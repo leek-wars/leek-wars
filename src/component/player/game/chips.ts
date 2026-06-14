@@ -1802,29 +1802,30 @@ class FireBall extends ChipAnimation {
 }
 
 class Trebuchet extends ChipAnimation {
-	static textures = [T.meteorite, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
+	static textures = [T.explosion_rock, T.explosion_rock2, T.explosion_mark]
 	static sounds = [S.meteorite, S.explosion]
-	public willFinish = false
-	public delay = 0
-	public count = 1
-	public vx: number = 0
+	public flyDuration = 40
+	public exploded = false
 	constructor(game: Game) { super(game, S.meteorite, 90, DamageType.EXPLOSION) }
-	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
-		super.launch(launchPos, position, targets, targetCell)
-		this.vx = (300 + Math.random() * 200) * ((Math.random() > 0.5) ? 1 : -1)
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		// Zone d'impact télégraphiée
 		this.game.setEffectArea(targetCell, Area.CIRCLE2, '#888', 180)
+		// Rocher lancé par le trébuchet : il tournoie jusqu'à la cible, sans traînée
+		this.game.particles.addFlyingSpinningProjectile(launchPos.x, launchPos.y, 50, position.x, position.y, this.flyDuration, T.explosion_rock, 64, 0.25)
 	}
 	public update(dt: number) {
 		super.update(dt)
-		this.delay -= dt
-		if (this.delay < 0 && this.count > 0) {
-			this.delay = 8
-			this.count--
-			const y = this.position.y
-			const z = this.position.y + 200
-			const x = this.position.x + this.vx
-			const angle = Math.atan2(this.vx, z) + Math.PI / 2
-			this.game.particles.addMeteorite(x, y, z, angle, 1.2, this.targets, true)
+		// Impact quand le rocher atteint la cible (durée totale - durée de vol)
+		if (!this.exploded && this.duration <= 90 - this.flyDuration) {
+			this.exploded = true
+			// Petite explosion + marque noire au sol + rocher qui se découpe en morceaux
+			this.game.particles.addRealisticExplosion(this.position.x, this.position.y, 1.5)
+			if (this.targets) {
+				for (const target of this.targets) {
+					target.hurt(this.position.x, this.position.y, 0, 0, 0, 0)
+				}
+			}
 		}
 	}
 }
