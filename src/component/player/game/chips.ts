@@ -1741,7 +1741,7 @@ class Kemuridama extends ChipAnimation {
 		// Gros nuage de fumée : plusieurs sprites de nuage par frame, étalés, qui
 		// dérivent sur le côté et montent, sans rotation, en grande échelle.
 		const pos = this.duration > 60 ? this.launchPos : this.targetPos
-		for (let i = 0; i < 3; ++i) {
+		if (Math.random() > 0.55) {
 			const ox = Math.random() * 90 - 45
 			const oy = Math.random() * 60 - 30
 			const dx = (Math.random() - 0.5) * 1.4 // dérive latérale
