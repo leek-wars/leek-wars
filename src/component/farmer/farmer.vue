@@ -784,10 +784,15 @@
 
 	// Pendant la navigation sortante, le composant reste monté le temps que la
 	// route suivante charge ; nuller farmer.value démonte les v-if des popups et
-	// casse les Teleport Vuetify (parentNode null). onBeforeRouteLeave ne fire pas
-	// sur /farmer/A → /farmer/B (même composant), le watch reste fonctionnel.
+	// casse les Teleport Vuetify (parentNode null). On ne pose le flag que si on
+	// quitte vraiment la page éleveur — /farmer ↔ /farmer/:id sont deux routes
+	// distinctes (le hook fire) mais utilisent le même composant et le watch
+	// doit pouvoir recharger les données.
 	let leaving = false
-	onBeforeRouteLeave(() => { leaving = true })
+	onBeforeRouteLeave((to) => {
+		const stillFarmer = to.matched.some(r => r.path === '/farmer' || r.path === '/farmer/:id')
+		if (!stillFarmer) leaving = true
+	})
 
 	watch(id, () => update(), { immediate: true })
 
