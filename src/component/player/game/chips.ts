@@ -1821,10 +1821,11 @@ class FireBall extends ChipAnimation {
 class Trebuchet extends ChipAnimation {
 	static textures = [T.boulder, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.meteorite, S.explosion]
-	public flyDuration = 60
+	static DURATION = 50
+	public flyDuration = 40
 	public boulderSize = 96
 	public exploded = false
-	constructor(game: Game) { super(game, S.meteorite, 90, DamageType.EXPLOSION) }
+	constructor(game: Game) { super(game, S.meteorite, Trebuchet.DURATION, DamageType.EXPLOSION) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, position, targets, targetCell, launcher)
 		// Zone d'impact télégraphiée
@@ -1838,7 +1839,7 @@ class Trebuchet extends ChipAnimation {
 	public update(dt: number) {
 		super.update(dt)
 		// Impact quand le rocher atteint la cible (durée totale - durée de vol)
-		if (!this.exploded && this.duration <= 90 - this.flyDuration) {
+		if (!this.exploded && this.duration <= Trebuchet.DURATION - this.flyDuration) {
 			this.exploded = true
 			// Le rocher éclate en fragments procéduraux (découpage de la sprite, comme
 			// la mort d'un poireau) + souffle d'impact et débris projetés par le sol.
