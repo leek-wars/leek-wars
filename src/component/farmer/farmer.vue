@@ -965,10 +965,10 @@
 	function claimAposterioriRewards() {
 		LeekWars.post('farmer/claim-aposteriori-rewards').then((data: { crystals: number, habs: number, fights: number }) => {
 			if (farmer.value && farmer.value.aposteriori_rewards) farmer.value.aposteriori_rewards.claimable = false
-			if (store.state.farmer) {
-				store.state.farmer.habs += data.habs
-				store.state.farmer.crystals += data.crystals
-			}
+			// Passer par les mutations pour animer les compteurs (sinon animated_* ne rattrape jamais → cascade infinie). #4118
+			store.commit('update-habs', data.habs)
+			store.commit('update-crystals', data.crystals)
+			if (data.fights) store.commit('update-fights', data.fights)
 			LeekWars.toast(t('aposteriori_claimed') as string)
 		}).catch(godfatherError)
 	}
