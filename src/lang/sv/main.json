@@ -108,6 +108,7 @@
 	"eighth_final": "8:e finalen",
 	"encyclopedia": "Encyklopedi",
 	"error": "Fel",
+	"error_chat_flood": "Du skickar meddelanden för snabbt, vänta lite.",
 	"error_muted": "Du är tystad i {0} sekunder",
 	"error_x": "Fel: {0}",
 	"estimated_value": "Uppskattat värde",

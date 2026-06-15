@@ -108,6 +108,7 @@
 	"eighth_final": "8. finale",
 	"encyclopedia": "Encyklopædi",
 	"error": "Fejl",
+	"error_chat_flood": "Du sender beskeder for hurtigt, vent et øjeblik.",
 	"error_muted": "Du er slået fra i {0} sekunder",
 	"error_x": "Fejl: {0}",
 	"estimated_value": "Anslået værdi",

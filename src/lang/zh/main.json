@@ -108,6 +108,7 @@
 	"eighth_final": "第八场决赛",
 	"encyclopedia": "百科全书",
 	"error": "错误",
+	"error_chat_flood": "您发送消息的速度过快，请稍等。",
 	"error_muted": "您被静音 {0} 秒",
 	"error_x": "错误：{0}",
 	"estimated_value": "估计的价值",

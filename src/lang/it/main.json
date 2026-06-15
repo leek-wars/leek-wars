@@ -115,6 +115,7 @@
 	"eighth_final": "8° finale",
 	"encyclopedia": "Enciclopedia",
 	"error": "Errore",
+	"error_chat_flood": "Stai inviando messaggi troppo velocemente, attendi un momento.",
 	"error_muted": "Sei silenziato per {0} secondi",
 	"error_x": "Errore: {0}",
 	"estimated_value": "Valore stimato",

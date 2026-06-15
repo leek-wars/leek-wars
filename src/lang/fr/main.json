@@ -115,6 +115,7 @@
 	"eighth_final": "8ème de finale",
 	"encyclopedia": "Encyclopédie",
 	"error": "Erreur",
+	"error_chat_flood": "Vous envoyez des messages trop rapidement, patientez un instant.",
 	"error_muted": "Vous êtes mis en sourdine pour {0} secondes",
 	"error_x": "Erreur : {0}",
 	"estimated_value": "Valeur estimée",

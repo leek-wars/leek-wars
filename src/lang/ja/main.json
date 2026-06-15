@@ -108,6 +108,7 @@
 	"eighth_final": "8回決勝",
 	"encyclopedia": "百科事典",
 	"error": "エラー",
+	"error_chat_flood": "メッセージの送信が速すぎます。少しお待ちください。",
 	"error_muted": "あなたは{0}秒間ミュートされています",
 	"error_x": "エラー: {0}",
 	"estimated_value": "推定値",

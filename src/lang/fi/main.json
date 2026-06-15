@@ -108,6 +108,7 @@
 	"eighth_final": "8. finaali",
 	"encyclopedia": "Tietosanakirja",
 	"error": "Virhe",
+	"error_chat_flood": "Lähetät viestejä liian nopeasti, odota hetki.",
 	"error_muted": "Olet mykistetty {0} sekunniksi",
 	"error_x": "Virhe: {0}",
 	"estimated_value": "Arvioitu arvo",

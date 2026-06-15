@@ -108,6 +108,7 @@
 	"eighth_final": "1/8 final",
 	"encyclopedia": "Ensiklopedi",
 	"error": "Kesalahan",
+	"error_chat_flood": "Anda mengirim pesan terlalu cepat, mohon tunggu sebentar.",
 	"error_muted": "Anda dibisukan selama {0} detik",
 	"error_x": "Kesalahan: {0}",
 	"estimated_value": "Nilai perkiraan",

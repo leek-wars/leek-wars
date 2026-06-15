@@ -109,6 +109,7 @@
 	"eighth_final": "16강",
 	"encyclopedia": "백과사전",
 	"error": "오류",
+	"error_chat_flood": "메시지를 너무 빨리 보내고 있습니다. 잠시 기다려 주세요.",
 	"error_muted": "{0}초 동안 음소거되었습니다.",
 	"error_x": "오류: {0}",
 	"estimated_value": "추정 가치",

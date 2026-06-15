@@ -108,6 +108,7 @@
 	"eighth_final": "8e finale",
 	"encyclopedia": "Encyclopedie",
 	"error": "Fout",
+	"error_chat_flood": "Je verzendt te snel berichten, wacht even.",
 	"error_muted": "Je bent {0} seconden gedempt",
 	"error_x": "Fout: {0}",
 	"estimated_value": "Geschatte waarde",
