@@ -37,6 +37,12 @@ const pseudosEnabled = ref(false)
 const pseudosFilter = ref('')
 let rootEl: HTMLElement
 let cleanupPasteProtect: (() => void) | null = null
+// Anti-flood client : sans ça, vider l'input avant que le serveur ne rejette
+// (HTTP 429 chat_flood) ferait perdre la saisie. On bloque l'envoi en amont
+// et on garde le texte tant que le délai n'est pas écoulé. Le check serveur
+// reste en place (sécurité, le client peut être bypassé).
+const FLOOD_DELAY_MS = 350
+let lastSendTime = 0
 
 onMounted(() => {
 	cleanupPasteProtect = LeekWars.contenteditable_paste_protect(inputRef.value!)
@@ -110,6 +116,12 @@ function keyUp(e: KeyboardEvent) {
 			LeekWars.toast(i18n.t('main.chat_too_long') as string)
 			return
 		}
+		const now = Date.now()
+		if (now - lastSendTime < FLOOD_DELAY_MS) {
+			LeekWars.toast(i18n.t('main.error_chat_flood') as string)
+			return
+		}
+		lastSendTime = now
 		if (message.value === '/ping') {
 			// LW.chat.last_ping = Date.now()
 		}
