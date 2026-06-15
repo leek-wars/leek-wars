@@ -280,11 +280,13 @@
 	const edition = ref(false)
 	const editor = ref<Monaco.editor.IStandaloneCodeEditor | null>(null)
 	let scrolling = false
-	// Date du dernier édit : un re-render de la preview change sa hauteur et fait
-	// émettre au navigateur des events « scroll » (clamp du scrollTop) qui ne sont
-	// pas des scrolls utilisateur. Les propager vers l'éditeur le fait sauter (bug
-	// de la page qui « monte et descend »). On ignore donc la sync preview→éditeur
-	// juste après une frappe, le temps que le reflow se stabilise.
+	// Date du dernier édit. Taper modifie la hauteur du contenu des deux côtés :
+	// Monaco émet un event de scroll dès que sa scrollHeight change (pas seulement
+	// le scrollTop), et le navigateur clampe le scrollTop de la preview lors de son
+	// re-render. Ces events ne sont pas des scrolls utilisateur ; les répercuter via
+	// la synchro fait sauter l'éditeur et dériver la preview à chaque touche. On
+	// désactive donc la synchro dans les deux sens juste après une frappe, le temps
+	// que le reflow se stabilise.
 	const REFLOW_STABILIZE_DELAY = 400
 	let lastEditTime = 0
 	const modified = ref(false)
@@ -595,6 +597,9 @@ ${ret}
 
 				editor.value.onDidScrollChange((e) => {
 					if (scrolling) { scrolling = false; return }
+					// Scroll provoqué par la frappe (croissance de scrollHeight), pas par
+					// l'utilisateur : ne pas le répercuter sur la preview (sinon elle dérive).
+					if (Date.now() - lastEditTime < REFLOW_STABILIZE_DELAY) { return }
 					const scrollTop = e.scrollTop
 					const scrollHeight = e.scrollHeight
 					const editorHeight = editor.value!.getLayoutInfo().height
