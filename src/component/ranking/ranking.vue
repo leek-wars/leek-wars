@@ -333,7 +333,7 @@
 							<td><div class="country-wrapper"><flag v-if="row.country" :code="row.country" /></div></td>
 							<td>{{ row.turns }}</td>
 							<td>{{ row.leeks }}</td>
-							<td>{{ Math.round(Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</td>
+							<td>{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</td>
 							<td>{{ new Date(row.date * 1000).toLocaleDateString() }}</td>
 							<td class="fight-link-cell">
 								<router-link v-if="row.fight" :to="'/fight/' + row.fight" :title="$t('main.fight')">
