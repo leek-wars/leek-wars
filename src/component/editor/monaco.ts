@@ -213,7 +213,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 					const line = hover.defined[1]
 					const column = hover.defined[2]
 					const args = encodeURIComponent(JSON.stringify({ ai: defAi.path, line, column }))
-					details += "[" + i18n.t('leekscript.defined_in', [ '`' + defAi.path + '`', line ]) + "](command:jump?" + args + ' "' + defAi.path + ':' + line + ':' + column + '")'
+					details += "[" + i18n.t('leekscript.defined_in', [ '`' + defAi.path + '`', line ], { escapeParameter: false }) + "](command:jump?" + args + ' "' + defAi.path + ':' + line + ':' + column + '")'
 				}
 				if (symbol) {
 					fileSystem.symbols[text] = symbol
