@@ -317,7 +317,7 @@ class Analyzer {
 				if (fileSystem.ais[resolved]) aiPath = resolved
 			}
 			const info = problem.length === 8
-				? i18n.t('leekscript.error_' + problem[6], problem[7] as unknown[]) as string
+				? i18n.t('leekscript.error_' + problem[6], problem[7] as unknown[], { escapeParameter: false }) as string
 				: i18n.t('leekscript.error_' + problem[6]) as string
 			if (!problemsByAI[aiPath]) {
 				problemsByAI[aiPath] = []
