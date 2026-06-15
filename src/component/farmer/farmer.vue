@@ -944,13 +944,6 @@
 		}
 	}
 
-	function openGodfatherDialog() {
-		godfatherDialog.value = true
-		setTimeout(() => {
-			if (godfatherLink.value) LeekWars.selectText(godfatherLink.value)
-		}, 100)
-	}
-
 	function selectCountry(code: string) {
 		if (farmer.value) {
 			farmer.value.country = code === 'null' ? null : code
@@ -959,7 +952,7 @@
 		}
 	}
 
-	// Parrainage a posteriori : se délier de son parrain (le renier d'un filleul est dans le dialogue de gestion). #4118
+	// Parrainage a posteriori : se délier de son parrain. #4118 (renier filleul = dialogue de gestion)
 	function untieGodfather() {
 		LeekWars.post('farmer/remove-godfather').then(() => {
 			if (farmer.value) farmer.value.godfather = null
