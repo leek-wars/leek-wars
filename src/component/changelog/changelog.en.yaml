@@ -13,6 +13,7 @@
     - "#ai LeekScript annotations: `@unused`, `@deprecated`, `@pure`, `@override`, `@tailrec`, `@todo`. #img_248_annotations"
     - "Clone a remote git repository right from the editor (File > Clone a git repo). #img_248_git_clone"
     - "Connect your self-hosted git instances: GitHub Enterprise, GitLab, Bitbucket DC, Forgejo. #img_248_git_selfhosted"
+    - "Compact repository button (git gc) in the editor menu to shrink its size."
     - "#ai Reference count on every global variable, like for functions and classes. #img_248_global_codelens"
     - "#ai Support for `.md`, `.txt`, `.json`, `.yaml` and `.gitignore` files with syntax highlighting."
     - "#ai `getChestType(entity)` function and `CHEST_WOOD`, `CHEST_IRON`, `CHEST_DIAMOND` constants."
@@ -44,6 +45,7 @@
     - "The intro tutorial no longer has a Skip button: it advances with your real actions."
     - "The logout confirmation lists the connected accounts to disconnect. #img_248_logout"
     - "Forum: filters and sorting are remembered for each category."
+    - "New animations for boss attacks: Trebuchet, Shuriken, Kemuridama and Thunder."
   fixed:
     - "New players can see their opponents in the garden again."
     - "Next-fight countdown is correct everywhere in the world (midnight, Paris time)."
@@ -63,6 +65,7 @@
     - "Fixed icon display errors and crashes on the team and profile pages."
     - "Broken image for schemes that produce a hat."
     - "Editing a leek's AI in a default scenario no longer triggers a 404. (thanks to Kraspen)"
+    - "Sessions are invalidated when an account is deleted."
 247:
   title: "Git integration, loadouts, multi-account management and clover potions."
   added:

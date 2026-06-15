@@ -13,6 +13,7 @@
     - "#ai Annotations LeekScript : `@unused`, `@deprecated`, `@pure`, `@override`, `@tailrec`, `@todo`. #img_248_annotations"
     - "Clonez un dépôt git distant directement depuis l'éditeur (Fichier > Cloner un repo git). #img_248_git_clone"
     - "Connectez vos instances git auto-hébergées : GitHub Enterprise, GitLab, Bitbucket DC, Forgejo. #img_248_git_selfhosted"
+    - "Bouton « Compacter le dépôt » (git gc) dans le menu de l'éditeur pour réduire sa taille."
     - "#ai Compteur de références sur chaque variable globale, comme pour les fonctions et les classes. #img_248_global_codelens"
     - "#ai Support des fichiers `.md`, `.txt`, `.json`, `.yaml` et `.gitignore` avec coloration adaptée."
     - "#ai Fonction `getChestType(entité)` et constantes `CHEST_WOOD`, `CHEST_IRON`, `CHEST_DIAMOND`."
@@ -44,6 +45,7 @@
     - "Le didacticiel d'introduction n'a plus de bouton Passer : il avance au fil de vos vraies actions."
     - "La confirmation de déconnexion liste les comptes connectés à déconnecter. #img_248_logout"
     - "Forum : les filtres et le tri sont mémorisés pour chaque catégorie."
+    - "Nouvelles animations pour les attaques de boss : Trébuchet, Shuriken, Kemuridama et Tonnerre."
   fixed:
     - "Les nouveaux joueurs voient à nouveau leurs adversaires dans le potager."
     - "Compte à rebours du prochain combat correct partout dans le monde (minuit, heure de Paris)."
@@ -63,6 +65,7 @@
     - "Correction d'erreurs d'affichage d'icônes et de plantages sur les pages équipe et profil."
     - "Image cassée des schémas dont le résultat est un chapeau."
     - "Modifier l'IA d'un poireau dans un scénario par défaut ne provoque plus de 404. (merci à Kraspen)"
+    - "La session est invalidée lorsqu'un compte est supprimé."
 247:
   title: "Intégration Git, équipements, gestion multi-comptes et potions de trèfle."
   added:

@@ -13,6 +13,7 @@
     - "#ai Annotazioni LeekScript: `@unused`, `@deprecated`, `@pure`, `@override`, `@tailrec`, `@todo`. #img_248_annotations"
     - "Clona un repository git remoto direttamente dall'editor (File > Clona un repo git). #img_248_git_clone"
     - "Collega le tue istanze git self-hosted: GitHub Enterprise, GitLab, Bitbucket DC, Forgejo. #img_248_git_selfhosted"
+    - "Pulsante « Compatta il repository » (git gc) nel menu dell'editor per ridurne le dimensioni."
     - "#ai Contatore di riferimenti su ogni variabile globale, come per funzioni e classi. #img_248_global_codelens"
     - "#ai Supporto dei file `.md`, `.txt`, `.json`, `.yaml` e `.gitignore` con evidenziazione adatta."
     - "#ai Funzione `getChestType(entità)` e costanti `CHEST_WOOD`, `CHEST_IRON`, `CHEST_DIAMOND`."
@@ -44,6 +45,7 @@
     - "Il tutorial introduttivo non ha più il pulsante Salta: avanza con le tue azioni reali."
     - "La conferma di disconnessione elenca gli account connessi da disconnettere. #img_248_logout"
     - "Forum: i filtri e l'ordinamento sono memorizzati per ogni categoria."
+    - "Nuove animazioni per gli attacchi dei boss: Trabucco, Shuriken, Kemuridama e Tuono."
   fixed:
     - "I nuovi giocatori vedono di nuovo i loro avversari nell'orto."
     - "Conto alla rovescia del prossimo combattimento corretto ovunque (mezzanotte, ora di Parigi)."
@@ -63,6 +65,7 @@
     - "Corretti errori di visualizzazione delle icone e crash sulle pagine squadra e profilo."
     - "Immagine rotta degli schemi che producono un cappello."
     - "Modificare l'IA di un porro in uno scenario predefinito non causa più un 404. (grazie a Kraspen)"
+    - "La sessione viene invalidata quando un account viene eliminato."
 247:
   title: "Integrazione Git, equipaggiamenti, gestione multi-account e pozioni di trifoglio."
   added:
