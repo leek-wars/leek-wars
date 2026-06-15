@@ -23,7 +23,7 @@ const AdminMatchmaking = () => import(/* webpackChunkName: "admin" */ `@/compone
 const AdminGameAnimations = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-game-animations.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
-const ErrorPage = () => import('@/component/app/error.vue')
+import Error from '@/component/app/error.vue'
 const BankBuy = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-buy.vue`)
 const BankValidate = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-validate.vue`)
 const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank.${locale}.i18n`)
@@ -184,8 +184,8 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/editor/:id(.+)', component: Editor, beforeEnter: connected },
 	{ path: '/group/:id', component: Group, beforeEnter: connected },
 	{ path: '/groups', component: Groups },
-	{ path: '/error/:message', component: ErrorPage },
-	{ path: '/error/:message/:title', component: ErrorPage },
+	{ path: '/error/:message', component: Error },
+	{ path: '/error/:message/:title', component: Error },
 	{ path: '/farmer', component: Farmer, beforeEnter: connected },
 	{ path: '/farmer/:id', component: Farmer },
 	{ path: '/farmer/:id/history', component: History, props: {type: 'farmer'} },
@@ -248,7 +248,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/trophies/:id', component: Trophies },
 	{ path: '/trophy/:code', component: TrophyPage },
 	// { path: '/workshop', component: Workshop },
-	{ path: '/:pathMatch(.*)*', component: ErrorPage }, // Vue 3 catch-all route
+	{ path: '/:pathMatch(.*)*', component: Error }, // Vue 3 catch-all route
 ]
 
 if (import.meta.env.VITE_SOCIAL !== 'false') {
