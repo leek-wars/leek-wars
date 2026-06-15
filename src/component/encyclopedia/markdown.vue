@@ -33,6 +33,7 @@
 		mode: string
 		locale?: string
 	}>()
+	const emit = defineEmits<{ rendered: [] }>()
 
 	const { t, locale: i18nLocale } = useI18n()
 	const route = useRoute()
@@ -423,6 +424,7 @@
 						}
 					}
 				}
+				emit('rendered')
 			})
 		}
 

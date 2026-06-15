@@ -76,7 +76,7 @@
 							{{ $t('redirected_from', [redirectedFrom]) }}
 						</div>
 
-						<markdown :content="content" mode="encyclopedia" :class="{main: page.reference === 1 }" :locale="page.language" />
+						<markdown :content="content" mode="encyclopedia" :class="{main: page.reference === 1 }" :locale="page.language" @rendered="onMarkdownRendered" />
 
 						<div v-if="page.new && !edition" class="nopage">
 							<v-icon>mdi-book-open-page-variant</v-icon>
@@ -290,6 +290,7 @@
 	const diffEditor = ref<Monaco.editor.IStandaloneDiffEditor | null>(null)
 	const referencedBy = ref<ReferencedBy | null>(null)
 	let destroyed = false
+	let loadedPending = false
 
 	const language = computed(() => {
 		const lang = route.params && route.params.lang ? route.params.lang as string : i18nLocale.value as string
@@ -472,7 +473,10 @@
 			}
 			LeekWars.setTitle(title.value)
 			updatePageMeta(p)
-			emitter.emit('loaded')
+			// Les id des headings sont posés par <markdown> après son rendu ;
+			// on attend son événement 'rendered' avant d'émettre 'loaded'
+			// pour que le scroll_to_hash global trouve l'ancre.
+			loadedPending = true
 		})
 		.error((err) => {
 			const result = err as { translations?: Record<string, string> }
@@ -635,6 +639,12 @@ ${ret}
 			const data = JSON.stringify({page_id: page.value.id})
 			navigator.sendBeacon(LeekWars.API + 'encyclopedia/end-edition', new Blob([data], {type: 'application/json'}))
 		}
+	}
+
+	function onMarkdownRendered() {
+		if (!loadedPending) return
+		loadedPending = false
+		emitter.emit('loaded')
 	}
 
 	function markdownScroll() {
