@@ -280,6 +280,13 @@
 	const edition = ref(false)
 	const editor = ref<Monaco.editor.IStandaloneCodeEditor | null>(null)
 	let scrolling = false
+	// Date du dernier édit : un re-render de la preview change sa hauteur et fait
+	// émettre au navigateur des events « scroll » (clamp du scrollTop) qui ne sont
+	// pas des scrolls utilisateur. Les propager vers l'éditeur le fait sauter (bug
+	// de la page qui « monte et descend »). On ignore donc la sync preview→éditeur
+	// juste après une frappe, le temps que le reflow se stabilise.
+	const REFLOW_STABILIZE_DELAY = 400
+	let lastEditTime = 0
 	const modified = ref(false)
 	const statsExpanded = ref(false)
 	const redirectedFrom = ref<string | null>(null)
@@ -570,6 +577,7 @@ ${ret}
 
 				editor.value.onDidChangeModelContent(() => {
 					modified.value = true
+					lastEditTime = Date.now()
 					if (page.value) page.value.content = editor.value!.getValue()
 					// La page parent est déclarée par le premier blockquote (« > Titre ») du
 					// contenu. On la résout depuis le rendu markdown après mise à jour du DOM.
@@ -649,6 +657,9 @@ ${ret}
 
 	function markdownScroll() {
 		if (scrolling) { scrolling = false; return }
+		// Scroll émis par le reflow de la preview suite à une frappe, pas par
+		// l'utilisateur : ne pas le répercuter sur l'éditeur (sinon il saute).
+		if (Date.now() - lastEditTime < REFLOW_STABILIZE_DELAY) { return }
 		const md = markdownRef.value
 		if (!md) return
 		const percent = md.scrollTop / (md.scrollHeight - md.clientHeight)
