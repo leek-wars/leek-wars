@@ -246,14 +246,13 @@
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { fileSystem } from '@/model/filesystem'
-	import { mixins } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 	import GitHistory from './git-history.vue'
 	import GitRemoteDialog from './git-remote-dialog.vue'
 	import { gitCall } from './git-log'
 	import { emitter } from '@/model/vue'
 	import type { DiffTab } from './editor-tabs.vue'
 	import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 
 	interface GitChange {
@@ -289,7 +288,7 @@
 		'show-merge': [payload: unknown]
 	}>()
 
-	const { t } = useI18n()
+	const t = useNamespacedT('GitPanel')
 	const router = useRouter()
 
 	const repos = ref<{folder: string, name: string}[]>([])
