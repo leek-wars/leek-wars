@@ -172,8 +172,6 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/dev-blog/:id', component: DevBlogArticle },
 	{ path: '/creator', component: Creator, beforeEnter: connected },
 	{ path: '/creator/:id', component: Creator, beforeEnter: connected },
-	{ path: '/dev-blog', component: DevBlog },
-	{ path: '/dev-blog/:id', component: DevBlogArticle },
 	{ path: '/encyclopedia', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia/:lang/:page', component: Encyclopedia, meta: {scrollOffset: 45} },

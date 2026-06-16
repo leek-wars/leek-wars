@@ -16,8 +16,9 @@
 
 					<loader v-if="!articles" />
 					<div v-else class="articles">
-						<router-link v-for="article of articles" :key="article.id" v-ripple class="article card" :to="'/forum/category-' + article.category + '/topic-' + article.topic + '-' + formatTitleURL(article.title)">
-							<img :src="article.image">
+						<router-link v-for="article of articles" :key="article.id" v-ripple class="article card" :to="'/dev-blog/' + article.id">
+							<img v-if="article.image" :src="article.image">
+							<div v-else class="no-image"><v-icon>mdi-newspaper-variant-outline</v-icon></div>
 							<div class="info">
 								<div class="title">{{ article.title }}</div>
 
@@ -43,8 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { mixins } from '@/model/i18n'
+import { onBeforeMount, ref } from 'vue'
+import { i18n, mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 
@@ -56,9 +57,11 @@ LeekWars.get('article/all').then(data => {
 	articles.value = data
 })
 
-function formatTitleURL(title: string) {
-	return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[[\]]/g, '').replace(/,/g, '').replace(/\//g, '')
-}
+onBeforeMount(() => {
+	const title = i18n.global.t('main.dev-blog') as string
+	LeekWars.setTitle(title)
+	LeekWars.setMeta({ title })
+})
 </script>
 
 <style lang="scss" scoped>
@@ -71,6 +74,18 @@ function formatTitleURL(title: string) {
 		overflow: hidden;
 		img {
 			width: 100%;
+		}
+		.no-image {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			aspect-ratio: 1076 / 332;
+			background: var(--background-secondary);
+			i {
+				font-size: 64px;
+				color: var(--text-color-secondary);
+				opacity: 0.4;
+			}
 		}
 		.info {
 			padding: 15px;
