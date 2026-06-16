@@ -32,7 +32,8 @@
 						</div>
 					</div>
 
-					<markdown :content="article.message" mode="forum" />
+					<div v-if="article.html" v-emojis v-code class="text" v-html="article.html"></div>
+					<markdown v-else :content="body" mode="forum" />
 
 					<router-link :to="forumLink" class="forum-link">
 						<v-icon>mdi-forum-outline</v-icon>
@@ -60,7 +61,7 @@
 		title: string
 		date: number
 		message: string
-		html: boolean
+		html: string
 		message_count: number
 		votes_up: number
 		votes_down: number
@@ -70,11 +71,15 @@
 
 	const route = useRoute()
 	const article = ref<Article | null>(null)
+	const body = ref('')
 	const not_found = ref(false)
 	const forumLink = ref('/forum')
+	let currentId = -1
 
-	function formatTitleURL(title: string) {
-		return title.toLocaleLowerCase().replace(/ /g, '-').replace(/[[\]]/g, '').replace(/,/g, '').replace(/\//g, '')
+	// Retire un titre markdown en tête de corps qui répète le titre de l'article (cas des
+	// articles techniques commençant par "# Titre"), celui-ci étant déjà affiché au-dessus.
+	function stripDuplicateTitle(message: string, title: string) {
+		return message.replace(/^\s*#{1,6}[ \t]+(.+?)[ \t]*(?:\r?\n|$)/, (m, h) => h.trim() === title.trim() ? '' : m)
 	}
 
 	// Description SEO : on aplatit le markdown en texte brut, tronqué à 200 caractères.
@@ -93,11 +98,15 @@
 	}
 
 	function load(id: number) {
+		currentId = id
 		article.value = null
+		body.value = ''
 		not_found.value = false
 		LeekWars.get<Article>('article/get/' + id).then(a => {
+			if (currentId !== id) { return } // réponse obsolète : on a navigué entre-temps
 			article.value = a
-			forumLink.value = '/forum/category-' + a.category + '/topic-' + a.topic + '-' + formatTitleURL(a.title)
+			body.value = stripDuplicateTitle(a.message, a.title)
+			forumLink.value = '/forum/category-' + a.category + '/topic-' + a.topic
 			LeekWars.setTitle(a.title)
 			LeekWars.setMeta({
 				title: a.title,
@@ -106,6 +115,7 @@
 				canonical: 'https://leekwars.com/dev-blog/' + a.id
 			})
 		}).error(() => {
+			if (currentId !== id) { return }
 			not_found.value = true
 		})
 	}
