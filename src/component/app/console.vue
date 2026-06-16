@@ -20,7 +20,7 @@
 					<template v-else-if="line.type === 'error'">
 						<div class="error">
 							<div v-if="line.location" class="zigzag">{{ line.zigzags }}</div>
-							<div>{{ $t('leekscript.error_' + line.error, line.params ?? []) }}</div>
+							<div>{{ $t('leekscript.error_' + line.error, line.params ?? [], { escapeParameter: false }) }}</div>
 						</div>
 						<span v-if="line.ops" class="ops">{{ line.ops }} ops</span>
 					</template>

@@ -551,7 +551,7 @@
 				for (const log of action) {
 					const leek = log[0] as number
 					const type = log[1] as number
-					const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4] as (string | number)[]) + "\n" + log[2] : log[2]
+					const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4] as (string | number)[], { escapeParameter: false }) + "\n" + log[2] : log[2]
 					if (type === 2 || type === 7) {
 						warnings.value.push({entity: leeks.value[leek].name, data: message as string, action: a, index: i, ai: log[4] as number, line: log[5] as number, resolvedAI: fileSystem.ais[log[4] as number]})
 					} else if (type === 3 || type === 8) {

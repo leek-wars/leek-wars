@@ -31,10 +31,10 @@ const LOCAL = window.location.port === '8500' || window.location.port === '5100'
 
 // Helper functions to avoid TypeScript "excessively deep" errors with vue-i18n
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const $t = (key: string, args?: any): string => {
+const $t = (key: string, args?: any, options?: any): string => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const t = (i18n.global as any).t
-	return t(key, args)
+	return options !== undefined ? t(key, args, options) : t(key, args)
 }
 const $tc = (key: string, choice: number): string => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -988,7 +988,7 @@ const LeekWars = reactive({
 				const helpPage = LeekWars.logHelpPage(log)
 				return helpPage
 			}
-			return $t('leekscript.error_' + log[3], log[4] as string[]) + "\n" + log[2]
+			return $t('leekscript.error_' + log[3], log[4] as string[], { escapeParameter: false }) + "\n" + log[2]
 		}
 		return log[2]
 	},
