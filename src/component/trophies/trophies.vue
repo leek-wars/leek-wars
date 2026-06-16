@@ -397,6 +397,8 @@ watch(sort_by, () => {
 			padding: 10px;
 			.trophy {
 				width: 43px;
+				height: 43px;
+				object-fit: contain;
 				vertical-align: bottom;
 			}
 		}
