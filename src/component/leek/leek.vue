@@ -1076,13 +1076,19 @@
 	function update() {
 		if (leaving) return
 		if (!id.value) return
-		leek.value = null
+		// Ne PAS remettre leek.value à null ici : sur une nav /leek/A -> /leek/B (même
+		// composant, onBeforeRouteLeave ne fire pas), ça démonte le gros sous-arbre
+		// v-if="leek" + les Teleports/tooltips EN PLEIN patch in-place du <router-view>
+		// -> "parentNode of null" dans le scheduler (#4163). On garde l'ancien leek
+		// affiché et on swappe atomiquement quand la réponse arrive.
 		tournamentRange.value = null
 		tournamentRangeLoading.value = false
 		error.value = false
+		const reqId = id.value
 		const method = my_leek.value ? 'leek/get-private/' + id.value : 'leek/get/' + id.value
 		request = LeekWars.get<Leek>(method)
 		request.then((l: unknown) => {
+			if (reqId !== id.value) return // une navigation plus récente a pris le relais
 			leek.value = new Leek(l as Record<string, unknown>)
 			if (leek.value) {
 				LeekWars.setTitle(leek.value.name, t('main.level_n', [leek.value.level]))
@@ -1111,6 +1117,8 @@
 				emitter.emit('loaded')
 			}
 		}).error(() => {
+			if (reqId !== id.value) return
+			leek.value = null
 			error.value = true
 		})
 	}

@@ -798,22 +798,27 @@
 
 	function update() {
 		if (leaving) return
-		farmer.value = null
-		trophies.value = null
+		if (id.value === null) return
+		// Ne PAS nuller farmer.value/trophies/chart ici : sur une nav /farmer/A -> /farmer/B
+		// (même composant, onBeforeRouteLeave ne fire pas), ça démonte le sous-arbre
+		// v-if="farmer" EN PLEIN patch in-place du <router-view> -> "parentNode of null"
+		// (#4163). On garde l'ancien farmer affiché ; init() swappe à l'arrivée des données.
 		notfound.value = false
 		invitationSent.value = false
 		tournamentRangeLoading.value = false
-		chartData.value = null
-		chartOptions.value = null
-		if (id.value === null) return
+		const reqId = id.value
 		if (myFarmer.value) {
 			setTimeout(() => {
+				if (reqId !== id.value) return
 				init(store.state.farmer!)
 			}, 10)
 		} else {
 			LeekWars.get('farmer/get/' + id.value).then(data => {
+				if (reqId !== id.value) return // une navigation plus récente a pris le relais
 				init(data.farmer)
 			}).error(() => {
+				if (reqId !== id.value) return
+				farmer.value = null
 				notfound.value = true
 			})
 		}
