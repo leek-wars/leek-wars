@@ -43,6 +43,71 @@
 				</i18n-t>
 			<loader v-else-if="!topic || !topic.messages" />
 				<div v-else>
+					<!-- Barre d'actions du topic répétée en haut quand le topic est long (#4154) :
+					     évite de scroller le 1er post pour verrouiller/accrocher/voir le status. -->
+					<div v-if="longTopic" class="bottom topic-toolbar">
+						<div v-if="op && !op.deleted" class="votes">
+							<div :class="{active: op.my_vote == 1, zero: op.votes_up === 0}" class="vote up" @click="voteUp(op)">
+								<v-icon>mdi-thumb-up</v-icon>
+								<span class="counter">{{ op.votes_up }}</span>
+							</div>
+							<div :class="{active: op.my_vote == -1, zero: !op.votes_down}" class="vote down" @click="voteDown(op)">
+								<v-icon>mdi-thumb-down</v-icon>
+								<span class="counter">{{ op.votes_down }}</span>
+							</div>
+						</div>
+						<span class="views-counter"><v-icon>mdi-eye</v-icon> {{ $t('main.n_views', topic.views) }}</span>
+						<template v-if="$store.state.connected && category && category.moderator">
+							<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
+							<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
+						</template>
+						<template v-if="canEditStatus">
+							<v-select v-model="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="setStatus">
+								<template #selection="{ item }">
+									<v-icon :color="item.raw.color">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+								</template>
+								<template #item="{ props, item }">
+									<v-list-item v-bind="props">
+										<template #prepend>
+											<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
+										</template>
+									</v-list-item>
+								</template>
+							</v-select>
+						</template>
+						<span v-else-if="topic.status !== ForumTopicStatus.OPEN && currentStatusInfo" class="status-text">
+							<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
+						</span>
+						<template v-if="$store.state.farmer && $store.state.farmer.admin">
+							<span v-if="topic.release" class="action" @click="releaseInput = topic.release; releaseDialog = true">
+								<v-icon>mdi-tag</v-icon> {{ 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}
+							</span>
+							<v-select v-if="hasPriority" v-model="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="setPriority">
+								<template #selection="{ item }">
+									<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+								</template>
+								<template #item="{ props, item }">
+									<v-list-item v-bind="props">
+										<template #prepend>
+											<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
+										</template>
+									</v-list-item>
+								</template>
+							</v-select>
+						</template>
+						<span v-if="hasPriority && topic.priority && !($store.state.farmer && $store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
+							<v-icon :color="topic.priority === 1 ? '#e53935' : topic.priority === 2 ? '#fb8c00' : '#757575'" size="small">mdi-flag</v-icon>
+							{{ topic.priority === 1 ? $t('priority_high') : topic.priority === 2 ? $t('priority_medium') : $t('priority_low') }}
+						</span>
+						<span v-if="topic.acknowledged && !topic.private_issue && !($store.state.farmer && $store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ $t('status_acknowledged') }}</span>
+						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
+							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
+						</a>
+						<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="issue-badge private-issue" target="_blank" rel="noopener">
+							<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
+						</a>
+						<span v-if="$store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="createIssue"><v-icon :class="{ 'mdi-spin': creatingIssue }">{{ creatingIssue ? 'mdi-loading' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
+					</div>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<div v-if="!message.writer.deleted" class="profile">
 							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ props }">
@@ -381,6 +446,13 @@
 	const moveCategories = ref<{id: number, name: string}[]>([])
 	const releaseDialog = ref(false)
 	const releaseInput = ref<number | null>(null)
+
+	// Message original du topic (1er post, id -1), présent sur la page 1. Sert à répéter
+	// la barre d'actions du topic en haut quand le topic est long. #4154
+	const op = computed(() => topic.value?.messages?.find((m: ForumMessage) => m.id === -1) ?? null)
+	// Topic "long" : plusieurs pages ou beaucoup de messages -> la barre d'outils du 1er
+	// post est loin sous le pli, on la répète en haut.
+	const longTopic = computed(() => pages.value > 1 || (topic.value?.messages?.length ?? 0) >= 5)
 
 	const hasPriority = computed(() => category.value && (category.value.name === 'bug_reports' || category.value.name === 'suggestions_ideas'))
 	const priorityItems = computed(() => [
@@ -1016,7 +1088,7 @@
 		align-items: center;
 		gap: 6px;
 	}
-	.message .bottom {
+	.bottom {
 		display: flex;
 		align-items: center;
 		margin-top: 10px;
@@ -1055,6 +1127,16 @@
 		align-items: center;
 		gap: 5px;
 		font-size: 14px;
+	}
+	// Barre d'actions du topic répétée en haut (#4154) : carte légère qui la détache
+	// visuellement de la liste des messages.
+	.topic-toolbar {
+		margin-top: 0;
+		margin-bottom: 16px;
+		padding: 10px 16px;
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
+		border-radius: 8px;
 	}
 	.status-select {
 		display: inline-flex;
