@@ -58,16 +58,21 @@ const copied = ref(false)
 
 const login = computed(() => props.login ?? store.state.farmer?.login ?? '')
 const link = computed(() => `leekwars.com/godfather/${login.value}`)
-const fullLink = computed(() => `https://${link.value}`)
 const message = computed(() => t('share_message'))
 
+// Lien de partage tagué pour l'attribution d'acquisition (#4106) : utm_source=parrainage
+// fait classer la conversion en `utm:parrainage` côté serveur, utm_medium distingue la
+// surface (x/whatsapp/telegram/qr/copy/native). Le lien AFFICHÉ reste propre (sans utm).
+const taggedLink = (medium: string) => `https://${link.value}?utm_source=parrainage&utm_medium=${medium}`
+
 const shareUrls = computed(() => {
-	const url = encodeURIComponent(fullLink.value)
 	const text = encodeURIComponent(message.value)
+	const xUrl = encodeURIComponent(taggedLink('x'))
+	const telegramUrl = encodeURIComponent(taggedLink('telegram'))
 	return {
-		x: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
-		whatsapp: `https://wa.me/?text=${encodeURIComponent(message.value + ' ' + fullLink.value)}`,
-		telegram: `https://t.me/share/url?url=${url}&text=${text}`,
+		x: `https://twitter.com/intent/tweet?text=${text}&url=${xUrl}`,
+		whatsapp: `https://wa.me/?text=${encodeURIComponent(message.value + ' ' + taggedLink('whatsapp'))}`,
+		telegram: `https://t.me/share/url?url=${telegramUrl}&text=${text}`,
 	}
 })
 
@@ -75,7 +80,8 @@ const shareUrls = computed(() => {
 // pour ne pas alourdir le bundle) en data URI : pas de service externe, couvert par
 // la CSP img-src 'data:'.
 const qrDataUrl = ref('')
-watch(fullLink, async (url) => {
+const qrLink = computed(() => taggedLink('qr'))
+watch(qrLink, async (url) => {
 	const QRCode = (await import('qrcode')).default
 	qrDataUrl.value = await QRCode.toDataURL(url, { width: 240, margin: 2 })
 }, { immediate: true })
@@ -86,13 +92,13 @@ function selectLink() {
 	if (linkElement.value) LeekWars.selectText(linkElement.value)
 }
 function copyLink() {
-	navigator.clipboard?.writeText(fullLink.value).catch(() => {})
+	navigator.clipboard?.writeText(taggedLink('copy')).catch(() => {})
 	selectLink()
 	copied.value = true
 	setTimeout(() => { copied.value = false }, 2000)
 }
 function nativeShare() {
-	navigator.share?.({ text: message.value, url: fullLink.value }).catch(() => {})
+	navigator.share?.({ text: message.value, url: taggedLink('native') }).catch(() => {})
 }
 </script>
 
