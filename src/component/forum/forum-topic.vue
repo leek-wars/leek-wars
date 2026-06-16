@@ -43,72 +43,7 @@
 				</i18n-t>
 			<loader v-else-if="!topic || !topic.messages" />
 				<div v-else>
-					<!-- Barre d'actions du topic répétée en haut quand le topic est long (#4154) :
-					     évite de scroller le 1er post pour verrouiller/accrocher/voir le status. -->
-					<div v-if="longTopic" class="bottom topic-toolbar">
-						<div v-if="op && !op.deleted" class="votes">
-							<div :class="{active: op.my_vote == 1, zero: op.votes_up === 0}" class="vote up" @click="voteUp(op)">
-								<v-icon>mdi-thumb-up</v-icon>
-								<span class="counter">{{ op.votes_up }}</span>
-							</div>
-							<div :class="{active: op.my_vote == -1, zero: !op.votes_down}" class="vote down" @click="voteDown(op)">
-								<v-icon>mdi-thumb-down</v-icon>
-								<span class="counter">{{ op.votes_down }}</span>
-							</div>
-						</div>
-						<span class="views-counter"><v-icon>mdi-eye</v-icon> {{ $t('main.n_views', topic.views) }}</span>
-						<template v-if="$store.state.connected && category && category.moderator">
-							<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
-							<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
-						</template>
-						<template v-if="canEditStatus">
-							<v-select v-model="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="setStatus">
-								<template #selection="{ item }">
-									<v-icon :color="item.raw.color">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
-								</template>
-								<template #item="{ props, item }">
-									<v-list-item v-bind="props">
-										<template #prepend>
-											<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
-										</template>
-									</v-list-item>
-								</template>
-							</v-select>
-						</template>
-						<span v-else-if="topic.status !== ForumTopicStatus.OPEN && currentStatusInfo" class="status-text">
-							<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
-						</span>
-						<template v-if="$store.state.farmer && $store.state.farmer.admin">
-							<span v-if="topic.release" class="action" @click="releaseInput = topic.release; releaseDialog = true">
-								<v-icon>mdi-tag</v-icon> {{ 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}
-							</span>
-							<v-select v-if="hasPriority" v-model="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="setPriority">
-								<template #selection="{ item }">
-									<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
-								</template>
-								<template #item="{ props, item }">
-									<v-list-item v-bind="props">
-										<template #prepend>
-											<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
-										</template>
-									</v-list-item>
-								</template>
-							</v-select>
-						</template>
-						<span v-if="hasPriority && topic.priority && !($store.state.farmer && $store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
-							<v-icon :color="topic.priority === 1 ? '#e53935' : topic.priority === 2 ? '#fb8c00' : '#757575'" size="small">mdi-flag</v-icon>
-							{{ topic.priority === 1 ? $t('priority_high') : topic.priority === 2 ? $t('priority_medium') : $t('priority_low') }}
-						</span>
-						<span v-if="topic.acknowledged && !topic.private_issue && !($store.state.farmer && $store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ $t('status_acknowledged') }}</span>
-						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
-							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
-						</a>
-						<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="issue-badge private-issue" target="_blank" rel="noopener">
-							<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
-						</a>
-						<span v-if="$store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="createIssue"><v-icon :class="{ 'mdi-spin': creatingIssue }">{{ creatingIssue ? 'mdi-loading' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
-					</div>
-					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
+					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper" :ref="(el) => { if (message.id === -1) setOpEl(el as HTMLElement | null) }">
 						<div v-if="!message.writer.deleted" class="profile">
 							<rich-tooltip-farmer :id="message.writer.id" v-slot="{ props }">
 								<router-link :to="'/farmer/' + message.writer.id" class="" v-bind="props">
@@ -149,6 +84,35 @@
 								<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
 								<router-link v-else to="" class="link">#</router-link>
 							</template>
+							<!-- Barre d'actions répétée en haut du 1er post quand le topic est long (#4154). -->
+							<div v-if="message.id === -1 && longTopic" class="bottom topic-bar-top">
+								<div v-if="!message.deleted" class="votes">
+									<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)">
+										<v-icon>mdi-thumb-up</v-icon>
+										<span class="counter">{{ message.votes_up }}</span>
+									</div>
+									<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)">
+										<v-icon>mdi-thumb-down</v-icon>
+										<span class="counter">{{ message.votes_down }}</span>
+									</div>
+								</div>
+								<forum-topic-actions
+									:topic="topic"
+									:category="category"
+									:can-edit-status="!!canEditStatus"
+									:has-priority="!!hasPriority"
+									:status-items="statusItems"
+									:priority-items="priorityItems"
+									:current-status-info="currentStatusInfo"
+									:creating-issue="creatingIssue"
+									@lock="lock"
+									@pin="pin"
+									@set-status="setStatus"
+									@set-priority="setPriority"
+									@create-issue="createIssue"
+									@open-release="openReleaseDialog"
+								/>
+							</div>
 
 							<div v-if="message.deleted" class="text deleted">{{ $t('deleted_message') }}</div>
 							<textarea v-else-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original" @input="autoResize(message, $event)"></textarea>
@@ -196,60 +160,23 @@
 									</v-tooltip>
 								</div>
 
-								<span v-if="message.id == -1" class="views-counter"><v-icon>mdi-eye</v-icon> {{ $t('main.n_views', topic.views) }}</span>
-
-								<template v-if="message.id == -1 && $store.state.connected && category && category.moderator">
-									<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
-									<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
-								</template>
-								<template v-if="message.id == -1 && canEditStatus">
-									<v-select v-model="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="setStatus">
-										<template #selection="{ item }">
-											<v-icon :color="item.raw.color">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
-										</template>
-										<template #item="{ props, item }">
-											<v-list-item v-bind="props">
-												<template #prepend>
-													<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
-												</template>
-											</v-list-item>
-										</template>
-									</v-select>
-								</template>
-								<span v-else-if="message.id == -1 && topic.status !== ForumTopicStatus.OPEN && currentStatusInfo" class="status-text">
-									<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
-								</span>
-								<template v-if="message.id == -1 && $store.state.farmer && $store.state.farmer.admin">
-									<span v-if="topic.release" class="action" @click="releaseInput = topic.release; releaseDialog = true">
-										<v-icon>mdi-tag</v-icon> {{ 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}
-									</span>
-									<v-select v-if="hasPriority" v-model="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="setPriority">
-										<template #selection="{ item }">
-											<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
-										</template>
-										<template #item="{ props, item }">
-											<v-list-item v-bind="props">
-												<template #prepend>
-													<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
-												</template>
-											</v-list-item>
-										</template>
-									</v-select>
-								</template>
-								<span v-if="message.id == -1 && hasPriority && topic.priority && !($store.state.farmer && $store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
-									<v-icon :color="topic.priority === 1 ? '#e53935' : topic.priority === 2 ? '#fb8c00' : '#757575'" size="small">mdi-flag</v-icon>
-									{{ topic.priority === 1 ? $t('priority_high') : topic.priority === 2 ? $t('priority_medium') : $t('priority_low') }}
-								</span>
-								<template v-if="message.id == -1">
-									<span v-if="topic.acknowledged && !topic.private_issue && !($store.state.farmer && $store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ $t('status_acknowledged') }}</span>
-									<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
-										<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
-									</a>
-									<a v-if="topic.private_issue && $store.state.farmer && $store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="issue-badge private-issue" target="_blank" rel="noopener">
-										<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
-									</a>
-									<span v-if="$store.state.farmer && $store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="createIssue"><v-icon :class="{ 'mdi-spin': creatingIssue }">{{ creatingIssue ? 'mdi-loading' : 'mdi-source-branch' }}</v-icon> {{ $t('create_issue') }}</span>
-								</template>
+								<forum-topic-actions
+									v-if="message.id === -1"
+									:topic="topic"
+									:category="category"
+									:can-edit-status="!!canEditStatus"
+									:has-priority="!!hasPriority"
+									:status-items="statusItems"
+									:priority-items="priorityItems"
+									:current-status-info="currentStatusInfo"
+									:creating-issue="creatingIssue"
+									@lock="lock"
+									@pin="pin"
+									@set-status="setStatus"
+									@set-priority="setPriority"
+									@create-issue="createIssue"
+									@open-release="openReleaseDialog"
+								/>
 
 								<v-spacer />
 
@@ -402,6 +329,7 @@
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import ForumTopicActions from '@/component/forum/forum-topic-actions.vue'
 	import Pagination from '@/component/pagination.vue'
 	import LwTitle from '@/component/title/title.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
@@ -447,12 +375,35 @@
 	const releaseDialog = ref(false)
 	const releaseInput = ref<number | null>(null)
 
-	// Message original du topic (1er post, id -1), présent sur la page 1. Sert à répéter
-	// la barre d'actions du topic en haut quand le topic est long. #4154
-	const op = computed(() => topic.value?.messages?.find((m: ForumMessage) => m.id === -1) ?? null)
-	// Topic "long" : plusieurs pages ou beaucoup de messages -> la barre d'outils du 1er
-	// post est loin sous le pli, on la répète en haut.
-	const longTopic = computed(() => pages.value > 1 || (topic.value?.messages?.length ?? 0) >= 5)
+	// On répète la barre en haut quand le 1er POST lui-même dépasse la hauteur de l'écran :
+	// sa barre du bas est alors hors écran et il faut scroller pour l'atteindre. On mesure
+	// la hauteur réelle du post original (pas la liste entière : un topic multi-pages avec
+	// un OP court ne doit pas afficher deux barres collées), et on re-mesure via
+	// ResizeObserver pour prendre en compte le chargement asynchrone des images. #4154
+	const opEl = ref<HTMLElement | null>(null)
+	const contentTall = ref(false)
+	function setOpEl(el: HTMLElement | null) {
+		if (resizeObserver) {
+			if (opEl.value) resizeObserver.unobserve(opEl.value)
+			if (el) resizeObserver.observe(el)
+		}
+		opEl.value = el
+		measureTall()
+	}
+	function measureTall() {
+		contentTall.value = !!opEl.value && opEl.value.scrollHeight > window.innerHeight
+	}
+	const longTopic = computed(() => contentTall.value)
+	let resizeObserver: ResizeObserver | null = null
+	onMounted(() => {
+		resizeObserver = new ResizeObserver(() => measureTall())
+		if (opEl.value) resizeObserver.observe(opEl.value)
+		window.addEventListener('resize', measureTall)
+	})
+	onBeforeUnmount(() => {
+		resizeObserver?.disconnect()
+		window.removeEventListener('resize', measureTall)
+	})
 
 	const hasPriority = computed(() => category.value && (category.value.name === 'bug_reports' || category.value.name === 'suggestions_ideas'))
 	const priorityItems = computed(() => [
@@ -853,6 +804,14 @@
 	function setPriority(priority: number) {
 		if (!topic.value) { return }
 		LeekWars.post('forum/set-topic-priority', {topic_id: topic.value.id, priority})
+		topic.value.priority = priority
+	}
+
+	// Ouvre le dialogue de release (déclenché depuis forum-topic-actions). #4154
+	function openReleaseDialog() {
+		if (!topic.value) { return }
+		releaseInput.value = topic.value.release
+		releaseDialog.value = true
 	}
 
 	const isOldTopic = computed(() => {
@@ -1122,79 +1081,17 @@
 			text-align: right;
 		}
 	}
-	.status-text {
-		display: inline-flex;
-		align-items: center;
-		gap: 5px;
-		font-size: 14px;
-	}
-	// Barre d'actions du topic répétée en haut (#4154) : carte légère qui la détache
-	// visuellement de la liste des messages.
-	.topic-toolbar {
+	// Barre d'actions répétée en haut du 1er post (#4154) : marge sous la barre pour la
+	// séparer du contenu du post.
+	.topic-bar-top {
 		margin-top: 0;
 		margin-bottom: 16px;
-		padding: 10px 16px;
-		background: var(--background-secondary);
-		border: 1px solid var(--border);
-		border-radius: 8px;
-	}
-	.status-select {
-		display: inline-flex;
-		vertical-align: middle;
-		flex-grow: 0;
-		:deep(.v-field) {
-			font-size: 13px;
-			min-height: 28px;
-			padding: 4px 8px;
-		}
-		:deep(.v-field__input) {
-			padding: 0;
-			min-height: unset;
-			align-items: center;
-		}
-		:deep(.v-icon) {
-			opacity: 1 !important;
-		}
-		:deep(.v-select__selection) {
-			color: var(--text-color);
-		}
 	}
 	:global(.v-list-item__prepend .v-icon.status-icon) {
 		opacity: 1 !important;
 	}
 	:global(.v-list-item__prepend .v-icon) {
 		opacity: 1 !important;
-	}
-	.priority-select {
-		display: inline-flex;
-		vertical-align: middle;
-		flex-grow: 0;
-		:deep(.v-field) {
-			font-size: 13px;
-			min-height: 28px;
-			padding: 4px 8px;
-		}
-		:deep(.v-field__input) {
-			padding: 0;
-			min-height: unset;
-			align-items: center;
-		}
-		:deep(.v-icon) {
-			opacity: 1 !important;
-		}
-		:deep(.v-select__selection) {
-			color: var(--text-color);
-		}
-	}
-	.priority-label {
-		font-size: 13px;
-		font-weight: 500;
-		display: inline-flex;
-		align-items: center;
-		gap: 2px;
-		&.priority-1 { color: #e53935; }
-		&.priority-2 { color: #fb8c00; }
-		&.priority-3 { color: #757575; }
 	}
 	.editor {
 		margin-left: 140px;
@@ -1260,24 +1157,6 @@
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0 4px;
-	}
-	.issue-badge {
-		background: #0366d6;
-		color: white;
-		border-radius: 5px;
-		font-size: 13px;
-		font-weight: 500;
-		padding: 0 6px;
-		display: inline-flex;
-		align-items: center;
-		height: 22px;
-		img {
-			height: 16px;
-			margin-right: 4px;
-		}
-		&.private-issue {
-			background: #6f42c1;
-		}
 	}
 	.votes {
 		display: inline-flex;
@@ -1449,14 +1328,5 @@
 		.v-icon {
 			color: white;
 		}
-	}
-	.views-counter {
-		display: flex;
-		align-items: center;
-		gap: 5px;
-		color: var(--text-color-secondary);
-		font-size: 14px;
-		padding: 5px 10px;
-		i { font-size: 18px; }
 	}
 </style>
