@@ -21,21 +21,7 @@
 				</router-link>
 				<router-link :to="getURL('farmer', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'farmer'}">{{ $t('farmers') }}</div></router-link>
 				<router-link :to="getURL(teamMode, 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team' || category === 'composition'}">{{ $t('teams') }}</div></router-link>
-				<router-link :to="getURL('boss-' + bossId, bossMode, null, LeekWars.rankingInactive)">
-					<div class="tab" :class="{active: category.startsWith('boss')}">
-						{{ $t('boss') }}
-						<v-menu offset-y>
-							<template #activator="{ props }">
-								<v-icon v-bind="props" @click.prevent="">mdi-chevron-down</v-icon>
-							</template>
-							<v-list>
-								<router-link v-for="b in BOSSES" :key="b.id" :to="getURL('boss-' + b.id, bossMode, null, LeekWars.rankingInactive)">
-									<v-list-item v-ripple :title="$t('entity.' + b.name)" />
-								</router-link>
-							</v-list>
-						</v-menu>
-					</div>
-				</router-link>
+				<router-link :to="getURL('boss-' + bossId, bossMode, null, LeekWars.rankingInactive)"><div class="tab" :class="{active: category.startsWith('boss')}">{{ $t('boss') }}</div></router-link>
 
 				<v-menu v-model="countryList" offset-y>
 					<template #activator="{ props }">
@@ -336,8 +322,8 @@
 							<td>{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</td>
 							<td>{{ new Date(row.date * 1000).toLocaleDateString() }}</td>
 							<td class="fight-link-cell">
-								<router-link v-if="row.fight" :to="'/fight/' + row.fight" :title="$t('main.fight')">
-									<v-icon>mdi-sword-cross</v-icon>
+								<router-link v-if="row.fight" :to="'/fight/' + row.fight" :title="$t('main.fight')" style="vertical-align: bottom;">
+									<v-icon style="font-size: 19px; height: 19px;">mdi-sword-cross</v-icon>
 								</router-link>
 							</td>
 						</tr>
@@ -440,8 +426,9 @@
 		{ id: 'first', icon: 'mdi-flag-checkered' },
 	]
 	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, date: number, fight: number }
-	const bossId = computed(() => category.value.startsWith('boss-') ? (parseInt(category.value.substring(5), 10) || 1) : 1)
-	const bossMode = computed(() => category.value.startsWith('boss-') && order.value ? order.value : 'turns')
+	// Dernier boss / mode visités, restaurés au clic sur l'onglet Boss (#3627)
+	const bossId = computed(() => category.value.startsWith('boss-') ? (parseInt(category.value.substring(5), 10) || 1) : (parseInt(localStorage.getItem('ranking/boss-id') || '1', 10) || 1))
+	const bossMode = computed(() => category.value.startsWith('boss-') && order.value ? order.value : (localStorage.getItem('ranking/boss-mode') || 'turns'))
 
 	const url = computed(() => getURLBase(category.value, order.value))
 	const urlQuery = computed(() => getURLQuery(country.value, LeekWars.rankingInactive))
@@ -471,6 +458,10 @@
 		if (category.value !== 'fun') {
 			order.value = 'order' in route.params ? route.params.order as string : 'talent'
 			page.value = 'page' in route.params ? parseInt(route.params.page as string, 10) : 1
+		}
+		if (category.value.startsWith('boss-')) {
+			localStorage.setItem('ranking/boss-id', '' + bossId.value)
+			localStorage.setItem('ranking/boss-mode', bossMode.value)
 		}
 	}, { immediate: true })
 
