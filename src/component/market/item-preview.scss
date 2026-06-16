@@ -126,7 +126,12 @@
 	}
 	.stats .leek-preview {
 		padding: 10px;
-		display: flex;
+		// Grille 2 colonnes (2x2 pour 4 poireaux) comme l'aperçu des chapeaux,
+		// sinon le flex retombait sur une seule ligne et débordait.
+		display: grid;
+		grid-template-columns: repeat(2, auto);
 		justify-content: center;
+		align-items: end;
+		gap: 10px 14px;
 	}
 }
