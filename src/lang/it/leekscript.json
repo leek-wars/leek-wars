@@ -31,6 +31,7 @@
 	"error_1005": "Il bulbo evocato non ha IA",
 	"error_1006": "Loadout \"{0}\" non trovato. Il nome deve corrispondere esattamente a un loadout esistente del contadino (sensibile alle maiuscole).",
 	"error_1007": "setLoadout() può essere chiamata solo all'interno della funzione beforeFight().",
+	"error_1008": "La funzione {0}() non può essere chiamata in un hook beforeFight() o afterFight().",
 	"error_1009": "Loadout \"{0}\": nessuna arma dimenticata disponibile — tutte le candidate sono già equipaggiate su altri porri del contadino.",
 	"error_1010": "Loadout \"{0}\": nessuna pozione di restat disponibile, le caratteristiche non sono state modificate.",
 	"error_101": "Interruzione AI: troppe operazioni consumate.",
