@@ -123,6 +123,16 @@ const item_present = computed(() => items.value.map(item => {
 					return resource.quantity >= item.quantity ? 'present' : 'partial'
 				}
 			}
+			for (const resource of store.state.farmer!.hats) {
+				if (item.item && resource.template === item.item.id) {
+					return resource.quantity >= item.quantity ? 'present' : 'partial'
+				}
+			}
+			for (const resource of store.state.farmer!.pomps) {
+				if (item.item && resource.template === item.item.id) {
+					return resource.quantity >= item.quantity ? 'present' : 'partial'
+				}
+			}
 		}
 	}
 	return 'missing'

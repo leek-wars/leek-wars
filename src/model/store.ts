@@ -91,6 +91,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 								return resource.quantity >= item[1]
 							}
 						}
+						for (const resource of state.farmer.hats) {
+							if (resource.template === item[0]) {
+								return resource.quantity >= item[1]
+							}
+						}
+						for (const resource of state.farmer.pomps) {
+							if (resource.template === item[0]) {
+								return resource.quantity >= item[1]
+							}
+						}
 					}
 				}
 				return false
