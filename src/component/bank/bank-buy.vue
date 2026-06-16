@@ -104,6 +104,15 @@ function loadPayPal() {
 				}).catch((err: unknown) => {
 					router.replace('/bank/validate/failed/' + (err as { error?: string }).error)
 				})
+			},
+			// Abandon a l'etape d'approbation PayPal (begin 200 sans execute qui suit) : on trace
+			// pour distinguer une annulation volontaire (onCancel) d'un plantage du SDK (onError).
+			onCancel: (data) => {
+				LeekWars.post('bank/track-payment-abort', { order_id: (data as { orderID?: string }).orderID || '', reason: 'cancel' })
+			},
+			onError: (err) => {
+				LeekWars.post('bank/track-payment-abort', { order_id: '', reason: 'error' })
+				console.error('PayPal button error', err)
 			}
 		}).render('#paypal-button-container')
 	}).catch((err) => {
