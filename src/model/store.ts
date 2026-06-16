@@ -713,6 +713,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 						level: hat_template.level,
 						hat_template: hat_template.id,
 						quantity,
+						time: data.time,
 					})
 				}
 			} else if (data.type === ItemType.POTION) {
