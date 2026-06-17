@@ -47,6 +47,8 @@
 
 				<invite-dialog v-if="inviteDialogOpen" v-model="inviteDialogOpen" />
 
+				<tutorial-nudge-dialog v-if="tutorialNudgeOpen" v-model="tutorialNudgeOpen" />
+
 				<godfather-accept-dialog v-if="godfatherAcceptOpen" v-model="godfatherAcceptOpen" :login="godfatherAcceptLogin" />
 
 				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
@@ -219,6 +221,7 @@
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
 	const InviteDialog = defineAsyncComponent(() => import('@/component/invite-dialog/invite-dialog.vue'))
+	const TutorialNudgeDialog = defineAsyncComponent(() => import('@/component/tutorial-nudge-dialog/tutorial-nudge-dialog.vue'))
 	const GodfatherAcceptDialog = defineAsyncComponent(() => import('@/component/godfather-accept-dialog/godfather-accept-dialog.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 	const VisitorBanner = defineAsyncComponent(() => import('@/component/visitor-banner/visitor-banner.vue'))
@@ -368,6 +371,34 @@
 			const f = store.state.farmer!
 			f.invite_dialog_seen_at = Math.floor(Date.now() / 1000)
 			LeekWars.post('farmer/dismiss-invite-dialog')
+		}
+	}, { immediate: true })
+
+	// Nudge tutoriel : un joueur qui joue depuis un moment (compte > 1h, au moins
+	// quelques combats) mais n'a jamais ouvert le tutoriel LeekScript est incité,
+	// une seule fois, à le commencer. Cible la friction observée sur les cohortes
+	// scolaires (elles combattent mais ne codent pas, tutorial_progress = 0). Flag
+	// en localStorage par farmer : simple nudge, pas besoin d'un champ en base. On
+	// ne concurrence pas les dialogs de vérification / parrainage. Les clics sont
+	// mesurés via LeekWars.track (tutorial-nudge-shown/start/later).
+	const TUTORIAL_NUDGE_MIN_AGE_MS = 60 * 60 * 1000
+	const TUTORIAL_NUDGE_MIN_FIGHTS = 5
+	const tutorialNudgeOpen = ref(false)
+	watch(() => {
+		const f = store.state.farmer
+		if (!f) return false
+		if ((f.tutorial_progress ?? 0) > 0) return false
+		if ((f.fights ?? 0) < TUTORIAL_NUDGE_MIN_FIGHTS) return false
+		if (!f.register_date || Date.now() - f.register_date * 1000 < TUTORIAL_NUDGE_MIN_AGE_MS) return false
+		if (localStorage.getItem('tutorial-nudge-seen-' + f.id) === '1') return false
+		if (!f.verified && (showVerifyPopup.value || showCheckEmailReminder.value)) return false
+		if (inviteDialogOpen.value) return false
+		return true
+	}, (shouldShow) => {
+		if (shouldShow && !tutorialNudgeOpen.value) {
+			tutorialNudgeOpen.value = true
+			localStorage.setItem('tutorial-nudge-seen-' + store.state.farmer!.id, '1')
+			LeekWars.track('tutorial-nudge-shown')
 		}
 	}, { immediate: true })
 

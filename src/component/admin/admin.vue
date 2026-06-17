@@ -218,6 +218,7 @@
 					<v-btn prepend-icon="mdi-account-plus" @click="testVerifyPopup = true">Verify popup</v-btn>
 					<v-btn prepend-icon="mdi-email-fast" @click="testCheckEmailReminder = true">Check email reminder</v-btn>
 					<v-btn prepend-icon="mdi-party-popper" @click="testActivationWelcome = true">Activation welcome</v-btn>
+					<v-btn prepend-icon="mdi-code-tags" @click="testTutorialNudge = true">Tutorial nudge</v-btn>
 				</div>
 			</template>
 		</panel>
@@ -226,6 +227,7 @@
 		<verify-popup v-if="testVerifyPopup" v-model="testVerifyPopup" />
 		<check-email-reminder v-if="testCheckEmailReminder" v-model="testCheckEmailReminder" :test="true" />
 		<activation-welcome v-if="testActivationWelcome" v-model="testActivationWelcome" />
+		<tutorial-nudge-dialog v-if="testTutorialNudge" v-model="testTutorialNudge" />
 	</div>
 </template>
 
@@ -245,6 +247,7 @@
 	const VerifyPopup = defineAsyncComponent(() => import('@/component/verify-popup/verify-popup.vue'))
 	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
+	const TutorialNudgeDialog = defineAsyncComponent(() => import('@/component/tutorial-nudge-dialog/tutorial-nudge-dialog.vue'))
 
 	const router = useRouter()
 
@@ -258,6 +261,7 @@
 	const testVerifyPopup = ref(false)
 	const testCheckEmailReminder = ref(false)
 	const testActivationWelcome = ref(false)
+	const testTutorialNudge = ref(false)
 
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle('Admin')
