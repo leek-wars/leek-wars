@@ -43,7 +43,7 @@
 
 			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" :style="{ 'width': (editor1Width * 80) + '%' }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentAI2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @close="close" @close-all="closeAll" @open="open($event, 2)" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" :all-tabs="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @select="selectTab2" @close-tab="closeTab2" @close-all="closeAllTabs2" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -324,6 +324,7 @@
 	// Clés localStorage per-account (cf. issue #2678).
 	const lastCodeKey = (side: number | string) => 'editor/last-code-' + side + '/' + farmerId()
 	const tabsKey = () => 'editor/tabs1/' + farmerId()
+	const tabs2Key = () => 'editor/tabs2/' + farmerId()
 	const currentTabKey = () => 'editor/current-tab/' + farmerId()
 	const historyKey = () => 'editor/history/' + farmerId()
 
@@ -399,6 +400,8 @@
 	const tabs1 = ref<EditorTab[]>([])
 	let tabs1Loaded = false
 	const currentTab = ref<EditorTab | null>(null)
+	const currentTab2 = computed<FileTab | null>(() => currentAI2.value ? { type: 'file', id: currentAI2.value } : null)
+	const tabs2 = ref<EditorTab[]>([])
 	const diffMounted = ref(true)
 	const diffReady = ref(0)
 	const editor1Width = ref(0.5)
@@ -651,6 +654,11 @@
 							saveTabs()
 						}
 						currentTab.value = tabs1.value.find(tt => tt.type === 'file' && tt.id === key) || fileTab
+					} else if (currentSide.value === 2) {
+						if (!tabs2.value.find(tt => tt.type === 'file' && tt.id === key)) {
+							tabs2.value.push({ type: 'file', id: key })
+							saveTabs2()
+						}
 					}
 					// Ajout dans l'historique
 					const i = history.value.indexOf(ai)
@@ -907,6 +915,35 @@
 		saveTabs()
 	}
 
+	function selectTab2(tab: EditorTab) {
+		if (tab.type !== 'file') return
+		const ai = fileSystem.ais[tab.id]
+		if (!ai) return
+		open(ai.path, 2)
+	}
+
+	function closeTab2(tab: EditorTab) {
+		const i = tabs2.value.indexOf(tab)
+		if (i === -1) return
+		tabs2.value.splice(i, 1)
+		if (tabs2.value.length === 0) {
+			setSplitted(false)
+			return
+		}
+		// Si c'est le fichier affiché qu'on ferme, en sélectionner un autre
+		if (tab.type === 'file' && currentAI2.value === tab.id) {
+			const newIndex = Math.min(i, tabs2.value.length - 1)
+			selectTab2(tabs2.value[newIndex])
+		}
+		saveTabs2()
+	}
+
+	function closeAllTabs2(keepTab: EditorTab) {
+		tabs2.value = [keepTab]
+		selectTab2(keepTab)
+		saveTabs2()
+	}
+
 	function openDiffFile() {
 		if (!currentTab.value || currentTab.value.type === 'file') return
 		openAIFromDiffTab(currentTab.value as DiffTab)
@@ -940,6 +977,11 @@
 		}
 	}
 
+	function saveTabs2() {
+		const serialized = tabs2.value.filter(t => t.type === 'file').map(t => ({ type: 'file', id: (t as FileTab).id }))
+		setLocalStorageSafe(tabs2Key(), JSON.stringify(serialized))
+	}
+
 	function restoreTabs() {
 		if (tabs1Loaded) return
 		tabs1Loaded = true
@@ -955,6 +997,17 @@
 					const tab: DiffTab = { type: (tt.type as DiffTab['type']) || 'diff', id: tt.id || '', folder: tt.folder || '', file: tt.file || '', staged: tt.staged, hash: tt.hash, original: '', modified: '', ready: false }
 					tabs1.value.push(tab)
 				}
+			}
+			// Côté droit (fichiers uniquement)
+			const saved2 = JSON.parse(localStorage.getItem(tabs2Key()) || '[]') as SavedTabData[]
+			for (const tt of saved2) {
+				if (tt.type === 'file' && tt.id && tt.id in fileSystem.ais) {
+					tabs2.value.push({ type: 'file', id: tt.id })
+				}
+			}
+			// S'assurer que le fichier affiché à droite a son onglet
+			if (currentAI2.value && currentAI2.value in fileSystem.ais && !tabs2.value.find(t => t.type === 'file' && t.id === currentAI2.value)) {
+				tabs2.value.push({ type: 'file', id: currentAI2.value })
 			}
 		} catch {
 			// Données corrompues
@@ -1223,14 +1276,6 @@
 		router.replace('/editor')
 	}
 
-	function close(id: string) {
-		history.value = history.value.filter(a => a.path !== id)
-	}
-
-	function closeAll() {
-		history.value = []
-	}
-
 	function onVersionUpdate(version: number) {
 		if (!currentAI.value) return
 		currentAI.value.version = version
@@ -1288,12 +1333,10 @@
 			editor2Width.value = 0.5
 			const ai = tab ? fileSystem.ais[tab.id] : null
 			if (ai) {
-				fileSystem.load(ai).then(() => {
-					currentAI2.value = ai.path
-				})
-				localStorage.setItem(lastCodeKey(2), ai.path)
+				open(ai.path, 2) // open() gère load + setSide(2) + persistance
+			} else {
+				setSide(2)
 			}
-			setSide(2)
 		} else {
 			editor1Width.value = editorTotalWidth
 			setSide(1)
@@ -1312,6 +1355,11 @@
 			}
 			currentTab.value = tabs1.value.find(t => t.type === 'file' && t.id === ai) || fileTab
 			saveTabs()
+		} else {
+			if (!tabs2.value.find(t => t.type === 'file' && t.id === ai)) {
+				tabs2.value.push(fileTab)
+			}
+			saveTabs2()
 		}
 		setSide(side)
 		const aiObj = fileSystem.ais[ai]
