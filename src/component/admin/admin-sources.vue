@@ -38,19 +38,6 @@
 									</router-link>
 								</rich-tooltip-farmer>
 
-								<source-detail :id="farmer.id" v-slot="{ props }">
-									<div class="score" v-bind="props">
-										<template v-if="farmer.score">
-											<div class="bar a"><div class="fill" :style="{ height: farmer.score.a + '%' }"></div></div>
-											<div class="bar b"><div class="fill" :style="{ height: farmer.score.b + '%' }"></div></div>
-										</template>
-										<template v-if="farmer.score && (farmer.score.c != null || farmer.score.d != null)">
-											<div class="bar c"><div class="fill" :style="{ height: (farmer.score.c || 0) + '%' }"></div></div>
-											<div class="bar d"><div class="fill" :style="{ height: (farmer.score.d || 0) + '%' }"></div></div>
-										</template>
-									</div>
-								</source-detail>
-
 								<div class="register-type" :title="regLabel(farmer.reg_type)">
 									<v-icon v-if="farmer.reg_type" :class="{pending: isPendingEmail(farmer.reg_type, farmer.verified)}">{{ regIcon(farmer.reg_type, farmer.verified) }}</v-icon>
 									<v-icon v-if="farmer.validation" :class="{pending: isPendingEmail(farmer.validation, farmer.verified)}" :title="validationLabel(farmer.validation)">{{ regIcon(farmer.validation, farmer.verified) }}</v-icon>
@@ -107,6 +94,18 @@
 									<v-icon>mdi-cog-outline</v-icon> {{ farmer.test_fights }}
 									<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
 								</div>
+								<source-detail :id="farmer.id" v-slot="{ props }">
+									<div class="score" v-bind="props">
+										<template v-if="farmer.score">
+											<div class="bar a"><div class="fill" :style="{ height: farmer.score.a + '%' }"></div></div>
+											<div class="bar b"><div class="fill" :style="{ height: farmer.score.b + '%' }"></div></div>
+										</template>
+										<template v-if="farmer.score && (farmer.score.c != null || farmer.score.d != null)">
+											<div class="bar c"><div class="fill" :style="{ height: (farmer.score.c || 0) + '%' }"></div></div>
+											<div class="bar d"><div class="fill" :style="{ height: (farmer.score.d || 0) + '%' }"></div></div>
+										</template>
+									</div>
+								</source-detail>
 								<component :is="LeekWars.safeUrl(farmer.referer) ? 'a' : 'span'" class="source" :href="LeekWars.safeUrl(farmer.referer)" target="_blank" :title="farmer.referer">
 									{{ format(farmer.referer || '∅') }}
 								</component>
@@ -600,7 +599,6 @@
 	grid-template-columns:
 		/* date   */ 70px
 		/* name   */ minmax(120px, 1.4fr)
-		/* score  */ 64px
 		/* reg    */ 46px
 		/* email  */ minmax(120px, 1.4fr)
 		/* tuto   */ 70px
@@ -610,6 +608,7 @@
 		/* ai     */ 34px
 		/* ip     */ minmax(120px, 1.1fr)
 		/* stats  */ minmax(100px, 1fr)
+		/* score  */ 64px
 		/* source */ minmax(80px, 1.3fr);
 	column-gap: 6px;
 	padding: 4px 6px;
@@ -812,7 +811,7 @@ body.dark .farmer.connected {
 	}
 }
 #app.app .farmer {
-	grid-template-columns: 60px minmax(100px, 1.3fr) 64px 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) minmax(70px, 1.1fr);
+	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) 64px minmax(70px, 1.1fr);
 	column-gap: 4px;
 	font-size: 12px;
 }
