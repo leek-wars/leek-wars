@@ -572,6 +572,8 @@ async function formatLeekScript(code:string): Promise<string> {
 		formatted = formatted.replace(/\\ =/g, ' \\=')
 		// js-beautify doesn't recognize the .. operator and will split it as: \ =
 		formatted = formatted.replace(/\. \./g, '..')
+		// js-beautify doesn't recognize the -> arrow operator and will split it as: - >
+		formatted = formatted.replace(/- >/g, '->')
 		formattedCode = formatted;
 	})
 	return formattedCode;
