@@ -3,7 +3,7 @@
 // - Same-origin GET assets (non-/api/): Stale-while-revalidate with throttled background refresh
 // - Push notifications + click handling
 
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const NAV_CACHE = 'nav-' + CACHE_VERSION;
 const ASSET_CACHE = 'assets-' + CACHE_VERSION;
 const ALL_CACHES = [NAV_CACHE, ASSET_CACHE];
@@ -40,6 +40,12 @@ self.addEventListener('fetch', event => {
 	if (url.origin !== self.location.origin) return;
 	// API requests bypass: custom headers get stripped on cache replay, error responses get cached.
 	if (url.pathname.startsWith('/api/')) return;
+	// Images bypass: they ship immutable long-lived Cache-Control, so the browser's
+	// native HTTP cache serves them. Routing every <img> through Cache Storage SWR
+	// is redundant and counter-productive on Firefox, where Cache Storage reads/writes
+	// are slow and image-dense pages (trophées d'éleveur, marché) issue hundreds of
+	// requests — the cache.match/cache.put overhead piles up and slows the page.
+	if (req.destination === 'image') return;
 	// Devtools "only-if-cached" oddity for non-same-origin (defensive).
 	if (req.cache === 'only-if-cached' && req.mode !== 'same-origin') return;
 
