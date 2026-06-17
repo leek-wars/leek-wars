@@ -94,14 +94,14 @@
 									<v-icon>mdi-cog-outline</v-icon> {{ farmer.test_fights }}
 									<v-icon>mdi-trophy-outline</v-icon> {{ farmer.trophies }}
 								</div>
-								<source-detail :id="farmer.id" v-slot="{ props }">
-									<div class="score" v-bind="props">
-											<div class="bar a"><div class="fill" :style="{ height: (farmer.score && farmer.score.a || 0) + '%' }"></div></div>
-											<div class="bar b"><div class="fill" :style="{ height: (farmer.score && farmer.score.b || 0) + '%' }"></div></div>
-											<div class="bar c"><div class="fill" :style="{ height: (farmer.score && farmer.score.c || 0) + '%' }"></div></div>
-											<div class="bar d"><div class="fill" :style="{ height: (farmer.score && farmer.score.d || 0) + '%' }"></div></div>
-									</div>
-								</source-detail>
+								<div class="score">
+									<source-detail :id="farmer.id">
+										<div class="bar a" :title="barTitle('a', farmer.score && farmer.score.a)"><div class="fill" :style="{ height: (farmer.score && farmer.score.a || 0) + '%' }"></div></div>
+										<div class="bar b" :title="barTitle('b', farmer.score && farmer.score.b)"><div class="fill" :style="{ height: (farmer.score && farmer.score.b || 0) + '%' }"></div></div>
+									</source-detail>
+									<div class="bar c" :title="barTitle('c', farmer.score && farmer.score.c)"><div class="fill" :style="{ height: (farmer.score && farmer.score.c || 0) + '%' }"></div></div>
+									<div class="bar d" :title="barTitle('d', farmer.score && farmer.score.d)"><div class="fill" :style="{ height: (farmer.score && farmer.score.d || 0) + '%' }"></div></div>
+								</div>
 								<component :is="LeekWars.safeUrl(farmer.referer) ? 'a' : 'span'" class="source" :href="LeekWars.safeUrl(farmer.referer)" target="_blank" :title="farmer.referer">
 									{{ format(farmer.referer || '∅') }}
 								</component>
@@ -282,6 +282,7 @@
 	const data = ref<Record<string, unknown> | null>(null)
 	const sources = ref<{ name: string, count: number, fights: number, test_fights: number, trophies: number }[] | null>(null)
 	const last = ref<SourceFarmer[] | null>(null)
+	const scoreLegend = ref<Record<string, string>>({})
 	const loading = ref(false)
 	let timer: ReturnType<typeof setInterval> | null = null
 	const last_farmers_by_day = ref<Record<string, SourceFarmer[]>>({})
@@ -328,6 +329,7 @@
 			data.value = d
 			sources.value = d.all
 			last.value = d.last
+			scoreLegend.value = (d.score_legend as Record<string, string>) || {}
 
 			last_farmers_by_day.value = {}
 			for (const farmer of last.value || []) {
@@ -429,6 +431,13 @@
 	function formatPercent(v: number | null): string {
 		if (v == null) return '—'
 		return (v * 100).toFixed(1) + '%'
+	}
+
+	// Libellé d'une barre de score : texte fourni par le serveur (le client est public).
+	function barTitle(key: string, value: number | null | undefined): string {
+		const label = scoreLegend.value[key] || ''
+		if (value === null || value === undefined) return label
+		return label + ' : ' + Math.round(value) + '%'
 	}
 
 	function format(name: string) {
@@ -725,6 +734,7 @@
 		}
 	}
 	.score {
+		display: flex;
 		flex-direction: row;
 		align-items: flex-end;
 		justify-content: center;
@@ -732,6 +742,9 @@
 		width: 100%;
 		height: 18px;
 		cursor: help;
+		> span {
+			display: contents;
+		}
 		.bar {
 			width: 12px;
 			height: 100%;
