@@ -1,5 +1,5 @@
 <template lang="html">
-	<footer class="footer" :class="{help: $route.path === '/help'}">
+	<footer v-if="LeekWars.footer" class="footer" :class="{help: $route.path === '/help'}">
 		<div class="column">
 			<h4 class="version">Leek Wars {{ LeekWars.smart_version }}</h4>
 			<a class="item" target="_blank" rel="noopener" href="https://leek-wars.myspreadshop.fr/">

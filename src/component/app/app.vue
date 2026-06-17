@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, xp: LeekWars.xpTheme, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="mousemove">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, xp: LeekWars.xpTheme, dark: LeekWars.darkMode, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA }" data-app="true" @mousemove="mousemove">
 				<a class="skip-link" href="#main-content">{{ $t('main.skip_to_content') }}</a>
 
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
@@ -15,16 +15,16 @@
 				<lw-bar v-if="LeekWars.mobile" />
 
 				<div class="app-center">
-					<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
+					<div ref="appWrapperEl" class="app-wrapper">
 						<lw-header v-if="!LeekWars.mobile || !$store.state.connected" />
 						<main id="main-content" class="page-wrapper">
 							<router-view :key="LeekWars.routerViewKey" />
 						</main>
-						<lw-footer v-if="LeekWars.footer" />
+						<lw-footer />
 					</div>
 				</div>
 
-				<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large, hidden: LeekWars.didactitial}">
+				<div v-if="!LeekWars.mobile" ref="bigLeeksEl" class="big-leeks">
 					<div class="wrapper">
 						<img class="big-leek-1" width="252" height="372" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
 						<img class="big-leek-2" width="398" height="508" fetchpriority="high" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
@@ -440,6 +440,34 @@
 			document.body.classList.remove('xp')
 	}, { immediate: true })
 
+	// Flags de layout (large/flex/box/footer/lightBar) appliqués en IMPÉRATIF, hors du
+	// rendu de app.vue. Crucial : si app.vue lit ces flags dans son template, toute
+	// nav (resetLayout en beforeEach, puis onMounted de la page) re-render app.vue et
+	// re-patche le <router-view> en plein swap → racine destination el=null → crash
+	// "parentNode of null" (#4163, cluster #3957-#3983). En togglant des classes sur des
+	// éléments stables (jamais re-patchés par Vue, classe statique), le router-view n'est
+	// jamais touché. Même principe éprouvé que darkMode/xpTheme sur body.
+	const appWrapperEl = useTemplateRef<HTMLElement>('appWrapperEl')
+	const bigLeeksEl = useTemplateRef<HTMLElement>('bigLeeksEl')
+	function applyLayout() {
+		const w = appWrapperEl.value
+		if (w) {
+			w.classList.toggle('large', LeekWars.large || LeekWars.flex)
+			w.classList.toggle('flex', LeekWars.flex)
+			w.classList.toggle('box', LeekWars.box)
+		}
+		const b = bigLeeksEl.value
+		if (b) {
+			b.classList.toggle('flex', LeekWars.flex || LeekWars.large)
+			b.classList.toggle('hidden', LeekWars.didactitial)
+		}
+		document.body.classList.toggle('lightbar', LeekWars.lightBar)
+	}
+	// mobile est inclus : big-leeks est en v-if="!mobile", il faut ré-appliquer ses
+	// classes quand il (re)monte. flush:'post' garantit que le DOM est à jour.
+	watch(() => [LeekWars.large, LeekWars.flex, LeekWars.box, LeekWars.didactitial, LeekWars.lightBar, LeekWars.mobile], applyLayout, { flush: 'post' })
+	onMounted(applyLayout)
+
 	emitter.on('connected', () => {
 		if (!store.state.farmer!.didactitiel_seen) {
 			LeekWars.show_didactitiel()
@@ -665,7 +693,7 @@
 	#app.app {
 		overflow: hidden;
 	}
-	#app.app.connected:not(.lightbar) {
+	body:not(.lightbar) #app.app.connected {
 		padding-top: 56px;
 	}
 	#app.app .page {
