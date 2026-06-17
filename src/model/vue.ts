@@ -701,6 +701,10 @@ const dochash = {
 
 app.directive('dochash', dochash)
 
+// ⚠️ N'utiliser v-emojis QUE sur un élément en v-html (contenu opaque pour Vue).
+// Sur des enfants trackés par Vue (interpolation {{ }} ou v-text), le replaceChild
+// ci-dessous désynchronise vnode.el → crash "parentNode of null" (#4163).
+// Pour du texte brut tracké, utiliser formatEmojisText(...) en v-html à la place.
 app.directive('emojis', (el: HTMLElement) => {
 	el.childNodes.forEach((child: ChildNode) => {
 		if (child.nodeType === Node.TEXT_NODE) {

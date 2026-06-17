@@ -74,4 +74,14 @@ function formatEmojis(rawData: unknown): string {
 	}
 }
 
-export { Emojis, formatEmojis }
+// Variante sûre pour les liaisons v-html : échappe le texte (protect) puis
+// applique les emojis, exactement comme la directive v-emojis le faisait sur un
+// noeud texte. À utiliser quand le contenu est du texte brut tracké par Vue
+// (interpolation, v-text) : binder le résultat en v-html évite que la directive
+// remplace un noeud que Vue suit encore (desync vnode.el -> crash parentNode, #4163).
+function formatEmojisText(rawData: unknown): string {
+	if (rawData === null || rawData === undefined) { return '' }
+	return formatEmojis(LeekWars.protect(String(rawData)))
+}
+
+export { Emojis, formatEmojis, formatEmojisText }

@@ -14,7 +14,7 @@
 							<v-icon class="drag-handle">mdi-drag-vertical</v-icon>
 							<div class="loadout-icon">
 								<img v-if="isCharac(loadout.icon)" :src="'/image/charac/' + loadout.icon + '.png'" width="24" height="24">
-								<span v-else-if="loadout.icon" :key="loadout.icon" v-emojis class="emoji-icon">{{ loadout.icon }}</span>
+								<span v-else-if="loadout.icon" :key="loadout.icon" class="emoji-icon" v-html="formatEmojisText(loadout.icon)"></span>
 								<v-icon v-else size="24">mdi-package-variant-closed</v-icon>
 							</div>
 							<div class="loadout-name">
@@ -91,7 +91,7 @@
 				<div class="row-name-icon">
 					<emoji-picker class="icon-picker" @pick="pickEmoji">
 						<img v-if="isCharac(editing.icon)" :src="'/image/charac/' + editing.icon + '.png'" width="32" height="32">
-						<span v-else-if="editing.icon" :key="editing.icon" v-emojis class="emoji-display">{{ editing.icon }}</span>
+						<span v-else-if="editing.icon" :key="editing.icon" class="emoji-display" v-html="formatEmojisText(editing.icon)"></span>
 						<v-icon v-else size="32">mdi-emoticon-outline</v-icon>
 					</emoji-picker>
 					<input v-model="editing.name" class="name-input" :placeholder="$t('main.loadout_name_placeholder')" maxlength="60" type="text">
@@ -294,6 +294,7 @@
 	import { Loadout, LoadoutComponent, LoadoutStats } from '@/model/loadout'
 	import { capitalToStatBonus, statBonusToCapital, baseStatFor, totalCapitalForLevel } from '@/model/capital'
 	import { store } from '@/model/store'
+	import { formatEmojisText } from '@/model/emojis'
 	import EmojiPicker from '@/component/chat/emoji-picker.vue'
 	import Item from '@/component/item.vue'
 	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
@@ -559,6 +560,7 @@
 		},
 		methods: {
 			isCharac(icon: string) { return CHARACTERISTICS.includes(icon) },
+			formatEmojisText,
 			skippedItemTKey(s: SkippedItem): string {
 				if (!s) return ''
 				const item = LeekWars.items[s.template]

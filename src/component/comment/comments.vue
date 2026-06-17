@@ -14,7 +14,7 @@
 							<router-link :to="'/farmer/' + comment.farmer.id"><b>{{ comment.farmer.name }}</b></router-link>
 						</rich-tooltip-farmer>
 					</div>
-					<div v-emojis class="text" v-text="comment.comment"></div>
+					<div class="text" v-html="commentsHtml[c]"></div>
 					<div class="date">{{ $filters.date(comment.date) }}</div>
 				</div>
 			</div>
@@ -30,13 +30,18 @@ import type { Farmer } from '@/model/farmer'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-import '@/model/emojis'
+import { formatEmojisText } from '@/model/emojis'
+import { computed } from 'vue'
 
 defineOptions({ name: 'Comments', components: { 'chat-input': ChatInput } })
 
-defineProps<{
+const props = defineProps<{
 	comments: Comment[] | null
 }>()
+
+// Précalculé : éviter de relancer formatEmojisText (35+ regex) pour chaque
+// commentaire à chaque rendu du parent. Ne se recalcule que si la liste change.
+const commentsHtml = computed(() => (props.comments ?? []).map(c => formatEmojisText(c.comment)))
 
 const emit = defineEmits<{
 	comment: [comment: Comment]
