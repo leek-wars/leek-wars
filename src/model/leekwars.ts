@@ -370,6 +370,10 @@ const LeekWars = reactive({
 	delete: del,
 	cgu_version: 1,
 	mobile: false,
+	// Firefox gère mal le loading="lazy" sur les pages à forte densité d'images
+	// (trophées, marché) : les images ne se chargent pas de façon fiable. On
+	// force donc le chargement eager sur Firefox uniquement (cf. plaintes joueurs).
+	firefox: typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent),
 	socialCollapsed: false,
 	menuCollapsed: false,
 	menuExpanded: false,

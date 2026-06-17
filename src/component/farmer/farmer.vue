@@ -302,12 +302,12 @@
 				<div class="trophies" @mouseleave="hideTrophyTooltip">
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
-						<div v-show="trophiesMode == 'list'" class="list trophies-container">
+						<div v-if="trophiesMode == 'list'" class="list trophies-container">
 							<router-link v-for="(trophy, t) in trophies_list" :key="t" :to="'/trophy/' + trophy.code" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
 								<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" loading="lazy">
 							</router-link>
 						</div>
-						<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
+						<div v-else class="grid trophies-container">
 							<template v-for="(trophy, t) in trophies_grid" :key="t">
 								<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
 									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" loading="lazy">

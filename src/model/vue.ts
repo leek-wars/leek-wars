@@ -746,6 +746,32 @@ const vm = app.mount('#app2') as ComponentPublicInstance & {
 }
 setVueMain(vm)
 
+// Firefox : le chargement natif loading="lazy" est peu fiable sur les pages à
+// forte densité d'images (trophées d'éleveur, marché). Les images restent non
+// chargées, même dans le viewport (plaintes joueurs 06/2026). On force eager en
+// passant l'attribut lazy à eager dès qu'une image entre dans le DOM (couvre les
+// trophées rendus en asynchrone). Firefox uniquement : Chrome gère bien le lazy
+// natif et conserve le gain de bande passante.
+if (LeekWars.firefox) {
+	const eagerify = (root: ParentNode) => {
+		(root as Element).querySelectorAll?.('img[loading="lazy"]').forEach((img) => img.setAttribute('loading', 'eager'))
+	}
+	eagerify(document)
+	new MutationObserver((mutations) => {
+		for (const mutation of mutations) {
+			for (const node of mutation.addedNodes) {
+				if (node.nodeType !== Node.ELEMENT_NODE) continue
+				const el = node as Element
+				if (el.tagName === 'IMG') {
+					if (el.getAttribute('loading') === 'lazy') el.setAttribute('loading', 'eager')
+				} else {
+					eagerify(el)
+				}
+			}
+		}
+	}).observe(document.body, { childList: true, subtree: true })
+}
+
 // Restore saved locale in dev/local mode
 if (LeekWars.DEV || LeekWars.LOCAL) {
 	const savedLocale = localStorage.getItem('locale')
