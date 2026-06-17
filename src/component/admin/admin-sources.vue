@@ -742,7 +742,7 @@
 		width: 100%;
 		height: 18px;
 		cursor: help;
-		> span {
+		> :deep(span) {
 			display: contents;
 		}
 		.bar {
