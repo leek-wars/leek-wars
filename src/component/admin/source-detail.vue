@@ -1,5 +1,5 @@
 <template>
-	<v-menu v-model="value" :close-on-content-click="false" :open-on-hover="true" :open-delay="300" :close-delay="1" :nudge-width="260" offset-y bottom @update:model-value="open($event)">
+	<v-menu v-model="value" :close-on-content-click="false" :open-on-hover="true" :open-delay="300" :close-delay="1" location="bottom" @update:model-value="open($event)">
 		<template #activator="{ props: activatorProps }">
 			<span v-bind="activatorProps">
 				<slot :props="activatorProps"></slot>

@@ -97,8 +97,10 @@
 								<div class="score">
 									<source-detail :id="farmer.id">
 										<div class="bar a" :title="barTitle('a', farmer.score && farmer.score.a)"><div class="fill" :style="{ height: (farmer.score && farmer.score.a || 0) + '%' }"></div></div>
-										<div class="bar b" :title="barTitle('b', farmer.score && farmer.score.b)"><div class="fill" :style="{ height: (farmer.score && farmer.score.b || 0) + '%' }"></div></div>
 									</source-detail>
+									<source-friction :id="farmer.id">
+										<div class="bar b" :title="barTitle('b', farmer.score && farmer.score.b)"><div class="fill" :style="{ height: (farmer.score && farmer.score.b || 0) + '%' }"></div></div>
+									</source-friction>
 									<div class="bar c" :title="barTitle('c', farmer.score && farmer.score.c)"><div class="fill" :style="{ height: (farmer.score && farmer.score.c || 0) + '%' }"></div></div>
 									<div class="bar d" :title="barTitle('d', farmer.score && farmer.score.d)"><div class="fill" :style="{ height: (farmer.score && farmer.score.d || 0) + '%' }"></div></div>
 								</div>
@@ -210,6 +212,7 @@
 	import { useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import SourceDetail from '@/component/admin/source-detail.vue'
+	import SourceFriction from '@/component/admin/source-friction.vue'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import { Line, Bar } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
@@ -742,8 +745,13 @@
 		width: 100%;
 		height: 18px;
 		cursor: help;
+		// Le <span> activateur des menus (source-detail / source-friction) doit garder
+		// une vraie boîte alignée sur sa barre : avec `display: contents` il n'a aucune
+		// géométrie et l'overlay Vuetify se positionne en (0,0), coin haut-gauche.
 		> :deep(span) {
-			display: contents;
+			display: flex;
+			align-items: flex-end;
+			height: 100%;
 		}
 		.bar {
 			width: 12px;
