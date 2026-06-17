@@ -156,8 +156,11 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/tournaments', component: AdminTournaments, beforeEnter: connected },
 	{ path: '/admin/funnels', component: AdminFunnels, beforeEnter: connected },
 	{ path: '/admin/funnels/:funnel', component: AdminFunnels, beforeEnter: connected },
-	{ path: '/admin/dashboards', component: AdminDashboards, beforeEnter: connected },
-	{ path: '/admin/dashboards/:id', component: AdminDashboards, beforeEnter: connected },
+	// Un seul record (param :id optionnel) : avec deux records distincts, le replace
+	// vers /:id après chargement comparait un loader lazy non encore résolu (record :id)
+	// à un composant déjà résolu (record de base, muté par vue-router) → toComponent !==
+	// fromComponent → resetLayout() intempestif, sans remount donc sans re-set du large.
+	{ path: '/admin/dashboards/:id?', component: AdminDashboards, beforeEnter: connected },
 	{ path: '/admin/matchmaking', component: AdminMatchmaking, beforeEnter: connected },
 	{ path: '/admin/game-animations', component: AdminGameAnimations, beforeEnter: connected },
 	{ path: '/about', component: About },
