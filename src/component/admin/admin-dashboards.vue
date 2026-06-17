@@ -96,7 +96,7 @@
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { reactive, ref, watch } from 'vue'
+	import { onMounted, reactive, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -126,7 +126,11 @@
 	const data = reactive<{ [key: string]: Dashboard }>({})
 
 	LeekWars.setTitle("Admin Dashboards")
-	LeekWars.large = true
+	// Le layout `large` doit être posé dans onMounted (après le swap de <router-view>),
+	// sinon le resetLayout() du beforeEach le clobber par intermittence (cf. router.ts).
+	onMounted(() => {
+		LeekWars.large = true
+	})
 	checkAdmin()
 	LeekWars.get('dashboard/get-all').then((res: Dashboard[]) => {
 		dashboards.value = res
