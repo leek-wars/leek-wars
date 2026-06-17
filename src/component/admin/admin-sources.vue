@@ -96,14 +96,10 @@
 								</div>
 								<source-detail :id="farmer.id" v-slot="{ props }">
 									<div class="score" v-bind="props">
-										<template v-if="farmer.score">
-											<div class="bar a"><div class="fill" :style="{ height: farmer.score.a + '%' }"></div></div>
-											<div class="bar b"><div class="fill" :style="{ height: farmer.score.b + '%' }"></div></div>
-										</template>
-										<template v-if="farmer.score && (farmer.score.c != null || farmer.score.d != null)">
-											<div class="bar c"><div class="fill" :style="{ height: (farmer.score.c || 0) + '%' }"></div></div>
-											<div class="bar d"><div class="fill" :style="{ height: (farmer.score.d || 0) + '%' }"></div></div>
-										</template>
+											<div class="bar a"><div class="fill" :style="{ height: (farmer.score && farmer.score.a || 0) + '%' }"></div></div>
+											<div class="bar b"><div class="fill" :style="{ height: (farmer.score && farmer.score.b || 0) + '%' }"></div></div>
+											<div class="bar c"><div class="fill" :style="{ height: (farmer.score && farmer.score.c || 0) + '%' }"></div></div>
+											<div class="bar d"><div class="fill" :style="{ height: (farmer.score && farmer.score.d || 0) + '%' }"></div></div>
 									</div>
 								</source-detail>
 								<component :is="LeekWars.safeUrl(farmer.referer) ? 'a' : 'span'" class="source" :href="LeekWars.safeUrl(farmer.referer)" target="_blank" :title="farmer.referer">
@@ -731,12 +727,13 @@
 	.score {
 		flex-direction: row;
 		align-items: flex-end;
+		justify-content: center;
 		gap: 3px;
 		width: 100%;
 		height: 18px;
 		cursor: help;
 		.bar {
-			flex: 1;
+			width: 12px;
 			height: 100%;
 			display: flex;
 			align-items: flex-end;
