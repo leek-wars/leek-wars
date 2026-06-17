@@ -56,11 +56,12 @@
 									<template v-else-if="col.type === 'percent'">
 										{{ item[col.key] }}%
 									</template>
-									<!-- score 0..1 → barre colorée + pourcentage ("—" si absent) -->
+									<!-- score 0..1 → barre colorée + % ("—" si absent). Échelle via col.max,
+									     tooltip des facteurs au hover via col.tooltip_key. -->
 									<template v-else-if="col.type === 'score'">
-										<div v-if="item[col.key] != null" class="score-cell">
-											<div class="score-bar" :class="col.scheme || 'green'" :style="{ width: Math.round(item[col.key] * 100) + '%' }"></div>
-											<span>{{ Math.round(item[col.key] * 100) }}%</span>
+										<div v-if="item[col.key] != null" class="score-cell" :title="scoreTitle(col, item)">
+											<div class="score-bar" :class="col.scheme || 'green'" :style="{ width: scoreBarWidth(col, item[col.key]) }"></div>
+											<span>{{ scoreLabel(col, item[col.key]) }}</span>
 										</div>
 										<span v-else class="score-empty">—</span>
 									</template>
@@ -110,6 +111,8 @@
 		type?: string
 		id_key?: string
 		scheme?: string
+		max?: number
+		tooltip_key?: string
 	}
 	interface Dashboard {
 		id: string
@@ -185,6 +188,21 @@
 
 	function cellSlot(key: string) {
 		return 'item.' + key
+	}
+
+	// Largeur de barre : valeur rapportée à col.max (1 par défaut), plafonnée à 100%.
+	function scoreBarWidth(col: DashboardColumn, v: number): string {
+		const max = col.max || 1
+		return Math.min(Math.round((v / max) * 100), 100) + '%'
+	}
+	// Libellé : vrai pourcentage, 1 décimale quand l'échelle est petite (max <= 10%).
+	function scoreLabel(col: DashboardColumn, v: number): string {
+		return (v * 100).toFixed(col.max && col.max <= 0.1 ? 1 : 0) + '%'
+	}
+	// Tooltip : facteurs lisibles (un par ligne) fournis par l'API via col.tooltip_key.
+	function scoreTitle(col: DashboardColumn, item: Record<string, unknown>): string {
+		const r = col.tooltip_key ? item[col.tooltip_key] : null
+		return Array.isArray(r) && r.length ? r.join('\n') : ''
 	}
 
 	function daysSince(timestamp: number) {
