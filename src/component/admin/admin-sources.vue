@@ -41,12 +41,12 @@
 								<source-detail :id="farmer.id" v-slot="{ props }">
 									<div class="score" v-bind="props">
 										<template v-if="farmer.score">
-											<div class="bar a"><div class="fill" :style="{ width: farmer.score.a + '%' }"></div></div>
-											<div class="bar b"><div class="fill" :style="{ width: farmer.score.b + '%' }"></div></div>
+											<div class="bar a"><div class="fill" :style="{ height: farmer.score.a + '%' }"></div></div>
+											<div class="bar b"><div class="fill" :style="{ height: farmer.score.b + '%' }"></div></div>
 										</template>
 										<template v-if="farmer.score && (farmer.score.c != null || farmer.score.d != null)">
-											<div class="bar c"><div class="fill" :style="{ width: (farmer.score.c || 0) + '%' }"></div></div>
-											<div class="bar d"><div class="fill" :style="{ width: (farmer.score.d || 0) + '%' }"></div></div>
+											<div class="bar c"><div class="fill" :style="{ height: (farmer.score.c || 0) + '%' }"></div></div>
+											<div class="bar d"><div class="fill" :style="{ height: (farmer.score.d || 0) + '%' }"></div></div>
 										</template>
 									</div>
 								</source-detail>
@@ -730,19 +730,23 @@
 		}
 	}
 	.score {
-		flex-direction: column;
-		align-items: stretch;
+		flex-direction: row;
+		align-items: flex-end;
 		gap: 3px;
 		width: 100%;
+		height: 18px;
 		cursor: help;
 		.bar {
-			height: 6px;
-			border-radius: 3px;
+			flex: 1;
+			height: 100%;
+			display: flex;
+			align-items: flex-end;
+			border-radius: 2px;
 			background: var(--background-disabled, #e0e0e0);
 			overflow: hidden;
 			.fill {
-				height: 100%;
-				border-radius: 3px;
+				width: 100%;
+				border-radius: 2px;
 			}
 			&.a .fill {
 				background: #4caf50;
