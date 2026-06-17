@@ -1280,17 +1280,20 @@
 		editor.setValue(newCode)
 	}
 
-	function setSplitted(splittedValue: boolean, ai: AI | null = null) {
+	function setSplitted(splittedValue: boolean, tab: EditorTab | null = null) {
 		splitted.value = splittedValue
 		editorTotalWidth = (editors.value as HTMLElement).clientWidth
 		if (splitted.value) {
 			editor1Width.value = 0.5
 			editor2Width.value = 0.5
-			fileSystem.load(ai!).then(() => {
-				currentAI2.value = ai!.path
-			})
+			const ai = tab ? fileSystem.ais[tab.id] : null
+			if (ai) {
+				fileSystem.load(ai).then(() => {
+					currentAI2.value = ai.path
+				})
+				localStorage.setItem(lastCodeKey(2), ai.path)
+			}
 			setSide(2)
-			localStorage.setItem(lastCodeKey(2), ai!.path)
 		} else {
 			editor1Width.value = editorTotalWidth
 			setSide(1)
