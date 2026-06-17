@@ -56,6 +56,14 @@
 									<template v-else-if="col.type === 'percent'">
 										{{ item[col.key] }}%
 									</template>
+									<!-- score 0..1 → barre colorée + pourcentage ("—" si absent) -->
+									<template v-else-if="col.type === 'score'">
+										<div v-if="item[col.key] != null" class="score-cell">
+											<div class="score-bar" :class="col.scheme || 'green'" :style="{ width: Math.round(item[col.key] * 100) + '%' }"></div>
+											<span>{{ Math.round(item[col.key] * 100) }}%</span>
+										</div>
+										<span v-else class="score-empty">—</span>
+									</template>
 									<!-- barre de proportion -->
 									<template v-else-if="col.type === 'size_bar'">
 										<div class="size-cell">
@@ -101,6 +109,7 @@
 		sort_key?: string
 		type?: string
 		id_key?: string
+		scheme?: string
 	}
 	interface Dashboard {
 		id: string
@@ -227,5 +236,29 @@
 		bottom: 2px;
 		background: rgba(95, 173, 27, 0.15);
 		border-radius: 3px;
+	}
+	.score-cell {
+		position: relative;
+		display: flex;
+		align-items: center;
+		min-width: 64px;
+		span {
+			position: relative;
+			z-index: 1;
+			font-size: 12px;
+			font-weight: 600;
+		}
+	}
+	.score-bar {
+		position: absolute;
+		left: 0;
+		top: 2px;
+		bottom: 2px;
+		border-radius: 3px;
+		&.red { background: rgba(229, 57, 53, 0.28); }
+		&.green { background: rgba(67, 160, 71, 0.28); }
+	}
+	.score-empty {
+		color: var(--text-color-secondary);
 	}
 </style>

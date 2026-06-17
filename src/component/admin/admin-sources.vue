@@ -44,6 +44,10 @@
 											<div class="bar a"><div class="fill" :style="{ width: farmer.score.a + '%' }"></div></div>
 											<div class="bar b"><div class="fill" :style="{ width: farmer.score.b + '%' }"></div></div>
 										</template>
+										<template v-if="farmer.score && (farmer.score.c != null || farmer.score.d != null)">
+											<div class="bar c"><div class="fill" :style="{ width: (farmer.score.c || 0) + '%' }"></div></div>
+											<div class="bar d"><div class="fill" :style="{ width: (farmer.score.d || 0) + '%' }"></div></div>
+										</template>
 									</div>
 								</source-detail>
 
@@ -276,7 +280,7 @@
 		team_id?: number
 		team_name?: string
 		ai_count: number
-		score?: { a: number, b: number }
+		score?: { a: number, b: number, c?: number, d?: number }
 		[key: string]: unknown
 	}
 
@@ -745,6 +749,12 @@
 			}
 			&.b .fill {
 				background: #ff9800;
+			}
+			&.c .fill {
+				background: #e53935;
+			}
+			&.d .fill {
+				background: #1e88e5;
 			}
 		}
 	}
