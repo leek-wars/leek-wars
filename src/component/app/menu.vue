@@ -298,6 +298,10 @@
 	let lastT = 0
 
 	function onPointerDown(e: PointerEvent) {
+		// Le swipe n'ouvre le menu en tiroir qu'en mode mobile. Quand le menu
+		// normal est déjà affiché en barre latérale (iPad large, desktop), on
+		// ignore le geste pour éviter d'animer un tiroir par-dessus.
+		if (!LeekWars.mobile) { return }
 		downX = e.clientX
 		downY = e.clientY
 		if (LeekWars.menuExpanded || downX < window.innerWidth / 3) {
