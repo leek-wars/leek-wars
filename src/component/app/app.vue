@@ -4,7 +4,7 @@
 
 				<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark-shadow" @click="darkClick"></div>
 
-				<div class="requests">{{ LeekWars.requests }} <v-btn size="x-small" @click="LeekWars.requests = 0">reset</v-btn></div>
+				<request-counter />
 
 				<lw-menu v-if="$store.state.connected" />
 
@@ -211,6 +211,7 @@
 	import { locale } from '@/locale'
 	import Bar from '@/component/app/bar.vue'
 	import Header from '@/component/app/header.vue'
+	import RequestCounter from '@/component/app/request-counter.vue'
 	const Chats = defineAsyncComponent(() => import('@/component/app/chats.vue'))
 	const Footer = defineAsyncComponent(() => import('@/component/app/footer.vue'))
 	const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`))
@@ -230,7 +231,7 @@
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
 	export default {
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, 'mobile-br': MobileBR, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, 'mobile-br': MobileBR, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow, RequestCounter }
 	}
 </script>
 <script lang="ts" setup>
@@ -901,16 +902,6 @@
 		}
 	}
 
-	.requests {
-		display: none;
-		background: rgba(0,0,0,0.8);
-		color: white;
-		padding: 10px;
-		position: fixed;
-		top: 10px;
-		left: 10px;
-		z-index: 100;
-	}
 	:deep(.v-overlay__content.doc) {
 		height: auto;
 		display: flex;
