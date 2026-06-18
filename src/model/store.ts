@@ -126,12 +126,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}) {
 			LeekWars.arena.reset()
 			LeekWars.bossSquads.leaveSquad()
+			// Lire les comptes sauvegardés AVANT le reset (qui supprime la clé localStorage)
+			let savedAccounts: AccountInfo[] = []
+			try { savedAccounts = JSON.parse(localStorage.getItem('accounts') || '[]') } catch { /* ignore corrupt localStorage */ }
 			store.commit("reset")
 			state.farmer = data.farmer
 			// Fusionner les comptes du serveur avec les comptes déconnectés en localStorage
 			const serverAccounts: AccountInfo[] = data.accounts || []
-			let savedAccounts: AccountInfo[] = []
-			try { savedAccounts = JSON.parse(localStorage.getItem('accounts') || '[]') } catch { /* ignore corrupt localStorage */ }
 			const merged = [...serverAccounts]
 			for (const saved of savedAccounts) {
 				if (!merged.find(a => a.id === saved.id)) {
