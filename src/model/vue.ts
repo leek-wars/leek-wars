@@ -153,6 +153,17 @@ window.addEventListener('error', (event) => {
 
 let lastErrorSent = 0
 
+// Instrumentation #4163 : tracer la SÉQUENCE d'erreurs (chunk/async-loader → cascade parentNode)
+// et l'écart depuis le dernier bump routerViewKey (rustine), pour distinguer un PREMIER crash
+// organique d'une cascade auto-induite par la rustine. Read-only, aucun changement de comportement.
+let lastRouterViewKeyBump = 0
+let droppedSinceLastReport = 0
+const recentEvents: { t: number, kind: string, msg: string }[] = []
+function recordEvent(kind: string, msg: unknown) {
+	recentEvents.push({ t: Date.now(), kind, msg: String(msg ?? '').slice(0, 80) })
+	if (recentEvents.length > 14) recentEvents.shift()
+}
+
 interface NavSnapshot {
 	fullPath: string
 	name: string | null
@@ -243,6 +254,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		e?.message?.includes('Loading chunk') ||
 		e?.message?.includes('Loading CSS chunk') ||
 		e?.message?.includes('Unable to preload CSS')) {
+		recordEvent('chunk', e?.message)
 		reportHidden(e?.message || String(e), e?.stack)
 		return
 	}
@@ -250,12 +262,18 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// runtime-13 = ASYNC_COMPONENT_LOADER : sur un échec de chunk, le handler vite:preloadError
 	// gère déjà la récup ; sur un vrai throw de composant, recharger ne sert à rien (boucle). On logge.
 	if (infoAny?.includes?.('runtime-13')) {
+		recordEvent('async-loader', e?.message)
 		reportHidden((e?.message || String(e)) + ' [' + infoAny + ']', e?.stack)
 		return
 	}
 
-	if (Date.now() - lastErrorSent < 1000) return
+	if (Date.now() - lastErrorSent < 1000) {
+		droppedSinceLastReport++
+		recordEvent('dropped', e?.message)
+		return
+	}
 	lastErrorSent = Date.now()
+	recordEvent('crash', e?.message)
 
 	let errorBody: string
 	try {
@@ -328,7 +346,18 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		if (lines.length) navTrace = '\n\n' + lines.join('\n')
 	} catch { /* empty */ }
 
-	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace
+	let instrTrace = ''
+	try {
+		const now = Date.now()
+		const bumpAge = lastRouterViewKeyBump ? (now - lastRouterViewKeyBump) + 'ms' : 'never'
+		const seq = recentEvents.map(ev => ev.kind + ' +' + (now - ev.t) + 'ms' + (ev.msg ? ' ' + ev.msg : '')).join('\n  ')
+		instrTrace = '\n\nSince routerViewKey bump: ' + bumpAge +
+			'\nDropped since last report: ' + droppedSinceLastReport +
+			'\nRecent events (oldest→newest):\n  ' + seq
+		droppedSinceLastReport = 0
+	} catch { /* empty */ }
+
+	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
@@ -337,6 +366,8 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// chaque navigation suivante recrash. Incrémenter routerViewKey force Vue à démonter
 	// et remonter un RouterView frais, sans rechargement de page.
 	if (e?.message?.includes('parentNode') || e?.message?.includes("reading 'el'")) {
+		lastRouterViewKeyBump = Date.now()
+		recordEvent('rvk-bump', '')
 		LeekWars.routerViewKey++
 	}
 }
