@@ -18,7 +18,7 @@
 					<div ref="appWrapperEl" class="app-wrapper">
 						<lw-header v-if="!LeekWars.mobile || !$store.state.connected" />
 						<main id="main-content" class="page-wrapper">
-							<router-view :key="LeekWars.routerViewKey" />
+							<page-host />
 						</main>
 						<lw-footer />
 					</div>
@@ -212,6 +212,7 @@
 	import Bar from '@/component/app/bar.vue'
 	import Header from '@/component/app/header.vue'
 	import RequestCounter from '@/component/app/request-counter.vue'
+	import PageHost from '@/component/app/page-host.vue'
 	const Chats = defineAsyncComponent(() => import('@/component/app/chats.vue'))
 	const Footer = defineAsyncComponent(() => import('@/component/app/footer.vue'))
 	const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`))
@@ -231,7 +232,7 @@
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
 	export default {
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, 'mobile-br': MobileBR, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow, RequestCounter }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, 'mobile-br': MobileBR, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow, RequestCounter, PageHost }
 	}
 </script>
 <script lang="ts" setup>
