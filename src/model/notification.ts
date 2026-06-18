@@ -52,6 +52,7 @@ enum NotificationType {
 	GODFATHER_REQUEST = 49, // Demande de parrainage reçue (params : id_requester, name_requester)
 	GODFATHER_REQUEST_ACCEPTED = 50, // Demande de parrainage acceptée (params : id_godfather, name_godfather)
 	GODFATHER_REQUEST_REFUSED = 51, // Demande de parrainage refusée (params : id_target, name_target)
+	COLOSSUS_OWN_REPORT = 52, // Rapport de Colosse, reçu par le colosse lui-même
 }
 
 class Notification {
