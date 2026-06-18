@@ -273,7 +273,8 @@
 <script setup lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
-	import { aiCodeKey, aiMtimeKey, fileSystem, translateFileSystemError } from '@/model/filesystem'
+	import { getAICache, setAICache } from '@/model/ai-code-cache'
+	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { setLocalStorageSafe } from '@/model/storage'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -745,12 +746,13 @@
 			const ai = fileSystem.ais[path]
 			if (!ai.modified) continue
 			if (!isLeekScript(ai.path)) continue
-			// Récupérer le code sauvegardé sur le FS (depuis le cache localStorage)
-			const savedCode = localStorage.getItem(aiCodeKey(ai.path))
-			if (savedCode !== null) {
-				// Renvoyer le code du disque au daemon pour restaurer son cache
-				LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, savedCode])
-			}
+			// Récupérer le code sauvegardé sur le FS (depuis le cache IndexedDB)
+			getAICache(ai.path).then((cached) => {
+				if (cached !== null) {
+					// Renvoyer le code du disque au daemon pour restaurer son cache
+					LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, cached.code])
+				}
+			})
 		}
 	}
 
@@ -781,8 +783,7 @@
 		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
 			aiEditor.saving = false
 			aiEditor.ai.mtime = data.modified || Date.now()
-			setLocalStorageSafe(aiMtimeKey(aiEditor.ai.path), '' + aiEditor.ai.mtime)
-			setLocalStorageSafe(aiCodeKey(aiEditor.ai.path), content)
+			setAICache(aiEditor.ai.path, content, aiEditor.ai.mtime)
 			aiEditor.ai.modified = false
 
 			if (data.result) {

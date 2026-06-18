@@ -1,18 +1,12 @@
 import { AIItem, Folder } from '@/component/editor/editor-item'
+import { getAICache, removeAICache, setAICache } from '@/model/ai-code-cache'
 import { AI } from '@/model/ai'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { farmerId } from '@/model/store'
-import { setLocalStorageSafe } from '@/model/storage'
 import { emitter } from '@/model/vue'
 
 import { Keyword } from './keyword'
 import { reactive } from 'vue'
-
-// Clés localStorage namespacées par farmer ID — évite la collision entre
-// comptes quand deux IA partagent le même path (cf. issue #2678).
-export const aiCodeKey = (path: string) => 'ai/code/' + farmerId() + '/' + path
-export const aiMtimeKey = (path: string) => 'ai/mtime/' + farmerId() + '/' + path
 
 export interface FSFile {
 	path: string
@@ -180,25 +174,22 @@ class FileSystem {
 	 * Utilise le mtime du fichier pour éviter les re-fetch inutiles.
 	 */
 	public load(ai: AI): Promise<AI> {
-		const cachedMtime = parseInt(localStorage.getItem(aiMtimeKey(ai.path)) || '0', 10)
-		const cached = localStorage.getItem(aiCodeKey(ai.path))
-
-		// Cache hit : le mtime local correspond au mtime serveur
-		if (cached !== null && cachedMtime > 0 && cachedMtime >= ai.mtime) {
-			ai.code = cached
-			if (!ai.functions.length) { ai.analyze() }
-			return Promise.resolve(ai)
-		}
-
-		return new Promise<AI>((resolve, reject) => {
-			LeekWars.post('ai/read', { path: ai.path }).then((data) => {
-				ai.code = data.code
-				ai.mtime = data.mtime || Date.now()
-				setLocalStorageSafe(aiCodeKey(ai.path), ai.code)
-				setLocalStorageSafe(aiMtimeKey(ai.path), '' + ai.mtime)
-				ai.analyze()
-				resolve(ai)
-			}).error(reject)
+		return getAICache(ai.path).then((cached) => {
+			// Cache hit : le mtime local correspond au mtime serveur
+			if (cached !== null && cached.mtime > 0 && cached.mtime >= ai.mtime) {
+				ai.code = cached.code
+				if (!ai.functions.length) { ai.analyze() }
+				return ai
+			}
+			return new Promise<AI>((resolve, reject) => {
+				LeekWars.post('ai/read', { path: ai.path }).then((data) => {
+					ai.code = data.code
+					ai.mtime = data.mtime || Date.now()
+					setAICache(ai.path, ai.code, ai.mtime)
+					ai.analyze()
+					resolve(ai)
+				}).error(reject)
+			})
 		})
 	}
 
@@ -453,9 +444,9 @@ class FileSystem {
 			const fullPath = (repoFolder ? repoFolder + '/' : '') + file
 			const ai = this.getAIByPath(fullPath)
 			if (!ai) continue
-			localStorage.removeItem(aiMtimeKey(ai.path))
-			localStorage.removeItem(aiCodeKey(ai.path))
-			promises.push(this.load(ai).then(() => {
+			// Purge avant rechargement : le mtime mémoire peut encore satisfaire le
+			// cache après une opération git et servir une version périmée.
+			promises.push(removeAICache(ai.path).then(() => this.load(ai)).then(() => {
 				emitter.emit('file-reloaded', ai.path)
 			}))
 		}

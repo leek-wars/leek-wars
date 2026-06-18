@@ -1,20 +1,21 @@
 /**
  * Écriture localStorage tolérante au quota.
  *
- * L'éditeur met en cache des données régénérables (code des IA, mtime, view-state
- * Monaco, position de scroll, onglets ouverts, historique). Sur une grosse IA
- * multi-fichiers, ces caches peuvent saturer le quota (~5-10 Mo). Une fois plein,
- * le moindre setItem lève QuotaExceededError et remontait jusqu'au handler global
- * d'erreurs (#admin/errors), alors qu'il s'agit de caches best-effort.
+ * L'éditeur met en cache des données régénérables en localStorage (view-state
+ * Monaco, position de scroll, onglets ouverts, historique). Le code des IA, de loin
+ * le plus lourd, vit désormais dans IndexedDB (cf. ai-code-cache.ts) et ne pèse plus
+ * sur ce quota. Les caches restants peuvent malgré tout, en cumul, saturer le quota
+ * (~5-10 Mo) ; une fois plein, le moindre setItem lève QuotaExceededError et remontait
+ * jusqu'au handler global d'erreurs (#admin/errors), alors qu'il s'agit de caches
+ * best-effort.
  *
- * Ce helper attrape le dépassement de quota, purge en priorité les caches de code
- * (les plus lourds, re-téléchargés depuis le serveur au chargement), puis réessaie.
- * En dernier recours il abandonne silencieusement : perdre une position de scroll
- * ou un view-state n'a aucun impact fonctionnel.
+ * Ce helper attrape le dépassement de quota, purge les caches régénérables, puis
+ * réessaie. En dernier recours il abandonne silencieusement : perdre une position de
+ * scroll ou un view-state n'a aucun impact fonctionnel.
  */
 
 // Préfixes des caches régénérables, du plus lourd au plus léger.
-const EVICTABLE_PREFIXES = ['ai/code/', 'ai/mtime/', 'editor/viewstate/', 'editor/scroll/']
+const EVICTABLE_PREFIXES = ['editor/viewstate/', 'editor/scroll/']
 
 function isQuotaError(e: unknown): boolean {
 	// Selon les navigateurs : name QuotaExceededError, ou code 22 / 1014 (Firefox).

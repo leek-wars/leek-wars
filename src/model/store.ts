@@ -6,6 +6,7 @@ import { Notification, NotificationType } from '@/model/notification'
 import { Team } from '@/model/team'
 
 import Vuex, { Store } from 'vuex'
+import { clearAICache } from './ai-code-cache'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
@@ -187,6 +188,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.setItem('logout', '' + Date.now())
 			store.commit("reset")
 			// Supprime le cache des IAs et l'état de l'éditeur (confidentialité).
+			clearAICache() // code des IA (IndexedDB)
 			for (const key of Object.keys(localStorage)) {
 				if (key.startsWith('ai/') || key.startsWith('editor/tabs') || key.startsWith('editor/last-code-')
 					|| key.startsWith('editor/scroll/') || key.startsWith('editor/viewstate/')
