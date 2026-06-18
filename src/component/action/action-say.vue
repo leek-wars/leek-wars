@@ -2,7 +2,7 @@
 <template>
 	<i18n-t tag="div" keypath="fight.leek_speak" :a="a">
 		<template #leek>
-			<leek :leek="action.entity" />
+			<leek v-if="action.entity" :leek="action.entity" />
 		</template>
 		<template #text>
 			<i>{{ text }}<template v-if="glagoliticValue !== null && store.state.farmer?.admin"> ({{ glagoliticValue }})</template></i>
@@ -41,7 +41,7 @@ function glagoliticToDecimal(s: string): number | null {
 	return r
 }
 
-const muted = computed(() => !!(props.action.entity.farmer && props.action.entity.farmer.muted))
+const muted = computed(() => !!(props.action.entity?.farmer && props.action.entity.farmer.muted))
 const text = computed(() => muted.value ? "@*%#$€" : props.action.params[1])
 const glagoliticValue = computed(() => muted.value ? null : glagoliticToDecimal(props.action.params[1]))
 </script>

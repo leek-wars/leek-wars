@@ -1463,24 +1463,29 @@ class Game {
 		}
 		case ActionType.SAY: {
 			action.entity = this.leeks[this.currentPlayer!]
-			this.log(action)
-			action.entity.looseTP(1, this.jumping)
-			if (!this.jumping) {
-				let message = action.params[1]
-				if (action.entity.farmer && action.entity.farmer.muted) {
-					message = "@*%#$€"
+			// currentPlayer peut être null (ex: say() dans le hook afterFight(), logué après END_TURN)
+			if (action.entity) {
+				this.log(action)
+				action.entity.looseTP(1, this.jumping)
+				if (!this.jumping) {
+					let message = action.params[1]
+					if (action.entity.farmer && action.entity.farmer.muted) {
+						message = "@*%#$€"
+					}
+					action.entity.say(this.ctx, message)
 				}
-				action.entity.say(this.ctx, message)
 			}
 			this.actionDone(40)
 			break
 		}
 		case ActionType.LAMA: {
 			action.entity = this.leeks[this.currentPlayer!]
-			this.log(action)
-			action.entity.looseTP(1, this.jumping)
-			if (!this.jumping) {
-				this.leeks[this.currentPlayer!].sayLama()
+			if (action.entity) {
+				this.log(action)
+				action.entity.looseTP(1, this.jumping)
+				if (!this.jumping) {
+					action.entity.sayLama()
+				}
 			}
 			this.actionDone(40)
 			break
