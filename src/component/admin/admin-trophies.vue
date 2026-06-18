@@ -31,7 +31,7 @@
 				<tr v-for="(trophy, t) in trophies" :key="t">
 					<td>{{ trophy.id }}</td>
 					<td>{{ trophy.index }}</td>
-					<td><img :src="'/image/trophy/' + trophy.code + '.svg'"></td>
+					<td><trophy-icon :code="trophy.code" /></td>
 					<td><i>{{ trophy.code }}</i></td>
 					<td :style="{'background-color': difficulties[trophy.difficulty].color}">
 						<select v-model="trophy.difficulty" @change="difficultyChange(trophy)">

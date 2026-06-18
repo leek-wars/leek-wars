@@ -239,7 +239,7 @@
 					<template v-for="reward in $store.state.farmer.rewards" :key="reward.trophy">
 					<div v-if="TROPHIES[reward.trophy - 1]" class="reward">
 						<router-link :to="'/trophy/' + TROPHIES[reward.trophy - 1].code">
-							<img :src="'/image/trophy/' + TROPHIES[reward.trophy - 1].code + '.svg'">
+							<trophy-icon :code="TROPHIES[reward.trophy - 1].code" />
 							{{ $t('trophy.' + TROPHIES[reward.trophy - 1].code) }}
 							<div class="spacer"></div>
 							<div>{{ $filters.number(reward.habs) }} <span class="hab"></span></div>

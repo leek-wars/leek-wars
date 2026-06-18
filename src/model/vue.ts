@@ -9,6 +9,7 @@ import '@/component/editor/leekscript.scss'
 import '@/component/editor/leekscript-monokai.scss'
 import Emblem from '@/component/emblem.vue'
 import LeekImage from '@/component/leek-image.vue'
+import TrophyIcon from '@/component/trophy-icon.vue'
 import NotificationElement from '@/component/notifications/notification.vue'
 import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
@@ -581,6 +582,7 @@ app.mixin({
 })
 
 app.component('leek-image', LeekImage)
+app.component('trophy-icon', TrophyIcon)
 app.component('avatar', Avatar)
 app.component('emblem', Emblem)
 app.component('talent', Talent)

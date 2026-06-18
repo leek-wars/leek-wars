@@ -1,7 +1,7 @@
 <template>
 	<router-link v-ripple :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" :to="'/trophy/' + trophy.code" class="trophy">
 		<div class="flex">
-			<img :src="'/image/trophy/' + trophy.code + '.svg'" class="image">
+			<trophy-icon :code="trophy.code" class="image" />
 			<div class="info">
 				<div class="header">
 					<div class="name">{{ $t('trophy.' + trophy.code) }}</div>
@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		<div class="unlock">
-			<img v-if="trophy.in_fight" class="fight-icon" src="/image/trophy/winner.svg" :title="$t('trophy.unlockable_fight')">
+			<trophy-icon v-if="trophy.in_fight" class="fight-icon" code="winner" :title="$t('trophy.unlockable_fight')" />
 			<template v-if="trophy.unlocked">
 				<i18n-t v-if="trophy.fight" tag="span" class="date" keypath="main.unlocked_the">
 					<template #date>

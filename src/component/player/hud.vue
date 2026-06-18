@@ -46,7 +46,7 @@
 			<template v-for="line of renderedLines">
 				<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
-					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
+					<trophy-icon :code="line.trophy.name" />
 					<i18n-t keypath="trophy.x_unlocks_t">
 						<template #farmer>{{ line.trophy.farmer.name }}</template>
 						<template #trophy>

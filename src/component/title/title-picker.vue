@@ -5,12 +5,12 @@
 			<div class="select-icon select">
 				<v-select v-model="icon" :items="icons" item-value="id" item-title="id" hide-details density="comfortable" variant="solo">
 					<template #selection>
-						<img v-if="icon" :src="'/image/trophy/' + LeekWars.trophies[icon - 1].code + '.svg'">
+						<trophy-icon v-if="icon" :code="LeekWars.trophies[icon - 1].code" />
 					</template>
 					<template #item="{ props: itemProps, item }">
 						<v-list-item v-bind="itemProps">
 							<template v-if="item.raw.id" #title>
-								<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+								<trophy-icon class="icon" :code="item.raw.code" />
 							</template>
 							<template v-else #title>{{ $t('main.none') }}</template>
 							<template v-if="item.raw.id" #append>
@@ -29,7 +29,7 @@
 						<template #item="{ props: itemProps, item }">
 							<v-list-item v-bind="itemProps">
 								<template v-if="item.value" #prepend>
-									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+									<trophy-icon class="icon" :code="item.raw.code" />
 								</template>
 								<template v-if="item.value" #append>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
@@ -61,7 +61,7 @@
 						<template #item="{ props: itemProps, item }">
 							<v-list-item v-bind="itemProps">
 								<template v-if="item.value" #prepend>
-									<img class="icon" :src="'/image/trophy/' + item.raw.code + '.svg'">
+									<trophy-icon class="icon" :code="item.raw.code" />
 								</template>
 								<template v-if="item.value" #append>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>

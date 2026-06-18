@@ -133,7 +133,7 @@
 				</div>
 
 				<div v-if="expand && data.trophies && data.trophies.length" class="trophies">
-					<img v-for="t in data.trophies" :key="t.trophy" :src="'/image/trophy/' + t.name + '.svg'" :title="$te('trophy.' + t.name) ? ($t('trophy.' + t.name) as string) : t.name">
+					<trophy-icon v-for="t in data.trophies" :key="t.trophy" :code="t.name" :title="$te('trophy.' + t.name) ? ($t('trophy.' + t.name) as string) : t.name" />
 				</div>
 
 				<div class="footer">

@@ -83,7 +83,7 @@
 							<div class="trophies">
 								<rich-tooltip-trophy v-for="(trophy, t) in best_trophies" :key="t" :trophy="trophy" :bottom="true" :instant="true" @update:model-value="$emit('update:modelValue', $event)">
 									<router-link :to="'/trophy/' + trophy.code">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy">
+										<trophy-icon :code="trophy.code" class="trophy" />
 									</router-link>
 								</rich-tooltip-trophy>
 							</div>
@@ -93,7 +93,7 @@
 							<div class="trophies">
 								<rich-tooltip-trophy v-for="(trophy, t) in rarest_trophies" :key="t" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true" @update:model-value="$emit('update:modelValue', $event)">
 									<router-link :to="'/trophy/' + trophy.code">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-bind="props">
+										<trophy-icon :code="trophy.code" class="trophy" v-bind="props" />
 									</router-link>
 								</rich-tooltip-trophy>
 							</div>
@@ -103,7 +103,7 @@
 							<div class="trophies">
 								<rich-tooltip-trophy v-for="(trophy, t) in latest_trophies" :key="t" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true" @update:model-value="$emit('update:modelValue', $event)">
 									<router-link :to="'/trophy/' + trophy.code">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" v-bind="props">
+										<trophy-icon :code="trophy.code" class="trophy" v-bind="props" />
 									</router-link>
 								</rich-tooltip-trophy>
 							</div>

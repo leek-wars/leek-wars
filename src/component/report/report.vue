@@ -126,7 +126,7 @@
 					<h3 class="trophies-title">{{ $t('trophies') }}</h3>
 					<div class="trophies">
 						<router-link v-for="(trophy, t) in fight.trophies" :key="t" v-ripple :to="'/trophy/' + trophy.name" class="trophy card">
-							<img :src="'/image/trophy/' + trophy.name + '.svg'" class="image">
+							<trophy-icon :code="trophy.name" class="image" />
 							<div class="info">
 								<div class="name">{{ $t('trophy.' + trophy.name) }}</div>
 								<div class="farmer">

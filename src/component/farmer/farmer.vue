@@ -304,13 +304,13 @@
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-if="trophiesMode == 'list'" class="list trophies-container">
 							<router-link v-for="(trophy, t) in trophies_list" :key="t" :to="'/trophy/' + trophy.code" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
-								<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" loading="lazy">
+								<trophy-icon class="trophy" :code="trophy.code" />
 							</router-link>
 						</div>
 						<div v-else class="grid trophies-container">
 							<template v-for="(trophy, t) in trophies_grid" :key="t">
 								<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
-									<img :src="'/image/trophy/' + trophy.code + '.svg'" class="trophy" loading="lazy">
+									<trophy-icon :code="trophy.code" class="trophy" />
 								</router-link>
 								<div v-else class="locked">
 									<img class="trophy" src="/image/unknown.png" loading="lazy">
@@ -321,7 +321,7 @@
 							<h4 class="trophies-bonus">{{ $t('bonus_trophies') }}</h4>
 							<div class="trophies-container">
 								<router-link v-for="trophy in bonus_trophies" :key="trophy.id" :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}" @mouseenter="showTrophyTooltip(trophy, $event)" @mouseleave="hideTrophyTooltip">
-									<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" loading="lazy">
+									<trophy-icon class="trophy" :code="trophy.code" />
 								</router-link>
 							</div>
 						</div>
@@ -432,7 +432,7 @@
 					<div v-if="farmer" class="rewards">
 						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': Number(r) <= (farmer.godsons_level ?? 0)}">
 							<div class="level">{{ $filters.number(Number(r)) }}<v-icon v-if="Number(r) <= (farmer.godsons_level ?? 0)">mdi-check</v-icon></div>
-							<img v-if="reward.trophy" :src="'/image/trophy/' + reward.trophy + '.svg'">
+							<trophy-icon v-if="reward.trophy" :code="reward.trophy" />
 							<rich-tooltip-item v-else-if="reward.resource" v-slot="{ props }" :item="LeekWars.items[reward.item!]" :bottom="true">
 								<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
 							</rich-tooltip-item>
@@ -602,7 +602,7 @@
 				Combat : <input v-model="giveTrophyFight" type="number">
 			</div>
 			<br>
-			<img v-for="trophy in giveTrophies" :key="trophy.id" :src="'/image/trophy/' + trophy.code + '.svg'" :title="trophy.code" class="give-trophy" @click="giveTrophyID = trophy.id">
+			<trophy-icon v-for="trophy in giveTrophies" :key="trophy.id" :code="trophy.code" :title="trophy.code" class="give-trophy" @click="giveTrophyID = trophy.id" />
 
 			<template #actions>
 				<div v-ripple @click="trophyDialog = false">{{ $t('cancel') }}</div>
