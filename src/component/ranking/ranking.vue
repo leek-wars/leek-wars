@@ -659,7 +659,6 @@
 		&.active {
 			border-color: var(--primary);
 			background: var(--background-secondary);
-			span { font-weight: bold; }
 		}
 	}
 	.mode-buttons {
