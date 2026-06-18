@@ -125,7 +125,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				token: string,
 				accounts?: AccountInfo[]
 			}) {
-			LeekWars.arena.reset()
+			// Désinscrit l'arène du compte précédent (socket encore actif) tout en
+			// gardant sa mémoire d'inscription pour la restaurer au retour.
+			LeekWars.arena.suspend()
 			LeekWars.bossSquads.leaveSquad()
 			// Lire les comptes sauvegardés AVANT le reset (qui supprime la clé localStorage)
 			let savedAccounts: AccountInfo[] = []

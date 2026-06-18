@@ -120,6 +120,17 @@ class Arena {
 		this.clearStorage()
 		this.reset()
 	}
+	// Changement de compte : désinscrit le poireau du compte qu'on quitte côté
+	// serveur (un seul compte inscrit à la fois) mais conserve la mémoire pour
+	// le réinscrire si on revient sur ce compte.
+	suspend() {
+		// Uniquement si le socket du compte courant est encore ouvert, sinon le
+		// message serait mis en file et envoyé sur le socket du nouveau compte.
+		if (this.enabled && LeekWars.socket.connected()) {
+			LeekWars.socket.send([SocketMessage.ARENA_LEAVE])
+		}
+		this.reset()
+	}
 	reset() {
 		LeekWars.setTitleTag(null)
 		this.leeks = []
