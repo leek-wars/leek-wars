@@ -575,6 +575,7 @@ ${ret}
 					overviewRulerLanes: 0,
 					overviewRulerBorder: false,
 					renderLineHighlight: "line",
+					accessibilitySupport: 'off', // Workaround Firefox : sélection backward + remplacement (#2802)
 				}))
 
 				editor.value.onDidChangeModelContent(() => {
