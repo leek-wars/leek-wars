@@ -23,6 +23,14 @@ class Arena {
 
 	init() {
 		if (localStorage.getItem('in-arena')) {
+			// L'inscription mémorisée appartient à un éleveur précis : ne pas la
+			// reprendre après un changement de compte (sinon réinscription du
+			// poireau d'un autre compte → affichage bloqué à 0).
+			const farmer = parseInt(localStorage.getItem('arena-farmer') || '', 10)
+			if (!store.state.farmer || farmer !== store.state.farmer.id) {
+				this.clearStorage()
+				return
+			}
 			const leek = parseInt(localStorage.getItem('arena-leek') || '', 10)
 			const preference = parseInt(localStorage.getItem('arena-preference') || '-1', 10)
 			const wantsColossus = localStorage.getItem('arena-colossus') === '1'
@@ -35,6 +43,7 @@ class Arena {
 		localStorage.setItem('arena-preference', '' + preference)
 		localStorage.setItem('arena-colossus', wantsColossus ? '1' : '0')
 		localStorage.setItem('in-arena', '1')
+		if (store.state.farmer) { localStorage.setItem('arena-farmer', '' + store.state.farmer.id) }
 		this.enabled = true
 		this.preference = preference
 		store.commit('arena-status', {enabled: true, preference})
@@ -49,11 +58,16 @@ class Arena {
 		}
 		LeekWars.setTitleTag('Arène ' + this.progress + '/' + Arena.MAX_PLAYERS)
 	}
-	leave() {
-		LeekWars.socket.send([SocketMessage.ARENA_LEAVE])
+	clearStorage() {
 		localStorage.removeItem('in-arena')
+		localStorage.removeItem('arena-leek')
 		localStorage.removeItem('arena-preference')
 		localStorage.removeItem('arena-colossus')
+		localStorage.removeItem('arena-farmer')
+	}
+	leave() {
+		LeekWars.socket.send([SocketMessage.ARENA_LEAVE])
+		this.clearStorage()
 		this.reset()
 	}
 	reset() {
@@ -74,9 +88,7 @@ class Arena {
 			this.countdown = -1
 			this.preference = -1
 			store.commit('arena-status', {enabled: false, preference: -1})
-			localStorage.removeItem('in-arena')
-			localStorage.removeItem('arena-preference')
-			localStorage.removeItem('arena-colossus')
+			this.clearStorage()
 			store.commit('update-fights', -1)
 
 			// Redirect if on the garden page

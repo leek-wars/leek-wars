@@ -93,6 +93,7 @@
     - "Country flags no longer distorted on Safari and iPad."
     - "Editing a leek's AI in a default scenario no longer triggers a 404. (thanks to Kraspen)"
     - "Sessions are invalidated when an account is deleted."
+    - "Arena queue: the display no longer stays stuck after switching accounts. (thanks to NewSlash)"
 247:
   title: "Git integration, loadouts, multi-account management and clover potions."
   added:
