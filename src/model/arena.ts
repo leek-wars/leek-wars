@@ -81,13 +81,7 @@ class Arena {
 	}
 	start(data: [unknown, unknown]) {
 		if (data[1]) { // Garden arena (not automatic)
-			LeekWars.setTitleTag(null)
-			this.leeks = []
-			this.enabled = false
-			this.progress = 0
-			this.countdown = -1
-			this.preference = -1
-			store.commit('arena-status', {enabled: false, preference: -1})
+			this.reset()
 			this.clearStorage()
 			store.commit('update-fights', -1)
 
