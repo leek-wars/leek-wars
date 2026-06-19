@@ -111,6 +111,23 @@ const METHOD_REGEX = /^[ \t]+(?:(?:(?:public\s+)?(?:static\s+)?(?:[\w<>,?[\]]+\s
 const NON_METHOD_KEYWORDS = new Set(['function', 'for', 'while', 'if', 'class', 'var', 'return', 'new', 'else', 'switch', 'catch'])
 const RESERVED_SYMBOLS = new Set(['true', 'false', 'null', 'this', 'super'])
 
+// Extrait le nom d'une méthode déclarée sur une ligne indentée, ou null si la
+// ligne n'est pas une déclaration. METHOD_REGEX est permissif : son préfixe de
+// type de retour avale n'importe quel mot, donc une instruction comme
+// `return maFonction()` serait lue comme une méthode `maFonction` de type
+// `return` et recevrait un CodeLens « no references » parasite (#4257). On
+// rejette à la fois le nom capturé et le premier mot de la ligne s'ils sont des
+// mots-clés d'instruction.
+function methodNameFromLine(lineContent: string): string | null {
+	const m = METHOD_REGEX.exec(lineContent)
+	if (!m) return null
+	const name = m[1] || m[2]
+	if (NON_METHOD_KEYWORDS.has(name)) return null
+	const firstWord = lineContent.trim().match(/^\w+/)
+	if (firstWord && NON_METHOD_KEYWORDS.has(firstWord[0])) return null
+	return name
+}
+
 
 monaco.editor.defineTheme("leek-wars", {
 	base: "vs", // can also be vs-dark or hc-black
@@ -373,10 +390,8 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 		}
 		// Scan methods directly from code (line-by-line to avoid multi-line regex issues in ai.ts)
 		for (let i = 0; i < model.getLineCount(); i++) {
-			const m = METHOD_REGEX.exec(model.getLineContent(i + 1))
-			if (!m) continue
-			const name = m[1] || m[2]
-			if (NON_METHOD_KEYWORDS.has(name)) continue
+			const name = methodNameFromLine(model.getLineContent(i + 1))
+			if (!name) continue
 			if (name === 'constructor') {
 				const className = findEnclosingClassName(ai, i + 1)
 				if (className) {
@@ -468,10 +483,8 @@ monaco.languages.registerDocumentSymbolProvider("leekscript", {
 
 			// Methods (scan code like CodeLens does)
 			for (let i = cls.line; i <= classEndLine; i++) {
-				const m = METHOD_REGEX.exec(model.getLineContent(i))
-				if (!m) continue
-				const methodName = m[1] || m[2]
-				if (NON_METHOD_KEYWORDS.has(methodName)) continue
+				const methodName = methodNameFromLine(model.getLineContent(i))
+				if (!methodName) continue
 				const methodEndLine = findBlockEnd(model, i)
 				children.push({
 					name: methodName,
