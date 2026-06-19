@@ -448,8 +448,12 @@
 		if (destroyed) { return }
 
 		if (code.value === 'Page au hasard') {
-			const ps = Object.values(LeekWars.encyclopedia[i18nLocale.value])
-			router.replace('/encyclopedia/' + i18nLocale.value + '/' + ps[Math.random() * ps.length | 0].title)
+			await LeekWars.loadEncyclopedia(i18nLocale.value)
+			if (destroyed) { return }
+			const ps = Object.values(LeekWars.encyclopedia[i18nLocale.value] || {})
+			if (ps.length) {
+				router.replace('/encyclopedia/' + i18nLocale.value + '/' + ps[Math.random() * ps.length | 0].title)
+			}
 			return
 		}
 
