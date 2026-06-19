@@ -40,6 +40,7 @@ const Creator = () => import(/* webpackChunkName: "[request]" */ `@/component/cr
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 const Group = () => import(/* webpackChunkName: "[request]" */ `@/component/group/group.${locale}.i18n`)
 const Groups = () => import(/* webpackChunkName: "[request]" */ `@/component/groups/groups.${locale}.i18n`)
+const Collection = () => import(/* webpackChunkName: "[request]" */ `@/component/collection/collection.${locale}.i18n`)
 const Editor = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor.${locale}.i18n`)
 const Encyclopedia = () => import(/* webpackChunkName: "encyclopedia" */ `@/component/encyclopedia/encyclopedia.${locale}.i18n`)
 const EncyclopediaSearch = () => import(/* webpackChunkName: "[request]" */ `@/component/encyclopedia/encyclopedia-search.${locale}.i18n`)

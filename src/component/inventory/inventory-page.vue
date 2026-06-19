@@ -26,6 +26,12 @@
 					<v-icon>mdi-treasure-chest</v-icon>
 					<span>{{ $t('main.inventory') }}</span>
 				</div>
+				<router-link to="/collection">
+					<div class="tab action" icon="mdi-trophy-variant-outline" link="/collection">
+						<v-icon>mdi-trophy-variant-outline</v-icon>
+						<span>{{ $t('main.collection') }}</span>
+					</div>
+				</router-link>
 			</div>
 		</div>
 		<div class="column">

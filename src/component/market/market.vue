@@ -33,6 +33,12 @@
 						<span>{{ $t('main.inventory') }}</span>
 					</div>
 				</router-link>
+				<router-link to="/collection">
+					<div class="tab action" icon="mdi-trophy-variant-outline" link="/collection">
+						<v-icon>mdi-trophy-variant-outline</v-icon>
+						<span>{{ $t('main.collection') }}</span>
+					</div>
+				</router-link>
 				<!-- <router-link to="/workshop">
 					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
 						<v-icon>mdi-hammer-wrench</v-icon>
