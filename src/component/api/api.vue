@@ -348,27 +348,38 @@ onBeforeUnmount(() => {
 	#app.app .documentation {
 		padding-bottom: 0;
 	}
+	// Colonnes scrollables dimensionnées via flexbox (flex:1 + min-height:0) plutôt que
+	// `height: 100%` en cascade : la résolution de hauteur en pourcentage imbriquée dans
+	// des conteneurs flex est recalculée de façon erratique par Firefox (scrollHeight
+	// périmé) → colonne trop grande, impossible à scroller (#4150).
 	.column4 {
 		position: sticky;
 		top: 12px;
 		height: 100%;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
 		.panel {
 			margin-bottom: 0;
-			max-height: 100%;
+			flex: 1;
+			min-height: 0;
 			& > div {
 				padding: 0;
-				height: 100%;
 			}
 		}
 	}
 	.column8 {
 		height: 100%;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
 	}
 	.items-list {
 		overflow-y: scroll;
 		overflow-x: hidden;
 		position: relative;
-		height: 100%;
+		flex: 1;
+		min-height: 0;
 	}
 	.items-list h2 {
 		font-size: 16px;
@@ -405,7 +416,8 @@ onBeforeUnmount(() => {
 	.items {
 		overflow-y: scroll;
 		overflow-x: hidden;
-		height: 100%;
+		flex: 1;
+		min-height: 0;
 	}
 	.items .item {
 		position: relative;

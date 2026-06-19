@@ -522,7 +522,14 @@
 		z-index: 2;
 	}
 	.messages {
-		height: calc(100% - 40px);
+		// Hauteur via flexbox (flex:1 + min-height:0) plutôt que `height: calc(100% - 40px)`.
+		// Le calc en pourcentage imbriqué dans une colonne flex est recalculé de façon
+		// erratique par Firefox (scrollHeight/clientHeight périmés) → conteneur trop grand,
+		// impossible à scroller (#4150). Le flex dimensionne la zone de façon fiable et
+		// supprime au passage le nombre magique 40px (faux si l'input passe sur plusieurs
+		// lignes ou si la bannière de vérification remplace l'input).
+		flex: 1;
+		min-height: 0;
 		overflow-y: scroll;
 	}
 	.no-messages {
