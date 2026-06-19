@@ -1144,7 +1144,6 @@
 		content: '';
 		position: absolute;
 		inset: 0;
-		z-index: -1;
 		border-radius: 50%;
 		background: rgba(95, 173, 27, 0.6);
 		animation: arena-pulse 2s infinite;
