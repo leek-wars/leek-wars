@@ -42,6 +42,7 @@
 	"new_password": "Kata sandi baru",
 	"notifs_popups": "Popup notifikasi",
 	"notifs_results": "Pertempuran menghasilkan notifikasi",
+	"notifs_open_report": "Buka laporan alih-alih pertarungan dari notifikasi",
 	"old_password": "Password lama",
 	"misc_options": "Berbagai pilihan",
 	"password_changed": "Kata sandi diubah!",

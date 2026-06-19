@@ -42,6 +42,7 @@
 	"new_password": "Uusi salasana",
 	"notifs_popups": "Ilmoitusten ponnahdusikkunat",
 	"notifs_results": "Taistelu johtaa ilmoituksiin",
+	"notifs_open_report": "Avaa raportti taistelun sijaan ilmoituksesta",
 	"old_password": "Vanha salasana",
 	"misc_options": "Erilaisia vaihtoehtoja",
 	"password_changed": "Salasana vaihdettu!",

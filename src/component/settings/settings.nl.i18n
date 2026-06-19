@@ -42,6 +42,7 @@
 	"new_password": "Nieuw paswoord",
 	"notifs_popups": "Melding-popups",
 	"notifs_results": "Gevechtsresultaten in meldingen",
+	"notifs_open_report": "Open het verslag in plaats van het gevecht vanuit een melding",
 	"old_password": "Oud Wachtwoord",
 	"misc_options": "Diverse opties",
 	"password_changed": "Wachtwoord veranderd!",

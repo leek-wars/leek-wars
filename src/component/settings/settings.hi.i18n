@@ -42,6 +42,7 @@
 	"new_password": "नया पासवर्ड",
 	"notifs_popups": "सूचना पॉपअप",
 	"notifs_results": "सूचनाओं में लड़ाई का परिणाम",
+	"notifs_open_report": "सूचना से लड़ाई के बजाय रिपोर्ट खोलें",
 	"old_password": "पुराना पासवर्ड",
 	"misc_options": "विभिन्न विकल्प",
 	"password_changed": "पासवर्ड बदला गया!",

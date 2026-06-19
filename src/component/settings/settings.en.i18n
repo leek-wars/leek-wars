@@ -40,6 +40,7 @@
 	"new_password": "New password",
 	"notifs_popups": "Notification popups",
 	"notifs_results": "Fight results in notifications",
+	"notifs_open_report": "Open the report instead of the fight from a notification",
 	"old_password": "Old password",
 	"misc_options": "Miscellaneous options",
 	"password_changed": "Password changed!",

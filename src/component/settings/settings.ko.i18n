@@ -59,6 +59,7 @@
 	"new_password": "새 비밀번호",
 	"notifs_popups": "알림 팝업",
 	"notifs_results": "전투 결과 알림",
+	"notifs_open_report": "알림에서 전투 대신 리포트 열기",
 	"old_password": "기존 비밀번호",
 	"password": "비밀번호",
 	"password_changed": "비밀번호가 변경되었습니다!",

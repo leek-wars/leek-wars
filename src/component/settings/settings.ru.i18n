@@ -42,6 +42,7 @@
 	"new_password": "Новый пароль",
 	"notifs_popups": "Всплывающие уведомления",
 	"notifs_results": "Результаты боя в уведомлениях",
+	"notifs_open_report": "Открывать отчёт вместо боя из уведомления",
 	"old_password": "Старый пароль",
 	"misc_options": "Различные варианты",
 	"password_changed": "Пароль изменен!",

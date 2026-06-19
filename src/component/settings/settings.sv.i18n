@@ -42,6 +42,7 @@
 	"new_password": "Nytt lösenord",
 	"notifs_popups": "Aviseringspopuper",
 	"notifs_results": "Strid resulterar i aviseringar",
+	"notifs_open_report": "Öppna rapporten i stället för striden från en avisering",
 	"old_password": "Gammalt lösenord",
 	"misc_options": "Olika alternativ",
 	"password_changed": "Lösenordet ändrat!",

@@ -42,6 +42,7 @@
 	"new_password": "Nova Senha",
 	"notifs_popups": "Popups de notificação",
 	"notifs_results": "Resultados da batalha em notificações",
+	"notifs_open_report": "Abrir o relatório em vez do combate a partir de uma notificação",
 	"old_password": "Senha Antiga",
 	"misc_options": "Várias opções",
 	"password_changed": "Senha alterada!",

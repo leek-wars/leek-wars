@@ -42,6 +42,7 @@
 	"new_password": "Nytt passord",
 	"notifs_popups": "Varsel-popuper",
 	"notifs_results": "Kamp resulterer i varsler",
+	"notifs_open_report": "Åpne rapporten i stedet for kampen fra et varsel",
 	"old_password": "Gammelt passord",
 	"misc_options": "Ulike alternativer",
 	"password_changed": "Passord endret!",

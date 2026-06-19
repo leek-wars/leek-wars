@@ -42,6 +42,7 @@
 	"new_password": "Nueva contraseña",
 	"notifs_popups": "Popups de notificaciones",
 	"notifs_results": "Resultados de batalla en notificaciones",
+	"notifs_open_report": "Abrir el informe en lugar del combate desde una notificación",
 	"old_password": "Antigua contraseña",
 	"misc_options": "Varias opciones",
 	"password_changed": "¡Contraseña cambiada!",

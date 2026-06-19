@@ -119,6 +119,10 @@
 						<div>{{ $t('notifs_results') }}</div>
 						<div><v-switch v-model="notifsResults" hide-details /></div>
 					</div>
+					<div id="notifs-open-report-button" class="setting">
+						<div>{{ $t('notifs_open_report') }}</div>
+						<div><v-switch v-model="notifsOpenReport" hide-details /></div>
+					</div>
 					<div v-if="LeekWars.mobile" class="setting">
 						<div>{{ $t('chat_first') }}</div>
 						<div><v-switch v-model="chatFirst" hide-details /></div>
@@ -298,6 +302,7 @@
 	const sfwMode = ref(localStorage.getItem('sfw') === 'true')
 	const notifsPopups = ref(localStorage.getItem('options/notifs-popups') !== 'false')
 	const notifsResults = ref(localStorage.getItem('options/notifs-results') === 'true')
+	const notifsOpenReport = ref(localStorage.getItem('options/notifs-open-report') === 'true')
 	const chatFirst = ref(localStorage.getItem('options/chat-first') === 'true')
 	const modernTheme = ref(localStorage.getItem('theme') === 'xp')
 	const pushNotifications = ref(localStorage.getItem('options/push-notifs') === 'true')
@@ -420,6 +425,11 @@
 	watch(notifsResults, () => {
 		localStorage.setItem('options/notifs-results', '' + notifsResults.value)
 		LeekWars.notifsResults = notifsResults.value
+	})
+
+	watch(notifsOpenReport, () => {
+		localStorage.setItem('options/notifs-open-report', '' + notifsOpenReport.value)
+		LeekWars.notifsOpenReport = notifsOpenReport.value
 	})
 
 	watch(chatFirst, () => {

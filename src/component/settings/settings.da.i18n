@@ -42,6 +42,7 @@
 	"new_password": "Nyt kodeord",
 	"notifs_popups": "Notifikations-popups",
 	"notifs_results": "Kamp resulterer i meddelelser",
+	"notifs_open_report": "Åbn rapporten i stedet for kampen fra en notifikation",
 	"old_password": "Gammelt kodeord",
 	"misc_options": "Forskellige muligheder",
 	"password_changed": "Adgangskode ændret!",

@@ -42,6 +42,7 @@
 	"new_password": "新密码",
 	"notifs_popups": "通知弹窗",
 	"notifs_results": "战斗结果通知",
+	"notifs_open_report": "从通知打开战报而非战斗",
 	"old_password": "旧密码",
 	"misc_options": "多种选择",
 	"password_changed": "密码已更改！",

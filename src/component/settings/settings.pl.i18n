@@ -42,6 +42,7 @@
 	"new_password": "Nowe hasło",
 	"notifs_popups": "Wyskakujące powiadomienia",
 	"notifs_results": "Wyniki bitwy w powiadomieniach",
+	"notifs_open_report": "Otwieraj raport zamiast walki z powiadomienia",
 	"old_password": "Stare hasło",
 	"misc_options": "Różne opcje",
 	"password_changed": "Hasło zostało zmienione!",
