@@ -916,8 +916,8 @@ class Bazooka extends Firegun {
 	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.rocket, T.fire, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.rocket, S.explosion]
 
-	constructor(game: Game, texture: Texture = T.bazooka) {
-		super(game, texture, T.cart_bazooka, S.rocket, 29, DamageType.EXPLOSION)
+	constructor(game: Game, texture: Texture = T.bazooka, id: number = 29) {
+		super(game, texture, T.cart_bazooka, S.rocket, id, DamageType.EXPLOSION)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number {
@@ -955,7 +955,7 @@ class PlutoniumBazooka extends Bazooka {
 	static textures = [T.shots, T.bullet, T.plutonium_bazooka, T.cart_bazooka, T.plutonium_rocket, T.fire, T.explosion_mark]
 
 	constructor(game: Game) {
-		super(game, T.plutonium_bazooka)
+		super(game, T.plutonium_bazooka, 26)
 	}
 
 	protected areaColor(): string {
