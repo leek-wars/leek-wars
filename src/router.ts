@@ -395,7 +395,7 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 // Réinitialise les balises meta SEO/partage à chaque navigation : pose le canonical et
 // l'og:url de l'URL courante + remet les valeurs par défaut. Les pages publiques surchargent
 // ensuite via LeekWars.setMeta() dans leur onMounted (après le swap de <router-view>).
-router.afterEach((to, from) => {
+router.afterEach((to, from, failure) => {
 	// Layout posé ICI (afterEach) et non dans beforeEach : la navigation est confirmée et le
 	// chunk lazy chargé, donc resetLayout()/meta.layout se batchent avec le swap de
 	// <router-view> → appliqués sur la page de DESTINATION, jamais sur la page courante encore
@@ -403,6 +403,10 @@ router.afterEach((to, from) => {
 	// chargement du chunk → flash (élargissement `large` / dé-box de la page précédente)
 	// (#4150). Les flags de layout ne sont plus lus par le template de app.vue (depuis
 	// e703b37e3, #4163) → les muter ici ne re-render pas app.vue, le swap reste sûr.
+	// `failure` : afterEach est aussi appelé sur une navigation AVORTÉE (un onBeforeRouteLeave
+	// qui fait next(false) : éditeur/encyclopédie qui annulent la confirmation "modifs non
+	// sauvées"). La nav échoue mais on reste sur la page courante → ne PAS toucher son layout
+	// (sinon elle rapetisse/dé-boxe en place). On gate donc le layout sur l'absence d'échec.
 	// Gating par composant : sur une nav de paramètres (même composant), on préserve les
 	// flags déjà posés (la page ne re-monte pas). meta.layout pose le layout de façon
 	// déterministe AVANT le 1er rendu de la page (comme au refresh) plutôt que dans son
@@ -410,7 +414,7 @@ router.afterEach((to, from) => {
 	// box=false après nav → chat/doc à la hauteur du contenu, sans scroll (#4150).
 	const toComponent = to.matched[to.matched.length - 1]?.components?.default
 	const fromComponent = from.matched[from.matched.length - 1]?.components?.default
-	if (toComponent !== fromComponent) {
+	if (!failure && toComponent !== fromComponent) {
 		LeekWars.resetLayout()
 		const layout = to.meta.layout as Record<string, boolean> | undefined
 		if (layout) {
