@@ -315,11 +315,19 @@
 		min-height: 0;
 		flex-wrap: nowrap;
 	}
+	// min-height: 0 sur les colonnes ET leurs panels : sans ça le panel est un flex item
+	// en min-height: auto, qui refuse de rétrécir sous la hauteur de son contenu. Chrome le
+	// contraint quand même via height: 100%, mais les navigateurs mobiles (Safari/Firefox)
+	// ne re-résolvent pas ce pourcentage après une navigation client-side → le panel grandit
+	// à la hauteur de la conversation, impossible à scroller (#4150). min-height: 0 laisse le
+	// flex (align-items: stretch) le contraindre à la hauteur de l'écran de façon fiable.
 	.main-column, .side-column, .right-column {
 		height: 100%;
+		min-height: 0;
 		min-width: 0;
 		.panel {
 			height: 100%;
+			min-height: 0;
 			margin-bottom: 0;
 		}
 	}
@@ -345,6 +353,8 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		height: 100%;
+		flex: 1;
+		min-height: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 2px;
