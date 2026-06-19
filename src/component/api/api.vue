@@ -283,8 +283,7 @@ function back() {
 }
 
 onMounted(() => {
-	LeekWars.footer = false
-	LeekWars.box = true
+	// box/footer posés par meta.layout de la route (router.afterEach).
 	search.value?.focus()
 	emitter.on('back', back)
 })

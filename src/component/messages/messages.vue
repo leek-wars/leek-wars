@@ -159,9 +159,7 @@
 	})
 
 	onMounted(() => {
-		LeekWars.footer = false
-		LeekWars.box = true
-		LeekWars.large = true
+		// Layout (box/large/footer) posé par meta.layout de la route dans router.afterEach.
 		emitter.on('back', back)
 		emitter.on('focus', conversationRead)
 	})
@@ -352,7 +350,6 @@
 	.conversations {
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: 100%;
 		flex: 1;
 		min-height: 0;
 		display: flex;

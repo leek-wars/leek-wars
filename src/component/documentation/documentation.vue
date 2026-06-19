@@ -215,9 +215,8 @@
 	const onDocNavigate = (item: unknown) => navigate(item as string)
 	onMounted(() => {
 		if (!props.popup) {
+			// box/footer posés par meta.layout de la route (router.afterEach) ; large reste ici (préférence localStorage)
 			LeekWars.large = localStorage.getItem('documentation/large') === 'true'
-			LeekWars.footer = false
-			LeekWars.box = true
 		}
 		search.value?.focus()
 		emitter.on('back', back)

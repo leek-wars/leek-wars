@@ -132,6 +132,11 @@ const disconnected = (to: RouteLocationNormalized, _from: RouteLocationNormalize
 	}
 }
 
+// Layout déclaré par route, appliqué dans router.afterEach avant le 1er rendu (cf. #4150).
+// Objets partagés (lus, jamais mutés) pour éviter de répéter le littéral sur chaque route.
+const LAYOUT_BOX = { layout: { box: true, footer: false } }
+const LAYOUT_BOX_LARGE = { layout: { box: true, large: true, footer: false } }
+
 const routes: RouteRecordRaw[] = [
 	{ path: '/', component: Home },
 	{ path: '/godfather', component: Home },
@@ -162,7 +167,7 @@ const routes: RouteRecordRaw[] = [
 	// fromComponent → resetLayout() intempestif, sans remount donc sans re-set du large.
 	{ path: '/admin/dashboards/:id?', component: AdminDashboards, beforeEnter: connected },
 	{ path: '/admin/matchmaking', component: AdminMatchmaking, beforeEnter: connected },
-	{ path: '/admin/game-animations', component: AdminGameAnimations, beforeEnter: connected },
+	{ path: '/admin/game-animations', component: AdminGameAnimations, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
@@ -179,10 +184,10 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/encyclopedia/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia/:lang/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia-search', component: EncyclopediaSearch },
-	{ path: '/editor', component: Editor, beforeEnter: connected },
-	{ path: '/editor/:id(.+)/diff', component: Editor, beforeEnter: connected },
-	{ path: '/editor/:id(.+)/h/:hash', component: Editor, beforeEnter: connected },
-	{ path: '/editor/:id(.+)', component: Editor, beforeEnter: connected },
+	{ path: '/editor', component: Editor, meta: LAYOUT_BOX, beforeEnter: connected },
+	{ path: '/editor/:id(.+)/diff', component: Editor, meta: LAYOUT_BOX, beforeEnter: connected },
+	{ path: '/editor/:id(.+)/h/:hash', component: Editor, meta: LAYOUT_BOX, beforeEnter: connected },
+	{ path: '/editor/:id(.+)', component: Editor, meta: LAYOUT_BOX, beforeEnter: connected },
 	{ path: '/group/:id', component: Group, beforeEnter: connected },
 	{ path: '/groups', component: Groups },
 	{ path: '/error/:message', component: Error },
@@ -200,15 +205,15 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/garden/:category/:type/:target', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target/:item', component: Garden, beforeEnter: connected },
 	{ path: '/help', component: Encyclopedia },
-	{ path: '/help/api', component: Api, meta: { layout: { box: true } } },
-	{ path: '/help/api/:module/:function', component: Api, props: { popup: false }, meta: { layout: { box: true } } },
-	{ path: '/help/documentation', component: Documentation, props: { popup: false }, meta: { layout: { box: true } } },
-	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false }, meta: { layout: { box: true } } },
+	{ path: '/help/api', component: Api, meta: LAYOUT_BOX },
+	{ path: '/help/api/:module/:function', component: Api, props: { popup: false }, meta: LAYOUT_BOX },
+	{ path: '/help/documentation', component: Documentation, props: { popup: false }, meta: LAYOUT_BOX },
+	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false }, meta: LAYOUT_BOX },
 	{ path: '/help/items', component: Items },
 	{ path: '/help/line-of-sight', component: LineOfSight },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
-	{ path: '/inventory', component: InventoryPage },
+	{ path: '/inventory', component: InventoryPage, meta: LAYOUT_BOX },
 	{ path: '/legal', component: Legal },
 	{ path: '/login', component: Login, beforeEnter: disconnected },
 	{ path: '/login/:token', component: Login },
@@ -216,9 +221,9 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/leek/:id/history', component: History, props: {type: 'leek'} },
 	{ path: '/market', name: 'market', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
 	{ path: '/market/:item', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
-	{ path: '/messages', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
-	{ path: '/messages/conversation/:id', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
-	{ path: '/messages/new/:farmer_id/:name/:avatar_changed', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
+	{ path: '/messages', component: Messages, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
+	{ path: '/messages/conversation/:id', component: Messages, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
+	{ path: '/messages/new/:farmer_id/:name/:avatar_changed', component: Messages, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
@@ -260,9 +265,9 @@ if (import.meta.env.VITE_SOCIAL !== 'false') {
 		{ path: '/forum/category-:category/topic-:topic', component: ForumTopic },
 		{ path: '/forum/category-:category/topic-:topic/page-:page', component: ForumTopic },
 		{ path: '/search', component: ForumSearch, beforeEnter: connected },
-		{ path: '/chat', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
-		{ path: '/chat/:id', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
-		{ path: '/chat/new/:farmer_id/:name/:avatar_changed', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
+		{ path: '/chat', component: Messages, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
+		{ path: '/chat/:id', component: Messages, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
+		{ path: '/chat/new/:farmer_id/:name/:avatar_changed', component: Messages, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
 	)
 }
 if (import.meta.env.VITE_BANK !== 'false') {
