@@ -157,6 +157,7 @@ let lastErrorSent = 0
 // et l'écart depuis le dernier bump routerViewKey (rustine), pour distinguer un PREMIER crash
 // organique d'une cascade auto-induite par la rustine. Read-only, aucun changement de comportement.
 let lastRouterViewKeyBump = 0
+let rvkBumpScheduled = false
 let droppedSinceLastReport = 0
 const recentEvents: { t: number, kind: string, msg: string }[] = []
 function recordEvent(kind: string, msg: unknown) {
@@ -245,6 +246,25 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	const infoAny = info as any
 
 	if (LeekWars.DEV) return
+
+	// Instrumentation v2 (#4163) : mémoriser LA première erreur de la session (corrupteur
+	// racine d'un el null) en sessionStorage — le buffer roule et la perd. Capturée pour TOUT
+	// type d'erreur (y compris chunk/async-loader) et réinjectée dans chaque rapport complet.
+	let firstCrashTrace = ''
+	try {
+		const stored = sessionStorage.getItem('lw_first_crash')
+		if (!stored) {
+			sessionStorage.setItem('lw_first_crash', JSON.stringify({
+				m: (e?.message || String(e) || '').slice(0, 100), info: String(infoAny),
+				route: currentNav?.fullPath || null, prev: previousNav?.fullPath || null,
+				sinceNav: currentNav ? Date.now() - currentNav.at : null, at: Date.now(),
+			}))
+		} else {
+			const f = JSON.parse(stored)
+			firstCrashTrace = '\n\nFirst crash this session (' + (Date.now() - f.at) + 'ms ago): ' + f.m +
+				' | info=' + f.info + ' | route=' + f.route + ' prev=' + f.prev + ' sinceNav=' + f.sinceNav + 'ms'
+		}
+	} catch { /* empty */ }
 
 	// Échecs de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
 	// On les logge en masqué SANS recharger : la récupération après déploiement est gérée par le
@@ -357,18 +377,27 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		droppedSinceLastReport = 0
 	} catch { /* empty */ }
 
-	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace
+	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + firstCrashTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
 
-	// Après un crash "parentNode of null", RouterView garde un VNode avec el=null :
-	// chaque navigation suivante recrash. Incrémenter routerViewKey force Vue à démonter
-	// et remonter un RouterView frais, sans rechargement de page.
-	if (e?.message?.includes('parentNode') || e?.message?.includes("reading 'el'")) {
+	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
+	// alors fait parentNode/nextSibling/style(null) → crash, et la session crashe en boucle).
+	// Incrémenter routerViewKey démonte le RouterView corrompu et en remonte un frais.
+	// DIFFÉRÉ en nextTick (et non synchrone dans le handler) : fait synchroniquement DANS le
+	// flush cassé, le remount re-crashe immédiatement (observé via instrumentation #4163, le
+	// rvk-bump était suivi d'un re-crash 1ms après). Élargi à la famille nextSibling/style
+	// (même corruption). Debounce pour ne pas empiler les remounts.
+	const m = e?.message || ''
+	if (m.includes('parentNode') || m.includes('nextSibling') ||
+		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'")) {
 		lastRouterViewKeyBump = Date.now()
 		recordEvent('rvk-bump', '')
-		LeekWars.routerViewKey++
+		if (!rvkBumpScheduled) {
+			rvkBumpScheduled = true
+			nextTick(() => { rvkBumpScheduled = false; LeekWars.routerViewKey++ })
+		}
 	}
 }
 
