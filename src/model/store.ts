@@ -18,6 +18,19 @@ import { SchemeTemplate } from './scheme'
 import { Loadout } from './loadout'
 import { NotificationBuilder } from '@/model/notification-builder'
 
+// Met à jour (ou ajoute) l'entrée d'un farmer dans chat.farmers à partir d'une version
+// fraîche reçue du serveur, en rafraîchissant les champs d'affichage volatils (#11625).
+function updateChatFarmer(chat: Chat, farmer: Farmer) {
+	const existing = chat.farmers.find(f => f.id === farmer.id)
+	if (existing) {
+		existing.name = farmer.name
+		existing.avatar_changed = farmer.avatar_changed
+		existing.color = farmer.color
+	} else {
+		chat.farmers.push(farmer)
+	}
+}
+
 export interface AccountInfo {
 	id: number
 	name: string
@@ -369,9 +382,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 			chat.last_date = message.date
 			chat.last_farmer = message.farmer
-			if (!chat.farmers.find(f => f.id === message.farmer.id)) {
-				chat.farmers.push(message.farmer)
-			}
+			// Le serveur renvoie des infos d'auteur FRAÎCHES (Farmers.get = requête DB par
+			// message). On rafraîchit donc l'entrée existante (pp/pseudo/couleur) au lieu de
+			// la jeter : sinon le farmer mis en cache à l'ouverture de la conversation gardait
+			// son ancienne pp/pseudo après un changement côté envoyeur (#11625).
+			updateChatFarmer(chat, message.farmer)
 			if (data.unshift) {
 				chat.unshift(message)
 			} else {
@@ -412,8 +427,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'add-conversation-participant'(state: LeekWarsState, data: {id: number, farmer: Farmer}) {
 			const chat = state.chat[data.id]
-			if (chat && !chat.farmers.find(f => f.id === data.farmer.id)) {
-				chat.farmers.push(data.farmer)
+			if (chat) {
+				updateChatFarmer(chat, data.farmer)
 			}
 		},
 
