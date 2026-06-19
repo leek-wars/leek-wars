@@ -99,7 +99,11 @@ class Arena {
 	}
 	private clearActiveSlot() {
 		localStorage.removeItem('in-arena')
-		localStorage.removeItem('arena-leek')
+		// On conserve volontairement 'arena-leek' : ce n'est pas un état
+		// d'inscription mais le dernier poireau choisi, mémorisé entre les
+		// sessions pour le repré-sélectionner dans le potager / le menu / le
+		// chat. Le purger ici (quitter l'arène ou combat lancé) faisait retomber
+		// la sélection sur le premier poireau.
 		localStorage.removeItem('arena-preference')
 		localStorage.removeItem('arena-colossus')
 		localStorage.removeItem('arena-farmer')
