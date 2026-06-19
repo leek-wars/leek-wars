@@ -200,10 +200,10 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/garden/:category/:type/:target', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target/:item', component: Garden, beforeEnter: connected },
 	{ path: '/help', component: Encyclopedia },
-	{ path: '/help/api', component: Api },
-	{ path: '/help/api/:module/:function', component: Api, props: { popup: false } },
-	{ path: '/help/documentation', component: Documentation, props: { popup: false } },
-	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false } },
+	{ path: '/help/api', component: Api, meta: { layout: { box: true } } },
+	{ path: '/help/api/:module/:function', component: Api, props: { popup: false }, meta: { layout: { box: true } } },
+	{ path: '/help/documentation', component: Documentation, props: { popup: false }, meta: { layout: { box: true } } },
+	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false }, meta: { layout: { box: true } } },
 	{ path: '/help/items', component: Items },
 	{ path: '/help/line-of-sight', component: LineOfSight },
 	{ path: '/help/general', component: GeneralHelp },
@@ -216,9 +216,9 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/leek/:id/history', component: History, props: {type: 'leek'} },
 	{ path: '/market', name: 'market', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
 	{ path: '/market/:item', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
-	{ path: '/messages', component: Messages, beforeEnter: connected },
-	{ path: '/messages/conversation/:id', component: Messages, beforeEnter: connected },
-	{ path: '/messages/new/:farmer_id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
+	{ path: '/messages', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
+	{ path: '/messages/conversation/:id', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
+	{ path: '/messages/new/:farmer_id/:name/:avatar_changed', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
@@ -260,9 +260,9 @@ if (import.meta.env.VITE_SOCIAL !== 'false') {
 		{ path: '/forum/category-:category/topic-:topic', component: ForumTopic },
 		{ path: '/forum/category-:category/topic-:topic/page-:page', component: ForumTopic },
 		{ path: '/search', component: ForumSearch, beforeEnter: connected },
-		{ path: '/chat', component: Messages, beforeEnter: connected },
-		{ path: '/chat/:id', component: Messages, beforeEnter: connected },
-		{ path: '/chat/new/:farmer_id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
+		{ path: '/chat', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
+		{ path: '/chat/:id', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
+		{ path: '/chat/new/:farmer_id/:name/:avatar_changed', component: Messages, meta: { layout: { box: true, large: true, footer: false } }, beforeEnter: connected },
 	)
 }
 if (import.meta.env.VITE_BANK !== 'false') {
@@ -377,6 +377,17 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 	const fromComponent = from.matched[from.matched.length - 1]?.components?.default
 	if (toComponent !== fromComponent) {
 		LeekWars.resetLayout()
+		// Pose le layout déclaré par la route de destination AVANT le rendu de la page
+		// (comme au refresh), au lieu de le laisser à chaque page dans son onMounted.
+		// Sinon la fenêtre entre resetLayout (box=false) et onMounted (box=true) peut
+		// laisser box=false après une navigation client-side : la contrainte height:100vh
+		// manque, le chat/la doc prennent la hauteur de leur contenu et ne scrollent plus
+		// (#4150). C'est le même type de mutation réactive que resetLayout juste au-dessus,
+		// suivie du même await nextTick() → sûr vis-à-vis de #4163.
+		const layout = to.meta.layout as Record<string, boolean> | undefined
+		if (layout) {
+			for (const key in layout) { (LeekWars as unknown as Record<string, boolean>)[key] = layout[key] }
+		}
 		// resetLayout() (et le store.commit ci-dessus) mutent des flags réactifs bindés
 		// sur app.vue (ancêtre du <router-view>). Sans ce tick, le re-render de app.vue
 		// et le swap de route flushent ensemble : app.vue re-patche son sous-arbre PENDANT
