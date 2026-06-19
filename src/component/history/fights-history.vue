@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="history">
 		<div v-for="fight in fights" :key="fight.id" class="wrapper">
-			<fight-history :fight="fight" />
+			<fight-history :fight="fight" :progress="progress && progress[fight.id]" />
 		</div>
 	</div>
 </template>
@@ -14,6 +14,7 @@ defineOptions({ name: 'FightsHistory' })
 
 defineProps<{
 	fights: Fight[]
+	progress?: Record<number, number>
 }>()
 </script>
 

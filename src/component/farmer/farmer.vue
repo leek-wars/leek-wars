@@ -464,7 +464,7 @@
 				</template>
 				<template #content>
 					<loader v-if="!farmer" />
-					<fights-history v-else :fights="farmer.fight_history" />
+					<fights-history v-else :fights="farmer.fight_history" :progress="liveProgress" />
 				</template>
 			</panel>
 			<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
@@ -629,6 +629,7 @@
 <script setup lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
+	import { useLiveHistory } from '@/model/use-live-history'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Team, TeamMemberLevel } from '@/model/team'
@@ -795,6 +796,22 @@
 	})
 
 	watch(id, () => update(), { immediate: true })
+
+	// Mise à jour en direct du petit historique de combats. `update()` réutilise
+	// le store pour son propre profil (pas de refetch), donc on recharge ici
+	// directement le fight_history depuis le serveur.
+	function reloadFightHistory() {
+		if (id.value === null) return
+		LeekWars.get('farmer/get/' + id.value).then(data => {
+			if (farmer.value && data.farmer) farmer.value.fight_history = data.farmer.fight_history
+		})
+	}
+	const { progress: liveProgress } = useLiveHistory({
+		type: 'farmer',
+		id: () => farmer.value?.id,
+		fights: () => farmer.value?.fight_history,
+		reload: reloadFightHistory,
+	})
 
 	function update() {
 		if (leaving) return

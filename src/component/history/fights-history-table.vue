@@ -53,6 +53,9 @@
 						<v-icon v-else-if="item.type == FightType.COLOSSUS" :title="$t('colossus')">mdi-skull-outline</v-icon>
 						<v-icon v-else-if="item.type == FightType.BATTLE_ROYALE" :title="$t('battle_royale')">mdi-sword-cross</v-icon>
 						<img v-else src="/image/icon/black/garden.png" :title="$t('garden')">
+						<div v-if="item.status == 0" class="progress-bar" :title="(progress && progress[item.id] || 0) + '%'">
+							<div class="progress-bar-fill" :style="{ width: (progress && progress[item.id] || 0) + '%' }"></div>
+						</div>
 					</span>
 				</rich-tooltip-fight>
 			</template>
@@ -156,6 +159,7 @@ defineOptions({ name: 'FightsHistoryTable', i18n: {}, mixins: [...mixins] })
 
 defineProps<{
 	fights: Fight[]
+	progress?: Record<number, number>
 }>()
 
 const { t } = useI18n()
@@ -251,8 +255,10 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 
 	.type-cell {
 		display: inline-flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		gap: 3px;
 		.v-icon {
 			font-size: 22px;
 			color: #333;
@@ -263,6 +269,18 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 			height: 20px;
 			opacity: 0.85;
 			vertical-align: middle;
+		}
+		.progress-bar {
+			width: 36px;
+			height: 3px;
+			background: var(--background-disabled);
+			border-radius: 2px;
+			overflow: hidden;
+		}
+		.progress-bar-fill {
+			height: 100%;
+			background: var(--primary);
+			transition: width 0.4s ease;
 		}
 	}
 	.result-icon {

@@ -620,7 +620,7 @@
 					</router-link>
 				</template>
 				<template #content>
-					<fights-history v-if="team" :fights="team.fights" />
+					<fights-history v-if="team" :fights="team.fights" :progress="liveProgress" />
 				</template>
 			</panel>
 
@@ -828,6 +828,7 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Composition, Team, TeamMember, type TeamInvitation } from '@/model/team'
+	import { useLiveHistory } from '@/model/use-live-history'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -1027,6 +1028,14 @@
 	})
 
 	watch(id, () => update(), { immediate: true })
+
+	// Mise à jour en direct du petit historique de combats.
+	const { progress: liveProgress } = useLiveHistory({
+		type: 'team',
+		id: () => team.value?.id,
+		fights: () => team.value?.fights,
+		reload: () => update(),
+	})
 
 	function update() {
 		if (id.value === null) return

@@ -284,7 +284,7 @@
 					</router-link>
 				</template>
 				<template #content>
-					<fights-history :fights="leek.fights" />
+					<fights-history :fights="leek.fights" :progress="liveProgress" />
 				</template>
 			</panel>
 			<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
@@ -823,6 +823,7 @@
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/vue'
+	import { useLiveHistory } from '@/model/use-live-history'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
 
@@ -1072,6 +1073,14 @@
 	onBeforeRouteLeave(() => { leaving = true })
 
 	watch(id, () => update(), { immediate: true })
+
+	// Mise à jour en direct du petit historique de combats.
+	const { progress: liveProgress } = useLiveHistory({
+		type: 'leek',
+		id: () => leek.value?.id,
+		fights: () => leek.value?.fights,
+		reload: () => update(),
+	})
 
 	function update() {
 		if (leaving) return

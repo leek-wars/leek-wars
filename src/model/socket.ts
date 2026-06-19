@@ -92,6 +92,9 @@ enum SocketMessage {
 	PING = 90,
 	CONNECTED_COUNT = 91,
 	EDITOR_REFERENCES = 92,
+	HISTORY_REGISTER = 94,
+	HISTORY_UPDATE = 95,
+	HISTORY_UNREGISTER = 96,
 }
 
 // On visibility change, if no message received for this long, send a probe ping
@@ -269,6 +272,10 @@ class Socket {
 				}
 				case SocketMessage.FIGHT_PROGRESS: {
 					emitter.emit('fight-progress', data)
+					break
+				}
+				case SocketMessage.HISTORY_UPDATE: {
+					emitter.emit('history-update', data)
 					break
 				}
 				case SocketMessage.TOURNAMENT_UPDATE: {

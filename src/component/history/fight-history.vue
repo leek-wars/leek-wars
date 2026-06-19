@@ -57,6 +57,9 @@
 				<div>{{ $t('entity.' + fight.boss_name) }}</div>
 			</div>
 		</div>
+		<div v-if="fight.status == 0" class="progress-bar" :title="(progress || 0) + '%'">
+			<div class="progress-bar-fill" :style="{ width: (progress || 0) + '%' }"></div>
+		</div>
 		<div class="time">{{ LeekWars.formatDuration(fight.date) }}</div>
 		<div class="info">
 			<span v-if="fight.levelups"><v-icon >mdi-arrow-up-thick</v-icon>{{ fight.levelups }}</span>
@@ -81,6 +84,7 @@ defineOptions({ name: 'FightHistory' })
 
 const props = defineProps<{
 	fight: Fight
+	progress?: number
 }>()
 
 const { t } = useI18n()
@@ -199,6 +203,22 @@ const arenaLabel = computed<[string, string]>(() => {
 	}
 	.generating {
 		background: var(--pure-white);
+	}
+	.progress-bar {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		background: var(--background-disabled);
+		border-bottom-left-radius: 3px;
+		border-bottom-right-radius: 3px;
+		overflow: hidden;
+	}
+	.progress-bar-fill {
+		height: 100%;
+		background: var(--primary);
+		transition: width 0.4s ease;
 	}
 	@keyframes rotate {
 		0% { transform: rotate(0); }

@@ -42,6 +42,7 @@ type Events = {
 	'doc-navigate': string,
 	'garden-queue': number,
 	'fight-progress': [number, number],
+	'history-update': [number],
 	'update-leek-xp': unknown,
 	'update-leek-talent': unknown,
 	'update-team-talent': { composition: number; talent: number },

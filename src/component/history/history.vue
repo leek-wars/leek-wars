@@ -95,21 +95,22 @@
 					</div>
 				</div>
 
-				<fights-history-table v-if="viewMode === 'table'" :fights="filteredFights" />
-				<fights-history v-else :fights="filteredFights" />
+				<fights-history-table v-if="viewMode === 'table'" :fights="filteredFights" :progress="progress" />
+				<fights-history v-else :fights="filteredFights" :progress="progress" />
 			</div>
 		</panel>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Farmer } from '@/model/farmer'
 import { type Fight, FightContext, FightType } from '@/model/fight'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import type { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
+import { useLiveHistory } from '@/model/use-live-history'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
 import FightsHistoryTable from '@/component/history/fights-history-table.vue'
@@ -131,6 +132,7 @@ const displayContexts = ref({ challenge: true, garden: true, tournament: true })
 const displayTypes = ref({ solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
 const displayLoot = ref({ chests: false, rareloot: false })
 const viewMode = ref<'grid' | 'table'>((localStorage.getItem('options/history-view') as 'grid' | 'table') || 'grid')
+let destroyed = false
 
 const breadcrumb_items = computed(() => [
 	{ name: entity.value ? entity.value.name : '...', link: '/' + props.type + '/' + (entity.value ? entity.value.id : '') },
@@ -191,12 +193,27 @@ displayTypes.value = JSON.parse(localStorage.getItem('options/history-types') ||
 displayLoot.value = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":false,"rareloot":false}')
 select_period(initialPeriod)
 
-LeekWars.get('history/get-' + props.type + '-history/' + id).then(data => {
-	fights.value = data.fights
-	entity.value = data.entity
-	LeekWars.setTitle(t('title', [data.entity.name]))
-	select_period(initialPeriod)
+function loadHistory() {
+	LeekWars.get('history/get-' + props.type + '-history/' + id).then(data => {
+		if (destroyed) return
+		fights.value = data.fights
+		entity.value = data.entity
+		LeekWars.setTitle(t('title', [data.entity.name]))
+		select_period(period.value)
+	})
+}
+
+// Abonnement par entité + progression en direct + reload débouncé (cf. composable).
+const { progress } = useLiveHistory({
+	type: props.type,
+	id: () => Number(id),
+	fights: () => fights.value,
+	reload: loadHistory,
 })
+
+loadHistory()
+
+onUnmounted(() => { destroyed = true })
 
 watch(displayContexts, () => {
 	localStorage.setItem('options/history-contexts', JSON.stringify(displayContexts.value))
