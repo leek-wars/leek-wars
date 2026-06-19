@@ -566,6 +566,11 @@ img.emoji {
 	margin-top: -2px;
 	float: none;
 }
+// L'emoji « fréquence » est un éclair noir : invisible sur fond sombre (forum #11727).
+// En mode sombre on l'inverse (éclair blanc), visible dans le chat comme dans le picker.
+body.dark img.emoji[src$="frequency.png"] {
+	filter: invert(1);
+}
 .emoji.large {
 	width: 30px;
 	height: 30px;
