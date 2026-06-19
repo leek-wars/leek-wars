@@ -8,14 +8,6 @@ class NotificationBuilder {
 
 	public static rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 
-	// Destination d'une notification de combat : le rapport (page légère qui
-	// affiche le résultat tout de suite) ou le visionneur, selon la préférence
-	// utilisateur "Ouvrir le rapport plutôt que le combat" (#4222). Le rapport
-	// propose un lien vers le visionneur en un clic.
-	private static fightLink(fightId: string | number) {
-		return (LeekWars.notifsOpenReport ? "/report/" : "/fight/") + fightId
-	}
-
 	public static build(data: Record<string, unknown>) {
 
 		const type = data.type
@@ -39,7 +31,7 @@ class NotificationBuilder {
 			const fightId = params[1]
 			const enemyName = params[2]
 			const result = params.length > 3 ? parseInt(params[3], 10) : null
-			return new Notification(data, NotificationBuilder.fightLink(fightId), "garden.png", [leekName, enemyName], [], result)
+			return new Notification(data, "/fight/" + fightId, "garden.png", [leekName, enemyName], [], result)
 		} else if (type === NotificationType.NEW_MESSAGE) {
 			const farmerName = params[0]
 			const topicId = params[1]
@@ -52,7 +44,7 @@ class NotificationBuilder {
 			const fightId = params[1]
 			const teamName = params[2]
 			const result = params.length > 3 ? parseInt(params[3], 10) : null
-			return new Notification(data, NotificationBuilder.fightLink(fightId), "team_fight.png", [leekName, teamName], [], result)
+			return new Notification(data, "/fight/" + fightId, "team_fight.png", [leekName, teamName], [], result)
 		} else if (type === NotificationType.TEAM_BANNED) {
 			const teamName = params[0]
 			return new Notification(data, "/farmer", "team_banned.png", [teamName])
@@ -104,17 +96,17 @@ class NotificationBuilder {
 			const fightID = params[1]
 			const enemyName = params[2]
 			const result = params.length > 3 ? parseInt(params[3], 10) : null
-			return new Notification(data, NotificationBuilder.fightLink(fightID), "mdi-flag-outline", [leekName, enemyName], [], result)
+			return new Notification(data, "/fight/" + fightID, "mdi-flag-outline", [leekName, enemyName], [], result)
 		} else if (type === NotificationType.FARMER_CHALLENGE) {
 			const fightID = params[0]
 			const enemyName = params[1]
 			const result = params.length > 2 ? parseInt(params[2], 10) : null
-			return new Notification(data, NotificationBuilder.fightLink(fightID), "mdi-flag-outline", [enemyName], [], result)
+			return new Notification(data, "/fight/" + fightID, "mdi-flag-outline", [enemyName], [], result)
 		} else if (type === NotificationType.FARMER_FIGHT_REPORT) {
 			const fightID = params[1]
 			const farmerName = params[2]
 			const result = params.length > 3 ? parseInt(params[3], 10) : null
-			return new Notification(data, NotificationBuilder.fightLink(fightID), "garden.png", [farmerName], [], result)
+			return new Notification(data, "/fight/" + fightID, "garden.png", [farmerName], [], result)
 		} else if (type === NotificationType.TEAM_NEW_FARMER) {
 			const teamID = params[0]
 			const farmerName = params[1]
@@ -162,7 +154,7 @@ class NotificationBuilder {
 		} else if (type === NotificationType.BATTLE_ROYALE_STARTED) {
 			const fightID = params[0]
 			const result = params.length > 1 ? parseInt(params[1]) : 0
-			return new Notification(data, NotificationBuilder.fightLink(fightID), "mdi-sword-cross", [], [], result)
+			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [], [], result)
 		} else if (type === NotificationType.NO_TOURNAMENT_FARMER) {
 			return new Notification(data, "/farmer", "tournament_fail.png")
 		} else if (type === NotificationType.NO_TOURNAMENT_TEAM) {
@@ -192,7 +184,7 @@ class NotificationBuilder {
 			const farmer_name = params[0]
 			const fightID = params[1]
 			// const result = params.length > 1 ? parseInt(params[1]) : 0
-			return new Notification(data, NotificationBuilder.fightLink(fightID), "mdi-crown", [farmer_name])
+			return new Notification(data, "/fight/" + fightID, "mdi-crown", [farmer_name])
 		} else if (type === NotificationType.FORUM_TOPIC) {
 			const farmerName = params[0]
 			const topicId = params[1]
@@ -232,7 +224,7 @@ class NotificationBuilder {
 			const result = params.length > 1 ? parseInt(params[1]) : 0
 			const leekName = params.length > 2 ? params[2] : ''
 			const participantCount = params.length > 3 ? params[3] : ''
-			return new Notification(data, NotificationBuilder.fightLink(fightID), "mdi-sword-cross", [leekName, participantCount], [], result)
+			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross", [leekName, participantCount], [], result)
 		} else if (type === NotificationType.LEEK_AUTO_EXIT_ARENA) {
 			const leekId = parseInt(params[0], 10)
 			const leekName = leeks[leekId]?.name ?? '?'

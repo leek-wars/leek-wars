@@ -55,12 +55,30 @@ enum NotificationType {
 	COLOSSUS_OWN_REPORT = 52, // Rapport de Colosse, reçu par le colosse lui-même
 }
 
+// Notifications de résultat de combat dont le lien respecte la préférence
+// "Ouvrir le rapport plutôt que le combat" (#4222). FIGHT_COMMENT en est exclu :
+// son lien doit rester sur le visionneur (où vit le fil de discussion).
+const FIGHT_RESULT_NOTIFICATION_TYPES = new Set<NotificationType>([
+	NotificationType.FIGHT_REPORT,
+	NotificationType.COMPOSITION_FIGHT_REPORT,
+	NotificationType.CHALLENGE,
+	NotificationType.FARMER_FIGHT_REPORT,
+	NotificationType.FARMER_CHALLENGE,
+	NotificationType.BATTLE_ROYALE_STARTED,
+	NotificationType.BOSS_STARTED,
+	NotificationType.BATTLE_ROYALE_REPORT,
+	NotificationType.WAR_REPORT,
+	NotificationType.CHEST_HUNT_REPORT,
+	NotificationType.COLOSSUS_REPORT,
+	NotificationType.COLOSSUS_OWN_REPORT,
+])
+
 class Notification {
 
 	public id!: number
 	public type!: NotificationType
 	public date!: number
-	public link!: string | null
+	private _link!: string | null
 	public image!: string | null
 	public title!: string[]
 	public message!: string[]
@@ -73,7 +91,7 @@ class Notification {
 		this.id = data.id as number
 		this.date = data.date as number
 		this.type = data.type as NotificationType
-		this.link = link
+		this._link = link
 		this.image = image
 		if (this.image) {
 			if (this.image.includes(".")) {
@@ -98,6 +116,18 @@ class Notification {
 		if (this.type === NotificationType.TEAM_TOURNAMENT_WIN || this.type === NotificationType.FARMER_TOURNAMENT_WIN || this.type === NotificationType.TOURNAMENT_WINNER) {
 			this.clazz = 'notif-bigwin'
 		}
+	}
+
+	// Lien de navigation. Pour une notification de résultat de combat, on recalcule
+	// dynamiquement la destination (/report/<id> vs /fight/<id>) selon la préférence
+	// LeekWars.notifsOpenReport (#4222) : comme c'est un getter lisant un état réactif,
+	// le toggle prend effet immédiatement, sans recharger. notification-builder produit
+	// le lien canonique /fight/<id>.
+	get link(): string | null {
+		if (this._link && LeekWars.notifsOpenReport && FIGHT_RESULT_NOTIFICATION_TYPES.has(this.type) && this._link.startsWith('/fight/')) {
+			return '/report/' + this._link.slice('/fight/'.length)
+		}
+		return this._link
 	}
 }
 
