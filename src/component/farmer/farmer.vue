@@ -938,7 +938,12 @@
 		if (farmer.value.trophies_list) {
 			trophies.value = farmer.value.trophies_list
 		} else {
+			const reqId = farmer.value.id
 			LeekWars.get('trophy/get-farmer-trophies/' + farmer.value.id + '/' + i18nLocale.value).then(data => {
+				// Réponse périmée : une navigation /farmer/A -> /farmer/B plus récente a
+				// pris le relais (le fetch de A ne doit pas écraser les trophées de B). Sans
+				// ce garde, la page éleveur affichait les trophées d'un autre éleveur (#11650).
+				if (!farmer.value || id.value !== reqId) return
 				trophies.value = data.trophies
 				if (myFarmer.value) {
 					store.commit('set-trophies', data.trophies)
