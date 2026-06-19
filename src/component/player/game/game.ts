@@ -1526,6 +1526,17 @@ class Game {
 				entity.initialMaxLife = entity.maxLife
 			}
 			entity.reborn()
+			// Une entité ressuscitée peut être absente de game.teams (ex: add de boss
+			// inactif à l'init, non ajouté ligne ~709) : reborn() la remet vivante mais
+			// elle n'aurait pas de section dans la barre de vie du haut, d'où un décalage
+			// sections/entités sur les combats de boss avec résurrections (#11806). On
+			// garantit sa présence dans l'équipe (sans doublon).
+			if (this.teams[entity.team - 1] === undefined) {
+				this.teams[entity.team - 1] = []
+			}
+			if (!this.teams[entity.team - 1].includes(entity)) {
+				this.teams[entity.team - 1].push(entity)
+			}
 			cell.setEntity(entity)
 			if (!this.jumping) {
 				entity.setCell(cell)
