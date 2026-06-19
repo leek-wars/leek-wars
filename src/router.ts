@@ -376,25 +376,16 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 	const toComponent = to.matched[to.matched.length - 1]?.components?.default
 	const fromComponent = from.matched[from.matched.length - 1]?.components?.default
 	if (toComponent !== fromComponent) {
-		LeekWars.resetLayout()
-		// Pose le layout déclaré par la route de destination AVANT le rendu de la page
-		// (comme au refresh), au lieu de le laisser à chaque page dans son onMounted.
-		// Sinon la fenêtre entre resetLayout (box=false) et onMounted (box=true) peut
-		// laisser box=false après une navigation client-side : la contrainte height:100vh
-		// manque, le chat/la doc prennent la hauteur de leur contenu et ne scrollent plus
-		// (#4150). C'est le même type de mutation réactive que resetLayout juste au-dessus,
-		// suivie du même await nextTick() → sûr vis-à-vis de #4163.
-		const layout = to.meta.layout as Record<string, boolean> | undefined
-		if (layout) {
-			for (const key in layout) { (LeekWars as unknown as Record<string, boolean>)[key] = layout[key] }
-		}
-		// resetLayout() (et le store.commit ci-dessus) mutent des flags réactifs bindés
-		// sur app.vue (ancêtre du <router-view>). Sans ce tick, le re-render de app.vue
-		// et le swap de route flushent ensemble : app.vue re-patche son sous-arbre PENDANT
-		// que <RouterView> monte la page de destination, dont le vnode racine a alors
-		// `el` null → crash "parentNode of null" dans le scheduler. En attendant un tick,
-		// app.vue se stabilise AVANT le swap. Ne touche aucune valeur de layout (le
-		// gating par composant est conservé) → pas de régression éditeur.
+		// store.commit('connected') ci-dessus mute un flag réactif (connected) bindé sur
+		// app.vue (ancêtre du <router-view>). Sans ce tick, le re-render de app.vue et le
+		// swap de route flushent ensemble : app.vue re-patche son sous-arbre PENDANT que
+		// <RouterView> monte la page de destination, dont le vnode racine a alors `el` null
+		// → crash "parentNode of null" dans le scheduler. En attendant un tick, app.vue se
+		// stabilise AVANT le swap.
+		// Le layout (resetLayout + meta.layout) est posé dans afterEach (après confirmation,
+		// batché avec le swap) et non ici : sinon le changement de layout s'applique sur la
+		// page encore affichée pendant le chargement du chunk lazy → flash (élargissement /
+		// dé-box de la page précédente) (#4150).
 		await nextTick()
 	}
 
@@ -404,7 +395,28 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 // Réinitialise les balises meta SEO/partage à chaque navigation : pose le canonical et
 // l'og:url de l'URL courante + remet les valeurs par défaut. Les pages publiques surchargent
 // ensuite via LeekWars.setMeta() dans leur onMounted (après le swap de <router-view>).
-router.afterEach(() => {
+router.afterEach((to, from) => {
+	// Layout posé ICI (afterEach) et non dans beforeEach : la navigation est confirmée et le
+	// chunk lazy chargé, donc resetLayout()/meta.layout se batchent avec le swap de
+	// <router-view> → appliqués sur la page de DESTINATION, jamais sur la page courante encore
+	// affichée. Posé dans beforeEach, le layout s'appliquait sur la page quittée pendant le
+	// chargement du chunk → flash (élargissement `large` / dé-box de la page précédente)
+	// (#4150). Les flags de layout ne sont plus lus par le template de app.vue (depuis
+	// e703b37e3, #4163) → les muter ici ne re-render pas app.vue, le swap reste sûr.
+	// Gating par composant : sur une nav de paramètres (même composant), on préserve les
+	// flags déjà posés (la page ne re-monte pas). meta.layout pose le layout de façon
+	// déterministe AVANT le 1er rendu de la page (comme au refresh) plutôt que dans son
+	// onMounted, où la fenêtre resetLayout(box=false)/onMounted(box=true) pouvait laisser
+	// box=false après nav → chat/doc à la hauteur du contenu, sans scroll (#4150).
+	const toComponent = to.matched[to.matched.length - 1]?.components?.default
+	const fromComponent = from.matched[from.matched.length - 1]?.components?.default
+	if (toComponent !== fromComponent) {
+		LeekWars.resetLayout()
+		const layout = to.meta.layout as Record<string, boolean> | undefined
+		if (layout) {
+			for (const key in layout) { (LeekWars as unknown as Record<string, boolean>)[key] = layout[key] }
+		}
+	}
 	LeekWars.setMeta()
 })
 
