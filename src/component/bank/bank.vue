@@ -2,37 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
-			<div class="tabs">
-				<a href="https://leek-wars.myspreadshop.fr" target="_blank" rel="noopener">
-					<div class="tab action" icon="cart-outline" link="https://leek-wars.myspreadshop.fr">
-						<v-icon>mdi-cart-outline</v-icon>
-						<span>{{ $t('main.shop') }}</span>
-						<v-icon class="small">mdi-open-in-new</v-icon>
-					</div>
-				</a>
-				<div class="tab action active" icon="account_balance" link="/bank">
-					<v-icon>mdi-bank</v-icon>
-					<span>{{ $t('main.bank') }}</span>
-				</div>
-				<router-link to="/market">
-					<div class="tab action" image="icon/market.png" link="/market">
-						<img src="/image/icon/market.png">
-						<span>{{ $t('main.market') }}</span>
-					</div>
-				</router-link>
-				<router-link to="/inventory">
-					<div class="tab action" icon="mdi-treasure-chest" link="/inventory">
-						<v-icon>mdi-treasure-chest</v-icon>
-						<span>{{ $t('main.inventory') }}</span>
-					</div>
-				</router-link>
-				<!-- <router-link to="/workshop">
-					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
-						<v-icon>mdi-hammer-wrench</v-icon>
-						<span>{{ $t('main.workshop') }}</span>
-					</div>
-				</router-link> -->
-			</div>
+			<page-tabs active="bank" />
 		</div>
 		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
@@ -167,6 +137,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { ITEM_CATEGORY_NAME, ItemType, type ItemTemplate } from '@/model/item'
 import Item from '@/component/item.vue'
+import PageTabs from '@/component/app/page-tabs.vue'
 import BankProduct from './bank-product.vue'
 import Popup from '@/component/popup.vue'
 

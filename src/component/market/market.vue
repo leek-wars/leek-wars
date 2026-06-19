@@ -2,50 +2,17 @@
 	<div ref="marketRoot" class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
-			<div class="tabs">
-				<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="tab disabled search-box">
-					<img src="/image/search.png">
-					<input v-model="search" type="text" :placeholder="$t('main.search')" @keyup.stop>
-				</div>
-				<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
-					<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
-				</div>
-				<a href="https://leek-wars.myspreadshop.fr" target="_blank" rel="noopener">
-					<div class="tab action" icon="cart-outline" link="https://leek-wars.myspreadshop.fr">
-						<v-icon>mdi-cart-outline</v-icon>
-						<span>{{ $t('main.shop') }}</span>
-						<v-icon class="small">mdi-open-in-new</v-icon>
+			<page-tabs active="market">
+				<template #before>
+					<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="tab disabled search-box">
+						<img src="/image/search.png">
+						<input v-model="search" type="text" :placeholder="$t('main.search')" @keyup.stop>
 					</div>
-				</a>
-				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank?ref=market_tab">
-					<div class="tab action" icon="account_balance" link="/bank">
-						<v-icon>mdi-bank</v-icon>
-						<span>{{ $t('main.bank') }}</span>
+					<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
+						<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
 					</div>
-				</router-link>
-				<div class="tab action active" image="icon/market.png" link="/market">
-					<img src="/image/icon/black/market.png">
-					<span>{{ $t('main.market') }}</span>
-				</div>
-				<router-link to="/inventory">
-					<div class="tab action" icon="mdi-treasure-chest" link="/inventory">
-						<v-icon>mdi-treasure-chest</v-icon>
-						<span>{{ $t('main.inventory') }}</span>
-					</div>
-				</router-link>
-				<router-link to="/collection">
-					<div class="tab action" icon="mdi-trophy-variant-outline" link="/collection">
-						<v-icon>mdi-trophy-variant-outline</v-icon>
-						<span>{{ $t('main.collection') }}</span>
-					</div>
-				</router-link>
-				<!-- <router-link to="/workshop">
-					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
-						<v-icon>mdi-hammer-wrench</v-icon>
-						<span>{{ $t('main.workshop') }}</span>
-					</div>
-				</router-link> -->
-			</div>
+				</template>
+			</page-tabs>
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
@@ -360,6 +327,7 @@
 	import ItemPreview from './item-preview.vue'
 	import SchemeImage from './scheme-image.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import PageTabs from '@/component/app/page-tabs.vue'
 	import { emitter } from '@/model/vue'
 	import { computed, onBeforeUnmount, onUnmounted, reactive, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'

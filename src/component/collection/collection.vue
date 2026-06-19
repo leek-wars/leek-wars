@@ -2,30 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.collection') }}</h1>
-			<div class="tabs">
-				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank?ref=collection_tab">
-					<div class="tab action" icon="account_balance" link="/bank">
-						<v-icon>mdi-bank</v-icon>
-						<span>{{ $t('main.bank') }}</span>
-					</div>
-				</router-link>
-				<router-link to="/market">
-					<div class="tab action" image="icon/market.png" link="/market">
-						<img src="/image/icon/market.png">
-						<span>{{ $t('main.market') }}</span>
-					</div>
-				</router-link>
-				<router-link to="/inventory">
-					<div class="tab action" icon="mdi-treasure-chest" link="/inventory">
-						<v-icon>mdi-treasure-chest</v-icon>
-						<span>{{ $t('main.inventory') }}</span>
-					</div>
-				</router-link>
-				<div class="tab action active" icon="mdi-trophy-variant-outline" link="/collection">
-					<v-icon>mdi-trophy-variant-outline</v-icon>
-					<span>{{ $t('main.collection') }}</span>
-				</div>
-			</div>
+			<page-tabs active="collection" />
 		</div>
 		<panel class="collection-panel">
 			<template #content>
@@ -83,10 +60,10 @@
 	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { env } from '@/env'
 	import { computed, onMounted, ref, watch } from 'vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import SchemeImage from '../market/scheme-image.vue'
+	import PageTabs from '@/component/app/page-tabs.vue'
 
 	defineOptions({ name: 'Collection', i18n: {}, mixins: [...mixins] })
 
