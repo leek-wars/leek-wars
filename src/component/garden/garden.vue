@@ -1131,16 +1131,29 @@
 	}
 	.dot {
 		display: inline-block;
+		position: relative;
 		width: 8px;
 		height: 8px;
 		border-radius: 50%;
 		background: var(--primary);
+	}
+	// Halo pulsé via un pseudo-élément animé en transform/opacity (compositables
+	// GPU, aucun repaint). L'ancienne version animait box-shadow, ce qui forçait
+	// un repaint à chaque frame et faisait chauffer un cœur de CPU à 100% (#11920).
+	.dot::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		border-radius: 50%;
+		background: rgba(95, 173, 27, 0.6);
 		animation: arena-pulse 2s infinite;
+		pointer-events: none;
 	}
 	@keyframes arena-pulse {
-		0% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0.6); }
-		70% { box-shadow: 0 0 0 8px rgba(95, 173, 27, 0); }
-		100% { box-shadow: 0 0 0 0 rgba(95, 173, 27, 0); }
+		0% { transform: scale(1); opacity: 0.6; }
+		70% { transform: scale(3); opacity: 0; }
+		100% { transform: scale(3); opacity: 0; }
 	}
 	.arena-leek {
 		position: relative;
