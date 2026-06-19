@@ -1,8 +1,7 @@
 <template>
-	<router-view :key="LeekWars.routerViewKey" />
+	<router-view />
 </template>
 
 <script setup lang="ts">
-	import { LeekWars } from '@/model/leekwars'
 	defineOptions({ name: 'PageHost' })
 </script>

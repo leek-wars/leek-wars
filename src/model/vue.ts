@@ -156,8 +156,6 @@ let lastErrorSent = 0
 // Instrumentation #4163 : tracer la SÉQUENCE d'erreurs (chunk/async-loader → cascade parentNode)
 // et l'écart depuis le dernier bump routerViewKey (rustine), pour distinguer un PREMIER crash
 // organique d'une cascade auto-induite par la rustine. Read-only, aucun changement de comportement.
-let lastRouterViewKeyBump = 0
-let rvkBumpScheduled = false
 let droppedSinceLastReport = 0
 const recentEvents: { t: number, kind: string, msg: string }[] = []
 function recordEvent(kind: string, msg: unknown) {
@@ -369,9 +367,10 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	let instrTrace = ''
 	try {
 		const now = Date.now()
-		const bumpAge = lastRouterViewKeyBump ? (now - lastRouterViewKeyBump) + 'ms' : 'never'
+		const lastReload = parseInt(sessionStorage.getItem('parentNode-reload-at') || '0', 10)
+		const reloadAge = lastReload ? (now - lastReload) + 'ms' : 'never'
 		const seq = recentEvents.map(ev => ev.kind + ' +' + (now - ev.t) + 'ms' + (ev.msg ? ' ' + ev.msg : '')).join('\n  ')
-		instrTrace = '\n\nSince routerViewKey bump: ' + bumpAge +
+		instrTrace = '\n\nSince last auto-reload: ' + reloadAge +
 			'\nDropped since last report: ' + droppedSinceLastReport +
 			'\nRecent events (oldest→newest):\n  ' + seq
 		droppedSinceLastReport = 0
@@ -383,20 +382,20 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
 
 	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
-	// alors fait parentNode/nextSibling/style(null) → crash, et la session crashe en boucle).
-	// Incrémenter routerViewKey démonte le RouterView corrompu et en remonte un frais.
-	// DIFFÉRÉ en nextTick (et non synchrone dans le handler) : fait synchroniquement DANS le
-	// flush cassé, le remount re-crashe immédiatement (observé via instrumentation #4163, le
-	// rvk-bump était suivi d'un re-crash 1ms après). Élargi à la famille nextSibling/style
-	// (même corruption). Debounce pour ne pas empiler les remounts.
+	// fait alors parentNode/nextSibling/style(null) → crash, et la session crashe en BOUCLE).
+	// Le reset par routerViewKey++ (essayé 06/2026) NE RÉCUPÈRE PAS : observé en prod via
+	// l'instrumentation #4163, la session crashe en boucle 4+ min malgré les bumps. On revient
+	// au HARD RELOAD (le comportement d'avant le 11/06), qui repart d'un arbre Vue sain. Délai
+	// court pour laisser le POST error/report partir ; cooldown 30s anti-boucle de reload.
 	const m = e?.message || ''
 	if (m.includes('parentNode') || m.includes('nextSibling') ||
 		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'")) {
-		lastRouterViewKeyBump = Date.now()
-		recordEvent('rvk-bump', '')
-		if (!rvkBumpScheduled) {
-			rvkBumpScheduled = true
-			nextTick(() => { rvkBumpScheduled = false; LeekWars.routerViewKey++ })
+		const RELOAD_KEY = 'parentNode-reload-at'
+		const last = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10)
+		if (Date.now() - last > 30_000) {
+			recordEvent('reload', '')
+			sessionStorage.setItem(RELOAD_KEY, Date.now().toString())
+			setTimeout(() => location.reload(), 400)
 		}
 	}
 }
