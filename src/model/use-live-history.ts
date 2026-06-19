@@ -6,6 +6,40 @@ import type { Fight } from '@/model/fight'
 
 const HISTORY_TYPE: Record<string, number> = { farmer: 0, leek: 1, team: 2 }
 
+// Comptage de références PARTAGÉ entre toutes les instances du composable.
+// Indispensable : lors d'une navigation (ex. poireau -> historique), Vue exécute
+// le setup de la nouvelle page (qui s'abonne) AVANT de démonter l'ancienne (qui se
+// désabonne). Sans compteur, le UNREGISTER du composant démonté annulerait
+// l'abonnement que la nouvelle page vient de poser pour la même entité. On
+// n'envoie donc REGISTER qu'au passage 0->1 et UNREGISTER qu'au passage 1->0.
+const historyRefs = new Map<string, number>()
+const fightRefs = new Map<number, number>()
+
+function historyRef(type: string, id: number, on: boolean) {
+	const code = HISTORY_TYPE[type]
+	if (code === undefined) return
+	const key = type + ':' + id
+	const n = (historyRefs.get(key) || 0) + (on ? 1 : -1)
+	if (n <= 0) {
+		historyRefs.delete(key)
+		if (!on) LeekWars.socket.send([SocketMessage.HISTORY_UNREGISTER, code, id])
+	} else {
+		historyRefs.set(key, n)
+		if (on && n === 1) LeekWars.socket.send([SocketMessage.HISTORY_REGISTER, code, id])
+	}
+}
+
+function fightRef(fightId: number, on: boolean) {
+	const n = (fightRefs.get(fightId) || 0) + (on ? 1 : -1)
+	if (n <= 0) {
+		fightRefs.delete(fightId)
+		if (!on) LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, fightId])
+	} else {
+		fightRefs.set(fightId, n)
+		if (on && n === 1) LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, fightId])
+	}
+}
+
 /**
  * Met à jour en direct un historique de combats (page d'historique complète OU
  * petit historique des pages poireau/farmer/team).
@@ -36,18 +70,12 @@ export function useLiveHistory(options: {
 	let pollTimer: ReturnType<typeof setInterval> | null = null
 	let destroyed = false
 
-	function entitySubscribe(id: number, subscribe: boolean) {
-		const code = HISTORY_TYPE[options.type]
-		if (code === undefined) return
-		LeekWars.socket.send([subscribe ? SocketMessage.HISTORY_REGISTER : SocketMessage.HISTORY_UNREGISTER, code, id])
-	}
-
 	// (Ré)abonne quand l'entité regardée change (chargement async, navigation A->B).
 	function subscribeTo(id: number | undefined) {
 		if (id === currentId) return
-		if (currentId !== undefined) entitySubscribe(currentId, false)
+		if (currentId !== undefined) historyRef(options.type, currentId, false)
 		currentId = id
-		if (currentId !== undefined) entitySubscribe(currentId, true)
+		if (currentId !== undefined) historyRef(options.type, currentId, true)
 	}
 
 	// Abonne FIGHT_PROGRESS pour les combats en génération, désabonne les autres,
@@ -61,13 +89,13 @@ export function useLiveHistory(options: {
 				if (!registered.has(f.id)) {
 					registered.add(f.id)
 					if (!(f.id in progress.value)) progress.value[f.id] = 0
-					LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, f.id])
+					fightRef(f.id, true)
 				}
 			}
 		}
 		for (const fid of registered) {
 			if (!generating.has(fid)) {
-				LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, fid])
+				fightRef(fid, false)
 				registered.delete(fid)
 				delete progress.value[fid]
 			}
@@ -97,9 +125,13 @@ export function useLiveHistory(options: {
 		scheduleReload()
 	}
 
-	// Reconnexion WS : le daemon a perdu nos abonnements, on les rétablit.
+	// Reconnexion WS : le daemon a perdu nos abonnements, on les rétablit (envoi
+	// brut idempotent côté daemon, sans toucher au comptage de références).
 	function onWsConnected() {
-		if (currentId !== undefined) entitySubscribe(currentId, true)
+		const code = HISTORY_TYPE[options.type]
+		if (code !== undefined && currentId !== undefined) {
+			LeekWars.socket.send([SocketMessage.HISTORY_REGISTER, code, currentId])
+		}
 		for (const fid of registered) {
 			LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, fid])
 		}
@@ -118,12 +150,10 @@ export function useLiveHistory(options: {
 		emitter.off('fight-progress', onFightProgress)
 		emitter.off('history-update', onHistoryUpdate)
 		emitter.off('wsconnected', onWsConnected)
-		if (currentId !== undefined) entitySubscribe(currentId, false)
+		if (currentId !== undefined) historyRef(options.type, currentId, false)
 		if (reloadTimer) clearTimeout(reloadTimer)
 		if (pollTimer) clearInterval(pollTimer)
-		for (const fid of registered) {
-			LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, fid])
-		}
+		for (const fid of registered) fightRef(fid, false)
 		registered.clear()
 	})
 
