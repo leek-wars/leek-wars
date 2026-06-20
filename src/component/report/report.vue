@@ -249,6 +249,7 @@
 <script setup lang="ts">
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import Map from '@/component/app/map.vue'
+	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightContext, FightType, Report, ReportLeek } from '@/model/fight'
