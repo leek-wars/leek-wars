@@ -246,10 +246,9 @@
 </template>
 
 <script setup lang="ts">
-	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { Fight, FightMap, FightType, Report } from '@/model/fight'
-	import { i18n, mixins } from '@/model/i18n'
+	import { loadLocalizedMessages, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Game } from './game/game'
@@ -334,10 +333,9 @@
 	let request: ReturnType<typeof LeekWars.get> | null = null
 	const progress = ref(0)
 
-	;(async () => {
-		const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
-		i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
-	})()
+	// fight.<locale>.lang (dico du rapport de combat) doit suivre la locale active, pas seulement
+	// celle du boot, sinon un changement de langue laisse les clés fight.* en brut (#11926).
+	loadLocalizedMessages('fight', (loc) => import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${loc}.lang`))
 
 	if (localStorage.getItem('fight/shadows') === null) localStorage.setItem('fight/shadows', 'true')
 	if (localStorage.getItem('fight/volume') === null) localStorage.setItem('fight/volume', '0.5')

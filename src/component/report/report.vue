@@ -249,12 +249,11 @@
 <script setup lang="ts">
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import Map from '@/component/app/map.vue'
-	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightContext, FightType, Report, ReportLeek } from '@/model/fight'
 	import { Farmer } from '@/model/farmer'
-	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
+	import { i18n, loadLocalizedMessages, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
@@ -508,11 +507,10 @@
 		.error(() => notFound.value = true)
 	}
 
-	;(async () => {
-		emitter.on('keyup', keyup)
-		const fightMessages = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
-		i18n.global.mergeLocaleMessage(locale, { fight: fightMessages.default })
-	})()
+	emitter.on('keyup', keyup)
+	// fight.<locale>.lang doit suivre la locale active, pas seulement celle du boot, sinon un
+	// changement de langue laisse les clés fight.* du rapport en brut (#11926).
+	loadLocalizedMessages('fight', (loc) => import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${loc}.lang`))
 
 	function keyup(e: KeyboardEvent) {
 		if (e.key === 'r') {

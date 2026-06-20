@@ -1,5 +1,6 @@
 import { locale as initialLocale, messages } from '@/locale'
 import type { Component, ComponentInstance } from 'vue'
+import { watch } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 // Pre-declare dynamic imports for Vite to bundle them
@@ -224,4 +225,18 @@ function useNamespacedT(name: string) {
 	}
 }
 
-export { i18n, mixins, loadLanguageAsync, t, locale, normalizeComponentName, useNamespacedT }
+// Charge un dictionnaire .lang chargé à la demande (fight, doc...) pour la locale ACTIVE et le
+// recharge à chaque changement de langue. Sans ça, le dico chargé au boot reste figé et les clés
+// du namespace s'affichent en brut après un switch de langue (pas de fallbackLocale) — #11926.
+// À appeler dans le setup d'un composant : le watch est nettoyé à sa destruction. L'import est
+// mis en cache par le bundler, donc recharger une locale déjà vue est quasi gratuit.
+function loadLocalizedMessages(namespace: string, loader: (locale: string) => Promise<{ default: unknown }>) {
+	const load = (loc: string) => {
+		if (!loc) { return }
+		loader(loc).then((module) => i18n.global.mergeLocaleMessage(loc, { [namespace]: module.default }))
+	}
+	load(currentLocale())
+	watch(currentLocale, load)
+}
+
+export { i18n, mixins, loadLanguageAsync, loadLocalizedMessages, t, locale, normalizeComponentName, useNamespacedT }
