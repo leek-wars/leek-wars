@@ -359,6 +359,9 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		if (currentNav) lines.push('Route: ' + currentNav.fullPath + (currentNav.name ? ' [' + currentNav.name + ']' : ''))
 		if (previousNav) lines.push('Previous route: ' + previousNav.fullPath + (previousNav.name ? ' [' + previousNav.name + ']' : ''))
 		if (currentNav) lines.push('Since last navigation: ' + (Date.now() - currentNav.at) + 'ms')
+		// Écart entre les 2 dernières navs : un gap minuscule = double-nav rapprochée
+		// (interruption probable de la nav précédente pendant son démontage).
+		if (currentNav && previousNav) lines.push('Gap prev→current nav: ' + (currentNav.at - previousNav.at) + 'ms')
 		if (routeSubtree) lines.push('Route subtree: <' + routeSubtree + '>')
 		if (nullElPath) lines.push('Null-el path: ' + nullElPath)
 		if (lines.length) navTrace = '\n\n' + lines.join('\n')
@@ -841,7 +844,17 @@ if (LeekWars.DEV || LeekWars.LOCAL) {
 	}
 }
 
+// Instrumentation #4163 : tracer le DÉPART de chaque navigation dans le buffer, pour révéler
+// les navigations rapprochées/interrompues (hypothèse : RouterView met à jour pendant le
+// démontage de la page précédente → oldSubTree.el null → crash). beforeEach = capture aussi
+// les navs qui n'aboutissent pas (redirect, annulation), invisibles dans afterEach.
+router.beforeEach((to) => {
+	recordEvent('nav-start', to.fullPath)
+	return true
+})
+
 router.afterEach((to) => {
+	recordEvent('nav-done', to.fullPath)
 	previousNav = currentNav
 	currentNav = {
 		fullPath: to.fullPath,
