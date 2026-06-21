@@ -87,6 +87,7 @@
     - "Fights started in the same second are now ordered correctly."
     - "Git: AIs changed by a pull/checkout, revert on special names and action errors are fixed."
     - "Chat: notification bell on never-opened channels, code block indentation and message grouping."
+    - "Chat: adding an emoji to a multi-line message no longer drops the line breaks and inserts it at the right spot."
     - "The encyclopedia editor no longer jumps while typing."
     - "Forum: empty message/topic blocked, voters popup synced, search highlighting restored."
     - "The notification bell no longer stays wrongly lit after a refresh."

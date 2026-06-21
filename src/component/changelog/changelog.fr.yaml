@@ -87,6 +87,7 @@
     - "Les combats lancés à la même seconde sont désormais ordonnés correctement."
     - "Git : IA modifiées par pull/checkout, revert sur noms spéciaux et erreurs d'actions corrigés."
     - "Chat : cloche sur les salons jamais ouverts, indentation des blocs de code et groupement."
+    - "Chat : ajouter un emoji dans un message multi-lignes ne supprime plus les retours à la ligne et l'insère au bon endroit."
     - "L'éditeur d'encyclopédie ne saute plus pendant la frappe."
     - "Forum : message/topic vide bloqué, popup des votants synchronisé, surlignage de recherche."
     - "La cloche de notification ne reste plus allumée à tort après actualisation."

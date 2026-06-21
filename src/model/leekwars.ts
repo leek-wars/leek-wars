@@ -831,7 +831,7 @@ const LeekWars = reactive({
 	removeChat(i: number) {
 		LeekWars.chatWindows.splice(i, 1)
 	},
-	get_cursor_position, set_cursor_position,
+	set_cursor_position,
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatLongDuration,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag, setMeta,
 	shadeColor,
@@ -1332,19 +1332,6 @@ function createCodeAreaSimple(code: string, element: HTMLElement) {
 	})
 }
 
-
-function get_cursor_position(editableDiv: HTMLElement) {
-	if (window.getSelection) {
-		const sel = window.getSelection()
-		if (sel && sel.rangeCount) {
-			const range = sel.getRangeAt(0)
-			if (range.commonAncestorContainer.parentNode === editableDiv) {
-				return range.endOffset
-			}
-		}
-	}
-	return 0
-}
 
 function set_cursor_position(el: HTMLElement, pos: number) {
 	if (!el.firstChild) return
