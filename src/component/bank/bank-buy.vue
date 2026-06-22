@@ -232,11 +232,6 @@ LeekWars.get('bank/get-pack/' + pack.value).then(data => {
 	LeekWars.setTitle(t('title'), t('purshase_title_text_simple', [data.pack.crystals]))
 })
 
-// Premier passage sur l'onglet carte : on monte le Payment Element à la demande.
-watch(method, (m) => {
-	if (m === 'card' && !stripeReady.value && !stripeLoading.value) initStripe()
-})
-
 watch(() => LeekWars.currency, () => {
 	localStorage.setItem('currency', LeekWars.currency)
 	loadPayPal()
