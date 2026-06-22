@@ -146,6 +146,9 @@ const DEPRECATED_FLAT: Record<string, string> = {
 	// Registres (stockage persistant)
 	getRegister: 'Registers.get(key)', setRegister: 'Registers.set(key, value)',
 	getRegisters: 'Registers.all()', deleteRegister: 'Registers.delete(key)',
+	// Marquage / visualisation (debug)
+	mark: 'Debug.mark(cells, color, duration)', markText: 'Debug.markText(cells, text, color, duration)',
+	clearMarks: 'Debug.clearMarks()', show: 'Debug.show(cell, color)', pause: 'Debug.pause()',
 }
 
 // API de combat orientée objet (tranche 1 : me / Entity / Cell / Fight), couche guest définie par le
@@ -294,5 +297,13 @@ declare const Field: {
 	cellDistance(a: CellLike, b: CellLike): number;
 	pathLength(a: CellLike, b: CellLike): number;
 	lineOfSight(a: CellLike, b: CellLike): boolean;
+};
+
+declare const Debug: {
+	mark(cells: CellLike | CellLike[], color?: number, duration?: number): boolean;
+	markText(cells: CellLike | CellLike[], text: any, color?: number, duration?: number): boolean;
+	clearMarks(): void;
+	show(cell: CellLike, color?: number): boolean;
+	pause(): void;
 };
 `
