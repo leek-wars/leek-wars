@@ -601,7 +601,11 @@ class Repotting extends ChipAnimation {
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
-		this.target = targets.length ? targets[0] : null
+		// Le Rempotage ne peut échanger qu'avec un bulbe allié (effect targets=22).
+		// On filtre comme le serveur (recipientsOf / #3127) pour ne pas jouer un
+		// faux swap quand la cible n'est pas un bulbe allié (topic #11756).
+		const recipients = this.recipientsOf(launcher, targets)
+		this.target = recipients.length ? recipients[0] : null
 		this.launchPos = launchPos
 	}
 	public update(dt: number) {
@@ -627,7 +631,8 @@ class Repotting extends ChipAnimation {
 			this.game.particles.addRectangle(x1, y1, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
-		if (!this.inverted && this.duration < 40 && this.launcher && this.target) {
+		// !STATIC : le serveur (invertEntities) ne swappe pas une entité statique.
+		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.states.has(State.STATIC)) {
 			const cell = this.launcher.cell!
 			this.launcher.setCell(this.target.cell!)
 			this.target.setCell(cell)
