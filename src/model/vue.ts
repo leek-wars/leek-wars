@@ -853,8 +853,10 @@ router.beforeEach((to) => {
 	return true
 })
 
-router.afterEach((to) => {
-	recordEvent('nav-done', to.fullPath)
+router.afterEach((to, _from, failure) => {
+	// failure.type : 4=duplicated (push vers la route courante), 2=aborted, 8/16=redirect.
+	// Un nav-done SANS nav-start = nav qui a sauté beforeEach → ce type le caractérise (#4163).
+	recordEvent('nav-done' + (failure ? '✗' + ((failure as { type?: number }).type ?? '?') : ''), to.fullPath)
 	previousNav = currentNav
 	currentNav = {
 		fullPath: to.fullPath,
