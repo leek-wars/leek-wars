@@ -95,6 +95,7 @@
     - "Modifier l'IA d'un poireau dans un scénario par défaut ne provoque plus de 404. (merci à Kraspen)"
     - "La session est invalidée lorsqu'un compte est supprimé."
     - "File d'attente d'arène : l'affichage ne reste plus bloqué après un changement de compte. (merci à NewSlash)"
+    - "Titres de poireau et d'éleveur : ordre des mots et accord en genre corrigés selon la langue (italien, espagnol, portugais). (merci à Casanova)"
 247:
   title: "Intégration Git, équipements, gestion multi-comptes et potions de trèfle."
   added:

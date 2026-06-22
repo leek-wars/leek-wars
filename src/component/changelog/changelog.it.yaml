@@ -94,6 +94,7 @@
     - "Modificare l'IA di un porro in uno scenario predefinito non causa più un 404. (grazie a Kraspen)"
     - "La sessione viene invalidata quando un account viene eliminato."
     - "Coda dell'arena: la visualizzazione non rimane più bloccata dopo aver cambiato account. (grazie a NewSlash)"
+    - "Titoli di porro e allevatore: ordine delle parole e accordo di genere corretti per lingua (italiano, spagnolo, portoghese). (grazie a Casanova)"
 247:
   title: "Integrazione Git, equipaggiamenti, gestione multi-account e pozioni di trifoglio."
   added:

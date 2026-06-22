@@ -84,6 +84,7 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
 import LwTitle from '@/component/title/title.vue'
+import { titleAgreementGender, agreedTrophyKey } from '@/component/title/title-agreement'
 
 defineOptions({ name: 'TitlePicker' })
 
@@ -91,7 +92,7 @@ const props = defineProps<{
 	title: number[]
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 interface TrophyWord {
 	id: number
@@ -117,17 +118,20 @@ const genders = [
 	{ id: 2, code: 'female' }
 ]
 
+// Libellés des menus accordés comme le rendu (title.vue) : chaque nom s'accorde
+// avec son propre genre, chaque adjectif avec le genre imposé par le nom sélectionné.
 const nouns = computed(() => [{ code: '', id: 0, t: '', rarity: 0 }].concat(allNouns.value.filter((w: TrophyWord) => w.id !== adjective.value).map((w: TrophyWord) => {
-	const trophy = LeekWars.trophies[w.id - 1]
-	const gender_code = gender.value === 2 && (trophy.noun_translation as number & 2) && (((trophy.noun_gender as number) & 2) === 0) ? '_f' : ''
-	return { code: w.code, id: w.id, t: t('trophy.' + w.code + gender_code) as string, rarity: w.rarity }
+	const ag = titleAgreementGender(LeekWars.trophies[w.id - 1], gender.value, locale.value)
+	return { code: w.code, id: w.id, t: t(agreedTrophyKey(w.code, ag)) as string, rarity: w.rarity }
 }).sort((a, b) => a.t.localeCompare(b.t))))
 
-const adjectives = computed(() => [{ code: '', id: 0, t: '', rarity: 0 }].concat(allAdjectives.value.filter((w: TrophyWord) => w.id !== noun.value).map((w: TrophyWord) => {
-	const trophy = LeekWars.trophies[w.id - 1]
-	const gender_code = gender.value === 2 && (trophy.adj_translation as number & 2) && (((trophy.adj_gender as number) & 2) === 0) ? '_f' : ''
-	return { code: w.code, id: w.id, t: t('trophy.' + w.code + gender_code) as string, rarity: w.rarity }
-}).sort((a, b) => a.t.localeCompare(b.t))))
+const adjectives = computed(() => {
+	const nounTrophy = noun.value ? LeekWars.trophies[noun.value - 1] : null
+	const ag = titleAgreementGender(nounTrophy, gender.value, locale.value)
+	return [{ code: '', id: 0, t: '', rarity: 0 }].concat(allAdjectives.value.filter((w: TrophyWord) => w.id !== noun.value).map((w: TrophyWord) => {
+		return { code: w.code, id: w.id, t: t(agreedTrophyKey(w.code, ag)) as string, rarity: w.rarity }
+	}).sort((a, b) => a.t.localeCompare(b.t)))
+})
 
 LeekWars.loadTrophyWords().then(words => {
 	allNouns.value = (words as TrophyWord[]).filter((w: TrophyWord) => w.title & 1)
