@@ -104,6 +104,8 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 const OBJECT_API_DECLARATIONS = `// --- API de combat orientée objet (LeekScript v5-style) ---
 type CellLike = Cell | Entity | number;
 type EntityLike = Entity | number;
+type WeaponLike = Weapon | number;
+type ChipLike = Chip | number;
 
 declare class Cell {
 	readonly id: number;
@@ -115,6 +117,40 @@ declare class Cell {
 	distance(target: CellLike): number;
 	pathLength(target: CellLike): number;
 	lineOfSight(target: CellLike): boolean;
+}
+
+declare class Weapon {
+	readonly id: number;
+	readonly cost: number;
+	readonly minRange: number;
+	readonly maxRange: number;
+	readonly minScope: number;
+	readonly maxScope: number;
+	readonly name: string;
+	readonly area: number;
+	readonly launchType: number;
+	readonly maxUses: number;
+	readonly inline: boolean;
+	needLos(): boolean;
+	effects(): any[];
+}
+
+declare class Chip {
+	readonly id: number;
+	readonly cost: number;
+	readonly cooldown: number;
+	readonly currentCooldown: number;
+	readonly minRange: number;
+	readonly maxRange: number;
+	readonly minScope: number;
+	readonly maxScope: number;
+	readonly name: string;
+	readonly area: number;
+	readonly launchType: number;
+	readonly maxUses: number;
+	readonly inline: boolean;
+	needLos(): boolean;
+	effects(): any[];
 }
 
 declare class Entity {
@@ -137,7 +173,9 @@ declare class Entity {
 	readonly absoluteShield: number;
 	readonly relativeShield: number;
 	readonly cell: Cell;
-	readonly weapon: number;
+	readonly weapon: Weapon | null;
+	readonly weapons: Weapon[];
+	readonly chips: Chip[];
 	readonly alive: boolean;
 	readonly dead: boolean;
 	isAlly(): boolean;
@@ -150,12 +188,12 @@ declare class Me extends Entity {
 	moveAwayFrom(target: CellLike): number;
 	useWeapon(target: EntityLike): number;
 	useWeaponOnCell(cell: CellLike): number;
-	useChip(chip: number, target: EntityLike): number;
-	useChipOnCell(chip: number, cell: CellLike): number;
-	setWeapon(weapon: number): boolean;
+	useChip(chip: ChipLike, target: EntityLike): number;
+	useChipOnCell(chip: ChipLike, cell: CellLike): number;
+	setWeapon(weapon: WeaponLike): boolean;
 	say(message: any): boolean;
 	canUseWeapon(target: EntityLike): number;
-	canUseChip(chip: number, target: EntityLike): number;
+	canUseChip(chip: ChipLike, target: EntityLike): number;
 }
 
 /** L'IA courante. */
@@ -165,9 +203,31 @@ declare const Fight: {
 	readonly turn: number;
 	getNearestEnemy(): Entity | null;
 	getNearestAlly(): Entity | null;
+	getFarthestEnemy(): Entity | null;
+	getFarthestAlly(): Entity | null;
+	getNearestEnemyTo(target: EntityLike): Entity | null;
+	getNearestAllyTo(target: EntityLike): Entity | null;
 	getEnemies(): Entity[];
 	getAllies(): Entity[];
 	getAliveEnemies(): Entity[];
 	getAliveAllies(): Entity[];
+	getDeadEnemies(): Entity[];
+	getDeadAllies(): Entity[];
+	getEnemiesCount(): number;
+	getAlliesCount(): number;
+	getAliveEnemiesCount(): number;
+	getAliveAlliesCount(): number;
+	getAlliedTurret(): Entity | null;
+	getEnemyTurret(): Entity | null;
+};
+
+declare const Field: {
+	readonly mapType: number;
+	cellFromXY(x: number, y: number): Cell | null;
+	getObstacles(): Cell[];
+	distance(a: CellLike, b: CellLike): number;
+	cellDistance(a: CellLike, b: CellLike): number;
+	pathLength(a: CellLike, b: CellLike): number;
+	lineOfSight(a: CellLike, b: CellLike): boolean;
 };
 `
