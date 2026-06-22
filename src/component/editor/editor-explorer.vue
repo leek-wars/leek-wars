@@ -164,6 +164,7 @@
 				<v-btn-toggle v-model="newAILanguage" mandatory density="compact" class="language-toggle">
 					<v-btn value="leekscript" size="small">LeekScript</v-btn>
 					<v-btn value="javascript" size="small">JavaScript</v-btn>
+					<v-btn value="typescript" size="small">TypeScript</v-btn>
 					<v-btn value="python" size="small">Python</v-btn>
 				</v-btn-toggle>
 			</div>
@@ -317,10 +318,11 @@
 		return null
 	})
 
-	// L'extension d'IA détermine le langage : .js = JavaScript, .py = Python (IA polyglot GraalVM),
-	// rien = LeekScript. Voir getLanguageForPath (file-types.ts) côté coloration / exécution.
+	// L'extension d'IA détermine le langage : .js = JavaScript, .ts = TypeScript, .py = Python
+	// (IA polyglot GraalVM), rien = LeekScript. Voir getLanguageForPath (file-types.ts).
 	const newAIExtension = computed(() => {
 		if (newAILanguage.value === 'javascript') return '.js'
+		if (newAILanguage.value === 'typescript') return '.ts'
 		if (newAILanguage.value === 'python') return '.py'
 		return ''
 	})
