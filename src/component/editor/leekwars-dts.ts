@@ -93,5 +93,81 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		out.push(`declare function ${name}(${params.join(', ')}): ${tsType(f.return_type)};`)
 	}
 
+	out.push('')
+	out.push(OBJECT_API_DECLARATIONS)
 	return out.join('\n') + '\n'
 }
+
+// API de combat orientée objet (tranche 1 : me / Entity / Cell / Fight), couche guest définie par le
+// prélude objects.js du moteur. Statique (pas issue des game data) -> déclarée à la main pour que
+// l'éditeur connaisse me/Entity/Cell/Fight. Doit rester en phase avec generator objects.js/objects.py.
+const OBJECT_API_DECLARATIONS = `// --- API de combat orientée objet (LeekScript v5-style) ---
+type CellLike = Cell | Entity | number;
+type EntityLike = Entity | number;
+
+declare class Cell {
+	readonly id: number;
+	readonly x: number;
+	readonly y: number;
+	readonly empty: boolean;
+	readonly obstacle: boolean;
+	readonly entity: Entity | null;
+	distance(target: CellLike): number;
+	pathLength(target: CellLike): number;
+	lineOfSight(target: CellLike): boolean;
+}
+
+declare class Entity {
+	readonly id: number;
+	readonly life: number;
+	readonly maxLife: number;
+	readonly tp: number;
+	readonly maxTP: number;
+	readonly mp: number;
+	readonly maxMP: number;
+	readonly strength: number;
+	readonly agility: number;
+	readonly wisdom: number;
+	readonly resistance: number;
+	readonly science: number;
+	readonly magic: number;
+	readonly power: number;
+	readonly level: number;
+	readonly name: string;
+	readonly absoluteShield: number;
+	readonly relativeShield: number;
+	readonly cell: Cell;
+	readonly weapon: number;
+	readonly alive: boolean;
+	readonly dead: boolean;
+	isAlly(): boolean;
+	isEnemy(): boolean;
+	distance(target: CellLike): number;
+}
+
+declare class Me extends Entity {
+	moveToward(target: CellLike): number;
+	moveAwayFrom(target: CellLike): number;
+	useWeapon(target: EntityLike): number;
+	useWeaponOnCell(cell: CellLike): number;
+	useChip(chip: number, target: EntityLike): number;
+	useChipOnCell(chip: number, cell: CellLike): number;
+	setWeapon(weapon: number): boolean;
+	say(message: any): boolean;
+	canUseWeapon(target: EntityLike): number;
+	canUseChip(chip: number, target: EntityLike): number;
+}
+
+/** L'IA courante. */
+declare const me: Me;
+
+declare const Fight: {
+	readonly turn: number;
+	getNearestEnemy(): Entity | null;
+	getNearestAlly(): Entity | null;
+	getEnemies(): Entity[];
+	getAllies(): Entity[];
+	getAliveEnemies(): Entity[];
+	getAliveAllies(): Entity[];
+};
+`
