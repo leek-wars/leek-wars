@@ -139,6 +139,13 @@ const DEPRECATED_FLAT: Record<string, string> = {
 	getWeaponName: 'weapon.name', getWeaponArea: 'weapon.area', getWeaponMaxUses: 'weapon.maxUses',
 	getChipCost: 'chip.cost', getChipCooldown: 'chip.cooldown', getCurrentCooldown: 'chip.currentCooldown',
 	getChipName: 'chip.name', getChipMinRange: 'chip.minRange', getChipMaxRange: 'chip.maxRange',
+	// Effets / états / invocations (Entity, me)
+	getEffects: 'entity.effects', getLaunchedEffects: 'entity.launchedEffects', getPassiveEffects: 'entity.passiveEffects',
+	getStates: 'entity.states', getSummons: 'entity.summons', getSummoner: 'entity.summoner', isSummon: 'entity.summoned',
+	resurrect: 'me.resurrect(target, cell)',
+	// Registres (stockage persistant)
+	getRegister: 'Registers.get(key)', setRegister: 'Registers.set(key, value)',
+	getRegisters: 'Registers.all()', deleteRegister: 'Registers.delete(key)',
 }
 
 // API de combat orientée objet (tranche 1 : me / Entity / Cell / Fight), couche guest définie par le
@@ -219,6 +226,13 @@ declare class Entity {
 	readonly weapon: Weapon | null;
 	readonly weapons: Weapon[];
 	readonly chips: Chip[];
+	readonly effects: any[];
+	readonly launchedEffects: any[];
+	readonly passiveEffects: any[];
+	readonly states: any[];
+	readonly summons: Entity[];
+	readonly summoner: Entity | null;
+	readonly summoned: boolean;
 	readonly alive: boolean;
 	readonly dead: boolean;
 	isAlly(): boolean;
@@ -237,10 +251,18 @@ declare class Me extends Entity {
 	say(message: any): boolean;
 	canUseWeapon(target: EntityLike): number;
 	canUseChip(chip: ChipLike, target: EntityLike): number;
+	resurrect(target: EntityLike, cell: CellLike): number;
 }
 
 /** L'IA courante. */
 declare const me: Me;
+
+declare const Registers: {
+	get(key: string): any;
+	set(key: string, value: any): any;
+	delete(key: string): any;
+	all(): any;
+};
 
 declare const Fight: {
 	readonly turn: number;
