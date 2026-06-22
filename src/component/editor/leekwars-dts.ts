@@ -90,12 +90,55 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 			optionalFromHere = optionalFromHere || !!optional[i]
 			params.push(`${pname}${optionalFromHere ? '?' : ''}: ${tsType(Number(argTypes[i]))}`)
 		}
+		// Dépréciation douce : si la fonction plate a un équivalent objet, on marque @deprecated avec le
+		// pointeur (l'éditeur la barre + diagnostic, façon LS5 -> migration vers l'API objet).
+		const replacement = DEPRECATED_FLAT[name]
+		if (replacement) out.push(`/** @deprecated Préférez ${replacement} (API objet). */`)
 		out.push(`declare function ${name}(${params.join(', ')}): ${tsType(f.return_type)};`)
 	}
 
 	out.push('')
 	out.push(OBJECT_API_DECLARATIONS)
 	return out.join('\n') + '\n'
+}
+
+// Fonctions plates qui ont un équivalent dans l'API objet -> dépréciées (pointeur vers la forme objet).
+// À garder en phase avec objects.js/objects.py. Les fonctions sans équivalent objet (debug, getRegister,
+// les helpers réseau/couleur...) ne sont PAS dépréciées.
+const DEPRECATED_FLAT: Record<string, string> = {
+	// Entity (propriétés)
+	getLife: 'me.life / entity.life', getTotalLife: 'entity.maxLife', getTP: 'entity.tp', getTotalTP: 'entity.maxTP',
+	getMP: 'entity.mp', getTotalMP: 'entity.maxMP', getStrength: 'entity.strength', getAgility: 'entity.agility',
+	getWisdom: 'entity.wisdom', getResistance: 'entity.resistance', getScience: 'entity.science', getMagic: 'entity.magic',
+	getPower: 'entity.power', getLevel: 'entity.level', getName: 'entity.name', getAbsoluteShield: 'entity.absoluteShield',
+	getRelativeShield: 'entity.relativeShield', getCell: 'me.cell / entity.cell', getWeapon: 'entity.weapon',
+	getWeapons: 'entity.weapons', getChips: 'entity.chips', isAlive: 'entity.alive', isDead: 'entity.dead',
+	isAlly: 'entity.isAlly()', isEnemy: 'entity.isEnemy()', getEntity: 'me',
+	// me (actions)
+	useWeapon: 'me.useWeapon(target)', useWeaponOnCell: 'me.useWeaponOnCell(cell)', useChip: 'me.useChip(chip, target)',
+	useChipOnCell: 'me.useChipOnCell(chip, cell)', setWeapon: 'me.setWeapon(weapon)', say: 'me.say(message)',
+	moveToward: 'me.moveToward(target)', moveTowardCell: 'me.moveToward(cell)', moveAwayFrom: 'me.moveAwayFrom(target)',
+	moveAwayFromCell: 'me.moveAwayFrom(cell)', canUseWeapon: 'me.canUseWeapon(target)', canUseChip: 'me.canUseChip(chip, target)',
+	// Cell
+	getCellX: 'cell.x', getCellY: 'cell.y', getCellDistance: 'cell.distance(target)', getPathLength: 'cell.pathLength(target)',
+	isEmptyCell: 'cell.empty', isObstacle: 'cell.obstacle', getEntityOnCell: 'cell.entity', lineOfSight: 'cell.lineOfSight(target)',
+	// Field
+	getCellFromXY: 'Field.cellFromXY(x, y)', getObstacles: 'Field.getObstacles()', getMapType: 'Field.mapType',
+	getDistance: 'Field.distance(a, b)',
+	// Fight
+	getNearestEnemy: 'Fight.getNearestEnemy()', getNearestAlly: 'Fight.getNearestAlly()',
+	getFarthestEnemy: 'Fight.getFarthestEnemy()', getFarthestAlly: 'Fight.getFarthestAlly()',
+	getNearestEnemyTo: 'Fight.getNearestEnemyTo(target)', getNearestAllyTo: 'Fight.getNearestAllyTo(target)',
+	getEnemies: 'Fight.getEnemies()', getAllies: 'Fight.getAllies()', getAliveEnemies: 'Fight.getAliveEnemies()',
+	getAliveAllies: 'Fight.getAliveAllies()', getDeadEnemies: 'Fight.getDeadEnemies()', getDeadAllies: 'Fight.getDeadAllies()',
+	getEnemiesCount: 'Fight.getEnemiesCount()', getAlliesCount: 'Fight.getAlliesCount()',
+	getAliveEnemiesCount: 'Fight.getAliveEnemiesCount()', getAliveAlliesCount: 'Fight.getAliveAlliesCount()',
+	getAlliedTurret: 'Fight.getAlliedTurret()', getEnemyTurret: 'Fight.getEnemyTurret()', getTurn: 'Fight.turn',
+	// Weapon / Chip (stats)
+	getWeaponCost: 'weapon.cost', getWeaponMinRange: 'weapon.minRange', getWeaponMaxRange: 'weapon.maxRange',
+	getWeaponName: 'weapon.name', getWeaponArea: 'weapon.area', getWeaponMaxUses: 'weapon.maxUses',
+	getChipCost: 'chip.cost', getChipCooldown: 'chip.cooldown', getCurrentCooldown: 'chip.currentCooldown',
+	getChipName: 'chip.name', getChipMinRange: 'chip.minRange', getChipMaxRange: 'chip.maxRange',
 }
 
 // API de combat orientée objet (tranche 1 : me / Entity / Cell / Fight), couche guest définie par le
