@@ -13,6 +13,7 @@ import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
+import { buildLeekwarsDeclarations } from './leekwars-dts';
 
 monaco.languages.register({ id: 'leekscript' })
 monaco.languages.setLanguageConfiguration('leekscript', {
@@ -758,3 +759,40 @@ function addDotCompletionsFromAI(tokenBeforeDot: string, start: string, completi
 		addDotCompletionsFromAI(tokenBeforeDot, start, completions, visited, include, range)
 	}
 }
+
+// --- Language service TypeScript pour les IA polyglot (.ts / .js) ---
+// Configure le service TS de Monaco : builtins JS sans DOM + l'API de combat LeekScript exposée en
+// .d.ts ambiant (généré depuis les game data), pour l'autocomplétion + le typecheck navigateur.
+// Appelé au chargement de l'éditeur ; les game data (LeekWars.functions/constants) sont déjà chargées
+// à ce stade (l'éditeur est un chunk lazy ouvert après le boot de l'app).
+function configurePolyglotTypeScript() {
+	// monaco-stripped ne réexporte que le coeur (editor.api) ; le namespace `languages.typescript`
+	// est ajouté à l'exécution par la contribution importée dans monaco-stripped mais absent de ces
+	// types -> accès via cast (la config est validée au runtime/build, pas besoin du typage statique ici).
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const ts: any = (monaco.languages as any).typescript
+	if (!ts) return // le language service n'est pas chargé (ne devrait pas arriver)
+
+	const compilerOptions = {
+		target: ts.ScriptTarget.ESNext,
+		lib: ['esnext'], // builtins JS modernes, PAS 'dom' (pas de window/document dans l'autocomplétion)
+		allowNonTsExtensions: true,
+		module: ts.ModuleKind.ESNext,
+		moduleResolution: ts.ModuleResolutionKind.NodeJs,
+		noEmit: true,
+		allowJs: true,
+		checkJs: true, // les IA .js profitent aussi du typecheck via l'API typée
+	}
+	ts.typescriptDefaults.setCompilerOptions(compilerOptions)
+	ts.javascriptDefaults.setCompilerOptions(compilerOptions)
+
+	// 2307 = "Cannot find module" : les IA multi-fichiers importent des voisins du joueur que l'éditeur
+	// ne modélise pas (résolus seulement au build moteur) -> on ne pollue pas l'éditeur avec ça.
+	ts.typescriptDefaults.setDiagnosticsOptions({ diagnosticCodesToIgnore: [2307] })
+	ts.javascriptDefaults.setDiagnosticsOptions({ diagnosticCodesToIgnore: [2307] })
+
+	const declarations = buildLeekwarsDeclarations(LeekWars.functions ?? [], LeekWars.constants ?? [])
+	ts.typescriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
+	ts.javascriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
+}
+configurePolyglotTypeScript()

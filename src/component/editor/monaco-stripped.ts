@@ -5,15 +5,19 @@
 // the basic-languages we use (markdown, yaml, javascript, python); LeekScript is registered in
 // `./monaco.ts`; JSON is given a worker-less syntax-only Monarch grammar.
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+// Worker du language service TypeScript (typecheck + autocomplétion des IA polyglot .ts/.js).
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import 'monaco-editor/esm/vs/editor/edcore.main.js'
 import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution.js'
 import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
-// javascript/typescript/python = coloration des IA polyglot (.js / .ts / .py). Ces contributions
-// enregistrent une grammaire Monarch lazy seulement : pas de language service ni de worker lourd,
-// juste la coloration syntaxique. (Le typecheck TS via le language service Monaco viendra ensuite.)
+// javascript/typescript/python = coloration des IA polyglot (.js / .ts / .py) via grammaire Monarch.
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'
 import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js'
 import 'monaco-editor/esm/vs/basic-languages/python/python.contribution.js'
+// Language service TypeScript : ajoute par-dessus la coloration le typecheck + l'autocomplétion
+// (via ts.worker) pour les IA .ts ET .js (checkJs). Configuré dans `./monaco.ts` (lib sans DOM +
+// leekwars.d.ts de l'API de combat). C'est le worker "lourd" volontairement évité auparavant.
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js'
 export * from 'monaco-editor/esm/vs/editor/editor.api.js'
 
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api.js'
@@ -36,7 +40,11 @@ languages.setMonarchTokensProvider('json', jsonTokens)
 // duplicate were redundant. `nonce` is consumed at runtime for CSP-compliant <style>
 // injection (Monaco 0.55 ignores it for stylesheets — see `monaco-csp.ts`).
 self.MonacoEnvironment = {
-	getWorker: () => new editorWorker(),
+	getWorker: (_workerId: string, label: string) => {
+		// Le language service TS/JS réclame son propre worker ; tout le reste utilise le worker éditeur.
+		if (label === 'typescript' || label === 'javascript') return new tsWorker()
+		return new editorWorker()
+	},
 	// @ts-expect-error — `nonce` isn't typed on Environment but is consumed at runtime.
 	nonce: cspNonce,
 }
