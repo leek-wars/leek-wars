@@ -1,4 +1,8 @@
 {
+	"or": "ou",
+	"pay": "Payer",
+	"card_error_generic": "Le paiement a échoué. Veuillez réessayer.",
+	"payment_unavailable": "Le paiement par carte est momentanément indisponible.",
 	"description": "Bienvenue à la banque ! Les <b>cristaux</b> <span class='crystal'></span> vous permettent d'obtenir potions, combats supplémentaires, couleurs et accessoires pour vos poireaux. <b>Aucun avantage en combat</b> : tous les achats sont cosmétiques ou pratiques.<br>\nChaque achat soutient directement le développement de Leek Wars. Merci !",
 	"pack_of_n_crystals": "Pack de <b>{0}</b> cristaux",
 	"paypal_description": "Achat de {0} cristaux pour {1} €",
