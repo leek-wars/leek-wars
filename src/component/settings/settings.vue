@@ -344,37 +344,38 @@
 		if (store.state.farmer) {
 			LeekWars.setTitle(t('title'), store.state.farmer.name)
 		}
-		if (LeekWars.service_worker) {
-			LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
-				if (subscription) {
-					for (const endpoint of data.push_endpoints) {
-						if (subscription.endpoint === endpoint) {
-							pushNotifications.value = true
-							break
-						}
-					}
+		// Reconcile the toggle with the actual push subscription. Wait for navigator.serviceWorker.ready
+		// rather than reading LeekWars.service_worker, which is populated asynchronously and may still be
+		// null when get-settings resolves (race: the toggle showed OFF after a reload even while subscribed).
+		if ('serviceWorker' in navigator) {
+			getPushSubscription().then(subscription => {
+				if (subscription && data.push_endpoints.includes(subscription.endpoint)) {
+					pushNotifications.value = true
 				}
 			})
 		}
 	})
 
-	function updatePushNotifications(_e: Event) {
-		if (!LeekWars.service_worker) { return }
+	function getPushSubscription(): Promise<PushSubscription | null> {
+		return navigator.serviceWorker.ready.then(registration => registration.pushManager.getSubscription())
+	}
+
+	function updatePushNotifications() {
+		if (!('serviceWorker' in navigator)) { return }
 		if (pushNotifications.value) {
-			LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
-				if (subscription) {
-					subscription.unsubscribe()
-				}
-			})
+			pushNotifications.value = false
+			getPushSubscription().then(subscription => subscription?.unsubscribe())
 		} else {
-			LeekWars.service_worker.pushManager.subscribe({
-				applicationServerKey: vapid_key,
-				userVisibleOnly: true
-			}).then((subscription: PushSubscription) => {
-				LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
-			})
+			navigator.serviceWorker.ready
+				.then(registration => registration.pushManager.subscribe({ applicationServerKey: vapid_key, userVisibleOnly: true }))
+				.then(subscription => {
+					// Only reflect the toggle as ON once the browser actually granted the subscription,
+					// so it stays OFF (instead of lying) when notifications are blocked.
+					pushNotifications.value = true
+					LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
+				})
+				.catch(() => { pushNotifications.value = false })
 		}
-		pushNotifications.value = !pushNotifications.value
 	}
 
 	function logout() {

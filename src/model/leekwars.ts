@@ -390,7 +390,6 @@ const LeekWars = reactive({
 	notifsPopups: localStorage.getItem('options/notifs-popups') !== 'false',
 	notifsOpenReport: localStorage.getItem('options/notifs-open-report') === 'true',
 	rankingInactive: localStorage.getItem('options/ranking-inactive') === 'true',
-	service_worker: null as ServiceWorkerRegistration | null,
 	arena: new Arena(),
 	bossSquads: new BossSquads(),
 	squares: new Squares(),
