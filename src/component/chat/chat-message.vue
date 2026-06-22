@@ -32,7 +32,7 @@
 				<v-tooltip v-for="(reaction, emoji) in message.reactions" :key="emoji" :open-delay="500" :close-delay="0" bottom>
 					<template #activator="{ props }">
 						<div v-ripple v-bind="props" class="reaction" :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
-							{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
+							<span v-html="reactionsHtml[emoji]"></span><span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
 						</div>
 					</template>
 					{{ reaction.farmers.join(', ') }}
@@ -49,6 +49,7 @@
 <script setup lang="ts">
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import { Chat, ChatMessage, ChatType } from '@/model/chat'
+import { formatEmojisText } from '@/model/emojis'
 import { LeekWars } from '@/model/leekwars'
 import { computed, watch } from 'vue'
 import ChatMessageText from './chat-message-text.vue'
@@ -68,6 +69,16 @@ const emit = defineEmits<{
 }>()
 
 const privateMessages = computed(() => props.chat && props.chat.type === ChatType.PM)
+
+// Précalculé : éviter de relancer formatEmojisText (30+ regex) par réaction à
+// chaque rendu. Ne se recalcule que si les réactions changent.
+const reactionsHtml = computed(() => {
+	const html: Record<string, string> = {}
+	for (const emoji in props.message.reactions) {
+		html[emoji] = formatEmojisText(emoji)
+	}
+	return html
+})
 
 watch(() => props.message.reactions, () => {
 	emit('scroll')

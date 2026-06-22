@@ -135,7 +135,7 @@
 		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" content-class="emojis-dialog">
 			<v-card class="emojis">
 				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
-				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)">{{ menuMessage.my_reaction }}</span>
+				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)" v-html="formatEmojisText(menuMessage.my_reaction)"></span>
 				<emoji-picker :close-on-selected="true" @pick="toggleReaction"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
 			</v-card>
 		</v-menu>
@@ -146,6 +146,7 @@
 	import type { Chat as ChatModel, ChatMessage, ChatWindow } from '@/model/chat'
 	import { ChatType } from '@/model/chat'
 	import { formatChatMessage } from '@/model/chat-format'
+	import { formatEmojisText } from '@/model/emojis'
 	import type { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
