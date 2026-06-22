@@ -106,6 +106,23 @@ class Analyzer {
 		this.todo_count = todos
 	}
 
+	// Pont : reporte les diagnostics du language service TypeScript de Monaco (type ET syntaxe, en
+	// direct) dans le panneau d'erreur LW + les compteurs, pour les IA polyglot .ts/.js. Sans ça les
+	// erreurs TS ne s'affichaient qu'en soulignement inline (markers Monaco), pas dans le panneau.
+	// L'entrypoint = le fichier lui-même (le service TS analyse chaque modèle isolément).
+	public updatePolyglotProblems(ai: AI, markers: monaco.editor.IMarker[]) {
+		const problems = markers.map(m => new Problem(
+			m.startLineNumber,
+			Math.max(0, m.startColumn - 1), // Problem = colonne 0-based (l'analyzer rajoute +1 pour les markers)
+			m.endLineNumber,
+			Math.max(0, m.endColumn - 1),
+			m.severity === monaco.MarkerSeverity.Error ? 0 : (m.severity === monaco.MarkerSeverity.Warning ? 1 : 2),
+			m.message,
+		))
+		this.setProblems(ai.path, ai, problems)
+		this.updateCount()
+	}
+
 	public analyze(ai: AI, code: string) {
 		// console.log("🔥 Analyze", ai.path)
 		// console.time('hover')

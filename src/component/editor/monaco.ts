@@ -796,3 +796,19 @@ function configurePolyglotTypeScript() {
 	ts.javascriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
 }
 configurePolyglotTypeScript()
+
+// Pont diagnostics TS Monaco -> panneau d'erreur LW : à chaque changement de markers d'un fichier
+// polyglot (.ts/.js), on reporte les diagnostics du language service (type ET syntaxe, en direct) dans
+// l'analyzer, pour qu'ils apparaissent dans le panneau d'erreur + les compteurs, comme le LeekScript.
+monaco.editor.onDidChangeMarkers((uris) => {
+	for (const uri of uris) {
+		const path = uri.path.replace(/^\//, '') // monaco.Uri.file('main.ts') -> '/main.ts'
+		const ai = fileSystem.ais[path]
+		if (!ai) continue
+		const lang = getLanguageForPath(ai.path)
+		if (lang !== 'typescript' && lang !== 'javascript') continue
+		const markers = monaco.editor.getModelMarkers({ resource: uri })
+			.filter(m => m.owner === 'typescript' || m.owner === 'javascript')
+		analyzer.updatePolyglotProblems(ai, markers)
+	}
+})
