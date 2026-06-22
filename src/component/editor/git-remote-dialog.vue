@@ -29,6 +29,7 @@
 				<span v-else class="anonymous">{{ $t('connected_anonymous') }}</span>
 				<span v-if="cred.instance_url" class="credential-instance">@ {{ cred.instance_url }}</span>
 			</span>
+			<v-icon v-if="cred.provider === 'github' && cred.auth_type === 'app'" class="credential-configure" :title="$t('configure')" @click="startInstall">mdi-cog</v-icon>
 			<v-icon class="credential-delete" @click="deleteCredential(cred)">mdi-delete</v-icon>
 		</div>
 		<div class="auth-section">
@@ -372,7 +373,7 @@ body.dark .add-remote .input {
 	&:hover {
 		background: rgba(0,0,0,0.04);
 		border-color: rgba(0,0,0,0.15);
-		.credential-delete { opacity: 1; }
+		.credential-delete, .credential-configure { opacity: 1; }
 	}
 	.provider-icon { font-size: 22px; }
 	&.github .provider-icon    { color: #24292e; }
@@ -401,6 +402,13 @@ body.dark .add-remote .input {
 			font-family: monospace;
 			margin-left: 4px;
 		}
+	}
+	.credential-configure {
+		cursor: pointer;
+		font-size: 18px;
+		opacity: 0.4;
+		transition: opacity 0.15s ease, color 0.15s ease;
+		&:hover { opacity: 1; color: #5fad1b; }
 	}
 	.credential-delete {
 		cursor: pointer;

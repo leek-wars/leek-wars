@@ -18,5 +18,6 @@
 	"save": "Sauvegarder",
 	"add": "Ajouter",
 	"invalid_token": "Token refusé par le provider.",
-	"invalid_instance_url": "URL d'instance invalide ou inaccessible depuis le serveur."
+	"invalid_instance_url": "URL d'instance invalide ou inaccessible depuis le serveur.",
+	"configure": "Configurer"
 }

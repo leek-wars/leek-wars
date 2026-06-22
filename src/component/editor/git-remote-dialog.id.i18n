@@ -18,5 +18,6 @@
 	"save": "Simpan",
 	"add": "Tambah",
 	"invalid_token": "Token ditolak oleh provider.",
-	"invalid_instance_url": "URL instance tidak valid atau tidak dapat diakses dari server."
+	"invalid_instance_url": "URL instance tidak valid atau tidak dapat diakses dari server.",
+	"configure": "Konfigurasikan"
 }

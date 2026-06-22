@@ -18,5 +18,6 @@
 	"save": "저장",
 	"add": "추가",
 	"invalid_token": "공급자가 토큰을 거부했습니다.",
-	"invalid_instance_url": "유효하지 않거나 서버에서 접근할 수 없는 인스턴스 URL입니다."
+	"invalid_instance_url": "유효하지 않거나 서버에서 접근할 수 없는 인스턴스 URL입니다.",
+	"configure": "구성"
 }

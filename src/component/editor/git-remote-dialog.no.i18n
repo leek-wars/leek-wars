@@ -18,5 +18,6 @@
 	"save": "Lagre",
 	"add": "Legg til",
 	"invalid_token": "Token avvist av leverandøren.",
-	"invalid_instance_url": "Ugyldig instans-URL eller utilgjengelig fra serveren."
+	"invalid_instance_url": "Ugyldig instans-URL eller utilgjengelig fra serveren.",
+	"configure": "Konfigurer"
 }

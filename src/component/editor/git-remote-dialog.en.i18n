@@ -18,5 +18,6 @@
 	"save": "Save",
 	"add": "Add",
 	"invalid_token": "Token rejected by the provider.",
-	"invalid_instance_url": "Invalid instance URL or unreachable from the server."
+	"invalid_instance_url": "Invalid instance URL or unreachable from the server.",
+	"configure": "Configure"
 }

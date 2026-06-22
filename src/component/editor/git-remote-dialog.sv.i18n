@@ -17,5 +17,6 @@
 	"save": "Spara",
 	"add": "Lägg till",
 	"invalid_token": "Token avvisad av providern.",
-	"invalid_instance_url": "Ogiltig instans-URL eller oåtkomlig från servern."
+	"invalid_instance_url": "Ogiltig instans-URL eller oåtkomlig från servern.",
+	"configure": "Konfigurera"
 }

@@ -18,5 +18,6 @@
 	"save": "Zapisz",
 	"add": "Dodaj",
 	"invalid_token": "Token odrzucony przez dostawcę.",
-	"invalid_instance_url": "Nieprawidłowy URL instancji lub niedostępny z serwera."
+	"invalid_instance_url": "Nieprawidłowy URL instancji lub niedostępny z serwera.",
+	"configure": "Konfiguruj"
 }

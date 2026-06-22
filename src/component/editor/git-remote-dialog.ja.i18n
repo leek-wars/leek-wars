@@ -18,5 +18,6 @@
 	"save": "保存",
 	"add": "追加",
 	"invalid_token": "プロバイダによってトークンが拒否されました。",
-	"invalid_instance_url": "インスタンスの URL が無効、またはサーバーからアクセスできません。"
+	"invalid_instance_url": "インスタンスの URL が無効、またはサーバーからアクセスできません。",
+	"configure": "設定"
 }

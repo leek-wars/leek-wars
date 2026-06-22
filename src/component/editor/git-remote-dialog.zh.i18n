@@ -18,5 +18,6 @@
 	"save": "保存",
 	"add": "添加",
 	"invalid_token": "令牌被提供方拒绝。",
-	"invalid_instance_url": "实例 URL 无效或服务器无法访问。"
+	"invalid_instance_url": "实例 URL 无效或服务器无法访问。",
+	"configure": "配置"
 }

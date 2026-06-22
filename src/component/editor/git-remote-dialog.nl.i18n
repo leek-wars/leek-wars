@@ -18,5 +18,6 @@
 	"save": "Opslaan",
 	"add": "Toevoegen",
 	"invalid_token": "Token geweigerd door de provider.",
-	"invalid_instance_url": "Ongeldige instance-URL of niet bereikbaar vanaf de server."
+	"invalid_instance_url": "Ongeldige instance-URL of niet bereikbaar vanaf de server.",
+	"configure": "Configureren"
 }
