@@ -49,6 +49,16 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 	const out: string[] = [
 		'// Auto-généré depuis les game data Leek Wars (API de combat). Ne pas éditer à la main.',
 		'',
+		// Globaux fournis par le runtime hors API de combat (lib esnext sans DOM -> on déclare console
+		// nous-mêmes). console.* est routé vers debug() (visible dans le rapport de combat).
+		'declare const console: {',
+		'\tlog(...args: any[]): void;',
+		'\tinfo(...args: any[]): void;',
+		'\tdebug(...args: any[]): void;',
+		'\twarn(...args: any[]): void;',
+		'\terror(...args: any[]): void;',
+		'};',
+		'',
 	]
 	const declared = new Set<string>()
 
