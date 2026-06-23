@@ -119,7 +119,13 @@ class Bulb extends FightEntity {
 		const width = this.bodyTexFront.texture.width
 		const height = this.bodyTexFront.texture.height
 		const y = height * (this.deadAnim - 1)
-		ctx.drawImage(texture, 0, 0, texture.width, texture.height * (1 - this.deadAnim), -width / 2, y, width, -y)
+		// Rectangle source dégénéré (image pas encore chargée → width 0, ou deadAnim == 1
+		// en début de blooming → hauteur 0) : drawImage lève IndexSizeError sur Safari. On
+		// saute le rendu de cette frame. (#4312)
+		const sourceHeight = texture.height * (1 - this.deadAnim)
+		if (texture.width > 0 && sourceHeight > 0) {
+			ctx.drawImage(texture, 0, 0, texture.width, sourceHeight, -width / 2, y, width, -y)
+		}
 
 		ctx.restore()
 	}
