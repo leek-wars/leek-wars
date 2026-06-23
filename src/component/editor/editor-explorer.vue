@@ -347,7 +347,8 @@
 				const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
 				LeekWars.post('ai-folder/rename', {path: folderPath, new_name: newName.value}).then(() => {
 					LeekWars.toast(gt('leekscript.folder_renamed', [newName.value]))
-					folder.value!.name = newName.value
+					// renameFolder recalcule les paths + invalide le cache des IA descendantes (#4318)
+					fileSystem.renameFolder(folder.value!, newName.value)
 				}).error((error) => {
 					LeekWars.toast(translateFileSystemError(error))
 				})

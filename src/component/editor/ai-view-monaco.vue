@@ -324,7 +324,17 @@ function onFileReloaded(path: string) {
 
 function syncModel() {
 	const uri = monaco.Uri.file(props.ai.path)
-	const model = monaco.editor.getModel(uri) || markRaw(monaco.editor.createModel(props.ai.code, getLanguageForPath(props.ai.path), uri))
+	const existing = monaco.editor.getModel(uri)
+	const model = existing || markRaw(monaco.editor.createModel(props.ai.code, getLanguageForPath(props.ai.path), uri))
+	// Garde-fou #4318 : un modèle déjà présent pour ce path peut être un orphelin laissé par
+	// un fichier précédent (rename/déplacement/suppression réutilisant le path). Si l'IA n'a pas
+	// d'édition locale en cours et que son contenu diffère du vrai code, on réaligne le modèle
+	// plutôt que d'afficher (et risquer de sauvegarder) le contenu de l'ancien fichier.
+	// On ne touche QUE les modèles détachés : un modèle attaché est la vue live d'un autre
+	// éditeur (split), un setValue y déclencherait un faux "modifié" et écraserait son contenu.
+	if (existing && !existing.isAttachedToEditor() && !props.ai.modified && props.ai.code !== undefined && existing.getValue() !== props.ai.code) {
+		existing.setValue(props.ai.code)
+	}
 	// eslint-disable-next-line vue/no-mutating-props
 	props.ai.model = model
 

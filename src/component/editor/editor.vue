@@ -1390,6 +1390,24 @@
 		localStorage.setItem('editor/left_panel_tab', tab)
 	}
 
+	// Remappe les références d'UI (éditeurs actifs + onglets ouverts) quand le path d'une IA change,
+	// pour qu'un rename/déplacement (de fichier OU de dossier parent) ne démonte pas l'éditeur ouvert
+	// ni n'orpheline ses onglets. newPath null = suppression (géré par les flux de close). #4318
+	function onAiPathChanged({ oldPath, newPath }: { oldPath: string, newPath: string | null }) {
+		if (!newPath) return
+		if (currentAI1.value === oldPath) currentAI1.value = newPath
+		if (currentAI2.value === oldPath) currentAI2.value = newPath
+		for (const tab of tabs1.value) {
+			if (tab.type === 'file' && tab.id === oldPath) tab.id = newPath
+		}
+		for (const tab of tabs2.value) {
+			if (tab.type === 'file' && tab.id === oldPath) tab.id = newPath
+		}
+		if (currentTab.value && currentTab.value.type === 'file' && currentTab.value.id === oldPath) {
+			currentTab.value.id = newPath
+		}
+	}
+
 	onMounted(() => {
 		LeekWars.large = enlargeWindow.value
 		LeekWars.footer = false
@@ -1457,26 +1475,29 @@
 			if (parent === folder || dragging.value === folder) { return }
 			if (dragging.value instanceof Folder && isChild(folder, dragging.value)) { return }
 			const destPath = folder.id === 0 ? '' : fileSystem.getFolderPath(folder).replace(/\/$/, '')
-			if (dragging.value.folder) {
-				const srcPath = fileSystem.getFolderPath(dragging.value as Folder).replace(/\/$/, '')
+			const movedItem = dragging.value
+			if (movedItem.folder) {
+				const srcPath = fileSystem.getFolderPath(movedItem as Folder).replace(/\/$/, '')
 				LeekWars.post('ai/move', {path: srcPath, dest: destPath})
 			} else {
-				const ai = (dragging.value as AIItem).ai
-				const oldPath = ai.path
-				LeekWars.post('ai/move', {path: oldPath, dest: destPath})
-				delete fileSystem.ais[ai.path]
+				const ai = (movedItem as AIItem).ai
+				LeekWars.post('ai/move', {path: ai.path, dest: destPath})
 				ai.folder = folder.id
-				ai.path = destPath ? destPath + '/' + ai.name : ai.name
-				ai.folderpath = fileSystem.getFolderPath(folder)
-				fileSystem.ais[ai.path] = ai
+				// setPath re-clé la map, recalcule folderpath, invalide le cache (#4318)
+				fileSystem.setPath(ai, destPath ? destPath + '/' + ai.name : ai.name)
 			}
-			parent.items.splice(parent.items.indexOf(dragging.value), 1)
-			folder.items.push(dragging.value)
-			dragging.value.parent = folder.id
+			parent.items.splice(parent.items.indexOf(movedItem), 1)
+			folder.items.push(movedItem)
+			movedItem.parent = folder.id
 			fileSystem.sortFolder(folder)
 			folder.expanded = true
+			// Dossier déplacé : recalculer les paths (+ cache) de toutes les IA descendantes (#4318)
+			if (movedItem.folder) fileSystem.refreshSubtreePaths(movedItem as Folder)
 			dragging.value = null
 		})
+		// Suivre les références d'UI quand un path change (rename, déplacement, ou dossier parent
+		// renommé/déplacé) pour ne pas démonter l'éditeur ouvert ni casser les onglets ouverts (#4318).
+		emitter.on('ai-path-changed', onAiPathChanged)
 		emitter.on('connected', connected)
 		emitter.on('jump', jumpEvent)
 		emitter.on('reanalyze', () => {
@@ -1537,6 +1558,7 @@
 		emitter.off('back')
 		emitter.off('editor-drag')
 		emitter.off('editor-drop')
+		emitter.off('ai-path-changed', onAiPathChanged)
 		emitter.off('connected', connected)
 		emitter.off('jump', jumpEvent)
 		emitter.off('reanalyze')
