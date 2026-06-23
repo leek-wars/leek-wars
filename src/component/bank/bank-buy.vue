@@ -132,7 +132,7 @@ async function initStripe() {
 		paymentElement.mount('#stripe-payment-element')
 		stripeReady.value = true
 	} catch (err) {
-		if (token === stripeInitToken) stripeError.value = (err as { error?: string }).error === 'stripe_not_configured' ? t('payment_unavailable') : t('card_error_generic')
+		if (token === stripeInitToken) stripeError.value = (err as { error?: string } | null)?.error === 'stripe_not_configured' ? t('payment_unavailable') : t('card_error_generic')
 	} finally {
 		if (token === stripeInitToken) stripeLoading.value = false
 	}
@@ -164,7 +164,7 @@ function confirmStripePayment(paymentIntentId: string) {
 		router.replace('/bank/validate/success/' + d.crystals)
 	}).catch((err: unknown) => {
 		stripePaying.value = false
-		router.replace('/bank/validate/failed/' + (err as { error?: string }).error)
+		router.replace('/bank/validate/failed/' + ((err as { error?: string } | null)?.error ?? 'unknown'))
 	})
 }
 
@@ -197,7 +197,7 @@ function loadPayPal() {
 					store.commit('update-crystals', d.crystals)
 					router.replace('/bank/validate/success/' + d.crystals)
 				}).catch((err: unknown) => {
-					router.replace('/bank/validate/failed/' + (err as { error?: string }).error)
+					router.replace('/bank/validate/failed/' + ((err as { error?: string } | null)?.error ?? 'unknown'))
 				})
 			},
 			// Abandon a l'etape d'approbation PayPal (begin 200 sans execute qui suit) : on trace
