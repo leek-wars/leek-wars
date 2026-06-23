@@ -160,6 +160,33 @@ type EntityLike = Entity | number;
 type WeaponLike = Weapon | number;
 type ChipLike = Chip | number;
 
+/** Un effet actif ou lancé sur une entité (EFFECT_DAMAGE, EFFECT_HEAL...). */
+declare class Effect {
+	/** Tableau brut [type, value, caster, turns, critical, item, target, modifiers]. */
+	readonly raw: any[];
+	readonly type: number;
+	readonly value: number;
+	readonly caster: Entity | null;
+	readonly turns: number;
+	readonly critical: boolean;
+	/** Id de l'arme ou de la puce qui a appliqué l'effet (0 si aucun). */
+	readonly item: number;
+	readonly target: Entity | null;
+	readonly modifiers: number;
+}
+
+/** Un effet déclaré par une arme/puce ou un effet passif (potentiel, fourchette de valeurs). */
+declare class EffectTemplate {
+	/** Tableau brut [type, minValue, maxValue, turns, targets, modifiers]. */
+	readonly raw: any[];
+	readonly type: number;
+	readonly minValue: number;
+	readonly maxValue: number;
+	readonly turns: number;
+	readonly targets: number;
+	readonly modifiers: number;
+}
+
 declare class Cell {
 	readonly id: number;
 	readonly x: number;
@@ -185,7 +212,7 @@ declare class Weapon {
 	readonly maxUses: number;
 	readonly inline: boolean;
 	needLos(): boolean;
-	effects(): any[];
+	effects(): EffectTemplate[];
 }
 
 declare class Chip {
@@ -203,7 +230,7 @@ declare class Chip {
 	readonly maxUses: number;
 	readonly inline: boolean;
 	needLos(): boolean;
-	effects(): any[];
+	effects(): EffectTemplate[];
 }
 
 declare class Entity {
@@ -229,9 +256,9 @@ declare class Entity {
 	readonly weapon: Weapon | null;
 	readonly weapons: Weapon[];
 	readonly chips: Chip[];
-	readonly effects: any[];
-	readonly launchedEffects: any[];
-	readonly passiveEffects: any[];
+	readonly effects: Effect[];
+	readonly launchedEffects: Effect[];
+	readonly passiveEffects: EffectTemplate[];
 	readonly states: any[];
 	readonly summons: Entity[];
 	readonly summoner: Entity | null;
