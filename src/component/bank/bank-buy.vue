@@ -242,11 +242,6 @@ watch(() => LeekWars.currency, () => {
 watch(() => LeekWars.darkMode, () => {
 	elements?.update({ appearance: stripeAppearance() })
 })
-
-// Le Payment Element suit le dark mode en direct (toggle sans rechargement).
-watch(() => LeekWars.dark, () => {
-	elements?.update({ appearance: { theme: stripeTheme() } })
-})
 </script>
 
 <style lang="scss" scoped>
