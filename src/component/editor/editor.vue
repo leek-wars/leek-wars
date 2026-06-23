@@ -526,6 +526,11 @@
 		}
 		LeekWars.setTitle(t('title'), t('n_ais', [fileSystem.aiCount]))
 		restoreTabs()
+		// Charger le code de l'IA du panneau droit au montage : sinon ai2Ready reste
+		// faux et l'éditeur droit ne se monte pas (panneau vide au reload en splitté).
+		if (splitted.value && currentAI2.value && currentAI2.value in fileSystem.ais) {
+			fileSystem.load(fileSystem.ais[currentAI2.value])
+		}
 		await loadGitRepos()
 		update()
 	}
@@ -604,6 +609,7 @@
 	}
 
 	let updateGen = 0
+	let load2Gen = 0
 	function update() {
 		const routeHash = route.params.hash as string | undefined
 		const isDiffRoute = routeHash || route.path.endsWith('/diff')
@@ -1365,9 +1371,14 @@
 		setSide(side)
 		const aiObj = fileSystem.ais[ai]
 		if (aiObj) {
-			fileSystem.load(aiObj).then(() => {
-				if (side === 1) { currentAI1.value = ai } else { currentAI2.value = ai }
-			})
+			if (side === 1) {
+				fileSystem.load(aiObj).then(() => { currentAI1.value = ai })
+			} else {
+				// Garde anti-course : un switch rapide d'onglets droits ne doit pas
+				// laisser le .then le plus lent écraser currentAI2 du plus récent.
+				const gen = ++load2Gen
+				fileSystem.load(aiObj).then(() => { if (gen === load2Gen) currentAI2.value = ai })
+			}
 		}
 		updateUrl()
 		localStorage.setItem(lastCodeKey(side), '' + ai)
@@ -1394,7 +1405,13 @@
 	// pour qu'un rename/déplacement (de fichier OU de dossier parent) ne démonte pas l'éditeur ouvert
 	// ni n'orpheline ses onglets. newPath null = suppression (géré par les flux de close). #4318
 	function onAiPathChanged({ oldPath, newPath }: { oldPath: string, newPath: string | null }) {
-		if (!newPath) return
+		if (!newPath) {
+			// Suppression : fermer l'onglet droit pointant sur le path libéré. On a
+			// oldPath ici, alors que deleteAI reçoit ai.path déjà re-clé en .trash/...
+			const t2 = tabs2.value.find(t => t.type === 'file' && t.id === oldPath)
+			if (t2) closeTab2(t2)
+			return
+		}
 		if (currentAI1.value === oldPath) currentAI1.value = newPath
 		if (currentAI2.value === oldPath) currentAI2.value = newPath
 		for (const tab of tabs1.value) {
@@ -1512,6 +1529,8 @@
 		emitter.on('close-file-tab', (aiPath: string) => {
 			const tab = tabs1.value.find(t => t.type === 'file' && t.id === aiPath)
 			if (tab) { closeTabByRef(tab) }
+			const tab2 = tabs2.value.find(t => t.type === 'file' && t.id === aiPath)
+			if (tab2) { closeTab2(tab2) }
 		})
 
 		emitter.on('close-merge-tabs', ({ folder }: { folder: string }) => {
