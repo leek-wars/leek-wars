@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ Пакет {pack} за {price} покрывает эту покупку.",
 	"suggestion_cta": "Посмотреть пакет",
 	"items_title": "Они ждут только вас",
+	"refresh_items": "Обновить подборку",
 	"back": "Вернуться в банк",
 	"best_value": "Лучшее предложение",
 	"offered": "бесплатно"

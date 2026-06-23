@@ -90,7 +90,17 @@
 				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="Number(p)" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
 			</div>
 		</panel>
-		<h1 v-if="items" class="items-title">{{ $t('items_title') }}</h1>
+		<div v-if="items" class="items-header">
+			<h1 class="items-title">{{ $t('items_title') }}</h1>
+			<v-tooltip location="bottom">
+				<template #activator="{ props: tprops }">
+					<v-btn v-bind="tprops" class="refresh-button" icon variant="text" size="small" :loading="refreshing" @click="refreshItems">
+						<v-icon>mdi-refresh</v-icon>
+					</v-btn>
+				</template>
+				<span>{{ $t('refresh_items') }}</span>
+			</v-tooltip>
+		</div>
 		<div class="container grid">
 			<panel v-if="!items">
 				<loader />
@@ -171,6 +181,7 @@ const route = useRoute()
 const packs = ref<Record<string, Pack> | null>(null)
 const items = ref<Record<string, ItemTemplate> | null>(null)
 const firstPurchase = ref(false)
+const refreshing = ref(false)
 const buyDialog = ref(false)
 const buyItem = ref<ItemTemplate | null>(null)
 
@@ -309,6 +320,17 @@ LeekWars.get('bank/get-packs').then(data => {
 	firstPurchase.value = data.first_purchase
 	LeekWars.setTitle(t('title'))
 })
+
+function refreshItems() {
+	if (refreshing.value) return
+	refreshing.value = true
+	LeekWars.get('bank/refresh-items').then(data => {
+		items.value = data.items
+		refreshing.value = false
+	}).error(() => {
+		refreshing.value = false
+	})
+}
 
 if (store.state.farmer) {
 	LeekWars.setSubTitle(t('main.x_habs', [LeekWars.formatNumber(store.state.farmer.habs)]) + ' • ' + t('main.x_crystals', [LeekWars.formatNumber(store.state.farmer.crystals)]))
@@ -469,6 +491,20 @@ watch(() => LeekWars.currency, () => {
 	}
 	#app.app .packs {
 		padding: 5px 0;
+	}
+	.items-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.refresh-button {
+			// le header est posé sur le fond d'app (sombre dans les deux thèmes),
+			// comme le titre : on garde le bouton blanc en permanence.
+			color: white;
+			opacity: 0.75;
+			&:hover {
+				opacity: 1;
+			}
+		}
 	}
 	.items-title {
 		background: #222;

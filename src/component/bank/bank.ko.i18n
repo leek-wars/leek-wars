@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ {price}의 {pack} 팩으로 이 구매를 충당합니다.",
 	"suggestion_cta": "팩 보기",
 	"items_title": "당신을 기다리고 있어요",
+	"refresh_items": "선택 새로고침",
 	"back": "은행으로 돌아가기",
 	"best_value": "최고 혜택",
 	"offered": "무료"

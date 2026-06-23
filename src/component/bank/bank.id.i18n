@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ Paket {pack} seharga {price} menutup pembelian.",
 	"suggestion_cta": "Lihat paket",
 	"items_title": "Mereka menunggu Anda",
+	"refresh_items": "Perbarui pilihan",
 	"back": "Kembali ke bank",
 	"best_value": "Penawaran terbaik",
 	"offered": "gratis"

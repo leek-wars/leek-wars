@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ Het {pack} pakket voor {price} dekt deze aankoop.",
 	"suggestion_cta": "Bekijk het pakket",
 	"items_title": "Ze wachten op je",
+	"refresh_items": "Selectie vernieuwen",
 	"back": "Terug naar de bank",
 	"best_value": "Beste aanbieding",
 	"offered": "gratis"

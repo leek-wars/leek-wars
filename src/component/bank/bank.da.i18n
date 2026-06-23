@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ {pack}-pakken til {price} dækker købet.",
 	"suggestion_cta": "Se pakken",
 	"items_title": "De venter kun på dig",
+	"refresh_items": "Forny udvalget",
 	"back": "Tilbage til banken",
 	"best_value": "Bedste tilbud",
 	"offered": "gratis"

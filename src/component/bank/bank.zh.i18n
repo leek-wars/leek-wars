@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ {price}的{pack}包正好覆盖此购买。",
 	"suggestion_cta": "查看此包",
 	"items_title": "它们正等着您",
+	"refresh_items": "刷新精选",
 	"back": "返回银行",
 	"best_value": "超值优惠",
 	"offered": "免费"

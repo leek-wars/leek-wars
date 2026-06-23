@@ -8,6 +8,7 @@
 	"suggestion_exact": "→ Le pack {pack} à {price} couvre cet achat.",
 	"suggestion_cta": "Voir le pack",
 	"items_title": "Ils n'attendent que vous",
+	"refresh_items": "Renouveler la sélection",
 	"buy_now": "Acheter maintenant",
 	"missing_n_crystals": "Il vous manque {0} cristaux",
 	"confirm_purchase": "Confirmer l'achat",

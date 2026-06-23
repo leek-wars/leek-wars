@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ {pack} paketti hintaan {price} kattaa oston.",
 	"suggestion_cta": "Katso paketti",
 	"items_title": "Ne odottavat vain sinua",
+	"refresh_items": "Päivitä valikoima",
 	"back": "Takaisin pankkiin",
 	"best_value": "Paras tarjous",
 	"offered": "ilmaiseksi"

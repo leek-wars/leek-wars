@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ El pack {pack} por {price} cubre esta compra.",
 	"suggestion_cta": "Ver el pack",
 	"items_title": "Te están esperando",
+	"refresh_items": "Renovar la selección",
 	"back": "Volver al banco",
 	"best_value": "Mejor oferta",
 	"offered": "gratis"

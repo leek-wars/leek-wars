@@ -29,6 +29,7 @@
 	"suggestion_exact": "→ Paketet {pack} för {price} täcker köpet.",
 	"suggestion_cta": "Visa paketet",
 	"items_title": "De väntar bara på dig",
+	"refresh_items": "Uppdatera urvalet",
 	"back": "Tillbaka till banken",
 	"best_value": "Bästa erbjudandet",
 	"offered": "gratis"
