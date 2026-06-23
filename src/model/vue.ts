@@ -28,6 +28,9 @@ import { scroll_to_hash } from '@/router-functions'
 
 import { createVuetify } from 'vuetify'
 import 'vuetify/styles'
+import { da, de, en, es, fi, fr, id, it, ja, ko, nl, no, pl, pt, ru, sv, zhHans } from 'vuetify/locale'
+import { locale as initialLocale } from '@/locale'
+import { watch } from 'vue'
 import { aliases as mdiSvgAliases } from 'vuetify/iconsets/mdi-svg'
 import { mdiIconSet } from './icon-set'
 import { formatEmojis } from './emojis'
@@ -38,7 +41,15 @@ const Console = defineAsyncComponent(() => import('@/component/app/console.vue')
 
 const cspNonce = (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined
 
+// Vuetify ne fournit pas de messages pour 'hi' (→ fallback 'en') et nomme le chinois 'zhHans'.
+const toVuetifyLocale = (lang: string) => lang === 'zh' ? 'zhHans' : lang
+
 const vuetify = createVuetify({
+	locale: {
+		locale: toVuetifyLocale(initialLocale),
+		fallback: 'en',
+		messages: { da, de, en, es, fi, fr, id, it, ja, ko, nl, no, pl, pt, ru, sv, zhHans },
+	},
 	icons: {
 		defaultSet: 'mdi',
 		aliases: mdiSvgAliases,
@@ -83,6 +94,12 @@ const vuetify = createVuetify({
 			density: 'compact',
 		},
 	},
+})
+
+// Garde la locale des composants Vuetify (footer v-data-table, etc.) synchronisée
+// quand la langue change à chaud, sans rechargement de page.
+watch(() => i18n.locale, (lang) => {
+	vuetify.locale.current.value = toVuetifyLocale(lang)
 })
 
 // Cache-busted reload on Vite asset errors, with a cooldown to break out of
