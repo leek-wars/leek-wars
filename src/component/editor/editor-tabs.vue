@@ -22,6 +22,9 @@
 				</span>
 			</div>
 		</div>
+		<div v-if="group === 'tabs2'" class="unsplit" :title="$t('close')" @click="$emit('close-panel')">
+			<v-icon>mdi-dock-left</v-icon>
+		</div>
 		<v-menu v-model="menuOpened" :target="menuTarget" :theme="isDark ? 'dark' : 'light'" @update:model-value="menuChange">
 			<v-list class="menu" :dense="true">
 				<v-list-item v-if="menuTab" v-ripple prepend-icon="mdi-close-box-outline" @click="closeTab(menuTab)">
@@ -324,5 +327,25 @@
 	}
 	.menu .v-icon {
 		margin-right: 8px;
+	}
+	.unsplit {
+		height: 36px;
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		padding: 0 10px;
+		cursor: pointer;
+		background: rgba(0, 0, 0, 0.2);
+		.v-icon {
+			font-size: 18px;
+			color: #cacaca;
+			transition: none;
+		}
+		&:hover {
+			background: rgba(0, 0, 0, 0.35);
+			.v-icon {
+				color: #fff;
+			}
+		}
 	}
 </style>

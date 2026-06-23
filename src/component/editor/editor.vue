@@ -506,8 +506,12 @@
 		problemsHeight.value = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
 		panelWidth.value = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
 		splitted.value = localStorage.getItem('editor/splitted') === 'true'
-		editor1Width.value = parseFloat(localStorage.getItem('editor/editor1-width') || '') || (splitted.value ? 0.5 : 1)
-		editor2Width.value = parseFloat(localStorage.getItem('editor/editor2-width') || '') || 0.5
+		// editor1/2Width sont des fractions (0..1) ; ignorer toute valeur corrompue
+		// hors plage (ex. ancien bug persistant une largeur en pixels comme 800).
+		const storedW1 = parseFloat(localStorage.getItem('editor/editor1-width') || '')
+		editor1Width.value = (storedW1 > 0 && storedW1 <= 1) ? storedW1 : (splitted.value ? 0.5 : 1)
+		const storedW2 = parseFloat(localStorage.getItem('editor/editor2-width') || '')
+		editor2Width.value = (storedW2 > 0 && storedW2 <= 1) ? storedW2 : 0.5
 
 		LeekWars.loadEncyclopedia(locale)
 
@@ -526,10 +530,26 @@
 		}
 		LeekWars.setTitle(t('title'), t('n_ais', [fileSystem.aiCount]))
 		restoreTabs()
-		// Charger le code de l'IA du panneau droit au montage : sinon ai2Ready reste
-		// faux et l'éditeur droit ne se monte pas (panneau vide au reload en splitté).
-		if (splitted.value && currentAI2.value && currentAI2.value in fileSystem.ais) {
-			fileSystem.load(fileSystem.ais[currentAI2.value])
+		// Réconcilier le panneau droit au montage :
+		//  - currentAI2 valide        → charger son code (sinon ai2Ready faux = éditeur droit vide)
+		//  - sinon 1er onglet droit OK → l'afficher
+		//  - sinon rien de valide      → dé-splitter (évite un côté droit vide sans issue)
+		if (splitted.value) {
+			if (currentAI2.value && currentAI2.value in fileSystem.ais) {
+				fileSystem.load(fileSystem.ais[currentAI2.value])
+			} else {
+				const firstValid = tabs2.value.find(t => t.type === 'file' && t.id in fileSystem.ais) as FileTab | undefined
+				if (firstValid) {
+					currentAI2.value = firstValid.id
+					localStorage.setItem(lastCodeKey(2), firstValid.id)
+					fileSystem.load(fileSystem.ais[firstValid.id])
+				} else {
+					splitted.value = false
+					editor1Width.value = 1
+					localStorage.setItem('editor/splitted', 'false')
+					localStorage.setItem('editor/editor1-width', '1')
+				}
+			}
 		}
 		await loadGitRepos()
 		update()
@@ -1345,7 +1365,10 @@
 				setSide(2)
 			}
 		} else {
-			editor1Width.value = editorTotalWidth
+			// editor1Width est une fraction (0..1), bindée en * 100% : pleine largeur = 1
+			// (et non la largeur en pixels, qui donnerait editor1Width * 100 = 80000%).
+			editor1Width.value = 1
+			editor2Width.value = 0.5
 			setSide(1)
 		}
 		localStorage.setItem('editor/editor1-width', '' + editor1Width.value)
