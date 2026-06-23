@@ -36,8 +36,9 @@
 						<loader v-if="stripeLoading" />
 						<div id="stripe-payment-element"></div>
 						<div v-if="stripeError" class="stripe-error">{{ stripeError }}</div>
-						<v-btn v-if="stripeReady" color="primary" :loading="stripePaying" block class="pay-btn" @click="payWithStripe">
-							<v-icon>mdi-lock</v-icon> {{ $t('pay') }}
+						<v-btn v-if="stripeReady" color="primary" size="large" :loading="stripePaying" block class="pay-btn" @click="payWithStripe">
+							<template #prepend><v-icon>mdi-lock</v-icon></template>
+							{{ $t('pay') }}
 						</v-btn>
 					</div>
 
