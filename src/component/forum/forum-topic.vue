@@ -247,7 +247,7 @@
 					<div class="center">
 						<div v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }}</div>
 						<div v-if="isOldTopic" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('old_topic_warning') }}</div>
-						<v-btn color="primary" class="send" :disabled="!newMessage || !newMessage.trim()" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
+						<v-btn color="primary" class="send" :loading="sendingMessage" :disabled="!newMessage || !newMessage.trim()" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
 					</div>
 					<formatting-rules />
 					<br>
@@ -689,6 +689,9 @@
 			newMessage.value = ''
 			update(true)
 			sendingMessage.value = false
+		}).error((error: { error: string }) => {
+			sendingMessage.value = false
+			LeekWars.toast(t(error.error) as string)
 		})
 	}
 
