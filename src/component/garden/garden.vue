@@ -662,6 +662,9 @@
 			return
 		}
 		if (category.value) {
+			if (category.value !== 'challenge') {
+				localStorage.setItem('garden/category', category.value)
+			}
 			const category_underscore = category.value.replace('-', '_')
 			LeekWars.setTitle(t('garden_' + category_underscore), t('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + t('n_fights', store.state.farmer.team_fights) : ''))
 			LeekWars.splitShowContent()
@@ -855,12 +858,6 @@
 			router.push('/fight/' + data.fight)
 		}).error(error => LeekWars.toast(t(error.error) as string))
 	}
-
-	watch(category, () => {
-		if (category.value && category.value !== 'challenge') {
-			localStorage.setItem('garden/category', category.value)
-		}
-	})
 
 	watch(selectedLeek, () => {
 		if (selectedLeek.value) {
