@@ -1,6 +1,9 @@
 <template>
-	<error v-if="error" :title="$t('trophy')" :message="$t('main.page_not_found')" />
-	<div v-else class="page">
+	<!-- Racine STABLE unique (.page toujours montée) : un v-if/v-else à la racine crée un Fragment
+	     dont l'el peut devenir null pendant le patch/unmount -> "parentNode of null" (#4163, cf leek.vue). -->
+	<div class="page">
+		<error v-if="error" :title="$t('trophy')" :message="$t('main.page_not_found')" />
+		<template v-else>
 		<div class="page-bar page-header">
 			<h1>
 				<breadcrumb :items="[{name: $t('trophies'), link: '/trophies'}, {name: $t('trophy.' + code), link: ''}]" :raw="true" />
@@ -153,6 +156,7 @@
 				<div v-ripple class="red" @click="deleteTrophy()">{{ $t('main.delete') }}</div>
 			</template>
 		</popup>
+		</template>
 	</div>
 </template>
 

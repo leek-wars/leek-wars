@@ -1,4 +1,7 @@
 <template>
+	<!-- Racine STABLE unique (.page toujours montée) : v-if/v-else à la racine = Fragment dont
+	     l'el peut devenir null pendant le patch -> "parentNode of null" (#4163, cf leek.vue). -->
+	<div class="page">
 	<error v-if="error" :title="$t('not_found')">
 		<template #message><i18n-t keypath="not_found_id" tag="span"><template #id><b>{{ id }}</b></template></i18n-t></template>
 		<template #button>
@@ -7,7 +10,7 @@
 			</router-link>
 		</template>
 	</error>
-	<div v-else class="page">
+	<template v-else>
 		<div class="page-header page-bar">
 
 			<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
@@ -814,6 +817,7 @@
 
 		<invite-dialog v-model="inviteDialog" />
 
+	</template>
 	</div>
 </template>
 

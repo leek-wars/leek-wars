@@ -1,6 +1,10 @@
 <template lang="html">
-	<error v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
-	<div v-else class="page">
+	<!-- Racine STABLE unique (.page toujours montée) : un v-if/v-else à la racine crée un
+	     Fragment dont l'el peut devenir null pendant le patch/unmount -> "parentNode of null"
+	     (#4163, surtout sur un mob où `error` bascule). L'erreur 404 rend DANS .page. -->
+	<div class="page">
+		<error v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
+		<template v-else>
 		<div class="page-header page-bar">
 			<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ props }" :bottom="true">
 				<h1 v-bind="props">{{ leek.name }}</h1>
@@ -789,6 +793,7 @@
 
 		<capital-dialog v-if="leek && my_leek" v-model="showCapital" :leek="leek" :total-capital="leek.capital" />
 		<loadout-dialog v-if="leek && my_leek" v-model="showLoadout" :leek="leek" @applied="refreshTotalCharacteristics" />
+		</template>
 	</div>
 </template>
 
