@@ -44,6 +44,14 @@
 					</v-list>
 				</v-menu>
 				<div class="button-wrapper">
+					<router-link to="/help">
+						<div class="header-button">
+							<v-icon>mdi-help-circle-outline</v-icon>
+							<span class="help-label">{{ $t('main.help') }}</span>
+						</div>
+					</router-link>
+				</div>
+				<div class="button-wrapper">
 					<router-link to="/login">
 						<div class="header-button">
 							<v-icon>mdi-power</v-icon>
@@ -416,6 +424,9 @@
 		}
 	}
 	@media screen and (max-width: 599px) {
+		.help-label {
+			display: none;
+		}
 		#app.connected .header {
 			display: none;
 		}
