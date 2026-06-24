@@ -27,5 +27,6 @@
 	"war": "Guerra",
 	"chest_hunt": "Caça ao Baú",
 	"n_chests": "{0} baús",
-	"colossus": "Colosso"
+	"colossus": "Colosso",
+	"result": "Resultado"
 }

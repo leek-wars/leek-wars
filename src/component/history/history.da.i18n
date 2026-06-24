@@ -27,5 +27,6 @@
 	"war": "Krig",
 	"chest_hunt": "Kistejagt",
 	"n_chests": "{0} kister",
-	"colossus": "Koloss"
+	"colossus": "Koloss",
+	"result": "Resultat"
 }

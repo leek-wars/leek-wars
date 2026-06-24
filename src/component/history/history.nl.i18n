@@ -27,5 +27,6 @@
 	"chests": "Kisten",
 	"n_chests": "{0} kisten",
 	"loot": "Gevechtsbuit",
-	"rare_loot": "Zeldzame grondstoffen"
+	"rare_loot": "Zeldzame grondstoffen",
+	"result": "Resultaat"
 }

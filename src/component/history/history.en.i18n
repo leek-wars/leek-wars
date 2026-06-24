@@ -29,5 +29,6 @@
 	"n_chests": "{0} chests",
 	"colossus": "Colossus",
 	"view_grid": "Grid view",
-	"view_table": "Table view"
+	"view_table": "Table view",
+	"result": "Result"
 }

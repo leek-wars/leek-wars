@@ -27,5 +27,6 @@
 	"chests": "Truhen",
 	"rare_loot": "Seltene Ressourcen",
 	"n_chests": "{0} Truhen",
-	"colossus": "Koloss"
+	"colossus": "Koloss",
+	"result": "Ergebnis"
 }

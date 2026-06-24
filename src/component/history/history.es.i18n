@@ -27,5 +27,6 @@
 	"war": "Guerra",
 	"chest_hunt": "Caza de cofres",
 	"n_chests": "{0} cofres",
-	"colossus": "Coloso"
+	"colossus": "Coloso",
+	"result": "Resultado"
 }

@@ -27,5 +27,6 @@
 	"loot": "Rampasan pertarungan",
 	"n_chests": "{0} peti",
 	"rare_loot": "Sumber daya langka",
-	"war": "Perang"
+	"war": "Perang",
+	"result": "Hasil"
 }

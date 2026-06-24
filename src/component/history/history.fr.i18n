@@ -29,5 +29,6 @@
 	"n_chests": "{0} coffres",
 	"colossus": "Colosse",
 	"view_grid": "Vue grille",
-	"view_table": "Vue tableau"
+	"view_table": "Vue tableau",
+	"result": "Résultat"
 }

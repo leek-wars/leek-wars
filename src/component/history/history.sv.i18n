@@ -27,5 +27,6 @@
 	"colossus": "Koloss",
 	"loot": "Stridsbyte",
 	"chests": "Kistor",
-	"rare_loot": "Sällsynta resurser"
+	"rare_loot": "Sällsynta resurser",
+	"result": "Resultat"
 }

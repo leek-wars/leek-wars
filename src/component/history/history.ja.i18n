@@ -29,5 +29,6 @@
 	"rare_loot": "レア資源",
 	"view_grid": "グリッド表示",
 	"view_table": "テーブル表示",
-	"war": "戦争"
+	"war": "戦争",
+	"result": "結果"
 }

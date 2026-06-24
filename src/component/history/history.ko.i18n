@@ -29,5 +29,6 @@
 	"victories": "승리",
 	"view_grid": "그리드 보기",
 	"view_table": "테이블 보기",
-	"war": "전쟁"
+	"war": "전쟁",
+	"result": "결과"
 }

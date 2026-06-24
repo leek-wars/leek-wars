@@ -27,5 +27,6 @@
 	"loot": "Łupy z walki",
 	"n_chests": "{0} skrzyń",
 	"rare_loot": "Rzadkie zasoby",
-	"war": "Wojna"
+	"war": "Wojna",
+	"result": "Wynik"
 }
