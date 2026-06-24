@@ -23,7 +23,9 @@
 		<image :x="avatarCx - avatarSize / 2" :y="y + size - avatarSize / 3 - avatarSize / 2" :width="avatarSize" :height="avatarSize" :xlink:href="farmerAvatar" :clip-path="'url(#' + clipId + ')'" />
 		<circle :cx="avatarCx" :cy="y + size - avatarSize / 3" :r="avatarSize / 2" fill="none" stroke="var(--background-disabled)" :stroke-width="1.5" />
 	</a>
-	<text v-if="displayName" :x="x + size / 2" :y="y + size + 8" class="block-name" text-anchor="middle">{{ displayName }}</text>
+	<foreignObject v-if="displayName" :x="x - size / 2" :y="y + size + 1" :width="size * 2" :height="11" style="overflow: visible; pointer-events: none">
+		<div class="block-name-wrap"><span class="block-name">{{ displayName }}</span></div>
+	</foreignObject>
 </template>
 
 <script setup lang="ts">
@@ -133,10 +135,22 @@ function mouseleave() {
 		height: 100%;
 		cursor: pointer;
 	}
+	.block-name-wrap {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+	}
 	.block-name {
 		font-size: 7px;
 		font-weight: 500;
-		fill: var(--text-color);
+		line-height: 9px;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.55);
+		padding: 0.5px 3px;
+		border-radius: 3px;
+		white-space: nowrap;
 		pointer-events: none;
 	}
 </style>
