@@ -220,16 +220,52 @@ function updateCommands() {
 	}
 }
 
+// Remplace les tokenLength caracteres avant le caret memorise (savedRange) via le DOM
+// (Range) au lieu de reconstruire input.textContent : reconstruire aplatissait la
+// structure multi-lignes du contenteditable (les \n ne redevenaient pas des sauts de
+// ligne) et faisait sauter le curseur (forum #11627, meme cause que celle corrigee pour
+// addEmoji). Retourne false si le caret memorise n'est pas exploitable, pour laisser
+// l'appelant retomber sur l'ancien comportement.
+function replaceToken(input: HTMLElement, token: string, replacement: string): boolean {
+	const sel = window.getSelection()
+	const saved = savedRange
+	if (!sel || !saved || !input.contains(saved.commonAncestorContainer)) { return false }
+	if (saved.startContainer.nodeType !== Node.TEXT_NODE || saved.startOffset < token.length) { return false }
+	// On ne remplace via le DOM que si les caractères juste avant le caret sont bien le
+	// token attendu (caret au bout du /commande ou @pseudo). Sinon (caret déplacé), on
+	// rend false pour laisser l'appelant retomber sur l'ancien remplacement textContent :
+	// le chemin DOM reste alors strictement équivalent, sans risque de régression.
+	const before = (saved.startContainer.textContent || '').slice(saved.startOffset - token.length, saved.startOffset)
+	if (before !== token) { return false }
+	input.focus()
+	const range = saved.cloneRange()
+	range.setStart(saved.startContainer, saved.startOffset - token.length)
+	range.deleteContents()
+	const node = document.createTextNode(replacement)
+	range.insertNode(node)
+	range.setStartAfter(node)
+	range.collapse(true)
+	sel.removeAllRanges()
+	sel.addRange(range)
+	savedRange = range.cloneRange()
+	message.value = input.innerText
+	return true
+}
+
 function selectCommand(command: string, finished: boolean = true) {
 	const input = inputRef.value!
-	let text = input.innerText
+	const text = input.innerText
 	const regex = /\/(\w*(!|(:\w*))?)$/gi
 	const match = regex.exec(text)
-	text = text.replace(regex, "/" + command + (finished ? " " : ""))
-	input.textContent = text
-	input.focus()
 	if (match) {
-		LeekWars.set_cursor_position(input, match.index + command.length + (finished ? 2 : 1))
+		const replacement = "/" + command + (finished ? " " : "")
+		// DOM d'abord (preserve le multi-lignes) ; repli sur la reconstruction textContent
+		// si le caret memorise n'est pas exploitable.
+		if (!replaceToken(input, match[0], replacement)) {
+			input.textContent = text.replace(regex, replacement)
+			input.focus()
+			LeekWars.set_cursor_position(input, match.index + command.length + (finished ? 2 : 1))
+		}
 	}
 	if (finished) {
 		commandsEnabled.value = false
@@ -240,14 +276,16 @@ function selectCommand(command: string, finished: boolean = true) {
 function selectPseudo(pseudo: string | null) {
 	if (pseudo) {
 		const input = inputRef.value!
-		let text = input.innerText
+		const text = input.innerText
 		const regex = /@\w*$/gi
 		const match = regex.exec(text)
-		text = text.replace(regex, "@" + pseudo + " ")
-		input.textContent = text
-		input.focus()
 		if (match) {
-			LeekWars.set_cursor_position(input, match.index + pseudo.length + 2)
+			const replacement = "@" + pseudo + " "
+			if (!replaceToken(input, match[0], replacement)) {
+				input.textContent = text.replace(regex, replacement)
+				input.focus()
+				LeekWars.set_cursor_position(input, match.index + pseudo.length + 2)
+			}
 		}
 	}
 	pseudosEnabled.value = false
