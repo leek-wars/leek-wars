@@ -144,7 +144,10 @@ class Mob extends FightEntity {
 
 		textureCtx.save()
 		textureCtx.translate(canvas.width / 2, canvas.height - this.baseZ)
-		textureCtx.scale(this.scale, this.scale)
+		// * this.direction : sans le miroir, la texture capturée pour l'enfoncement (bury)
+		// ignore l'orientation courante du mob/boss, qui regarde alors la direction par
+		// défaut au lieu de sa direction au moment de la mort (#4332). Aligné sur leek.ts.
+		textureCtx.scale(this.scale * this.direction, this.scale)
 		this.drawNormal(textureCtx)
 		textureCtx.restore()
 
