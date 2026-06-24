@@ -23,6 +23,7 @@
 		<image :x="avatarCx - avatarSize / 2" :y="y + size - avatarSize / 3 - avatarSize / 2" :width="avatarSize" :height="avatarSize" :xlink:href="farmerAvatar" :clip-path="'url(#' + clipId + ')'" />
 		<circle :cx="avatarCx" :cy="y + size - avatarSize / 3" :r="avatarSize / 2" fill="none" stroke="var(--background-disabled)" :stroke-width="1.5" />
 	</a>
+	<text v-if="displayName" :x="x + size / 2" :y="y + size + 8" class="block-name" text-anchor="middle">{{ displayName }}</text>
 </template>
 
 <script setup lang="ts">
@@ -84,6 +85,13 @@ const entityId = computed(() => {
 	const match = props.item.link.match(/^\/(leek|farmer|team)\/(\d+)$/)
 	return match ? parseInt(match[2]) : 0
 })
+// Nom affiché sous la case du bracket (#4212) : tronqué pour ne pas déborder sur les
+// cases voisines dans un arbre dense.
+const displayName = computed(() => {
+	const name = props.item?.name
+	if (!name) return ''
+	return name.length > 11 ? name.slice(0, 10) + '…' : name
+})
 
 function activate() {
 	activeBlock.value = blockKey.value
@@ -124,5 +132,11 @@ function mouseleave() {
 		width: 100%;
 		height: 100%;
 		cursor: pointer;
+	}
+	.block-name {
+		font-size: 7px;
+		font-weight: 500;
+		fill: var(--text-color);
+		pointer-events: none;
 	}
 </style>
