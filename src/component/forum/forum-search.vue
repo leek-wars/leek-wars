@@ -149,7 +149,8 @@
 		category: -1,
 		admin: false,
 		moderator: false,
-		order: 'pertinence'
+		order: 'pertinence',
+		resolved: 'all'
 	} as Record<string, unknown>
 	const queryLower = ref('')
 	const pages = ref(0)
@@ -207,28 +208,37 @@
 	const urlPagination = computed(() => {
 		const q = route.query
 		const parts: string[] = []
-		if (q.query && q.query !== '' && q.query !== '-') parts.push('query=' + q.query)
-		if (q.farmer && q.farmer !== '' && q.farmer !== '-') parts.push('farmer=' + q.farmer)
-		if (q.category && q.category !== '-1' && q.category !== '-') parts.push('category=' + q.category)
-		if (q.order && q.order !== 'pertinence') parts.push('order=' + q.order)
-		if (q.admin) parts.push('admin=' + q.admin)
-		if (q.moderator) parts.push('moderator=' + q.moderator)
-		if (q.resolved && q.resolved !== 'all') parts.push('resolved=' + q.resolved)
+		// encodeURIComponent sur chaque valeur : sinon une query avec apostrophe/espace/&
+		// produit une URL malformée que Vue Router/Firefox tentent de re-normaliser en
+		// boucle (spam de la barre d'URL, #4333).
+		const add = (key: string, value: unknown) => parts.push(key + '=' + encodeURIComponent(String(value)))
+		if (q.query && q.query !== '' && q.query !== '-') add('query', q.query)
+		if (q.farmer && q.farmer !== '' && q.farmer !== '-') add('farmer', q.farmer)
+		if (q.category && q.category !== '-1' && q.category !== '-') add('category', q.category)
+		if (q.order && q.order !== 'pertinence') add('order', q.order)
+		if (q.admin) add('admin', q.admin)
+		if (q.moderator) add('moderator', q.moderator)
+		if (q.resolved && q.resolved !== 'all') add('resolved', q.resolved)
 		return '/search?' + parts.join('&')
 	})
 
-	// URL pour la navigation au clic sur Rechercher — basé sur options (état courant des inputs).
-	const searchUrl = computed(() => {
-		const url = "/search"
-		const opts = Object.keys(options)
-			.filter(option => options[option] !== null && options[option] !== defaultOptions[option] && option !== 'page')
-			.map(option => option + '=' + options[option])
-			.join('&')
-		return url + '?' + opts
+	// Query pour la navigation au clic sur Rechercher — basé sur options (état courant des
+	// inputs). On passe un OBJET query (et non une string concaténée à la main) pour que
+	// Vue Router encode chaque valeur : une query avec apostrophe/espace (ex: "qualité d'une
+	// IA est affichée") produisait sinon une URL malformée bouclant en redirection (#4333).
+	const searchQuery = computed<Record<string, string>>(() => {
+		const query: Record<string, string> = {}
+		for (const option of Object.keys(options)) {
+			if (option === 'page') continue
+			const value = options[option]
+			if (value === null || value === defaultOptions[option]) continue
+			query[option] = String(value)
+		}
+		return query
 	})
 
 	function search() {
-		router.push(searchUrl.value)
+		router.push({ path: '/search', query: searchQuery.value })
 	}
 	function searchButton() {
 		search()
