@@ -38,10 +38,13 @@
 							<div class="fighter summary"><span class="name">{{ $t('main.n_leeks', [data.leeks1.length]) }}</span></div>
 						</template>
 						<template v-else>
-							<div v-for="leek in data.leeks1" :key="leek.id" class="fighter">
-								<span class="name">{{ leek.name }}</span>
-								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-								<span v-if="expand && leekGain(leek.id, 1) !== null" class="gain" :class="{up: leekGain(leek.id, 1)! > 0, down: leekGain(leek.id, 1)! < 0}">{{ formatGain(leekGain(leek.id, 1)!) }}</span>
+							<div v-for="leek in data.leeks1" :key="leek.id" class="fighter-entry">
+								<div class="fighter">
+									<span class="name">{{ leek.name }}</span>
+									<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
+									<span v-if="expand && leekGain(leek.id, 1) !== null" class="gain" :class="{up: leekGain(leek.id, 1)! > 0, down: leekGain(leek.id, 1)! < 0}">{{ formatGain(leekGain(leek.id, 1)!) }}</span>
+								</div>
+								<fight-resources v-if="leekResources(leek.id)" :resources="leekResources(leek.id)!" :size="20" class="fighter-resources" />
 							</div>
 						</template>
 						<div v-if="data.type == FightType.FARMER && data.farmer1_name" class="farmer-name">
@@ -65,10 +68,13 @@
 								<div class="fighter summary"><span class="name">{{ $t('main.n_leeks', [data.leeks2.length]) }}</span></div>
 							</template>
 							<template v-else>
-								<div v-for="leek in data.leeks2" :key="leek.id" class="fighter">
-									<span class="name">{{ leek.name }}</span>
-									<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-									<span v-if="expand && leekGain(leek.id, 2) !== null" class="gain" :class="{up: leekGain(leek.id, 2)! > 0, down: leekGain(leek.id, 2)! < 0}">{{ formatGain(leekGain(leek.id, 2)!) }}</span>
+								<div v-for="leek in data.leeks2" :key="leek.id" class="fighter-entry">
+									<div class="fighter">
+										<span class="name">{{ leek.name }}</span>
+										<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
+										<span v-if="expand && leekGain(leek.id, 2) !== null" class="gain" :class="{up: leekGain(leek.id, 2)! > 0, down: leekGain(leek.id, 2)! < 0}">{{ formatGain(leekGain(leek.id, 2)!) }}</span>
+									</div>
+									<fight-resources v-if="leekResources(leek.id)" :resources="leekResources(leek.id)!" :size="20" class="fighter-resources" />
 								</div>
 							</template>
 							<div v-if="data.type == FightType.FARMER && data.farmer2_name" class="farmer-name">
@@ -87,6 +93,8 @@
 								<th>{{ $t('main.level') }}</th>
 								<th><img src="/image/talent.png"></th>
 								<th>±</th>
+								<th v-if="hasMoney" class="habs-col">{{ $t('main.habs') }}</th>
+								<th v-if="hasResources" class="resources-col">{{ $t('main.resources') }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -97,31 +105,41 @@
 								<td class="num gain" :class="{up: (leekGain(row.leek.id, row.side) ?? 0) > 0, down: (leekGain(row.leek.id, row.side) ?? 0) < 0}">
 									<template v-if="leekGain(row.leek.id, row.side) !== null">{{ formatGain(leekGain(row.leek.id, row.side)!) }}</template>
 								</td>
+								<td v-if="hasMoney" class="num habs-col">
+									<span v-if="leekMoney(row.leek.id)">{{ $filters.number(leekMoney(row.leek.id)) }} <span class="hab"></span></span>
+								</td>
+								<td v-if="hasResources" class="resources-col">
+									<fight-resources v-if="leekResources(row.leek.id)" :resources="leekResources(row.leek.id)!" :size="18" />
+								</td>
 							</tr>
 						</tbody>
 					</table>
-					<template v-else>
-						<table v-for="side in tableSides" :key="side" class="participants" :class="'team-' + side">
-							<thead>
-								<tr>
-									<th class="leek-name">{{ sideName(side) }}</th>
-									<th>{{ $t('main.level') }}</th>
-									<th><img src="/image/talent.png"></th>
-									<th>±</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="leek in (side === 1 ? data.leeks1 : data.leeks2)" :key="leek.id">
-									<td class="leek-name">{{ leek.name }}</td>
-									<td class="num">{{ leek.level }}</td>
-									<td class="num">{{ leek.talent ?? '' }}</td>
-									<td class="num gain" :class="{up: (leekGain(leek.id, side) ?? 0) > 0, down: (leekGain(leek.id, side) ?? 0) < 0}">
-										<template v-if="leekGain(leek.id, side) !== null">{{ formatGain(leekGain(leek.id, side)!) }}</template>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</template>
+					<table v-else class="participants">
+						<tbody v-for="side in tableSides" :key="side" :class="'team-' + side">
+							<tr class="team-header">
+								<th class="leek-name">{{ sideName(side) }}</th>
+								<th>{{ $t('main.level') }}</th>
+								<th><img src="/image/talent.png"></th>
+								<th>±</th>
+								<th v-if="hasMoney" class="habs-col">{{ $t('main.habs') }}</th>
+								<th v-if="hasResources" class="resources-col">{{ $t('main.resources') }}</th>
+							</tr>
+							<tr v-for="leek in (side === 1 ? data.leeks1 : data.leeks2)" :key="leek.id">
+								<td class="leek-name">{{ leek.name }}</td>
+								<td class="num">{{ leek.level }}</td>
+								<td class="num">{{ leek.talent ?? '' }}</td>
+								<td class="num gain" :class="{up: (leekGain(leek.id, side) ?? 0) > 0, down: (leekGain(leek.id, side) ?? 0) < 0}">
+									<template v-if="leekGain(leek.id, side) !== null">{{ formatGain(leekGain(leek.id, side)!) }}</template>
+								</td>
+								<td v-if="hasMoney" class="num habs-col">
+									<span v-if="leekMoney(leek.id)">{{ $filters.number(leekMoney(leek.id)) }} <span class="hab"></span></span>
+								</td>
+								<td v-if="hasResources" class="resources-col">
+									<fight-resources v-if="leekResources(leek.id)" :resources="leekResources(leek.id)!" :size="18" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</template>
 
 				<div v-if="metaItems.length" class="meta">
@@ -137,7 +155,7 @@
 				</div>
 
 				<div class="footer">
-					<router-link :to="'/fight/' + data.id" class="report-link">
+					<router-link :to="'/report/' + data.id" class="report-link">
 						<v-icon>mdi-text-box-outline</v-icon>
 						{{ $t('main.report') }}
 					</router-link>
@@ -153,6 +171,7 @@ import { useI18n } from 'vue-i18n'
 import { LeekWars } from '@/model/leekwars'
 import { i18n } from '@/model/i18n'
 import { FightContext, FightType } from '@/model/fight'
+import FightResources from '@/component/report/fight-resources.vue'
 
 interface TooltipLeek {
 	id: number
@@ -167,6 +186,8 @@ interface TooltipLeek {
 interface TooltipReportLeek {
 	id: number
 	talent_gain?: number
+	money?: number
+	resources?: {[key: number]: number}
 }
 
 interface TooltipTeam {
@@ -321,6 +342,37 @@ function leekGain(leekId: number, side: 1 | 2): number | null {
 	return found && typeof found.talent_gain === 'number' ? found.talent_gain : null
 }
 
+// Loot indexé par id de poireau (les ids sont uniques entre les deux camps),
+// construit une fois par combat plutôt qu'un .find() par cellule rendue.
+const resourcesByLeek = computed(() => {
+	const map: Record<number, {[key: number]: number}> = {}
+	for (const arr of [data.value?.report?.leeks1, data.value?.report?.leeks2]) {
+		for (const l of arr ?? []) {
+			if (l.resources && Object.keys(l.resources).length) map[l.id] = l.resources
+		}
+	}
+	return map
+})
+const moneyByLeek = computed(() => {
+	const map: Record<number, number> = {}
+	for (const arr of [data.value?.report?.leeks1, data.value?.report?.leeks2]) {
+		for (const l of arr ?? []) {
+			if (l.money) map[l.id] = l.money
+		}
+	}
+	return map
+})
+
+function leekResources(leekId: number): {[key: number]: number} | null {
+	return resourcesByLeek.value[leekId] ?? null
+}
+function leekMoney(leekId: number): number {
+	return moneyByLeek.value[leekId] ?? 0
+}
+
+const hasResources = computed(() => Object.keys(resourcesByLeek.value).length > 0)
+const hasMoney = computed(() => Object.keys(moneyByLeek.value).length > 0)
+
 function formatGain(g: number) {
 	return g > 0 ? '+' + g : '' + g
 }
@@ -425,6 +477,13 @@ const metaItems = computed(() => {
 	.team-name {
 		font-size: 15px;
 	}
+	.fighter-entry + .fighter-entry {
+		margin-top: 4px;
+	}
+	.fighter-resources {
+		margin-top: 2px;
+		justify-content: center;
+	}
 	.fighter {
 		display: flex;
 		align-items: baseline;
@@ -472,10 +531,6 @@ const metaItems = computed(() => {
 		text-align: left;
 		border-top: 1px solid var(--border);
 		border-collapse: collapse;
-		& + .participants {
-			margin-top: 0;
-			border-top: none;
-		}
 		tr {
 			border-bottom: 1px solid var(--border);
 		}
@@ -513,11 +568,25 @@ const metaItems = computed(() => {
 			width: 40px;
 			font-variant-numeric: tabular-nums;
 		}
-		&.team-1 th.leek-name { box-shadow: inset 3px 0 0 #4caf50; }
-		&.team-2 th.leek-name { box-shadow: inset 3px 0 0 #e53935; }
+		.habs-col {
+			text-align: right;
+			white-space: nowrap;
+		}
+		.resources-col {
+			text-align: left;
+			white-space: nowrap;
+		}
+		td.resources-col {
+			padding: 1px 8px;
+		}
+		tbody + tbody .team-header th {
+			border-top: 1px solid var(--border);
+		}
+		tbody.team-1 th.leek-name { box-shadow: inset 3px 0 0 #4caf50; }
+		tbody.team-2 th.leek-name { box-shadow: inset 3px 0 0 #e53935; }
 	}
-	body.dark .participants.team-1 th.leek-name { box-shadow: inset 3px 0 0 #7ddc7d; }
-	body.dark .participants.team-2 th.leek-name { box-shadow: inset 3px 0 0 #ff7068; }
+	body.dark .participants tbody.team-1 th.leek-name { box-shadow: inset 3px 0 0 #7ddc7d; }
+	body.dark .participants tbody.team-2 th.leek-name { box-shadow: inset 3px 0 0 #ff7068; }
 
 	.meta {
 		display: flex;

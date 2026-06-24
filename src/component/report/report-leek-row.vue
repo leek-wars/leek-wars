@@ -39,16 +39,7 @@
 			<span>{{ $filters.number(leek.money || 0) }} <span class="hab"></span></span>
 		</td>
 		<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">
-			<v-tooltip v-for="resource of sorted_resources" :key="resource[0]" content-class="fluid">
-				<template #activator="{ props }">
-					<span class="resource" v-bind="props">
-						<scheme-image v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[resource[0]].params]" />
-						<img v-else :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('hat_', '').replace('potion_', '') + '.png'">
-						<span v-if="resource[1] > 1" class="quantity">{{ resource[1] }}</span>
-					</span>
-				</template>
-				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(ITEM_CATEGORY_NAME[LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].type] + '.' + LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].name.replace('hat_', '').replace('potion_', ''))]) }}</b><b v-else>{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('hat_', '').replace('potion_', '')) }}</b>
-			</v-tooltip>
+			<fight-resources :resources="leek.resources" />
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined && leek.talent_gain !== undefined" class="talent">
 			<img src="/image/talent.png">
@@ -67,10 +58,8 @@
 
 <script setup lang="ts">
 	import { Fight, FightContext, FightType, ReportLeek } from '@/model/fight'
-	import { ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
-	import { LeekWars } from '@/model/leekwars'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import SchemeImage from '../market/scheme-image.vue'
+	import FightResources from './fight-resources.vue'
 	import { computed } from 'vue'
 	import { store } from '@/model/store'
 
@@ -96,15 +85,6 @@
 	const isMyLeek = computed(() => {
 		if (!store.state.farmer) { return false }
 		return props.leek.id in store.state.farmer.leeks
-	})
-
-	const sorted_resources = computed(() => {
-		if (props.leek.resources) {
-			return Object.entries(props.leek.resources)
-				.filter(r => !!LeekWars.items[r[0]])
-				.sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
-		}
-		return {}
 	})
 </script>
 
@@ -210,31 +190,6 @@
 		padding: 0 5px;
 		text-align: left;
 		height: 29px;
-	}
-	.resource {
-		position: relative;
-		padding: 1px;
-		display: inline-block;
-		vertical-align: bottom;
-		img, svg {
-			width: 27px;
-			height: 27px;
-			object-fit: contain;
-			vertical-align: bottom;
-		}
-		.quantity {
-			position: absolute;
-			bottom: -5px;
-			right: -5px;
-			padding: 0px 3px;
-			font-size: 12px;
-			content: attr(quantity);
-			text-align: center;
-			color: #eee;
-			border-radius: 4px;
-			font-weight: bold;
-			background: rgba(0, 0, 0, 0.75);
-		}
 	}
 	.xp-blocked {
 		font-size: 16px;
