@@ -223,19 +223,19 @@
 		<polyline class="line" points="-405 140, -405 170, -320 170, -320 135, -300 135" />
 
 		<tournament-fight :fight="eighths[0].fight" :x="-285" :y="-305" />
-		<tournament-block :item="eighths[0].contestants[0]" :x="-300" :y="-365" :size="60" />
+		<tournament-block :item="eighths[0].contestants[0]" :x="-300" :y="-365" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[0].contestants[1]" :x="-300" :y="-275" :size="60" :invert="true" />
 
 		<tournament-fight :fight="eighths[1].fight" :x="-285" :y="-105" />
-		<tournament-block :item="eighths[1].contestants[0]" :x="-300" :y="-165" :size="60" />
+		<tournament-block :item="eighths[1].contestants[0]" :x="-300" :y="-165" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[1].contestants[1]" :x="-300" :y="-75" :size="60" :invert="true" />
 
 		<tournament-fight :fight="eighths[2].fight" :x="-285" :y="75" />
-		<tournament-block :item="eighths[2].contestants[0]" :x="-300" :y="15" :size="60" />
+		<tournament-block :item="eighths[2].contestants[0]" :x="-300" :y="15" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[2].contestants[1]" :x="-300" :y="105" :size="60" :invert="true" />
 
 		<tournament-fight :fight="eighths[3].fight"	:x="-285" :y="275" />
-		<tournament-block :item="eighths[3].contestants[0]" :x="-300" :y="215" :size="60" />
+		<tournament-block :item="eighths[3].contestants[0]" :x="-300" :y="215" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[3].contestants[1]" :x="-300" :y="305" :size="60" :invert="true" />
 
 		<polyline class="line" points="-255 -290, -175 -290, -175 -275" />
@@ -244,18 +244,18 @@
 		<polyline class="line" points="-255 90, -175 90, -175 105" />
 
 		<tournament-fight :fight="quarters[0].fight" :x="-190" :y="-205" />
-		<tournament-block :item="quarters[0].contestants[0]" :x="-210" :y="-275" :size="70" />
+		<tournament-block :item="quarters[0].contestants[0]" :x="-210" :y="-275" :size="70" :name-above="true" />
 		<tournament-block :item="quarters[0].contestants[1]" :x="-210" :y="-175" :size="70" :invert="true" />
 
 		<tournament-fight :fight="quarters[1].fight" :x="-190" :y="175" />
-		<tournament-block :item="quarters[1].contestants[0]" :x="-210" :y="105" :size="70" />
+		<tournament-block :item="quarters[1].contestants[0]" :x="-210" :y="105" :size="70" :name-above="true" />
 		<tournament-block :item="quarters[1].contestants[1]" :x="-210" :y="205" :size="70" :invert="true" />
 
 		<polyline class="line" points="-160 -190, -122.2 -190, -122.5 -110, -80 -110, -80, -95" />
 		<polyline class="line" points="-160 190, -122.2 190, -122.5 110, -80 110, -80, 95" />
 
 		<tournament-fight :fight="semifinals[0].fight" :x="-95" :y="-15" />
-		<tournament-block :item="semifinals[0].contestants[0]" :x="-120" :y="-95" :size="80" />
+		<tournament-block :item="semifinals[0].contestants[0]" :x="-120" :y="-95" :size="80" :name-above="true" />
 		<tournament-block :item="semifinals[0].contestants[1]" :x="-120" :y="15" :size="80" :invert="true" />
 
 		<polyline class="line" points="-65 0, -25 0, -25 -145, -60 -145, -60 -165" />
@@ -303,19 +303,19 @@
 		<polyline class="line" points="405 140, 405 170, 320 170, 320 135, 300 135" />
 
 		<tournament-fight :fight="eighths[4].fight"	:x="255" :y="-305" />
-		<tournament-block :item="eighths[4].contestants[0]" :x="240" :y="-365" :size="60" />
+		<tournament-block :item="eighths[4].contestants[0]" :x="240" :y="-365" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[4].contestants[1]" :x="240" :y="-275" :size="60" :invert="true" />
 
 		<tournament-fight :fight="eighths[5].fight" :x="255" :y="-105" />
-		<tournament-block :item="eighths[5].contestants[0]" :x="240" :y="-165" :size="60" />
+		<tournament-block :item="eighths[5].contestants[0]" :x="240" :y="-165" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[5].contestants[1]" :x="240" :y="-75" :size="60" :invert="true" />
 
 		<tournament-fight :fight="eighths[6].fight"	:x="255" :y="75" />
-		<tournament-block :item="eighths[6].contestants[0]" :x="240" :y="15" :size="60" />
+		<tournament-block :item="eighths[6].contestants[0]" :x="240" :y="15" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[6].contestants[1]" :x="240" :y="105" :size="60" :invert="true" />
 
 		<tournament-fight :fight="eighths[7].fight"	:x="255" :y="275" />
-		<tournament-block :item="eighths[7].contestants[0]" :x="240" :y="215" :size="60" />
+		<tournament-block :item="eighths[7].contestants[0]" :x="240" :y="215" :size="60" :name-above="true" />
 		<tournament-block :item="eighths[7].contestants[1]" :x="240" :y="305" :size="60" :invert="true" />
 
 		<polyline class="line" points="255 -290, 175 -290, 175 -275" />
@@ -324,18 +324,18 @@
 		<polyline class="line" points="255 90, 175 90, 175 105" />
 
 		<tournament-fight :fight="quarters[2].fight" :x="160" :y="-205"	/>
-		<tournament-block :item="quarters[2].contestants[0]" :x="140" :y="-275" :size="70" />
+		<tournament-block :item="quarters[2].contestants[0]" :x="140" :y="-275" :size="70" :name-above="true" />
 		<tournament-block :item="quarters[2].contestants[1]" :x="140" :y="-175" :size="70" :invert="true" />
 
 		<tournament-fight :fight="quarters[3].fight" :x="160" :y="175" />
-		<tournament-block :item="quarters[3].contestants[0]" :x="140" :y="105" :size="70" />
+		<tournament-block :item="quarters[3].contestants[0]" :x="140" :y="105" :size="70" :name-above="true" />
 		<tournament-block :item="quarters[3].contestants[1]" :x="140" :y="205" :size="70" :invert="true" />
 
 		<polyline class="line" points="160 -190, 122.2 -190, 122.5 -110, 80 -110, 80, -95" />
 		<polyline class="line" points="160 190, 122.2 190, 122.5 110, 80 110, 80, 95" />
 
 		<tournament-fight :fight="semifinals[1].fight" :x="65" :y="-15" />
-		<tournament-block :item="semifinals[1].contestants[0]" :x="40" :y="-95" :size="80" />
+		<tournament-block :item="semifinals[1].contestants[0]" :x="40" :y="-95" :size="80" :name-above="true" />
 		<tournament-block :item="semifinals[1].contestants[1]" :x="40" :y="15" :size="80" :invert="true" />
 
 		<polyline class="line" points="65 0, 25 0, 25 -145, 60 -145, 60 -165" />
