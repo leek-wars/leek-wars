@@ -1,5 +1,5 @@
 <template lang="html">
-	<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="farmer.id !== $store.state.farmer?.id" :instant="true" class="rich">
+	<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="farmer.id !== $store.state.farmer?.id" :instant="true" :open-delay="10" class="rich">
 		<div class="elem" v-bind="props">
 			<avatar :farmer="farmer" />
 			<div class="name">{{ farmer.name }}</div>

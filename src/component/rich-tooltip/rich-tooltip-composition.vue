@@ -68,6 +68,7 @@ const props = defineProps<{
 	disabled?: boolean
 	bottom?: boolean
 	instant?: boolean
+	openDelay?: number
 }>()
 
 const emit = defineEmits<{
@@ -94,7 +95,7 @@ const locked = ref(false)
 const mouse = ref(false)
 const value = ref(false)
 
-const _open_delay = computed(() => props.instant ? 1 : 500)
+const _open_delay = computed(() => props.openDelay ?? (props.instant ? 1 : 500))
 const _close_delay = computed(() => props.instant ? 1 : 1)
 
 watch(() => props.id, () => {
