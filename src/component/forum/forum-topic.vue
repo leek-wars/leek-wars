@@ -447,7 +447,11 @@
 	function update(force: boolean = false) {
 		const t_id = parseInt(route.params.topic as string, 10)
 		const p = 'page' in route.params ? parseInt(route.params.page as string, 10) : 1
-		if (!force && topic.value && topic.value.id === t_id && page.value === p) {
+		const c_id = parseInt(route.params.category as string, 10)
+		// Recharger aussi quand SEULE la catégorie change (ex: déplacement d'un topic) :
+		// sinon category.value garde l'ancien nom/langue/droits, d'où un titre, un
+		// breadcrumb et un drapeau de langue périmés en multi-langues (#4276).
+		if (!force && topic.value && topic.value.id === t_id && page.value === p && category.value && category.value.id === c_id) {
 			emitter.emit('loaded')
 			return
 		}
@@ -666,8 +670,9 @@
 	function moveTopic(categoryId: number) {
 		if (!topic.value) { return }
 		LeekWars.post('forum/move-topic', {topic_id: topic.value.id, category_id: categoryId}).then(() => {
+			// La navigation vers la nouvelle catégorie déclenche update() qui recharge la
+			// catégorie complète (nom, langue, droits) ; plus de patch partiel de l'id seul (#4276).
 			router.push('/forum/category-' + categoryId + '/topic-' + topic.value!.id)
-			category.value!.id = categoryId
 		})
 	}
 
