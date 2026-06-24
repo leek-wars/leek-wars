@@ -42,8 +42,11 @@ const props = defineProps<{
 const { t, locale } = useI18n()
 const changelog = ref<Record<string, unknown> | null>(null)
 
+// Seules ces langues ont un changelog traduit ; les autres retombent sur l'anglais.
+const CHANGELOG_LOCALES = ['fr', 'en', 'es', 'it']
 function update() {
-	import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${locale.value}.yaml`).then((module) => {
+	const lang = CHANGELOG_LOCALES.includes(locale.value) ? locale.value : 'en'
+	import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${lang}.yaml`).then((module) => {
 		changelog.value = module.default
 	})
 }

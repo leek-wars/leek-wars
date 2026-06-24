@@ -58,20 +58,21 @@
 
 <script setup lang="ts">
 
-import { ref, computed, onUnmounted } from 'vue'
+import { ref, computed, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { locale } from '@/model/i18n'
 import { emitter } from '@/model/vue'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import ChangelogDialog from './changelog-dialog.vue'
 import ChangelogVersion from './changelog-version.vue'
 import ChangelogSocial from './changelog-social.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
+// Seules ces langues ont un changelog traduit ; les autres retombent sur l'anglais.
+const changelogLocale = computed(() => ['fr', 'en', 'es', 'it'].includes(locale.value) ? locale.value : 'en')
 const routeVersion = computed(() => route.params.version ? parseInt((route.params.version as string).replace('.', ''), 10) : null)
 
 interface ChangelogEntry {
@@ -118,26 +119,29 @@ function scroll() {
 	}
 }
 
-LeekWars.get<{ changelog: ChangelogEntry[] }>('changelog/get/' + locale).then(data => {
-	changelog.value = data.changelog
-	for (const c in changelog.value) {
-		changelog.value[c].active = parseInt(c, 10) < 2 ? true : false
-	}
-	addDevVersions()
-	if (routeVersion.value) {
-		const version = data.changelog.find(v => v.version === routeVersion.value)
-		LeekWars.setTitle(t('main.changelog') + ' — ' + (version ? version.version_name : route.params.version))
-	} else {
-		LeekWars.setTitle(t('main.changelog'))
-	}
-	emitter.emit('loaded')
-})
+function loadChangelog() {
+	LeekWars.get<{ changelog: ChangelogEntry[] }>('changelog/get/' + changelogLocale.value).then(data => {
+		changelog.value = data.changelog
+		for (const c in changelog.value) {
+			changelog.value[c].active = parseInt(c, 10) < 2 ? true : false
+		}
+		addDevVersions()
+		if (routeVersion.value) {
+			const version = data.changelog.find(v => v.version === routeVersion.value)
+			LeekWars.setTitle(t('main.changelog') + ' — ' + (version ? version.version_name : route.params.version))
+		} else {
+			LeekWars.setTitle(t('main.changelog'))
+		}
+		emitter.emit('loaded')
+	})
+	import(`@/component/changelog/changelog.${changelogLocale.value}.yaml`).then((module: { default: Record<number, { title?: string }> }) => {
+		translations.value = module.default
+		addDevVersions()
+	})
+}
+loadChangelog()
+watch(locale, loadChangelog)
 window.addEventListener('scroll', scroll)
-
-import(`@/component/changelog/changelog.${locale}.yaml`).then((module: { default: Record<number, { title?: string }> }) => {
-	translations.value = module.default
-	addDevVersions()
-})
 
 const addDevVersions = () => {
 	if (!changelog.value || !translations.value) return

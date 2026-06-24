@@ -478,10 +478,12 @@
 		leek_ranking.value = data.leeks
 		team_ranking.value = data.teams
 	})
-	import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${i18nLocale.value}.yaml`).then((module) => {
+	// Seules ces langues ont un changelog traduit ; les autres retombent sur l'anglais.
+	const changelogLocale = ['fr', 'en', 'es', 'it'].includes(i18nLocale.value) ? i18nLocale.value : 'en'
+	import(/* webpackChunkName: "changelog-[request]" */ `@/component/changelog/changelog.${changelogLocale}.yaml`).then((module) => {
 		translations.value = module.default
 	})
-	LeekWars.get('changelog/get/' + i18nLocale.value).then(data => {
+	LeekWars.get('changelog/get/' + changelogLocale).then(data => {
 		last_version.value = data.changelog[0]
 	})
 
