@@ -185,10 +185,16 @@
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
 				<template #actions>
-					<span class="push-notifs-button" @click="updatePushNotifications">
-						<span>{{ $t('push_notifications') }}</span>
-						<v-switch :model-value="pushNotifications" hide-details />
-					</span>
+					<v-tooltip :disabled="!pushHint" location="bottom">
+						<template #activator="{ props }">
+							<span class="push-notifs-button" v-bind="props" @click="updatePushNotifications">
+								<v-icon v-if="pushHint" class="push-warning">mdi-alert-circle-outline</v-icon>
+								<span>{{ $t('push_notifications') }}</span>
+								<v-switch :model-value="pushNotifications" hide-details />
+							</span>
+						</template>
+						{{ pushHint }}
+					</v-tooltip>
 				</template>
 				<template #content>
 					<div class="content notifications">
@@ -277,7 +283,7 @@
 	import { mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { ref, watch } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 
 	defineOptions({ name: 'Settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
@@ -305,7 +311,15 @@
 	const notifsOpenReport = ref(localStorage.getItem('options/notifs-open-report') === 'true')
 	const chatFirst = ref(localStorage.getItem('options/chat-first') === 'true')
 	const modernTheme = ref(localStorage.getItem('theme') === 'xp')
-	const pushNotifications = ref(localStorage.getItem('options/push-notifs') === 'true')
+	const pushNotifications = ref(false)
+	const pushSupported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
+	const pushPermission = ref<NotificationPermission | null>(pushSupported ? Notification.permission : null)
+	// Persistent explanation shown next to the toggle (warning icon + tooltip) when push can't be enabled.
+	const pushHint = computed(() => {
+		if (!pushSupported) { return t('push_unsupported') }
+		if (pushPermission.value === 'denied') { return t('push_blocked') }
+		return ''
+	})
 	const deleteDialog = ref(false)
 	const deleteConfirmDialog = ref(false)
 	const deleteConfirmPassword = ref('')
@@ -347,12 +361,12 @@
 		// Reconcile the toggle with the actual push subscription. Wait for navigator.serviceWorker.ready
 		// rather than reading LeekWars.service_worker, which is populated asynchronously and may still be
 		// null when get-settings resolves (race: the toggle showed OFF after a reload even while subscribed).
-		if ('serviceWorker' in navigator) {
+		if (pushSupported) {
 			getPushSubscription().then(subscription => {
 				if (subscription && data.push_endpoints.includes(subscription.endpoint)) {
 					pushNotifications.value = true
 				}
-			})
+			}).catch(() => { /* push unavailable on this browser, leave toggle OFF */ })
 		}
 	})
 
@@ -361,11 +375,23 @@
 	}
 
 	function updatePushNotifications() {
-		if (!('serviceWorker' in navigator)) { return }
+		if (!pushSupported) {
+			LeekWars.toast(t('push_unsupported'))
+			return
+		}
 		if (pushNotifications.value) {
 			pushNotifications.value = false
 			getPushSubscription().then(subscription => subscription?.unsubscribe())
-		} else {
+			return
+		}
+		// Request permission directly from the click so the prompt stays inside the user gesture (Safari requirement).
+		// If already denied, requestPermission() resolves to 'denied' without reprompting and we explain below.
+		Notification.requestPermission().then(permission => {
+			pushPermission.value = permission
+			if (permission !== 'granted') {
+				LeekWars.toast(t('push_blocked'))
+				return
+			}
 			navigator.serviceWorker.ready
 				.then(registration => registration.pushManager.subscribe({ applicationServerKey: vapid_key, userVisibleOnly: true }))
 				.then(subscription => {
@@ -374,8 +400,11 @@
 					pushNotifications.value = true
 					LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
 				})
-				.catch(() => { pushNotifications.value = false })
-		}
+				.catch(() => {
+					pushNotifications.value = false
+					LeekWars.toast(t('push_error'))
+				})
+		})
 	}
 
 	function logout() {
@@ -690,6 +719,10 @@
 		padding: 0 8px;
 		> span {
 			color: white;
+		}
+		.push-warning {
+			color: #ffca28;
+			font-size: 20px;
 		}
 	}
 	.notifications.content {
