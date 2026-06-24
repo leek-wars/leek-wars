@@ -462,7 +462,11 @@ const app = createApp({
 			} else if (event.altKey && event.which === 39) {
 				emitter.emit('next', event)
 			} else if (event.ctrlKey && event.keyCode === 80) {
-				emitter.emit('ctrlP', event)
+				if (event.shiftKey) {
+					emitter.emit('ctrlShiftP', event)
+				} else {
+					emitter.emit('ctrlP', event)
+				}
 			}
 		})
 		window.addEventListener('keyup', (event) => {

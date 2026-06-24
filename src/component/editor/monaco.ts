@@ -92,6 +92,12 @@ monaco.editor.addKeybindingRules([
 		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyU,
 		command: "editor.toggleFold",
 		when: "textInputFocus",
+	},
+	{
+		// Palette de commandes façon VSCode (#4317). F1 reste le raccourci natif Monaco.
+		keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyP,
+		command: "editor.action.quickCommand",
+		when: "textInputFocus",
 	}
 ]);
 

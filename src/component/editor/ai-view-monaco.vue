@@ -32,6 +32,7 @@ import { AI } from '@/model/ai'
 import { analyzer } from './analyzer'
 import { getLanguageForPath } from './file-types'
 import { code, dochash, createSubApp, emitter } from '@/model/vue'
+import { useNamespacedT } from '@/model/i18n'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
@@ -44,6 +45,7 @@ import { useI18n } from 'vue-i18n'
 defineOptions({ name: 'AiViewMonaco' })
 
 const { t } = useI18n()
+const editorT = useNamespacedT('editor')
 
 const scrollKey = (path: string) => 'editor/scroll/' + farmerId() + '/' + path
 const viewStateKey = (path: string) => 'editor/viewstate/' + farmerId() + '/' + path
@@ -272,9 +274,28 @@ onMounted(() => {
 		}
 	})
 
+	registerPaletteActions()
+
 	update()
 	emitter.on('file-reloaded', onFileReloaded)
 })
+
+// Palette de commandes (Ctrl+Shift+P / F1) : expose les actions Leek Wars comme commandes
+// nommées et traduites, listées par le widget natif Monaco editor.action.quickCommand (#4317).
+function registerPaletteActions() {
+	const add = (id: string, key: string, run: () => void) => {
+		editor.addAction({
+			id,
+			label: 'Leek Wars: ' + editorT(key),
+			run: () => run(),
+		})
+	}
+	add('leekwars.testFight', 'palette_test', () => emitter.emit('palette-test'))
+	add('leekwars.save', 'palette_save', () => emitter.emit('ctrlS'))
+	add('leekwars.format', 'palette_format', () => { editor.getAction('editor.action.formatDocument')?.run() })
+	add('leekwars.documentation', 'palette_documentation', () => { editor.getAction('editor.action.showHover')?.run() })
+	add('leekwars.toggleTheme', 'palette_toggle_theme', () => emitter.emit('palette-toggle-theme'))
+}
 
 onBeforeUnmount(() => {
 	emitter.off('file-reloaded', onFileReloaded)

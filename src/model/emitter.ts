@@ -16,6 +16,9 @@ type Events = {
 	previous: KeyboardEvent
 	next: KeyboardEvent
 	ctrlP: KeyboardEvent
+	ctrlShiftP: KeyboardEvent
+	'palette-test': void
+	'palette-toggle-theme': void
 	keyup: KeyboardEvent
 	resize: void
 	focus: void

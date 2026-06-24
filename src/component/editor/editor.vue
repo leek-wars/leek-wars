@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="page editor" :class="'theme-' + theme">
+	<div class="page editor" :class="'theme-' + appliedTheme">
 		<div class="page-header page-bar">
 			<div class="menu">
 				<h1>{{ $t('title') }}</h1>
@@ -41,9 +41,9 @@
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="theme" group="tabs" :all-tabs="tabs1" :style="{ 'width': (editor1Width * 80) + '%' }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
+			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="appliedTheme" group="tabs" :all-tabs="tabs1" :style="{ 'width': (editor1Width * 80) + '%' }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab2" :active="currentSide === 2" :splitted="splitted" :theme="theme" group="tabs2" :all-tabs="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @select="selectTab2" @close-tab="closeTab2" @close-all="closeAllTabs2" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab2" :active="currentSide === 2" :splitted="splitted" :theme="appliedTheme" group="tabs2" :all-tabs="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @select="selectTab2" @close-tab="closeTab2" @close-all="closeAllTabs2" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -75,7 +75,7 @@
 								</div>
 							</template>
 
-							<git-panel v-if="leftPanelTab === 'git'" :theme="theme" :active-diff="activeDiff" @show-diff="openDiff" @show-merge="openMerge" />
+							<git-panel v-if="leftPanelTab === 'git'" :theme="appliedTheme" :active-diff="activeDiff" @show-diff="openDiff" @show-merge="openMerge" />
 						</div>
 					</template>
 				</panel>
@@ -90,17 +90,17 @@
 							</div>
 							<div ref="editors" :class="{tabs: tabs1.length > 1}" class="editors">
 
-								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor1Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(1)" />
+								<ai-view-monaco v-if="ai1Ready" v-show="!showDiffViewer" ref="editor1" :ai="fileSystem.ais[currentAI1!]" :theme="appliedTheme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor1Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(1)" />
 
 								<div v-if="splitted" v-show="!showDiffViewer" class="resizer editor-resizer" @dblclick="split50_50" @mousedown="resizerEditorMousedown">
 									<v-icon>mdi-drag-vertical-variant</v-icon>
 								</div>
 
-								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2!]" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor2Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(2)" />
+								<ai-view-monaco v-if="splitted && ai2Ready" v-show="!showDiffViewer" ref="editor2" :ai="fileSystem.ais[currentAI2!]" :theme="appliedTheme" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" :line-numbers="true" :t="$t" :style="{ 'width': (editor2Width * 100) + '%' }" @jump="jump" @load="load" @focus="setSide(2)" />
 
 								<div v-if="showDiffViewer && !isDiffReady" class="diff-loader"><loader :size="40" /></div>
-								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer && activeDiff" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
-								<git-merge v-if="showMergeViewer && activeMerge && activeMerge.ready" :content="activeMerge.modified" :file="activeMerge.file" :theme="theme" :font-size="fontSize" :line-height="lineHeight" @resolve="onMergeResolve" />
+								<git-diff v-if="diffMounted && isDiffReady && !showMergeViewer && activeDiff" v-show="showDiffViewer" :original-content="activeDiff.original" :modified-content="activeDiffModified" :file="activeDiff.file" :theme="appliedTheme" :font-size="fontSize" :line-height="lineHeight" :inline="diffInline" :collapse-unchanged="diffCollapseUnchanged" @close="closeDiff" @open-file="openDiffFile" />
+								<git-merge v-if="showMergeViewer && activeMerge && activeMerge.ready" :content="activeMerge.modified" :file="activeMerge.file" :theme="appliedTheme" :font-size="fontSize" :line-height="lineHeight" @resolve="onMergeResolve" />
 
 							</div>
 
@@ -114,7 +114,7 @@
 									<v-icon>mdi-drag-horizontal-variant</v-icon>
 								</div>
 								<editor-problems v-if="bottomPanel === 'problems'" @jump="jump" />
-								<git-terminal v-else-if="bottomPanel === 'git'" :theme="theme" />
+								<git-terminal v-else-if="bottomPanel === 'git'" :theme="appliedTheme" />
 							</div>
 							<div class="status">
 								<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
@@ -188,7 +188,13 @@
 
 				<div class="title">{{ $t('theme') }}</div>
 
-				<v-radio-group v-model="theme" hide-details class="themes">
+				<v-checkbox v-model="themeAuto" :label="$t('theme_auto')" hide-details />
+
+				<div v-if="themeAuto" class="theme-selectors">
+					<v-select v-model="lightTheme" :items="LIGHT_THEME_OPTIONS" :label="$t('light_theme')" density="compact" variant="outlined" hide-details />
+					<v-select v-model="darkTheme" :items="DARK_THEME_OPTIONS" :label="$t('dark_theme')" density="compact" variant="outlined" hide-details />
+				</div>
+				<v-radio-group v-else v-model="theme" hide-details class="themes">
 					<v-radio label="Leek Wars" value="leek-wars" />
 					<v-radio label="Monokai" value="monokai" />
 					<v-radio label="VS Code clair" value="vs" />
@@ -321,6 +327,18 @@
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
 	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
+	const DARK_THEMES = ['monokai', 'vs-dark', 'hc-black']
+	// Thèmes proposés, séparés par luminosité (pour le mode automatique : un préféré clair, un préféré sombre).
+	const LIGHT_THEME_OPTIONS = [
+		{ value: 'leek-wars', title: 'Leek Wars' },
+		{ value: 'vs', title: 'VS Code clair' },
+		{ value: 'hc-light', title: 'High Contrast clair' },
+	]
+	const DARK_THEME_OPTIONS = [
+		{ value: 'monokai', title: 'Monokai' },
+		{ value: 'vs-dark', title: 'VS Code sombre' },
+		{ value: 'hc-black', title: 'High Contrast sombre' },
+	]
 
 	// Clés localStorage per-account (cf. issue #2678).
 	const lastCodeKey = (side: number | string) => 'editor/last-code-' + side + '/' + farmerId()
@@ -379,6 +397,12 @@
 	const storageUsage = ref<{ size: number, files: number, max_size: number, max_files: number } | null>(null)
 	const enlargeWindow = ref(false)
 	const theme = ref<string>(DEFAULT_THEME())
+	const themeAuto = ref(false)
+	const lightTheme = ref('leek-wars')
+	const darkTheme = ref('monokai')
+	// Thème réellement appliqué : en mode auto il suit le mode sombre du site (LeekWars.darkMode, réactif),
+	// sinon c'est le thème choisi manuellement.
+	const appliedTheme = computed(() => themeAuto.value ? (LeekWars.darkMode ? darkTheme.value : lightTheme.value) : theme.value)
 	const autoClosing = ref(false)
 	const autocomplete = ref(false)
 	const enableAnalyzer = ref(false)
@@ -494,6 +518,9 @@
 		if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
 		LeekWars.large = enlargeWindow.value = localStorage.getItem('editor/large') === 'true'
 		theme.value = localStorage.getItem('editor/theme') || DEFAULT_THEME()
+		themeAuto.value = localStorage.getItem('editor/theme_auto') === 'true'
+		lightTheme.value = localStorage.getItem('editor/light_theme') || 'leek-wars'
+		darkTheme.value = localStorage.getItem('editor/dark_theme') || 'monokai'
 		autoClosing.value = localStorage.getItem('editor/auto_closing') === 'true'
 		autocomplete.value = localStorage.getItem('editor/autocomplete') === 'true'
 		popups.value = localStorage.getItem('editor/popups') === 'true'
@@ -1126,6 +1153,12 @@
 		}
 		testDialog.value = true
 	}
+	function toggleEditorTheme() {
+		// Bascule manuelle clair/sombre : on sort du mode auto en figeant le thème opposé à l'actuel,
+		// en respectant les thèmes préférés clair/sombre.
+		themeAuto.value = false
+		theme.value = DARK_THEMES.includes(appliedTheme.value) ? lightTheme.value : darkTheme.value
+	}
 	function settings() {
 		settingsDialog.value = true
 		LeekWars.get('ai/get-storage-usage').then((data) => {
@@ -1140,6 +1173,9 @@
 	}
 
 	watch(theme, () => localStorage.setItem('editor/theme', theme.value))
+	watch(themeAuto, () => localStorage.setItem('editor/theme_auto', '' + themeAuto.value))
+	watch(lightTheme, () => localStorage.setItem('editor/light_theme', lightTheme.value))
+	watch(darkTheme, () => localStorage.setItem('editor/dark_theme', darkTheme.value))
 	watch(autocomplete, () => localStorage.setItem('editor/autocomplete', '' + autocomplete.value))
 	watch(autoClosing, () => localStorage.setItem('editor/auto_closing', '' + autoClosing.value))
 	watch(fontSize, () => localStorage.setItem('editor/font_size', '' + fontSize.value))
@@ -1475,6 +1511,17 @@
 		emitter.on('ctrlQ', () => {
 			testDialog.value = true
 		})
+		// Palette de commandes (#4317) : ouverture de secours quand l'éditeur n'a pas le focus
+		// (Monaco gère Ctrl+Shift+P nativement quand il l'a). Les actions LW émettent vers ici.
+		emitter.on('ctrlShiftP', (event: Event) => {
+			const ed = currentEditor.value?.editor
+			if (!ed) return
+			ed.focus()
+			ed.getAction('editor.action.quickCommand')?.run()
+			event.preventDefault()
+		})
+		emitter.on('palette-test', () => startTest())
+		emitter.on('palette-toggle-theme', () => toggleEditorTheme())
 		emitter.on('ctrlP', (event: Event) => {
 			if (!finder.value) return
 			finder.value.search = true
@@ -1590,6 +1637,9 @@
 		emitter.off('ctrlS')
 		emitter.off('ctrlShiftS')
 		emitter.off('ctrlQ')
+		emitter.off('ctrlShiftP')
+		emitter.off('palette-test')
+		emitter.off('palette-toggle-theme')
 		emitter.off('ctrlP')
 		emitter.off('escape')
 		emitter.off('htmlclick')
@@ -2066,6 +2116,15 @@
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		.v-selection-control {
 			grid-area: auto;
+		}
+	}
+	.theme-selectors {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 8px;
+		.v-select {
+			flex: 1 1 200px;
 		}
 	}
 </style>
