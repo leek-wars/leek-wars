@@ -115,7 +115,7 @@
 							</div>
 
 							<div v-if="message.deleted" class="text deleted">{{ $t('deleted_message') }}</div>
-							<textarea v-else-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original" @input="autoResize(message, $event)"></textarea>
+							<textarea v-else-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original" autocomplete="off" @input="autoResize(message, $event)"></textarea>
 							<div v-else-if="message.html" v-emojis v-code class="text" v-html="message.html"></div>
 							<markdown v-else :content="message.message" mode="forum" />
 
@@ -241,7 +241,7 @@
 				<div v-if="topic && !topic.locked && $store.state.farmer && $store.state.farmer.verified" class="editor">
 					<h4>{{ $t('answer') }}</h4>
 					<div class="response-wrapper">
-						<textarea ref="responseTextarea" v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
+						<textarea ref="responseTextarea" v-model="newMessage" class="response card" autocomplete="off" @keyup="updateDraft"></textarea>
 						<emoji-picker @pick="addEmojiNewMessage">😀</emoji-picker>
 					</div>
 					<div class="center">
