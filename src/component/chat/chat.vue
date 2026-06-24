@@ -132,8 +132,8 @@
 			</template>
 		</popup>
 
-		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" :open-on-click="false" content-class="emojis-dialog">
-			<v-card class="emojis">
+		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" :open-on-click="false" persistent no-click-animation content-class="emojis-dialog">
+			<v-card class="emojis" tabindex="-1" @keydown.esc="menuEmoji = false">
 				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
 				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)" v-html="formatEmojisText(menuMessage.my_reaction)"></span>
 				<emoji-picker :close-on-selected="true" @pick="toggleReaction"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
@@ -465,10 +465,33 @@
 		// le plus profond cliqué (souvent le <path> SVG de l'icône).
 		menuEmojiActivator.value = (activator.currentTarget as Element | null) ?? (activator.target as Element | null) ?? undefined
 		menu.value = false
+		// Le menu est `persistent` : s'il est déjà ouvert sur un autre message, il
+		// ne se ferme pas, on ne fait que changer son activateur ci-dessus, donc il
+		// glisse vers le nouveau bouton sans fermeture/réouverture (pas de flicker).
 		nextTick(() => {
 			menuEmoji.value = true
 		})
 	}
+
+	// Menu `persistent` : Vuetify ne ferme plus tout seul, on gère la fermeture au
+	// clic extérieur nous-mêmes (listener actif seulement quand le menu est ouvert,
+	// cf. watch ci-dessous). On NE ferme PAS si le clic vise un bouton de réaction
+	// (openEmojis repositionne le menu déjà ouvert : il glisse vers l'autre message
+	// sans fermeture/réouverture, donc sans flicker), ni s'il est dans le menu
+	// lui-même (géré par close-on-content-click / toggleReaction).
+	function onEmojiOutsidePointer(e: MouseEvent) {
+		const target = e.target as Element | null
+		if (!target || target.closest('.add') || target.closest('.emojis-dialog')) return
+		menuEmoji.value = false
+	}
+	watch(menuEmoji, (open) => {
+		if (open) {
+			document.addEventListener('mousedown', onEmojiOutsidePointer)
+		} else {
+			document.removeEventListener('mousedown', onEmojiOutsidePointer)
+		}
+	})
+	onBeforeUnmount(() => document.removeEventListener('mousedown', onEmojiOutsidePointer))
 
 	function toggleReaction(emoji: string) {
 		menuEmoji.value = false
