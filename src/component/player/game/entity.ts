@@ -739,6 +739,12 @@ abstract class FightEntity extends Entity {
 
 	// Inclinaison du poireau vers la cellule cible
 	public watch(cell: Cell) {
+		// Les objets statiques (graal, cristaux) ne pivotent pas : leur sprite est
+		// asymétrique (les gemmes du graal) et le miroir appliqué à l'orientation
+		// ouest/nord mettrait les couleurs du mauvais côté. Depuis l'ajout des
+		// animations de chips boss (#3627), le graal appelle watch() en lançant une
+		// boule de feu et se retrouvait inversé (forum #11964 / issue #4319).
+		if (!this.living) { return }
 		if (cell !== this.cell) {
 			const pos = this.game.ground.field.cellToXY(cell)
 			const east = this.y < pos.y
