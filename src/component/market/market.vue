@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="page">
+	<div ref="marketRoot" class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
@@ -343,7 +343,7 @@
 	import SchemeImage from './scheme-image.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import { emitter } from '@/model/vue'
-	import { computed, onBeforeUnmount, onUnmounted, reactive, ref, watch } from 'vue'
+	import { computed, onBeforeUnmount, onUnmounted, reactive, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 
@@ -379,6 +379,7 @@ const t = useNamespacedT('market')
 	let request: ReturnType<typeof LeekWars.get> | null = null
 	let onKeyDown: ((e: KeyboardEvent) => void) | null = null
 	const search = ref('')
+	const marketRoot = useTemplateRef<HTMLElement>('marketRoot')
 
 	const max_level = computed(() => {
 		if (store.state.farmer) {
@@ -512,6 +513,14 @@ const t = useNamespacedT('market')
 		if (!selectedItem.value) { return }
 		if (buyDialog.value || buyCrystalsDialog.value || sellDialog.value || unseenItemDialog.value) { return }
 		if (document.activeElement instanceof HTMLInputElement) { return }
+		// Le bloc de code scrollable du chat (CodeMirror <pre> non focusable) ne change pas
+		// activeElement (reste body) quand on clique dedans : il place juste une sélection.
+		// On rend donc les flèches au chat si le focus OU la sélection courante est hors du
+		// marché (#4291). Couvre aussi le champ de saisie contenteditable du chat.
+		const active = document.activeElement
+		if (active && active !== document.body && marketRoot.value && !marketRoot.value.contains(active)) { return }
+		const anchor = window.getSelection()?.anchorNode
+		if (anchor && marketRoot.value && !marketRoot.value.contains(anchor)) { return }
 		const names = orderedItemNames.value
 		if (!names.length) { return }
 		const currentName = route.params.item as string
