@@ -132,7 +132,7 @@
 			</template>
 		</popup>
 
-		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" content-class="emojis-dialog">
+		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" :open-on-click="false" content-class="emojis-dialog">
 			<v-card class="emojis">
 				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
 				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)" v-html="formatEmojisText(menuMessage.my_reaction)"></span>
@@ -461,7 +461,9 @@
 
 	function openEmojis(activator: MouseEvent, message: ChatMessage) {
 		menuMessage.value = message
-		menuEmojiActivator.value = (activator.target as Element | null) ?? undefined
+		// currentTarget = le conteneur .add (ancrage stable) plutôt que l'élément
+		// le plus profond cliqué (souvent le <path> SVG de l'icône).
+		menuEmojiActivator.value = (activator.currentTarget as Element | null) ?? (activator.target as Element | null) ?? undefined
 		menu.value = false
 		nextTick(() => {
 			menuEmoji.value = true
