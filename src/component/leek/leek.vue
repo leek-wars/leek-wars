@@ -1684,8 +1684,8 @@
 				font-weight: bold;
 			}
 		}
-		.characteristic:nth-child(8n+6),
-		.characteristic:nth-child(8n+8) {
+		.characteristic:nth-child(4n+3),
+		.characteristic:nth-child(4n+4) {
 			background: var(--background-secondary);
 		}
 	}
