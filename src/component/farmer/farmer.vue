@@ -10,7 +10,7 @@
 				</rich-tooltip-farmer>
 				<h1 v-else>...</h1>
 				<div class="info state">
-					<span v-if="farmer && farmer.connected"><img src="/image/connected.png">{{ $t('connected') }}</span>
+					<span v-if="displayConnected"><img src="/image/connected.png">{{ $t('connected') }}</span>
 					<span v-else><img src="/image/disconnected.png">{{ $t('disconnected') }}</span>
 				</div>
 			</div>
@@ -129,7 +129,7 @@
 						<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
 						<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
 						<br>
-						<span v-if="farmer.connected">{{ $t('connected') }}</span>
+						<span v-if="displayConnected">{{ $t('connected') }}</span>
 						<span v-else v-html="$t('last_connection', [LeekWars.formatDuration(farmer.last_connection)])"></span>
 						<br>
 						<span v-if="farmer.verified">{{ $t('verified') }}</span>
@@ -722,6 +722,11 @@
 
 	const id = computed<number | null>(() => route.params.id ? parseInt(route.params.id as string, 10) : (store.state.farmer ? store.state.farmer.id : null))
 	const myFarmer = computed(() => store.state.farmer && id.value === store.state.farmer.id)
+	// Sur sa propre page, le `connected` du farmer en store est figé à false
+	// (calculé au login avant l'enregistrement de la présence WS) : on se voyait
+	// donc déconnecté tant qu'on n'avait pas rechargé (#11635). Si c'est ma page et
+	// que je suis connecté, je suis forcément en ligne.
+	const displayConnected = computed(() => !!farmer.value && (farmer.value.connected || (!!myFarmer.value && store.state.connected)))
 
 	const safeWebsite = computed(() => {
 		if (!farmer.value) return null
