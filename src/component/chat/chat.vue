@@ -478,10 +478,12 @@
 	// cf. watch ci-dessous). On NE ferme PAS si le clic vise un bouton de réaction
 	// (openEmojis repositionne le menu déjà ouvert : il glisse vers l'autre message
 	// sans fermeture/réouverture, donc sans flicker), ni s'il est dans le menu
-	// lui-même (géré par close-on-content-click / toggleReaction).
+	// lui-même (géré par close-on-content-click / toggleReaction), ni dans l'overlay
+	// du sélecteur d'emoji complet (emoji-picker, rendu dans son propre overlay hors
+	// de .emojis-dialog : sans ça, changer d'onglet de catégorie fermait tout. #2716)
 	function onEmojiOutsidePointer(e: MouseEvent) {
 		const target = e.target as Element | null
-		if (!target || target.closest('.add') || target.closest('.emojis-dialog')) return
+		if (!target || target.closest('.add') || target.closest('.emojis-dialog') || target.closest('.emoji-picker-menu')) return
 		menuEmoji.value = false
 	}
 	watch(menuEmoji, (open) => {
