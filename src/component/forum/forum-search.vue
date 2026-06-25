@@ -125,7 +125,7 @@
 		query: string
 		farmer: string
 		page: number
-		category: number
+		category: number | string
 		admin: boolean
 		moderator: boolean
 		order: string
@@ -178,7 +178,11 @@
 		if (options.farmer === '-') { options.farmer = '' }
 		options.page = parseInt(route.query.page as string, 10) || 1
 		const category = route.query.category as string
-		options.category = (category === '-' || !category) ? -1 : parseInt(category, 10)
+		// Une catégorie forum couvre plusieurs langues (ex "2411,3") : on garde la
+		// liste d'ids telle quelle (le backend search2 filtre par id = ANY(...)), sinon
+		// parseInt la tronquait au 1er id (mauvaise langue) -> 0 résultat (#11974). Un id
+		// unique reste un number pour que le <select> de catégorie le retrouve.
+		options.category = (category === '-' || !category) ? -1 : (category.includes(',') ? category : parseInt(category, 10))
 		options.order = (route.query.order as string) || 'pertinence'
 		options.admin = !!route.query.admin
 		options.moderator = !!route.query.moderator
