@@ -516,6 +516,16 @@
 		])
 		loading.value = true
 		LeekWars.get('forum/get-topics/' + category + '/' + page.value + '/true/' + order.value + getFiltersQuery()).then(data => {
+			translations.value = data.translations || []
+			// Au chargement direct d'une catégorie, l'URL ne contient que l'id d'une seule langue.
+			// On l'élargit aux catégories de toutes les langues actives (cf. updateCategories), sinon
+			// les sujets des autres langues sélectionnées n'apparaissent pas (#11970).
+			const expected = translations.value.filter(tr => forumLanguages[tr.lang]).map(tr => '' + tr.id)
+			const current = ('' + category).split(',')
+			if (expected.length && [...expected].sort().join(',') !== [...current].sort().join(',')) {
+				router.replace({ path: '/forum/category-' + expected.join(','), query: route.query })
+				return
+			}
 			loading.value = false
 			categories.value = data.categories
 			if (categories.value) {
@@ -523,7 +533,6 @@
 				categories.value[0].name = categories.value[0].team > 0 ? categories.value[0].name : t('forum-category.' + categories.value[0].name) as string
 				topics.value = data.topics
 				pages.value = data.pages
-				translations.value = data.translations
 
 				LeekWars.setTitle(categories.value[0].name, t('n_topic_n_messages', [data.total_topics, data.total_messages]) as string)
 				emitter.emit('loaded')
