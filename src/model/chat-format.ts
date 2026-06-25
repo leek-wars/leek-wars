@@ -4,9 +4,19 @@ import { LeekWars } from './leekwars'
 
 function format(content: string, authorName: string): string {
 	let result = LeekWars.protect(content)
+	// Masque les segments LaTeX $...$ AVANT linkify : sinon le scanner d'URL de
+	// linkify avale le `$` de fermeture (ex: `$https://.../report/123$`) et casse
+	// le délimiteur, rendant le LaTeX invalide (#11553). On restaure le segment
+	// brut ensuite, pour que la directive v-chat-code-latex le rende via KaTeX.
+	const latexSpans: string[] = []
+	result = result.replace(LATEX_SPAN_RE, (span) => {
+		latexSpans.push(span)
+		return LATEX_MARK + (latexSpans.length - 1) + LATEX_MARK
+	})
 	result = LeekWars.linkify(result)
 	result = formatEmojis(result)
 	result = Commands.execute(result, authorName)
+	result = result.replace(LATEX_MARK_RE, (_, i) => latexSpans[+i])
 	return result
 }
 
@@ -21,6 +31,13 @@ function escapeCode(content: string): string {
 const CODE_MARK = String.fromCharCode(0xE000)
 const CODE_MARK_RE = new RegExp(CODE_MARK + '(\\d+)' + CODE_MARK, 'g')
 const CODE_SPAN_RE = /```[\s\S]*?```|`[^`]*?`/g
+
+// Sentinelle distincte (0xE001) pour masquer les segments LaTeX $...$ pendant le
+// formatage du texte (linkify/emojis/commandes), afin que leur contenu reste opaque.
+// Code masqué EN PREMIER (callers), donc un `$` dans du code ne peut pas être capté ici.
+const LATEX_MARK = String.fromCharCode(0xE001)
+const LATEX_MARK_RE = new RegExp(LATEX_MARK + '(\\d+)' + LATEX_MARK, 'g')
+const LATEX_SPAN_RE = /\$[^$\n]+\$/g
 
 // Replace every code span (```...``` and `...`) with a sentinel placeholder and
 // push the raw span into `codeSpans`. Keeps code content opaque to text formatting
