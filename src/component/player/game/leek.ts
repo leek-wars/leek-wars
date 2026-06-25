@@ -324,12 +324,18 @@ class Leek extends FightEntity {
 		const leekWidth = this.bodyTexFront.texture.width
 		const leekHeight = this.bodyTexFront.texture.height
 
-		// Body
+		// Body. Garde sur la taille SOURCE > 0 : une texture SVG dégénérée (0x0,
+		// décodage SVG non terminé sous Firefox) ferait lever IndexSizeError à
+		// drawImage, ce qui interrompait définitivement la boucle de rendu et
+		// masquait tous les poireaux suivants (#11573, même garde que #4312 pour
+		// bulb/chest).
 		const y = -leekHeight + (this.dead ? this.baseZ / this.scale : 0)
-		ctx.drawImage(texture, 0, 0, texture.width, texture.height, -leekWidth / 2, y, leekWidth, leekHeight)
+		if (texture.width > 0 && texture.height > 0) {
+			ctx.drawImage(texture, 0, 0, texture.width, texture.height, -leekWidth / 2, y, leekWidth, leekHeight)
+		}
 
 		// Hat
-		if (hatTexture) {
+		if (hatTexture && hatTexture.width > 0 && hatTexture.height > 0) {
 			const hatWidth = leekHeight * 0.8 * this.hatTemplate.width
 			const hatHeight = hatWidth * (hatTexture.height / hatTexture.width)
 			ctx.drawImage(hatTexture, -hatWidth / 2, -leekHeight - hatHeight + hatHeight * this.hatTemplate.height, hatWidth, hatHeight)

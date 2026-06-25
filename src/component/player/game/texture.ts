@@ -47,7 +47,10 @@ class Texture {
 			game.resourceLoaded(this.path)
 			this.loaded = true
 		}
-		const onerror = () => () => {
+		// Double flèche d'origine `() => () => {...}` : le corps n'était jamais
+		// exécuté, donc une texture en échec/abort (réseau instable) n'incrémentait
+		// pas loadedData et pouvait bloquer le compteur de chargement (#11573).
+		const onerror = () => {
 			console.warn("Error loading : " + this.path)
 			game.resourceLoaded(this.path)
 			this.texture.removeEventListener('load', onload)
