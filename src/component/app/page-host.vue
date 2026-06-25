@@ -17,7 +17,7 @@
 	// même composant) : les remonter = "reload" visible à chaque item/page. Ces pages-là gardent
 	// une clé STABLE (pas de remount) ; un crash rare y est rattrapé par le hard-reload de récup.
 	// Le corrupteur principal (leek, qui a useLiveHistory) reste keyé.
-	const KEEP_MOUNTED = ['/editor', '/market', '/encyclopedia', '/help', '/ranking', '/forum', '/bank']
+	const KEEP_MOUNTED = ['/editor', '/market', '/garden', '/encyclopedia', '/help', '/ranking', '/forum', '/bank']
 	const routeKey = computed(() => {
 		const path = route.path
 		const base = KEEP_MOUNTED.find(p => path === p || path.startsWith(p + '/'))
