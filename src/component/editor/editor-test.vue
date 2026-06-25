@@ -618,7 +618,9 @@
 
 	const availableWeapons = computed<WeaponTemplate[]>(() => {
 		if (!currentLeek.value) return []
-		return Object.values(LeekWars.weapons)
+		// Trié par niveau d'item, comme la liste d'armes du groupe (group.vue) et en
+		// cohérence avec les puces déjà triées juste en dessous (popup de bot de test).
+		return (Object.values(LeekWars.weapons) as WeaponTemplate[]).sort((a, b) => LeekWars.items[a.item].level - LeekWars.items[b.item].level)
 	})
 
 	const availableChips = computed(() => {
