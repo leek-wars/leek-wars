@@ -1072,11 +1072,11 @@
 				LeekWars.toast(t('upload_success') as string)
 				farmer.value.avatar_changed = data.avatar_changed
 			}
-		}).error(error => {
-			LeekWars.toast(t('upload_failed', [error.error]) as string)
-			if (farmer.value) {
-				farmer.value.avatar_changed = LeekWars.time
-			}
+		}).error((error: { error?: string } | null) => {
+			// Ne PAS toucher avatar_changed ici : le forcer faisait pointer l'<img> vers
+			// un avatar inexistant (carré noir / image cassée) alors que l'upload a
+			// échoué (#11584). La preview optimiste reste affichée jusqu'au rechargement.
+			LeekWars.toast(t('upload_failed', [error && error.error ? error.error : '?']) as string)
 		})
 	}
 

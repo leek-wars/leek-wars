@@ -1156,9 +1156,10 @@
 				team.value.emblem_changed = LeekWars.time
 				store.commit('update-emblem')
 			}
-		}).error(err => {
-			LeekWars.toast(t('upload_failed', [err.error]) as string)
-			team.value!.emblem_changed = LeekWars.time
+		}).error((err: { error?: string } | null) => {
+			// Ne pas forcer emblem_changed sur erreur (même bug que l'avatar #11584) :
+			// ça pointait l'<img> vers un emblème inexistant (carré noir / image cassée).
+			LeekWars.toast(t('upload_failed', [err && err.error ? err.error : '?']) as string)
 		})
 	}
 
