@@ -121,10 +121,16 @@ abstract class ChipAnimation {
 	// effectivement au moins un effet de la puce (issue #3127). Fallback safe :
 	// si effects absent, retourne tout (pas de régression visuelle).
 	public recipientsOf(launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
-		if (!launcher || !this.effects || this.effects.length === 0) return targets
-		const effects = this.effects
-		return targets.filter(target => effects.some(e => recipientMatches(e, launcher, target)))
+		return effectRecipients(this.effects, launcher, targets)
 	}
+}
+
+// Variante autonome (sans instance d'animation) : filtre les cibles selon le masque
+// effect.targets d'un set d'effets. Utilisée par le chemin de saut de game.ts pour
+// répliquer le filtrage serveur (cf. #11548). Fallback safe : effects absent -> tout.
+export function effectRecipients(effects: Effect[] | undefined, launcher: FightEntity | undefined, targets: FightEntity[]): FightEntity[] {
+	if (!launcher || !effects || effects.length === 0) return targets
+	return targets.filter(target => effects.some(e => recipientMatches(e, launcher, target)))
 }
 
 function recipientMatches(effect: Effect, launcher: FightEntity, target: FightEntity): boolean {
