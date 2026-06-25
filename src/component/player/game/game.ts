@@ -1426,12 +1426,15 @@ class Game {
 				entity.cell.entity = null
 				entity.cell = null
 			}
+			// Toujours logger la mort, y compris pendant un jump, sinon l'annonce
+			// disparait du panneau quand on revient en arrière et ne réapparait
+			// qu'en rejouant l'action (#11649).
+			this.log(action)
 			if (this.jumping) {
 				entity.active = false
 				entity.kill(false, DamageType.DEFAULT, 0, 0)
 				this.actionDone()
 			} else {
-				this.log(action)
 				const killer = this.leeks[action.params[2]]
 				if (killer) {
 					const dx = (entity.x - killer.x)
