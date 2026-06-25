@@ -20,6 +20,17 @@ function escapeCode(content: string): string {
 // untouched by emoji/mention/link/command formatting and never reaches the DOM.
 const CODE_MARK = String.fromCharCode(0xE000)
 const CODE_MARK_RE = new RegExp(CODE_MARK + '(\\d+)' + CODE_MARK, 'g')
+const CODE_SPAN_RE = /```[\s\S]*?```|`[^`]*?`/g
+
+// Replace every code span (```...``` and `...`) with a sentinel placeholder and
+// push the raw span into `codeSpans`. Keeps code content opaque to text formatting
+// (emojis, @mentions, links, commands) so it is shown verbatim. #3945 / #2712
+function maskCodeSpans(content: string, codeSpans: string[]): string {
+	return content.replace(CODE_SPAN_RE, (span) => {
+		codeSpans.push(span)
+		return CODE_MARK + (codeSpans.length - 1) + CODE_MARK
+	})
+}
 
 export function formatChatMessage(
 	content: string,
@@ -31,10 +42,7 @@ export function formatChatMessage(
 	// content is shown verbatim: without this, emojis, @mentions, links and
 	// commands inside code got transformed (e.g. @p -> pseudo, :) -> emoji). #3945
 	const codeSpans: string[] = []
-	const masked = content.replace(/```[\s\S]*?```|`[^`]*?`/g, (span) => {
-		codeSpans.push(span)
-		return CODE_MARK + (codeSpans.length - 1) + CODE_MARK
-	})
+	const masked = maskCodeSpans(content, codeSpans)
 	let result = format(masked, authorName)
 	result = result.replace(/@(\w+)/g, (a, b) => {
 		return farmerByName[b] ? "<span class='pseudo'>" + b + "</span>" : a
@@ -54,5 +62,18 @@ export function formatChatMessage(
 
 export function formatChatPreview(content: string, authorName: string): string {
 	if (!content) { return '' }
-	return format(content, authorName).replace(/\n/g, ' ')
+	// Comme formatChatMessage, on masque les spans de code avant formatage pour que
+	// leur contenu ne soit pas transformé (ex: ":)" -> emoji dans du code). #2712
+	// L'aperçu est une ligne unique sans directive de code : on restitue le code en
+	// texte échappé, délimiteurs ` conservés, sauts de ligne aplatis en espaces.
+	const codeSpans: string[] = []
+	const masked = maskCodeSpans(content, codeSpans)
+	let result = format(masked, authorName).replace(/\n/g, ' ')
+	result = result.replace(CODE_MARK_RE, (_, i) => {
+		const span = codeSpans[+i]
+		const delim = span.startsWith('```') ? '```' : '`'
+		const inner = span.startsWith('```') ? span.slice(3, -3) : span.slice(1, -1)
+		return delim + escapeCode(inner).replace(/\n/g, ' ') + delim
+	})
+	return result
 }
