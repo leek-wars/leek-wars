@@ -869,6 +869,21 @@
 		margin-left: 18px;
 		float: right;
 	}
+	// Sur tablette / fenêtre étroite (layout desktop car mobile dépend de l'UA), le
+	// bandeau vert du titre passe sur plusieurs lignes : le triangle décoratif se
+	// détache et l'onglet flottant chevauche le titre (#11721). On retire la pointe
+	// et on place l'onglet sous le titre.
+	@media (max-width: 850px) {
+		h1::after {
+			display: none;
+		}
+		.tabs {
+			float: none;
+			display: block;
+			margin-left: 15px;
+			margin-top: 4px;
+		}
+	}
 	#app.app .panel .content {
 		padding: 0;
 	}
