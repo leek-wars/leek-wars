@@ -28,6 +28,8 @@
 	"reason_17_action": "Teamemblemet kommer att raderas.",
 	"reason_18": "Fel hemsida",
 	"reason_18_action": "Webbplatsen kommer att raderas.",
+	"reason_19": "Fel GitHub",
+	"reason_19_action": "GitHub-kontot kommer att raderas och läggas till i listan över förbjudna ord.",
 	"reason_1_action": "Uppfödarens namn kommer att ersättas med 'Farmer{'@'}<id>' och det felande namnet kommer att läggas till i listan över förbjudna ord.",
 	"reason_2": "Felaktigt purjolöknamn",
 	"reason_2_action": "Purjolökens namn kommer att ersättas med 'Leek{'@'}<id>' och det felande namnet kommer att läggas till i listan över förbjudna ord.",
