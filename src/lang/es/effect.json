@@ -144,6 +144,7 @@
 	"type_5_fixed": "Protege del <b>{0}%</b> de daño",
 	"type_6": "Protege de <b>{0}</b> a <b>{1}</b> de daño",
 	"type_61_fixed": "Cura del total del efecto anterior",
+	"type_63_fixed": "Otorga <b>{0}%</b> del daño recibido como resistencia",
 	"type_6_fixed": "Protege de <b>{0}</b> de daño",
 	"type_7": "Aumenta los PM de <b>{0}</b> a <b>{1}</b>",
 	"type_7_fixed": "Aumenta los PM de <b>{0}</b>",

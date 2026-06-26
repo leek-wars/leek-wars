@@ -28,6 +28,8 @@
 	"reason_17_action": "El emblema del equipo se borrará.",
 	"reason_18": "Sitio web incorrecto",
 	"reason_18_action": "El sitio web será eliminado.",
+	"reason_19": "GitHub incorrecto",
+	"reason_19_action": "La cuenta de GitHub será eliminada y añadida a la lista de palabras prohibidas.",
 	"reason_1_action": "El nombre del criador se reemplazará con 'Farmer{'@'}<id>' y el nombre ofensivo se agregará a la lista de palabras prohibidas.",
 	"reason_2": "Nombre de puerro incorrecto",
 	"reason_2_action": "El nombre del puerro se reemplazará con 'Leek{'@'}<id>' y el nombre ofensivo se agregará a la lista de malas palabras.",
