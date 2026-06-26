@@ -168,10 +168,10 @@ class Field {
 		return cells
 	}
 
-	public getTargets(center: Cell, area: Area, caster_cell: Cell, max_range: number): Entity[] {
+	public getTargets(center: Cell, area: Area, caster_cell: Cell, max_range: number, min_range: number = 1): Entity[] {
 		// console.log("getTargets", center, area, caster_cell)
 		if (area === Area.FIRST_INLINE) {
-			const cell = this.getFirstWithEntity(caster_cell, center, max_range)
+			const cell = this.getFirstWithEntity(caster_cell, center, max_range, min_range)
 			if (cell) {
 				return [cell.entity!]
 			}
@@ -185,13 +185,17 @@ class Field {
 		return entities
 	}
 
-	public getFirstWithEntity(from: Cell, target: Cell, max_range: number): Cell | null {
+	public getFirstWithEntity(from: Cell, target: Cell, max_range: number, min_range: number = 1): Cell | null {
 		const dx = Math.sign(target.x - from.x)
 		const dy = Math.sign(target.y - from.y)
 		let d = 1
 		let current = this.next_cell(from, dx, dy)
 		while (current != null && !current.obstacle) {
-			if (current.entity != null) {
+			// Comme le serveur (Map.getFirstEntity) : ignorer les entités plus
+			// proches que min_range, sinon le client cible/anime la mauvaise
+			// entité (ex. gant de boxe min_range=2) et désynchronise les
+			// positions (#11685).
+			if (d >= min_range && current.entity != null) {
 				return current
 			}
 			current = this.next_cell(current, dx, dy)
