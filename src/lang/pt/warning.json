@@ -28,6 +28,8 @@
 	"reason_17_action": "O emblema da equipe será apagado.",
 	"reason_18": "Site incorreto",
 	"reason_18_action": "O site será excluído.",
+	"reason_19": "GitHub incorreto",
+	"reason_19_action": "A conta do GitHub será excluída e adicionada à lista de palavras proibidas.",
 	"reason_1_action": "O nome do fazendeiro será substituído por 'Farmer@<id>' e o nome ofensivo será adicionado à lista de palavras proibidas.",
 	"reason_2": "Nome de alho-poró incorreto",
 	"reason_2_action": "O nome do alho-poró será substituído por 'Leek@<id>' e o nome ofensivo será adicionado à lista de palavras proibidas.",
