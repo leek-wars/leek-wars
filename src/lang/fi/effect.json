@@ -144,6 +144,7 @@
 	"type_5_fixed": "Suojaa <b>{0} %</b> vaurioilta",
 	"type_6": "Suojaa <b>{0}</b> - <b>{1}</b> vaurioilta",
 	"type_61_fixed": "Parantaa edellisen vaikutuksen kokonaismäärän verran",
+	"type_63_fixed": "Antaa <b>{0}%</b> saadusta vahingosta resistanssina",
 	"type_6_fixed": "Suojaa <b>{0}</b> vaurioilta",
 	"type_7": "Kasvata MP arvosta <b>{0}</b> arvoon <b>{1}</b>",
 	"type_7_fixed": "Lisää MP:llä <b>{0}</b>",

@@ -28,6 +28,8 @@
 	"reason_17_action": "Joukkueen tunnus poistetaan.",
 	"reason_18": "Väärä verkkosivusto",
 	"reason_18_action": "Sivusto poistetaan.",
+	"reason_19": "Väärä GitHub",
+	"reason_19_action": "GitHub-tili poistetaan ja lisätään kiellettyjen sanojen listalle.",
 	"reason_1_action": "Viljelijän nimi korvataan nimellä \"Farmer@<id>\" ja loukkaava nimi lisätään kiellettyjen sanojen luetteloon.",
 	"reason_2": "Virheellinen purjonimi",
 	"reason_2_action": "Purjan nimi korvataan nimellä \"Purjo@<id>\" ja loukkaava nimi lisätään huonojen sanojen luetteloon.",
