@@ -82,6 +82,13 @@ function apply(loadout: Loadout) {
 		props.leek.chips = data.leek.chips
 		// eslint-disable-next-line vue/no-mutating-props
 		props.leek.components = data.leek.components
+		// Resync du stock libre (#11972) : un item déséquipé par l'apply doit
+		// réapparaître dans l'éditeur sans rechargement.
+		if (data.inventory) {
+			store.commit('set-weapons', data.inventory.weapons)
+			store.commit('set-chips', data.inventory.chips)
+			store.commit('set-components', data.inventory.components)
+		}
 		emit('applied')
 		if (data.skipped && data.skipped.length > 0) {
 			LeekWars.toast(t('main.loadout_skipped_n', [data.skipped.length]))

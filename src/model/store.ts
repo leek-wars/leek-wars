@@ -899,6 +899,19 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.farmer.components.push({id: component.id, quantity: 1, template: component.template})
 		},
 
+		// Réconciliation en masse du stock libre (non équipé) après un apply de loadout :
+		// le serveur a déplacé des items entre stock et équipement, on remplace les listes
+		// sinon un item déséquipé "disparaît" de l'éditeur jusqu'au rechargement (#11972).
+		'set-weapons'(state: LeekWarsState, weapons: Weapon[]) {
+			if (state.farmer) { state.farmer.weapons = weapons }
+		},
+		'set-chips'(state: LeekWarsState, chips: Chip[]) {
+			if (state.farmer) { state.farmer.chips = chips }
+		},
+		'set-components'(state: LeekWarsState, components: Farmer['components']) {
+			if (state.farmer) { state.farmer.components = components }
+		},
+
 		'last-connection'(state: LeekWarsState, time: number) {
 			if (!state.farmer) { return }
 			state.farmer.last_connection = time

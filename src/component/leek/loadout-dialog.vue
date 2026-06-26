@@ -807,6 +807,13 @@
 					this.leek!.weapons = data.leek.weapons
 					this.leek!.chips = data.leek.chips
 					this.leek!.components = data.leek.components
+					// Resync du stock libre (#11972) : un item déséquipé par l'apply doit
+					// réapparaître dans l'éditeur sans rechargement.
+					if (data.inventory) {
+						store.commit('set-weapons', data.inventory.weapons)
+						store.commit('set-chips', data.inventory.chips)
+						store.commit('set-components', data.inventory.components)
+					}
 					this.$emit('applied')
 					if (data.skipped && data.skipped.length > 0) {
 						this.skippedItems = data.skipped
@@ -844,6 +851,13 @@
 					this.leek!.weapons = data.leek.weapons
 					this.leek!.chips = data.leek.chips
 					this.leek!.components = data.leek.components
+					// Resync du stock libre (#11972) : un item déséquipé par l'apply doit
+					// réapparaître dans l'éditeur sans rechargement.
+					if (data.inventory) {
+						store.commit('set-weapons', data.inventory.weapons)
+						store.commit('set-chips', data.inventory.chips)
+						store.commit('set-components', data.inventory.components)
+					}
 					if (data.stats_changed) {
 						// Mise à jour des stats du leek + décrément potion côté store
 						this.applyStatsLocally(loadout)
