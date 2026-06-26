@@ -28,6 +28,8 @@
 	"reason_17_action": "Teamemblemet vil bli slettet.",
 	"reason_18": "Feil nettside",
 	"reason_18_action": "Nettsiden vil bli slettet.",
+	"reason_19": "Feil GitHub",
+	"reason_19_action": "GitHub-kontoen vil bli slettet og lagt til i listen over forbudte ord.",
 	"reason_1_action": "Bondens navn vil bli erstattet med 'Farmer{'@'}<id>' og det fornærmende navnet vil bli lagt til listen over forbudte ord.",
 	"reason_2": "Feil purrenavn",
 	"reason_2_action": "Purrens navn vil bli erstattet med 'Leek{'@'}<id>' og det fornærmende navnet vil bli lagt til listen over dårlige ord.",
