@@ -463,6 +463,7 @@ onBeforeUnmount(() => {
 			height: 27px;
 			width: calc(100% - 35px);
 			background: var(--background);
+			color: var(--text-color);
 			font-size: 20px;
 			border-radius: 4px;
 			vertical-align: bottom;
