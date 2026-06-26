@@ -483,11 +483,7 @@
 	}
 	refreshLanguages()
 
-	const activeLanguages = ref<string[]>([])
-	function refreshActiveLanguages() {
-		activeLanguages.value = Object.entries(forumLanguages).filter(e => e[1]).map(e => e[0])
-	}
-	watch(forumLanguages, refreshActiveLanguages, { deep: true, immediate: true })
+	const activeLanguages = computed(() => Object.entries(forumLanguages).filter(e => e[1]).map(e => e[0]))
 
 	const breadcrumb_items = ref<{name: string, link: string}[]>([])
 	const category_ids = ref('')
@@ -608,7 +604,7 @@
 
 	function updateCategories() {
 		localStorage.setItem('forum/languages', activeLanguages.value.join(','))
-		router.replace('/forum/category-' + translations.value.filter(t => forumLanguages[t.lang]).map(t => t.id).join(','))
+		router.replace({ path: '/forum/category-' + translations.value.filter(t => forumLanguages[t.lang]).map(t => t.id).join(','), query: route.query })
 	}
 	function updateDraft() {
 		localStorage.setItem('forum/draft', createMessage.value)
