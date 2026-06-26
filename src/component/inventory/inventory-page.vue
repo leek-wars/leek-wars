@@ -185,26 +185,6 @@
 
 	interface SchemeData { id: number; result: number; items: ([number, number] | null)[]; quantity: number }
 
-	function isCraftable(scheme: SchemeData): boolean {
-		if (!store.state.farmer) return false
-		const farmer = store.state.farmer
-		for (const ingredient of scheme.items) {
-			if (!ingredient) continue
-			const [itemId, quantity] = ingredient
-			if (itemId === 148) {
-				if (farmer.habs < quantity) return false
-			} else {
-				const found = farmer.resources.find((i) => i.template === itemId)
-					|| farmer.components.find((i) => i.template === itemId)
-					|| farmer.potions.find((i) => i.template === itemId)
-					|| farmer.weapons.find((i) => i.template === itemId)
-					|| farmer.chips.find((i) => i.template === itemId)
-				if (!found || found.quantity < quantity) return false
-			}
-		}
-		return true
-	}
-
 	const all_schemes = computed<SchemeData[]>(() => {
 		if (!store.state.farmer) return []
 		return (Object.values(LeekWars.schemes) as SchemeData[])
@@ -222,7 +202,7 @@
 			schemes = schemes.filter(s => LeekWars.items[s.result].type === filter.value)
 		}
 		if (craftableOnly.value) {
-			schemes = schemes.filter(s => isCraftable(s))
+			schemes = schemes.filter(s => store.getters.scheme_possible(s))
 		}
 		return [...schemes].sort((a, b) => {
 			if (sort.value === Sort.LEVEL) return LeekWars.items[b.result].level - LeekWars.items[a.result].level
