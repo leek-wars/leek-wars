@@ -28,6 +28,8 @@
 	"reason_17_action": "Het teamembleem wordt gewist.",
 	"reason_18": "Verkeerde website",
 	"reason_18_action": "De website wordt verwijderd.",
+	"reason_19": "Verkeerde GitHub",
+	"reason_19_action": "Het GitHub-account wordt verwijderd en toegevoegd aan de lijst met verboden woorden.",
 	"reason_1_action": "De naam van de boer wordt vervangen door 'Farmer{'@'}<id>' en de gewraakte naam wordt toegevoegd aan de lijst met verboden woorden.",
 	"reason_2": "Onjuiste preinaam",
 	"reason_2_action": "De naam van de prei wordt vervangen door 'Leek{'@'}<id>' en de gewraakte naam wordt toegevoegd aan de lijst met scheldwoorden.",

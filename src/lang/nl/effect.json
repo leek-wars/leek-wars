@@ -144,6 +144,7 @@
 	"type_5_fixed": "Beschermt tegen <b>{0}%</b> schade",
 	"type_6": "Beschermt tegen schade van <b>{0}</b> tot <b>{1}</b>",
 	"type_61_fixed": "Geneest voor het totaal van het vorige effect",
+	"type_63_fixed": "Geeft <b>{0}%</b> van de ontvangen schade als weerstand",
 	"type_6_fixed": "Beschermt tegen <b>{0}</b> schade",
 	"type_7": "Verhoog MP van <b>{0}</b> naar <b>{1}</b>",
 	"type_7_fixed": "Verhoogt MP met <b>{0}</b>",
