@@ -28,6 +28,8 @@
 	"reason_17_action": "Holdemblemet vil blive slettet.",
 	"reason_18": "Forkert hjemmeside",
 	"reason_18_action": "Hjemmesiden vil blive slettet.",
+	"reason_19": "Forkert GitHub",
+	"reason_19_action": "GitHub-kontoen bliver slettet og tilføjet til listen over forbudte ord.",
 	"reason_1_action": "Landmandens navn vil blive erstattet med 'Farmer@<id>', og det fornærmende navn vil blive tilføjet til listen over dårlige ord.",
 	"reason_2": "Forkert porrenavn",
 	"reason_2_action": "Porrens navn vil blive erstattet med 'Leek@<id>', og det fornærmende navn vil blive tilføjet til listen over dårlige ord.",

@@ -144,6 +144,7 @@
 	"type_5_fixed": "Beskytter mod <b>{0}%</b> skader",
 	"type_6": "Beskytter mod skader fra <b>{0}</b> til <b>{1}</b>",
 	"type_61_fixed": "Helbreder for det samlede beløb af den forrige effekt",
+	"type_63_fixed": "Giver <b>{0}%</b> af modtaget skade som modstand",
 	"type_6_fixed": "Beskytter mod <b>{0}</b> skader",
 	"type_7": "Øg MP fra <b>{0}</b> til <b>{1}</b>",
 	"type_7_fixed": "Øger MP med <b>{0}</b>",
