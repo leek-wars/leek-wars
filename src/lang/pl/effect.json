@@ -144,6 +144,7 @@
 	"type_5_fixed": "Chroni przed <b>{0}%</b> obrażeniami",
 	"type_6": "Chroni od <b>{0}</b> do <b>{1}</b> obrażeń",
 	"type_61_fixed": "Leczy z sumy poprzedniego efektu",
+	"type_63_fixed": "Daje <b>{0}%</b> otrzymanych obrażeń jako opór",
 	"type_6_fixed": "Chroni przed <b>{0}</b> obrażeniami",
 	"type_7": "Zwiększ PM z <b>{0}</b> do <b>{1}</b>",
 	"type_7_fixed": "Zwiększa MP o <b>{0}</b>",

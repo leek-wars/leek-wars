@@ -28,6 +28,8 @@
 	"reason_17_action": "Emblemat drużyny zostanie usunięty.",
 	"reason_18": "Niewłaściwa strona internetowa",
 	"reason_18_action": "Witryna zostanie usunięta.",
+	"reason_19": "Niewłaściwy GitHub",
+	"reason_19_action": "Konto GitHub zostanie usunięte i dodane do listy zakazanych słów.",
 	"reason_1_action": "Imię farmera zostanie zastąpione przez „Farmer{'@'}<id>”, a obraźliwe imię zostanie dodane do listy zakazanych słów.",
 	"reason_2": "Nieprawidłowa nazwa pora",
 	"reason_2_action": "Nazwa pora zostanie zastąpiona przez „Leek{'@'}<id>”, a obraźliwa nazwa zostanie dodana do listy złych słów.",
