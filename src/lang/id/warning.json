@@ -28,6 +28,8 @@
 	"reason_17_action": "Emblem tim akan dihapus.",
 	"reason_18": "Situs web yang salah",
 	"reason_18_action": "Situs web akan dihapus.",
+	"reason_19": "GitHub yang salah",
+	"reason_19_action": "Akun GitHub akan dihapus dan ditambahkan ke daftar kata terlarang.",
 	"reason_1_action": "Nama peternak akan diganti dengan 'Farmer{'@'}<id>' dan nama yang melanggar akan ditambahkan ke daftar kata terlarang.",
 	"reason_2": "Nama daun bawang salah",
 	"reason_2_action": "Nama daun bawang akan diganti dengan 'Leek{'@'}<id>' dan nama yang melanggar akan ditambahkan ke daftar kata terlarang.",
