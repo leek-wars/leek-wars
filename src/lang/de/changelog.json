@@ -3,10 +3,10 @@
 	"need_ai_change": "Kann Änderungen in der KI erfordern",
 	"popup_ok": "OK :)",
 	"see_all_changes": "Die vollständige Liste der Änderungen finden Sie auf der Seite {changelog}.",
-	"title": "Geschichte verändern",
+	"title": "Änderungsverlauf",
 	"title_0": "🌟 Neuzugänge",
 	"title_1": "⚒️ Verbesserungen",
 	"title_2": "🐞 Korrekturen",
-	"version_n": "{0} freigeben",
+	"version_n": "Version {0}",
 	"version_online": "Version {version} online!"
 }

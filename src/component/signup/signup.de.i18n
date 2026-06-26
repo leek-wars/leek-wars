@@ -1,6 +1,6 @@
 {
 	"android_app": "Android-App",
-	"conditions": "Indem du auf die Schaltfläche \u201ERegistrieren\u201C klickst, akzeptierst du die {link}.",
+	"conditions": "Indem du auf die Schaltfläche \u201ESpielen\u201C klickst, akzeptierst du die {link}.",
 	"conditions_name": "Nutzungsbedingungen",
 	"confirm_password": "Bestätigung",
 	"country": "Land",
@@ -29,8 +29,8 @@
 	"login": "Einloggen",
 	"n_leeks_already": "Schon <b>{0}</b> Lauch zum Kämpfen!",
 	"password": "Passwort",
-	"ranking": "Rangfolge",
-	"screenshots": "Bildschirmfoto",
+	"ranking": "Rangliste",
+	"screenshots": "Screenshots",
 	"signup": "Registrieren!",
 	"signup_gh": "Registriere dich über GitHub",
 	"signup_google": "Registriere dich über Google",
@@ -65,7 +65,7 @@
 	"customization_text1": "Verwalte das Aussehen deines Lauchs mit <b>Hüten</b>, <b>Farbtränken</b>, <b>Titeln</b> und anderem Drumherum.",
 	"shop_desc": "Entdecke unsere T-Shirts, Tassen, Sticker und mehr!",
 	"groups": "Leek Wars für Gruppen",
-	"groups_desc": "Erstellen Sie eine private Gruppe von Schülern, Mitarbeitern oder Spielern, verwalten Sie ihren Fortschritt, organisieren Sie Turniere und kommunizieren Sie live mit ihnen.",
+	"groups_desc": "Erstelle eine private Gruppe von Schülern, Mitarbeitern oder Spielern, verwalte ihren Fortschritt, organisiere Turniere und kommuniziere live mit ihnen.",
 	"groups_button": "Mehr zu den Angeboten",
-	"groups_title": "Erstellen Sie Ihre private Leek Wars Gruppe"
+	"groups_title": "Erstelle deine private Leek Wars Gruppe"
 }
