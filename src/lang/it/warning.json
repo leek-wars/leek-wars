@@ -28,6 +28,8 @@
 	"reason_17_action": "L'emblema della squadra verrà cancellato.",
 	"reason_18": "Sito web sbagliato",
 	"reason_18_action": "Il sito Web verrà eliminato.",
+	"reason_19": "GitHub sbagliato",
+	"reason_19_action": "L'account GitHub verrà eliminato e aggiunto alla lista delle parole vietate.",
 	"reason_1_action": "Il nome dell'agricoltore verrà sostituito con 'Farmer@<id>' e il nome offensivo verrà aggiunto all'elenco delle parole vietate.",
 	"reason_2": "Nome porro errato",
 	"reason_2_action": "Il nome del porro verrà sostituito con 'Leek@<id>' e il nome offensivo verrà aggiunto all'elenco delle parole vietate.",

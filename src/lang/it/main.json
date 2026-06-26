@@ -163,6 +163,7 @@
 	"loadout_apply": "Applica",
 	"loadout_apply_items_only": "Solo oggetti",
 	"loadout_apply_success": "Loadout applicato a {0}",
+	"loadout_capital_exceeds_highest": "Capitale speso ({0}) superiore al capitale massimo del tuo porro di livello più alto ({1} al livello {2})",
 	"loadout_create": "Crea loadout",
 	"loadout_discard_changes": "Scarta",
 	"loadout_edit": "Modifica loadout",
