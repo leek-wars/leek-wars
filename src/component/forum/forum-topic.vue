@@ -323,7 +323,7 @@
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { ForumCategory, ForumMessage, ForumTopic, ForumTopicStatus } from '@/model/forum'
-	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
+	import { i18n, mixins, useNamespacedT, t as globalT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import EmojiPicker from '../chat/emoji-picker.vue'
@@ -612,7 +612,7 @@
 		if (!topic.value || votes_up_names[message.id] !== undefined) { return }
 		votes_up_names[message.id] = null
 		LeekWars.post('forum/get-message-up-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
-			votes_up_names[message.id] = data.farmers.map((f: unknown[]) => f[1])
+			votes_up_names[message.id] = data.farmers.map((f: unknown[]) => (f[1] as string) || (globalT('main.farmer') + '@' + f[0]))
 		})
 	}
 
@@ -620,7 +620,7 @@
 		if (!topic.value || votes_down_names[message.id] !== undefined) { return }
 		votes_down_names[message.id] = null
 		LeekWars.post('forum/get-message-down-votes-names', {topic_id: topic.value.id, message_id: message.id}).then(data => {
-			votes_down_names[message.id] = data.farmers.map((f: unknown[]) => f[1])
+			votes_down_names[message.id] = data.farmers.map((f: unknown[]) => (f[1] as string) || (globalT('main.farmer') + '@' + f[0]))
 		})
 	}
 
