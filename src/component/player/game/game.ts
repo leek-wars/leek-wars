@@ -395,6 +395,7 @@ class Game {
 	public displayDebugs: boolean = true
 	public displayAllyDebugs: boolean = true
 	public displayAILines: boolean = true
+	public debugOnlyMine: boolean = false
 	public plainBackground: boolean = false
 	public sound: boolean = false
 	public volume: number = 0.5;
@@ -1189,6 +1190,23 @@ class Game {
 							delete this.markersText[m]
 						}
 					}
+				}
+			}
+			// Si debugOnlyMine est activé, on saute toutes les actions des autres joueurs en appelant requestJump sur le prochain tour du joueur courant
+			const me = store.state.farmer ? store.state.farmer.id : null
+			if (this.debugOnlyMine && me != null && entity && entity.farmer && entity.farmer.id !== me) {
+				this.stopAllSounds()
+				let i = this.currentAction + 1
+				for (; i < this.actions.length; i++) {
+					if (this.actions[i].type !== ActionType.LEEK_TURN) continue
+					const nextLeekId = this.actions[i].params[1]
+					const nextLeek = this.leeks[nextLeekId]
+					if (nextLeek != null && nextLeek.farmer != null && nextLeek.farmer.id === me) {
+						break
+					}
+				}
+				if (i < this.actions.length) {
+					if (!this.jumping) this.requestJump(i)
 				}
 			}
 			this.actionDone()

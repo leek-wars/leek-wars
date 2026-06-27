@@ -34,5 +34,6 @@
 	"sound_activated": "Ton aktiviert",
 	"sound_disactivated": "Gedämpfter Ton",
 	"tactic_mode": "Taktischer Modus",
+	"debug_only_my_leeks": "Meine Aktionen",
 	"error_secret_trophy": "Dieser Kampf enthält eine geheime Trophäe, die Sie noch nicht freigeschaltet haben."
 }

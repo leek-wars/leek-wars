@@ -34,5 +34,6 @@
 	"sound_activated": "Ljud aktiverat",
 	"sound_disactivated": "Dämpat ljud",
 	"tactic_mode": "Taktiskt läge",
+	"debug_only_my_leeks": "Mina handlingar",
 	"error_secret_trophy": "Den här striden innehåller en hemlig trofé som du inte har låst upp ännu."
 }

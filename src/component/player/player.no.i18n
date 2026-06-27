@@ -34,5 +34,6 @@
 	"sound_activated": "Lyd aktivert",
 	"sound_disactivated": "Dempet lyd",
 	"tactic_mode": "Taktisk modus",
+	"debug_only_my_leeks": "Mine handlinger",
 	"error_secret_trophy": "Denne kampen inneholder et hemmelig trofé som du ikke har låst opp ennå."
 }

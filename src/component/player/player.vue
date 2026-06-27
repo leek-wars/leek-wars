@@ -229,6 +229,9 @@
 								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-key" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
 									<v-switch :model-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
 								</v-list-item>
+								<v-list-item v-ripple prepend-icon="mdi-bug" @click="game.debugOnlyMine = !game.debugOnlyMine">
+									<v-switch :model-value="game.debugOnlyMine" :label="$t('debug_only_my_leeks') + ' (M)'" hide-details />
+								</v-list-item>
 							</v-list>
 						</v-menu>
 					</template>
@@ -345,6 +348,7 @@
 	if (localStorage.getItem('fight/actions') === null) localStorage.setItem('fight/actions', 'true')
 	if (localStorage.getItem('fight/auto-dark') === null) localStorage.setItem('fight/auto-dark', 'true')
 	if (localStorage.getItem('fight/debugs') === null) localStorage.setItem('fight/debugs', 'true')
+	if (localStorage.getItem('fight/debug-only-mine') === null) localStorage.setItem('fight/debug-only-mine', 'false')
 	game.value.shadows = localStorage.getItem('fight/shadows') === 'true'
 	game.value.tactic = localStorage.getItem('fight/tactic') === 'true'
 	game.value.showCells = localStorage.getItem('fight/cells') === 'true'
@@ -361,6 +365,7 @@
 	game.value.plainBackground = localStorage.getItem('fight/plain-background') === 'true'
 	game.value.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
 	game.value.displayAILines = localStorage.getItem('fight/debug-lines') === 'true'
+	game.value.debugOnlyMine = localStorage.getItem('fight/debug-only-mine') === 'true'
 	game.value.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	;(game.value as any).player = { gameLaunched, $emit: emit }
@@ -732,6 +737,10 @@
 	watch(() => game.value.plainBackground, () => { localStorage.setItem('fight/plain-background', '' + game.value.plainBackground); resize() })
 	watch(() => game.value.displayDebugs, () => { localStorage.setItem('fight/debugs', '' + game.value.displayDebugs) })
 	watch(() => game.value.displayAILines, () => { localStorage.setItem('fight/debug-lines', '' + game.value.displayAILines) })
+	watch(() => game.value.debugOnlyMine, () => {
+		localStorage.setItem('fight/debug-only-mine', '' + game.value.debugOnlyMine)
+		game.value.redraw()
+	})
 	watch(() => game.value.displayAllyDebugs, () => { localStorage.setItem('fight/ally-debugs', '' + game.value.displayAllyDebugs) })
 
 	function canvasClick() { game.value.selectEntity(game.value.click()) }
