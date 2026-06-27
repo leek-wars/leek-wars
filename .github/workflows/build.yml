@@ -22,9 +22,15 @@ jobs:
       - run: npm run test:unit
 
   build:
-    runs-on: ubuntu-latest
+    # Self-hosted seulement sur le repo privé (develop -> beta, consomme le
+    # quota). Le public leek-wars/leek-wars (master -> prod) reste sur
+    # ubuntu-latest : gratuit, et pas de runner self-hosted exposé aux forks.
+    runs-on: ${{ github.repository == '5pilow/leek-wars-client-private' && fromJSON('["self-hosted", "leekwars-client"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - run: npm ci
 
       # Push develop : build mode beta (lit .env.beta) et push vers la stack
