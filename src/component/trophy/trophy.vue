@@ -62,7 +62,7 @@
 						<template #date>{{ $filters.datetime(trophy.date) }}</template>
 					</i18n-t>
 					<div v-else class="rarity">{{ $t('not_unlocked') }}</div>
-					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight + (trophy.action ? '?action=' + (trophy.action - 15) : '')">{{ $t('see_fight') }}</router-link>
+					<router-link v-if="trophy.fight" class="rarity" :to="fightLink(trophy.fight, trophy.action)">{{ $t('see_fight') }}</router-link>
 				</div>
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> {{ $t('stats') }}</h4>
@@ -81,7 +81,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
-					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
+					<router-link v-if="farmer.fight" v-ripple :to="fightLink(farmer.fight, farmer.action)" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -97,7 +97,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.time - trophy.created_time) }}
 					</div>
-					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
+					<router-link v-if="farmer.fight" v-ripple :to="fightLink(farmer.fight, farmer.action)" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -113,7 +113,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.duration ?? 0) }}
 					</div>
-					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
+					<router-link v-if="farmer.fight" v-ripple :to="fightLink(farmer.fight, farmer.action)" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -129,7 +129,7 @@
 					<div class="duration">
 						{{ LeekWars.formatLongDuration(farmer.duration ?? 0) }}
 					</div>
-					<router-link v-if="farmer.fight" v-ripple :to="'/fight/' + farmer.fight + (farmer.action ? '?action=' + (farmer.action - 15) : '')" class="fight">
+					<router-link v-if="farmer.fight" v-ripple :to="fightLink(farmer.fight, farmer.action)" class="fight">
 						<v-icon>mdi-sword-cross</v-icon> {{ $filters.date(farmer.time) }}
 					</router-link>
 					<span v-else class="fight">{{ $filters.date(farmer.time) }}</span>
@@ -227,6 +227,14 @@ const deleteDialog = ref(false)
 const deleteFarmer = ref<TrophyFarmer | null>(null)
 
 const items = computed(() => trophy.value ? trophy.value.items.map((i: number) => LeekWars.items[i]) : [])
+
+// Lien vers le combat où le trophée a été gagné, rembobiné de 15 actions pour
+// le contexte. Si le trophée est gagné dans les 15 premières actions, on omet
+// le paramètre (sinon action négative, ignorée par le player -> début du combat).
+function fightLink(fight: number, action?: number) {
+	const start = action ? action - 15 : 0
+	return '/fight/' + fight + (start > 0 ? '?action=' + start : '')
+}
 
 function schemeLabel(item: ItemTemplate) {
 	const scheme = LeekWars.schemes[item.params]
