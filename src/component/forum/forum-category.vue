@@ -56,82 +56,90 @@
 								</v-btn>
 							</template>
 							<v-list density="compact" class="filter-list">
-								<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-email</v-icon>{{ $t('filter_read') }}</v-list-subheader>
-								<v-list-item v-for="r in readFilterItems" :key="r.value" density="compact" @click="filterRead = r.value; saveFilters()">
-									<template #prepend>
-										<v-list-item-action start>
-											<v-radio :model-value="filterRead" :value="r.value" density="compact" hide-details @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
-										</v-list-item-action>
-									</template>
-									<span>{{ r.title }}</span>
-								</v-list-item>
-								<v-divider class="my-1" />
-								<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-checkbox-marked-circle-outline</v-icon>{{ $t('filter_status') }}</v-list-subheader>
-								<v-list-item density="compact" @click="filterStatus = []; saveFilters()">
-									<template #prepend>
-										<v-list-item-action start>
-											<v-checkbox :model-value="filterStatus.length === 0" density="compact" hide-details @click.stop @update:model-value="filterStatus = []; saveFilters()" />
-										</v-list-item-action>
-									</template>
-									<span>{{ $t('filter_all') }}</span>
-								</v-list-item>
-								<v-list-item v-for="s in statusFilterItems" :key="s.value" density="compact" @click="toggleStatusFilter(s.value)">
-									<template #prepend>
-										<v-list-item-action start>
-											<v-checkbox :model-value="filterStatus.includes(s.value)" density="compact" hide-details @click.stop @update:model-value="toggleStatusFilter(s.value)" />
-										</v-list-item-action>
-									</template>
-									<v-icon v-if="s.icon" size="small" :class="s.iconClass" class="filter-item-icon">{{ s.icon }}</v-icon>
-									<span>{{ s.title }}</span>
-								</v-list-item>
-								<v-divider class="my-1" />
-								<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-eye</v-icon>{{ $t('filter_acknowledged') }}</v-list-subheader>
-								<v-list-item v-for="a in acknowledgedFilterItems" :key="a.value" density="compact" @click="filterAcknowledged = a.value; saveFilters()">
-									<template #prepend>
-										<v-list-item-action start>
-											<v-radio :model-value="filterAcknowledged" :value="a.value" density="compact" hide-details @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
-										</v-list-item-action>
-									</template>
-									<span>{{ a.title }}</span>
-								</v-list-item>
-								<v-divider class="my-1" />
-								<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-lock</v-icon>{{ $t('filter_locked') }}</v-list-subheader>
-								<v-list-item v-for="l in lockedFilterItems" :key="l.value" density="compact" @click="filterLocked = l.value; saveFilters()">
-									<template #prepend>
-										<v-list-item-action start>
-											<v-radio :model-value="filterLocked" :value="l.value" density="compact" hide-details @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
-										</v-list-item-action>
-									</template>
-									<span>{{ l.title }}</span>
-								</v-list-item>
-								<template v-if="isBugCategory || isSuggestionCategory">
-								<v-divider class="my-1" />
-								<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-flag</v-icon>{{ $t('filter_priority') }}</v-list-subheader>
-								<v-list-item density="compact" @click="filterPriority = []; saveFilters()">
-									<template #prepend>
-										<v-list-item-action start>
-											<v-checkbox :model-value="filterPriority.length === 0" density="compact" hide-details @click.stop @update:model-value="filterPriority = []; saveFilters()" />
-										</v-list-item-action>
-									</template>
-									<span>{{ $t('filter_all') }}</span>
-								</v-list-item>
-								<v-list-item v-for="p in priorityFilterItems" :key="p.value" density="compact" @click="togglePriorityFilter(p.value)">
-									<template #prepend>
-										<v-list-item-action start>
-											<v-checkbox :model-value="filterPriority.includes(p.value)" density="compact" hide-details @click.stop @update:model-value="togglePriorityFilter(p.value)" />
-										</v-list-item-action>
-									</template>
-									<v-icon v-if="p.icon" size="small" :class="p.iconClass" class="filter-item-icon">{{ p.icon }}</v-icon>
-									<span>{{ p.title }}</span>
-								</v-list-item>
+								<div class="filter-columns" :class="{ 'two-columns': !LeekWars.mobile }">
+									<div class="filter-section">
+										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-email</v-icon>{{ $t('filter_read') }}</v-list-subheader>
+										<v-list-item v-for="r in readFilterItems" :key="r.value" density="compact" @click="filterRead = r.value; saveFilters()">
+											<template #prepend>
+												<v-list-item-action start>
+													<v-radio :model-value="filterRead" :value="r.value" density="compact" hide-details @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
+												</v-list-item-action>
+											</template>
+											<span>{{ r.title }}</span>
+										</v-list-item>
+									</div>
+									<div class="filter-section">
+										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-checkbox-marked-circle-outline</v-icon>{{ $t('filter_status') }}</v-list-subheader>
+										<v-list-item density="compact" @click="filterStatus = []; saveFilters()">
+											<template #prepend>
+												<v-list-item-action start>
+													<v-checkbox :model-value="filterStatus.length === 0" density="compact" hide-details @click.stop @update:model-value="filterStatus = []; saveFilters()" />
+												</v-list-item-action>
+											</template>
+											<span>{{ $t('filter_all') }}</span>
+										</v-list-item>
+										<v-list-item v-for="s in statusFilterItems" :key="s.value" density="compact" @click="toggleStatusFilter(s.value)">
+											<template #prepend>
+												<v-list-item-action start>
+													<v-checkbox :model-value="filterStatus.includes(s.value)" density="compact" hide-details @click.stop @update:model-value="toggleStatusFilter(s.value)" />
+												</v-list-item-action>
+											</template>
+											<v-icon v-if="s.icon" size="small" :class="s.iconClass" class="filter-item-icon">{{ s.icon }}</v-icon>
+											<span>{{ s.title }}</span>
+										</v-list-item>
+									</div>
+									<div class="filter-section">
+										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-eye</v-icon>{{ $t('filter_acknowledged') }}</v-list-subheader>
+										<v-list-item v-for="a in acknowledgedFilterItems" :key="a.value" density="compact" @click="filterAcknowledged = a.value; saveFilters()">
+											<template #prepend>
+												<v-list-item-action start>
+													<v-radio :model-value="filterAcknowledged" :value="a.value" density="compact" hide-details @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
+												</v-list-item-action>
+											</template>
+											<span>{{ a.title }}</span>
+										</v-list-item>
+									</div>
+									<div class="filter-section">
+										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-lock</v-icon>{{ $t('filter_locked') }}</v-list-subheader>
+										<v-list-item v-for="l in lockedFilterItems" :key="l.value" density="compact" @click="filterLocked = l.value; saveFilters()">
+											<template #prepend>
+												<v-list-item-action start>
+													<v-radio :model-value="filterLocked" :value="l.value" density="compact" hide-details @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
+												</v-list-item-action>
+											</template>
+											<span>{{ l.title }}</span>
+										</v-list-item>
+									</div>
+									<div v-if="isBugCategory || isSuggestionCategory" class="filter-section">
+										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-flag</v-icon>{{ $t('filter_priority') }}</v-list-subheader>
+										<v-list-item density="compact" @click="filterPriority = []; saveFilters()">
+											<template #prepend>
+												<v-list-item-action start>
+													<v-checkbox :model-value="filterPriority.length === 0" density="compact" hide-details @click.stop @update:model-value="filterPriority = []; saveFilters()" />
+												</v-list-item-action>
+											</template>
+											<span>{{ $t('filter_all') }}</span>
+										</v-list-item>
+										<v-list-item v-for="p in priorityFilterItems" :key="p.value" density="compact" @click="togglePriorityFilter(p.value)">
+											<template #prepend>
+												<v-list-item-action start>
+													<v-checkbox :model-value="filterPriority.includes(p.value)" density="compact" hide-details @click.stop @update:model-value="togglePriorityFilter(p.value)" />
+												</v-list-item-action>
+											</template>
+											<v-icon v-if="p.icon" size="small" :class="p.iconClass" class="filter-item-icon">{{ p.icon }}</v-icon>
+											<span>{{ p.title }}</span>
+										</v-list-item>
+									</div>
+								</div>
+								<template v-if="activeFilterCount">
+									<v-divider class="my-1" />
+									<v-list-item density="compact" @click="clearFilters">
+										<template #prepend>
+											<v-icon size="small">mdi-close</v-icon>
+										</template>
+										<span>{{ $t('clear_filters') }}</span>
+									</v-list-item>
 								</template>
-								<v-divider v-if="activeFilterCount" class="my-1" />
-								<v-list-item v-if="activeFilterCount" density="compact" @click="clearFilters">
-									<template #prepend>
-										<v-icon size="small">mdi-close</v-icon>
-									</template>
-									<span>{{ $t('clear_filters') }}</span>
-								</v-list-item>
 							</v-list>
 						</v-menu>
 						<v-select v-model="order" :items="orderItems" item-value="value" item-title="title" hide-details density="compact" variant="solo" class="order-select">
@@ -1058,6 +1066,18 @@ body.dark .topic .seen img.seen {
 	:deep(.v-divider) {
 		margin: 2px 0;
 	}
+}
+// Menu de filtres sur 2 colonnes (desktop) : garde tous les filtres visibles
+// sans scroll, et réduit la hauteur du menu pour qu'elle ne frôle plus le bord
+// du viewport (cause du tremblement de repositionnement Vuetify, cf #11981).
+.filter-columns.two-columns {
+	column-count: 2;
+	column-gap: 12px;
+	width: 420px;
+	max-width: 90vw;
+}
+.filter-section {
+	break-inside: avoid;
 }
 .filter-icon {
 	margin-right: 4px;
