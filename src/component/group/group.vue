@@ -11,6 +11,20 @@
 				</div>
 			</div> -->
 		</div>
+
+		<div v-if="group && group.demo" class="demo-banner">
+			<div class="demo-banner-text">
+				<v-icon>mdi-flask-outline</v-icon>
+				<div>
+					<b>{{ $t('demo_banner_title') }}</b>
+					<div class="demo-banner-sub">{{ $t('demo_banner_sub') }}</div>
+				</div>
+			</div>
+			<router-link to="/groups">
+				<v-btn color="primary"><v-icon>mdi-star-outline</v-icon>&nbsp;{{ $t('demo_upgrade') }}</v-btn>
+			</router-link>
+		</div>
+
 		<panel class="first">
 			<loader v-if="!group" />
 			<div v-else>
@@ -1040,6 +1054,32 @@
 
 
 <style lang="scss" scoped>
+.demo-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 15px;
+	flex-wrap: wrap;
+	background: var(--background);
+	border: 1px solid var(--primary);
+	border-left: 4px solid var(--primary);
+	border-radius: 4px;
+	padding: 12px 18px;
+	margin-bottom: 10px;
+	.demo-banner-text {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		.v-icon {
+			font-size: 30px;
+			color: var(--primary);
+		}
+	}
+	.demo-banner-sub {
+		font-size: 13px;
+		color: var(--text-color-secondary);
+	}
+}
 h4 {
 	margin-bottom: 10px;
 }

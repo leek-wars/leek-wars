@@ -48,5 +48,9 @@
 	"question3": "Können die Teilnehmer in Teams eingeteilt werden?",
 	"answer3": "Dies ist nicht zwingend erforderlich, aber es ist möglich, Teams zu erstellen und die Teilnehmer in diese einzuteilen. Der Gruppenbetreuer kann dann Teamturniere starten.",
 	"testimony_esiea": "Mithilfe der Plattform Leek Wars organisieren wir seit zwei Jahren mehrtägige Algorithmus- und Programmierherausforderungen für unsere Schülerinnen und Schüler. Das ist besonders spielerisch und engagiert und jedes Mal ein großer Erfolg, bei dem wir sehen, wie sie sich begeistern und gleichzeitig ihre Fähigkeiten entwickeln. Um nichts zu verderben, ist es für die Lehrkraft besonders leicht umzusetzen. Und schließlich ermöglicht die Mechanik des Spiels selbst eine Progression in der Handhabung der Funktionen, die die Teilnehmer dazu bringt,... die Dokumentation lesen zu gehen, und das funktioniert! Durch den Wechsel zwischen Einzel- und Teamphasen werden unsere Schülerinnen und Schüler dazu angeregt, sich gegenseitig zu helfen, ohne ihre Codes preiszugeben, was ebenfalls den Zusammenhalt und den Wissensaustausch stärkt; eine perfekte Plattform für unseren Zweck.",
-	"testimony_xplor": "Wir haben Leek Wars für einen Teambuilding-Tag unter Entwicklern ausgewählt, und es war ein voller Erfolg! Pierre hat uns sehr dabei unterstützt, das Projekt zu gestalten und am Tag selbst umzusetzen. Die Entwickler haben das sehr unterhaltsame Erlebnis mehr als genossen und sind bereit, ihren Lauch langfristig weiterzuentwickeln!"
+	"testimony_xplor": "Wir haben Leek Wars für einen Teambuilding-Tag unter Entwicklern ausgewählt, und es war ein voller Erfolg! Pierre hat uns sehr dabei unterstützt, das Projekt zu gestalten und am Tag selbst umzusetzen. Die Entwickler haben das sehr unterhaltsame Erlebnis mehr als genossen und sind bereit, ihren Lauch langfristig weiterzuentwickeln!",
+	"try_demo": "Demo kostenlos testen",
+	"access_my_demo": "Zu meiner Gruppe",
+	"demo_cta_sub": "Erstelle mit einem Klick eine private Gruppe, schon voller kampfbereiter Bots.",
+	"demo_error": "Die Demo-Gruppe konnte nicht erstellt werden."
 }

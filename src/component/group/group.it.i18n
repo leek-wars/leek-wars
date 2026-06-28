@@ -47,5 +47,9 @@
 	"give_item": "Dare un oggetto",
 	"confirm_give_item": "Confermate la donazione di questo oggetto al membro {member}?",
 	"give_money": "Dare soldi a {member}",
-	"everybody": "tutti"
+	"everybody": "tutti",
+	"demo_banner_title": "Gruppo demo",
+	"demo_banner_sub": "Invitare partecipanti reali e farli giocare richiede un'offerta a pagamento.",
+	"demo_upgrade": "Scopri l'offerta",
+	"demo_upgrade_required": "Questa funzionalità è riservata alle offerte di gruppo privato a pagamento."
 }

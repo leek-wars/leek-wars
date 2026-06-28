@@ -47,5 +47,9 @@
 	"give_item": "아이템 제공",
 	"confirm_give_item": "회원 {member}에게 이 항목의 기부를 확인하시겠습니까?",
 	"give_money": "{member}에게 송금",
-	"everybody": "모두"
+	"everybody": "모두",
+	"demo_banner_title": "데모 그룹",
+	"demo_banner_sub": "실제 참가자를 초대하고 플레이하게 하려면 유료 제안이 필요합니다.",
+	"demo_upgrade": "제안 보기",
+	"demo_upgrade_required": "이 기능은 유료 비공개 그룹 제안 전용입니다."
 }

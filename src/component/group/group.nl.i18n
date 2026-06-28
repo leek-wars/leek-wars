@@ -47,5 +47,9 @@
 	"give_item": "Geef een item",
 	"confirm_give_item": "Bevestig de donatie van dit item aan lid {member} ?",
 	"give_money": "Geef geld aan {member}",
-	"everybody": "iedereen"
+	"everybody": "iedereen",
+	"demo_banner_title": "Demogroep",
+	"demo_banner_sub": "Echte deelnemers uitnodigen en ze laten spelen vereist een betaald aanbod.",
+	"demo_upgrade": "Ontdek het aanbod",
+	"demo_upgrade_required": "Deze functie is voorbehouden aan betaalde aanbiedingen voor privégroepen."
 }

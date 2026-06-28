@@ -47,5 +47,9 @@
 	"give_item": "Give an item",
 	"confirm_give_item": "Confirm the donation of this item to member {member}?",
 	"give_money": "Give money to {member}",
-	"everybody": "everybody"
+	"everybody": "everybody",
+	"demo_banner_title": "Demo group",
+	"demo_banner_sub": "Inviting real participants and letting them play requires a paid offer.",
+	"demo_upgrade": "Discover the offer",
+	"demo_upgrade_required": "This feature is reserved for paid private group offers."
 }

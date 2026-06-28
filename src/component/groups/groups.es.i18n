@@ -48,5 +48,9 @@
 	"question3": "¿Se puede dividir a los participantes en equipos?",
 	"answer3": "Esto no es obligatorio, pero es posible crear equipos y asignarles participantes. A continuación, el supervisor del grupo puede lanzar torneos por equipos.",
 	"testimony_esiea": "Gracias a la plataforma Leek Wars, desde hace 2 años organizamos retos algorítmicos y de programación durante varios días para nuestros alumnos. Particularmente divertido y atractivo, cada vez es un gran éxito y vemos cómo se entusiasman mientras desarrollan sus habilidades. Por si fuera poco, es especialmente fácil de preparar para los profesores. Por último, pero no por ello menos importante, la mecánica del propio juego permite a los participantes progresar a través de las funcionalidades, animándoles a... leer la documentación, ¡y funciona! Al alternar fases individuales y por equipos, se anima a nuestros alumnos a ayudarse mutuamente sin revelarse sus códigos, lo que también refuerza la cohesión y el intercambio de conocimientos; una plataforma perfecta para nuestro uso.",
-	"testimony_xplor": "Elegimos Leek Wars para una jornada de teambuilding entre desarrolladores y fue todo un éxito! Pierre nos acompañó en gran medida en la elaboración de este proyecto y su concreción el día mismo. Los desarrolladores disfrutaron muchísimo de la experiencia muy divertida y están listos para seguir desarrollando su puerro a largo plazo!"
+	"testimony_xplor": "Elegimos Leek Wars para una jornada de teambuilding entre desarrolladores y fue todo un éxito! Pierre nos acompañó en gran medida en la elaboración de este proyecto y su concreción el día mismo. Los desarrolladores disfrutaron muchísimo de la experiencia muy divertida y están listos para seguir desarrollando su puerro a largo plazo!",
+	"try_demo": "Prueba la demo gratis",
+	"access_my_demo": "Ir a mi grupo",
+	"demo_cta_sub": "Crea un grupo privado con un clic, ya lleno de bots listos para combatir.",
+	"demo_error": "No se pudo crear el grupo de demostración."
 }

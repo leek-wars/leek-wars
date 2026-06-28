@@ -47,5 +47,9 @@
 	"give_item": "Ein Item abgeben",
 	"confirm_give_item": "Bestätigen Sie die Spende dieses Items an das Mitglied {member}?",
 	"give_money": "Geld an {member} spenden",
-	"everybody": "alle"
+	"everybody": "alle",
+	"demo_banner_title": "Demo-Gruppe",
+	"demo_banner_sub": "Echte Teilnehmer einzuladen und sie spielen zu lassen, erfordert ein kostenpflichtiges Angebot.",
+	"demo_upgrade": "Angebot entdecken",
+	"demo_upgrade_required": "Diese Funktion ist den kostenpflichtigen Angeboten für private Gruppen vorbehalten."
 }

@@ -48,5 +48,9 @@
 	"question3": "Voidaanko osallistujat jakaa joukkueisiin?",
 	"answer3": "Tämä ei ole pakollista, mutta on mahdollista luoda ryhmiä ja jakaa osallistujat niihin. Ryhmän valvoja voi sitten käynnistää joukkueturnaukset.",
 	"testimony_esiea": "Leek Wars -alustan ansiosta olemme kahden viime vuoden ajan järjestäneet algoritmi- ja ohjelmointihaasteita oppilaillemme useiden päivien ajan. Se on erityisen hauskaa ja mukaansatempaavaa, ja joka kerta se on ollut suuri menestys, ja näemme oppilaiden innostuvan ja kehittävän samalla taitojaan. Kaiken kukkuraksi se on opettajille erityisen helppo järjestää. Viimeisenä mutta ei vähäisimpänä itse pelin mekaniikka antaa osallistujille mahdollisuuden edetä toiminnallisuuksien kautta, mikä kannustaa heitä... lukemaan dokumentaatiota, ja se toimii! Vuorottelemalla yksilö- ja tiimivaiheiden välillä oppilaitamme kannustetaan auttamaan toisiaan paljastamatta koodejaan toisilleen, mikä myös vahvistaa yhteenkuuluvuutta ja tiedon jakamista; täydellinen alusta meidän käyttöömme.",
-	"testimony_xplor": "Valitsimme Leek Warsin kehittäjien tiiminrakennuspäivään ja se oli suuri menestys! Pierre auttoi meitä paljon projektin muotoilussa ja toteutuksessa itse päivänä. Kehittäjät nauttivat erittäin hauskasta kokemuksesta enemmän kuin paljon ja ovat valmiita jatkamaan purjonsa kehittämistä pitkällä aikavälillä!"
+	"testimony_xplor": "Valitsimme Leek Warsin kehittäjien tiiminrakennuspäivään ja se oli suuri menestys! Pierre auttoi meitä paljon projektin muotoilussa ja toteutuksessa itse päivänä. Kehittäjät nauttivat erittäin hauskasta kokemuksesta enemmän kuin paljon ja ovat valmiita jatkamaan purjonsa kehittämistä pitkällä aikavälillä!",
+	"try_demo": "Kokeile demoa ilmaiseksi",
+	"access_my_demo": "Siirry ryhmääni",
+	"demo_cta_sub": "Luo yksityinen ryhmä yhdellä klikkauksella, valmiina taisteluun olevien bottien kanssa.",
+	"demo_error": "Demoryhmää ei voitu luoda."
 }

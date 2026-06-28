@@ -47,5 +47,9 @@
 	"give_item": "赠送物品",
 	"confirm_give_item": "确认将此物品捐赠给会员 {member} ?",
 	"give_money": "给{member}钱",
-	"everybody": "每个人"
+	"everybody": "每个人",
+	"demo_banner_title": "演示群组",
+	"demo_banner_sub": "邀请真实参与者并让他们游戏需要付费方案。",
+	"demo_upgrade": "了解方案",
+	"demo_upgrade_required": "此功能仅限付费私人群组方案使用。"
 }

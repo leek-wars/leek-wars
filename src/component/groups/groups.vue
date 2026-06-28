@@ -13,6 +13,13 @@
 				<span v-html="$t('intro2')"></span>
 			</div>
 
+			<div class="demo-cta">
+				<v-btn size="x-large" color="primary" :loading="creating" @click="tryDemo">
+					<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ myGroupId ? $t('access_my_demo') : $t('try_demo') }}
+				</v-btn>
+				<div class="demo-cta-sub">{{ $t('demo_cta_sub') }}</div>
+			</div>
+
 			<div class="targets">
 				<div class="target card">
 					<div class="image">
@@ -215,19 +222,46 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
+import { useRouter } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
 
 defineOptions({ name: 'Groups', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('groups')
+const router = useRouter()
+
+const creating = ref(false)
+// Groupe du farmer connecté (superviseur ou membre), s'il en a un
+const myGroupId = computed(() => store.state.farmer?.group?.id ?? null)
 
 const breadcrumb_items = computed(() => [
 	{ name: 'Leek Wars', link: '/' },
 	{ name: t('title'), link: '/groups' },
 ])
+
+// CTA tri-état : non connecté -> inscription ; déjà un groupe -> on y va ;
+// sinon -> création autonome d'un groupe de démo (#3341).
+function tryDemo() {
+	if (!store.state.connected) {
+		router.push('/')
+		return
+	}
+	if (myGroupId.value) {
+		router.push('/group/' + myGroupId.value)
+		return
+	}
+	creating.value = true
+	LeekWars.post('groupe/create-demo').then(data => {
+		router.push('/group/' + data.id)
+	}).error(() => {
+		creating.value = false
+		LeekWars.toast(t('demo_error'))
+	})
+}
 
 onBeforeMount(() => LeekWars.setTitle(t('title')))
 </script>
@@ -243,6 +277,20 @@ onBeforeMount(() => LeekWars.setTitle(t('title')))
 .intro {
 	font-size: 16px;
 	line-height: 1.5;
+}
+.demo-cta {
+	text-align: center;
+	margin: 25px 0 10px;
+	.v-btn {
+		font-size: 18px;
+		height: 52px;
+		padding: 0 28px;
+	}
+	.demo-cta-sub {
+		margin-top: 8px;
+		font-size: 13px;
+		color: var(--text-color-secondary);
+	}
 }
 h2 {
 	font-weight: 500;

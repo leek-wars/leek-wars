@@ -48,5 +48,9 @@
 	"question3": "Kunnen de deelnemers in teams worden verdeeld?",
 	"answer3": "Dit is niet verplicht, maar het is mogelijk om teams aan te maken en er deelnemers aan toe te wijzen. De groepsbegeleider kan dan teamtoernooien starten.",
 	"testimony_esiea": "Dankzij het Leek Wars platform hebben we de afgelopen 2 jaar algoritmische en programmeeruitdagingen georganiseerd voor onze leerlingen. Bijzonder leuk en boeiend, elke keer weer een groot succes en we zien ze enthousiast worden terwijl ze hun vaardigheden ontwikkelen. Tot overmaat van ramp is het voor leerkrachten bijzonder eenvoudig om op te zetten. En last but not least, de mechanica van het spel zelf zorgt ervoor dat deelnemers de functionaliteiten kunnen doorlopen, waardoor ze worden aangemoedigd om... de documentatie te lezen, en het werkt! Door af te wisselen tussen individuele en teamfasen worden onze studenten aangemoedigd om elkaar te helpen zonder hun codes aan elkaar prijs te geven, wat ook de cohesie en het delen van kennis versterkt; een perfect platform voor ons gebruik.",
-	"testimony_xplor": "We hebben Leek Wars uitgekozen voor een teambuilding-dag onder ontwikkelaars en het was een groot succes! Pierre heeft ons enorm geholpen bij het vormgeven en realiseren van dit project op de dag zelf. De ontwikkelaars hebben enorm genoten van de zeer leuke ervaring en zijn klaar om hun prei op de lange termijn verder te ontwikkelen!"
+	"testimony_xplor": "We hebben Leek Wars uitgekozen voor een teambuilding-dag onder ontwikkelaars en het was een groot succes! Pierre heeft ons enorm geholpen bij het vormgeven en realiseren van dit project op de dag zelf. De ontwikkelaars hebben enorm genoten van de zeer leuke ervaring en zijn klaar om hun prei op de lange termijn verder te ontwikkelen!",
+	"try_demo": "Probeer de demo gratis",
+	"access_my_demo": "Naar mijn groep",
+	"demo_cta_sub": "Maak met één klik een privégroep, al gevuld met bots die klaar zijn om te vechten.",
+	"demo_error": "De demogroep kon niet worden aangemaakt."
 }

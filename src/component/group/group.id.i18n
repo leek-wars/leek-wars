@@ -47,5 +47,9 @@
 	"give_item": "Berikan item",
 	"confirm_give_item": "Konfirmasikan donasi item ini kepada anggota {member} ?",
 	"give_money": "Berikan uang kepada {member}",
-	"everybody": "semua orang"
+	"everybody": "semua orang",
+	"demo_banner_title": "Grup demo",
+	"demo_banner_sub": "Mengundang peserta nyata dan membiarkan mereka bermain memerlukan penawaran berbayar.",
+	"demo_upgrade": "Lihat penawaran",
+	"demo_upgrade_required": "Fitur ini hanya tersedia untuk penawaran grup pribadi berbayar."
 }

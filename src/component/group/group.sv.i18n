@@ -47,5 +47,9 @@
 	"give_item": "Ge ett objekt",
 	"confirm_give_item": "Bekräfta donationen av denna artikel till medlem {member} ?",
 	"give_money": "Ge pengar till {member}",
-	"everybody": "alla"
+	"everybody": "alla",
+	"demo_banner_title": "Demogrupp",
+	"demo_banner_sub": "Att bjuda in riktiga deltagare och låta dem spela kräver ett betalt erbjudande.",
+	"demo_upgrade": "Upptäck erbjudandet",
+	"demo_upgrade_required": "Den här funktionen är reserverad för betalda erbjudanden för privata grupper."
 }

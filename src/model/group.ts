@@ -30,6 +30,7 @@ class Group {
 	public use_passwords!: boolean
 	public fights!: Fight[]
 	public is_supervisor!: boolean
+	public demo!: boolean
 	public tournament!: number | null
 	public tournaments!: Tournament[]
 	[key: string]: unknown

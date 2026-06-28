@@ -48,5 +48,9 @@
 	"question3": "Czy uczestnicy mogą zostać podzieleni na zespoły?",
 	"answer3": "Nie jest to obowiązkowe, ale możliwe jest tworzenie zespołów i przydzielanie do nich uczestników. Opiekun grupy może następnie uruchomić turnieje drużynowe.",
 	"testimony_esiea": "Dzięki platformie Leek Wars od 2 lat organizujemy kilkudniowe wyzwania algorytmiczne i programistyczne dla naszych uczniów. Szczególnie zabawne i angażujące, za każdym razem są wielkim sukcesem i widzimy, jak są podekscytowani, rozwijając swoje umiejętności. Co gorsza, jest to szczególnie łatwe do skonfigurowania dla nauczycieli. Wreszcie, co nie mniej ważne, mechanika samej gry pozwala uczestnikom przechodzić przez kolejne funkcje, zachęcając ich do... czytania dokumentacji, i to działa! Dzięki naprzemiennym fazom indywidualnym i zespołowym nasi uczniowie są zachęcani do wzajemnej pomocy bez ujawniania sobie nawzajem swoich kodów, co również wzmacnia spójność i dzielenie się wiedzą; idealna platforma do naszego użytku.",
-	"testimony_xplor": "Wybraliśmy Leek Wars na dzień teambuildingu wśród deweloperów i był to ogromny sukces! Pierre bardzo nam pomógł w kształtowaniu tego projektu i jego realizacji w samym dniu. Deweloperzy więcej niż docenili bardzo zabawne doświadczenie i są gotowi nadal rozwijać swoje pory w dłuższej perspektywie!"
+	"testimony_xplor": "Wybraliśmy Leek Wars na dzień teambuildingu wśród deweloperów i był to ogromny sukces! Pierre bardzo nam pomógł w kształtowaniu tego projektu i jego realizacji w samym dniu. Deweloperzy więcej niż docenili bardzo zabawne doświadczenie i są gotowi nadal rozwijać swoje pory w dłuższej perspektywie!",
+	"try_demo": "Wypróbuj demo za darmo",
+	"access_my_demo": "Przejdź do mojej grupy",
+	"demo_cta_sub": "Utwórz prywatną grupę jednym kliknięciem, już wypełnioną botami gotowymi do walki.",
+	"demo_error": "Nie udało się utworzyć grupy demonstracyjnej."
 }

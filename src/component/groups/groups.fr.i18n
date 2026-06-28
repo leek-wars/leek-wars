@@ -48,5 +48,9 @@
 	"question2": "Peut-on paramétrer le niveau et l'équipement des participants ?",
 	"answer2": "Oui, il est possible d'assigner un niveau et un équipement aux participants et éventuellement de le bloquer pour qu'il reste identique durant l'événement. Il est possible de changer ce niveau et cet équipement imposé à n'importe quel moment de l'événement.",
 	"question3": "Peut-on répartir les participants dans des équipes ?",
-	"answer3": "Ce n'est pas obligatoire mais il est possible de créer des équipes et répartir les participants dans celles-ci. Le superviseur du groupe peut ensuite lancer des tournois d'équipe."
+	"answer3": "Ce n'est pas obligatoire mais il est possible de créer des équipes et répartir les participants dans celles-ci. Le superviseur du groupe peut ensuite lancer des tournois d'équipe.",
+	"try_demo": "Essayer la démo gratuitement",
+	"access_my_demo": "Accéder à mon groupe",
+	"demo_cta_sub": "Créez un groupe privé en un clic, déjà rempli de bots prêts à combattre.",
+	"demo_error": "Impossible de créer le groupe de démo."
 }

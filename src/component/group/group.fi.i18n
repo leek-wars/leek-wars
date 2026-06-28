@@ -47,5 +47,9 @@
 	"give_item": "Anna esine",
 	"confirm_give_item": "Vahvista tämän esineen lahjoittaminen jäsenelle {member} ?",
 	"give_money": "Anna rahaa {member}",
-	"everybody": "kaikki"
+	"everybody": "kaikki",
+	"demo_banner_title": "Demoryhmä",
+	"demo_banner_sub": "Oikeiden osallistujien kutsuminen ja pelaaminen vaatii maksullisen tarjouksen.",
+	"demo_upgrade": "Tutustu tarjoukseen",
+	"demo_upgrade_required": "Tämä ominaisuus on varattu maksullisille yksityisryhmätarjouksille."
 }

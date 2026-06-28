@@ -47,5 +47,9 @@
 	"give_item": "Gi en gjenstand",
 	"confirm_give_item": "Bekreft donasjonen av denne gjenstanden til medlem {member} ?",
 	"give_money": "Gi penger til {member}",
-	"everybody": "alle"
+	"everybody": "alle",
+	"demo_banner_title": "Demogruppe",
+	"demo_banner_sub": "Å invitere ekte deltakere og la dem spille krever et betalt tilbud.",
+	"demo_upgrade": "Oppdag tilbudet",
+	"demo_upgrade_required": "Denne funksjonen er forbeholdt betalte tilbud for private grupper."
 }
