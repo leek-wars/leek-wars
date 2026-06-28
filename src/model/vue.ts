@@ -41,7 +41,7 @@ const Console = defineAsyncComponent(() => import('@/component/app/console.vue')
 
 const cspNonce = (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined
 
-// Vuetify ne fournit pas de messages pour 'hi' (→ fallback 'en') et nomme le chinois 'zhHans'.
+// Vuetify nomme le chinois 'zhHans'.
 const toVuetifyLocale = (lang: string) => lang === 'zh' ? 'zhHans' : lang
 
 const vuetify = createVuetify({

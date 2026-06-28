@@ -1,9 +1,0 @@
-{
-	"buy_fights": "{market} में Habs {hab} या क्रिस्टल {crystal} में अभी लड़ाइयाँ खरीदें।",
-	"buy_50_fights": "50 फाइट खरीदें",
-	"buy_100_fights": "100 फाइट खरीदें",
-	"fights_bought": "{0} फाइट खरीदी गईं!",
-	"next_fight_in": "{fights} नई लड़ाई {time} में",
-	"no_more_fights": "अधिक लड़ाइयाँ!",
-	"already_bought": "पहले से खरीदा गया"
-}
