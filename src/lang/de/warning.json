@@ -3,7 +3,7 @@
 	"censor_farmer": "Posts von {farmer} zum Zensieren auswählen:",
 	"confirm_mute": "Stumm",
 	"delete": "LÖSCHEN",
-	"delete_farmer": "Wählen Sie die zu löschenden Nachrichten aus:",
+	"delete_farmer": "Wähle die zu löschenden Nachrichten aus:",
 	"given_by_x_the_d": "Gegeben von {farmer} am {date}",
 	"mute": "Stumm",
 	"mute_popup": "Bist du sicher, dass du {farmer} für 1 Stunde stummschalten möchtest?",
@@ -13,7 +13,7 @@
 	"reason_101": "Angriff auf Leek Wars",
 	"reason_102": "Ausnutzung eines Fehlers",
 	"reason_103": "Verwenden eines Skripts oder eines Bots",
-	"reason_11": "Betrogen",
+	"reason_11": "Betrug",
 	"reason_12": "Flut im Forum",
 	"reason_12_action": "Forenbeitrag wird gelöscht",
 	"reason_13": "Flut im Chat",
@@ -49,9 +49,9 @@
 	"report": "Bericht",
 	"report_farmer_for_reason": "{0} aus welchem Grund melden?",
 	"report_informations": "Zusätzliche Informationen (optional)",
-	"select_leek": "Wählen Sie einen Lauch aus",
+	"select_leek": "Wähle einen Lauch aus",
 	"severity_s": "Schweregrad {0}",
 	"thank_you_for_reporting": "Danke für die Meldung",
-	"unmute": "Geben Sie das Wort",
-	"unmute_popup": "Möchten Sie den Boden wirklich an {farmer} zurückgeben?"
+	"unmute": "Stummschaltung aufheben",
+	"unmute_popup": "Möchtest du die Stummschaltung von {farmer} wirklich aufheben?"
 }
