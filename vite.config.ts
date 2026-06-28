@@ -52,7 +52,7 @@ function compileJsonFile(filePath: string): string {
 const stripQuery = (id: string) => id.split('?')[0]
 
 // List of supported languages
-const languages = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl', 'ru', 'ja', 'ko', 'zh', 'hi', 'id', 'da', 'fi', 'no', 'sv']
+const languages = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl', 'ru', 'ja', 'ko', 'zh', 'id', 'da', 'fi', 'no', 'sv']
 
 // Collect CSS files that are needed for the initial render (entry chunks + static deps).
 // CSS from lazy-loaded routes will be injected by Vite's __vite_preload at import time.
