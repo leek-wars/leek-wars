@@ -44,5 +44,13 @@
 	"unsubscribe": "unsubscribe",
 	"unsubscribe_message": "You have been unsubscribed from the email list <b>{0}</b>.",
 	"unsubscribe_sentence": "If you no longer wish to receive emails from the list <b>{0}</b> ({1}), you can {2}.",
-	"unsubscribed": "Unsubscribed"
+	"unsubscribed": "Unsubscribed",
+	"demo_relance1_subject": "Your Leek Wars demo group 🌱",
+	"demo_relance1_button": "Back to my group",
+	"demo_relance1_html": "Hi <b>%1$s</b>, I saw you created a demo group on Leek Wars.<br/><br/>Did you get to launch a tournament with the leeks? If you'd like to run a real event (a class, a team building, a tournament) with your own participants, I can help you set it up.<br/><br/>%2$s<br/><br/>You can also just reply to this email.<br/>— Pierre, creator of Leek Wars",
+	"demo_relance1_text": "Hi %1$s, you created a demo group on Leek Wars. To run a real event with your participants, I can help. Back to your group: %2$s — or just reply to this email. — Pierre, creator of Leek Wars",
+	"demo_relance2_subject": "-10% to launch your Leek Wars group 🌱",
+	"demo_relance2_button": "See the offer",
+	"demo_relance2_html": "Hi <b>%1$s</b>, did you enjoy your private group demo?<br/><br/>To move to a real group (participants who play, invitations, tournaments up to 64 players, support), here's <b>-10%%</b> with the code <b>%3$s</b>, valid for one week.<br/><br/>%2$s<br/><br/>Reply to this email or write to contact@leekwars.com.<br/>— Pierre, creator of Leek Wars",
+	"demo_relance2_text": "Hi %1$s, to turn your demo into a real private group, here's -10%% with the code %3$s (valid one week). The offer: %2$s — or reply to this email. — Pierre, creator of Leek Wars"
 }

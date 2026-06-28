@@ -44,5 +44,13 @@
 	"unsubscribe": "berhenti berlangganan",
 	"unsubscribe_message": "Anda telah berhasil berhenti berlangganan dari daftar email <b>{0}</b>.",
 	"unsubscribe_sentence": "Jika Anda tidak lagi ingin menerima email dari daftar <b>{0}</b> ({1}), Anda dapat {2}.",
-	"unsubscribed": "Tidak berlangganan"
+	"unsubscribed": "Tidak berlangganan",
+	"demo_relance1_subject": "Grup demo Leek Wars kamu 🌱",
+	"demo_relance1_button": "Kembali ke grup saya",
+	"demo_relance1_html": "Hai <b>%1$s</b>, aku lihat kamu membuat grup demo di Leek Wars.<br/><br/>Sudah sempat memulai turnamen dengan para leek? Kalau kamu mau mengadakan acara sungguhan (kelas, team building, turnamen) dengan peserta sendiri, aku bisa bantu menyiapkannya.<br/><br/>%2$s<br/><br/>Kamu juga bisa langsung membalas email ini.<br/>— Pierre, pembuat Leek Wars",
+	"demo_relance1_text": "Hai %1$s, kamu membuat grup demo di Leek Wars. Untuk mengadakan acara sungguhan dengan pesertamu, aku bisa bantu. Kembali ke grupmu: %2$s — atau balas email ini. — Pierre, pembuat Leek Wars",
+	"demo_relance2_subject": "-10% untuk meluncurkan grup Leek Wars kamu 🌱",
+	"demo_relance2_button": "Lihat penawaran",
+	"demo_relance2_html": "Hai <b>%1$s</b>, suka dengan demo grup pribadinya?<br/><br/>Untuk beralih ke grup sungguhan (peserta yang bermain, undangan, turnamen hingga 64 pemain, dukungan), aku beri <b>-10%%</b> dengan kode <b>%3$s</b>, berlaku satu minggu.<br/><br/>%2$s<br/><br/>Balas email ini atau tulis ke contact@leekwars.com.<br/>— Pierre, pembuat Leek Wars",
+	"demo_relance2_text": "Hai %1$s, untuk mengubah demomu jadi grup pribadi sungguhan, aku beri -10%% dengan kode %3$s (berlaku satu minggu). Penawarannya: %2$s — atau balas email ini. — Pierre, pembuat Leek Wars"
 }

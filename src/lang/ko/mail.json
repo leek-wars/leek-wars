@@ -44,5 +44,13 @@
 	"unsubscribe": "구독 취소",
 	"unsubscribe_message": "<b>{0}</b> 이메일 목록에서 구독이 취소되었습니다.",
 	"unsubscribe_sentence": "더 이상 <b>{0}</b> 목록의 이메일을 받지 않으려면 {2}할 수 있습니다 ({1}).",
-	"unsubscribed": "구독 취소됨"
+	"unsubscribed": "구독 취소됨",
+	"demo_relance1_subject": "당신의 Leek Wars 데모 그룹 🌱",
+	"demo_relance1_button": "내 그룹으로 돌아가기",
+	"demo_relance1_html": "안녕하세요 <b>%1$s</b>님, Leek Wars에서 데모 그룹을 만드신 걸 봤어요.<br/><br/>리크들로 토너먼트를 열어보셨나요? 직접 참가자들과 진짜 행사(수업, 팀빌딩, 토너먼트)를 열고 싶으시면 설정을 도와드릴게요.<br/><br/>%2$s<br/><br/>이 메일에 그냥 답장하셔도 됩니다.<br/>— Pierre, Leek Wars 제작자",
+	"demo_relance1_text": "안녕하세요 %1$s님, Leek Wars에서 데모 그룹을 만드셨네요. 참가자들과 진짜 행사를 여는 걸 도와드릴게요. 그룹으로 돌아가기: %2$s — 또는 이 메일에 답장하세요. — Pierre, Leek Wars 제작자",
+	"demo_relance2_subject": "Leek Wars 그룹 시작에 -10% 🌱",
+	"demo_relance2_button": "제안 보기",
+	"demo_relance2_html": "안녕하세요 <b>%1$s</b>님, 비공개 그룹 데모는 마음에 드셨나요?<br/><br/>진짜 그룹(직접 플레이하는 참가자, 초대, 최대 64명 토너먼트, 지원)으로 전환하시면 코드 <b>%3$s</b>로 <b>-10%%</b>, 일주일간 유효합니다.<br/><br/>%2$s<br/><br/>이 메일에 답장하시거나 contact@leekwars.com으로 연락하세요.<br/>— Pierre, Leek Wars 제작자",
+	"demo_relance2_text": "안녕하세요 %1$s님, 데모를 진짜 비공개 그룹으로 바꾸시면 코드 %3$s로 -10%% (일주일 유효). 제안: %2$s — 또는 이 메일에 답장하세요. — Pierre, Leek Wars 제작자"
 }

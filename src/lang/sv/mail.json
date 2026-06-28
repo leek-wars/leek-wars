@@ -44,5 +44,13 @@
 	"unsubscribe": "säga upp",
 	"unsubscribe_message": "Du har avslutats från e-postlistan <b>{0}</b>.",
 	"unsubscribe_sentence": "Om du inte längre vill ta emot e-postmeddelanden från listan <b>{0}</b> ({1}), kan du {2}.",
-	"unsubscribed": "Avslutad prenumeration"
+	"unsubscribed": "Avslutad prenumeration",
+	"demo_relance1_subject": "Din Leek Wars-demogrupp 🌱",
+	"demo_relance1_button": "Tillbaka till min grupp",
+	"demo_relance1_html": "Hej <b>%1$s</b>, jag såg att du skapade en demogrupp på Leek Wars.<br/><br/>Hann du starta en turnering med purjolökarna? Om du vill ordna ett riktigt evenemang (en lektion, en teambuilding, en turnering) med dina egna deltagare hjälper jag dig gärna att sätta upp det.<br/><br/>%2$s<br/><br/>Du kan också bara svara på det här mejlet.<br/>— Pierre, skaparen av Leek Wars",
+	"demo_relance1_text": "Hej %1$s, du skapade en demogrupp på Leek Wars. För att ordna ett riktigt evenemang med dina deltagare hjälper jag gärna. Tillbaka till din grupp: %2$s — eller svara på det här mejlet. — Pierre, skaparen av Leek Wars",
+	"demo_relance2_subject": "-10% för att lansera din Leek Wars-grupp 🌱",
+	"demo_relance2_button": "Se erbjudandet",
+	"demo_relance2_html": "Hej <b>%1$s</b>, gillade du demon av den privata gruppen?<br/><br/>För att byta till en riktig grupp (deltagare som spelar, inbjudningar, turneringar upp till 64 spelare, support) ger jag dig <b>-10%%</b> med koden <b>%3$s</b>, giltig en vecka.<br/><br/>%2$s<br/><br/>Svara på det här mejlet eller skriv till contact@leekwars.com.<br/>— Pierre, skaparen av Leek Wars",
+	"demo_relance2_text": "Hej %1$s, för att göra din demo till en riktig privat grupp ger jag dig -10%% med koden %3$s (giltig en vecka). Erbjudandet: %2$s — eller svara på det här mejlet. — Pierre, skaparen av Leek Wars"
 }

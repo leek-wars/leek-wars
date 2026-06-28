@@ -44,5 +44,13 @@
 	"unsubscribe": "lopeta tilaus",
 	"unsubscribe_message": "Sinut on peruutettu onnistuneesti sähköpostilistalta <b>{0}</b>.",
 	"unsubscribe_sentence": "Jos et enää halua vastaanottaa sähköpostiviestejä luettelosta <b>{0}</b> ({1}), voit {2}.",
-	"unsubscribed": "Tilaus peruutettu"
+	"unsubscribed": "Tilaus peruutettu",
+	"demo_relance1_subject": "Leek Wars -demoryhmäsi 🌱",
+	"demo_relance1_button": "Takaisin ryhmääni",
+	"demo_relance1_html": "Hei <b>%1$s</b>, huomasin, että loit demoryhmän Leek Warsissa.<br/><br/>Ehditkö käynnistää turnauksen purjojen kanssa? Jos haluat järjestää oikean tapahtuman (oppitunnin, tiiminrakennuksen, turnauksen) omilla osallistujillasi, autan mielelläni sen pystyttämisessä.<br/><br/>%2$s<br/><br/>Voit myös vain vastata tähän sähköpostiin.<br/>— Pierre, Leek Warsin tekijä",
+	"demo_relance1_text": "Hei %1$s, loit demoryhmän Leek Warsissa. Autan mielelläni järjestämään oikean tapahtuman osallistujillesi. Takaisin ryhmääsi: %2$s — tai vastaa tähän sähköpostiin. — Pierre, Leek Warsin tekijä",
+	"demo_relance2_subject": "-10% Leek Wars -ryhmäsi käynnistämiseen 🌱",
+	"demo_relance2_button": "Katso tarjous",
+	"demo_relance2_html": "Hei <b>%1$s</b>, piditkö yksityisryhmän demosta?<br/><br/>Siirtyäksesi oikeaan ryhmään (pelaavat osallistujat, kutsut, turnaukset jopa 64 pelaajalle, tuki) annan sinulle <b>-10%%</b> koodilla <b>%3$s</b>, voimassa viikon.<br/><br/>%2$s<br/><br/>Vastaa tähän sähköpostiin tai kirjoita osoitteeseen contact@leekwars.com.<br/>— Pierre, Leek Warsin tekijä",
+	"demo_relance2_text": "Hei %1$s, muuttaaksesi demosi oikeaksi yksityisryhmäksi annan sinulle -10%% koodilla %3$s (voimassa viikon). Tarjous: %2$s — tai vastaa tähän sähköpostiin. — Pierre, Leek Warsin tekijä"
 }

@@ -66,6 +66,13 @@ const form = ref({
 
 onBeforeMount(() => LeekWars.setTitle(t('title')))
 
+// Un lien comeback peut cibler une page via ?redirect=/chemin (mails de relance #3341).
+// On n'accepte que des chemins internes (commençant par /) pour éviter l'open-redirect.
+const redirectParam = route.query.redirect
+if (typeof redirectParam === 'string' && redirectParam.startsWith('/')) {
+	sessionStorage.setItem('redirect_after_login', redirectParam)
+}
+
 const tokenParam = route.params.token
 if (tokenParam) {
 	LeekWars.post('farmer/login-comeback', { token: tokenParam }).then(data => {

@@ -44,5 +44,13 @@
 	"unsubscribe": "退订",
 	"unsubscribe_message": "您已成功取消订阅 <b>{0}</b> 电子邮件列表。",
 	"unsubscribe_sentence": "如果您不想再接收来自列表 <b>{0}</b> ({1}) 的电子邮件，您可以{2}。",
-	"unsubscribed": "取消订阅"
+	"unsubscribed": "取消订阅",
+	"demo_relance1_subject": "你的 Leek Wars 演示群组 🌱",
+	"demo_relance1_button": "返回我的群组",
+	"demo_relance1_html": "你好 <b>%1$s</b>，我看到你在 Leek Wars 创建了一个演示群组。<br/><br/>有用韭菜们办过比赛了吗？如果你想用自己的参与者举办一场真正的活动（课程、团建、比赛），我可以帮你搭建。<br/><br/>%2$s<br/><br/>你也可以直接回复这封邮件。<br/>— Pierre，Leek Wars 作者",
+	"demo_relance1_text": "你好 %1$s，你在 Leek Wars 创建了一个演示群组。我可以帮你用参与者举办真正的活动。返回你的群组：%2$s —— 或回复这封邮件。— Pierre，Leek Wars 作者",
+	"demo_relance2_subject": "启动你的 Leek Wars 群组立减 10% 🌱",
+	"demo_relance2_button": "查看方案",
+	"demo_relance2_html": "你好 <b>%1$s</b>，喜欢这个私人群组演示吗？<br/><br/>升级到真正的群组（参与者可游玩、邀请、最多 64 人比赛、支持服务），用优惠码 <b>%3$s</b> 享 <b>-10%%</b>，一周内有效。<br/><br/>%2$s<br/><br/>回复这封邮件，或写信至 contact@leekwars.com。<br/>— Pierre，Leek Wars 作者",
+	"demo_relance2_text": "你好 %1$s，把演示升级为真正的私人群组，用优惠码 %3$s 享 -10%%（一周内有效）。方案：%2$s —— 或回复这封邮件。— Pierre，Leek Wars 作者"
 }

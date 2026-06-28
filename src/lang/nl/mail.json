@@ -44,5 +44,13 @@
 	"unsubscribe": "uitschrijven",
 	"unsubscribe_message": "Je bent succesvol afgemeld van de <b>{0}</b> e-maillijst.",
 	"unsubscribe_sentence": "Als u geen e-mails meer wilt ontvangen van lijst <b>{0}</b> ({1}), kunt u {2}.",
-	"unsubscribed": "Uitgeschreven"
+	"unsubscribed": "Uitgeschreven",
+	"demo_relance1_subject": "Jouw Leek Wars-demogroep 🌱",
+	"demo_relance1_button": "Terug naar mijn groep",
+	"demo_relance1_html": "Hoi <b>%1$s</b>, ik zag dat je een demogroep hebt aangemaakt op Leek Wars.<br/><br/>Heb je al een toernooi met de preien kunnen starten? Als je een echt evenement (een les, een teambuilding, een toernooi) met je eigen deelnemers wilt organiseren, help ik je graag bij het opzetten.<br/><br/>%2$s<br/><br/>Je kunt ook gewoon op deze e-mail antwoorden.<br/>— Pierre, maker van Leek Wars",
+	"demo_relance1_text": "Hoi %1$s, je hebt een demogroep aangemaakt op Leek Wars. Om een echt evenement met je deelnemers te organiseren, help ik je graag. Terug naar je groep: %2$s — of antwoord op deze e-mail. — Pierre, maker van Leek Wars",
+	"demo_relance2_subject": "-10% om je Leek Wars-groep te lanceren 🌱",
+	"demo_relance2_button": "Bekijk het aanbod",
+	"demo_relance2_html": "Hoi <b>%1$s</b>, vond je de demo van de privégroep leuk?<br/><br/>Om over te stappen op een echte groep (deelnemers die spelen, uitnodigingen, toernooien tot 64 spelers, support) geef ik je <b>-10%%</b> met de code <b>%3$s</b>, een week geldig.<br/><br/>%2$s<br/><br/>Antwoord op deze e-mail of schrijf naar contact@leekwars.com.<br/>— Pierre, maker van Leek Wars",
+	"demo_relance2_text": "Hoi %1$s, om je demo om te zetten in een echte privégroep geef ik je -10%% met de code %3$s (een week geldig). Het aanbod: %2$s — of antwoord op deze e-mail. — Pierre, maker van Leek Wars"
 }

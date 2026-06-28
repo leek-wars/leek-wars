@@ -44,5 +44,13 @@
 	"unsubscribe": "opsige abonnement",
 	"unsubscribe_message": "Du er blevet afmeldt fra e-maillisten <b>{0}</b>.",
 	"unsubscribe_sentence": "Hvis du ikke længere ønsker at modtage e-mails fra listen <b>{0}</b> ({1}), kan du {2}.",
-	"unsubscribed": "Afmeldt"
+	"unsubscribed": "Afmeldt",
+	"demo_relance1_subject": "Din Leek Wars-demogruppe 🌱",
+	"demo_relance1_button": "Tilbage til min gruppe",
+	"demo_relance1_html": "Hej <b>%1$s</b>, jeg så, at du har oprettet en demogruppe på Leek Wars.<br/><br/>Fik du startet en turnering med porrerne? Hvis du vil arrangere et rigtigt event (en undervisning, et teambuilding, en turnering) med dine egne deltagere, hjælper jeg dig gerne med at sætte det op.<br/><br/>%2$s<br/><br/>Du kan også bare svare på denne e-mail.<br/>— Pierre, skaberen af Leek Wars",
+	"demo_relance1_text": "Hej %1$s, du har oprettet en demogruppe på Leek Wars. For at arrangere et rigtigt event med dine deltagere hjælper jeg gerne. Tilbage til din gruppe: %2$s — eller svar på denne e-mail. — Pierre, skaberen af Leek Wars",
+	"demo_relance2_subject": "-10% til at lancere din Leek Wars-gruppe 🌱",
+	"demo_relance2_button": "Se tilbuddet",
+	"demo_relance2_html": "Hej <b>%1$s</b>, kunne du lide demoen af den private gruppe?<br/><br/>For at skifte til en rigtig gruppe (deltagere der spiller, invitationer, turneringer op til 64 spillere, support) giver jeg dig <b>-10%%</b> med koden <b>%3$s</b>, gyldig en uge.<br/><br/>%2$s<br/><br/>Svar på denne e-mail eller skriv til contact@leekwars.com.<br/>— Pierre, skaberen af Leek Wars",
+	"demo_relance2_text": "Hej %1$s, for at gøre din demo til en rigtig privat gruppe giver jeg dig -10%% med koden %3$s (gyldig en uge). Tilbuddet: %2$s — eller svar på denne e-mail. — Pierre, skaberen af Leek Wars"
 }

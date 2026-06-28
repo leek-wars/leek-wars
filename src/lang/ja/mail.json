@@ -44,5 +44,13 @@
 	"unsubscribe": "退会する",
 	"unsubscribe_message": "<b>{0}</b> メーリング リストからの登録が正常に解除されました。",
 	"unsubscribe_sentence": "リスト <b>{0}</b> ({1}) からのメールを受け取りたくない場合は、{2} できます。",
-	"unsubscribed": "購読解除"
+	"unsubscribed": "購読解除",
+	"demo_relance1_subject": "あなたの Leek Wars デモグループ 🌱",
+	"demo_relance1_button": "グループに戻る",
+	"demo_relance1_html": "こんにちは <b>%1$s</b> さん、Leek Wars でデモグループを作成されたのを見ました。<br/><br/>ネギたちでトーナメントは試せましたか？ ご自身の参加者と本格的なイベント（授業、チームビルディング、トーナメント）を開催したい場合は、設定をお手伝いします。<br/><br/>%2$s<br/><br/>このメールに返信いただくだけでも大丈夫です。<br/>— Pierre（Leek Wars 制作者）",
+	"demo_relance1_text": "こんにちは %1$s さん、Leek Wars でデモグループを作成されましたね。参加者との本格的なイベント開催をお手伝いします。グループに戻る: %2$s — またはこのメールに返信してください。— Pierre（Leek Wars 制作者）",
+	"demo_relance2_subject": "Leek Wars グループ開始に -10% 🌱",
+	"demo_relance2_button": "プランを見る",
+	"demo_relance2_html": "こんにちは <b>%1$s</b> さん、プライベートグループのデモはいかがでしたか？<br/><br/>本格的なグループ（参加者がプレイ、招待、最大64人のトーナメント、サポート）に移行するなら、コード <b>%3$s</b> で <b>-10%%</b>、1週間有効です。<br/><br/>%2$s<br/><br/>このメールに返信するか、contact@leekwars.com までご連絡ください。<br/>— Pierre（Leek Wars 制作者）",
+	"demo_relance2_text": "こんにちは %1$s さん、デモを本格的なプライベートグループにするなら、コード %3$s で -10%%（1週間有効）。プラン: %2$s — またはこのメールに返信してください。— Pierre（Leek Wars 制作者）"
 }

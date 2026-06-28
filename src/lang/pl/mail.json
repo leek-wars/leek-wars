@@ -44,5 +44,13 @@
 	"unsubscribe": "anulować subskrypcję",
 	"unsubscribe_message": "Pomyślnie wypisano Cię z listy e-mailowej <b>{0}</b>.",
 	"unsubscribe_sentence": "Jeśli nie chcesz już otrzymywać e-maili z listy <b>{0}</b> ({1}), możesz {2}.",
-	"unsubscribed": "Anulowano subskrypcję"
+	"unsubscribed": "Anulowano subskrypcję",
+	"demo_relance1_subject": "Twoja grupa demonstracyjna Leek Wars 🌱",
+	"demo_relance1_button": "Wróć do mojej grupy",
+	"demo_relance1_html": "Cześć <b>%1$s</b>, widziałem, że utworzyłeś grupę demonstracyjną w Leek Wars.<br/><br/>Udało Ci się rozpocząć turniej z porami? Jeśli chcesz zorganizować prawdziwe wydarzenie (zajęcia, integrację zespołu, turniej) z własnymi uczestnikami, chętnie pomogę Ci to skonfigurować.<br/><br/>%2$s<br/><br/>Możesz też po prostu odpowiedzieć na tego e-maila.<br/>— Pierre, twórca Leek Wars",
+	"demo_relance1_text": "Cześć %1$s, utworzyłeś grupę demonstracyjną w Leek Wars. Chętnie pomogę zorganizować prawdziwe wydarzenie z Twoimi uczestnikami. Wróć do swojej grupy: %2$s — albo odpowiedz na tego e-maila. — Pierre, twórca Leek Wars",
+	"demo_relance2_subject": "-10% na start Twojej grupy Leek Wars 🌱",
+	"demo_relance2_button": "Zobacz ofertę",
+	"demo_relance2_html": "Cześć <b>%1$s</b>, podobała Ci się wersja demo grupy prywatnej?<br/><br/>Aby przejść na prawdziwą grupę (grający uczestnicy, zaproszenia, turnieje do 64 graczy, wsparcie), daję Ci <b>-10%%</b> z kodem <b>%3$s</b>, ważnym tydzień.<br/><br/>%2$s<br/><br/>Odpowiedz na tego e-maila lub napisz na contact@leekwars.com.<br/>— Pierre, twórca Leek Wars",
+	"demo_relance2_text": "Cześć %1$s, aby zmienić swoje demo w prawdziwą grupę prywatną, daję Ci -10%% z kodem %3$s (ważnym tydzień). Oferta: %2$s — albo odpowiedz na tego e-maila. — Pierre, twórca Leek Wars"
 }
