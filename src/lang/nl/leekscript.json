@@ -203,7 +203,7 @@
 	"intial_version": "Eerste versie",
 	"keyword": "Zoekwoord {0}",
 	"lambda": "Lambda",
-	"leekscript": "Preiscript",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "De functie \"{0}\" biedt {1} definities.",
 	"ls_function_information": "Informatie over de functie \"{0}\".",
 	"ls_return_nothing": "geeft niets terug",

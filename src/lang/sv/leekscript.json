@@ -203,7 +203,7 @@
 	"intial_version": "Ursprunglig version",
 	"keyword": "Sökord {0}",
 	"lambda": "Lambda",
-	"leekscript": "Purjolök",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "Funktionen \"{0}\" erbjuder {1} definitioner.",
 	"ls_function_information": "Information om funktionen \"{0}\".",
 	"ls_return_nothing": "ger inget tillbaka",

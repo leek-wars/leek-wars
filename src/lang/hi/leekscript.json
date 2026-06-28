@@ -203,7 +203,7 @@
 	"intial_version": "प्रारंभिक संस्करण",
 	"keyword": "कीवर्ड {0}",
 	"lambda": "लैम्ब्डा",
-	"leekscript": "लीकस्क्रिप्ट",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "फ़ंक्शन \"{0}\" {1} परिभाषाएँ प्रदान करता है।",
 	"ls_function_information": "फ़ंक्शन \"{0}\" के बारे में जानकारी।",
 	"ls_return_nothing": "कुछ भी नहीं लौटाता",

@@ -203,7 +203,7 @@
 	"intial_version": "Wersja początkowa",
 	"keyword": "Słowo kluczowe {0}",
 	"lambda": "Lambda",
-	"leekscript": "Leekscript",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "Funkcja „{0}” oferuje {1} definicji.",
 	"ls_function_information": "Informacje o funkcji „{0}”.",
 	"ls_return_nothing": "nic nie zwraca",

@@ -198,7 +198,7 @@
 	"intial_version": "初期バージョン",
 	"keyword": "キーワード {0}",
 	"lambda": "ラムダ",
-	"leekscript": "リークスクリプト",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "関数 \"{0}\" は {1} 定義を提供します。",
 	"ls_function_information": "関数 \"{0}\" に関する情報。",
 	"ls_return_nothing": "何も返さない",

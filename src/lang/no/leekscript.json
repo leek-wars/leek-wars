@@ -203,7 +203,7 @@
 	"intial_version": "Første versjon",
 	"keyword": "Søkeord {0}",
 	"lambda": "Lambda",
-	"leekscript": "Purreskrift",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "Funksjonen \"{0}\" tilbyr {1} definisjoner.",
 	"ls_function_information": "Informasjon om funksjonen \"{0}\".",
 	"ls_return_nothing": "returnerer ingenting",

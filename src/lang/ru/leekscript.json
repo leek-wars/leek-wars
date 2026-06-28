@@ -203,7 +203,7 @@
 	"intial_version": "Первоначальная версия",
 	"keyword": "Ключевое слово {0}",
 	"lambda": "Лямбда",
-	"leekscript": "Лукскрипт",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "Функция \"{0}\" предлагает {1} определений.",
 	"ls_function_information": "Информация о функции \"{0}\".",
 	"ls_return_nothing": "ничего не возвращает",

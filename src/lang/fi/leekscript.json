@@ -203,7 +203,7 @@
 	"intial_version": "Alkuperäinen versio",
 	"keyword": "Avainsana {0}",
 	"lambda": "Lambda",
-	"leekscript": "Purjokirjoitus",
+	"leekscript": "LeekScript",
 	"ls_function_definitions": "Funktio \"{0}\" tarjoaa {1} määritelmää.",
 	"ls_function_information": "Tietoja funktiosta \"{0}\".",
 	"ls_return_nothing": "ei palauta mitään",
