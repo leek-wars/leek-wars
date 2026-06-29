@@ -96,6 +96,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "Folder tujuan",
 	"clone_auth_hint": "Repositori privat memerlukan autentikasi yang dikonfigurasi di pengaturan remote.",
+	"configure_auth": "Konfigurasikan autentikasi",
 	"cloning": "Mengklon...",
 	"clone": "Klon",
 	"clone_success": "Repositori berhasil diklon.",

@@ -96,6 +96,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "Doelmap",
 	"clone_auth_hint": "Privé-repo's vereisen dat authenticatie is geconfigureerd in de instellingen voor externe verbindingen.",
+	"configure_auth": "Authenticatie configureren",
 	"cloning": "Klonen...",
 	"clone": "Klonen",
 	"clone_success": "Repository succesvol gekloond.",

@@ -90,6 +90,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "Destinationsmappe",
 	"clone_auth_hint": "Private repositories kræver, at godkendelse er konfigureret i fjernindstillingerne.",
+	"configure_auth": "Konfigurer godkendelse",
 	"cloning": "Kloner...",
 	"clone": "Klon",
 	"clone_success": "Repository klonet korrekt.",

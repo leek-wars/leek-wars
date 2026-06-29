@@ -249,7 +249,11 @@
 				<v-text-field v-model="cloneFolder" :label="$t('clone_folder')" variant="solo" density="compact" :error-messages="cloneFolderError ? [cloneFolderError] : []" @keyup.enter="doClone" @keyup.stop />
 				<div class="clone-hint">
 					<v-icon size="small">mdi-information-outline</v-icon>
-					{{ $t('clone_auth_hint') }}
+					<span>{{ $t('clone_auth_hint') }}</span>
+				</div>
+				<div class="clone-auth-btn" @click="openRemoteDialog()">
+					<v-icon size="small">mdi-cloud-cog</v-icon>
+					{{ $t('configure_auth') }}
 				</div>
 				<div v-if="cloneError" class="clone-error">{{ cloneError }}</div>
 			</div>
@@ -258,6 +262,8 @@
 				<div class="green" :class="{ disabled: !cloneUrl || !!cloneFolderError || cloning }" @click="doClone">{{ cloning ? $t('cloning') : $t('clone') }}</div>
 			</template>
 		</popup>
+
+		<git-remote-dialog v-model="remoteDialog" :folder="remoteDialogFolder" />
 
 		<editor-test v-if="editorTestI18nReady" ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :current-a-i="currentAI" />
 
@@ -323,6 +329,9 @@
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
 	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
+	// Import du .vue (pas .${locale}.i18n) : les fichiers i18n manquent pour da/de/es/fi/it/pt
+	// et un import dynamique de fichier absent throw. L'i18n est chargé par le mixin (nom du composant).
+	const GitRemoteDialog = defineAsyncComponent(() => import('./git-remote-dialog.vue'))
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
@@ -382,6 +391,8 @@
 	const currentFolder = ref<Folder | null>(null)
 	const settingsDialog = ref(false)
 	const cloneDialog = ref(false)
+	const remoteDialog = ref(false)
+	const remoteDialogFolder = ref('')
 	const cloneUrl = ref('')
 	const cloneFolder = ref('')
 	const cloneError = ref('')
@@ -603,6 +614,14 @@
 		cloning.value = false
 		cloneDialog.value = true
 	}
+
+	// Unique point d'ouverture du dialogue remote/auth (instance possédée par l'éditeur).
+	// folder vide = configuration de l'authentification seule ; git-panel émet avec son repo.
+	function openRemoteDialog(folder = '') {
+		remoteDialogFolder.value = folder
+		remoteDialog.value = true
+	}
+	const onOpenRemoteDialog = (folder?: string) => openRemoteDialog(folder ?? '')
 
 	function onCloneUrlInput() {
 		cloneError.value = ''
@@ -1493,9 +1512,9 @@
 		const gitAuth = route.query.git_auth as string | undefined
 		if (gitAuth === 'success') {
 			LeekWars.toast(t('git_auth_success') as string)
-			// Rouvre le dialogue de conf pour ajouter un remote dans la foulée.
-			// setTimeout pour laisser git-panel finir son mounted() (listeners prêts).
-			setTimeout(() => emitter.emit('git-open-remote-dialog'), 0)
+			// Rouvre le dialogue de conf pour continuer dans la foulée (instance éditeur,
+			// toujours montée : fonctionne même sur un compte sans repo, sans git-panel).
+			openRemoteDialog()
 			router.replace({ query: { ...route.query, git_auth: undefined } })
 		} else if (gitAuth === 'error') {
 			LeekWars.toast(t('git_auth_error') as string)
@@ -1586,6 +1605,7 @@
 		// renommé/déplacé) pour ne pas démonter l'éditeur ouvert ni casser les onglets ouverts (#4318).
 		emitter.on('ai-path-changed', onAiPathChanged)
 		emitter.on('connected', connected)
+		emitter.on('git-open-remote-dialog', onOpenRemoteDialog)
 		emitter.on('jump', jumpEvent)
 		emitter.on('reanalyze', () => {
 			editor1.value?.setAnalyzerTimeout()
@@ -1652,6 +1672,7 @@
 		emitter.off('editor-drop')
 		emitter.off('ai-path-changed', onAiPathChanged)
 		emitter.off('connected', connected)
+		emitter.off('git-open-remote-dialog', onOpenRemoteDialog)
 		emitter.off('jump', jumpEvent)
 		emitter.off('reanalyze')
 		emitter.off('close-diff')
@@ -1804,6 +1825,20 @@
 			background: rgba(0, 0, 0, 0.04);
 			border-radius: 4px;
 			.v-icon { flex-shrink: 0; margin-top: 1px; }
+		}
+		.clone-auth-btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			align-self: flex-start;
+			font-size: 13px;
+			font-weight: 500;
+			color: var(--primary);
+			padding: 4px 2px;
+			cursor: pointer;
+			user-select: none;
+			.v-icon { color: var(--primary); }
+			&:hover { text-decoration: underline; }
 		}
 		.clone-error {
 			font-size: 13px;

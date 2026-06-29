@@ -1,23 +1,25 @@
 <template>
 	<popup v-model="show" :width="550" icon="mdi-cloud-cog" :title="$t('title')">
-		<!-- Remotes -->
-		<div class="section-title">{{ $t('remotes') }}</div>
-		<div v-if="remotes.length === 0 && !remotesLoading" class="empty">{{ $t('no_remotes') }}</div>
-		<div v-for="remote in remotes" :key="remote.name" class="remote-item" :class="providerFromUrl(remote.url)">
-			<v-icon class="remote-provider-icon">{{ providerIcon(providerFromUrl(remote.url)) }}</v-icon>
-			<span class="remote-name">{{ remote.name }}</span>
-			<span class="remote-url" :title="remote.url">{{ remote.url }}</span>
-			<v-icon class="remote-delete" @click="removeRemote(remote.name)">mdi-delete</v-icon>
-		</div>
-		<div class="add-remote">
-			<input v-model="newRemoteName" :placeholder="$t('remote_name')" class="input" />
-			<select v-if="availableRepos.length > 0" v-model="newRemoteUrl" class="input url repo-select">
-				<option value="">{{ $t('select_repo') }}</option>
-				<option v-for="r in availableRepos" :key="r.clone_url" :value="r.clone_url">{{ r.full_name }}{{ r.private ? ' 🔒' : '' }}</option>
-			</select>
-			<input v-else v-model="newRemoteUrl" :placeholder="$t('remote_url')" class="input url" />
-			<button type="button" class="add-btn" :disabled="!newRemoteName || !newRemoteUrl" @click="addRemote">{{ $t('add') }}</button>
-		</div>
+		<!-- Remotes (uniquement en contexte repo : sans dossier, on ne configure que l'authentification) -->
+		<template v-if="folder">
+			<div class="section-title">{{ $t('remotes') }}</div>
+			<div v-if="remotes.length === 0 && !remotesLoading" class="empty">{{ $t('no_remotes') }}</div>
+			<div v-for="remote in remotes" :key="remote.name" class="remote-item" :class="providerFromUrl(remote.url)">
+				<v-icon class="remote-provider-icon">{{ providerIcon(providerFromUrl(remote.url)) }}</v-icon>
+				<span class="remote-name">{{ remote.name }}</span>
+				<span class="remote-url" :title="remote.url">{{ remote.url }}</span>
+				<v-icon class="remote-delete" @click="removeRemote(remote.name)">mdi-delete</v-icon>
+			</div>
+			<div class="add-remote">
+				<input v-model="newRemoteName" :placeholder="$t('remote_name')" class="input" />
+				<select v-if="availableRepos.length > 0" v-model="newRemoteUrl" class="input url repo-select">
+					<option value="">{{ $t('select_repo') }}</option>
+					<option v-for="r in availableRepos" :key="r.clone_url" :value="r.clone_url">{{ r.full_name }}{{ r.private ? ' 🔒' : '' }}</option>
+				</select>
+				<input v-else v-model="newRemoteUrl" :placeholder="$t('remote_url')" class="input url" />
+				<button type="button" class="add-btn" :disabled="!newRemoteName || !newRemoteUrl" @click="addRemote">{{ $t('add') }}</button>
+			</div>
+		</template>
 
 		<!-- Authentification -->
 		<div class="section-title auth-title">{{ $t('authentication') }}</div>
@@ -260,7 +262,9 @@
 	font-weight: bold;
 	font-size: 14px;
 	margin-bottom: 8px;
-	&.auth-title {
+	// Marge seulement quand la section Remotes précède (contexte repo) ; sans dossier,
+	// le titre Authentification est le premier élément et n'a pas besoin d'espacement.
+	&.auth-title:not(:first-child) {
 		margin-top: 16px;
 	}
 }

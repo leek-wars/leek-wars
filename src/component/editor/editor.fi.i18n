@@ -90,6 +90,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "Kohdekansio",
 	"clone_auth_hint": "Yksityiset repositoriot vaativat todennuksen määrittämisen etäasetuksissa.",
+	"configure_auth": "Määritä todennus",
 	"cloning": "Kloonataan...",
 	"clone": "Kloonaa",
 	"clone_success": "Repositorio kloonattu onnistuneesti.",

@@ -96,6 +96,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "目标文件夹",
 	"clone_auth_hint": "私有仓库需要在远程设置中配置身份验证。",
+	"configure_auth": "配置身份验证",
 	"cloning": "克隆中...",
 	"clone": "克隆",
 	"clone_success": "仓库克隆成功。",

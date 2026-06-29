@@ -90,6 +90,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "保存先フォルダ",
 	"clone_auth_hint": "プライベートリポジトリにはリモート設定での認証が必要です。",
+	"configure_auth": "認証を設定",
 	"cloning": "クローン中...",
 	"clone": "クローン",
 	"clone_success": "リポジトリのクローンに成功しました。",

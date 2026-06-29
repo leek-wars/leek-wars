@@ -96,6 +96,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "Målmapp",
 	"clone_auth_hint": "Privata repon kräver att autentisering är konfigurerad i fjärrinställningarna.",
+	"configure_auth": "Konfigurera autentisering",
 	"cloning": "Klonar...",
 	"clone": "Klona",
 	"clone_success": "Repositoryt klonades framgångsrikt.",

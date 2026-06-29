@@ -33,7 +33,7 @@ type Events = {
 	'tooltip-close': void
 	'editor-drag': Item
 	'editor-drop': Folder
-	'git-open-remote-dialog': void
+	'git-open-remote-dialog': string | undefined
 	'tournament-update': unknown
 	trophy: unknown
 	fight_notification: unknown

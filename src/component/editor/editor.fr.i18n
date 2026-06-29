@@ -97,6 +97,7 @@
 	"clone_url_placeholder": "https://github.com/utilisateur/mon-repo.git",
 	"clone_folder": "Dossier de destination",
 	"clone_auth_hint": "Les repos privés nécessitent une authentification configurée dans les paramètres du remote.",
+	"configure_auth": "Configurer l'authentification",
 	"cloning": "Clonage en cours...",
 	"clone": "Cloner",
 	"clone_success": "Repo cloné avec succès.",

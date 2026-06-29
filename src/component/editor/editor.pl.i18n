@@ -96,6 +96,7 @@
 	"clone_url_placeholder": "https://github.com/user/my-repo.git",
 	"clone_folder": "Folder docelowy",
 	"clone_auth_hint": "Prywatne repozytoria wymagają skonfigurowania uwierzytelnienia w ustawieniach zdalnych.",
+	"configure_auth": "Skonfiguruj uwierzytelnianie",
 	"cloning": "Klonowanie...",
 	"clone": "Sklonuj",
 	"clone_success": "Repozytorium zostało pomyślnie sklonowane.",

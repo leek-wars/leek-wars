@@ -228,7 +228,7 @@
 						</v-list>
 					</v-menu>
 				</div>
-				<div class="action-btn" :title="$t('remote_settings')" @click="showRemoteDialog = true">
+				<div class="action-btn" :title="$t('remote_settings')" @click="openRemoteSettings">
 					<v-icon>mdi-cloud-cog</v-icon>
 				</div>
 			</div>
@@ -238,8 +238,6 @@
 		<div v-if="selectedRepo === '' && repos.length === 0 && !loading" class="no-repo">
 			<p>{{ $t('no_git_repo') }}</p>
 		</div>
-
-		<git-remote-dialog v-model="showRemoteDialog" :folder="selectedRepo" />
 	</div>
 </template>
 
@@ -248,7 +246,6 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import GitHistory from './git-history.vue'
-	import GitRemoteDialog from './git-remote-dialog.vue'
 	import { gitCall } from './git-log'
 	import { emitter } from '@/model/vue'
 	import type { DiffTab } from './editor-tabs.vue'
@@ -276,7 +273,7 @@
 		conflicts?: boolean
 	}
 
-	defineOptions({ name: 'GitPanel', i18n: {}, mixins: [...mixins], components: { GitHistory, GitRemoteDialog } })
+	defineOptions({ name: 'GitPanel', i18n: {}, mixins: [...mixins], components: { GitHistory } })
 
 	const props = withDefaults(defineProps<{
 		theme?: string
@@ -307,7 +304,6 @@
 	const branch = ref('')
 	const hasRemote = ref(false)
 	const hasUpstream = ref(false)
-	const showRemoteDialog = ref(false)
 	const syncError = ref('')
 	const syncInfo = ref('')
 	const branches = ref<string[]>([])
@@ -349,18 +345,18 @@
 		loadRepos()
 		emitter.on('git-file-changed', debouncedRefresh)
 		emitter.on('git-repos-changed', loadRepos)
-		emitter.on('git-open-remote-dialog', openRemoteDialog)
 	})
 
 	onBeforeUnmount(() => {
 		emitter.off('git-file-changed', debouncedRefresh)
 		emitter.off('git-repos-changed', loadRepos)
-		emitter.off('git-open-remote-dialog', openRemoteDialog)
 		if (refreshDebounceTimer) clearTimeout(refreshDebounceTimer)
 	})
 
-	function openRemoteDialog() {
-		showRemoteDialog.value = true
+	// Le dialogue remote/auth est possédé par l'éditeur (instance unique, toujours montée).
+	// On lui délègue l'ouverture en passant le repo courant pour la section Remotes.
+	function openRemoteSettings() {
+		emitter.emit('git-open-remote-dialog', selectedRepo.value)
 	}
 
 	async function undoLastCommit() {

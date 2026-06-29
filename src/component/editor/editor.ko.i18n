@@ -12,6 +12,7 @@
 	"child": "하위",
 	"clone": "복제",
 	"clone_auth_hint": "비공개 저장소는 원격 설정에서 인증을 구성해야 합니다.",
+	"configure_auth": "인증 설정",
 	"clone_failed": "복제에 실패했습니다.",
 	"clone_folder": "대상 폴더",
 	"clone_repo": "Git 저장소 복제",
