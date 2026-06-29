@@ -53,5 +53,15 @@
 	"access_my_demo": "Siirry ryhmääni",
 	"demo_cta_sub": "Luo yksityinen ryhmä yhdellä klikkauksella, valmiina taisteluun olevien bottien kanssa.",
 	"demo_error": "Demoryhmää ei voitu luoda.",
-	"demo_login_first": "Luo ilmainen tili aloittaaksesi demosi"
+	"demo_login_first": "Luo ilmainen tili aloittaaksesi demosi",
+	"demo_form_title": "Aloita demosi",
+	"demo_form_intro": "Anna sähköpostisi ja nimesi: demosi alkaa heti, ilman salasanan valintaa.",
+	"demo_form_email": "Sähköposti",
+	"demo_form_name": "Nimesi",
+	"demo_form_already": "Onko sinulla jo tili? Kirjaudu",
+	"demo_form_email_invalid": "Virheellinen sähköposti",
+	"demo_form_name_invalid": "Anna nimesi",
+	"demo_form_email_used": "Tällä sähköpostilla on jo tili. Kirjaudu.",
+	"demo_form_name_used": "Tämä nimi on jo käytössä, valitse toinen.",
+	"demo_form_too_many": "Liian monta demoa luotu äskettäin, yritä myöhemmin."
 }

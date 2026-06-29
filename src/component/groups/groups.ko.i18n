@@ -53,5 +53,15 @@
 	"access_my_demo": "내 그룹으로",
 	"demo_cta_sub": "클릭 한 번으로 비공개 그룹을 만들고, 전투 준비가 된 봇이 이미 채워져 있습니다.",
 	"demo_error": "데모 그룹을 만들 수 없습니다.",
-	"demo_login_first": "무료 계정을 만들어 데모를 시작하세요"
+	"demo_login_first": "무료 계정을 만들어 데모를 시작하세요",
+	"demo_form_title": "데모 시작하기",
+	"demo_form_intro": "이메일과 이름을 입력하면 비밀번호 없이 바로 데모가 시작됩니다.",
+	"demo_form_email": "이메일",
+	"demo_form_name": "이름",
+	"demo_form_already": "이미 계정이 있으신가요? 로그인",
+	"demo_form_email_invalid": "잘못된 이메일",
+	"demo_form_name_invalid": "이름을 입력하세요",
+	"demo_form_email_used": "이 이메일에는 이미 계정이 있습니다. 로그인하세요.",
+	"demo_form_name_used": "이미 사용 중인 이름입니다. 다른 이름을 선택하세요.",
+	"demo_form_too_many": "최근 데모를 너무 많이 만들었습니다. 나중에 다시 시도하세요."
 }

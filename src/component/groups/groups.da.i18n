@@ -53,5 +53,15 @@
 	"access_my_demo": "Gå til min gruppe",
 	"demo_cta_sub": "Opret en privat gruppe med ét klik, allerede fyldt med bots klar til kamp.",
 	"demo_error": "Demogruppen kunne ikke oprettes.",
-	"demo_login_first": "Opret en gratis konto for at starte din demo"
+	"demo_login_first": "Opret en gratis konto for at starte din demo",
+	"demo_form_title": "Start din demo",
+	"demo_form_intro": "Indtast din e-mail og dit navn: din demo starter med det samme, uden at vælge adgangskode.",
+	"demo_form_email": "E-mail",
+	"demo_form_name": "Dit navn",
+	"demo_form_already": "Har du allerede en konto? Log ind",
+	"demo_form_email_invalid": "Ugyldig e-mail",
+	"demo_form_name_invalid": "Indtast dit navn",
+	"demo_form_email_used": "Denne e-mail har allerede en konto. Log ind.",
+	"demo_form_name_used": "Dette navn er allerede taget, vælg et andet.",
+	"demo_form_too_many": "For mange demoer oprettet for nylig, prøv igen senere."
 }

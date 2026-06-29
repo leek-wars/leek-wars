@@ -53,5 +53,15 @@
 	"access_my_demo": "Go to my group",
 	"demo_cta_sub": "Create a private group in one click, already filled with bots ready to fight.",
 	"demo_error": "The demo group could not be created.",
-	"demo_login_first": "Create a free account to start your demo"
+	"demo_login_first": "Create a free account to start your demo",
+	"demo_form_title": "Start your demo",
+	"demo_form_intro": "Enter your email and name: your demo starts right away, no password to choose.",
+	"demo_form_email": "Email",
+	"demo_form_name": "Your name",
+	"demo_form_already": "Already have an account? Log in",
+	"demo_form_email_invalid": "Invalid email",
+	"demo_form_name_invalid": "Enter your name",
+	"demo_form_email_used": "This email already has an account. Log in.",
+	"demo_form_name_used": "This name is already taken, choose another.",
+	"demo_form_too_many": "Too many demos created recently, try again later."
 }

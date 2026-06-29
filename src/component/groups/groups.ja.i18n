@@ -53,5 +53,15 @@
 	"access_my_demo": "マイグループへ",
 	"demo_cta_sub": "ワンクリックでプライベートグループを作成。戦う準備ができたボットがすでにいます。",
 	"demo_error": "デモグループを作成できませんでした。",
-	"demo_login_first": "無料アカウントを作成してデモを始めよう"
+	"demo_login_first": "無料アカウントを作成してデモを始めよう",
+	"demo_form_title": "デモを始める",
+	"demo_form_intro": "メールアドレスと名前を入力すれば、パスワードなしですぐにデモが始まります。",
+	"demo_form_email": "メールアドレス",
+	"demo_form_name": "お名前",
+	"demo_form_already": "アカウントをお持ちですか？ ログイン",
+	"demo_form_email_invalid": "無効なメールアドレス",
+	"demo_form_name_invalid": "お名前を入力してください",
+	"demo_form_email_used": "このメールアドレスには既にアカウントがあります。ログインしてください。",
+	"demo_form_name_used": "この名前は既に使われています。別の名前を選んでください。",
+	"demo_form_too_many": "最近デモを作りすぎました。後でもう一度お試しください。"
 }

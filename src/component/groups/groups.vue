@@ -20,6 +20,20 @@
 				<div class="demo-cta-sub">{{ $t('demo_cta_sub') }}</div>
 			</div>
 
+			<v-dialog v-model="guestForm" :max-width="440">
+				<div class="guest-dialog">
+					<h2>{{ $t('demo_form_title') }}</h2>
+					<div class="guest-intro">{{ $t('demo_form_intro') }}</div>
+					<v-text-field v-model="guestName" :label="$t('demo_form_name')" variant="outlined" density="comfortable" :hide-details="true" @keyup.enter="submitGuest" />
+					<v-text-field v-model="guestEmail" :label="$t('demo_form_email')" type="email" variant="outlined" density="comfortable" :hide-details="true" @keyup.enter="submitGuest" />
+					<div v-if="guestError" class="guest-error">{{ guestError }}</div>
+					<v-btn size="large" color="primary" :loading="submitting" :block="true" @click="submitGuest">
+						<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ $t('try_demo') }}
+					</v-btn>
+					<div class="guest-login" @click="goLogin">{{ $t('demo_form_already') }}</div>
+				</div>
+			</v-dialog>
+
 			<div class="targets">
 				<div class="target card">
 					<div class="image">
@@ -239,20 +253,24 @@ const creating = ref(false)
 // Groupe du farmer connecté (superviseur ou membre), s'il en a un
 const myGroupId = computed(() => store.state.farmer?.group?.id ?? null)
 
+// Formulaire invité (non connecté) : email + nom → compte rapide + démo
+const guestForm = ref(false)
+const guestEmail = ref('')
+const guestName = ref('')
+const guestError = ref<string | null>(null)
+const submitting = ref(false)
+
 const breadcrumb_items = computed(() => [
 	{ name: 'Leek Wars', link: '/' },
 	{ name: t('title'), link: '/groups' },
 ])
 
-// CTA tri-état : non connecté -> inscription ; déjà un groupe -> on y va ;
+// CTA tri-état : non connecté -> formulaire email+nom ; déjà un groupe -> on y va ;
 // sinon -> création autonome d'un groupe de démo (#3341).
 function tryDemo() {
 	if (!store.state.connected) {
-		// Pas connecté : on mémorise l'intention et on envoie vers l'inscription (home = Signup
-		// pour un visiteur). Au retour, ?demo=1 relance la création automatiquement.
-		sessionStorage.setItem('redirect_after_login', '/groups?demo=1')
-		LeekWars.toast(t('demo_login_first'))
-		router.push('/')
+		guestError.value = null
+		guestForm.value = true
 		return
 	}
 	if (myGroupId.value) {
@@ -266,6 +284,30 @@ function tryDemo() {
 		creating.value = false
 		LeekWars.toast(t('demo_error'))
 	})
+}
+
+// Soumission du formulaire invité : crée un compte rapide + la démo, puis
+// auto-connecte via le token comeback et atterrit sur le groupe.
+function submitGuest() {
+	guestError.value = null
+	if (!guestEmail.value.includes('@')) { guestError.value = t('demo_form_email_invalid'); return }
+	if (guestName.value.trim().length < 2) { guestError.value = t('demo_form_name_invalid'); return }
+	submitting.value = true
+	LeekWars.post('groupe/create-demo-guest', { email: guestEmail.value.trim(), name: guestName.value.trim() }).then(data => {
+		router.push('/login/' + data.token + '?redirect=' + encodeURIComponent('/group/' + data.id))
+	}).error((e: { error?: string }) => {
+		submitting.value = false
+		if (e.error === 'mail_already_used') guestError.value = t('demo_form_email_used')
+		else if (e.error === 'name_already_used') guestError.value = t('demo_form_name_used')
+		else if (e.error === 'too_many_requests') guestError.value = t('demo_form_too_many')
+		else guestError.value = t('demo_error')
+	})
+}
+
+// Lien "déjà un compte ?" : on garde l'intention de démo pour le retour
+function goLogin() {
+	sessionStorage.setItem('redirect_after_login', '/groups?demo=1')
+	router.push('/login')
 }
 
 onBeforeMount(() => {
@@ -288,6 +330,39 @@ onBeforeMount(() => {
 .intro {
 	font-size: 16px;
 	line-height: 1.5;
+}
+.guest-dialog {
+	background: var(--background);
+	border-radius: 4px;
+	padding: 25px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	h2 {
+		margin: 0;
+		font-size: 22px;
+		font-weight: 500;
+	}
+	.guest-intro {
+		font-size: 14px;
+		color: var(--text-color-secondary);
+		line-height: 1.4;
+	}
+	.guest-error {
+		color: #c0392b;
+		font-size: 13px;
+		margin-top: -6px;
+	}
+	.guest-login {
+		text-align: center;
+		font-size: 13px;
+		color: var(--link-color);
+		cursor: pointer;
+		&:hover { text-decoration: underline; }
+	}
+}
+body.dark .guest-dialog .guest-error {
+	color: #ff7060;
 }
 .demo-cta {
 	text-align: center;

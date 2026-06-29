@@ -53,5 +53,15 @@
 	"access_my_demo": "Przejdź do mojej grupy",
 	"demo_cta_sub": "Utwórz prywatną grupę jednym kliknięciem, już wypełnioną botami gotowymi do walki.",
 	"demo_error": "Nie udało się utworzyć grupy demonstracyjnej.",
-	"demo_login_first": "Załóż darmowe konto, aby uruchomić swoje demo"
+	"demo_login_first": "Załóż darmowe konto, aby uruchomić swoje demo",
+	"demo_form_title": "Uruchom swoje demo",
+	"demo_form_intro": "Podaj e-mail i imię: twoje demo rusza od razu, bez wybierania hasła.",
+	"demo_form_email": "E-mail",
+	"demo_form_name": "Twoje imię",
+	"demo_form_already": "Masz już konto? Zaloguj się",
+	"demo_form_email_invalid": "Nieprawidłowy e-mail",
+	"demo_form_name_invalid": "Podaj swoje imię",
+	"demo_form_email_used": "Ten e-mail ma już konto. Zaloguj się.",
+	"demo_form_name_used": "Ta nazwa jest już zajęta, wybierz inną.",
+	"demo_form_too_many": "Zbyt wiele dem utworzonych ostatnio, spróbuj później."
 }

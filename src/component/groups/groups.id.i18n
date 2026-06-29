@@ -53,5 +53,15 @@
 	"access_my_demo": "Ke grup saya",
 	"demo_cta_sub": "Buat grup pribadi dengan satu klik, sudah berisi bot yang siap bertarung.",
 	"demo_error": "Grup demo tidak dapat dibuat.",
-	"demo_login_first": "Buat akun gratis untuk memulai demomu"
+	"demo_login_first": "Buat akun gratis untuk memulai demomu",
+	"demo_form_title": "Mulai demomu",
+	"demo_form_intro": "Masukkan email dan namamu: demomu langsung dimulai, tanpa memilih kata sandi.",
+	"demo_form_email": "Email",
+	"demo_form_name": "Namamu",
+	"demo_form_already": "Sudah punya akun? Masuk",
+	"demo_form_email_invalid": "Email tidak valid",
+	"demo_form_name_invalid": "Masukkan namamu",
+	"demo_form_email_used": "Email ini sudah punya akun. Masuk.",
+	"demo_form_name_used": "Nama ini sudah dipakai, pilih yang lain.",
+	"demo_form_too_many": "Terlalu banyak demo dibuat baru-baru ini, coba lagi nanti."
 }
