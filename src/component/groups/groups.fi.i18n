@@ -52,5 +52,6 @@
 	"try_demo": "Kokeile demoa ilmaiseksi",
 	"access_my_demo": "Siirry ryhmääni",
 	"demo_cta_sub": "Luo yksityinen ryhmä yhdellä klikkauksella, valmiina taisteluun olevien bottien kanssa.",
-	"demo_error": "Demoryhmää ei voitu luoda."
+	"demo_error": "Demoryhmää ei voitu luoda.",
+	"demo_login_first": "Luo ilmainen tili aloittaaksesi demosi"
 }

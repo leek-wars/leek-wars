@@ -52,5 +52,6 @@
 	"try_demo": "Coba demo gratis",
 	"access_my_demo": "Ke grup saya",
 	"demo_cta_sub": "Buat grup pribadi dengan satu klik, sudah berisi bot yang siap bertarung.",
-	"demo_error": "Grup demo tidak dapat dibuat."
+	"demo_error": "Grup demo tidak dapat dibuat.",
+	"demo_login_first": "Buat akun gratis untuk memulai demomu"
 }

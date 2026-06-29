@@ -52,5 +52,6 @@
 	"try_demo": "Essayer la démo gratuitement",
 	"access_my_demo": "Accéder à mon groupe",
 	"demo_cta_sub": "Créez un groupe privé en un clic, déjà rempli de bots prêts à combattre.",
-	"demo_error": "Impossible de créer le groupe de démo."
+	"demo_error": "Impossible de créer le groupe de démo.",
+	"demo_login_first": "Crée un compte gratuit pour lancer ta démo"
 }

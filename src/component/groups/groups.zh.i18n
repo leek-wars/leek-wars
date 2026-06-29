@@ -52,5 +52,6 @@
 	"try_demo": "免费试用演示",
 	"access_my_demo": "前往我的群组",
 	"demo_cta_sub": "一键创建私人群组，已预先填充准备战斗的机器人。",
-	"demo_error": "无法创建演示群组。"
+	"demo_error": "无法创建演示群组。",
+	"demo_login_first": "创建免费账号来启动你的演示"
 }

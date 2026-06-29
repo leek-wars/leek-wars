@@ -52,5 +52,6 @@
 	"try_demo": "Wypróbuj demo za darmo",
 	"access_my_demo": "Przejdź do mojej grupy",
 	"demo_cta_sub": "Utwórz prywatną grupę jednym kliknięciem, już wypełnioną botami gotowymi do walki.",
-	"demo_error": "Nie udało się utworzyć grupy demonstracyjnej."
+	"demo_error": "Nie udało się utworzyć grupy demonstracyjnej.",
+	"demo_login_first": "Załóż darmowe konto, aby uruchomić swoje demo"
 }

@@ -52,5 +52,6 @@
 	"try_demo": "Probeer de demo gratis",
 	"access_my_demo": "Naar mijn groep",
 	"demo_cta_sub": "Maak met één klik een privégroep, al gevuld met bots die klaar zijn om te vechten.",
-	"demo_error": "De demogroep kon niet worden aangemaakt."
+	"demo_error": "De demogroep kon niet worden aangemaakt.",
+	"demo_login_first": "Maak een gratis account om je demo te starten"
 }

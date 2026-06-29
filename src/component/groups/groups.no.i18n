@@ -52,5 +52,6 @@
 	"try_demo": "Prøv demoen gratis",
 	"access_my_demo": "Gå til gruppen min",
 	"demo_cta_sub": "Opprett en privat gruppe med ett klikk, allerede fylt med bots klare til kamp.",
-	"demo_error": "Demogruppen kunne ikke opprettes."
+	"demo_error": "Demogruppen kunne ikke opprettes.",
+	"demo_login_first": "Opprett en gratis konto for å starte demoen din"
 }

@@ -225,7 +225,7 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import Breadcrumb from '../forum/breadcrumb.vue'
 
@@ -233,6 +233,7 @@ defineOptions({ name: 'Groups', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('groups')
 const router = useRouter()
+const route = useRoute()
 
 const creating = ref(false)
 // Groupe du farmer connecté (superviseur ou membre), s'il en a un
@@ -247,6 +248,10 @@ const breadcrumb_items = computed(() => [
 // sinon -> création autonome d'un groupe de démo (#3341).
 function tryDemo() {
 	if (!store.state.connected) {
+		// Pas connecté : on mémorise l'intention et on envoie vers l'inscription (home = Signup
+		// pour un visiteur). Au retour, ?demo=1 relance la création automatiquement.
+		sessionStorage.setItem('redirect_after_login', '/groups?demo=1')
+		LeekWars.toast(t('demo_login_first'))
 		router.push('/')
 		return
 	}
@@ -263,7 +268,13 @@ function tryDemo() {
 	})
 }
 
-onBeforeMount(() => LeekWars.setTitle(t('title')))
+onBeforeMount(() => {
+	LeekWars.setTitle(t('title'))
+	// Retour après inscription/login avec l'intention de démo → on enchaîne la création
+	if (route.query.demo === '1' && store.state.connected) {
+		tryDemo()
+	}
+})
 </script>
 
 <style lang="scss" scoped>

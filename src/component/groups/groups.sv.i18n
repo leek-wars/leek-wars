@@ -52,5 +52,6 @@
 	"try_demo": "Prova demon gratis",
 	"access_my_demo": "Gå till min grupp",
 	"demo_cta_sub": "Skapa en privat grupp med ett klick, redan fylld med bottar redo att strida.",
-	"demo_error": "Demogruppen kunde inte skapas."
+	"demo_error": "Demogruppen kunde inte skapas.",
+	"demo_login_first": "Skapa ett gratis konto för att starta din demo"
 }
