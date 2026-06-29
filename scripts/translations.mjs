@@ -43,7 +43,7 @@ const ALL_LANGS = readdirSync(LANG_DIR, { withFileTypes: true })
 
 const LANG_NAMES = {
 	da: 'Danish', de: 'German', en: 'English', es: 'Spanish', fi: 'Finnish',
-	hi: 'Hindi', id: 'Indonesian', it: 'Italian', ja: 'Japanese', ko: 'Korean',
+	id: 'Indonesian', it: 'Italian', ja: 'Japanese', ko: 'Korean',
 	nl: 'Dutch', no: 'Norwegian', pl: 'Polish', pt: 'Portuguese', ru: 'Russian',
 	sv: 'Swedish', zh: 'Chinese',
 }
