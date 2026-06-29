@@ -1,6 +1,6 @@
 {
 	"censor": "Censurar",
-	"censor_farmer": "Seleccione publicaciones de {farmer} para censurar:",
+	"censor_farmer": "Selecciona las publicaciones de {farmer} a censurar:",
 	"confirm_mute": "Silenciar",
 	"delete": "Borrar",
 	"delete_farmer": "Selecciona los mensajes a borrar:",
@@ -39,8 +39,8 @@
 	"reason_4_action": "El nombre del equipo se reemplazará con 'Team{'@'}<id>' y el nombre ofensivo se agregará a la lista de malas palabras.",
 	"reason_5": "Descripción incorrecta del equipo",
 	"reason_5_action": "La descripción del equipo será eliminada.",
-	"reason_6": "Letras incorrectas de say() en combate",
-	"reason_6_action": "Se ocultará el say() de todos los puerros criadores en todas sus peleas.",
+	"reason_6": "Palabras incorrectas de say() en combate",
+	"reason_6_action": "Se ocultará el say() de todos los puerros del criador en todas sus combates.",
 	"reason_7": "Contenido incorrecto en el foro.",
 	"reason_7_action": "La publicación del foro será eliminada.",
 	"reason_8": "Palabras de chat incorrectas",

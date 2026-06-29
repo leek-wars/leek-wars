@@ -30,7 +30,7 @@
 	"reason_18_action": "Die Webseite wird gelöscht.",
 	"reason_19": "Falscher GitHub",
 	"reason_19_action": "Der GitHub-Account wird gelöscht und zur Liste verbotener Wörter hinzugefügt.",
-	"reason_1_action": "Der Name des Farmers wird durch 'Farmer@<id>' ersetzt und der anstößige Name wird der Liste der Schimpfworte hinzugefügt.",
+	"reason_1_action": "Der Name des Züchters wird durch 'Farmer@<id>' ersetzt und der anstößige Name wird der Liste der Schimpfworte hinzugefügt.",
 	"reason_2": "Falscher Lauchname",
 	"reason_2_action": "Der Name des Lauchs wird durch „Leek@<id>“ ersetzt und der anstößige Name wird zur Liste der schlechten Wörter hinzugefügt.",
 	"reason_3": "Falscher AI-Name",

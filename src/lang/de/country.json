@@ -61,7 +61,7 @@
 	"ga": "Gabun",
 	"gb": "Großbritannien",
 	"gd": "Grenada",
-	"ge": "Georgia",
+	"ge": "Georgien",
 	"gh": "Ghana",
 	"gm": "Gambia",
 	"gn": "Guinea",
@@ -91,7 +91,7 @@
 	"ki": "Kiribati",
 	"km": "Komoren",
 	"kn": "St. Kitts und Nevis",
-	"kp": "Nord Korea",
+	"kp": "Nordkorea",
 	"kr": "Südkorea",
 	"kw": "Kuwait",
 	"kz": "Kasachstan",
@@ -136,7 +136,7 @@
 	"om": "Oman",
 	"pa": "Panama",
 	"pe": "Peru",
-	"pg": "Papua Neu-Guinea",
+	"pg": "Papua-Neuguinea",
 	"ph": "Philippinen",
 	"pk": "Pakistan",
 	"pl": "Polen",
@@ -150,7 +150,7 @@
 	"ru": "Russland",
 	"rw": "Ruanda",
 	"sa": "Saudi-Arabien",
-	"sb": "Solomon",
+	"sb": "Salomonen",
 	"sc": "Seychellen",
 	"sd": "Sudan",
 	"se": "Schweden",
@@ -194,5 +194,5 @@
 	"ye": "Jemen",
 	"za": "Südafrika",
 	"zm": "Sambia",
-	"zw": "Zimbabwe"
+	"zw": "Simbabwe"
 }

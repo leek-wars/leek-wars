@@ -11,7 +11,7 @@
 	"damage": "Daño",
 	"damage_return": "Reflejo de daños",
 	"frequency": "Frecuencia",
-	"frequency_desc": "Las altas frecuencias comienzan la lucha primero.",
+	"frequency_desc": "Las frecuencias elevadas tienen más probabilidades de empezar el combate primero.",
 	"heal": "Curación",
 	"invested": "Invertido",
 	"invested_capital": "Capital invertido",
