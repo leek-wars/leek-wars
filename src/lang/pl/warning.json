@@ -32,7 +32,7 @@
 	"reason_19_action": "Konto GitHub zostanie usunięte i dodane do listy zakazanych słów.",
 	"reason_1_action": "Imię farmera zostanie zastąpione przez „Farmer{'@'}<id>”, a obraźliwe imię zostanie dodane do listy zakazanych słów.",
 	"reason_2": "Nieprawidłowa nazwa pora",
-	"reason_2_action": "Nazwa pora zostanie zastąpiona przez „Leek{'@'}<id>”, a obraźliwa nazwa zostanie dodana do listy złych słów.",
+	"reason_2_action": "Nazwa pora zostanie zastąpiona przez „Leek{'@'}<id>”, a obraźliwa nazwa zostanie dodana do listy zakazanych słów.",
 	"reason_3": "Nieprawidłowa nazwa sztucznej inteligencji",
 	"reason_3_action": "Imię sztucznej inteligencji zostanie zastąpione przez „AI{'@'}<id>”, a obraźliwe imię zostanie dodane do listy złych słów.",
 	"reason_4": "Błędna nazwa zespołu",
@@ -49,9 +49,9 @@
 	"report": "Raport",
 	"report_farmer_for_reason": "Zgłoś {0} z jakiego powodu?",
 	"report_informations": "Dodatkowe informacje (opcjonalnie)",
-	"select_leek": "Wybierz por",
-	"severity_s": "grawitacja {0}",
+	"select_leek": "Wybierz pora",
+	"severity_s": "ważność {0}",
 	"thank_you_for_reporting": "Dziękujemy za zgłoszenie",
 	"unmute": "Przywróć głos",
-	"unmute_popup": "Czy na pewno chcesz zwrócić podłogę {farmer}?"
+	"unmute_popup": "Czy na pewno chcesz przywrócić głos {farmer}?"
 }
