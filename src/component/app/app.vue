@@ -49,6 +49,8 @@
 
 				<tutorial-nudge-dialog v-if="tutorialNudgeOpen" v-model="tutorialNudgeOpen" />
 
+				<season-dialog v-if="LeekWars.seasonDialog" v-model="LeekWars.seasonDialog" />
+
 				<godfather-accept-dialog v-if="godfatherAcceptOpen" v-model="godfatherAcceptOpen" :login="godfatherAcceptLogin" />
 
 				<activation-welcome v-if="showActivationWelcome" v-model="showActivationWelcome" />
@@ -235,6 +237,7 @@
 	const CheckEmailReminder = defineAsyncComponent(() => import('@/component/check-email-reminder/check-email-reminder.vue'))
 	const InviteDialog = defineAsyncComponent(() => import('@/component/invite-dialog/invite-dialog.vue'))
 	const TutorialNudgeDialog = defineAsyncComponent(() => import('@/component/tutorial-nudge-dialog/tutorial-nudge-dialog.vue'))
+	const SeasonDialog = defineAsyncComponent(() => import('@/component/season/season-dialog.vue'))
 	const GodfatherAcceptDialog = defineAsyncComponent(() => import('@/component/godfather-accept-dialog/godfather-accept-dialog.vue'))
 	const ActivationWelcome = defineAsyncComponent(() => import('@/component/activation-welcome/activation-welcome.vue'))
 	const VisitorBanner = defineAsyncComponent(() => import('@/component/visitor-banner/visitor-banner.vue'))
@@ -413,6 +416,27 @@
 			tutorialNudgeOpen.value = true
 			localStorage.setItem('tutorial-nudge-seen-' + store.state.farmer!.id, '1')
 			LeekWars.track('tutorial-nudge-shown')
+		}
+	}, { immediate: true })
+
+	// Saison événementielle (#4383) : on ouvre le dialogue de début (à l'arrivée de la
+	// saison) ou de fin (délai de grâce) une seule fois. farmer.season.dialog est calculé
+	// côté serveur (gate par l'état "vu" en base) ; on le repasse à null après ouverture
+	// pour ne pas reboucler, et on marque vu en base. Le bandeau du potager peut rouvrir
+	// le dialogue manuellement (LeekWars.seasonDialog), sans re-marquer.
+	watch(() => {
+		const f = store.state.farmer
+		if (!f || !f.season || !f.season.dialog) return false
+		if (!f.verified && (showVerifyPopup.value || showCheckEmailReminder.value)) return false
+		if (inviteDialogOpen.value || tutorialNudgeOpen.value) return false
+		return true
+	}, (shouldShow) => {
+		if (shouldShow && !LeekWars.seasonDialog) {
+			const season = store.state.farmer!.season!
+			const phase = season.dialog === 'end' ? 1 : 0
+			LeekWars.seasonDialog = true
+			LeekWars.post('farmer/season-dialog-seen', { season: season.instance, phase })
+			season.dialog = null
 		}
 	}, { immediate: true })
 

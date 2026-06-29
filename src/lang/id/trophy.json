@@ -703,5 +703,15 @@
 	"popular": "Populer",
 	"popular_f": "Populer",
 	"adored": "Dipuja",
-	"adored_f": "Dipuja"
+	"adored_f": "Dipuja",
+	"season_solstice": "Anak matahari",
+	"season_solstice_f": "Anak matahari",
+	"season_heatwave": "Adem",
+	"season_heatwave_f": "Adem",
+	"season_halloween": "Malam bawang",
+	"season_halloween_f": "Malam bawang",
+	"season_easter": "Berburu telur",
+	"season_easter_f": "Berburu telur",
+	"season_christmas": "Semangat Natal",
+	"season_christmas_f": "Semangat Natal"
 }

@@ -703,5 +703,15 @@
 	"popular": "Популярный",
 	"popular_f": "Популярная",
 	"adored": "Обожаемый",
-	"adored_f": "Обожаемая"
+	"adored_f": "Обожаемая",
+	"season_solstice": "Дитя солнца",
+	"season_solstice_f": "Дитя солнца",
+	"season_heatwave": "На прохладе",
+	"season_heatwave_f": "На прохладе",
+	"season_halloween": "Ночь порея",
+	"season_halloween_f": "Ночь порея",
+	"season_easter": "Охота за яйцами",
+	"season_easter_f": "Охота за яйцами",
+	"season_christmas": "Дух Рождества",
+	"season_christmas_f": "Дух Рождества"
 }

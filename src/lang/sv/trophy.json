@@ -703,5 +703,15 @@
 	"popular": "Populär",
 	"popular_f": "Populär",
 	"adored": "Avgudad",
-	"adored_f": "Avgudad"
+	"adored_f": "Avgudad",
+	"season_solstice": "Solbarn",
+	"season_solstice_f": "Solbarn",
+	"season_heatwave": "Svalkan",
+	"season_heatwave_f": "Svalkan",
+	"season_halloween": "Purjolöksnatt",
+	"season_halloween_f": "Purjolöksnatt",
+	"season_easter": "Äggjakt",
+	"season_easter_f": "Äggjakt",
+	"season_christmas": "Julstämning",
+	"season_christmas_f": "Julstämning"
 }

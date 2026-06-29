@@ -383,5 +383,22 @@
 	"x_to_y": "{0} do {1}",
 	"xp": "XP",
 	"xp_blocked": "XP zablokowany",
-	"yes": "Tak"
+	"yes": "Tak",
+	"season_name_solstice": "Przesilenie",
+	"season_name_heatwave": "Upały",
+	"season_name_halloween": "Halloween",
+	"season_name_easter": "Wielkanoc",
+	"season_name_christmas": "Boże Narodzenie",
+	"season_banner": "Sezon {season}!",
+	"season_bonus_solstice": "+{bonus}% PD i łupów w Battle Royale",
+	"season_bonus_heatwave": "+{bonus}% PD i łupów w walkach solo",
+	"season_bonus_halloween": "+{bonus}% PD i łupów w walkach z bossami",
+	"season_bonus_easter": "+{bonus}% PD i łupów w Polowaniu na skrzynie",
+	"season_bonus_christmas": "+{bonus}% PD i łupów w walkach drużynowych",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "Sezon {season} się rozpoczyna!",
+	"season_start_text": "To sezon {season}! Korzystaj z bonusu +{bonus}% PD i łupów we wszystkich walkach z bossami. Udanych łowów!",
+	"season_end_title": "Koniec sezonu {season}",
+	"season_end_text": "Sezon {season} dobiegł końca. Dzięki za udział, do zobaczenia następnym razem!",
+	"season_close": "Rozumiem!"
 }

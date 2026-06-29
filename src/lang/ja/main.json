@@ -383,5 +383,22 @@
 	"loadout_forgotten_preferred_hint": "候補の順序付きリスト : エレヴールが空きの個体を所有している最初のものが装備されます。ドラッグ＆ドロップで並び替え。",
 	"loadout_skipped_reason_no_forgotten_available": "候補の中に利用可能な忘れられた武器がありません",
 	"loadout_unsaved_changes_message": "この装備に未保存の変更があります。どうしますか？",
-	"loadout_unsaved_changes_title": "未保存の変更"
+	"loadout_unsaved_changes_title": "未保存の変更",
+	"season_name_solstice": "夏至",
+	"season_name_heatwave": "猛暑",
+	"season_name_halloween": "ハロウィン",
+	"season_name_easter": "イースター",
+	"season_name_christmas": "クリスマス",
+	"season_banner": "{season}シーズン！",
+	"season_bonus_solstice": "バトルロイヤルで経験値と戦利品 +{bonus}%",
+	"season_bonus_heatwave": "ソロ戦で経験値と戦利品 +{bonus}%",
+	"season_bonus_halloween": "ボス戦で経験値と戦利品 +{bonus}%",
+	"season_bonus_easter": "宝箱ハントで経験値と戦利品 +{bonus}%",
+	"season_bonus_christmas": "チーム戦で経験値と戦利品 +{bonus}%",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "{season}シーズンが始まりました！",
+	"season_start_text": "{season}シーズンです！すべてのボス戦で経験値と戦利品が +{bonus}% アップ。狩りを楽しもう！",
+	"season_end_title": "{season}シーズン終了",
+	"season_end_text": "{season}シーズンが終了しました。ご参加ありがとうございました。次のシーズンでお会いしましょう！",
+	"season_close": "了解！"
 }

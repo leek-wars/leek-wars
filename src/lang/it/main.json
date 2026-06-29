@@ -383,5 +383,22 @@
 	"x_to_y": "{0} a {1}",
 	"xp": "XP",
 	"xp_blocked": "XP bloccati",
-	"yes": "Sì"
+	"yes": "Sì",
+	"season_name_solstice": "Solstizio",
+	"season_name_heatwave": "Canicola",
+	"season_name_halloween": "Halloween",
+	"season_name_easter": "Pasqua",
+	"season_name_christmas": "Natale",
+	"season_banner": "Stagione di {season}!",
+	"season_bonus_solstice": "+{bonus}% di XP e bottino in Battle Royale",
+	"season_bonus_heatwave": "+{bonus}% di XP e bottino in combattimenti solitari",
+	"season_bonus_halloween": "+{bonus}% di XP e bottino in combattimenti contro i boss",
+	"season_bonus_easter": "+{bonus}% di XP e bottino in Caccia ai forzieri",
+	"season_bonus_christmas": "+{bonus}% di XP e bottino in combattimenti a squadre",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "La stagione di {season} è iniziata!",
+	"season_start_text": "È la stagione di {season}! Approfitta di un bonus del +{bonus}% di XP e bottino in tutti i combattimenti contro i boss. Buona caccia!",
+	"season_end_title": "Fine della stagione di {season}",
+	"season_end_text": "La stagione di {season} è finita. Grazie per aver partecipato, alla prossima!",
+	"season_close": "Capito!"
 }

@@ -383,5 +383,22 @@
 	"x_to_y": "{0} до {1}",
 	"xp": "XP",
 	"xp_blocked": "XP заблокирован",
-	"yes": "Да"
+	"yes": "Да",
+	"season_name_solstice": "Солнцестояние",
+	"season_name_heatwave": "Зной",
+	"season_name_halloween": "Хэллоуин",
+	"season_name_easter": "Пасха",
+	"season_name_christmas": "Рождество",
+	"season_banner": "Сезон «{season}»!",
+	"season_bonus_solstice": "+{bonus}% опыта и добычи в Battle Royale",
+	"season_bonus_heatwave": "+{bonus}% опыта и добычи в одиночных боях",
+	"season_bonus_halloween": "+{bonus}% опыта и добычи в боях с боссами",
+	"season_bonus_easter": "+{bonus}% опыта и добычи в Охоте за сундуками",
+	"season_bonus_christmas": "+{bonus}% опыта и добычи в командных боях",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "Начинается сезон «{season}»!",
+	"season_start_text": "Это сезон «{season}»! Получайте бонус +{bonus}% к опыту и добыче во всех боях с боссами. Удачной охоты!",
+	"season_end_title": "Конец сезона «{season}»",
+	"season_end_text": "Сезон «{season}» завершён. Спасибо за участие, до встречи в следующем сезоне!",
+	"season_close": "Понятно!"
 }

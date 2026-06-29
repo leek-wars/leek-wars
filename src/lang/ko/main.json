@@ -383,5 +383,22 @@
 	"x_to_y": "{0} ~ {1}",
 	"xp": "XP",
 	"xp_blocked": "XP 차단됨",
-	"yes": "예"
+	"yes": "예",
+	"season_name_solstice": "하지",
+	"season_name_heatwave": "폭염",
+	"season_name_halloween": "할로윈",
+	"season_name_easter": "부활절",
+	"season_name_christmas": "크리스마스",
+	"season_banner": "{season} 시즌!",
+	"season_bonus_solstice": "배틀로얄에서 경험치와 전리품 +{bonus}%",
+	"season_bonus_heatwave": "솔로 전투에서 경험치와 전리품 +{bonus}%",
+	"season_bonus_halloween": "보스 전투에서 경험치와 전리품 +{bonus}%",
+	"season_bonus_easter": "상자 사냥에서 경험치와 전리품 +{bonus}%",
+	"season_bonus_christmas": "팀 전투에서 경험치와 전리품 +{bonus}%",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "{season} 시즌이 시작됩니다!",
+	"season_start_text": "{season} 시즌입니다! 모든 보스 전투에서 경험치와 전리품 +{bonus}% 보너스를 누리세요. 즐거운 사냥 되세요!",
+	"season_end_title": "{season} 시즌 종료",
+	"season_end_text": "{season} 시즌이 끝났습니다. 참여해 주셔서 감사합니다. 다음 시즌에 만나요!",
+	"season_close": "확인!"
 }

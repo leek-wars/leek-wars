@@ -726,5 +726,15 @@
 	"popular": "Popular",
 	"popular_f": "Popular",
 	"adored": "Adorado",
-	"adored_f": "Adorada"
+	"adored_f": "Adorada",
+	"season_solstice": "Hijo del sol",
+	"season_solstice_f": "Hijo del sol",
+	"season_heatwave": "Al fresco",
+	"season_heatwave_f": "Al fresco",
+	"season_halloween": "Noche de puerros",
+	"season_halloween_f": "Noche de puerros",
+	"season_easter": "Búsqueda de huevos",
+	"season_easter_f": "Búsqueda de huevos",
+	"season_christmas": "Espíritu navideño",
+	"season_christmas_f": "Espíritu navideño"
 }

@@ -703,5 +703,15 @@
 	"popular": "受欢迎者",
 	"popular_f": "受欢迎者",
 	"adored": "受崇拜者",
-	"adored_f": "受崇拜者"
+	"adored_f": "受崇拜者",
+	"season_solstice": "太阳之子",
+	"season_solstice_f": "太阳之子",
+	"season_heatwave": "纳凉",
+	"season_heatwave_f": "纳凉",
+	"season_halloween": "韭葱之夜",
+	"season_halloween_f": "韭葱之夜",
+	"season_easter": "寻蛋",
+	"season_easter_f": "寻蛋",
+	"season_christmas": "圣诞精神",
+	"season_christmas_f": "圣诞精神"
 }

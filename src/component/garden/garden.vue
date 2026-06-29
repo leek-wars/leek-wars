@@ -10,6 +10,7 @@
 				</div>
 			</div>
 		</div>
+		<season-banner />
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="garden-left first last">
@@ -446,6 +447,7 @@
 	import { BOSSES } from '@/model/boss'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import SeasonBanner from '@/component/season/season-banner.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 	import { useRoute, useRouter } from 'vue-router'

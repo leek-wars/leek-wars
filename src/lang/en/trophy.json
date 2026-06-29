@@ -703,5 +703,15 @@
 	"popular": "Popular",
 	"popular_f": "Popular",
 	"adored": "Adored",
-	"adored_f": "Adored"
+	"adored_f": "Adored",
+	"season_solstice": "Sun Child",
+	"season_solstice_f": "Sun Child",
+	"season_heatwave": "Keeping Cool",
+	"season_heatwave_f": "Keeping Cool",
+	"season_halloween": "Leek Night",
+	"season_halloween_f": "Leek Night",
+	"season_easter": "Egg Hunt",
+	"season_easter_f": "Egg Hunt",
+	"season_christmas": "Christmas Spirit",
+	"season_christmas_f": "Christmas Spirit"
 }

@@ -910,6 +910,7 @@ const LeekWars = reactive({
 	effectRawOpened: false,
 	message: null as string | null,
 	messagePopup: false,
+	seasonDialog: false, // dialogue de saison événementielle (#4383), ouvert au clic sur le bandeau
 	logoutDialog: false,
 	cloverResult: null as string | null,
 	cloverPopup: false,

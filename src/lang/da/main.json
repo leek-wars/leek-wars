@@ -383,5 +383,22 @@
 	"x_to_y": "{0} til {1}",
 	"xp": "XP",
 	"xp_blocked": "XP blokeret",
-	"yes": "Ja"
+	"yes": "Ja",
+	"season_name_solstice": "Sankthans",
+	"season_name_heatwave": "Hedebølge",
+	"season_name_halloween": "Halloween",
+	"season_name_easter": "Påske",
+	"season_name_christmas": "Jul",
+	"season_banner": "{season}sæson!",
+	"season_bonus_solstice": "+{bonus}% XP og bytte i Battle Royale",
+	"season_bonus_heatwave": "+{bonus}% XP og bytte i solokampe",
+	"season_bonus_halloween": "+{bonus}% XP og bytte i boss-kampe",
+	"season_bonus_easter": "+{bonus}% XP og bytte i Kistejagten",
+	"season_bonus_christmas": "+{bonus}% XP og bytte i holdkampe",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "{season}sæsonen er her!",
+	"season_start_text": "Det er {season}sæson! Nyd en bonus på +{bonus}% XP og bytte i alle boss-kampe. God jagt!",
+	"season_end_title": "Slutningen på {season}sæsonen",
+	"season_end_text": "{season}sæsonen er slut. Tak fordi du deltog, vi ses næste gang!",
+	"season_close": "Forstået!"
 }

@@ -383,5 +383,22 @@
 	"x_to_y": "{0} sampai {1}",
 	"xp": "XP",
 	"xp_blocked": "XP diblokir",
-	"yes": "Ya"
+	"yes": "Ya",
+	"season_name_solstice": "Titik Balik Surya",
+	"season_name_heatwave": "Gelombang Panas",
+	"season_name_halloween": "Halloween",
+	"season_name_easter": "Paskah",
+	"season_name_christmas": "Natal",
+	"season_banner": "Musim {season}!",
+	"season_bonus_solstice": "+{bonus}% XP dan rampasan di Battle Royale",
+	"season_bonus_heatwave": "+{bonus}% XP dan rampasan di pertarungan solo",
+	"season_bonus_halloween": "+{bonus}% XP dan rampasan di pertarungan bos",
+	"season_bonus_easter": "+{bonus}% XP dan rampasan di Perburuan Peti",
+	"season_bonus_christmas": "+{bonus}% XP dan rampasan di pertarungan tim",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "Musim {season} telah tiba!",
+	"season_start_text": "Ini musim {season}! Nikmati bonus +{bonus}% XP dan rampasan di semua pertarungan bos. Selamat berburu!",
+	"season_end_title": "Akhir musim {season}",
+	"season_end_text": "Musim {season} telah berakhir. Terima kasih telah berpartisipasi, sampai jumpa lain kali!",
+	"season_close": "Mengerti!"
 }

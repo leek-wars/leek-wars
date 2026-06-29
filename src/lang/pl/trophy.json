@@ -703,5 +703,15 @@
 	"popular": "Popularny",
 	"popular_f": "Popularna",
 	"adored": "Uwielbiany",
-	"adored_f": "Uwielbiana"
+	"adored_f": "Uwielbiana",
+	"season_solstice": "Dziecko słońca",
+	"season_solstice_f": "Dziecko słońca",
+	"season_heatwave": "W cieniu",
+	"season_heatwave_f": "W cieniu",
+	"season_halloween": "Noc porów",
+	"season_halloween_f": "Noc porów",
+	"season_easter": "Polowanie na jajka",
+	"season_easter_f": "Polowanie na jajka",
+	"season_christmas": "Duch Bożego Narodzenia",
+	"season_christmas_f": "Duch Bożego Narodzenia"
 }

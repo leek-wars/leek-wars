@@ -383,5 +383,22 @@
 	"x_to_y": "{0} – {1}",
 	"xp": "XP",
 	"xp_blocked": "XP estetty",
-	"yes": "Kyllä"
+	"yes": "Kyllä",
+	"season_name_solstice": "Juhannus",
+	"season_name_heatwave": "Helle",
+	"season_name_halloween": "Halloween",
+	"season_name_easter": "Pääsiäinen",
+	"season_name_christmas": "Joulu",
+	"season_banner": "{season}kausi!",
+	"season_bonus_solstice": "+{bonus}% kokemusta ja saalista Battle Royale -otteluissa",
+	"season_bonus_heatwave": "+{bonus}% kokemusta ja saalista soolotaisteluissa",
+	"season_bonus_halloween": "+{bonus}% kokemusta ja saalista pomotaisteluissa",
+	"season_bonus_easter": "+{bonus}% kokemusta ja saalista Arkkujahdissa",
+	"season_bonus_christmas": "+{bonus}% kokemusta ja saalista joukkuetaisteluissa",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "{season}kausi on alkanut!",
+	"season_start_text": "On {season}kausi! Nauti +{bonus}% kokemus- ja saalisbonuksesta kaikissa pomotaisteluissa. Hyvää metsästystä!",
+	"season_end_title": "{season}kauden loppu",
+	"season_end_text": "{season}kausi on päättynyt. Kiitos osallistumisesta, nähdään ensi kerralla!",
+	"season_close": "Selvä!"
 }

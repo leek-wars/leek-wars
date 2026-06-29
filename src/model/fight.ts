@@ -84,6 +84,8 @@ class Report {
 	public flags1!: string[]
 	public flags2!: string[]
 	public duration!: number
+	public season?: string        // saison événementielle active (#4383), ex : 'summer'
+	public season_bonus?: number  // bonus XP/butin en % appliqué à ce combat (boss en saison)
 }
 
 class Fight {

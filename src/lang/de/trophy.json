@@ -703,5 +703,15 @@
 	"popular": "Populär",
 	"popular_f": "Populär",
 	"adored": "Vergöttert",
-	"adored_f": "Vergöttert"
+	"adored_f": "Vergöttert",
+	"season_solstice": "Sonnenkind",
+	"season_solstice_f": "Sonnenkind",
+	"season_heatwave": "Abgekühlt",
+	"season_heatwave_f": "Abgekühlt",
+	"season_halloween": "Lauchnacht",
+	"season_halloween_f": "Lauchnacht",
+	"season_easter": "Eiersuche",
+	"season_easter_f": "Eiersuche",
+	"season_christmas": "Weihnachtsgeist",
+	"season_christmas_f": "Weihnachtsgeist"
 }

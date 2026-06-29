@@ -8,6 +8,7 @@ import { Tournament } from '@/model/tournament'
 import { Weapon } from '@/model/weapon'
 import { Group } from './group'
 import { FarmerTree } from './filesystem'
+import { SeasonState } from './season'
 
 interface InventoryItem {
 	id: number
@@ -79,6 +80,7 @@ class Farmer {
 	public verify_modal_dismissed_at!: number | null
 	public verify_code_at!: number | null
 	public invite_dialog_seen_at!: number | null
+	public season!: SeasonState | null
 	public last_connection!: number
 	public moderator!: boolean
 	public admin!: boolean

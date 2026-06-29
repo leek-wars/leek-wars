@@ -703,5 +703,15 @@
 	"popular": "Suosittu",
 	"popular_f": "Suosittu",
 	"adored": "Ihailtu",
-	"adored_f": "Ihailtu"
+	"adored_f": "Ihailtu",
+	"season_solstice": "Auringon lapsi",
+	"season_solstice_f": "Auringon lapsi",
+	"season_heatwave": "Viileässä",
+	"season_heatwave_f": "Viileässä",
+	"season_halloween": "Purjon yö",
+	"season_halloween_f": "Purjon yö",
+	"season_easter": "Munajahti",
+	"season_easter_f": "Munajahti",
+	"season_christmas": "Joulun henki",
+	"season_christmas_f": "Joulun henki"
 }

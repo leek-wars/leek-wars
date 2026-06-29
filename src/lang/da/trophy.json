@@ -703,5 +703,15 @@
 	"popular": "Populær",
 	"popular_f": "Populær",
 	"adored": "Forgudet",
-	"adored_f": "Forgudet"
+	"adored_f": "Forgudet",
+	"season_solstice": "Solbarn",
+	"season_solstice_f": "Solbarn",
+	"season_heatwave": "I skyggen",
+	"season_heatwave_f": "I skyggen",
+	"season_halloween": "Porrenat",
+	"season_halloween_f": "Porrenat",
+	"season_easter": "Æggejagt",
+	"season_easter_f": "Æggejagt",
+	"season_christmas": "Julestemning",
+	"season_christmas_f": "Julestemning"
 }

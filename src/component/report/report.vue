@@ -38,6 +38,15 @@
 					{{ $t('generation_too_long') }}
 				</div>
 				<div class="report-general">
+					<v-tooltip v-if="report.season_bonus">
+						<template #activator="{ props }">
+							<div v-bind="props" class="season-tag" :style="seasonTagStyle">
+								<span class="season-tag-emoji">{{ seasonDisplay(report.season!).emoji }}</span>
+								<span>{{ $t('main.season_tag', { season: $t('main.season_name_' + report.season), bonus: report.season_bonus }) }}</span>
+							</div>
+						</template>
+						{{ $t('main.season_bonus_' + report.season, { bonus: report.season_bonus }) }}
+					</v-tooltip>
 					<div v-if="fight.type === FightType.BATTLE_ROYALE">
 						<h3>{{ $t('main.leeks') }}</h3>
 						<div class="scroll-x">
@@ -258,6 +267,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
+	import { seasonDisplay } from '@/model/season'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
@@ -297,6 +307,12 @@
 
 	const fight = ref<Fight | null>(null)
 	const report = ref<Report | null>(null)
+
+	// Tag de bonus de saison (#4383) : pastille colorée à la teinte de la saison.
+	const seasonTagStyle = computed(() => {
+		const key = report.value?.season
+		return key ? { background: seasonDisplay(key).accent } : {}
+	})
 	const fightActions = ref<Action[] | null>(null)
 	const leeks = ref<{[key: number]: ReportLeek}>({})
 	const farmers = ref<{[key: number]: Farmer}>({})
@@ -809,6 +825,24 @@
 
 
 <style lang="scss" scoped>
+	.season-tag {
+		display: flex;
+		width: fit-content;
+		align-items: center;
+		gap: 6px;
+		margin: 0 auto 12px;
+		padding: 5px 12px;
+		border-radius: 14px;
+		color: white;
+		font-weight: bold;
+		font-size: 13px;
+		cursor: help;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+	}
+	.season-tag-emoji {
+		font-size: 16px;
+		line-height: 1;
+	}
 	.tab .v-icon {
 		font-size: 20px;
 		margin-right: 0;

@@ -383,5 +383,22 @@
 	"x_to_y": "{0} to {1}",
 	"xp": "XP",
 	"xp_blocked": "XP blocked",
-	"yes": "Yes"
+	"yes": "Yes",
+	"season_name_solstice": "Solstice",
+	"season_name_heatwave": "Heatwave",
+	"season_name_halloween": "Halloween",
+	"season_name_easter": "Easter",
+	"season_name_christmas": "Christmas",
+	"season_banner": "{season} season!",
+	"season_bonus_solstice": "+{bonus}% XP and loot on Battle Royale fights",
+	"season_bonus_heatwave": "+{bonus}% XP and loot on solo fights",
+	"season_bonus_halloween": "+{bonus}% XP and loot on boss fights",
+	"season_bonus_easter": "+{bonus}% XP and loot on Chest Hunt fights",
+	"season_bonus_christmas": "+{bonus}% XP and loot on team fights",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "The {season} season is here!",
+	"season_start_text": "It's the {season} season! Enjoy a +{bonus}% XP and loot bonus on all boss fights. Happy hunting!",
+	"season_end_title": "End of the {season} season",
+	"season_end_text": "The {season} season is over. Thanks for taking part, see you next time!",
+	"season_close": "Got it!"
 }

@@ -703,5 +703,15 @@
 	"popular": "人気者",
 	"popular_f": "人気者",
 	"adored": "敬愛される者",
-	"adored_f": "敬愛される者"
+	"adored_f": "敬愛される者",
+	"season_solstice": "太陽の子",
+	"season_solstice_f": "太陽の子",
+	"season_heatwave": "涼を求めて",
+	"season_heatwave_f": "涼を求めて",
+	"season_halloween": "リークの夜",
+	"season_halloween_f": "リークの夜",
+	"season_easter": "卵探し",
+	"season_easter_f": "卵探し",
+	"season_christmas": "クリスマスの精神",
+	"season_christmas_f": "クリスマスの精神"
 }

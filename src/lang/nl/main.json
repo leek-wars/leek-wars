@@ -383,5 +383,22 @@
 	"x_to_y": "{0} tot {1}",
 	"xp": "XP",
 	"xp_blocked": "XP geblokkeerd",
-	"yes": "Ja"
+	"yes": "Ja",
+	"season_name_solstice": "Midzomer",
+	"season_name_heatwave": "Hittegolf",
+	"season_name_halloween": "Halloween",
+	"season_name_easter": "Pasen",
+	"season_name_christmas": "Kerstmis",
+	"season_banner": "{season}-seizoen!",
+	"season_bonus_solstice": "+{bonus}% XP en buit in Battle Royale",
+	"season_bonus_heatwave": "+{bonus}% XP en buit in sologevechten",
+	"season_bonus_halloween": "+{bonus}% XP en buit in bossgevechten",
+	"season_bonus_easter": "+{bonus}% XP en buit in de Kistenjacht",
+	"season_bonus_christmas": "+{bonus}% XP en buit in teamgevechten",
+	"season_tag": "{season} +{bonus}%",
+	"season_start_title": "Het {season}-seizoen is begonnen!",
+	"season_start_text": "Het is {season}-seizoen! Geniet van een bonus van +{bonus}% XP en buit in alle bossgevechten. Veel jachtplezier!",
+	"season_end_title": "Einde van het {season}-seizoen",
+	"season_end_text": "Het {season}-seizoen is voorbij. Bedankt voor je deelname, tot de volgende keer!",
+	"season_close": "Begrepen!"
 }

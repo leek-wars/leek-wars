@@ -703,5 +703,15 @@
 	"popular": "Populair",
 	"popular_f": "Populair",
 	"adored": "Aanbeden",
-	"adored_f": "Aanbeden"
+	"adored_f": "Aanbeden",
+	"season_solstice": "Zonnekind",
+	"season_solstice_f": "Zonnekind",
+	"season_heatwave": "Lekker koel",
+	"season_heatwave_f": "Lekker koel",
+	"season_halloween": "Preinacht",
+	"season_halloween_f": "Preinacht",
+	"season_easter": "Eierjacht",
+	"season_easter_f": "Eierjacht",
+	"season_christmas": "Kerstsfeer",
+	"season_christmas_f": "Kerstsfeer"
 }
