@@ -159,7 +159,7 @@
 	"error_72": "Campo sconosciuto \"{1}\" nella classe \"{0}\"",
 	"error_73": "Costruttore sconosciuto",
 	"error_74": "Il secondo operatore di instanceof deve essere una classe",
-	"error_75": "Questo valore \"{0}\" non è iterabile (non è un elenco o una tabella)",
+	"error_75": "Questo valore \"{0}\" non è iterabile (non è un array o una tabella)",
 	"error_76": "StackOverflow",
 	"error_77": "Operatore non valido \"{0}\"",
 	"error_78": "Questo campo \"{1}\" è privato nella classe \"{0}\".",

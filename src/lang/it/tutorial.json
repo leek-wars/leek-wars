@@ -3,7 +3,7 @@
 	"boolean_null_items": "Equipaggia un'arma solo una volta",
 	"conditions": "Condizioni",
 	"conditions_items": "Guarisci se ferito",
-	"editor": "L'editore",
+	"editor": "L'editor",
 	"editor_items": "Introduzione",
 	"functions": "Crea le tue funzioni",
 	"functions_items": "Funzione getClosestCellToUse",

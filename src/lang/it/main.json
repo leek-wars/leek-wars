@@ -90,7 +90,7 @@
 	"dida_12": "Buona fortuna <b>{0}</b>!",
 	"dida_1_leek": "Benvenuto a Leek Wars <b>{0}</b>, giovane porro! Questa è la tua pagina.",
 	"dida_2": "Inizia utilizzando i tuoi punti capitale per aumentare le tue caratteristiche: si consiglia di utilizzare la vita {life} e la forza {strength}.",
-	"dida_3": "È ora possibile affrontare i porri degli altri giocatori nel <b>Potager</b> ⚔️. Hai a disposizione 50 combattimenti al giorno.",
+	"dida_3": "È ora possibile affrontare i porri degli altri giocatori nell'<b>Orto</b> ⚔️. Hai a disposizione 50 combattimenti al giorno.",
 	"dida_4": "Clicca su un avversario per attaccarlo!",
 	"dida_5": "In Leek Wars non controlli direttamente il tuo porro. Questo spetta all'<b>Intelligenza Artificiale</b> (IA) che programmi! ⚙️",
 	"dida_6": "Combattendo si guadagnano XP, che si possono usare per guadagnare punti capitale e sbloccare armi e chip.",
@@ -279,7 +279,7 @@
 	"resources": "Risorse",
 	"resources_help": "Risorse e aiuto",
 	"retrieve": "Recuperare",
-	"retrieve_all": "Riprendersi tutto",
+	"retrieve_all": "Recupera tutto",
 	"reusable": "Riutilizzabile",
 	"rewards": "Premi",
 	"roadmap": "Tabella di marcia",
@@ -378,6 +378,6 @@
 	"x_habs": "{0} Habs",
 	"x_to_y": "{0} a {1}",
 	"xp": "XP",
-	"xp_blocked": "PE bloccati",
+	"xp_blocked": "XP bloccati",
 	"yes": "Sì"
 }
