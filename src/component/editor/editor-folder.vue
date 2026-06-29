@@ -7,7 +7,7 @@
 				<v-icon v-if="folder.closed" class="icon">mdi-folder-lock-outline</v-icon>
 				<v-icon v-else-if="isGitRepo" class="icon">mdi-source-branch</v-icon>
 				<v-icon v-else class="icon">mdi-folder-outline</v-icon>
-				<span v-if="folder.id === -1" ref="name" class="text">{{ $t(folder.name) }}
+				<span v-if="folder.id === -1" ref="name" class="text">{{ nt(folder.name) }}
 					<span v-if="folder.id === -1">({{ folder.items.length }})</span>
 				</span>
 				<span v-else ref="name" class="text">{{ folder.name }}</span>
@@ -27,6 +27,7 @@
 
 <script setup lang="ts">
 import { fileSystem } from '@/model/filesystem'
+import { useNamespacedT } from '@/model/i18n'
 import { emitter } from '@/model/vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -35,6 +36,10 @@ import { Folder } from './editor-item'
 import { explorer } from './explorer'
 
 defineOptions({ name: 'EditorFolder', components: { 'editor-ai': EditorAI } })
+
+// La corbeille (folder.id === -1) affiche son nom via la clé `recycle_bin`, qui
+// vit dans le namespace `editor-explorer` (editor-folder n'a pas son propre .i18n).
+const nt = useNamespacedT('editor-explorer')
 
 const props = defineProps<{
 	folder: Folder
