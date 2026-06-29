@@ -63,5 +63,6 @@
 	"demo_form_name_invalid": "お名前を入力してください",
 	"demo_form_email_used": "このメールアドレスには既にアカウントがあります。ログインしてください。",
 	"demo_form_name_used": "この名前は既に使われています。別の名前を選んでください。",
-	"demo_form_too_many": "最近デモを作りすぎました。後でもう一度お試しください。"
+	"demo_form_too_many": "最近デモを作りすぎました。後でもう一度お試しください。",
+	"demo_form_name_rejected": "この名前は使用できません。別の名前を選んでください。"
 }

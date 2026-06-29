@@ -63,5 +63,6 @@
 	"demo_form_name_invalid": "Skriv inn navnet ditt",
 	"demo_form_email_used": "Denne e-posten har allerede en konto. Logg inn.",
 	"demo_form_name_used": "Dette navnet er allerede tatt, velg et annet.",
-	"demo_form_too_many": "For mange demoer opprettet nylig, prøv igjen senere."
+	"demo_form_too_many": "For mange demoer opprettet nylig, prøv igjen senere.",
+	"demo_form_name_rejected": "Dette navnet er ugyldig, velg et annet."
 }

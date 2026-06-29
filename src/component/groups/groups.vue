@@ -297,9 +297,12 @@ function submitGuest() {
 		router.push('/login/' + data.token + '?redirect=' + encodeURIComponent('/group/' + data.id))
 	}).error((e: { error?: string }) => {
 		submitting.value = false
-		if (e.error === 'mail_already_used') guestError.value = t('demo_form_email_used')
-		else if (e.error === 'name_already_used') guestError.value = t('demo_form_name_used')
-		else if (e.error === 'too_many_requests') guestError.value = t('demo_form_too_many')
+		const err = e.error
+		if (err === 'mail_already_used') guestError.value = t('demo_form_email_used')
+		else if (err === 'invalid_email') guestError.value = t('demo_form_email_invalid')
+		else if (err === 'name_already_used') guestError.value = t('demo_form_name_used')
+		else if (err === 'name_length' || err === 'name_format' || err === 'forbidden_name') guestError.value = t('demo_form_name_rejected')
+		else if (err === 'too_many_requests') guestError.value = t('demo_form_too_many')
 		else guestError.value = t('demo_error')
 	})
 }

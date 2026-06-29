@@ -63,5 +63,6 @@
 	"demo_form_name_invalid": "Inserisci il tuo nome",
 	"demo_form_email_used": "Questa email ha già un account. Accedi.",
 	"demo_form_name_used": "Questo nome è già in uso, scegline un altro.",
-	"demo_form_too_many": "Troppe demo create di recente, riprova più tardi."
+	"demo_form_too_many": "Troppe demo create di recente, riprova più tardi.",
+	"demo_form_name_rejected": "Questo nome non è valido, scegline un altro."
 }

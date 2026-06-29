@@ -63,5 +63,6 @@
 	"demo_form_name_invalid": "Ange ditt namn",
 	"demo_form_email_used": "Den här e-posten har redan ett konto. Logga in.",
 	"demo_form_name_used": "Det här namnet är upptaget, välj ett annat.",
-	"demo_form_too_many": "För många demos skapade nyligen, försök igen senare."
+	"demo_form_too_many": "För många demos skapade nyligen, försök igen senare.",
+	"demo_form_name_rejected": "Det här namnet är ogiltigt, välj ett annat."
 }

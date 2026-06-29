@@ -63,5 +63,6 @@
 	"demo_form_name_invalid": "Anna nimesi",
 	"demo_form_email_used": "Tällä sähköpostilla on jo tili. Kirjaudu.",
 	"demo_form_name_used": "Tämä nimi on jo käytössä, valitse toinen.",
-	"demo_form_too_many": "Liian monta demoa luotu äskettäin, yritä myöhemmin."
+	"demo_form_too_many": "Liian monta demoa luotu äskettäin, yritä myöhemmin.",
+	"demo_form_name_rejected": "Tämä nimi ei kelpaa, valitse toinen."
 }

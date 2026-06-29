@@ -63,5 +63,6 @@
 	"demo_form_name_invalid": "请输入你的名字",
 	"demo_form_email_used": "该邮箱已有账号，请登录。",
 	"demo_form_name_used": "该名字已被占用，请换一个。",
-	"demo_form_too_many": "最近创建的演示过多，请稍后再试。"
+	"demo_form_too_many": "最近创建的演示过多，请稍后再试。",
+	"demo_form_name_rejected": "该名字无效，请换一个。"
 }
