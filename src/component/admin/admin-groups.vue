@@ -41,6 +41,13 @@
 					<template #item.archived="{ item }">
 						<v-checkbox v-model="item.archived" :hide-details="true" />
 					</template>
+					<template #item.demo="{ item }">
+						<div v-if="isDemo(item)" class="demo-cell">
+							<span class="demo-badge">Démo</span>
+							<v-btn size="small" color="primary" variant="tonal" @click="convertDemo(item)">Convertir</v-btn>
+						</div>
+						<span v-else>—</span>
+					</template>
 				</v-data-table>
 			</div>
 		</panel>
@@ -65,6 +72,7 @@
 		{ title: 'Membres', value: 'members' },
 		{ title: 'Date de création', value: 'creation_date' },
 		{ title: 'Archivé', value: 'archived' },
+		{ title: 'Démo', value: 'demo' },
 	//   { text: 'Combats restants', value: 'day_fight' },
 	//   { text: 'Combats', value: 'fights' },
 	//   { text: 'Victoires', value: 'wins' },
@@ -80,6 +88,20 @@
 	LeekWars.get('groupe/get-all').then(g => {
 		groups.value = g
 	})
+
+	// Booléen pg renvoyé brut par get-all (true / 't' / 1)
+	function isDemo(item: { demo?: unknown }): boolean {
+		return item.demo === true || item.demo === 't' || item.demo === 1
+	}
+
+	// Convertit une démo en groupe payant (set-demo false) → étape "converted" du funnel
+	function convertDemo(item: { id: number, demo?: unknown }) {
+		if (!confirm('Convertir cette démo en groupe payant ? Le superviseur garde tout son contenu.')) return
+		LeekWars.put('groupe/set-demo', { group_id: item.id, enabled: false }).then(() => {
+			item.demo = false
+			LeekWars.toast('Groupe converti')
+		}).error((e: { error?: string }) => LeekWars.toast(e.error ?? 'Erreur'))
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -99,5 +121,18 @@
 }
 .status {
 	width: 15px;
+}
+.demo-cell {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.demo-badge {
+	background: var(--primary);
+	color: var(--pure-white);
+	font-size: 11px;
+	font-weight: bold;
+	padding: 2px 8px;
+	border-radius: 10px;
 }
 </style>
