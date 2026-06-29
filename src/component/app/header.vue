@@ -4,6 +4,7 @@
 			<router-link to="/">
 				<div class="logo-wrapper">
 					<img class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : '/image/leekwars.svg'">
+					<span v-if="seasonDecoration" class="season-decoration">{{ seasonDecoration }}</span>
 					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
@@ -189,9 +190,16 @@
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { defineAsyncComponent, ref } from 'vue'
+	import { seasonDisplay } from '@/model/season'
+	import { computed, defineAsyncComponent, ref } from 'vue'
 
 	defineOptions({ name: 'LwHeader' })
+
+	// Décoration saisonnière greffée sur le logo (#4383), seulement en saison active.
+	const seasonDecoration = computed(() => {
+		const s = store.state.farmer?.season
+		return s && s.active ? seasonDisplay(s.key).decoration : null
+	})
 
 	const Conversation = defineAsyncComponent(() => import('@/component/messages/conversation.vue'))
 	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
@@ -239,6 +247,16 @@
 	.logo-wrapper {
 		white-space: nowrap;
 		position: relative;
+		.season-decoration {
+			position: absolute;
+			top: -2px;
+			left: 142px;
+			font-size: 26px;
+			line-height: 1;
+			transform: rotate(14deg);
+			pointer-events: none;
+			filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+		}
 		.hat {
 			position: absolute;
 			top: -10px;

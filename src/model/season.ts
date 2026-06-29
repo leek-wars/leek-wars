@@ -17,17 +17,18 @@ export interface SeasonDisplay {
 	emoji: string
 	gradient: [string, string] // dégradé du bandeau / en-tête du dialogue
 	accent: string             // couleur d'accent (texte, tag rapport)
+	decoration: string         // emoji greffé sur le logo du header (#4383)
 }
 
 export const SEASON_DISPLAY: Record<string, SeasonDisplay> = {
-	solstice:  { emoji: '☀️', gradient: ['#ffd84d', '#ff9a2e'], accent: '#e07a0a' }, // été festif
-	heatwave:  { emoji: '🏖️', gradient: ['#2bc4d4', '#ffdf91'], accent: '#1497a6' }, // été plage
-	halloween: { emoji: '🎃', gradient: ['#ff7a18', '#5b2a86'], accent: '#d5610a' },
-	easter:    { emoji: '🐣', gradient: ['#9be3b4', '#ffd9a8'], accent: '#3f9d56' },
-	christmas: { emoji: '🎄', gradient: ['#1a7a4c', '#b02a37'], accent: '#b02a37' },
+	solstice:  { emoji: '☀️', gradient: ['#ffd84d', '#ff9a2e'], accent: '#e07a0a', decoration: '👒' }, // été festif
+	heatwave:  { emoji: '🏖️', gradient: ['#2bc4d4', '#ffdf91'], accent: '#1497a6', decoration: '☀️' }, // été plage
+	halloween: { emoji: '🎃', gradient: ['#ff7a18', '#5b2a86'], accent: '#d5610a', decoration: '🎃' },
+	easter:    { emoji: '🐣', gradient: ['#9be3b4', '#ffd9a8'], accent: '#3f9d56', decoration: '🥚' },
+	christmas: { emoji: '🎄', gradient: ['#1a7a4c', '#b02a37'], accent: '#b02a37', decoration: '🎅' },
 }
 
-const FALLBACK_DISPLAY: SeasonDisplay = { emoji: '✨', gradient: ['#9aa7ff', '#6c7cf0'], accent: '#5566e0' }
+const FALLBACK_DISPLAY: SeasonDisplay = { emoji: '✨', gradient: ['#9aa7ff', '#6c7cf0'], accent: '#5566e0', decoration: '✨' }
 
 export function seasonDisplay(key: string): SeasonDisplay {
 	return SEASON_DISPLAY[key] ?? FALLBACK_DISPLAY
