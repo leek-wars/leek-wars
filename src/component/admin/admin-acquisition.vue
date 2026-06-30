@@ -89,42 +89,49 @@
 			</template>
 		</panel>
 
-		<!-- Ventilations par langue et par pays : mêmes colonnes triables (clic sur l'en-tête) -->
-		<panel v-for="b of breakdowns" :key="b.kind">
+		<!-- Par langue -->
+		<panel>
 			<template #content>
 				<div class="content">
-					<h3>{{ b.title }}</h3>
-					<v-data-table
-						:headers="b.headers"
-						:items="b.items"
-						:items-per-page="-1"
-						:sort-by="[{ key: 'n', order: 'desc' }]"
-						density="compact"
-						hide-default-footer
-						class="breakdown-table">
-						<template #item.label="{ item }">
-							<div class="label-cell">
-								<flag v-if="item.flag" :code="item.flag" :clickable="false" />
-								<v-icon v-else-if="item.isUnknown" class="unknown-flag">mdi-help-circle-outline</v-icon>
-								<span>{{ item.label }}</span>
-							</div>
-						</template>
-						<template #item.n="{ item }">
-							<div class="inscrits">
-								<span>{{ $filters.number(item.n) }}</span>
-								<div class="ibar"><div class="fill" :style="{ width: item.bar }"></div></div>
-							</div>
-						</template>
-						<template #item.share_pct="{ item }">{{ pct1(item.share_pct) }}</template>
-						<template #item.activation_pct="{ item }">{{ pct1(item.activation_pct) }}</template>
-						<template #item.engagement_pct="{ item }">{{ pct1(item.engagement_pct) }}</template>
-						<template #item.verified_pct="{ item }">{{ pct1(item.verified_pct) }}</template>
-						<template #item.didactitiel_pct="{ item }">{{ pct1(item.didactitiel_pct) }}</template>
-						<template #item.tuto_done_pct="{ item }">{{ pct1(item.tuto_done_pct) }}</template>
-						<template #item.retention_d7_pct="{ item }">{{ pct1(item.retention_d7_pct) }}</template>
-						<template #item.trophy_points_avg="{ item }">{{ num0(item.trophy_points_avg) }}</template>
-						<template #no-data><div class="empty">Aucune donnée</div></template>
-					</v-data-table>
+					<h3>Par langue</h3>
+					<table class="breakdown">
+						<thead>
+							<tr><th>Langue</th><th class="num">Inscrits</th><th class="bar-col">Part</th><th class="num">Activation</th><th class="num">Vérifié</th><th class="num">Trophées moy.</th></tr>
+						</thead>
+						<tbody>
+							<tr v-for="row of by_language" :key="row.language">
+								<td class="label-cell">
+									<flag v-if="languageFlag(row.language)" :code="languageFlag(row.language)!" :clickable="false" />
+									<span>{{ languageName(row.language) }}</span>
+								</td>
+								<td class="num">{{ $filters.number(row.n) }}</td>
+								<td class="bar-col"><div class="ibar"><div class="fill" :style="{ width: barWidth(row.n, maxLanguageN) }"></div></div></td>
+								<td class="num">{{ pct1(row.activation_pct) }}</td>
+								<td class="num">{{ pct1(row.verified_pct) }}</td>
+								<td class="num">{{ num0(row.trophy_points_avg) }}</td>
+							</tr>
+							<tr v-if="!by_language.length"><td colspan="6" class="empty">Aucune donnée</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</template>
+		</panel>
+
+		<!-- Par pays -->
+		<panel>
+			<template #content>
+				<div class="content">
+					<h3>Par pays</h3>
+					<div v-if="by_country.length" class="countries">
+						<div v-for="c of by_country" :key="c.country" class="country card">
+							<flag v-if="c.country !== '(null)'" :code="c.country" :clickable="false" />
+							<v-icon v-else class="unknown-flag">mdi-help-circle-outline</v-icon>
+							<span class="code">{{ countryLabel(c.country) }}</span>
+							<span class="count">{{ $filters.number(c.n) }}</span>
+							<span class="share">{{ pct1(c.share_pct) }}</span>
+						</div>
+					</div>
+					<div v-else class="empty">Aucune donnée</div>
 				</div>
 			</template>
 		</panel>
@@ -218,20 +225,8 @@
 		active_hours_avg: number | null
 		active_hours_median: number | null
 	}
-	// Une ligne de ventilation, par langue OU par pays (mêmes colonnes de comparaison).
-	interface BreakdownRow {
-		language?: string
-		country?: string
-		n: number
-		share_pct: number | null
-		activation_pct: number | null
-		engagement_pct: number | null
-		verified_pct: number | null
-		didactitiel_pct: number | null
-		tuto_done_pct: number | null
-		retention_d7_pct: number | null
-		trophy_points_avg: number | null
-	}
+	interface LangRow { language: string, n: number, verified_pct: number | null, activation_pct: number | null, trophy_points_avg: number | null }
+	interface CountryRow { country: string, n: number, share_pct: number | null, activation_pct: number | null }
 	interface LoginModeRow { login_mode: string, n: number }
 	interface GodfatherRow { source: string, n: number, verified_pct: number | null, activation_pct: number | null }
 	interface CountryOption { country: string, n: number }
@@ -239,8 +234,8 @@
 		period: string
 		cohort_size: number
 		aggregates: Aggregates
-		by_language: BreakdownRow[]
-		by_country: BreakdownRow[]
+		by_language: LangRow[]
+		by_country: CountryRow[]
 		by_login_mode: LoginModeRow[]
 		by_godfather: GodfatherRow[]
 		country_options: CountryOption[]
@@ -264,46 +259,15 @@
 	const loading = ref(false)
 	const cohort_size = ref(0)
 	const agg = ref<Aggregates>({ ...EMPTY_AGG })
-	const by_language = ref<BreakdownRow[]>([])
-	const by_country = ref<BreakdownRow[]>([])
+	const by_language = ref<LangRow[]>([])
+	const by_country = ref<CountryRow[]>([])
 	const by_login_mode = ref<LoginModeRow[]>([])
 	const by_godfather = ref<GodfatherRow[]>([])
 	const countryOptions = ref<CountryOption[]>([])
 
 	const languageOptions = computed(() => Object.values(LeekWars.languages).map(l => ({ code: l.code, name: l.name })))
+	const maxLanguageN = computed(() => by_language.value.reduce((m, r) => Math.max(m, r.n), 0))
 	const hasFilters = computed(() => Object.values(filters).some(v => v !== ''))
-
-	// Colonnes triables partagées par les deux tables (clic sur l'en-tête).
-	// Le tri opère sur la valeur brute de l'item (n, *_pct…), pas sur l'affichage.
-	function breakdownHeaders(labelTitle: string): any[] {
-		return [
-			{ title: labelTitle, key: 'label', align: 'start', sortable: true },
-			{ title: 'Inscrits', key: 'n', align: 'end', sortable: true },
-			{ title: 'Part', key: 'share_pct', align: 'end', sortable: true },
-			{ title: 'Activ.', key: 'activation_pct', align: 'end', sortable: true },
-			{ title: 'Engagé', key: 'engagement_pct', align: 'end', sortable: true },
-			{ title: 'Vérifié', key: 'verified_pct', align: 'end', sortable: true },
-			{ title: 'Didact.', key: 'didactitiel_pct', align: 'end', sortable: true },
-			{ title: 'Tuto', key: 'tuto_done_pct', align: 'end', sortable: true },
-			{ title: 'J+7', key: 'retention_d7_pct', align: 'end', sortable: true },
-			{ title: 'Trophées', key: 'trophy_points_avg', align: 'end', sortable: true },
-		]
-	}
-	function buildBreakdown(kind: 'language' | 'country', title: string, labelTitle: string, rows: BreakdownRow[]) {
-		const max = rows.reduce((m, r) => Math.max(m, r.n), 0)
-		const items = rows.map(r => ({
-			...r,
-			label: kind === 'language' ? languageName(r.language) : countryLabel(r.country),
-			flag: kind === 'language' ? languageFlag(r.language) : (r.country && r.country !== '(null)' ? r.country : null),
-			isUnknown: kind === 'country' && r.country === '(null)',
-			bar: max ? Math.round((r.n / max) * 100) + '%' : '0%',
-		}))
-		return { kind, title, items, headers: breakdownHeaders(labelTitle) }
-	}
-	const breakdowns = computed(() => [
-		buildBreakdown('language', 'Par langue', 'Langue', by_language.value),
-		buildBreakdown('country', 'Par pays', 'Pays', by_country.value),
-	])
 
 	const dualMetrics = computed(() => [
 		{ label: 'Ancienneté du compte', icon: 'mdi-calendar-clock', avg: duration(agg.value.account_age_avg), median: duration(agg.value.account_age_median) },
@@ -379,14 +343,13 @@
 	}
 
 	// --- Libellés ---------------------------------------------------------------
-	function languageName(code?: string): string {
-		return (code && LeekWars.languages[code]?.name) || code || ''
+	function languageName(code: string): string {
+		return LeekWars.languages[code]?.name || code
 	}
-	function languageFlag(code?: string): string | null {
-		return (code && LeekWars.languages[code]?.country) || null
+	function languageFlag(code: string): string | null {
+		return LeekWars.languages[code]?.country || null
 	}
-	function countryLabel(code?: string): string {
-		if (!code) return ''
+	function countryLabel(code: string): string {
 		return code === '(null)' ? 'Inconnu' : code.toUpperCase()
 	}
 	function loginMode(mode: string): { label: string, color: string, icon: string } {
@@ -487,77 +450,63 @@ h4 {
 		}
 	}
 }
-// Tables triables (langue / pays) : Vuetify v-data-table, fond transparent pour
-// s'intégrer au panel + couleurs via les variables CSS du site (dark inclus).
-.breakdown-table {
-	background: transparent;
-	font-size: 13px;
-	:deep(.v-table__wrapper) { overflow-x: auto; }
-	:deep(.v-data-table__th) {
-		color: var(--text-color-secondary) !important;
-		font-size: 12px;
-		font-weight: 600;
-		white-space: nowrap;
-	}
-	:deep(.v-data-table__td) {
-		font-variant-numeric: tabular-nums;
-	}
-	:deep(.v-data-table__td),
-	:deep(.v-data-table__th) {
-		padding: 0 10px !important;
-	}
-}
-// Table simple (mode d'inscription).
 .breakdown {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 13px;
-	white-space: nowrap;
 	th {
-		text-align: right;
+		text-align: left;
 		font-weight: 600;
 		color: var(--text-color-secondary);
 		font-size: 12px;
 		padding: 4px 8px;
 		border-bottom: 1px solid var(--border);
-		&:first-child { text-align: left; }
 	}
 	td {
 		padding: 5px 8px;
 		border-bottom: 1px solid var(--border);
 	}
 	.num { text-align: right; font-variant-numeric: tabular-nums; }
+	.label-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		.flag { max-height: 16px; max-width: 22px; }
+		.v-icon { font-size: 18px; }
+	}
 	.bar-col { width: 30%; }
+	.ibar {
+		height: 8px;
+		background: var(--background-disabled, #e0e0e0);
+		border-radius: 4px;
+		overflow: hidden;
+		.fill {
+			height: 100%;
+			background: #2196f3;
+			border-radius: 4px;
+		}
+	}
 	.empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
 }
-// Cellules partagées par les deux types de table.
-.label-cell {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	.flag { max-height: 16px; max-width: 22px; }
-	.unknown-flag { font-size: 18px; color: var(--text-color-secondary); }
-	.v-icon { font-size: 18px; }
-}
-.inscrits {
-	display: inline-flex;
-	flex-direction: column;
-	align-items: flex-end;
-	span { line-height: 1.2; }
-	.ibar { width: 54px; margin-top: 2px; }
-}
-.ibar {
-	height: 5px;
-	background: var(--background-disabled, #e0e0e0);
-	border-radius: 3px;
-	overflow: hidden;
-	.fill {
-		height: 100%;
-		background: #2196f3;
-		border-radius: 3px;
+.countries {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 6px;
+	.country {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		background: var(--pure-white);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		.flag { max-height: 18px; max-width: 24px; }
+		.unknown-flag { font-size: 18px; color: var(--text-color-secondary); }
+		.code { font-weight: 500; font-size: 13px; }
+		.count { margin-left: auto; font-weight: 600; font-variant-numeric: tabular-nums; }
+		.share { font-size: 11px; color: var(--text-color-secondary); font-variant-numeric: tabular-nums; min-width: 42px; text-align: right; }
 	}
 }
-.empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
 .split {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
