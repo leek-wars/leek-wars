@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "チーム戦で経験値と戦利品 +{bonus}%",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "{season}シーズンが始まりました！",
-	"season_start_text": "{season}シーズンです！シーズン中ずっと経験値と戦利品が +{bonus}% アップ。狩りを楽しもう！",
+	"season_start_text": "{season}シーズンです！特定の戦闘で経験値と戦利品が +{bonus}% アップ。狩りを楽しもう！",
 	"season_end_title": "{season}シーズン終了",
 	"season_end_text": "{season}シーズンが終了しました。ご参加ありがとうございました。次のシーズンでお会いしましょう！",
 	"season_close": "了解！"

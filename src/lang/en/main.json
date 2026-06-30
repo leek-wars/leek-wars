@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "+{bonus}% XP and loot on team fights",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "The {season} season is here!",
-	"season_start_text": "It's the {season} season! Enjoy a +{bonus}% XP and loot bonus throughout the season. Happy hunting!",
+	"season_start_text": "It's the {season} season! Enjoy a +{bonus}% XP and loot bonus on certain fights. Happy hunting!",
 	"season_end_title": "End of the {season} season",
 	"season_end_text": "The {season} season is over. Thanks for taking part, see you next time!",
 	"season_close": "Got it!"

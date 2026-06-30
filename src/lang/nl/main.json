@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "+{bonus}% XP en buit in teamgevechten",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "Het {season}-seizoen is begonnen!",
-	"season_start_text": "Het is {season}-seizoen! Geniet van een bonus van +{bonus}% XP en buit gedurende het hele seizoen. Veel jachtplezier!",
+	"season_start_text": "Het is {season}-seizoen! Geniet van een bonus van +{bonus}% XP en buit in bepaalde gevechten. Veel jachtplezier!",
 	"season_end_title": "Einde van het {season}-seizoen",
 	"season_end_text": "Het {season}-seizoen is voorbij. Bedankt voor je deelname, tot de volgende keer!",
 	"season_close": "Begrepen!"

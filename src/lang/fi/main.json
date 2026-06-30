@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "+{bonus}% kokemusta ja saalista joukkuetaisteluissa",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "{season}kausi on alkanut!",
-	"season_start_text": "On {season}kausi! Nauti +{bonus}% kokemus- ja saalisbonuksesta koko kauden ajan. Hyvää metsästystä!",
+	"season_start_text": "On {season}kausi! Nauti +{bonus}% kokemus- ja saalisbonuksesta tietyissä taisteluissa. Hyvää metsästystä!",
 	"season_end_title": "{season}kauden loppu",
 	"season_end_text": "{season}kausi on päättynyt. Kiitos osallistumisesta, nähdään ensi kerralla!",
 	"season_close": "Selvä!"

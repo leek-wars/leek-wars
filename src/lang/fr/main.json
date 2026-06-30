@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "+{bonus} % d'XP et de butin sur les combats d'équipe",
 	"season_tag": "Saison {season} +{bonus} %",
 	"season_start_title": "La saison {season} commence !",
-	"season_start_text": "C'est la saison {season} ! Profite d'un bonus de +{bonus} % d'XP et de butin pendant toute la saison. Bonne chasse !",
+	"season_start_text": "C'est la saison {season} ! Profite d'un bonus de +{bonus} % d'XP et de butin sur certains combats. Bonne chasse !",
 	"season_end_title": "Fin de la saison {season}",
 	"season_end_text": "La saison {season} est terminée. Merci d'avoir participé, rendez-vous à la prochaine !",
 	"season_close": "Compris !"
