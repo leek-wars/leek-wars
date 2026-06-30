@@ -1,11 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 
-// capital.ts importe COSTS depuis @/model/leek (qui tire tout le graphe de modèles).
-// On le mocke pour un test hermétique. On fournit des paliers réalistes (life + strength)
-// pour exercer réellement l'algorithme de progression, pas seulement les cas no-op.
-// On teste l'ALGORITHME de stepping, pas les valeurs d'équilibrage (config jeu, qui peut
-// bouger) : le mock reproduit la forme des vrais paliers, pas une dépendance à leurs chiffres.
-vi.mock('@/model/leek', () => ({
+// capital.ts importe COSTS depuis @/model/costs (module feuille sans dépendance).
+// On le mocke avec des paliers réalistes (life + strength) pour exercer l'ALGORITHME de
+// stepping indépendamment des valeurs d'équilibrage (config jeu, qui peut bouger) : le mock
+// reproduit la forme des vrais paliers, pas une dépendance à leurs chiffres.
+vi.mock('@/model/costs', () => ({
 	COSTS: {
 		// strength : 1 capital → +2 stat sous 200, puis 1 capital → +1 stat de 200 à 400,
 		// puis 2 capital → +1 de 400 à 600, puis 3 capital → +1 au-delà.

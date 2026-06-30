@@ -1,4 +1,4 @@
-import { COSTS } from '@/model/leek'
+import { COSTS } from '@/model/costs'
 
 /** Convertit un nombre de capital dépensé en bonus de stat pour une caractéristique donnée. */
 export function capitalToStatBonus(charac: string, capital: number): number {
