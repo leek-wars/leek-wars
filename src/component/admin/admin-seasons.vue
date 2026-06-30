@@ -4,17 +4,33 @@
 			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Saisons', link: '/admin/seasons'}]" :raw="true" /></h1>
 		</div>
 
-		<panel icon="mdi-party-popper" title="Prévisualisation des dialogues de saison">
+		<panel icon="mdi-party-popper" title="Saisons événementielles">
 			<template #content>
-				<p class="hint">Affiche le dialogue d'annonce d'une saison (début ou fin) sans attendre la vraie date. Aperçu <b>local</b> uniquement : rien n'est enregistré, l'état réel est restauré à la fermeture du dialogue.</p>
-				<table class="seasons">
-					<tr v-for="s in seasons" :key="s.key">
-						<td class="emoji">{{ s.display.emoji }}</td>
-						<td class="name">{{ s.name }}</td>
-						<td><v-btn color="primary" variant="flat" prepend-icon="mdi-play" @click="preview(s.key, true)">Dialogue de début</v-btn></td>
-						<td><v-btn variant="tonal" prepend-icon="mdi-stop" @click="preview(s.key, false)">Dialogue de fin</v-btn></td>
-					</tr>
-				</table>
+				<div class="season-admin">
+					<p class="hint">Aperçu des saisons et de leur bonus. Les boutons affichent le dialogue d'annonce (début / fin) sans attendre la vraie date : aperçu <b>local</b> uniquement (rien n'est enregistré, l'état réel est restauré à la fermeture).</p>
+					<table class="seasons">
+						<thead>
+							<tr>
+								<th colspan="2">Saison</th>
+								<th>Dates</th>
+								<th>Bonus (type de combat boosté)</th>
+								<th>Aperçu du dialogue</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="s in seasons" :key="s.key">
+								<td class="emoji">{{ s.emoji }}</td>
+								<td class="name">{{ s.name }}</td>
+								<td class="dates">{{ s.dates }}</td>
+								<td class="bonus">{{ s.bonus }}</td>
+								<td class="actions">
+									<v-btn size="small" color="primary" variant="flat" prepend-icon="mdi-play" @click="preview(s.key, true)">Début</v-btn>
+									<v-btn size="small" variant="tonal" prepend-icon="mdi-stop" @click="preview(s.key, false)">Fin</v-btn>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</template>
 		</panel>
 	</div>
@@ -34,10 +50,21 @@
 	if (!store.getters.admin) router.replace('/')
 	LeekWars.setTitle("Saisons")
 
+	// Fenêtres affichées pour référence (source de vérité = Season.class.php côté serveur).
+	const DATES: { [key: string]: string } = {
+		solstice: "21 juin → 21 juillet",
+		heatwave: "1er → 31 août",
+		halloween: "24 octobre → 1er novembre",
+		easter: "≈ 1 semaine autour de Pâques (date variable)",
+		christmas: "1er → 25 décembre",
+	}
+
 	const seasons = Object.keys(SEASON_DISPLAY).map(key => ({
 		key,
-		display: seasonDisplay(key),
+		emoji: seasonDisplay(key).emoji,
 		name: i18n.t('main.season_name_' + key) as string,
+		dates: DATES[key] ?? '',
+		bonus: i18n.t('main.season_bonus_' + key, { bonus: 50 }) as string,
 	}))
 
 	// État réel de la saison, restauré quand l'aperçu se ferme (l'injection ci-dessous
@@ -60,22 +87,45 @@
 </script>
 
 <style lang="scss" scoped>
+	.season-admin {
+		padding: 16px;
+	}
 	.hint {
 		color: var(--text-color-secondary);
 		margin: 0 0 16px;
 	}
 	.seasons {
 		border-collapse: collapse;
+		width: 100%;
+		th {
+			text-align: left;
+			padding: 6px 16px 8px 0;
+			color: var(--text-color-secondary);
+			font-weight: 500;
+			border-bottom: 1px solid var(--border);
+		}
 		td {
-			padding: 6px 12px 6px 0;
+			padding: 8px 16px 8px 0;
 			vertical-align: middle;
+			border-bottom: 1px solid var(--border);
 		}
 		.emoji {
 			font-size: 26px;
+			padding-right: 8px;
 		}
 		.name {
 			font-weight: bold;
-			min-width: 110px;
+			white-space: nowrap;
+		}
+		.dates {
+			white-space: nowrap;
+			color: var(--text-color-secondary);
+		}
+		.actions {
+			white-space: nowrap;
+			.v-btn {
+				margin-right: 6px;
+			}
 		}
 	}
 </style>
