@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "+{bonus}% опыта и добычи в командных боях",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "Начинается сезон «{season}»!",
-	"season_start_text": "Это сезон «{season}»! Получайте бонус +{bonus}% к опыту и добыче во всех боях с боссами. Удачной охоты!",
+	"season_start_text": "Это сезон «{season}»! Получайте бонус +{bonus}% к опыту и добыче в течение всего сезона. Удачной охоты!",
 	"season_end_title": "Конец сезона «{season}»",
 	"season_end_text": "Сезон «{season}» завершён. Спасибо за участие, до встречи в следующем сезоне!",
 	"season_close": "Понятно!"

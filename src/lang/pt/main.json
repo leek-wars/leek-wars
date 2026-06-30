@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "+{bonus}% de XP e saque em combates em equipe",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "A temporada de {season} começou!",
-	"season_start_text": "É a temporada de {season}! Aproveite um bônus de +{bonus}% de XP e saque em todos os combates de chefe. Boa caçada!",
+	"season_start_text": "É a temporada de {season}! Aproveite um bônus de +{bonus}% de XP e saque durante toda a temporada. Boa caçada!",
 	"season_end_title": "Fim da temporada de {season}",
 	"season_end_text": "A temporada de {season} acabou. Obrigado por participar, até a próxima!",
 	"season_close": "Entendi!"

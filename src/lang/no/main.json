@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "+{bonus}% XP og bytte i lagkamper",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "{season}sesongen er her!",
-	"season_start_text": "Det er {season}sesong! Nyt en bonus på +{bonus}% XP og bytte i alle boss-kamper. God jakt!",
+	"season_start_text": "Det er {season}sesong! Nyt en bonus på +{bonus}% XP og bytte gjennom hele sesongen. God jakt!",
 	"season_end_title": "Slutten på {season}sesongen",
 	"season_end_text": "{season}sesongen er over. Takk for at du deltok, vi ses neste gang!",
 	"season_close": "Forstått!"

@@ -397,7 +397,7 @@
 	"season_bonus_christmas": "团队战斗经验和掉落 +{bonus}%",
 	"season_tag": "{season} +{bonus}%",
 	"season_start_title": "{season}赛季开始了！",
-	"season_start_text": "现在是{season}赛季！在所有 Boss 战斗中享受 +{bonus}% 的经验和掉落加成。狩猎愉快！",
+	"season_start_text": "现在是{season}赛季！在整个赛季享受 +{bonus}% 的经验和掉落加成。狩猎愉快！",
 	"season_end_title": "{season}赛季结束",
 	"season_end_text": "{season}赛季已结束。感谢参与，下个赛季再见！",
 	"season_close": "明白了！"
