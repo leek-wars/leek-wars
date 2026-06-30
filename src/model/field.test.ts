@@ -12,8 +12,6 @@ vi.mock('@/component/player/game/entity', () => ({ FightEntity: class {} }))
 import { Field } from '@/model/field'
 
 // Taille réelle du terrain de jeu (cf ground.ts : new Field(18, 18)).
-// NB : Field n'est pas correct pour de très petites tailles (collision du sentinel -1
-// dans le calcul de min/max), donc on teste à la taille réelle, jamais < 3.
 const SIZE = 18
 
 describe('Field - construction de la grille (losange)', () => {
@@ -82,6 +80,30 @@ describe('Field - next_cell', () => {
 	it('case inexistante du losange → null', () => {
 		const f = new Field(SIZE, SIZE)
 		expect(f.next_cell(f.getCell(SIZE - 1, 0), 0, 1)).toBeNull()
+	})
+})
+
+// Régression : avant le fix du sentinel -1, construire une petite grille (qui contient
+// des coordonnées -1) corrompait min/max et faisait crasher le constructeur (coord[-1]).
+describe('Field - régression petite grille (sentinel -1)', () => {
+	it('Field(2,2) se construit (5 cellules en losange)', () => {
+		const f = new Field(2, 2)
+		expect(f.nb_cells).toBe(5)
+		expect(f.cells.length).toBe(5)
+		expect(f.getCell(0, 0)).toBeTruthy()
+		expect(f.getCell(1, 1)).toBeNull() // coin du losange
+	})
+	it('Field(2,2) conversions exactes', () => {
+		const f = new Field(2, 2)
+		expect(f.cellToXY(f.getCell(-1, 0))).toEqual({ x: 0, y: 0 })
+		expect(f.cellToXY(f.getCell(0, 0))).toEqual({ x: 1, y: 1 })
+		expect(f.cellToXY(f.getCell(1, 0))).toEqual({ x: 2, y: 2 })
+		expect(f.xyToCell(1, 1)).toBe(f.getCell(0, 0))
+	})
+	it('Field(2,2) voisinage', () => {
+		const f = new Field(2, 2)
+		expect(f.next_cell(f.getCell(0, 0), 1, 0)).toBe(f.getCell(1, 0))
+		expect(f.next_cell(f.getCell(1, 0), 1, 0)).toBeNull() // hors limites
 	})
 })
 

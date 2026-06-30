@@ -11,10 +11,10 @@ class Field {
 	public nb_cells = 0
 	public coord: Cell[][] = []
 	public cells: Cell[] = []
-	private min_x = -1
-	private max_x = -1
-	private min_y = -1
-	private max_y = -1
+	private min_x = Infinity
+	private max_x = -Infinity
+	private min_y = Infinity
+	private max_y = -Infinity
 
 	constructor(tilesX: number, tilesY: number) {
 		this.tilesX = tilesX
@@ -28,18 +28,13 @@ class Field {
 				const id = tilesX * (tilesX - 1) + tilesX * x + (tilesX - 1) * y
 				const cell = new Cell(id, x, y)
 
-				if (this.min_x === -1 || x < this.min_x) {
-					this.min_x = x
-				}
-				if (this.max_x === -1 || x > this.max_x) {
-					this.max_x = x
-				}
-				if (this.min_y === -1 || y < this.min_y) {
-					this.min_y = y
-				}
-				if (this.max_y === -1 || y > this.max_y) {
-					this.max_y = y
-				}
+				// min/max via Math.min/max : -1 est une coordonnée valide, on ne peut
+				// pas s'en servir comme sentinel "non défini" (sinon collision → bornes
+				// fausses sur les petites grilles, coord[-1] undefined → crash au constructeur).
+				this.min_x = Math.min(this.min_x, x)
+				this.max_x = Math.max(this.max_x, x)
+				this.min_y = Math.min(this.min_y, y)
+				this.max_y = Math.max(this.max_y, y)
 				this.cells[id] = cell
 			}
 		}
