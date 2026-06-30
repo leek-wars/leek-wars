@@ -89,57 +89,42 @@
 			</template>
 		</panel>
 
-		<!-- Ventilations par langue et par pays (mêmes colonnes pour comparer) -->
+		<!-- Ventilations par langue et par pays : mêmes colonnes triables (clic sur l'en-tête) -->
 		<panel v-for="b of breakdowns" :key="b.kind">
 			<template #content>
 				<div class="content">
 					<h3>{{ b.title }}</h3>
-					<div class="breakdown-scroll">
-						<table class="breakdown">
-							<thead>
-								<tr>
-									<th>{{ b.label }}</th>
-									<th class="num">Inscrits</th>
-									<th class="num">Part</th>
-									<th class="num" title="A lancé au moins 1 combat">Activ.</th>
-									<th class="num" title="A lancé au moins 5 combats">Engagé</th>
-									<th class="num" title="Email vérifié">Vérifié</th>
-									<th class="num" title="Didactitiel vu">Didact.</th>
-									<th class="num" title="Tutoriel terminé (10/10)">Tuto</th>
-									<th class="num" title="Encore actif 7 jours après l'inscription">J+7</th>
-									<th class="num" title="Trophées (points) moyens">Trophées</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="row of b.rows" :key="b.kind + '-' + (row.language ?? row.country)">
-									<td class="label-cell">
-										<template v-if="b.kind === 'language'">
-											<flag v-if="languageFlag(row.language)" :code="languageFlag(row.language)!" :clickable="false" />
-											<span>{{ languageName(row.language) }}</span>
-										</template>
-										<template v-else>
-											<flag v-if="row.country && row.country !== '(null)'" :code="row.country" :clickable="false" />
-											<v-icon v-else class="unknown-flag">mdi-help-circle-outline</v-icon>
-											<span>{{ countryLabel(row.country) }}</span>
-										</template>
-									</td>
-									<td class="num inscrits">
-										<span>{{ $filters.number(row.n) }}</span>
-										<div class="ibar"><div class="fill" :style="{ width: barWidth(row.n, b.max) }"></div></div>
-									</td>
-									<td class="num">{{ pct1(row.share_pct) }}</td>
-									<td class="num">{{ pct1(row.activation_pct) }}</td>
-									<td class="num">{{ pct1(row.engagement_pct) }}</td>
-									<td class="num">{{ pct1(row.verified_pct) }}</td>
-									<td class="num">{{ pct1(row.didactitiel_pct) }}</td>
-									<td class="num">{{ pct1(row.tuto_done_pct) }}</td>
-									<td class="num">{{ pct1(row.retention_d7_pct) }}</td>
-									<td class="num">{{ num0(row.trophy_points_avg) }}</td>
-								</tr>
-								<tr v-if="!b.rows.length"><td colspan="10" class="empty">Aucune donnée</td></tr>
-							</tbody>
-						</table>
-					</div>
+					<v-data-table
+						:headers="b.headers"
+						:items="b.items"
+						:items-per-page="-1"
+						:sort-by="[{ key: 'n', order: 'desc' }]"
+						density="compact"
+						hide-default-footer
+						class="breakdown-table">
+						<template #item.label="{ item }">
+							<div class="label-cell">
+								<flag v-if="item.flag" :code="item.flag" :clickable="false" />
+								<v-icon v-else-if="item.isUnknown" class="unknown-flag">mdi-help-circle-outline</v-icon>
+								<span>{{ item.label }}</span>
+							</div>
+						</template>
+						<template #item.n="{ item }">
+							<div class="inscrits">
+								<span>{{ $filters.number(item.n) }}</span>
+								<div class="ibar"><div class="fill" :style="{ width: item.bar }"></div></div>
+							</div>
+						</template>
+						<template #item.share_pct="{ item }">{{ pct1(item.share_pct) }}</template>
+						<template #item.activation_pct="{ item }">{{ pct1(item.activation_pct) }}</template>
+						<template #item.engagement_pct="{ item }">{{ pct1(item.engagement_pct) }}</template>
+						<template #item.verified_pct="{ item }">{{ pct1(item.verified_pct) }}</template>
+						<template #item.didactitiel_pct="{ item }">{{ pct1(item.didactitiel_pct) }}</template>
+						<template #item.tuto_done_pct="{ item }">{{ pct1(item.tuto_done_pct) }}</template>
+						<template #item.retention_d7_pct="{ item }">{{ pct1(item.retention_d7_pct) }}</template>
+						<template #item.trophy_points_avg="{ item }">{{ num0(item.trophy_points_avg) }}</template>
+						<template #no-data><div class="empty">Aucune donnée</div></template>
+					</v-data-table>
 				</div>
 			</template>
 		</panel>
@@ -288,10 +273,36 @@
 	const languageOptions = computed(() => Object.values(LeekWars.languages).map(l => ({ code: l.code, name: l.name })))
 	const hasFilters = computed(() => Object.values(filters).some(v => v !== ''))
 
-	const maxN = (rows: BreakdownRow[]) => rows.reduce((m, r) => Math.max(m, r.n), 0)
+	// Colonnes triables partagées par les deux tables (clic sur l'en-tête).
+	// Le tri opère sur la valeur brute de l'item (n, *_pct…), pas sur l'affichage.
+	function breakdownHeaders(labelTitle: string): any[] {
+		return [
+			{ title: labelTitle, key: 'label', align: 'start', sortable: true },
+			{ title: 'Inscrits', key: 'n', align: 'end', sortable: true },
+			{ title: 'Part', key: 'share_pct', align: 'end', sortable: true },
+			{ title: 'Activ.', key: 'activation_pct', align: 'end', sortable: true },
+			{ title: 'Engagé', key: 'engagement_pct', align: 'end', sortable: true },
+			{ title: 'Vérifié', key: 'verified_pct', align: 'end', sortable: true },
+			{ title: 'Didact.', key: 'didactitiel_pct', align: 'end', sortable: true },
+			{ title: 'Tuto', key: 'tuto_done_pct', align: 'end', sortable: true },
+			{ title: 'J+7', key: 'retention_d7_pct', align: 'end', sortable: true },
+			{ title: 'Trophées', key: 'trophy_points_avg', align: 'end', sortable: true },
+		]
+	}
+	function buildBreakdown(kind: 'language' | 'country', title: string, labelTitle: string, rows: BreakdownRow[]) {
+		const max = rows.reduce((m, r) => Math.max(m, r.n), 0)
+		const items = rows.map(r => ({
+			...r,
+			label: kind === 'language' ? languageName(r.language) : countryLabel(r.country),
+			flag: kind === 'language' ? languageFlag(r.language) : (r.country && r.country !== '(null)' ? r.country : null),
+			isUnknown: kind === 'country' && r.country === '(null)',
+			bar: max ? Math.round((r.n / max) * 100) + '%' : '0%',
+		}))
+		return { kind, title, items, headers: breakdownHeaders(labelTitle) }
+	}
 	const breakdowns = computed(() => [
-		{ kind: 'language', title: 'Par langue', label: 'Langue', rows: by_language.value, max: maxN(by_language.value) },
-		{ kind: 'country', title: 'Par pays', label: 'Pays', rows: by_country.value, max: maxN(by_country.value) },
+		buildBreakdown('language', 'Par langue', 'Langue', by_language.value),
+		buildBreakdown('country', 'Par pays', 'Pays', by_country.value),
 	])
 
 	const dualMetrics = computed(() => [
@@ -476,9 +487,27 @@ h4 {
 		}
 	}
 }
-.breakdown-scroll {
-	overflow-x: auto;
+// Tables triables (langue / pays) : Vuetify v-data-table, fond transparent pour
+// s'intégrer au panel + couleurs via les variables CSS du site (dark inclus).
+.breakdown-table {
+	background: transparent;
+	font-size: 13px;
+	:deep(.v-table__wrapper) { overflow-x: auto; }
+	:deep(.v-data-table__th) {
+		color: var(--text-color-secondary) !important;
+		font-size: 12px;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+	:deep(.v-data-table__td) {
+		font-variant-numeric: tabular-nums;
+	}
+	:deep(.v-data-table__td),
+	:deep(.v-data-table__th) {
+		padding: 0 10px !important;
+	}
 }
+// Table simple (mode d'inscription).
 .breakdown {
 	width: 100%;
 	border-collapse: collapse;
@@ -491,41 +520,44 @@ h4 {
 		font-size: 12px;
 		padding: 4px 8px;
 		border-bottom: 1px solid var(--border);
-		cursor: help;
 		&:first-child { text-align: left; }
 	}
 	td {
 		padding: 5px 8px;
 		border-bottom: 1px solid var(--border);
 	}
-	tbody tr:hover { background: var(--background-secondary); }
 	.num { text-align: right; font-variant-numeric: tabular-nums; }
-	.label-cell {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		.flag { max-height: 16px; max-width: 22px; }
-		.unknown-flag { font-size: 18px; color: var(--text-color-secondary); }
-		.v-icon { font-size: 18px; }
-	}
-	.inscrits {
-		min-width: 80px;
-		span { display: block; }
-		.ibar { margin-top: 3px; }
-	}
-	.ibar {
-		height: 5px;
-		background: var(--background-disabled, #e0e0e0);
-		border-radius: 3px;
-		overflow: hidden;
-		.fill {
-			height: 100%;
-			background: #2196f3;
-			border-radius: 3px;
-		}
-	}
+	.bar-col { width: 30%; }
 	.empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
 }
+// Cellules partagées par les deux types de table.
+.label-cell {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	.flag { max-height: 16px; max-width: 22px; }
+	.unknown-flag { font-size: 18px; color: var(--text-color-secondary); }
+	.v-icon { font-size: 18px; }
+}
+.inscrits {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: flex-end;
+	span { line-height: 1.2; }
+	.ibar { width: 54px; margin-top: 2px; }
+}
+.ibar {
+	height: 5px;
+	background: var(--background-disabled, #e0e0e0);
+	border-radius: 3px;
+	overflow: hidden;
+	.fill {
+		height: 100%;
+		background: #2196f3;
+		border-radius: 3px;
+	}
+}
+.empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
 .split {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
