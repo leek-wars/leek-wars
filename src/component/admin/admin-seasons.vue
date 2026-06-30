@@ -8,28 +8,20 @@
 			<template #content>
 				<div class="season-admin">
 					<p class="hint">Aperçu des saisons et de leur bonus. Les boutons affichent le dialogue d'annonce (début / fin) sans attendre la vraie date : aperçu <b>local</b> uniquement (rien n'est enregistré, l'état réel est restauré à la fermeture).</p>
-					<table class="seasons">
-						<thead>
-							<tr>
-								<th colspan="2">Saison</th>
-								<th>Dates</th>
-								<th>Bonus (type de combat boosté)</th>
-								<th>Aperçu du dialogue</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr v-for="s in seasons" :key="s.key">
-								<td class="emoji">{{ s.emoji }}</td>
-								<td class="name">{{ s.name }}</td>
-								<td class="dates">{{ s.dates }}</td>
-								<td class="bonus">{{ s.bonus }}</td>
-								<td class="actions">
-									<v-btn size="small" color="primary" variant="flat" prepend-icon="mdi-play" @click="preview(s.key, true)">Début</v-btn>
-									<v-btn size="small" variant="tonal" prepend-icon="mdi-stop" @click="preview(s.key, false)">Fin</v-btn>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="season-list">
+						<div v-for="s in seasons" :key="s.key" class="season-card">
+							<span class="emoji">{{ s.emoji }}</span>
+							<div class="info">
+								<div class="name">{{ s.name }}</div>
+								<div class="meta"><v-icon size="15">mdi-calendar</v-icon> {{ s.dates }}</div>
+								<div class="meta bonus">{{ s.bonus }}</div>
+							</div>
+							<div class="actions">
+								<v-btn size="small" color="primary" variant="flat" prepend-icon="mdi-play" @click="preview(s.key, true)">Début</v-btn>
+								<v-btn size="small" variant="tonal" prepend-icon="mdi-stop" @click="preview(s.key, false)">Fin</v-btn>
+							</div>
+						</div>
+					</div>
 				</div>
 			</template>
 		</panel>
@@ -94,37 +86,56 @@
 		color: var(--text-color-secondary);
 		margin: 0 0 16px;
 	}
-	.seasons {
-		border-collapse: collapse;
-		width: 100%;
-		th {
-			text-align: left;
-			padding: 6px 16px 8px 0;
-			color: var(--text-color-secondary);
-			font-weight: 500;
-			border-bottom: 1px solid var(--border);
-		}
-		td {
-			padding: 8px 16px 8px 0;
-			vertical-align: middle;
-			border-bottom: 1px solid var(--border);
-		}
+	.season-list {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.season-card {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 10px 14px;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		background: var(--background-secondary);
 		.emoji {
-			font-size: 26px;
-			padding-right: 8px;
+			font-size: 30px;
+			line-height: 1;
+			flex-shrink: 0;
 		}
-		.name {
-			font-weight: bold;
-			white-space: nowrap;
-		}
-		.dates {
-			white-space: nowrap;
-			color: var(--text-color-secondary);
+		.info {
+			flex: 1;
+			min-width: 0;
+			.name {
+				font-weight: bold;
+				font-size: 15px;
+			}
+			.meta {
+				color: var(--text-color-secondary);
+				font-size: 13px;
+				margin-top: 2px;
+				.v-icon {
+					vertical-align: -2px;
+					margin-right: 2px;
+				}
+			}
 		}
 		.actions {
-			white-space: nowrap;
-			.v-btn {
-				margin-right: 6px;
+			display: flex;
+			gap: 6px;
+			flex-shrink: 0;
+		}
+	}
+	@media (max-width: 600px) {
+		.season-card {
+			flex-wrap: wrap;
+			.actions {
+				width: 100%;
+				margin-top: 4px;
+				.v-btn {
+					flex: 1;
+				}
 			}
 		}
 	}
