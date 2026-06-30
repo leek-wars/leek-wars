@@ -132,7 +132,7 @@
 		</template>
 
 		<!-- Historique -->
-		<git-history v-if="showHistory && selectedRepo !== ''" :folder="selectedRepo" @show-diff="(e: { folder: string | undefined, hash: string, file: string }) => emit('show-diff', { folder: e.folder ?? '', file: e.file, staged: false })" />
+		<git-history v-if="showHistory && selectedRepo !== ''" :folder="selectedRepo" @show-diff="(e: { folder: string | undefined, hash: string, file: string }) => emit('show-diff', { folder: e.folder ?? '', file: e.file, staged: false, hash: e.hash })" />
 
 		<!-- Messages de sortie git (visibles même en mode historique) -->
 		<div v-if="syncError && selectedRepo !== ''" class="sync-error">
@@ -281,7 +281,7 @@
 	}>(), { theme: 'leek-wars', activeDiff: null })
 
 	const emit = defineEmits<{
-		'show-diff': [payload: { folder: string, file: string, staged: boolean }]
+		'show-diff': [payload: { folder: string, file: string, staged: boolean, hash?: string }]
 		'show-merge': [payload: unknown]
 	}>()
 
