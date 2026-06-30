@@ -10,6 +10,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Tests unitaires (logique pure de src/model/). Rapide et gratuit (repo public,
+  # runner GitHub-hosted). Volontairement NON bloquant pour le déploiement au début :
+  # job indépendant de `build`, sans `needs:`. Quand la suite sera mûre et de confiance,
+  # ajouter `needs: unit-tests` au job `build` pour gater la prod.
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run test:unit
+
   build:
     runs-on: ubuntu-latest
     steps:
