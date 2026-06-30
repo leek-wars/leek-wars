@@ -96,6 +96,12 @@
 							<h2>Trophées</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/seasons">
+						<div v-ripple class="section card">
+							<v-icon>mdi-party-popper</v-icon>
+							<h2>Saisons</h2>
+						</div>
+					</router-link>
 					<router-link to="/admin/hats">
 						<div v-ripple class="section card">
 							<v-icon>mdi-hat-fedora</v-icon>

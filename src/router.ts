@@ -23,6 +23,7 @@ const AdminFunnels = () => import(/* webpackChunkName: "admin" */ `@/component/a
 const AdminDashboards = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-dashboards.vue`)
 const AdminMatchmaking = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-matchmaking.vue`)
 const AdminGameAnimations = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-game-animations.vue`)
+const AdminSeasons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-seasons.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
 import Error from '@/component/app/error.vue'
@@ -173,6 +174,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/dashboards/:id?', component: AdminDashboards, beforeEnter: connected },
 	{ path: '/admin/matchmaking', component: AdminMatchmaking, beforeEnter: connected },
 	{ path: '/admin/game-animations', component: AdminGameAnimations, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
+	{ path: '/admin/seasons', component: AdminSeasons, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
