@@ -89,49 +89,57 @@
 			</template>
 		</panel>
 
-		<!-- Par langue -->
-		<panel>
+		<!-- Ventilations par langue et par pays (mêmes colonnes pour comparer) -->
+		<panel v-for="b of breakdowns" :key="b.kind">
 			<template #content>
 				<div class="content">
-					<h3>Par langue</h3>
-					<table class="breakdown">
-						<thead>
-							<tr><th>Langue</th><th class="num">Inscrits</th><th class="bar-col">Part</th><th class="num">Activation</th><th class="num">Vérifié</th><th class="num">Trophées moy.</th></tr>
-						</thead>
-						<tbody>
-							<tr v-for="row of by_language" :key="row.language">
-								<td class="label-cell">
-									<flag v-if="languageFlag(row.language)" :code="languageFlag(row.language)!" :clickable="false" />
-									<span>{{ languageName(row.language) }}</span>
-								</td>
-								<td class="num">{{ $filters.number(row.n) }}</td>
-								<td class="bar-col"><div class="ibar"><div class="fill" :style="{ width: barWidth(row.n, maxLanguageN) }"></div></div></td>
-								<td class="num">{{ pct1(row.activation_pct) }}</td>
-								<td class="num">{{ pct1(row.verified_pct) }}</td>
-								<td class="num">{{ num0(row.trophy_points_avg) }}</td>
-							</tr>
-							<tr v-if="!by_language.length"><td colspan="6" class="empty">Aucune donnée</td></tr>
-						</tbody>
-					</table>
-				</div>
-			</template>
-		</panel>
-
-		<!-- Par pays -->
-		<panel>
-			<template #content>
-				<div class="content">
-					<h3>Par pays</h3>
-					<div v-if="by_country.length" class="countries">
-						<div v-for="c of by_country" :key="c.country" class="country card">
-							<flag v-if="c.country !== '(null)'" :code="c.country" :clickable="false" />
-							<v-icon v-else class="unknown-flag">mdi-help-circle-outline</v-icon>
-							<span class="code">{{ countryLabel(c.country) }}</span>
-							<span class="count">{{ $filters.number(c.n) }}</span>
-							<span class="share">{{ pct1(c.share_pct) }}</span>
-						</div>
+					<h3>{{ b.title }}</h3>
+					<div class="breakdown-scroll">
+						<table class="breakdown">
+							<thead>
+								<tr>
+									<th>{{ b.label }}</th>
+									<th class="num">Inscrits</th>
+									<th class="num">Part</th>
+									<th class="num" title="A lancé au moins 1 combat">Activ.</th>
+									<th class="num" title="A lancé au moins 5 combats">Engagé</th>
+									<th class="num" title="Email vérifié">Vérifié</th>
+									<th class="num" title="Didactitiel vu">Didact.</th>
+									<th class="num" title="Tutoriel terminé (10/10)">Tuto</th>
+									<th class="num" title="Encore actif 7 jours après l'inscription">J+7</th>
+									<th class="num" title="Trophées (points) moyens">Trophées</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="row of b.rows" :key="b.kind + '-' + (row.language ?? row.country)">
+									<td class="label-cell">
+										<template v-if="b.kind === 'language'">
+											<flag v-if="languageFlag(row.language)" :code="languageFlag(row.language)!" :clickable="false" />
+											<span>{{ languageName(row.language) }}</span>
+										</template>
+										<template v-else>
+											<flag v-if="row.country && row.country !== '(null)'" :code="row.country" :clickable="false" />
+											<v-icon v-else class="unknown-flag">mdi-help-circle-outline</v-icon>
+											<span>{{ countryLabel(row.country) }}</span>
+										</template>
+									</td>
+									<td class="num inscrits">
+										<span>{{ $filters.number(row.n) }}</span>
+										<div class="ibar"><div class="fill" :style="{ width: barWidth(row.n, b.max) }"></div></div>
+									</td>
+									<td class="num">{{ pct1(row.share_pct) }}</td>
+									<td class="num">{{ pct1(row.activation_pct) }}</td>
+									<td class="num">{{ pct1(row.engagement_pct) }}</td>
+									<td class="num">{{ pct1(row.verified_pct) }}</td>
+									<td class="num">{{ pct1(row.didactitiel_pct) }}</td>
+									<td class="num">{{ pct1(row.tuto_done_pct) }}</td>
+									<td class="num">{{ pct1(row.retention_d7_pct) }}</td>
+									<td class="num">{{ num0(row.trophy_points_avg) }}</td>
+								</tr>
+								<tr v-if="!b.rows.length"><td colspan="10" class="empty">Aucune donnée</td></tr>
+							</tbody>
+						</table>
 					</div>
-					<div v-else class="empty">Aucune donnée</div>
 				</div>
 			</template>
 		</panel>
@@ -225,8 +233,20 @@
 		active_hours_avg: number | null
 		active_hours_median: number | null
 	}
-	interface LangRow { language: string, n: number, verified_pct: number | null, activation_pct: number | null, trophy_points_avg: number | null }
-	interface CountryRow { country: string, n: number, share_pct: number | null, activation_pct: number | null }
+	// Une ligne de ventilation, par langue OU par pays (mêmes colonnes de comparaison).
+	interface BreakdownRow {
+		language?: string
+		country?: string
+		n: number
+		share_pct: number | null
+		activation_pct: number | null
+		engagement_pct: number | null
+		verified_pct: number | null
+		didactitiel_pct: number | null
+		tuto_done_pct: number | null
+		retention_d7_pct: number | null
+		trophy_points_avg: number | null
+	}
 	interface LoginModeRow { login_mode: string, n: number }
 	interface GodfatherRow { source: string, n: number, verified_pct: number | null, activation_pct: number | null }
 	interface CountryOption { country: string, n: number }
@@ -234,8 +254,8 @@
 		period: string
 		cohort_size: number
 		aggregates: Aggregates
-		by_language: LangRow[]
-		by_country: CountryRow[]
+		by_language: BreakdownRow[]
+		by_country: BreakdownRow[]
 		by_login_mode: LoginModeRow[]
 		by_godfather: GodfatherRow[]
 		country_options: CountryOption[]
@@ -259,15 +279,20 @@
 	const loading = ref(false)
 	const cohort_size = ref(0)
 	const agg = ref<Aggregates>({ ...EMPTY_AGG })
-	const by_language = ref<LangRow[]>([])
-	const by_country = ref<CountryRow[]>([])
+	const by_language = ref<BreakdownRow[]>([])
+	const by_country = ref<BreakdownRow[]>([])
 	const by_login_mode = ref<LoginModeRow[]>([])
 	const by_godfather = ref<GodfatherRow[]>([])
 	const countryOptions = ref<CountryOption[]>([])
 
 	const languageOptions = computed(() => Object.values(LeekWars.languages).map(l => ({ code: l.code, name: l.name })))
-	const maxLanguageN = computed(() => by_language.value.reduce((m, r) => Math.max(m, r.n), 0))
 	const hasFilters = computed(() => Object.values(filters).some(v => v !== ''))
+
+	const maxN = (rows: BreakdownRow[]) => rows.reduce((m, r) => Math.max(m, r.n), 0)
+	const breakdowns = computed(() => [
+		{ kind: 'language', title: 'Par langue', label: 'Langue', rows: by_language.value, max: maxN(by_language.value) },
+		{ kind: 'country', title: 'Par pays', label: 'Pays', rows: by_country.value, max: maxN(by_country.value) },
+	])
 
 	const dualMetrics = computed(() => [
 		{ label: 'Ancienneté du compte', icon: 'mdi-calendar-clock', avg: duration(agg.value.account_age_avg), median: duration(agg.value.account_age_median) },
@@ -343,13 +368,14 @@
 	}
 
 	// --- Libellés ---------------------------------------------------------------
-	function languageName(code: string): string {
-		return LeekWars.languages[code]?.name || code
+	function languageName(code?: string): string {
+		return (code && LeekWars.languages[code]?.name) || code || ''
 	}
-	function languageFlag(code: string): string | null {
-		return LeekWars.languages[code]?.country || null
+	function languageFlag(code?: string): string | null {
+		return (code && LeekWars.languages[code]?.country) || null
 	}
-	function countryLabel(code: string): string {
+	function countryLabel(code?: string): string {
+		if (!code) return ''
 		return code === '(null)' ? 'Inconnu' : code.toUpperCase()
 	}
 	function loginMode(mode: string): { label: string, color: string, icon: string } {
@@ -450,62 +476,55 @@ h4 {
 		}
 	}
 }
+.breakdown-scroll {
+	overflow-x: auto;
+}
 .breakdown {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 13px;
+	white-space: nowrap;
 	th {
-		text-align: left;
+		text-align: right;
 		font-weight: 600;
 		color: var(--text-color-secondary);
 		font-size: 12px;
 		padding: 4px 8px;
 		border-bottom: 1px solid var(--border);
+		cursor: help;
+		&:first-child { text-align: left; }
 	}
 	td {
 		padding: 5px 8px;
 		border-bottom: 1px solid var(--border);
 	}
+	tbody tr:hover { background: var(--background-secondary); }
 	.num { text-align: right; font-variant-numeric: tabular-nums; }
 	.label-cell {
 		display: flex;
 		align-items: center;
 		gap: 8px;
 		.flag { max-height: 16px; max-width: 22px; }
+		.unknown-flag { font-size: 18px; color: var(--text-color-secondary); }
 		.v-icon { font-size: 18px; }
 	}
-	.bar-col { width: 30%; }
+	.inscrits {
+		min-width: 80px;
+		span { display: block; }
+		.ibar { margin-top: 3px; }
+	}
 	.ibar {
-		height: 8px;
+		height: 5px;
 		background: var(--background-disabled, #e0e0e0);
-		border-radius: 4px;
+		border-radius: 3px;
 		overflow: hidden;
 		.fill {
 			height: 100%;
 			background: #2196f3;
-			border-radius: 4px;
+			border-radius: 3px;
 		}
 	}
 	.empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
-}
-.countries {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	gap: 6px;
-	.country {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 10px;
-		background: var(--pure-white);
-		border: 1px solid var(--border);
-		border-radius: 4px;
-		.flag { max-height: 18px; max-width: 24px; }
-		.unknown-flag { font-size: 18px; color: var(--text-color-secondary); }
-		.code { font-weight: 500; font-size: 13px; }
-		.count { margin-left: auto; font-weight: 600; font-variant-numeric: tabular-nums; }
-		.share { font-size: 11px; color: var(--text-color-secondary); font-variant-numeric: tabular-nums; min-width: 42px; text-align: right; }
-	}
 }
 .split {
 	display: grid;
