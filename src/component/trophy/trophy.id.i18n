@@ -30,5 +30,6 @@
 	"fastest_farmers": "Peternak tercepat",
 	"slowest_farmers": "Peternak paling lambat",
 	"title_farmers": "Peternak dengan gelar tersebut di gelar mereka",
-	"created_the": "Ditambahkan pada {0}"
+	"created_the": "Ditambahkan pada {0}",
+	"category_seasons": "Musim"
 }

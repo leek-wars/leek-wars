@@ -896,6 +896,7 @@ const LeekWars = reactive({
 		'mdi-basket-outline',          // 8: shopping
 		'mdi-crown-outline',           // 9: boss
 		'mdi-stadium',               // 10: arena
+		'mdi-party-popper',            // 11: seasons (#4383)
 	]),
 	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
 	potions: Object.freeze(POTIONS),

@@ -30,5 +30,6 @@
 	"fastest_farmers": "Snabbaste uppfödarna",
 	"slowest_farmers": "Långsammaste uppfödarna",
 	"title_farmers": "Uppfödare med det i sin titel",
-	"created_the": "Tillagd den {0}"
+	"created_the": "Tillagd den {0}",
+	"category_seasons": "Säsonger"
 }

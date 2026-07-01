@@ -30,5 +30,6 @@
 	"fastest_farmers": "Raskeste oppdrettere",
 	"slowest_farmers": "De tregeste oppdretterne",
 	"title_farmers": "Oppdrettere med det i tittelen",
-	"created_the": "Lagt til den {0}"
+	"created_the": "Lagt til den {0}",
+	"category_seasons": "Sesonger"
 }

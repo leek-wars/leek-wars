@@ -30,5 +30,6 @@
 	"fastest_farmers": "Nopeimmat kasvattajat",
 	"slowest_farmers": "Hitaimmat kasvattajat",
 	"title_farmers": "Kasvattajat, joiden nimessä on se",
-	"created_the": "Lisätty {0}"
+	"created_the": "Lisätty {0}",
+	"category_seasons": "Kaudet"
 }

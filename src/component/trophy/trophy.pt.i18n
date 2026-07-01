@@ -30,5 +30,6 @@
 	"fastest_farmers": "Criadores mais rápidos",
 	"slowest_farmers": "Os criadores mais lentos",
 	"title_farmers": "Criadores com este nome no seu título",
-	"created_the": "Adicionado em {0}"
+	"created_the": "Adicionado em {0}",
+	"category_seasons": "Temporadas"
 }

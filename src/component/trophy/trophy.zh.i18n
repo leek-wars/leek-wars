@@ -30,5 +30,6 @@
 	"fastest_farmers": "繁殖速度最快",
 	"slowest_farmers": "繁殖速度最慢",
 	"title_farmers": "称号中包含该称号的育种者",
-	"created_the": "于{0}添加"
+	"created_the": "于{0}添加",
+	"category_seasons": "赛季"
 }

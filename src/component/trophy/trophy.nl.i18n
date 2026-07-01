@@ -30,5 +30,6 @@
 	"fastest_farmers": "Snelste fokkers",
 	"slowest_farmers": "Langzaamste fokkers",
 	"title_farmers": "Fokkers met het in hun titel",
-	"created_the": "Toegevoegd op {0}"
+	"created_the": "Toegevoegd op {0}",
+	"category_seasons": "Seizoenen"
 }

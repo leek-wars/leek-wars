@@ -30,5 +30,6 @@
 	"fastest_farmers": "Gli allevatori più veloci",
 	"slowest_farmers": "Gli allevatori più lenti",
 	"title_farmers": "Allevatori con il titolo",
-	"created_the": "Aggiunto il {0}"
+	"created_the": "Aggiunto il {0}",
+	"category_seasons": "Stagioni"
 }
