@@ -14,6 +14,12 @@ import { getKeywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
 import { buildLeekwarsDeclarations } from './leekwars-dts';
+// monaco-stripped importe la contribution TS pour ses effets de bord (enregistrement du langage), mais
+// n'assemble PAS le namespace `monaco.languages.typescript` (fait uniquement par `editor.main` complet,
+// non importé ici) -> `monaco.languages.typescript` est TOUJOURS undefined dans ce build. On récupère
+// donc les défauts TS/JS via les exports nommés DIRECTS de la contribution (même module singleton),
+// sinon le d.ts de l'API n'est jamais posé et les IA .ts/.js perdent le typecheck + l'autocomplétion API.
+import * as typescriptContribution from 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 
 monaco.languages.register({ id: 'leekscript' })
 monaco.languages.setLanguageConfiguration('leekscript', {
@@ -766,12 +772,11 @@ function addDotCompletionsFromAI(tokenBeforeDot: string, start: string, completi
 // Appelé au chargement de l'éditeur ; les game data (LeekWars.functions/constants) sont déjà chargées
 // à ce stade (l'éditeur est un chunk lazy ouvert après le boot de l'app).
 function configurePolyglotTypeScript() {
-	// monaco-stripped ne réexporte que le coeur (editor.api) ; le namespace `languages.typescript`
-	// est ajouté à l'exécution par la contribution importée dans monaco-stripped mais absent de ces
-	// types -> accès via cast (la config est validée au runtime/build, pas besoin du typage statique ici).
+	// Défauts TS/JS de la contribution (cf import en tête) : le namespace `monaco.languages.typescript`
+	// n'existe pas dans le build stripped, donc on passe par les exports directs de la contribution.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const ts: any = (monaco.languages as any).typescript
-	if (!ts) return // le language service n'est pas chargé (ne devrait pas arriver)
+	const ts: any = typescriptContribution
+	if (!ts || !ts.typescriptDefaults) return // garde-fou (ne devrait pas arriver)
 
 	const compilerOptions = {
 		target: ts.ScriptTarget.ESNext,
@@ -791,9 +796,30 @@ function configurePolyglotTypeScript() {
 	ts.typescriptDefaults.setDiagnosticsOptions({ diagnosticCodesToIgnore: [2307] })
 	ts.javascriptDefaults.setDiagnosticsOptions({ diagnosticCodesToIgnore: [2307] })
 
-	const declarations = buildLeekwarsDeclarations(LeekWars.functions ?? [], LeekWars.constants ?? [])
-	ts.typescriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
-	ts.javascriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
+	// Le d.ts est bâti depuis les game data (LeekWars.functions/constants). Si l'éditeur est ouvert en
+	// accès direct (URL /editor, refetch) avant la fin de leur chargement, on régénère le d.ts dès leur
+	// arrivée (sinon il resterait vide -> API en "Cannot find name").
+	let tsLib: { dispose(): void } | null = null
+	let jsLib: { dispose(): void } | null = null
+	const refreshDeclarations = () => {
+		const declarations = buildLeekwarsDeclarations(LeekWars.functions ?? [], LeekWars.constants ?? [])
+		tsLib?.dispose()
+		jsLib?.dispose()
+		tsLib = ts.typescriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
+		jsLib = ts.javascriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
+	}
+	refreshDeclarations()
+	if (!LeekWars.functions || LeekWars.functions.length === 0) {
+		const started = Date.now()
+		const poll = setInterval(() => {
+			if (LeekWars.functions && LeekWars.functions.length > 0) {
+				clearInterval(poll)
+				refreshDeclarations()
+			} else if (Date.now() - started > 20000) {
+				clearInterval(poll)
+			}
+		}, 150)
+	}
 }
 configurePolyglotTypeScript()
 
