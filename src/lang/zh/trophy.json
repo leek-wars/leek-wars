@@ -713,5 +713,15 @@
 	"season_easter": "兔子",
 	"season_easter_f": "兔子",
 	"season_christmas": "冰霜",
-	"season_christmas_f": "冰霜"
+	"season_christmas_f": "冰霜",
+	"season_br_fights": "无情",
+	"season_br_fights_f": "无情",
+	"season_solo_fights": "独行",
+	"season_solo_fights_f": "独行",
+	"season_boss_fights": "刽子手",
+	"season_boss_fights_f": "刽子手",
+	"season_chest_fights": "探寻者",
+	"season_chest_fights_f": "探寻者",
+	"season_team_fights": "战友",
+	"season_team_fights_f": "战友"
 }

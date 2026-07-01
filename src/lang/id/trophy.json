@@ -713,5 +713,15 @@
 	"season_easter": "Kelinci",
 	"season_easter_f": "Kelinci",
 	"season_christmas": "Beku",
-	"season_christmas_f": "Beku"
+	"season_christmas_f": "Beku",
+	"season_br_fights": "Kejam",
+	"season_br_fights_f": "Kejam",
+	"season_solo_fights": "Penyendiri",
+	"season_solo_fights_f": "Penyendiri",
+	"season_boss_fights": "Algojo",
+	"season_boss_fights_f": "Algojo",
+	"season_chest_fights": "Pencari",
+	"season_chest_fights_f": "Pencari",
+	"season_team_fights": "Kawan",
+	"season_team_fights_f": "Kawan"
 }

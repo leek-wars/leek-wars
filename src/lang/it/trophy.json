@@ -736,5 +736,15 @@
 	"season_easter": "Coniglio",
 	"season_easter_f": "Coniglio",
 	"season_christmas": "Ghiacciato",
-	"season_christmas_f": "Ghiacciato"
+	"season_christmas_f": "Ghiacciato",
+	"season_br_fights": "Spietato",
+	"season_br_fights_f": "Spietato",
+	"season_solo_fights": "Solitario",
+	"season_solo_fights_f": "Solitario",
+	"season_boss_fights": "Boia",
+	"season_boss_fights_f": "Boia",
+	"season_chest_fights": "Cercatore",
+	"season_chest_fights_f": "Cercatore",
+	"season_team_fights": "Compagno",
+	"season_team_fights_f": "Compagno"
 }

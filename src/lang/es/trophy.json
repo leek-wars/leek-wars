@@ -736,5 +736,15 @@
 	"season_easter": "Conejo",
 	"season_easter_f": "Conejo",
 	"season_christmas": "Escarchado",
-	"season_christmas_f": "Escarchado"
+	"season_christmas_f": "Escarchado",
+	"season_br_fights": "Despiadado",
+	"season_br_fights_f": "Despiadado",
+	"season_solo_fights": "Solitario",
+	"season_solo_fights_f": "Solitario",
+	"season_boss_fights": "Verdugo",
+	"season_boss_fights_f": "Verdugo",
+	"season_chest_fights": "Buscador",
+	"season_chest_fights_f": "Buscador",
+	"season_team_fights": "Camarada",
+	"season_team_fights_f": "Camarada"
 }

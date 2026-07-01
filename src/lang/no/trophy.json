@@ -713,5 +713,15 @@
 	"season_easter": "Hare",
 	"season_easter_f": "Hare",
 	"season_christmas": "Frostig",
-	"season_christmas_f": "Frostig"
+	"season_christmas_f": "Frostig",
+	"season_br_fights": "Nådeløs",
+	"season_br_fights_f": "Nådeløs",
+	"season_solo_fights": "Einstøing",
+	"season_solo_fights_f": "Einstøing",
+	"season_boss_fights": "Bøddel",
+	"season_boss_fights_f": "Bøddel",
+	"season_chest_fights": "Søker",
+	"season_chest_fights_f": "Søker",
+	"season_team_fights": "Kamerat",
+	"season_team_fights_f": "Kamerat"
 }

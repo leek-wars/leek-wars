@@ -713,5 +713,15 @@
 	"season_easter": "Zajączek",
 	"season_easter_f": "Zajączek",
 	"season_christmas": "Oszroniony",
-	"season_christmas_f": "Oszroniony"
+	"season_christmas_f": "Oszroniony",
+	"season_br_fights": "Bezlitosny",
+	"season_br_fights_f": "Bezlitosny",
+	"season_solo_fights": "Samotnik",
+	"season_solo_fights_f": "Samotnik",
+	"season_boss_fights": "Kat",
+	"season_boss_fights_f": "Kat",
+	"season_chest_fights": "Poszukiwacz",
+	"season_chest_fights_f": "Poszukiwacz",
+	"season_team_fights": "Towarzysz",
+	"season_team_fights_f": "Towarzysz"
 }

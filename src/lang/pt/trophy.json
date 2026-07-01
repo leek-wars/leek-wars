@@ -736,5 +736,15 @@
 	"season_easter": "Coelho",
 	"season_easter_f": "Coelho",
 	"season_christmas": "Gelado",
-	"season_christmas_f": "Gelado"
+	"season_christmas_f": "Gelado",
+	"season_br_fights": "Impiedoso",
+	"season_br_fights_f": "Impiedoso",
+	"season_solo_fights": "Solitário",
+	"season_solo_fights_f": "Solitário",
+	"season_boss_fights": "Carrasco",
+	"season_boss_fights_f": "Carrasco",
+	"season_chest_fights": "Buscador",
+	"season_chest_fights_f": "Buscador",
+	"season_team_fights": "Camarada",
+	"season_team_fights_f": "Camarada"
 }

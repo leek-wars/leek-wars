@@ -713,5 +713,15 @@
 	"season_easter": "Haas",
 	"season_easter_f": "Haas",
 	"season_christmas": "IJzig",
-	"season_christmas_f": "IJzig"
+	"season_christmas_f": "IJzig",
+	"season_br_fights": "Meedogenloos",
+	"season_br_fights_f": "Meedogenloos",
+	"season_solo_fights": "Eenling",
+	"season_solo_fights_f": "Eenling",
+	"season_boss_fights": "Beul",
+	"season_boss_fights_f": "Beul",
+	"season_chest_fights": "Zoeker",
+	"season_chest_fights_f": "Zoeker",
+	"season_team_fights": "Kameraad",
+	"season_team_fights_f": "Kameraad"
 }

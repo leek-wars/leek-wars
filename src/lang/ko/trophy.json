@@ -713,5 +713,15 @@
 	"season_easter": "토끼",
 	"season_easter_f": "토끼",
 	"season_christmas": "서리",
-	"season_christmas_f": "서리"
+	"season_christmas_f": "서리",
+	"season_br_fights": "무자비",
+	"season_br_fights_f": "무자비",
+	"season_solo_fights": "외톨이",
+	"season_solo_fights_f": "외톨이",
+	"season_boss_fights": "처형자",
+	"season_boss_fights_f": "처형자",
+	"season_chest_fights": "탐구자",
+	"season_chest_fights_f": "탐구자",
+	"season_team_fights": "전우",
+	"season_team_fights_f": "전우"
 }

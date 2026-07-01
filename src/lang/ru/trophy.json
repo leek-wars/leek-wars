@@ -713,5 +713,15 @@
 	"season_easter": "Зайчик",
 	"season_easter_f": "Зайчик",
 	"season_christmas": "Морозный",
-	"season_christmas_f": "Морозный"
+	"season_christmas_f": "Морозный",
+	"season_br_fights": "Беспощадный",
+	"season_br_fights_f": "Беспощадный",
+	"season_solo_fights": "Одиночка",
+	"season_solo_fights_f": "Одиночка",
+	"season_boss_fights": "Палач",
+	"season_boss_fights_f": "Палач",
+	"season_chest_fights": "Искатель",
+	"season_chest_fights_f": "Искатель",
+	"season_team_fights": "Товарищ",
+	"season_team_fights_f": "Товарищ"
 }

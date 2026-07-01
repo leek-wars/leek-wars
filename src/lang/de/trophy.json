@@ -713,5 +713,15 @@
 	"season_easter": "Hase",
 	"season_easter_f": "Hase",
 	"season_christmas": "Frostig",
-	"season_christmas_f": "Frostig"
+	"season_christmas_f": "Frostig",
+	"season_br_fights": "Erbarmungslos",
+	"season_br_fights_f": "Erbarmungslos",
+	"season_solo_fights": "Einzelgänger",
+	"season_solo_fights_f": "Einzelgänger",
+	"season_boss_fights": "Henker",
+	"season_boss_fights_f": "Henker",
+	"season_chest_fights": "Sucher",
+	"season_chest_fights_f": "Sucher",
+	"season_team_fights": "Kamerad",
+	"season_team_fights_f": "Kamerad"
 }

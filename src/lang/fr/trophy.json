@@ -713,5 +713,15 @@
 	"season_easter": "Lapin",
 	"season_easter_f": "Lapine",
 	"season_christmas": "Givré",
-	"season_christmas_f": "Givrée"
+	"season_christmas_f": "Givrée",
+	"season_br_fights": "Impitoyable",
+	"season_br_fights_f": "Impitoyable",
+	"season_solo_fights": "Solitaire",
+	"season_solo_fights_f": "Solitaire",
+	"season_boss_fights": "Bourreau",
+	"season_boss_fights_f": "Bourreau",
+	"season_chest_fights": "Chercheur",
+	"season_chest_fights_f": "Chercheuse",
+	"season_team_fights": "Camarade",
+	"season_team_fights_f": "Camarade"
 }

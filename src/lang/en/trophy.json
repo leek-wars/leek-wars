@@ -713,5 +713,15 @@
 	"season_easter": "Bunny",
 	"season_easter_f": "Bunny",
 	"season_christmas": "Frosty",
-	"season_christmas_f": "Frosty"
+	"season_christmas_f": "Frosty",
+	"season_br_fights": "Merciless",
+	"season_br_fights_f": "Merciless",
+	"season_solo_fights": "Lone",
+	"season_solo_fights_f": "Lone",
+	"season_boss_fights": "Slayer",
+	"season_boss_fights_f": "Slayer",
+	"season_chest_fights": "Seeker",
+	"season_chest_fights_f": "Seeker",
+	"season_team_fights": "Comrade",
+	"season_team_fights_f": "Comrade"
 }

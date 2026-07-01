@@ -713,5 +713,15 @@
 	"season_easter": "Pupu",
 	"season_easter_f": "Pupu",
 	"season_christmas": "Jäinen",
-	"season_christmas_f": "Jäinen"
+	"season_christmas_f": "Jäinen",
+	"season_br_fights": "Armoton",
+	"season_br_fights_f": "Armoton",
+	"season_solo_fights": "Yksinäinen",
+	"season_solo_fights_f": "Yksinäinen",
+	"season_boss_fights": "Pyöveli",
+	"season_boss_fights_f": "Pyöveli",
+	"season_chest_fights": "Etsijä",
+	"season_chest_fights_f": "Etsijä",
+	"season_team_fights": "Toveri",
+	"season_team_fights_f": "Toveri"
 }
