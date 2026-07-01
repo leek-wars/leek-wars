@@ -221,6 +221,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
 	{ path: '/inventory', component: InventoryPage, meta: LAYOUT_BOX },
+	{ path: '/collection', component: Collection, meta: LAYOUT_BOX, beforeEnter: connected },
 	{ path: '/legal', component: Legal },
 	{ path: '/login', component: Login, beforeEnter: disconnected },
 	{ path: '/login/:token', component: Login },
