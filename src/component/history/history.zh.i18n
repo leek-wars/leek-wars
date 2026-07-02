@@ -28,5 +28,6 @@
 	"n_chests": "{0} 个宝箱",
 	"rare_loot": "稀有资源",
 	"war": "战争",
-	"result": "结果"
+	"result": "结果",
+	"generating": "生成中"
 }

@@ -30,5 +30,6 @@
 	"view_grid": "グリッド表示",
 	"view_table": "テーブル表示",
 	"war": "戦争",
-	"result": "結果"
+	"result": "結果",
+	"generating": "生成中"
 }

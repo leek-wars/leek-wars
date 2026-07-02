@@ -30,5 +30,6 @@
 	"colossus": "Colossus",
 	"view_grid": "Grid view",
 	"view_table": "Table view",
-	"result": "Result"
+	"result": "Result",
+	"generating": "Generating"
 }

@@ -28,5 +28,6 @@
 	"loot": "Stridsbyte",
 	"chests": "Kistor",
 	"rare_loot": "Sällsynta resurser",
-	"result": "Resultat"
+	"result": "Resultat",
+	"generating": "Genererar"
 }

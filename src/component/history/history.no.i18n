@@ -28,5 +28,6 @@
 	"tournament": "Turnering",
 	"victories": "seire",
 	"war": "Krig",
-	"result": "Resultat"
+	"result": "Resultat",
+	"generating": "Genererer"
 }

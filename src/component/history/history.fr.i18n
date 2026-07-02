@@ -30,5 +30,6 @@
 	"colossus": "Colosse",
 	"view_grid": "Vue grille",
 	"view_table": "Vue tableau",
-	"result": "Résultat"
+	"result": "Résultat",
+	"generating": "En cours de génération"
 }
