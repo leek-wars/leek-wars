@@ -55,6 +55,15 @@
 									<img v-for="hat in [2, 9, 7, 1]" :key="hat" height="50" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
 								</div>
 							</div>
+							<div>
+								<div class="title">{{ t('default_language') }}</div>
+								<div class="languages">
+									<div v-for="l in AI_LANGUAGES" :key="l.id" class="language" :class="{selected: aiLanguage === l.id}" @click="aiLanguage = l.id">
+										<img :src="l.logo">
+										<span>{{ l.label }}</span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -382,6 +391,7 @@
 	import { locale } from '@/locale'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { AI_LANGUAGES } from '@/component/editor/file-types'
 	import { RankingLeekRow, RankingFarmerRow, RankingTeamRow } from '@/model/ranking'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -426,6 +436,7 @@
 	const translations = ref<Record<string, { title?: string }>>({})
 	const leekSkin = ref(1)
 	const leekHat = ref(0)
+	const aiLanguage = ref('leekscript')
 	const fastRegister = ref(true)
 
 	const features = [
@@ -511,7 +522,8 @@
 		const args: Record<string, unknown> = {
 			leek_name: leek.value,
 			hat: leekHat.value,
-			skin: leekSkin.value
+			skin: leekSkin.value,
+			ai_language: aiLanguage.value
 		}
 		if (!fastRegister.value) {
 			args.login = login.value
@@ -949,6 +961,30 @@
 			max-height: 50px;
 			object-fit: contain;
 			cursor: pointer;
+		}
+		.languages {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+		}
+		.language {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding: 5px 10px;
+			border: 2px solid transparent;
+			border-radius: 6px;
+			background: rgba(0, 0, 0, 0.05);
+			cursor: pointer;
+			font-size: 13px;
+			img {
+				width: 18px;
+				height: 18px;
+			}
+			&.selected {
+				border-color: #5FAD1B;
+				background: rgba(95, 173, 27, 0.12);
+			}
 		}
 	}
 	#app.app .leek-creator {

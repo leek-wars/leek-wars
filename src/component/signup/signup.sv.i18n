@@ -76,5 +76,6 @@
 	"groups_players": "Spelare",
 	"groups_players_desc": "En grupp spelare för ett evenemang med en privat turnering.",
 	"groups_discover": "Upptäck privata grupper",
-	"groups_trusted": "De litar på oss"
+	"groups_trusted": "De litar på oss",
+	"default_language": "Standardspråk"
 }

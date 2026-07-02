@@ -76,5 +76,6 @@
 	"groups_players": "Игроки",
 	"groups_players_desc": "Группа игроков для мероприятия с частным турниром.",
 	"groups_discover": "Узнать о приватных группах",
-	"groups_trusted": "Они доверяют нам"
+	"groups_trusted": "Они доверяют нам",
+	"default_language": "Язык по умолчанию"
 }

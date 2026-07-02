@@ -76,5 +76,6 @@
 	"groups_players": "Pemain",
 	"groups_players_desc": "Sekelompok pemain untuk sebuah acara dengan turnamen pribadi.",
 	"groups_discover": "Jelajahi grup pribadi",
-	"groups_trusted": "Mereka mempercayai kami"
+	"groups_trusted": "Mereka mempercayai kami",
+	"default_language": "Bahasa default"
 }

@@ -76,5 +76,6 @@
 	"groups_players": "Spelers",
 	"groups_players_desc": "Een groep spelers voor een evenement met een privétoernooi.",
 	"groups_discover": "Ontdek privégroepen",
-	"groups_trusted": "Ze vertrouwen ons"
+	"groups_trusted": "Ze vertrouwen ons",
+	"default_language": "Standaardtaal"
 }

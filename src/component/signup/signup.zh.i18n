@@ -76,5 +76,6 @@
 	"groups_players": "玩家",
 	"groups_players_desc": "一群玩家组成的群组，可举办带有私人锦标赛的活动",
 	"groups_discover": "了解私人群组",
-	"groups_trusted": "他们信任我们"
+	"groups_trusted": "他们信任我们",
+	"default_language": "默认语言"
 }

@@ -76,5 +76,6 @@
 	"groups_players": "Players",
 	"groups_players_desc": "A group of players for an event with a private tournament.",
 	"groups_discover": "Discover private groups",
-	"groups_trusted": "They trust us"
+	"groups_trusted": "They trust us",
+	"default_language": "Default language"
 }

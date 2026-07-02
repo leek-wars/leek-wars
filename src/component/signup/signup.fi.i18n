@@ -76,5 +76,6 @@
 	"groups_players": "Pelaajat",
 	"groups_players_desc": "Pelaajaryhmä tapahtumaan, jossa on yksityinen turnaus.",
 	"groups_discover": "Tutustu yksityisryhmiin",
-	"groups_trusted": "He luottavat meihin"
+	"groups_trusted": "He luottavat meihin",
+	"default_language": "Oletuskieli"
 }

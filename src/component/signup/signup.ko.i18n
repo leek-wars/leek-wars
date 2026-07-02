@@ -76,5 +76,6 @@
 	"groups_players": "플레이어",
 	"groups_players_desc": "비공개 토너먼트가 있는 이벤트의 플레이어 그룹입니다.",
 	"groups_discover": "비공개 그룹 둘러보기",
-	"groups_trusted": "그들은 우리를 신뢰합니다"
+	"groups_trusted": "그들은 우리를 신뢰합니다",
+	"default_language": "기본 언어"
 }
