@@ -186,7 +186,10 @@ const filteredFights = computed(() => fights.value.filter((fight) => {
 		|| (displayLoot.value.chests && fight.chests > 0)
 		|| (displayLoot.value.rareloot && fight.rareloot > 0)
 
-	const resultFilter = (displayResults.value.win && fight.result === 'win')
+	// Les combats en génération (status === 0) n'ont pas encore de résultat :
+	// toujours les afficher, indépendamment des filtres victoires/défaites/égalités.
+	const resultFilter = fight.status === 0
+		|| (displayResults.value.win && fight.result === 'win')
 		|| (displayResults.value.draw && fight.result === 'draw')
 		|| (displayResults.value.defeat && fight.result === 'defeat')
 
