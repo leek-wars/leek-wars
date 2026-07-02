@@ -21,6 +21,11 @@
 						</div>
 						<div class="category-tabs">
 							<div v-for="c in categoryStats" :key="c.type" class="cat-tab" :class="{ active: filter === c.type }" @click="filter = c.type">
+								<transition name="celebrate">
+									<div v-if="celebratingNow.has(c.type)" class="cat-celebrate">
+										<span class="celebrate-text">{{ t('completed') }}</span>
+									</div>
+								</transition>
 								<div class="cat-tab-head">
 									<v-icon>{{ ITEM_TYPE_ICONS[c.type] }}</v-icon>
 									<span class="cat-name">{{ $t('main.' + ITEM_TYPE_NAME[c.type]) }}</span>
@@ -88,6 +93,13 @@
 	// inclut les items équipés ET ceux vendus/consommés depuis. Absent du store local.
 	const serverOwned = ref<Set<number>>(new Set())
 
+	// Catégories dont l'animation dorée « Terminé » a déjà été montrée (serveur).
+	const celebratedCategories = ref<Set<number>>(new Set())
+	// True une fois la liste "celebrated" chargée : évite d'animer avant de savoir.
+	const celebrationsLoaded = ref(false)
+	// Catégories qui jouent l'animation en ce moment (retirées à la fin).
+	const celebratingNow = ref<Set<number>>(new Set())
+
 	// Templates débloqués (jamais "re-verrouillés") : déjà-possédé serveur
 	// ∪ inventaire local courant (immédiat, sans attendre un rechargement).
 	const owned = computed(() => {
@@ -136,6 +148,32 @@
 			return { type, total: items.length, owned: ownedCount }
 		})
 		.filter((c) => c.total > 0))
+
+	// Célébration « Terminé » : quand une catégorie vient d'être complétée et n'a
+	// jamais été célébrée, on joue une fois l'animation dorée puis on l'enregistre
+	// côté serveur (ne rejoue plus, même sur un autre appareil). Décalé dans le
+	// temps si plusieurs catégories sont complétées d'un coup (arrivée initiale).
+	function checkCelebrations() {
+		if (!celebrationsLoaded.value) return
+		let delay = 0
+		for (const c of categoryStats.value) {
+			if (c.total === 0 || c.owned !== c.total) continue
+			if (celebratedCategories.value.has(c.type)) continue
+			celebratedCategories.value.add(c.type) // garde anti-rejeu immédiat
+			const type = c.type
+			window.setTimeout(() => {
+				celebratingNow.value = new Set(celebratingNow.value).add(type)
+				window.setTimeout(() => {
+					const s = new Set(celebratingNow.value)
+					s.delete(type)
+					celebratingNow.value = s
+				}, 2600)
+			}, delay)
+			delay += 600
+			LeekWars.post('item/celebrate-category', { category: type })
+		}
+	}
+	watch([categoryStats, celebrationsLoaded], checkCelebrations)
 
 	// Catégorie affichée (une seule à la fois, selon l'onglet sélectionné).
 	const currentCategory = computed(() => allByType.value.get(filter.value) ?? [])
@@ -198,8 +236,10 @@
 		LeekWars.setTitle(t('main.collection') as string)
 		// Templates déjà possédés un jour (équipés et items vendus/consommés inclus) :
 		// source de vérité côté serveur (table farmer_item_collection).
-		LeekWars.get<{ templates: number[] }>('item/get-collection').then((res) => {
+		LeekWars.get<{ templates: number[], celebrated: number[] }>('item/get-collection').then((res) => {
 			serverOwned.value = new Set(res.templates)
+			celebratedCategories.value = new Set(res.celebrated ?? [])
+			celebrationsLoaded.value = true
 		}).error(() => { /* repli : inventaire local du store uniquement */ })
 	})
 </script>
@@ -276,6 +316,8 @@
 	border-bottom: 1px solid var(--border);
 }
 .cat-tab {
+	position: relative;
+	overflow: hidden;
 	min-width: 0;
 	border: 1px solid var(--border);
 	border-radius: 8px;
@@ -353,6 +395,46 @@
 		.cat-count { font-size: 14px; }
 	}
 	.cat-progress { height: 11px; }
+}
+// Animation dorée « Terminé » quand une catégorie vient d'être complétée.
+.cat-celebrate {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+	background: radial-gradient(ellipse at center, rgba(255, 200, 40, 0.38), rgba(255, 200, 40, 0) 72%);
+	.celebrate-text {
+		font-size: 20px;
+		font-weight: 800;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		background: linear-gradient(100deg, #b8860b 0%, #ffd700 25%, #fff6c0 50%, #ffd700 75%, #b8860b 100%);
+		background-size: 220% 100%;
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+		filter: drop-shadow(0 1px 5px rgba(255, 190, 30, 0.55));
+		animation: celebrate-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both, celebrate-shine 2.4s linear;
+	}
+}
+@keyframes celebrate-pop {
+	0% { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+	60% { transform: scale(1.15) rotate(2deg); }
+	100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes celebrate-shine {
+	0% { background-position: 120% 0; }
+	100% { background-position: -120% 0; }
+}
+.celebrate-enter-active { transition: opacity 0.3s; }
+.celebrate-leave-active { transition: opacity 0.6s; }
+.celebrate-enter-from, .celebrate-leave-to { opacity: 0; }
+#app.app .cat-celebrate .celebrate-text {
+	font-size: 15px;
 }
 .grid {
 	display: grid;
