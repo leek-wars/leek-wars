@@ -99,6 +99,7 @@
 						<v-checkbox v-model="displayResults.win" hide-details class="option-checkbox" :label="$t('victories')" />
 						<v-checkbox v-model="displayResults.draw" hide-details class="option-checkbox" :label="$t('draws')" />
 						<v-checkbox v-model="displayResults.defeat" hide-details class="option-checkbox" :label="$t('defeats')" />
+						<v-checkbox v-model="displayResults.generating" hide-details class="option-checkbox" :label="$t('generating')" />
 					</div>
 				</div>
 
@@ -138,7 +139,7 @@ const start_date = ref(0)
 const displayContexts = ref({ challenge: true, garden: true, tournament: true })
 const displayTypes = ref({ solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
 const displayLoot = ref({ chests: false, rareloot: false })
-const displayResults = ref({ win: true, draw: true, defeat: true })
+const displayResults = ref({ win: true, draw: true, defeat: true, generating: true })
 const opponentSearch = ref('')
 const viewMode = ref<'grid' | 'table'>((localStorage.getItem('options/history-view') as 'grid' | 'table') || 'grid')
 
@@ -189,6 +190,7 @@ const filteredFights = computed(() => fights.value.filter((fight) => {
 	const resultFilter = (displayResults.value.win && fight.result === 'win')
 		|| (displayResults.value.draw && fight.result === 'draw')
 		|| (displayResults.value.defeat && fight.result === 'defeat')
+		|| (displayResults.value.generating && fight.status == 0)
 
 	const query = opponentSearch.value.trim().toLowerCase()
 	const opponentFilter = !query || fightSearchText(fight).includes(query)
@@ -221,7 +223,7 @@ const initialPeriod = localStorage.getItem('options/history-period') || '1week'
 displayContexts.value = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
 displayTypes.value = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true, "boss": true }')
 displayLoot.value = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":false,"rareloot":false}')
-displayResults.value = JSON.parse(localStorage.getItem('options/history-results') || '{"win":true,"draw":true,"defeat":true}')
+displayResults.value = JSON.parse(localStorage.getItem('options/history-results') || '{"win":true,"draw":true,"defeat":true,"generating":true}')
 select_period(initialPeriod)
 
 function loadHistory() {
