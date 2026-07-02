@@ -28,5 +28,6 @@
 	"chest_hunt": "Caça ao Baú",
 	"n_chests": "{0} baús",
 	"colossus": "Colosso",
-	"result": "Resultado"
+	"result": "Resultado",
+	"generating": "Gerando"
 }

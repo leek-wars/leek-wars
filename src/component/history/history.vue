@@ -72,6 +72,7 @@
 						<span class="category">
 							{{ $t('fight_context') }}
 						</span>
+						<v-checkbox v-model="allContexts" :indeterminate="indetContexts" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
 						<v-checkbox v-model="displayContexts.challenge" hide-details class="option-checkbox" :label="$t('challenge')" />
 						<v-checkbox v-model="displayContexts.garden" hide-details class="option-checkbox" :label="$t('garden')" />
 						<v-checkbox v-model="displayContexts.tournament" hide-details class="option-checkbox" :label="$t('tournament')" />
@@ -80,6 +81,7 @@
 						<span class="category">
 							{{ $t('fight_type') }}
 						</span>
+						<v-checkbox v-model="allTypes" :indeterminate="indetTypes" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
 						<v-checkbox v-model="displayTypes.solo" hide-details class="option-checkbox" :label="$t('solo')" />
 						<v-checkbox v-model="displayTypes.farmer" hide-details class="option-checkbox" :label="$t('farmer')" />
 						<v-checkbox v-model="displayTypes.team" hide-details class="option-checkbox" :label="$t('team')" />
@@ -91,11 +93,13 @@
 					</div>
 					<div class="fight-loot">
 						<span class="category">{{ $t('loot') }}</span>
+						<v-checkbox v-model="allLoot" :indeterminate="indetLoot" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
 						<v-checkbox v-model="displayLoot.chests" hide-details class="option-checkbox" :label="$t('chests')" />
 						<v-checkbox v-model="displayLoot.rareloot" hide-details class="option-checkbox" :label="$t('rare_loot')" />
 					</div>
 					<div class="fight-result">
 						<span class="category">{{ $t('result') }}</span>
+						<v-checkbox v-model="allResults" :indeterminate="indetResults" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
 						<v-checkbox v-model="displayResults.win" hide-details class="option-checkbox" :label="$t('victories')" />
 						<v-checkbox v-model="displayResults.draw" hide-details class="option-checkbox" :label="$t('draws')" />
 						<v-checkbox v-model="displayResults.defeat" hide-details class="option-checkbox" :label="$t('defeats')" />
@@ -111,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted } from 'vue'
+import { ref, computed, watch, onUnmounted, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Farmer } from '@/model/farmer'
 import { type Fight, FightContext, FightType } from '@/model/fight'
@@ -136,12 +140,32 @@ const fights = ref<Fight[]>([])
 const entity = ref<Farmer | Leek | null>(null)
 const period = ref<string>('today')
 const start_date = ref(0)
-const displayContexts = ref({ challenge: true, garden: true, tournament: true })
-const displayTypes = ref({ solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
-const displayLoot = ref({ chests: false, rareloot: false })
-const displayResults = ref({ win: true, draw: true, defeat: true, generating: true })
+const displayContexts = ref<Record<string, boolean>>({ challenge: true, garden: true, tournament: true })
+const displayTypes = ref<Record<string, boolean>>({ solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
+const displayLoot = ref<Record<string, boolean>>({ chests: false, rareloot: false })
+const displayResults = ref<Record<string, boolean>>({ win: true, draw: true, defeat: true, generating: true })
 const opponentSearch = ref('')
 const viewMode = ref<'grid' | 'table'>((localStorage.getItem('options/history-view') as 'grid' | 'table') || 'grid')
+
+// Case à cocher "Tous" par ligne de filtres : cochée quand toutes les options de la
+// ligne le sont, indéterminée si partiellement cochée. Cliquer (re)coche toute la ligne.
+function allModel(obj: Ref<Record<string, boolean>>, keys: string[]) {
+	return computed<boolean>({
+		get: () => keys.every(k => obj.value[k]),
+		set: (v: boolean) => keys.forEach(k => { obj.value[k] = v }),
+	})
+}
+function someModel(obj: Ref<Record<string, boolean>>, keys: string[]) {
+	return computed(() => keys.some(k => obj.value[k]) && !keys.every(k => obj.value[k]))
+}
+const allContexts = allModel(displayContexts, ['challenge', 'garden', 'tournament'])
+const indetContexts = someModel(displayContexts, ['challenge', 'garden', 'tournament'])
+const allTypes = allModel(displayTypes, ['solo', 'farmer', 'team', 'battleRoyale', 'war', 'chestHunt', 'colossus', 'boss'])
+const indetTypes = someModel(displayTypes, ['solo', 'farmer', 'team', 'battleRoyale', 'war', 'chestHunt', 'colossus', 'boss'])
+const allLoot = allModel(displayLoot, ['chests', 'rareloot'])
+const indetLoot = someModel(displayLoot, ['chests', 'rareloot'])
+const allResults = allModel(displayResults, ['win', 'draw', 'defeat', 'generating'])
+const indetResults = someModel(displayResults, ['win', 'draw', 'defeat', 'generating'])
 
 // Texte recherchable d'un combat : noms de tous les participants (poireaux, équipes,
 // éleveurs, boss), pour filtrer par adversaire (#4314).
@@ -361,5 +385,13 @@ watch(viewMode, () => {
 		display: inline-block;
 		padding-right: 5px;
 		padding-left: 5px;
+	}
+	.all-checkbox {
+		margin-right: 5px;
+		border-right: 1px solid var(--border);
+		:deep(.v-label) {
+			font-weight: bold;
+			opacity: 1;
+		}
 	}
 </style>

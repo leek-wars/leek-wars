@@ -28,5 +28,6 @@
 	"chest_hunt": "Kistejagt",
 	"n_chests": "{0} kister",
 	"colossus": "Koloss",
-	"result": "Resultat"
+	"result": "Resultat",
+	"generating": "Genererer"
 }

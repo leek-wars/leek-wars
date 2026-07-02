@@ -28,5 +28,6 @@
 	"n_chests": "{0} skrzyń",
 	"rare_loot": "Rzadkie zasoby",
 	"war": "Wojna",
-	"result": "Wynik"
+	"result": "Wynik",
+	"generating": "Generowanie"
 }
