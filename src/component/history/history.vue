@@ -68,42 +68,50 @@
 				</div>
 
 				<div class="history-options">
-					<div class="fight-context">
-						<span class="category">
-							{{ $t('fight_context') }}
-						</span>
-						<v-checkbox v-model="allContexts" :indeterminate="indetContexts" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
-						<v-checkbox v-model="displayContexts.challenge" hide-details class="option-checkbox" :label="$t('challenge')" />
-						<v-checkbox v-model="displayContexts.garden" hide-details class="option-checkbox" :label="$t('garden')" />
-						<v-checkbox v-model="displayContexts.tournament" hide-details class="option-checkbox" :label="$t('tournament')" />
+					<div class="filter-row">
+						<span class="filter-label">{{ $t('fight_context') }}</span>
+						<div class="chips">
+							<div class="chip all" :class="{ on: allContexts, indet: indetContexts }" @click="allContexts = !allContexts">{{ $t('main.all') }}</div>
+							<span class="sep"></span>
+							<div class="chip" :class="{ on: displayContexts.challenge }" @click="displayContexts.challenge = !displayContexts.challenge"><span class="dot"></span>{{ $t('challenge') }}</div>
+							<div class="chip" :class="{ on: displayContexts.garden }" @click="displayContexts.garden = !displayContexts.garden"><span class="dot"></span>{{ $t('garden') }}</div>
+							<div class="chip" :class="{ on: displayContexts.tournament }" @click="displayContexts.tournament = !displayContexts.tournament"><span class="dot"></span>{{ $t('tournament') }}</div>
+						</div>
 					</div>
-					<div v-if="type !== 'team'" class="fight-type">
-						<span class="category">
-							{{ $t('fight_type') }}
-						</span>
-						<v-checkbox v-model="allTypes" :indeterminate="indetTypes" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
-						<v-checkbox v-model="displayTypes.solo" hide-details class="option-checkbox" :label="$t('solo')" />
-						<v-checkbox v-model="displayTypes.farmer" hide-details class="option-checkbox" :label="$t('farmer')" />
-						<v-checkbox v-model="displayTypes.team" hide-details class="option-checkbox" :label="$t('team')" />
-						<v-checkbox v-model="displayTypes.battleRoyale" hide-details class="option-checkbox" :label="$t('battle_royale')" />
-						<v-checkbox v-model="displayTypes.war" hide-details class="option-checkbox" :label="$t('war')" />
-						<v-checkbox v-model="displayTypes.chestHunt" hide-details class="option-checkbox" :label="$t('chest_hunt')" />
-						<v-checkbox v-model="displayTypes.colossus" hide-details class="option-checkbox" :label="$t('colossus')" />
-						<v-checkbox v-model="displayTypes.boss" hide-details class="option-checkbox" :label="$t('boss')" />
+					<div v-if="type !== 'team'" class="filter-row">
+						<span class="filter-label">{{ $t('fight_type') }}</span>
+						<div class="chips">
+							<div class="chip all" :class="{ on: allTypes, indet: indetTypes }" @click="allTypes = !allTypes">{{ $t('main.all') }}</div>
+							<span class="sep"></span>
+							<div class="chip" :class="{ on: displayTypes.solo }" @click="displayTypes.solo = !displayTypes.solo"><span class="dot"></span>{{ $t('solo') }}</div>
+							<div class="chip" :class="{ on: displayTypes.farmer }" @click="displayTypes.farmer = !displayTypes.farmer"><span class="dot"></span>{{ $t('farmer') }}</div>
+							<div class="chip" :class="{ on: displayTypes.team }" @click="displayTypes.team = !displayTypes.team"><span class="dot"></span>{{ $t('team') }}</div>
+							<div class="chip" :class="{ on: displayTypes.battleRoyale }" @click="displayTypes.battleRoyale = !displayTypes.battleRoyale"><span class="dot"></span>{{ $t('battle_royale') }}</div>
+							<div class="chip" :class="{ on: displayTypes.war }" @click="displayTypes.war = !displayTypes.war"><span class="dot"></span>{{ $t('war') }}</div>
+							<div class="chip" :class="{ on: displayTypes.chestHunt }" @click="displayTypes.chestHunt = !displayTypes.chestHunt"><span class="dot"></span>{{ $t('chest_hunt') }}</div>
+							<div class="chip" :class="{ on: displayTypes.colossus }" @click="displayTypes.colossus = !displayTypes.colossus"><span class="dot"></span>{{ $t('colossus') }}</div>
+							<div class="chip" :class="{ on: displayTypes.boss }" @click="displayTypes.boss = !displayTypes.boss"><span class="dot"></span>{{ $t('boss') }}</div>
+						</div>
 					</div>
-					<div class="fight-loot">
-						<span class="category">{{ $t('loot') }}</span>
-						<v-checkbox v-model="allLoot" :indeterminate="indetLoot" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
-						<v-checkbox v-model="displayLoot.chests" hide-details class="option-checkbox" :label="$t('chests')" />
-						<v-checkbox v-model="displayLoot.rareloot" hide-details class="option-checkbox" :label="$t('rare_loot')" />
+					<div class="filter-row">
+						<span class="filter-label">{{ $t('loot') }}</span>
+						<div class="chips">
+							<div class="chip all" :class="{ on: allLoot, indet: indetLoot }" @click="allLoot = !allLoot">{{ $t('main.all') }}</div>
+							<span class="sep"></span>
+							<div class="chip" :class="{ on: displayLoot.chests }" @click="displayLoot.chests = !displayLoot.chests"><span class="dot"></span>{{ $t('chests') }}</div>
+							<div class="chip" :class="{ on: displayLoot.rareloot }" @click="displayLoot.rareloot = !displayLoot.rareloot"><span class="dot"></span>{{ $t('rare_loot') }}</div>
+						</div>
 					</div>
-					<div class="fight-result">
-						<span class="category">{{ $t('result') }}</span>
-						<v-checkbox v-model="allResults" :indeterminate="indetResults" hide-details class="option-checkbox all-checkbox" :label="$t('main.all')" />
-						<v-checkbox v-model="displayResults.win" hide-details class="option-checkbox" :label="$t('victories')" />
-						<v-checkbox v-model="displayResults.draw" hide-details class="option-checkbox" :label="$t('draws')" />
-						<v-checkbox v-model="displayResults.defeat" hide-details class="option-checkbox" :label="$t('defeats')" />
-						<v-checkbox v-model="displayResults.generating" hide-details class="option-checkbox" :label="$t('generating')" />
+					<div class="filter-row">
+						<span class="filter-label">{{ $t('result') }}</span>
+						<div class="chips">
+							<div class="chip all" :class="{ on: allResults, indet: indetResults }" @click="allResults = !allResults">{{ $t('main.all') }}</div>
+							<span class="sep"></span>
+							<div class="chip res-win" :class="{ on: displayResults.win }" @click="displayResults.win = !displayResults.win"><span class="dot"></span>{{ $t('victories') }}</div>
+							<div class="chip res-draw" :class="{ on: displayResults.draw }" @click="displayResults.draw = !displayResults.draw"><span class="dot"></span>{{ $t('draws') }}</div>
+							<div class="chip res-defeat" :class="{ on: displayResults.defeat }" @click="displayResults.defeat = !displayResults.defeat"><span class="dot"></span>{{ $t('defeats') }}</div>
+							<div class="chip res-generating" :class="{ on: displayResults.generating }" @click="displayResults.generating = !displayResults.generating"><span class="dot"></span>{{ $t('generating') }}</div>
+						</div>
 					</div>
 				</div>
 
@@ -374,24 +382,100 @@ watch(viewMode, () => {
 	.grey {
 		color: var(--text-color-secondary);
 	}
-	.category {
-		vertical-align: top;
-		font-size: 16px
-	}
 	.history-options {
-		margin: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin: 14px 10px;
 	}
-	.option-checkbox {
-		display: inline-block;
-		padding-right: 5px;
-		padding-left: 5px;
+	.filter-row {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
 	}
-	.all-checkbox {
-		margin-right: 5px;
-		border-right: 1px solid var(--border);
-		:deep(.v-label) {
-			font-weight: bold;
-			opacity: 1;
-		}
+	.filter-label {
+		flex: 0 0 130px;
+		text-align: right;
+		padding-top: 7px;
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 1.3;
+		text-transform: uppercase;
+		letter-spacing: 0.4px;
+		color: var(--text-color-secondary);
 	}
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 7px;
+	}
+	.chip {
+		--c: var(--primary);
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 5px 13px;
+		border-radius: 15px;
+		font-size: 13px;
+		line-height: 1;
+		white-space: nowrap;
+		cursor: pointer;
+		user-select: none;
+		color: var(--text-color-secondary);
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
+		transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+	}
+	.chip:hover {
+		color: var(--text-color);
+		background: var(--background-header);
+	}
+	.chip.on {
+		color: var(--c);
+		background: color-mix(in srgb, var(--c) 15%, transparent);
+		border-color: color-mix(in srgb, var(--c) 50%, transparent);
+		font-weight: 600;
+	}
+	.chip.on:hover {
+		color: var(--c);
+		background: color-mix(in srgb, var(--c) 24%, transparent);
+	}
+	.chip .dot {
+		flex: none;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: currentColor;
+		opacity: 0.35;
+	}
+	.chip.on .dot {
+		opacity: 1;
+	}
+	.chip.all {
+		font-weight: 700;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.chip.all.indet {
+		color: var(--c);
+		background: transparent;
+		border-style: dashed;
+		border-color: color-mix(in srgb, var(--c) 50%, transparent);
+	}
+	.sep {
+		align-self: stretch;
+		width: 1px;
+		margin: 2px 4px;
+		background: var(--border);
+	}
+	body.dark .chip { --c: #7ec93f; }
+	.res-win { --c: #5fad1b; }
+	.res-draw { --c: #8a8a8a; }
+	.res-defeat { --c: #d3382f; }
+	.res-generating { --c: #3f86d6; }
+	body.dark .res-win { --c: #7ec93f; }
+	body.dark .res-draw { --c: #a6a6a6; }
+	body.dark .res-defeat { --c: #e07a72; }
+	body.dark .res-generating { --c: #6ba8e6; }
 </style>
