@@ -67,5 +67,13 @@
 	"groups": "Leek Wars ryhmille",
 	"groups_desc": "Luo yksityinen ryhmä opiskelijoille, henkilökunnalle tai pelaajille, hallitse heidän edistymistään, järjestä turnauksia ja kommunikoi heidän kanssaan suorassa lähetyksessä.",
 	"groups_button": "Lue lisää tarjouksistamme",
-	"groups_title": "Luo yksityinen Leek Wars -ryhmäsi"
+	"groups_title": "Yksityiset ryhmät",
+	"groups_intro": "Leek Wars tarjoaa mahdollisuuden <b>luoda ja hallinnoida pelaajaryhmää</b>, jossa on peruspeliä kehittyneempiä ominaisuuksia.<br>Ideaalinen, jos olet :",
+	"groups_education": "Koulutus",
+	"groups_education_desc": "Opettaja oppilaiden kanssa oppitunnilla tai toiminnassa.",
+	"groups_enterprise": "Yritys",
+	"groups_enterprise_desc": "Yhteistyökumppaneiden välisen toiminnan yritys.",
+	"groups_players": "Pelaajat",
+	"groups_players_desc": "Pelaajaryhmä tapahtumaan, jossa on yksityinen turnaus.",
+	"groups_discover": "Tutustu yksityisryhmiin"
 }

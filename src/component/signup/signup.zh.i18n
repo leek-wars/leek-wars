@@ -67,5 +67,13 @@
 	"groups": "团体的韭菜大战",
 	"groups_desc": "创建一个学生、员工或球员的私人小组，管理他们的进展，组织比赛并与他们进行现场交流。",
 	"groups_button": "了解更多关于我们的优惠",
-	"groups_title": "创建你的私人韭菜大战小组"
+	"groups_title": "私人团体",
+	"groups_intro": "Leek Wars提供了<b>创建和管理一组玩家的可能性</b>，比基本游戏有更多的高级功能。<br>如果你是：",
+	"groups_education": "教育",
+	"groups_education_desc": "一个老师和学生在一起，为了一节课或一项活动。",
+	"groups_enterprise": "公司",
+	"groups_enterprise_desc": "一个合作者之间活动的公司。",
+	"groups_players": "玩家",
+	"groups_players_desc": "一群玩家组成的群组，可举办带有私人锦标赛的活动",
+	"groups_discover": "了解私人群组"
 }

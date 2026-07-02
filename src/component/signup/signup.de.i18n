@@ -1,6 +1,6 @@
 {
 	"android_app": "Android-App",
-	"conditions": "Indem du auf die Schaltfläche \u201ESpielen\u201C klickst, akzeptierst du die {link}.",
+	"conditions": "Indem du auf die Schaltfläche „Spielen“ klickst, akzeptierst du die {link}.",
 	"conditions_name": "Nutzungsbedingungen",
 	"confirm_password": "Bestätigung",
 	"country": "Land",
@@ -67,5 +67,13 @@
 	"groups": "Leek Wars für Gruppen",
 	"groups_desc": "Erstelle eine private Gruppe von Schülern, Mitarbeitern oder Spielern, verwalte ihren Fortschritt, organisiere Turniere und kommuniziere live mit ihnen.",
 	"groups_button": "Mehr zu den Angeboten",
-	"groups_title": "Erstelle deine private Leek Wars Gruppe"
+	"groups_title": "Private Gruppen",
+	"groups_intro": "Leek Wars bietet die Möglichkeit, <b>eine Spielergruppe zu gründen und zu verwalten</b>, mit Funktionen, die über das Basisspiel hinausgehen.<br> Ideal, wenn Sie :",
+	"groups_education": "Bildung",
+	"groups_education_desc": "Ein Lehrer mit Schülern, für einen Kurs oder eine Aktivität.",
+	"groups_enterprise": "Unternehmen",
+	"groups_enterprise_desc": "Ein Unternehmen für eine Aktivität unter Mitarbeitern.",
+	"groups_players": "Spieler",
+	"groups_players_desc": "Eine Gruppe von Spielern für eine Veranstaltung mit einem privaten Turnier.",
+	"groups_discover": "Private Gruppen entdecken"
 }

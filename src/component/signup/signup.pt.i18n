@@ -67,5 +67,13 @@
 	"groups": "Leek Wars para grupos",
 	"groups_desc": "Crie um grupo privado de estudantes, funcionários ou jogadores, faça a gestão dos seus progressos, organize torneios e comunique em direto com eles.",
 	"groups_button": "Saiba mais sobre as nossas ofertas",
-	"groups_title": "Criar o seu grupo privado de Leek Wars"
+	"groups_title": "Grupos privados",
+	"groups_intro": "O Leek Wars oferece a possibilidade de <b>criar e gerir um grupo de jogadores</b> com características mais avançadas do que o jogo básico.<br>Ideal se fores :",
+	"groups_education": "Educação",
+	"groups_education_desc": "Um professor com alunos, para uma aula ou uma atividade.",
+	"groups_enterprise": "Empresa",
+	"groups_enterprise_desc": "Uma empresa para uma atividade entre colaboradores.",
+	"groups_players": "Jogadores",
+	"groups_players_desc": "Um grupo de jogadores para um evento com um torneio privado.",
+	"groups_discover": "Descobrir os grupos privados"
 }

@@ -67,5 +67,13 @@
 	"groups": "단체용 Leek Wars",
 	"groups_desc": "학생, 교직원 또는 선수로 구성된 비공개 그룹을 만들고, 진행 상황을 관리하고, 토너먼트를 조직하고, 이들과 실시간으로 소통하세요.",
 	"groups_button": "혜택에 대해 자세히 알아보기",
-	"groups_title": "비공개 Leek Wars 그룹 생성"
+	"groups_title": "비공개 그룹",
+	"groups_intro": "Leek Wars는 기본 게임보다 고급 기능을 갖춘 <b>플레이어 그룹을 생성하고 관리할 수 있는 기능</b>을 제공합니다.<br>다음과 같은 경우에 이상적입니다:",
+	"groups_education": "교육",
+	"groups_education_desc": "수업 또는 활동을 위해 학생들과 함께 있는 교사.",
+	"groups_enterprise": "회사",
+	"groups_enterprise_desc": "공동 작업자 간의 활동을 위한 회사입니다.",
+	"groups_players": "플레이어",
+	"groups_players_desc": "비공개 토너먼트가 있는 이벤트의 플레이어 그룹입니다.",
+	"groups_discover": "비공개 그룹 둘러보기"
 }

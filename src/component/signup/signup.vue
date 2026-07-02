@@ -123,6 +123,46 @@
 			</panel>
 		</div>
 
+		<panel class="groups-panel first" :title="$t('groups_title')" icon="mdi-account-group">
+			<div class="groups-teaser">
+				<div class="teaser-intro" v-html="$t('groups_intro')"></div>
+				<div class="teaser-targets">
+					<div class="teaser-target">
+						<div class="image">
+							<leek-image :leek="{level: 200, hat: 7, face: 1}" :scale="0.4" />
+							<leek-image :leek="{level: 20, hat: 31, face: 1}" :scale="0.34" :invert="true" />
+							<leek-image :leek="{level: 20, hat: 31, face: 1}" :scale="0.34" :invert="true" />
+						</div>
+						<div class="t-title">{{ $t('groups_education') }}</div>
+						<div class="t-desc">{{ $t('groups_education_desc') }}</div>
+					</div>
+					<div class="teaser-target">
+						<div class="image">
+							<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.32" />
+							<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.31" />
+							<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.32" :invert="true" />
+						</div>
+						<div class="t-title">{{ $t('groups_enterprise') }}</div>
+						<div class="t-desc">{{ $t('groups_enterprise_desc') }}</div>
+					</div>
+					<div class="teaser-target">
+						<div class="image">
+							<leek-image :leek="{level: 200, skin: 2, hat: 10, face: 1}" :scale="0.33" />
+							<leek-image :leek="{level: 200, skin: 3, hat: 17, face: 1}" :scale="0.33" />
+							<leek-image :leek="{level: 200, skin: 4, hat: 6, face: 1}" :scale="0.33" :invert="true" />
+						</div>
+						<div class="t-title">{{ $t('groups_players') }}</div>
+						<div class="t-desc">{{ $t('groups_players_desc') }}</div>
+					</div>
+				</div>
+				<div class="teaser-cta">
+					<router-link to="/groups">
+						<v-btn color="primary" size="large"><v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ $t('groups_discover') }}</v-btn>
+					</router-link>
+				</div>
+			</div>
+		</panel>
+
 		<!-- <panel :title="$t('main.partners')">
 			<template #content>
 				<div class="content partners">
@@ -550,6 +590,45 @@
 </script>
 
 <style lang="scss" scoped>
+	.groups-teaser {
+		padding: 5px;
+		.teaser-intro {
+			font-size: 15px;
+			line-height: 1.5;
+			margin-bottom: 18px;
+		}
+		.teaser-targets {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 20px;
+			margin-bottom: 20px;
+		}
+		.teaser-target {
+			display: flex;
+			flex-direction: column;
+			.image {
+				margin-bottom: 8px;
+				min-height: 90px;
+				display: flex;
+				align-items: flex-end;
+			}
+			.t-title {
+				font-size: 18px;
+				font-weight: 500;
+				color: var(--primary);
+				margin-bottom: 4px;
+			}
+			.t-desc {
+				font-size: 14px;
+				color: var(--text-color-secondary);
+				line-height: 1.4;
+			}
+		}
+		.teaser-cta {
+			text-align: center;
+			margin-top: 5px;
+		}
+	}
 	.godfather-invite-banner {
 		display: flex;
 		align-items: center;

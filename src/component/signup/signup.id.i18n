@@ -67,5 +67,13 @@
 	"groups": "Leek Wars untuk kelompok",
 	"groups_desc": "Buat grup pribadi yang terdiri dari siswa, staf, atau pemain, kelola kemajuan mereka, selenggarakan turnamen, dan berkomunikasi langsung dengan mereka.",
 	"groups_button": "Cari tahu lebih lanjut tentang penawaran kami",
-	"groups_title": "Buat grup Leek Wars pribadi Anda"
+	"groups_title": "Kelompok pribadi",
+	"groups_intro": "Leek Wars menawarkan kemungkinan untuk <b>membuat dan mengelola sekelompok pemain</b> dengan fitur yang lebih canggih daripada permainan dasar.<br>Ideal jika Anda:",
+	"groups_education": "Pendidikan",
+	"groups_education_desc": "Seorang guru dengan siswa, untuk sebuah pelajaran atau kegiatan.",
+	"groups_enterprise": "Perusahaan",
+	"groups_enterprise_desc": "Sebuah perusahaan untuk kegiatan antar kolaborator.",
+	"groups_players": "Pemain",
+	"groups_players_desc": "Sekelompok pemain untuk sebuah acara dengan turnamen pribadi.",
+	"groups_discover": "Jelajahi grup pribadi"
 }

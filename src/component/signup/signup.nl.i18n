@@ -67,5 +67,13 @@
 	"groups": "Leek Wars voor groepen",
 	"groups_desc": "Maak een privégroep van studenten, medewerkers of spelers, beheer hun voortgang, organiseer toernooien en communiceer live met ze.",
 	"groups_button": "Meer informatie over onze aanbiedingen",
-	"groups_title": "Creëer je eigen Leek Wars groep"
+	"groups_title": "Particuliere groepen",
+	"groups_intro": "Leek Wars biedt de mogelijkheid om <b>een groep spelers</b> aan te maken en te beheren met meer geavanceerde functies dan het basisspel.<br>Ideaal als je :",
+	"groups_education": "Onderwijs",
+	"groups_education_desc": "Een leraar met leerlingen, voor een les of een activiteit.",
+	"groups_enterprise": "Bedrijf",
+	"groups_enterprise_desc": "Een bedrijf voor een activiteit tussen medewerkers.",
+	"groups_players": "Spelers",
+	"groups_players_desc": "Een groep spelers voor een evenement met een privétoernooi.",
+	"groups_discover": "Ontdek privégroepen"
 }

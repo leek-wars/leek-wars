@@ -67,5 +67,13 @@
 	"groups": "団体向けネギ戦争",
 	"groups_desc": "生徒、スタッフ、選手のプライベートグループを作成し、進捗状況を管理したり、トーナメントを開催したり、ライブでコミュニケーションをとったりできます。",
 	"groups_button": "オファーの詳細",
-	"groups_title": "プライベート・グループ「ネギ戦争」を作ろう"
+	"groups_title": "プライベート・グループ",
+	"groups_intro": "Leek Wars では、基本のゲームよりも高度な機能を備えた<b>プレイヤーグループを作成・管理</b>することができます。<br>以下の方にぴったりです :",
+	"groups_education": "教育",
+	"groups_education_desc": "レッスンや活動のために生徒と一緒にいる教師。",
+	"groups_enterprise": "会社概要",
+	"groups_enterprise_desc": "協力者間の活動のための会社。",
+	"groups_players": "選手",
+	"groups_players_desc": "プライベートトーナメントのあるイベントのための選手グループ。",
+	"groups_discover": "プライベートグループを見る"
 }

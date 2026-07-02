@@ -67,5 +67,13 @@
 	"groups": "Leek Wars for grupper",
 	"groups_desc": "Opret en privat gruppe af studerende, ansatte eller spillere, administrer deres fremskridt, organiser turneringer og kommuniker live med dem.",
 	"groups_button": "Find ud af mere om vores tilbud",
-	"groups_title": "Opret din private Leek Wars-gruppe"
+	"groups_title": "Private grupper",
+	"groups_intro": "Leek Wars giver mulighed for at <b>oprette og styre en gruppe spillere</b> med mere avancerede funktioner end grundspillet.<br>Ideal, hvis du er :",
+	"groups_education": "Uddannelse",
+	"groups_education_desc": "En lærer med elever, til en lektion eller en aktivitet.",
+	"groups_enterprise": "Virksomhed",
+	"groups_enterprise_desc": "En virksomhed for en aktivitet mellem samarbejdspartnere.",
+	"groups_players": "Spillere",
+	"groups_players_desc": "En gruppe af spillere til et arrangement med en privat turnering.",
+	"groups_discover": "Opdag private grupper"
 }
