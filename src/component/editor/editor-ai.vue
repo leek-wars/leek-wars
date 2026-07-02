@@ -5,6 +5,7 @@
 				<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
 				<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
 				<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
+				<img v-if="langLogo" class="lang-logo" :src="langLogo">
 				<span class="text" :class="gitStatusClass">{{ ai.name }}</span>
 				<span v-if="ai.errors" class="count error">{{ ai.errors }}</span>
 				<span v-if="ai.warnings" class="count warning">{{ ai.warnings }}</span>
@@ -30,6 +31,7 @@ import { emitter } from '@/model/vue'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { AIItem } from './editor-item'
+import { getLanguageLogo } from './file-types'
 
 defineOptions({ name: 'EditorAi' })
 
@@ -41,6 +43,8 @@ const props = defineProps<{
 const router = useRouter()
 
 const ai = computed(() => props.item.ai)
+
+const langLogo = computed(() => getLanguageLogo(ai.value.path))
 
 const leeks = computed(() => {
 	const aiKey = ai.value.path
@@ -127,6 +131,13 @@ function click(e: Event) {
 		&.warning {
 			color: #ff9100;
 		}
+	}
+	.lang-logo {
+		width: 15px;
+		height: 15px;
+		margin-right: 5px;
+		vertical-align: -2px;
+		flex: none;
 	}
 	.count {
 		border-radius: 10px;

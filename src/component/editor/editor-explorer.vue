@@ -162,10 +162,10 @@
 					:class="{'text-field-warning': !newAIError && windowsWarning(newAIName)}"
 					@keyup.stop @keyup.enter="!newAIError && newAI(false, newAIName)" />
 				<v-btn-toggle v-model="newAILanguage" mandatory density="compact" class="language-toggle">
-					<v-btn value="leekscript" size="small">LeekScript</v-btn>
-					<v-btn value="javascript" size="small">JavaScript</v-btn>
-					<v-btn value="typescript" size="small">TypeScript</v-btn>
-					<v-btn value="python" size="small">Python</v-btn>
+					<v-btn value="leekscript" size="small"><img class="lang-opt" src="/image/language/leekscript.svg">LeekScript</v-btn>
+					<v-btn value="javascript" size="small"><img class="lang-opt" src="/image/language/javascript.svg">JavaScript</v-btn>
+					<v-btn value="typescript" size="small"><img class="lang-opt" src="/image/language/typescript.svg">TypeScript</v-btn>
+					<v-btn value="python" size="small"><img class="lang-opt" src="/image/language/python.svg">Python</v-btn>
 				</v-btn-toggle>
 			</div>
 			<template #actions>
@@ -649,5 +649,17 @@
 }
 .language-toggle {
 	margin-top: 4px;
+	width: 100%;
+}
+.language-toggle :deep(.v-btn) {
+	flex: 1 1 0;
+	min-width: 0;
+	padding: 0 6px;
+}
+.lang-opt {
+	width: 15px;
+	height: 15px;
+	margin-right: 5px;
+	flex: none;
 }
 </style>
