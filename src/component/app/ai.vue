@@ -95,8 +95,8 @@ const show_lines = computed(() => {
 		}
 		.lang-logo {
 			position: absolute;
-			top: 8px;
-			left: 8px;
+			bottom: 8px;
+			right: 8px;
 			width: 18px;
 			height: 18px;
 		}
@@ -111,8 +111,8 @@ const show_lines = computed(() => {
 				font-size: 12px;
 			}
 			.lang-logo {
-				top: 5px;
-				left: 5px;
+				bottom: 5px;
+				right: 5px;
 				width: 14px;
 				height: 14px;
 			}
@@ -136,7 +136,7 @@ const show_lines = computed(() => {
 			border: 1px solid var(--border);
 			color: var(--text-color-secondary);
 			bottom: 10px;
-			right: 10px;
+			left: 10px;
 		}
 		&.locked {
 			filter: brightness(85%);
