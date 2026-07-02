@@ -39,7 +39,6 @@
 <style lang="scss" scoped>
 	.resources-list {
 		display: inline-flex;
-		flex-wrap: wrap;
 		gap: 2px;
 		vertical-align: bottom;
 	}
