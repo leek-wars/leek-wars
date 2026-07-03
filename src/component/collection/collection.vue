@@ -2,7 +2,14 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.collection') }}</h1>
-			<page-tabs active="collection" />
+			<page-tabs active="collection">
+				<template v-if="isAdmin" #before>
+					<div class="tab action celebration-test" @click="testCelebration">
+						<v-icon>mdi-auto-fix</v-icon>
+						<span>{{ t('test_celebration') }}</span>
+					</div>
+				</template>
+			</page-tabs>
 		</div>
 		<panel class="collection-panel">
 			<template #content>
@@ -47,10 +54,6 @@
 							</div>
 						</div>
 					</div>
-
-						<div v-if="isAdmin" class="admin-test">
-							<v-btn size="small" variant="tonal" @click="testCelebration">{{ t('test_celebration') }}</v-btn>
-						</div>
 
 					<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 						<div class="collection-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
@@ -416,7 +419,9 @@
 	}
 	.cat-progress { height: 11px; }
 }
-// Animation dorée « Terminé » quand une catégorie vient d'être complétée.
+// Animation dorée « Terminé » quand une catégorie vient d'être complétée :
+// badge doré (texte clair sur pilule ambre foncée) pour un fort contraste,
+// avec un halo doré et un reflet qui balaye le badge.
 .cat-celebrate {
 	position: absolute;
 	inset: 0;
@@ -425,36 +430,48 @@
 	align-items: center;
 	justify-content: center;
 	pointer-events: none;
-	background: radial-gradient(ellipse at center, rgba(255, 200, 40, 0.38), rgba(255, 200, 40, 0) 72%);
+	background: radial-gradient(ellipse at center, rgba(255, 190, 25, 0.45), rgba(255, 190, 25, 0) 74%);
 	.celebrate-text {
-		font-size: 20px;
+		position: relative;
+		overflow: hidden;
+		padding: 4px 14px;
+		border-radius: 15px;
+		font-size: 18px;
 		font-weight: 800;
-		letter-spacing: 0.5px;
+		letter-spacing: 0.6px;
 		text-transform: uppercase;
-		background: linear-gradient(100deg, #b8860b 0%, #ffd700 25%, #fff6c0 50%, #ffd700 75%, #b8860b 100%);
-		background-size: 220% 100%;
-		-webkit-background-clip: text;
-		background-clip: text;
-		-webkit-text-fill-color: transparent;
-		color: transparent;
-		filter: drop-shadow(0 1px 5px rgba(255, 190, 30, 0.55));
-		animation: celebrate-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both, celebrate-shine 2.4s linear;
+		color: #ffde72;
+		background: linear-gradient(135deg, #4a3208, #6b4a0d);
+		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
+		box-shadow: 0 2px 9px rgba(110, 72, 0, 0.5), inset 0 0 0 1px rgba(255, 212, 90, 0.6);
+		animation: celebrate-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			width: 60%;
+			background: linear-gradient(100deg, transparent, rgba(255, 244, 200, 0.6) 50%, transparent);
+			transform: translateX(-180%);
+			animation: celebrate-shine 1.5s ease-in-out 0.25s;
+		}
 	}
 }
 @keyframes celebrate-pop {
 	0% { transform: scale(0.4) rotate(-8deg); opacity: 0; }
-	60% { transform: scale(1.15) rotate(2deg); }
+	60% { transform: scale(1.12) rotate(2deg); }
 	100% { transform: scale(1) rotate(0); opacity: 1; }
 }
 @keyframes celebrate-shine {
-	0% { background-position: 120% 0; }
-	100% { background-position: -120% 0; }
+	to { transform: translateX(400%); }
 }
 .celebrate-enter-active { transition: opacity 0.3s; }
 .celebrate-leave-active { transition: opacity 0.6s; }
 .celebrate-enter-from, .celebrate-leave-to { opacity: 0; }
 #app.app .cat-celebrate .celebrate-text {
 	font-size: 15px;
+	padding: 3px 11px;
 }
 .grid {
 	display: grid;
@@ -516,9 +533,8 @@ body.dark .cell.locked .image {
 .collection-tooltip {
 	width: 280px;
 }
-.admin-test {
-	display: flex;
-	justify-content: center;
-	padding: 4px 12px 16px;
+// Bouton admin « Tester l'animation » dans l'app-bar (style tab de la page).
+.celebration-test .v-icon {
+	color: #ffce3a;
 }
 </style>
