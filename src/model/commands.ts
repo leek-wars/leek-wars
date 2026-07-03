@@ -33,42 +33,42 @@ const COMMANDS = [
 	{
 		name: "arena",
 		description: "Inviter à rejoindre l'arène",
-		regex: /(^| )\/arena(?=$|\s)/gi,
+		regex: /(^|\s)\/arena(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite"></span>'
 	}, {
 		name: "arena!",
 		description: "Inviter à rejoindre l'arène, de manière appuyée",
-		regex: /(^| )\/arena!(?=$|\s)/gi,
+		regex: /(^|\s)\/arena!(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-label="À L\'ARÈÈÈÈNE !"></span>'
 	}, {
 		name: "br",
 		description: "Inviter à rejoindre un Battle Royale",
-		regex: /(^| )\/br(?::(\d+))?(?=$|\s)/gi,
+		regex: /(^|\s)\/br(?::(\d+))?(?=$|\s)/gi,
 		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="Battle Royale"></span>'
 	}, {
 		name: "br!",
 		description: "Inviter à rejoindre un Battle Royale, de manière appuyée",
-		regex: /(^| )\/br!(?::(\d+))?(?=$|\s)/gi,
+		regex: /(^|\s)\/br!(?::(\d+))?(?=$|\s)/gi,
 		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="LA BAGAAAAARRE !"></span>'
 	}, {
 		name: "chest",
 		description: "Inviter à rejoindre une chasse aux coffres",
-		regex: /(^| )\/chest(?=$|\s)/gi,
+		regex: /(^|\s)\/chest(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="Chasse aux coffres"></span>'
 	}, {
 		name: "chest!",
 		description: "Inviter à rejoindre une chasse aux coffres, de manière appuyée",
-		regex: /(^| )\/chest!(?=$|\s)/gi,
+		regex: /(^|\s)\/chest!(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="AUX COFFREEEES !"></span>'
 	}, {
 		name: "coloss",
 		description: "Inviter à rejoindre un combat contre un colosse",
-		regex: /(^| )\/coloss(?=$|\s)/gi,
+		regex: /(^|\s)\/coloss(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="Colosse"></span>'
 	}, {
 		name: "coloss!",
 		description: "Inviter à rejoindre un combat contre un colosse, de manière appuyée",
-		regex: /(^| )\/coloss!(?=$|\s)/gi,
+		regex: /(^|\s)\/coloss!(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="LE COLOOOOSSE !"></span>'
 	}, {
 		name: "doc",
@@ -104,31 +104,31 @@ const COMMANDS = [
 	}, {
 		name: "fliptable",
 		description: "(╯°□°）╯︵ ┻━┻",
-		regex: /(^| )\/fliptable(?=$|\s)/gi,
+		regex: /(^|\s)\/fliptable(?=$|\s)/gi,
 		replacement: (_: string, b: string) => b + "(╯°□°）╯︵ ┻━┻"
 	}, {
 		name: "issue",
 		description: "Lien vers les Issues sur GitHub",
-		regex: /(^| )\/issue(?=$|\s)/gi,
+		regex: /(^|\s)\/issue(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_ISSUE, "Issue", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "issue!",
 		description: "Lien vers les Issues sur GitHub, de manière appuyée",
-		regex: /(^| )\/issue!(?=$|\s)/gi,
+		regex: /(^|\s)\/issue!(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_ISSUE, "ISSUEEEEE", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "lama",
 		description: "#LamaSwag avec une emphase",
-		regex: /(^| )\/lama(?=$|\s)/gi,
+		regex: /(^|\s)\/lama(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + "<i>#LamaSwag</i>"
 	}, {
 		name: "lenny",
 		description: "( ͡° ͜ʖ ͡° )",
-		regex: /(^| )\/lenny(?=$|\s)/gi,
+		regex: /(^|\s)\/lenny(?=$|\s)/gi,
 		replacement: (_: string, b: string) => b + "( ͡° ͜ʖ ͡° )"
 	}, {
 		name: "market",
@@ -147,70 +147,70 @@ const COMMANDS = [
 	}, {
 		name: "me",
 		description: "Votre pseudo avec une emphase",
-		regex: /(^| )\/me(?=$|\s)/gi,
+		regex: /(^|\s)\/me(?=$|\s)/gi,
 		replacement: (authorName: string, space: string) => space + "<i>" + authorName + "</i>"
 	}, {
 		name: "ping",
 		description: "Envoie un message ping au serveur",
-		regex: /(^| )\/ping(?=$|\s)/gi,
+		regex: /(^|\s)\/ping(?=$|\s)/gi,
 		replacement: () => ''
 	}, {
 		name: "pr",
 		description: "Lien vers les Pull Request sur GitHub",
-		regex: /(^| )\/pr(?=$|\s)/gi,
+		regex: /(^|\s)\/pr(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_PR, "Pull Request", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "pr!",
 		description: "Lien vers les PR sur GitHub de manière appuyée",
-		regex: /(^| )\/pr!(?=$|\s)/gi,
+		regex: /(^|\s)\/pr!(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_PR, "PULL REQUESTTTTT", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "replacetable",
 		description: "┬─┬﻿ ノ( ゜-゜ノ)",
-		regex: /(^| )\/replacetable(?=$|\s)/gi,
+		regex: /(^|\s)\/replacetable(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + "┬─┬﻿ ノ( ゜-゜ノ)"
 	}, {
 		name: "shrug",
 		description: "¯\\_(ツ)_/¯",
-		regex: /(^| )\/shrug(?=$|\s)/gi,
+		regex: /(^|\s)\/shrug(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + "¯\\_(ツ)_/¯"
 	}, {
 		name: "tuto",
 		description: "Lien vers le tutorial",
-		regex: /(^| )\/tuto(?=$|\s)/gi,
+		regex: /(^|\s)\/tuto(?=$|\s)/gi,
 		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "tuto!",
 		description: "Lien vers le tutorial, de manière appuyée",
-		regex: /(^| )\/tuto([!]?)(?=$|\s)/gi,
+		regex: /(^|\s)\/tuto([!]?)(?=$|\s)/gi,
 		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "update",
 		description: "Lien vers le sujet de la dernière mise à jour",
-		regex: /(^| )\/update(?=$|\s)/gi,
+		regex: /(^|\s)\/update(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "la màj", "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "update!",
 		description: "Lien vers le sujet de la dernière mise à jour, de manière appuyée",
-		regex: /(^| )\/update!(?=$|\s)/gi,
+		regex: /(^|\s)\/update!(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "LA MÀJJJJJ", "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "war",
 		description: "Inviter à rejoindre une guerre",
-		regex: /(^| )\/war(?=$|\s)/gi,
+		regex: /(^|\s)\/war(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="Guerre"></span>'
 	}, {
 		name: "war!",
 		description: "Inviter à rejoindre une guerre, de manière appuyée",
-		regex: /(^| )\/war!(?=$|\s)/gi,
+		regex: /(^|\s)\/war!(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="À LA GUEEEEERRE !"></span>'
 	}
 ] as Command[]
