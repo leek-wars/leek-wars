@@ -1,4 +1,5 @@
 {
 	"missing_only": "Alleen ontbrekende tonen",
-	"completed": "Voltooid"
+	"completed": "Voltooid",
+	"test_celebration": "Animatie testen (admin)"
 }

@@ -1,4 +1,5 @@
 {
 	"missing_only": "未所持のみ表示",
-	"completed": "完了"
+	"completed": "完了",
+	"test_celebration": "アニメーションをテスト（管理者）"
 }

@@ -48,6 +48,10 @@
 						</div>
 					</div>
 
+						<div v-if="isAdmin" class="admin-test">
+							<v-btn size="small" variant="tonal" @click="testCelebration">{{ t('test_celebration') }}</v-btn>
+						</div>
+
 					<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 						<div class="collection-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
 							<item-preview v-if="tooltipItem" :item="tooltipItem" :inventory="false" />
@@ -149,6 +153,19 @@
 		})
 		.filter((c) => c.total > 0))
 
+	// Joue l'animation dorée sur une catégorie (après un éventuel délai), puis la
+	// retire. Purement visuel, sans effet serveur.
+	function playCelebration(type: ItemType, delay = 0) {
+		window.setTimeout(() => {
+			celebratingNow.value = new Set(celebratingNow.value).add(type)
+			window.setTimeout(() => {
+				const s = new Set(celebratingNow.value)
+				s.delete(type)
+				celebratingNow.value = s
+			}, 2600)
+		}, delay)
+	}
+
 	// Célébration « Terminé » : quand une catégorie vient d'être complétée et n'a
 	// jamais été célébrée, on joue une fois l'animation dorée puis on l'enregistre
 	// côté serveur (ne rejoue plus, même sur un autre appareil). Décalé dans le
@@ -160,20 +177,23 @@
 			if (c.total === 0 || c.owned !== c.total) continue
 			if (celebratedCategories.value.has(c.type)) continue
 			celebratedCategories.value.add(c.type) // garde anti-rejeu immédiat
-			const type = c.type
-			window.setTimeout(() => {
-				celebratingNow.value = new Set(celebratingNow.value).add(type)
-				window.setTimeout(() => {
-					const s = new Set(celebratingNow.value)
-					s.delete(type)
-					celebratingNow.value = s
-				}, 2600)
-			}, delay)
+			playCelebration(c.type, delay)
 			delay += 600
-			LeekWars.post('item/celebrate-category', { category: type })
+			LeekWars.post('item/celebrate-category', { category: c.type })
 		}
 	}
 	watch([categoryStats, celebrationsLoaded], checkCelebrations)
+
+	// Admin : rejouer l'animation sur une catégorie au hasard (test visuel, sans
+	// écriture serveur, réutilisable à volonté).
+	const isAdmin = computed(() => store.getters.admin)
+	function testCelebration() {
+		const cats = categoryStats.value
+		if (!cats.length) return
+		const type = cats[Math.floor(Math.random() * cats.length)].type
+		filter.value = type // bascule sur la catégorie pour la voir
+		playCelebration(type)
+	}
 
 	// Catégorie affichée (une seule à la fois, selon l'onglet sélectionné).
 	const currentCategory = computed(() => allByType.value.get(filter.value) ?? [])
@@ -495,5 +515,10 @@ body.dark .cell.locked .image {
 }
 .collection-tooltip {
 	width: 280px;
+}
+.admin-test {
+	display: flex;
+	justify-content: center;
+	padding: 4px 12px 16px;
 }
 </style>

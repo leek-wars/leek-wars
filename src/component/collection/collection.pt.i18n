@@ -1,4 +1,5 @@
 {
 	"missing_only": "Mostrar apenas os que faltam",
-	"completed": "Concluído"
+	"completed": "Concluído",
+	"test_celebration": "Testar animação (admin)"
 }

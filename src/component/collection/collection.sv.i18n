@@ -1,4 +1,5 @@
 {
 	"missing_only": "Visa endast saknade",
-	"completed": "Klart"
+	"completed": "Klart",
+	"test_celebration": "Testa animation (admin)"
 }

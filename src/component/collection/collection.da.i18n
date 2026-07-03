@@ -1,4 +1,5 @@
 {
 	"missing_only": "Vis kun manglende",
-	"completed": "Fuldført"
+	"completed": "Fuldført",
+	"test_celebration": "Test animation (admin)"
 }

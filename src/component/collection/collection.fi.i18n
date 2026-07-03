@@ -1,4 +1,5 @@
 {
 	"missing_only": "Näytä vain puuttuvat",
-	"completed": "Valmis"
+	"completed": "Valmis",
+	"test_celebration": "Testaa animaatio (admin)"
 }

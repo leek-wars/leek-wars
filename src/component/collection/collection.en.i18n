@@ -1,4 +1,5 @@
 {
 	"missing_only": "Show only missing",
-	"completed": "Completed"
+	"completed": "Completed",
+	"test_celebration": "Test animation (admin)"
 }
