@@ -2,14 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.collection') }}</h1>
-			<page-tabs active="collection">
-				<template v-if="isAdmin" #before>
-					<div class="tab action celebration-test" @click="testCelebration">
-						<v-icon>mdi-auto-fix</v-icon>
-						<span>{{ t('test_celebration') }}</span>
-					</div>
-				</template>
-			</page-tabs>
+			<page-tabs active="collection" />
 		</div>
 		<panel class="collection-panel">
 			<template #content>
@@ -64,6 +57,14 @@
 				</div>
 			</template>
 		</panel>
+		<div v-if="isAdmin" class="page-footer page-bar">
+			<div class="tabs">
+				<div class="tab celebration-test" @click="testCelebration">
+					<v-icon>mdi-auto-fix</v-icon>
+					<span>{{ t('test_celebration') }}</span>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -532,9 +533,5 @@ body.dark .cell.locked .image {
 }
 .collection-tooltip {
 	width: 280px;
-}
-// Bouton admin « Tester l'animation » dans l'app-bar (style tab de la page).
-.celebration-test .v-icon {
-	color: #ffce3a;
 }
 </style>
