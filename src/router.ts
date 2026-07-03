@@ -140,6 +140,8 @@ const disconnected = (to: RouteLocationNormalized, _from: RouteLocationNormalize
 // Objets partagés (lus, jamais mutés) pour éviter de répéter le littéral sur chaque route.
 const LAYOUT_BOX = { layout: { box: true, footer: false } }
 const LAYOUT_BOX_LARGE = { layout: { box: true, large: true, footer: false } }
+// Box AVEC footer : ne surcharge pas `footer`, qui garde sa valeur par défaut (true) du resetLayout.
+const LAYOUT_BOX_FOOTER = { layout: { box: true } }
 
 const routes: RouteRecordRaw[] = [
 	{ path: '/', component: Home },
@@ -221,7 +223,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
 	{ path: '/inventory', component: InventoryPage, meta: LAYOUT_BOX },
-	{ path: '/collection', component: Collection, meta: LAYOUT_BOX, beforeEnter: connected },
+	{ path: '/collection', component: Collection, meta: LAYOUT_BOX_FOOTER, beforeEnter: connected },
 	{ path: '/legal', component: Legal },
 	{ path: '/login', component: Login, beforeEnter: disconnected },
 	{ path: '/login/:token', component: Login },
