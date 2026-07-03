@@ -21,7 +21,7 @@ export interface SeasonDisplay {
 }
 
 export const SEASON_DISPLAY: Record<string, SeasonDisplay> = {
-	solstice:  { emoji: '☀️', gradient: ['#ffd84d', '#ff9a2e'], accent: '#e07a0a', decoration: '👒' }, // été festif
+	solstice:  { emoji: '☀️', gradient: ['#ff9a2e', '#ffd84d'], accent: '#e07a0a', decoration: '👒' }, // été festif (orange->jaune : texte lisible à gauche)
 	heatwave:  { emoji: '🏖️', gradient: ['#2bc4d4', '#ffdf91'], accent: '#1497a6', decoration: '☀️' }, // été plage
 	halloween: { emoji: '🎃', gradient: ['#ff7a18', '#5b2a86'], accent: '#d5610a', decoration: '🎃' },
 	easter:    { emoji: '🐣', gradient: ['#9be3b4', '#ffd9a8'], accent: '#3f9d56', decoration: '🥚' },

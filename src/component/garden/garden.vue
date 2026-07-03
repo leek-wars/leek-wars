@@ -912,6 +912,12 @@
 
 
 <style lang="scss" scoped>
+	// Quand le bandeau de saison est présent, les panneaux du dessus s'y collent :
+	// on carre leurs coins hauts pour une jointure nette avec le bandeau.
+	.season-banner + .container .panel.first {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
 	.column3 {
 		align-self: start;
 	}

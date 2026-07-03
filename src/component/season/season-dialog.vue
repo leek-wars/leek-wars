@@ -5,6 +5,7 @@
 
 		<div class="season-dialog-body">
 			<p class="season-dialog-text">{{ text }}</p>
+			<p class="season-dialog-dates">{{ $t('main.season_dates', { start: LeekWars.formatDayMonthShort(season.start), end: LeekWars.formatDayMonthShort(season.end) }) }}</p>
 			<div v-if="season.active" class="season-dialog-bonus" :style="bonusStyle">
 				<span class="big-emoji">{{ display.emoji }}</span>
 				<span>{{ $t('main.season_bonus_' + season.key, { bonus: season.bonus }) }}</span>
@@ -21,6 +22,7 @@
 	import { computed } from 'vue'
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
+	import { LeekWars } from '@/model/leekwars'
 	import { seasonDisplay } from '@/model/season'
 	import Popup from '@/component/popup.vue'
 
@@ -59,6 +61,12 @@
 	font-size: 15px;
 	line-height: 1.5;
 	margin: 4px 0 0;
+}
+.season-dialog-dates {
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--text-color-secondary);
+	margin: 8px 0 0;
 }
 .season-dialog-bonus {
 	display: flex;

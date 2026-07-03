@@ -5,6 +5,7 @@
 			<span class="season-title">{{ $t('main.season_banner', { season: $t('main.season_name_' + season.key) }) }}</span>
 			<span class="season-bonus">{{ $t('main.season_bonus_' + season.key, { bonus: season.bonus }) }}</span>
 		</div>
+		<span class="season-dates">{{ $t('main.season_dates', { start: LeekWars.formatDayMonthShort(season.start), end: LeekWars.formatDayMonthShort(season.end) }) }}</span>
 		<v-icon class="season-info">mdi-information-outline</v-icon>
 	</div>
 </template>
@@ -36,7 +37,9 @@
 	align-items: center;
 	gap: 12px;
 	padding: 10px 16px;
-	border-radius: 4px;
+	// Coins bas carrés + collé aux panneaux du potager en dessous.
+	border-radius: 4px 4px 0 0;
+	margin-bottom: 0;
 	color: white;
 	cursor: pointer;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -62,8 +65,20 @@
 	opacity: 0.95;
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
+.season-dates {
+	font-size: 13px;
+	font-weight: 500;
+	white-space: nowrap;
+	opacity: 0.95;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
 .season-info {
 	color: white;
 	opacity: 0.85;
+}
+@media (max-width: 640px) {
+	.season-dates {
+		display: none;
+	}
 }
 </style>
