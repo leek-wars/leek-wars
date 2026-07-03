@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "Een bedrijf voor een activiteit tussen medewerkers.",
 	"groups_players": "Spelers",
 	"groups_players_desc": "Een groep spelers voor een evenement met een privétoernooi.",
-	"groups_discover": "Ontdek privégroepen"
+	"groups_discover": "Ontdek privégroepen",
+	"groups_trusted": "Ze vertrouwen ons"
 }

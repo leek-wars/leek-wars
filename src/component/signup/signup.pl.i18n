@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "Firma zajmująca się działalnością między współpracownikami.",
 	"groups_players": "Gracze",
 	"groups_players_desc": "Grupa graczy na wydarzenie z prywatnym turniejem.",
-	"groups_discover": "Odkryj grupy prywatne"
+	"groups_discover": "Odkryj grupy prywatne",
+	"groups_trusted": "Ufają nam"
 }

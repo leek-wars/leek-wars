@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "一个合作者之间活动的公司。",
 	"groups_players": "玩家",
 	"groups_players_desc": "一群玩家组成的群组，可举办带有私人锦标赛的活动",
-	"groups_discover": "了解私人群组"
+	"groups_discover": "了解私人群组",
+	"groups_trusted": "他们信任我们"
 }

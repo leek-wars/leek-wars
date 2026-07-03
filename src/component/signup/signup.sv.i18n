@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "Ett företag för en aktivitet mellan samarbetspartners.",
 	"groups_players": "Spelare",
 	"groups_players_desc": "En grupp spelare för ett evenemang med en privat turnering.",
-	"groups_discover": "Upptäck privata grupper"
+	"groups_discover": "Upptäck privata grupper",
+	"groups_trusted": "De litar på oss"
 }

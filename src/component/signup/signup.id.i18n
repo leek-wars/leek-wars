@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "Sebuah perusahaan untuk kegiatan antar kolaborator.",
 	"groups_players": "Pemain",
 	"groups_players_desc": "Sekelompok pemain untuk sebuah acara dengan turnamen pribadi.",
-	"groups_discover": "Jelajahi grup pribadi"
+	"groups_discover": "Jelajahi grup pribadi",
+	"groups_trusted": "Mereka mempercayai kami"
 }

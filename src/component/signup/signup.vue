@@ -155,9 +155,19 @@
 						<div class="t-desc">{{ $t('groups_players_desc') }}</div>
 					</div>
 				</div>
+				<div class="teaser-trust">
+					<span class="trust-label">{{ $t('groups_trusted') }}</span>
+					<div class="logos">
+						<img src="/image/partner/esiea.png" alt="ESIEA" loading="lazy">
+						<img src="/image/partner/norauto.png" alt="Norauto" loading="lazy">
+						<img src="/image/partner/xplor.svg" alt="Xplor" loading="lazy">
+						<img src="/image/partner/n-hitec.png" alt="N-HiTec" loading="lazy">
+						<img src="/image/partner/santevet.svg" alt="Santévet" loading="lazy">
+					</div>
+				</div>
 				<div class="teaser-cta">
 					<router-link to="/groups">
-						<v-btn color="primary" size="large"><v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ $t('groups_discover') }}</v-btn>
+						<v-btn color="primary" size="x-large"><v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ $t('groups_discover') }}</v-btn>
 					</router-link>
 				</div>
 			</div>
@@ -189,42 +199,6 @@
 				<img :src="bigImage">
 			</div>
 		</panel>
-
-		<h1>{{ $t('groups') }}</h1>
-
-		<div class="container large large-tiles">
-			<panel v-ripple class="first">
-				<template #content>
-					<router-link to="/groups">
-						<div class="groups">
-							<div class="image">
-								<leek-image :leek="{level: 300, hat: 2, skin: 12, face: 1}" :scale="0.6" />
-								<leek-image :leek="{level: 200, hat: 7, skin: 43, face: 1}" :scale="0.7" />
-								<leek-image :leek="{level: 300, hat: 37, skin: 23, face: 1}" :scale="0.8" style="margin-top: 15px" />
-								<leek-image :leek="{level: 250, hat: 35, skin: 17, face: 1}" :scale="0.7" :invert="true" style="margin-top: 10px" />
-								<leek-image :leek="{level: 200, hat: 7, skin: 20, face: 1}" :scale="0.6" :invert="true" />
-							</div>
-							<div>
-								<h2>{{ $t('groups_title') }}</h2>
-								<div>{{ $t('groups_desc') }}</div>
-								<div class="center">
-									<v-btn>{{ $t('groups_button') }}</v-btn>
-								</div>
-							</div>
-						</div>
-					</router-link>
-				</template>
-			</panel>
-			<!-- <panel v-ripple>
-				<router-link to="/press-kit" slot="content" class="flex">
-					<div class="image">📦</div>
-					<div>
-						<h2>{{ $t('main.press-kit') }}</h2>
-						<v-btn size="small">{{ $t('main.press-kit') }}</v-btn>
-					</div>
-				</router-link>
-			</panel> -->
-		</div>
 
 		<h1>{{ $t('ranking') }}</h1>
 
@@ -624,9 +598,36 @@
 				line-height: 1.4;
 			}
 		}
+		.teaser-trust {
+			border-top: 1px solid var(--border);
+			margin-top: 6px;
+			padding-top: 16px;
+			text-align: center;
+			.trust-label {
+				display: block;
+				font-size: 12px;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: var(--text-color-secondary);
+				margin-bottom: 12px;
+			}
+			.logos {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: center;
+				gap: 26px;
+				img {
+					max-height: 34px;
+					max-width: 110px;
+					object-fit: contain;
+					opacity: 0.85;
+				}
+			}
+		}
 		.teaser-cta {
 			text-align: center;
-			margin-top: 5px;
+			margin-top: 20px;
 		}
 	}
 	.godfather-invite-banner {

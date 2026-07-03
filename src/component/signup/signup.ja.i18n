@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "協力者間の活動のための会社。",
 	"groups_players": "選手",
 	"groups_players_desc": "プライベートトーナメントのあるイベントのための選手グループ。",
-	"groups_discover": "プライベートグループを見る"
+	"groups_discover": "プライベートグループを見る",
+	"groups_trusted": "私たちは信頼されている"
 }

@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "Компания для деятельности между сотрудниками.",
 	"groups_players": "Игроки",
 	"groups_players_desc": "Группа игроков для мероприятия с частным турниром.",
-	"groups_discover": "Узнать о приватных группах"
+	"groups_discover": "Узнать о приватных группах",
+	"groups_trusted": "Они доверяют нам"
 }

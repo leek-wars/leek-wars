@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "Una società per un'attività tra collaboratori.",
 	"groups_players": "Giocatori",
 	"groups_players_desc": "Un gruppo di giocatori per un evento con torneo privato.",
-	"groups_discover": "Scopri i gruppi privati"
+	"groups_discover": "Scopri i gruppi privati",
+	"groups_trusted": "Si fidano di noi"
 }

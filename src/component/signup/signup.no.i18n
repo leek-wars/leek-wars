@@ -75,5 +75,6 @@
 	"groups_enterprise_desc": "Et selskap for en aktivitet mellom samarbeidspartnere.",
 	"groups_players": "Spillere",
 	"groups_players_desc": "En gruppe spillere til et arrangement med en privat turnering.",
-	"groups_discover": "Oppdag private grupper"
+	"groups_discover": "Oppdag private grupper",
+	"groups_trusted": "De stoler på oss"
 }
