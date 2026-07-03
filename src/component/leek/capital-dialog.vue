@@ -1,5 +1,5 @@
 <template>
-	<popup :width="800" @update:modelValue="updateValue">
+	<popup :model-value="modelValue" :width="800" @update:modelValue="updateValue">
 		<template #icon>
 			<v-icon>mdi-star-outline</v-icon>
 		</template>
@@ -62,6 +62,7 @@ const props = defineProps<{
 	leek: Leek
 	totalCapital: number
 	restat?: boolean
+	modelValue?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -92,6 +93,13 @@ const useful_level: Record<string, number> = {
 
 watch(() => props.leek.level, () => {
 	reset()
+})
+
+// Recompute base/added/costs à chaque ouverture : le poireau a pu changer entre-temps
+// (ex. potion de restat qui remet les stats à 0 et rend le capital). Sans ça, added/costs
+// gardent les ratios du build précédent alors que les stats affichées sont à 0 (#4402).
+watch(() => props.modelValue, (open) => {
+	if (open) reset()
 })
 
 reset()
