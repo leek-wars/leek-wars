@@ -249,11 +249,11 @@
 		position: relative;
 		.season-decoration {
 			position: absolute;
-			top: -2px;
-			left: 142px;
-			font-size: 26px;
+			top: 7px;
+			left: 287px;
+			font-size: 36px;
 			line-height: 1;
-			transform: rotate(14deg);
+			transform: rotate(-3deg);
 			pointer-events: none;
 			filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
 		}
