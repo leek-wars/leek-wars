@@ -24,6 +24,18 @@
 							<h2>Sources</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/acquisition">
+						<div v-ripple class="section card">
+							<v-icon>mdi-account-multiple-plus</v-icon>
+							<h2>Acquisition</h2>
+						</div>
+					</router-link>
+					<router-link to="/admin/items">
+						<div v-ripple class="section card">
+							<v-icon>mdi-treasure-chest</v-icon>
+							<h2>Items</h2>
+						</div>
+					</router-link>
 					<router-link to="/admin/security">
 						<div v-ripple class="section card">
 							<v-icon>mdi-shield-alert</v-icon>

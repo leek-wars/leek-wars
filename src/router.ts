@@ -12,6 +12,8 @@ const AdminServices = () => import(/* webpackChunkName: "admin" */ `@/component/
 const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-trophies.vue`)
 const AdminGroups = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-groups.vue`)
 const AdminSources = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-sources.vue`)
+const AdminAcquisition = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-acquisition.vue`)
+const AdminItems = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-items.vue`)
 const AdminSchemes = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-schemes.vue`)
 const AdminSecurity = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-security.vue`)
 const AdminApiStats = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-api-stats.vue`)
@@ -153,6 +155,8 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/trophies', component: AdminTrophies, beforeEnter: connected },
 	{ path: '/admin/groups', component: AdminGroups, beforeEnter: connected },
 	{ path: '/admin/sources', component: AdminSources, beforeEnter: connected },
+	{ path: '/admin/acquisition', component: AdminAcquisition, beforeEnter: connected },
+	{ path: '/admin/items', component: AdminItems, beforeEnter: connected },
 	{ path: '/admin/schemes', component: AdminSchemes, beforeEnter: connected },
 	{ path: '/admin/security', component: AdminSecurity, beforeEnter: connected },
 	{ path: '/admin/api-stats', component: AdminApiStats, beforeEnter: connected },
