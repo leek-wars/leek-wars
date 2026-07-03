@@ -7,6 +7,52 @@
 import type { Constant } from '@/model/constant'
 import type { LSFunction } from '@/model/function'
 
+// Résout une entrée de doc localisée à partir d'une sous-clé du namespace i18n `doc`
+// (ex: 'func_getAliveEnemies', 'func_getAliveEnemies_return'). Renvoie undefined si absente
+// -> la déclaration correspondante est générée sans JSDoc. Fournie par l'appelant (monaco.ts)
+// pour garder ce module indépendant d'i18n (testable).
+export type DocLookup = (subkey: string) => string | undefined
+
+// Nettoie un texte de doc (source: doc.*.lang, en HTML/markdown léger) pour l'inclure dans un
+// bloc JSDoc rendu par le survol Monaco : retire le HTML, dénude les hash-refs (#weapon), et
+// surtout n'autorise pas `*/` qui fermerait le commentaire prématurément.
+function sanitizeDoc(raw: string): string {
+	return raw
+		.replace(/<br\s*\/?>/gi, ' ')   // <br> -> espace
+		.replace(/<[^>]+>/g, '')        // autres balises HTML
+		.replace(/#(\w+)/g, '$1')       // hash-refs (#weapon) -> texte nu
+		.replace(/\*\//g, '* /')        // ne jamais fermer le bloc JSDoc
+		.replace(/\s+/g, ' ')           // espaces / retours ligne multiples -> 1
+		.trim()
+}
+
+// Rend un bloc JSDoc à partir de lignes déjà nettoyées, avec l'indentation donnée. Forme courte
+// `/** desc */` si une seule ligne de description (pas de tag), sinon bloc multi-lignes.
+function renderJsdoc(lines: string[], indent: string): string {
+	if (lines.length === 1 && !lines[0].startsWith('@')) {
+		return `${indent}/** ${lines[0]} */`
+	}
+	return `${indent}/**\n` + lines.map((l) => `${indent} * ${l}`).join('\n') + `\n${indent} */`
+}
+
+// JSDoc d'une fonction plate : description + @param (noms de la signature émise) + @returns + @deprecated.
+function buildFunctionJsdoc(doc: DocLookup, name: string, paramNames: string[], hasReturn: boolean, deprecated?: string): string | null {
+	const lines: string[] = []
+	const desc = doc('func_' + name)
+	if (desc) lines.push(sanitizeDoc(desc))
+	for (let i = 0; i < paramNames.length; i++) {
+		const d = doc(`func_${name}_arg_${i + 1}`)
+		if (d) lines.push(`@param ${paramNames[i]} ${sanitizeDoc(d)}`)
+	}
+	if (hasReturn) {
+		const r = doc('func_' + name + '_return')
+		if (r) lines.push(`@returns ${sanitizeDoc(r)}`)
+	}
+	if (deprecated) lines.push(`@deprecated ${sanitizeDoc(deprecated)}`)
+	if (!lines.length) return null
+	return renderJsdoc(lines, '')
+}
+
 // Type-id LeekScript -> type TS. Aligné sur `doc.arg_type_<id>` (cf. doc.*.lang). 0 = void (pas de retour).
 // Les valeurs marshallées côté guest : map -> objet/Map, set -> tableau (cf. TypeMarshaller).
 const TS_TYPE: Record<number, string> = {
@@ -45,7 +91,7 @@ function safeName(name: string | null | undefined): string | null {
 	return name
 }
 
-export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[]): string {
+export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup): string {
 	const out: string[] = [
 		'// Auto-généré depuis les game data Leek Wars (API de combat). Ne pas éditer à la main.',
 		'',
@@ -66,6 +112,8 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		const name = safeName(c.name)
 		if (!name || declared.has(name)) continue
 		declared.add(name)
+		const cdoc = doc?.('const_' + name)
+		if (cdoc) out.push(renderJsdoc([sanitizeDoc(cdoc)], ''))
 		out.push(`declare const ${name}: ${tsType(c.type)};`)
 	}
 	out.push('')
@@ -81,11 +129,13 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		const usedParams = new Set<string>()
 		let optionalFromHere = false
 		const params: string[] = []
+		const paramNames: string[] = []
 		for (let i = 0; i < argNames.length; i++) {
 			// Nom réel s'il est un identifiant valide et unique dans la signature, sinon positionnel.
 			let pname = safeName(argNames[i])
 			if (!pname || usedParams.has(pname)) pname = 'a' + i
 			usedParams.add(pname)
+			paramNames.push(pname)
 			// Règle TS : un paramètre optionnel ne peut pas être suivi d'un requis -> optionnel à partir du 1er.
 			optionalFromHere = optionalFromHere || !!optional[i]
 			params.push(`${pname}${optionalFromHere ? '?' : ''}: ${tsType(Number(argTypes[i]))}`)
@@ -93,13 +143,77 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		// Dépréciation douce : si la fonction plate a un équivalent objet, on marque @deprecated avec le
 		// pointeur (l'éditeur la barre + diagnostic, façon LS5 -> migration vers l'API objet).
 		const replacement = DEPRECATED_FLAT[name]
-		if (replacement) out.push(`/** @deprecated Préférez ${replacement} (API objet). */`)
+		const deprecated = replacement ? `Préférez ${replacement} (API objet).` : undefined
+		// Doc de survol = description + @param + @returns (depuis doc.*.lang), fusionnée avec @deprecated.
+		// Sans DocLookup (ou doc absente), on garde au minimum le marqueur @deprecated seul.
+		const jsdoc = doc
+			? buildFunctionJsdoc(doc, name, paramNames, tsType(f.return_type) !== 'void', deprecated)
+			: (deprecated ? `/** @deprecated ${deprecated} */` : null)
+		if (jsdoc) out.push(jsdoc)
 		out.push(`declare function ${name}(${params.join(', ')}): ${tsType(f.return_type)};`)
 	}
 
 	out.push('')
-	out.push(OBJECT_API_DECLARATIONS)
+	out.push(doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc) : OBJECT_API_DECLARATIONS)
 	return out.join('\n') + '\n'
+}
+
+// Alias minuscules employés dans les pointeurs de DEPRECATED_FLAT -> nom de la classe/const déclarée.
+const OO_ALIAS: Record<string, string> = { me: 'Me', entity: 'Entity', cell: 'Cell', weapon: 'Weapon', chip: 'Chip' }
+
+// Construit la table membre objet -> nom de fonction LS, en inversant DEPRECATED_FLAT (qui encode
+// déjà la correspondance fonction plate -> forme objet). Clé = `Conteneur.membre` (désambiguïse les
+// membres homonymes entre classes, ex: Cell.distance vs Field.distance). Ainsi la doc de survol de
+// `Fight.getAliveEnemies()` réutilise `doc.func_getAliveEnemies`, source unique traduite en 18 langues.
+function buildMemberToLs(): Record<string, string> {
+	const map: Record<string, string> = {}
+	for (const lsName in DEPRECATED_FLAT) {
+		for (const form of DEPRECATED_FLAT[lsName].split('/')) {
+			const m = form.trim().match(/^([A-Za-z_]\w*)\.([A-Za-z_]\w*)/)
+			if (!m) continue
+			const key = (OO_ALIAS[m[1]] ?? m[1]) + '.' + m[2]
+			if (!(key in map)) map[key] = lsName // 1re occurrence gagne
+		}
+	}
+	return map
+}
+
+// Injecte des blocs JSDoc dans les déclarations objet statiques : pour chaque membre qui correspond
+// à une fonction LS documentée, on préfixe sa description (et @returns pour les méthodes non-void).
+// On ne touche pas les membres déjà commentés à la main (Effect, me...) ni ceux sans équivalent LS.
+function annotateObjectApi(block: string, doc: DocLookup): string {
+	const memberToLs = buildMemberToLs()
+	const out: string[] = []
+	let container: string | null = null
+	let prevWasComment = false
+	for (const line of block.split('\n')) {
+		const containerM = line.match(/^declare\s+(?:class|const)\s+([A-Za-z_]\w*)/)
+		if (containerM) {
+			container = containerM[1]
+			out.push(line)
+			prevWasComment = line.trim().endsWith('*/')
+			continue
+		}
+		// Membre : indentation + [readonly] identifiant suivi de `(` (méthode) ou `:` (propriété).
+		const memberM = line.match(/^(\s+)(?:readonly\s+)?([A-Za-z_]\w*)\s*[(:]/)
+		if (container && memberM && !prevWasComment) {
+			const [, indent, member] = memberM
+			const lsName = memberToLs[container + '.' + member]
+			const desc = lsName ? doc('func_' + lsName) : undefined
+			if (lsName && desc) {
+				const jlines = [sanitizeDoc(desc)]
+				const isMethod = line.slice(line.indexOf(member) + member.length).trimStart().startsWith('(')
+				if (isMethod && !/:\s*void\s*;?\s*$/.test(line)) {
+					const r = doc('func_' + lsName + '_return')
+					if (r) jlines.push(`@returns ${sanitizeDoc(r)}`)
+				}
+				out.push(renderJsdoc(jlines, indent))
+			}
+		}
+		out.push(line)
+		prevWasComment = line.trim().endsWith('*/')
+	}
+	return out.join('\n')
 }
 
 // Fonctions plates qui ont un équivalent dans l'API objet -> dépréciées (pointeur vers la forme objet).

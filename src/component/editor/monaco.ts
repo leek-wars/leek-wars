@@ -7,7 +7,7 @@ import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
 import { analyzer } from './analyzer';
 import { emitter } from '@/model/vue';
-import { markRaw } from 'vue';
+import { markRaw, watch } from 'vue';
 import { AI } from '@/model/ai.js';
 import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
@@ -766,6 +766,19 @@ function addDotCompletionsFromAI(tokenBeforeDot: string, start: string, completi
 	}
 }
 
+// Locale active (le namespace i18n `doc` en dépend). i18n.global.locale est un WritableComputedRef
+// en mode composition -> on déballe .value ; lu dans un watch pour régénérer le .d.ts au switch de langue.
+function polyglotLocale(): string {
+	const loc = i18n.global.locale as unknown as { value?: string } | string
+	return typeof loc === 'object' && loc !== null && 'value' in loc ? (loc.value as string) : (loc as string)
+}
+
+// DocLookup pour le .d.ts : résout `doc.<subkey>` si la clé existe, sinon undefined (pas de JSDoc).
+function leekwarsDoc(subkey: string): string | undefined {
+	const key = 'doc.' + subkey
+	return (i18n.global.te as (k: string) => boolean)(key) ? String(i18n.t(key)) : undefined
+}
+
 // --- Language service TypeScript pour les IA polyglot (.ts / .js) ---
 // Configure le service TS de Monaco : builtins JS sans DOM + l'API de combat LeekScript exposée en
 // .d.ts ambiant (généré depuis les game data), pour l'autocomplétion + le typecheck navigateur.
@@ -796,13 +809,14 @@ function configurePolyglotTypeScript() {
 	ts.typescriptDefaults.setDiagnosticsOptions({ diagnosticCodesToIgnore: [2307] })
 	ts.javascriptDefaults.setDiagnosticsOptions({ diagnosticCodesToIgnore: [2307] })
 
-	// Le d.ts est bâti depuis les game data (LeekWars.functions/constants). Si l'éditeur est ouvert en
+	// Le d.ts est bâti depuis les game data (LeekWars.functions/constants) + les descriptions localisées
+	// (namespace i18n `doc`, passées via leekwarsDoc pour le JSDoc au survol). Si l'éditeur est ouvert en
 	// accès direct (URL /editor, refetch) avant la fin de leur chargement, on régénère le d.ts dès leur
 	// arrivée (sinon il resterait vide -> API en "Cannot find name").
 	let tsLib: { dispose(): void } | null = null
 	let jsLib: { dispose(): void } | null = null
 	const refreshDeclarations = () => {
-		const declarations = buildLeekwarsDeclarations(LeekWars.functions ?? [], LeekWars.constants ?? [])
+		const declarations = buildLeekwarsDeclarations(LeekWars.functions ?? [], LeekWars.constants ?? [], leekwarsDoc)
 		tsLib?.dispose()
 		jsLib?.dispose()
 		tsLib = ts.typescriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
@@ -820,6 +834,20 @@ function configurePolyglotTypeScript() {
 			}
 		}, 150)
 	}
+
+	// La doc de l'API (namespace i18n `doc`) est chargée à la demande et dépend de la langue. On la
+	// charge puis on régénère le d.ts pour peupler le JSDoc au survol, et on refait à chaque changement
+	// de langue (avant ça, refreshDeclarations a déjà fourni les types, sans description).
+	const loadDocsAndRefresh = async () => {
+		const loc = polyglotLocale()
+		try {
+			const mod = await import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${loc}.lang`)
+			i18n.global.mergeLocaleMessage(loc, { doc: (mod as { default: Record<string, unknown> }).default })
+		} catch { /* pas de doc pour cette langue : d.ts sans JSDoc */ }
+		refreshDeclarations()
+	}
+	loadDocsAndRefresh()
+	watch(polyglotLocale, loadDocsAndRefresh)
 }
 configurePolyglotTypeScript()
 
