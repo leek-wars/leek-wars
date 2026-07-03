@@ -831,7 +831,7 @@ const LeekWars = reactive({
 		LeekWars.chatWindows.splice(i, 1)
 	},
 	set_cursor_position,
-	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatLongDuration,
+	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatDayMonthShortUTC, formatLongDuration,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag, setMeta,
 	shadeColor,
 	createCodeArea, createCodeAreaSimple,
@@ -1242,6 +1242,16 @@ function formatDayMonthShort(timestamp: number) {
 	const date = new Date(timestamp * 1000)
 	const day = date.getDate()
 	const month = date.getMonth()
+	return day + ' ' + getMonthShort(month)
+}
+
+// Variante UTC : pour les dates définies en jours entiers côté serveur (UTC), ex.
+// fenêtres de saison [00:00:00, 23:59:59] — évite le décalage d'un jour dans les
+// fuseaux à l'est de l'UTC (23:59:59 UTC devient le lendemain à Paris).
+function formatDayMonthShortUTC(timestamp: number) {
+	const date = new Date(timestamp * 1000)
+	const day = date.getUTCDate()
+	const month = date.getUTCMonth()
 	return day + ' ' + getMonthShort(month)
 }
 

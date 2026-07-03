@@ -5,7 +5,7 @@
 
 		<div class="season-dialog-body">
 			<p class="season-dialog-text">{{ text }}</p>
-			<p class="season-dialog-dates">{{ $t('main.season_dates', { start: LeekWars.formatDayMonthShort(season.start), end: LeekWars.formatDayMonthShort(season.end) }) }}</p>
+			<p class="season-dialog-dates">{{ $t('main.season_dates', { start: LeekWars.formatDayMonthShortUTC(season.start), end: LeekWars.formatDayMonthShortUTC(season.end) }) }}</p>
 			<div v-if="season.active" class="season-dialog-bonus" :style="bonusStyle">
 				<span class="big-emoji">{{ display.emoji }}</span>
 				<span>{{ $t('main.season_bonus_' + season.key, { bonus: season.bonus }) }}</span>

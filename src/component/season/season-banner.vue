@@ -5,7 +5,7 @@
 			<span class="season-title">{{ $t('main.season_banner', { season: $t('main.season_name_' + season.key) }) }}</span>
 			<span class="season-bonus">{{ $t('main.season_bonus_' + season.key, { bonus: season.bonus }) }}</span>
 		</div>
-		<span class="season-dates">{{ $t('main.season_dates', { start: LeekWars.formatDayMonthShort(season.start), end: LeekWars.formatDayMonthShort(season.end) }) }}</span>
+		<span class="season-dates">{{ $t('main.season_dates', { start: LeekWars.formatDayMonthShortUTC(season.start), end: LeekWars.formatDayMonthShortUTC(season.end) }) }}</span>
 		<v-icon class="season-info">mdi-information-outline</v-icon>
 	</div>
 </template>
