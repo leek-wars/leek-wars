@@ -51,5 +51,9 @@
 	"demo_banner_title": "Demo-Gruppe",
 	"demo_banner_sub": "Echte Teilnehmer einzuladen und sie spielen zu lassen, erfordert ein kostenpflichtiges Angebot.",
 	"demo_upgrade": "Angebot entdecken",
-	"demo_upgrade_required": "Diese Funktion ist den kostenpflichtigen Angeboten für private Gruppen vorbehalten."
+	"demo_upgrade_required": "Diese Funktion ist den kostenpflichtigen Angeboten für private Gruppen vorbehalten.",
+	"demo_upsell_title": "Bereit für ein echtes Event?",
+	"demo_upsell_text": "Du siehst, wie es mit den Bots läuft 🔥. Für ein echtes Event — echte Teilnehmer, die spielen, Einladungen, Turniere mit bis zu 64 Spielern und Support — wechsle zu einer vollen Gruppe.",
+	"demo_upsell_offer": "Angebot ansehen",
+	"demo_upsell_continue": "Demo fortsetzen"
 }

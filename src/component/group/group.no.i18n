@@ -51,5 +51,9 @@
 	"demo_banner_title": "Demogruppe",
 	"demo_banner_sub": "Å invitere ekte deltakere og la dem spille krever et betalt tilbud.",
 	"demo_upgrade": "Oppdag tilbudet",
-	"demo_upgrade_required": "Denne funksjonen er forbeholdt betalte tilbud for private grupper."
+	"demo_upgrade_required": "Denne funksjonen er forbeholdt betalte tilbud for private grupper.",
+	"demo_upsell_title": "Klar for et ekte arrangement?",
+	"demo_upsell_text": "Du ser hvordan det er med bots 🔥. For et ekte arrangement — ekte deltakere som spiller, invitasjoner, turneringer opptil 64 spillere og støtte — bytt til en full gruppe.",
+	"demo_upsell_offer": "Se tilbudet",
+	"demo_upsell_continue": "Fortsett demoen"
 }

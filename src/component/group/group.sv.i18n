@@ -51,5 +51,9 @@
 	"demo_banner_title": "Demogrupp",
 	"demo_banner_sub": "Att bjuda in riktiga deltagare och låta dem spela kräver ett betalt erbjudande.",
 	"demo_upgrade": "Upptäck erbjudandet",
-	"demo_upgrade_required": "Den här funktionen är reserverad för betalda erbjudanden för privata grupper."
+	"demo_upgrade_required": "Den här funktionen är reserverad för betalda erbjudanden för privata grupper.",
+	"demo_upsell_title": "Redo för ett riktigt event?",
+	"demo_upsell_text": "Du ser hur det är med bottarna 🔥. För ett riktigt event — riktiga deltagare som spelar, inbjudningar, turneringar upp till 64 spelare och support — byt till en full grupp.",
+	"demo_upsell_offer": "Se erbjudandet",
+	"demo_upsell_continue": "Fortsätt demon"
 }

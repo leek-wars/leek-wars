@@ -51,5 +51,9 @@
 	"demo_banner_title": "Grupo de demonstração",
 	"demo_banner_sub": "Convidar participantes reais e deixá-los jogar requer uma oferta paga.",
 	"demo_upgrade": "Descobrir a oferta",
-	"demo_upgrade_required": "Este recurso é reservado às ofertas pagas de grupo privado."
+	"demo_upgrade_required": "Este recurso é reservado às ofertas pagas de grupo privado.",
+	"demo_upsell_title": "Pronto para um evento a sério?",
+	"demo_upsell_text": "Já vês como é com os bots 🔥. Para um evento a sério — participantes reais que jogam, convites, torneios até 64 jogadores e suporte — passa para um grupo completo.",
+	"demo_upsell_offer": "Ver a oferta",
+	"demo_upsell_continue": "Continuar a demo"
 }

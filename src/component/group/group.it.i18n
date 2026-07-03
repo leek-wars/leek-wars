@@ -51,5 +51,9 @@
 	"demo_banner_title": "Gruppo demo",
 	"demo_banner_sub": "Invitare partecipanti reali e farli giocare richiede un'offerta a pagamento.",
 	"demo_upgrade": "Scopri l'offerta",
-	"demo_upgrade_required": "Questa funzionalità è riservata alle offerte di gruppo privato a pagamento."
+	"demo_upgrade_required": "Questa funzionalità è riservata alle offerte di gruppo privato a pagamento.",
+	"demo_upsell_title": "Pronto per un vero evento?",
+	"demo_upsell_text": "Hai visto com'è con i bot 🔥. Per un vero evento — partecipanti reali che giocano, inviti, tornei fino a 64 giocatori e supporto — passa a un gruppo completo.",
+	"demo_upsell_offer": "Vedi l'offerta",
+	"demo_upsell_continue": "Continua la demo"
 }

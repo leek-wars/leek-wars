@@ -51,5 +51,9 @@
 	"demo_banner_title": "Demogroep",
 	"demo_banner_sub": "Echte deelnemers uitnodigen en ze laten spelen vereist een betaald aanbod.",
 	"demo_upgrade": "Ontdek het aanbod",
-	"demo_upgrade_required": "Deze functie is voorbehouden aan betaalde aanbiedingen voor privégroepen."
+	"demo_upgrade_required": "Deze functie is voorbehouden aan betaalde aanbiedingen voor privégroepen.",
+	"demo_upsell_title": "Klaar voor een echt evenement?",
+	"demo_upsell_text": "Je ziet hoe het werkt met de bots 🔥. Voor een echt evenement — echte deelnemers die spelen, uitnodigingen, toernooien tot 64 spelers en support — stap over naar een volledige groep.",
+	"demo_upsell_offer": "Bekijk het aanbod",
+	"demo_upsell_continue": "Verder met de demo"
 }

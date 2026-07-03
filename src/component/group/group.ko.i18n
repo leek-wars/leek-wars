@@ -51,5 +51,9 @@
 	"demo_banner_title": "데모 그룹",
 	"demo_banner_sub": "실제 참가자를 초대하고 플레이하게 하려면 유료 제안이 필요합니다.",
 	"demo_upgrade": "제안 보기",
-	"demo_upgrade_required": "이 기능은 유료 비공개 그룹 제안 전용입니다."
+	"demo_upgrade_required": "이 기능은 유료 비공개 그룹 제안 전용입니다.",
+	"demo_upsell_title": "진짜 이벤트를 열 준비가 됐나요?",
+	"demo_upsell_text": "봇으로 분위기를 확인했죠 🔥. 진짜 이벤트(직접 플레이하는 참가자, 초대, 최대 64명 토너먼트, 지원)를 원하면 정식 그룹으로 업그레이드하세요.",
+	"demo_upsell_offer": "제안 보기",
+	"demo_upsell_continue": "데모 계속하기"
 }

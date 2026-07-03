@@ -51,5 +51,9 @@
 	"demo_banner_title": "デモグループ",
 	"demo_banner_sub": "実際の参加者を招待してプレイさせるには有料プランが必要です。",
 	"demo_upgrade": "プランを見る",
-	"demo_upgrade_required": "この機能は有料のプライベートグループプラン専用です。"
+	"demo_upgrade_required": "この機能は有料のプライベートグループプラン専用です。",
+	"demo_upsell_title": "本番のイベント、始めませんか？",
+	"demo_upsell_text": "ボットでの雰囲気はご覧のとおり 🔥。本番のイベント（実際に参加者がプレイ、招待、最大64人のトーナメント、サポート）には、フル機能のグループへ。",
+	"demo_upsell_offer": "プランを見る",
+	"demo_upsell_continue": "デモを続ける"
 }

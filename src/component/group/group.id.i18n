@@ -51,5 +51,9 @@
 	"demo_banner_title": "Grup demo",
 	"demo_banner_sub": "Mengundang peserta nyata dan membiarkan mereka bermain memerlukan penawaran berbayar.",
 	"demo_upgrade": "Lihat penawaran",
-	"demo_upgrade_required": "Fitur ini hanya tersedia untuk penawaran grup pribadi berbayar."
+	"demo_upgrade_required": "Fitur ini hanya tersedia untuk penawaran grup pribadi berbayar.",
+	"demo_upsell_title": "Siap untuk acara sungguhan?",
+	"demo_upsell_text": "Kamu lihat serunya dengan bot 🔥. Untuk acara sungguhan — peserta nyata yang bermain, undangan, turnamen hingga 64 pemain, dan dukungan — beralih ke grup penuh.",
+	"demo_upsell_offer": "Lihat penawaran",
+	"demo_upsell_continue": "Lanjutkan demo"
 }

@@ -469,6 +469,18 @@
 
 		<invite-dialog v-model="inviteDialog" />
 
+		<popup v-if="group" v-model="upsellDialog" :width="560" class="demo-upsell">
+			<template #icon>
+				<v-icon>mdi-rocket-launch-outline</v-icon>
+			</template>
+			<template #title>{{ $t('demo_upsell_title') }}</template>
+			<div class="demo-upsell-body">{{ $t('demo_upsell_text') }}</div>
+			<template #actions>
+				<div v-ripple @click="upsellDialog = false">{{ $t('demo_upsell_continue') }}</div>
+				<div v-ripple class="upsell-offer" @click="goOffer()">{{ $t('demo_upsell_offer') }}</div>
+			</template>
+		</popup>
+
 		<popup v-if="group" v-model="giveItemDialog" :width="800" class="give-item-dialog">
 			<template #icon>
 				<v-icon>mdi-gift-outline</v-icon>
@@ -612,6 +624,9 @@
 	const applyingEquipment = ref(false)
 	const membersDialog = ref(false)
 	const inviteDialog = ref(false)
+	// Upsell in-app démo : après N tournois/BR lancés, on propose de passer à l'offre (une fois). #3341
+	const DEMO_UPSELL_THRESHOLD = 2
+	const upsellDialog = ref(false)
 	const characteristics = reactive<{[key: string]: number} & {level: number}>({ level: 0 })
 	const deleteMemberDialog = ref(false)
 	const memberToDelete = ref<Member | null>(null)
@@ -691,6 +706,7 @@
 		renameGroupName.value = g.name
 		LeekWars.setTitle(g.name)
 		emitter.emit('loaded')
+		maybeShowUpsell()
 	})
 
 	function sendMessage(farmer: Member) {
@@ -705,6 +721,7 @@
 	function startBattleRoyale() {
 		if (!group.value) { return }
 		LeekWars.post('groupe/start-battle-royale', { group_id: group.value.id }).then(data => {
+			demoLaunched()
 			router.push('/fight/' + data.fight)
 		}).error(error => LeekWars.toast(t(error.error)))
 	}
@@ -712,6 +729,7 @@
 	function startTournament() {
 		if (!group.value) { return }
 		LeekWars.post('groupe/start-solo-tournament', { group_id: group.value.id }).then(data => {
+			demoLaunched()
 			router.push('/tournament/' + data.tournament)
 		}).error(error => LeekWars.toast(t(error.error)))
 	}
@@ -719,8 +737,34 @@
 	function startTeamTournament() {
 		if (!group.value) { return }
 		LeekWars.post('groupe/start-team-tournament', { group_id: group.value.id }).then(data => {
+			demoLaunched()
 			router.push('/tournament/' + data.tournament)
 		}).error(error => LeekWars.toast(t(error.error)))
+	}
+
+	// Compte un lancement de tournoi/BR sur une démo (localStorage, par groupe).
+	function demoLaunched() {
+		if (!group.value || !group.value.demo) { return }
+		const k = 'demo_launches_' + group.value.id
+		localStorage.setItem(k, String(parseInt(localStorage.getItem(k) || '0', 10) + 1))
+	}
+
+	// À l'ouverture de la page groupe : si démo engagée (>= seuil de lancements) et pas
+	// encore vu, on propose de passer à l'offre. Affiché une seule fois par groupe.
+	function maybeShowUpsell() {
+		if (!group.value || !group.value.demo) { return }
+		const shownKey = 'demo_upsell_shown_' + group.value.id
+		if (localStorage.getItem(shownKey)) { return }
+		const launches = parseInt(localStorage.getItem('demo_launches_' + group.value.id) || '0', 10)
+		if (launches >= DEMO_UPSELL_THRESHOLD) {
+			upsellDialog.value = true
+			localStorage.setItem(shownKey, '1')
+		}
+	}
+
+	function goOffer() {
+		upsellDialog.value = false
+		router.push('/groups')
 	}
 
 	function settingPut(setting: string, enabled: boolean) {
@@ -1082,6 +1126,14 @@
 }
 h4 {
 	margin-bottom: 10px;
+}
+.demo-upsell-body {
+	font-size: 15px;
+	line-height: 1.5;
+}
+.upsell-offer {
+	color: var(--primary);
+	font-weight: bold;
 }
 .member {
 	padding: 5px;

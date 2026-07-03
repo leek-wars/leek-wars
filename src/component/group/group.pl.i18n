@@ -51,5 +51,9 @@
 	"demo_banner_title": "Grupa demonstracyjna",
 	"demo_banner_sub": "Zapraszanie prawdziwych uczestników i umożliwienie im gry wymaga płatnej oferty.",
 	"demo_upgrade": "Poznaj ofertę",
-	"demo_upgrade_required": "Ta funkcja jest zarezerwowana dla płatnych ofert grup prywatnych."
+	"demo_upgrade_required": "Ta funkcja jest zarezerwowana dla płatnych ofert grup prywatnych.",
+	"demo_upsell_title": "Gotów na prawdziwe wydarzenie?",
+	"demo_upsell_text": "Widzisz, jak to działa z botami 🔥. Na prawdziwe wydarzenie — prawdziwi uczestnicy, którzy grają, zaproszenia, turnieje do 64 graczy i wsparcie — przejdź na pełną grupę.",
+	"demo_upsell_offer": "Zobacz ofertę",
+	"demo_upsell_continue": "Kontynuuj demo"
 }

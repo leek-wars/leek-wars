@@ -51,5 +51,9 @@
 	"demo_banner_title": "演示群组",
 	"demo_banner_sub": "邀请真实参与者并让他们游戏需要付费方案。",
 	"demo_upgrade": "了解方案",
-	"demo_upgrade_required": "此功能仅限付费私人群组方案使用。"
+	"demo_upgrade_required": "此功能仅限付费私人群组方案使用。",
+	"demo_upsell_title": "准备好办一场真正的活动了吗？",
+	"demo_upsell_text": "你已经看到用机器人的效果了 🔥。想办真正的活动——真实参与者亲自游玩、邀请、最多 64 人的比赛和支持——就升级到完整群组吧。",
+	"demo_upsell_offer": "查看方案",
+	"demo_upsell_continue": "继续演示"
 }

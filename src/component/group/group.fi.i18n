@@ -51,5 +51,9 @@
 	"demo_banner_title": "Demoryhmä",
 	"demo_banner_sub": "Oikeiden osallistujien kutsuminen ja pelaaminen vaatii maksullisen tarjouksen.",
 	"demo_upgrade": "Tutustu tarjoukseen",
-	"demo_upgrade_required": "Tämä ominaisuus on varattu maksullisille yksityisryhmätarjouksille."
+	"demo_upgrade_required": "Tämä ominaisuus on varattu maksullisille yksityisryhmätarjouksille.",
+	"demo_upsell_title": "Valmis oikeaan tapahtumaan?",
+	"demo_upsell_text": "Näet, millaista se on bottien kanssa 🔥. Oikeaa tapahtumaa varten — oikeat pelaavat osallistujat, kutsut, turnaukset jopa 64 pelaajalle ja tuki — siirry täyteen ryhmään.",
+	"demo_upsell_offer": "Katso tarjous",
+	"demo_upsell_continue": "Jatka demoa"
 }
