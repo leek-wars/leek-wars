@@ -440,10 +440,10 @@
 		font-weight: 800;
 		letter-spacing: 0.6px;
 		text-transform: uppercase;
-		color: #ffde72;
-		background: linear-gradient(135deg, #4a3208, #6b4a0d);
-		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
-		box-shadow: 0 2px 9px rgba(110, 72, 0, 0.5), inset 0 0 0 1px rgba(255, 212, 90, 0.6);
+		color: #000;
+		background: linear-gradient(0deg, #ffb029, #ffdc3a);
+		border: 1px solid #ffb430;
+		box-shadow: 0 2px 9px rgba(150, 100, 0, 0.45);
 		animation: celebrate-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
 		&::after {
 			content: '';
@@ -452,7 +452,7 @@
 			bottom: 0;
 			left: 0;
 			width: 60%;
-			background: linear-gradient(100deg, transparent, rgba(255, 244, 200, 0.6) 50%, transparent);
+			background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.6) 50%, transparent);
 			transform: translateX(-180%);
 			animation: celebrate-shine 1.5s ease-in-out 0.25s;
 		}
