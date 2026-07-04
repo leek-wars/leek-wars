@@ -794,7 +794,9 @@
 	})
 
 	const farmer_weapons = computed(() => {
-		return (Object.values(LeekWars.weapons) as WeaponTemplate[]).sort((weaponA, weaponB) => {
+		// Seules les armes réellement obtenables (en vente) peuvent être imposées : on exclut
+		// les armes de boss (Faux, Odachi, Excalibur) et variantes cachées (market=false).
+		return (Object.values(LeekWars.weapons) as WeaponTemplate[]).filter(weapon => LeekWars.items[weapon.item]?.market).sort((weaponA, weaponB) => {
 			return LeekWars.items[weaponA.item].level - LeekWars.items[weaponB.item].level
 		}).map(weapon => weapon.item)
 	})
@@ -855,7 +857,9 @@
 	}
 
 	const farmer_chips = computed(() => {
-		return (Object.values(LeekWars.chipTemplates) as Array<{id: number, item: number}>).sort((a, b) => {
+		// Idem armes : on exclut les puces de boss (Apocalypse, Protection divine, Exaspération...)
+		// qui sont market=false et niveau 1, donc sinon imposables par tout groupe.
+		return (Object.values(LeekWars.chipTemplates) as Array<{id: number, item: number}>).filter(chip => LeekWars.items[chip.item]?.market).sort((a, b) => {
 			return LeekWars.items[a.item].level - LeekWars.items[b.item].level
 		}).map(chip => chip.item)
 	})
