@@ -462,5 +462,49 @@
 	"248_verify_banner": {
 		"emoji": "🎁",
 		"description": "A new bottom banner shows your verification rewards and opens the validation dialog in one click."
+	},
+	"249_seasons": {
+		"emoji": "🌞",
+		"description": "Five seasonal events through the year, each with its own bonuses and trophies"
+	},
+	"249_season_dialog": {
+		"emoji": "📣",
+		"description": "An announcement and a garden banner kick off each season"
+	},
+	"249_season_trophies": {
+		"emoji": "🏅",
+		"description": "10 seasonal trophies gathered in a brand-new category"
+	},
+	"249_polyglot": {
+		"emoji": "🐍",
+		"description": "Write your AIs in JavaScript, Python or TypeScript, with the full fight API"
+	},
+	"249_language_logos": {
+		"emoji": "🔤",
+		"description": "Spot each AI's language at a glance in the editor and on your leeks"
+	},
+	"249_collection": {
+		"emoji": "🗂️",
+		"description": "Track your progress on every weapon, chip, hat and resource"
+	},
+	"249_payment": {
+		"emoji": "💳",
+		"description": "Pay by card directly in the shop"
+	},
+	"249_history_filters": {
+		"emoji": "🔍",
+		"description": "Filter your fight history by result or search for an opponent"
+	},
+	"249_command_palette": {
+		"emoji": "⌨️",
+		"description": "Every editor action is one Ctrl+Shift+P away"
+	},
+	"249_contact": {
+		"emoji": "📬",
+		"description": "All the ways to get help and follow the game, on one page"
+	},
+	"249_maintenance": {
+		"emoji": "🏁",
+		"description": "Race your leek in a mini-game while the server updates"
 	}
 }
