@@ -1,5 +1,6 @@
 {
 	"ai_name": "AI名",
+	"include_starter": "基本AIを含める",
 	"open": "開ける",
 	"test": "テスト",
 	"delete": "消去",

@@ -1,5 +1,6 @@
 {
 	"ai_name": "AI 이름",
+	"include_starter": "기본 AI 포함",
 	"close_folder": "폴더 닫기",
 	"deinit_git": "Git 저장소 제거",
 	"deinit_git_confirm": "\"{0}\" 폴더에서 Git 저장소를 제거하시겠습니까? 커밋 기록이 손실됩니다.",

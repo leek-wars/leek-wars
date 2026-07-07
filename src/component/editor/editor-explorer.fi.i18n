@@ -1,5 +1,6 @@
 {
 	"ai_name": "AI nimi",
+	"include_starter": "Sisällytä perus-AI",
 	"open": "Avata",
 	"test": "Testata",
 	"delete": "Poista",

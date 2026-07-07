@@ -1,5 +1,6 @@
 {
 	"ai_name": "AI navn",
+	"include_starter": "Inkluder basis-AI",
 	"close_folder": "Lukk mappen",
 	"deinit_git": "Slett Git-depotet",
 	"deinit_git_confirm": "Slett Git-depotet fra mappen \"{0}\"? Commit-historikken vil gå tapt.",

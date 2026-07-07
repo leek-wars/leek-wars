@@ -1,5 +1,6 @@
 {
 	"ai_name": "AI-naam",
+	"include_starter": "Basis-AI toevoegen",
 	"open": "Openen",
 	"test": "Test",
 	"delete": "Verwijderen",

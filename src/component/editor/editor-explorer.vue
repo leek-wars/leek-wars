@@ -167,6 +167,7 @@
 					<v-btn value="typescript" size="small"><img class="lang-opt" src="/image/language/typescript.svg">TypeScript</v-btn>
 					<v-btn value="python" size="small"><img class="lang-opt" src="/image/language/python.svg">Python</v-btn>
 				</v-btn-toggle>
+				<v-checkbox v-model="newAIStarter" :label="$t('include_starter')" density="compact" hide-details />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
@@ -238,6 +239,7 @@
 	const emptyDialog = ref(false)
 	const newAIName = ref('')
 	const newAILanguage = ref('leekscript')
+	const newAIStarter = ref(false)
 	const newAIDialog = ref(false)
 	const newFolderDialog = ref(false)
 	const newFolderName = ref('')
@@ -474,6 +476,9 @@
 		// Repartir de LeekScript à chaque ouverture : sinon le langage choisi précédemment
 		// (puis annulé) fuite et on créerait un .js/.py par surprise.
 		newAILanguage.value = 'leekscript'
+		// IA de base cochée par défaut seulement sur un compte sans aucune IA (comportement
+		// historique du serveur : exemple posé sur le tout premier fichier).
+		newAIStarter.value = Object.keys(fileSystem.ais).length === 0
 		newAIDialog.value = true
 		setTimeout(() => newAIInput.value?.focus(), 50)
 	}
@@ -483,7 +488,7 @@
 		const ext = newAIExtension.value
 		const fullName = ext && name.toLowerCase().endsWith(ext) ? name : name + ext
 		const folderPath = folder.value.id === 0 ? '' : fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
-		LeekWars.post<{ path: string, code: string }>('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name: fullName}).then((data) => {
+		LeekWars.post<{ path: string, code: string }>('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name: fullName, starter: newAIStarter.value}).then((data) => {
 			const newAi = new AI({
 				name: fullName,
 				path: data.path,

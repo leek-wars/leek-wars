@@ -35,6 +35,7 @@
     - "Payment now follows the light or dark theme of the site."
     - "Button to renew the item shop showcase."
     - "The editor theme is automatic: light or dark to match the site."
+    - "Starter AI checkbox when creating a file, to begin with the language's example code."
     - "AI code is cached locally for faster loading."
     - "Button to reconfigure the GitHub App repositories without removing it."
     - "Weapons sorted by level in the test opponent selector."

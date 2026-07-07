@@ -1,5 +1,6 @@
 {
 	"ai_name": "Nama AI",
+	"include_starter": "Sertakan AI dasar",
 	"open": "Buka",
 	"test": "Tes",
 	"delete": "Hapus",

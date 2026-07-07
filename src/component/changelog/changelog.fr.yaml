@@ -35,6 +35,7 @@
     - "Le paiement suit le thème clair ou sombre du site."
     - "Bouton pour renouveler la vitrine d'items de la boutique."
     - "Thème de l'éditeur automatique : clair ou sombre selon le site."
+    - "Case « IA de base » à la création d'un fichier, pour partir du code d'exemple du langage."
     - "Le code des IA est mis en cache localement pour un chargement plus rapide."
     - "Bouton pour reconfigurer les dépôts de la GitHub App sans la supprimer."
     - "Armes triées par niveau dans le sélecteur d'adversaire de test."

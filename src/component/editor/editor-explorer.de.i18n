@@ -1,5 +1,6 @@
 {
 	"ai_name": "KI-Name",
+	"include_starter": "Basis-KI einfügen",
 	"open": "Offen",
 	"test": "Prüfen",
 	"delete": "LÖSCHEN",

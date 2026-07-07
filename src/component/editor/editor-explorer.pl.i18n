@@ -1,5 +1,6 @@
 {
 	"ai_name": "Nazwa SI",
+	"include_starter": "Dołącz podstawową SI",
 	"open": "Otwórz",
 	"test": "Test",
 	"delete": "Usuń",

@@ -1,5 +1,6 @@
 {
 	"ai_name": "AI-namn",
+	"include_starter": "Inkludera bas-AI:n",
 	"open": "Öppen",
 	"test": "Testa",
 	"delete": "Radera",

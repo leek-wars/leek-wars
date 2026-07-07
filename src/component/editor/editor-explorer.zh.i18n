@@ -1,5 +1,6 @@
 {
 	"ai_name": "人工智能名称",
+	"include_starter": "包含基础人工智能",
 	"open": "打开",
 	"test": "测试",
 	"delete": "删除",

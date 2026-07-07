@@ -1,5 +1,6 @@
 {
 	"ai_name": "Nombre de IA",
+	"include_starter": "Incluir la IA básica",
 	"open": "Abrir",
 	"test": "Prueba",
 	"delete": "Eliminar",
