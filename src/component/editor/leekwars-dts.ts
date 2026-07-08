@@ -91,6 +91,19 @@ function safeName(name: string | null | undefined): string | null {
 	return name
 }
 
+// SNAKE_CASE (nom de constante) -> camelCase (membre objet). WEAPON_MACHINE_GUN -> machineGun.
+// DOIT rester en phase avec la même conversion côté runtime (generator objects.js).
+function camelCase(s: string): string {
+	return s.toLowerCase().replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase())
+}
+
+// Constantes d'items exposées comme membres statiques objet (Weapon.pistol, Chip.fireball) plutôt
+// que comme globales plates (WEAPON_PISTOL) : préfixe -> conteneur objet. cf objects.js runtime.
+const ITEM_CONST_CONTAINERS: { prefix: string, container: string }[] = [
+	{ prefix: 'WEAPON_', container: 'Weapon' },
+	{ prefix: 'CHIP_', container: 'Chip' },
+]
+
 export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup): string {
 	const out: string[] = [
 		'// Auto-généré depuis les game data Leek Wars (API de combat). Ne pas éditer à la main.',
@@ -107,12 +120,22 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		'',
 	]
 	const declared = new Set<string>()
+	// Constantes d'items (WEAPON_/CHIP_) détournées vers les namespaces objet (Weapon.pistol...) :
+	// container -> [{member camelCase, doc}]. Émis en fin de fichier, fusionnés avec les classes.
+	const itemConsts: Record<string, { member: string, doc?: string }[]> = {}
 
 	for (const c of constants) {
 		const name = safeName(c.name)
 		if (!name || declared.has(name)) continue
 		declared.add(name)
 		const cdoc = doc?.('const_' + name)
+		// Arme/puce : on n'émet PAS la globale plate `declare const WEAPON_X` -> elle devient
+		// `Weapon.x` (API objet, cf runtime objects.js). La globale reste dispo à l'exécution.
+		const bucket = ITEM_CONST_CONTAINERS.find((b) => name.startsWith(b.prefix))
+		if (bucket) {
+			(itemConsts[bucket.container] ||= []).push({ member: camelCase(name.slice(bucket.prefix.length)), doc: cdoc })
+			continue
+		}
 		if (cdoc) out.push(renderJsdoc([sanitizeDoc(cdoc)], ''))
 		out.push(`declare const ${name}: ${tsType(c.type)};`)
 	}
@@ -155,6 +178,25 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 
 	out.push('')
 	out.push(doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc) : OBJECT_API_DECLARATIONS)
+
+	// Constantes objet : `declare namespace Weapon { const pistol: Weapon; ... }` fusionne (declaration
+	// merging) avec `declare class Weapon` -> Weapon.pistol est une instance Weapon (poolée au runtime,
+	// cf objects.js). Émis après les classes ; l'ordre dans un fichier ambiant n'importe pas.
+	for (const { container } of ITEM_CONST_CONTAINERS) {
+		const members = itemConsts[container]
+		if (!members || !members.length) continue
+		out.push('')
+		out.push(`declare namespace ${container} {`)
+		const seen = new Set<string>()
+		for (const { member, doc: mdoc } of members) {
+			const m = safeName(member)
+			if (!m || seen.has(m)) continue // collision camelCase / mot réservé : on saute
+			seen.add(m)
+			if (mdoc) out.push(renderJsdoc([sanitizeDoc(mdoc)], '\t'))
+			out.push(`\tconst ${m}: ${container};`)
+		}
+		out.push('}')
+	}
 	return out.join('\n') + '\n'
 }
 
