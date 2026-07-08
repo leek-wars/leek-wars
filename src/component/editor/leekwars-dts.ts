@@ -331,8 +331,10 @@ declare class Effect {
 	readonly modifiers: number;
 }
 
-/** Un effet déclaré par une arme/puce ou un effet passif (potentiel, fourchette de valeurs). */
-declare class EffectTemplate {
+/** Une caractéristique déclarée par une arme/puce (ou un effet passif) : ce que l'item peut faire
+ *  quand il touche (dégâts, poison, téléport, inversion...). Potentiel, fourchette de valeurs.
+ *  À distinguer d'Effect (un effet actif sur une entité). */
+declare class Feature {
 	/** Tableau brut [type, minValue, maxValue, turns, targets, modifiers]. */
 	readonly raw: any[];
 	readonly type: number;
@@ -368,7 +370,8 @@ declare class Weapon {
 	readonly maxUses: number;
 	readonly inline: boolean;
 	needLos(): boolean;
-	effects(): EffectTemplate[];
+	/** Caractéristiques déclarées de l'arme (dégâts, poison, téléport...). cf Feature. */
+	readonly features: Feature[];
 }
 
 declare class Chip {
@@ -386,7 +389,8 @@ declare class Chip {
 	readonly maxUses: number;
 	readonly inline: boolean;
 	needLos(): boolean;
-	effects(): EffectTemplate[];
+	/** Caractéristiques déclarées de la puce. cf Feature. */
+	readonly features: Feature[];
 }
 
 declare class Entity {
@@ -414,7 +418,7 @@ declare class Entity {
 	readonly chips: Chip[];
 	readonly effects: Effect[];
 	readonly launchedEffects: Effect[];
-	readonly passiveEffects: EffectTemplate[];
+	readonly passiveEffects: Feature[];
 	readonly states: any[];
 	readonly summons: Entity[];
 	readonly summoner: Entity | null;
