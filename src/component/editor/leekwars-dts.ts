@@ -109,9 +109,7 @@ const CONST_CONTAINERS: { prefix: string, container: string, sub?: string, item?
 	{ prefix: 'FIGHT_CONTEXT_', container: 'Fight', sub: 'Context' },
 	{ prefix: 'AREA_', container: 'Item', sub: 'Area' },
 	{ prefix: 'STAT_', container: 'Entity', sub: 'Stat' },
-	// NB : pas de ENTITY_ -> Entity.Type : les sous-classes (x instanceof Mob) remplacent les types
-	// d'entité, et Entity.Type entrerait en conflit d'héritage statique avec Chest/Bulb/Mob.Type.
-	// Les ENTITY_* restent donc des globales plates.
+	{ prefix: 'ENTITY_', container: 'Entity', sub: 'Type' },
 	{ prefix: 'CELL_', container: 'Cell', sub: 'Type' },
 	{ prefix: 'CHEST_', container: 'Chest', sub: 'Type' },
 	{ prefix: 'BULB_', container: 'Bulb', sub: 'Type' },
@@ -473,25 +471,35 @@ declare class Chip extends Item {
 	readonly features: Feature[];
 }
 
+// Sous-types d'entité. Héritage exprimé par 'interface X extends Entity' (côté INSTANCE, structurel)
+// plutôt que 'class X extends Entity' : ainsi le static side d'Entity (Entity.Type, Entity.Stat)
+// n'est PAS propagé aux sous-classes, ce qui évite le conflit TS entre Entity.Type et
+// Chest/Bulb/Mob.Type. 'x instanceof Bulb', l'assignabilité à Entity et les propriétés héritées
+// fonctionnent identiquement (le runtime, lui, fait un vrai class extends).
 /** Un poireau. */
-declare class Leek extends Entity {}
+declare class Leek {}
+interface Leek extends Entity {}
 /** Une tourelle d'équipe. */
-declare class Turret extends Entity {}
+declare class Turret {}
+interface Turret extends Entity {}
 /** Un bulbe invoqué. */
-declare class Bulb extends Entity {
+declare class Bulb {
 	/** Sous-type de bulbe (Bulb.Type.PUNY...). */
 	readonly type: number;
 }
+interface Bulb extends Entity {}
 /** Un coffre (chasse aux coffres). */
-declare class Chest extends Entity {
+declare class Chest {
 	/** Sous-type de coffre (Chest.Type.WOOD...). */
 	readonly type: number;
 }
+interface Chest extends Entity {}
 /** Un monstre / boss. */
-declare class Mob extends Entity {
+declare class Mob {
 	/** Sous-type de monstre (Mob.Type.GRAAL...). */
 	readonly type: number;
 }
+interface Mob extends Entity {}
 
 declare class Entity {
 	readonly id: number;
