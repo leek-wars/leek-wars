@@ -97,12 +97,39 @@ function camelCase(s: string): string {
 	return s.toLowerCase().replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase())
 }
 
-// Constantes d'items exposées comme membres statiques objet (Weapon.pistol, Chip.fireball) plutôt
-// que comme globales plates (WEAPON_PISTOL) : préfixe -> conteneur objet. cf objects.js runtime.
-const ITEM_CONST_CONTAINERS: { prefix: string, container: string }[] = [
-	{ prefix: 'WEAPON_', container: 'Weapon' },
-	{ prefix: 'CHIP_', container: 'Chip' },
+// Constantes rangées en membres OBJET (Weapon.pistol, Effect.DAMAGE, Fight.Type.SOLO...) au lieu de
+// globales plates. préfixe -> conteneur (+ sous-conteneur). item=true -> INSTANCE (type = conteneur,
+// camelCase) ; sinon CATÉGORIE (type number, nom MAJUSCULE). DOIT rester en phase avec le RULES du
+// runtime (generator objects.js/objects.py). Préfixes composés listés avant les simples.
+const CONST_CONTAINERS: { prefix: string, container: string, sub?: string, item?: boolean }[] = [
+	{ prefix: 'WEAPON_', container: 'Weapon', item: true },
+	{ prefix: 'CHIP_', container: 'Chip', item: true },
+	{ prefix: 'LAUNCH_TYPE_', container: 'Item', sub: 'LaunchType' },
+	{ prefix: 'FIGHT_TYPE_', container: 'Fight', sub: 'Type' },
+	{ prefix: 'FIGHT_CONTEXT_', container: 'Fight', sub: 'Context' },
+	{ prefix: 'AREA_', container: 'Item', sub: 'Area' },
+	{ prefix: 'STAT_', container: 'Entity', sub: 'Stat' },
+	// NB : pas de ENTITY_ -> Entity.Type : les sous-classes (x instanceof Mob) remplacent les types
+	// d'entité, et Entity.Type entrerait en conflit d'héritage statique avec Chest/Bulb/Mob.Type.
+	// Les ENTITY_* restent donc des globales plates.
+	{ prefix: 'CELL_', container: 'Cell', sub: 'Type' },
+	{ prefix: 'CHEST_', container: 'Chest', sub: 'Type' },
+	{ prefix: 'BULB_', container: 'Bulb', sub: 'Type' },
+	{ prefix: 'MOB_', container: 'Mob', sub: 'Type' },
+	{ prefix: 'BOSS_', container: 'Fight', sub: 'Boss' },
+	{ prefix: 'EROSION_', container: 'Fight', sub: 'Erosion' },
+	{ prefix: 'USE_', container: 'Fight', sub: 'Use' },
+	{ prefix: 'MESSAGE_', container: 'Fight', sub: 'Message' },
+	{ prefix: 'MAP_', container: 'Field' },
+	{ prefix: 'EFFECT_', container: 'Effect' },
+	{ prefix: 'STATE_', container: 'State' },
 ]
+// Conteneurs qui sont des objets `const` (pas des classes) : namespace-merge impossible -> on injecte
+// leurs constantes INLINE dans la déclaration de l'objet (cf renderInlineContainer).
+const CONST_OBJECT_CONTAINERS = new Set(['Fight', 'Field'])
+
+type ConstMember = { member: string, doc?: string, isInstance: boolean }
+type ConstBucket = { direct: ConstMember[], subs: Record<string, ConstMember[]> }
 
 export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup): string {
 	const out: string[] = [
@@ -120,20 +147,24 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		'',
 	]
 	const declared = new Set<string>()
-	// Constantes d'items (WEAPON_/CHIP_) détournées vers les namespaces objet (Weapon.pistol...) :
-	// container -> [{member camelCase, doc}]. Émis en fin de fichier, fusionnés avec les classes.
-	const itemConsts: Record<string, { member: string, doc?: string }[]> = {}
+	// Constantes rangées par conteneur : container -> { direct, subs }. Émises en fin de fichier
+	// (namespaces mergés aux classes, ou inline pour Fight/Field). La globale plate n'est PAS émise
+	// -> le style objet remplace WEAPON_PISTOL par Weapon.pistol (globale conservée au runtime).
+	const collected: Record<string, ConstBucket> = {}
+	const bucketFor = (container: string): ConstBucket => (collected[container] ||= { direct: [], subs: {} })
 
 	for (const c of constants) {
 		const name = safeName(c.name)
 		if (!name || declared.has(name)) continue
 		declared.add(name)
 		const cdoc = doc?.('const_' + name)
-		// Arme/puce : on n'émet PAS la globale plate `declare const WEAPON_X` -> elle devient
-		// `Weapon.x` (API objet, cf runtime objects.js). La globale reste dispo à l'exécution.
-		const bucket = ITEM_CONST_CONTAINERS.find((b) => name.startsWith(b.prefix))
-		if (bucket) {
-			(itemConsts[bucket.container] ||= []).push({ member: camelCase(name.slice(bucket.prefix.length)), doc: cdoc })
+		const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
+		if (rule) {
+			const raw = name.slice(rule.prefix.length)
+			const entry: ConstMember = { member: rule.item ? camelCase(raw) : raw, doc: cdoc, isInstance: !!rule.item }
+			const b = bucketFor(rule.container)
+			if (rule.sub) (b.subs[rule.sub] ||= []).push(entry)
+			else b.direct.push(entry)
 			continue
 		}
 		if (cdoc) out.push(renderJsdoc([sanitizeDoc(cdoc)], ''))
@@ -176,24 +207,70 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		out.push(`declare function ${name}(${params.join(', ')}): ${tsType(f.return_type)};`)
 	}
 
-	out.push('')
-	out.push(doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc) : OBJECT_API_DECLARATIONS)
+	// Rend un membre de namespace `const X: type;` (type = conteneur pour une instance, sinon number).
+	const memberLines = (m: ConstMember, container: string, indent: string): string[] => {
+		const safe = safeName(m.member)
+		if (!safe) return []
+		const lines: string[] = []
+		if (m.doc) lines.push(renderJsdoc([sanitizeDoc(m.doc)], indent))
+		lines.push(`${indent}const ${safe}: ${m.isInstance ? container : 'number'};`)
+		return lines
+	}
+	// Pour Fight/Field (objets const) : les constantes s'injectent INLINE (readonly ...: number).
+	const inlineContainer = (container: string): string => {
+		const b = collected[container]
+		if (!b) return ''
+		const lines: string[] = []
+		const seen = new Set<string>()
+		for (const m of b.direct) {
+			const safe = safeName(m.member)
+			if (safe && !seen.has(safe)) { seen.add(safe); lines.push(`\treadonly ${safe}: number;`) }
+		}
+		for (const sub of Object.keys(b.subs)) {
+			lines.push(`\treadonly ${sub}: {`)
+			const seenS = new Set<string>()
+			for (const m of b.subs[sub]) {
+				const safe = safeName(m.member)
+				if (safe && !seenS.has(safe)) { seenS.add(safe); lines.push(`\t\treadonly ${safe}: number;`) }
+			}
+			lines.push('\t};')
+		}
+		return lines.join('\n')
+	}
 
-	// Constantes objet : `declare namespace Weapon { const pistol: Weapon; ... }` fusionne (declaration
-	// merging) avec `declare class Weapon` -> Weapon.pistol est une instance Weapon (poolée au runtime,
-	// cf objects.js). Émis après les classes ; l'ordre dans un fichier ambiant n'importe pas.
-	for (const { container } of ITEM_CONST_CONTAINERS) {
-		const members = itemConsts[container]
-		if (!members || !members.length) continue
+	// Bloc API objet (classes + const Fight/Field) : on injecte les constantes de Fight/Field inline.
+	let objBlock = doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc) : OBJECT_API_DECLARATIONS
+	for (const container of CONST_OBJECT_CONTAINERS) {
+		const inline = inlineContainer(container)
+		if (inline) objBlock = objBlock.replace(`declare const ${container}: {\n`, `declare const ${container}: {\n${inline}\n`)
+	}
+	out.push('')
+	out.push(objBlock)
+
+	// Namespaces de constantes fusionnés aux classes (declaration merging) : Effect.DAMAGE,
+	// Entity.Stat.STRENGTH, Weapon.pistol, Item.LaunchType.LINE... (Fight/Field déjà injectés inline).
+	for (const container of Object.keys(collected)) {
+		if (CONST_OBJECT_CONTAINERS.has(container)) continue
+		const { direct, subs } = collected[container]
 		out.push('')
 		out.push(`declare namespace ${container} {`)
 		const seen = new Set<string>()
-		for (const { member, doc: mdoc } of members) {
-			const m = safeName(member)
-			if (!m || seen.has(m)) continue // collision camelCase / mot réservé : on saute
-			seen.add(m)
-			if (mdoc) out.push(renderJsdoc([sanitizeDoc(mdoc)], '\t'))
-			out.push(`\tconst ${m}: ${container};`)
+		for (const m of direct) {
+			const safe = safeName(m.member)
+			if (!safe || seen.has(safe)) continue
+			seen.add(safe)
+			for (const l of memberLines(m, container, '\t')) out.push(l)
+		}
+		for (const sub of Object.keys(subs)) {
+			out.push(`\tnamespace ${sub} {`)
+			const seenS = new Set<string>()
+			for (const m of subs[sub]) {
+				const safe = safeName(m.member)
+				if (!safe || seenS.has(safe)) continue
+				seenS.add(safe)
+				for (const l of memberLines(m, container, '\t\t')) out.push(l)
+			}
+			out.push('\t}')
 		}
 		out.push('}')
 	}
@@ -357,8 +434,12 @@ declare class Cell {
 	lineOfSight(target: CellLike): boolean;
 }
 
-declare class Weapon {
+/** Base commune aux armes et puces. Porte les constantes partagées (Item.LaunchType, Item.Area). */
+declare class Item {
 	readonly id: number;
+}
+
+declare class Weapon extends Item {
 	readonly cost: number;
 	readonly minRange: number;
 	readonly maxRange: number;
@@ -374,8 +455,7 @@ declare class Weapon {
 	readonly features: Feature[];
 }
 
-declare class Chip {
-	readonly id: number;
+declare class Chip extends Item {
 	readonly cost: number;
 	readonly cooldown: number;
 	readonly currentCooldown: number;
@@ -391,6 +471,26 @@ declare class Chip {
 	needLos(): boolean;
 	/** Caractéristiques déclarées de la puce. cf Feature. */
 	readonly features: Feature[];
+}
+
+/** Un poireau. */
+declare class Leek extends Entity {}
+/** Une tourelle d'équipe. */
+declare class Turret extends Entity {}
+/** Un bulbe invoqué. */
+declare class Bulb extends Entity {
+	/** Sous-type de bulbe (Bulb.Type.PUNY...). */
+	readonly type: number;
+}
+/** Un coffre (chasse aux coffres). */
+declare class Chest extends Entity {
+	/** Sous-type de coffre (Chest.Type.WOOD...). */
+	readonly type: number;
+}
+/** Un monstre / boss. */
+declare class Mob extends Entity {
+	/** Sous-type de monstre (Mob.Type.GRAAL...). */
+	readonly type: number;
 }
 
 declare class Entity {
