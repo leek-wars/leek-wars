@@ -238,6 +238,9 @@
 									<img src="/image/notgood.png">
 									<h4>{{ $t('no_opponent_of_your_size') }}</h4>
 								</div>
+								<div v-if="$store.getters.admin && farmerOpponents && farmerOpponents.length" class="solo-batch">
+									<v-btn color="primary" :loading="batchLoading" @click="batchFarmerAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
+								</div>
 							</div>
 							<garden-no-fights v-else :canbuy="true" @bought="reload" />
 						</div>
@@ -521,6 +524,15 @@
 		if (!selectedLeek.value) return
 		batchLoading.value = true
 		LeekWars.post('garden/start-solo-fight-batch', {leek_id: selectedLeek.value.id}).then(data => {
+			store.commit('update-fights', -data.fights.length)
+			router.push('/fight/' + data.fights[0])
+		}).error(batchErrorToast).finally(() => {
+			batchLoading.value = false
+		})
+	}
+	function batchFarmerAttack() {
+		batchLoading.value = true
+		LeekWars.post('garden/start-farmer-fight-batch', {count: 10}).then(data => {
 			store.commit('update-fights', -data.fights.length)
 			router.push('/fight/' + data.fights[0])
 		}).error(batchErrorToast).finally(() => {
