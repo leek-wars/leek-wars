@@ -249,7 +249,8 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 	}
 
 	// Bloc API objet (classes + const Fight/Field) : on injecte les constantes de Fight/Field inline.
-	let objBlock = doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc) : OBJECT_API_DECLARATIONS
+	const funcByName = new Map(functions.map((f) => [f.name, f]))
+	let objBlock = doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc, funcByName) : OBJECT_API_DECLARATIONS
 	for (const container of CONST_OBJECT_CONTAINERS) {
 		const inline = inlineContainer(container)
 		if (inline) objBlock = objBlock.replace(`declare const ${container}: {\n`, `declare const ${container}: {\n${inline}\n`)
@@ -341,12 +342,35 @@ function injectJsdocLines(out: string[], commentStart: number, extra: string[]):
 	}
 }
 
+// Doc LS COMPLÈTE d'un symbole (celle de sa page /help/documentation), en lignes JSDoc : description
+// + un @param par argument (nom réel de la fonction LS + description, marqué optionnel) + @returns +
+// lien. Reproduit dans la tooltip le contenu de la page de doc, params compris. `lsFun` (les game
+// data de la fonction) fournit les noms/optionnalité des arguments ; absent -> desc + lien seuls.
+function lsFullDocLines(doc: DocLookup, lsName: string, lsFun: LSFunction | undefined, isMethod: boolean): string[] {
+	const lines: string[] = []
+	const desc = doc('func_' + lsName)
+	if (desc) lines.push(sanitizeDoc(desc))
+	// @param seulement pour les méthodes : sur une propriété (weapon.cost) le 1er argument LS est le
+	// récepteur lui-même (weapon), un @param serait trompeur.
+	const names = isMethod ? (lsFun?.arguments_names ?? []) : []
+	const optional = lsFun?.optional ?? []
+	for (let i = 0; i < names.length; i++) {
+		const d = doc(`func_${lsName}_arg_${i + 1}`)
+		if (d) lines.push(`@param ${names[i]} ${optional[i] ? '(optionnel) ' : ''}${sanitizeDoc(d)}`)
+	}
+	if (lsFun && lsFun.return_type !== 0) {
+		const r = doc('func_' + lsName + '_return')
+		if (r) lines.push(`@returns ${sanitizeDoc(r)}`)
+	}
+	lines.push(docLink(lsName))
+	return lines
+}
+
 // Injecte des blocs JSDoc dans les déclarations objet statiques : pour chaque membre qui correspond
-// à une fonction LS documentée, on préfixe sa description (et @returns pour les méthodes non-void) +
-// un lien vers la page de doc. Si le membre a déjà un commentaire écrit à la main (Effect, me...),
-// on ne réécrit pas sa description mais on y insère quand même le lien de doc. Membres sans
-// équivalent LS : laissés tels quels.
-function annotateObjectApi(block: string, doc: DocLookup): string {
+// à une fonction LS, on injecte sa doc COMPLÈTE (description + paramètres + retour + lien), soit le
+// contenu de sa page de doc. Si le membre a déjà un commentaire écrit à la main (Effect, me...), on
+// conserve sa prose et on y ajoute la doc LS. Membres sans équivalent LS : laissés tels quels.
+function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string, LSFunction>): string {
 	const memberToLs = buildMemberToLs()
 	const out: string[] = []
 	let container: string | null = null
@@ -364,16 +388,8 @@ function annotateObjectApi(block: string, doc: DocLookup): string {
 				const [, indent, member] = memberM
 				const lsName = memberToLs[container + '.' + member]
 				if (lsName) {
-					// Doc LS complète du symbole : description + @returns (méthode non-void) + lien de doc.
-					const desc = doc('func_' + lsName)
-					const lsLines: string[] = []
-					if (desc) lsLines.push(sanitizeDoc(desc))
 					const isMethod = line.slice(line.indexOf(member) + member.length).trimStart().startsWith('(')
-					if (isMethod && !/:\s*void\s*;?\s*$/.test(line)) {
-						const r = doc('func_' + lsName + '_return')
-						if (r) lsLines.push(`@returns ${sanitizeDoc(r)}`)
-					}
-					lsLines.push(docLink(lsName))
+					const lsLines = lsFullDocLines(doc, lsName, funcByName.get(lsName), isMethod)
 					// Déjà commenté à la main : on fusionne (prose conservée + doc LS ajoutée). Sinon on
 					// génère le bloc directement.
 					if (prevWasComment && commentStart >= 0) injectJsdocLines(out, commentStart, lsLines)
