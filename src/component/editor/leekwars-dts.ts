@@ -326,12 +326,12 @@ const OBJECT_DOC_EXTRA: Record<string, string> = {
 	'Fight.getNearestEnemyToCell': 'getNearestEnemyToCell', 'Fight.getNearestAllyToCell': 'getNearestAllyToCell',
 }
 
-// Construit la table membre objet -> nom de fonction LS, en inversant DEPRECATED_FLAT (qui encode
-// déjà la correspondance fonction plate -> forme objet) puis en fusionnant OBJECT_DOC_EXTRA. Clé =
+// (exportée) Construit la table membre objet -> nom de fonction LS, en inversant DEPRECATED_FLAT (qui
+// encode déjà la correspondance fonction plate -> forme objet) puis en fusionnant OBJECT_DOC_EXTRA. Clé =
 // `Conteneur.membre` (désambiguïse les membres homonymes entre classes, ex: Cell.distance vs
 // Field.distance). Ainsi la doc de survol de `Fight.getAliveEnemies()` réutilise
 // `doc.func_getAliveEnemies`, source unique traduite en 18 langues.
-function buildMemberToLs(): Record<string, string> {
+export function buildMemberToLs(): Record<string, string> {
 	const map: Record<string, string> = {}
 	for (const lsName in DEPRECATED_FLAT) {
 		for (const form of DEPRECATED_FLAT[lsName].split('/')) {

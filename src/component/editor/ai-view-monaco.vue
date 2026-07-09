@@ -37,7 +37,7 @@ import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions'
-import { buildConstantPathMap } from './leekwars-dts'
+import { buildConstantPathMap, buildMemberToLs } from './leekwars-dts'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import Code from '@/component/app/code.vue'
 import { parseConflicts, hasConflictMarkers, buildConflictDecorations, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
@@ -56,6 +56,13 @@ function constPathMap(): Map<string, string> {
 	if (!_constPathMap || _constPathMap.size === 0) _constPathMap = buildConstantPathMap(LeekWars.constants ?? [])
 	return _constPathMap
 }
+// Membre de l'API objet -> nom de fonction LS (ex "Me.weaponCells" -> "getCellsToUseWeapon",
+// "Weapon.cost" -> "getWeaponCost"). Statique -> calculé une fois.
+let _memberToLs: Record<string, string> | null = null
+function memberToLsMap(): Record<string, string> {
+	if (!_memberToLs) _memberToLs = buildMemberToLs()
+	return _memberToLs
+}
 function extractHoverSymbol(text: string): string | null {
 	const t2 = text.trim()
 	const kw = t2.match(/^(?:\(\w+\)\s*)?(?:const|let|var|function|readonly|namespace)\s+([\w.$]+)/)
@@ -70,13 +77,15 @@ function resolveHoverDoc(text: string): { fun?: any, constant?: any } {
 	if (fun || constant) return { fun, constant }
 	const sym = extractHoverSymbol(text)
 	if (!sym) return {}
+	// Constante (Weapon.bazooka -> WEAPON_BAZOOKA, Effect.DAMAGE, MAX_TURNS...) : priorité à la fiche constante.
 	const constName = sym.includes('.') ? constPathMap().get(sym) : sym
 	if (constName) constant = LeekWars.constants.find((c) => c.name === constName)
-	if (!constant) {
-		const funName = sym.includes('.') ? sym.split('.').pop()! : sym
-		fun = FUNCTIONS.find((f) => f.name === funName)
-	}
-	return { fun, constant }
+	if (constant) return { constant }
+	// Fonction : membre objet mappé vers sa fonction LS (Me.weaponCells -> getCellsToUseWeapon),
+	// sinon dernier segment tel quel (Fight.getAliveEnemies -> getAliveEnemies, ou fonction plate).
+	const funName = memberToLsMap()[sym] ?? (sym.includes('.') ? sym.split('.').pop()! : sym)
+	fun = FUNCTIONS.find((f) => f.name === funName)
+	return { fun }
 }
 
 const scrollKey = (path: string) => 'editor/scroll/' + farmerId() + '/' + path
