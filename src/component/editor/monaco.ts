@@ -773,10 +773,52 @@ function polyglotLocale(): string {
 	return typeof loc === 'object' && loc !== null && 'value' in loc ? (loc.value as string) : (loc as string)
 }
 
-// DocLookup pour le .d.ts : résout `doc.<subkey>` si la clé existe, sinon undefined (pas de JSDoc).
+// Fiche texte d'une arme/puce, pour le survol de Weapon.bazooka / Chip.acceleration dans l'éditeur
+// (les constantes WEAPON_*/CHIP_* n'ont pas de doc `const_*`). Reproduit l'essentiel de la fiche
+// visuelle de la page de doc (item-preview) : nom localisé, portée, coût, récupération (puces) et
+// effets, à partir des game data (LeekWars.weaponByName / LeekWars.chips) + i18n. Le rendu markdown
+// est fait par le survol Monaco (le générateur nettoie le HTML des libellés d'effets).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildItemFiche(constName: string): string | undefined {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const t = (k: string, p?: any) => String(i18n.t(k, p))
+	const te = i18n.global.te as (k: string) => boolean
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let tpl: any
+	let category: string
+	if (constName.startsWith('WEAPON_')) {
+		category = 'weapon'
+		tpl = (LeekWars.weaponByName as Record<string, unknown>)?.[constName.slice(7).toLowerCase()]
+	} else if (constName.startsWith('CHIP_')) {
+		category = 'chip'
+		const short = constName.slice(5).toLowerCase()
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		tpl = Object.values((LeekWars.chips ?? {}) as Record<string, any>).find((c) => c.name === short)
+	} else {
+		return undefined
+	}
+	if (!tpl) return undefined
+
+	const parts: string[] = []
+	parts.push(tpl.min_range === tpl.max_range ? t('effect.range_fixed', [tpl.min_range]) : t('effect.range', [tpl.min_range, tpl.max_range]))
+	if (te('characteristic.tp')) parts.push(`${tpl.cost} ${t('characteristic.tp')}`)
+	if (category === 'chip' && tpl.cooldown) parts.push(t('effect.cooldown', { turns: tpl.cooldown }))
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	for (const e of ((tpl.effects ?? []) as any[])) {
+		const key = 'effect.type_' + e.id + (e.value2 === 0 ? '_fixed' : '')
+		if (te(key)) parts.push(t(key, e.value2 === 0 ? [e.value1] : [e.value1, e.value1 + e.value2]))
+	}
+	const name = te(category + '.' + tpl.name) ? t(category + '.' + tpl.name) : constName
+	return `**${name}** — ${parts.join(' · ')}`
+}
+
+// DocLookup pour le .d.ts : résout `doc.<subkey>` si la clé existe. À défaut, pour une constante
+// d'arme/puce, génère une fiche à la volée. Sinon undefined (pas de JSDoc).
 function leekwarsDoc(subkey: string): string | undefined {
 	const key = 'doc.' + subkey
-	return (i18n.global.te as (k: string) => boolean)(key) ? String(i18n.t(key)) : undefined
+	if ((i18n.global.te as (k: string) => boolean)(key)) return String(i18n.t(key))
+	if (subkey.startsWith('const_WEAPON_') || subkey.startsWith('const_CHIP_')) return buildItemFiche(subkey.slice('const_'.length))
+	return undefined
 }
 
 // --- Language service TypeScript pour les IA polyglot (.ts / .js) ---
