@@ -63,13 +63,33 @@
 	// écrase temporairement farmer.season, ce qui afficherait aussi la bannière du potager).
 	const originalSeason: SeasonState | null = store.state.farmer?.season ?? null
 
+	// Fenêtres [mois (0-indexé), jour] par saison, pour dater l'aperçu (année courante,
+	// UTC comme le serveur). Pâques est variable : approximation raisonnable pour l'aperçu.
+	const WINDOWS: { [key: string]: [number, number, number, number] } = {
+		solstice:  [5, 21, 6, 21],
+		heatwave:  [7, 1, 7, 31],
+		halloween: [9, 24, 10, 1],
+		easter:    [3, 5, 3, 13],
+		christmas: [11, 1, 11, 25],
+	}
+	function previewDates(key: string): { start: number, end: number } {
+		const w = WINDOWS[key]
+		if (!w) return { start: 0, end: 0 }
+		const y = new Date().getUTCFullYear()
+		return {
+			start: Math.floor(Date.UTC(y, w[0], w[1], 0, 0, 0) / 1000),
+			end: Math.floor(Date.UTC(y, w[2], w[3], 23, 59, 59) / 1000),
+		}
+	}
+
 	// Aperçu local : on injecte une saison factice puis on ouvre le dialogue (monté
 	// globalement dans app.vue). active=true → texte de début, false → texte de fin.
 	// dialog=null pour ne PAS déclencher le mark-seen automatique d'app.vue.
 	function preview(key: string, active: boolean) {
 		const f = store.state.farmer
 		if (!f) return
-		f.season = { key, instance: key + '-preview', active, start: 0, end: 0, bonus: 50, dialog: null }
+		const { start, end } = previewDates(key)
+		f.season = { key, instance: key + '-preview', active, start, end, bonus: 50, dialog: null }
 		LeekWars.seasonDialog = true
 	}
 

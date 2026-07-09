@@ -58,19 +58,19 @@
 .season-title {
 	font-weight: bold;
 	font-size: 16px;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
 .season-bonus {
 	font-size: 13px;
 	opacity: 0.95;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
 .season-dates {
 	font-size: 13px;
 	font-weight: 500;
 	white-space: nowrap;
 	opacity: 0.95;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
 .season-info {
 	color: white;
