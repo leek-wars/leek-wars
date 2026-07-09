@@ -35,7 +35,15 @@ function renderJsdoc(lines: string[], indent: string): string {
 	return `${indent}/**\n` + lines.map((l) => `${indent} * ${l}`).join('\n') + `\n${indent} */`
 }
 
-// JSDoc d'une fonction plate : description + @param (noms de la signature émise) + @returns + @deprecated.
+// Lien Markdown vers la page de doc LeekScript du symbole (fonction ou constante). Monaco rend le
+// Markdown au survol -> lien cliquable qui ouvre /help/documentation/<symbole> (la doc du symbole,
+// dans la langue du joueur via son locale). Réutilise la doc LeekScript existante pour JS/TS/Python.
+function docLink(symbol: string): string {
+	return `📖 [Documentation](https://leekwars.com/help/documentation/${symbol})`
+}
+
+// JSDoc d'une fonction plate : description + @param (noms de la signature émise) + @returns +
+// @deprecated + lien vers la doc LeekScript du symbole.
 function buildFunctionJsdoc(doc: DocLookup, name: string, paramNames: string[], hasReturn: boolean, deprecated?: string): string | null {
 	const lines: string[] = []
 	const desc = doc('func_' + name)
@@ -49,7 +57,7 @@ function buildFunctionJsdoc(doc: DocLookup, name: string, paramNames: string[], 
 		if (r) lines.push(`@returns ${sanitizeDoc(r)}`)
 	}
 	if (deprecated) lines.push(`@deprecated ${sanitizeDoc(deprecated)}`)
-	if (!lines.length) return null
+	lines.push(docLink(name)) // toujours le lien doc, même sans description
 	return renderJsdoc(lines, '')
 }
 
@@ -126,7 +134,7 @@ const CONST_CONTAINERS: { prefix: string, container: string, sub?: string, item?
 // leurs constantes INLINE dans la déclaration de l'objet (cf renderInlineContainer).
 const CONST_OBJECT_CONTAINERS = new Set(['Fight', 'Field'])
 
-type ConstMember = { member: string, doc?: string, isInstance: boolean }
+type ConstMember = { member: string, full: string, doc?: string, isInstance: boolean }
 type ConstBucket = { direct: ConstMember[], subs: Record<string, ConstMember[]> }
 
 export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup): string {
@@ -159,13 +167,13 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
 		if (rule) {
 			const raw = name.slice(rule.prefix.length)
-			const entry: ConstMember = { member: rule.item ? camelCase(raw) : raw, doc: cdoc, isInstance: !!rule.item }
+			const entry: ConstMember = { member: rule.item ? camelCase(raw) : raw, full: name, doc: cdoc, isInstance: !!rule.item }
 			const b = bucketFor(rule.container)
 			if (rule.sub) (b.subs[rule.sub] ||= []).push(entry)
 			else b.direct.push(entry)
 			continue
 		}
-		if (cdoc) out.push(renderJsdoc([sanitizeDoc(cdoc)], ''))
+		out.push(renderJsdoc(cdoc ? [sanitizeDoc(cdoc), docLink(name)] : [docLink(name)], ''))
 		out.push(`declare const ${name}: ${tsType(c.type)};`)
 	}
 	out.push('')
@@ -205,14 +213,18 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		out.push(`declare function ${name}(${params.join(', ')}): ${tsType(f.return_type)};`)
 	}
 
+	// JSDoc d'un membre constante : description (si dispo) + lien vers la doc du symbole.
+	const constJsdoc = (m: ConstMember, indent: string): string => {
+		const jlines: string[] = []
+		if (m.doc) jlines.push(sanitizeDoc(m.doc))
+		jlines.push(docLink(m.full))
+		return renderJsdoc(jlines, indent)
+	}
 	// Rend un membre de namespace `const X: type;` (type = conteneur pour une instance, sinon number).
 	const memberLines = (m: ConstMember, container: string, indent: string): string[] => {
 		const safe = safeName(m.member)
 		if (!safe) return []
-		const lines: string[] = []
-		if (m.doc) lines.push(renderJsdoc([sanitizeDoc(m.doc)], indent))
-		lines.push(`${indent}const ${safe}: ${m.isInstance ? container : 'number'};`)
-		return lines
+		return [constJsdoc(m, indent), `${indent}const ${safe}: ${m.isInstance ? container : 'number'};`]
 	}
 	// Pour Fight/Field (objets const) : les constantes s'injectent INLINE (readonly ...: number).
 	const inlineContainer = (container: string): string => {
@@ -222,14 +234,14 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		const seen = new Set<string>()
 		for (const m of b.direct) {
 			const safe = safeName(m.member)
-			if (safe && !seen.has(safe)) { seen.add(safe); lines.push(`\treadonly ${safe}: number;`) }
+			if (safe && !seen.has(safe)) { seen.add(safe); lines.push(constJsdoc(m, '\t'), `\treadonly ${safe}: number;`) }
 		}
 		for (const sub of Object.keys(b.subs)) {
 			lines.push(`\treadonly ${sub}: {`)
 			const seenS = new Set<string>()
 			for (const m of b.subs[sub]) {
 				const safe = safeName(m.member)
-				if (safe && !seenS.has(safe)) { seenS.add(safe); lines.push(`\t\treadonly ${safe}: number;`) }
+				if (safe && !seenS.has(safe)) { seenS.add(safe); lines.push(constJsdoc(m, '\t\t'), `\t\treadonly ${safe}: number;`) }
 			}
 			lines.push('\t};')
 		}
@@ -278,10 +290,23 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 // Alias minuscules employés dans les pointeurs de DEPRECATED_FLAT -> nom de la classe/const déclarée.
 const OO_ALIAS: Record<string, string> = { me: 'Me', entity: 'Entity', cell: 'Cell', weapon: 'Weapon', chip: 'Chip' }
 
+// Membres de l'API objet qui n'ont PAS d'équivalent plat déprécié (donc absents de DEPRECATED_FLAT)
+// mais qui correspondent quand même à une fonction LS documentée : on les mappe à la main pour que
+// leur survol hérite de la description LS + du lien de doc. Ne lister QUE des fonctions ayant une
+// entrée `func_<name>` dans doc.*.lang (sinon pas de description ET page de doc potentiellement absente).
+const OBJECT_DOC_EXTRA: Record<string, string> = {
+	'Me.weaponCells': 'getCellsToUseWeapon', 'Me.chipCells': 'getCellsToUseChip',
+	'Me.weaponTargets': 'getWeaponTargets', 'Me.chipTargets': 'getChipTargets',
+	'Weapon.needsLos': 'weaponNeedLos', 'Chip.needsLos': 'chipNeedLos',
+	'Chip.features': 'getChipEffects', 'Cell.content': 'getCellContent', 'Cell.path': 'getPath',
+	'Fight.getNearestEnemyToCell': 'getNearestEnemyToCell', 'Fight.getNearestAllyToCell': 'getNearestAllyToCell',
+}
+
 // Construit la table membre objet -> nom de fonction LS, en inversant DEPRECATED_FLAT (qui encode
-// déjà la correspondance fonction plate -> forme objet). Clé = `Conteneur.membre` (désambiguïse les
-// membres homonymes entre classes, ex: Cell.distance vs Field.distance). Ainsi la doc de survol de
-// `Fight.getAliveEnemies()` réutilise `doc.func_getAliveEnemies`, source unique traduite en 18 langues.
+// déjà la correspondance fonction plate -> forme objet) puis en fusionnant OBJECT_DOC_EXTRA. Clé =
+// `Conteneur.membre` (désambiguïse les membres homonymes entre classes, ex: Cell.distance vs
+// Field.distance). Ainsi la doc de survol de `Fight.getAliveEnemies()` réutilise
+// `doc.func_getAliveEnemies`, source unique traduite en 18 langues.
 function buildMemberToLs(): Record<string, string> {
 	const map: Record<string, string> = {}
 	for (const lsName in DEPRECATED_FLAT) {
@@ -292,43 +317,70 @@ function buildMemberToLs(): Record<string, string> {
 			if (!(key in map)) map[key] = lsName // 1re occurrence gagne
 		}
 	}
+	for (const key in OBJECT_DOC_EXTRA) if (!(key in map)) map[key] = OBJECT_DOC_EXTRA[key]
 	return map
 }
 
+// Ajoute une ligne lien de doc dans le bloc de commentaire JSDoc écrit à la main qui se termine à
+// out[out.length-1] (repéré par son ouverture commentStart). Gère la forme courte `/** desc */`
+// (convertie en multi-lignes) et la forme multi-lignes (le lien s'insère avant la ligne ` */`).
+function injectDocLink(out: string[], commentStart: number, link: string): void {
+	const end = out.length - 1
+	if (commentStart === end) {
+		const m = out[end].match(/^(\s*)\/\*\*\s*([\s\S]*?)\s*\*\/\s*$/)
+		if (!m) return
+		const ind = m[1]
+		out[end] = `${ind}/**\n${ind} * ${m[2]}\n${ind} * ${link}\n${ind} */`
+	} else {
+		const ind = (out[end].match(/^(\s*)\*\//)?.[1] ?? '').replace(/\s$/, '')
+		out.splice(end, 0, `${ind} * ${link}`)
+	}
+}
+
 // Injecte des blocs JSDoc dans les déclarations objet statiques : pour chaque membre qui correspond
-// à une fonction LS documentée, on préfixe sa description (et @returns pour les méthodes non-void).
-// On ne touche pas les membres déjà commentés à la main (Effect, me...) ni ceux sans équivalent LS.
+// à une fonction LS documentée, on préfixe sa description (et @returns pour les méthodes non-void) +
+// un lien vers la page de doc. Si le membre a déjà un commentaire écrit à la main (Effect, me...),
+// on ne réécrit pas sa description mais on y insère quand même le lien de doc. Membres sans
+// équivalent LS : laissés tels quels.
 function annotateObjectApi(block: string, doc: DocLookup): string {
 	const memberToLs = buildMemberToLs()
 	const out: string[] = []
 	let container: string | null = null
 	let prevWasComment = false
+	let commentStart = -1 // index dans `out` de la ligne ouvrant le dernier bloc de commentaire
 	for (const line of block.split('\n')) {
+		const trimmed = line.trim()
 		const containerM = line.match(/^declare\s+(?:class|const)\s+([A-Za-z_]\w*)/)
 		if (containerM) {
 			container = containerM[1]
-			out.push(line)
-			prevWasComment = line.trim().endsWith('*/')
-			continue
-		}
-		// Membre : indentation + [readonly] identifiant suivi de `(` (méthode) ou `:` (propriété).
-		const memberM = line.match(/^(\s+)(?:readonly\s+)?([A-Za-z_]\w*)\s*[(:]/)
-		if (container && memberM && !prevWasComment) {
-			const [, indent, member] = memberM
-			const lsName = memberToLs[container + '.' + member]
-			const desc = lsName ? doc('func_' + lsName) : undefined
-			if (lsName && desc) {
-				const jlines = [sanitizeDoc(desc)]
-				const isMethod = line.slice(line.indexOf(member) + member.length).trimStart().startsWith('(')
-				if (isMethod && !/:\s*void\s*;?\s*$/.test(line)) {
-					const r = doc('func_' + lsName + '_return')
-					if (r) jlines.push(`@returns ${sanitizeDoc(r)}`)
+		} else {
+			// Membre : indentation + [readonly] identifiant suivi de `(` (méthode) ou `:` (propriété).
+			const memberM = line.match(/^(\s+)(?:readonly\s+)?([A-Za-z_]\w*)\s*[(:]/)
+			if (container && memberM) {
+				const [, indent, member] = memberM
+				const lsName = memberToLs[container + '.' + member]
+				if (lsName) {
+					if (prevWasComment && commentStart >= 0) {
+						// Déjà commenté à la main : on ajoute juste le lien de doc au bloc existant.
+						injectDocLink(out, commentStart, docLink(lsName))
+					} else if (!prevWasComment) {
+						const desc = doc('func_' + lsName)
+						const jlines: string[] = []
+						if (desc) jlines.push(sanitizeDoc(desc))
+						const isMethod = line.slice(line.indexOf(member) + member.length).trimStart().startsWith('(')
+						if (isMethod && !/:\s*void\s*;?\s*$/.test(line)) {
+							const r = doc('func_' + lsName + '_return')
+							if (r) jlines.push(`@returns ${sanitizeDoc(r)}`)
+						}
+						jlines.push(docLink(lsName))
+						out.push(renderJsdoc(jlines, indent))
+					}
 				}
-				out.push(renderJsdoc(jlines, indent))
 			}
 		}
+		if (trimmed.startsWith('/**')) commentStart = out.length // ligne d'ouverture (poussée juste après)
 		out.push(line)
-		prevWasComment = line.trim().endsWith('*/')
+		prevWasComment = trimmed.endsWith('*/')
 	}
 	return out.join('\n')
 }
