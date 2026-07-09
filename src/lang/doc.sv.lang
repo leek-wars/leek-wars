@@ -594,6 +594,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "Målcellen.",
 	"func_getWeaponEffectiveArea_arg_3": "Cellen från vilken vapnet avfyras.",
 	"func_getWeaponEffectiveArea_return": "Arrayen som innehåller id för alla celler som kommer att påverkas.",
+	"func_getWeaponEffects": "Returnerar effekterna av vapnet <b>vapnet</b>.",
 	"func_getWeaponPassiveEffects": "Returnerar de passiva effekterna av vapnets <b>vapnet</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "Id för vapnet vars passiva effekter kommer att returneras.",
 	"func_getWeaponPassiveEffects_return": "En array som innehåller effekterna av <b>vapnet</b> vapnet. Varje effekt är i sig en array av formen\n[typ, min, max, vändningar, mål, modifierare]. Dessa effekter är desamma som de som returneras av #getWeaponEffects.",

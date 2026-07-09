@@ -591,6 +591,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "Die Zielzelle.",
 	"func_getWeaponEffectiveArea_arg_3": "Die Zelle, aus der die Waffe abgefeuert wird.",
 	"func_getWeaponEffectiveArea_return": "Das Array, das die IDs aller betroffenen Zellen enthält.",
+	"func_getWeaponEffects": "Gibt die Effekte der Waffe <b>weapon</b> zurück.",
 	"func_getWeaponPassiveEffects": "Gibt die passiven Effekte der Waffe <b>weapon</b> zurück.",
 	"func_getWeaponPassiveEffects_arg_1": "Die ID der Waffe, deren passive Effekte zurückgegeben werden.",
 	"func_getWeaponPassiveEffects_return": "Ein Array, das die Effekte der <b>weapon</b> Waffe enthält. Jeder Effekt ist selbst ein Array des Formulars\n[Typ, Min., Max., Wendungen, Ziele, Modifikatoren]. Diese Effekte sind dieselben wie die von #getWeaponEffects zurückgegebenen.",

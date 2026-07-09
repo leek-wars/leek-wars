@@ -601,6 +601,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "La cellula bersaglio.",
 	"func_getWeaponEffectiveArea_arg_3": "La cella da cui viene sparata l'arma.",
 	"func_getWeaponEffectiveArea_return": "L'array contenente gli ID di tutte le celle interessate.",
+	"func_getWeaponEffects": "Restituisce gli effetti dell'arma <b>weapon</b>.",
 	"func_getWeaponPassiveEffects": "Restituisce gli effetti passivi dell'arma <b>weapon</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "L'id dell'arma i cui effetti passivi verranno restituiti.",
 	"func_getWeaponPassiveEffects_return": "Un array contenente gli effetti dell'<b>weapon</b> dell'arma. Ogni effetto è esso stesso un array della forma\n[tipo, minimo, massimo, turni, bersagli, modificatori]. Questi effetti sono gli stessi di quelli restituiti da #getWeaponEffects.",

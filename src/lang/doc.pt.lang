@@ -591,6 +591,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "A célula alvo.",
 	"func_getWeaponEffectiveArea_arg_3": "A célula de onde a arma é disparada.",
 	"func_getWeaponEffectiveArea_return": "A matriz contendo os ids de todas as células que serão afetadas.",
+	"func_getWeaponEffects": "Retorna os efeitos da arma <b>weapon</b>.",
 	"func_getWeaponPassiveEffects": "Retorna os efeitos passivos da arma <b>weapon</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "O id da arma cujos efeitos passivos serão devolvidos.",
 	"func_getWeaponPassiveEffects_return": "Uma matriz contendo os efeitos da arma <b>weapon</b>. Cada efeito é em si uma matriz da forma\n[tipo, mínimo, máximo, turnos, alvos, modificadores]. Esses efeitos são os mesmos retornados por #getWeaponEffects.",

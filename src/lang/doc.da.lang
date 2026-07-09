@@ -591,6 +591,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "Målcellen.",
 	"func_getWeaponEffectiveArea_arg_3": "Cellen, hvorfra våbnet affyres.",
 	"func_getWeaponEffectiveArea_return": "Arrayet, der indeholder id'erne for alle celler, der vil blive påvirket.",
+	"func_getWeaponEffects": "Returnerer effekterne af våbenets <b>våben</b>.",
 	"func_getWeaponPassiveEffects": "Returnerer de passive effekter af våbenets <b>våben</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "Id'et for det våben, hvis passive effekter vil blive returneret.",
 	"func_getWeaponPassiveEffects_return": "Et array, der indeholder effekterne af <b>våben</b> våbnet. Hver effekt er i sig selv en række af formen\n[type, min, max, drejninger, mål, modifikatorer]. Disse effekter er de samme som dem, der returneres af #getWeaponEffects.",

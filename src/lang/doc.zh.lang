@@ -596,6 +596,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "目标细胞。",
 	"func_getWeaponEffectiveArea_arg_3": "发射武器的单元格。",
 	"func_getWeaponEffectiveArea_return": "包含将受影响的所有单元格的 ID 的数组。",
+	"func_getWeaponEffects": "返回武器<b>武器</b>的效果。",
 	"func_getWeaponPassiveEffects": "返回武器<b>武器</b>的被动效果。",
 	"func_getWeaponPassiveEffects_arg_1": "将返回其被动效果的武器的 id。",
 	"func_getWeaponPassiveEffects_return": "包含<b>武器</b>武器效果的数组。每个效果本身都是一个数组\n[类型、最小值、最大值、转弯、目标、修饰符]。这些效果与 #getWeaponEffects 返回的效果相同。",

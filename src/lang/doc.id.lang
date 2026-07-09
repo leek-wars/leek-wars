@@ -596,6 +596,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "Sel sasaran.",
 	"func_getWeaponEffectiveArea_arg_3": "Sel tempat senjata ditembakkan.",
 	"func_getWeaponEffectiveArea_return": "Larik yang berisi id dari semua sel yang akan terpengaruh.",
+	"func_getWeaponEffects": "Mengembalikan efek senjata <b>senjata</b>.",
 	"func_getWeaponPassiveEffects": "Mengembalikan efek pasif senjata <b>senjata</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "Id senjata yang efek pasifnya akan dikembalikan.",
 	"func_getWeaponPassiveEffects_return": "Larik yang berisi efek senjata <b>senjata</b>. Setiap efek itu sendiri merupakan larik dari formulir\n[ketik, min, maks, belokan, target, pengubah]. Efek ini sama dengan yang dikembalikan oleh #getWeaponEffects.",

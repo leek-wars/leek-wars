@@ -629,6 +629,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "La cellule cible.",
 	"func_getWeaponEffectiveArea_arg_3": "La cellule depuis laquelle l'arme est utilisée.",
 	"func_getWeaponEffectiveArea_return": "Le tableau contenant les ids de toutes les cellules qui seront affectées.",
+	"func_getWeaponEffects": "Renvoie les effets de l'arme <b>weapon</b>.",
 	"func_getWeaponPassiveEffects": "Renvoie les effets passifs de l'arme <b>weapon</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "L'id de l'arme dont les effets passifs seront retournés.",
 	"func_getWeaponPassiveEffects_return": "Un tableau contenant les effets de l'arme <b>weapon</b>. Chaque effet est lui-même un tableau de la forme\n[type, min, max, turns, targets, modifiers]. Ces effets sont les mêmes que ceux renvoyés par #getWeaponEffects.",

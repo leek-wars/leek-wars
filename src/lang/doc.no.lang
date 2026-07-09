@@ -640,6 +640,7 @@
 	"func_getWeaponName": "Returnerer navnet på <b>våpenet</b>-våpenet.",
 	"func_getWeaponName_arg_1": "ID-en til våpenet hvis navn vil bli returnert.",
 	"func_getWeaponName_return": "Navnet på <b>våpenet</b>-våpenet.",
+	"func_getWeaponEffects": "Returnerer effektene av våpenet <b>våpenet</b>.",
 	"func_getWeaponPassiveEffects": "Returnerer de passive effektene av våpenet <b>våpenet</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "ID-en til våpenet hvis passive effekter vil bli returnert.",
 	"func_getWeaponPassiveEffects_return": "En matrise som inneholder effektene av <b>våpenet</b>-våpenet. Hver effekt er i seg selv en rekke av formen\n[type, min, maks, svinger, mål, modifikatorer]. Disse effektene er de samme som returneres av #getWeaponEffects.",

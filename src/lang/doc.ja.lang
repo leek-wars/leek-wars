@@ -596,6 +596,7 @@
 	"func_getWeaponEffectiveArea_arg_2": "ターゲット セル。",
 	"func_getWeaponEffectiveArea_arg_3": "武器が発射されるセル。",
 	"func_getWeaponEffectiveArea_return": "影響を受けるすべてのセルの ID を含む配列。",
+	"func_getWeaponEffects": "武器の<b>武器</b>の効果を返します。",
 	"func_getWeaponPassiveEffects": "武器の<b>武器</b>のパッシブ効果を返します。",
 	"func_getWeaponPassiveEffects_arg_1": "パッシブ効果が返される武器の ID。",
 	"func_getWeaponPassiveEffects_return": "<b>武器</b>武器の効果を含む配列。各効果は、それ自体が次の形式の配列です。\n[タイプ、最小、最大、ターン、ターゲット、修飾子]。これらの効果は、#getWeaponEffects によって返されるものと同じです。",

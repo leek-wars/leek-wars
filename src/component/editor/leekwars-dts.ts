@@ -298,7 +298,8 @@ const OBJECT_DOC_EXTRA: Record<string, string> = {
 	'Me.weaponCells': 'getCellsToUseWeapon', 'Me.chipCells': 'getCellsToUseChip',
 	'Me.weaponTargets': 'getWeaponTargets', 'Me.chipTargets': 'getChipTargets',
 	'Weapon.needsLos': 'weaponNeedLos', 'Chip.needsLos': 'chipNeedLos',
-	'Chip.features': 'getChipEffects', 'Cell.content': 'getCellContent', 'Cell.path': 'getPath',
+	'Weapon.features': 'getWeaponEffects', 'Chip.features': 'getChipEffects',
+	'Cell.content': 'getCellContent', 'Cell.path': 'getPath',
 	'Fight.getNearestEnemyToCell': 'getNearestEnemyToCell', 'Fight.getNearestAllyToCell': 'getNearestAllyToCell',
 }
 
@@ -321,19 +322,22 @@ function buildMemberToLs(): Record<string, string> {
 	return map
 }
 
-// Ajoute une ligne lien de doc dans le bloc de commentaire JSDoc écrit à la main qui se termine à
-// out[out.length-1] (repéré par son ouverture commentStart). Gère la forme courte `/** desc */`
-// (convertie en multi-lignes) et la forme multi-lignes (le lien s'insère avant la ligne ` */`).
-function injectDocLink(out: string[], commentStart: number, link: string): void {
+// Ajoute des lignes JSDoc (description LS, @returns, lien de doc...) dans le bloc de commentaire écrit
+// à la main qui se termine à out[out.length-1] (repéré par son ouverture commentStart). Gère la forme
+// courte `/** desc */` (convertie en multi-lignes) et la forme multi-lignes (les lignes s'insèrent
+// avant la ligne ` */`). Ainsi un membre déjà commenté conserve sa prose ET reçoit la doc LS complète.
+function injectJsdocLines(out: string[], commentStart: number, extra: string[]): void {
+	if (!extra.length) return
 	const end = out.length - 1
 	if (commentStart === end) {
 		const m = out[end].match(/^(\s*)\/\*\*\s*([\s\S]*?)\s*\*\/\s*$/)
 		if (!m) return
 		const ind = m[1]
-		out[end] = `${ind}/**\n${ind} * ${m[2]}\n${ind} * ${link}\n${ind} */`
+		const body = [m[2], ...extra].map((l) => `${ind} * ${l}`).join('\n')
+		out[end] = `${ind}/**\n${body}\n${ind} */`
 	} else {
 		const ind = (out[end].match(/^(\s*)\*\//)?.[1] ?? '').replace(/\s$/, '')
-		out.splice(end, 0, `${ind} * ${link}`)
+		out.splice(end, 0, ...extra.map((l) => `${ind} * ${l}`))
 	}
 }
 
@@ -360,21 +364,20 @@ function annotateObjectApi(block: string, doc: DocLookup): string {
 				const [, indent, member] = memberM
 				const lsName = memberToLs[container + '.' + member]
 				if (lsName) {
-					if (prevWasComment && commentStart >= 0) {
-						// Déjà commenté à la main : on ajoute juste le lien de doc au bloc existant.
-						injectDocLink(out, commentStart, docLink(lsName))
-					} else if (!prevWasComment) {
-						const desc = doc('func_' + lsName)
-						const jlines: string[] = []
-						if (desc) jlines.push(sanitizeDoc(desc))
-						const isMethod = line.slice(line.indexOf(member) + member.length).trimStart().startsWith('(')
-						if (isMethod && !/:\s*void\s*;?\s*$/.test(line)) {
-							const r = doc('func_' + lsName + '_return')
-							if (r) jlines.push(`@returns ${sanitizeDoc(r)}`)
-						}
-						jlines.push(docLink(lsName))
-						out.push(renderJsdoc(jlines, indent))
+					// Doc LS complète du symbole : description + @returns (méthode non-void) + lien de doc.
+					const desc = doc('func_' + lsName)
+					const lsLines: string[] = []
+					if (desc) lsLines.push(sanitizeDoc(desc))
+					const isMethod = line.slice(line.indexOf(member) + member.length).trimStart().startsWith('(')
+					if (isMethod && !/:\s*void\s*;?\s*$/.test(line)) {
+						const r = doc('func_' + lsName + '_return')
+						if (r) lsLines.push(`@returns ${sanitizeDoc(r)}`)
 					}
+					lsLines.push(docLink(lsName))
+					// Déjà commenté à la main : on fusionne (prose conservée + doc LS ajoutée). Sinon on
+					// génère le bloc directement.
+					if (prevWasComment && commentStart >= 0) injectJsdocLines(out, commentStart, lsLines)
+					else if (!prevWasComment) out.push(renderJsdoc(lsLines, indent))
 				}
 			}
 		}
