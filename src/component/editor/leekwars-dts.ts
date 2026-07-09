@@ -427,9 +427,13 @@ declare class Cell {
 	readonly empty: boolean;
 	readonly obstacle: boolean;
 	readonly entity: Entity | null;
+	/** Contenu de la case (Cell.Type.EMPTY/PLAYER/ENTITY/OBSTACLE). */
+	readonly content: number;
 	distance(target: CellLike): number;
 	pathLength(target: CellLike): number;
 	lineOfSight(target: CellLike): boolean;
+	/** Chemin (liste de cellules) jusqu'à la cible, en évitant 'ignoredCells'. */
+	path(target: CellLike, ignoredCells?: CellLike[]): Cell[];
 }
 
 /** Base commune aux armes et puces. Porte les constantes partagées (Item.LaunchType, Item.Area). */
@@ -550,6 +554,22 @@ declare class Me extends Entity {
 	canUseWeapon(target: EntityLike): number;
 	canUseChip(chip: ChipLike, target: EntityLike): number;
 	resurrect(target: EntityLike, cell: CellLike): number;
+	/** Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target'. */
+	cellToUseWeapon(target: EntityLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell | null;
+	/** Toutes les cellules d'où utiliser l'arme sur 'target'. */
+	cellsToUseWeapon(target: EntityLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell[];
+	/** Cellule d'où utiliser l'arme sur la case 'cell'. */
+	cellToUseWeaponOnCell(cell: CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell | null;
+	cellsToUseWeaponOnCell(cell: CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell[];
+	/** Cellule d'où utiliser 'chip' sur 'target'. */
+	cellToUseChip(chip: ChipLike, target: EntityLike, ignoredCells?: CellLike[]): Cell | null;
+	cellsToUseChip(chip: ChipLike, target: EntityLike, ignoredCells?: CellLike[]): Cell[];
+	cellToUseChipOnCell(chip: ChipLike, cell: CellLike, ignoredCells?: CellLike[]): Cell | null;
+	cellsToUseChipOnCell(chip: ChipLike, cell: CellLike, ignoredCells?: CellLike[]): Cell[];
+	/** Entités touchées si l'arme (courante ou 'weapon') est utilisée sur la case 'cell'. */
+	weaponTargets(cell: CellLike, weapon?: WeaponLike): Entity[];
+	/** Entités touchées si 'chip' est utilisée sur la case 'cell'. */
+	chipTargets(chip: ChipLike, cell: CellLike): Entity[];
 }
 
 /** L'IA courante. */
@@ -582,6 +602,9 @@ declare const Fight: {
 	getAliveAlliesCount(): number;
 	getAlliedTurret(): Entity | null;
 	getEnemyTurret(): Entity | null;
+	/** Entité alliée/ennemie la plus proche d'une CELLULE. */
+	getNearestEnemyToCell(cell: CellLike): Entity | null;
+	getNearestAllyToCell(cell: CellLike): Entity | null;
 };
 
 declare const Field: {
@@ -592,6 +615,8 @@ declare const Field: {
 	cellDistance(a: CellLike, b: CellLike): number;
 	pathLength(a: CellLike, b: CellLike): number;
 	lineOfSight(a: CellLike, b: CellLike): boolean;
+	/** Chemin (liste de cellules) de 'from' à 'to', en évitant 'ignoredCells'. */
+	path(from: CellLike, to: CellLike, ignoredCells?: CellLike[]): Cell[];
 };
 
 declare const Debug: {
