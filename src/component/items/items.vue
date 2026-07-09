@@ -19,7 +19,7 @@
 					<span v-for="(items, l) in levels" :key="l" class="level">
 						<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
 						<template v-for="item in items">
-							<div v-if="item.trophy && (!(item.trophy.id in trophies) || !trophies[item.trophy.id].unlocked)" :key="item.id" class="locked">?</div>
+							<div v-if="lockedByTrophy(item)" :key="item.id" class="locked">?</div>
 							<item v-else :key="item.id" :item="item" />
 						</template>
 					</span>
@@ -57,6 +57,15 @@ const breadcrumb_items = computed(() => [
 const items = computed<ItemTemplate[]>(() => (Object.values(LeekWars.items) as ItemTemplate[])
 	.filter((i) => !ignoredItems.has(i.id) && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP || i.type === ItemType.COMPONENT))
 	.sort((a, b) => a.level - b.level))
+
+// data/get-all renvoie trophy comme id numérique brut (colonne BDD),
+// contrairement à market/get-item-templates qui renvoie un objet {id, name}.
+function lockedByTrophy(item: ItemTemplate): boolean {
+	if (!item.trophy) { return false }
+	const id = typeof item.trophy === 'number' ? item.trophy : item.trophy.id
+	const trophy = trophies.value[id]
+	return !trophy || !trophy.unlocked
+}
 
 const levels = computed(() => {
 	const weaponsAdded = new Set<number>()

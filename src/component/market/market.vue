@@ -166,10 +166,10 @@
 								<item-preview v-if="selectedItem.type == ItemType.FIGHT_PACK" :item="selectedItem" />
 								<item-preview v-else :item="LeekWars.items[selectedItem.id]" />
 
-								<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
-									<trophy-icon :code="selectedItem.trophy.name" />
+								<router-link v-if="selectedItem.trophy" :to="'/trophy/' + trophyName(selectedItem.trophy)" class="trophy">
+									<trophy-icon :code="trophyName(selectedItem.trophy)" />
 									<i18n-t keypath="unlocked_with" tag="span">
-										<template #trophy><b>{{ $t('trophy.' + selectedItem.trophy.name) }}</b></template>
+										<template #trophy><b>{{ $t('trophy.' + trophyName(selectedItem.trophy)) }}</b></template>
 									</i18n-t>
 								</router-link>
 
@@ -317,9 +317,9 @@
 				<item-preview :item="LeekWars.items[unseenItem.id]" />
 
 				<div v-if="unseenItem.trophy" class="card trophy">
-					<trophy-icon :code="unseenItem.trophy.name" />
+					<trophy-icon :code="trophyName(unseenItem.trophy)" />
 					<i18n-t keypath="unlocked_with" tag="span">
-						<template #trophy><b>{{ $t('trophy.' + unseenItem.trophy.name) }}</b></template>
+						<template #trophy><b>{{ $t('trophy.' + trophyName(unseenItem.trophy)) }}</b></template>
 					</i18n-t>
 				</div>
 			</div>
@@ -355,6 +355,11 @@ const t = useNamespacedT('market')
 	const router = useRouter()
 
 	const effectTypes = Object.values(EffectTypeMarket).filter(v => typeof v === 'number') as number[]
+
+	// market/get-item-templates renvoie toujours trophy en objet {id, name}
+	function trophyName(trophy: ItemTemplate['trophy']): string {
+		return typeof trophy === 'object' && trophy ? trophy.name : ''
+	}
 
 	const selectedItem = ref<ItemTemplate | null>(null)
 	const items = reactive<{[key: string]: ItemTemplate}>({})

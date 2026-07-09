@@ -35,7 +35,8 @@ class ItemTemplate {
 	public buyable!: boolean
 	public public!: boolean
 	public singleton!: boolean
-	public trophy!: { id: number, name: string, code?: string } | null
+	// id numérique brut via data/get-all, objet via market/get-item-templates
+	public trophy!: number | { id: number, name: string, code?: string } | null
 	public market!: boolean
 	public buyable_crystals!: boolean
 	public rarity!: number
