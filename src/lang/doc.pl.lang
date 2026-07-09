@@ -595,6 +595,7 @@
 	"func_getWeaponEffectiveArea_arg_3": "Cela, z której strzela broń.",
 	"func_getWeaponEffectiveArea_return": "Tablica zawierająca identyfikatory wszystkich komórek, których to dotyczy.",
 	"func_getWeaponEffects": "Zwraca efekty broni <b>weapon</b>.",
+	"func_getWeaponEffects_return": "Tablica zawierająca efekty broni <b>weapon</b>. Każdy efekt sam w sobie jest tablicą formy\n[typ, min, max, tury, cele, modyfikatory].",
 	"func_getWeaponPassiveEffects": "Zwraca pasywne efekty broni <b>weapon</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "Identyfikator broni, której efekty pasywne zostaną zwrócone.",
 	"func_getWeaponPassiveEffects_return": "Tablica zawierająca efekty broni <b>weapon</b>. Każdy efekt sam w sobie jest tablicą formy\n[typ, min, max, tury, cele, modyfikatory]. Te efekty są takie same, jak te zwracane przez #getWeaponEffects.",

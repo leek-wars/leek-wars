@@ -615,6 +615,7 @@
 	"func_getWeaponLaunchType_arg_1": "The id of the weapon whose launch mode will be returned. By default your currently equipped weapon.",
 	"func_getWeaponLaunchType_return": "Given <b>weapon</b>'s launch mode.",
 	"func_getWeaponEffects": "Lists a <b>weapon</b>'s effects.",
+	"func_getWeaponEffects_return": "An array containing the effects of weapon <b>weapon</b>. Each effect is itself an array of the form [type, min, max, turns, targets, modifiers].",
 	"func_getWeaponPassiveEffects": "Lists a <b>weapon</b>'s passive effects.",
 	"func_getWeaponPassiveEffects_arg_1": "Desired weapon.",
 	"func_getWeaponPassiveEffects_return": "An array containing the effects of weapon <b>weapon</b>. Each effect is itself an array of the form [type, min, max, turns, targets, modifiers].",

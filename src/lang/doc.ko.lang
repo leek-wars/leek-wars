@@ -599,6 +599,7 @@
 	"func_getWeaponEffectiveArea_arg_3": "무기가 발사되는 셀입니다.",
 	"func_getWeaponEffectiveArea_return": "영향을 받는 모든 셀의 ID를 포함하는 배열입니다.",
 	"func_getWeaponEffects": "무기 <b>무기</b>의 효과를 반환합니다.",
+	"func_getWeaponEffects_return": "<b>weapon</b> 무기의 효과를 포함하는 배열입니다. 각 효과는 그 자체로 다음 형식의 배열입니다.\n[유형, 최소, 최대, 회전, 대상, 수정자].",
 	"func_getWeaponPassiveEffects": "무기 <b>무기</b>의 패시브 효과를 반환합니다.",
 	"func_getWeaponPassiveEffects_arg_1": "패시브 효과를 반환할 무기의 id.",
 	"func_getWeaponPassiveEffects_return": "<b>weapon</b> 무기의 효과를 포함하는 배열입니다. 각 효과는 그 자체로 다음 형식의 배열입니다.\n[유형, 최소, 최대, 회전, 대상, 수정자]. 이러한 효과는 #getWeaponEffects에서 반환된 것과 동일합니다.",

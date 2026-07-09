@@ -358,10 +358,10 @@ function lsFullDocLines(doc: DocLookup, lsName: string, lsFun: LSFunction | unde
 		const d = doc(`func_${lsName}_arg_${i + 1}`)
 		if (d) lines.push(`@param ${names[i]} ${optional[i] ? '(optionnel) ' : ''}${sanitizeDoc(d)}`)
 	}
-	if (lsFun && lsFun.return_type !== 0) {
-		const r = doc('func_' + lsName + '_return')
-		if (r) lines.push(`@returns ${sanitizeDoc(r)}`)
-	}
+	// @returns dès qu'une doc de retour existe (indépendant de la présence de la fonction dans les game
+	// data : certains helpers objet mappent une fonction non listée mais documentée).
+	const r = doc('func_' + lsName + '_return')
+	if (r) lines.push(`@returns ${sanitizeDoc(r)}`)
 	lines.push(docLink(lsName))
 	return lines
 }

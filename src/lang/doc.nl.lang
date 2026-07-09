@@ -595,6 +595,7 @@
 	"func_getWeaponEffectiveArea_arg_3": "De cel van waaruit het wapen wordt afgevuurd.",
 	"func_getWeaponEffectiveArea_return": "De array met de id's van alle cellen die worden beïnvloed.",
 	"func_getWeaponEffects": "Retourneert de effecten van het wapen <b>weapon</b>.",
+	"func_getWeaponEffects_return": "Een array met de effecten van het <b>weapon</b> wapen. Elk effect is zelf een array van het formulier\n[type, min, max, bochten, doelen, modifiers].",
 	"func_getWeaponPassiveEffects": "Retourneert de passieve effecten van het wapen <b>weapon</b>.",
 	"func_getWeaponPassiveEffects_arg_1": "De id van het wapen waarvan de passieve effecten worden geretourneerd.",
 	"func_getWeaponPassiveEffects_return": "Een array met de effecten van het <b>weapon</b> wapen. Elk effect is zelf een array van het formulier\n[type, min, max, bochten, doelen, modifiers]. Deze effecten zijn dezelfde als die worden geretourneerd door #getWeaponEffects.",

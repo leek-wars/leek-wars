@@ -592,6 +592,7 @@
 	"func_getWeaponEffectiveArea_arg_3": "Solu, josta ase ammutaan.",
 	"func_getWeaponEffectiveArea_return": "Taulukko, joka sisältää kaikkien vaikutusten kohteena olevien solujen tunnukset.",
 	"func_getWeaponEffects": "Palauttaa aseen <b>aseen</b> vaikutukset.",
+	"func_getWeaponEffects_return": "Joukko, joka sisältää <b>ase</b> aseen vaikutukset. Jokainen tehoste on itsessään joukko muotoja\n[tyyppi, min, maksimi, käännökset, kohteet, muuntajat].",
 	"func_getWeaponPassiveEffects": "Palauttaa aseen <b>aseen</b> passiiviset vaikutukset.",
 	"func_getWeaponPassiveEffects_arg_1": "Sen aseen tunnus, jonka passiiviset vaikutukset palautetaan.",
 	"func_getWeaponPassiveEffects_return": "Joukko, joka sisältää <b>ase</b> aseen vaikutukset. Jokainen tehoste on itsessään joukko muotoja\n[tyyppi, min, maksimi, käännökset, kohteet, muuntajat]. Nämä tehosteet ovat samat kuin #getWeaponEffectsin palauttamat tehosteet.",
