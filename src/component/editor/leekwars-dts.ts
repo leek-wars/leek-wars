@@ -452,7 +452,7 @@ declare class Weapon extends Item {
 	readonly launchType: number;
 	readonly maxUses: number;
 	readonly inline: boolean;
-	needLos(): boolean;
+	readonly needsLos: boolean;
 	/** Caractéristiques déclarées de l'arme (dégâts, poison, téléport...). cf Feature. */
 	readonly features: Feature[];
 }
@@ -470,7 +470,7 @@ declare class Chip extends Item {
 	readonly launchType: number;
 	readonly maxUses: number;
 	readonly inline: boolean;
-	needLos(): boolean;
+	readonly needsLos: boolean;
 	/** Caractéristiques déclarées de la puce. cf Feature. */
 	readonly features: Feature[];
 }
@@ -554,18 +554,14 @@ declare class Me extends Entity {
 	canUseWeapon(target: EntityLike): number;
 	canUseChip(chip: ChipLike, target: EntityLike): number;
 	resurrect(target: EntityLike, cell: CellLike): number;
-	/** Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target'. */
-	cellToUseWeapon(target: EntityLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell | null;
+	/** Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target' (une entité OU une case). */
+	weaponCell(target: EntityLike | CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell | null;
 	/** Toutes les cellules d'où utiliser l'arme sur 'target'. */
-	cellsToUseWeapon(target: EntityLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell[];
-	/** Cellule d'où utiliser l'arme sur la case 'cell'. */
-	cellToUseWeaponOnCell(cell: CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell | null;
-	cellsToUseWeaponOnCell(cell: CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell[];
-	/** Cellule d'où utiliser 'chip' sur 'target'. */
-	cellToUseChip(chip: ChipLike, target: EntityLike, ignoredCells?: CellLike[]): Cell | null;
-	cellsToUseChip(chip: ChipLike, target: EntityLike, ignoredCells?: CellLike[]): Cell[];
-	cellToUseChipOnCell(chip: ChipLike, cell: CellLike, ignoredCells?: CellLike[]): Cell | null;
-	cellsToUseChipOnCell(chip: ChipLike, cell: CellLike, ignoredCells?: CellLike[]): Cell[];
+	weaponCells(target: EntityLike | CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell[];
+	/** Cellule d'où utiliser 'chip' sur 'target' (une entité OU une case). */
+	chipCell(chip: ChipLike, target: EntityLike | CellLike, ignoredCells?: CellLike[]): Cell | null;
+	/** Toutes les cellules d'où utiliser 'chip' sur 'target'. */
+	chipCells(chip: ChipLike, target: EntityLike | CellLike, ignoredCells?: CellLike[]): Cell[];
 	/** Entités touchées si l'arme (courante ou 'weapon') est utilisée sur la case 'cell'. */
 	weaponTargets(cell: CellLike, weapon?: WeaponLike): Entity[];
 	/** Entités touchées si 'chip' est utilisée sur la case 'cell'. */
@@ -608,7 +604,7 @@ declare const Fight: {
 };
 
 declare const Field: {
-	readonly mapType: number;
+	readonly type: number;
 	cellFromXY(x: number, y: number): Cell | null;
 	getObstacles(): Cell[];
 	distance(a: CellLike, b: CellLike): number;
