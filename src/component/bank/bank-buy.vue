@@ -128,10 +128,14 @@ async function initStripe() {
 		if (token !== stripeInitToken || !stripe) return
 		elements = stripe.elements({ clientSecret: r.client_secret, appearance: stripeAppearance() })
 		const paymentElement = elements.create('payment')
+		// On n'affiche le bouton Payer qu'une fois l'event 'ready' de l'Element reçu :
+		// stripeReady calé sur le mount() seul laissait passer un clic alors que l'iframe
+		// Stripe n'était pas chargée (réseau instable) → confirmPayment IntegrationError (#4379).
+		paymentElement.on('ready', () => { if (token === stripeInitToken) stripeReady.value = true })
+		paymentElement.on('loaderror', (e) => { if (token === stripeInitToken) stripeError.value = e.error?.message || t('card_error_generic') })
 		await nextTick()
 		if (token !== stripeInitToken) return
 		paymentElement.mount('#stripe-payment-element')
-		stripeReady.value = true
 	} catch (err) {
 		if (token === stripeInitToken) stripeError.value = (err as { error?: string } | null)?.error === 'stripe_not_configured' ? t('payment_unavailable') : t('card_error_generic')
 	} finally {
@@ -143,13 +147,20 @@ async function payWithStripe() {
 	if (!stripe || !elements) return
 	stripePaying.value = true
 	stripeError.value = ''
-	const { error } = await stripe.confirmPayment({
-		elements,
-		// redirect 'if_required' : les cartes se valident sans quitter la page ;
-		// les moyens à redirection (wallets) reviennent sur return_url.
-		confirmParams: { return_url: window.location.origin + '/bank/buy/' + pack.value },
-		redirect: 'if_required'
-	})
+	let error
+	try {
+		// confirmPayment peut lancer une IntegrationError (Element non monté/ready) au lieu
+		// de la retourner : on capte le throw pour débloquer le bouton plutôt que crasher (#4379).
+		;({ error } = await stripe.confirmPayment({
+			elements,
+			// redirect 'if_required' : les cartes se valident sans quitter la page ;
+			// les moyens à redirection (wallets) reviennent sur return_url.
+			confirmParams: { return_url: window.location.origin + '/bank/buy/' + pack.value },
+			redirect: 'if_required'
+		}))
+	} catch (err) {
+		error = { message: (err as { message?: string } | null)?.message || t('card_error_generic') }
+	}
 	if (error) {
 		stripeError.value = error.message || t('card_error_generic')
 		stripePaying.value = false
