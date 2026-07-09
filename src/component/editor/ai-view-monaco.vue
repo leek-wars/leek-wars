@@ -37,6 +37,7 @@ import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
 import Javadoc from './javadoc.vue'
 import { FUNCTIONS } from '@/model/functions'
+import { buildConstantPathMap } from './leekwars-dts'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import Code from '@/component/app/code.vue'
 import { parseConflicts, hasConflictMarkers, buildConflictDecorations, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
@@ -46,6 +47,37 @@ defineOptions({ name: 'AiViewMonaco' })
 
 const { t } = useI18n()
 const editorT = useNamespacedT('editor')
+
+// Résolution du symbole survolé vers une fiche de doc (constante / fonction). En LeekScript le texte
+// de survol est le nom nu (ex "WEAPON_BAZOOKA") ; en polyglot (JS/TS) c'est un quick-info TS (ex
+// "const Weapon.bazooka: Weapon") qu'on ramène au nom plat via la map notation-objet -> constante.
+let _constPathMap: Map<string, string> | null = null
+function constPathMap(): Map<string, string> {
+	if (!_constPathMap || _constPathMap.size === 0) _constPathMap = buildConstantPathMap(LeekWars.constants ?? [])
+	return _constPathMap
+}
+function extractHoverSymbol(text: string): string | null {
+	const t2 = text.trim()
+	const kw = t2.match(/^(?:\(\w+\)\s*)?(?:const|let|var|function|readonly|namespace)\s+([\w.$]+)/)
+	if (kw) return kw[1]
+	const bare = t2.match(/^(?:\(\w+\)\s*)?([\w.$]+)/)
+	return bare ? bare[1] : null
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveHoverDoc(text: string): { fun?: any, constant?: any } {
+	let fun = FUNCTIONS.find((f) => f.name === text)
+	let constant = LeekWars.constants.find((c) => c.name === text)
+	if (fun || constant) return { fun, constant }
+	const sym = extractHoverSymbol(text)
+	if (!sym) return {}
+	const constName = sym.includes('.') ? constPathMap().get(sym) : sym
+	if (constName) constant = LeekWars.constants.find((c) => c.name === constName)
+	if (!constant) {
+		const funName = sym.includes('.') ? sym.split('.').pop()! : sym
+		fun = FUNCTIONS.find((f) => f.name === funName)
+	}
+	return { fun, constant }
+}
 
 const scrollKey = (path: string) => 'editor/scroll/' + farmerId() + '/' + path
 const viewStateKey = (path: string) => 'editor/viewstate/' + farmerId() + '/' + path
@@ -238,7 +270,7 @@ onMounted(() => {
 		element.classList.add('lw')
 		body.prepend(element)
 
-		const fun = FUNCTIONS.find((f) => f.name === firstRow.innerText)
+		const { fun, constant } = resolveHoverDoc(firstRow.innerText.trim())
 		if (fun) {
 			firstRow.style.display = 'none'
 			const doc = createSubApp(DocumentationFunction, { fun }, 'hover-function')
@@ -249,7 +281,6 @@ onMounted(() => {
 				hoverController._contentWidget.widget._resize({ width: 500, height: doc.$el.clientHeight + 40 })
 			})
 		}
-		const constant = LeekWars.constants.find((c) => c.name === firstRow.innerText)
 		if (constant) {
 			firstRow.style.display = 'none'
 			const doc = createSubApp(DocumentationConstant, { constant }, 'hover-constant')

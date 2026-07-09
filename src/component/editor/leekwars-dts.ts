@@ -288,6 +288,28 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 	return out.join('\n') + '\n'
 }
 
+// Map notation objet -> nom de constante plat, ex: "Weapon.bazooka" -> "WEAPON_BAZOOKA",
+// "Effect.DAMAGE" -> "EFFECT_DAMAGE", "Fight.Type.SOLO" -> "FIGHT_TYPE_SOLO". Même routage
+// (CONST_CONTAINERS + camelCase) que la génération du d.ts. Sert au survol de l'éditeur polyglot à
+// remonter du symbole objet vers la fiche de doc de la constante d'origine.
+export function buildConstantPathMap(constants: readonly Constant[]): Map<string, string> {
+	const map = new Map<string, string>()
+	const seen = new Set<string>()
+	for (const c of constants) {
+		const name = safeName(c.name)
+		if (!name || seen.has(name)) continue
+		seen.add(name)
+		const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
+		if (!rule) continue // constante plate : la notation objet == son nom, matché directement
+		const raw = name.slice(rule.prefix.length)
+		const member = safeName(rule.item ? camelCase(raw) : raw)
+		if (!member) continue
+		const path = rule.sub ? `${rule.container}.${rule.sub}.${member}` : `${rule.container}.${member}`
+		if (!map.has(path)) map.set(path, name)
+	}
+	return map
+}
+
 // Alias minuscules employés dans les pointeurs de DEPRECATED_FLAT -> nom de la classe/const déclarée.
 const OO_ALIAS: Record<string, string> = { me: 'Me', entity: 'Entity', cell: 'Cell', weapon: 'Weapon', chip: 'Chip' }
 
