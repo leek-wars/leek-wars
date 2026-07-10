@@ -250,12 +250,18 @@ function select_period(p: string) {
 	localStorage.setItem('options/history-period', p)
 }
 
+// Fusionne les filtres sauvegardés avec les défauts : une clé ajoutée après la
+// sauvegarde de l'utilisateur serait sinon undefined, donc silencieusement décochée
+// (ex. "generating" masquait les combats en génération pour tout localStorage antérieur).
+function storedFilters(key: string, defaults: Record<string, boolean>): Record<string, boolean> {
+	return { ...defaults, ...JSON.parse(localStorage.getItem(key) || '{}') }
+}
 const id = route.params.id
 const initialPeriod = localStorage.getItem('options/history-period') || '1week'
-displayContexts.value = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
-displayTypes.value = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true, "boss": true }')
-displayLoot.value = JSON.parse(localStorage.getItem('options/history-loot') || '{"chests":false,"rareloot":false}')
-displayResults.value = JSON.parse(localStorage.getItem('options/history-results') || '{"win":true,"draw":true,"defeat":true,"generating":true}')
+displayContexts.value = storedFilters('options/history-contexts', { challenge: true, garden: true, tournament: true })
+displayTypes.value = storedFilters('options/history-types', { solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
+displayLoot.value = storedFilters('options/history-loot', { chests: false, rareloot: false })
+displayResults.value = storedFilters('options/history-results', { win: true, draw: true, defeat: true, generating: true })
 select_period(initialPeriod)
 
 function loadHistory() {

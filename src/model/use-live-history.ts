@@ -67,6 +67,8 @@ export function useLiveHistory(options: {
 	const registered = new Set<number>()
 	let currentId: number | undefined
 	let reloadTimer: ReturnType<typeof setTimeout> | null = null
+	let lastReload = 0
+	let wasConnected = false
 	let pollTimer: ReturnType<typeof setInterval> | null = null
 	let destroyed = false
 
@@ -108,9 +110,21 @@ export function useLiveHistory(options: {
 		}
 	}
 
+	// Recharge immédiatement au premier événement (la génération peut être plus courte
+	// que le debounce : sans ça la ligne "en génération" n'apparaîtrait jamais), puis
+	// débounce la rafale suivante.
 	function scheduleReload() {
+		if (!reloadTimer && Date.now() - lastReload > 800) {
+			lastReload = Date.now()
+			options.reload()
+			return
+		}
 		if (reloadTimer) clearTimeout(reloadTimer)
-		reloadTimer = setTimeout(() => { reloadTimer = null; if (!destroyed) options.reload() }, 800)
+		reloadTimer = setTimeout(() => {
+			reloadTimer = null
+			lastReload = Date.now()
+			if (!destroyed) options.reload()
+		}, 800)
 	}
 
 	function onFightProgress(data: unknown[]) {
@@ -126,7 +140,9 @@ export function useLiveHistory(options: {
 	}
 
 	// Reconnexion WS : le daemon a perdu nos abonnements, on les rétablit (envoi
-	// brut idempotent côté daemon, sans toucher au comptage de références).
+	// brut idempotent côté daemon, sans toucher au comptage de références), et on
+	// recharge la liste : des combats ont pu apparaître/finir pendant la coupure.
+	// Pas de reload sur la connexion initiale (loadHistory est déjà en vol).
 	function onWsConnected() {
 		const code = HISTORY_TYPE[options.type]
 		if (code !== undefined && currentId !== undefined) {
@@ -135,6 +151,8 @@ export function useLiveHistory(options: {
 		for (const fid of registered) {
 			LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, fid])
 		}
+		if (wasConnected) scheduleReload()
+		wasConnected = true
 	}
 
 	watch(options.id, subscribeTo, { immediate: true })
