@@ -54,6 +54,7 @@ const ForumTopic = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Forum = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum.${locale}.i18n`)
 const Garden = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden.${locale}.i18n`)
 const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.vue`)
+const HelpPolyglot = () => import(/* webpackChunkName: "[request]" */ `@/component/help/help-polyglot/help-polyglot.vue`)
 const InventoryPage = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory-page.${locale}.i18n`)
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
@@ -218,6 +219,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false }, meta: LAYOUT_BOX },
 	{ path: '/help/items', component: Items },
 	{ path: '/help/line-of-sight', component: LineOfSight },
+	{ path: '/help/polyglot', component: HelpPolyglot },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
 	{ path: '/inventory', component: InventoryPage, meta: LAYOUT_BOX },

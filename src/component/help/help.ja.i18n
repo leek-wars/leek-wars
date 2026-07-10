@@ -2,6 +2,8 @@
 	"documentation": "ドキュメンテーション",
 	"documentation_desc": "すべての <b>LeekScript</b> 関数と定数の詳細なリスト",
 	"general_help": "ゲーム、操作、情報の発見",
+	"polyglot": "JavaScript, Python, TypeScript",
+	"polyglot_desc": "Write your AI in <b>JavaScript</b>, <b>Python</b> or <b>TypeScript</b>",
 	"rewatch_didactitiel": "チュートリアルを確認する",
 	"title": "援助",
 	"tutorial": "LeekScript チュートリアル",
