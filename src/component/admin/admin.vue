@@ -297,23 +297,23 @@
 		})
 	}
 
-	// Vide le cache du navigateur (Cache Storage de la PWA) et désinscrit le service
-	// worker, puis recharge la page : force le rechargement des assets à froid.
+	// Vide TOUT le cache (équivalent Ctrl+Shift+R) puis recharge : d'abord les
+	// caches du service worker (Cache Storage), puis le cache HTTP du navigateur
+	// (JS/CSS/images/SVG périmés) via l'en-tête Clear-Site-Data renvoyé par l'API
+	// sur la même origine. On NE désinscrit PAS le SW (sinon on casse le push).
 	async function clearCache() {
 		if (cacheClearing.value) return
-		if (!confirm('Vider le cache du navigateur et le service worker ? La page va se recharger.')) return
+		if (!confirm('Vider tout le cache (HTTP + service worker) et recharger la page ?')) return
 		cacheClearing.value = true
 		try {
 			if ('caches' in window) {
 				const keys = await caches.keys()
 				await Promise.all(keys.map(k => caches.delete(k)))
 			}
-			if ('serviceWorker' in navigator) {
-				const registrations = await navigator.serviceWorker.getRegistrations()
-				await Promise.all(registrations.map(r => r.unregister()))
-			}
+			// Clear-Site-Data: "cache" côté serveur purge le cache HTTP de l'origine.
+			await fetch(env.API + 'data/clear-cache', { cache: 'no-store', credentials: 'include' }).catch(() => {})
 			LeekWars.toast('Cache vidé, rechargement…')
-			setTimeout(() => window.location.reload(), 600)
+			setTimeout(() => window.location.reload(), 400)
 		} catch (error) {
 			cacheClearing.value = false
 			LeekWars.toast('Erreur : ' + error)
