@@ -215,7 +215,11 @@ const filteredFights = computed(() => fights.value.filter((fight) => {
 		props.type === 'team'
 	)
 
+	// Un combat en génération a un butin encore inconnu (chests/rareloot à 0) : il ne
+	// doit pas être exclu par le filtre butin, sinon il est invisible même avec le
+	// chip « En cours de génération » activé.
 	const lootFilter = !displayLoot.value.chests && !displayLoot.value.rareloot
+		|| fight.status === 0
 		|| (displayLoot.value.chests && fight.chests > 0)
 		|| (displayLoot.value.rareloot && fight.rareloot > 0)
 
