@@ -288,6 +288,109 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 	return out.join('\n') + '\n'
 }
 
+// ---------------------------------------------------------------------------------------------
+// Modèle structuré de l'API objet, pour l'AUTOCOMPLÉTION Python (Monaco n'a pas de language service
+// Python : on alimente un CompletionItemProvider custom). Source unique = OBJECT_API_DECLARATIONS
+// ci-dessous (le même bloc qui type le .d.ts JS/TS) + les constantes des game data.
+// ---------------------------------------------------------------------------------------------
+
+export interface ApiMember {
+	name: string
+	kind: 'method' | 'property'
+	detail: string // signature affichée dans la complétion (ex: "moveToward(target: CellLike): number")
+	container: string // classe/const d'origine (pour retrouver la doc via buildMemberToLs)
+}
+
+export interface ObjectApiModel {
+	members: Record<string, ApiMember[]> // membres par conteneur (Fight, Weapon, Entity, Me...)
+	singletons: string[]                 // objets const (accédés Nom.membre) : Fight, Field, Registers, Debug
+	classes: string[]                    // classes (dont on a des instances / qu'on utilise en instanceof)
+	instanceUnion: ApiMember[]           // union des membres d'instance (pour `x.` quand x n'est pas typé)
+	meMembers: ApiMember[]               // Me + Entity (pour `me.`, cas dominant)
+}
+
+// Classes dont les membres constituent l'« union d'instance » (offerte après `variable.`). On exclut
+// les singletons (Fight/Field/Registers/Debug), accédés par leur nom, pas via une variable typée.
+const INSTANCE_CLASSES = ['Entity', 'Me', 'Cell', 'Weapon', 'Chip', 'Item', 'Effect', 'Feature', 'Leek', 'Turret', 'Bulb', 'Chest', 'Mob']
+
+// Parse OBJECT_API_DECLARATIONS (format régulier généré à la main) en modèle de complétion. Robuste
+// au format exact du bloc ci-dessous : `declare class X {` / `declare const X: {` ouvrent un conteneur,
+// une ligne `  [readonly] nom: type;` = propriété, `  nom(args): type;` = méthode, `}` ferme.
+let _objectApiModel: ObjectApiModel | null = null
+export function buildObjectApiModel(): ObjectApiModel {
+	if (_objectApiModel) return _objectApiModel
+	const members: Record<string, ApiMember[]> = {}
+	const singletons: string[] = []
+	const classes: string[] = []
+	let container: string | null = null
+	for (const raw of OBJECT_API_DECLARATIONS.split('\n')) {
+		const open = raw.match(/^declare\s+(class|const)\s+([A-Za-z_]\w*)/)
+		if (open) {
+			container = open[2]
+			if (!members[container]) members[container] = []
+			;(open[1] === 'const' ? singletons : classes).push(container)
+			continue
+		}
+		if (!container) continue
+		if (raw.startsWith('}')) { container = null; continue }
+		const trimmed = raw.trim()
+		if (!trimmed || trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) continue
+		// méthode : nom( ... ) : type ;
+		const method = trimmed.match(/^([A-Za-z_]\w*)\s*\((.*)\)\s*:\s*([^;]+);/)
+		if (method) {
+			members[container].push({ name: method[1], kind: 'method', detail: `${method[1]}(${method[2]}): ${method[3].trim()}`, container })
+			continue
+		}
+		// propriété : [readonly] nom : type ;
+		const prop = trimmed.match(/^(?:readonly\s+)?([A-Za-z_]\w*)\s*:\s*([^;]+);/)
+		if (prop) {
+			members[container].push({ name: prop[1], kind: 'property', detail: `${prop[1]}: ${prop[2].trim()}`, container })
+		}
+	}
+	const dedup = (list: ApiMember[]): ApiMember[] => {
+		const seen = new Set<string>(); const out: ApiMember[] = []
+		for (const m of list) if (!seen.has(m.name)) { seen.add(m.name); out.push(m) }
+		return out
+	}
+	const instanceUnion = dedup(INSTANCE_CLASSES.flatMap((c) => members[c] ?? []))
+	const meMembers = dedup([...(members['Me'] ?? []), ...(members['Entity'] ?? [])])
+	_objectApiModel = { members, singletons, classes, instanceUnion, meMembers }
+	return _objectApiModel
+}
+
+// Membres CONSTANTES par chemin d'accès, pour la complétion (ex: `Weapon.` -> pistol, machineGun... ;
+// `Entity.` -> Stat, Type (sous-namespaces) ; `Entity.Stat.` -> STRENGTH...). Clé = chemin (conteneur
+// ou conteneur.sous). isNamespace=true pour un sous-conteneur (offert au niveau du conteneur parent).
+// Même routage (CONST_CONTAINERS + camelCase) que le .d.ts, donc toujours en phase.
+export interface ConstCompletion { name: string, isNamespace: boolean, full?: string }
+export function buildConstantMembersByPath(constants: readonly Constant[]): Record<string, ConstCompletion[]> {
+	const byPath: Record<string, ConstCompletion[]> = {}
+	const seen: Record<string, Set<string>> = {}
+	const add = (path: string, item: ConstCompletion) => {
+		;(byPath[path] ||= [])
+		;(seen[path] ||= new Set())
+		if (!seen[path].has(item.name)) { seen[path].add(item.name); byPath[path].push(item) }
+	}
+	const declaredNames = new Set<string>()
+	for (const c of constants) {
+		const name = safeName(c.name)
+		if (!name || declaredNames.has(name)) continue
+		declaredNames.add(name)
+		const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
+		if (!rule) continue
+		const raw = name.slice(rule.prefix.length)
+		const member = safeName(rule.item ? camelCase(raw) : raw)
+		if (!member) continue
+		if (rule.sub) {
+			add(`${rule.container}.${rule.sub}`, { name: member, isNamespace: false, full: name })
+			add(rule.container, { name: rule.sub, isNamespace: true }) // le sous-namespace au niveau du conteneur
+		} else {
+			add(rule.container, { name: member, isNamespace: false, full: name })
+		}
+	}
+	return byPath
+}
+
 // Map notation objet -> nom de constante plat, ex: "Weapon.bazooka" -> "WEAPON_BAZOOKA",
 // "Effect.DAMAGE" -> "EFFECT_DAMAGE", "Fight.Type.SOLO" -> "FIGHT_TYPE_SOLO". Même routage
 // (CONST_CONTAINERS + camelCase) que la génération du d.ts. Sert au survol de l'éditeur polyglot à
@@ -429,7 +532,7 @@ function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string
 // Fonctions plates qui ont un équivalent dans l'API objet -> dépréciées (pointeur vers la forme objet).
 // À garder en phase avec objects.js/objects.py. Les fonctions sans équivalent objet (debug, getRegister,
 // les helpers réseau/couleur...) ne sont PAS dépréciées.
-const DEPRECATED_FLAT: Record<string, string> = {
+export const DEPRECATED_FLAT: Record<string, string> = {
 	// Entity (propriétés)
 	getLife: 'me.life / entity.life', getTotalLife: 'entity.maxLife', getTP: 'entity.tp', getTotalTP: 'entity.maxTP',
 	getMP: 'entity.mp', getTotalMP: 'entity.maxMP', getStrength: 'entity.strength', getAgility: 'entity.agility',

@@ -13,7 +13,7 @@ import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
-import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs } from './leekwars-dts';
+import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, DEPRECATED_FLAT, type ApiMember } from './leekwars-dts';
 // monaco-stripped importe la contribution TS pour ses effets de bord (enregistrement du langage), mais
 // n'assemble PAS le namespace `monaco.languages.typescript` (fait uniquement par `editor.main` complet,
 // non importé ici) -> `monaco.languages.typescript` est TOUJOURS undefined dans ce build. On récupère
@@ -306,6 +306,95 @@ monaco.languages.registerHoverProvider('python', {
 			// 1re ligne = nom plat du symbole : le hook de carte (ai-view-monaco) le résout et monte la fiche.
 			contents: [{ value: flat }],
 		}
+	},
+})
+
+// --- Autocomplétion des IA polyglot Python ---
+// Monaco n'a pas de language service Python (juste la coloration) : on fournit un CompletionItemProvider
+// alimenté par le modèle de l'API objet (buildObjectApiModel, même source que le leekwars.d.ts) + les
+// constantes des game data. Sans inférence de types : après `Conteneur.` on liste ses membres/constantes,
+// après `me.` les membres de Me/Entity, après une autre variable l'union des membres d'instance, et sans
+// point les points d'entrée (conteneurs de l'API objet + fonctions plates). JS/TS ont, eux, le service TS.
+let _pyConstMembers: { src: unknown, val: Record<string, { name: string, isNamespace: boolean, full?: string }[]> } | null = null
+function pyConstMembers() {
+	const src = LeekWars.constants ?? []
+	if (!_pyConstMembers || _pyConstMembers.src !== src) _pyConstMembers = { src, val: buildConstantMembersByPath(src) }
+	return _pyConstMembers.val
+}
+function pyItemDoc(path: string): monaco.IMarkdownString | undefined {
+	const flat = resolvePolyglotSymbol(path)
+	return flat ? { value: `📖 [Documentation](https://leekwars.com/help/documentation/${flat})`, isTrusted: true } : undefined
+}
+
+monaco.languages.registerCompletionItemProvider('python', {
+	triggerCharacters: ['.'],
+	provideCompletionItems: (model, position) => {
+		const K = monaco.languages.CompletionItemKind
+		const word = model.getWordUntilPosition(position)
+		const range = {
+			startLineNumber: position.lineNumber, endLineNumber: position.lineNumber,
+			startColumn: word.startColumn, endColumn: word.endColumn,
+		}
+		const before = model.getLineContent(position.lineNumber).slice(0, word.startColumn - 1)
+		const dot = before.match(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\.\s*$/)
+		const apiModel = buildObjectApiModel()
+		const constByPath = pyConstMembers()
+		const suggestions: monaco.languages.CompletionItem[] = []
+
+		const pushApiMember = (m: ApiMember, ownerPath: string) => {
+			suggestions.push({
+				label: m.name,
+				kind: m.kind === 'method' ? K.Method : K.Property,
+				detail: m.detail, insertText: m.name, range,
+				documentation: pyItemDoc(ownerPath === 'me' ? 'me.' + m.name : m.container + '.' + m.name),
+			})
+		}
+		const pushConst = (c: { name: string, isNamespace: boolean, full?: string }, path: string) => {
+			suggestions.push({
+				label: c.name,
+				kind: c.isNamespace ? K.Module : K.EnumMember,
+				detail: c.isNamespace ? `${path}.${c.name}` : (c.full ?? c.name),
+				insertText: c.name, range,
+				documentation: c.full ? pyItemDoc(`${path}.${c.name}`) : undefined,
+			})
+		}
+
+		if (dot) {
+			const path = dot[1]
+			if (apiModel.singletons.includes(path)) {
+				for (const m of apiModel.members[path] ?? []) pushApiMember(m, path)
+				for (const c of constByPath[path] ?? []) pushConst(c, path)
+			} else if (constByPath[path]) {
+				for (const c of constByPath[path]) pushConst(c, path)
+			} else if (apiModel.classes.includes(path)) {
+				// classe sans constantes (Leek, Turret...) : type utilisé en isinstance, rien à compléter.
+			} else {
+				// variable non typée : `me` -> membres de Me+Entity ; sinon union des membres d'instance.
+				const union = path === 'me' ? apiModel.meMembers : apiModel.instanceUnion
+				for (const m of union) pushApiMember(m, path)
+			}
+		} else {
+			// Points d'entrée globaux : conteneurs de l'API objet (Fight, Weapon, Entity...) + fonctions
+			// plates (marquées dépréciées si un équivalent objet existe, comme le d.ts). Monaco filtre.
+			const containers = new Set<string>([
+				...apiModel.singletons, ...apiModel.classes,
+				...Object.keys(constByPath).filter((k) => !k.includes('.')),
+			])
+			for (const name of containers) {
+				suggestions.push({ label: name, kind: K.Class, detail: 'API de combat', insertText: name, range })
+			}
+			for (const f of LeekWars.functions ?? []) {
+				if (!f.name) continue
+				const deprecated = DEPRECATED_FLAT[f.name]
+				suggestions.push({
+					label: f.name, kind: K.Function, insertText: f.name, range,
+					detail: deprecated ? `déprécié → ${deprecated}` : undefined,
+					tags: deprecated ? [monaco.languages.CompletionItemTag.Deprecated] : undefined,
+					documentation: pyItemDoc(f.name),
+				})
+			}
+		}
+		return { suggestions }
 	},
 })
 
