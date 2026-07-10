@@ -1,6 +1,19 @@
 <template>
 	<div class="tabs">
 		<slot name="before"></slot>
+		<!-- Collection : uniquement dans le contexte Inventaire / Collection, en 1re position. -->
+		<template v-if="active === 'inventory' || active === 'collection'">
+			<div v-if="active === 'collection'" class="tab action active">
+				<v-icon>mdi-trophy-variant-outline</v-icon>
+				<span>{{ $t('main.collection') }}</span>
+			</div>
+			<router-link v-else to="/collection">
+				<div class="tab action">
+					<v-icon>mdi-trophy-variant-outline</v-icon>
+					<span>{{ $t('main.collection') }}</span>
+				</div>
+			</router-link>
+		</template>
 		<a href="https://leek-wars.myspreadshop.fr" target="_blank" rel="noopener">
 			<div class="tab action">
 				<v-icon>mdi-cart-outline</v-icon>
@@ -38,16 +51,6 @@
 			<div class="tab action">
 				<v-icon>mdi-treasure-chest</v-icon>
 				<span>{{ $t('main.inventory') }}</span>
-			</div>
-		</router-link>
-		<div v-if="active === 'collection'" class="tab action active">
-			<v-icon>mdi-trophy-variant-outline</v-icon>
-			<span>{{ $t('main.collection') }}</span>
-		</div>
-		<router-link v-else to="/collection">
-			<div class="tab action">
-				<v-icon>mdi-trophy-variant-outline</v-icon>
-				<span>{{ $t('main.collection') }}</span>
 			</div>
 		</router-link>
 	</div>
