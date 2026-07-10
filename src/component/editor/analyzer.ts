@@ -132,7 +132,12 @@ class Analyzer {
 		// console.log("🔥 Analyze", ai.path)
 		// console.time('hover')
 
-		if (!isLeekScript(ai.path)) {
+		// LeekScript ET Python passent par le daemon (le handler EDITOR_ANALYZE route .py vers
+		// validatePolyglot -> diagnostics de syntaxe live, même format de réponse). JS/TS sont analysés
+		// par le service TypeScript de Monaco côté client (type-check complet, remonté via
+		// updatePolyglotProblems) : on ne les envoie PAS au daemon pour éviter une double analyse.
+		const language = getLanguageForPath(ai.path)
+		if (language !== 'leekscript' && language !== 'python') {
 			return Promise.resolve(null)
 		}
 		if (code.length > 60_000) {
