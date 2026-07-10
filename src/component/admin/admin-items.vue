@@ -36,6 +36,7 @@
 						<v-btn v-if="search || category !== ItemType.ALL" size="small" variant="text" @click="resetFilters">
 							<v-icon>mdi-filter-remove-outline</v-icon> Réinitialiser
 						</v-btn>
+						<v-switch v-model="showUnowned" density="compact" hide-details inset color="primary" label="Possédés par personne" class="unowned-switch" />
 						<div class="view-toggle">
 							<v-btn size="small" variant="text" icon="mdi-format-list-bulleted" :class="{active: viewMode === 'list'}" @click="viewMode = 'list'" />
 							<v-btn size="small" variant="text" icon="mdi-view-grid" :class="{active: viewMode === 'grid'}" @click="viewMode = 'grid'" />
@@ -56,7 +57,7 @@
 						:items="filteredRows"
 						:items-per-page="25"
 						:items-per-page-options="itemsPerPageOptions"
-						:sort-by="[{ key: 'total', order: 'asc' }]"
+						:sort-by="[{ key: 'total', order: 'desc' }]"
 						density="compact"
 						class="items-table">
 						<template #item.name="{ item }">
@@ -174,6 +175,9 @@
 	const category = ref<number>(ItemType.ALL)
 	const search = ref('')
 	const viewMode = ref<'list' | 'grid'>('list')
+	// Afficher aussi les items possédés par personne (0 exemplaire en jeu, ex. items
+	// neufs pas encore droppés). Masqués par défaut pour garder la vue distribution.
+	const showUnowned = ref(false)
 	// Templates dont l'image a échoué au chargement : repli sur l'icône de catégorie
 	// (plans/schemes, boîtes sans visuel, ou assets absents en dev local).
 	const imgErrors = reactive(new Set<number>())
@@ -198,13 +202,17 @@
 		{ value: -1, title: 'Tous' },
 	]
 
-	const totalItems = computed(() => rows.value.reduce((s, r) => s + r.total, 0))
+	// Base d'affichage : selon le switch, tout le catalogue ou seulement les items
+	// réellement possédés (total > 0). KPI, compteurs et filtres en découlent.
+	const baseRows = computed(() => showUnowned.value ? rows.value : rows.value.filter(r => r.total > 0))
+
+	const totalItems = computed(() => baseRows.value.reduce((s, r) => s + r.total, 0))
 
 	// Catégories présentes dans les données + « Tous » ; comptées pour l'affichage.
 	const categoryOptions = computed(() => {
 		const counts = new Map<number, number>()
-		for (const r of rows.value) counts.set(r.type, (counts.get(r.type) || 0) + 1)
-		const options = [{ type: ItemType.ALL, label: 'Tous', icon: 'mdi-all-inclusive', count: rows.value.length }]
+		for (const r of baseRows.value) counts.set(r.type, (counts.get(r.type) || 0) + 1)
+		const options = [{ type: ItemType.ALL, label: 'Tous', icon: 'mdi-all-inclusive', count: baseRows.value.length }]
 		for (const type of Object.keys(ITEM_TYPE_NAME).map(Number)) {
 			if (type === ItemType.ALL) continue
 			if (counts.has(type)) {
@@ -216,7 +224,7 @@
 
 	const filteredRows = computed(() => {
 		const q = search.value.trim().toLowerCase()
-		return rows.value.filter(r => {
+		return baseRows.value.filter(r => {
 			if (category.value !== ItemType.ALL && r.type !== category.value) return false
 			if (q && !r.name.toLowerCase().includes(q)) return false
 			return true
@@ -256,14 +264,46 @@
 		return templateName(item)
 	}
 
-	// URL de l'image de l'item (même convention que le composant <item>). Pour un
-	// schéma, on affiche l'image de l'item résultat. En cas d'échec (@error), on
-	// retombe sur l'icône de catégorie via imgErrors.
+	// URL de l'image de l'item. Pour un schéma, on affiche l'image de l'item
+	// résultat. En cas d'échec (@error), on retombe sur l'icône de catégorie via
+	// imgErrors. ⚠️ Ressources et composants ne sont PAS préfixés par leur
+	// catégorie : le nom complet EST le nom de fichier (gold_nugget.png). Les
+	// autres (weapon_/chip_/potion_…) sont préfixés → on retire le préfixe.
 	function itemImage(item: ItemTemplate): string {
 		const target = item.type === ItemType.SCHEME ? (schemeResult(item) || item) : item
 		const cat = ITEM_CATEGORY_NAME[target.type]
-		const img = target.type === ItemType.COMPONENT ? target.name : target.name.substring(target.name.indexOf('_') + 1)
+		const img = (target.type === ItemType.RESOURCE || target.type === ItemType.COMPONENT)
+			? target.name
+			: target.name.substring(target.name.indexOf('_') + 1)
 		return '/image/' + cat + '/' + img + '.png'
+	}
+
+	// Construit une ligne à partir d'un template + ses compteurs de distribution
+	// (d peut être à zéro pour un item sans exemplaire en jeu, ex. item neuf).
+	function buildRow(template: number, item: ItemTemplate | undefined, d: DistributionRow, totalFarmers: number, max: number): ItemRow {
+		const type = item ? item.type : ItemType.ALL
+		return {
+			template,
+			tpl: item,
+			scheme: item && item.type === ItemType.SCHEME ? (LeekWars.schemes[item.params] || null) : null,
+			name: item ? itemName(item) : 'Item #' + template,
+			type,
+			icon: ITEM_TYPE_ICONS[type] || 'mdi-help-circle-outline',
+			categoryLabel: item ? categoryLabel(type) : '—',
+			level: item ? item.level : null,
+			rarity: item ? item.rarity : null,
+			rarityLabel: item ? i18n.t('main.difficulty_' + item.rarity) : '',
+			price: item ? (item.price ?? null) : null,
+			total: d.total,
+			equipped: d.equipped,
+			farmer_count: d.farmer_count,
+			average: d.farmer_count ? d.total / d.farmer_count : 0,
+			coverage: totalFarmers ? (d.farmer_count / totalFarmers) * 100 : null,
+			// Taux d'utilisation : éleveurs qui l'équipent sur un poireau (max 1 par
+			// éleveur) / éleveurs qui le possèdent. null si personne ne le possède.
+			usage: d.farmer_count ? (d.equipped_farmers / d.farmer_count) * 100 : null,
+			bar: max ? Math.round((d.total / max) * 100) + '%' : '0%',
+		}
 	}
 
 	function load() {
@@ -271,32 +311,26 @@
 		LeekWars.get<{ distribution: DistributionRow[], total_farmers: number }>('item/distribution').then(data => {
 			total_farmers.value = data.total_farmers
 			const max = data.distribution.reduce((m, d) => Math.max(m, d.total), 0)
-			rows.value = data.distribution.map(d => {
-				const item = LeekWars.items[d.template] as ItemTemplate | undefined
-				const type = item ? item.type : ItemType.ALL
-				return {
-					template: d.template,
-					tpl: item,
-					scheme: item && item.type === ItemType.SCHEME ? (LeekWars.schemes[item.params] || null) : null,
-					name: item ? itemName(item) : 'Item #' + d.template,
-					type,
-					icon: ITEM_TYPE_ICONS[type] || 'mdi-help-circle-outline',
-					categoryLabel: item ? categoryLabel(type) : '—',
-					level: item ? item.level : null,
-					rarity: item ? item.rarity : null,
-					rarityLabel: item ? i18n.t('main.difficulty_' + item.rarity) : '',
-					price: item ? (item.price ?? null) : null,
-					total: d.total,
-					equipped: d.equipped,
-					farmer_count: d.farmer_count,
-					average: d.farmer_count ? d.total / d.farmer_count : 0,
-					coverage: data.total_farmers ? (d.farmer_count / data.total_farmers) * 100 : null,
-					// Taux d'utilisation : éleveurs qui l'équipent sur un poireau (max 1 par
-					// éleveur) / éleveurs qui le possèdent. null si personne ne le possède.
-					usage: d.farmer_count ? (d.equipped_farmers / d.farmer_count) * 100 : null,
-					bar: max ? Math.round((d.total / max) * 100) + '%' : '0%',
-				}
-			})
+			const distByTemplate = new Map<number, DistributionRow>(data.distribution.map(d => [d.template, d]))
+			// Catalogue COMPLET : tous les item_template connus du client, enrichis des
+			// compteurs de distribution (0 exemplaire si aucun n'est en jeu, ex. items
+			// neufs pas encore droppés). Sinon un item à 0 possesseur serait invisible.
+			const result: ItemRow[] = []
+			const seen = new Set<number>()
+			for (const [key, item] of Object.entries(LeekWars.items)) {
+				const template = Number(key)
+				if (!item || seen.has(template)) continue
+				seen.add(template)
+				const d = distByTemplate.get(template) || { template, total: 0, equipped: 0, farmer_count: 0, equipped_farmers: 0 }
+				result.push(buildRow(template, item as ItemTemplate, d, data.total_farmers, max))
+			}
+			// Items possédés absents du registre client (edge case) : les garder aussi.
+			for (const d of data.distribution) {
+				if (seen.has(d.template)) continue
+				seen.add(d.template)
+				result.push(buildRow(d.template, LeekWars.items[d.template] as ItemTemplate | undefined, d, data.total_farmers, max))
+			}
+			rows.value = result
 			loading.value = false
 		}).error(() => {
 			loading.value = false
@@ -432,6 +466,12 @@
 	white-space: nowrap;
 }
 .empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
+.unowned-switch {
+	flex: 0 0 auto;
+	margin-left: 8px;
+	:deep(.v-label) { font-size: 13px; opacity: 1; }
+	:deep(.v-selection-control) { min-height: auto; }
+}
 .view-toggle {
 	display: flex;
 	margin-left: auto;
