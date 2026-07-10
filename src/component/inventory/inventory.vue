@@ -1,10 +1,5 @@
 <template>
-	<div class="page inventory-page">
-		<div class="page-header page-bar">
-			<h1>{{ $t('main.inventory') }}</h1>
-			<page-tabs active="inventory" />
-		</div>
-		<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel">
+	<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel">
 		<template #title>
 			<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== ItemType.ALL"> / {{ inventory.length }}</span>)</div>
 			<div class="categories">
@@ -166,8 +161,7 @@
 
 			</div>
 		</template>
-		</panel>
-	</div>
+	</panel>
 </template>
 
 <script lang="ts" setup>
@@ -178,7 +172,6 @@
 	import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 	import ItemPreview from '@/component/market/item-preview.vue'
-	import PageTabs from '@/component/app/page-tabs.vue'
 	import SchemeImage from '../market/scheme-image.vue'
 	import { emitter } from '@/model/vue'
 
@@ -450,14 +443,6 @@
 </script>
 
 <style lang="scss" scoped>
-// Racine en page flex-colonne (comme market/collection) : la barre d'onglets en haut, puis le panel
-// qui prend le reste. Sans ça, `.inventory-panel { flex: 1 }` n'aurait pas de parent flex.
-.inventory-page {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	min-height: 0;
-}
 .panel :deep(h2 > div) {
 	width: 145px;
 }
