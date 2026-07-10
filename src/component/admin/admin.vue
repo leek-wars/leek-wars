@@ -196,6 +196,10 @@
 						<v-icon>mdi-database-refresh</v-icon>
 						<h2>Refresh game data</h2>
 					</div>
+					<div v-ripple class="section card" @click="clearCache">
+						<v-icon :class="{ 'mdi-spin': cacheClearing }">{{ cacheClearing ? 'mdi-loading' : 'mdi-cached' }}</v-icon>
+						<h2>Clear cache</h2>
+					</div>
 					<div v-ripple class="section card" @click="refreshEncycloLinks">
 						<v-icon :class="{ 'mdi-spin': encycloLinksLoading }">{{ encycloLinksLoading ? 'mdi-loading' : 'mdi-book-sync' }}</v-icon>
 						<h2>Refresh encyclo links</h2>
@@ -276,6 +280,7 @@
 	const levelPopupData = ref<unknown>(null)
 	const encycloLinksLoading = ref(false)
 	const mobsLoading = ref(false)
+	const cacheClearing = ref(false)
 	const testVerifyPopup = ref(false)
 	const testCheckEmailReminder = ref(false)
 	const testActivationWelcome = ref(false)
@@ -290,6 +295,29 @@
 		}).error(() => {
 			LeekWars.toast("Failed to refresh game data")
 		})
+	}
+
+	// Vide le cache du navigateur (Cache Storage de la PWA) et désinscrit le service
+	// worker, puis recharge la page : force le rechargement des assets à froid.
+	async function clearCache() {
+		if (cacheClearing.value) return
+		if (!confirm('Vider le cache du navigateur et le service worker ? La page va se recharger.')) return
+		cacheClearing.value = true
+		try {
+			if ('caches' in window) {
+				const keys = await caches.keys()
+				await Promise.all(keys.map(k => caches.delete(k)))
+			}
+			if ('serviceWorker' in navigator) {
+				const registrations = await navigator.serviceWorker.getRegistrations()
+				await Promise.all(registrations.map(r => r.unregister()))
+			}
+			LeekWars.toast('Cache vidé, rechargement…')
+			setTimeout(() => window.location.reload(), 600)
+		} catch (error) {
+			cacheClearing.value = false
+			LeekWars.toast('Erreur : ' + error)
+		}
 	}
 
 	function square() {

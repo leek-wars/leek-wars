@@ -36,6 +36,10 @@
 						<v-btn v-if="search || category !== ItemType.ALL" size="small" variant="text" @click="resetFilters">
 							<v-icon>mdi-filter-remove-outline</v-icon> Réinitialiser
 						</v-btn>
+						<div class="view-toggle">
+							<v-btn size="small" variant="text" icon="mdi-format-list-bulleted" :class="{active: viewMode === 'list'}" @click="viewMode = 'list'" />
+							<v-btn size="small" variant="text" icon="mdi-view-grid" :class="{active: viewMode === 'grid'}" @click="viewMode = 'grid'" />
+						</div>
 					</div>
 				</div>
 			</template>
@@ -47,7 +51,7 @@
 				<div class="content">
 					<loader v-if="loading" />
 					<v-data-table
-						v-else
+						v-else-if="viewMode === 'list'"
 						:headers="headers"
 						:items="filteredRows"
 						:items-per-page="25"
@@ -91,6 +95,25 @@
 						</template>
 						<template #no-data><div class="empty">Aucun item</div></template>
 					</v-data-table>
+					<div v-else class="items-grid">
+						<div v-for="item of gridRows" :key="item.template" class="item-card">
+							<rich-tooltip-item v-if="item.tpl" :item="item.tpl" :inventory="true" :bottom="true" :instant="true">
+								<div class="card-thumb">
+									<scheme-image v-if="item.scheme" :scheme="item.scheme" class="scheme-thumb" />
+									<img v-else-if="!imgErrors.has(item.template)" :src="itemImage(item.tpl)" :class="{ weapon: item.type === ItemType.WEAPON }" :alt="item.name" @error="imgErrors.add(item.template)">
+									<v-icon v-else class="cat-icon">{{ item.icon }}</v-icon>
+								</div>
+							</rich-tooltip-item>
+							<div v-else class="card-thumb"><v-icon class="cat-icon">{{ item.icon }}</v-icon></div>
+							<div class="card-name">{{ item.name }}</div>
+							<div class="card-meta">
+								<span v-if="item.rarity !== null" class="rarity-badge" :class="'difficulty-' + item.rarity">{{ item.rarityLabel }}</span>
+								<span class="card-cat">{{ item.categoryLabel }}<template v-if="item.level !== null"> · niv. {{ item.level }}</template></span>
+							</div>
+							<div class="card-count"><v-icon size="14">mdi-package-variant-closed</v-icon> {{ $filters.number(item.total) }}<span v-if="item.coverage !== null" class="card-cov"> · {{ pct1(item.coverage) }} él.</span></div>
+						</div>
+						<div v-if="!gridRows.length" class="empty">Aucun item</div>
+					</div>
 				</div>
 			</template>
 		</panel>
@@ -150,6 +173,7 @@
 	const total_farmers = ref(0)
 	const category = ref<number>(ItemType.ALL)
 	const search = ref('')
+	const viewMode = ref<'list' | 'grid'>('list')
 	// Templates dont l'image a échoué au chargement : repli sur l'icône de catégorie
 	// (plans/schemes, boîtes sans visuel, ou assets absents en dev local).
 	const imgErrors = reactive(new Set<number>())
@@ -203,6 +227,11 @@
 		category.value = ItemType.ALL
 		search.value = ''
 	}
+
+	// Vue grille : mêmes filtres, triée par catégorie puis nom (catalogue visuel).
+	const gridRows = computed(() => {
+		return [...filteredRows.value].sort((a, b) => a.type - b.type || a.name.localeCompare(b.name))
+	})
 
 	// Nom traduit d'un template (weapon.pistol, chip.spark…), repli sur le nom brut.
 	function templateName(item: ItemTemplate): string {
@@ -403,4 +432,73 @@
 	white-space: nowrap;
 }
 .empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
+.view-toggle {
+	display: flex;
+	margin-left: auto;
+	.v-btn.active {
+		background: rgba(33, 150, 243, 0.2);
+		color: var(--primary);
+	}
+}
+.items-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 10px;
+	.item-card {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 5px;
+		padding: 10px 8px;
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		.card-thumb {
+			width: 96px;
+			height: 96px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: var(--pure-white);
+			border-radius: 6px;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+			padding: 6px;
+			cursor: pointer;
+			img {
+				max-width: 100%;
+				max-height: 100%;
+				object-fit: contain;
+				&.weapon { transform: rotate(-40deg); width: 118%; height: 118%; }
+			}
+			.cat-icon { font-size: 44px; color: var(--text-color-secondary); }
+			.scheme-thumb { width: 100%; height: auto; max-height: 100%; }
+		}
+		.card-name {
+			font-weight: 600;
+			font-size: 13px;
+			line-height: 1.2;
+		}
+		.card-meta {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			gap: 5px;
+		}
+		.card-cat {
+			font-size: 11px;
+			color: var(--text-color-secondary);
+		}
+		.card-count {
+			font-size: 12px;
+			color: var(--text-color);
+			font-variant-numeric: tabular-nums;
+			display: inline-flex;
+			align-items: center;
+			gap: 3px;
+			.card-cov { color: var(--text-color-secondary); }
+		}
+	}
+}
 </style>
