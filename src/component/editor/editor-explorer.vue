@@ -167,7 +167,7 @@
 					<v-btn value="typescript" size="small"><img class="lang-opt" src="/image/language/typescript.svg">TypeScript</v-btn>
 					<v-btn value="python" size="small"><img class="lang-opt" src="/image/language/python.svg">Python</v-btn>
 				</v-btn-toggle>
-				<v-checkbox v-model="newAIStarter" :label="$t('include_starter')" density="compact" hide-details />
+				<v-checkbox v-model="newAIStarter" :label="$t('include_starter')" density="compact" hide-details class="starter-checkbox" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
@@ -666,5 +666,8 @@
 	height: 15px;
 	margin-right: 5px;
 	flex: none;
+}
+.starter-checkbox {
+	margin-top: 8px;
 }
 </style>
