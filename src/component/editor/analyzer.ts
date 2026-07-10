@@ -4,7 +4,7 @@ import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
 
 import { AIItem, Folder } from './editor-item'
-import { getLanguageForPath, isLeekScript } from './file-types'
+import { getLanguageForPath } from './file-types'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
 import * as monaco from 'monaco-editor'
@@ -431,27 +431,35 @@ class Analyzer {
 	}
 
 	public async updateTodos(ai: AI) {
-		if (!isLeekScript(ai.path)) return
-		// Collect full include tree (recursive), en chargeant le code si nécessaire
+		const language = getLanguageForPath(ai.path)
+		const isPython = language === 'python'
+		// LeekScript ET polyglot (.js/.ts/.py) : on scanne les TODO. Les docs (.md/.json...) sont exclus.
+		if (language !== 'leekscript' && language !== 'javascript' && language !== 'typescript' && !isPython) return
+		// LeekScript : arbre d'includes (les TODO d'un include comptent). Polyglot : fichier seul (les
+		// imports ES/Python ne sont pas modélisés côté éditeur).
 		const ais = new Set<AI>([ai])
-		const collectIncludes = async (a: AI) => {
-			if (a.code === undefined) {
-				await fileSystem.load(a)
-			}
-			if (!a.includes.length) a.updateIncludes()
-			for (const inc of a.includes) {
-				if (!ais.has(inc)) {
-					ais.add(inc)
-					await collectIncludes(inc)
+		if (language === 'leekscript') {
+			const collectIncludes = async (a: AI) => {
+				if (a.code === undefined) {
+					await fileSystem.load(a)
+				}
+				if (!a.includes.length) a.updateIncludes()
+				for (const inc of a.includes) {
+					if (!ais.has(inc)) {
+						ais.add(inc)
+						await collectIncludes(inc)
+					}
 				}
 			}
+			await collectIncludes(ai)
+		} else if (ai.code === undefined) {
+			await fileSystem.load(ai)
 		}
-		await collectIncludes(ai)
 
 		// Scan all involved AIs for TODOs
 		const ids = new Set(Array.from(ais).map(a => a.path))
 		const todos = Array.from(ais).flatMap(a => {
-			return a.code ? this.scanTodos(a, a.code) : []
+			return a.code ? this.scanTodos(a, a.code, isPython) : []
 		})
 
 		// Build problems + Monaco markers in one pass
@@ -511,7 +519,10 @@ class Analyzer {
 		this.updateCount()
 	}
 
-	private scanTodos(ai: AI, code: string) {
+	// hash=true (Python) : commentaire de ligne `#` (pas de bloc /* */). Sinon (LeekScript/JS/TS) :
+	// commentaires `//` et `/* */`. Dans les deux cas on saute les chaînes pour ne pas prendre un
+	// "TODO" à l'intérieur d'un littéral.
+	private scanTodos(ai: AI, code: string, hash = false) {
 		const todos: [number, string, number, number, number, number, string][] = []
 		const lines = code.split('\n')
 		let inBlockComment = false
@@ -537,7 +548,10 @@ class Analyzer {
 					else if (c === inString) inString = null
 				} else if (c === '"' || c === "'") {
 					inString = c
-				} else if (c === '/' && i + 1 < line.length) {
+				} else if (hash && c === '#') {
+					this.findTodoInText(ai, todos, lineNum, i + 1, line.substring(i + 1))
+					break
+				} else if (!hash && c === '/' && i + 1 < line.length) {
 					if (line[i + 1] === '/') {
 						this.findTodoInText(ai, todos, lineNum, i + 2, line.substring(i + 2))
 						break
