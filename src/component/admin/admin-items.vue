@@ -58,8 +58,10 @@
 						:items-per-page="25"
 						:items-per-page-options="itemsPerPageOptions"
 						:sort-by="[{ key: 'total', order: 'desc' }]"
+						:row-props="rowProps"
 						density="compact"
 						class="items-table">
+						<template #item.template="{ item }"><span class="id-cell">{{ item.template }}</span></template>
 						<template #item.name="{ item }">
 							<div class="label-cell">
 								<rich-tooltip-item v-if="item.tpl" :item="item.tpl" :inventory="true" :bottom="true" :instant="true">
@@ -97,7 +99,7 @@
 						<template #no-data><div class="empty">Aucun item</div></template>
 					</v-data-table>
 					<div v-else class="items-grid">
-						<div v-for="item of gridRows" :key="item.template" class="item-card">
+						<div v-for="item of gridRows" :key="item.template" class="item-card" :class="{ unowned: item.total === 0 }">
 							<rich-tooltip-item v-if="item.tpl" :item="item.tpl" :inventory="true" :bottom="true" :instant="true">
 								<div class="card-thumb">
 									<scheme-image v-if="item.scheme" :scheme="item.scheme" class="scheme-thumb" />
@@ -109,7 +111,7 @@
 							<div class="card-name">{{ item.name }}</div>
 							<div class="card-meta">
 								<span v-if="item.rarity !== null" class="rarity-badge" :class="'difficulty-' + item.rarity">{{ item.rarityLabel }}</span>
-								<span class="card-cat">{{ item.categoryLabel }}<template v-if="item.level !== null"> · niv. {{ item.level }}</template></span>
+								<span class="card-cat">#{{ item.template }} · {{ item.categoryLabel }}<template v-if="item.level !== null"> · niv. {{ item.level }}</template></span>
 							</div>
 							<div class="card-count"><v-icon size="14">mdi-package-variant-closed</v-icon> {{ $filters.number(item.total) }}<span v-if="item.coverage !== null" class="card-cov"> · {{ pct1(item.coverage) }} él.</span></div>
 						</div>
@@ -183,6 +185,7 @@
 	const imgErrors = reactive(new Set<number>())
 
 	const headers: any[] = [
+		{ title: 'ID', key: 'template', align: 'end', sortable: true },
 		{ title: 'Item', key: 'name', align: 'start', sortable: true },
 		{ title: 'Catégorie', key: 'category', align: 'start', sortable: true, value: 'categoryLabel' },
 		{ title: 'Niveau', key: 'level', align: 'end', sortable: true },
@@ -240,6 +243,11 @@
 	const gridRows = computed(() => {
 		return [...filteredRows.value].sort((a, b) => a.type - b.type || a.name.localeCompare(b.name))
 	})
+
+	// Grise la ligne d'un item possédé par personne (0 exemplaire en jeu).
+	function rowProps({ item }: { item: ItemRow }) {
+		return item.total === 0 ? { class: 'unowned-row' } : {}
+	}
 
 	// Nom traduit d'un template (weapon.pistol, chip.spark…), repli sur le nom brut.
 	function templateName(item: ItemTemplate): string {
@@ -403,6 +411,11 @@
 		padding: 0 7px !important;
 	}
 }
+.id-cell {
+	color: var(--text-color-secondary);
+	font-variant-numeric: tabular-nums;
+	font-size: 12px;
+}
 .label-cell {
 	display: flex;
 	align-items: center;
@@ -539,6 +552,15 @@
 			gap: 3px;
 			.card-cov { color: var(--text-color-secondary); }
 		}
+		// Item possédé par personne : texte grisé.
+		&.unowned {
+			.card-name, .card-count { color: var(--text-color-secondary); }
+			.card-name { font-weight: 500; }
+		}
 	}
+}
+// Ligne de tableau d'un item possédé par personne : texte grisé.
+.items-table :deep(.unowned-row) .v-data-table__td {
+	color: var(--text-color-secondary);
 }
 </style>
