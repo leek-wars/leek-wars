@@ -170,8 +170,16 @@ const allContexts = allModel(displayContexts, ['challenge', 'garden', 'tournamen
 const indetContexts = someModel(displayContexts, ['challenge', 'garden', 'tournament'])
 const allTypes = allModel(displayTypes, ['solo', 'farmer', 'team', 'battleRoyale', 'war', 'chestHunt', 'colossus', 'boss'])
 const indetTypes = someModel(displayTypes, ['solo', 'farmer', 'team', 'battleRoyale', 'war', 'chestHunt', 'colossus', 'boss'])
-const allLoot = allModel(displayLoot, ['chests', 'rareloot'])
-const indetLoot = someModel(displayLoot, ['chests', 'rareloot'])
+// Ligne Butin : sémantique inversée par rapport aux autres lignes. Ses chips sont des
+// RESTRICTIONS (cocher « Coffres » = ne montrer que les combats à coffres) et c'est
+// aucun chip coché qui affiche tout. « Tout » est donc coché quand aucune restriction
+// n'est active, et cliquer dessus les efface (avant, il cochait les deux restrictions,
+// masquant notamment les combats en génération alors qu'il affichait « Tout »).
+const allLoot = computed<boolean>({
+	get: () => !displayLoot.value.chests && !displayLoot.value.rareloot,
+	set: () => { displayLoot.value.chests = false; displayLoot.value.rareloot = false },
+})
+const indetLoot = computed(() => displayLoot.value.chests || displayLoot.value.rareloot)
 const allResults = allModel(displayResults, ['win', 'draw', 'defeat', 'generating'])
 const indetResults = someModel(displayResults, ['win', 'draw', 'defeat', 'generating'])
 
