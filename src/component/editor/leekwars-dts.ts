@@ -437,7 +437,7 @@ const DEPRECATED_FLAT: Record<string, string> = {
 	getPower: 'entity.power', getLevel: 'entity.level', getName: 'entity.name', getAbsoluteShield: 'entity.absoluteShield',
 	getRelativeShield: 'entity.relativeShield', getCell: 'me.cell / entity.cell', getWeapon: 'entity.weapon',
 	getWeapons: 'entity.weapons', getChips: 'entity.chips', isAlive: 'entity.alive', isDead: 'entity.dead',
-	isAlly: 'entity.isAlly()', isEnemy: 'entity.isEnemy()', getEntity: 'me',
+	isAlly: 'entity.isAlly()', isEnemy: 'entity.isEnemy()', getEntity: 'Fight.me',
 	// me (actions)
 	useWeapon: 'me.useWeapon(target)', useWeaponOnCell: 'me.useWeaponOnCell(cell)', useChip: 'me.useChip(chip, target)',
 	useChipOnCell: 'me.useChipOnCell(chip, cell)', setWeapon: 'me.setWeapon(weapon)', say: 'me.say(message)',
@@ -661,9 +661,6 @@ declare class Me extends Entity {
 	chipTargets(chip: ChipLike, cell: CellLike): Entity[];
 }
 
-/** L'IA courante. */
-declare const me: Me;
-
 declare const Registers: {
 	get(key: string): any;
 	set(key: string, value: any): any;
@@ -672,6 +669,8 @@ declare const Registers: {
 };
 
 declare const Fight: {
+	/** L'IA courante (votre entité). */
+	readonly me: Me;
 	readonly turn: number;
 	getNearestEnemy(): Entity | null;
 	getNearestAlly(): Entity | null;
