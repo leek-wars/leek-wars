@@ -13,7 +13,7 @@ import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
-import { buildLeekwarsDeclarations } from './leekwars-dts';
+import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs } from './leekwars-dts';
 // monaco-stripped importe la contribution TS pour ses effets de bord (enregistrement du langage), mais
 // n'assemble PAS le namespace `monaco.languages.typescript` (fait uniquement par `editor.main` complet,
 // non importé ici) -> `monaco.languages.typescript` est TOUJOURS undefined dans ce build. On récupère
@@ -268,6 +268,43 @@ monaco.languages.registerHoverProvider("leekscript", {
 			contents: [
 
 			],
+		}
+	},
+})
+
+// --- Survol des IA polyglot Python ---
+// Les .py utilisent le langage Monaco `python` (pas de language service TS, donc aucun hover natif).
+// On résout le symbole sous le curseur (fonction plate, constante objet Weapon.pistol, membre me./
+// Fight....) vers son nom plat d'API : le hover renvoie ce nom, et le hook de carte de ai-view-monaco
+// enrichit alors avec la vraie fiche (DocumentationConstant / DocumentationFunction), comme en JS/TS.
+let _pyConstPaths: Map<string, string> | null = null
+let _pyMemberToLs: Record<string, string> | null = null
+function resolvePolyglotSymbol(path: string): string | undefined {
+	_pyConstPaths ||= buildConstantPathMap(LeekWars.constants ?? [])
+	_pyMemberToLs ||= buildMemberToLs()
+	// `me` est l'instance de Me : on normalise vers le nom de classe pour la table des membres.
+	const p = path.startsWith('me.') ? 'Me.' + path.slice(3) : path
+	const constName = p.includes('.') ? _pyConstPaths.get(p) : p
+	if (constName && (LeekWars.constants ?? []).some((c) => c.name === constName)) return constName
+	const funName = _pyMemberToLs[p] ?? (p.includes('.') ? p.split('.').pop()! : p)
+	if ((LeekWars.functions ?? []).some((f) => f.name === funName)) return funName
+	return undefined
+}
+
+monaco.languages.registerHoverProvider('python', {
+	provideHover: (model, position) => {
+		const word = model.getWordAtPosition(position)
+		if (!word) return null
+		// Préfixe `Ident.` éventuel juste avant le mot (accès membre : Weapon.pistol, me.setWeapon...).
+		const before = model.getLineContent(position.lineNumber).slice(0, word.startColumn - 1)
+		const prefix = before.match(/([A-Za-z_$][\w$]*)\.\s*$/)
+		const path = prefix ? `${prefix[1]}.${word.word}` : word.word
+		const flat = resolvePolyglotSymbol(path)
+		if (!flat) return null
+		return {
+			range: new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
+			// 1re ligne = nom plat du symbole : le hook de carte (ai-view-monaco) le résout et monte la fiche.
+			contents: [{ value: flat }],
 		}
 	},
 })
