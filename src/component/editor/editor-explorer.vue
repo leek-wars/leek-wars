@@ -194,6 +194,7 @@
 
 <script setup lang="ts">
 	import { AI } from '@/model/ai'
+	import { getLanguageForPath } from './file-types'
 	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { mixins, t as gt, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -558,13 +559,23 @@
 		}
 	}
 
+	// Entête de commentaire adapté au langage : Python n'a pas de bloc /* */, les autres (LeekScript,
+	// JS, TS) acceptent /** **/. Sans ça un export Python commençait par un commentaire invalide.
+	function commentLine(language: string, text: string): string {
+		return (language === 'python' ? "# " + text : "/** " + text + " **/") + "\n\n"
+	}
+
 	function downloadSimple() {
-		download(ai.value!.name, "/** " + ai.value!.path + " **/\n\n" + ai.value!.code)
+		const language = getLanguageForPath(ai.value!.path)
+		download(ai.value!, commentLine(language, ai.value!.path) + ai.value!.code)
 	}
 
 	async function downloadIncludes() {
 		if (!ai.value) { return }
 
+		// Aplatissement des include() LeekScript uniquement (le sous-menu n'apparaît que si ai.includes
+		// est non vide, ce qui est propre au LeekScript ; JS/TS/Python résolvent leurs imports au build).
+		const language = getLanguageForPath(ai.value.path)
 		const regex = /^[ \t]*include\s*\(\s*["'](.*?)["']\s*\)[ \t]*;?.*$/gm
 		const pragmaRegex = /^[ \t]*\/\/[ \t]*@[A-Za-z_][A-Za-z0-9_]*(?:[ \t]*:[ \t]*\S+)?[ \t]*\r?$/gm
 
@@ -594,7 +605,7 @@
 			if (!isRoot) {
 				code = code.replace(pragmaRegex, '')
 			}
-			return "/** " + target.path + " **/\n\n" + code.replace(regex, (a, path) => {
+			return commentLine(language, target.path) + code.replace(regex, (a, path) => {
 				const included = fileSystem.find(path, target.folder)
 				if (included && !included_ais.has(included)) {
 					included_ais.add(included)
@@ -606,12 +617,16 @@
 		}
 		const code = fun(ai.value!, true)
 
-		download(ai.value!.name, code)
+		download(ai.value!, code)
 	}
 
-	function download(filename: string, text: string) {
-		const data = "/** Exporté le " + new Date().toLocaleString() + " **/\n\n" + text
-		if (!filename.endsWith(".leek")) {
+	function download(file: AI, text: string) {
+		const language = getLanguageForPath(file.path)
+		const data = commentLine(language, "Exporté le " + new Date().toLocaleString()) + text
+		// Nom = basename réel (extension incluse pour le polyglot : bot.js/bot.py). LeekScript = sans
+		// extension par convention -> on ajoute .leek. Avant : .leek forcé pour TOUS -> bot.js.leek.
+		let filename = file.path.substring(file.path.lastIndexOf('/') + 1)
+		if (language === 'leekscript' && !filename.endsWith(".leek")) {
 			filename += ".leek"
 		}
 		const element = document.createElement('a')

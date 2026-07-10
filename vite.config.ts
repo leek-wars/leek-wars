@@ -452,10 +452,11 @@ export default defineConfig({
 		alias: [
 			{ find: '@', replacement: path.resolve(__dirname, 'src') },
 			// Redirect bare `monaco-editor` imports to a stripped barrel that only
-			// pulls the languages we actually use (markdown, yaml) + LeekScript
-			// custom registration in monaco.ts. Skips the ~80 basic-languages and
-			// the 4 heavy language services (ts/json/html/css) and their Workers
-			// — each Worker triggered a nested Vite build (~14s each).
+			// pulls the languages we actually use (markdown, yaml, plus JS/TS/Python
+			// for the polyglot AIs) + the TypeScript language service and its Worker
+			// (type-checking JS/TS in the browser), + LeekScript custom registration
+			// in monaco.ts. Skips the ~80 other basic-languages and the json/html/css
+			// language services and their Workers — each triggered a nested Vite build.
 			{ find: /^monaco-editor$/, replacement: path.resolve(__dirname, 'src/component/editor/monaco-stripped.ts') }
 		]
 	},

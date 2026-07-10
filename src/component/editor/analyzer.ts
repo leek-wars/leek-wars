@@ -120,6 +120,11 @@ class Analyzer {
 			m.message,
 		))
 		this.setProblems(ai.path, ai, problems)
+		// Recalcule ai.valid (croix rouge "invalide" de la carte d'IA) : sinon il restait figé sur
+		// l'état serveur, périmé tant qu'on n'avait pas sauvegardé. Mêmes règles qu'applyAnalyzeResult
+		// (un problème de niveau 0 = erreur = invalide). Couvre les IA .ts/.js (le pont TS ne passe pas
+		// les .py, qui n'ont pas encore de diagnostics live).
+		ai.valid = !problems.some(p => p.level === 0)
 		this.updateCount()
 	}
 
@@ -206,8 +211,6 @@ class Analyzer {
 	}
 
 	public complete(ai: AI, code: string, line: number, column: number): Promise<CompletionResult | null> {
-
-		console.log("🔥 Complete", ai.path, line, column)
 
 		if (code.length > 60_000) {
 			// return { ...Promise.reject(), abort: () => null }
