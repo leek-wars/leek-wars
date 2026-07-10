@@ -1,0 +1,68 @@
+import { describe, it, expect } from 'vitest'
+import { getLanguageForPath, isLeekScript, AI_LANGUAGES } from './file-types'
+
+// Ancre anti-dérive : la correspondance extension -> langage est dupliquée dans 3 repos
+// (client file-types.ts, serveur AIController POLYGLOT/NON_LEEK/LANGUAGE_EXTENSIONS, generator
+// PolyglotEntityAI.detectLanguage). Ce test verrouille la vue CLIENT ; si on ajoute/retire une
+// extension polyglot, il casse et rappelle de synchroniser les 3 sources.
+
+describe('getLanguageForPath', () => {
+	// Extensions polyglot reconnues par le moteur (doit rester alignée sur POLYGLOT_EXTENSIONS PHP
+	// = ['js','mjs','ts','mts','py'] et PolyglotEntityAI.detectLanguage côté generator).
+	const cases: [string, string][] = [
+		['main', 'leekscript'],        // sans extension = LeekScript (convention historique)
+		['main.leek', 'leekscript'],
+		['bot.js', 'javascript'],
+		['bot.mjs', 'javascript'],
+		['bot.ts', 'typescript'],
+		['bot.mts', 'typescript'],
+		['bot.py', 'python'],
+		['dir/sub/bot.py', 'python'],  // le langage vient du basename, pas du dossier
+		['BOT.JS', 'javascript'],      // insensible à la casse (comme strtolower serveur / detectLanguage)
+		['notes.md', 'markdown'],
+		['data.json', 'json'],
+		['conf.yml', 'yaml'],
+		['conf.yaml', 'yaml'],
+		['readme.txt', 'plaintext'],
+		['.gitignore', 'plaintext'],
+		['weird.xyz', 'leekscript'],   // extension inconnue = LeekScript (defaut)
+	]
+	for (const [path, lang] of cases) {
+		it(`${path} -> ${lang}`, () => {
+			expect(getLanguageForPath(path)).toBe(lang)
+		})
+	}
+
+	it('les extensions polyglot sont exactement js/mjs/ts/mts/py', () => {
+		const polyglot = new Set(['javascript', 'typescript', 'python'])
+		const ext = (p: string) => getLanguageForPath('f.' + p)
+		const polyglotExts = ['js', 'mjs', 'ts', 'mts', 'py'].filter(e => polyglot.has(ext(e)))
+		expect(polyglotExts).toEqual(['js', 'mjs', 'ts', 'mts', 'py'])
+		// et aucune autre extension "courante" ne doit basculer en polyglot
+		for (const e of ['leek', 'md', 'json', 'yml', 'yaml', 'txt', 'lsx', 'py2']) {
+			expect(polyglot.has(ext(e))).toBe(false)
+		}
+	})
+})
+
+describe('isLeekScript', () => {
+	it('vrai pour LeekScript / sans extension, faux pour le polyglot et les docs', () => {
+		expect(isLeekScript('main')).toBe(true)
+		expect(isLeekScript('main.leek')).toBe(true)
+		expect(isLeekScript('bot.js')).toBe(false)
+		expect(isLeekScript('bot.ts')).toBe(false)
+		expect(isLeekScript('bot.py')).toBe(false)
+		expect(isLeekScript('notes.md')).toBe(false)
+	})
+})
+
+describe('AI_LANGUAGES', () => {
+	it('couvre les 4 langages proposés à la création, extensions cohérentes avec getLanguageForPath', () => {
+		expect(AI_LANGUAGES.map(l => l.id)).toEqual(['leekscript', 'javascript', 'typescript', 'python'])
+		for (const l of AI_LANGUAGES) {
+			// LeekScript = extension vide -> nom sans point ; les autres = leur extension déclarée.
+			const sample = l.extension ? 'demo' + l.extension : 'demo'
+			expect(getLanguageForPath(sample)).toBe(l.id)
+		}
+	})
+})
