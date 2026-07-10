@@ -2,8 +2,6 @@
 	"documentation": "文档",
 	"documentation_desc": "所有 <b>LeekScript</b> 函数和常量的详细列表",
 	"general_help": "发现游戏、运营和信息",
-	"polyglot": "JavaScript, Python, TypeScript",
-	"polyglot_desc": "Write your AI in <b>JavaScript</b>, <b>Python</b> or <b>TypeScript</b>",
 	"rewatch_didactitiel": "查看教程",
 	"title": "帮助",
 	"tutorial": "LeekScript 教程",

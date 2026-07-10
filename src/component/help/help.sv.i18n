@@ -2,8 +2,6 @@
 	"documentation": "Dokumentation",
 	"documentation_desc": "Detaljerad lista över alla <b>LeekScript</b>-funktioner och konstanter",
 	"general_help": "Upptäckt av spelet, drift och information",
-	"polyglot": "JavaScript, Python, TypeScript",
-	"polyglot_desc": "Write your AI in <b>JavaScript</b>, <b>Python</b> or <b>TypeScript</b>",
 	"rewatch_didactitiel": "Granska handledningen",
 	"title": "Hjälp",
 	"tutorial": "LeekScript handledning",

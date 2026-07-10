@@ -2,8 +2,6 @@
 	"documentation": "문서",
 	"documentation_desc": "모든 <b>LeekScript</b> 함수 및 상수의 상세 목록",
 	"general_help": "게임 발견, 작동 방식 및 정보",
-	"polyglot": "JavaScript, Python, TypeScript",
-	"polyglot_desc": "Write your AI in <b>JavaScript</b>, <b>Python</b> or <b>TypeScript</b>",
 	"rewatch_didactitiel": "튜토리얼 다시 보기",
 	"title": "도움말",
 	"tutorial": "LeekScript 튜토리얼",

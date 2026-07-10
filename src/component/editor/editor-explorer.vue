@@ -167,6 +167,9 @@
 					<v-btn value="typescript" size="small"><img class="lang-opt" src="/image/language/typescript.svg">TypeScript</v-btn>
 					<v-btn value="python" size="small"><img class="lang-opt" src="/image/language/python.svg">Python</v-btn>
 				</v-btn-toggle>
+				<a v-if="newAILanguage !== 'leekscript'" href="/help/polyglot" target="_blank" rel="noopener" class="polyglot-help">
+					<v-icon size="16">mdi-book-open-variant</v-icon> {{ polyglotHelpLabel }}
+				</a>
 				<v-checkbox v-model="newAIStarter" :label="$t('include_starter')" density="compact" hide-details class="starter-checkbox" />
 			</div>
 			<template #actions>
@@ -194,6 +197,7 @@
 
 <script setup lang="ts">
 	import { AI } from '@/model/ai'
+	import { useI18n } from 'vue-i18n'
 	import { getLanguageForPath } from './file-types'
 	import { fileSystem, translateFileSystemError } from '@/model/filesystem'
 	import { mixins, t as gt, useNamespacedT } from '@/model/i18n'
@@ -320,6 +324,13 @@
 		}
 		return null
 	})
+
+	// Lien vers la doc joueur polyglot (dialogue nouvelle IA, si langage non-LeekScript). Label bilingue
+	// FR/EN via la locale (pas de nouvelle clé i18n × 17 pour un simple libellé de lien).
+	const { locale: uiLocale } = useI18n()
+	const polyglotHelpLabel = computed(() => uiLocale.value === 'fr'
+		? 'Guide : écrire une IA en JavaScript, Python ou TypeScript'
+		: 'Guide: writing an AI in JavaScript, Python or TypeScript')
 
 	// L'extension d'IA détermine le langage : .js = JavaScript, .ts = TypeScript, .py = Python
 	// (IA polyglot GraalVM), rien = LeekScript. Voir getLanguageForPath (file-types.ts).
@@ -684,5 +695,17 @@
 }
 .starter-checkbox {
 	margin-top: 8px;
+}
+.polyglot-help {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-top: 10px;
+	font-size: 13px;
+	color: var(--link-color);
+	text-decoration: none;
+}
+.polyglot-help:hover {
+	text-decoration: underline;
 }
 </style>

@@ -2,8 +2,6 @@
 	"documentation": "Dokumentasi",
 	"documentation_desc": "Daftar detail semua fungsi dan konstanta <b>LeekScript</b>",
 	"general_help": "Penemuan permainan, operasi dan informasi",
-	"polyglot": "JavaScript, Python, TypeScript",
-	"polyglot_desc": "Write your AI in <b>JavaScript</b>, <b>Python</b> or <b>TypeScript</b>",
 	"rewatch_didactitiel": "Tinjau tutorialnya",
 	"title": "Bantuan",
 	"tutorial": "Tutorial LeekScript",

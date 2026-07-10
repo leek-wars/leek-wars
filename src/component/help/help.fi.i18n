@@ -2,8 +2,6 @@
 	"documentation": "Dokumentointi",
 	"documentation_desc": "Yksityiskohtainen luettelo kaikista <b>LeekScript</b>-funktioista ja vakioista",
 	"general_help": "Pelin, toiminnan ja tietojen löytäminen",
-	"polyglot": "JavaScript, Python, TypeScript",
-	"polyglot_desc": "Write your AI in <b>JavaScript</b>, <b>Python</b> or <b>TypeScript</b>",
 	"rewatch_didactitiel": "Tarkista opetusohjelma",
 	"title": "Apu",
 	"tutorial": "LeekScript opetusohjelma",

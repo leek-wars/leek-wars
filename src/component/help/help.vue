@@ -37,15 +37,6 @@
 			</panel>
 
 			<panel v-ripple>
-				<template #content><router-link to="/help/polyglot">
-					<h2>{{ $t('polyglot') }}</h2>
-					<v-icon class="bigicon">mdi-code-braces</v-icon>
-					<br>
-					<span class="description">{{ $t('polyglot_desc') }}</span>
-				</router-link></template>
-			</panel>
-
-			<panel v-ripple>
 				<template #content><router-link to="/encyclopedia">
 					<h2>Encyclopédie</h2>
 					<v-icon class="bigicon">mdi-book-open-page-variant</v-icon>
