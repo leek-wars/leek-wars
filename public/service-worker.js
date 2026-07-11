@@ -40,6 +40,9 @@ self.addEventListener('fetch', event => {
 	if (url.origin !== self.location.origin) return;
 	// API requests bypass: custom headers get stripped on cache replay, error responses get cached.
 	if (url.pathname.startsWith('/api/')) return;
+	// Explicit bypass: the new-version check (version-check.ts) needs the network copy of
+	// index.html — a stale-while-revalidate replay would defeat the comparison.
+	if (url.searchParams.has('no-sw')) return;
 	// Images bypass: they ship immutable long-lived Cache-Control, so the browser's
 	// native HTTP cache serves them. Routing every <img> through Cache Storage SWR
 	// is redundant and counter-productive on Firefox, where Cache Storage reads/writes

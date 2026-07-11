@@ -912,6 +912,7 @@ const LeekWars = reactive({
 	logoutDialog: false,
 	cloverResult: null as string | null,
 	cloverPopup: false,
+	newVersionPopup: false,
 	displayMessage: (message: string | null) => {
 		if (message) {
 			// console.log("Display message", message)

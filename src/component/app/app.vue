@@ -203,6 +203,17 @@
 					<v-btn variant="text" @click="LeekWars.cloverPopup = false">{{ $t('main.clover_dismiss') }}</v-btn>
 				</template>
 			</v-snackbar>
+
+			<v-snackbar v-model="LeekWars.newVersionPopup" :timeout="-1" color="#222" location="top">
+				<div style="display: flex; align-items: center; gap: 10px">
+					<v-icon>mdi-update</v-icon>
+					<span>{{ $t('main.new_version') }}</span>
+				</div>
+				<template #actions>
+					<v-btn variant="text" color="#5fad1b" @click="reloadNewVersion">{{ $t('main.new_version_reload') }}</v-btn>
+					<v-btn variant="text" @click="LeekWars.newVersionPopup = false">{{ $t('main.new_version_later') }}</v-btn>
+				</template>
+			</v-snackbar>
 		</div>
 </template>
 
@@ -240,6 +251,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { AccountInfo, store } from '@/model/store'
+	import { startVersionCheck } from '@/model/version-check'
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
@@ -469,6 +481,11 @@
 	// classes quand il (re)monte. flush:'post' garantit que le DOM est à jour.
 	watch(() => [LeekWars.large, LeekWars.flex, LeekWars.box, LeekWars.didactitial, LeekWars.lightBar, LeekWars.mobile], applyLayout, { flush: 'post' })
 	onMounted(applyLayout)
+	onMounted(startVersionCheck)
+
+	function reloadNewVersion() {
+		window.location.reload()
+	}
 
 	emitter.on('connected', () => {
 		if (!store.state.farmer!.didactitiel_seen) {
