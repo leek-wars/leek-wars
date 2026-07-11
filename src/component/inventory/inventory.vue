@@ -283,6 +283,7 @@
 			inventory.push(...store.state.farmer.resources.map(resource => ({type: ItemType.RESOURCE, ...resource})))
 			inventory.push(...store.state.farmer.components.map(p => ({type: ItemType.COMPONENT, ...p})))
 			inventory.push(...store.state.farmer.schemes.map(p => ({type: ItemType.SCHEME, ...p})))
+			inventory.push(...(store.state.farmer.fight_packs || []).map(p => ({type: ItemType.FIGHT_PACK, ...p})))
 		}
 		return inventory
 	})

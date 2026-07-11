@@ -99,6 +99,7 @@ class Farmer {
 	public resources!: InventoryItem[]
 	public components!: InventoryItem[]
 	public schemes!: InventoryItem[]
+	public fight_packs!: InventoryItem[]
 	public verified!: boolean
 	public tutorial_progress!: number
 	public group!: Group

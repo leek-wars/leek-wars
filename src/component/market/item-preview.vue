@@ -58,6 +58,10 @@
 				<v-btn v-if="quantity >= 10" size="small" class="get-all notif-trophy" @click.stop="retrieveN(10)">x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				<v-btn v-if="quantity >= 100" size="small" class="get-all notif-trophy" @click.stop="retrieveN(100)">x100 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 			</div>
+			<div v-if="inventory && item.type === ItemType.FIGHT_PACK && quantity > 0">
+				<v-btn size="small" class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+				<v-btn v-if="quantity >= 10" size="small" class="get-all notif-trophy" @click.stop="retrieveN(10)">x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+			</div>
 		</div>
 	</div>
 </template>
@@ -167,15 +171,20 @@ const schemeCraftCost = computed(() => {
 const displayCraftCost = computed(() => props.craftCost || schemeCraftCost.value)
 
 function retrieveN(n: number) {
-	LeekWars.post<{habs: number, items: {[key: number]: { template: number, [k: string]: unknown }}}>('item/retrieve', { template: props.item.id, quantity: n }).then((data) => {
+	LeekWars.post<{habs: number, fights: number, items: {[key: number]: { template: number, [k: string]: unknown }}}>('item/retrieve', { template: props.item.id, quantity: n }).then((data) => {
 		if (data.habs) {
 			store.commit('update-habs', data.habs)
+		}
+		// Packs de combat : le serveur crédite les combats à l'utilisation.
+		if (data.fights) {
+			store.commit('update-fights', data.fights)
+			store.commit('update-bought-fights', data.fights)
 		}
 		for (const item of Object.values(data.items)) {
 			store.commit('add-inventory', {...item, type: LeekWars.items[item.template].type, time: Date.now() / 1000 })
 		}
 		emit('retrieve', Object.values(data.items))
-		store.commit('remove-inventory', { type: ItemType.RESOURCE, item_template: props.item.id, quantity: n })
+		store.commit('remove-inventory', { type: props.item.type, item_template: props.item.id, quantity: n })
 	})
 }
 

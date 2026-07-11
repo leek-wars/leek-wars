@@ -785,6 +785,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					// Sinon on ajoute
 					state.farmer.resources.push(data)
 				}
+			} else if (data.type === ItemType.FIGHT_PACK) {
+				// Les packs se stackent par template (un item leek=-1 par template côté serveur).
+				if (!state.farmer.fight_packs) { state.farmer.fight_packs = [] }
+				const pack = LeekWars.selectWhere(state.farmer.fight_packs, 'template', data.template)
+				if (pack) {
+					pack.quantity += quantity
+					pack.time = data.time
+				} else {
+					state.farmer.fight_packs.push({ id: data.id, template: data.template, quantity, time: data.time })
+				}
 			}
 		},
 
@@ -803,6 +813,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				list = state.farmer.resources
 			} else if (data.type === ItemType.COMPONENT) {
 				list = state.farmer.components
+			} else if (data.type === ItemType.FIGHT_PACK) {
+				list = state.farmer.fight_packs
 			}
 			if (!list) { return }
 			const item = LeekWars.selectWhere(list, 'template', data.item_template)
