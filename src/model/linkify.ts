@@ -57,7 +57,18 @@ export function linkify(html: string) {
 		const lw_index = indexOf_leekwars(real_url)
 		const blank = lw_index.index === 0 ? "" : "target='_blank' rel='noopener'"
 		if (lw_index.index === 0) {
-			real_url = decodeURIComponent(real_url).substring(lw_index.length)
+			// Le décodage rend l'URL lisible (accents des slugs...), mais il
+			// réintroduit APRÈS protect() des caractères qu'elle avait neutralisés :
+			// %22%3E → "> ferme l'attribut href et injecte du HTML brut dans le
+			// v-html du chat. On ne garde la forme décodée que si elle ne contient
+			// ni HTML-spéciaux, ni blancs, ni les sentinelles 0xE000/0xE001 de
+			// chat-format ; sinon l'URL reste encodée telle que tapée (inoffensive).
+			// decodeURIComponent jette sur un % malformé (ex: /100%) : idem.
+			try {
+				const decoded = decodeURIComponent(real_url)
+				if (!/[<>"'&\s\uE000\uE001]/.test(decoded)) { real_url = decoded }
+			} catch { /* séquence % malformée : on garde l'URL brute */ }
+			real_url = real_url.substring(lw_index.length)
 			if (real_url.length === 0) real_url = '/'
 			url = real_url
 		}

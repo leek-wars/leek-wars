@@ -45,6 +45,29 @@ describe('linkify - texte de lien trompeur via " et > (bug report)', () => {
 	})
 })
 
+describe('linkify - injection HTML via URL percent-encodée (bug report)', () => {
+	it('ne décode pas une URL leekwars dont la forme décodée contient " ou > (%22%3E)', () => {
+		// Vecteur réel : leekwars.com/bank/buy/6%22%3E%0A...texte d'arnaque...
+		// Le décodage réintroduirait "> APRÈS protect() → sortie de l'attribut
+		// href et HTML brut injecté dans le v-html du chat.
+		const out = linkify('leekwars.com/bank/buy/6%22%3E%0A%20(crystal)Si%20vous%20voyez')
+		expect(out).toBe('<a  class="lw" href="/bank/buy/6%22%3E%0A%20(crystal)Si%20vous%20voyez">' +
+			'/bank/buy/6%22%3E%0A%20(crystal)Si%20vous%20voyez</a>')
+	})
+	it('ne décode pas non plus %3Cimg (balise HTML encodée)', () => {
+		const out = linkify('https://leekwars.com/a%3Cimg%20src=x%3E')
+		expect(out).not.toContain('<img')
+	})
+	it('décode toujours les URLs leekwars inoffensives (accents)', () => {
+		const out = linkify('https://leekwars.com/forum/cat%C3%A9gorie')
+		expect(out).toContain('href="/forum/catégorie"')
+	})
+	it('ne plante pas sur une séquence % malformée', () => {
+		const out = linkify('https://leekwars.com/100%')
+		expect(out).toContain('href="/100%"')
+	})
+})
+
 describe('linkify - emails', () => {
 	it('transforme un email en lien mailto', () => {
 		expect(linkify('bob@example.com')).toBe(
