@@ -96,6 +96,7 @@
     - "Sessions are invalidated when an account is deleted."
     - "Arena queue: the display no longer stays stuck after switching accounts. (thanks to NewSlash)"
     - "Leek and farmer titles: word order and gender agreement fixed per language (Italian, Spanish, Portuguese). (thanks to Casanova)"
+    - "Chat: a URL followed by \" or > no longer absorbs the following text, which allowed forging links with deceptive text."
 247:
   title: "Git integration, loadouts, multi-account management and clover potions."
   added:
