@@ -24,7 +24,7 @@
 		<circle :cx="avatarCx" :cy="y + size - avatarSize / 3" :r="avatarSize / 2" fill="none" stroke="var(--background-disabled)" :stroke-width="1.5" />
 	</a>
 	<foreignObject v-if="displayName" :x="x" :y="nameAbove ? y - nameFontSize * 1.6 - 1 : y + size + 1" :width="size" :height="nameFontSize * 1.6" style="overflow: visible; pointer-events: none">
-		<div class="block-name-wrap"><span class="block-name" :style="nameStyle">{{ displayName }}</span></div>
+		<div class="block-name-wrap" :class="{ above: nameAbove }"><span class="block-name" :style="nameStyle">{{ displayName }}</span></div>
 	</foreignObject>
 </template>
 
@@ -148,10 +148,15 @@ function mouseleave() {
 	.block-name-wrap {
 		display: flex;
 		justify-content: center;
-		align-items: center;
+		// Collé au bord haut de la boîte (juste sous le carré) quand le nom est
+		// en dessous ; collé au bord bas (juste au-dessus du carré) quand au-dessus.
+		align-items: flex-start;
 		width: 100%;
 		height: 100%;
 		pointer-events: none;
+	}
+	.block-name-wrap.above {
+		align-items: flex-end;
 	}
 	.block-name {
 		max-width: 100%;
