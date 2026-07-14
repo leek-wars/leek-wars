@@ -19,3 +19,10 @@ interface ImportMeta {
 
 declare const __BUILD_DATE__: string
 declare const __BUILD_COMMIT__: string
+
+// Stubs typeshed (stdlib) de Pyright, fournis par pyrightTypeshedPlugin (vite.config.ts) : map
+// chemin relatif (`stdlib/builtins.pyi`...) -> contenu du stub. Seedé dans la FS du worker Pyright.
+declare module 'virtual:pyright-typeshed' {
+	const files: Record<string, string>
+	export default files
+}

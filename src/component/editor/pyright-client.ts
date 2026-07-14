@@ -13,6 +13,15 @@ import * as monaco from 'monaco-editor'
 import { BrowserMessageReader, BrowserMessageWriter, createMessageConnection, type MessageConnection } from 'vscode-jsonrpc/browser'
 import type { Diagnostic, PublishDiagnosticsParams, ConfigurationParams } from 'vscode-languageserver-protocol'
 import { injectImport } from './pyright-inject'
+// Stubs typeshed (stdlib Python) : @typefox/pyright-browser n'embarque PAS typeshed -> sans ça Pyright
+// n'a aucun builtin (print/len/range... = « not defined »). Fournis par pyrightTypeshedPlugin
+// (vite.config.ts), bundlés dans ce chunk lazy et seedés dans la FS du worker sous TYPESHED_ROOT.
+import typeshedStdlib from 'virtual:pyright-typeshed'
+
+const TYPESHED_ROOT = '/typeshed'
+const TYPESHED_FILES: Record<string, string> = Object.fromEntries(
+	Object.entries(typeshedStdlib).map(([relPath, content]) => [`${TYPESHED_ROOT}/${relPath}`, content]),
+)
 // Worker prébuilt (IIFE webpack). ?worker -> Vite émet le chunk et fournit le constructeur.
 import PyrightWorker from '@typefox/pyright-browser/dist/pyright.worker.js?worker'
 
@@ -47,6 +56,7 @@ const PY_SETTINGS = {
 	diagnosticMode: 'openFilesOnly',
 	useLibraryCodeForTypes: false,
 	autoImportCompletions: false,
+	typeshedPaths: [TYPESHED_ROOT], // stdlib seedée dans la FS du worker (cf TYPESHED_FILES)
 	diagnosticSeverityOverrides: {
 		reportMissingImports: 'none',
 		reportMissingModuleSource: 'none',
@@ -119,8 +129,9 @@ function ensure(): Promise<void> {
 			processId: null,
 			rootUri: 'file:///',
 			workspaceFolders: [{ uri: 'file:///', name: 'leekwars' }],
-			// Seed la FS in-memory du worker avec le stub de l'API (cf PyrightServer.initialize).
-			initializationOptions: { files: { [STUB_PATH]: currentStub } },
+			// Seed la FS in-memory du worker : stubs typeshed (builtins/stdlib) + stub de l'API de combat
+			// (cf PyrightServer.initialize -> fileSystem.apply). typeshedPath complète typeshedPaths.
+			initializationOptions: { files: { ...TYPESHED_FILES, [STUB_PATH]: currentStub }, typeshedPath: TYPESHED_ROOT },
 			capabilities: {
 				workspace: { configuration: true, didChangeConfiguration: { dynamicRegistration: true } },
 				textDocument: { publishDiagnostics: { relatedInformation: false }, synchronization: {} },

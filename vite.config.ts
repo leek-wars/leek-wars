@@ -292,6 +292,34 @@ function yamlPlugin(): Plugin {
 	}
 }
 
+// Expose les stubs typeshed (stdlib) de Pyright comme module virtuel `virtual:pyright-typeshed`
+// (map chemin -> contenu). @typefox/pyright-browser N'EMBARQUE PAS typeshed : sans ces stubs, Pyright
+// n'a aucun builtin et signale `print`/`len`/`range`... comme « not defined ». On lit la stdlib du
+// paquet `pyright` (devDependency) au build ; le résultat est bundlé dans le chunk lazy pyright-client
+// (chargé seulement à l'ouverture d'un .py) et seedé dans la FS in-memory du worker.
+function pyrightTypeshedPlugin(): Plugin {
+	const VIRTUAL = 'virtual:pyright-typeshed'
+	const RESOLVED = '\0' + VIRTUAL
+	return {
+		name: 'pyright-typeshed',
+		resolveId(id) { return id === VIRTUAL ? RESOLVED : undefined },
+		load(id) {
+			if (id !== RESOLVED) return
+			const root = path.resolve(__dirname, 'node_modules/pyright/dist/typeshed-fallback/stdlib')
+			const files: Record<string, string> = {}
+			const walk = (dir: string) => {
+				for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+					const p = path.join(dir, e.name)
+					if (e.isDirectory()) walk(p)
+					else files['stdlib/' + path.relative(root, p).split(path.sep).join('/')] = fs.readFileSync(p, 'utf-8')
+				}
+			}
+			walk(root)
+			return `export default ${JSON.stringify(files)}`
+		},
+	}
+}
+
 // Plugin to inject __DATA__ in dev mode by fetching from the API
 // Uses a middleware to read cookies and diff like the PHP server does
 function gameDataPlugin(): Plugin {
@@ -420,6 +448,7 @@ export default defineConfig({
 	},
 	plugins: [
 		multiLanguagePlugin(),
+		pyrightTypeshedPlugin(),
 		i18nPlugin(),
 		i18nJsonPlugin(),
 		yamlPlugin(),
