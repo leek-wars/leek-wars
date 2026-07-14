@@ -506,5 +506,29 @@
 	"249_maintenance": {
 		"emoji": "🏁",
 		"description": "Race your leek in a mini-game while the server updates"
+	},
+	"249_js_ts_py": {
+		"emoji": "🌐",
+		"description": "JavaScript, TypeScript and Python, all first-class"
+	},
+	"249_covariant": {
+		"emoji": "🧬",
+		"description": "Override a method with a more precise return type"
+	},
+	"249_history_resources": {
+		"emoji": "💎",
+		"description": "See the resources each leek dropped, right in the preview"
+	},
+	"249_tournament_names": {
+		"emoji": "🏆",
+		"description": "Leek names now show in the tournament bracket"
+	},
+	"249_tutorial_dialog": {
+		"emoji": "🎓",
+		"description": "A friendly nudge to start the LeekScript tutorial"
+	},
+	"248_notif_setting": {
+		"emoji": "🔔",
+		"description": "Open the fight report directly from a notification"
 	}
 }
