@@ -181,6 +181,15 @@ class Analyzer {
 			const entry = result[epPath]
 			if (typeof entry.total_lines === 'number') ai.total_lines = entry.total_lines
 			if (typeof entry.total_chars === 'number') ai.total_chars = entry.total_chars
+			// Polyglot (.js/.ts/.py) : la validité et les problèmes sont pilotés CÔTÉ CLIENT (service TS de
+			// Monaco / worker Pyright) via updatePolyglotProblems. Le verdict serveur — pour Python, un simple
+			// parse de syntaxe qui ignore les noms indéfinis — ne doit ni l'écraser ni afficher un faux
+			// "IA valide" au save. On reflète juste l'état client courant pour le retour positif.
+			const lang = getLanguageForPath(ai.path)
+			if (lang === 'javascript' || lang === 'typescript' || lang === 'python') {
+				if (ai.valid && onValid) onValid(ai)
+				continue
+			}
 			if (entry.problems !== undefined) {
 				// Entrée avec problèmes dédupliqués
 				const valid = !entry.problems.some(p => p[0] === 0)
