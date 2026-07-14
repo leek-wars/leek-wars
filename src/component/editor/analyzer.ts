@@ -122,8 +122,7 @@ class Analyzer {
 		this.setProblems(ai.path, ai, problems)
 		// Recalcule ai.valid (croix rouge "invalide" de la carte d'IA) : sinon il restait figé sur
 		// l'état serveur, périmé tant qu'on n'avait pas sauvegardé. Mêmes règles qu'applyAnalyzeResult
-		// (un problème de niveau 0 = erreur = invalide). Couvre les IA .ts/.js (le pont TS ne passe pas
-		// les .py, qui n'ont pas encore de diagnostics live).
+		// (un problème de niveau 0 = erreur = invalide). Couvre .ts/.js (service TS) ET .py (Pyright).
 		ai.valid = !problems.some(p => p.level === 0)
 		this.updateCount()
 	}
@@ -132,12 +131,12 @@ class Analyzer {
 		// console.log("🔥 Analyze", ai.path)
 		// console.time('hover')
 
-		// LeekScript ET Python passent par le daemon (le handler EDITOR_ANALYZE route .py vers
-		// validatePolyglot -> diagnostics de syntaxe live, même format de réponse). JS/TS sont analysés
-		// par le service TypeScript de Monaco côté client (type-check complet, remonté via
-		// updatePolyglotProblems) : on ne les envoie PAS au daemon pour éviter une double analyse.
+		// Seul LeekScript passe par le daemon. Les polyglot sont validés CÔTÉ CLIENT et remontés via le
+		// pont de markers (updatePolyglotProblems) : service TypeScript de Monaco pour .ts/.js, worker
+		// Pyright pour .py. On ne les envoie PAS au daemon -> pas de double analyse ni de double-report
+		// (le daemon faisait aussi une passe de syntaxe sur les .py, désormais couverte par Pyright).
 		const language = getLanguageForPath(ai.path)
-		if (language !== 'leekscript' && language !== 'python') {
+		if (language !== 'leekscript') {
 			return Promise.resolve(null)
 		}
 		if (code.length > 60_000) {

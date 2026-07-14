@@ -13,7 +13,9 @@ import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
-import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, DEPRECATED_FLAT, type ApiMember } from './leekwars-dts';
+import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, DEPRECATED_FLAT, type ApiMember } from './leekwars-dts'
+import { buildLeekwarsPyi } from './leekwars-pyi'
+import { pySetStub } from './pyright';
 // monaco-stripped importe la contribution TS pour ses effets de bord (enregistrement du langage), mais
 // n'assemble PAS le namespace `monaco.languages.typescript` (fait uniquement par `editor.main` complet,
 // non importé ici) -> `monaco.languages.typescript` est TOUJOURS undefined dans ce build. On récupère
@@ -989,6 +991,9 @@ function configurePolyglotTypeScript() {
 		jsLib?.dispose()
 		tsLib = ts.typescriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
 		jsLib = ts.javascriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
+		// Même source pour le stub Python (.pyi) fourni à Pyright (validation des IA .py). La façade est
+		// paresseuse : ceci ne fait que mémoriser le stub (le worker ne démarre qu'à l'ouverture d'un .py).
+		pySetStub(buildLeekwarsPyi(LeekWars.functions ?? [], LeekWars.constants ?? []))
 	}
 	refreshDeclarations()
 	if (!LeekWars.functions || LeekWars.functions.length === 0) {
@@ -1019,18 +1024,23 @@ function configurePolyglotTypeScript() {
 }
 configurePolyglotTypeScript()
 
-// Pont diagnostics TS Monaco -> panneau d'erreur LW : à chaque changement de markers d'un fichier
-// polyglot (.ts/.js), on reporte les diagnostics du language service (type ET syntaxe, en direct) dans
-// l'analyzer, pour qu'ils apparaissent dans le panneau d'erreur + les compteurs, comme le LeekScript.
+// Pont diagnostics client -> panneau d'erreur LW : à chaque changement de markers d'un fichier polyglot,
+// on reporte les diagnostics dans l'analyzer (panneau d'erreur + compteurs + croix "invalide"), comme le
+// LeekScript. Source des markers selon le langage : service TypeScript de Monaco (.ts/.js), worker
+// Pyright (.py). Les .py ne passent plus par le daemon (cf analyzer.analyze) -> pas de double-report.
+const POLYGLOT_MARKER_OWNERS: Record<string, string[]> = {
+	typescript: ['typescript', 'javascript'],
+	javascript: ['typescript', 'javascript'],
+	python: ['pyright'],
+}
 monaco.editor.onDidChangeMarkers((uris) => {
 	for (const uri of uris) {
 		const path = uri.path.replace(/^\//, '') // monaco.Uri.file('main.ts') -> '/main.ts'
 		const ai = fileSystem.ais[path]
 		if (!ai) continue
-		const lang = getLanguageForPath(ai.path)
-		if (lang !== 'typescript' && lang !== 'javascript') continue
-		const markers = monaco.editor.getModelMarkers({ resource: uri })
-			.filter(m => m.owner === 'typescript' || m.owner === 'javascript')
+		const owners = POLYGLOT_MARKER_OWNERS[getLanguageForPath(ai.path)]
+		if (!owners) continue
+		const markers = monaco.editor.getModelMarkers({ resource: uri }).filter(m => owners.includes(m.owner))
 		analyzer.updatePolyglotProblems(ai, markers)
 	}
 })

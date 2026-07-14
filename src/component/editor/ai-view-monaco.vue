@@ -31,6 +31,7 @@ import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer } from './analyzer'
 import { getLanguageForPath } from './file-types'
+import { pyOpen, pyChange, pyClose } from './pyright'
 import { code, dochash, createSubApp, emitter } from '@/model/vue'
 import { useNamespacedT } from '@/model/i18n'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
@@ -342,6 +343,7 @@ onBeforeUnmount(() => {
 	if (analyzerTimeout) clearTimeout(analyzerTimeout)
 	if (viewStateSaveTimeout) clearTimeout(viewStateSaveTimeout)
 	saveViewState()
+	if (currentAiPath !== null && getLanguageForPath(currentAiPath) === 'python') pyClose(monaco.Uri.file(currentAiPath).toString())
 	scrollListener?.dispose()
 	conflictLenses?.dispose()
 	if (editor) {
@@ -364,6 +366,8 @@ function update() {
 	if (!props.ai) return
 	if (currentAiPath !== null && currentAiPath !== props.ai.path) {
 		saveViewState()
+		// On quitte l'onglet précédent : ferme son document Pyright (efface ses marqueurs).
+		if (getLanguageForPath(currentAiPath) === 'python') pyClose(monaco.Uri.file(currentAiPath).toString())
 	}
 	currentAiPath = props.ai.path
 	syncModel()
@@ -403,6 +407,9 @@ function syncModel() {
 	editor.setModel(model)
 	currentVersionId = model.getAlternativeVersionId()
 
+	// Validation Python (Pyright, worker client) : ouvre le document. Démarre le worker au 1er .py.
+	if (model.getLanguageId() === 'python') pyOpen(model)
+
 	updateConflictDecorations()
 	setAnalyzerTimeout()
 	editor.focus()
@@ -439,6 +446,10 @@ function setAnalyzerTimeout() {
 		analyzing.value = true
 		ai.code = editor.getValue()
 		ai.analyze()
+
+		// Pyright : notifie le changement de contenu (worker client) pour les IA .py.
+		const model = editor.getModel()
+		if (model && model.getLanguageId() === 'python') pyChange(model)
 
 		analyzer.updateTodos(ai)
 

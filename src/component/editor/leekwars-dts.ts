@@ -63,7 +63,7 @@ function buildFunctionJsdoc(doc: DocLookup, name: string, paramNames: string[], 
 
 // Type-id LeekScript -> type TS. Aligné sur `doc.arg_type_<id>` (cf. doc.*.lang). 0 = void (pas de retour).
 // Les valeurs marshallées côté guest : map -> objet/Map, set -> tableau (cf. TypeMarshaller).
-const TS_TYPE: Record<number, string> = {
+export const TS_TYPE: Record<number, string> = {
 	0: 'void',
 	1: 'number', 6: 'number', 7: 'number', // number / integer / real
 	2: 'string',
@@ -137,6 +137,41 @@ const CONST_OBJECT_CONTAINERS = new Set(['Fight', 'Field'])
 type ConstMember = { member: string, full: string, doc?: string, isInstance: boolean }
 type ConstBucket = { direct: ConstMember[], subs: Record<string, ConstMember[]> }
 
+// Routage d'une constante vers son membre objet selon CONST_CONTAINERS. Retourne null pour une
+// constante « plate » (aucun préfixe conteneur). `member` applique déjà camelCase pour les items
+// (WEAPON_PISTOL -> pistol) ; l'appelant reste responsable de re-valider `member` selon sa cible
+// (identifiant JS pour le d.ts, Python pour le stub .pyi). SOURCE UNIQUE du routage, partagée par le
+// d.ts, la complétion, le survol et le stub Python -> impossible de diverger.
+export interface RoutedConstant { container: string, sub?: string, member: string, isInstance: boolean }
+export function routeConstant(name: string): RoutedConstant | null {
+	const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
+	if (!rule) return null
+	const raw = name.slice(rule.prefix.length)
+	return { container: rule.container, sub: rule.sub, member: rule.item ? camelCase(raw) : raw, isInstance: !!rule.item }
+}
+
+// Liste des paramètres d'une fonction plate depuis les game data, avec la MÊME logique pour toutes les
+// cibles : nom réel s'il est un identifiant sûr (via `safe`, propre à la cible JS/Python) et unique,
+// sinon positionnel `a<i>` ; `optional` est collant (un paramètre optionnel ne peut pas précéder un
+// requis). L'appelant rend le type et le marqueur d'optionalité selon sa syntaxe (`?`/`= ...`).
+export interface FnParam { name: string, typeId: number, optional: boolean }
+export function functionParams(fn: LSFunction, safe: (n: string | null | undefined) => string | null): FnParam[] {
+	const argNames = fn.arguments_names || []
+	const argTypes = fn.arguments_types || []
+	const optional = fn.optional || []
+	const used = new Set<string>()
+	let optionalFromHere = false
+	const params: FnParam[] = []
+	for (let i = 0; i < argNames.length; i++) {
+		let pname = safe(argNames[i])
+		if (!pname || used.has(pname)) pname = 'a' + i
+		used.add(pname)
+		optionalFromHere = optionalFromHere || !!optional[i]
+		params.push({ name: pname, typeId: Number(argTypes[i]), optional: optionalFromHere })
+	}
+	return params
+}
+
 export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup): string {
 	const out: string[] = [
 		'// Auto-généré depuis les game data Leek Wars (API de combat). Ne pas éditer à la main.',
@@ -164,12 +199,11 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		if (!name || declared.has(name)) continue
 		declared.add(name)
 		const cdoc = doc?.('const_' + name)
-		const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
-		if (rule) {
-			const raw = name.slice(rule.prefix.length)
-			const entry: ConstMember = { member: rule.item ? camelCase(raw) : raw, full: name, doc: cdoc, isInstance: !!rule.item }
-			const b = bucketFor(rule.container)
-			if (rule.sub) (b.subs[rule.sub] ||= []).push(entry)
+		const routed = routeConstant(name)
+		if (routed) {
+			const entry: ConstMember = { member: routed.member, full: name, doc: cdoc, isInstance: routed.isInstance }
+			const b = bucketFor(routed.container)
+			if (routed.sub) (b.subs[routed.sub] ||= []).push(entry)
 			else b.direct.push(entry)
 			continue
 		}
@@ -183,23 +217,10 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		if (!name || declared.has(name)) continue
 		declared.add(name)
 
-		const argNames = f.arguments_names || []
-		const argTypes = f.arguments_types || []
-		const optional = f.optional || []
-		const usedParams = new Set<string>()
-		let optionalFromHere = false
-		const params: string[] = []
-		const paramNames: string[] = []
-		for (let i = 0; i < argNames.length; i++) {
-			// Nom réel s'il est un identifiant valide et unique dans la signature, sinon positionnel.
-			let pname = safeName(argNames[i])
-			if (!pname || usedParams.has(pname)) pname = 'a' + i
-			usedParams.add(pname)
-			paramNames.push(pname)
-			// Règle TS : un paramètre optionnel ne peut pas être suivi d'un requis -> optionnel à partir du 1er.
-			optionalFromHere = optionalFromHere || !!optional[i]
-			params.push(`${pname}${optionalFromHere ? '?' : ''}: ${tsType(Number(argTypes[i]))}`)
-		}
+		// Paramètres via l'assainisseur commun (règle TS : un optionnel ne peut pas précéder un requis).
+		const fnParams = functionParams(f, safeName)
+		const paramNames = fnParams.map((p) => p.name)
+		const params = fnParams.map((p) => `${p.name}${p.optional ? '?' : ''}: ${tsType(p.typeId)}`)
 		// Dépréciation douce : si la fonction plate a un équivalent objet, on marque @deprecated avec le
 		// pointeur (l'éditeur la barre + diagnostic, façon LS5 -> migration vers l'API objet).
 		const replacement = DEPRECATED_FLAT[name]
@@ -376,16 +397,15 @@ export function buildConstantMembersByPath(constants: readonly Constant[]): Reco
 		const name = safeName(c.name)
 		if (!name || declaredNames.has(name)) continue
 		declaredNames.add(name)
-		const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
-		if (!rule) continue
-		const raw = name.slice(rule.prefix.length)
-		const member = safeName(rule.item ? camelCase(raw) : raw)
+		const routed = routeConstant(name)
+		if (!routed) continue
+		const member = safeName(routed.member)
 		if (!member) continue
-		if (rule.sub) {
-			add(`${rule.container}.${rule.sub}`, { name: member, isNamespace: false, full: name })
-			add(rule.container, { name: rule.sub, isNamespace: true }) // le sous-namespace au niveau du conteneur
+		if (routed.sub) {
+			add(`${routed.container}.${routed.sub}`, { name: member, isNamespace: false, full: name })
+			add(routed.container, { name: routed.sub, isNamespace: true }) // le sous-namespace au niveau du conteneur
 		} else {
-			add(rule.container, { name: member, isNamespace: false, full: name })
+			add(routed.container, { name: member, isNamespace: false, full: name })
 		}
 	}
 	return byPath
@@ -402,12 +422,11 @@ export function buildConstantPathMap(constants: readonly Constant[]): Map<string
 		const name = safeName(c.name)
 		if (!name || seen.has(name)) continue
 		seen.add(name)
-		const rule = CONST_CONTAINERS.find((r) => name.startsWith(r.prefix))
-		if (!rule) continue // constante plate : la notation objet == son nom, matché directement
-		const raw = name.slice(rule.prefix.length)
-		const member = safeName(rule.item ? camelCase(raw) : raw)
+		const routed = routeConstant(name)
+		if (!routed) continue // constante plate : la notation objet == son nom, matché directement
+		const member = safeName(routed.member)
 		if (!member) continue
-		const path = rule.sub ? `${rule.container}.${rule.sub}.${member}` : `${rule.container}.${member}`
+		const path = routed.sub ? `${routed.container}.${routed.sub}.${member}` : `${routed.container}.${member}`
 		if (!map.has(path)) map.set(path, name)
 	}
 	return map
