@@ -27,6 +27,11 @@
 							<option value="">Toutes les langues</option>
 							<option v-for="l of languageOptions" :key="l.code" :value="l.code">{{ l.name }}</option>
 						</select>
+						<select v-model="filters.ai_language" class="filter-input">
+							<option value="">Tous les langages</option>
+							<option v-for="l of AI_LANGUAGES" :key="l.id" :value="l.id">{{ l.label }}</option>
+							<option value="(null)">Langage inconnu</option>
+						</select>
 						<select v-model="filters.login_mode" class="filter-input">
 							<option value="">Toute inscription</option>
 							<option v-for="m of LOGIN_MODE_LIST" :key="m" :value="m">{{ LOGIN_MODES[m].label }}</option>
@@ -264,7 +269,7 @@
 
 	const STORAGE_KEY_PERIOD = 'admin_acquisition_period'
 	const period = ref<PeriodKey>((localStorage.getItem(STORAGE_KEY_PERIOD) as PeriodKey) || '1m')
-	const filters = reactive({ country: '', language: '', login_mode: '', godfather: '', verified: '' })
+	const filters = reactive({ country: '', language: '', ai_language: '', login_mode: '', godfather: '', verified: '' })
 
 	const loading = ref(false)
 	const cohort_size = ref(0)
@@ -327,6 +332,7 @@
 	function resetFilters() {
 		filters.country = ''
 		filters.language = ''
+		filters.ai_language = ''
 		filters.login_mode = ''
 		filters.godfather = ''
 		filters.verified = ''
