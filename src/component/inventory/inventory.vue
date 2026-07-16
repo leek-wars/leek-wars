@@ -389,6 +389,7 @@
 	}
 
 	const actions = [
+		{icon: 'mdi-trophy-variant-outline', click: () => router.push('/collection')},
 		{icon: 'mdi-bank', click: () => router.push('/bank?ref=inventory_action')},
 		{image: 'icon/market.png', click: () => router.push('/market')},
 	]
