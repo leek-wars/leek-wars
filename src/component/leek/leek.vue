@@ -1055,6 +1055,10 @@
 		const msg = message as { leek: number, talent: number }
 		if (leek.value && msg.leek === leek.value.id) {
 			leek.value.talent += msg.talent
+			// Rafraîchit en direct le point d'aujourd'hui du graphe pendant les combats.
+			// On reconstruit chartData (nouvelle référence) : vue-chartjs compare les
+			// références des datasets et ignore une mutation en place.
+			chart()
 		}
 	}
 	const onUpdateLeekXp = (message: unknown) => {
