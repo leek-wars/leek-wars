@@ -719,12 +719,17 @@ class Game {
 		this.actions = this.data.actions.map(a => new Action(a))
 		this.currentAction = 0
 
-		// Check first action
-		// if (this.actions.length === 0 || this.actions[0].type !== ActionType.START_FIGHT) {
-		// 	console.warn("Error ! no action START_FIGHT")
-		// 	this.setError()
-		// 	return
-		// }
+		// Le générateur peut émettre des effets initiaux (états permanents des
+		// tourelles, cf. Turret.java) AVANT l'action START_FIGHT. Or le player
+		// suppose que actions[0] est le START_FIGHT et ne la passe jamais à
+		// doAction (lecture normale comme jump démarrent à l'index 1) : le
+		// premier effet du préambule était perdu (tourelle sans état STATIC →
+		// swap visuel par Inversion puis tourelle invisible, #4408). On remonte
+		// le START_FIGHT en tête pour que le préambule soit réellement exécuté.
+		const startFight = this.actions.findIndex(a => a.type === ActionType.START_FIGHT)
+		if (startFight > 0) {
+			this.actions.unshift(...this.actions.splice(startFight, 1))
+		}
 		this.log(this.actions[0])
 
 		// Get the relative position of the turns in the actions
