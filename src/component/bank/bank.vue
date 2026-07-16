@@ -107,6 +107,12 @@
 			</template>
 		</div>
 
+		<div class="center">
+			<router-link to="/bank/history" class="history-link">
+				<v-icon>mdi-history</v-icon> {{ $t('purchase_history') }}
+			</router-link>
+		</div>
+
 		<popup v-model="buyDialog" :width="600">
 			<template #icon><v-icon>mdi-cash-multiple</v-icon></template>
 			<template #title><span>{{ $t('confirm_purchase') }}</span></template>
@@ -483,6 +489,20 @@ watch(() => LeekWars.currency, () => {
 		font-size: 17px;
 		&::after {
 			border-color: transparent transparent transparent #222;
+		}
+	}
+	.history-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin: 20px 0;
+		padding: 6px 14px;
+		color: white;
+		background: rgba(150, 150, 150, 0.2);
+		border-radius: 4px;
+		text-decoration: none;
+		&:hover {
+			background: rgba(150, 150, 150, 0.35);
 		}
 	}
 	.item-sample {

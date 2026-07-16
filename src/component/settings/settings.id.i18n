@@ -75,5 +75,6 @@
 	"auto": "Otomatis",
 	"theme": "Tema",
 	"modern_theme": "Tema modern (beta)",
-	"xp_theme": "Tema XP"
+	"xp_theme": "Tema XP",
+	"purchase_history": "Riwayat pembelian"
 }

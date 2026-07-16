@@ -1,0 +1,7 @@
+{
+	"title": "Purchase history",
+	"column_date": "Date",
+	"column_crystals": "Crystals",
+	"column_price": "Price",
+	"no_purchases": "You haven't made any purchases yet."
+}

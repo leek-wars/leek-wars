@@ -32,5 +32,6 @@
 	"refresh_items": "Renovar la selección",
 	"back": "Volver al banco",
 	"best_value": "Mejor oferta",
-	"offered": "gratis"
+	"offered": "gratis",
+	"purchase_history": "Historial de compras"
 }

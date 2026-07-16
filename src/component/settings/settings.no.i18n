@@ -75,5 +75,6 @@
 	"auto": "Auto",
 	"theme": "Tema",
 	"modern_theme": "Moderne tema (beta)",
-	"xp_theme": "XP-tema"
+	"xp_theme": "XP-tema",
+	"purchase_history": "Kjøpshistorikk"
 }

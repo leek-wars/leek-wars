@@ -82,5 +82,6 @@
 	"error_password_required": "このアカウントを削除するにはパスワードが必要です。",
 	"error_too_many_requests": "試行回数が多すぎます。しばらくしてから再度お試しください。",
 	"error_unknown": "予期しないエラーが発生しました。再度お試しください。",
-	"error_wrong_token": "セッションが期限切れです。再度ログインしてください。"
+	"error_wrong_token": "セッションが期限切れです。再度ログインしてください。",
+	"purchase_history": "購入履歴"
 }

@@ -1,0 +1,7 @@
+{
+	"title": "Historique des achats",
+	"column_date": "Date",
+	"column_crystals": "Cristaux",
+	"column_price": "Prix",
+	"no_purchases": "Vous n'avez encore effectué aucun achat."
+}

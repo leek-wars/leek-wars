@@ -60,9 +60,9 @@
 	"title": "Paramètres",
 	"chat_first": "Affichage la page Chat en premier",
 	"password": "Mot de passe",
-	"your_email": "Votre email",
+	"your_email": "Votre adresse email",
 	"your_farmer_name": "Votre nom d'éleveur",
-	"godfather": "Parrain (Facultatif)",
+	"godfather": "Votre parrain (facultatif)",
 	"verify": "Vérifier le compte",
 	"verify_gh": "Vérifier avec GitHub",
 	"verify_message": "Vous n'avez pas ajouté d'adresse email, vous pouvez perdre l'accès à votre compte si vous changer d'appareil, de navigateur.",
@@ -73,12 +73,7 @@
 	"verify_pro3": "Forum, chats, messages privés",
 	"verify_pro4": "Acheter des cristaux",
 	"verify_pro5": "Battle Royales",
-	"your_farmer_name": "Votre nom d'éleveur",
-	"godfather": "Votre parrain (facultatif)",
-	"your_email": "Votre adresse email",
-	"password": "Mot de passe",
-	"Vérifier" : "Vérifier le compte",
-	"verify_gh" : "Vérifier avec GitHub",
+	"Vérifier": "Vérifier le compte",
 	"verify_google": "Vérifier avec Google",
 	"allow_github": "Autoriser la connexion via GitHub",
 	"allow_google": "Autoriser la connexion via Google",
@@ -87,5 +82,6 @@
 	"dark": "Sombre",
 	"auto": "Auto",
 	"modern_theme": "Thème moderne (bêta)",
-	"xp_theme": "Thème XP"
+	"xp_theme": "Thème XP",
+	"purchase_history": "Historique des achats"
 }

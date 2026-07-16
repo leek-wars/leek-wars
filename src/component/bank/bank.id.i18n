@@ -32,5 +32,6 @@
 	"refresh_items": "Perbarui pilihan",
 	"back": "Kembali ke bank",
 	"best_value": "Penawaran terbaik",
-	"offered": "gratis"
+	"offered": "gratis",
+	"purchase_history": "Riwayat pembelian"
 }

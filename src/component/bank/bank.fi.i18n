@@ -32,5 +32,6 @@
 	"refresh_items": "Päivitä valikoima",
 	"back": "Takaisin pankkiin",
 	"best_value": "Paras tarjous",
-	"offered": "ilmaiseksi"
+	"offered": "ilmaiseksi",
+	"purchase_history": "Ostohistoria"
 }

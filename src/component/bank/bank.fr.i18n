@@ -45,5 +45,6 @@
 	"failed_to_execute_payment": "le paiement n'a pas fonctionné ou a été annulé",
 	"payment_cancelled": "Vous avez annulé le paiement",
 	"payment_no_code": "Pas de code",
-	"payment_wrong_code": "Code non valide"
+	"payment_wrong_code": "Code non valide",
+	"purchase_history": "Historique des achats"
 }

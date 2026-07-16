@@ -32,5 +32,6 @@
 	"refresh_items": "선택 새로고침",
 	"back": "은행으로 돌아가기",
 	"best_value": "최고 혜택",
-	"offered": "무료"
+	"offered": "무료",
+	"purchase_history": "구매 내역"
 }

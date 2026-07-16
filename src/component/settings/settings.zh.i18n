@@ -75,5 +75,6 @@
 	"auto": "汽车",
 	"theme": "主题",
 	"modern_theme": "现代主题（测试版）",
-	"xp_theme": "XP 主题"
+	"xp_theme": "XP 主题",
+	"purchase_history": "购买记录"
 }

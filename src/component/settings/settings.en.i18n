@@ -82,5 +82,6 @@
 	"auto": "Auto",
 	"theme": "Theme",
 	"modern_theme": "Modern theme (beta)",
-	"xp_theme": "XP Theme"
+	"xp_theme": "XP Theme",
+	"purchase_history": "Purchase history"
 }

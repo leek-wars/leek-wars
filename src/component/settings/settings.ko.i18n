@@ -82,5 +82,6 @@
 	"verify_tip": "팁: 사용자 이름이 포함된 쿠키를 보관하십시오. 쿠키를 분실하면 계정에 대한 액세스 권한을 완전히 잃게 됩니다.",
 	"xp_theme": "XP 테마",
 	"your_email": "귀하의 이메일 주소",
-	"your_farmer_name": "사육자 이름"
+	"your_farmer_name": "사육자 이름",
+	"purchase_history": "구매 내역"
 }

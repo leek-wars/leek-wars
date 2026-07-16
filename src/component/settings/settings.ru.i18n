@@ -75,5 +75,6 @@
 	"auto": "Авто",
 	"theme": "Тема",
 	"modern_theme": "Современная тема (бета)",
-	"xp_theme": "Тема XP"
+	"xp_theme": "Тема XP",
+	"purchase_history": "История покупок"
 }

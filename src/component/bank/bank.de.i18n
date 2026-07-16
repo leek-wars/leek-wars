@@ -32,5 +32,6 @@
 	"refresh_items": "Auswahl erneuern",
 	"back": "Zurück zur Bank",
 	"best_value": "Bestes Angebot",
-	"offered": "gratis"
+	"offered": "gratis",
+	"purchase_history": "Kaufverlauf"
 }

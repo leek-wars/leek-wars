@@ -32,5 +32,6 @@
 	"refresh_items": "Uppdatera urvalet",
 	"back": "Tillbaka till banken",
 	"best_value": "Bästa erbjudandet",
-	"offered": "gratis"
+	"offered": "gratis",
+	"purchase_history": "Köphistorik"
 }

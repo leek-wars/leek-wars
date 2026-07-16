@@ -45,5 +45,6 @@
 	"failed_to_execute_payment": "The payment did not go through or was cancelled",
 	"payment_cancelled": "You cancelled the payment",
 	"payment_no_code": "No code",
-	"payment_wrong_code": "Invalid code"
+	"payment_wrong_code": "Invalid code",
+	"purchase_history": "Purchase history"
 }

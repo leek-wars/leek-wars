@@ -32,5 +32,6 @@
 	"refresh_items": "Forny udvalget",
 	"back": "Tilbage til banken",
 	"best_value": "Bedste tilbud",
-	"offered": "gratis"
+	"offered": "gratis",
+	"purchase_history": "Købshistorik"
 }
