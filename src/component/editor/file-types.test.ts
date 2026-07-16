@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getLanguageForPath, isLeekScript, AI_LANGUAGES } from './file-types'
+import { getLanguageForPath, getLanguageVersion, getLanguageVersionLabel, isLeekScript, AI_LANGUAGES } from './file-types'
 
 // Ancre anti-dérive : la correspondance extension -> langage est dupliquée dans 3 repos
 // (client file-types.ts, serveur AIController POLYGLOT/NON_LEEK/LANGUAGE_EXTENSIONS, generator
@@ -53,6 +53,27 @@ describe('isLeekScript', () => {
 		expect(isLeekScript('bot.ts')).toBe(false)
 		expect(isLeekScript('bot.py')).toBe(false)
 		expect(isLeekScript('notes.md')).toBe(false)
+	})
+})
+
+describe('getLanguageVersionLabel', () => {
+	it('libellé de version pour les IA polyglot uniquement (LeekScript a son menu, docs rien)', () => {
+		expect(getLanguageVersionLabel('bot.js')).toBe('JavaScript ES2026')
+		expect(getLanguageVersionLabel('bot.mjs')).toBe('JavaScript ES2026')
+		expect(getLanguageVersionLabel('bot.ts')).toBe('TypeScript 5.8')
+		expect(getLanguageVersionLabel('bot.py')).toBe('Python 3.12')
+		expect(getLanguageVersionLabel('main')).toBeNull()
+		expect(getLanguageVersionLabel('main.leek')).toBeNull()
+		expect(getLanguageVersionLabel('notes.md')).toBeNull()
+	})
+})
+
+describe('getLanguageVersion', () => {
+	it('pragma et syntaxe de commentaire par langage (alignés sur AIController::polyglotStarterCode)', () => {
+		expect(getLanguageVersion('bot.js')).toEqual({label: 'JavaScript ES2026', pragma: '2026', comment: '//'})
+		expect(getLanguageVersion('bot.ts')).toEqual({label: 'TypeScript 5.8', pragma: '5.8', comment: '//'})
+		expect(getLanguageVersion('bot.py')).toEqual({label: 'Python 3.12', pragma: '3.12', comment: '#'})
+		expect(getLanguageVersion('main')).toBeNull()
 	})
 })
 

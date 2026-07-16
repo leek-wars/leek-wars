@@ -40,6 +40,26 @@ export function getLanguageLogo(path: string): string | null {
 	}
 }
 
+// Version du langage pour les IA polyglot : une seule par langage, imposée par le runtime
+// du generator. `pragma` est la valeur écrite dans le fichier (`// @version:2026`,
+// `# @version:3.12`) : déclarative aujourd'hui, elle épinglera la version des IA existantes
+// le jour où plusieurs versions coexisteront (même rôle que `// @version:N` en LeekScript).
+// À tenir en phase avec les montées de version du generator : GraalVM 25.1.3 → GraalJS
+// ECMAScript 2026 et GraalPy Python 3.12 ; TypeScript = tsc embarqué (typescript.js.gz),
+// et le starter serveur (AIController::polyglotStarterCode) qui écrit le même pragma.
+export interface LanguageVersion { label: string, pragma: string, comment: '//' | '#' }
+const LANGUAGE_VERSIONS: { [language: string]: LanguageVersion } = {
+	javascript: { label: 'JavaScript ES2026', pragma: '2026', comment: '//' },
+	typescript: { label: 'TypeScript 5.8', pragma: '5.8', comment: '//' },
+	python: { label: 'Python 3.12', pragma: '3.12', comment: '#' },
+}
+export function getLanguageVersion(path: string): LanguageVersion | null {
+	return LANGUAGE_VERSIONS[getLanguageForPath(path)] ?? null
+}
+export function getLanguageVersionLabel(path: string): string | null {
+	return getLanguageVersion(path)?.label ?? null
+}
+
 // Langages d'IA proposés à la création (nouveau fichier) et comme langage par défaut à
 // l'inscription. LeekScript = extension vide (convention historique : fichier sans extension).
 export const AI_LANGUAGES = [

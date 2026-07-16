@@ -117,7 +117,7 @@
 								<git-terminal v-else-if="bottomPanel === 'git'" :theme="appliedTheme" />
 							</div>
 							<div class="status">
-								<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
+								<v-menu v-if="currentAI && isLeekScript(currentAI.path)" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
 									<template #activator="{ props }">
 										<div v-ripple class="version" v-bind="props">
 											LeekScript&nbsp;{{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
@@ -125,6 +125,23 @@
 										</div>
 									</template>
 									<leekscript-versions :version="currentAI.version" :strict="currentAI.strict" @update:version="onVersionUpdate" @update:strict="onStrictUpdate" />
+								</v-menu>
+								<v-menu v-else-if="currentAIPolyglotVersion" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="true">
+									<template #activator="{ props }">
+										<div v-ripple class="version" v-bind="props">
+											{{ currentAIPolyglotVersion.label }}
+											<v-icon>mdi-chevron-down</v-icon>
+										</div>
+									</template>
+									<v-list class="version-menu">
+										<v-list-item v-ripple :lines="false" @click="onPolyglotVersionSelect">
+											<template #prepend>
+												<v-icon class="list-icon">mdi-star</v-icon>
+											</template>
+											<v-list-item-title>{{ currentAIPolyglotVersion.label }}</v-list-item-title>
+											<v-list-item-subtitle><code>{{ currentAIPolyglotVersion.comment }} @version:{{ currentAIPolyglotVersion.pragma }}</code></v-list-item-subtitle>
+										</v-list-item>
+									</v-list>
 								</v-menu>
 								<div v-ripple class="problems" :class="{active: bottomPanel === 'problems'}" @click="toggleBottomPanel('problems')">
 									<span v-if="!analyzer.error_count && !analyzer.warning_count" class="no-error">
@@ -305,7 +322,7 @@
 	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
-	import { isLeekScript } from './file-types'
+	import { getLanguageVersion, isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
@@ -471,6 +488,12 @@
 		const key = currentSide.value === 1 ? currentAI1.value : currentAI2.value
 		return key ? (fileSystem.ais[key] ?? null) : null
 	})
+	// Version du langage pour les IA polyglot (JS/TS/Python) : une seule version possible,
+	// imposée par le runtime. Le menu ne sert qu'à écrire le pragma `@version` dans le fichier
+	// (avec la syntaxe de commentaire du langage), pour épingler la version des IA existantes
+	// le jour où plusieurs versions coexisteront. Le menu LeekScript, lui, reste réservé aux
+	// fichiers LeekScript (il réécrirait un pragma `// @version:N` invalide dans du Python).
+	const currentAIPolyglotVersion = computed(() => currentAI.value ? getLanguageVersion(currentAI.value.path) : null)
 	const ai1Ready = computed(() => {
 		const ai = currentAI1.value ? fileSystem.ais[currentAI1.value] : null
 		return ai && ai.code !== undefined
@@ -1367,6 +1390,15 @@
 		currentAI.value.analyze()
 	}
 
+	// Écrit (ou réécrit) le pragma @version dans une IA polyglot, avec la syntaxe de
+	// commentaire du langage. Pas d'analyze() : la validation polyglot passe par le save.
+	function onPolyglotVersionSelect() {
+		if (!currentEditor.value || !currentAIPolyglotVersion.value) return
+		const v = currentAIPolyglotVersion.value
+		rewritePragma('version', v.pragma, v.comment)
+		save(currentEditor.value)
+	}
+
 	function onStrictUpdate(strict: boolean) {
 		if (!currentAI.value) return
 		currentAI.value.strict = strict
@@ -1376,12 +1408,14 @@
 		currentAI.value.analyze()
 	}
 
-	function rewritePragma(name: 'version' | 'strict', value: number | boolean) {
+	// `comment` = syntaxe de commentaire du langage : '//' (LeekScript, JS, TS) ou '#' (Python)
+	function rewritePragma(name: 'version' | 'strict', value: number | boolean | string, comment: '//' | '#' = '//') {
 		if (!currentEditor.value) return
 		const editor = currentEditor.value.editor
 		const code = editor.getValue()
-		const pragmaRe = new RegExp(`^[ \\t]*//[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
-		const line = name === 'version' ? `// @version:${value}\n` : (value ? `// @strict\n` : '')
+		const commentRe = comment === '#' ? '#' : '//'
+		const pragmaRe = new RegExp(`^[ \\t]*${commentRe}[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
+		const line = name === 'version' ? `${comment} @version:${value}\n` : (value ? `// @strict\n` : '')
 		const match = pragmaRe.exec(code)
 		let newCode: string
 		if (match) {
