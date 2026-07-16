@@ -974,8 +974,34 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'level-up'(state: LeekWarsState, data: { leek: number, level: number, capital: number }) {
 			if (state.farmer) {
-				state.farmer.leeks[data.leek].level = data.level
-				state.farmer.leeks[data.leek].capital = data.capital
+				const leek = state.farmer.leeks[data.leek]
+				if (!leek) { return }
+				leek.level = data.level
+				leek.capital = data.capital
+				// Niveau 301 : le serveur (worker, etre301) équipe la couronne (item 83),
+				// rend l'ancien chapeau au stock et offre la potion peau dorée (82).
+				// Répliqué ici, sinon inventaire et modale de chapeaux restent
+				// désynchronisés jusqu'au rechargement de la page.
+				if (data.level === 301) {
+					const CROWN_ITEM = 83
+					const crown_template = LeekWars.items[CROWN_ITEM]
+					const crown = crown_template ? LeekWars.hats[crown_template.params] : null
+					// Garde anti-rejeu (reconnexion WS) : ne rien faire si la couronne est déjà portée
+					if (crown && leek.hat?.hat_template !== crown.id) {
+						store.commit('change-hat', { leek: data.leek, hat: {
+							id: -CROWN_ITEM,
+							template: CROWN_ITEM,
+							hat_template: crown.id,
+							name: crown.name,
+							level: crown.level,
+							quantity: 1,
+						} })
+					}
+					const GOLD_SKIN_POTION = 82
+					if (!state.farmer.potions.find(p => p.template === GOLD_SKIN_POTION)) {
+						state.farmer.potions.push({ id: -GOLD_SKIN_POTION, template: GOLD_SKIN_POTION, quantity: 1, time: Date.now() / 1000 })
+					}
+				}
 			}
 		},
 
