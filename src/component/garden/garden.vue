@@ -468,6 +468,7 @@
 
 	interface GardenData {
 		fights: number
+		team_fights: number
 		farmer_enabled: boolean
 		team_enabled: boolean
 		battle_royale_enabled: boolean
@@ -574,13 +575,7 @@
 		advanced.value = localStorage.getItem("editor/test/advanced") === 'true'
 
 		request = LeekWars.get('garden/get')
-		request.then((r) => {
-			garden.value = (r as { garden: GardenData }).garden
-			for (const composition of garden.value.my_compositions) {
-				compositions_by_id[composition.id] = composition
-			}
-			update()
-		})
+		request.then(handleGardenData)
 
 		emitter.on('back', back)
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
@@ -605,14 +600,23 @@
 		localStorage.removeItem('garden/category')
 	}
 
+	function handleGardenData(r: unknown) {
+		garden.value = (r as { garden: GardenData }).garden
+		// Jamais de compteur négatif (ex: dernier combat dépensé en attendant dans la file d'arène)
+		garden.value.fights = Math.max(0, garden.value.fights)
+		garden.value.team_fights = Math.max(0, garden.value.team_fights)
+		for (const composition of garden.value.my_compositions) {
+			composition.fights = Math.max(0, composition.fights)
+			compositions_by_id[composition.id] = composition
+		}
+		// Resynchronise les compteurs du menu/header : les valeurs du store
+		// dérivent (décréments locaux, compos créées sans refetch du farmer)
+		store.commit('set-fights-counts', { fights: garden.value.fights, team_fights: garden.value.team_fights })
+		update()
+	}
+
 	function reload() {
-		LeekWars.get('garden/get').then((r) => {
-			garden.value = (r as { garden: GardenData }).garden
-			for (const composition of garden.value.my_compositions) {
-				compositions_by_id[composition.id] = composition
-			}
-			update()
-		})
+		LeekWars.get('garden/get').then(handleGardenData)
 	}
 
 	function onPageShow(event: PageTransitionEvent) {

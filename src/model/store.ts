@@ -162,6 +162,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			state.farmer.animated_habs = state.farmer.habs
 			state.farmer.animated_crystals = state.farmer.crystals
+			// Jamais de compteur négatif (données serveur potentiellement erronées)
+			state.farmer.fights = Math.max(0, state.farmer.fights)
+			state.farmer.team_fights = Math.max(0, state.farmer.team_fights)
 			state.token = data.token
 			state.connected = true
 			state.connected_farmers = data.farmers
@@ -474,7 +477,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'update-fights'(state: LeekWarsState, fights: number) {
 			if (state.farmer) {
-				state.farmer.fights += fights
+				state.farmer.fights = Math.max(0, state.farmer.fights + fights)
 				state.farmer.bought_fights = Math.min(state.farmer.bought_fights, state.farmer.fights)
 			}
 		},
@@ -484,7 +487,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'update-team-fights'(state: LeekWarsState, fights: number) {
-			if (state.farmer) { state.farmer.team_fights += fights }
+			if (state.farmer) { state.farmer.team_fights = Math.max(0, state.farmer.team_fights + fights) }
+		},
+
+		// Resynchronise les compteurs depuis le serveur (garden/get) : les
+		// décréments locaux ne voient pas les compos créées entre temps
+		'set-fights-counts'(state: LeekWarsState, counts: { fights: number, team_fights: number }) {
+			if (state.farmer) {
+				state.farmer.fights = Math.max(0, counts.fights)
+				state.farmer.team_fights = Math.max(0, counts.team_fights)
+			}
 		},
 
 		'set-talent'(state: LeekWarsState, talent: number) {
