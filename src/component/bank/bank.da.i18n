@@ -33,5 +33,11 @@
 	"back": "Tilbage til banken",
 	"best_value": "Bedste tilbud",
 	"offered": "gratis",
-	"purchase_history": "Købshistorik"
+	"purchase_history": "Købshistorik",
+	"history_title": "Købshistorik",
+	"history_date": "Dato",
+	"history_crystals": "Krystaller",
+	"history_price": "Pris",
+	"history_no_purchases": "Du har endnu ikke foretaget nogen køb.",
+	"history_buy_first": "Køb dine første krystaller"
 }

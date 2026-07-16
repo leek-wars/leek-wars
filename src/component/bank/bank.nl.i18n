@@ -33,5 +33,11 @@
 	"back": "Terug naar de bank",
 	"best_value": "Beste aanbieding",
 	"offered": "gratis",
-	"purchase_history": "Aankoopgeschiedenis"
+	"purchase_history": "Aankoopgeschiedenis",
+	"history_title": "Aankoopgeschiedenis",
+	"history_date": "Datum",
+	"history_crystals": "Kristallen",
+	"history_price": "Prijs",
+	"history_no_purchases": "Je hebt nog geen aankopen gedaan.",
+	"history_buy_first": "Koop je eerste kristallen"
 }

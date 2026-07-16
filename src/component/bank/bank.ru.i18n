@@ -33,5 +33,11 @@
 	"back": "Вернуться в банк",
 	"best_value": "Лучшее предложение",
 	"offered": "бесплатно",
-	"purchase_history": "История покупок"
+	"purchase_history": "История покупок",
+	"history_title": "История покупок",
+	"history_date": "Дата",
+	"history_crystals": "Кристаллы",
+	"history_price": "Цена",
+	"history_no_purchases": "Вы ещё не совершили ни одной покупки.",
+	"history_buy_first": "Купите свои первые кристаллы"
 }

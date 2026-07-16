@@ -33,5 +33,11 @@
 	"back": "은행으로 돌아가기",
 	"best_value": "최고 혜택",
 	"offered": "무료",
-	"purchase_history": "구매 내역"
+	"purchase_history": "구매 내역",
+	"history_title": "구매 내역",
+	"history_date": "날짜",
+	"history_crystals": "크리스탈",
+	"history_price": "가격",
+	"history_no_purchases": "아직 구매한 내역이 없습니다.",
+	"history_buy_first": "첫 크리스탈을 구매하세요"
 }

@@ -33,5 +33,11 @@
 	"back": "Volver al banco",
 	"best_value": "Mejor oferta",
 	"offered": "gratis",
-	"purchase_history": "Historial de compras"
+	"purchase_history": "Historial de compras",
+	"history_title": "Historial de compras",
+	"history_date": "Fecha",
+	"history_crystals": "Cristales",
+	"history_price": "Precio",
+	"history_no_purchases": "Aún no has realizado ninguna compra.",
+	"history_buy_first": "Compra tus primeros cristales"
 }

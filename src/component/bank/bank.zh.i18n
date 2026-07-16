@@ -33,5 +33,11 @@
 	"back": "返回银行",
 	"best_value": "超值优惠",
 	"offered": "免费",
-	"purchase_history": "购买记录"
+	"purchase_history": "购买记录",
+	"history_title": "购买记录",
+	"history_date": "日期",
+	"history_crystals": "水晶",
+	"history_price": "价格",
+	"history_no_purchases": "您还没有进行任何购买。",
+	"history_buy_first": "购买您的第一批水晶"
 }

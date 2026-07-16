@@ -33,5 +33,11 @@
 	"back": "Kembali ke bank",
 	"best_value": "Penawaran terbaik",
 	"offered": "gratis",
-	"purchase_history": "Riwayat pembelian"
+	"purchase_history": "Riwayat pembelian",
+	"history_title": "Riwayat pembelian",
+	"history_date": "Tanggal",
+	"history_crystals": "Kristal",
+	"history_price": "Harga",
+	"history_no_purchases": "Anda belum melakukan pembelian apa pun.",
+	"history_buy_first": "Beli kristal pertamamu"
 }

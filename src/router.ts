@@ -30,7 +30,7 @@ import Error from '@/component/app/error.vue'
 const BankBuy = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-buy.vue`)
 const BankValidate = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-validate.vue`)
 const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank.${locale}.i18n`)
-const BankHistory = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank-history.${locale}.i18n`)
+const BankHistory = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-history.vue`)
 const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/component/change-email/change-email.${locale}.i18n`)
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)

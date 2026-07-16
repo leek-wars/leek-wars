@@ -46,5 +46,11 @@
 	"payment_cancelled": "Hai annullato il pagamento",
 	"payment_no_code": "Nessun codice",
 	"payment_wrong_code": "Codice non valido",
-	"purchase_history": "Cronologia degli acquisti"
+	"purchase_history": "Cronologia degli acquisti",
+	"history_title": "Cronologia degli acquisti",
+	"history_date": "Data",
+	"history_crystals": "Cristalli",
+	"history_price": "Prezzo",
+	"history_no_purchases": "Non hai ancora effettuato alcun acquisto.",
+	"history_buy_first": "Acquista i tuoi primi cristalli"
 }

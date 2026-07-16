@@ -33,5 +33,11 @@
 	"back": "Tillbaka till banken",
 	"best_value": "Bästa erbjudandet",
 	"offered": "gratis",
-	"purchase_history": "Köphistorik"
+	"purchase_history": "Köphistorik",
+	"history_title": "Köphistorik",
+	"history_date": "Datum",
+	"history_crystals": "Kristaller",
+	"history_price": "Pris",
+	"history_no_purchases": "Du har inte gjort några köp ännu.",
+	"history_buy_first": "Köp dina första kristaller"
 }

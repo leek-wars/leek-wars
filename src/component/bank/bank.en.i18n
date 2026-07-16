@@ -46,5 +46,11 @@
 	"payment_cancelled": "You cancelled the payment",
 	"payment_no_code": "No code",
 	"payment_wrong_code": "Invalid code",
-	"purchase_history": "Purchase history"
+	"purchase_history": "Purchase history",
+	"history_title": "Purchase history",
+	"history_date": "Date",
+	"history_crystals": "Crystals",
+	"history_price": "Price",
+	"history_no_purchases": "You haven't made any purchases yet.",
+	"history_buy_first": "Buy your first crystals"
 }
