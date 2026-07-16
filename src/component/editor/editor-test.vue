@@ -1436,6 +1436,10 @@
 		gap: 9px;
 		.name {
 			flex: 1;
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.v-icon {
 			font-size: 20px;
@@ -1612,10 +1616,7 @@
 		color: white;
 		border-radius: 4px;
 		padding: 0 4px;
-		margin-left: 5px;
-		position: absolute;
-		right: 7px;
-		top: 8px;
+		flex-shrink: 0;
 	}
 	.popup.mobile .leek-column {
 		width: auto;
