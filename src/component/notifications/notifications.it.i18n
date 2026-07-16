@@ -1,3 +1,7 @@
 {
-	"title": "Notifiche"
+	"title": "Notifiche",
+	"push_blocked": "Notifiche bloccate. Autorizzale nelle impostazioni del browser.",
+	"push_error": "Impossibile attivare le notifiche push.",
+	"push_notifications": "Le notifiche push",
+	"push_unsupported": "Il tuo browser non supporta le notifiche push."
 }

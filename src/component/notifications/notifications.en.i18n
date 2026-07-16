@@ -1,3 +1,7 @@
 {
-	"title": "Notifications"
+	"title": "Notifications",
+	"push_blocked": "Notifications are blocked. Allow them in your browser settings.",
+	"push_error": "Couldn't enable push notifications.",
+	"push_notifications": "Push notifications",
+	"push_unsupported": "Your browser doesn't support push notifications."
 }

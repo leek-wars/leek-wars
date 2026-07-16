@@ -1,3 +1,7 @@
 {
-	"title": "通知"
+	"title": "通知",
+	"push_blocked": "通知已被阻止。请在浏览器设置中允许通知。",
+	"push_error": "无法启用推送通知。",
+	"push_notifications": "推送通知",
+	"push_unsupported": "您的浏览器不支持推送通知。"
 }

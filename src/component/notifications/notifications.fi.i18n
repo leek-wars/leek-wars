@@ -1,3 +1,7 @@
 {
-	"title": "Ilmoitukset"
+	"title": "Ilmoitukset",
+	"push_blocked": "Ilmoitukset on estetty. Salli ne selaimesi asetuksista.",
+	"push_error": "Push-ilmoituksia ei voitu ottaa käyttöön.",
+	"push_notifications": "Push-ilmoitukset",
+	"push_unsupported": "Selaimesi ei tue push-ilmoituksia."
 }

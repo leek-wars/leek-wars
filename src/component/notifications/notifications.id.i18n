@@ -1,3 +1,7 @@
 {
-	"title": "Notifikasi"
+	"title": "Notifikasi",
+	"push_blocked": "Notifikasi diblokir. Izinkan di pengaturan browser Anda.",
+	"push_error": "Tidak dapat mengaktifkan notifikasi push.",
+	"push_notifications": "Pemberitahuan push",
+	"push_unsupported": "Browser Anda tidak mendukung notifikasi push."
 }

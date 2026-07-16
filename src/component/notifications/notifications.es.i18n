@@ -1,3 +1,7 @@
 {
-	"title": "Notificaciones"
+	"title": "Notificaciones",
+	"push_blocked": "Notificaciones bloqueadas. Permítelas en la configuración de tu navegador.",
+	"push_error": "No se han podido activar las notificaciones push.",
+	"push_notifications": "Notificaciones push",
+	"push_unsupported": "Tu navegador no admite las notificaciones push."
 }

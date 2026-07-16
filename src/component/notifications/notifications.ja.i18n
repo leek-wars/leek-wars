@@ -1,3 +1,7 @@
 {
-	"title": "通知"
+	"title": "通知",
+	"push_blocked": "通知がブロックされています。ブラウザの設定で許可してください。",
+	"push_error": "プッシュ通知を有効にできませんでした。",
+	"push_notifications": "プッシュ通知",
+	"push_unsupported": "お使いのブラウザはプッシュ通知に対応していません。"
 }

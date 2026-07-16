@@ -15,6 +15,7 @@
     - "Maintenance page with a leek runner mini-game. #img_249_maintenance"
     - "Start a group demo to try Leek Wars with others, without an account."
     - "Welcome message in the chat for newly registered players."
+    - "Push notifications: enable them from the Notifications page to be alerted directly in your browser."
     - "#ai Return type covariance when overriding a method. #img_249_covariant"
     - "#ai Optional indexed access with the `a?[b]` operator."
   improved:

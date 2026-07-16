@@ -15,6 +15,7 @@
     - "Page de maintenance avec un mini-jeu de course de poireau. #img_249_maintenance"
     - "Lancez une démo de groupe pour essayer Leek Wars à plusieurs, sans compte."
     - "Message de bienvenue dans le chat pour les nouveaux inscrits."
+    - "Notifications push : activez-les depuis la page Notifications pour être prévenu directement dans votre navigateur."
     - "#ai Covariance du type de retour lors de la redéfinition d'une méthode. #img_249_covariant"
     - "#ai Accès indexé optionnel avec l'opérateur `a?[b]`."
   improved:
