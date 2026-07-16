@@ -85,6 +85,10 @@
 									{{ farmer.ai_count }}
 								</div>
 
+								<div class="ai-lang">
+									<img v-if="aiLang(farmer.ai_language)" :src="aiLang(farmer.ai_language)!.logo" :title="aiLang(farmer.ai_language)!.label">
+								</div>
+
 								<div class="ip" :title="farmer.country ? farmer.country.toUpperCase() + ' — ' + farmer.register_ip : farmer.register_ip">
 									<flag v-if="farmer.country" :code="farmer.country" :clickable="false" />
 									{{ farmer.register_ip }}
@@ -207,6 +211,7 @@
 
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
+	import { AI_LANGUAGES } from '@/component/editor/file-types'
 	import { store } from '@/model/store'
 	import { onBeforeUnmount, onMounted, ref } from 'vue'
 	import { useRouter } from 'vue-router'
@@ -268,6 +273,7 @@
 		email_bounced_at?: number | null
 		connected?: boolean
 		language?: string
+		ai_language?: string | null
 		country?: string | null
 		referer?: string
 		last_time: number
@@ -423,6 +429,10 @@
 	function validationLabel(v: RegType): string {
 		const VIA: Record<RegType, string> = { classic: 'email', github: 'GitHub', google: 'Google', fast: '', fast_verified: '' }
 		return 'Validé via ' + VIA[v]
+	}
+
+	function aiLang(id?: string | null) {
+		return AI_LANGUAGES.find(l => l.id === id) || null
 	}
 
 	function tutoTitle(farmer: SourceFarmer): string {
@@ -614,6 +624,7 @@
 		/* play   */ minmax(90px, 1fr)
 		/* team   */ 28px
 		/* ai     */ 34px
+		/* lang   */ 24px
 		/* ip     */ minmax(120px, 1.1fr)
 		/* stats  */ minmax(100px, 1fr)
 		/* score  */ 64px
@@ -681,6 +692,11 @@
 			max-height: 14px;
 			max-width: 20px;
 		}
+	}
+	.ai-lang img {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
 	}
 	.register-type {
 		.v-icon.pending {
@@ -829,7 +845,7 @@ body.dark .farmer.connected {
 	}
 }
 #app.app .farmer {
-	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) 64px minmax(70px, 1.1fr);
+	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px 22px minmax(110px, 1fr) minmax(90px, 1fr) 64px minmax(70px, 1.1fr);
 	column-gap: 4px;
 	font-size: 12px;
 }

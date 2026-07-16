@@ -105,6 +105,7 @@
 						<template #item.label="{ item }">
 							<div class="label-cell">
 								<flag v-if="item.flag" :code="item.flag" :clickable="false" />
+								<img v-else-if="item.logo" :src="item.logo" class="lang-logo">
 								<v-icon v-else-if="item.isUnknown" class="unknown-flag">mdi-help-circle-outline</v-icon>
 								<span>{{ item.label }}</span>
 							</div>
@@ -183,6 +184,7 @@
 	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import KpiCard from '@/component/admin/kpi-card.vue'
+	import { AI_LANGUAGES } from '@/component/editor/file-types'
 
 	type PeriodKey = '24h' | '1w' | '1m' | '1y' | 'all'
 	const PERIODS: { key: PeriodKey, label: string }[] = [
@@ -218,9 +220,11 @@
 		active_hours_avg: number | null
 		active_hours_median: number | null
 	}
-	// Une ligne de ventilation, par langue OU par pays (mêmes colonnes de comparaison).
+	// Une ligne de ventilation, par langue, langage de programmation OU pays
+	// (mêmes colonnes de comparaison).
 	interface BreakdownRow {
 		language?: string
+		ai_language?: string
 		country?: string
 		n: number
 		share_pct: number | null
@@ -240,6 +244,7 @@
 		cohort_size: number
 		aggregates: Aggregates
 		by_language: BreakdownRow[]
+		by_ai_language: BreakdownRow[]
 		by_country: BreakdownRow[]
 		by_login_mode: LoginModeRow[]
 		by_godfather: GodfatherRow[]
@@ -265,6 +270,7 @@
 	const cohort_size = ref(0)
 	const agg = ref<Aggregates>({ ...EMPTY_AGG })
 	const by_language = ref<BreakdownRow[]>([])
+	const by_ai_language = ref<BreakdownRow[]>([])
 	const by_country = ref<BreakdownRow[]>([])
 	const by_login_mode = ref<LoginModeRow[]>([])
 	const by_godfather = ref<GodfatherRow[]>([])
@@ -289,19 +295,21 @@
 			{ title: 'Trophées', key: 'trophy_points_avg', align: 'end', sortable: true },
 		]
 	}
-	function buildBreakdown(kind: 'language' | 'country', title: string, labelTitle: string, rows: BreakdownRow[]) {
+	function buildBreakdown(kind: 'language' | 'ai_language' | 'country', title: string, labelTitle: string, rows: BreakdownRow[]) {
 		const max = rows.reduce((m, r) => Math.max(m, r.n), 0)
 		const items = rows.map(r => ({
 			...r,
-			label: kind === 'language' ? languageName(r.language) : countryLabel(r.country),
-			flag: kind === 'language' ? languageFlag(r.language) : (r.country && r.country !== '(null)' ? r.country : null),
-			isUnknown: kind === 'country' && r.country === '(null)',
+			label: kind === 'language' ? languageName(r.language) : (kind === 'ai_language' ? aiLanguageName(r.ai_language) : countryLabel(r.country)),
+			flag: kind === 'language' ? languageFlag(r.language) : (kind === 'country' && r.country && r.country !== '(null)' ? r.country : null),
+			logo: kind === 'ai_language' ? aiLanguageLogo(r.ai_language) : null,
+			isUnknown: (kind === 'country' && r.country === '(null)') || (kind === 'ai_language' && r.ai_language === '(null)'),
 			bar: max ? Math.round((r.n / max) * 100) + '%' : '0%',
 		}))
 		return { kind, title, items, headers: breakdownHeaders(labelTitle) }
 	}
 	const breakdowns = computed(() => [
 		buildBreakdown('language', 'Par langue', 'Langue', by_language.value),
+		buildBreakdown('ai_language', 'Par langage de programmation', 'Langage', by_ai_language.value),
 		buildBreakdown('country', 'Par pays', 'Pays', by_country.value),
 	])
 
@@ -335,6 +343,7 @@
 			cohort_size.value = data.cohort_size
 			agg.value = data.aggregates || { ...EMPTY_AGG }
 			by_language.value = data.by_language || []
+			by_ai_language.value = data.by_ai_language || []
 			by_country.value = data.by_country || []
 			by_login_mode.value = data.by_login_mode || []
 			by_godfather.value = data.by_godfather || []
@@ -384,6 +393,13 @@
 	}
 	function languageFlag(code?: string): string | null {
 		return (code && LeekWars.languages[code]?.country) || null
+	}
+	function aiLanguageName(id?: string): string {
+		if (!id || id === '(null)') return 'Inconnu'
+		return AI_LANGUAGES.find(l => l.id === id)?.label || id
+	}
+	function aiLanguageLogo(id?: string): string | null {
+		return AI_LANGUAGES.find(l => l.id === id)?.logo || null
 	}
 	function countryLabel(code?: string): string {
 		if (!code) return ''
@@ -536,6 +552,7 @@ h4 {
 	align-items: center;
 	gap: 8px;
 	.flag { max-height: 16px; max-width: 22px; }
+	.lang-logo { width: 16px; height: 16px; flex-shrink: 0; }
 	.unknown-flag { font-size: 18px; color: var(--text-color-secondary); }
 	.v-icon { font-size: 18px; }
 }
