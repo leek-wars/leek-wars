@@ -18,6 +18,7 @@
     - "#ai Covariance du type de retour lors de la redéfinition d'une méthode. #img_249_covariant"
     - "#ai Accès indexé optionnel avec l'opérateur `a?[b]`."
   improved:
+    - "Nombre de potions de réinitialisation restantes affiché dans le Potager, à côté du nombre de combats."
     - "L'historique de combat se met à jour en direct, sans recharger la page."
     - "Pages d'article dédiées pour le dev-blog, indexées par les moteurs de recherche."
     - "Le paiement suit le thème clair ou sombre du site."

@@ -18,6 +18,7 @@
     - "#ai Covarianza del tipo di ritorno nella ridefinizione di un metodo. #img_249_covariant"
     - "#ai Accesso indicizzato opzionale con l'operatore `a?[b]`."
   improved:
+    - "Numero di Pozioni di ripristino rimanenti visualizzato nell'orto, accanto al numero di combattimenti."
     - "La cronologia dei combattimenti si aggiorna in diretta, senza ricaricare la pagina."
     - "Pagine di articolo dedicate per il dev blog, indicizzate dai motori di ricerca."
     - "Il pagamento segue ora il tema chiaro o scuro del sito."

@@ -18,6 +18,7 @@
     - "#ai Return type covariance when overriding a method. #img_249_covariant"
     - "#ai Optional indexed access with the `a?[b]` operator."
   improved:
+    - "Number of remaining Restat Potions displayed in the garden, next to the fight count."
     - "The fight history updates live, without reloading the page."
     - "Dedicated article pages for the dev blog, indexed by search engines."
     - "Payment now follows the light or dark theme of the site."

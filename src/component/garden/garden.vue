@@ -3,6 +3,15 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div v-if="garden" class="tabs">
+				<v-tooltip>
+					<template #activator="{ props }">
+						<div v-bind="props" class="tab action hidden disabled">
+							<img class="restat-potion" src="/image/potion/restat.png">
+							<span>{{ restatPotions }}</span>
+						</div>
+					</template>
+					{{ $t('potion.restat') }}
+				</v-tooltip>
 				<div class="tab action hidden disabled">
 					<img src="/image/icon/garden.png">
 					<span>{{ garden.fights }}</span>
@@ -437,6 +446,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
+	import { PotionEffect } from '@/model/potion'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
@@ -518,6 +528,12 @@
 	const bossEnabled = computed(() => true)
 	const liveArenaCount = computed(() => store.state.arenaCount || 0)
 	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
+	// Toute potion avec un effet RESTAT (49 classique, 58 admin)
+	const restatPotions = computed(() => {
+		const potions = store.state.farmer?.potions || []
+		return potions.filter(p => LeekWars.potions[p.template]?.effects?.some(e => e.type === PotionEffect.RESTAT))
+			.reduce((sum, p) => sum + p.quantity, 0)
+	})
 
 	function batchErrorToast(error: unknown) {
 		const key = typeof error === 'string' ? error : (error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : null) || 'unknown_error'
@@ -916,6 +932,10 @@
 
 
 <style lang="scss" scoped>
+	.tabs .tab img.restat-potion {
+		width: 32px;
+		margin: -4px 0;
+	}
 	// Quand le bandeau de saison est présent, les panneaux du dessus s'y collent :
 	// on carre leurs coins hauts pour une jointure nette avec le bandeau.
 	.season-banner + .container .panel.first {
