@@ -18,6 +18,9 @@
 					<div v-ripple class="hat" :class="{selected: hat === 0}" @click="hat = 0"><img src="/image/hat/no_hat.png"></div>
 					<div v-for="h in hatList" :key="h" v-ripple class="hat" :class="{selected: hat === h}" @click="hat = h"><img :src="'/image/hat/' + LeekWars.hats[h].name + '.png'"></div>
 				</div>
+				<div class="languages">
+					<div v-for="l in AI_LANGUAGES" :key="l.id" v-ripple class="language" :class="{selected: aiLanguage === l.id}" :title="l.label" @click="aiLanguage = l.id"><img :src="l.logo" :alt="l.label"></div>
+				</div>
 				<div v-if="error" class="error">{{ error }}</div>
 			</div>
 		</div>
@@ -39,6 +42,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getRedirectAfterLogin } from '@/router'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { AI_LANGUAGES } from '@/component/editor/file-types'
 import { store } from '@/model/store'
 
 defineOptions({ name: 'VisitorBanner', i18n: {}, mixins: [...mixins] })
@@ -62,8 +66,9 @@ const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}')
 const leekName = ref<string>(draft.name || '')
 const skin = ref<number>(draft.skin || 1)
 const hat = ref<number>(draft.hat || 0)
-watch([leekName, skin, hat], () => {
-	localStorage.setItem(DRAFT_KEY, JSON.stringify({ name: leekName.value, skin: skin.value, hat: hat.value }))
+const aiLanguage = ref<string>(AI_LANGUAGES.some(l => l.id === draft.language) ? draft.language : 'leekscript')
+watch([leekName, skin, hat, aiLanguage], () => {
+	localStorage.setItem(DRAFT_KEY, JSON.stringify({ name: leekName.value, skin: skin.value, hat: hat.value, language: aiLanguage.value }))
 })
 const error = ref('')
 const loading = ref(false)
@@ -154,7 +159,7 @@ function submit() {
 	}
 	loading.value = true
 	error.value = ''
-	LeekWars.post('farmer/register-fast', { leek_name: name, hat: hat.value, skin: skin.value, source: 'visitor-banner' }).then(data => {
+	LeekWars.post('farmer/register-fast', { leek_name: name, hat: hat.value, skin: skin.value, source: 'visitor-banner', ai_language: aiLanguage.value }).then(data => {
 		store.commit('connect', data)
 		store.commit('connected', '$')
 		router.push(getRedirectAfterLogin())
@@ -308,6 +313,34 @@ function submit() {
 			max-width: 36px;
 			max-height: 31px;
 			object-fit: contain;
+		}
+		&:hover {
+			background: rgba(255, 255, 255, 0.4);
+		}
+		&.selected {
+			background: white;
+			border-color: rgba(0, 0, 0, 0.1);
+		}
+	}
+	.languages {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.language {
+		width: 38px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.22);
+		border: 2px solid transparent;
+		border-radius: 8px;
+		cursor: pointer;
+		transition: background 0.15s ease;
+		img {
+			width: 20px;
+			height: 20px;
 		}
 		&:hover {
 			background: rgba(255, 255, 255, 0.4);

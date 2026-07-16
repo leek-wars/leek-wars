@@ -58,9 +58,8 @@
 							<div>
 								<div class="title">{{ t('default_language') }}</div>
 								<div class="languages">
-									<div v-for="l in AI_LANGUAGES" :key="l.id" class="language" :class="{selected: aiLanguage === l.id}" @click="aiLanguage = l.id">
-										<img :src="l.logo">
-										<span>{{ l.label }}</span>
+									<div v-for="l in AI_LANGUAGES" :key="l.id" class="language" :class="{selected: aiLanguage === l.id}" :title="l.label" @click="aiLanguage = l.id">
+										<img :src="l.logo" :alt="l.label">
 									</div>
 								</div>
 							</div>
@@ -970,16 +969,14 @@
 		.language {
 			display: flex;
 			align-items: center;
-			gap: 6px;
-			padding: 5px 10px;
+			padding: 6px 8px;
 			border: 2px solid transparent;
 			border-radius: 6px;
 			background: rgba(0, 0, 0, 0.05);
 			cursor: pointer;
-			font-size: 13px;
 			img {
-				width: 18px;
-				height: 18px;
+				width: 24px;
+				height: 24px;
 			}
 			&.selected {
 				border-color: #5FAD1B;
