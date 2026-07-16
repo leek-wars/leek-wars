@@ -957,6 +957,9 @@
 				}
 				& > a > img {
 					width: 34px;
+					height: 34px;
+					object-fit: contain;
+					flex-shrink: 0;
 				}
 				.v-btn {
 					padding: 0;
