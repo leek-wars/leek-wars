@@ -140,6 +140,7 @@
 	"grade": "Звание",
 	"grade_admin": "Администратор",
 	"grade_contributor": "Автор",
+	"grade_referent": "Референт",
 	"grade_member": "Член",
 	"grade_moderator": "Модератор",
 	"group": "Группа",

@@ -140,6 +140,7 @@
 	"grade": "Pangkat",
 	"grade_admin": "Administrator",
 	"grade_contributor": "Kontributor",
+	"grade_referent": "Referen",
 	"grade_member": "Anggota",
 	"grade_moderator": "Moderator",
 	"group": "Grup",

@@ -140,6 +140,7 @@
 	"grade": "Rang",
 	"grade_admin": "Beheerder",
 	"grade_contributor": "Bijdrager",
+	"grade_referent": "Referent",
 	"grade_member": "Lid",
 	"grade_moderator": "Moderator",
 	"group": "Groep",

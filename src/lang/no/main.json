@@ -140,6 +140,7 @@
 	"grade": "Grad",
 	"grade_admin": "Administrator",
 	"grade_contributor": "Bidragsyter",
+	"grade_referent": "Referent",
 	"grade_member": "Medlem",
 	"grade_moderator": "Moderator",
 	"group": "Gruppe",

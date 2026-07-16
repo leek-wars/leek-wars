@@ -140,6 +140,7 @@
 	"grade": "등급",
 	"grade_admin": "관리자",
 	"grade_contributor": "기여자",
+	"grade_referent": "레퍼런트",
 	"grade_member": "회원",
 	"grade_moderator": "중재자",
 	"group": "그룹",

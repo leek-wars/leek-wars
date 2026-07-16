@@ -140,6 +140,7 @@
 	"grade": "Rang",
 	"grade_admin": "Administrator",
 	"grade_contributor": "Mitwirkender",
+	"grade_referent": "Referent",
 	"grade_member": "Mitglied",
 	"grade_moderator": "Moderation",
 	"group": "Gruppe",
