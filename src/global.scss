@@ -610,6 +610,10 @@ body.dark img.emoji[src$="frequency.png"] {
 	color: #009c1d;
 	font-weight: bold;
 }
+.referent, a.referent {
+	color: #2196f3;
+	font-weight: bold;
+}
 .bot, a.bot {
 	color: var(--text-color);
 	font-weight: 500;

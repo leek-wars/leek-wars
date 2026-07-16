@@ -97,6 +97,7 @@ class Farmer {
 	public pass!: boolean
 	public errors!: number
 	public contributor!: boolean
+	public referent!: boolean
 	public rewards!: Reward[]
 	public resources!: InventoryItem[]
 	public components!: InventoryItem[]

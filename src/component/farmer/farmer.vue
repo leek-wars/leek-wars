@@ -138,7 +138,8 @@
 					<div v-if="farmer" class="grades">
 						<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
 						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
-						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+						<div v-if="farmer.referent" class="grade referent">{{ $t('referent') }}</div>
+						<div v-else-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
 					</div>
 
 
@@ -508,6 +509,10 @@
 						<v-icon>mdi-trophy-outline</v-icon>
 						Donner trophée
 					</div>
+					<div class="tab" @click="openGradeDialog()">
+						<v-icon>mdi-shield-account-outline</v-icon>
+						Changer le grade
+					</div>
 				</template>
 			</div>
 		</div>
@@ -607,6 +612,22 @@
 			<template #actions>
 				<div v-ripple @click="trophyDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="green" @click="giveTrophy()">Donner</div>
+			</template>
+		</popup>
+
+		<popup v-if="farmer" v-model="gradeDialog" :width="500" icon="mdi-shield-account-outline">
+			<template #title>Changer le grade de {{ farmer.name }}</template>
+
+			<div class="grade-options">
+				<label v-for="option in gradeOptions" :key="option.value" class="grade-option">
+					<input v-model="gradeChoice" type="radio" :value="option.value">
+					<span :class="option.color">{{ option.label }}</span>
+				</label>
+			</div>
+
+			<template #actions>
+				<div v-ripple @click="gradeDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="setGrade()">Valider</div>
 			</template>
 		</popup>
 
@@ -716,6 +737,17 @@
 		5000: { potion: 'mafia', item: 282 },
 		10000: { hat: 'gold_fedora', item: 280 },
 	}
+	const gradeDialog = ref(false)
+	// Hiérarchie : admin > modérateur > référent > contributeur > normal
+	// grade = champ farmer.grade (0/10/100), special = champ farmer.special (0/1/2)
+	const gradeOptions = [
+		{ value: 'admin', label: "Administrateur", color: 'admin', grade: 100, special: 0 },
+		{ value: 'moderator', label: "Modérateur", color: 'moderator', grade: 10, special: 0 },
+		{ value: 'referent', label: "Référent", color: 'referent', grade: 0, special: 2 },
+		{ value: 'contributor', label: "Contributeur", color: 'contributor', grade: 0, special: 1 },
+		{ value: 'normal', label: "Normal", color: '', grade: 0, special: 0 },
+	]
+	const gradeChoice = ref('normal')
 	const invitationSent = ref(false)
 	const chartData = ref<ChartData<'line'> | null>(null)
 	const chartOptions = ref<ChartOptions<'line'> | null>(null)
@@ -1231,6 +1263,35 @@
 		}
 	}
 
+	function openGradeDialog() {
+		if (!farmer.value) return
+		// Détermine le grade actuel à partir des booléens exposés
+		if (farmer.value.admin) gradeChoice.value = 'admin'
+		else if (farmer.value.moderator) gradeChoice.value = 'moderator'
+		else if (farmer.value.referent) gradeChoice.value = 'referent'
+		else if (farmer.value.contributor) gradeChoice.value = 'contributor'
+		else gradeChoice.value = 'normal'
+		gradeDialog.value = true
+	}
+
+	function setGrade() {
+		if (!farmer.value) return
+		const option = gradeOptions.find(o => o.value === gradeChoice.value)
+		if (!option) return
+		LeekWars.post('farmer/set-grade', { farmer_id: farmer.value.id, grade: option.grade, special: option.special })
+			.then(data => {
+				if (!farmer.value) return
+				farmer.value.admin = option.value === 'admin'
+				farmer.value.moderator = option.value === 'admin' || option.value === 'moderator'
+				farmer.value.referent = option.value === 'referent'
+				farmer.value.contributor = option.value === 'contributor'
+				farmer.value.grade = data.color
+				gradeDialog.value = false
+				LeekWars.toast("Grade mis à jour !")
+			})
+			.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
+	}
+
 	function toggleLike() {
 		if (!farmer.value) return
 		const liked = farmer.value.liked
@@ -1467,6 +1528,22 @@
 	}
 	.grade.contributor {
 		background: #009c1d;
+	}
+	.grade.referent {
+		background: #2196f3;
+	}
+	.grade-options {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 5px 0;
+	}
+	.grade-option {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		cursor: pointer;
+		font-size: 16px;
 	}
 	.avatar-wrapper {
 		position: relative;
