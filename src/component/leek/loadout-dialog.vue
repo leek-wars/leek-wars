@@ -569,7 +569,8 @@
 					const w = LeekWars.weapons[item.params]
 					if (w?.name) return 'weapon.' + w.name
 				} else if (s.type === 'chip') {
-					const c = LeekWars.chips[item.params]
+					// LeekWars.chips est indexé par id d'item_template, pas par item.params (id de chip_template)
+					const c = LeekWars.chips[s.template]
 					if (c?.name) return 'chip.' + c.name
 				} else if (s.type === 'component') {
 					const c = LeekWars.components[item.params]
