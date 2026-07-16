@@ -5,5 +5,8 @@
 	"fights_bought": "{0} Kämpfe gekauft!",
 	"next_fight_in": "{fights} neue Kämpfe in {time}",
 	"no_more_fights": "Mehr Kämpfe!",
-	"already_bought": "Bereits gekauft"
+	"already_bought": "Bereits gekauft",
+	"n_fights": "{0} Kämpfe",
+	"use": "Benutzen",
+	"fights_retrieved": "{0} Kämpfe erhalten!"
 }

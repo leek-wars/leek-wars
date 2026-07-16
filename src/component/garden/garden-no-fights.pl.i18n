@@ -5,5 +5,8 @@
 	"fights_bought": "Kupiono {0} walk!",
 	"next_fight_in": "{fights} nowych walk za {time}",
 	"no_more_fights": "Więcej walk!",
-	"already_bought": "Już kupiono"
+	"already_bought": "Już kupiono",
+	"n_fights": "{0} walk",
+	"use": "Użyj",
+	"fights_retrieved": "Odebrano {0} walk!"
 }

@@ -5,5 +5,8 @@
 	"fights_bought": "{0} pertarungan dibeli!",
 	"next_fight_in": "{fights} pertarungan baru dalam {time}",
 	"no_more_fights": "Perkelahian lagi!",
-	"already_bought": "Sudah dibeli"
+	"already_bought": "Sudah dibeli",
+	"n_fights": "{0} pertarungan",
+	"use": "Gunakan",
+	"fights_retrieved": "{0} pertarungan diambil!"
 }

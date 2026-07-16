@@ -5,5 +5,8 @@
 	"fights_bought": "{0} gevechten gekocht!",
 	"next_fight_in": "{fights} nieuwe gevechten in {time}",
 	"no_more_fights": "Meer gevechten!",
-	"already_bought": "Al gekocht"
+	"already_bought": "Al gekocht",
+	"n_fights": "{0} gevechten",
+	"use": "Gebruiken",
+	"fights_retrieved": "{0} gevechten opgehaald!"
 }

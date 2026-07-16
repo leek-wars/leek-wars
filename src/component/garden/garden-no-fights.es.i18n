@@ -5,5 +5,8 @@
 	"fights_bought": "¡{0} peleas compradas!",
 	"next_fight_in": "{fights} nuevas peleas en {time}",
 	"no_more_fights": "¡Sin más combates!",
-	"already_bought": "Ya comprado"
+	"already_bought": "Ya comprado",
+	"n_fights": "{0} peleas",
+	"use": "Usar",
+	"fights_retrieved": "¡{0} peleas recuperadas!"
 }

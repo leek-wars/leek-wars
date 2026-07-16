@@ -5,5 +5,8 @@
 	"fights_bought": "{0}戦を購入しました！",
 	"next_fight_in": "{time}で{fights}の新しい戦い",
 	"no_more_fights": "もっと戦います！",
-	"already_bought": "購入済み"
+	"already_bought": "購入済み",
+	"n_fights": "{0}戦",
+	"use": "使う",
+	"fights_retrieved": "{0}戦を獲得しました！"
 }

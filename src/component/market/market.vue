@@ -16,18 +16,6 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<panel v-if="outOfFights && ownedFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross" class="use-packs-panel">
-					<template #content>
-						<div class="items fights">
-							<div v-for="pack in ownedFightPacks" :key="pack.template" class="item fight-pack owned-pack">
-								<img :src="'/image/fight-pack/fight_pack_' + pack.fights + '.png'">
-								<div>{{ $t('n_fights', [pack.fights]) }}</div>
-								<div class="owned-count">×{{ pack.count }}</div>
-								<v-btn size="small" color="primary" class="use-btn" @click="useFightPack(pack.template)">{{ $t('main.retrieve') }}</v-btn>
-							</div>
-						</div>
-					</template>
-				</panel>
 				<panel v-if="$store.state.farmer?.buy_fights_enabled && filteredFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross">
 					<template #content>
 						<loader v-if="!fight_packs.length" />
@@ -388,26 +376,6 @@ const t = useNamespacedT('market')
 	}
 
 	const filteredFightPacks = computed(() => fight_packs.value.filter(p => matchesSearch(p)))
-
-	// Packs de combat possédés (utilisables manuellement). Les templates réels 265..268 sont
-	// chargés dans `items` avec leur farmer_count ; on les surface quand le joueur n'a plus de combats.
-	const FIGHT_PACK_TEMPLATES = [{ template: 265, fights: 50 }, { template: 266, fights: 100 }, { template: 267, fights: 200 }, { template: 268, fights: 500 }]
-	const outOfFights = computed(() => (store.state.farmer?.fights ?? 0) <= 0)
-	const ownedFightPacks = computed(() => FIGHT_PACK_TEMPLATES
-		.map(p => ({ ...p, count: items[p.template]?.farmer_count ?? 0 }))
-		.filter(p => p.count > 0))
-
-	function useFightPack(template: number) {
-		LeekWars.post<{ fights: number }>('item/retrieve', { template, quantity: 1 }).then(data => {
-			if (data.fights) {
-				store.commit('update-fights', data.fights)
-				store.commit('update-bought-fights', data.fights)
-			}
-			if (items[template]) items[template].farmer_count = Math.max(0, (items[template].farmer_count ?? 0) - 1)
-			store.commit('remove-inventory', { type: ItemType.FIGHT_PACK, item_template: template, quantity: 1 })
-			updateSubtitle()
-		}).error(error => LeekWars.toast(t('error_' + error.error, error.params)))
-	}
 
 	const filteredWeapons = computed(() => weapons.value.filter(w => matchesSearch(items[w.id])))
 	const filteredChips = computed(() => chips.value.filter(c => matchesSearch(items[c.id])))
@@ -892,20 +860,6 @@ const t = useNamespacedT('market')
 		div {
 			margin-top: 10px;
 		}
-	}
-	.item.fight-pack.owned-pack {
-		cursor: default;
-		.owned-count {
-			margin-top: 4px;
-			font-size: 13px;
-			color: var(--text-color-secondary);
-		}
-		.use-btn {
-			margin-top: 8px;
-		}
-	}
-	.use-packs-panel {
-		border: 1px solid var(--primary);
 	}
 	.fights img {
 		height: 75px;

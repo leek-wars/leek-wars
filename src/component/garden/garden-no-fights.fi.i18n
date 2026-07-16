@@ -5,5 +5,8 @@
 	"fights_bought": "{0} taistelua ostettu!",
 	"next_fight_in": "{fights} uutta taistelua {time}",
 	"no_more_fights": "Lisää tappeluita!",
-	"already_bought": "Jo ostettu"
+	"already_bought": "Jo ostettu",
+	"n_fights": "{0} tappelua",
+	"use": "Käytä",
+	"fights_retrieved": "{0} tappelua lunastettu!"
 }

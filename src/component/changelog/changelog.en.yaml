@@ -31,7 +31,7 @@
     - "Dialog prompting you to start the LeekScript tutorial. #img_249_tutorial_dialog"
     - "Trophy icons adapted to dark mode."
     - "Fights compressed server-side for lighter storage."
-    - "Purchased fight packs land in your inventory (to activate) instead of being credited directly."
+    - "Purchased fight packs land in your inventory (to activate) instead of being credited directly, usable from the garden when you're out of fights."
     - "Automatic removal from the garden after a losing streak now requires distinct opponents."
     - "#ai Entry-point functions are no longer flagged as unused."
     - "#ai Python AI validation in the editor: undefined names, type and syntax errors reported live."

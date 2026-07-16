@@ -5,5 +5,8 @@
 	"fights_bought": "{0} fights bought!",
 	"next_fight_in": "{fights} more fights in {time}",
 	"no_more_fights": "No more fights!",
-	"already_bought": "Already bought"
+	"already_bought": "Already bought",
+	"n_fights": "{0} fights",
+	"use": "Use",
+	"fights_retrieved": "{0} fights retrieved!"
 }

@@ -31,7 +31,7 @@
     - "Dialogue incitant à démarrer le tutoriel LeekScript. #img_249_tutorial_dialog"
     - "Icônes de trophée adaptées au mode sombre."
     - "Combats compressés côté serveur pour un stockage plus léger."
-    - "Les packs de combats achetés arrivent dans l'inventaire (à activer) au lieu d'être crédités directement."
+    - "Les packs de combats achetés arrivent dans l'inventaire (à activer) au lieu d'être crédités directement, utilisables depuis le potager quand vous n'avez plus de combats."
     - "Le retrait automatique du potager après une série de défaites exige désormais des adversaires distincts."
     - "#ai Les fonctions points d'entrée ne sont plus signalées comme inutilisées."
     - "#ai Validation des IA Python dans l'éditeur : noms indéfinis, erreurs de type et de syntaxe signalés en direct."

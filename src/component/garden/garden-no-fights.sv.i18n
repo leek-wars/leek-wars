@@ -5,5 +5,8 @@
 	"fights_bought": "{0} slagsmål köpta!",
 	"next_fight_in": "{fights} nya slagsmål om {time}",
 	"no_more_fights": "Fler slagsmål!",
-	"already_bought": "Redan köpt"
+	"already_bought": "Redan köpt",
+	"n_fights": "{0} slagsmål",
+	"use": "Använd",
+	"fights_retrieved": "{0} slagsmål hämtade!"
 }

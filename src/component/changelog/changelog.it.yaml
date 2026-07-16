@@ -31,7 +31,7 @@
     - "Finestra che invita ad avviare il tutorial LeekScript. #img_249_tutorial_dialog"
     - "Icone dei trofei adattate alla modalità scura."
     - "Combattimenti compressi lato server per un archivio più leggero."
-    - "I pacchetti di combattimenti acquistati arrivano nell'inventario (da attivare) invece di essere accreditati subito."
+    - "I pacchetti di combattimenti acquistati arrivano nell'inventario (da attivare) invece di essere accreditati subito, utilizzabili dall'orto quando non hai più combattimenti."
     - "La rimozione automatica dall'orto dopo una serie di sconfitte richiede ora avversari distinti."
     - "#ai Le funzioni punto d'ingresso non sono più segnalate come inutilizzate."
     - "#ai Validazione delle IA Python nell'editor: nomi non definiti, errori di tipo e di sintassi segnalati in tempo reale."

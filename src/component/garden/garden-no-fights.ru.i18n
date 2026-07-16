@@ -5,5 +5,8 @@
 	"fights_bought": "{0} боёв куплено!",
 	"next_fight_in": "{fights} новых боев за {time}",
 	"no_more_fights": "Больше боев!",
-	"already_bought": "Уже куплено"
+	"already_bought": "Уже куплено",
+	"n_fights": "{0} драк",
+	"use": "Использовать",
+	"fights_retrieved": "Получено {0} драк!"
 }

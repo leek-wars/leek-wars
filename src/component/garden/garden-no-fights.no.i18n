@@ -5,5 +5,8 @@
 	"fights_bought": "{0} kamper kjøpt!",
 	"next_fight_in": "{fights} nye kamper om {time}",
 	"no_more_fights": "Flere kamper!",
-	"already_bought": "Allerede kjøpt"
+	"already_bought": "Allerede kjøpt",
+	"n_fights": "{0} kamper",
+	"use": "Bruk",
+	"fights_retrieved": "{0} kamper hentet!"
 }

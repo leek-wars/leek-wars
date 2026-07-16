@@ -2,6 +2,14 @@
 	<div class="nofight">
 		<img src="/image/notgood.png">
 		<h4 class="next">{{ $t('no_more_fights') }}</h4>
+		<div v-if="canbuy && ownedPacks.length" class="packs">
+			<div v-for="pack in ownedPacks" :key="pack.template" class="pack card">
+				<div class="pack-count">×{{ pack.quantity }}</div>
+				<img :src="'/image/fight-pack/fight_pack_' + pack.fights + '.png'">
+				<div class="pack-name">{{ $t('n_fights', [pack.fights]) }}</div>
+				<v-btn size="small" color="primary" :loading="usingPack === pack.template" @click="usePack(pack.template)">{{ $t('use') }}</v-btn>
+			</div>
+		</div>
 		<div v-if="canbuy && $store.state.farmer?.buy_fights_enabled" class="buy-buttons">
 			<v-btn class="buy-habs-button" :disabled="$store.state.farmer.habs_fights || $store.state.farmer.habs < habsPrice" :loading="buyingHabs" @click="buyHabs">
 				<div class="buy-btn-content">
@@ -35,6 +43,7 @@
 
 <script setup lang="ts">
 	import { mixins, useNamespacedT } from '@/model/i18n'
+	import { ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { computed, ref } from 'vue'
@@ -54,6 +63,32 @@
 
 	const buyingHabs = ref(false)
 	const buyingCrystals = ref(false)
+	const usingPack = ref(0)
+
+	// Nombre de combats par template de pack (mêmes templates que le market)
+	const FIGHT_PACK_FIGHTS: {[template: number]: number} = { 265: 50, 266: 100, 267: 200, 268: 500 }
+
+	const ownedPacks = computed(() => (store.state.farmer?.fight_packs || [])
+		.filter(p => p.quantity > 0 && FIGHT_PACK_FIGHTS[p.template])
+		.map(p => ({ template: p.template, quantity: p.quantity, fights: FIGHT_PACK_FIGHTS[p.template] }))
+		.sort((a, b) => a.fights - b.fights))
+
+	function usePack(template: number) {
+		usingPack.value = template
+		LeekWars.post<{ fights: number }>('item/retrieve', { template, quantity: 1 }).then(data => {
+			if (data.fights) {
+				store.commit('update-fights', data.fights)
+				store.commit('update-bought-fights', data.fights)
+			}
+			store.commit('remove-inventory', { type: ItemType.FIGHT_PACK, item_template: template, quantity: 1 })
+			LeekWars.toast(t('fights_retrieved', [data.fights]))
+			emit('bought')
+		}).error(error => {
+			LeekWars.toast(t('market.error_' + error.error) || error.error)
+		}).finally(() => {
+			usingPack.value = 0
+		})
+	}
 
 	const remainingTime = computed(() => {
 		const nowMs = LeekWars.timeSeconds * 1000
@@ -124,6 +159,38 @@
 	}
 	.buy, .next {
 		padding: 6px;
+	}
+	.packs {
+		display: flex;
+		justify-content: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.pack {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 14px 22px 12px;
+		font-size: 14px;
+		font-weight: 500;
+		border-radius: 6px;
+		img {
+			height: 75px;
+		}
+		.pack-name {
+			margin: 8px 0 10px;
+		}
+		.pack-count {
+			position: absolute;
+			top: 6px;
+			right: 6px;
+			padding: 1px 7px;
+			border-radius: 10px;
+			font-size: 12px;
+			background: var(--background-secondary);
+			color: var(--text-color-secondary);
+		}
 	}
 	a {
 		color: #5fad1b;
