@@ -913,16 +913,25 @@
 		for (let i = 1; i <= 7; ++i) {
 			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
 		}
+		labels.reverse()
+		labels.push(LeekWars.formatDayMonthShort(time))
+		const data = [...farmer.value.talent_history, farmer.value.talent]
+		const lastIndex = data.length - 1
 		chartData.value = {
-			labels: labels.reverse(),
+			labels,
 			datasets: [
 				{
 					tension: 0.2,
-					data: farmer.value.talent_history,
+					data,
 					borderColor: '#5fad1b',
 					pointBackgroundColor: '#5fad1b',
 					borderWidth: 2,
 					fill: { target: 'origin', above: '#5fad1b30' },
+					// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
+					segment: {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
+					},
 				}
 			]
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
