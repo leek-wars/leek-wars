@@ -8,5 +8,6 @@
 	"already_bought": "이미 구매함",
 	"n_fights": "{0} 전투",
 	"use": "사용",
-	"fights_retrieved": "전투 {0}회를 획득했습니다!"
+	"fights_retrieved": "전투 {0}회를 획득했습니다!",
+	"pack_bought": "팩을 구매했습니다!"
 }

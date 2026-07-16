@@ -8,5 +8,6 @@
 	"already_bought": "Już kupiono",
 	"n_fights": "{0} walk",
 	"use": "Użyj",
-	"fights_retrieved": "Odebrano {0} walk!"
+	"fights_retrieved": "Odebrano {0} walk!",
+	"pack_bought": "Pakiet kupiony!"
 }

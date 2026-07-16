@@ -8,5 +8,6 @@
 	"already_bought": "Allerede kjøpt",
 	"n_fights": "{0} kamper",
 	"use": "Bruk",
-	"fights_retrieved": "{0} kamper hentet!"
+	"fights_retrieved": "{0} kamper hentet!",
+	"pack_bought": "Pakke kjøpt!"
 }

@@ -8,5 +8,6 @@
 	"already_bought": "Sudah dibeli",
 	"n_fights": "{0} pertarungan",
 	"use": "Gunakan",
-	"fights_retrieved": "{0} pertarungan diambil!"
+	"fights_retrieved": "{0} pertarungan diambil!",
+	"pack_bought": "Paket dibeli!"
 }

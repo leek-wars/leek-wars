@@ -8,5 +8,6 @@
 	"already_bought": "購入済み",
 	"n_fights": "{0}戦",
 	"use": "使う",
-	"fights_retrieved": "{0}戦を獲得しました！"
+	"fights_retrieved": "{0}戦を獲得しました！",
+	"pack_bought": "パックを購入しました！"
 }

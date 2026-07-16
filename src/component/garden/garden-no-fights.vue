@@ -42,6 +42,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { InventoryItem } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
@@ -111,13 +112,11 @@
 
 	function buyHabs() {
 		buyingHabs.value = true
-		LeekWars.post('market/buy-habs-quantity', { item_id: '50fights', quantity: 1 }).then(data => {
+		LeekWars.post<{ item: InventoryItem }>('market/buy-habs-quantity', { item_id: '50fights', quantity: 1 }).then(data => {
 			store.commit('update-habs', -habsPrice.value)
-			store.commit('update-fights', data.fights)
-			store.commit('update-bought-fights', data.fights)
 			if (store.state.farmer) store.state.farmer.habs_fights = true
-			LeekWars.toast(t('fights_bought', [data.fights]))
-			emit('bought')
+			store.commit('add-inventory', { type: ItemType.FIGHT_PACK, id: data.item.id, template: data.item.template, quantity: 1, time: data.item.time ?? LeekWars.timeSeconds })
+			LeekWars.toast(t('pack_bought'))
 		}).error(error => {
 			LeekWars.toast(t('market.error_' + error.error) || error.error)
 		}).finally(() => {
@@ -131,12 +130,10 @@
 			return
 		}
 		buyingCrystals.value = true
-		LeekWars.post('market/buy-crystals-quantity', { item_id: '100fights', quantity: 1 }).then(data => {
+		LeekWars.post<{ item: InventoryItem }>('market/buy-crystals-quantity', { item_id: '100fights', quantity: 1 }).then(data => {
 			store.commit('update-crystals', -100)
-			store.commit('update-fights', data.fights)
-			store.commit('update-bought-fights', data.fights)
-			LeekWars.toast(t('fights_bought', [data.fights]))
-			emit('bought')
+			store.commit('add-inventory', { type: ItemType.FIGHT_PACK, id: data.item.id, template: data.item.template, quantity: 1, time: data.item.time ?? LeekWars.timeSeconds })
+			LeekWars.toast(t('pack_bought'))
 		}).error(error => {
 			LeekWars.toast(t('market.error_' + error.error) || error.error)
 		}).finally(() => {

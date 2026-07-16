@@ -8,5 +8,6 @@
 	"already_bought": "Déjà acheté",
 	"n_fights": "{0} combats",
 	"use": "Utiliser",
-	"fights_retrieved": "{0} combats récupérés !"
+	"fights_retrieved": "{0} combats récupérés !",
+	"pack_bought": "Pack acheté !"
 }

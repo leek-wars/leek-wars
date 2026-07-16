@@ -8,5 +8,6 @@
 	"already_bought": "Già acquistato",
 	"n_fights": "{0} combattimenti",
 	"use": "Usa",
-	"fights_retrieved": "{0} combattimenti recuperati!"
+	"fights_retrieved": "{0} combattimenti recuperati!",
+	"pack_bought": "Pacchetto acquistato!"
 }

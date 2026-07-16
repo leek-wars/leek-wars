@@ -8,5 +8,6 @@
 	"already_bought": "Al gekocht",
 	"n_fights": "{0} gevechten",
 	"use": "Gebruiken",
-	"fights_retrieved": "{0} gevechten opgehaald!"
+	"fights_retrieved": "{0} gevechten opgehaald!",
+	"pack_bought": "Pakket gekocht!"
 }

@@ -8,5 +8,6 @@
 	"already_bought": "Уже куплено",
 	"n_fights": "{0} драк",
 	"use": "Использовать",
-	"fights_retrieved": "Получено {0} драк!"
+	"fights_retrieved": "Получено {0} драк!",
+	"pack_bought": "Набор куплен!"
 }

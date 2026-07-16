@@ -8,5 +8,6 @@
 	"already_bought": "Redan köpt",
 	"n_fights": "{0} slagsmål",
 	"use": "Använd",
-	"fights_retrieved": "{0} slagsmål hämtade!"
+	"fights_retrieved": "{0} slagsmål hämtade!",
+	"pack_bought": "Paket köpt!"
 }

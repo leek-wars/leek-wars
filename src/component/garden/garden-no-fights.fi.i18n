@@ -8,5 +8,6 @@
 	"already_bought": "Jo ostettu",
 	"n_fights": "{0} tappelua",
 	"use": "Käytä",
-	"fights_retrieved": "{0} tappelua lunastettu!"
+	"fights_retrieved": "{0} tappelua lunastettu!",
+	"pack_bought": "Paketti ostettu!"
 }

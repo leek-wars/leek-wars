@@ -8,5 +8,6 @@
 	"already_bought": "Already bought",
 	"n_fights": "{0} fights",
 	"use": "Use",
-	"fights_retrieved": "{0} fights retrieved!"
+	"fights_retrieved": "{0} fights retrieved!",
+	"pack_bought": "Pack purchased!"
 }

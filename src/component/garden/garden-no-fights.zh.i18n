@@ -8,5 +8,6 @@
 	"already_bought": "已购买",
 	"n_fights": "{0} 场战斗",
 	"use": "使用",
-	"fights_retrieved": "已领取 {0} 场战斗！"
+	"fights_retrieved": "已领取 {0} 场战斗！",
+	"pack_bought": "已购买战斗包！"
 }
