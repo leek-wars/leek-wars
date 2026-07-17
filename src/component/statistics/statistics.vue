@@ -43,6 +43,10 @@
 					<div class="chart"><Doughnut ref="charts" :data="chartAI" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_ai_version') }}</div>
 				</div>
+				<div v-if="category_id == 3" class="chart-wrap right">
+					<div class="chart"><Doughnut ref="charts" :data="chartAILanguage" :options="chartOptions" /></div>
+					<div class="title">{{ $t('chart_ai_language') }}</div>
+				</div>
 				<div v-if="category_id == 6" class="chart-wrap left">
 					<div class="chart"><Doughnut ref="charts" :data="chartLanguages" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_languages') }}</div>
@@ -57,7 +61,7 @@
 				</div>
 				<template v-for="(statistic, name) in category">
 					<div v-if="statistic.visible" :key="name" :class="{private: statistic.private, show_today: statistic.show_today, color: selectedStatistic === name && !!selectedStatisticColor}" class="statistic card" :style="{background: selectedStatistic === name ? selectedStatisticColor : ''}" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="hoverStat(name)" @mouseleave="hoverLeave">
-						<div class="label"><v-icon v-if="statistic.icon">{{ 'mdi-' + statistic.icon }}</v-icon> {{ $t(name) }}</div>
+						<div class="label"><img v-if="aiLanguageLogo(name)" class="stat-lang-logo" :src="aiLanguageLogo(name)!"> <v-icon v-else-if="statistic.icon">{{ 'mdi-' + statistic.icon }}</v-icon> {{ $t(name) }}</div>
 						<div v-if="!statistic.today_state" class="value total">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
@@ -146,10 +150,25 @@
 	const chartFightContext = computed(() => makeChartData(FIGHT_CATEGORY, ['fight_garden', 'fight_test', 'fight_tournament', 'fight_challenge']))
 	const chartDamage = computed(() => makeChartData(FIGHT_CATEGORY, ['damage_direct', 'damage_poison', 'damage_return', 'damage_life']))
 	const chartAI = computed(() => makeChartData(AI_CATEGORY, ['ais_v1', 'ais_v2', 'ais_v3', 'ais_v4']))
+	// LeekScript écrase tout (~99,9% des IA) : un camembert incluant LeekScript rendrait JS/TS/Python
+	// invisibles. On montre donc la répartition entre langages polyglot (le total LeekScript reste
+	// lisible via le camembert "Versions d'IA" et les compteurs).
+	const chartAILanguage = computed(() => makeChartData(AI_CATEGORY, ['ais_javascript', 'ais_typescript', 'ais_python']))
 	const chartLanguage = computed(() => makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en', 'lang_es', 'lang_it', 'lang_de']))
 	const chartLanguages = computed(() => makeChartData(CODE_CATEGORY, ['lw_code_java', 'lw_code_javascript', 'lw_code_php', 'lw_code_css', 'lw_code_vue', 'lw_code_json']))
 	const chartItems = computed(() => makeChartData(ITEM_CATEGORY, ['item_resource', 'item_weapon', 'item_chip', 'item_potion', 'item_hat', 'item_pomp']))
 	const chartChests = computed(() => makeChartData(CHEST_CATEGORY, ['chest_wood', 'chest_iron', 'chest_diamond']))
+
+	// Logo de langage pour les tuiles/légende des stats "IA par langage" (icône = null en base).
+	const AI_LANGUAGE_LOGOS: { [key: string]: string } = {
+		ais_leekscript: '/image/language/leekscript.svg',
+		ais_javascript: '/image/language/javascript.svg',
+		ais_typescript: '/image/language/typescript.svg',
+		ais_python: '/image/language/python.svg',
+	}
+	function aiLanguageLogo(name: string): string | null {
+		return AI_LANGUAGE_LOGOS[name] ?? null
+	}
 
 	function toggleAction() {
 		playing.value = !playing.value
@@ -324,6 +343,11 @@
 			.v-icon {
 				font-size: 16px;
 				transition: none;
+			}
+			.stat-lang-logo {
+				width: 16px;
+				height: 16px;
+				object-fit: contain;
 			}
 		}
 		.unit {
