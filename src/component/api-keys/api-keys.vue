@@ -1,70 +1,103 @@
 <template>
 	<panel :title="t('title')" icon="mdi-key-variant" class="api-keys-panel">
+		<template #actions>
+			<div v-ripple class="tab action" @click="openDialog">
+				<v-icon>mdi-plus</v-icon>
+				<span>{{ t('new') }}</span>
+			</div>
+		</template>
 		<template #content>
 			<div class="content api-keys-content">
 				<p class="api-keys-desc">{{ t('desc') }}</p>
 
 				<div class="quickstart">
 					<div class="quickstart-item">
-						<span class="label">{{ t('auth_header') }}</span>
+						<div class="label">{{ t('auth_header') }}</div>
 						<code>Authorization: Bearer lwk_…</code>
 					</div>
 					<div class="quickstart-item">
-						<span class="label">{{ t('base_url') }}</span>
+						<div class="label">{{ t('base_url') }}</div>
 						<code>https://leekwars.com/api/</code>
 					</div>
 					<div class="quickstart-item">
-						<span class="label">{{ t('rate_limit') }}</span>
-						<span>{{ t('rate_limit_value') }}</span>
+						<div class="label">{{ t('rate_limit') }}</div>
+						<code>{{ t('rate_limit_value') }}</code>
 					</div>
 				</div>
 
-				<div v-if="createdSecret" class="created-secret">
-					<div class="secret-warning"><v-icon>mdi-alert</v-icon> {{ t('copy_now') }}</div>
-					<div class="secret-row">
-						<code>{{ createdSecret }}</code>
-						<v-btn size="small" @click="copySecret">{{ copied ? t('copied') : t('copy') }}</v-btn>
-					</div>
-				</div>
-
-				<table v-if="apiKeys.length" class="keys-table">
-					<tr v-for="key in apiKeys" :key="key.id" :class="{ revoked: key.revoked }">
-						<td class="key-name">
-							<span class="name">{{ key.name }}</span>
-							<span class="prefix">{{ key.prefix }}…</span>
-						</td>
-						<td class="key-scopes">
-							<span v-for="scope in key.scopes" :key="scope" class="scope-chip">{{ scope }}</span>
-						</td>
-						<td class="key-used">
-							{{ key.last_used_at ? LeekWars.formatDuration(key.last_used_at) : t('never_used') }}
-						</td>
-						<td class="key-action">
-							<v-btn v-if="!key.revoked" size="small" variant="text" color="error" @click="revokeKey(key.id)">{{ t('revoke') }}</v-btn>
-							<span v-else class="revoked-label">{{ t('revoked') }}</span>
-						</td>
-					</tr>
-				</table>
-				<p v-else class="api-keys-none">{{ t('none') }}</p>
-
-				<div class="new-key">
-					<h4>{{ t('new') }}</h4>
-					<div class="new-key-form">
-						<v-text-field v-model="newKeyName" :placeholder="t('name')" hide-details density="compact" maxlength="64" />
-						<div class="scopes">
-							<v-checkbox v-for="scope in API_SCOPES" :key="scope" v-model="newKeyScopes" :value="scope" :label="scope" hide-details density="compact" />
+				<div v-if="apiKeys.length" class="keys-list">
+					<div v-for="key in apiKeys" :key="key.id" class="key-card" :class="{ revoked: key.revoked }">
+						<v-icon class="key-icon">{{ key.revoked ? 'mdi-key-remove' : 'mdi-key' }}</v-icon>
+						<div class="key-infos">
+							<div class="key-header">
+								<span class="name">{{ key.name }}</span>
+								<code class="prefix">{{ key.prefix }}…</code>
+							</div>
+							<div class="key-meta">
+								<span v-for="scope in key.scopes" :key="scope" class="scope-chip" :title="t('scope_' + scope.replace(':', '_'))">{{ scope }}</span>
+								<span class="last-used">
+									<v-icon>mdi-clock-outline</v-icon>
+									{{ key.last_used_at ? LeekWars.formatDuration(key.last_used_at) : t('never_used') }}
+								</span>
+							</div>
 						</div>
-						<v-btn :disabled="!newKeyScopes.length || creating" color="primary" @click="createKey">{{ t('create') }}</v-btn>
+						<template v-if="!key.revoked">
+							<v-btn size="small" variant="text" icon="mdi-pencil" :title="t('edit')" @click="openEdit(key)"></v-btn>
+							<v-btn size="small" variant="text" color="error" @click="revokeKey(key.id)">{{ t('revoke') }}</v-btn>
+						</template>
+						<span v-else class="revoked-label">{{ t('revoked') }}</span>
 					</div>
 				</div>
-
-				<div class="mcp-note">
-					<v-icon>mdi-robot-outline</v-icon>
-					<span>{{ t('mcp_note') }}</span>
+				<div v-else class="api-keys-none">
+					<v-icon>mdi-key-outline</v-icon>
+					{{ t('none') }}
 				</div>
 			</div>
 		</template>
 	</panel>
+
+	<popup v-model="dialog" :width="620">
+		<template #icon><v-icon>{{ editingId ? 'mdi-key-change' : 'mdi-key-plus' }}</v-icon></template>
+		<template #title><span>{{ editingId ? t('edit_title') : t('new') }}</span></template>
+
+		<div v-if="!createdSecret" class="create-form">
+			<input v-model="newKeyName" type="text" class="key-name-input" :placeholder="t('name')" maxlength="64">
+			<h4>{{ t('permissions') }}</h4>
+			<div class="permissions">
+				<div v-for="scope in API_SCOPES" :key="scope" v-ripple class="permission"
+					:class="{ selected: newKeyScopes.includes(scope) }" @click="toggleScope(scope)">
+					<v-icon class="check">{{ newKeyScopes.includes(scope) ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}</v-icon>
+					<v-icon class="scope-icon">{{ SCOPE_ICONS[scope] }}</v-icon>
+					<div class="texts">
+						<div class="scope-name">
+							<code>{{ scope }}</code>
+							<span v-if="scope.endsWith(':write') || scope.endsWith(':start')" class="badge-write">{{ t('badge_write') }}</span>
+						</div>
+						<div class="scope-desc">{{ t('scope_' + scope.replace(':', '_')) }}</div>
+					</div>
+				</div>
+			</div>
+			<div class="hint"><v-icon>mdi-shield-check-outline</v-icon> {{ t('hint_minimal') }}</div>
+		</div>
+
+		<div v-else class="secret-step">
+			<div class="secret-warning"><v-icon>mdi-alert</v-icon> {{ t('copy_now') }}</div>
+			<div class="secret-row">
+				<code>{{ createdSecret }}</code>
+			</div>
+			<div class="center">
+				<v-btn color="primary" :prepend-icon="copied ? 'mdi-check' : 'mdi-content-copy'" @click="copySecret">{{ copied ? t('copied') : t('copy') }}</v-btn>
+			</div>
+		</div>
+
+		<template #actions>
+			<template v-if="!createdSecret">
+				<div v-ripple class="action dismiss" @click="dialog = false">{{ t('cancel') }}</div>
+				<div v-ripple class="action green" :class="{ disabled: !newKeyScopes.length || creating }" @click="submit">{{ editingId ? t('save') : t('create') }}</div>
+			</template>
+			<div v-else v-ripple class="action green" @click="dialog = false">{{ t('close') }}</div>
+		</template>
+	</popup>
 </template>
 
 <script setup lang="ts">
@@ -78,7 +111,16 @@
 
 	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean }
 	const API_SCOPES = ['farmer:read', 'ai:read', 'ai:write', 'fight:read', 'fight:start']
+	const SCOPE_ICONS: Record<string, string> = {
+		'farmer:read': 'mdi-account',
+		'ai:read': 'mdi-file-code-outline',
+		'ai:write': 'mdi-pencil',
+		'fight:read': 'mdi-file-document-outline',
+		'fight:start': 'mdi-sword-cross',
+	}
 	const apiKeys = ref<ApiKey[]>([])
+	const dialog = ref(false)
+	const editingId = ref<number | null>(null)
 	const newKeyName = ref('')
 	const newKeyScopes = ref<string[]>(['farmer:read', 'ai:read', 'fight:read'])
 	const createdSecret = ref<string | null>(null)
@@ -86,6 +128,37 @@
 	const copied = ref(false)
 
 	LeekWars.get('api-key/list').then(data => { apiKeys.value = data.keys ?? [] })
+
+	function openDialog() {
+		editingId.value = null
+		createdSecret.value = null
+		copied.value = false
+		newKeyName.value = ''
+		newKeyScopes.value = ['farmer:read', 'ai:read', 'fight:read']
+		dialog.value = true
+	}
+
+	function openEdit(key: ApiKey) {
+		editingId.value = key.id
+		createdSecret.value = null
+		copied.value = false
+		newKeyName.value = key.name
+		newKeyScopes.value = [...key.scopes]
+		dialog.value = true
+	}
+
+	function toggleScope(scope: string) {
+		if (newKeyScopes.value.includes(scope)) {
+			newKeyScopes.value = newKeyScopes.value.filter(s => s !== scope)
+		} else {
+			newKeyScopes.value = [...newKeyScopes.value, scope]
+		}
+	}
+
+	function submit() {
+		if (editingId.value) updateKey()
+		else createKey()
+	}
 
 	function createKey() {
 		if (!newKeyScopes.value.length || creating.value) return
@@ -95,6 +168,15 @@
 			copied.value = false
 			apiKeys.value = data.keys ?? apiKeys.value
 			newKeyName.value = ''
+		}).finally(() => { creating.value = false })
+	}
+
+	function updateKey() {
+		if (!newKeyScopes.value.length || creating.value || editingId.value === null) return
+		creating.value = true
+		LeekWars.post('api-key/update', { id: editingId.value, name: newKeyName.value, scopes: newKeyScopes.value.join(',') }).then(data => {
+			apiKeys.value = data.keys ?? apiKeys.value
+			dialog.value = false
 		}).finally(() => { creating.value = false })
 	}
 
@@ -114,95 +196,213 @@
 
 <style lang="scss" scoped>
 	.api-keys-content {
-		padding: 10px 15px 15px;
+		padding: 12px 15px 15px;
 		.api-keys-desc {
 			color: var(--text-color-secondary);
-			margin: 0 0 12px;
+			margin: 0 0 14px;
 		}
 		.quickstart {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 6px 24px;
-			margin-bottom: 15px;
+			gap: 10px;
+			margin-bottom: 16px;
 			.quickstart-item {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				.label { color: var(--text-color-secondary); font-size: 13px; }
+				flex: 1 1 200px;
+				background: var(--background-secondary);
+				border-radius: 4px;
+				padding: 8px 12px;
+				min-width: 0;
+				.label {
+					color: var(--text-color-secondary);
+					font-size: 11px;
+					text-transform: uppercase;
+					letter-spacing: 0.5px;
+					margin-bottom: 3px;
+				}
 				code {
-					background: var(--background-secondary);
-					padding: 2px 8px;
-					border-radius: 4px;
 					font-size: 13px;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					display: block;
 				}
 			}
 		}
-		.created-secret {
+		.keys-list {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			.key-card {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				border: 1px solid var(--border);
+				border-radius: 4px;
+				padding: 10px 12px;
+				background: var(--background);
+				&:hover { border-color: #5fad1b; }
+				&.revoked {
+					opacity: 0.45;
+					&:hover { border-color: var(--border); }
+					.name { text-decoration: line-through; }
+				}
+				.key-icon { color: var(--text-color-secondary); }
+				.key-infos {
+					flex: 1;
+					min-width: 0;
+					.key-header {
+						display: flex;
+						align-items: baseline;
+						gap: 8px;
+						flex-wrap: wrap;
+						.name { font-weight: 500; }
+						.prefix {
+							color: var(--text-color-secondary);
+							font-size: 11px;
+							background: var(--background-secondary);
+							padding: 1px 6px;
+							border-radius: 3px;
+						}
+					}
+					.key-meta {
+						display: flex;
+						align-items: center;
+						gap: 4px;
+						flex-wrap: wrap;
+						margin-top: 5px;
+						.scope-chip {
+							background: var(--background-secondary);
+							border: 1px solid var(--border);
+							border-radius: 10px;
+							padding: 1px 8px;
+							font-size: 11px;
+							color: var(--text-color-secondary);
+						}
+						.last-used {
+							color: var(--text-color-secondary);
+							font-size: 12px;
+							margin-left: 8px;
+							white-space: nowrap;
+							.v-icon { font-size: 14px; vertical-align: -2px; }
+						}
+					}
+				}
+				.revoked-label { color: var(--text-color-secondary); font-size: 12px; font-style: italic; }
+			}
+		}
+		.api-keys-none {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			color: var(--text-color-secondary);
 			background: var(--background-secondary);
+			border: 1px dashed var(--border);
+			border-radius: 4px;
+			padding: 18px;
+		}
+	}
+	.create-form {
+		.key-name-input {
+			width: 100%;
+			background: var(--background);
 			border: 1px solid var(--border);
 			border-radius: 4px;
-			padding: 10px;
-			margin-bottom: 15px;
-			.secret-warning {
-				font-weight: 500;
-				margin-bottom: 6px;
-				display: flex;
-				align-items: center;
-				gap: 6px;
-			}
-			.secret-row {
+			padding: 8px 10px;
+			color: var(--text-color);
+			margin-bottom: 14px;
+			&:focus { outline: none; border-color: #5fad1b; }
+			&::placeholder { color: var(--text-color-secondary); }
+		}
+		h4 { margin: 0 0 8px; }
+		.permissions {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			.permission {
 				display: flex;
 				align-items: center;
 				gap: 10px;
-				code {
-					flex: 1;
-					word-break: break-all;
-					background: var(--background);
-					padding: 6px 8px;
-					border-radius: 4px;
-					font-size: 13px;
+				border: 1px solid var(--border);
+				border-radius: 4px;
+				padding: 8px 10px;
+				cursor: pointer;
+				user-select: none;
+				&:hover { border-color: #5fad1b; }
+				&.selected {
+					border-color: #5fad1b;
+					background: var(--background-secondary);
+					.check { color: #5fad1b; }
+				}
+				.check { color: var(--text-color-secondary); }
+				.scope-icon { color: var(--text-color-secondary); }
+				.texts {
+					min-width: 0;
+					.scope-name {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						code { font-size: 13px; }
+						.badge-write {
+							background: #f0e0c8;
+							color: #9a6b1f;
+							font-size: 10px;
+							text-transform: uppercase;
+							letter-spacing: 0.5px;
+							border-radius: 3px;
+							padding: 1px 5px;
+						}
+					}
+					.scope-desc {
+						color: var(--text-color-secondary);
+						font-size: 12px;
+						margin-top: 1px;
+					}
 				}
 			}
 		}
-		.keys-table {
-			width: 100%;
-			border-collapse: collapse;
-			td { padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-			tr.revoked { opacity: 0.45; }
-			.key-name {
-				.name { font-weight: 500; }
-				.prefix { color: var(--text-color-secondary); font-family: monospace; font-size: 12px; margin-left: 8px; }
-			}
-			.scope-chip {
-				display: inline-block;
-				background: var(--background-secondary);
-				border-radius: 3px;
-				padding: 1px 6px;
-				margin: 2px 3px 2px 0;
-				font-size: 11px;
-			}
-			.key-used { color: var(--text-color-secondary); font-size: 12px; }
-			.key-action { text-align: right; }
-			.revoked-label { color: var(--text-color-secondary); font-size: 12px; font-style: italic; }
-		}
-		.api-keys-none { color: var(--text-color-secondary); }
-		.new-key {
-			margin-top: 18px;
-			h4 { margin: 0 0 8px; }
-			.new-key-form {
-				display: flex;
-				flex-direction: column;
-				gap: 10px;
-				.scopes { display: flex; flex-wrap: wrap; gap: 4px 16px; }
-			}
-		}
-		.mcp-note {
-			margin-top: 15px;
+		.hint {
 			display: flex;
 			align-items: center;
 			gap: 8px;
 			color: var(--text-color-secondary);
-			font-size: 13px;
+			font-size: 12px;
+			margin-top: 12px;
+			.v-icon { font-size: 16px; }
 		}
+	}
+	.secret-step {
+		.secret-warning {
+			font-weight: 500;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 12px;
+			.v-icon { color: #e8a33d; }
+		}
+		.secret-row {
+			code {
+				display: block;
+				word-break: break-all;
+				background: var(--background-secondary);
+				border: 1px solid #5fad1b;
+				padding: 10px 12px;
+				border-radius: 4px;
+				font-size: 14px;
+				user-select: all;
+			}
+		}
+		.center {
+			text-align: center;
+			margin-top: 14px;
+		}
+	}
+	.action.disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	body.dark .create-form .permissions .permission .badge-write {
+		background: #4a3a1a;
+		color: #e8bf7a;
 	}
 </style>

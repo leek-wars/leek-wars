@@ -15,5 +15,17 @@
 	"new": "New key",
 	"name": "Key name",
 	"create": "Create key",
-	"mcp_note": "The same key works for both the API and the official MCP server, which lets an AI agent browse the docs, read your code and run test fights."
+	"scope_farmer_read": "Read profile (talent, habs, leeks)",
+	"scope_ai_read": "Read AI code",
+	"scope_ai_write": "Write AI code",
+	"scope_fight_read": "Read fight reports and logs",
+	"scope_fight_start": "Start test fights",
+	"cancel": "Cancel",
+	"close": "Close",
+	"permissions": "Permissions",
+	"badge_write": "action",
+	"hint_minimal": "Grant your key only the permissions it needs: you can always create another one.",
+	"edit": "Edit",
+	"edit_title": "Edit key",
+	"save": "Save"
 }
