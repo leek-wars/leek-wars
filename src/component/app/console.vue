@@ -20,7 +20,8 @@
 					<template v-else-if="line.type === 'error'">
 						<div class="error">
 							<div v-if="line.location" class="zigzag">{{ line.zigzags }}</div>
-							<div>{{ $t('leekscript.error_' + line.error, line.params ?? [], { escapeParameter: false }) }}</div>
+							<div v-if="line.message">{{ line.message }}</div>
+							<div v-else>{{ $t('leekscript.error_' + line.error, line.params ?? [], { escapeParameter: false }) }}</div>
 						</div>
 						<span v-if="line.ops" class="ops">{{ line.ops }} ops</span>
 					</template>
@@ -66,9 +67,26 @@ interface ConsoleLine {
 	ops?: number
 	log?: unknown[]
 	error?: string
+	message?: string
 	params?: (string | number)[]
 	location?: number[]
 	zigzags?: string
+}
+
+// Extension de path par langage : pilote la coloration/autocomplétion Monaco (getLanguageForPath)
+// et le langage envoyé au serveur. LeekScript garde la convention historique `.leek`.
+const LANGUAGE_EXT: { [lang: string]: string } = {
+	leekscript: '.leek',
+	javascript: '.js',
+	typescript: '.ts',
+	python: '.py',
+}
+// Jeton de langage attendu par le serveur (PolyglotConsole) : js / ts / python, ou leekscript.
+const SERVER_LANGUAGE: { [lang: string]: string } = {
+	leekscript: 'leekscript',
+	javascript: 'js',
+	typescript: 'ts',
+	python: 'python',
 }
 
 const editorRef = useTemplateRef<EditorRef>('editor')
@@ -77,7 +95,14 @@ const scrollRef = useTemplateRef<HTMLElement>('scroll')
 const lines = ref<ConsoleLine[]>([])
 const history = ref<string[]>([])
 const historyPos = ref(0)
-const ai = ref<AI>(new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' }))
+const language = ref<string>(localStorage.getItem('console/language') || 'leekscript')
+// Un identifiant stable par session : chaque langage a son propre path (donc son modèle Monaco),
+// réutilisé au fil des bascules de langage plutôt que d'accumuler des modèles orphelins.
+const consoleId = Math.random()
+function consolePath(lang: string) {
+	return FileSystem.CONSOLE_MAGIC_KEY + consoleId + (LANGUAGE_EXT[lang] ?? '.leek')
+}
+const ai = ref<AI>(new AI({ id: 0, code: '', path: consolePath(language.value) }))
 const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'monokai' : 'leek-wars'))
 const leekscript = reactive({
 	version: 4,
@@ -111,7 +136,7 @@ function clear() {
 	history.value = []
 	historyPos.value = 0
 	setEditorValue('')
-	LeekWars.socket.send([SocketMessage.CONSOLE_NEW, leekscript.version, leekscript.strict])
+	LeekWars.socket.send([SocketMessage.CONSOLE_NEW, leekscript.version, leekscript.strict, SERVER_LANGUAGE[language.value] ?? 'leekscript'])
 }
 
 function up() {
@@ -205,7 +230,16 @@ watch(() => leekscript.strict, () => {
 	clear()
 })
 
-defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
+// Bascule de langage : nouveau path (donc bascule de la coloration/autocomplétion Monaco via le
+// watcher de props.ai.path dans l'éditeur), puis on repart sur une session REPL neuve.
+watch(language, (lang) => {
+	localStorage.setItem('console/language', lang)
+	ai.value = new AI({ id: 0, code: '', path: consolePath(lang) })
+	fileSystem.consoleAI = ai.value
+	clear()
+})
+
+defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language })
 </script>
 
 <style lang="scss" scoped>

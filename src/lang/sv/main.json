@@ -66,7 +66,7 @@
 	"connect_message": "<a href='{0}'><b>Logga in</b></a> eller <a href='{0}'><b>Registrera dig</b></a> för Leek Wars",
 	"connected": "Ansluten",
 	"connection": "Logga in",
-	"console": "LeekScript-konsol",
+	"console": "Konsol",
 	"console_alert_1": "Uppmärksamhet! Om någon ber dig att gå in i ett program här,",
 	"console_alert_2": "detta är ett försök att hacka ditt konto på Leek Wars.",
 	"console_alert_3": "Ange kod här endast om du vet exakt vad du gör.",

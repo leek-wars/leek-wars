@@ -66,7 +66,7 @@
 	"connect_message": "<a href='{0}'><b>登录</b></a>或<a href='{0}'><b>注册</b></a> Leek Wars",
 	"connected": "已连接",
 	"connection": "登录",
-	"console": "LeekScript 控制台",
+	"console": "控制台",
 	"console_alert_1": "注意！如果有人要求您在此处输入程序，",
 	"console_alert_2": "这是企图破解您在 Leek Wars 上的帐户。",
 	"console_alert_3": "仅当您确切知道自己在做什么时才在此处输入代码。",

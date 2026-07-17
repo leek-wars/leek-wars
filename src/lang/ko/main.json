@@ -66,7 +66,7 @@
 	"connect_message": "Leek Wars에 <a href='{0}'><b>로그인</b></a> 또는 <a href='{0}'><b>가입</b></a>",
 	"connected": "접속 중",
 	"connection": "로그인",
-	"console": "LeekScript 콘솔",
+	"console": "콘솔",
 	"console_alert_1": "주의! 누군가 여기에 프로그램을 입력하라고 한다면",
 	"console_alert_2": "Leek Wars에서 귀하의 계정을 해킹하려는 시도입니다.",
 	"console_alert_3": "수행 중인 작업을 정확히 알고 있는 경우에만 여기에 코드를 입력하십시오.",

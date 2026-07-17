@@ -66,7 +66,7 @@
 	"connect_message": "<a href='{0}'><b>Logg på</b></a> eller <a href='{0}'><b>Registrer deg</b></a> for Leek Wars",
 	"connected": "Tilkoblet",
 	"connection": "Logg Inn",
-	"console": "LeekScript-konsollen",
+	"console": "Konsoll",
 	"console_alert_1": "Merk følgende ! Hvis noen ber deg om å legge inn et program her,",
 	"console_alert_2": "dette er et forsøk på å hacke kontoen din på Leek Wars.",
 	"console_alert_3": "Skriv inn koden her bare hvis du vet nøyaktig hva du gjør.",
