@@ -17,7 +17,7 @@
 	"create": "Crea chiave",
 	"scope_farmer_read": "Leggere il profilo (talento, habs, porri)",
 	"scope_ai_read": "Leggere il codice delle IA",
-	"scope_ai_write": "Scrivere il codice delle IA",
+	"scope_ai_write": "Creare e modificare le IA",
 	"scope_fight_read": "Leggere i rapporti e i log dei combattimenti",
 	"scope_fight_start": "Lanciare combattimenti di prova",
 	"cancel": "Annulla",
@@ -27,5 +27,7 @@
 	"hint_minimal": "Concedi alla chiave solo i permessi necessari: potrai sempre crearne un’altra.",
 	"edit": "Modifica",
 	"edit_title": "Modifica chiave",
-	"save": "Salva"
+	"save": "Salva",
+	"scope_leek_read": "Leggere i porri e il loro equipaggiamento",
+	"scope_market_read": "Leggere il catalogo e i prezzi del mercato"
 }

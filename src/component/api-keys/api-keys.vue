@@ -1,7 +1,7 @@
 <template>
 	<panel :title="t('title')" icon="mdi-key-variant" class="api-keys-panel">
 		<template #actions>
-			<div v-ripple class="tab action" @click="openDialog">
+			<div v-ripple class="button green new-key-button" @click="openDialog">
 				<v-icon>mdi-plus</v-icon>
 				<span>{{ t('new') }}</span>
 			</div>
@@ -110,13 +110,15 @@
 	const t = useNamespacedT('api-keys')
 
 	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean }
-	const API_SCOPES = ['farmer:read', 'ai:read', 'ai:write', 'fight:read', 'fight:start']
+	const API_SCOPES = ['farmer:read', 'leek:read', 'ai:read', 'ai:write', 'fight:read', 'fight:start', 'market:read']
 	const SCOPE_ICONS: Record<string, string> = {
 		'farmer:read': 'mdi-account',
+		'leek:read': 'mdi-sprout',
 		'ai:read': 'mdi-file-code-outline',
 		'ai:write': 'mdi-pencil',
 		'fight:read': 'mdi-file-document-outline',
 		'fight:start': 'mdi-sword-cross',
+		'market:read': 'mdi-cart-outline',
 	}
 	const apiKeys = ref<ApiKey[]>([])
 	const dialog = ref(false)
@@ -195,6 +197,16 @@
 </script>
 
 <style lang="scss" scoped>
+	.new-key-button {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		background: #5fad1b;
+		font-weight: 500;
+		border-top-right-radius: 3px;
+		.v-icon { font-size: 18px; }
+		&:hover { background: #6ec91f !important; }
+	}
 	.api-keys-content {
 		padding: 12px 15px 15px;
 		.api-keys-desc {
