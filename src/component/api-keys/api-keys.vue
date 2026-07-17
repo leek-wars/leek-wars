@@ -207,11 +207,7 @@
 		display: flex;
 		align-items: center;
 		gap: 4px;
-		background: #5fad1b;
-		font-weight: 500;
-		border-top-right-radius: 3px;
 		.v-icon { font-size: 18px; }
-		&:hover { background: #6ec91f !important; }
 	}
 	.api-keys-content {
 		padding: 12px 15px 15px;
