@@ -4,7 +4,7 @@
 	"auth_header": "Authentication",
 	"base_url": "Base URL",
 	"rate_limit": "Rate limit",
-	"rate_limit_value": "30 requests / second",
+	"rate_limit_value": "5 requests / second",
 	"copy_now": "Copy this key now: it will not be shown again.",
 	"copy": "Copy",
 	"copied": "Copied!",
