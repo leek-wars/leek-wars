@@ -110,12 +110,9 @@
 			</div>
 		</div>
 
-		<template #actions>
-			<template v-if="!createdSecret">
-				<div v-ripple class="action dismiss" @click="dialog = false">{{ t('cancel') }}</div>
-				<div v-ripple class="action green" :class="{ disabled: !newKeyRole || creating }" @click="submit">{{ editingId ? t('save') : t('create') }}</div>
-			</template>
-			<div v-else v-ripple class="action green" @click="dialog = false">{{ t('close') }}</div>
+		<template v-if="!createdSecret" #actions>
+			<div v-ripple class="action dismiss" @click="dialog = false">{{ t('cancel') }}</div>
+			<div v-ripple class="action green" :class="{ disabled: !newKeyRole || creating }" @click="submit">{{ editingId ? t('save') : t('create') }}</div>
 		</template>
 	</popup>
 </template>
@@ -153,10 +150,10 @@
 	LeekWars.get('api-key/list').then(data => { apiKeys.value = data.keys ?? [] })
 	LeekWars.get<Service[]>('service/get-all').then(data => { services.value = data ?? [] })
 
-	// Endpoints accessibles par un rôle (cumulatif) : scope de rang <= rang du rôle.
+	// Endpoints AJOUTÉS par un rôle (par rapport au rôle précédent) : scope exact.
+	// (Les rôles sont cumulatifs ; on n'affiche que le delta pour rester lisible.)
 	function endpointsFor(roleId: string): Service[] {
-		const max = TIER_RANK[roleId] ?? 0
-		return services.value.filter(s => (TIER_RANK[s.scope] ?? 1) <= max)
+		return services.value.filter(s => s.scope === roleId)
 	}
 	function endpointsGrouped(roleId: string): { module: string; functions: Service[] }[] {
 		const byModule: Record<string, Service[]> = {}
@@ -309,6 +306,11 @@
 		&.player { background: #d9ecc4; color: #4a7018; }
 		&.account { background: #f5d6d6; color: #a83232; }
 	}
+	body.dark .role-chip {
+		&.base { background: #333b44; color: #b3bec8; }
+		&.player { background: #33481a; color: #b6dd88; }
+		&.account { background: #542626; color: #f3aaaa; }
+	}
 	.create-form {
 		.key-name-input {
 			width: 100%;
@@ -347,7 +349,7 @@
 						align-items: center;
 						gap: 8px;
 						code { font-size: 14px; font-weight: 500; }
-						.scope-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 3px; padding: 1px 5px; &.sensible { background: #f5d6d6; color: #a83232; } }
+						.scope-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 3px; padding: 1px 5px; font-weight: 600; &.sensible { background: #f5d6d6; color: #a83232; } }
 					}
 					.role-desc { color: var(--text-color-secondary); font-size: 12px; margin-top: 2px; }
 				}
@@ -379,6 +381,7 @@
 		.center { text-align: center; margin-top: 14px; }
 	}
 	.action.disabled { opacity: 0.5; pointer-events: none; }
+	body.dark .create-form .roles .role .texts .role-name .scope-badge.sensible { background: #542626; color: #f3aaaa; }
 </style>
 
 <style lang="scss">
