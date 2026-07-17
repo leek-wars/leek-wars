@@ -1,0 +1,19 @@
+{
+	"title": "Clés API",
+	"desc": "Génère une clé pour utiliser l’API Leek Wars depuis tes scripts ou pour brancher le jeu à un agent (Claude, Cursor…) via le serveur MCP. Donne-lui le minimum de permissions nécessaires.",
+	"auth_header": "Authentification",
+	"base_url": "URL de base",
+	"rate_limit": "Limite",
+	"rate_limit_value": "30 requêtes / seconde",
+	"copy_now": "Copie cette clé maintenant : elle ne sera plus affichée.",
+	"copy": "Copier",
+	"copied": "Copiée !",
+	"never_used": "jamais utilisée",
+	"revoke": "Révoquer",
+	"revoked": "révoquée",
+	"none": "Aucune clé pour l’instant.",
+	"new": "Nouvelle clé",
+	"name": "Nom de la clé",
+	"create": "Créer la clé",
+	"mcp_note": "La même clé sert pour l’API et pour le serveur MCP officiel, qui permet à un agent IA de consulter la doc, lire ton code et lancer des combats de test."
+}

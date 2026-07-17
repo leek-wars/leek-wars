@@ -57,6 +57,7 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<div ref="elements" class="items" @scroll="scroll">
+					<api-keys v-if="$store.state.farmer && $store.state.farmer.verified" class="service" />
 					<panel v-for="(service, s) in filteredItems" :key="s" class="service" :item="service.module + '_' + service.function" >
 						<div class="title">
 							<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
@@ -104,13 +105,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
+import { defineAsyncComponent, ref, computed, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { mixins , useNamespacedT } from '@/model/i18n'
+import { locale, mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
+
+// Composant async : utilisable directement dans le template (script setup),
+// NE PAS le référencer dans defineOptions (variable locale, hoisting interdit).
+const ApiKeys = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/api-keys/api-keys.${locale}.i18n`))
 
 defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins] })
 
