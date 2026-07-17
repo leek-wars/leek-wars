@@ -27,5 +27,6 @@
 	"role_account_desc": "Everything else, including sensitive: private messages, account settings.",
 	"endpoints_label": "endpoints",
 	"endpoints_of": "Endpoints of role {0}",
-	"hint_cumulative": "Each role includes the previous ones. Pick the most restricted that works."
+	"hint_cumulative": "Each role includes the previous ones. Pick the most restricted that works.",
+	"usage_last_days": "Usage (last {0} days)"
 }

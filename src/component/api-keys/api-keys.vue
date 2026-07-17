@@ -39,6 +39,9 @@
 									<v-icon>mdi-clock-outline</v-icon>
 									{{ key.last_used_at ? LeekWars.formatDuration(key.last_used_at) : t('never_used') }}
 								</span>
+								<svg v-if="key.usage && usageMax(key) > 0" class="sparkline" :viewBox="`0 0 ${key.usage.length * 4 - 1} 16`" :title="t('usage_last_days', [key.usage.length])">
+									<rect v-for="(v, i) in key.usage" :key="i" :x="i * 4" :y="16 - barHeight(v, key)" width="3" :height="barHeight(v, key)" rx="0.5" />
+								</svg>
 							</div>
 						</div>
 						<template v-if="!key.revoked">
@@ -126,7 +129,7 @@
 
 	const t = useNamespacedT('api-keys')
 
-	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean }
+	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean; usage?: number[] }
 	interface Service { module: string; function: string; method: string; scope: string }
 
 	// Rôles cumulatifs : base < player < account.
@@ -159,6 +162,16 @@
 		const byModule: Record<string, Service[]> = {}
 		for (const s of endpointsFor(roleId)) (byModule[s.module] ??= []).push(s)
 		return Object.keys(byModule).sort().map(module => ({ module, functions: byModule[module] }))
+	}
+
+	// Sparkline : hauteur de barre (sur 16px) proportionnelle au pic de la clé.
+	function usageMax(key: ApiKey): number {
+		return Math.max(0, ...(key.usage ?? []))
+	}
+	function barHeight(v: number, key: ApiKey): number {
+		const max = usageMax(key)
+		if (!max || !v) return 0
+		return Math.max(2, Math.round((v / max) * 16))
 	}
 
 	function openDialog() {
@@ -280,6 +293,7 @@
 						flex-wrap: wrap;
 						margin-top: 5px;
 						.last-used { color: var(--text-color-secondary); font-size: 12px; margin-left: 4px; white-space: nowrap; .v-icon { font-size: 14px; vertical-align: -2px; } }
+						.sparkline { height: 16px; width: 55px; margin-left: 4px; rect { fill: #5fad1b; } }
 					}
 				}
 				.revoked-label { color: var(--text-color-secondary); font-size: 12px; font-style: italic; }
