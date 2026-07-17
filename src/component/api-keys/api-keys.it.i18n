@@ -29,5 +29,6 @@
 	"edit_title": "Modifica chiave",
 	"save": "Salva",
 	"scope_leek_read": "Leggere i porri e il loro equipaggiamento",
-	"scope_market_read": "Leggere il catalogo e i prezzi del mercato"
+	"scope_market_read": "Leggere il catalogo e i prezzi del mercato",
+	"scope_leek_write": "Equipaggiare i loadout sui porri"
 }

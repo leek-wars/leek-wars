@@ -110,10 +110,11 @@
 	const t = useNamespacedT('api-keys')
 
 	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean }
-	const API_SCOPES = ['farmer:read', 'leek:read', 'ai:read', 'ai:write', 'fight:read', 'fight:start', 'market:read']
+	const API_SCOPES = ['farmer:read', 'leek:read', 'leek:write', 'ai:read', 'ai:write', 'fight:read', 'fight:start', 'market:read']
 	const SCOPE_ICONS: Record<string, string> = {
 		'farmer:read': 'mdi-account',
-		'leek:read': 'mdi-sprout',
+		'leek:read': 'mdi-leek',
+		'leek:write': 'mdi-leek',
 		'ai:read': 'mdi-file-code-outline',
 		'ai:write': 'mdi-pencil',
 		'fight:read': 'mdi-file-document-outline',
