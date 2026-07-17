@@ -34,7 +34,7 @@
 								<code class="prefix">{{ key.prefix }}…</code>
 							</div>
 							<div class="key-meta">
-								<span v-for="scope in key.scopes" :key="scope" class="scope-chip" :title="t('scope_' + scope.replace(':', '_'))">{{ scope }}</span>
+								<span v-for="scope in key.scopes" :key="scope" class="role-chip" :class="scope">{{ scope }}</span>
 								<span class="last-used">
 									<v-icon>mdi-clock-outline</v-icon>
 									{{ key.last_used_at ? LeekWars.formatDuration(key.last_used_at) : t('never_used') }}
@@ -56,28 +56,48 @@
 		</template>
 	</panel>
 
-	<popup v-model="dialog" :width="620">
+	<popup v-model="dialog" :width="640">
 		<template #icon><v-icon>{{ editingId ? 'mdi-key-change' : 'mdi-key-plus' }}</v-icon></template>
 		<template #title><span>{{ editingId ? t('edit_title') : t('new') }}</span></template>
 
 		<div v-if="!createdSecret" class="create-form">
 			<input v-model="newKeyName" type="text" class="key-name-input" :placeholder="t('name')" maxlength="64">
-			<h4>{{ t('permissions') }}</h4>
-			<div class="permissions">
-				<div v-for="scope in API_SCOPES" :key="scope" v-ripple class="permission"
-					:class="{ selected: newKeyScopes.includes(scope) }" @click="toggleScope(scope)">
-					<v-icon class="check">{{ newKeyScopes.includes(scope) ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}</v-icon>
-					<v-icon class="scope-icon">{{ SCOPE_ICONS[scope] }}</v-icon>
+			<h4>{{ t('role') }}</h4>
+			<div class="roles">
+				<div v-for="role in ROLES" :key="role.id" v-ripple class="role"
+					:class="{ selected: newKeyRole === role.id }" @click="newKeyRole = role.id">
+					<v-icon class="check">{{ newKeyRole === role.id ? 'mdi-radiobox-marked' : 'mdi-radiobox-blank' }}</v-icon>
+					<v-icon class="role-icon">{{ role.icon }}</v-icon>
 					<div class="texts">
-						<div class="scope-name">
-							<code>{{ scope }}</code>
-							<span v-if="scopeBadge(scope)" class="scope-badge" :class="scopeBadge(scope)">{{ t('badge_' + scopeBadge(scope)) }}</span>
+						<div class="role-name">
+							<code>{{ role.id }}</code>
+							<span v-if="role.id === 'account'" class="scope-badge sensible">{{ t('badge_sensible') }}</span>
 						</div>
-						<div class="scope-desc">{{ t('scope_' + scope.replace(':', '_')) }}</div>
+						<div class="role-desc">{{ t('role_' + role.id + '_desc') }}</div>
 					</div>
+					<v-menu :close-on-content-click="false" location="bottom end">
+						<template #activator="{ props }">
+							<span class="endpoints-link" v-bind="props" @click.stop>
+								{{ endpointsFor(role.id).length }} {{ t('endpoints_label') }}
+								<v-icon>mdi-chevron-down</v-icon>
+							</span>
+						</template>
+						<div class="endpoints-menu">
+							<div class="endpoints-menu-header">{{ t('endpoints_of', [role.id]) }}</div>
+							<div class="endpoints-scroll">
+								<template v-for="group in endpointsGrouped(role.id)" :key="group.module">
+									<div class="ep-module">{{ group.module }}</div>
+									<div v-for="ep in group.functions" :key="ep.function" class="ep-row">
+										<span class="ep-method" :class="ep.method.toLowerCase()">{{ ep.method }}</span>
+										<span class="ep-fn">{{ ep.function }}</span>
+									</div>
+								</template>
+							</div>
+						</div>
+					</v-menu>
 				</div>
 			</div>
-			<div class="hint"><v-icon>mdi-shield-check-outline</v-icon> {{ t('hint_minimal') }}</div>
+			<div class="hint"><v-icon>mdi-shield-check-outline</v-icon> {{ t('hint_cumulative') }}</div>
 		</div>
 
 		<div v-else class="secret-step">
@@ -93,7 +113,7 @@
 		<template #actions>
 			<template v-if="!createdSecret">
 				<div v-ripple class="action dismiss" @click="dialog = false">{{ t('cancel') }}</div>
-				<div v-ripple class="action green" :class="{ disabled: !newKeyScopes.length || creating }" @click="submit">{{ editingId ? t('save') : t('create') }}</div>
+				<div v-ripple class="action green" :class="{ disabled: !newKeyRole || creating }" @click="submit">{{ editingId ? t('save') : t('create') }}</div>
 			</template>
 			<div v-else v-ripple class="action green" @click="dialog = false">{{ t('close') }}</div>
 		</template>
@@ -103,46 +123,53 @@
 <script setup lang="ts">
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { ref } from 'vue'
+	import { computed, ref } from 'vue'
 
 	defineOptions({ name: 'ApiKeys', i18n: {}, mixins: [...mixins] })
 
 	const t = useNamespacedT('api-keys')
 
 	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean }
-	const API_SCOPES = ['read', 'ai:read', 'message:read', 'ai:write', 'leek:write', 'fight:start']
-	const SCOPE_ICONS: Record<string, string> = {
-		'read': 'mdi-book-open-variant',
-		'ai:read': 'mdi-file-code-outline',
-		'message:read': 'mdi-email-outline',
-		'ai:write': 'mdi-pencil',
-		'leek:write': 'mdi-leek',
-		'fight:start': 'mdi-sword-cross',
-	}
-	// Lectures sensibles (badge "sensible") vs écritures (badge "action").
-	const SENSITIVE_SCOPES = ['ai:read', 'message:read']
-	function scopeBadge(scope: string): 'action' | 'sensible' | null {
-		if (scope.endsWith(':write') || scope.endsWith(':start')) return 'action'
-		if (SENSITIVE_SCOPES.includes(scope)) return 'sensible'
-		return null
-	}
+	interface Service { module: string; function: string; method: string; scope: string }
+
+	// Rôles cumulatifs : base < player < account.
+	const ROLES = [
+		{ id: 'base', icon: 'mdi-earth', rank: 1 },
+		{ id: 'player', icon: 'mdi-controller', rank: 2 },
+		{ id: 'account', icon: 'mdi-account-cog', rank: 3 },
+	]
+	const TIER_RANK: Record<string, number> = { base: 1, player: 2, account: 3 }
+
 	const apiKeys = ref<ApiKey[]>([])
+	const services = ref<Service[]>([])
 	const dialog = ref(false)
 	const editingId = ref<number | null>(null)
 	const newKeyName = ref('')
-	const newKeyScopes = ref<string[]>(['read'])
+	const newKeyRole = ref('player')
 	const createdSecret = ref<string | null>(null)
 	const creating = ref(false)
 	const copied = ref(false)
 
 	LeekWars.get('api-key/list').then(data => { apiKeys.value = data.keys ?? [] })
+	LeekWars.get<Service[]>('service/get-all').then(data => { services.value = data ?? [] })
+
+	// Endpoints accessibles par un rôle (cumulatif) : scope de rang <= rang du rôle.
+	function endpointsFor(roleId: string): Service[] {
+		const max = TIER_RANK[roleId] ?? 0
+		return services.value.filter(s => (TIER_RANK[s.scope] ?? 1) <= max)
+	}
+	function endpointsGrouped(roleId: string): { module: string; functions: Service[] }[] {
+		const byModule: Record<string, Service[]> = {}
+		for (const s of endpointsFor(roleId)) (byModule[s.module] ??= []).push(s)
+		return Object.keys(byModule).sort().map(module => ({ module, functions: byModule[module] }))
+	}
 
 	function openDialog() {
 		editingId.value = null
 		createdSecret.value = null
 		copied.value = false
 		newKeyName.value = ''
-		newKeyScopes.value = ['read']
+		newKeyRole.value = 'player'
 		dialog.value = true
 	}
 
@@ -151,16 +178,9 @@
 		createdSecret.value = null
 		copied.value = false
 		newKeyName.value = key.name
-		newKeyScopes.value = [...key.scopes]
+		// une clé porte un rôle ; on prend le plus élevé qu'elle contient.
+		newKeyRole.value = [...key.scopes].sort((a, b) => (TIER_RANK[b] ?? 0) - (TIER_RANK[a] ?? 0))[0] ?? 'player'
 		dialog.value = true
-	}
-
-	function toggleScope(scope: string) {
-		if (newKeyScopes.value.includes(scope)) {
-			newKeyScopes.value = newKeyScopes.value.filter(s => s !== scope)
-		} else {
-			newKeyScopes.value = [...newKeyScopes.value, scope]
-		}
 	}
 
 	function submit() {
@@ -169,9 +189,9 @@
 	}
 
 	function createKey() {
-		if (!newKeyScopes.value.length || creating.value) return
+		if (!newKeyRole.value || creating.value) return
 		creating.value = true
-		LeekWars.post('api-key/create', { name: newKeyName.value, scopes: newKeyScopes.value.join(',') }).then(data => {
+		LeekWars.post('api-key/create', { name: newKeyName.value, scopes: newKeyRole.value }).then(data => {
 			createdSecret.value = data.secret
 			copied.value = false
 			apiKeys.value = data.keys ?? apiKeys.value
@@ -180,9 +200,9 @@
 	}
 
 	function updateKey() {
-		if (!newKeyScopes.value.length || creating.value || editingId.value === null) return
+		if (!newKeyRole.value || creating.value || editingId.value === null) return
 		creating.value = true
-		LeekWars.post('api-key/update', { id: editingId.value, name: newKeyName.value, scopes: newKeyScopes.value.join(',') }).then(data => {
+		LeekWars.post('api-key/update', { id: editingId.value, name: newKeyName.value, scopes: newKeyRole.value }).then(data => {
 			apiKeys.value = data.keys ?? apiKeys.value
 			dialog.value = false
 		}).finally(() => { creating.value = false })
@@ -226,20 +246,8 @@
 				border-radius: 4px;
 				padding: 8px 12px;
 				min-width: 0;
-				.label {
-					color: var(--text-color-secondary);
-					font-size: 11px;
-					text-transform: uppercase;
-					letter-spacing: 0.5px;
-					margin-bottom: 3px;
-				}
-				code {
-					font-size: 13px;
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					display: block;
-				}
+				.label { color: var(--text-color-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+				code { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
 			}
 		}
 		.keys-list {
@@ -255,11 +263,7 @@
 				padding: 10px 12px;
 				background: var(--background);
 				&:hover { border-color: #5fad1b; }
-				&.revoked {
-					opacity: 0.45;
-					&:hover { border-color: var(--border); }
-					.name { text-decoration: line-through; }
-				}
+				&.revoked { opacity: 0.45; &:hover { border-color: var(--border); } .name { text-decoration: line-through; } }
 				.key-icon { color: var(--text-color-secondary); }
 				.key-infos {
 					flex: 1;
@@ -270,35 +274,15 @@
 						gap: 8px;
 						flex-wrap: wrap;
 						.name { font-weight: 500; }
-						.prefix {
-							color: var(--text-color-secondary);
-							font-size: 11px;
-							background: var(--background-secondary);
-							padding: 1px 6px;
-							border-radius: 3px;
-						}
+						.prefix { color: var(--text-color-secondary); font-size: 11px; background: var(--background-secondary); padding: 1px 6px; border-radius: 3px; }
 					}
 					.key-meta {
 						display: flex;
 						align-items: center;
-						gap: 4px;
+						gap: 6px;
 						flex-wrap: wrap;
 						margin-top: 5px;
-						.scope-chip {
-							background: var(--background-secondary);
-							border: 1px solid var(--border);
-							border-radius: 10px;
-							padding: 1px 8px;
-							font-size: 11px;
-							color: var(--text-color-secondary);
-						}
-						.last-used {
-							color: var(--text-color-secondary);
-							font-size: 12px;
-							margin-left: 8px;
-							white-space: nowrap;
-							.v-icon { font-size: 14px; vertical-align: -2px; }
-						}
+						.last-used { color: var(--text-color-secondary); font-size: 12px; margin-left: 4px; white-space: nowrap; .v-icon { font-size: 14px; vertical-align: -2px; } }
 					}
 				}
 				.revoked-label { color: var(--text-color-secondary); font-size: 12px; font-style: italic; }
@@ -316,6 +300,15 @@
 			padding: 18px;
 		}
 	}
+	.role-chip {
+		border-radius: 10px;
+		padding: 1px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		&.base { background: #e0e6ec; color: #55606b; }
+		&.player { background: #d9ecc4; color: #4a7018; }
+		&.account { background: #f5d6d6; color: #a83232; }
+	}
 	.create-form {
 		.key-name-input {
 			width: 100%;
@@ -329,49 +322,44 @@
 			&::placeholder { color: var(--text-color-secondary); }
 		}
 		h4 { margin: 0 0 8px; }
-		.permissions {
+		.roles {
 			display: flex;
 			flex-direction: column;
 			gap: 6px;
-			.permission {
+			.role {
 				display: flex;
 				align-items: center;
 				gap: 10px;
 				border: 1px solid var(--border);
 				border-radius: 4px;
-				padding: 8px 10px;
+				padding: 10px;
 				cursor: pointer;
 				user-select: none;
 				&:hover { border-color: #5fad1b; }
-				&.selected {
-					border-color: #5fad1b;
-					background: var(--background-secondary);
-					.check { color: #5fad1b; }
-				}
+				&.selected { border-color: #5fad1b; background: var(--background-secondary); .check { color: #5fad1b; } }
 				.check { color: var(--text-color-secondary); }
-				.scope-icon { color: var(--text-color-secondary); }
+				.role-icon { color: var(--text-color-secondary); }
 				.texts {
+					flex: 1;
 					min-width: 0;
-					.scope-name {
+					.role-name {
 						display: flex;
 						align-items: center;
 						gap: 8px;
-						code { font-size: 13px; }
-						.scope-badge {
-							font-size: 10px;
-							text-transform: uppercase;
-							letter-spacing: 0.5px;
-							border-radius: 3px;
-							padding: 1px 5px;
-							&.action { background: #f0e0c8; color: #9a6b1f; }
-							&.sensible { background: #f5d6d6; color: #a83232; }
-						}
+						code { font-size: 14px; font-weight: 500; }
+						.scope-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 3px; padding: 1px 5px; &.sensible { background: #f5d6d6; color: #a83232; } }
 					}
-					.scope-desc {
-						color: var(--text-color-secondary);
-						font-size: 12px;
-						margin-top: 1px;
-					}
+					.role-desc { color: var(--text-color-secondary); font-size: 12px; margin-top: 2px; }
+				}
+				.endpoints-link {
+					flex-shrink: 0;
+					color: var(--text-color-secondary);
+					font-size: 12px;
+					white-space: nowrap;
+					padding: 2px 6px;
+					border-radius: 3px;
+					&:hover { color: var(--text-color); background: var(--background); }
+					.v-icon { font-size: 14px; vertical-align: -2px; }
 				}
 			}
 		}
@@ -386,37 +374,63 @@
 		}
 	}
 	.secret-step {
-		.secret-warning {
-			font-weight: 500;
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			margin-bottom: 12px;
-			.v-icon { color: #e8a33d; }
+		.secret-warning { font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; .v-icon { color: #e8a33d; } }
+		.secret-row code { display: block; word-break: break-all; background: var(--background-secondary); border: 1px solid #5fad1b; padding: 10px 12px; border-radius: 4px; font-size: 14px; user-select: all; }
+		.center { text-align: center; margin-top: 14px; }
+	}
+	.action.disabled { opacity: 0.5; pointer-events: none; }
+</style>
+
+<style lang="scss">
+	// Menu des endpoints (non scoped : rendu en teleport hors du composant)
+	.endpoints-menu {
+		background: var(--background);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+		width: 300px;
+		.endpoints-menu-header {
+			padding: 8px 12px;
+			font-size: 12px;
+			color: var(--text-color-secondary);
+			border-bottom: 1px solid var(--border);
+			position: sticky;
+			top: 0;
+			background: var(--background);
 		}
-		.secret-row {
-			code {
-				display: block;
-				word-break: break-all;
-				background: var(--background-secondary);
-				border: 1px solid #5fad1b;
-				padding: 10px 12px;
-				border-radius: 4px;
-				font-size: 14px;
-				user-select: all;
+		.endpoints-scroll {
+			max-height: 340px;
+			overflow-y: auto;
+			padding: 4px 0 6px;
+			.ep-module {
+				padding: 6px 12px 2px;
+				font-size: 11px;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				color: var(--text-color-secondary);
+				font-weight: 600;
+			}
+			.ep-row {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 2px 12px;
+				font-size: 13px;
+				.ep-method {
+					font-size: 10px;
+					font-weight: 600;
+					border-radius: 3px;
+					padding: 0 4px;
+					min-width: 42px;
+					text-align: center;
+					background: var(--background-secondary);
+					color: var(--text-color-secondary);
+					&.post { color: #4a7018; }
+					&.delete { color: #a83232; }
+					&.put { color: #9a6b1f; }
+				}
+				.ep-fn { font-family: monospace; }
 			}
 		}
-		.center {
-			text-align: center;
-			margin-top: 14px;
-		}
-	}
-	.action.disabled {
-		opacity: 0.5;
-		pointer-events: none;
-	}
-	body.dark .create-form .permissions .permission .scope-badge {
-		&.action { background: #4a3a1a; color: #e8bf7a; }
-		&.sensible { background: #4a1f1f; color: #e89a9a; }
 	}
 </style>
