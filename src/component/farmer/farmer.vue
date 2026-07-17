@@ -738,16 +738,13 @@
 		10000: { hat: 'gold_fedora', item: 280 },
 	}
 	const gradeDialog = ref(false)
-	// Hiérarchie : admin > modérateur > référent > contributeur > normal
-	// grade = champ farmer.grade (0/10/100), special = champ farmer.special (0/1/2)
+	// Distinction spéciale (champ special, 0/1/2). Le grade modo/admin se gère ailleurs.
 	const gradeOptions = [
-		{ value: 'admin', label: "Administrateur", color: 'admin', grade: 100, special: 0 },
-		{ value: 'moderator', label: "Modérateur", color: 'moderator', grade: 10, special: 0 },
-		{ value: 'referent', label: "Référent", color: 'referent', grade: 0, special: 2 },
-		{ value: 'contributor', label: "Contributeur", color: 'contributor', grade: 0, special: 1 },
-		{ value: 'normal', label: "Normal", color: '', grade: 0, special: 0 },
+		{ value: 'none', label: "Aucune", color: '', special: 0 },
+		{ value: 'contributor', label: "Contributeur", color: 'contributor', special: 1 },
+		{ value: 'referent', label: "Référent", color: 'referent', special: 2 },
 	]
-	const gradeChoice = ref('normal')
+	const gradeChoice = ref('none')
 	const invitationSent = ref(false)
 	const chartData = ref<ChartData<'line'> | null>(null)
 	const chartOptions = ref<ChartOptions<'line'> | null>(null)
@@ -1265,12 +1262,10 @@
 
 	function openGradeDialog() {
 		if (!farmer.value) return
-		// Détermine le grade actuel à partir des booléens exposés
-		if (farmer.value.admin) gradeChoice.value = 'admin'
-		else if (farmer.value.moderator) gradeChoice.value = 'moderator'
-		else if (farmer.value.referent) gradeChoice.value = 'referent'
+		// Détermine la distinction actuelle à partir des booléens exposés
+		if (farmer.value.referent) gradeChoice.value = 'referent'
 		else if (farmer.value.contributor) gradeChoice.value = 'contributor'
-		else gradeChoice.value = 'normal'
+		else gradeChoice.value = 'none'
 		gradeDialog.value = true
 	}
 
@@ -1278,13 +1273,13 @@
 		if (!farmer.value) return
 		const option = gradeOptions.find(o => o.value === gradeChoice.value)
 		if (!option) return
-		LeekWars.post('farmer/set-grade', { farmer_id: farmer.value.id, grade: option.grade, special: option.special })
+		// On ne touche pas au grade modo/admin : on le conserve tel quel
+		const grade = farmer.value.admin ? 100 : (farmer.value.moderator ? 10 : 0)
+		LeekWars.post('farmer/set-grade', { farmer_id: farmer.value.id, grade, special: option.special })
 			.then(data => {
 				if (!farmer.value) return
-				farmer.value.admin = option.value === 'admin'
-				farmer.value.moderator = option.value === 'admin' || option.value === 'moderator'
-				farmer.value.referent = option.value === 'referent'
-				farmer.value.contributor = option.value === 'contributor'
+				farmer.value.referent = option.special === 2
+				farmer.value.contributor = option.special === 1
 				farmer.value.grade = data.color
 				gradeDialog.value = false
 				LeekWars.toast("Grade mis à jour !")
