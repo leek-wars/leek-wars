@@ -71,7 +71,7 @@
 					<div class="texts">
 						<div class="scope-name">
 							<code>{{ scope }}</code>
-							<span v-if="scope.endsWith(':write') || scope.endsWith(':start')" class="badge-write">{{ t('badge_write') }}</span>
+							<span v-if="scopeBadge(scope)" class="scope-badge" :class="scopeBadge(scope)">{{ t('badge_' + scopeBadge(scope)) }}</span>
 						</div>
 						<div class="scope-desc">{{ t('scope_' + scope.replace(':', '_')) }}</div>
 					</div>
@@ -110,22 +110,27 @@
 	const t = useNamespacedT('api-keys')
 
 	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean }
-	const API_SCOPES = ['farmer:read', 'leek:read', 'leek:write', 'ai:read', 'ai:write', 'fight:read', 'fight:start', 'market:read']
+	const API_SCOPES = ['read', 'ai:read', 'message:read', 'ai:write', 'leek:write', 'fight:start']
 	const SCOPE_ICONS: Record<string, string> = {
-		'farmer:read': 'mdi-account',
-		'leek:read': 'mdi-leek',
-		'leek:write': 'mdi-leek',
+		'read': 'mdi-book-open-variant',
 		'ai:read': 'mdi-file-code-outline',
+		'message:read': 'mdi-email-outline',
 		'ai:write': 'mdi-pencil',
-		'fight:read': 'mdi-file-document-outline',
+		'leek:write': 'mdi-leek',
 		'fight:start': 'mdi-sword-cross',
-		'market:read': 'mdi-cart-outline',
+	}
+	// Lectures sensibles (badge "sensible") vs écritures (badge "action").
+	const SENSITIVE_SCOPES = ['ai:read', 'message:read']
+	function scopeBadge(scope: string): 'action' | 'sensible' | null {
+		if (scope.endsWith(':write') || scope.endsWith(':start')) return 'action'
+		if (SENSITIVE_SCOPES.includes(scope)) return 'sensible'
+		return null
 	}
 	const apiKeys = ref<ApiKey[]>([])
 	const dialog = ref(false)
 	const editingId = ref<number | null>(null)
 	const newKeyName = ref('')
-	const newKeyScopes = ref<string[]>(['farmer:read', 'ai:read', 'fight:read'])
+	const newKeyScopes = ref<string[]>(['read'])
 	const createdSecret = ref<string | null>(null)
 	const creating = ref(false)
 	const copied = ref(false)
@@ -137,7 +142,7 @@
 		createdSecret.value = null
 		copied.value = false
 		newKeyName.value = ''
-		newKeyScopes.value = ['farmer:read', 'ai:read', 'fight:read']
+		newKeyScopes.value = ['read']
 		dialog.value = true
 	}
 
@@ -356,14 +361,14 @@
 						align-items: center;
 						gap: 8px;
 						code { font-size: 13px; }
-						.badge-write {
-							background: #f0e0c8;
-							color: #9a6b1f;
+						.scope-badge {
 							font-size: 10px;
 							text-transform: uppercase;
 							letter-spacing: 0.5px;
 							border-radius: 3px;
 							padding: 1px 5px;
+							&.action { background: #f0e0c8; color: #9a6b1f; }
+							&.sensible { background: #f5d6d6; color: #a83232; }
 						}
 					}
 					.scope-desc {
@@ -414,8 +419,8 @@
 		opacity: 0.5;
 		pointer-events: none;
 	}
-	body.dark .create-form .permissions .permission .badge-write {
-		background: #4a3a1a;
-		color: #e8bf7a;
+	body.dark .create-form .permissions .permission .scope-badge {
+		&.action { background: #4a3a1a; color: #e8bf7a; }
+		&.sensible { background: #4a1f1f; color: #e89a9a; }
 	}
 </style>
