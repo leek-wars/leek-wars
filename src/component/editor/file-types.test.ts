@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getLanguageForPath, getLanguageVersion, getLanguageVersionLabel, isLeekScript, AI_LANGUAGES } from './file-types'
+import { getLanguageForPath, getLanguageVersion, getLanguageVersionLabel, getLanguageVersions, isLeekScript, AI_LANGUAGES } from './file-types'
 
 // Ancre anti-dérive : la correspondance extension -> langage est dupliquée dans 3 repos
 // (client file-types.ts, serveur AIController POLYGLOT/NON_LEEK/LANGUAGE_EXTENSIONS, generator
@@ -70,10 +70,20 @@ describe('getLanguageVersionLabel', () => {
 
 describe('getLanguageVersion', () => {
 	it('pragma et syntaxe de commentaire par langage (alignés sur AIController::polyglotStarterCode)', () => {
-		expect(getLanguageVersion('bot.js')).toEqual({label: 'JavaScript ES2026', pragma: '2026', comment: '//'})
-		expect(getLanguageVersion('bot.ts')).toEqual({label: 'TypeScript 5.8', pragma: '5.8', comment: '//'})
-		expect(getLanguageVersion('bot.py')).toEqual({label: 'Python 3.12', pragma: '3.12', comment: '#'})
+		expect(getLanguageVersion('bot.js')).toEqual({label: 'JavaScript ES2026', short: 'ES2026', pragma: '2026', comment: '//'})
+		expect(getLanguageVersion('bot.ts')).toEqual({label: 'TypeScript 5.8', short: '5.8', pragma: '5.8', comment: '//'})
+		expect(getLanguageVersion('bot.py')).toEqual({label: 'Python 3.12', short: '3.12', pragma: '3.12', comment: '#'})
 		expect(getLanguageVersion('main')).toBeNull()
+	})
+})
+
+describe('getLanguageVersions', () => {
+	it('liste des versions par langage (une seule aujourd\'hui), vide pour leekscript/inconnu', () => {
+		expect(getLanguageVersions('javascript')).toEqual([{label: 'JavaScript ES2026', short: 'ES2026', pragma: '2026', comment: '//'}])
+		expect(getLanguageVersions('typescript').length).toBe(1)
+		expect(getLanguageVersions('python')[0].short).toBe('3.12')
+		expect(getLanguageVersions('leekscript')).toEqual([])
+		expect(getLanguageVersions('unknown')).toEqual([])
 	})
 })
 

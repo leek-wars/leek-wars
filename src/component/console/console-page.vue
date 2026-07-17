@@ -11,6 +11,18 @@
 						<div v-for="l in languages" :key="l.id" class="lang-item" :class="{ active: consoleRef.language === l.id }" @click="consoleRef.language = l.id"><img class="lang-logo" :src="l.logo"> {{ l.label }}</div>
 					</div>
 				</v-menu>
+				<v-menu v-if="consoleRef && consoleRef.language === 'leekscript'" offset-y :close-on-content-click="false">
+					<template #activator="{ props }">
+						<div class="tab action lang-tab" v-bind="props">LS {{ consoleRef.leekscript.version }} {{ consoleRef.leekscript.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></div>
+					</template>
+					<leekscript-versions v-model:version="consoleRef.leekscript.version" v-model:strict="consoleRef.leekscript.strict" />
+				</v-menu>
+				<v-menu v-else-if="consoleRef && currentVersionShort" offset-y :close-on-content-click="false">
+					<template #activator="{ props }">
+						<div class="tab action lang-tab" v-bind="props">{{ currentVersionShort }} <v-icon>mdi-chevron-down</v-icon></div>
+					</template>
+					<polyglot-versions :language="consoleRef.language" v-model:version="consoleRef.languageVersion" />
+				</v-menu>
 				<v-menu v-if="!LeekWars.mobile" offset-y :close-on-content-click="false">
 					<template #activator="{ props }">
 						<div class="tab action" v-bind="props">
@@ -39,9 +51,11 @@ import { ref, computed, useTemplateRef, nextTick } from 'vue'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Console from '../app/console.vue'
-import { AI_LANGUAGES } from '../editor/file-types'
+import LeekscriptVersions from '../app/leekscript-versions.vue'
+import PolyglotVersions from '../app/polyglot-versions.vue'
+import { AI_LANGUAGES, getLanguageVersions } from '../editor/file-types'
 
-defineOptions({ name: 'ConsolePage', components: { Console }, mixins: [...mixins] })
+defineOptions({ name: 'ConsolePage', components: { Console, LeekscriptVersions, PolyglotVersions }, mixins: [...mixins] })
 
 const t = useNamespacedT('console-page')
 
@@ -53,6 +67,11 @@ const languages = AI_LANGUAGES
 const currentLanguage = computed(() => {
 	const lang = (consoleRef.value as unknown as { language?: string })?.language
 	return languages.find(l => l.id === lang) ?? languages[0]
+})
+const currentVersionShort = computed(() => {
+	const c = consoleRef.value as unknown as { language?: string, languageVersion?: string } | null
+	if (!c?.language) return ''
+	return getLanguageVersions(c.language).find(v => v.pragma === c.languageVersion)?.short ?? ''
 })
 
 const themes = [

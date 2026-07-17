@@ -17,6 +17,12 @@
 					</template>
 					<leekscript-versions v-model:version="consoleRef.leekscript.version" v-model:strict="consoleRef.leekscript.strict" />
 				</v-menu>
+				<v-menu v-else-if="consoleRef && currentVersionShort" offset-y :close-on-content-click="false">
+					<template #activator="{ props }">
+						<v-chip v-bind="props" size="small">{{ currentVersionShort }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+					</template>
+					<polyglot-versions :language="consoleRef.language" v-model:version="consoleRef.languageVersion" />
+				</v-menu>
 				<v-chip v-if="consoleRef && !consoleRef.isEmpty()" size="small" @click="consoleRef.clear()"><v-icon>mdi-cancel</v-icon></v-chip>
 			</div>
 		</template>
@@ -43,9 +49,10 @@ import { emitter } from '@/model/vue'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'
-import { AI_LANGUAGES } from '../editor/file-types'
+import PolyglotVersions from './polyglot-versions.vue'
+import { AI_LANGUAGES, getLanguageVersions } from '../editor/file-types'
 
-defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions } })
+defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions, PolyglotVersions } })
 
 const languages = AI_LANGUAGES
 
@@ -62,6 +69,11 @@ const consoleRef = useTemplateRef<InstanceType<typeof Console>>('console')
 const currentLanguage = computed(() => {
 	const lang = (consoleRef.value as unknown as { language?: string })?.language
 	return languages.find(l => l.id === lang) ?? languages[0]
+})
+const currentVersionShort = computed(() => {
+	const c = consoleRef.value as unknown as { language?: string, languageVersion?: string } | null
+	if (!c?.language) return ''
+	return getLanguageVersions(c.language).find(v => v.pragma === c.languageVersion)?.short ?? ''
 })
 const consoleX = ref(0)
 const consoleY = ref(0)

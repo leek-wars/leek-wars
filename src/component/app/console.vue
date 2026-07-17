@@ -48,6 +48,7 @@ import { SocketMessage } from '@/model/socket'
 import { emitter } from '@/model/vue'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
+import { getLanguageVersions } from '../editor/file-types'
 
 defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco } })
 
@@ -103,6 +104,13 @@ function consolePath(lang: string) {
 	return FileSystem.CONSOLE_MAGIC_KEY + consoleId + (LANGUAGE_EXT[lang] ?? '.leek')
 }
 const ai = ref<AI>(new AI({ id: 0, code: '', path: consolePath(language.value) }))
+// Version sélectionnée pour le langage polyglot courant (pragma). Une seule version par langage
+// aujourd'hui (le runtime l'impose) : purement indicatif, mais mémorisé par langage pour le jour où
+// plusieurs versions coexisteront. Vide pour LeekScript (qui a son propre sélecteur version/strict).
+function defaultVersion(lang: string) {
+	return getLanguageVersions(lang)[0]?.pragma ?? ''
+}
+const languageVersion = ref<string>(localStorage.getItem('console/version/' + language.value) || defaultVersion(language.value))
 const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'monokai' : 'leek-wars'))
 const leekscript = reactive({
 	version: 4,
@@ -234,12 +242,17 @@ watch(() => leekscript.strict, () => {
 // watcher de props.ai.path dans l'éditeur), puis on repart sur une session REPL neuve.
 watch(language, (lang) => {
 	localStorage.setItem('console/language', lang)
+	languageVersion.value = localStorage.getItem('console/version/' + lang) || defaultVersion(lang)
 	ai.value = new AI({ id: 0, code: '', path: consolePath(lang) })
 	fileSystem.consoleAI = ai.value
 	clear()
 })
 
-defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language })
+watch(languageVersion, (v) => {
+	if (v) localStorage.setItem('console/version/' + language.value, v)
+})
+
+defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language, languageVersion })
 </script>
 
 <style lang="scss" scoped>
