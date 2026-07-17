@@ -29,5 +29,6 @@
 	"edit_title": "Edit key",
 	"save": "Save",
 	"scope_leek_read": "Read leeks and their gear",
-	"scope_market_read": "Read the market catalog and prices"
+	"scope_market_read": "Read the market catalog and prices",
+	"scope_leek_write": "Equip loadouts on leeks"
 }

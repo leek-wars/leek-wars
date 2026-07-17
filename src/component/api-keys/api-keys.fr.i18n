@@ -29,5 +29,6 @@
 	"edit_title": "Modifier la clé",
 	"save": "Enregistrer",
 	"scope_leek_read": "Lire les poireaux et leurs équipements",
-	"scope_market_read": "Lire le catalogue et les prix du marché"
+	"scope_market_read": "Lire le catalogue et les prix du marché",
+	"scope_leek_write": "Équiper des loadouts sur les poireaux"
 }
