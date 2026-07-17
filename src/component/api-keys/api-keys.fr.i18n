@@ -15,5 +15,17 @@
 	"new": "Nouvelle clé",
 	"name": "Nom de la clé",
 	"create": "Créer la clé",
-	"mcp_note": "La même clé sert pour l’API et pour le serveur MCP officiel, qui permet à un agent IA de consulter la doc, lire ton code et lancer des combats de test."
+	"scope_farmer_read": "Lire le profil (talent, habs, poireaux)",
+	"scope_ai_read": "Lire le code des IA",
+	"scope_ai_write": "Écrire le code des IA",
+	"scope_fight_read": "Lire les rapports et logs de combat",
+	"scope_fight_start": "Lancer des combats de test",
+	"cancel": "Annuler",
+	"close": "Fermer",
+	"permissions": "Permissions",
+	"badge_write": "action",
+	"hint_minimal": "Donne à ta clé le minimum de permissions nécessaires : tu pourras toujours en créer une autre.",
+	"edit": "Modifier",
+	"edit_title": "Modifier la clé",
+	"save": "Enregistrer"
 }
