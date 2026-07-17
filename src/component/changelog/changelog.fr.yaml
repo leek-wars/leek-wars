@@ -1,3 +1,8 @@
+250:
+  title: "WIP"
+  improved:
+    - "Suppression de compte possible pour le créateur d'une équipe : elle est transmise au membre le plus ancien, ou dissoute s'il est seul."
+
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
   added:

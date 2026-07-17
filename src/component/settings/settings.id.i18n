@@ -21,6 +21,8 @@
 	"delete_password": "Kata sandi",
 	"delete_success": "Penghapusan berhasil",
 	"delete_success_message": "Akun Anda telah dihapus, Anda akan dialihkan dalam beberapa detik, sampai jumpa di Leek Wars!",
+	"delete_team_dissolve": "Kamu adalah pembuat sekaligus satu-satunya anggota tim {0}: tim akan dibubarkan saat akunmu dihapus.",
+	"delete_team_transfer": "Kamu adalah pembuat tim {0}: saat akunmu dihapus, tim akan diserahkan kepada anggota paling lama.",
 	"discrete_mode": "Modus rahasia",
 	"empty": "Kosong",
 	"empty_localstorage": "Kosongkan penyimpanan lokal",

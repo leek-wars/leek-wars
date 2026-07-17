@@ -251,6 +251,11 @@
 			<template #icon><v-icon>mdi-delete</v-icon></template>
 			<template #title><span>{{ $t('delete_account') }}</span></template>
 			<div v-html="$t('delete_message')"></div>
+			<div v-if="teamOwner" class="team-warning">
+				<v-icon>mdi-alert</v-icon>
+				<span v-if="teamOwnerAlone">{{ $t('delete_team_dissolve', [teamName]) }}</span>
+				<span v-else>{{ $t('delete_team_transfer', [teamName]) }}</span>
+			</div>
 			<br v-if="$store.state.farmer?.verified">
 			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
 			<template #actions>
@@ -289,8 +294,9 @@
 	import { mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { TeamMemberLevel } from '@/model/team'
 	import { usePushNotifications } from '@/model/use-push-notifications'
-	import { ref, watch } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 
 	defineOptions({ name: 'Settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
@@ -340,6 +346,12 @@
 	const email = ref('')
 	const password1 = ref('')
 	const submittingVerify = ref(false)
+
+	// Créateur d'une équipe : elle sera transmise au membre le plus ancien
+	// à la suppression du compte, ou dissoute s'il est le seul membre
+	const teamOwner = computed(() => !!store.state.farmer?.team && store.state.farmer.team.member_level === TeamMemberLevel.OWNER)
+	const teamOwnerAlone = computed(() => store.state.farmer?.team?.member_count === 1)
+	const teamName = computed(() => store.state.farmer?.team?.name || '')
 
 	settings.value = {}
 	for (const category in mails) {
@@ -557,6 +569,23 @@
 </script>
 
 <style lang="scss" scoped>
+	.team-warning {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 12px;
+		padding: 8px 12px;
+		border-radius: 4px;
+		background: #fff3e0;
+		color: #a04000;
+		.v-icon {
+			color: #e67e22;
+		}
+	}
+	body.dark .team-warning {
+		background: #4a3520;
+		color: #ffcc80;
+	}
 	.languages {
 		text-align: center;
 		.language {

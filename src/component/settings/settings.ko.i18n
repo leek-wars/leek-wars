@@ -27,6 +27,8 @@
 	"delete_password": "비밀번호",
 	"delete_success": "성공적인 삭제",
 	"delete_success_message": "계정이 삭제되었습니다. 몇 초 후에 리디렉션됩니다. 곧 Leek Wars에서 뵙겠습니다!",
+	"delete_team_dissolve": "당신은 팀 {0}의 창설자이자 유일한 멤버입니다. 계정을 삭제하면 팀이 해체됩니다.",
+	"delete_team_transfer": "당신은 팀 {0}의 창설자입니다. 계정을 삭제하면 팀은 가장 오래된 멤버에게 넘어갑니다.",
 	"discrete_mode": "비밀 모드",
 	"empty": "비우기",
 	"empty_localstorage": "LocalStorage 비우기",

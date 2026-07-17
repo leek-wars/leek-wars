@@ -21,6 +21,8 @@
 	"delete_password": "Wachtwoord",
 	"delete_success": "Succesvolle verwijdering",
 	"delete_success_message": "Je account is verwijderd, je wordt over een paar seconden doorgestuurd, tot ziens op Leek Wars!",
+	"delete_team_dissolve": "Je bent de oprichter en het enige lid van team {0}: het team wordt ontbonden wanneer je account wordt verwijderd.",
+	"delete_team_transfer": "Je bent de oprichter van team {0}: wanneer je account wordt verwijderd, wordt het team overgedragen aan het oudste lid.",
 	"discrete_mode": "Discrete modus",
 	"empty": "Leeg",
 	"empty_localstorage": "Leeg de localStorage",

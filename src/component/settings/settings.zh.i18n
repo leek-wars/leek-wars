@@ -21,6 +21,8 @@
 	"delete_password": "密码",
 	"delete_success": "删除成功",
 	"delete_success_message": "您的帐户已被删除，几秒钟后您将被重定向，韭菜大战再见！",
+	"delete_team_dissolve": "你是团队 {0} 的创建者，也是唯一的成员：删除账号后，团队将被解散。",
+	"delete_team_transfer": "你是团队 {0} 的创建者：删除账号后，团队将移交给最早加入的成员。",
 	"discrete_mode": "谨慎模式",
 	"empty": "空的",
 	"empty_localstorage": "清空本地存储",

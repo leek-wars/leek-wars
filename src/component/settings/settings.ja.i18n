@@ -21,6 +21,8 @@
 	"delete_password": "パスワード",
 	"delete_success": "削除成功",
 	"delete_success_message": "あなたのアカウントは削除されました。数秒後にリダイレクトされます。Leek Wars でお会いしましょう!",
+	"delete_team_dissolve": "あなたはチーム {0} の作成者であり唯一のメンバーです。アカウントを削除すると、チームは解散されます。",
+	"delete_team_transfer": "あなたはチーム {0} の作成者です。アカウントを削除すると、チームは最も古いメンバーに引き継がれます。",
 	"discrete_mode": "秘密モード",
 	"empty": "空",
 	"empty_localstorage": "LocalStorage を空にする",

@@ -21,6 +21,8 @@
 	"delete_password": "Contraseña",
 	"delete_success": "Eliminación exitosa",
 	"delete_success_message": "Tu cuenta ha sido eliminada, serás redirigido en unos segundos, ¡nos vemos pronto en Leek Wars!",
+	"delete_team_dissolve": "Eres el creador y el único miembro del equipo {0}: el equipo se disolverá al eliminar tu cuenta.",
+	"delete_team_transfer": "Eres el creador del equipo {0}: al eliminar tu cuenta, el equipo pasará al miembro más antiguo.",
 	"discrete_mode": "Modo discreto",
 	"empty": "Vacío",
 	"empty_localstorage": "Vaciar el almacenamiento local",

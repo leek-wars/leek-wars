@@ -21,6 +21,8 @@
 	"delete_password": "Salasana",
 	"delete_success": "Onnistui poistaminen",
 	"delete_success_message": "Tilisi on poistettu, sinut ohjataan muutaman sekunnin kuluttua, nähdään pian Leek Warsissa!",
+	"delete_team_dissolve": "Olet miehistön {0} perustaja ja ainoa jäsen: miehistö lakkautetaan, kun tilisi poistetaan.",
+	"delete_team_transfer": "Olet miehistön {0} perustaja: kun tilisi poistetaan, miehistö siirtyy sen vanhimmalle jäsenelle.",
 	"discrete_mode": "Huomaamaton tila",
 	"empty": "Tyhjä",
 	"empty_localstorage": "Tyhjennä paikallinen tallennustila",

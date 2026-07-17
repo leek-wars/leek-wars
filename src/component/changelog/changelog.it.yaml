@@ -1,3 +1,8 @@
+250:
+  title: "WIP"
+  improved:
+    - "L'eliminazione dell'account è ora possibile per i creatori di squadra: la squadra passa al membro più anziano, o viene sciolta se il creatore era solo."
+
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."
   added:

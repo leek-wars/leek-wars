@@ -21,6 +21,8 @@
 	"delete_password": "Hasło",
 	"delete_success": "Pomyślne usunięcie",
 	"delete_success_message": "Twoje konto zostało usunięte, za kilka sekund zostaniesz przekierowany, do zobaczenia wkrótce na Leek Wars!",
+	"delete_team_dissolve": "Jesteś założycielem i jedynym członkiem zespołu {0}: zespół zostanie rozwiązany po usunięciu konta.",
+	"delete_team_transfer": "Jesteś założycielem zespołu {0}: po usunięciu konta zespół zostanie przekazany członkowi z najdłuższym stażem.",
 	"discrete_mode": "Tryb dyskretny",
 	"empty": "Pusty",
 	"empty_localstorage": "Opróżnij pamięć lokalną",

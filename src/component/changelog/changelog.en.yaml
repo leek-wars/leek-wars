@@ -1,3 +1,8 @@
+250:
+  title: "WIP"
+  improved:
+    - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
+
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
   added:

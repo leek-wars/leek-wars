@@ -21,6 +21,8 @@
 	"delete_password": "Adgangskode",
 	"delete_success": "Vellykket sletning",
 	"delete_success_message": "Din konto er blevet slettet, du vil blive omdirigeret om et par sekunder, vi ses snart på Leek Wars!",
+	"delete_team_dissolve": "Du er skaberen og det eneste medlem af holdet {0}: holdet opløses, når din konto slettes.",
+	"delete_team_transfer": "Du er skaberen af holdet {0}: når din konto slettes, overdrages holdet til det ældste medlem.",
 	"discrete_mode": "Diskret tilstand",
 	"empty": "Tom",
 	"empty_localstorage": "Tøm det lokale lager",

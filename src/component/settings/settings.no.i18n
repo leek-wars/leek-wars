@@ -21,6 +21,8 @@
 	"delete_password": "Passord",
 	"delete_success": "Vellykket sletting",
 	"delete_success_message": "Kontoen din har blitt slettet, du vil bli omdirigert i løpet av noen sekunder, vi sees snart på Leek Wars!",
+	"delete_team_dissolve": "Du er skaperen og det eneste medlemmet av laget {0}: laget oppløses når kontoen din slettes.",
+	"delete_team_transfer": "Du er skaperen av laget {0}: når kontoen din slettes, overføres laget til det eldste medlemmet.",
 	"discrete_mode": "Diskret modus",
 	"empty": "Tømme",
 	"empty_localstorage": "Tøm den lokale lagringen",
