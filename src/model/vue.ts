@@ -268,17 +268,21 @@ function isDomCorruptionCrash(m: string): boolean {
 // injectés. Le but est de CONFIRMER en prod que ce cluster corrèle avec la traduction et de
 // quantifier sa part. On dumpe tous les attributs de <html> (capture les marqueurs inconnus,
 // ex. Firefox natif) plutôt que de hardcoder une liste.
-function detectDOMInterference(): string {
+// `translation` = un moteur de traduction (Google Translate, Firefox Translations…) est
+// actif : marqueur qui prouve que le crash de patch est induit de l'extérieur, donc
+// irréparable côté app. On s'en sert pour masquer ces rapports (voir reportVueError).
+function detectDOMInterference(): { text: string, translation: boolean } {
 	try {
 		const signals: string[] = []
+		let translation = false
 		const html = document.documentElement
 		// Google Translate : classe translated-ltr/rtl + DOM du widget.
-		if (/\btranslated-(ltr|rtl)\b/.test(html.className || '')) signals.push('google-translate')
-		if (document.querySelector('.goog-te-banner-frame, #goog-gt-tt, ins.skiptranslate')) signals.push('goog-te-dom')
+		if (/\btranslated-(ltr|rtl)\b/.test(html.className || '')) { signals.push('google-translate'); translation = true }
+		if (document.querySelector('.goog-te-banner-frame, #goog-gt-tt, ins.skiptranslate')) { signals.push('goog-te-dom'); translation = true }
 		// <font> dans #app : signature d'un moteur de traduction (l'app n'en rend jamais).
 		const app = document.getElementById('app')
 		const fonts = app ? app.getElementsByTagName('font').length : 0
-		if (fonts) signals.push('font-nodes=' + fonts)
+		if (fonts) { signals.push('font-nodes=' + fonts); translation = true }
 		// Extensions invasives connues qui muteraient le DOM.
 		if (document.querySelector('grammarly-extension, grammarly-desktop-integration')) signals.push('grammarly')
 		if (document.querySelector('style.darkreader, style#dark-reader-style')) signals.push('darkreader')
@@ -286,9 +290,10 @@ function detectDOMInterference(): string {
 		const attrs = Array.from(html.attributes)
 			.map(a => a.name + (a.value ? '="' + a.value.substring(0, 60) + '"' : ''))
 			.join(' ')
-		return '\n\nDOM interference: ' + (signals.length ? signals.join(' ') : 'no known marker') + '\nhtml attrs: ' + attrs
+		const text = '\n\nDOM interference: ' + (signals.length ? signals.join(' ') : 'no known marker') + '\nhtml attrs: ' + attrs
+		return { text, translation }
 	} catch (ex) {
-		return '\n\nDOM interference: [detection failed: ' + (ex as Error).message + ']'
+		return { text: '\n\nDOM interference: [detection failed: ' + (ex as Error).message + ']', translation: false }
 	}
 }
 
@@ -438,12 +443,20 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 
 	// Signaux d'interférence DOM externe, seulement pour la famille corruption-DOM
 	// (crashs de patch sur un el null : cause probable = moteur de traduction/extension).
-	const domInterference = isDomCorruptionCrash(e?.message || '') ? detectDOMInterference() : ''
+	const isCorruption = isDomCorruptionCrash(e?.message || '')
+	const interference = isCorruption ? detectDOMInterference() : { text: '', translation: false }
+	const domInterference = interference.text
 
 	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + domInterference + firstCrashTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
-	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
+	// Crash de patch Vue AVEC un moteur de traduction actif (goog-te-dom, <font> injectés…) :
+	// induit de l'extérieur, irréparable côté app et déjà couvert par le hard reload de
+	// récupération ci-dessous. On le logge en MASQUÉ (hidden) pour mesurer son volume sans
+	// créer d'issue GitHub ni noyer #admin/errors. Sans marqueur de traduction, on garde le
+	// rapport complet : un nextSibling/parentNode null « nu » peut être un vrai bug applicatif.
+	const hidden = isCorruption && interference.translation
+	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit, hidden })
 
 	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
 	// fait alors parentNode/nextSibling/style(null) → crash, et la session crashe en BOUCLE).
@@ -451,8 +464,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// l'instrumentation #4163, la session crashe en boucle 4+ min malgré les bumps. On revient
 	// au HARD RELOAD (le comportement d'avant le 11/06), qui repart d'un arbre Vue sain. Délai
 	// court pour laisser le POST error/report partir ; cooldown 30s anti-boucle de reload.
-	const m = e?.message || ''
-	if (isDomCorruptionCrash(m)) {
+	if (isCorruption) {
 		const RELOAD_KEY = 'parentNode-reload-at'
 		const last = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10)
 		if (Date.now() - last > 30_000) {
