@@ -1,6 +1,9 @@
 250:
   title: "WIP"
+  added:
+    - "The LeekScript console becomes the Console: run JavaScript, TypeScript and Python interactively too, with state kept between lines."
   improved:
+    - "#ai The JavaScript, TypeScript and Python API is now 100% object-oriented: no more global functions or constants, everything goes through objects (Fight, me, Weapon.pistol, System.operations, Network, Color...). The LeekScript stdlib is replaced by the language natives (Math, JSON, random...)."
     - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
 
 249:

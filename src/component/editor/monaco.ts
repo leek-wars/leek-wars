@@ -13,7 +13,7 @@ import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
-import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, DEPRECATED_FLAT, type ApiMember } from './leekwars-dts'
+import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, type ApiMember } from './leekwars-dts'
 import { buildLeekwarsPyi } from './leekwars-pyi'
 import { pySetStub } from './pyright';
 // monaco-stripped importe la contribution TS pour ses effets de bord (enregistrement du langage), mais
@@ -366,34 +366,27 @@ monaco.languages.registerCompletionItemProvider('python', {
 			if (apiModel.singletons.includes(path)) {
 				for (const m of apiModel.members[path] ?? []) pushApiMember(m, path)
 				for (const c of constByPath[path] ?? []) pushConst(c, path)
-			} else if (constByPath[path]) {
-				for (const c of constByPath[path]) pushConst(c, path)
 			} else if (apiModel.classes.includes(path)) {
-				// classe sans constantes (Leek, Turret...) : type utilisé en isinstance, rien à compléter.
+				// Nom de CLASSE : membres statiques (Weapon.getAll...) + constantes (Weapon.pistol...).
+				for (const m of apiModel.statics[path] ?? []) pushApiMember(m, path)
+				for (const c of constByPath[path] ?? []) pushConst(c, path)
+			} else if (constByPath[path]) {
+				// Sous-conteneur de constantes (Entity.Stat, Fight.Type...).
+				for (const c of constByPath[path]) pushConst(c, path)
 			} else {
 				// variable non typée : `me` -> membres de Me+Entity ; sinon union des membres d'instance.
 				const union = path === 'me' ? apiModel.meMembers : apiModel.instanceUnion
 				for (const m of union) pushApiMember(m, path)
 			}
 		} else {
-			// Points d'entrée globaux : conteneurs de l'API objet (Fight, Weapon, Entity...) + fonctions
-			// plates (marquées dépréciées si un équivalent objet existe, comme le d.ts). Monaco filtre.
+			// Points d'entrée globaux : les conteneurs de l'API objet (Fight, Weapon, Entity, System...).
+			// Plus AUCUNE fonction plate : l'API est 100% objet.
 			const containers = new Set<string>([
 				...apiModel.singletons, ...apiModel.classes,
 				...Object.keys(constByPath).filter((k) => !k.includes('.')),
 			])
 			for (const name of containers) {
 				suggestions.push({ label: name, kind: K.Class, detail: 'API de combat', insertText: name, range })
-			}
-			for (const f of LeekWars.functions ?? []) {
-				if (!f.name) continue
-				const deprecated = DEPRECATED_FLAT[f.name]
-				suggestions.push({
-					label: f.name, kind: K.Function, insertText: f.name, range,
-					detail: deprecated ? `déprécié → ${deprecated}` : undefined,
-					tags: deprecated ? [monaco.languages.CompletionItemTag.Deprecated] : undefined,
-					documentation: pyItemDoc(f.name),
-				})
 			}
 		}
 		return { suggestions }
@@ -993,7 +986,7 @@ function configurePolyglotTypeScript() {
 		jsLib = ts.javascriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')
 		// Même source pour le stub Python (.pyi) fourni à Pyright (validation des IA .py). La façade est
 		// paresseuse : ceci ne fait que mémoriser le stub (le worker ne démarre qu'à l'ouverture d'un .py).
-		pySetStub(buildLeekwarsPyi(LeekWars.functions ?? [], LeekWars.constants ?? []))
+		pySetStub(buildLeekwarsPyi(LeekWars.constants ?? []))
 	}
 	refreshDeclarations()
 	if (!LeekWars.functions || LeekWars.functions.length === 0) {

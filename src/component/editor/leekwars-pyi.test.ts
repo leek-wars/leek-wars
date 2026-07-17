@@ -3,8 +3,8 @@ import { execFileSync } from 'child_process'
 import { writeFileSync, mkdtempSync } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
-import { buildLeekwarsPyi, PY_TYPE } from './leekwars-pyi'
-import { TS_TYPE, buildObjectApiModel, buildLeekwarsDeclarations } from './leekwars-dts'
+import { buildLeekwarsPyi } from './leekwars-pyi'
+import { buildObjectApiModel, buildLeekwarsDeclarations } from './leekwars-dts'
 import type { LSFunction } from '@/model/function'
 import type { Constant } from '@/model/constant'
 
@@ -15,7 +15,7 @@ const cst = (name: string, type = 6): Constant => ({ name, type } as unknown as 
 const FUNCTIONS = [
 	fn('getNearestEnemy'),
 	fn('moveToward', [['cell', 6]]),
-	fn('getPath', [['from', 6], ['to', 6], ['ignored', 4]], 4, [false, false, true]), // arg python keyword 'from'
+	fn('getPath', [['from', 6], ['to', 6], ['ignored', 4]], 4, [false, false, true]),
 	fn('setWeapon', [['weapon', 6]], 3),
 ]
 const CONSTANTS = [
@@ -27,11 +27,14 @@ const CONSTANTS = [
 	cst('FIGHT_TYPE_SOLO'),
 	cst('STATE_UNHEALABLE'),
 	cst('MAP_NEXUS'),
-	cst('PI', 7), // non-container flat constant
+	cst('MESSAGE_HEAL'),
+	cst('COLOR_RED'),
+	cst('OPERATIONS_LIMIT'),
+	cst('PI', 7), // constante sans famille : NON exposée (API 100% objet)
 ]
 
 describe('buildLeekwarsPyi', () => {
-	const stub = buildLeekwarsPyi(FUNCTIONS, CONSTANTS)
+	const stub = buildLeekwarsPyi(CONSTANTS)
 
 	it('exposes the object API but NOT a global `me`', () => {
 		expect(stub).toContain('class Me(Entity):')
@@ -47,13 +50,25 @@ describe('buildLeekwarsPyi', () => {
 		expect(stub).toContain('DAMAGE: int')
 		expect(stub).toMatch(/class Stat:[\s\S]*STRENGTH: int/)
 		expect(stub).toMatch(/class Type:[\s\S]*SOLO: int/) // Fight.Type.SOLO
-		expect(stub).toContain('PI: float') // constante plate hors conteneur
+		expect(stub).toMatch(/class Type:[\s\S]*HEAL: int/) // Message.Type.HEAL
+		expect(stub).toContain('RED: int') // Color.RED
+		expect(stub).toContain('OPERATIONS_LIMIT: int') // System.OPERATIONS_LIMIT
 	})
 
-	it('emits flat functions, sanitizing python-keyword arg names', () => {
-		expect(stub).toContain('def getNearestEnemy() -> int: ...')
-		expect(stub).toContain('def moveToward(')
-		expect(stub).toContain('def getPath(a0: int, to: int, ignored: list = ...)') // 'from' -> a0
+	it('is 100% object: no flat functions nor flat constants', () => {
+		// aucune def top-level (toutes les def du stub sont indentées dans une classe)
+		expect(stub).not.toMatch(/^def /m)
+		expect(stub).not.toMatch(/^\s*PI: /m)
+		expect(stub).not.toContain('getNearestEnemy() -> int') // la forme plate n'existe plus
+		expect(stub).toContain('def getNearestEnemy(self) -> Entity: ...') // la forme objet oui
+	})
+
+	it('exposes the new singletons (System, Network, Color) and Message', () => {
+		expect(stub).toContain('System: _System')
+		expect(stub).toContain('Network: _Network')
+		expect(stub).toContain('Color: _Color')
+		expect(stub).toContain('class Message:')
+		expect(stub).toContain('operations: int')
 	})
 
 	const hasPython = (() => {
@@ -69,33 +84,33 @@ describe('buildLeekwarsPyi', () => {
 })
 
 // Gardes anti-dérive entre les deux générateurs (le .d.ts TS et le .pyi Python décrivent la MÊME API,
-// en partie à la main). Si l'un gagne un type-id ou un membre d'API objet que l'autre n'a pas, ces
-// tests échouent -> divergence rendue bruyante au lieu de faux positifs Pyright silencieux.
+// en partie à la main). Si l'un gagne un membre d'API objet que l'autre n'a pas, ces tests échouent
+// -> divergence rendue bruyante au lieu de faux positifs Pyright silencieux.
 describe('parité stub Python <-> API TS (anti-dérive)', () => {
-	it('PY_TYPE couvre tous les type-ids mappés par TS_TYPE', () => {
-		for (const id of Object.keys(TS_TYPE)) {
-			expect(PY_TYPE, `type-id ${id} présent dans TS_TYPE mais absent de PY_TYPE`).toHaveProperty(id)
-		}
-	})
-
-	// Le d.ts TS et le stub Python partagent routeConstant()/functionParams() : on caractérise la sortie
-	// du d.ts pour garantir que l'extraction de ces helpers reste iso-comportement.
-	it('d.ts: routage des constantes et paramètres inchangés', () => {
+	it('d.ts : 100% objet, routage des constantes inchangé', () => {
 		const dts = buildLeekwarsDeclarations(FUNCTIONS, CONSTANTS)
-		expect(dts).toContain('declare function getNearestEnemy(): number;')
-		// 'from' est un identifiant JS valide -> conservé (contrairement au Python) ; 3e arg optionnel -> `?`.
-		expect(dts).toContain('declare function getPath(from: number, to: number, ignored?: any[]): any[];')
+		// plus AUCUNE déclaration plate (ni fonction, ni constante)
+		expect(dts).not.toContain('declare function')
+		expect(dts).not.toContain('declare const PI')
+		// routage objet des constantes
 		expect(dts).toContain('const pistol: Weapon;') // membre de namespace (item)
 		expect(dts).toContain('const DAMAGE: number;') // membre de catégorie
-		expect(dts).toContain('declare const PI: number;') // constante plate hors conteneur
+		expect(dts).toContain('readonly OPERATIONS_LIMIT: number;') // inline dans System
+		expect(dts).toContain('readonly RED: number;') // inline dans Color
+		expect(dts).toMatch(/declare namespace Message \{[\s\S]*namespace Type \{[\s\S]*HEAL/) // Message.Type.HEAL
 	})
 
 	it('tout membre de l\'API objet déclaré côté TS existe dans le stub Python', () => {
-		const emptyStub = buildLeekwarsPyi([], []) // bloc objet statique seul (indépendant des game data)
+		const emptyStub = buildLeekwarsPyi([]) // bloc objet statique seul (indépendant des game data)
 		const model = buildObjectApiModel() // parse OBJECT_API_DECLARATIONS (source du .d.ts)
 		for (const container of Object.keys(model.members)) {
 			for (const m of model.members[container]) {
 				expect(new RegExp(`\\b${m.name}\\b`).test(emptyStub), `${container}.${m.name} (API TS) manquant dans le stub Python (CLASSES)`).toBe(true)
+			}
+		}
+		for (const container of Object.keys(model.statics)) {
+			for (const m of model.statics[container]) {
+				expect(new RegExp(`\\b${m.name}\\b`).test(emptyStub), `${container}.${m.name} (static TS) manquant dans le stub Python (CLASSES)`).toBe(true)
 			}
 		}
 	})
