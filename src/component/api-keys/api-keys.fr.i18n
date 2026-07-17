@@ -17,7 +17,7 @@
 	"create": "Créer la clé",
 	"scope_farmer_read": "Lire le profil (talent, habs, poireaux)",
 	"scope_ai_read": "Lire le code des IA",
-	"scope_ai_write": "Écrire le code des IA",
+	"scope_ai_write": "Créer et modifier des IA",
 	"scope_fight_read": "Lire les rapports et logs de combat",
 	"scope_fight_start": "Lancer des combats de test",
 	"cancel": "Annuler",
@@ -27,5 +27,7 @@
 	"hint_minimal": "Donne à ta clé le minimum de permissions nécessaires : tu pourras toujours en créer une autre.",
 	"edit": "Modifier",
 	"edit_title": "Modifier la clé",
-	"save": "Enregistrer"
+	"save": "Enregistrer",
+	"scope_leek_read": "Lire les poireaux et leurs équipements",
+	"scope_market_read": "Lire le catalogue et les prix du marché"
 }
