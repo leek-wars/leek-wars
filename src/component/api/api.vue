@@ -95,12 +95,7 @@
 							</ul>
 						</template>
 
-						<template v-if="service.example">
-							<json-viewer class="example"
-								:value="service.example"
-								:expand-depth=2
-								></json-viewer>
-						</template>
+						<pre v-if="service.example" class="example">{{ formatExample(service.example) }}</pre>
 					</panel>
 				</div>
 			</div>
@@ -114,12 +109,21 @@ import { useRoute, useRouter } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
-// @ts-expect-error - no types for vue-json-viewer
-import JsonViewer from 'vue-json-viewer'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
 
-defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
+defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins] })
+
+// Rendu d'exemple JSON sans dépendance (vue-json-viewer injectait un <style>
+// runtime sans nonce → violation CSP style-src). Un <pre> formaté suffit.
+function formatExample(ex: unknown): string {
+	if (ex === null || ex === undefined) return ''
+	let value: unknown = ex
+	if (typeof ex === 'string') {
+		try { value = JSON.parse(ex) } catch { return ex }
+	}
+	try { return JSON.stringify(value, null, 2) } catch { return String(ex) }
+}
 
 const t = useNamespacedT('api')
 const route = useRoute()
@@ -515,25 +519,17 @@ onBeforeUnmount(() => {
 		margin-bottom: 8px;
 		font-size: 15px;
 	}
-	.example.jv-container {
-		background: var(--pure-white);
-	}
-	.example :deep(.jv-code) {
+	.example {
+		background: var(--background-secondary);
 		color: var(--text-color);
 		border: 1px solid var(--border);
-		padding: 5px;
+		padding: 8px 10px;
 		border-radius: 4px;
 		max-height: 300px;
-		overflow-y: auto;
-		font-size: 15px;
-		.jv-node {
-			padding: 2px 0;
-		}
-		.jv-key, .jv-array, .jv-object {
-			color: var(--text-color);
-		}
-	}
-	body.dark .example :deep(.jv-code) {
-		// background: ;
+		overflow: auto;
+		font-size: 13px;
+		font-family: monospace;
+		white-space: pre;
+		margin: 0;
 	}
 </style>
