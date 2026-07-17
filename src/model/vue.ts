@@ -252,6 +252,46 @@ function findNullElVnodePath(instance: unknown): string | null {
 	} catch { return null }
 }
 
+// Famille de crashs = corruption de l'arbre de vnodes de Vue (el/anchor/instance devenus
+// null pendant le patch, cause probable moteur de traduction/extension qui mute le DOM).
+// Une seule définition, partagée par le diagnostic ET la récupération par hard reload, pour
+// éviter que les deux listes de motifs divergent.
+function isDomCorruptionCrash(m: string): boolean {
+	return m.includes('parentNode') || m.includes('nextSibling') ||
+		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'") ||
+		m.includes("reading 'insertBefore'") || m.includes('"insertBefore"') || m.includes('emitsOptions')
+}
+
+// Empreintes DOM d'interférence externe (moteurs de traduction, extensions), collées aux
+// rapports de crash de la famille corruption-DOM (nextSibling/parentNode/insertBefore null).
+// Les navigateurs interdisent d'énumérer les extensions : on détecte donc leurs artefacts
+// injectés. Le but est de CONFIRMER en prod que ce cluster corrèle avec la traduction et de
+// quantifier sa part. On dumpe tous les attributs de <html> (capture les marqueurs inconnus,
+// ex. Firefox natif) plutôt que de hardcoder une liste.
+function detectDOMInterference(): string {
+	try {
+		const signals: string[] = []
+		const html = document.documentElement
+		// Google Translate : classe translated-ltr/rtl + DOM du widget.
+		if (/\btranslated-(ltr|rtl)\b/.test(html.className || '')) signals.push('google-translate')
+		if (document.querySelector('.goog-te-banner-frame, #goog-gt-tt, ins.skiptranslate')) signals.push('goog-te-dom')
+		// <font> dans #app : signature d'un moteur de traduction (l'app n'en rend jamais).
+		const app = document.getElementById('app')
+		const fonts = app ? app.getElementsByTagName('font').length : 0
+		if (fonts) signals.push('font-nodes=' + fonts)
+		// Extensions invasives connues qui muteraient le DOM.
+		if (document.querySelector('grammarly-extension, grammarly-desktop-integration')) signals.push('grammarly')
+		if (document.querySelector('style.darkreader, style#dark-reader-style')) signals.push('darkreader')
+		// Attributs bruts de <html> : capte les marqueurs non anticipés (translate, lang forcé, etc.).
+		const attrs = Array.from(html.attributes)
+			.map(a => a.name + (a.value ? '="' + a.value.substring(0, 60) + '"' : ''))
+			.join(' ')
+		return '\n\nDOM interference: ' + (signals.length ? signals.join(' ') : 'no known marker') + '\nhtml attrs: ' + attrs
+	} catch (ex) {
+		return '\n\nDOM interference: [detection failed: ' + (ex as Error).message + ']'
+	}
+}
+
 export function reportVueError(err: unknown, vm: unknown, info: unknown, origin: string = 'main') {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const e = err as any
@@ -396,7 +436,11 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		droppedSinceLastReport = 0
 	} catch { /* empty */ }
 
-	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + firstCrashTrace
+	// Signaux d'interférence DOM externe, seulement pour la famille corruption-DOM
+	// (crashs de patch sur un el null : cause probable = moteur de traduction/extension).
+	const domInterference = isDomCorruptionCrash(e?.message || '') ? detectDOMInterference() : ''
+
+	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + domInterference + firstCrashTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
@@ -408,8 +452,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// au HARD RELOAD (le comportement d'avant le 11/06), qui repart d'un arbre Vue sain. Délai
 	// court pour laisser le POST error/report partir ; cooldown 30s anti-boucle de reload.
 	const m = e?.message || ''
-	if (m.includes('parentNode') || m.includes('nextSibling') ||
-		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'")) {
+	if (isDomCorruptionCrash(m)) {
 		const RELOAD_KEY = 'parentNode-reload-at'
 		const last = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10)
 		if (Date.now() - last > 30_000) {
