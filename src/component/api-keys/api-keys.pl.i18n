@@ -1,0 +1,19 @@
+{
+	"title": "API keys",
+	"desc": "Generate a key to use the Leek Wars API from your scripts or to connect the game to an agent (Claude, Cursor…) through the MCP server. Grant it only the permissions it needs.",
+	"auth_header": "Authentication",
+	"base_url": "Base URL",
+	"rate_limit": "Rate limit",
+	"rate_limit_value": "30 requests / second",
+	"copy_now": "Copy this key now: it will not be shown again.",
+	"copy": "Copy",
+	"copied": "Copied!",
+	"never_used": "never used",
+	"revoke": "Revoke",
+	"revoked": "revoked",
+	"none": "No keys yet.",
+	"new": "New key",
+	"name": "Key name",
+	"create": "Create key",
+	"mcp_note": "The same key works for both the API and the official MCP server, which lets an AI agent browse the docs, read your code and run test fights."
+}

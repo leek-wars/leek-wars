@@ -237,6 +237,8 @@
 					</div>
 				</template>
 			</panel>
+
+			<api-keys v-if="$store.state.farmer && $store.state.farmer.verified" />
 		</div>
 
 		<div class="center">
@@ -298,13 +300,17 @@
 <script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
 	import { apiErrorKey, apiFieldMessages } from '@/model/api-error'
-	import { mixins, t as gt , useNamespacedT } from '@/model/i18n'
+	import { locale, mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { TeamMemberLevel } from '@/model/team'
 	import { usePushNotifications } from '@/model/use-push-notifications'
-	import { computed, ref, watch } from 'vue'
+	import { computed, defineAsyncComponent, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
+
+	// Composant async : utilisable directement dans le template (script setup),
+	// NE PAS le référencer dans defineOptions (variable locale, hoisting interdit).
+	const ApiKeys = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/api-keys/api-keys.${locale}.i18n`))
 
 	defineOptions({ name: 'Settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
 
