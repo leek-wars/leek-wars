@@ -27,5 +27,6 @@
 	"role_account_desc": "Tout le reste, y compris sensible : messages privés, paramètres du compte.",
 	"endpoints_label": "endpoints",
 	"endpoints_of": "Endpoints du rôle {0}",
-	"hint_cumulative": "Chaque rôle inclut les précédents. Choisis le plus restreint qui suffit."
+	"hint_cumulative": "Chaque rôle inclut les précédents. Choisis le plus restreint qui suffit.",
+	"usage_last_days": "Utilisation ({0} derniers jours)"
 }
