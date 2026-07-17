@@ -4,7 +4,7 @@
 	"auth_header": "Authentification",
 	"base_url": "URL de base",
 	"rate_limit": "Limite",
-	"rate_limit_value": "30 requêtes / seconde",
+	"rate_limit_value": "5 requêtes / seconde",
 	"copy_now": "Copie cette clé maintenant : elle ne sera plus affichée.",
 	"copy": "Copier",
 	"copied": "Copiée !",

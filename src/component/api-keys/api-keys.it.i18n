@@ -4,7 +4,7 @@
 	"auth_header": "Autenticazione",
 	"base_url": "URL di base",
 	"rate_limit": "Limite",
-	"rate_limit_value": "30 richieste / secondo",
+	"rate_limit_value": "5 richieste / secondo",
 	"copy_now": "Copia subito questa chiave: non verrà più mostrata.",
 	"copy": "Copia",
 	"copied": "Copiata!",
