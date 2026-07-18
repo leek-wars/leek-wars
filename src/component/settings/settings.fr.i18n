@@ -62,6 +62,7 @@
 	"push_unsupported": "Votre navigateur ne prend pas en charge les notifications push.",
 	"title": "Paramètres",
 	"chat_first": "Affichage la page Chat en premier",
+	"home_dashboard": "Tableau de bord en page d’accueil",
 	"password": "Mot de passe",
 	"your_email": "Votre adresse email",
 	"your_farmer_name": "Votre nom d'éleveur",

@@ -101,6 +101,11 @@ import AdminComponents from './component/admin/admin-components.vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
 import { vueMain } from './model/emitter'
 
+// Tableau de bord personnalisable (#4262). Affiché par défaut sur '/' quand on est
+// connecté. Le joueur peut revenir à l'ancien comportement (page du 1er poireau) via
+// l'option 'options/home-dashboard' = 'false' (réglages).
+const HomeDashboard = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/home/home.${locale}.i18n`))
+
 const Home = defineComponent({
 	components: { signup: Signup, leek: LeekAsync, messages: Messages },
 	computed: {
@@ -117,7 +122,9 @@ const Home = defineComponent({
 	render() {
 		if (store.state.connected) {
 			const chatFirst = LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
-			return chatFirst ? null : h(LeekAsync)
+			if (chatFirst) return null
+			const firstLeek = localStorage.getItem('options/home-dashboard') === 'false'
+			return firstLeek ? h(LeekAsync) : h(HomeDashboard)
 		}
 		return h(Signup)
 	}

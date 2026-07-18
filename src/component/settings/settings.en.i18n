@@ -53,6 +53,7 @@
 	"push_unsupported": "Your browser doesn't support push notifications.",
 	"title": "Settings",
 	"chat_first": "Show the Chat page first",
+	"home_dashboard": "Dashboard as home page",
 	"verify_message": "You have not added an email address; you may lose access to your account if you change device or browser.",
 	"verify_tip": "Tip: keep the cookie that contains your login, if you lose it you completely lose access to the account.",
 	"verify_pros": "Once your account is verified, you can:",

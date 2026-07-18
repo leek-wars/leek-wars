@@ -56,6 +56,7 @@
 	"push_unsupported": "Nettleseren din støtter ikke push-varsler.",
 	"title": "Innstillinger",
 	"chat_first": "Vis Chat-siden først",
+	"home_dashboard": "Dashboard as home page",
 	"password": "Passord",
 	"your_email": "Din epostadresse",
 	"your_farmer_name": "Oppdretternavnet ditt",

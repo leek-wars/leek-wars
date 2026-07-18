@@ -93,6 +93,7 @@ class Farmer {
 	public language!: string
 	public title!: number[]
 	public show_ai_lines!: boolean
+	public home_layout!: string | null // #4262 disposition JSON des widgets du tableau de bord (null = défaut)
 	public pomps!: InventoryItem[]
 	public pass!: boolean
 	public errors!: number

@@ -56,6 +56,7 @@
 	"push_unsupported": "您的浏览器不支持推送通知。",
 	"title": "设置",
 	"chat_first": "首先显示聊天页面",
+	"home_dashboard": "Dashboard as home page",
 	"password": "密码",
 	"your_email": "您的电子邮件地址",
 	"your_farmer_name": "您的饲养员姓名",

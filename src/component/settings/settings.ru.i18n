@@ -56,6 +56,7 @@
 	"push_unsupported": "Ваш браузер не поддерживает push-уведомления.",
 	"title": "Настройки",
 	"chat_first": "Сначала показать страницу чата",
+	"home_dashboard": "Dashboard as home page",
 	"password": "Пароль",
 	"your_email": "Ваш электронный адрес",
 	"your_farmer_name": "Имя вашего заводчика",

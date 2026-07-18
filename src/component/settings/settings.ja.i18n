@@ -55,6 +55,7 @@
 	"push_unsupported": "お使いのブラウザはプッシュ通知に対応していません。",
 	"title": "設定",
 	"chat_first": "最初にチャット ページを表示",
+	"home_dashboard": "Dashboard as home page",
 	"password": "パスワード",
 	"your_email": "あなたのメールアドレス",
 	"your_farmer_name": "あなたのブリーダー名",

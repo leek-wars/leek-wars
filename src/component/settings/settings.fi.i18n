@@ -56,6 +56,7 @@
 	"push_unsupported": "Selaimesi ei tue push-ilmoituksia.",
 	"title": "Asetukset",
 	"chat_first": "Näytä Chat-sivu ensin",
+	"home_dashboard": "Dashboard as home page",
 	"password": "Salasana",
 	"your_email": "Sähköpostiosoitteesi",
 	"your_farmer_name": "Kasvattajanimesi",
