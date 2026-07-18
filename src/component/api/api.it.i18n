@@ -315,5 +315,17 @@
 	"trophy_retrieve-reward": "Riscatta la ricompensa del trofeo **trophy_id**.",
 	"trophy-template_get": "Restituisce il modello del trofeo con codice **code** nella lingua **locale**.",
 	"weapon_get-all": "Restituisce l'elenco di tutte le armi del gioco.",
-	"weapon_get-templates": "Restituisce i modelli di armi del gioco."
+	"weapon_get-templates": "Restituisce i modelli di armi del gioco.",
+	"example_call": "Esempio di chiamata",
+	"example_response": "Esempio di risposta",
+	"copy": "Copia",
+	"copied": "Copiato!",
+	"role_base": "pubblico",
+	"role_player": "player",
+	"role_account": "account",
+	"role_session": "session",
+	"role_base_hint": "Accessibile senza chiave (dati pubblici)",
+	"role_player_hint": "Richiede una chiave API con ruolo player (o account)",
+	"role_account_hint": "Richiede una chiave API con ruolo account",
+	"role_session_hint": "Richiede una sessione connessa (non accessibile via chiave API)"
 }

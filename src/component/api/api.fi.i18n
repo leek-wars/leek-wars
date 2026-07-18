@@ -315,5 +315,17 @@
 	"trophy_retrieve-reward": "Lunastaa pokaalin **trophy_id** palkinnon.",
 	"trophy-template_get": "Palauttaa pokaalin, jonka koodi on **code**, mallin kielellä **locale**.",
 	"weapon_get-all": "Palauttaa listan kaikista pelin aseista.",
-	"weapon_get-templates": "Palauttaa pelin asemallit."
+	"weapon_get-templates": "Palauttaa pelin asemallit.",
+	"example_call": "Example call",
+	"example_response": "Example response",
+	"copy": "Copy",
+	"copied": "Copied!",
+	"role_base": "public",
+	"role_player": "player",
+	"role_account": "account",
+	"role_session": "session",
+	"role_base_hint": "Accessible without a key (public data)",
+	"role_player_hint": "Requires an API key with the player role (or account)",
+	"role_account_hint": "Requires an API key with the account role",
+	"role_session_hint": "Requires a logged-in session (not accessible via API key)"
 }

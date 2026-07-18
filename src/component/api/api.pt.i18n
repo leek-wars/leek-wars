@@ -315,5 +315,17 @@
 	"trophy_retrieve-reward": "Reivindica a recompensa do troféu **trophy_id**.",
 	"trophy-template_get": "Retorna o modelo do troféu com código **code** no idioma **locale**.",
 	"weapon_get-all": "Retorna a lista de todas as armas do jogo.",
-	"weapon_get-templates": "Retorna os modelos de armas do jogo."
+	"weapon_get-templates": "Retorna os modelos de armas do jogo.",
+	"example_call": "Example call",
+	"example_response": "Example response",
+	"copy": "Copy",
+	"copied": "Copied!",
+	"role_base": "public",
+	"role_player": "player",
+	"role_account": "account",
+	"role_session": "session",
+	"role_base_hint": "Accessible without a key (public data)",
+	"role_player_hint": "Requires an API key with the player role (or account)",
+	"role_account_hint": "Requires an API key with the account role",
+	"role_session_hint": "Requires a logged-in session (not accessible via API key)"
 }

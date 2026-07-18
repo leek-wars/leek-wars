@@ -315,5 +315,17 @@
 	"trophy_retrieve-reward": "Réclame la récompense du trophée **trophy_id**.",
 	"trophy-template_get": "Renvoie le modèle du trophée de code **code** dans la langue **locale**.",
 	"weapon_get-all": "Renvoie la liste de toutes les armes du jeu.",
-	"weapon_get-templates": "Renvoie les modèles d'armes du jeu."
+	"weapon_get-templates": "Renvoie les modèles d'armes du jeu.",
+	"example_call": "Exemple d’appel",
+	"example_response": "Exemple de réponse",
+	"copy": "Copier",
+	"copied": "Copié !",
+	"role_base": "public",
+	"role_player": "player",
+	"role_account": "account",
+	"role_session": "session",
+	"role_base_hint": "Accessible sans clé (donnée publique)",
+	"role_player_hint": "Nécessite une clé API de rôle player (ou account)",
+	"role_account_hint": "Nécessite une clé API de rôle account",
+	"role_session_hint": "Nécessite une session connectée (non accessible par clé API)"
 }

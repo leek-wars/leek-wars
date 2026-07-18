@@ -69,6 +69,7 @@
 						</div>
 						<div class="chips">
 							<span class="method chip" :class="service.method">{{ service.method }}</span>
+							<span v-if="service.scope" class="role chip" :class="service.scope" :title="t('role_' + service.scope + '_hint')">{{ t('role_' + service.scope) }}</span>
 							<span v-if="service.auth" class="auth chip">{{ $t('auth') }}</span>
 							<a v-if="service.example_url" :href="LeekWars.API + service.example_url" target="_blank" class="demo chip">
 								/api/{{ service.example_url }} <v-icon>mdi-open-in-new</v-icon>
@@ -96,7 +97,23 @@
 							</ul>
 						</template>
 
-						<pre v-if="service.example" class="example">{{ formatExample(service.example) }}</pre>
+						<div class="doc-columns">
+							<div class="doc-code">
+								<h4>{{ t('example_call') }}</h4>
+								<div class="code-block">
+									<div class="code-tabs">
+										<span v-for="l in LANGS" :key="l" class="code-tab" :class="{ active: activeLang === l }" @click="activeLang = l">{{ LANG_LABELS[l] }}</span>
+										<div class="spacer"></div>
+										<v-icon class="copy-btn" :title="t('copy')" @click="copyCode(buildSnippet(service, activeLang))">mdi-content-copy</v-icon>
+									</div>
+									<pre class="code-snippet"><code>{{ buildSnippet(service, activeLang) }}</code></pre>
+								</div>
+							</div>
+							<div v-if="service.example" class="doc-response">
+								<h4>{{ t('example_response') }}</h4>
+								<pre class="example">{{ formatExample(service.example) }}</pre>
+							</div>
+						</div>
 					</panel>
 				</div>
 			</div>
@@ -112,6 +129,11 @@ import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
+import { LANGS, LANG_LABELS, buildSnippet, type Lang } from './code-examples'
+
+// Langue d'exemple de code, partagée par tous les endpoints et persistée.
+const activeLang = ref<Lang>((localStorage.getItem('api-doc/lang') as Lang) || 'curl')
+watch(activeLang, l => localStorage.setItem('api-doc/lang', l))
 
 // Composant async : utilisable directement dans le template (script setup),
 // NE PAS le référencer dans defineOptions (variable locale, hoisting interdit).
@@ -128,6 +150,11 @@ function formatExample(ex: unknown): string {
 		try { value = JSON.parse(ex) } catch { return ex }
 	}
 	try { return JSON.stringify(value, null, 2) } catch { return String(ex) }
+}
+
+function copyCode(code: string) {
+	navigator.clipboard?.writeText(code)
+	LeekWars.toast(t('copied'))
 }
 
 const t = useNamespacedT('api')
@@ -147,6 +174,7 @@ interface ApiService {
 	example?: string
 	example_url?: string
 	deprecated?: boolean
+	scope?: string // base | player | account | session (rôle d'accès par clé API)
 }
 
 const services = ref<ApiService[]>([])
@@ -458,8 +486,13 @@ onBeforeUnmount(() => {
 		font-weight: bold;
 		margin: 10px;
 	}
-	pre {
-		max-width: 500px;
+	// Sidebar catégories à largeur fixe (la page est en pleine largeur, un tiers
+	// serait trop large) ; le contenu prend le reste.
+	.column4 {
+		flex: 0 0 260px;
+	}
+	.column8 {
+		flex: 1;
 	}
 	.search-box {
 		display: flex;
@@ -543,5 +576,63 @@ onBeforeUnmount(() => {
 		font-family: monospace;
 		white-space: pre;
 		margin: 0;
+	}
+	.role {
+		text-transform: uppercase;
+		&.base { background: #2f8132; color: white; }
+		&.player { background: #7d4bc4; color: white; }
+		&.account { background: #cc3333; color: white; }
+		&.session { background: #888; color: white; }
+	}
+	// Exemple d'appel + réponse côte à côte quand la place le permet.
+	.doc-columns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		margin-top: 14px;
+		align-items: flex-start;
+		.doc-code { flex: 1 1 420px; min-width: 0; }
+		.doc-response { flex: 1 1 300px; min-width: 0; }
+		h4 { margin-top: 0; }
+	}
+	.code-block {
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		overflow: hidden;
+		background: var(--background-secondary);
+	}
+	.code-tabs {
+		display: flex;
+		align-items: center;
+		background: var(--background);
+		border-bottom: 1px solid var(--border);
+		padding: 0 4px;
+		.code-tab {
+			padding: 6px 12px;
+			font-size: 13px;
+			cursor: pointer;
+			color: var(--text-color-secondary);
+			border-bottom: 2px solid transparent;
+			&:hover { color: var(--text-color); }
+			&.active { color: var(--text-color); border-bottom-color: #5fad1b; font-weight: 500; }
+		}
+		.spacer { flex: 1; }
+		.copy-btn {
+			font-size: 16px;
+			color: var(--text-color-secondary);
+			cursor: pointer;
+			padding: 4px;
+			&:hover { color: var(--text-color); }
+		}
+	}
+	.code-snippet {
+		margin: 0;
+		padding: 10px 12px;
+		overflow-x: auto;
+		max-height: 340px;
+		font-size: 13px;
+		line-height: 1.5;
+		white-space: pre;
+		code { font-family: monospace; color: var(--text-color); background: none; padding: 0; }
 	}
 </style>

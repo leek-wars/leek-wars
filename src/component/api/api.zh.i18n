@@ -315,5 +315,17 @@
 	"trophy_retrieve-reward": "领取奖杯 **trophy_id** 的奖励。",
 	"trophy-template_get": "返回语言 **locale** 中代码为 **code** 的奖杯模板。",
 	"weapon_get-all": "返回游戏中所有武器的列表。",
-	"weapon_get-templates": "返回游戏的武器模板。"
+	"weapon_get-templates": "返回游戏的武器模板。",
+	"example_call": "Example call",
+	"example_response": "Example response",
+	"copy": "Copy",
+	"copied": "Copied!",
+	"role_base": "public",
+	"role_player": "player",
+	"role_account": "account",
+	"role_session": "session",
+	"role_base_hint": "Accessible without a key (public data)",
+	"role_player_hint": "Requires an API key with the player role (or account)",
+	"role_account_hint": "Requires an API key with the account role",
+	"role_session_hint": "Requires a logged-in session (not accessible via API key)"
 }

@@ -315,5 +315,17 @@
 	"trophy_retrieve-reward": "トロフィー **trophy_id** の報酬を受け取ります。",
 	"trophy-template_get": "言語 **locale** でのコード **code** のトロフィーテンプレートを返します。",
 	"weapon_get-all": "ゲーム内のすべての武器のリストを返します。",
-	"weapon_get-templates": "ゲームの武器テンプレートを返します。"
+	"weapon_get-templates": "ゲームの武器テンプレートを返します。",
+	"example_call": "Example call",
+	"example_response": "Example response",
+	"copy": "Copy",
+	"copied": "Copied!",
+	"role_base": "public",
+	"role_player": "player",
+	"role_account": "account",
+	"role_session": "session",
+	"role_base_hint": "Accessible without a key (public data)",
+	"role_player_hint": "Requires an API key with the player role (or account)",
+	"role_account_hint": "Requires an API key with the account role",
+	"role_session_hint": "Requires a logged-in session (not accessible via API key)"
 }

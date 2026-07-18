@@ -315,5 +315,17 @@
 	"trophy_retrieve-reward": "Fordert die Belohnung der Trophäe **trophy_id** an.",
 	"trophy-template_get": "Gibt die Vorlage der Trophäe mit dem Code **code** in der Sprache **locale** zurück.",
 	"weapon_get-all": "Gibt die Liste aller Waffen im Spiel zurück.",
-	"weapon_get-templates": "Gibt die Waffenvorlagen des Spiels zurück."
+	"weapon_get-templates": "Gibt die Waffenvorlagen des Spiels zurück.",
+	"example_call": "Example call",
+	"example_response": "Example response",
+	"copy": "Copy",
+	"copied": "Copied!",
+	"role_base": "public",
+	"role_player": "player",
+	"role_account": "account",
+	"role_session": "session",
+	"role_base_hint": "Accessible without a key (public data)",
+	"role_player_hint": "Requires an API key with the player role (or account)",
+	"role_account_hint": "Requires an API key with the account role",
+	"role_session_hint": "Requires a logged-in session (not accessible via API key)"
 }
