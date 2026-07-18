@@ -1,0 +1,21 @@
+{
+	"title": "Home",
+	"customize": "Customize",
+	"done": "Done",
+	"add_widget": "Add a widget",
+	"all_widgets_added": "All widgets are displayed",
+	"empty": "Your dashboard is empty.",
+	"empty_edit": "Add widgets to build your dashboard.",
+	"widget_leeks": "My leeks",
+	"widget_talent": "Talent and latest fights",
+	"widget_trophies": "My trophies",
+	"widget_chat": "Chat",
+	"breeder_talent": "Breeder talent",
+	"latest_fights": "Latest fights",
+	"no_fight": "No recent fight.",
+	"trophies_unlocked": "Trophies",
+	"points": "Points",
+	"latest_trophies": "Latest trophies",
+	"no_trophy": "No trophy unlocked yet.",
+	"chat_unavailable": "Chat unavailable."
+}

@@ -1,0 +1,21 @@
+{
+	"title": "Home",
+	"customize": "Personalizza",
+	"done": "Fatto",
+	"add_widget": "Aggiungi un widget",
+	"all_widgets_added": "Tutti i widget sono visualizzati",
+	"empty": "La tua dashboard è vuota.",
+	"empty_edit": "Aggiungi widget per comporre la tua dashboard.",
+	"widget_leeks": "I miei porri",
+	"widget_talent": "Talento e ultimi combattimenti",
+	"widget_trophies": "I miei trofei",
+	"widget_chat": "Chat",
+	"breeder_talent": "Talento da allevatore",
+	"latest_fights": "Ultimi combattimenti",
+	"no_fight": "Nessun combattimento recente.",
+	"trophies_unlocked": "Trofei",
+	"points": "Punti",
+	"latest_trophies": "Ultimi trofei",
+	"no_trophy": "Nessun trofeo sbloccato.",
+	"chat_unavailable": "Chat non disponibile."
+}

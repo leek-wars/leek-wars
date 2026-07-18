@@ -1037,6 +1037,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		'set-home-layout'(state: LeekWarsState, layout: string) {
+			if (state.farmer) {
+				state.farmer.home_layout = layout
+			}
+		},
+
 		'toggle-metal'(state: LeekWarsState, leek: number) {
 			if (state.farmer) {
 				state.farmer.leeks[leek].metal = !state.farmer.leeks[leek].metal

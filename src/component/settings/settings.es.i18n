@@ -56,6 +56,7 @@
 	"push_unsupported": "Tu navegador no admite las notificaciones push.",
 	"title": "Configuraciones",
 	"chat_first": "Mostrar la página de chat primero",
+	"home_dashboard": "Dashboard as home page",
 	"password": "Contraseña",
 	"your_email": "Su dirección de correo electrónico",
 	"your_farmer_name": "Tu nombre de criador",

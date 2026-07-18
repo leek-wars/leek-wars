@@ -127,6 +127,10 @@
 						<div>{{ $t('chat_first') }}</div>
 						<div><v-switch v-model="chatFirst" hide-details /></div>
 					</div>
+					<div class="setting">
+						<div>{{ $t('home_dashboard') }}</div>
+						<div><v-switch v-model="homeDashboard" hide-details /></div>
+					</div>
 					<div v-if="!LeekWars.mobile" class="setting">
 						<div>{{ $t('leek_theme') }}</div>
 						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
@@ -335,6 +339,7 @@
 	const notifsResults = ref(localStorage.getItem('options/notifs-results') === 'true')
 	const notifsOpenReport = ref(localStorage.getItem('options/notifs-open-report') === 'true')
 	const chatFirst = ref(localStorage.getItem('options/chat-first') === 'true')
+	const homeDashboard = ref(localStorage.getItem('options/home-dashboard') !== 'false')
 	const modernTheme = ref(localStorage.getItem('theme') === 'xp')
 	const { pushSupported, pushNotifications, pushHint, reconcilePushToggle, updatePushNotifications } = usePushNotifications(t)
 	const deleteDialog = ref(false)
@@ -443,6 +448,10 @@
 
 	watch(chatFirst, () => {
 		localStorage.setItem('options/chat-first', '' + chatFirst.value)
+	})
+
+	watch(homeDashboard, () => {
+		localStorage.setItem('options/home-dashboard', '' + homeDashboard.value)
 	})
 
 	function updateNotif(setting: string, value: boolean) {

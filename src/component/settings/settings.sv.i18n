@@ -56,6 +56,7 @@
 	"push_unsupported": "Din webbläsare stöder inte push-aviseringar.",
 	"title": "Inställningar",
 	"chat_first": "Visa chattsidan först",
+	"home_dashboard": "Dashboard as home page",
 	"password": "Lösenord",
 	"your_email": "Din e-postadress",
 	"your_farmer_name": "Ditt uppfödarnamn",

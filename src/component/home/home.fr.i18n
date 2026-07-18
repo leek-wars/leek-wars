@@ -1,0 +1,21 @@
+{
+	"title": "Accueil",
+	"customize": "Personnaliser",
+	"done": "Terminé",
+	"add_widget": "Ajouter un widget",
+	"all_widgets_added": "Tous les widgets sont affichés",
+	"empty": "Votre tableau de bord est vide.",
+	"empty_edit": "Ajoutez des widgets pour composer votre tableau de bord.",
+	"widget_leeks": "Mes poireaux",
+	"widget_talent": "Talent et derniers combats",
+	"widget_trophies": "Mes trophées",
+	"widget_chat": "Chat",
+	"breeder_talent": "Talent d'éleveur",
+	"latest_fights": "Derniers combats",
+	"no_fight": "Aucun combat récent.",
+	"trophies_unlocked": "Trophées",
+	"points": "Points",
+	"latest_trophies": "Derniers trophées",
+	"no_trophy": "Aucun trophée débloqué.",
+	"chat_unavailable": "Chat indisponible."
+}
