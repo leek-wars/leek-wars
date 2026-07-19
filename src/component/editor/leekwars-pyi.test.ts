@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { execFileSync } from 'child_process'
-import { writeFileSync, mkdtempSync } from 'fs'
+import { writeFileSync, mkdtempSync, existsSync } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
 import { buildLeekwarsPyi } from './leekwars-pyi'
@@ -113,5 +113,46 @@ describe('parité stub Python <-> API TS (anti-dérive)', () => {
 				expect(new RegExp(`\\b${m.name}\\b`).test(emptyStub), `${container}.${m.name} (static TS) manquant dans le stub Python (CLASSES)`).toBe(true)
 			}
 		}
+	})
+})
+
+// Anti-régression du bug #4540 : le moteur Pyright navigateur (@typefox/pyright-browser, GELÉ en 1.1.299)
+// et le typeshed bundlé (harvesté du paquet `pyright`, cf pyrightTypeshedPlugin dans vite.config.ts) DOIVENT
+// rester co-versionnés. Un typeshed trop récent définit `Any` en `class Any: ...` (au lieu de `Any = object()`)
+// que le vieux moteur ne spécial-case pas -> il traite `Any` comme une classe nominale, et TOUT paramètre
+// typé `Any` (Debug.mark, markText, Message.params...) rejette les arguments concrets. On fige donc `pyright`
+// en 1.1.299 (package.json) ; ce test échoue si un bump le désaligne. On fait tourner le VRAI Pyright bundlé
+// (node_modules/pyright = même version/typeshed que le worker) sur le code exact du rapport #4540.
+describe('Pyright bundlé accepte l\'API `Any` (anti-régression #4540)', () => {
+	const clientRoot = process.cwd()
+	const pyrightBin = join(clientRoot, 'node_modules', '.bin', 'pyright')
+	const typeshedPath = join(clientRoot, 'node_modules', 'pyright', 'dist', 'typeshed-fallback')
+	const hasBundledPyright = existsSync(pyrightBin) && existsSync(typeshedPath)
+
+	it.runIf(hasBundledPyright)('Debug.mark(Cell) / mark(list) / markText ne sont PAS signalés incompatibles', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'lwpy4540-'))
+		// Stub `leekwars` résolu comme module local (comme le worker le seede sous /leekwars.pyi).
+		writeFileSync(join(dir, 'leekwars.pyi'), buildLeekwarsPyi([cst('COLOR_BLUE'), cst('COLOR_RED')]))
+		// Code du rapport #4540 (+ variantes liste / markText), avec l'import injecté par pyright-inject.
+		writeFileSync(join(dir, 'ia.py'), [
+			'from leekwars import *',
+			'sud = Field.cellFromXY(17, 0)',
+			'Debug.mark(sud, Color.BLUE, 1)',
+			'Debug.mark([sud, sud], Color.BLUE, 1)',
+			'Debug.markText(sud, "hp", Color.RED)',
+		].join('\n'))
+		writeFileSync(join(dir, 'pyrightconfig.json'), JSON.stringify({
+			typeCheckingMode: 'basic', reportMissingImports: 'none', typeshedPath,
+		}))
+		// pyright renvoie un code de sortie non nul dès qu'il y a des erreurs -> on capture stdout quoi qu'il arrive.
+		let out = ''
+		try {
+			out = execFileSync(pyrightBin, ['--outputjson', 'ia.py'], { cwd: dir, encoding: 'utf-8', stdio: 'pipe' })
+		} catch (e) {
+			out = (e as { stdout?: string }).stdout ?? ''
+		}
+		const report = JSON.parse(out) as { generalDiagnostics: Array<{ severity: string, message: string }> }
+		const errors = report.generalDiagnostics.filter((d) => d.severity === 'error')
+		expect(errors, `Pyright signale des erreurs (typeshed désaligné du moteur ?) :\n${errors.map((d) => d.message).join('\n')}`).toEqual([])
 	})
 })
