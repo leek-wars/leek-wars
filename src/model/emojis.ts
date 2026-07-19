@@ -84,4 +84,45 @@ function formatEmojisText(rawData: unknown): string {
 	return formatEmojis(LeekWars.protect(String(rawData)))
 }
 
-export { Emojis, formatEmojis, formatEmojisText }
+// Balises dont le contenu texte ne doit JAMAIS être transformé en emoji :
+// - CODE / PRE : blocs de code (un ":)" ou "://" y est du code, pas un smiley) ;
+//   en plus, le rendu markdown lit leur textContent brut ensuite (coloration).
+// - LATEX : expressions maths déjà rendues.
+// - A : liens ; une URL contient "://" (la règle de frontière de formatEmojis le
+//   protège déjà, mais on saute les <a> par double prudence).
+const EMOJI_SKIP_TAGS = new Set(['CODE', 'PRE', 'LATEX', 'A'])
+
+// Applique les smileys/emojis sur tous les nœuds texte d'un sous-arbre DOM DÉJÀ
+// rendu (ex : sortie markdown du forum), en réutilisant formatEmojis (même moteur
+// que le chat) pour rester cohérent. On n'opère que sur les nœuds texte hors
+// EMOJI_SKIP_TAGS. Un nœud sans emoji est laissé strictement intact (aucun <span>
+// parasite créé), donc l'appel est sûr à répéter et ne modifie pas le texte
+// contenant des caractères spéciaux (<, >, &) mais aucun smiley.
+function applyEmojis(root: HTMLElement): void {
+	const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+		acceptNode(node) {
+			let p = node.parentElement
+			while (p && p !== root) {
+				if (EMOJI_SKIP_TAGS.has(p.tagName)) { return NodeFilter.FILTER_REJECT }
+				p = p.parentElement
+			}
+			return NodeFilter.FILTER_ACCEPT
+		},
+	})
+	// On matérialise la liste AVANT de muter le DOM : remplacer un nœud pendant
+	// que le walker le parcourt invaliderait l'itération.
+	const targets: Text[] = []
+	let n: Node | null
+	while ((n = walker.nextNode())) { targets.push(n as Text) }
+
+	for (const textNode of targets) {
+		const escaped = LeekWars.protect(textNode.nodeValue ?? '')
+		const formatted = formatEmojis(escaped)
+		if (formatted === escaped) { continue } // aucun emoji : nœud intact
+		const template = document.createElement('template')
+		template.innerHTML = formatted
+		textNode.parentNode?.replaceChild(template.content, textNode)
+	}
+}
+
+export { Emojis, formatEmojis, formatEmojisText, applyEmojis }

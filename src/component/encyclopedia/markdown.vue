@@ -4,6 +4,7 @@
 
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
+	import { applyEmojis } from '@/model/emojis'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { mdiIcons } from '@/model/mdi-icons'
 	import { Latex } from '@/model/latex'
@@ -94,6 +95,10 @@
 				// Rendu LaTeX inline ($...$) — fait avant la transformation des blocs
 				// de code pour que le contenu des <code>/<pre> reste intact.
 				renderMath(mdEl)
+				// Smileys / emojis (:) :/ :D <3 ...) dans les messages forum et le
+				// dev-blog (mode="forum"). applyEmojis saute code/pre/latex/liens, donc
+				// c'est fait avant createCodeArea sans risque de toucher au code.
+				if (props.mode === 'forum') { applyEmojis(mdEl) }
 				mdEl.querySelectorAll('h1, h2, h3, h4, h5').forEach((item) => {
 					const el = item as HTMLHeadingElement
 					const level = parseInt(el.tagName.substring(1), 10)
