@@ -378,7 +378,7 @@ const LeekWars = reactive({
 	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
-	actions: [] as { icon?: string, image?: string, click: (e?: MouseEvent) => void }[],
+	actions: [] as { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[],
 	lightBar: false,
 	dark: 0,
 	title: '',
@@ -671,7 +671,7 @@ const LeekWars = reactive({
 		LeekWars.header = true
 		LeekWars.lightBar = false
 	},
-	setActions(actions: { icon?: string, image?: string, click: (e?: MouseEvent) => void }[]) {
+	setActions(actions: { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[]) {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
