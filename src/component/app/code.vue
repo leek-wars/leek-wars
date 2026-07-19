@@ -20,6 +20,7 @@ const props = defineProps<{
 	single?: boolean
 	expandable?: boolean
 	theme?: string
+	language?: string
 }>()
 
 const expanded = ref(true)
@@ -28,11 +29,11 @@ const codeEl = useTemplateRef<HTMLElement>('codeEl')
 const finalTheme = computed(() => props.theme ? props.theme : (LeekWars.darkMode ? 'theme-monokai' : ''))
 const lines = computed(() => props.code.split('\n').length)
 
-watch([() => props.code, () => props.single], () => {
+watch([() => props.code, () => props.single, () => props.language], () => {
 	nextTick(() => {
 		if (!codeEl.value) return
-		if (props.single) LeekWars.createCodeAreaSimple(props.code, codeEl.value)
-		else LeekWars.createCodeArea(props.code, codeEl.value)
+		if (props.single) LeekWars.createCodeAreaSimple(props.code, codeEl.value, props.language)
+		else LeekWars.createCodeArea(props.code, codeEl.value, props.language)
 	})
 }, { immediate: true })
 </script>

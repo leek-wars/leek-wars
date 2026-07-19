@@ -148,7 +148,10 @@
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')
 					if (LeekWars.darkMode) item.classList.add('theme-monokai')
-					LeekWars.createCodeArea(content, item as HTMLElement)
+					// markdown-it pose une classe language-<lang> sur les blocs ```lang
+					const langClass = Array.from(item.classList).find((c) => c.startsWith('language-'))
+					const language = langClass ? langClass.slice('language-'.length) : undefined
+					LeekWars.createCodeArea(content, item as HTMLElement, language)
 				})
 				mdEl.querySelectorAll('code:not(.multi)').forEach((item) => {
 					const content = ('' + item.textContent).trim()

@@ -834,7 +834,7 @@ const LeekWars = reactive({
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatDayMonthShortUTC, formatLongDuration,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag, setMeta,
 	shadeColor,
-	createCodeArea, createCodeAreaSimple,
+	createCodeArea, createCodeAreaSimple, codeLanguageMode,
 	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as ReturnType<typeof setTimeout> | null, lucky,
 	setFavicon,
 	linkify, toChatLink,
@@ -1321,10 +1321,26 @@ function markFormatted(element: HTMLElement): boolean {
 	element.dataset.lwFormatted = '1'
 	return true
 }
-function createCodeArea(code: string, element: HTMLElement) {
+// Langages de coloration disponibles dans les blocs de code (```lang ...).
+// La valeur est le mode/MIME CodeMirror correspondant (voir codemirror-wrapper.ts).
+// Non reconnu => bloc coloré en LeekScript (défaut historique).
+const CODE_LANGUAGE_MODES: {[key: string]: string} = {
+	leekscript: 'leekscript', ls: 'leekscript', lw: 'leekscript', lse: 'leekscript',
+	js: 'javascript', javascript: 'javascript',
+	ts: 'text/typescript', typescript: 'text/typescript',
+	py: 'python', python: 'python',
+	json: 'application/json',
+}
+// Retourne le mode CodeMirror pour un jeton de langage, ou undefined si inconnu.
+function codeLanguageMode(language: string | undefined | null): string | undefined {
+	if (!language) { return undefined }
+	return CODE_LANGUAGE_MODES[language.toLowerCase().trim()]
+}
+function createCodeArea(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
+	const mode = codeLanguageMode(language) || 'leekscript'
 	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
+		wrapper.CodeMirror.runMode(code, mode, element)
 		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
 
 		const num = code.split(/\n/).length
@@ -1335,10 +1351,11 @@ function createCodeArea(code: string, element: HTMLElement) {
 		element.classList.add('formatted')
 	})
 }
-function createCodeAreaSimple(code: string, element: HTMLElement) {
+function createCodeAreaSimple(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
+	const mode = codeLanguageMode(language) || 'leekscript'
 	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
+		wrapper.CodeMirror.runMode(code, mode, element)
 		element.innerHTML = '<pre>' + element.innerHTML + '</pre>'
 		element.classList.add('single')
 	})

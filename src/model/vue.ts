@@ -792,8 +792,19 @@ app.directive('chat-code-latex', {
 		el.querySelectorAll('code').forEach((c: Element) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
-				props = { code, expandable: true }
+				let code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
+				// Langage optionnel sur la 1re ligne (```js, ```python, ...), à la Markdown :
+				// on ne retire la ligne que si le jeton correspond à un langage connu.
+				let language: string | undefined
+				const firstBreak = code.indexOf("\n")
+				if (firstBreak > 0) {
+					const firstLine = code.slice(0, firstBreak).trim()
+					if (LeekWars.codeLanguageMode(firstLine)) {
+						language = firstLine
+						code = code.slice(firstBreak + 1)
+					}
+				}
+				props = { code, expandable: true, language }
 			} else {
 				props = { code: c.textContent || '', single: true }
 			}
