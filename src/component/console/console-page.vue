@@ -1,5 +1,5 @@
 <template>
-	<div class="page">
+	<div class="page console-page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.console') }}</h1>
 			<div class="tabs">
@@ -106,6 +106,12 @@ function setTheme(theme: string) {
 	display: flex;
 	align-items: center;
 	gap: 6px;
+}
+// Sur mobile, toutes les .action de la page-bar sont masquées (leurs équivalents passent dans
+// l'app-bar). On réaffiche les sélecteurs langage + version de la console pour pouvoir les changer
+// depuis mobile ; le thème, lui, reste accessible via l'action de l'app-bar (setActions).
+#app.app .console-page .page-bar .lang-tab.action {
+	display: flex;
 }
 .lang-logo {
 	width: 16px;
