@@ -1,0 +1,41 @@
+// Coloration des aperçus de code (chat, encyclopédie...) tokenisés par Monaco
+// (voir monaco-highlight.ts). Les classes `t-<type>` reprennent les types de tokens
+// Monarch ; les couleurs répliquent EXACTEMENT les thèmes de l'éditeur Monaco
+// (leek-wars en clair, monokai en sombre — définis dans monaco.ts), pour une coloration
+// cohérente partout. Le thème sombre est activé par la classe `.theme-monokai` posée sur
+// le conteneur d'aperçu (réactive au mode sombre du site), donc pas de re-coloration au
+// basculement clair/sombre : c'est purement CSS.
+
+// --- Clair (thème leek-wars) ---
+code {
+	// Premier plan par défaut (identifiants, délimiteurs...) = foreground du thème
+	// leek-wars de l'éditeur. Fixé sur <pre> pour ne pas dépendre de la couleur héritée
+	// du contexte (chat, encyclopédie...), comme un bloc de code autonome.
+	pre { color: #000000; }
+	.t-comment { color: #999999; }
+	.t-string, .t-regexp { color: #ff781e; }
+	.t-keyword { color: #00007f; font-weight: bold; }
+	.t-type { color: #0000d0; font-weight: bold; }
+	.t-number { color: #007f00; }
+	.t-atom { color: #0086bc; font-weight: bold; }
+	.t-annotation { color: #aa5500; font-weight: bold; }
+	.t-lsconstant { font-weight: bold; }
+	.t-lsfunction { font-style: italic; }
+	.t-lsfunction-deprecated { color: #777777; font-style: italic; }
+}
+
+// --- Sombre (thème monokai) ---
+.theme-monokai {
+	color: #f8f8f2;
+	pre { background: #272822; color: #f8f8f2; }
+	.t-comment { color: #75715e; }
+	.t-string, .t-regexp { color: #e6db74; }
+	.t-keyword { color: #f92672; font-weight: normal; }
+	.t-type { color: #86d7ff; font-weight: normal; }
+	.t-number { color: #ae81ff; }
+	.t-atom { color: #ae81ff; font-weight: normal; }
+	.t-annotation { color: #ffaa44; font-weight: bold; }
+	.t-lsconstant { color: #ffffff; font-weight: bold; }
+	.t-lsfunction { color: #ffffff; font-style: italic; }
+	.t-lsfunction-deprecated { color: #777777; font-style: italic; }
+}

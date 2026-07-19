@@ -319,7 +319,6 @@
 	import GitTerminal from './git-terminal.vue'
 	import { gitLog } from './git-log'
 	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
-	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
 	import { getLanguageVersion, isLeekScript } from './file-types'

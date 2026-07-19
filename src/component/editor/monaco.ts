@@ -1,7 +1,6 @@
 import * as monaco from 'monaco-editor'
 
-// @ts-expect-error no types for leekscript-monarch.js
-import leekscript from './leekscript-monarch.js'
+import { registerLeekScriptLanguage } from './monaco-leekscript-language'
 
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
@@ -23,38 +22,7 @@ import { pySetStub } from './pyright';
 // sinon le d.ts de l'API n'est jamais posé et les IA .ts/.js perdent le typecheck + l'autocomplétion API.
 import * as typescriptContribution from 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 
-monaco.languages.register({ id: 'leekscript' })
-monaco.languages.setLanguageConfiguration('leekscript', {
-	comments: {
-		lineComment: '//',
-		blockComment: ['/*', '*/'],
-	},
-	surroundingPairs: [
-		{ open: "(", close: ")" },
-		{ open: "{", close: "}" },
-		{ open: "[", close: "]" },
-		// { open: "<", close: ">" },
-	],
-	autoClosingPairs: [
-		{ open: "(", close: ")" },
-		{ open: "{", close: "}" },
-		{ open: "[", close: "]" },
-		// { open: "<", close: ">" },
-	],
-	brackets:[
-		["(", ")"],
-		["{", "}"],
-		["[", "]"],
-		// ["<", ">"],
-	],
-	indentationRules: {
-		decreaseIndentPattern: new RegExp("^\\s*[\\}\\]\\)].*$"),
-		increaseIndentPattern: new RegExp("^.*(\\{[^}]*|\\([^)]*|\\[[^\\]]*)$"),
-		unIndentedLinePattern: new RegExp("^(\\t|[ ])*[ ]\\*[^/]*\\*/\\s*$|^(\\t|[ ])*[ ]\\*/\\s*$|^(\\t|[ ])*[ ]\\*([ ]([^\\*]|\\*(?!/))*)?$"),
-		indentNextLinePattern: new RegExp("^((.*=>\\s*)|((.*[^\\w]+|\\s*)(if|while|for)\\s*\\(.*\\)\\s*))$")
-	},
-})
-monaco.languages.setMonarchTokensProvider('leekscript', leekscript)
+registerLeekScriptLanguage(monaco.languages)
 
 monaco.editor.addKeybindingRules([
 	{

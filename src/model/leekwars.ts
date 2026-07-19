@@ -1299,18 +1299,18 @@ function formatTime(time: number) {
 	return date.getHours() + ":" + minuts
 }
 
-// Module codemirror-wrapper mis en cache : une fois chargé, le formatage est
-// synchrone (avant le paint), sinon le bloc brut est peint un instant puis
-// remplacé par la version formatée (flicker à chaque re-rendu, ex. édition encyclopédie).
-let codeMirrorWrapper: typeof import("@/codemirror-wrapper") | null = null
-function withCodeMirror(callback: (wrapper: typeof import("@/codemirror-wrapper")) => void) {
-	if (codeMirrorWrapper) {
-		callback(codeMirrorWrapper)
+// Moteur de coloration Monaco (tokenizer statique, léger) mis en cache : une fois
+// chargé, la coloration est synchrone (avant le paint), sinon le bloc brut est peint
+// un instant puis recoloré (flicker à chaque re-rendu, ex. édition encyclopédie).
+let highlighter: typeof import("@/component/editor/monaco-highlight") | null = null
+function withHighlighter(callback: (h: typeof import("@/component/editor/monaco-highlight")) => void) {
+	if (highlighter) {
+		callback(highlighter)
 		return
 	}
-	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
-		codeMirrorWrapper = wrapper
-		callback(wrapper)
+	import(/* webpackChunkName: "monaco-highlight" */ "@/component/editor/monaco-highlight").then(h => {
+		highlighter = h
+		callback(h)
 	})
 }
 // Marqueur posé de façon synchrone : si l'élément a déjà été formaté (un update
@@ -1321,42 +1321,37 @@ function markFormatted(element: HTMLElement): boolean {
 	element.dataset.lwFormatted = '1'
 	return true
 }
-// Langages de coloration disponibles dans les blocs de code (```lang ...).
-// La valeur est le mode/MIME CodeMirror correspondant (voir codemirror-wrapper.ts).
-// Non reconnu => bloc coloré en LeekScript (défaut historique).
-const CODE_LANGUAGE_MODES: {[key: string]: string} = {
+// Langages de coloration des blocs de code (```lang ...) -> id de langage Monaco.
+// Non reconnu / absent => LeekScript (défaut historique).
+const CODE_LANGUAGE_IDS: {[key: string]: string} = {
 	leekscript: 'leekscript', ls: 'leekscript', lw: 'leekscript', lse: 'leekscript',
 	js: 'javascript', javascript: 'javascript',
-	ts: 'text/typescript', typescript: 'text/typescript',
+	ts: 'typescript', typescript: 'typescript',
 	py: 'python', python: 'python',
-	json: 'application/json',
+	json: 'json',
 }
-// Retourne le mode CodeMirror pour un jeton de langage, ou undefined si inconnu.
+// Retourne l'id de langage Monaco pour un jeton de langage, ou undefined si inconnu.
 function codeLanguageMode(language: string | undefined | null): string | undefined {
 	if (!language) { return undefined }
-	return CODE_LANGUAGE_MODES[language.toLowerCase().trim()]
+	return CODE_LANGUAGE_IDS[language.toLowerCase().trim()]
 }
 function createCodeArea(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	const mode = codeLanguageMode(language) || 'leekscript'
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, mode, element)
-		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
-
-		const num = code.split(/\n/).length
-		for (let j = 0; j < num; j++) {
-			const line_num = element.getElementsByTagName('span')[0]
-			line_num.innerHTML += '<span>' + (j + 1) + '</span>'
-		}
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		const tokens = h.highlightToHtml(code, lang)
+		const num = code.split('\n').length
+		let gutter = ''
+		for (let j = 0; j < num; j++) { gutter += '<span>' + (j + 1) + '</span>' }
+		element.innerHTML = '<span class="line-number">' + gutter + '</span><pre>' + tokens + '</pre>'
 		element.classList.add('formatted')
 	})
 }
 function createCodeAreaSimple(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	const mode = codeLanguageMode(language) || 'leekscript'
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, mode, element)
-		element.innerHTML = '<pre>' + element.innerHTML + '</pre>'
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		element.innerHTML = '<pre>' + h.highlightToHtml(code, lang) + '</pre>'
 		element.classList.add('single')
 	})
 }
