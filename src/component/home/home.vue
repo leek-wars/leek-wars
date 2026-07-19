@@ -64,6 +64,11 @@
 	import HomeWidgetTalent from '@/component/home/widgets/home-widget-talent.vue'
 	import HomeWidgetTrophies from '@/component/home/widgets/home-widget-trophies.vue'
 	import HomeWidgetChat from '@/component/home/widgets/home-widget-chat.vue'
+	import HomeWidgetCollection from '@/component/home/widgets/home-widget-collection.vue'
+	import HomeWidgetRanking from '@/component/home/widgets/home-widget-ranking.vue'
+	import HomeWidgetRareTrophies from '@/component/home/widgets/home-widget-rare-trophies.vue'
+	import HomeWidgetForum from '@/component/home/widgets/home-widget-forum.vue'
+	import HomeWidgetTournaments from '@/component/home/widgets/home-widget-tournaments.vue'
 
 	defineOptions({ name: 'Home', i18n: {}, mixins: [...mixins] })
 
@@ -85,6 +90,11 @@
 		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), sizable: true, defaultSize: 2, link: '/farmer' },
 		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), sizable: true, defaultSize: 1, link: '/trophies' },
 		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), sizable: true, defaultSize: 1 },
+		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), sizable: true, defaultSize: 1, link: '/collection' },
+		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), sizable: true, defaultSize: 1, link: '/ranking' },
+		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), sizable: true, defaultSize: 1, link: '/trophies' },
+		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), sizable: true, defaultSize: 1, link: '/forum' },
+		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), sizable: true, defaultSize: 1 },
 	}
 	const WIDGET_TYPES = Object.keys(widgetMeta)
 

@@ -17,5 +17,16 @@
 	"points": "Points",
 	"latest_trophies": "Latest trophies",
 	"no_trophy": "No trophy unlocked yet.",
-	"chat_unavailable": "Chat unavailable."
+	"chat_unavailable": "Chat unavailable.",
+	"widget_collection": "Collection",
+	"widget_ranking": "Notable players",
+	"widget_rare_trophies": "Rarest trophies",
+	"widget_forum": "Forum",
+	"widget_tournaments": "Tournament winners",
+	"nobody": "Nobody yet.",
+	"no_topic": "No topic.",
+	"no_tournament": "No recent tournament.",
+	"tournament_leek": "Leek tournament",
+	"tournament_farmer": "Farmer tournament",
+	"tournament_team": "Team tournament"
 }

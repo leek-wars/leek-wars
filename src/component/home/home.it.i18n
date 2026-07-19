@@ -17,5 +17,16 @@
 	"points": "Punti",
 	"latest_trophies": "Ultimi trofei",
 	"no_trophy": "Nessun trofeo sbloccato.",
-	"chat_unavailable": "Chat non disponibile."
+	"chat_unavailable": "Chat non disponibile.",
+	"widget_collection": "Collezione",
+	"widget_ranking": "Giocatori notevoli",
+	"widget_rare_trophies": "Trofei più rari",
+	"widget_forum": "Forum",
+	"widget_tournaments": "Vincitori dei tornei",
+	"nobody": "Nessuno per ora.",
+	"no_topic": "Nessun argomento.",
+	"no_tournament": "Nessun torneo recente.",
+	"tournament_leek": "Torneo di porri",
+	"tournament_farmer": "Torneo di allevatori",
+	"tournament_team": "Torneo di squadre"
 }

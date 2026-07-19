@@ -17,5 +17,16 @@
 	"points": "Points",
 	"latest_trophies": "Derniers trophées",
 	"no_trophy": "Aucun trophée débloqué.",
-	"chat_unavailable": "Chat indisponible."
+	"chat_unavailable": "Chat indisponible.",
+	"widget_collection": "Collection",
+	"widget_ranking": "Joueurs remarquables",
+	"widget_rare_trophies": "Trophées les plus rares",
+	"widget_forum": "Forum",
+	"widget_tournaments": "Gagnants des tournois",
+	"nobody": "Personne pour l’instant.",
+	"no_topic": "Aucun sujet.",
+	"no_tournament": "Aucun tournoi récent.",
+	"tournament_leek": "Tournoi de poireaux",
+	"tournament_farmer": "Tournoi d’éleveurs",
+	"tournament_team": "Tournoi d’équipes"
 }
