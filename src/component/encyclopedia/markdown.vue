@@ -8,6 +8,7 @@
 	import { mdiIcons } from '@/model/mdi-icons'
 	import { Latex } from '@/model/latex'
 	import { createSubApp } from '@/model/vue'
+	import { resolveCodeThemeClass } from '@/component/editor/code-theme'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
@@ -147,7 +148,7 @@
 				mdEl.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')
-					if (LeekWars.darkMode) item.classList.add('theme-monokai')
+					item.classList.add(resolveCodeThemeClass())
 					// markdown-it pose une classe language-<lang> sur les blocs ```lang
 					const langClass = Array.from(item.classList).find((c) => c.startsWith('language-'))
 					const language = langClass ? langClass.slice('language-'.length) : undefined
@@ -155,7 +156,7 @@
 				})
 				mdEl.querySelectorAll('code:not(.multi)').forEach((item) => {
 					const content = ('' + item.textContent).trim()
-					if (LeekWars.darkMode) item.classList.add('theme-monokai')
+					item.classList.add(resolveCodeThemeClass())
 					LeekWars.createCodeAreaSimple(content, item as HTMLElement)
 				})
 

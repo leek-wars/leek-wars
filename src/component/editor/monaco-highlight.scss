@@ -1,41 +1,71 @@
 // Coloration des aperçus de code (chat, encyclopédie...) tokenisés par Monaco
 // (voir monaco-highlight.ts). Les classes `t-<type>` reprennent les types de tokens
-// Monarch ; les couleurs répliquent EXACTEMENT les thèmes de l'éditeur Monaco
-// (leek-wars en clair, monokai en sombre — définis dans monaco.ts), pour une coloration
-// cohérente partout. Le thème sombre est activé par la classe `.theme-monokai` posée sur
-// le conteneur d'aperçu (réactive au mode sombre du site), donc pas de re-coloration au
-// basculement clair/sombre : c'est purement CSS.
+// Monarch ; les couleurs sont pilotées par des variables CSS définies par la classe de
+// thème `.code-theme-<nom>` posée sur le conteneur (résolue depuis le thème d'éditeur
+// préféré du joueur, cf. code-theme.ts). Les 6 thèmes répliquent EXACTEMENT ceux de
+// l'éditeur Monaco. Changement de thème (mode sombre, préférence) = purement CSS, pas de
+// recoloration, et sans jamais toucher le thème de l'éditeur lui-même.
 
-// --- Clair (thème leek-wars) ---
 code {
-	// Premier plan par défaut (identifiants, délimiteurs...) = foreground du thème
-	// leek-wars de l'éditeur. Fixé sur <pre> pour ne pas dépendre de la couleur héritée
-	// du contexte (chat, encyclopédie...), comme un bloc de code autonome.
-	pre { color: #000000; }
-	.t-comment { color: #999999; }
-	.t-string, .t-regexp { color: #ff781e; }
-	.t-keyword { color: #00007f; font-weight: bold; }
-	.t-type { color: #0000d0; font-weight: bold; }
-	.t-number { color: #007f00; }
-	.t-atom { color: #0086bc; font-weight: bold; }
-	.t-annotation { color: #aa5500; font-weight: bold; }
-	.t-lsconstant { font-weight: bold; }
-	.t-lsfunction { font-style: italic; }
-	.t-lsfunction-deprecated { color: #777777; font-style: italic; }
+	// Premier plan par défaut (identifiants, délimiteurs) et fond = thème courant. Fixés
+	// sur <pre> pour que l'aperçu soit autonome, indépendant de la couleur héritée du contexte.
+	pre {
+		background: var(--ct-bg, transparent);
+		color: var(--ct-fg, #000000);
+	}
+	.t-comment { color: var(--ct-comment); }
+	.t-string, .t-regexp { color: var(--ct-string); }
+	.t-keyword { color: var(--ct-keyword); font-weight: var(--ct-keyword-weight, normal); }
+	.t-type { color: var(--ct-type); font-weight: var(--ct-type-weight, normal); }
+	.t-number { color: var(--ct-number); }
+	// Tokens propres à LeekScript : seuls les thèmes leek-wars et monokai les colorent ;
+	// les thèmes VS Code / High Contrast les laissent en couleur par défaut (comme l'éditeur).
+	.t-atom { color: var(--ct-atom, inherit); font-weight: var(--ct-atom-weight, normal); }
+	.t-annotation { color: var(--ct-annotation, inherit); font-weight: var(--ct-annotation-weight, normal); }
+	.t-lsconstant { color: var(--ct-lsconstant, inherit); font-weight: var(--ct-lsconstant-weight, normal); }
+	.t-lsfunction { color: var(--ct-lsfunction, inherit); font-style: var(--ct-lsfunction-style, normal); }
+	.t-lsfunction-deprecated { color: var(--ct-lsdeprecated, #777777); font-style: italic; }
 }
 
-// --- Sombre (thème monokai) ---
-.theme-monokai {
-	color: #f8f8f2;
-	pre { background: #272822; color: #f8f8f2; }
-	.t-comment { color: #75715e; }
-	.t-string, .t-regexp { color: #e6db74; }
-	.t-keyword { color: #f92672; font-weight: normal; }
-	.t-type { color: #86d7ff; font-weight: normal; }
-	.t-number { color: #ae81ff; }
-	.t-atom { color: #ae81ff; font-weight: normal; }
-	.t-annotation { color: #ffaa44; font-weight: bold; }
-	.t-lsconstant { color: #ffffff; font-weight: bold; }
-	.t-lsfunction { color: #ffffff; font-style: italic; }
-	.t-lsfunction-deprecated { color: #777777; font-style: italic; }
+// ---- Thèmes clairs ----
+.code-theme-leek-wars {
+	--ct-fg: #000000;
+	--ct-keyword: #00007f; --ct-keyword-weight: bold;
+	--ct-type: #0000d0; --ct-type-weight: bold;
+	--ct-string: #ff781e; --ct-number: #007f00; --ct-comment: #999999;
+	--ct-atom: #0086bc; --ct-atom-weight: bold;
+	--ct-annotation: #aa5500; --ct-annotation-weight: bold;
+	--ct-lsconstant: #000000; --ct-lsconstant-weight: bold;
+	--ct-lsfunction: #000000; --ct-lsfunction-style: italic;
+}
+.code-theme-vs {
+	--ct-fg: #000000;
+	--ct-keyword: #0000ff; --ct-type: #008080;
+	--ct-string: #a31515; --ct-number: #098658; --ct-comment: #008000;
+}
+.code-theme-hc-light {
+	--ct-fg: #292929;
+	--ct-keyword: #0000ff; --ct-type: #008080;
+	--ct-string: #a31515; --ct-number: #098658; --ct-comment: #008000;
+}
+
+// ---- Thèmes sombres (fond propre pour rester lisibles quel que soit le fond du site) ----
+.code-theme-monokai {
+	--ct-fg: #f8f8f2; --ct-bg: #272822;
+	--ct-keyword: #f92672; --ct-type: #86d7ff;
+	--ct-string: #e6db74; --ct-number: #ae81ff; --ct-comment: #75715e;
+	--ct-atom: #ae81ff;
+	--ct-annotation: #ffaa44; --ct-annotation-weight: bold;
+	--ct-lsconstant: #ffffff; --ct-lsconstant-weight: bold;
+	--ct-lsfunction: #ffffff; --ct-lsfunction-style: italic;
+}
+.code-theme-vs-dark {
+	--ct-fg: #d4d4d4; --ct-bg: #1e1e1e;
+	--ct-keyword: #569cd6; --ct-type: #3dc9b0;
+	--ct-string: #ce9178; --ct-number: #b5cea8; --ct-comment: #608b4e;
+}
+.code-theme-hc-black {
+	--ct-fg: #ffffff; --ct-bg: #000000;
+	--ct-keyword: #569cd6; --ct-type: #3dc9b0;
+	--ct-string: #ce9178; --ct-number: #b5cea8; --ct-comment: #608b4e;
 }
