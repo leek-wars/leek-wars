@@ -2,13 +2,15 @@
 	<div class="rare-trophies-widget">
 		<loader v-if="!loaded" />
 		<template v-else-if="rarest.length">
-			<router-link v-for="trophy in rarest" :key="trophy.code" :to="'/trophies/' + farmerId" class="trophy-line">
-				<trophy-icon :code="trophy.code" class="trophy" />
-				<div class="info">
-					<span class="name">{{ trophy.name }}</span>
-					<span class="rarity">{{ trophy.rarity }}%</span>
-				</div>
-			</router-link>
+			<rich-tooltip-trophy v-for="trophy in rarest" :key="trophy.code" :trophy="trophy" :bottom="true" :instant="true" v-slot="{ props }">
+				<router-link :to="'/trophies/' + farmerId" class="trophy-line" v-bind="props">
+					<trophy-icon :code="trophy.code" class="trophy" />
+					<div class="info">
+						<span class="name">{{ trophy.name }}</span>
+						<span class="rarity">{{ trophy.rarity }}%</span>
+					</div>
+				</router-link>
+			</rich-tooltip-trophy>
 		</template>
 		<div v-else class="none">{{ t('no_trophy') }}</div>
 	</div>
@@ -20,6 +22,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { useNamespacedT } from '@/model/i18n'
+	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 
 	defineOptions({ name: 'HomeWidgetRareTrophies' })
 

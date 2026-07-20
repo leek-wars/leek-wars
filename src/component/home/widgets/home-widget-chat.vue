@@ -35,10 +35,14 @@
 <style lang="scss" scoped>
 	.chat-widget {
 		margin: -15px;
+		height: calc(100% + 30px);
+		display: flex;
 	}
 	.chat-body {
 		display: block;
-		height: 360px;
+		flex: 1 1 auto;
+		min-height: 0;
+		width: 100%;
 	}
 	.none {
 		color: var(--text-color-secondary);
