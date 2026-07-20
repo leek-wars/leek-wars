@@ -761,10 +761,33 @@ app.directive('autostopscroll', {
 	}
 })
 
+// Langage d'un bloc de code, à la Markdown, depuis deux sources possibles :
+//  - une classe `language-<lang>` posée par un rendu Markdown (HTML stocké : anciens messages
+//    du forum, articles du dev blog) ;
+//  - à défaut, un jeton sur la 1re ligne (```js, ```python...), comme dans le chat.
+// On ne retire la 1re ligne que si le jeton correspond à un langage CONNU, pour ne jamais avaler
+// une vraie ligne de code. Langage inconnu/absent => undefined (LeekScript par défaut, comme avant).
+function splitCodeLanguage(code: string, el?: Element): { code: string, language: string | undefined } {
+	const cls = el && Array.from(el.classList).find((c) => c.startsWith('language-'))
+	if (cls) {
+		const lang = cls.slice('language-'.length)
+		if (LeekWars.codeLanguageMode(lang)) { return { code, language: lang } }
+	}
+	const firstBreak = code.indexOf("\n")
+	if (firstBreak > 0) {
+		const firstLine = code.slice(0, firstBreak).trim()
+		if (LeekWars.codeLanguageMode(firstLine)) {
+			return { code: code.slice(firstBreak + 1), language: firstLine }
+		}
+	}
+	return { code, language: undefined }
+}
+
 const code = {
 	mounted: (el: HTMLElement) => {
 		el.querySelectorAll('code').forEach((c: Element) => {
-			createSubApp(Code, { code: (c as HTMLElement).innerText }, 'v-code').mount(c)
+			const { code: text, language } = splitCodeLanguage((c as HTMLElement).innerText, c)
+			createSubApp(Code, { code: text, language }, 'v-code').mount(c)
 		})
 	}
 }
@@ -808,18 +831,9 @@ app.directive('chat-code-latex', {
 		el.querySelectorAll('code').forEach((c: Element) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				let code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
-				// Langage optionnel sur la 1re ligne (```js, ```python, ...), à la Markdown :
-				// on ne retire la ligne que si le jeton correspond à un langage connu.
-				let language: string | undefined
-				const firstBreak = code.indexOf("\n")
-				if (firstBreak > 0) {
-					const firstLine = code.slice(0, firstBreak).trim()
-					if (LeekWars.codeLanguageMode(firstLine)) {
-						language = firstLine
-						code = code.slice(firstBreak + 1)
-					}
-				}
+				const raw = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
+				// Langage optionnel sur la 1re ligne (```js, ```python, ...) : cf. splitCodeLanguage.
+				const { code, language } = splitCodeLanguage(raw, c)
 				props = { code, expandable: true, language }
 			} else {
 				props = { code: c.textContent || '', single: true }
