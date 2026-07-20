@@ -62,14 +62,16 @@
 								<div class="filter-columns" :class="{ 'two-columns': !LeekWars.mobile }">
 									<div class="filter-section">
 										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-email</v-icon>{{ $t('filter_read') }}</v-list-subheader>
-										<v-list-item v-for="r in readFilterItems" :key="r.value" density="compact" @click="filterRead = r.value; saveFilters()">
-											<template #prepend>
-												<v-list-item-action start>
-													<lw-radio :model-value="filterRead" :value="r.value" @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
-												</v-list-item-action>
-											</template>
-											<span>{{ r.title }}</span>
-										</v-list-item>
+										<lw-radio-group v-model="filterRead" :aria-label="$t('filter_read')" @update:model-value="saveFilters()">
+											<v-list-item v-for="r in readFilterItems" :key="r.value" density="compact" @click="filterRead = r.value; saveFilters()">
+												<template #prepend>
+													<v-list-item-action start>
+														<lw-radio :value="r.value" @click.stop />
+													</v-list-item-action>
+												</template>
+												<span>{{ r.title }}</span>
+											</v-list-item>
+										</lw-radio-group>
 									</div>
 									<div class="filter-section">
 										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-checkbox-marked-circle-outline</v-icon>{{ $t('filter_status') }}</v-list-subheader>
@@ -93,25 +95,29 @@
 									</div>
 									<div class="filter-section">
 										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-eye</v-icon>{{ $t('filter_acknowledged') }}</v-list-subheader>
-										<v-list-item v-for="a in acknowledgedFilterItems" :key="a.value" density="compact" @click="filterAcknowledged = a.value; saveFilters()">
-											<template #prepend>
-												<v-list-item-action start>
-													<lw-radio :model-value="filterAcknowledged" :value="a.value" @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
-												</v-list-item-action>
-											</template>
-											<span>{{ a.title }}</span>
-										</v-list-item>
+										<lw-radio-group v-model="filterAcknowledged" :aria-label="$t('filter_acknowledged')" @update:model-value="saveFilters()">
+											<v-list-item v-for="a in acknowledgedFilterItems" :key="a.value" density="compact" @click="filterAcknowledged = a.value; saveFilters()">
+												<template #prepend>
+													<v-list-item-action start>
+														<lw-radio :value="a.value" @click.stop />
+													</v-list-item-action>
+												</template>
+												<span>{{ a.title }}</span>
+											</v-list-item>
+										</lw-radio-group>
 									</div>
 									<div class="filter-section">
 										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-lock</v-icon>{{ $t('filter_locked') }}</v-list-subheader>
-										<v-list-item v-for="l in lockedFilterItems" :key="l.value" density="compact" @click="filterLocked = l.value; saveFilters()">
-											<template #prepend>
-												<v-list-item-action start>
-													<lw-radio :model-value="filterLocked" :value="l.value" @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
-												</v-list-item-action>
-											</template>
-											<span>{{ l.title }}</span>
-										</v-list-item>
+										<lw-radio-group v-model="filterLocked" :aria-label="$t('filter_locked')" @update:model-value="saveFilters()">
+											<v-list-item v-for="l in lockedFilterItems" :key="l.value" density="compact" @click="filterLocked = l.value; saveFilters()">
+												<template #prepend>
+													<v-list-item-action start>
+														<lw-radio :value="l.value" @click.stop />
+													</v-list-item-action>
+												</template>
+												<span>{{ l.title }}</span>
+											</v-list-item>
+										</lw-radio-group>
 									</div>
 									<div v-if="isBugCategory || isSuggestionCategory" class="filter-section">
 										<v-list-subheader><v-icon size="x-small" class="filter-icon">mdi-flag</v-icon>{{ $t('filter_priority') }}</v-list-subheader>
@@ -1128,6 +1134,10 @@ body:not(.v2) {
 }
 .filter-section {
 	break-inside: avoid;
+	// Le groupe de radios garde l'espacement des lignes de liste voisines
+	.lw-radio-group {
+		gap: 0;
+	}
 }
 .filter-icon {
 	margin-right: 4px;
