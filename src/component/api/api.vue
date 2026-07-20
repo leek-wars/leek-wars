@@ -76,42 +76,49 @@
 							</a>
 						</div>
 
-						<markdown v-if="$te(service.module + '_' + service.function)" class="description" :content="$t(service.module + '_' + service.function)" :pages="{}" mode="encyclopedia" />
-						<div v-else class="description grey">{{ $t('no_desc') }}</div>
+						<div class="service-body">
+							<div class="service-info">
+								<markdown v-if="$te(service.module + '_' + service.function)" class="description" :content="$t(service.module + '_' + service.function)" :pages="{}" mode="encyclopedia" />
+								<div v-else class="description grey">{{ $t('no_desc') }}</div>
 
-						<template v-if="service.parameters.length > 0">
-							<h4>{{ $t('parameters') }}</h4>
-							<ul class="parameters">
-								<li v-for="(parameter, p) in service.parameters" :key="p" class="parameter">
-									<span class="name">{{ parameter }}</span> : {{ service.parameters_types[p] }}
-								</li>
-							</ul>
-						</template>
+								<template v-if="service.parameters.length > 0">
+									<h4>{{ $t('parameters') }}</h4>
+									<ul class="parameters">
+										<li v-for="(parameter, p) in service.parameters" :key="p" class="parameter">
+											<span class="name">{{ parameter }}</span> : {{ service.parameters_types[p] }}
+										</li>
+									</ul>
+								</template>
 
-						<template v-if="service.returns.length > 0">
-							<h4>{{ $t('return') }}</h4>
-							<ul class="parameters">
-								<li v-for="(ret, p) in service.returns" :key="p" class="parameter">
-									<span class="name">{{ ret }}</span> : {{ service.returns_types[p] }}
-								</li>
-							</ul>
-						</template>
-
-						<div class="doc-columns">
-							<div class="doc-code">
-								<h4>{{ t('example_call') }}</h4>
-								<div class="code-block">
-									<div class="code-tabs">
-										<span v-for="l in LANGS" :key="l" class="code-tab" :class="{ active: activeLang === l }" @click="activeLang = l">{{ LANG_LABELS[l] }}</span>
-										<div class="spacer"></div>
-										<v-icon class="copy-btn" :title="t('copy')" @click="copyCode(buildSnippet(service, activeLang))">mdi-content-copy</v-icon>
-									</div>
-									<pre class="code-snippet"><code>{{ buildSnippet(service, activeLang) }}</code></pre>
-								</div>
+								<template v-if="service.returns.length > 0">
+									<h4>{{ $t('return') }}</h4>
+									<ul class="parameters">
+										<li v-for="(ret, p) in service.returns" :key="p" class="parameter">
+											<span class="name">{{ ret }}</span> : {{ service.returns_types[p] }}
+										</li>
+									</ul>
+								</template>
 							</div>
-							<div v-if="service.example" class="doc-response">
-								<h4>{{ t('example_response') }}</h4>
-								<pre class="example">{{ formatExample(service.example) }}</pre>
+
+							<div class="service-examples">
+								<div class="doc-code">
+									<h4>{{ t('example_call') }}</h4>
+									<div class="code-block">
+										<div class="code-tabs">
+											<span v-for="l in LANGS" :key="l" class="code-tab" :class="{ active: activeLang === l }" :title="LANG_LABELS[l]" @click="activeLang = l">
+												<v-icon>{{ LANG_ICONS[l] }}</v-icon>
+												<span class="lang-label">{{ LANG_LABELS[l] }}</span>
+											</span>
+											<div class="spacer"></div>
+											<v-icon class="copy-btn" :title="t('copy')" @click="copyCode(buildSnippet(service, activeLang))">mdi-content-copy</v-icon>
+										</div>
+										<pre class="code-snippet"><code>{{ buildSnippet(service, activeLang) }}</code></pre>
+									</div>
+								</div>
+								<div v-if="service.example" class="doc-response">
+									<h4>{{ t('example_response') }}</h4>
+									<pre class="example">{{ formatExample(service.example) }}</pre>
+								</div>
 							</div>
 						</div>
 					</panel>
@@ -129,7 +136,7 @@ import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
-import { LANGS, LANG_LABELS, buildSnippet, type Lang } from './code-examples'
+import { LANGS, LANG_LABELS, LANG_ICONS, buildSnippet, type Lang } from './code-examples'
 
 // Langue d'exemple de code, partagée par tous les endpoints et persistée.
 const activeLang = ref<Lang>((localStorage.getItem('api-doc/lang') as Lang) || 'curl')
@@ -584,15 +591,25 @@ onBeforeUnmount(() => {
 		&.account { background: #cc3333; color: white; }
 		&.session { background: #888; color: white; }
 	}
-	// Exemple d'appel + réponse côte à côte quand la place le permet.
-	.doc-columns {
+	// Grand écran : description (+ paramètres / retour) à gauche, exemples de code à
+	// droite. Quand le contenu descend sous ~760px, les deux colonnes se replient
+	// l'une sous l'autre (flex-wrap), les exemples passant alors sous la description.
+	.service-body {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 16px;
-		margin-top: 14px;
+		gap: 24px;
 		align-items: flex-start;
-		.doc-code { flex: 1 1 420px; min-width: 0; }
-		.doc-response { flex: 1 1 300px; min-width: 0; }
+	}
+	.service-info {
+		flex: 1 1 300px;
+		min-width: 0;
+	}
+	.service-examples {
+		flex: 1 1 440px;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 		h4 { margin-top: 0; }
 	}
 	.code-block {
@@ -608,13 +625,23 @@ onBeforeUnmount(() => {
 		border-bottom: 1px solid var(--border);
 		padding: 0 4px;
 		.code-tab {
-			padding: 6px 12px;
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			padding: 6px 10px;
 			font-size: 13px;
 			cursor: pointer;
 			color: var(--text-color-secondary);
 			border-bottom: 2px solid transparent;
+			.v-icon { font-size: 16px; }
 			&:hover { color: var(--text-color); }
 			&.active { color: var(--text-color); border-bottom-color: #5fad1b; font-weight: 500; }
+		}
+		// Écran étroit : plus de place pour les libellés + le bouton copier, on ne
+		// garde que les icônes (le nom du langage reste dans l'attribut title).
+		@media (max-width: 520px) {
+			.code-tab .lang-label { display: none; }
+			.code-tab { padding: 6px 8px; }
 		}
 		.spacer { flex: 1; }
 		.copy-btn {
