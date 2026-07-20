@@ -261,6 +261,19 @@ function isDomCorruptionCrash(m: string): boolean {
 		m.includes("reading 'insertBefore'") || m.includes('"insertBefore"') || m.includes('emitsOptions')
 }
 
+// Crash d'ordre d'initialisation (TDZ) : accès à une liaison `const`/import avant son
+// initialisation (« Cannot access 'X' before initialization » sur V8/JSC, « can't access
+// lexical declaration 'X' before initialization » sur Firefox). Le rendu d'une page référence
+// un import statique de composant (ex. <Conversation> dans messages.vue) qui remonte TDZ.
+// Or nos bundles n'ont AUCUN cycle d'import inter-chunks (vérifié au build) : un import statique
+// ne PEUT donc pas être en TDZ pour un moteur conforme sur un graphe de modules sain. Quand ça
+// arrive quand même (observé sur Safari iOS), la cause est externe — un moteur de traduction /
+// une extension qui réévalue ou mute le contexte de la page. Traité comme la famille corruption
+// DOM : diagnostic d'interférence attaché, masqué si traduction active (voir reportVueError).
+function isInitOrderCrash(m: string): boolean {
+	return m.includes('before initialization')
+}
+
 // Empreintes DOM d'interférence externe (moteurs de traduction, extensions), collées aux
 // rapports de crash de la famille corruption-DOM (nextSibling/parentNode/insertBefore null).
 // Les navigateurs interdisent d'énumérer les extensions : on détecte donc leurs artefacts
@@ -440,21 +453,25 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		droppedSinceLastReport = 0
 	} catch { /* empty */ }
 
-	// Signaux d'interférence DOM externe, seulement pour la famille corruption-DOM
-	// (crashs de patch sur un el null : cause probable = moteur de traduction/extension).
+	// Signaux d'interférence DOM externe, pour les familles de crashs à cause externe probable :
+	// corruption-DOM (patch sur un el null) ET ordre d'init/TDZ (import statique en TDZ alors qu'aucun
+	// cycle d'import inter-chunks n'existe → impossible sans réévaluation externe du contexte page).
 	const isCorruption = isDomCorruptionCrash(e?.message || '')
-	const interference = isCorruption ? detectDOMInterference() : { text: '', translation: false }
+	// Familles dont la cause probable est externe (moteur de traduction / extension) : on leur
+	// attache le diagnostic d'interférence et on les masque si une traduction est active.
+	const externallyInduced = isCorruption || isInitOrderCrash(e?.message || '')
+	const interference = externallyInduced ? detectDOMInterference() : { text: '', translation: false }
 	const domInterference = interference.text
 
 	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + domInterference + firstCrashTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
-	// Crash de patch Vue AVEC un moteur de traduction actif (goog-te-dom, <font> injectés…) :
-	// induit de l'extérieur, irréparable côté app et déjà couvert par le hard reload de
-	// récupération ci-dessous. On le logge en MASQUÉ (hidden) pour mesurer son volume sans
-	// créer d'issue GitHub ni noyer #admin/errors. Sans marqueur de traduction, on garde le
-	// rapport complet : un nextSibling/parentNode null « nu » peut être un vrai bug applicatif.
-	const hidden = isCorruption && interference.translation
+	// Crash (patch DOM ou TDZ d'import) AVEC un moteur de traduction actif (goog-te-dom, <font>
+	// injectés…) : induit de l'extérieur, irréparable côté app. On le logge en MASQUÉ (hidden) pour
+	// mesurer son volume sans créer d'issue GitHub ni noyer #admin/errors. Sans marqueur de traduction,
+	// on garde le rapport complet : un nextSibling/parentNode null « nu » peut être un vrai bug de
+	// patch, un TDZ « nu » une vraie régression de bundling (cycle d'import réintroduit).
+	const hidden = externallyInduced && interference.translation
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit, hidden })
 
 	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
