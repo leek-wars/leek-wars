@@ -28,35 +28,35 @@
 			<div v-if="!editMode" v-ripple class="button" @click="toggleEdit">{{ t('customize') }}</div>
 		</div>
 
-		<div v-else ref="grid" class="widgets" :class="{ edit: editMode }">
-			<div v-for="widget in widgets" :key="widget.type" class="widget" :class="'size-' + widget.size" :data-type="widget.type">
-				<panel :title="t('widget_' + widget.type)" :icon="widgetMeta[widget.type].icon">
-					<template #actions>
-						<template v-if="editMode">
-							<div v-if="widgetMeta[widget.type].sizable" class="button flat" @click="toggleSize(widget)">
-								<v-icon>{{ widget.size === 2 ? 'mdi-arrow-collapse-horizontal' : 'mdi-arrow-expand-horizontal' }}</v-icon>
-							</div>
-							<div class="button flat" @click="removeWidget(widget)">
-								<v-icon>mdi-close</v-icon>
-							</div>
-							<div class="button flat drag-handle">
-								<v-icon>mdi-drag</v-icon>
-							</div>
+		<div ref="gridEl" class="grid-stack" :class="{ editing: editMode }">
+			<div v-for="widget in widgets" :key="widget.type" class="grid-stack-item" :gs-id="widget.type" :gs-x="widget.x" :gs-y="widget.y" :gs-w="widget.w" :gs-h="widget.h">
+				<div class="grid-stack-item-content">
+					<panel :title="t('widget_' + widget.type)" :icon="widgetMeta[widget.type].icon" class="widget-panel">
+						<template #actions>
+							<template v-if="editMode">
+								<div class="button flat" @click="removeWidget(widget.type)">
+									<v-icon>mdi-close</v-icon>
+								</div>
+								<div class="button flat drag-handle">
+									<v-icon>mdi-drag</v-icon>
+								</div>
+							</template>
+							<router-link v-else-if="widgetMeta[widget.type].link" :to="widgetMeta[widget.type].link!" class="button flat">
+								<v-icon>mdi-open-in-new</v-icon>
+							</router-link>
 						</template>
-						<router-link v-else-if="widgetMeta[widget.type].link" :to="widgetMeta[widget.type].link!" class="button flat">
-							<v-icon>mdi-open-in-new</v-icon>
-						</router-link>
-					</template>
-					<component :is="widgetMeta[widget.type].component" />
-				</panel>
+						<component :is="widgetMeta[widget.type].component" />
+					</panel>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { markRaw, nextTick, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
-	import Sortable from 'sortablejs'
+	import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+	import { GridStack, type GridStackWidget } from 'gridstack'
+	import 'gridstack/dist/gridstack.min.css'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { mixins, useNamespacedT } from '@/model/i18n'
@@ -74,36 +74,39 @@
 
 	const t = useNamespacedT('home')
 
-	interface WidgetInstance { type: string, size: number }
+	const COLUMNS = 12
+
+	interface WidgetInstance { type: string, x: number, y: number, w: number, h: number }
 	interface WidgetDefinition {
 		icon: string
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		component: any
-		sizable: boolean
-		defaultSize: number
+		defaultW: number
+		defaultH: number
+		minW: number
+		minH: number
 		link?: string
 	}
 
-	// Registre des widgets disponibles. L'ordre définit l'ordre proposé dans la barre d'ajout.
 	const widgetMeta: Record<string, WidgetDefinition> = {
-		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), sizable: true, defaultSize: 2, link: '/farmer' },
-		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), sizable: true, defaultSize: 2, link: '/farmer' },
-		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), sizable: true, defaultSize: 1, link: '/trophies' },
-		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), sizable: true, defaultSize: 1 },
-		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), sizable: true, defaultSize: 1, link: '/collection' },
-		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), sizable: true, defaultSize: 1, link: '/ranking' },
-		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), sizable: true, defaultSize: 1, link: '/trophies' },
-		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), sizable: true, defaultSize: 1, link: '/forum' },
-		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), sizable: true, defaultSize: 1 },
+		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), defaultW: 6, defaultH: 4, minW: 3, minH: 3, link: '/farmer' },
+		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), defaultW: 6, defaultH: 4, minW: 4, minH: 3, link: '/farmer' },
+		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 4, defaultH: 3, minW: 3, minH: 2, link: '/trophies' },
+		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 4, defaultH: 5, minW: 3, minH: 3 },
+		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/collection' },
+		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/ranking' },
+		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies' },
+		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum' },
+		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 4, defaultH: 3, minW: 3, minH: 2 },
 	}
 	const WIDGET_TYPES = Object.keys(widgetMeta)
 
-	// Disposition par défaut si l'éleveur n'a jamais personnalisé sa page.
+	// Disposition par défaut (grille 12 colonnes) si l'éleveur n'a jamais personnalisé.
 	const DEFAULT_LAYOUT: WidgetInstance[] = [
-		{ type: 'leeks', size: 2 },
-		{ type: 'talent', size: 2 },
-		{ type: 'trophies', size: 1 },
-		{ type: 'chat', size: 1 },
+		{ type: 'leeks', x: 0, y: 0, w: 6, h: 4 },
+		{ type: 'talent', x: 6, y: 0, w: 6, h: 4 },
+		{ type: 'trophies', x: 0, y: 4, w: 4, h: 3 },
+		{ type: 'chat', x: 4, y: 4, w: 8, h: 5 },
 	]
 
 	function parseLayout(raw: string | null | undefined): WidgetInstance[] {
@@ -111,18 +114,31 @@
 		try {
 			const parsed = JSON.parse(raw)
 			if (!Array.isArray(parsed)) return DEFAULT_LAYOUT.map(w => ({ ...w }))
-			// On ne garde que les widgets connus (un widget retiré du code ne casse pas la page)
-			// et on borne la taille aux valeurs supportées.
 			const seen = new Set<string>()
 			const result: WidgetInstance[] = []
+			let fallbackY = 0
 			for (const w of parsed) {
 				if (!w || typeof w.type !== 'string') continue
 				if (!WIDGET_TYPES.includes(w.type) || seen.has(w.type)) continue
 				seen.add(w.type)
-				const size = w.size === 2 ? 2 : 1
-				result.push({ type: w.type, size: widgetMeta[w.type].sizable ? size : 1 })
+				const def = widgetMeta[w.type]
+				// Format historique {type, size} -> conversion en {x,y,w,h}.
+				if (typeof w.w !== 'number' || typeof w.h !== 'number') {
+					const legacyW = w.size === 2 ? 12 : 6
+					result.push({ type: w.type, x: 0, y: fallbackY, w: legacyW, h: def.defaultH })
+					fallbackY += def.defaultH
+					continue
+				}
+				result.push({
+					type: w.type,
+					x: typeof w.x === 'number' ? w.x : 0,
+					y: typeof w.y === 'number' ? w.y : fallbackY,
+					w: Math.min(COLUMNS, Math.max(def.minW, w.w)),
+					h: Math.max(def.minH, w.h)
+				})
+				fallbackY += 1
 			}
-			return result
+			return result.length ? result : DEFAULT_LAYOUT.map(w => ({ ...w }))
 		} catch {
 			return DEFAULT_LAYOUT.map(w => ({ ...w }))
 		}
@@ -130,8 +146,8 @@
 
 	const widgets = ref<WidgetInstance[]>(parseLayout(store.state.farmer?.home_layout))
 	const editMode = ref(false)
-	const grid = ref<HTMLElement | null>(null)
-	const sortable = shallowRef<Sortable | null>(null)
+	const gridEl = ref<HTMLElement | null>(null)
+	let grid: GridStack | null = null
 
 	const availableToAdd = ref<{ type: string, icon: string }[]>([])
 	function refreshAvailable() {
@@ -140,67 +156,100 @@
 	}
 	refreshAvailable()
 
-	function save() {
-		const layout = JSON.stringify(widgets.value)
-		store.commit('set-home-layout', layout)
-		LeekWars.put('farmer/set-home-layout', { home_layout: layout })
+	// Mode large activé sur cette page uniquement (restauré en quittant).
+	const previousLarge = ref(false)
+
+	let saveTimer: ReturnType<typeof setTimeout> | null = null
+	function persist() {
+		if (!grid) return
+		const nodes = grid.save(false, false) as GridStackWidget[]
+		const layout = nodes.map(n => ({ type: String(n.id), x: n.x ?? 0, y: n.y ?? 0, w: n.w ?? 1, h: n.h ?? 1 }))
+		if (saveTimer) clearTimeout(saveTimer)
+		saveTimer = setTimeout(() => {
+			const json = JSON.stringify(layout)
+			store.commit('set-home-layout', json)
+			LeekWars.put('farmer/set-home-layout', { home_layout: json })
+		}, 500)
+	}
+
+	function initGrid() {
+		if (!gridEl.value) return
+		grid = GridStack.init({
+			column: COLUMNS,
+			cellHeight: 78,
+			margin: 6,
+			float: true,
+			staticGrid: true,
+			handle: '.drag-handle',
+			minRow: 1,
+			columnOpts: { breakpointForWindow: true, breakpoints: [{ w: 768, c: 1 }] }
+		}, gridEl.value)
+		if (!grid) return
+		// Contraintes de taille minimale par widget.
+		for (const w of widgets.value) {
+			const el = gridEl.value.querySelector(`[gs-id="${w.type}"]`) as HTMLElement | null
+			if (el) grid.update(el, { minW: widgetMeta[w.type].minW, minH: widgetMeta[w.type].minH })
+		}
+		grid.on('change', persist)
 	}
 
 	function toggleEdit() {
 		editMode.value = !editMode.value
-		if (editMode.value) {
-			nextTick(setupSortable)
-		} else if (sortable.value) {
-			sortable.value.destroy()
-			sortable.value = null
-		}
+		if (!grid) return
+		grid.setStatic(!editMode.value)
 	}
 
-	function setupSortable() {
-		if (!grid.value) return
-		if (sortable.value) sortable.value.destroy()
-		sortable.value = Sortable.create(grid.value, {
-			handle: '.drag-handle',
-			animation: 150,
-			draggable: '.widget',
-			onEnd: (evt) => {
-				if (evt.oldIndex === undefined || evt.newIndex === undefined || evt.oldIndex === evt.newIndex) return
-				const moved = widgets.value.splice(evt.oldIndex, 1)[0]
-				widgets.value.splice(evt.newIndex, 0, moved)
-				save()
-			}
-		})
+	function nextFreeY(): number {
+		let maxY = 0
+		for (const w of widgets.value) maxY = Math.max(maxY, w.y + w.h)
+		return maxY
 	}
 
 	function addWidget(type: string) {
 		if (widgets.value.some(w => w.type === type)) return
-		widgets.value.push({ type, size: widgetMeta[type].defaultSize })
+		const def = widgetMeta[type]
+		widgets.value.push({ type, x: 0, y: nextFreeY(), w: def.defaultW, h: def.defaultH })
 		refreshAvailable()
-		save()
-		if (editMode.value) nextTick(setupSortable)
+		nextTick(() => {
+			const el = gridEl.value?.querySelector(`[gs-id="${type}"]`) as HTMLElement | null
+			if (el && grid) {
+				grid.makeWidget(el)
+				grid.update(el, { minW: def.minW, minH: def.minH })
+			}
+			persist()
+		})
 	}
 
-	function removeWidget(widget: WidgetInstance) {
-		const index = widgets.value.indexOf(widget)
-		if (index === -1) return
-		widgets.value.splice(index, 1)
+	function removeWidget(type: string) {
+		const el = gridEl.value?.querySelector(`[gs-id="${type}"]`) as HTMLElement | null
+		if (el && grid) grid.removeWidget(el, false)
+		widgets.value = widgets.value.filter(w => w.type !== type)
 		refreshAvailable()
-		save()
+		persist()
 	}
 
-	function toggleSize(widget: WidgetInstance) {
-		widget.size = widget.size === 2 ? 1 : 2
-		save()
-	}
-
-	// Sync si le farmer change (login/switch de compte) alors qu'on est déjà sur la page.
+	// Changement de compte : recharge la disposition et reconstruit la grille.
 	watch(() => store.state.farmer?.id, () => {
 		widgets.value = parseLayout(store.state.farmer?.home_layout)
 		refreshAvailable()
+		editMode.value = false
+		if (grid) {
+			grid.destroy(false)
+			grid = null
+		}
+		nextTick(initGrid)
+	})
+
+	onMounted(() => {
+		previousLarge.value = LeekWars.large
+		LeekWars.large = true
+		nextTick(initGrid)
 	})
 
 	onBeforeUnmount(() => {
-		if (sortable.value) sortable.value.destroy()
+		if (saveTimer) clearTimeout(saveTimer)
+		if (grid) { grid.destroy(false); grid = null }
+		LeekWars.large = previousLarge.value
 	})
 </script>
 
@@ -245,36 +294,29 @@
 		color: var(--text-color-secondary);
 		font-style: italic;
 	}
-	.widgets {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 12px;
-		align-items: start;
+	.grid-stack {
+		background: transparent;
 	}
-	.widget {
-		min-width: 0;
+	.grid-stack-item-content {
+		inset: 0;
+		overflow: auto;
+		display: flex;
 	}
-	.widget.size-2 {
-		grid-column: span 2;
-	}
-	.widget.size-1 {
-		grid-column: span 1;
-	}
-	.widget :deep(.panel) {
+	.widget-panel {
+		width: 100%;
 		margin-bottom: 0;
+		min-height: 100%;
 	}
-	.widgets.edit .widget :deep(.panel) {
+	.grid-stack.editing .grid-stack-item-content {
 		outline: 2px dashed var(--border);
 		outline-offset: -2px;
+		border-radius: 4px;
 	}
-	.drag-handle {
+	.grid-stack.editing .drag-handle {
 		cursor: grab;
 	}
-	.drag-handle:active {
+	.grid-stack.editing .drag-handle:active {
 		cursor: grabbing;
-	}
-	:global(.sortable-ghost) {
-		opacity: 0.4;
 	}
 	.empty {
 		display: flex;
@@ -287,14 +329,6 @@
 		.v-icon {
 			font-size: 48px;
 			opacity: 0.6;
-		}
-	}
-	@media (max-width: 850px) {
-		.widgets {
-			grid-template-columns: minmax(0, 1fr);
-		}
-		.widget.size-2, .widget.size-1 {
-			grid-column: span 1;
 		}
 	}
 </style>
