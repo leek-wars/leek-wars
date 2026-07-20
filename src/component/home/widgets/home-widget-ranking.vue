@@ -31,7 +31,7 @@
 		return rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : ''
 	}
 
-	LeekWars.get<{ ranking: RankingFarmerRow[] }>('ranking/get-active/farmer/talent/1/all').then((data) => {
+	LeekWars.get<{ ranking: RankingFarmerRow[] }>('ranking/get-active/farmer/talent/1/null').then((data) => {
 		const list = (data.ranking ?? []).slice(0, 8)
 		const me = store.state.farmer?.id
 		for (const row of list) {

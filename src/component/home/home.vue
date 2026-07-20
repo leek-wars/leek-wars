@@ -5,7 +5,7 @@
 				<h1>{{ t('title') }}</h1>
 			</div>
 			<div class="tabs">
-				<div class="tab" :class="{ active: editMode }" @click="toggleEdit">
+				<div class="tab" @click="toggleEdit">
 					<v-icon>{{ editMode ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
 					<span>{{ t(editMode ? 'done' : 'customize') }}</span>
 				</div>
@@ -42,7 +42,7 @@
 								</div>
 							</template>
 							<router-link v-else-if="widgetMeta[widget.type].link" :to="widgetMeta[widget.type].link!" class="button flat">
-								<v-icon>mdi-open-in-new</v-icon>
+								<v-icon>mdi-arrow-right</v-icon>
 							</router-link>
 						</template>
 						<component :is="widgetMeta[widget.type].component" />
@@ -254,10 +254,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.tabs .tab.active {
-		background: var(--primary);
-		color: white;
-	}
 	.add-bar {
 		display: flex;
 		flex-wrap: wrap;
@@ -299,13 +295,18 @@
 	}
 	.grid-stack-item-content {
 		inset: 0;
-		overflow: auto;
-		display: flex;
+		overflow: hidden;
 	}
+	// Le panel remplit toute la cellule ; son contenu (slot) prend la hauteur
+	// restante pour que, ex. la barre d'input du chat, reste collée en bas.
 	.widget-panel {
 		width: 100%;
+		height: 100%;
 		margin-bottom: 0;
-		min-height: 100%;
+	}
+	.widget-panel:deep(.content) {
+		flex: 1 1 auto;
+		min-height: 0;
 	}
 	.grid-stack.editing .drag-handle {
 		cursor: grab;

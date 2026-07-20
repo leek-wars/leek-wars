@@ -14,9 +14,11 @@
 			</div>
 			<h4 v-if="latest.length" class="section"><v-icon>mdi-history</v-icon> {{ t('latest_trophies') }}</h4>
 			<div v-if="latest.length" class="trophy-row">
-				<router-link v-for="trophy in latest" :key="trophy.code" :to="'/trophies/' + farmerId" :title="trophy.name">
-					<trophy-icon :code="trophy.code" class="trophy" />
-				</router-link>
+				<rich-tooltip-trophy v-for="trophy in latest" :key="trophy.code" :trophy="trophy" :bottom="true" :instant="true" v-slot="{ props }">
+					<router-link :to="'/trophies/' + farmerId" v-bind="props">
+						<trophy-icon :code="trophy.code" class="trophy" />
+					</router-link>
+				</rich-tooltip-trophy>
 			</div>
 			<div v-else class="none">{{ t('no_trophy') }}</div>
 		</template>
@@ -29,6 +31,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { useNamespacedT } from '@/model/i18n'
+	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 
 	defineOptions({ name: 'HomeWidgetTrophies' })
 
