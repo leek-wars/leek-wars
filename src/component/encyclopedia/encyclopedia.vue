@@ -324,7 +324,7 @@
 			return parts
 		}
 	})
-	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator : false)
+	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator || store.state.farmer.referent : false)
 	const parents = computed(() => {
 		const list: { id: number, title: string, [key: string]: unknown }[] = []
 		const visited = new Set<number>()
