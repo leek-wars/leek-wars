@@ -110,6 +110,7 @@
 							<h4>
 								{{ $t('characteristic.characteristics') }}
 								<span class="capital-used" :class="{warning: totalCapital() > softMaxCapital}">({{ totalCapital() }} / {{ softMaxCapital }})</span>
+								<span v-if="softMaxCapital - totalCapital() > 0" class="capital-remaining">{{ $t('main.n_capital', [softMaxCapital - totalCapital()]) }}</span>
 								<v-tooltip v-if="totalCapital() > softMaxCapital" location="bottom">
 									<template #activator="{ props }">
 										<v-icon v-bind="props" color="warning" size="18" class="capital-warning-icon">mdi-alert</v-icon>
@@ -119,7 +120,7 @@
 							</h4>
 							<v-btn :class="{'invisible-btn': Object.keys(editing.stats).length === 0}" size="x-small" variant="text" icon @click="editing.stats = {}"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
-						<loadout-stats-picker v-model="editing.stats" :max="maxCapital" />
+						<loadout-stats-picker v-model="editing.stats" :max="maxCapital" :totals="editingStatTotals" />
 					</div>
 
 					<!-- Armes -->
@@ -405,6 +406,12 @@
 			maxChipsCount(): number {
 				if (!this.leek || !this.editing) return 0
 				return ramFor(this.leek.level, this.editing.stats.ram || 0, this.editing.components)
+			},
+			editingStatTotals(): { [stat: string]: number } {
+				const out: { [stat: string]: number } = {}
+				if (!this.editing) return out
+				for (const stat of CHARACTERISTICS) out[stat] = this.statTotalFor(this.editing, stat)
+				return out
 			},
 			restatPotionCount(): number {
 				const farmer = store.state.farmer as Farmer | null
@@ -695,12 +702,12 @@
 				if (!this.editing) return 0
 				return Object.values(this.editing.stats).reduce((a, b) => a + b, 0)
 			},
-			statBonusFor(loadout: Loadout, stat: string): number {
+			statBonusFor(loadout: { stats: LoadoutStats }, stat: string): number {
 				if (!loadout.stats) return 0
 				const cap = loadout.stats[stat] || 0
 				return cap > 0 ? capitalToStatBonus(stat, cap) : 0
 			},
-			statTotalFor(loadout: Loadout, stat: string): number {
+			statTotalFor(loadout: { stats: LoadoutStats, components: LoadoutComponent[] }, stat: string): number {
 				const level = this.leek?.level || 1
 				let total = baseStatFor(level, stat) + this.statBonusFor(loadout, stat)
 				for (const c of loadout.components || []) {
@@ -1015,6 +1022,8 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; min-height: 24px; }
 .capital-used { font-weight: 400; color: #666; font-size: 12px; margin-left: 4px; }
 .capital-used.warning { color: #e67e22; font-weight: 600; }
+.capital-remaining { font-weight: 500; color: #2d8a2d; font-size: 12px; margin-left: 6px; }
+body.dark .capital-remaining { color: #6ac46a; }
 .capital-warning-icon { vertical-align: middle; margin-left: 4px; }
 .invisible-btn { visibility: hidden; pointer-events: none; }
 .skipped-list { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; max-height: 400px; overflow-y: auto; }
