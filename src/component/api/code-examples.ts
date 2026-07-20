@@ -14,6 +14,14 @@ export const LANG_LABELS: Record<Lang, string> = {
 	http: 'HTTP',
 }
 
+// Icônes MDI par langage (noms littéraux pour que generate-mdi-icons.mjs les détecte).
+export const LANG_ICONS: Record<Lang, string> = {
+	curl: 'mdi-console',
+	javascript: 'mdi-language-javascript',
+	python: 'mdi-language-python',
+	http: 'mdi-web',
+}
+
 export interface ServiceDef {
 	module: string
 	function: string
@@ -23,7 +31,7 @@ export interface ServiceDef {
 	auth: boolean
 }
 
-const KEY_PLACEHOLDER = 'lwk_ta_cle'
+const KEY_PLACEHOLDER = 'lwk_your_key'
 
 /** Valeur d'exemple d'un paramètre, formatée pour un langage donné. */
 function value(type: string, lang: 'json' | 'js' | 'py'): string {
@@ -41,7 +49,7 @@ function value(type: string, lang: 'json' | 'js' | 'py'): string {
 function pathValue(type: string): string {
 	if (type === 'number') return '123'
 	if (type === 'boolean') return 'true'
-	return 'valeur'
+	return 'value'
 }
 
 function isGet(s: ServiceDef): boolean {
