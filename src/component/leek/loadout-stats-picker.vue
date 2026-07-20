@@ -5,7 +5,7 @@
 			<div>
 				<span :class="'stat color-' + c">{{ bonuses[c] }}</span>
 				<span v-if="modelValue[c]" class="sup">&nbsp;({{ modelValue[c] }})</span>
-				<span v-if="modelValue[c] && totals[c] != null && totals[c] !== bonuses[c]" :class="'total color-' + c">&nbsp;= {{ totals[c] }}</span>
+				<span v-if="totals[c] != null && totals[c] !== bonuses[c]" :class="'total color-' + c">&nbsp;= {{ totals[c] }}</span>
 				<div class="add-wrapper">
 					<v-tooltip v-for="q in [1, 10, 100]" :key="q">
 						<template #activator="{ props }">
