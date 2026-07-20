@@ -5,6 +5,8 @@
   improved:
     - "#ai The JavaScript, TypeScript and Python API is now 100% object-oriented: no more global functions or constants, everything goes through objects (Fight, me, Weapon.pistol, System.operations, Network, Color...). The LeekScript stdlib is replaced by the language natives (Math, JSON, random...)."
     - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
+  fixed:
+    - "Forum: the radio filters (Read / Unread, Acknowledged, Locked) that all appeared selected on the first click and could no longer be deselected."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

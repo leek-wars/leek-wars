@@ -5,6 +5,8 @@
   improved:
     - "#ai L'API JavaScript, TypeScript et Python devient 100 % orientée objet : plus aucune fonction ni constante globale, tout passe par les objets (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript est remplacée par les natifs du langage (Math, JSON, random...)."
     - "Suppression de compte possible pour le créateur d'une équipe : elle est transmise au membre le plus ancien, ou dissoute s'il est seul."
+  fixed:
+    - "Forum : les filtres radio (Lu / Non lu, Pris en compte, Verrouillé) qui apparaissaient tous sélectionnés au premier clic et ne pouvaient plus être désélectionnés."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
