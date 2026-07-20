@@ -12,15 +12,19 @@
 					<div class="label">{{ t('points') }}</div>
 				</div>
 			</div>
-			<h4 v-if="latest.length" class="section"><v-icon>mdi-history</v-icon> {{ t('latest_trophies') }}</h4>
-			<div v-if="latest.length" class="trophy-row">
-				<rich-tooltip-trophy v-for="trophy in latest" :key="trophy.code" :trophy="trophy" :bottom="true" :instant="true" v-slot="{ props }">
-					<router-link :to="'/trophies/' + farmerId" v-bind="props">
-						<trophy-icon :code="trophy.code" class="trophy" />
-					</router-link>
-				</rich-tooltip-trophy>
-			</div>
-			<div v-else class="none">{{ t('no_trophy') }}</div>
+			<template v-for="s in sections" :key="s.key">
+				<template v-if="s.list.length">
+					<h4 class="section"><v-icon>{{ s.icon }}</v-icon> {{ t(s.key) }}</h4>
+					<div class="trophy-row">
+						<rich-tooltip-trophy v-for="trophy in s.list" :key="trophy.code" :trophy="trophy" :bottom="true" :instant="true" v-slot="{ props }">
+							<router-link :to="'/trophies/' + farmerId" v-bind="props">
+								<trophy-icon :code="trophy.code" class="trophy" />
+							</router-link>
+						</rich-tooltip-trophy>
+					</div>
+				</template>
+			</template>
+			<div v-if="!anyTrophies" class="none">{{ t('no_trophy') }}</div>
 		</template>
 	</div>
 </template>
@@ -44,7 +48,18 @@
 	const total = ref(0)
 	const points = ref(0)
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const best = ref<any[]>([])
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const rarest = ref<any[]>([])
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const latest = ref<any[]>([])
+
+	const sections = computed(() => [
+		{ key: 'best_trophies', icon: 'mdi-trophy-outline', list: best.value },
+		{ key: 'rarest_trophies', icon: 'mdi-star-outline', list: rarest.value },
+		{ key: 'latest_trophies', icon: 'mdi-history', list: latest.value },
+	])
+	const anyTrophies = computed(() => best.value.length > 0)
 
 	if (store.state.farmer) {
 		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
@@ -57,10 +72,10 @@
 				if (trophy.unlocked && trophy.category !== 0) pts += trophy.points
 			}
 			points.value = pts
-			latest.value = all
-				.filter(tr => tr.unlocked && tr.category !== 0)
-				.sort((a, b) => b.date - a.date)
-				.slice(0, 8)
+			const unlocked = all.filter(tr => tr.unlocked && tr.category !== 0)
+			best.value = [...unlocked].sort((a, b) => b.points - a.points).slice(0, 8)
+			rarest.value = [...unlocked].sort((a, b) => a.rarity - b.rarity).slice(0, 8)
+			latest.value = [...unlocked].sort((a, b) => b.date - a.date).slice(0, 8)
 			loaded.value = true
 		})
 	}

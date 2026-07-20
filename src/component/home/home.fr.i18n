@@ -28,5 +28,11 @@
 	"no_tournament": "Aucun tournoi récent.",
 	"tournament_leek": "Tournoi de poireaux",
 	"tournament_farmer": "Tournoi d’éleveurs",
-	"tournament_team": "Tournoi d’équipes"
+	"tournament_team": "Tournoi d’équipes",
+	"best_trophies": "Meilleurs trophées",
+	"rarest_trophies": "Les plus rares",
+	"reason_top_talent": "N°{0} au talent",
+	"reason_forum_messages": "{0} messages au forum",
+	"reason_trophies": "{0} trophées",
+	"reason_likes": "{0} j’aime"
 }
