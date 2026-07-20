@@ -290,8 +290,16 @@
 		color: var(--text-color-secondary);
 		font-style: italic;
 	}
+	// La page ne défile pas horizontalement : on masque le débord de 6px créé par
+	// la marge négative ci-dessous (gridstack insère une marge de 6px autour de chaque
+	// widget, y compris sur les bords ; on l'annule pour aligner le 1er widget sur le titre).
+	.page {
+		overflow-x: clip;
+	}
 	.grid-stack {
 		background: transparent;
+		margin-left: -6px;
+		margin-right: -6px;
 	}
 	.grid-stack-item-content {
 		inset: 0;
