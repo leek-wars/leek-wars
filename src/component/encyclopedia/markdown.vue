@@ -18,7 +18,7 @@
 	import TutorialMenu from '../tutorial/tutorial-menu.vue'
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
 	import { VBtn, VCheckbox } from 'vuetify/components'
-	import { tutorial_items } from '../tutorial/tutorial-items'
+	import { tutorial_items, toTutorialTrack } from '../tutorial/tutorial-items'
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
@@ -241,13 +241,15 @@
 				})
 				// Tutorial menu
 				mdEl.querySelectorAll('.tutorial-menu').forEach((item) => {
-					const app = createSubApp(TutorialMenu, { locale: props.locale }, 'tutorial-menu')
+					const track = toTutorialTrack(item.getAttribute('data-track'))
+					const app = createSubApp(TutorialMenu, { locale: props.locale, track }, 'tutorial-menu')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
 				mdEl.querySelectorAll('.tutorial-progress').forEach((item) => {
-					const app = createSubApp(TutorialProgress, { locale: props.locale }, 'tutorial-progress')
+					const track = toTutorialTrack(item.getAttribute('data-track'))
+					const app = createSubApp(TutorialProgress, { locale: props.locale, track }, 'tutorial-progress')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
@@ -492,9 +494,11 @@
 				} else if (tag.startsWith('line-of-sight')) {
 					return "<div class='encyclopedia-los'></div>"
 				} else if (tag.startsWith('tutorial-menu')) {
-					return "<div class='tutorial-menu'></div>"
+					// {{ tutorial-menu }} = piste LeekScript ; {{ tutorial-menu:python }} = piste Python, etc.
+					// toTutorialTrack ne renvoie qu'une valeur connue (a-z), sûre pour l'attribut.
+					return "<div class='tutorial-menu' data-track='" + toTutorialTrack(tag.split(':')[1]) + "'></div>"
 				} else if (tag.startsWith('tutorial-progress')) {
-					return "<div class='tutorial-progress'></div>"
+					return "<div class='tutorial-progress' data-track='" + toTutorialTrack(tag.split(':')[1]) + "'></div>"
 				} else if (tag.startsWith('tutorial-score')) {
 					return "<div>" + (store.state.farmer ? store.state.farmer.tutorial_progress : 0) + " / " + tutorial_items.length + "</div>"
 				} else if (tag.startsWith('tutorial-lock')) {

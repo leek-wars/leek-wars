@@ -223,6 +223,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/help/polyglot', component: HelpPolyglot },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
+	{ path: '/help/tutorial/:lang', component: Tutorial },
 	{ path: '/inventory', component: InventoryPage, meta: LAYOUT_BOX },
 	// Scroll naturel de la page + footer (pas de box : la grille est haute et
 	// déborderait sur le footer en hauteur fixe 100vh). resetLayout par défaut.

@@ -105,6 +105,7 @@ class Farmer {
 	public fight_packs!: InventoryItem[]
 	public verified!: boolean
 	public tutorial_progress!: number
+	public ai_language!: string
 	public group!: Group
 	public public_chat_enabled!: boolean
 	public equipment_enabled!: boolean
