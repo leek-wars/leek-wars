@@ -178,7 +178,7 @@
 			column: COLUMNS,
 			cellHeight: 78,
 			margin: 6,
-			float: true,
+			float: false,
 			staticGrid: true,
 			handle: '.drag-handle',
 			minRow: 1,
@@ -306,11 +306,6 @@
 		width: 100%;
 		margin-bottom: 0;
 		min-height: 100%;
-	}
-	.grid-stack.editing .grid-stack-item-content {
-		outline: 2px dashed var(--border);
-		outline-offset: -2px;
-		border-radius: 4px;
 	}
 	.grid-stack.editing .drag-handle {
 		cursor: grab;
