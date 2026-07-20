@@ -299,7 +299,7 @@
 		</div>
 
 		<panel v-if="leek && my_leek && leek.registers && leek.registers.length > 0" toggle="leek/registers" icon="mdi-database">
-			<template #title>{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/100]</span></template>
+			<template #title>{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/101]</span></template>
 			<table class="registers">
 				<tr>
 					<th>{{ $t('register_key') }}</th>
