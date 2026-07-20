@@ -12,6 +12,10 @@ import type { LSFunction } from '@/model/function'
 // -> la déclaration correspondante est générée sans JSDoc. Fournie par l'appelant (monaco.ts)
 // pour garder ce module indépendant d'i18n (testable).
 export type DocLookup = (subkey: string) => string | undefined
+// Description d'une CLASSE de l'API (Debug, Field...) -> JSDoc sur `declare class/const X`, pour que
+// le survol TS de JS/TS l'affiche comme LeekScript/Python (cf. api-class-doc.ts). Fournie par
+// l'appelant (monaco.ts) car elle dépend de la locale active.
+export type ClassDocLookup = (className: string) => string | undefined
 
 // Nettoie un texte de doc (source: doc.*.lang, en HTML/markdown léger) pour l'inclure dans un
 // bloc JSDoc rendu par le survol Monaco : retire le HTML, dénude les hash-refs (#weapon), et
@@ -118,7 +122,7 @@ export function routeConstant(name: string): RoutedConstant | null {
 	return { container: rule.container, sub: rule.sub, member: rule.item ? camelCase(raw) : raw, isInstance: !!rule.item }
 }
 
-export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup): string {
+export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup, classDoc?: ClassDocLookup): string {
 	const out: string[] = [
 		'// Auto-généré depuis les game data Leek Wars (API de combat). Ne pas éditer à la main.',
 		'',
@@ -192,7 +196,7 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 
 	// Bloc API objet (classes + const Fight/Field) : on injecte les constantes de Fight/Field inline.
 	const funcByName = new Map(functions.map((f) => [f.name, f]))
-	let objBlock = doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc, funcByName) : OBJECT_API_DECLARATIONS
+	let objBlock = doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc, funcByName, classDoc) : OBJECT_API_DECLARATIONS
 	for (const container of CONST_OBJECT_CONTAINERS) {
 		const inline = inlineContainer(container)
 		if (inline) objBlock = objBlock.replace(`declare const ${container}: {\n`, `declare const ${container}: {\n${inline}\n`)
@@ -509,7 +513,7 @@ function lsFullDocLines(doc: DocLookup, lsName: string, lsFun: LSFunction | unde
 // à une fonction LS, on injecte sa doc COMPLÈTE (description + paramètres + retour + lien), soit le
 // contenu de sa page de doc. Si le membre a déjà un commentaire écrit à la main (Effect, me...), on
 // conserve sa prose et on y ajoute la doc LS. Membres sans équivalent LS : laissés tels quels.
-function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string, LSFunction>): string {
+function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string, LSFunction>, classDoc?: ClassDocLookup): string {
 	const memberToLs = buildMemberToLs()
 	const out: string[] = []
 	let container: string | null = null
@@ -520,6 +524,13 @@ function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string
 		const containerM = line.match(/^declare\s+(?:class|const)\s+([A-Za-z_]\w*)/)
 		if (containerM) {
 			container = containerM[1]
+			// Description de la classe -> JSDoc juste avant `declare class/const X` (survol TS en JS/TS).
+			const cdoc = classDoc?.(container)
+			if (cdoc) {
+				const indent = line.match(/^\s*/)?.[0] ?? ''
+				if (prevWasComment && commentStart >= 0) injectJsdocLines(out, commentStart, [cdoc])
+				else if (!prevWasComment) out.push(renderJsdoc([cdoc], indent))
+			}
 		} else {
 			// Membre : indentation + [readonly|static] identifiant suivi de `(` (méthode) ou `:` (propriété).
 			const memberM = line.match(/^(\s+)(?:readonly\s+|static\s+)?([A-Za-z_]\w*)\s*[(:]/)

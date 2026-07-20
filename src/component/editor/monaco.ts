@@ -1,6 +1,8 @@
 import * as monaco from 'monaco-editor'
 
 import { registerLeekScriptLanguage } from './monaco-leekscript-language'
+import { registerPythonLanguage } from './monaco-python-language'
+import { getClassDoc } from './api-class-doc'
 
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
@@ -22,7 +24,20 @@ import { pySetStub } from './pyright';
 // sinon le d.ts de l'API n'est jamais posé et les IA .ts/.js perdent le typecheck + l'autocomplétion API.
 import * as typescriptContribution from 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 
-registerLeekScriptLanguage(monaco.languages)
+// Données du tokenizer LeekScript (noms de constantes/fonctions) fournies explicitement :
+// la grammaire ne les importe plus elle-même (cf. leekscript-monarch.js). Les game data sont
+// déjà chargées au montage de l'éditeur.
+registerLeekScriptLanguage(monaco.languages, {
+	constants: (LeekWars.constants ?? []).map(c => c.name),
+	functions: (LeekWars.functions ?? []).filter(f => !f.deprecated).map(f => f.name),
+	deprecatedFunctions: (LeekWars.functions ?? []).filter(f => f.deprecated).map(f => f.name),
+})
+
+// Colore les noms de classes de l'API (Field, Debug, Color, Fight, Weapon, Entity…) en `type`,
+// comme en JS/TS (service sémantique) et en LeekScript (règle `[A-Z]`). Source = modèle d'API objet
+// (même déclaration que le leekwars.d.ts), donc toujours en phase.
+const _apiModel = buildObjectApiModel()
+registerPythonLanguage(monaco.languages, [..._apiModel.singletons, ..._apiModel.classes])
 
 monaco.editor.addKeybindingRules([
 	{
@@ -171,6 +186,28 @@ monaco.editor.registerEditorOpener({
 
 const ANNOTATION_NAMES = new Set(['unused', 'deprecated', 'pure', 'nodiscard', 'override', 'tailrec', 'todo'])
 
+// --- Survol du NOM d'une classe de l'API (Debug, Field, Weapon...) ---
+// Les MEMBRES ont déjà leur fiche (resolvePolyglotSymbol -> DocumentationFunction/Constant) ; la
+// classe elle-même ne résout vers aucun symbole plat, donc n'avait AUCUN survol. On rend ici une
+// courte description (api-class-doc) + un aperçu de ses membres (modèle d'API objet). Le hook de
+// carte de ai-view-monaco laisse ce Markdown tel quel (son texte ne correspond à aucun symbole).
+// Renvoie null si le mot n'est pas une classe documentée -> l'appelant garde son comportement.
+function classHoverFor(word: monaco.editor.IWordAtPosition | null | undefined, position: monaco.IPosition): monaco.languages.Hover | null {
+	if (!word) { return null }
+	const doc = getClassDoc(word.word, polyglotLocale())
+	if (!doc) { return null }
+	const names = (list?: ApiMember[]) => (list ?? []).map((m) => m.name)
+	const all = [...names(_apiModel.statics[word.word]), ...names(_apiModel.members[word.word])]
+	let value = '**' + word.word + '** — ' + doc
+	if (all.length) {
+		value += '\n\n' + all.slice(0, 12).map((n) => '`' + n + '`').join(', ') + (all.length > 12 ? ', …' : '')
+	}
+	return {
+		range: new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
+		contents: [{ value }],
+	}
+}
+
 monaco.languages.registerHoverProvider("leekscript", {
 	provideHover: async (model, position, _token, _context) => {
 		// Annotations hover — resolved locally, no server round-trip
@@ -189,7 +226,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 		}
 
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
-		if (!ai) { return null }
+		if (!ai) { return classHoverFor(word, position) }
 
 		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
 		// console.log(hover)
@@ -228,7 +265,8 @@ monaco.languages.registerHoverProvider("leekscript", {
 				],
 			}
 		}
-		return {
+		// L'analyseur n'a rien : dernier recours, le survol de classe (sinon survol vide, comme avant).
+		return classHoverFor(word, position) ?? {
 			range: new monaco.Range(
 				position.lineNumber,
 				position.column,
@@ -270,7 +308,8 @@ monaco.languages.registerHoverProvider('python', {
 		const prefix = before.match(/([A-Za-z_$][\w$]*)\.\s*$/)
 		const path = prefix ? `${prefix[1]}.${word.word}` : word.word
 		const flat = resolvePolyglotSymbol(path)
-		if (!flat) return null
+		// Pas de symbole plat : c'est peut-être le NOM d'une classe de l'API (Debug, Field...).
+		if (!flat) return classHoverFor(word, position)
 		return {
 			range: new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
 			// 1re ligne = nom plat du symbole : le hook de carte (ai-view-monaco) le résout et monte la fiche.
@@ -947,7 +986,7 @@ function configurePolyglotTypeScript() {
 	let tsLib: { dispose(): void } | null = null
 	let jsLib: { dispose(): void } | null = null
 	const refreshDeclarations = () => {
-		const declarations = buildLeekwarsDeclarations(LeekWars.functions ?? [], LeekWars.constants ?? [], leekwarsDoc)
+		const declarations = buildLeekwarsDeclarations(LeekWars.functions ?? [], LeekWars.constants ?? [], leekwarsDoc, (name) => getClassDoc(name, polyglotLocale()))
 		tsLib?.dispose()
 		jsLib?.dispose()
 		tsLib = ts.typescriptDefaults.addExtraLib(declarations, 'file:///leekwars.d.ts')

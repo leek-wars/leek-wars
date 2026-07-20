@@ -4,6 +4,7 @@ import { locale } from '@/locale'
 import { Arena } from '@/model/arena'
 import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, COMPLEXITIES } from '@/model/data'
 import { linkify, toChatLink } from '@/model/linkify'
+import { buildObjectApiModel } from '@/component/editor/leekwars-dts'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -1335,10 +1336,35 @@ function codeLanguageMode(language: string | undefined | null): string | undefin
 	if (!language) { return undefined }
 	return CODE_LANGUAGE_IDS[language.toLowerCase().trim()]
 }
+// Injecte dans les tokenizers de l'aperçu les données que possède leekwars.ts (permet à
+// monaco-highlight de n'importer aucun module applicatif, cf. leekscript-monarch.js) :
+//  - LeekScript : noms de constantes/fonctions (game data) ; tant qu'elles ne sont pas chargées,
+//    on réessaie au rendu suivant.
+//  - Python : noms des classes de l'API (Field, Debug, Color…), colorées en `type` ; source
+//    statique (modèle d'API objet, même déclaration que le leekwars.d.ts).
+let leekscriptDataFed = false
+let pythonClassesFed = false
+function feedHighlighterData(h: typeof import("@/component/editor/monaco-highlight")) {
+	if (!pythonClassesFed) {
+		pythonClassesFed = true
+		const model = buildObjectApiModel()
+		h.setPythonClasses([...model.singletons, ...model.classes])
+	}
+	if (leekscriptDataFed) { return }
+	const constants = LeekWars.constants, functions = LeekWars.functions
+	if (!constants?.length && !functions?.length) { return }
+	leekscriptDataFed = true
+	h.setLeekScriptData({
+		constants: constants.map(c => c.name),
+		functions: functions.filter(f => !f.deprecated).map(f => f.name),
+		deprecatedFunctions: functions.filter(f => f.deprecated).map(f => f.name),
+	})
+}
 function createCodeArea(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
 	const lang = codeLanguageMode(language) || 'leekscript'
 	withHighlighter(h => {
+		feedHighlighterData(h)
 		const tokens = h.highlightToHtml(code, lang)
 		const num = code.split('\n').length
 		let gutter = ''
@@ -1351,6 +1377,7 @@ function createCodeAreaSimple(code: string, element: HTMLElement, language?: str
 	if (!markFormatted(element)) { return }
 	const lang = codeLanguageMode(language) || 'leekscript'
 	withHighlighter(h => {
+		feedHighlighterData(h)
 		element.innerHTML = '<pre>' + h.highlightToHtml(code, lang) + '</pre>'
 		element.classList.add('single')
 	})

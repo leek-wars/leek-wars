@@ -19,10 +19,9 @@ import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api.js'
 import { conf as jsConf, language as jsLang } from 'monaco-editor/esm/vs/basic-languages/javascript/javascript.js'
 // @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
 import { conf as tsConf, language as tsLang } from 'monaco-editor/esm/vs/basic-languages/typescript/typescript.js'
-// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
-import { conf as pyConf, language as pyLang } from 'monaco-editor/esm/vs/basic-languages/python/python.js'
 import { config as jsonConfig, tokens as jsonTokens } from './json-monarch'
-import { registerLeekScriptLanguage } from './monaco-leekscript-language'
+import { registerLeekScriptLanguage, type LeekScriptData } from './monaco-leekscript-language'
+import { registerPythonLanguage } from './monaco-python-language'
 
 function ensure(id: string, extensions: string[], conf: languages.LanguageConfiguration, monarch: languages.IMonarchLanguage) {
 	if (!languages.getLanguages().some(l => l.id === id)) {
@@ -34,9 +33,26 @@ function ensure(id: string, extensions: string[], conf: languages.LanguageConfig
 
 ensure('javascript', ['.js', '.mjs', '.cjs'], jsConf, jsLang)
 ensure('typescript', ['.ts', '.mts', '.cts'], tsConf, tsLang)
-ensure('python', ['.py'], pyConf, pyLang)
+// Python via le module partagé (grammaire étendue, noms de classes injectés au runtime par leekwars.ts).
+registerPythonLanguage(languages)
 ensure('json', ['.json'], jsonConfig, jsonTokens)
+// LeekScript enregistré sans données ici (ce module n'importe AUCUN module applicatif, pour
+// rester hors du graphe/cycle d'import du boot). Les listes de constantes/fonctions sont
+// injectées au runtime par leekwars.ts via setLeekScriptData() avant la première coloration.
 registerLeekScriptLanguage(languages)
+
+// Fournit au tokenizer LeekScript les noms de constantes/fonctions (game data). Appelé par
+// leekwars.ts (qui possède ces données) juste avant highlightToHtml : évite tout import
+// statique de @/model/leekwars dans ce chunk. Idempotent.
+export function setLeekScriptData(data: LeekScriptData): void {
+	registerLeekScriptLanguage(languages, data)
+}
+
+// Fournit au tokenizer Python les noms de classes de l'API (Field, Debug, Color…) pour les colorer
+// en `type`. Appelé par leekwars.ts (qui possède le modèle d'API) avant highlightToHtml. Idempotent.
+export function setPythonClasses(classNames: string[]): void {
+	registerPythonLanguage(languages, classNames)
+}
 
 function escapeHtml(s: string): string {
 	return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
