@@ -1,14 +1,18 @@
 <template>
-	<div class="ranking-widget">
+	<div class="remarkable-widget">
 		<loader v-if="!loaded" />
 		<template v-else>
-			<router-link v-for="row in rows" :key="row.id" v-ripple :to="'/farmer/' + row.id" class="row" :class="{ me: row.me }">
-				<span class="rank" :class="rankClass(row.rank)">{{ row.rank }}</span>
-				<span class="name">{{ row.name }}</span>
-				<flag v-if="row.country" :code="row.country" :clickable="false" />
-				<span class="talent">{{ $filters.number(row.talent) }}</span>
+			<router-link v-for="p in players" :key="p.id" v-ripple :to="'/farmer/' + p.id" class="player">
+				<img :src="LeekWars.getAvatar(p.id, p.avatar_changed)" class="avatar" loading="lazy">
+				<div class="info">
+					<div class="name-line">
+						<span class="name">{{ p.name }}</span>
+						<flag v-if="p.country" :code="p.country" :clickable="false" class="flag" />
+					</div>
+					<span class="reason">{{ reasonText(p.reason) }}</span>
+				</div>
 			</router-link>
-			<div v-if="!rows.length" class="none">{{ t('nobody') }}</div>
+			<div v-if="!players.length" class="none">{{ t('nobody') }}</div>
 		</template>
 	</div>
 </template>
@@ -16,71 +20,80 @@
 <script setup lang="ts">
 	import { ref } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
 	import { useNamespacedT } from '@/model/i18n'
-	import type { RankingFarmerRow } from '@/model/ranking'
 
 	defineOptions({ name: 'HomeWidgetRanking' })
 
 	const t = useNamespacedT('home')
 
-	const loaded = ref(false)
-	const rows = ref<RankingFarmerRow[]>([])
+	interface Reason { type: string, value: number, rank: number }
+	interface Player { id: number, name: string, avatar_changed: number, country: string | null, reason: Reason }
 
-	function rankClass(rank: number): string {
-		return rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : ''
+	const loaded = ref(false)
+	const players = ref<Player[]>([])
+
+	function reasonText(r: Reason): string {
+		switch (r.type) {
+			case 'top_talent': return t('reason_top_talent', [r.rank])
+			case 'forum_messages': return t('reason_forum_messages', [r.value])
+			case 'trophies': return t('reason_trophies', [r.value])
+			case 'likes': return t('reason_likes', [r.value])
+			default: return ''
+		}
 	}
 
-	LeekWars.get<{ ranking: RankingFarmerRow[] }>('ranking/get-active/farmer/talent/1/null').then((data) => {
-		const list = (data.ranking ?? []).slice(0, 8)
-		const me = store.state.farmer?.id
-		for (const row of list) {
-			if (me && row.id === me) row.me = 'me'
-		}
-		rows.value = list
+	LeekWars.get<{ players: Player[] }>('farmer/get-remarkable').then((data) => {
+		players.value = data.players ?? []
 		loaded.value = true
 	}).error(() => { loaded.value = true })
 </script>
 
 <style lang="scss" scoped>
-	.ranking-widget {
+	.remarkable-widget {
 		display: flex;
 		flex-direction: column;
 	}
-	.row {
+	.player {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 10px;
 		padding: 6px 8px;
 		border-radius: 4px;
 		text-decoration: none;
 		color: var(--text-color);
 	}
-	.row:hover {
+	.player:hover {
 		background: var(--background-secondary);
 	}
-	.row.me {
-		background: rgba(95, 173, 27, 0.12);
+	.avatar {
+		width: 34px;
+		height: 34px;
+		border-radius: 4px;
+		flex-shrink: 0;
 	}
-	.rank {
-		width: 26px;
-		text-align: center;
-		font-weight: bold;
-		color: var(--text-color-secondary);
+	.info {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
 	}
-	.rank.first { color: #f1c40f; }
-	.rank.second { color: #bdc3c7; }
-	.rank.third { color: #cd7f32; }
+	.name-line {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
 	.name {
-		flex: 1;
 		font-weight: bold;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	.talent {
-		font-weight: bold;
-		color: var(--primary);
+	.player:deep(.flag) {
+		height: 13px;
+		flex-shrink: 0;
+	}
+	.reason {
+		font-size: 12px;
+		color: var(--text-color-secondary);
 	}
 	.none {
 		color: var(--text-color-secondary);

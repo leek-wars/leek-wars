@@ -9,10 +9,11 @@
 				</div>
 				<div class="bar"><div class="fill" :class="{ complete: totalOwned === totalCount && totalCount > 0 }" :style="{ width: percent(totalOwned, totalCount) + '%' }"></div></div>
 			</div>
-			<div class="cats">
-				<div v-for="c in stats" :key="c.type" class="cat">
-					<v-icon class="cat-icon">{{ icons[c.type] }}</v-icon>
-					<div class="cat-bar"><div class="fill" :class="{ complete: c.owned === c.total }" :style="{ width: percent(c.owned, c.total) + '%' }"></div></div>
+			<div class="cats-grid">
+				<div v-for="c in stats" :key="c.type" class="cat" :class="{ complete: c.owned === c.total }">
+					<v-progress-circular :model-value="percent(c.owned, c.total)" :size="54" :width="4" class="ring">
+						<v-icon class="cat-icon">{{ icons[c.type] }}</v-icon>
+					</v-progress-circular>
 					<span class="cat-count">{{ c.owned }}/{{ c.total }}</span>
 				</div>
 			</div>
@@ -106,13 +107,13 @@
 		color: var(--primary);
 		font-weight: bold;
 	}
-	.bar, .cat-bar {
+	.bar {
 		background: var(--background-secondary);
 		border-radius: 4px;
 		height: 10px;
 		overflow: hidden;
 	}
-	.bar .fill, .cat-bar .fill {
+	.bar .fill {
 		height: 100%;
 		background: var(--primary);
 		transition: width 0.3s;
@@ -120,23 +121,34 @@
 	.fill.complete {
 		background: #f1c40f;
 	}
-	.cats {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
+	.cats-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+		gap: 12px;
+		justify-items: center;
 	}
 	.cat {
-		display: grid;
-		grid-template-columns: 24px 1fr 48px;
+		display: flex;
+		flex-direction: column;
 		align-items: center;
-		gap: 8px;
+		gap: 4px;
+	}
+	// Anneau de progression : primaire en cours, doré une fois complété.
+	.cat:deep(.v-progress-circular) {
+		color: var(--primary);
+	}
+	.cat.complete:deep(.v-progress-circular) {
+		color: #f1c40f;
 	}
 	.cat-icon {
 		color: var(--text-color-secondary);
+		font-size: 22px;
+	}
+	.cat.complete .cat-icon {
+		color: #f1c40f;
 	}
 	.cat-count {
 		font-size: 12px;
 		color: var(--text-color-secondary);
-		text-align: right;
 	}
 </style>

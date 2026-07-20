@@ -28,5 +28,11 @@
 	"no_tournament": "No recent tournament.",
 	"tournament_leek": "Leek tournament",
 	"tournament_farmer": "Farmer tournament",
-	"tournament_team": "Team tournament"
+	"tournament_team": "Team tournament",
+	"best_trophies": "Best trophies",
+	"rarest_trophies": "Rarest",
+	"reason_top_talent": "#{0} in talent",
+	"reason_forum_messages": "{0} forum messages",
+	"reason_trophies": "{0} trophies",
+	"reason_likes": "{0} likes"
 }

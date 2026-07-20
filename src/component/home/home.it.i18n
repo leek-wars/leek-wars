@@ -28,5 +28,11 @@
 	"no_tournament": "Nessun torneo recente.",
 	"tournament_leek": "Torneo di porri",
 	"tournament_farmer": "Torneo di allevatori",
-	"tournament_team": "Torneo di squadre"
+	"tournament_team": "Torneo di squadre",
+	"best_trophies": "Migliori trofei",
+	"rarest_trophies": "Più rari",
+	"reason_top_talent": "N°{0} per talento",
+	"reason_forum_messages": "{0} messaggi sul forum",
+	"reason_trophies": "{0} trofei",
+	"reason_likes": "{0} mi piace"
 }
