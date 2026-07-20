@@ -433,7 +433,7 @@
 					<div v-if="farmer" class="rewards">
 						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': Number(r) <= (farmer.godsons_level ?? 0)}">
 							<div class="level">{{ $filters.number(Number(r)) }}<v-icon v-if="Number(r) <= (farmer.godsons_level ?? 0)">mdi-check</v-icon></div>
-							<trophy-icon v-if="reward.trophy" :code="reward.trophy" />
+							<trophy-icon v-if="reward.trophy" :code="reward.trophy" :light="Number(r) <= (farmer.godsons_level ?? 0)" />
 							<rich-tooltip-item v-else-if="reward.resource" v-slot="{ props }" :item="LeekWars.items[reward.item!]" :bottom="true">
 								<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
 							</rich-tooltip-item>
