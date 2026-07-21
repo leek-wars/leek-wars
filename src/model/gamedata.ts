@@ -7,7 +7,7 @@ export const DATA_TYPES = [
 	'items', 'chips', 'weapons', 'hats', 'pomps', 'potions', 'schemes',
 	'components', 'trophies', 'constants', 'functions',
 	'hat_templates', 'chip_templates', 'summon_templates',
-	'trophy_categories', 'complexities',
+	'trophy_categories', 'complexities', 'alterations',
 ] as const
 
 interface Meta {
