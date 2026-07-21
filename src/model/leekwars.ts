@@ -25,6 +25,7 @@ import { PotionEffect, PotionTemplate } from './potion'
 import { ITEMS } from './items'
 import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
+import type { AlterationData } from './alteration'
 import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
 import { DATA_TYPES, loadGameData as loadGameDataRaw } from './gamedata'
@@ -902,6 +903,7 @@ const LeekWars = reactive({
 	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
 	complexities: Object.freeze(COMPLEXITIES),
 	components: Object.freeze(COMPONENTS),
+	alterations: null as AlterationData | null,
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'cores', 'ram', 'mp', 'tp']),
 	// characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'ram', 'agility', 'cores', 'resistance', 'mp', 'science', 'tp']),
 	characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'cores', 'agility', 'ram', 'resistance', 'mp', 'science', 'tp']),
@@ -1486,6 +1488,7 @@ async function loadGameData() {
 	}
 	if (data.schemes) LeekWars.schemes = Object.freeze(data.schemes)
 	if (data.components) LeekWars.components = Object.freeze(data.components)
+	if (data.alterations) LeekWars.alterations = Object.freeze(data.alterations) as AlterationData
 	if (data.hat_templates) LeekWars.hatTemplates = Object.freeze(data.hat_templates)
 	if (data.chip_templates) LeekWars.chipTemplates = Object.freeze(data.chip_templates)
 	if (data.summon_templates) LeekWars.summonTemplates = Object.freeze(data.summon_templates)

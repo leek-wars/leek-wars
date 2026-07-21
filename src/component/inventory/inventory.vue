@@ -127,6 +127,7 @@
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
 								<img v-else-if="entry.item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
+								<alteration-icon v-else-if="entry.item.type === ItemType.ALTERATION" :template="entry.item.template" :size="32" />
 								<img v-else class="image" :class="{small: entry.item.template === 37 || entry.item.template === 45 || entry.item.template === 153 || entry.item.template === 182}" :src="'/image/' + LeekWars.items[entry.item.template].name.replace('_', '/') + '.png'" loading="lazy">
 								<img v-if="LeekWars.items[entry.item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
 								<img v-if="LeekWars.christmasPresents && LeekWars.items[entry.item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
@@ -173,6 +174,7 @@
 	import { useRouter } from 'vue-router'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import SchemeImage from '../market/scheme-image.vue'
+	import AlterationIcon from '../alteration/alteration-icon.vue'
 	import { emitter } from '@/model/vue'
 
 	enum Sort {
@@ -295,6 +297,7 @@
 			inventory.push(...store.state.farmer.resources.map(resource => ({type: ItemType.RESOURCE, ...resource})))
 			inventory.push(...store.state.farmer.components.map(p => ({type: ItemType.COMPONENT, ...p})))
 			inventory.push(...store.state.farmer.schemes.map(p => ({type: ItemType.SCHEME, ...p})))
+			inventory.push(...(store.state.farmer.alterations || []).map(p => ({type: ItemType.ALTERATION, ...p})))
 			inventory.push(...(store.state.farmer.fight_packs || []).map(p => ({type: ItemType.FIGHT_PACK, ...p})))
 		}
 		return withKnownTemplate(inventory)

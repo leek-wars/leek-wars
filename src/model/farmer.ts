@@ -102,6 +102,7 @@ class Farmer {
 	public rewards!: Reward[]
 	public resources!: InventoryItem[]
 	public components!: InventoryItem[]
+	public alterations!: InventoryItem[] // #622
 	public schemes!: InventoryItem[]
 	public fight_packs!: InventoryItem[]
 	public verified!: boolean
