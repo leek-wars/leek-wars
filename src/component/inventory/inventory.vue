@@ -122,7 +122,7 @@
 							<span class="group-count">({{ entry.count }})</span>
 						</div>
 						<div v-else-if="entry.placeholder" class="placeholder"></div>
-						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable, selectable: entry.item.type === ItemType.COMPONENT || entry.item.type === ItemType.ALTERATION }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()" @click="selectItem(entry.item as InventoryItem)">
+						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable, selectable: entry.item.type === ItemType.COMPONENT || entry.item.type === ItemType.ALTERATION }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()" @click="selectItem(entry.item as InventoryItem, $event)">
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
@@ -258,16 +258,42 @@
 		return tier ? 'altered-' + tier.tier : ''
 	}
 
-	function selectItem(item: InventoryItem) {
+	function selectItem(item: InventoryItem, event?: MouseEvent) {
+		// Sur mobile il n'y a pas de survol : le tap est le seul moyen d'ouvrir une
+		// fiche. On l'affiche donc au clic, tout de suite, sans le delai du desktop.
+		if (LeekWars.mobile && event) {
+			showTooltipNow(item as Item & { type: ItemType }, event)
+		}
 		if (item.type === ItemType.COMPONENT) {
-			// Sur mobile le tap est le SEUL moyen de consulter une fiche : la fermer
-			// ici privait le joueur des stats de son composant. Sur desktop l'infobulle
-			// suit la souris, la fermer evite qu'elle masque la forge.
+			// Sur desktop l'infobulle suit la souris : on la ferme pour ne pas masquer
+			// la forge ou le composant vient d'atterrir.
 			if (!LeekWars.mobile) hideTooltip()
 			emitter.emit('alter', item)
 		} else if (item.type === ItemType.ALTERATION) {
 			emitter.emit('add-alteration', item)
 		}
+	}
+
+	/**
+	 * Ouvre l'infobulle au tap (mobile), sans le delai de 500 ms du survol.
+	 *
+	 * L'ouverture est differee d'un tick : sinon le meme evenement de tap remonte
+	 * jusqu'au detecteur de "clic exterieur" du v-menu, qui le referme aussitot. C'est
+	 * cette course qui faisait que l'infobulle ne s'ouvrait qu'une fois sur deux.
+	 */
+	function showTooltipNow(item: Item & { type: ItemType }, event: MouseEvent) {
+		clearTimeout(tooltipShowTimer)
+		clearTimeout(tooltipHideTimer)
+		// currentTarget devient null des que le handler rend la main : on le capture ici.
+		const target = event.currentTarget as HTMLElement
+		tooltipVisible.value = false
+		requestAnimationFrame(() => {
+			tooltipActivator.value = target
+			tooltipItem.value = LeekWars.items[item.template]
+			tooltipQuantity.value = item.quantity
+			tooltipInstance.value = item
+			tooltipVisible.value = true
+		})
 	}
 
 	function showTooltip(item: Item & { type: ItemType }, event: MouseEvent) {
