@@ -753,9 +753,9 @@
 							{{ $t('all_my_components') }} ({{ farmer_components.length }})
 						</div>
 						<div class="farmer-components" :class="{dashed: draggedComponent && draggedComponentLocation === 'leek'}" @dragover="dragOver" @drop="componentsDrop('farmer', $event)">
-							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" ref="componentTooltips" :item="LeekWars.items[component.template]" :bottom="true" :nodge="true">
+							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" ref="componentTooltips" :item="LeekWars.items[component.template]" :instance="(component as any)" :bottom="true" :nodge="true">
 								<div :quantity="component.quantity" :class="{dragging: draggedComponent && draggedComponent.template === component.template && draggedComponentLocation === 'farmer', locked: LeekWars.items[component.template].level > leek.level || leek.components.find(c => c && c.template === component.template) }" :draggable="LeekWars.items[component.template].level <= leek.level" class="component" v-bind="props" @dragstart="componentDragStart('farmer', component, $event)" @dragend="componentDragEnd(component)" @click="addComponent(component)">
-									<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
+									<img :class="alteredClass(component as any, LeekWars.items[component.template].level as number)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
 								</div>
 							</rich-tooltip-item>
 						</div>

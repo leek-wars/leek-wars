@@ -17,7 +17,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { mergeStats, well as wellCapacity, addedPower, alterationTier } from '@/model/alteration'
-import { LeekWars } from '@/model/leekwars'
 
 defineOptions({ name: 'ComponentPreview' })
 
@@ -39,11 +38,18 @@ const isAltered = (carac: string) => !!props.alterations && !!props.alterations[
 
 // Remplissage du puits : puissance ajoutée / capacité (0,85 × niveau). Affiché
 // seulement quand la pièce porte des altérations, sinon la barre serait toujours vide.
+// Poids des caracs (couts marginaux, constants). En dur ici pour ne pas importer
+// LeekWars dans un composant de preview : ca tirerait tout le store et casserait les
+// tests unitaires, qui montent la preview sans app complete.
+const WEIGHTS: { [carac: string]: number } = {
+	life: 1, strength: 4, agility: 4, wisdom: 4, resistance: 4, science: 4, magic: 4,
+	frequency: 2, tp: 200, mp: 250, cores: 200, ram: 200,
+}
 const well = computed(() => {
 	if (!props.alterations || !props.level) return null
 	const capacity = wellCapacity(props.level)
 	if (capacity <= 0) return null
-	const ratio = addedPower(props.alterations, LeekWars.alterations?.weights ?? {}) / capacity
+	const ratio = addedPower(props.alterations, WEIGHTS) / capacity
 	const tier = alterationTier(ratio)
 	return ratio > 0 ? { ratio, tier: tier ? tier.tier : 1 } : null
 })
