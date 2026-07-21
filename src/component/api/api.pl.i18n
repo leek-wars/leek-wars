@@ -3,6 +3,7 @@
 	"parameters": "Parametry",
 	"return": "Wartość zwracana",
 	"no_desc": "Brak opisu 😥",
+	"deprecated": "Przestarzałe",
 	"ai_bin": "Opróżnia twój kosz i trwale usuwa znajdujące się w nim SI.",
 	"ai_create": "Tworzy nową SI o nazwie **name** i wersji **version** w folderze **folder**.",
 	"ai_delete": "Przenosi SI znajdującą się w ścieżce **path** do twojego kosza.",

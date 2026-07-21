@@ -3,6 +3,7 @@
 	"parameters": "パラメータ",
 	"return": "戻り値",
 	"no_desc": "説明はまだありません 😥",
+	"deprecated": "非推奨",
 	"ai_bin": "ゴミ箱を空にし、その中にあるAIを完全に削除します。",
 	"ai_create": "**folder** フォルダに、名前が **name** でバージョンが **version** の新しいAIを作成します。",
 	"ai_delete": "パス **path** にあるAIをゴミ箱に移動します。",

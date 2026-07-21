@@ -3,6 +3,7 @@
 	"parameters": "Parameter",
 	"return": "Nilai kembalian",
 	"no_desc": "Belum ada deskripsi 😥",
+	"deprecated": "Usang",
 	"ai_bin": "Mengosongkan tempat sampah Anda dan menghancurkan secara permanen AI yang ada di dalamnya.",
 	"ai_create": "Membuat AI baru bernama **name** dengan versi **version** di folder **folder**.",
 	"ai_delete": "Memindahkan AI di jalur **path** ke tempat sampah Anda.",

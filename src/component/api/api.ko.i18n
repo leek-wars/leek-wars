@@ -3,6 +3,7 @@
 	"parameters": "매개변수",
 	"return": "반환값",
 	"no_desc": "아직 설명이 없습니다 😥",
+	"deprecated": "지원 중단",
 	"ai_bin": "휴지통을 비우고 그 안에 있는 AI를 영구적으로 삭제합니다.",
 	"ai_create": "**folder** 폴더에 **name**이라는 이름과 **version** 버전의 새 AI를 만듭니다.",
 	"ai_delete": "**path** 경로의 AI를 휴지통으로 옮깁니다.",

@@ -3,6 +3,7 @@
 	"parameters": "Parameter",
 	"return": "Rückgabewert",
 	"no_desc": "Noch keine Beschreibung 😥",
+	"deprecated": "Veraltet",
 	"ai_bin": "Leert deinen Papierkorb und löscht die darin enthaltenen KIs endgültig.",
 	"ai_create": "Erstellt eine neue KI namens **name** mit der Version **version** im Ordner **folder**.",
 	"ai_delete": "Verschiebt die KI unter dem Pfad **path** in deinen Papierkorb.",

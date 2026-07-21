@@ -3,6 +3,7 @@
 	"parameters": "Parametre",
 	"return": "Returværdi",
 	"no_desc": "Ingen beskrivelse endnu 😥",
+	"deprecated": "Forældet",
 	"ai_bin": "Tømmer din papirkurv og destruerer permanent de AI'er, der ligger i den.",
 	"ai_create": "Opretter en ny AI med navnet **name** og version **version** i mappen **folder**.",
 	"ai_delete": "Flytter AI'en på stien **path** til din papirkurv.",

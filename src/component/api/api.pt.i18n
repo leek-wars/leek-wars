@@ -3,6 +3,7 @@
 	"parameters": "Parâmetros",
 	"return": "Valor de retorno",
 	"no_desc": "Ainda não há descrição 😥",
+	"deprecated": "Descontinuado",
 	"ai_bin": "Esvazia a sua lixeira e destrói definitivamente as IAs que estão nela.",
 	"ai_create": "Cria uma nova IA chamada **name** com a versão **version** na pasta **folder**.",
 	"ai_delete": "Move a IA localizada no caminho **path** para a sua lixeira.",
