@@ -51,18 +51,10 @@ const ALTERATION_FAMILY_NAMES: { [key: number]: string } = {
 	[AlterationFamily.BOOSTER]: 'booster',
 }
 
-/** Icône et teinte par famille, comme prévu par la spec : fiole verte, lingot gris, boîtier bleu. */
-const ALTERATION_FAMILY_ICONS: { [key: number]: string } = {
-	[AlterationFamily.VITAMIN]: 'mdi-flask',
-	[AlterationFamily.ALLOY]: 'mdi-gold',
-	[AlterationFamily.BOOSTER]: 'mdi-chip',
-}
-
-const ALTERATION_FAMILY_COLORS: { [key: number]: string } = {
-	[AlterationFamily.VITAMIN]: '#4caf50',
-	[AlterationFamily.ALLOY]: '#9e9e9e',
-	[AlterationFamily.BOOSTER]: '#2196f3',
-}
+// Pas de couleur par famille : c'est la FORME de l'image qui porte la famille
+// (fiole, lingot, puce) et sa COULEUR qui porte la caractéristique visée, reprise du
+// code couleur du jeu (rouge = vie, brun = force...). Un joueur reconnaît donc la
+// carac d'un coup d'œil, et les trois familles d'une même carac se répondent.
 
 /**
  * Paliers de couleur du remplissage du puits, calibrés pour qu'il y ait environ un
@@ -237,8 +229,7 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 }
 
 export {
-	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_FAMILY_ICONS,
-	ALTERATION_FAMILY_COLORS, ALTERATION_TIERS, alterationTier,
+	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
 	well, power, addedPower, part, difficulty, efficiencyTier, planAttempt, toMap,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }
