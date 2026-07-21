@@ -11,8 +11,9 @@ enum ItemType {
 	RESOURCE = 7,
 	COMPONENT = 8,
 	SCHEME = 9,
+	ALTERATION = 10,
 }
-const ItemTypes = [ItemType.ALL, ItemType.WEAPON, ItemType.CHIP, ItemType.POTION, ItemType.HAT, ItemType.POMP, ItemType.FIGHT_PACK, ItemType.RESOURCE, ItemType.COMPONENT, ItemType.SCHEME]
+const ItemTypes = [ItemType.ALL, ItemType.WEAPON, ItemType.CHIP, ItemType.POTION, ItemType.HAT, ItemType.POMP, ItemType.FIGHT_PACK, ItemType.RESOURCE, ItemType.COMPONENT, ItemType.SCHEME, ItemType.ALTERATION]
 
 export { ItemType, ItemTypes }
 
@@ -61,6 +62,7 @@ const ITEM_CATEGORY_NAME: { [key: number]: string } = {
 	[ItemType.RESOURCE]: 'resource',
 	[ItemType.COMPONENT]: 'component',
 	[ItemType.SCHEME]: 'scheme',
+	[ItemType.ALTERATION]: 'alteration',
 }
 
 const ITEM_TYPE_NAME: { [key: number]: string } = {
@@ -74,6 +76,7 @@ const ITEM_TYPE_NAME: { [key: number]: string } = {
 	[ItemType.RESOURCE]: 'resources',
 	[ItemType.COMPONENT]: 'components',
 	[ItemType.SCHEME]: 'schemes',
+	[ItemType.ALTERATION]: 'alterations',
 }
 
 const ITEM_TYPE_ICONS: { [key: number]: string } = {
@@ -87,6 +90,7 @@ const ITEM_TYPE_ICONS: { [key: number]: string } = {
 	[ItemType.RESOURCE]: 'mdi-leaf',
 	[ItemType.COMPONENT]: 'mdi-sd',
 	[ItemType.SCHEME]: 'mdi-map-outline',
+	[ItemType.ALTERATION]: 'mdi-flask',
 }
 
 // Types dont le nom d'item est déjà le nom de fichier image, sans préfixe de catégorie

@@ -61,6 +61,7 @@
 	"colossus": "Koloss",
 	"commands": "Kommandoer",
 	"comments": "Kommentarer",
+	"alterations": "Endringer",
 	"components": "Komponenter",
 	"conditions": "Vilkår for bruk",
 	"connect_message": "<a href='{0}'><b>Logg på</b></a> eller <a href='{0}'><b>Registrer deg</b></a> for Leek Wars",

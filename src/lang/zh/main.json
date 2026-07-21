@@ -61,6 +61,7 @@
 	"colossus": "巨像",
 	"commands": "命令",
 	"comments": "评论",
+	"alterations": "改造",
 	"components": "组件",
 	"conditions": "使用条款",
 	"connect_message": "<a href='{0}'><b>登录</b></a>或<a href='{0}'><b>注册</b></a> Leek Wars",

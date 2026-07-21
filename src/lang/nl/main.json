@@ -61,6 +61,7 @@
 	"colossus": "Kolos",
 	"commands": "Opdrachten",
 	"comments": "Opmerkingen",
+	"alterations": "Wijzigingen",
 	"components": "Onderdelen",
 	"conditions": "Gebruiksvoorwaarden",
 	"connect_message": "<a href='{0}'><b>Inloggen</b></a> of <a href='{0}'><b>Registreren</b></a> voor Leek Wars",
