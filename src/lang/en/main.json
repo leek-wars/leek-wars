@@ -64,6 +64,7 @@
 	"colossus": "Colossus",
 	"commands": "Commands",
 	"comments": "Comments",
+	"alterations": "Alterations",
 	"components": "Components",
 	"conditions": "Terms of use",
 	"connect_message": "<a href='{0}'><b>Log in</b></a> or <a href='{0}'><b>Sign up</b></a> on Leek Wars",

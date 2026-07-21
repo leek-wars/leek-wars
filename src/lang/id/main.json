@@ -61,6 +61,7 @@
 	"colossus": "Kolosus",
 	"commands": "Perintah",
 	"comments": "Komentar",
+	"alterations": "Perubahan",
 	"components": "Komponen",
 	"conditions": "Syarat Penggunaan",
 	"connect_message": "<a href='{0}'><b>Login</b></a> atau <a href='{0}'><b>Daftar</b></a> untuk Leek Wars",

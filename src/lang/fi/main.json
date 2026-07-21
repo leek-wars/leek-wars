@@ -61,6 +61,7 @@
 	"colossus": "Kolossi",
 	"commands": "Komennot",
 	"comments": "Kommentit",
+	"alterations": "Muutokset",
 	"components": "Komponentit",
 	"conditions": "Käyttöehdot",
 	"connect_message": "<a href='{0}'><b>Kirjaudu sisään</b></a> tai <a href='{0}'><b>Rekisteröidy</b></a> Leek Warsiin",

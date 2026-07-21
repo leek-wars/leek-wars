@@ -61,6 +61,7 @@
 	"colossus": "コロッサス",
 	"commands": "コマンド",
 	"comments": "コメント",
+	"alterations": "変質",
 	"components": "コンポーネント",
 	"conditions": "利用規約",
 	"connect_message": "<a href='{0}'><b>ログイン</b></a>または<a href='{0}'><b>登録</b></a>してLeek Warsに参加",

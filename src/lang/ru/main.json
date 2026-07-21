@@ -61,6 +61,7 @@
 	"colossus": "Колосс",
 	"commands": "Команды",
 	"comments": "Комментарии",
+	"alterations": "Изменения",
 	"components": "Компоненты",
 	"conditions": "Условия использования",
 	"connect_message": "<a href='{0}'><b>Войдите</b></a> или <a href='{0}'><b>Зарегистрируйтесь</b></a> в Leek Wars",
