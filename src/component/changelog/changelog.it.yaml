@@ -4,6 +4,8 @@
     - "La console LeekScript diventa la Console: esegui anche JavaScript, TypeScript e Python in modo interattivo, con lo stato conservato tra le righe."
   improved:
     - "#ai L'API JavaScript, TypeScript e Python diventa 100% orientata agli oggetti: niente più funzioni o costanti globali, tutto passa dagli oggetti (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript è sostituita dai nativi del linguaggio (Math, JSON, random...)."
+    - "#ai Tipi dell'API JavaScript, TypeScript e Python affinati (grazie a Nyaleph): le famiglie di costanti sono ora indicate nelle firme (Entity.Stat, Fight.Use, Item.Area...), Item porta finalmente ciò che armi e chip hanno in comune, e i registri sono tipizzati come testo. Attenzione: un'IA che usa il valore di ritorno di Registers.delete, o un valore di registro direttamente come numero, segnalerà ora un errore: usa parseInt."
+    - "#ai API JavaScript, TypeScript e Python: Effect.item restituisce ora l'arma o il chip stesso invece del suo numero, si può risalire a un oggetto dal suo identificatore (Cell.get, Entity.get, Weapon.get, Chip.get, Item.get), e gli oggetti restituiti dall'API sono condivisi e in sola lettura, quindi confrontabili per identità (me.cell === me.cell). Le costanti EFFECT_MODIFIER_* e EFFECT_TARGET_* sono raggruppate in Effect.Modifier.* e Effect.Target.* (grazie a Nyaleph)."
     - "L'eliminazione dell'account è ora possibile per i creatori di squadra: la squadra passa al membro più anziano, o viene sciolta se il creatore era solo."
 
 249:

@@ -3,6 +3,7 @@ import { execFileSync } from 'child_process'
 import { writeFileSync, mkdtempSync, existsSync } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
+import ts from 'typescript'
 import { buildLeekwarsPyi } from './leekwars-pyi'
 import { buildObjectApiModel, buildLeekwarsDeclarations } from './leekwars-dts'
 import type { LSFunction } from '@/model/function'
@@ -32,6 +33,36 @@ const CONSTANTS = [
 	cst('OPERATIONS_LIMIT'),
 	cst('PI', 7), // constante sans famille : NON exposée (API 100% objet)
 ]
+
+// Compile un .d.ts avec le VRAI compilateur TypeScript, dans la configuration de l'éditeur
+// (cf monaco.configurePolyglotTypeScript : lib esnext seule, pas de DOM, pas de @types, non strict).
+// Renvoie les diagnostics formatés. Les assertions `toContain` du reste du fichier passent sur un
+// fichier qui ne compile pas : c'est ce test qui garantit qu'il tient debout.
+function compileDts(dts: string): string[] {
+	const dir = mkdtempSync(join(tmpdir(), 'lw-dts-'))
+	const file = join(dir, 'leekwars.d.ts')
+	writeFileSync(file, dts)
+	const program = ts.createProgram([file], {
+		noEmit: true, target: ts.ScriptTarget.ESNext, lib: ['lib.esnext.d.ts'],
+		allowJs: true, checkJs: true, types: [], typeRoots: [],
+	})
+	return ts.getPreEmitDiagnostics(program)
+		.map((d) => `${d.code} ${ts.flattenDiagnosticMessageText(d.messageText, ' ')}`)
+}
+
+describe('le .d.ts généré compile', () => {
+	it('avec des game data complètes', () => {
+		expect(compileDts(buildLeekwarsDeclarations(FUNCTIONS, CONSTANTS))).toEqual([])
+	})
+
+	// Le bloc écrit à la main référence des familles (Effect.Type, Fight.Use, Entity.Stat...) qui sont
+	// émises par le générateur. Si elles dépendaient des constantes CHARGÉES, un d.ts bâti avant leur
+	// arrivée référencerait des namespaces inexistants -> API entière en `any`, et monaco ne s'en
+	// relève pas (son rattrapage ne surveille que LeekWars.functions). D'où l'émission depuis la config.
+	it('même sans aucune game data', () => {
+		expect(compileDts(buildLeekwarsDeclarations([], []))).toEqual([])
+	})
+})
 
 describe('buildLeekwarsPyi', () => {
 	const stub = buildLeekwarsPyi(CONSTANTS)
@@ -94,10 +125,13 @@ describe('parité stub Python <-> API TS (anti-dérive)', () => {
 		expect(dts).not.toContain('declare const PI')
 		// routage objet des constantes
 		expect(dts).toContain('const pistol: Weapon;') // membre de namespace (item)
-		expect(dts).toContain('const DAMAGE: number;') // membre de catégorie
-		expect(dts).toContain('readonly OPERATIONS_LIMIT: number;') // inline dans System
-		expect(dts).toContain('readonly RED: number;') // inline dans Color
+		expect(dts).toContain('const DAMAGE: Effect.Type;') // membre de catégorie, typé par sa famille
+		expect(dts).toContain('const OPERATIONS_LIMIT: number;') // fusionné dans namespace System
+		expect(dts).toContain('const RED: Color.Value;') // fusionné dans namespace Color
 		expect(dts).toMatch(/declare namespace Message \{[\s\S]*namespace Type \{[\s\S]*HEAL/) // Message.Type.HEAL
+		// alias de famille émis à côté du namespace de valeurs (Entity.Stat en type ET en valeurs)
+		expect(dts).toContain('type Type = number;')
+		expect(dts).toMatch(/declare namespace Entity \{[\s\S]*type Stat = number;[\s\S]*namespace Stat \{/)
 	})
 
 	it('tout membre de l\'API objet déclaré côté TS existe dans le stub Python', () => {

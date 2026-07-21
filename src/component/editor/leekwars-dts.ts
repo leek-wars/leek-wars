@@ -90,6 +90,11 @@ const CONST_CONTAINERS: { prefix: string, container: string, sub?: string, item?
 	{ prefix: 'USE_', container: 'Fight', sub: 'Use' },
 	{ prefix: 'MESSAGE_', container: 'Message', sub: 'Type' },
 	{ prefix: 'MAP_', container: 'Field' },
+	// EFFECT_* mélangeait trois familles à plat : les TYPES d'effet (DAMAGE, HEAL...), les MODIFICATEURS
+	// (bitmask de effect.modifiers) et les CIBLES (bitmask de feature.targets). Les deux dernières
+	// passent en sous-conteneurs. À garder AVANT 'EFFECT_' (préfixes composés en premier).
+	{ prefix: 'EFFECT_MODIFIER_', container: 'Effect', sub: 'Modifier' },
+	{ prefix: 'EFFECT_TARGET_', container: 'Effect', sub: 'Target' },
 	{ prefix: 'EFFECT_', container: 'Effect' },
 	{ prefix: 'STATE_', container: 'State' },
 	{ prefix: 'COLOR_', container: 'Color' },
@@ -100,9 +105,34 @@ const CONST_EXACT: Record<string, string> = {
 	OPERATIONS_LIMIT: 'System', INSTRUCTIONS_LIMIT: 'System',
 	CRITICAL_FACTOR: 'Fight', MAX_TURNS: 'Fight', SUMMON_LIMIT: 'Fight',
 }
-// Conteneurs qui sont des objets `const` (pas des classes) : namespace-merge impossible -> on injecte
-// leurs constantes INLINE dans la déclaration de l'objet (cf renderInlineContainer).
-const CONST_OBJECT_CONTAINERS = new Set(['Fight', 'Field', 'System', 'Color'])
+// Nom de l'ALIAS DE TYPE d'une famille de constantes rangées DIRECTEMENT sous leur conteneur (les
+// familles en sous-conteneur prennent le nom du sous-conteneur : Entity.Stat, Fight.Use...). L'alias
+// est émis dans le namespace du conteneur (`declare namespace Effect { type Type = number }`) et sert
+// à typer les membres de l'API : `readonly type: Effect.Type` au lieu de `readonly type: number`.
+// C'est un simple alias, PAS un type brandé : le survol et les signatures nomment la famille (« où
+// vais-je chercher cette constante ? ») sans jamais refuser un nombre. Un brand donnerait un vrai
+// contrôle croisé mais rejetterait `entity.stat(4)`, et comme les diagnostics TS pilotent `ai.valid`
+// (cf analyzer.updatePolyglotProblems), un faux positif marquerait INVALIDE une IA qui tourne.
+// Et aucun de ces alias n'est global : ils vivent dans le namespace du conteneur, donc ils n'entrent
+// jamais en collision avec un type écrit par un joueur.
+const CONST_DIRECT_FAMILY: Record<string, string> = {
+	Effect: 'Type', State: 'Type', Field: 'Type', Color: 'Value',
+}
+// Toutes les familles déclarées par la CONFIG (sous-conteneurs + familles directes), conteneur ->
+// noms d'alias. Calculée depuis CONST_CONTAINERS/CONST_DIRECT_FAMILY et NON depuis les constantes
+// chargées : le bloc écrit à la main référence ces alias (Effect.Type, Fight.Use, Entity.Stat...), donc
+// ils doivent exister même quand les game data sont absentes ou partielles. Sans ça, un d.ts généré
+// avant l'arrivée des constantes référence 16 namespaces inexistants et part en vrille (« Cannot find
+// namespace 'State' », « 'Effect' only refers to a type... »), état dont l'éditeur ne se relève pas :
+// le rattrapage de monaco.ts ne surveille que LeekWars.functions, jamais les constantes.
+// Le Set dédoublonne : une famille directe et un sous-conteneur homonymes n'émettent qu'un alias.
+function constFamilies(): Record<string, Set<string>> {
+	const families: Record<string, Set<string>> = {}
+	const add = (container: string, alias: string) => ((families[container] ||= new Set())).add(alias)
+	for (const container of Object.keys(CONST_DIRECT_FAMILY)) add(container, CONST_DIRECT_FAMILY[container])
+	for (const rule of CONST_CONTAINERS) if (rule.sub) add(rule.container, rule.sub)
+	return families
+}
 
 type ConstMember = { member: string, full: string, doc?: string, isInstance: boolean }
 type ConstBucket = { direct: ConstMember[], subs: Record<string, ConstMember[]> }
@@ -166,57 +196,53 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		jlines.push(docLink(m.full))
 		return renderJsdoc(jlines, indent)
 	}
-	// Rend un membre de namespace `const X: type;` (type = conteneur pour une instance, sinon number).
-	const memberLines = (m: ConstMember, container: string, indent: string): string[] => {
+	// Rend un membre de namespace `const X: type;`. Une INSTANCE (Weapon.pistol) est typée par son
+	// conteneur ; une catégorie est typée par l'alias de sa famille (Effect.DAMAGE -> Effect.Type),
+	// et retombe sur `number` pour les familles qui n'en ont pas (Fight.MAX_TURNS).
+	const memberLines = (m: ConstMember, container: string, family: string | undefined, indent: string): string[] => {
 		const safe = safeName(m.member)
 		if (!safe) return []
-		return [constJsdoc(m, indent), `${indent}const ${safe}: ${m.isInstance ? container : 'number'};`]
+		const type = m.isInstance ? container : (family ? `${container}.${family}` : 'number')
+		return [constJsdoc(m, indent), `${indent}const ${safe}: ${type};`]
 	}
-	// Pour Fight/Field (objets const) : les constantes s'injectent INLINE (readonly ...: number).
-	const inlineContainer = (container: string): string => {
-		const b = collected[container]
-		if (!b) return ''
-		const lines: string[] = []
-		const seen = new Set<string>()
-		for (const m of b.direct) {
-			const safe = safeName(m.member)
-			if (safe && !seen.has(safe)) { seen.add(safe); lines.push(constJsdoc(m, '\t'), `\treadonly ${safe}: number;`) }
-		}
-		for (const sub of Object.keys(b.subs)) {
-			lines.push(`\treadonly ${sub}: {`)
-			const seenS = new Set<string>()
-			for (const m of b.subs[sub]) {
-				const safe = safeName(m.member)
-				if (safe && !seenS.has(safe)) { seenS.add(safe); lines.push(constJsdoc(m, '\t\t'), `\t\treadonly ${safe}: number;`) }
-			}
-			lines.push('\t};')
-		}
-		return lines.join('\n')
+	// JSDoc de l'alias de famille : nomme la famille et cite ses premiers membres, pour que le survol
+	// de `stat(stat: Entity.Stat)` dise où aller chercher la constante.
+	const familyJsdoc = (path: string, members: ConstMember[], indent: string): string => {
+		const sample = members.map((m) => safeName(m.member)).filter(Boolean).slice(0, 3).join(', ')
+		return renderJsdoc([`Constante de la famille ${path}${sample ? ` (${sample}...)` : ''}.`], indent)
 	}
 
-	// Bloc API objet (classes + const Fight/Field) : on injecte les constantes de Fight/Field inline.
 	const funcByName = new Map(functions.map((f) => [f.name, f]))
-	let objBlock = doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc, funcByName, classDoc) : OBJECT_API_DECLARATIONS
-	for (const container of CONST_OBJECT_CONTAINERS) {
-		const inline = inlineContainer(container)
-		if (inline) objBlock = objBlock.replace(`declare const ${container}: {\n`, `declare const ${container}: {\n${inline}\n`)
-	}
 	out.push('')
-	out.push(objBlock)
+	out.push(doc ? annotateObjectApi(OBJECT_API_DECLARATIONS, doc, funcByName, classDoc) : OBJECT_API_DECLARATIONS)
 
-	// Namespaces de constantes fusionnés aux classes (declaration merging) : Effect.DAMAGE,
-	// Entity.Stat.STRENGTH, Weapon.pistol, Item.LaunchType.LINE... (Fight/Field déjà injectés inline).
-	for (const container of Object.keys(collected)) {
-		if (CONST_OBJECT_CONTAINERS.has(container)) continue
-		const { direct, subs } = collected[container]
+	// Namespaces de constantes fusionnés aux classes ET aux singletons (declaration merging) :
+	// Effect.DAMAGE, Entity.Stat.STRENGTH, Weapon.pistol, Item.LaunchType.LINE, Fight.Type.SOLO...
+	// Fight/Field/System/Color sont déclarés `declare namespace` dans le bloc objet, justement pour
+	// que leurs constantes fusionnent ici comme les autres (avant, `declare const` l'interdisait et
+	// il fallait les injecter inline dans le littéral d'objet).
+	// Les alias viennent de la CONFIG, les membres des game data : un conteneur dont aucune constante
+	// n'est chargée émet quand même son namespace d'alias, donc le bloc écrit à la main compile
+	// toujours (avec simplement des familles vides).
+	const families = constFamilies()
+	for (const container of new Set([...Object.keys(families), ...Object.keys(collected)])) {
+		const { direct, subs } = collected[container] ?? { direct: [], subs: {} }
+		const directFamily = CONST_DIRECT_FAMILY[container]
 		out.push('')
 		out.push(`declare namespace ${container} {`)
+		// Alias de TYPE de chaque famille du conteneur. Un sous-conteneur porte les deux sens : alias
+		// de type (Entity.Stat en position de type) et namespace de valeurs (Entity.Stat.STRENGTH) ;
+		// TypeScript les fusionne sans conflit.
+		for (const alias of families[container] ?? []) {
+			out.push(familyJsdoc(`${container}.${alias}`, alias === directFamily ? direct : (subs[alias] ?? []), '\t'))
+			out.push(`\ttype ${alias} = number;`)
+		}
 		const seen = new Set<string>()
 		for (const m of direct) {
 			const safe = safeName(m.member)
 			if (!safe || seen.has(safe)) continue
 			seen.add(safe)
-			for (const l of memberLines(m, container, '\t')) out.push(l)
+			for (const l of memberLines(m, container, directFamily, '\t')) out.push(l)
 		}
 		for (const sub of Object.keys(subs)) {
 			out.push(`\tnamespace ${sub} {`)
@@ -225,7 +251,7 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 				const safe = safeName(m.member)
 				if (!safe || seenS.has(safe)) continue
 				seenS.add(safe)
-				for (const l of memberLines(m, container, '\t\t')) out.push(l)
+				for (const l of memberLines(m, container, sub, '\t\t')) out.push(l)
 			}
 			out.push('\t}')
 		}
@@ -261,8 +287,10 @@ export interface ObjectApiModel {
 const INSTANCE_CLASSES = ['Entity', 'Me', 'Cell', 'Weapon', 'Chip', 'Item', 'Effect', 'Feature', 'Message', 'Leek', 'Turret', 'Bulb', 'Chest', 'Mob']
 
 // Parse OBJECT_API_DECLARATIONS (format régulier généré à la main) en modèle de complétion. Robuste
-// au format exact du bloc ci-dessous : `declare class X {` / `declare const X: {` ouvrent un conteneur,
-// une ligne `  [readonly] nom: type;` = propriété, `  nom(args): type;` = méthode, `}` ferme.
+// au format exact du bloc ci-dessous : `declare class X {` / `declare namespace X {` / `declare const
+// X: {` ouvrent un conteneur, une ligne `  [readonly|const] nom: type;` = propriété, `  [function]
+// nom(args): type;` = méthode, `}` ferme. Les singletons s'écrivent en `namespace` (Fight, Field...)
+// ou en objet `const` (Debug, Network, Registers), les deux se rangent dans `singletons`.
 let _objectApiModel: ObjectApiModel | null = null
 export function buildObjectApiModel(): ObjectApiModel {
 	if (_objectApiModel) return _objectApiModel
@@ -272,11 +300,11 @@ export function buildObjectApiModel(): ObjectApiModel {
 	const classes: string[] = []
 	let container: string | null = null
 	for (const raw of OBJECT_API_DECLARATIONS.split('\n')) {
-		const open = raw.match(/^declare\s+(class|const)\s+([A-Za-z_]\w*)/)
+		const open = raw.match(/^declare\s+(class|const|namespace)\s+([A-Za-z_]\w*)/)
 		if (open) {
 			container = open[2]
 			if (!members[container]) members[container] = []
-			;(open[1] === 'const' ? singletons : classes).push(container)
+			;(open[1] === 'class' ? classes : singletons).push(container)
 			continue
 		}
 		if (!container) continue
@@ -289,14 +317,16 @@ export function buildObjectApiModel(): ObjectApiModel {
 			trimmed = trimmed.slice('static '.length)
 			bucket = (statics[container] ||= [])
 		}
+		// `readonly`/`const`/`function` ne sont que des mots de déclaration : le membre est ce qui suit.
+		trimmed = trimmed.replace(/^(?:readonly|const|function)\s+/, '')
 		// méthode : nom( ... ) : type ;
 		const method = trimmed.match(/^([A-Za-z_]\w*)\s*\((.*)\)\s*:\s*([^;]+);/)
 		if (method) {
 			bucket.push({ name: method[1], kind: 'method', detail: `${method[1]}(${method[2]}): ${method[3].trim()}`, container })
 			continue
 		}
-		// propriété : [readonly] nom : type ;
-		const prop = trimmed.match(/^(?:readonly\s+)?([A-Za-z_]\w*)\s*:\s*([^;]+);/)
+		// propriété : nom : type ;
+		const prop = trimmed.match(/^([A-Za-z_]\w*)\s*:\s*([^;]+);/)
 		if (prop) {
 			bucket.push({ name: prop[1], kind: 'property', detail: `${prop[1]}: ${prop[2].trim()}`, container })
 		}
@@ -521,7 +551,7 @@ function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string
 	let commentStart = -1 // index dans `out` de la ligne ouvrant le dernier bloc de commentaire
 	for (const line of block.split('\n')) {
 		const trimmed = line.trim()
-		const containerM = line.match(/^declare\s+(?:class|const)\s+([A-Za-z_]\w*)/)
+		const containerM = line.match(/^declare\s+(?:class|const|namespace)\s+([A-Za-z_]\w*)/)
 		if (containerM) {
 			container = containerM[1]
 			// Description de la classe -> JSDoc juste avant `declare class/const X` (survol TS en JS/TS).
@@ -532,13 +562,15 @@ function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string
 				else if (!prevWasComment) out.push(renderJsdoc([cdoc], indent))
 			}
 		} else {
-			// Membre : indentation + [readonly|static] identifiant suivi de `(` (méthode) ou `:` (propriété).
-			const memberM = line.match(/^(\s+)(?:readonly\s+|static\s+)?([A-Za-z_]\w*)\s*[(:]/)
+			// Membre : indentation + [readonly|static|const|function] identifiant suivi de `(` (méthode)
+			// ou `:` (propriété). Le délimiteur est capturé pour distinguer les deux sans re-chercher le
+			// nom dans la ligne (un `indexOf` retomberait sur le mot de déclaration s'il contenait le nom).
+			const memberM = line.match(/^(\s+)(?:readonly\s+|static\s+|const\s+|function\s+)?([A-Za-z_]\w*)\s*([(:])/)
 			if (container && memberM) {
-				const [, indent, member] = memberM
+				const [, indent, member, delimiter] = memberM
 				const lsName = memberToLs[container + '.' + member]
 				if (lsName) {
-					const isMethod = line.slice(line.indexOf(member) + member.length).trimStart().startsWith('(')
+					const isMethod = delimiter === '('
 					const lsLines = lsFullDocLines(doc, lsName, funcByName.get(lsName), isMethod)
 					// Déjà commenté à la main : on fusionne (prose conservée + doc LS ajoutée). Sinon on
 					// génère le bloc directement.
@@ -558,35 +590,46 @@ function annotateObjectApi(block: string, doc: DocLookup, funcByName: Map<string
 // prélude objects.js du moteur. Statique (pas issue des game data) -> déclarée à la main pour que
 // l'éditeur connaisse Fight/Entity/Cell/System... Doit rester en phase avec generator objects.js/objects.py.
 const OBJECT_API_DECLARATIONS = `// --- API de combat orientée objet (LeekScript v5-style) ---
+// Les signatures écrivent les unions EN TOUTES LETTRES (\`Cell | Entity | number\`) au lieu d'un alias
+// nommé : le survol dit alors directement ce qu'on peut passer, et surtout on n'ajoute AUCUN nom au
+// scope global. Un \`type Position\` global entrerait en collision avec un \`class Position\` écrit par
+// un joueur (TS2300 -> IA marquée invalide via le pont de diagnostics). Les alias historiques sont
+// conservés ci-dessous, dépréciés, pour ne casser aucune IA existante qui les annote.
+/** @deprecated Écrire \`Cell | Entity | number\`. */
 type CellLike = Cell | Entity | number;
+/** @deprecated Écrire \`Entity | number\`. */
 type EntityLike = Entity | number;
+/** @deprecated Écrire \`Weapon | number\`. */
 type WeaponLike = Weapon | number;
+/** @deprecated Écrire \`Chip | number\`. */
 type ChipLike = Chip | number;
 
 /** Un effet actif ou lancé sur une entité (Effect.DAMAGE, Effect.HEAL...). */
 declare class Effect {
 	/** Tableau brut [type, value, caster, turns, critical, item, target, modifiers]. */
 	readonly raw: any[];
-	readonly type: number;
+	readonly type: Effect.Type;
 	readonly value: number;
 	readonly caster: Entity | null;
 	readonly turns: number;
 	readonly critical: boolean;
-	/** Id de l'arme ou de la puce qui a appliqué l'effet (0 si aucun). */
-	readonly item: number;
+	/** Arme ou puce qui a appliqué l'effet, null si aucune. L'id brut reste dans raw[5]. */
+	readonly item: Weapon | Chip | null;
 	readonly target: Entity | null;
-	readonly modifiers: number;
+	/** Bitmask de modificateurs (Effect.Modifier.STACKABLE...). */
+	readonly modifiers: Effect.Modifier;
 	/** Liste des ids de TYPES d'effets existants (Effect.DAMAGE, Effect.HEAL...). */
-	static getAll(): number[];
+	static getAll(): Effect.Type[];
 }
 
 /** Un message d'équipe reçu (cf Network.getMessages). */
 declare class Message {
 	/** Tableau brut [auteur, type, params]. */
 	readonly raw: any[];
-	readonly author: Entity | null;
+	/** Entité alliée qui a envoyé le message. Toujours définie. */
+	readonly author: Entity;
 	/** Type du message (Message.Type.*). */
-	readonly type: number;
+	readonly type: Message.Type;
 	readonly params: any;
 }
 
@@ -596,12 +639,14 @@ declare class Message {
 declare class Feature {
 	/** Tableau brut [type, minValue, maxValue, turns, targets, modifiers]. */
 	readonly raw: any[];
-	readonly type: number;
+	readonly type: Effect.Type;
 	readonly minValue: number;
 	readonly maxValue: number;
 	readonly turns: number;
-	readonly targets: number;
-	readonly modifiers: number;
+	/** Bitmask des cibles visées (Effect.Target.ALLIES, ENEMIES...). */
+	readonly targets: Effect.Target;
+	/** Bitmask de modificateurs (Effect.Modifier.STACKABLE...). */
+	readonly modifiers: Effect.Modifier;
 }
 
 declare class Cell {
@@ -614,19 +659,52 @@ declare class Cell {
 	/** Une entité occupe-t-elle la case. */
 	readonly hasEntity: boolean;
 	/** Contenu de la case (Cell.Type.EMPTY/PLAYER/ENTITY/OBSTACLE). */
-	readonly content: number;
-	distance(target: CellLike): number;
-	pathLength(target: CellLike, ignoredCells?: CellLike[]): number;
-	lineOfSight(target: CellLike, ignoredEntities?: EntityLike | EntityLike[]): boolean;
+	readonly content: Cell.Type;
+	distance(target: Cell | Entity | number): number;
+	pathLength(target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): number;
+	lineOfSight(target: Cell | Entity | number, ignoredEntities?: Entity | number | (Entity | number)[]): boolean;
 	/** Chemin (liste de cellules) jusqu'à la cible, en évitant 'ignoredCells'. */
-	path(target: CellLike, ignoredCells?: CellLike[]): Cell[];
+	path(target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
 	/** La case est-elle alignée (même ligne ou colonne) avec la cible. */
-	onSameLine(target: CellLike): boolean;
+	onSameLine(target: Cell | Entity | number): boolean;
+	/** Cellule d'id 'id', ou null s'il est invalide. L'API accepte des ids partout : voici le chemin
+	 *  inverse, indispensable dès qu'on relit un id rangé dans un registre. */
+	static get(id: number): Cell | null;
 }
 
-/** Base commune aux armes et puces. Porte les constantes partagées (Item.LaunchType, Item.Area). */
+/** Base commune aux armes et puces : tout ce qu'une arme ET une puce savent faire (coût, portée,
+ *  zone, caractéristiques...). Permet d'écrire du code générique sur un équipement quelconque
+ *  (\`function best(item: Item) { return item.cost }\`). Porte aussi les constantes partagées
+ *  (Item.LaunchType, Item.Area). Weapon et Chip redéclarent ces membres pour garder CHACUN sa
+ *  documentation propre (getWeaponCost vs getChipCost), pas parce qu'ils diffèrent. */
 declare class Item {
 	readonly id: number;
+	/** Coût en PT d'une utilisation. */
+	readonly cost: number;
+	/** Portée minimale, en nombre de cases. */
+	readonly minRange: number;
+	/** Portée maximale, en nombre de cases. */
+	readonly maxRange: number;
+	/** Nom de l'item (Pistolet, Bandage...). */
+	readonly name: string;
+	/** Forme de la zone d'effet (Item.Area.SINGLE_CELL, CIRCLE_2...). */
+	readonly area: Item.Area;
+	/** Contrainte de visée (Item.LaunchType.LINE, STAR, CIRCLE...). */
+	readonly launchType: Item.LaunchType;
+	/** Nombre maximal d'utilisations par tour (0 = illimité). */
+	readonly maxUses: number;
+	/** L'item ne peut viser que dans l'alignement de l'entité. */
+	readonly inline: boolean;
+	/** L'item exige une ligne de vue dégagée jusqu'à la cible. */
+	readonly needsLos: boolean;
+	/** Pourcentage d'échec. */
+	readonly failure: number;
+	/** Caractéristiques déclarées de l'item (dégâts, poison, téléport...). cf Feature. */
+	readonly features: Feature[];
+	/** Zone d'effet réelle de l'item sur 'cell', utilisé depuis 'from' (défaut : position courante). */
+	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
+	/** L'item (arme OU puce) d'id 'id', ou null si l'id n'en désigne aucun. */
+	static get(id: number): Weapon | Chip | null;
 }
 
 declare class Weapon extends Item {
@@ -634,8 +712,8 @@ declare class Weapon extends Item {
 	readonly minRange: number;
 	readonly maxRange: number;
 	readonly name: string;
-	readonly area: number;
-	readonly launchType: number;
+	readonly area: Item.Area;
+	readonly launchType: Item.LaunchType;
 	readonly maxUses: number;
 	readonly inline: boolean;
 	readonly needsLos: boolean;
@@ -646,7 +724,9 @@ declare class Weapon extends Item {
 	/** Caractéristiques passives de l'arme (bonus quand elle est équipée). */
 	readonly passiveFeatures: Feature[];
 	/** Zone d'effet réelle de l'arme sur 'cell', tirée depuis 'from' (défaut : position courante). */
-	effectiveArea(cell: CellLike, from?: CellLike): Cell[];
+	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
+	/** L'arme d'id 'id', ou null si l'id n'est pas celui d'une arme. */
+	static get(id: number): Weapon | null;
 	/** Toutes les armes du jeu. */
 	static getAll(): Weapon[];
 	/** La valeur est-elle un id d'arme valide. */
@@ -662,8 +742,8 @@ declare class Chip extends Item {
 	readonly minScope: number;
 	readonly maxScope: number;
 	readonly name: string;
-	readonly area: number;
-	readonly launchType: number;
+	readonly area: Item.Area;
+	readonly launchType: Item.LaunchType;
 	readonly maxUses: number;
 	readonly inline: boolean;
 	readonly needsLos: boolean;
@@ -678,9 +758,11 @@ declare class Chip extends Item {
 	/** Pour une puce d'INVOCATION : statistiques du bulbe invoqué. */
 	readonly bulbStats: any;
 	/** Cooldown restant de la puce pour une AUTRE entité que soi. */
-	currentCooldownOf(entity: EntityLike): number;
+	currentCooldownOf(entity: Entity | number): number;
 	/** Zone d'effet réelle de la puce sur 'cell', lancée depuis 'from' (défaut : position courante). */
-	effectiveArea(cell: CellLike, from?: CellLike): Cell[];
+	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
+	/** La puce d'id 'id', ou null si l'id n'est pas celui d'une puce. */
+	static get(id: number): Chip | null;
 	/** Toutes les puces du jeu. */
 	static getAll(): Chip[];
 	/** La valeur est-elle un id de puce valide. */
@@ -701,19 +783,19 @@ interface Turret extends Entity {}
 /** Un bulbe invoqué. */
 declare class Bulb {
 	/** Sous-type de bulbe (Bulb.Type.PUNY...). */
-	readonly type: number;
+	readonly type: Bulb.Type;
 }
 interface Bulb extends Entity {}
 /** Un coffre (chasse aux coffres). */
 declare class Chest {
 	/** Sous-type de coffre (Chest.Type.WOOD...). */
-	readonly type: number;
+	readonly type: Chest.Type;
 }
 interface Chest extends Entity {}
 /** Un monstre / boss. */
 declare class Mob {
 	/** Sous-type de monstre (Mob.Type.GRAAL...). */
-	readonly type: number;
+	readonly type: Mob.Type;
 }
 interface Mob extends Entity {}
 
@@ -747,7 +829,7 @@ declare class Entity {
 	readonly effects: Effect[];
 	readonly launchedEffects: Effect[];
 	readonly passiveEffects: Feature[];
-	readonly states: any[];
+	readonly states: State.Type[];
 	readonly summons: Entity[];
 	readonly summoner: Entity | null;
 	readonly summoned: boolean;
@@ -770,159 +852,170 @@ declare class Entity {
 	isAlly(): boolean;
 	isEnemy(): boolean;
 	/** Valeur d'une caractéristique par sa constante (Entity.Stat.STRENGTH...). */
-	stat(stat: number): number;
-	distance(target: CellLike): number;
+	stat(stat: Entity.Stat): number;
+	distance(target: Cell | Entity | number): number;
+	/** Entité d'id 'id' (typée : Leek, Bulb, Mob...), ou null s'il est invalide. Chemin inverse des
+	 *  ids acceptés partout par l'API : relire un id d'entité rangé dans un registre, par exemple. */
+	static get(id: number): Entity | null;
 }
 
 declare class Me extends Entity {
 	/** Se rapproche de 'target' en dépensant au plus 'mp' PM (défaut : tous). */
-	moveToward(target: CellLike, mp?: number): number;
-	moveAwayFrom(target: CellLike, mp?: number): number;
-	moveTowardCells(cells: CellLike[], mp?: number): number;
-	moveTowardEntities(entities: EntityLike[], mp?: number): number;
-	moveTowardLine(a: CellLike, b: CellLike, mp?: number): number;
-	moveAwayFromCells(cells: CellLike[], mp?: number): number;
-	moveAwayFromEntities(entities: EntityLike[], mp?: number): number;
-	moveAwayFromLine(a: CellLike, b: CellLike, mp?: number): number;
-	useWeapon(target: EntityLike): number;
-	useWeaponOnCell(cell: CellLike): number;
-	useChip(chip: ChipLike, target?: EntityLike): number;
-	useChipOnCell(chip: ChipLike, cell: CellLike): number;
-	setWeapon(weapon: WeaponLike): boolean;
+	moveToward(target: Cell | Entity | number, mp?: number): number;
+	moveAwayFrom(target: Cell | Entity | number, mp?: number): number;
+	moveTowardCells(cells: (Cell | Entity | number)[], mp?: number): number;
+	moveTowardEntities(entities: (Entity | number)[], mp?: number): number;
+	moveTowardLine(a: Cell | Entity | number, b: Cell | Entity | number, mp?: number): number;
+	moveAwayFromCells(cells: (Cell | Entity | number)[], mp?: number): number;
+	moveAwayFromEntities(entities: (Entity | number)[], mp?: number): number;
+	moveAwayFromLine(a: Cell | Entity | number, b: Cell | Entity | number, mp?: number): number;
+	useWeapon(target: Entity | number): Fight.Use;
+	useWeaponOnCell(cell: Cell | Entity | number): Fight.Use;
+	useChip(chip: Chip | number, target?: Entity | number): Fight.Use;
+	useChipOnCell(chip: Chip | number, cell: Cell | Entity | number): Fight.Use;
+	setWeapon(weapon: Weapon | number): boolean;
 	say(message: any): boolean;
 	/** Fait dire « lama » à ton entité. */
 	lama(): void;
+	// Les canUse* renvoient un BOOLÉEN (moteur : Type.BOOL), pas un code Fight.Use : ce sont des
+	// prédicats « est-ce possible », pas des tentatives. Seules les actions réelles (useWeapon,
+	// useChip, resurrect, summon) renvoient un Fight.Use.
 	/** Peut-on utiliser l'arme courante sur 'target' — ou 'weapon' sur 'target' (2 arguments). */
-	canUseWeapon(target: EntityLike): number;
-	canUseWeapon(weapon: WeaponLike, target: EntityLike): number;
+	canUseWeapon(target: Entity | number): boolean;
+	canUseWeapon(weapon: Weapon | number, target: Entity | number): boolean;
 	/** Peut-on utiliser l'arme courante sur la case 'cell' — ou 'weapon' sur 'cell' (2 arguments). */
-	canUseWeaponOnCell(cell: CellLike): number;
-	canUseWeaponOnCell(weapon: WeaponLike, cell: CellLike): number;
-	canUseChip(chip: ChipLike, target: EntityLike): number;
-	canUseChipOnCell(chip: ChipLike, cell: CellLike): number;
-	resurrect(target: EntityLike, cell: CellLike): number;
+	canUseWeaponOnCell(cell: Cell | Entity | number): boolean;
+	canUseWeaponOnCell(weapon: Weapon | number, cell: Cell | Entity | number): boolean;
+	canUseChip(chip: Chip | number, target: Entity | number): boolean;
+	canUseChipOnCell(chip: Chip | number, cell: Cell | Entity | number): boolean;
+	resurrect(target: Entity | number, cell: Cell | Entity | number): Fight.Use;
 	/** Nombre d'utilisations de l'item (arme ou puce) ce tour. */
-	itemUses(item: WeaponLike | ChipLike): number;
+	itemUses(item: Item | number): number;
 	/** Change l'équipement courant (nom du loadout). */
 	setLoadout(name: string, keep?: boolean): boolean;
 	/** Invoque un bulbe : 'callback' est rejouée à chaque tour du bulbe (me désigne alors le bulbe). */
-	summon(chip: ChipLike, cell: CellLike, callback: () => void, name?: string): number;
+	summon(chip: Chip | number, cell: Cell | Entity | number, callback: () => void, name?: string): Fight.Use;
 	/** Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target' (une entité OU une case). */
-	weaponCell(target: EntityLike | CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell | null;
+	weaponCell(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
 	/** Toutes les cellules d'où utiliser l'arme sur 'target'. */
-	weaponCells(target: EntityLike | CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell[];
+	weaponCells(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
 	/** Cellule d'où utiliser 'chip' sur 'target' (une entité OU une case). */
-	chipCell(chip: ChipLike, target: EntityLike | CellLike, ignoredCells?: CellLike[]): Cell | null;
+	chipCell(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
 	/** Toutes les cellules d'où utiliser 'chip' sur 'target'. */
-	chipCells(chip: ChipLike, target: EntityLike | CellLike, ignoredCells?: CellLike[]): Cell[];
+	chipCells(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
 	/** Entités touchées si l'arme (courante ou 'weapon') est utilisée sur la case 'cell'. */
-	weaponTargets(cell: CellLike, weapon?: WeaponLike): Entity[];
+	weaponTargets(cell: Cell | Entity | number, weapon?: Weapon | number): Entity[];
 	/** Entités touchées si 'chip' est utilisée sur la case 'cell'. */
-	chipTargets(chip: ChipLike, cell: CellLike): Entity[];
+	chipTargets(chip: Chip | number, cell: Cell | Entity | number): Entity[];
 }
 
+// Stockage persistant de l'IA. Reste un \`declare const\` (et pas un namespace) : \`delete\` est un mot
+// réservé, donc \`function delete(...)\` serait une erreur de syntaxe dans un namespace.
 declare const Registers: {
-	get(key: string): any;
-	set(key: string, value: any): any;
-	delete(key: string): any;
-	all(): any;
+	/** Valeur du registre 'key', ou null s'il n'existe pas. Les registres ne stockent que du texte. */
+	get(key: string): string | null;
+	/** Écrit un registre (la valeur est convertie en texte). false si la limite de registres est atteinte. */
+	set(key: string, value: any): boolean;
+	delete(key: string): void;
+	/** Tous les registres de l'entité, clé -> valeur. */
+	all(): Record<string, string>;
 };
 
-declare const Fight: {
+declare namespace Fight {
 	/** L'IA courante (votre entité). */
-	readonly me: Me;
-	readonly turn: number;
+	const me: Me;
+	const turn: number;
 	/** Id du combat. */
-	readonly id: number;
+	const id: number;
 	/** Type de combat (Fight.Type.SOLO...). */
-	readonly type: number;
+	const type: Fight.Type;
 	/** Contexte du combat (Fight.Context.GARDEN...). */
-	readonly context: number;
+	const context: Fight.Context;
 	/** Boss du combat (Fight.Boss.*), s'il y en a un. */
-	readonly boss: number;
-	readonly winner: number;
+	const boss: Fight.Boss;
+	const winner: number;
 	/** Somme des PV des alliés / des ennemis. */
-	readonly alliesLife: number;
-	readonly enemiesLife: number;
-	getNearestEnemy(): Entity | null;
-	getNearestAlly(): Entity | null;
-	getFarthestEnemy(): Entity | null;
-	getFarthestAlly(): Entity | null;
-	getNearestEnemyTo(target: EntityLike): Entity | null;
-	getNearestAllyTo(target: EntityLike): Entity | null;
-	getEnemies(): Entity[];
-	getAllies(): Entity[];
-	getAliveEnemies(): Entity[];
-	getAliveAllies(): Entity[];
-	getDeadEnemies(): Entity[];
-	getDeadAllies(): Entity[];
-	getEnemiesCount(): number;
-	getAlliesCount(): number;
-	getAliveEnemiesCount(): number;
-	getAliveAlliesCount(): number;
-	getDeadEnemiesCount(): number;
-	getAlliedTurret(): Entity | null;
-	getEnemyTurret(): Entity | null;
+	const alliesLife: number;
+	const enemiesLife: number;
+	function getNearestEnemy(): Entity | null;
+	function getNearestAlly(): Entity | null;
+	function getFarthestEnemy(): Entity | null;
+	function getFarthestAlly(): Entity | null;
+	function getNearestEnemyTo(target: Entity | number): Entity | null;
+	function getNearestAllyTo(target: Entity | number): Entity | null;
+	function getEnemies(): Entity[];
+	function getAllies(): Entity[];
+	function getAliveEnemies(): Entity[];
+	function getAliveAllies(): Entity[];
+	function getDeadEnemies(): Entity[];
+	function getDeadAllies(): Entity[];
+	function getEnemiesCount(): number;
+	function getAlliesCount(): number;
+	function getAliveEnemiesCount(): number;
+	function getAliveAlliesCount(): number;
+	function getDeadEnemiesCount(): number;
+	function getAlliedTurret(): Entity | null;
+	function getEnemyTurret(): Entity | null;
 	/** Entité alliée/ennemie la plus proche d'une CELLULE. */
-	getNearestEnemyToCell(cell: CellLike): Entity | null;
-	getNearestAllyToCell(cell: CellLike): Entity | null;
+	function getNearestEnemyToCell(cell: Cell | Entity | number): Entity | null;
+	function getNearestAllyToCell(cell: Cell | Entity | number): Entity | null;
 	/** Joueur suivant / précédent dans l'ordre de jeu (défaut : relatif à soi). */
-	getNextPlayer(entity?: EntityLike): Entity | null;
-	getPreviousPlayer(entity?: EntityLike): Entity | null;
+	function getNextPlayer(entity?: Entity | number): Entity | null;
+	function getPreviousPlayer(entity?: Entity | number): Entity | null;
 	/** Paroles prononcées (say) par les entités : liste de [entité, message]. */
-	listen(): any[][];
-};
+	function listen(): any[][];
+}
 
-declare const Field: {
-	readonly type: number;
-	cellFromXY(x: number, y: number): Cell | null;
-	getObstacles(): Cell[];
-	distance(a: CellLike, b: CellLike): number;
-	cellDistance(a: CellLike, b: CellLike): number;
-	pathLength(a: CellLike, b: CellLike, ignoredCells?: CellLike[]): number;
-	lineOfSight(a: CellLike, b: CellLike, ignoredEntities?: EntityLike | EntityLike[]): boolean;
+declare namespace Field {
+	const type: Field.Type;
+	function cellFromXY(x: number, y: number): Cell | null;
+	function getObstacles(): Cell[];
+	function distance(a: Cell | Entity | number, b: Cell | Entity | number): number;
+	function cellDistance(a: Cell | Entity | number, b: Cell | Entity | number): number;
+	function pathLength(a: Cell | Entity | number, b: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): number;
+	function lineOfSight(a: Cell | Entity | number, b: Cell | Entity | number, ignoredEntities?: Entity | number | (Entity | number)[]): boolean;
 	/** Les deux cases sont-elles alignées (même ligne ou colonne). */
-	onSameLine(a: CellLike, b: CellLike): boolean;
+	function onSameLine(a: Cell | Entity | number, b: Cell | Entity | number): boolean;
 	/** Chemin (liste de cellules) de 'from' à 'to', en évitant 'ignoredCells'. */
-	path(from: CellLike, to: CellLike, ignoredCells?: CellLike[]): Cell[];
-};
+	function path(from: Cell | Entity | number, to: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
+}
 
 declare const Network: {
 	/** Envoie un message typé (Message.Type.*) à une entité alliée. */
-	sendTo(entity: EntityLike, type: number, params: any): boolean;
+	sendTo(entity: Entity | number, type: Message.Type, params: any): boolean;
 	/** Envoie un message typé à toutes les entités alliées. */
-	sendAll(type: number, params: any): void;
+	sendAll(type: Message.Type, params: any): void;
 	/** Messages reçus (de 'entity' seulement si fourni). */
-	getMessages(entity?: EntityLike): Message[];
+	getMessages(entity?: Entity | number): Message[];
 };
 
 declare const Debug: {
 	/** Écrit dans le journal de combat, éventuellement en couleur (cf Color). console.log existe aussi. */
-	log(value: any, color?: number): void;
-	mark(cells: CellLike | CellLike[], color?: number, duration?: number): boolean;
-	markText(cells: CellLike | CellLike[], text: any, color?: number, duration?: number): boolean;
+	log(value: any, color?: Color.Value): void;
+	mark(cells: Cell | Entity | number | (Cell | Entity | number)[], color?: Color.Value, duration?: number): boolean;
+	markText(cells: Cell | Entity | number | (Cell | Entity | number)[], text: any, color?: Color.Value, duration?: number): boolean;
 	clearMarks(): void;
-	show(cell: CellLike, color?: number): boolean;
+	show(cell: Cell | Entity | number, color?: Color.Value): boolean;
 	pause(): void;
 };
 
-declare const System: {
+declare namespace System {
 	/** Opérations consommées ce tour (à comparer à maxOperations pour borner une recherche). */
-	readonly operations: number;
-	readonly maxOperations: number;
-	readonly instructionsCount: number;
-	readonly usedRAM: number;
-	readonly maxRAM: number;
-	readonly date: string;
-	readonly time: string;
-	readonly timestamp: number;
-};
+	const operations: number;
+	const maxOperations: number;
+	const instructionsCount: number;
+	const usedRAM: number;
+	const maxRAM: number;
+	const date: string;
+	const time: string;
+	const timestamp: number;
+}
 
-declare const Color: {
+declare namespace Color {
 	/** Compose une couleur depuis ses composantes 0-255. */
-	rgb(r: number, g: number, b: number): number;
-	red(color: number): number;
-	green(color: number): number;
-	blue(color: number): number;
-};
+	function rgb(r: number, g: number, b: number): Color.Value;
+	function red(color: Color.Value): number;
+	function green(color: Color.Value): number;
+	function blue(color: Color.Value): number;
+}
 `

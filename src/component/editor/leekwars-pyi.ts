@@ -38,7 +38,8 @@ interface ClassSpec { name: string, base?: string, body: string[], inject?: stri
 const CLASSES: ClassSpec[] = [
 	{ name: 'Effect', inject: 'Effect', body: [
 		'raw: list', 'type: int', 'value: int', 'caster: Entity', 'turns: int', 'critical: bool',
-		'item: int', 'target: Entity', 'modifiers: int',
+		// item : l'ARME ou la PUCE qui a appliqué l'effet (miroir du runtime), l'id brut restant dans raw[5].
+		'item: Weapon | Chip', 'target: Entity', 'modifiers: int',
 		'@staticmethod', 'def getAll() -> list[int]: ...',
 	] },
 	{ name: 'Feature', body: [
@@ -56,13 +57,24 @@ const CLASSES: ClassSpec[] = [
 		'def lineOfSight(self, target: CellLike, ignoredEntities: Any = ...) -> bool: ...',
 		'def path(self, target: CellLike, ignoredCells: list = ...) -> list[Cell]: ...',
 		'def onSameLine(self, target: CellLike) -> bool: ...',
+		'@staticmethod', 'def get(id: int) -> Cell: ...',
 	] },
-	{ name: 'Item', inject: 'Item', body: ['id: int'] },
+	// Base commune aux armes et puces : porte tout ce qu'une arme ET une puce savent faire, pour que le
+	// code générique sur un équipement quelconque (`def best(item: Item): return item.cost`) type juste.
+	// Weapon et Chip redéclarent ces membres, chacun gardant sa propre documentation. Miroir du .d.ts.
+	{ name: 'Item', inject: 'Item', body: [
+		'id: int', 'cost: int', 'minRange: int', 'maxRange: int', 'name: str',
+		'area: int', 'launchType: int', 'maxUses: int', 'inline: bool', 'needsLos: bool',
+		'failure: int', 'features: list[Feature]',
+		'def effectiveArea(self, cell: CellLike, frm: CellLike = ...) -> list[Cell]: ...',
+		'@staticmethod', 'def get(id: int) -> Weapon | Chip: ...',
+	] },
 	{ name: 'Weapon', base: 'Item', inject: 'Weapon', body: [
 		'cost: int', 'minRange: int', 'maxRange: int', 'name: str',
 		'area: int', 'launchType: int', 'maxUses: int', 'inline: bool', 'needsLos: bool',
 		'failure: int', 'features: list[Feature]', 'passiveFeatures: list[Feature]',
 		'def effectiveArea(self, cell: CellLike, frm: CellLike = ...) -> list[Cell]: ...',
+		'@staticmethod', 'def get(id: int) -> Weapon: ...',
 		'@staticmethod', 'def getAll() -> list[Weapon]: ...',
 		'@staticmethod', 'def isWeapon(value: Any) -> bool: ...',
 	] },
@@ -73,6 +85,7 @@ const CLASSES: ClassSpec[] = [
 		'bulbChips: list[Chip]', 'bulbCharacteristics: dict', 'bulbStats: dict',
 		'def currentCooldownOf(self, entity: EntityLike) -> int: ...',
 		'def effectiveArea(self, cell: CellLike, frm: CellLike = ...) -> list[Cell]: ...',
+		'@staticmethod', 'def get(id: int) -> Chip: ...',
 		'@staticmethod', 'def getAll() -> list[Chip]: ...',
 		'@staticmethod', 'def isChip(value: Any) -> bool: ...',
 	] },
@@ -89,6 +102,7 @@ const CLASSES: ClassSpec[] = [
 		'aiID: int', 'aiName: str',
 		'def isAlly(self) -> bool: ...', 'def isEnemy(self) -> bool: ...',
 		'def stat(self, stat: int) -> int: ...',
+		'@staticmethod', 'def get(id: int) -> Entity: ...',
 		'def distance(self, target: CellLike) -> int: ...',
 	] },
 	{ name: 'Me', base: 'Entity', body: [
@@ -107,10 +121,12 @@ const CLASSES: ClassSpec[] = [
 		'def setWeapon(self, weapon: WeaponLike) -> bool: ...',
 		'def say(self, message: Any) -> bool: ...',
 		'def lama(self) -> None: ...',
-		'def canUseWeapon(self, target: WeaponLike | EntityLike, target2: EntityLike = ...) -> int: ...',
-		'def canUseWeaponOnCell(self, cell: WeaponLike | CellLike, cell2: CellLike = ...) -> int: ...',
-		'def canUseChip(self, chip: ChipLike, target: EntityLike) -> int: ...',
-		'def canUseChipOnCell(self, chip: ChipLike, cell: CellLike) -> int: ...',
+		// Prédicats -> bool (moteur : Type.BOOL), à ne pas confondre avec les actions useWeapon/useChip
+		// qui renvoient un code USE_*. Miroir du .d.ts.
+		'def canUseWeapon(self, target: WeaponLike | EntityLike, target2: EntityLike = ...) -> bool: ...',
+		'def canUseWeaponOnCell(self, cell: WeaponLike | CellLike, cell2: CellLike = ...) -> bool: ...',
+		'def canUseChip(self, chip: ChipLike, target: EntityLike) -> bool: ...',
+		'def canUseChipOnCell(self, chip: ChipLike, cell: CellLike) -> bool: ...',
 		'def resurrect(self, target: EntityLike, cell: CellLike) -> int: ...',
 		'def itemUses(self, item: WeaponLike | ChipLike) -> int: ...',
 		'def setLoadout(self, name: str, keep: bool = ...) -> bool: ...',
@@ -130,11 +146,14 @@ const CLASSES: ClassSpec[] = [
 	{ name: 'Mob', base: 'Entity', inject: 'Mob', body: ['type: int'] },
 	// Conteneur de catégories seul (STATE_*), pas de membres statiques.
 	{ name: 'State', inject: 'State', body: [] },
+	// Les registres ne stockent QUE du texte (getRegister -> STRING_OR_NULL, getRegisters ->
+	// MAP_STRING_STRING côté moteur) : `Any` laissait croire qu'on en ressortait un nombre.
+	// Pas de `| None` sur get, cf la règle de nullabilité en tête de fichier.
 	{ name: '_Registers', instance: 'Registers', body: [
-		'def get(self, key: str) -> Any: ...',
-		'def set(self, key: str, value: Any) -> Any: ...',
-		'def delete(self, key: str) -> Any: ...',
-		'def all(self) -> Any: ...',
+		'def get(self, key: str) -> str: ...',
+		'def set(self, key: str, value: Any) -> bool: ...',
+		'def delete(self, key: str) -> None: ...',
+		'def all(self) -> dict[str, str]: ...',
 	] },
 	{ name: '_Fight', instance: 'Fight', inject: 'Fight', body: [
 		'me: Me', 'turn: int', 'id: int', 'type: int', 'context: int', 'boss: int', 'winner: int',

@@ -10,31 +10,41 @@ declare const console: {
 
 
 // --- API de combat orientée objet (LeekScript v5-style) ---
+// Les signatures écrivent les unions EN TOUTES LETTRES (`Cell | Entity | number`) au lieu d'un alias
+// nommé : le survol dit alors directement ce qu'on peut passer, et surtout on n'ajoute AUCUN nom au
+// scope global. Un `type Position` global entrerait en collision avec un `class Position` écrit par
+// un joueur (TS2300 -> IA marquée invalide via le pont de diagnostics). Les alias historiques sont
+// conservés ci-dessous, dépréciés, pour ne casser aucune IA existante qui les annote.
+/** @deprecated Écrire `Cell | Entity | number`. */
 type CellLike = Cell | Entity | number;
+/** @deprecated Écrire `Entity | number`. */
 type EntityLike = Entity | number;
+/** @deprecated Écrire `Weapon | number`. */
 type WeaponLike = Weapon | number;
+/** @deprecated Écrire `Chip | number`. */
 type ChipLike = Chip | number;
 
 /** Un effet actif ou lancé sur une entité (Effect.DAMAGE, Effect.HEAL...). */
 declare class Effect {
 	/** Tableau brut [type, value, caster, turns, critical, item, target, modifiers]. */
 	readonly raw: any[];
-	readonly type: number;
+	readonly type: Effect.Type;
 	readonly value: number;
 	readonly caster: Entity | null;
 	readonly turns: number;
 	readonly critical: boolean;
-	/** Id de l'arme ou de la puce qui a appliqué l'effet (0 si aucun). */
-	readonly item: number;
+	/** Arme ou puce qui a appliqué l'effet, null si aucune. L'id brut reste dans raw[5]. */
+	readonly item: Weapon | Chip | null;
 	readonly target: Entity | null;
-	readonly modifiers: number;
+	/** Bitmask de modificateurs (Effect.Modifier.STACKABLE...). */
+	readonly modifiers: Effect.Modifier;
 	/**
 	 * Liste des ids de TYPES d'effets existants (Effect.DAMAGE, Effect.HEAL...).
 	 * Retourne la liste de tous les effets du jeu.
 	 * @returns La liste de tous les effets du jeu.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAllEffects)
 	 */
-	static getAll(): number[];
+	static getAll(): Effect.Type[];
 }
 
 /** Un message d'équipe reçu (cf Network.getMessages). */
@@ -42,18 +52,19 @@ declare class Message {
 	/** Tableau brut [auteur, type, params]. */
 	readonly raw: any[];
 	/**
+	 * Entité alliée qui a envoyé le message. Toujours définie.
 	 * Renvoie l'id de l'entité auteur du message message.
 	 * @returns L'id de l'entité auteur du message message.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getMessageAuthor)
 	 */
-	readonly author: Entity | null;
+	readonly author: Entity;
 	/**
 	 * Type du message (Message.Type.*).
 	 * Renvoie le type du message message.
 	 * @returns Le type du message message.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getMessageType)
 	 */
-	readonly type: number;
+	readonly type: Message.Type;
 	/**
 	 * Renvoie le tableau des paramètres du message message.
 	 * @returns Les paramètres du message message.
@@ -68,12 +79,14 @@ declare class Message {
 declare class Feature {
 	/** Tableau brut [type, minValue, maxValue, turns, targets, modifiers]. */
 	readonly raw: any[];
-	readonly type: number;
+	readonly type: Effect.Type;
 	readonly minValue: number;
 	readonly maxValue: number;
 	readonly turns: number;
-	readonly targets: number;
-	readonly modifiers: number;
+	/** Bitmask des cibles visées (Effect.Target.ALLIES, ENEMIES...). */
+	readonly targets: Effect.Target;
+	/** Bitmask de modificateurs (Effect.Modifier.STACKABLE...). */
+	readonly modifiers: Effect.Modifier;
 }
 
 declare class Cell {
@@ -121,7 +134,7 @@ declare class Cell {
 	 * @returns Le contenu de la cellule cell : CELL_EMPTY pour une cellule vide, CELL_ENTITY pour une entité, CELL_OBSTACLE pour un obstacle.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellContent)
 	 */
-	readonly content: number;
+	readonly content: Cell.Type;
 	/**
 	 * Retourne la distance entre deux cellules cell1 et cell2. La distance retournée est exprimée en nombre de cellules, et ne tient pas compte des divers obstacles entre les deux cellules. Pour obtenir la distance à vol d'oiseau, voir getDistance et pour obtenir la distance du chemin entre les deux cellules en évitant les obstacles, voir getPathLength.
 	 * @param cell1 L'id de la cellule de départ.
@@ -129,7 +142,7 @@ declare class Cell {
 	 * @returns La distance entre les deux cellules cell1 et cell2.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellDistance)
 	 */
-	distance(target: CellLike): number;
+	distance(target: Cell | Entity | number): number;
 	/**
 	 * Renvoie la longueur du chemin entre deux cellules cell1 et cell2, en esquivant les obstacles, en ignorant les cellules contenues dans le tableau ignoredCells. Cette fonction équivaut à count(getPath(cell1, cell2, ignoredCells)). Si un joueur se situe sur une cellule ignorée, le chemin peut passer sur lui. La cellule de départ cell1 n'est jamais comptée dans le résultat. La cellule cell2 est comptée dans le résultat si et seulement si elle est vide ou ignorée par ignoredCells. Si aucun chemin n'existe entre les deux cellules, getPathLength renvoie null.
 	 * @param cell1 La cellule de départ.
@@ -138,7 +151,7 @@ declare class Cell {
 	 * @returns La longueur du chemin entre cell1 et cell2.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getPathLength)
 	 */
-	pathLength(target: CellLike, ignoredCells?: CellLike[]): number;
+	pathLength(target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): number;
 	/**
 	 * Vérifie la ligne de vue entre la cellule start et la cellule end, en ignorant les entités ignoredEntities.
 	 * @param start Cellule de départ.
@@ -147,7 +160,7 @@ declare class Cell {
 	 * @returns Retourne vrai si la ligne de vue est dégagée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/lineOfSight)
 	 */
-	lineOfSight(target: CellLike, ignoredEntities?: EntityLike | EntityLike[]): boolean;
+	lineOfSight(target: Cell | Entity | number, ignoredEntities?: Entity | number | (Entity | number)[]): boolean;
 	/**
 	 * Chemin (liste de cellules) jusqu'à la cible, en évitant 'ignoredCells'.
 	 * Renvoie le chemin en évitant les obstacles entre deux cellules cell1 et cell2, si celui-ci existe, en ignorant les cellules contenues dans le tableau ignoredCells. Si un joueur se situe sur une cellule ignorée, le chemin peut passer sur lui. La cellule de départ cell1 ne fait jamais partie du chemin résultant. La cellule cell2 fait partie du chemin résultant si et seulement si elle est vide ou ignorée par ignoredCells. Si aucun chemin n'existe entre les deux cellules, getPath renvoie null.
@@ -157,7 +170,7 @@ declare class Cell {
 	 * @returns Le tableau contenant les cellules constituant le chemin entre les deux cellules.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getPath)
 	 */
-	path(target: CellLike, ignoredCells?: CellLike[]): Cell[];
+	path(target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
 	/**
 	 * La case est-elle alignée (même ligne ou colonne) avec la cible.
 	 * Détermine si deux cellules cell1 et cell2 sont sur la même ligne.
@@ -166,12 +179,45 @@ declare class Cell {
 	 * @returns vrai si les deux cellules sont sur la même ligne, faux sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/isOnSameLine)
 	 */
-	onSameLine(target: CellLike): boolean;
+	onSameLine(target: Cell | Entity | number): boolean;
+	/** Cellule d'id 'id', ou null s'il est invalide. L'API accepte des ids partout : voici le chemin
+	 *  inverse, indispensable dès qu'on relit un id rangé dans un registre. */
+	static get(id: number): Cell | null;
 }
 
-/** Base commune aux armes et puces. Porte les constantes partagées (Item.LaunchType, Item.Area). */
+/** Base commune aux armes et puces : tout ce qu'une arme ET une puce savent faire (coût, portée,
+ *  zone, caractéristiques...). Permet d'écrire du code générique sur un équipement quelconque
+ *  (`function best(item: Item) { return item.cost }`). Porte aussi les constantes partagées
+ *  (Item.LaunchType, Item.Area). Weapon et Chip redéclarent ces membres pour garder CHACUN sa
+ *  documentation propre (getWeaponCost vs getChipCost), pas parce qu'ils diffèrent. */
 declare class Item {
 	readonly id: number;
+	/** Coût en PT d'une utilisation. */
+	readonly cost: number;
+	/** Portée minimale, en nombre de cases. */
+	readonly minRange: number;
+	/** Portée maximale, en nombre de cases. */
+	readonly maxRange: number;
+	/** Nom de l'item (Pistolet, Bandage...). */
+	readonly name: string;
+	/** Forme de la zone d'effet (Item.Area.SINGLE_CELL, CIRCLE_2...). */
+	readonly area: Item.Area;
+	/** Contrainte de visée (Item.LaunchType.LINE, STAR, CIRCLE...). */
+	readonly launchType: Item.LaunchType;
+	/** Nombre maximal d'utilisations par tour (0 = illimité). */
+	readonly maxUses: number;
+	/** L'item ne peut viser que dans l'alignement de l'entité. */
+	readonly inline: boolean;
+	/** L'item exige une ligne de vue dégagée jusqu'à la cible. */
+	readonly needsLos: boolean;
+	/** Pourcentage d'échec. */
+	readonly failure: number;
+	/** Caractéristiques déclarées de l'item (dégâts, poison, téléport...). cf Feature. */
+	readonly features: Feature[];
+	/** Zone d'effet réelle de l'item sur 'cell', utilisé depuis 'from' (défaut : position courante). */
+	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
+	/** L'item (arme OU puce) d'id 'id', ou null si l'id n'en désigne aucun. */
+	static get(id: number): Weapon | Chip | null;
 }
 
 declare class Weapon extends Item {
@@ -204,13 +250,13 @@ declare class Weapon extends Item {
 	 * @returns Le type de zone de l'arme weapon parmi les constantes AREA_* : AREA_POINT : zone d'une seule case AREA_LASER_LINE : ligne d'un laser AREA_CIRCLE_1 : zone circulaire de 3 cases de diamètre AREA_CIRCLE_2 : zone circulaire de 5 cases de diamètre AREA_CIRCLE_3 : zone circulaire de 7 cases de diamètre
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponArea)
 	 */
-	readonly area: number;
+	readonly area: Item.Area;
 	/**
 	 * Renvoie le mode de lancé de l'arme weapon, parmi les constantes LAUNCH_TYPE_*.
 	 * @returns Le mode de lancé de l'arme weapon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponLaunchType)
 	 */
-	readonly launchType: number;
+	readonly launchType: Item.LaunchType;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponMaxUses) */
 	readonly maxUses: number;
 	/**
@@ -255,7 +301,9 @@ declare class Weapon extends Item {
 	 * @returns Le tableau contenant les ids de toutes les cellules qui seront affectées.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponEffectiveArea)
 	 */
-	effectiveArea(cell: CellLike, from?: CellLike): Cell[];
+	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
+	/** L'arme d'id 'id', ou null si l'id n'est pas celui d'une arme. */
+	static get(id: number): Weapon | null;
 	/**
 	 * Toutes les armes du jeu.
 	 * Retourne la liste de toutes les armes du jeu.
@@ -327,13 +375,13 @@ declare class Chip extends Item {
 	 * @returns Le type de zone de la puce chip parmi les constantes AREA_* : AREA_POINT : zone d'une seule case AREA_LASER_LINE : ligne d'un laser AREA_CIRCLE_1 : zone circulaire de 3 cases de diamètre AREA_CIRCLE_2 : zone circulaire de 5 cases de diamètre AREA_CIRCLE_3 : zone circulaire de 7 cases de diamètre
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChipArea)
 	 */
-	readonly area: number;
+	readonly area: Item.Area;
 	/**
 	 * Renvoie le mode de lancé de la puce chip, parmi les constantes LAUNCH_TYPE_*.
 	 * @returns Le mode de lancé de la puce chip.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChipLaunchType)
 	 */
-	readonly launchType: number;
+	readonly launchType: Item.LaunchType;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getChipMaxUses) */
 	readonly maxUses: number;
 	/**
@@ -389,7 +437,7 @@ declare class Chip extends Item {
 	 * @returns Le cooldown actuel de la puce chip, il s'agit du nombre de tours avant lesquels la puce deviendra utilisable, 0 si elle est actuellement utilisable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCooldown)
 	 */
-	currentCooldownOf(entity: EntityLike): number;
+	currentCooldownOf(entity: Entity | number): number;
 	/**
 	 * Zone d'effet réelle de la puce sur 'cell', lancée depuis 'from' (défaut : position courante).
 	 * Renvoie la liste des cellules qui seront affectés si la puce chip est utilisée sur la cellule cell depuis une cellule from.
@@ -399,7 +447,9 @@ declare class Chip extends Item {
 	 * @returns Le tableau contenant les ids de toutes les cellules qui seront affectés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChipEffectiveArea)
 	 */
-	effectiveArea(cell: CellLike, from?: CellLike): Cell[];
+	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
+	/** La puce d'id 'id', ou null si l'id n'est pas celui d'une puce. */
+	static get(id: number): Chip | null;
 	/**
 	 * Toutes les puces du jeu.
 	 * Retourne la liste de toutes les puces du jeu.
@@ -436,7 +486,7 @@ declare class Bulb {
 	 * @returns Le type de bulbe de l'entité :BULB_PUNY pour un bulbe Chétif.BULB_FIRE pour un bulbe de Feu.BULB_HEALER pour un bulbe Soigneur.BULB_ROCKY pour un bulbe Rocheux.BULB_ICED pour un bulbe Glacé.BULB_LIGHTNING pour un bulbe de Foudre.BULB_METALLIC pour un bulbe Métallique.BULB_WIZARD pour un bulbe Sorcier.BULB_TACTICIAN pour un bulbe Tacticien.BULB_SAVANT pour un bulbe Savant.Retourne -1 si l'entité n'est pas un bulbe, ou null si l'entité n'existe pas.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getBulbType)
 	 */
-	readonly type: number;
+	readonly type: Bulb.Type;
 }
 interface Bulb extends Entity {}
 /** Un coffre (chasse aux coffres). */
@@ -445,7 +495,7 @@ declare class Chest {
 	 * Sous-type de coffre (Chest.Type.WOOD...).
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChestType)
 	 */
-	readonly type: number;
+	readonly type: Chest.Type;
 }
 interface Chest extends Entity {}
 /** Un monstre / boss. */
@@ -456,7 +506,7 @@ declare class Mob {
 	 * @returns Le type de mob de l'entité entity, ou -1 si ce n'est pas un mob.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getMobType)
 	 */
-	readonly type: number;
+	readonly type: Mob.Type;
 }
 interface Mob extends Entity {}
 
@@ -623,7 +673,7 @@ declare class Entity {
 	 */
 	readonly passiveEffects: Feature[];
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getStates) */
-	readonly states: any[];
+	readonly states: State.Type[];
 	/**
 	 * Renvoie la liste des ids des invocations actuellement en vie de l'entité d'id entity.
 	 * @returns La liste des ids des invocations de l'entité d'id entity.
@@ -749,7 +799,7 @@ declare class Entity {
 	 * @returns La valeur de la statistique stat de l'entité entity.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getStat)
 	 */
-	stat(stat: number): number;
+	stat(stat: Entity.Stat): number;
 	/**
 	 * Retourne la distance entre deux cellules cell1 et cell2. La distance retournée est exprimée en nombre de cellules, et ne tient pas compte des divers obstacles entre les deux cellules. Pour obtenir la distance à vol d'oiseau, voir getDistance et pour obtenir la distance du chemin entre les deux cellules en évitant les obstacles, voir getPathLength.
 	 * @param cell1 L'id de la cellule de départ.
@@ -757,7 +807,10 @@ declare class Entity {
 	 * @returns La distance entre les deux cellules cell1 et cell2.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellDistance)
 	 */
-	distance(target: CellLike): number;
+	distance(target: Cell | Entity | number): number;
+	/** Entité d'id 'id' (typée : Leek, Bulb, Mob...), ou null s'il est invalide. Chemin inverse des
+	 *  ids acceptés partout par l'API : relire un id d'entité rangé dans un registre, par exemple. */
+	static get(id: number): Entity | null;
 }
 
 declare class Me extends Entity {
@@ -769,7 +822,7 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveToward)
 	 */
-	moveToward(target: CellLike, mp?: number): number;
+	moveToward(target: Cell | Entity | number, mp?: number): number;
 	/**
 	 * Éloigne votre entité d'un autre entité entity, en utilisant au maximum mp points de mouvement.
 	 * @param entity L'entité dont votre entité doit s'éloigner.
@@ -777,7 +830,7 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveAwayFrom)
 	 */
-	moveAwayFrom(target: CellLike, mp?: number): number;
+	moveAwayFrom(target: Cell | Entity | number, mp?: number): number;
 	/**
 	 * Rapproche votre entité d'un ensemble de cellules cells, en utilisant au maximum mp points de mouvement.
 	 * @param cells Le tableau contenant les cellules vers lesquelles votre entité doit se rapprocher.
@@ -785,7 +838,7 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveTowardCells)
 	 */
-	moveTowardCells(cells: CellLike[], mp?: number): number;
+	moveTowardCells(cells: (Cell | Entity | number)[], mp?: number): number;
 	/**
 	 * Rapproche votre entité d'un ensemble d'entités entities, en utilisant au maximum mp points de mouvement.
 	 * @param entities Le tableau contenant les ids des entités vers lesquelles votre entité doit se rapprocher.
@@ -793,7 +846,7 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveTowardEntities)
 	 */
-	moveTowardEntities(entities: EntityLike[], mp?: number): number;
+	moveTowardEntities(entities: (Entity | number)[], mp?: number): number;
 	/**
 	 * Rapproche votre entité d'une ligne définie par deux cellules cell1 et cell2, en utilisant au maximum mp points de mouvement.
 	 * @param cell1 La cellule 1.
@@ -802,7 +855,7 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveTowardLine)
 	 */
-	moveTowardLine(a: CellLike, b: CellLike, mp?: number): number;
+	moveTowardLine(a: Cell | Entity | number, b: Cell | Entity | number, mp?: number): number;
 	/**
 	 * Éloigne votre entité d'un ensemble de cellules cells, en utilisant au maximum mp points de mouvement.
 	 * @param cells Le tableau contenant les cellules dont votre entité doit s'éloigner.
@@ -810,7 +863,7 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveAwayFromCells)
 	 */
-	moveAwayFromCells(cells: CellLike[], mp?: number): number;
+	moveAwayFromCells(cells: (Cell | Entity | number)[], mp?: number): number;
 	/**
 	 * Éloigne votre entité d'un ensemble de entités entities, en utilisant au maximum mp points de mouvement.
 	 * @param entities Le tableau contenant les ids des entités dont votre entité doit s'éloigner.
@@ -818,7 +871,7 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveAwayFromEntities)
 	 */
-	moveAwayFromEntities(entities: EntityLike[], mp?: number): number;
+	moveAwayFromEntities(entities: (Entity | number)[], mp?: number): number;
 	/**
 	 * Éloigne votre entité d'une ligne définie par deux cellules cell1 et cell2, en utilisant au maximum mp points de mouvement.
 	 * @param cell1 La cellule 1.
@@ -827,21 +880,21 @@ declare class Me extends Entity {
 	 * @returns Le nombre de points de mouvements utilisés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/moveAwayFromLine)
 	 */
-	moveAwayFromLine(a: CellLike, b: CellLike, mp?: number): number;
+	moveAwayFromLine(a: Cell | Entity | number, b: Cell | Entity | number, mp?: number): number;
 	/**
 	 * Utilise l'arme sélectionnée sur l'entité entity.
 	 * @param entity Entité ciblée.
 	 * @returns Les valeurs de retour de useWeapon sont : USE_CRITICAL, en cas de coup critique USE_SUCCESS, en cas de réussite USE_FAILED, en cas de d'échec USE_INVALID_TARGET, si la cible n'existe pas USE_NOT_ENOUGH_TP, si votre entité n'a pas assez de TP USE_INVALID_POSITION, si la portée est mauvaise ou la ligne de vue n'est pas dégagée
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/useWeapon)
 	 */
-	useWeapon(target: EntityLike): number;
+	useWeapon(target: Entity | number): Fight.Use;
 	/**
 	 * Utilise l'arme sélectionnée sur la cellule cell.
 	 * @param cell Cellule ciblée.
 	 * @returns Une valeur supérieure à 0 si l'attaque a été lancée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/useWeaponOnCell)
 	 */
-	useWeaponOnCell(cell: CellLike): number;
+	useWeaponOnCell(cell: Cell | Entity | number): Fight.Use;
 	/**
 	 * Utilise le chip chip sur l'entité entity.
 	 * @param chip Chip à utiliser.
@@ -849,7 +902,7 @@ declare class Me extends Entity {
 	 * @returns Les valeurs de retour de useChip sont : USE_CRITICAL, en cas de coup critique USE_SUCCESS, en cas de réussite USE_FAILED, en cas de d'échec USE_INVALID_TARGET, si la cible n'existe pas USE_NOT_ENOUGH_TP, si votre entité n'a pas assez de TP USE_INVALID_COOLDOWN, si la puce n'est pas encore utilisable USE_INVALID_POSITION, si la portée est mauvaise ou la ligne de vue n'est pas dégagée
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/useChip)
 	 */
-	useChip(chip: ChipLike, target?: EntityLike): number;
+	useChip(chip: Chip | number, target?: Entity | number): Fight.Use;
 	/**
 	 * Utilise le chip chip sur la cellule cell.
 	 * @param chip Chip à utiliser.
@@ -857,13 +910,13 @@ declare class Me extends Entity {
 	 * @returns Une valeur supérieure à 0 si l'attaque a été lancée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/useChipOnCell)
 	 */
-	useChipOnCell(chip: ChipLike, cell: CellLike): number;
+	useChipOnCell(chip: Chip | number, cell: Cell | Entity | number): Fight.Use;
 	/**
 	 * Équipe l'arme weapon sur votre entité.
 	 * @param weapon Id de l'arme à équiper.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/setWeapon)
 	 */
-	setWeapon(weapon: WeaponLike): boolean;
+	setWeapon(weapon: Weapon | number): boolean;
 	/**
 	 * Fait parler votre entité.
 	 * @param message Message qu'annonçera votre entité dans l'arène.
@@ -875,6 +928,9 @@ declare class Me extends Entity {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/lama)
 	 */
 	lama(): void;
+	// Les canUse* renvoient un BOOLÉEN (moteur : Type.BOOL), pas un code Fight.Use : ce sont des
+	// prédicats « est-ce possible », pas des tentatives. Seules les actions réelles (useWeapon,
+	// useChip, resurrect, summon) renvoient un Fight.Use.
 	/**
 	 * Peut-on utiliser l'arme courante sur 'target' — ou 'weapon' sur 'target' (2 arguments).
 	 * Détermine si votre entité peut tirer sur l'entité d'id entity avec l'arme weapon.
@@ -883,7 +939,7 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeapon)
 	 */
-	canUseWeapon(target: EntityLike): number;
+	canUseWeapon(target: Entity | number): boolean;
 	/**
 	 * Détermine si votre entité peut tirer sur l'entité d'id entity avec l'arme weapon.
 	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
@@ -891,7 +947,7 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeapon)
 	 */
-	canUseWeapon(weapon: WeaponLike, target: EntityLike): number;
+	canUseWeapon(weapon: Weapon | number, target: Entity | number): boolean;
 	/**
 	 * Peut-on utiliser l'arme courante sur la case 'cell' — ou 'weapon' sur 'cell' (2 arguments).
 	 * Détermine si votre entité peut tirer sur la cellule cell avec l'arme weapon.
@@ -900,7 +956,7 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeaponOnCell)
 	 */
-	canUseWeaponOnCell(cell: CellLike): number;
+	canUseWeaponOnCell(cell: Cell | Entity | number): boolean;
 	/**
 	 * Détermine si votre entité peut tirer sur la cellule cell avec l'arme weapon.
 	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
@@ -908,7 +964,7 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeaponOnCell)
 	 */
-	canUseWeaponOnCell(weapon: WeaponLike, cell: CellLike): number;
+	canUseWeaponOnCell(weapon: Weapon | number, cell: Cell | Entity | number): boolean;
 	/**
 	 * Détermine si votre entité peut utiliser la puce chip sur l'entité d'id entity.
 	 * @param chip Le numéro de la puce à tester.
@@ -916,7 +972,7 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut utiliser la puce, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseChip)
 	 */
-	canUseChip(chip: ChipLike, target: EntityLike): number;
+	canUseChip(chip: Chip | number, target: Entity | number): boolean;
 	/**
 	 * Détermine si votre entité peut utiliser la puce chip sur la cellule cell.
 	 * @param chip Le numéro de la puce à tester.
@@ -924,7 +980,7 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut utiliser la puce, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseChipOnCell)
 	 */
-	canUseChipOnCell(chip: ChipLike, cell: CellLike): number;
+	canUseChipOnCell(chip: Chip | number, cell: Cell | Entity | number): boolean;
 	/**
 	 * Utilise la puce CHIP_RESURRECTION pour ressusciter une entité d'id entity morte, sur la cellule cell.
 	 * @param entity L'id de l'entité à faire revivre.
@@ -932,12 +988,12 @@ declare class Me extends Entity {
 	 * @returns Le résultat du lancement de la puce, parmi les constantes USE_*.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/resurrect)
 	 */
-	resurrect(target: EntityLike, cell: CellLike): number;
+	resurrect(target: Entity | number, cell: Cell | Entity | number): Fight.Use;
 	/**
 	 * Nombre d'utilisations de l'item (arme ou puce) ce tour.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getItemUses)
 	 */
-	itemUses(item: WeaponLike | ChipLike): number;
+	itemUses(item: Item | number): number;
 	/**
 	 * Change l'équipement courant (nom du loadout).
 	 * Applique un loadout pour ce combat uniquement, sans modifier l'équipement persistant du poireau. À utiliser uniquement dans beforeFight(). Si le nom n'existe pas ou si setLoadout est appelé en dehors de beforeFight(), la fonction renvoie false et un avertissement est ajouté au rapport.
@@ -956,12 +1012,12 @@ declare class Me extends Entity {
 	 * @returns La fonction summon a le même retour que la fonction useChip.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/summon)
 	 */
-	summon(chip: ChipLike, cell: CellLike, callback: () => void, name?: string): number;
+	summon(chip: Chip | number, cell: Cell | Entity | number, callback: () => void, name?: string): Fight.Use;
 	/**
 	 * Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target' (une entité OU une case).
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellToUseWeapon)
 	 */
-	weaponCell(target: EntityLike | CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell | null;
+	weaponCell(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
 	/**
 	 * Toutes les cellules d'où utiliser l'arme sur 'target'.
 	 * Retourne la liste des cellules à partir desquelles votre entité pourra utiliser l'arme weapon sur l'entité entity.
@@ -971,12 +1027,12 @@ declare class Me extends Entity {
 	 * @returns Liste des cellules d'où l'arme pourra être utilisée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellsToUseWeapon)
 	 */
-	weaponCells(target: EntityLike | CellLike, weapon?: WeaponLike, ignoredCells?: CellLike[]): Cell[];
+	weaponCells(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
 	/**
 	 * Cellule d'où utiliser 'chip' sur 'target' (une entité OU une case).
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellToUseChip)
 	 */
-	chipCell(chip: ChipLike, target: EntityLike | CellLike, ignoredCells?: CellLike[]): Cell | null;
+	chipCell(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
 	/**
 	 * Toutes les cellules d'où utiliser 'chip' sur 'target'.
 	 * Retourne la liste des cellules à partir desquelles votre entité pourra utiliser la puce chip sur l'entité entity.
@@ -986,7 +1042,7 @@ declare class Me extends Entity {
 	 * @returns Liste des cellules d'où la puce pourra être utilisée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellsToUseChip)
 	 */
-	chipCells(chip: ChipLike, target: EntityLike | CellLike, ignoredCells?: CellLike[]): Cell[];
+	chipCells(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
 	/**
 	 * Entités touchées si l'arme (courante ou 'weapon') est utilisée sur la case 'cell'.
 	 * Renvoie les entités qui seront affectées si l'arme weapon est utilisée sur la cellule cell.
@@ -995,7 +1051,7 @@ declare class Me extends Entity {
 	 * @returns Le tableau contenant les ids de tous les entités qui seront affectées.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponTargets)
 	 */
-	weaponTargets(cell: CellLike, weapon?: WeaponLike): Entity[];
+	weaponTargets(cell: Cell | Entity | number, weapon?: Weapon | number): Entity[];
 	/**
 	 * Entités touchées si 'chip' est utilisée sur la case 'cell'.
 	 * Renvoie les entités qui seront affectées si la puce chip est utilisée sur la cellule cell.
@@ -1004,343 +1060,215 @@ declare class Me extends Entity {
 	 * @returns Le tableau contenant les ids de tous les entités qui seront affectées.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChipTargets)
 	 */
-	chipTargets(chip: ChipLike, cell: CellLike): Entity[];
+	chipTargets(chip: Chip | number, cell: Cell | Entity | number): Entity[];
 }
 
+// Stockage persistant de l'IA. Reste un `declare const` (et pas un namespace) : `delete` est un mot
+// réservé, donc `function delete(...)` serait une erreur de syntaxe dans un namespace.
 declare const Registers: {
 	/**
+	 * Valeur du registre 'key', ou null s'il n'existe pas. Les registres ne stockent que du texte.
 	 * Renvoie la valeur stockée dans le registre de l'entité associé à la clé key ou null si le registre n'existe pas.
 	 * @param key La clé du registre dont la valeur sera retournée.
 	 * @returns La valeur stockée dans le registre de clé key.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getRegister)
 	 */
-	get(key: string): any;
+	get(key: string): string | null;
 	/**
+	 * Écrit un registre (la valeur est convertie en texte). false si la limite de registres est atteinte.
 	 * Stocke la valeur value dans le registre de clé key. La clé et la valeur sont des chaînes qui doivent contenir respectivement 100 et 5000 caractères au maximum. Un poireau peut posséder au maximum 100 registres, le stockage dans un nouveau registre ne fonctionnera pas si tous les registres sont déjà occupés.
 	 * @param key La clé du registre où stocker la valeur.
 	 * @param value La valeur à stocker.
 	 * @returns true si l'opération s'est bien passée, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/setRegister)
 	 */
-	set(key: string, value: any): any;
+	set(key: string, value: any): boolean;
 	/**
 	 * Supprime le registre associé à la clé key s'il existe.
 	 * @param key La clé du registre à supprimer.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/deleteRegister)
 	 */
-	delete(key: string): any;
+	delete(key: string): void;
 	/**
+	 * Tous les registres de l'entité, clé -> valeur.
 	 * Renvoie l'ensemble des registres de l'entité sous la forme d'un tableau associatif [clé du registre : valeur du registre]. Exemple : debug(getRegisters()); // Affiche par exemple : // ['reg1' : '314323', 'reg2' : 'test_string']
 	 * @returns Le tableau associatif correspondant à tous les registres de l'entité.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getRegisters)
 	 */
-	all(): any;
+	all(): Record<string, string>;
 };
 
-declare const Fight: {
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/CRITICAL_FACTOR) */
-	readonly CRITICAL_FACTOR: number;
-	/**
-	 * Nombre de tours maximum dans un combat.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/MAX_TURNS)
-	 */
-	readonly MAX_TURNS: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/SUMMON_LIMIT) */
-	readonly SUMMON_LIMIT: number;
-	readonly Use: {
-		/**
-		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de coup critique.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_CRITICAL)
-		 */
-		readonly CRITICAL: number;
-		/**
-		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de d'échec.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_FAILED)
-		 */
-		readonly FAILED: number;
-		/**
-		 * Valeur renvoyée par les fonctions useChip et useChipOnCell si la puce n'est pas encore utilisable.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_INVALID_COOLDOWN)
-		 */
-		readonly INVALID_COOLDOWN: number;
-		/**
-		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell si la portée est mauvaise ou la ligne de vue n'est pas dégagée.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_INVALID_POSITION)
-		 */
-		readonly INVALID_POSITION: number;
-		/**
-		 * Valeur renvoyée par les fonctions useWeapon et useChip si la cible n'existe pas.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_INVALID_TARGET)
-		 */
-		readonly INVALID_TARGET: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/USE_MAX_USES) */
-		readonly MAX_USES: number;
-		/**
-		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell si le lanceur n'a pas assez de points d'action pour utiliser l'objet.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_NOT_ENOUGH_TP)
-		 */
-		readonly NOT_ENOUGH_TP: number;
-		/**
-		 * Valeur renvoyée par la fonction resurrect lorsque l'entité spécifiée n'existe pas ou n'est pas encore morte.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_RESURRECT_INVALID_ENTITY)
-		 */
-		readonly RESURRECT_INVALID_ENTITY: number;
-		/**
-		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de réussite.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_SUCCESS)
-		 */
-		readonly SUCCESS: number;
-		/**
-		 * Erreur renvoyée par summon lorsque vous avez déjà 8 invocations vivantes.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_TOO_MANY_SUMMONS)
-		 */
-		readonly TOO_MANY_SUMMONS: number;
-	};
-	readonly Erosion: {
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/EROSION_CRITICAL_BONUS) */
-		readonly CRITICAL_BONUS: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/EROSION_DAMAGE) */
-		readonly DAMAGE: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/EROSION_POISON) */
-		readonly POISON: number;
-	};
-	readonly Boss: {
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_EVIL_PUMPKIN) */
-		readonly EVIL_PUMPKIN: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_FENNEL_KING) */
-		readonly FENNEL_KING: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_NASU_SAMOURAI) */
-		readonly NASU_SAMOURAI: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_NASU_SAMURAI) */
-		readonly NASU_SAMURAI: number;
-	};
-	readonly Context: {
-		/**
-		 * Contexte de combat en Battle Royale.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_BATTLE_ROYALE)
-		 */
-		readonly BATTLE_ROYALE: number;
-		/**
-		 * Contexte de combat de type défi.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_CHALLENGE)
-		 */
-		readonly CHALLENGE: number;
-		/**
-		 * Contexte de combat dans le potager.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_GARDEN)
-		 */
-		readonly GARDEN: number;
-		/**
-		 * Contexte de combat de test.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_TEST)
-		 */
-		readonly TEST: number;
-		/**
-		 * Contexte de combat de tournois.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_TOURNAMENT)
-		 */
-		readonly TOURNAMENT: number;
-	};
-	readonly Type: {
-		/**
-		 * Combat en Battle Royale.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_BATTLE_ROYALE)
-		 */
-		readonly BATTLE_ROYALE: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_BOSS) */
-		readonly BOSS: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_CHEST_HUNT) */
-		readonly CHEST_HUNT: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_COLOSSUS) */
-		readonly COLOSSUS: number;
-		/**
-		 * Combat d'éleveur.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_FARMER)
-		 */
-		readonly FARMER: number;
-		/**
-		 * Combat en solo.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_SOLO)
-		 */
-		readonly SOLO: number;
-		/**
-		 * Combat en équipe.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_TEAM)
-		 */
-		readonly TEAM: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_WAR) */
-		readonly WAR: number;
-	};
+declare namespace Fight {
 	/**
 	 * L'IA courante (votre entité).
 	 * Renvoie l'id de votre entité.
 	 * @returns L'id de votre entité.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEntity)
 	 */
-	readonly me: Me;
+	const me: Me;
 	/**
 	 * Renvoie le tour actuel du combat. Le nombre de tours maximum est MAX_TURNS.
 	 * @returns Le tour actuel du combat.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getTurn)
 	 */
-	readonly turn: number;
+	const turn: number;
 	/**
 	 * Id du combat.
 	 * Retourne l'id du combat actuel.
 	 * @returns L'id du combat actuel.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFightID)
 	 */
-	readonly id: number;
+	const id: number;
 	/**
 	 * Type de combat (Fight.Type.SOLO...).
 	 * Retourne le type de combat actuel.
 	 * @returns Selon le type de combat : Combat en solo (FIGHT_TYPE_SOLO), Combat d'éleveur (FIGHT_TYPE_FARMER), Combat d'équipe (FIGHT_TYPE_TEAM), Battle Royale (FIGHT_TYPE_BATTLE_ROYALE)
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFightType)
 	 */
-	readonly type: number;
+	const type: Fight.Type;
 	/**
 	 * Contexte du combat (Fight.Context.GARDEN...).
 	 * Retourne le contexte du combat actuel.
 	 * @returns Selon le contexte du combat : Combat de test (FIGHT_CONTEXT_TEST), Combat en arène (FIGHT_CONTEXT_GARDEN), Combat en tournoi (FIGHT_CONTEXT_TOURNAMENT), Combat en défi (FIGHT_CONTEXT_CHALLENGE), Battle Royale (FIGHT_CONTEXT_BATTLE_ROYALE)
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFightContext)
 	 */
-	readonly context: number;
+	const context: Fight.Context;
 	/**
 	 * Boss du combat (Fight.Boss.*), s'il y en a un.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFightBoss)
 	 */
-	readonly boss: number;
+	const boss: Fight.Boss;
 	/**
 	 * Retourne le côté de l'équipe gagnante. À utiliser uniquement dans afterFight(). Renvoie -1 si le combat n'est pas terminé.
 	 * @returns Le côté gagnant : 0 (notre côté), 1 (côté adverse), 2 (égalité), ou -1 si combat en cours.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWinner)
 	 */
-	readonly winner: number;
+	const winner: number;
 	/**
 	 * Somme des PV des alliés / des ennemis.
 	 * Retourne la vie totale de vos alliés.
 	 * @returns La vie totale de vos alliés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAlliesLife)
 	 */
-	readonly alliesLife: number;
+	const alliesLife: number;
 	/**
 	 * Calcule la somme des points de vie de tous les entités ennemies.
 	 * @returns La somme des points de vie de l'équipe ennemie.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEnemiesLife)
 	 */
-	readonly enemiesLife: number;
+	const enemiesLife: number;
 	/**
 	 * Renvoie l'entité ennemie la plus proche de votre entité.
 	 * @returns L'id de l'entité ennemie la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestEnemy)
 	 */
-	getNearestEnemy(): Entity | null;
+	function getNearestEnemy(): Entity | null;
 	/**
 	 * Renvoie l'entité alliée la plus proche de votre entité.
 	 * @returns L'id de l'entité alliée la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestAlly)
 	 */
-	getNearestAlly(): Entity | null;
+	function getNearestAlly(): Entity | null;
 	/**
 	 * Détermine l'ennemi le plus éloigné de votre entité, à vol d'oiseau.
 	 * @returns L'id de l'entité ennemie la plus éloignée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFarthestEnemy)
 	 */
-	getFarthestEnemy(): Entity | null;
+	function getFarthestEnemy(): Entity | null;
 	/**
 	 * Détermine l'allié le plus éloigné de votre entité, à vol d'oiseau.
 	 * @returns L'id de l'entité alliée la plus éloignée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFarthestAlly)
 	 */
-	getFarthestAlly(): Entity | null;
+	function getFarthestAlly(): Entity | null;
 	/**
 	 * Renvoie l'entité ennemie la plus proche de l'entité fourni en paramètre.
 	 * @param entity L'id de l'entité dont on veut connaitre l'ennemi le plus proche.
 	 * @returns L'id de l'entité ennemie la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestEnemyTo)
 	 */
-	getNearestEnemyTo(target: EntityLike): Entity | null;
+	function getNearestEnemyTo(target: Entity | number): Entity | null;
 	/**
 	 * Renvoie l'entité alliée la plus proche de l'entité fourni en paramètre.
 	 * @param entity L'id de l'entité dont on veut connaitre l'allié le plus proche.
 	 * @returns L'id de l'entitée alliée la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestAllyTo)
 	 */
-	getNearestAllyTo(target: EntityLike): Entity | null;
+	function getNearestAllyTo(target: Entity | number): Entity | null;
 	/**
 	 * Renvoie les entités ennemies (vivantes ou mortes) dans le combat.
 	 * @returns Un tableau contenant les ids de tous les entités ennemies.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEnemies)
 	 */
-	getEnemies(): Entity[];
+	function getEnemies(): Entity[];
 	/**
 	 * Retourne un tableau contenant vos alliés, et votre entité.
 	 * @returns Le tableau des alliés et votre entité.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAllies)
 	 */
-	getAllies(): Entity[];
+	function getAllies(): Entity[];
 	/**
 	 * Retourne un tableau de tous vos ennemis vivants dans le combat.
 	 * @returns Un tableau contenant les ids de tous vos ennemis vivants.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAliveEnemies)
 	 */
-	getAliveEnemies(): Entity[];
+	function getAliveEnemies(): Entity[];
 	/**
 	 * Retourne un tableau de tous vos alliés vivants dans le combat.
 	 * @returns Un tableau contenant les ids de tous vos alliés vivants.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAliveAllies)
 	 */
-	getAliveAllies(): Entity[];
+	function getAliveAllies(): Entity[];
 	/**
 	 * Renvoie les entités ennemies mortes.
 	 * @returns Le tableau des entités ennemies mortes.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getDeadEnemies)
 	 */
-	getDeadEnemies(): Entity[];
+	function getDeadEnemies(): Entity[];
 	/**
 	 * Renvoie les entités alliées mortes.
 	 * @returns Le tableau des entités alliées mortes.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getDeadAllies)
 	 */
-	getDeadAllies(): Entity[];
+	function getDeadAllies(): Entity[];
 	/**
 	 * Renvoie le nombre d'ennemis dans le combat.
 	 * @returns Le nombre d'ennemis.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEnemiesCount)
 	 */
-	getEnemiesCount(): number;
+	function getEnemiesCount(): number;
 	/**
 	 * Renvoie le nombre d'alliés dans le combat.
 	 * @returns Le nombre d'alliés.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAlliesCount)
 	 */
-	getAlliesCount(): number;
+	function getAlliesCount(): number;
 	/**
 	 * Renvoie le nombre d'ennemis vivants dans le combat.
 	 * @returns Le nombre d'ennemis vivants.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAliveEnemiesCount)
 	 */
-	getAliveEnemiesCount(): number;
+	function getAliveEnemiesCount(): number;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getAliveAlliesCount) */
-	getAliveAlliesCount(): number;
+	function getAliveAlliesCount(): number;
 	/**
 	 * Renvoie le nombre d'ennemis morts dans le combat.
 	 * @returns Le nombre d'ennemis morts.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getDeadEnemiesCount)
 	 */
-	getDeadEnemiesCount(): number;
+	function getDeadEnemiesCount(): number;
 	/**
 	 * Retourne l'id de la tourelle de votre équipe ou -1 si elle n'existe pas.
 	 * @returns L'id de la tourelle de votre équipe.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAlliedTurret)
 	 */
-	getAlliedTurret(): Entity | null;
+	function getAlliedTurret(): Entity | null;
 	/**
 	 * Retourne l'id de la tourelle ennemie ou -1 si elle n'existe pas.
 	 * @returns L'id de la tourelle ennemie.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEnemyTurret)
 	 */
-	getEnemyTurret(): Entity | null;
+	function getEnemyTurret(): Entity | null;
 	/**
 	 * Entité alliée/ennemie la plus proche d'une CELLULE.
 	 * Renvoie l'entité ennemie la plus proche de la cellule fournie en paramètre.
@@ -1348,14 +1276,14 @@ declare const Fight: {
 	 * @returns L'id de l'entité ennemie la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestEnemyToCell)
 	 */
-	getNearestEnemyToCell(cell: CellLike): Entity | null;
+	function getNearestEnemyToCell(cell: Cell | Entity | number): Entity | null;
 	/**
 	 * Renvoie l'entité alliée la plus proche de la cellule fournie en paramètre.
 	 * @param cell L'id de la cellule dont on veut connaitre l'allié le plus proche.
 	 * @returns L'id de l'entité alliée la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestAllyToCell)
 	 */
-	getNearestAllyToCell(cell: CellLike): Entity | null;
+	function getNearestAllyToCell(cell: Cell | Entity | number): Entity | null;
 	/**
 	 * Joueur suivant / précédent dans l'ordre de jeu (défaut : relatif à soi).
 	 * Renvoie l'id de l'entité qui jouera après l'entité entity. Sans paramètre, renvoie l'entité qui jouera après le joueur actuel.
@@ -1363,50 +1291,30 @@ declare const Fight: {
 	 * @returns Le joueur suivant.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNextPlayer)
 	 */
-	getNextPlayer(entity?: EntityLike): Entity | null;
+	function getNextPlayer(entity?: Entity | number): Entity | null;
 	/**
 	 * Renvoie l'id de l'entité ayant joué avant l'entité entity. Sans paramètre, renvoie l'entité ayant joué avant le joueur actuel.
 	 * @param entity (optionnel) L'id de l'entité de référence.
 	 * @returns Le joueur précédent.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getPreviousPlayer)
 	 */
-	getPreviousPlayer(entity?: EntityLike): Entity | null;
+	function getPreviousPlayer(entity?: Entity | number): Entity | null;
 	/**
 	 * Paroles prononcées (say) par les entités : liste de [entité, message].
 	 * Renvoie le tableau des say() des entités précédentes, sous la forme [entity_id, message].
 	 * @returns Le tableau des say() précédents.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/listen)
 	 */
-	listen(): any[][];
-};
+	function listen(): any[][];
+}
 
-declare const Field: {
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_NEXUS) */
-	readonly NEXUS: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_FACTORY) */
-	readonly FACTORY: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_DESERT) */
-	readonly DESERT: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_FOREST) */
-	readonly FOREST: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_GLACIER) */
-	readonly GLACIER: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_BEACH) */
-	readonly BEACH: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_TEMPLE) */
-	readonly TEMPLE: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_CASTLE) */
-	readonly CASTLE: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_CEMETERY) */
-	readonly CEMETERY: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_TEIEN) */
-	readonly TEIEN: number;
+declare namespace Field {
 	/**
 	 * Renvoie le type de terrain sur lequel se déroule le combat (usine, désert, forêt etc.), parmi les constantes MAP_NEXUS, MAP_FACTORY, MAP_DESERT, MAP_FOREST, MAP_GLACIER et MAP_BEACH.
 	 * @returns Le type de terrain.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getMapType)
 	 */
-	readonly type: number;
+	const type: Field.Type;
 	/**
 	 * Retourne l'id de la cellule se trouvant à la position (x, y).
 	 * @param x La position en x de la cellule.
@@ -1414,13 +1322,13 @@ declare const Field: {
 	 * @returns L'id de la cellule à la position (x, y), null si la cellule n'existe pas.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellFromXY)
 	 */
-	cellFromXY(x: number, y: number): Cell | null;
+	function cellFromXY(x: number, y: number): Cell | null;
 	/**
 	 * Renvoie la liste des cases obstacles du terrain.
 	 * @returns Le tableau contenant les id des cellules obstacles.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getObstacles)
 	 */
-	getObstacles(): Cell[];
+	function getObstacles(): Cell[];
 	/**
 	 * Calcule la distance à vol d'oiseau entre deux cellules cell1 et cell2. Pour obtenir la distance en nombre de cellules, voir getCellDistance, et pour obtenir la longueur du chemin entre les deux cellules en esquivant les divers obstacles, voir getPathLength.
 	 * @param cell1 La cellule de départ.
@@ -1428,7 +1336,7 @@ declare const Field: {
 	 * @returns La distance à vol d'oiseau entre les deux cellules.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getDistance)
 	 */
-	distance(a: CellLike, b: CellLike): number;
+	function distance(a: Cell | Entity | number, b: Cell | Entity | number): number;
 	/**
 	 * Retourne la distance entre deux cellules cell1 et cell2. La distance retournée est exprimée en nombre de cellules, et ne tient pas compte des divers obstacles entre les deux cellules. Pour obtenir la distance à vol d'oiseau, voir getDistance et pour obtenir la distance du chemin entre les deux cellules en évitant les obstacles, voir getPathLength.
 	 * @param cell1 L'id de la cellule de départ.
@@ -1436,7 +1344,7 @@ declare const Field: {
 	 * @returns La distance entre les deux cellules cell1 et cell2.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellDistance)
 	 */
-	cellDistance(a: CellLike, b: CellLike): number;
+	function cellDistance(a: Cell | Entity | number, b: Cell | Entity | number): number;
 	/**
 	 * Renvoie la longueur du chemin entre deux cellules cell1 et cell2, en esquivant les obstacles, en ignorant les cellules contenues dans le tableau ignoredCells. Cette fonction équivaut à count(getPath(cell1, cell2, ignoredCells)). Si un joueur se situe sur une cellule ignorée, le chemin peut passer sur lui. La cellule de départ cell1 n'est jamais comptée dans le résultat. La cellule cell2 est comptée dans le résultat si et seulement si elle est vide ou ignorée par ignoredCells. Si aucun chemin n'existe entre les deux cellules, getPathLength renvoie null.
 	 * @param cell1 La cellule de départ.
@@ -1445,7 +1353,7 @@ declare const Field: {
 	 * @returns La longueur du chemin entre cell1 et cell2.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getPathLength)
 	 */
-	pathLength(a: CellLike, b: CellLike, ignoredCells?: CellLike[]): number;
+	function pathLength(a: Cell | Entity | number, b: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): number;
 	/**
 	 * Vérifie la ligne de vue entre la cellule start et la cellule end, en ignorant les entités ignoredEntities.
 	 * @param start Cellule de départ.
@@ -1454,7 +1362,7 @@ declare const Field: {
 	 * @returns Retourne vrai si la ligne de vue est dégagée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/lineOfSight)
 	 */
-	lineOfSight(a: CellLike, b: CellLike, ignoredEntities?: EntityLike | EntityLike[]): boolean;
+	function lineOfSight(a: Cell | Entity | number, b: Cell | Entity | number, ignoredEntities?: Entity | number | (Entity | number)[]): boolean;
 	/**
 	 * Les deux cases sont-elles alignées (même ligne ou colonne).
 	 * Détermine si deux cellules cell1 et cell2 sont sur la même ligne.
@@ -1463,7 +1371,7 @@ declare const Field: {
 	 * @returns vrai si les deux cellules sont sur la même ligne, faux sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/isOnSameLine)
 	 */
-	onSameLine(a: CellLike, b: CellLike): boolean;
+	function onSameLine(a: Cell | Entity | number, b: Cell | Entity | number): boolean;
 	/**
 	 * Chemin (liste de cellules) de 'from' à 'to', en évitant 'ignoredCells'.
 	 * Renvoie le chemin en évitant les obstacles entre deux cellules cell1 et cell2, si celui-ci existe, en ignorant les cellules contenues dans le tableau ignoredCells. Si un joueur se situe sur une cellule ignorée, le chemin peut passer sur lui. La cellule de départ cell1 ne fait jamais partie du chemin résultant. La cellule cell2 fait partie du chemin résultant si et seulement si elle est vide ou ignorée par ignoredCells. Si aucun chemin n'existe entre les deux cellules, getPath renvoie null.
@@ -1473,8 +1381,8 @@ declare const Field: {
 	 * @returns Le tableau contenant les cellules constituant le chemin entre les deux cellules.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getPath)
 	 */
-	path(from: CellLike, to: CellLike, ignoredCells?: CellLike[]): Cell[];
-};
+	function path(from: Cell | Entity | number, to: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
+}
 
 declare const Network: {
 	/**
@@ -1486,7 +1394,7 @@ declare const Network: {
 	 * @returns true si l'envoi a été effecuté, false si une erreur est survenue.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/sendTo)
 	 */
-	sendTo(entity: EntityLike, type: number, params: any): boolean;
+	sendTo(entity: Entity | number, type: Message.Type, params: any): boolean;
 	/**
 	 * Envoie un message typé à toutes les entités alliées.
 	 * Envoie un message à toute votre équipe.
@@ -1494,7 +1402,7 @@ declare const Network: {
 	 * @param params Les paramètres du message, qui peuvent être n'importe quelle valeur.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/sendAll)
 	 */
-	sendAll(type: number, params: any): void;
+	sendAll(type: Message.Type, params: any): void;
 	/**
 	 * Messages reçus (de 'entity' seulement si fourni).
 	 * Renvoie le tableau des messages de l'entité entity.
@@ -1502,7 +1410,7 @@ declare const Network: {
 	 * @returns Le tableau de vos messages. Un message est représenté lui-même sous la forme d'un tableau de la forme : [auteur, type, paramètres] Les différents types de messages sont représentés par les constantes : MESSAGE_HEAL : demande de soins MESSAGE_ATTACK : demande d'attaquer MESSAGE_BUFF_FORCE : demande de boost force ...
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getMessages)
 	 */
-	getMessages(entity?: EntityLike): Message[];
+	getMessages(entity?: Entity | number): Message[];
 };
 
 declare const Debug: {
@@ -1512,7 +1420,7 @@ declare const Debug: {
 	 * @param object Le message à enregistrer.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/debug)
 	 */
-	log(value: any, color?: number): void;
+	log(value: any, color?: Color.Value): void;
 	/**
 	 * Marque une ou plusieurs cellules de la couleur indiquée en paramètre sur le terrain pour le nombre de tour indiqué en paramètre. Ce marquage n'est visible que par l'éleveur de l'entité.
 	 * @param cells La cellule ou tableau de plusieurs cellules à marquer
@@ -1521,7 +1429,7 @@ declare const Debug: {
 	 * @returns Retourne true si tout s'est bien déroulé
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/mark)
 	 */
-	mark(cells: CellLike | CellLike[], color?: number, duration?: number): boolean;
+	mark(cells: Cell | Entity | number | (Cell | Entity | number)[], color?: Color.Value, duration?: number): boolean;
 	/**
 	 * Écrit un texte sur une ou plusieurs cellules de la couleur indiquée en paramètre sur le terrain pour le nombre de tour indiqué en paramètre. Ces textes ne sont visibles que par l'éleveur de l'entité.
 	 * @param cells La cellule ou tableau de plusieurs cellules où écrire
@@ -1531,7 +1439,7 @@ declare const Debug: {
 	 * @returns Retourne true si tout s'est bien déroulé
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/markText)
 	 */
-	markText(cells: CellLike | CellLike[], text: any, color?: number, duration?: number): boolean;
+	markText(cells: Cell | Entity | number | (Cell | Entity | number)[], text: any, color?: Color.Value, duration?: number): boolean;
 	/**
 	 * Efface tous les marquages effectués par mark() et markText() sur le terrain.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/clearMarks)
@@ -1544,7 +1452,7 @@ declare const Debug: {
 	 * @returns Retourne true si tout s'est bien déroulé
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/show)
 	 */
-	show(cell: CellLike, color?: number): boolean;
+	show(cell: Cell | Entity | number, color?: Color.Value): boolean;
 	/**
 	 * Met en pause le combat, uniquement pour l'éleveur de l'entité qui utilise la fonction.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/pause)
@@ -1552,72 +1460,47 @@ declare const Debug: {
 	pause(): void;
 };
 
-declare const System: {
-	/**
-	 * Nombre d'instructions maximales qu'une entité peut utiliser pendant son tour.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/INSTRUCTIONS_LIMIT)
-	 */
-	readonly INSTRUCTIONS_LIMIT: number;
-	/**
-	 * Nombre d'opérations maximales qu'une entité peut utiliser pendant son tour.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/OPERATIONS_LIMIT)
-	 */
-	readonly OPERATIONS_LIMIT: number;
+declare namespace System {
 	/**
 	 * Opérations consommées ce tour (à comparer à maxOperations pour borner une recherche).
 	 * Renvoie le nombre d'opérations consommées par votre entité depuis le début de son tour. Ce nombre doit rester inférieur à OPERATIONS_LIMIT pour ne pas que l'entité plante.
 	 * @returns Nombre d'opérations consommées par votre entité depuis le début de son tour.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getOperations)
 	 */
-	readonly operations: number;
+	const operations: number;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getMaxOperations) */
-	readonly maxOperations: number;
+	const maxOperations: number;
 	/**
 	 * Renvoie le nombre d'instructions que votre entité a effectué durant le tour actuel.
 	 * @returns Le nombre d'instructions que votre entité a effectué durant le tour actuel.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getInstructionsCount)
 	 */
-	readonly instructionsCount: number;
+	const instructionsCount: number;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getUsedRAM) */
-	readonly usedRAM: number;
+	const usedRAM: number;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getMaxRAM) */
-	readonly maxRAM: number;
+	const maxRAM: number;
 	/**
 	 * Renvoie la date du combat, au format dd/MM/yyyy.
 	 * @returns La date du combat.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getDate)
 	 */
-	readonly date: string;
+	const date: string;
 	/**
 	 * Renvoie le temps du combat, au format HH:mm:ss.
 	 * @returns Le temps du combat.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getTime)
 	 */
-	readonly time: string;
+	const time: string;
 	/**
 	 * Renvoie l'horodatage du combat, égual au nombre de secondes depuis le 1er janvier 1970.
 	 * @returns L'horodatage du combat.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getTimestamp)
 	 */
-	readonly timestamp: number;
-};
+	const timestamp: number;
+}
 
-declare const Color: {
-	/**
-	 * Couleur bleue.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/COLOR_BLUE)
-	 */
-	readonly BLUE: number;
-	/**
-	 * Couleur verte.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/COLOR_GREEN)
-	 */
-	readonly GREEN: number;
-	/**
-	 * Couleur rouge.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/COLOR_RED)
-	 */
-	readonly RED: number;
+declare namespace Color {
 	/**
 	 * Compose une couleur depuis ses composantes 0-255.
 	 * Retourne l'entier correspondant à la couleur (red, green, blue) fournie en paramètres.
@@ -1627,451 +1510,837 @@ declare const Color: {
 	 * @returns int correspondant à la couleur fournie en paramètre.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getColor)
 	 */
-	rgb(r: number, g: number, b: number): number;
+	function rgb(r: number, g: number, b: number): Color.Value;
 	/**
 	 * Renvoie le taux de rouge dans la couleur color, entre 0 et 255. Par exemple, getRed(COLOR_RED) = 255 et getRed(COLOR_BLUE) = 0.
 	 * @param color La couleur dont le taux de rouge sera renvoyé.
 	 * @returns Le taux de rouge dans la couleur color
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getRed)
 	 */
-	red(color: number): number;
+	function red(color: Color.Value): number;
 	/**
 	 * Renvoie le taux de vert dans la couleur color, entre 0 et 255. Par exemple, getGreen(COLOR_GREEN) = 255 et getGreen(COLOR_RED) = 0.
 	 * @param color La couleur dont le taux de vert sera renvoyé.
 	 * @returns Le taux de vert dans la couleur color
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getGreen)
 	 */
-	green(color: number): number;
+	function green(color: Color.Value): number;
 	/**
 	 * Renvoie le taux de bleu dans la couleur color, entre 0 et 255. Par exemple, getBlue(COLOR_BLUE) = 255 et getBlue(COLOR_GREEN) = 0.
 	 * @param color La couleur dont le taux de bleu sera renvoyé.
 	 * @returns Le taux de bleu dans la couleur color
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getBlue)
 	 */
-	blue(color: number): number;
-};
+	function blue(color: Color.Value): number;
+}
 
 
 declare namespace Effect {
+	/** Constante de la famille Effect.Type (ABSOLUTE_SHIELD, ABSOLUTE_VULNERABILITY, ADD_STATE...). */
+	type Type = number;
+	/** Constante de la famille Effect.Modifier (IRREDUCTIBLE, MULTIPLIED_BY_TARGETS, NOT_REPLACEABLE...). */
+	type Modifier = number;
+	/** Constante de la famille Effect.Target (ALLIES, ALWAYS_CASTER, CASTER...). */
+	type Target = number;
 	/**
 	 * Procure du bouclier absolu à une entité, permettant de réduire la quantité de points de vie retirée par les dégâts (EFFECT_DAMAGE) d'un montant fixe. Amplifié par la résistance.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_ABSOLUTE_SHIELD)
 	 */
-	const ABSOLUTE_SHIELD: number;
+	const ABSOLUTE_SHIELD: Effect.Type;
 	/**
 	 * Retire du bouclier absolu à une entité. N'est pas amplifié par une caractéristique. Permet d'augmenter les points de vie retiré par les dégâts (EFFECT_DAMAGE) d'un montant absolu.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_ABSOLUTE_VULNERABILITY)
 	 */
-	const ABSOLUTE_VULNERABILITY: number;
+	const ABSOLUTE_VULNERABILITY: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_ADD_STATE) */
-	const ADD_STATE: number;
+	const ADD_STATE: Effect.Type;
 	/**
 	 * Retire des points de vie à une entité. Amplifié par la science. Réduit le maximum de points de vie de 5% du montant de points de vie retiré.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_AFTEREFFECT)
 	 */
-	const AFTEREFFECT: number;
+	const AFTEREFFECT: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_ALLY_KILLED_TO_AGILITY) */
-	const ALLY_KILLED_TO_AGILITY: number;
+	const ALLY_KILLED_TO_AGILITY: Effect.Type;
 	/**
 	 * Retire tous les poison (EFFECT_POISON) présent sur une cible.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_ANTIDOTE)
 	 */
-	const ANTIDOTE: number;
+	const ANTIDOTE: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_ATTRACT) */
-	const ATTRACT: number;
+	const ATTRACT: Effect.Type;
 	/**
 	 * Augmente les points de vie et le maximum de points de vie d'une entité. Amplifié par la sagesse.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BOOST_MAX_LIFE)
 	 */
-	const BOOST_MAX_LIFE: number;
+	const BOOST_MAX_LIFE: Effect.Type;
 	/**
 	 * Procure de l'agilité à une entité. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_AGILITY)
 	 */
-	const BUFF_AGILITY: number;
+	const BUFF_AGILITY: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_FORCE) */
-	const BUFF_FORCE: number;
+	const BUFF_FORCE: Effect.Type;
 	/**
 	 * Procure des points de mouvement à une entité. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_MP)
 	 */
-	const BUFF_MP: number;
+	const BUFF_MP: Effect.Type;
 	/**
 	 * Procure de la résistance à une entité. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_RESISTANCE)
 	 */
-	const BUFF_RESISTANCE: number;
+	const BUFF_RESISTANCE: Effect.Type;
 	/**
 	 * Procure de la force à une entité. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_STRENGTH)
 	 */
-	const BUFF_STRENGTH: number;
+	const BUFF_STRENGTH: Effect.Type;
 	/**
 	 * Procure des points d'action à une entité. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_TP)
 	 */
-	const BUFF_TP: number;
+	const BUFF_TP: Effect.Type;
 	/**
 	 * Procure de la sagesse à une entité. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_WISDOM)
 	 */
-	const BUFF_WISDOM: number;
+	const BUFF_WISDOM: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_CRITICAL_TO_HEAL) */
-	const CRITICAL_TO_HEAL: number;
+	const CRITICAL_TO_HEAL: Effect.Type;
 	/**
 	 * Retire des points de vie à une entité. Amplifié par la force. Interagit avec les boucliers (EFFECT_ABSOLUTE_SHIELD, EFFECT_RELATIVE_SHIELD, EFFECT_VULNERABILITY, EFFECT_ABSOLUTE_VULNERABILITY), le vol de vie (à l'exception du lanceur), et le retour de dégâts (EFFECT_DAMAGE_RETURN). Réduit le maximum de points de vie de 5% du montant de points de vie retiré.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_DAMAGE)
 	 */
-	const DAMAGE: number;
+	const DAMAGE: Effect.Type;
 	/**
 	 * Procure du renvoi de dégâts à une entité, permettant de retirer des points de vie aux entités infligeant des dégâts au bénéficiaire. Amplifié par l'agilité. Réduit le maximum de points de vie de 5% du montant de points de vie retiré.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_DAMAGE_RETURN)
 	 */
-	const DAMAGE_RETURN: number;
+	const DAMAGE_RETURN: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_DAMAGE_TO_ABSOLUTE_SHIELD) */
-	const DAMAGE_TO_ABSOLUTE_SHIELD: number;
+	const DAMAGE_TO_ABSOLUTE_SHIELD: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_DAMAGE_TO_RESISTANCE) */
-	const DAMAGE_TO_RESISTANCE: number;
+	const DAMAGE_TO_RESISTANCE: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_DAMAGE_TO_STRENGTH) */
-	const DAMAGE_TO_STRENGTH: number;
+	const DAMAGE_TO_STRENGTH: Effect.Type;
 	/**
 	 * Réduit la valeur de tous les effets présents sur une entité d'un pourcentage.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_DEBUFF)
 	 */
-	const DEBUFF: number;
+	const DEBUFF: Effect.Type;
 	/**
 	 * Rend des points de vie à une entité, limité par le maximum de points de vie. Amplifié par la sagesse.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_HEAL)
 	 */
-	const HEAL: number;
+	const HEAL: Effect.Type;
 	/**
 	 * Échange la position du lanceur avec celle d'une entité.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_INVERT)
 	 */
-	const INVERT: number;
+	const INVERT: Effect.Type;
 	/**
 	 * Retire tous les points de vie d'une entité.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_KILL)
 	 */
-	const KILL: number;
+	const KILL: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_KILL_TO_TP) */
-	const KILL_TO_TP: number;
+	const KILL_TO_TP: Effect.Type;
 	/**
 	 * Retire des points de vie à une entité, dépendant d'un pourcentage de la vie du lanceur. Interagit avec les boucliers (EFFECT_ABSOLUTE_SHIELD, EFFECT_RELATIVE_SHIELD, EFFECT_VULNERABILITY, EFFECT_ABSOLUTE_VULNERABILITY) et le retour de dégâts (EFFECT_DAMAGE_RETURN). Réduit le maximum de points de vie de 5% du montant de points de vie retiré.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_LIFE_DAMAGE)
 	 */
-	const LIFE_DAMAGE: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_IRREDUCTIBLE) */
-	const MODIFIER_IRREDUCTIBLE: number;
-	/**
-	 * L'effet est multiplié par le nombre d'entités affectées dans la zone.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_MULTIPLIED_BY_TARGETS)
-	 */
-	const MODIFIER_MULTIPLIED_BY_TARGETS: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_NOT_REPLACEABLE) */
-	const MODIFIER_NOT_REPLACEABLE: number;
-	/**
-	 * L'effet affecte toujours le lanceur.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_ON_CASTER)
-	 */
-	const MODIFIER_ON_CASTER: number;
-	/**
-	 * L'effet est cumulable.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_STACKABLE)
-	 */
-	const MODIFIER_STACKABLE: number;
+	const LIFE_DAMAGE: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MOVED_TO_MP) */
-	const MOVED_TO_MP: number;
+	const MOVED_TO_MP: Effect.Type;
 	/**
 	 * Retire des points de vie max. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_NOVA_DAMAGE)
 	 */
-	const NOVA_DAMAGE: number;
+	const NOVA_DAMAGE: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_NOVA_DAMAGE_TO_MAGIC) */
-	const NOVA_DAMAGE_TO_MAGIC: number;
+	const NOVA_DAMAGE_TO_MAGIC: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_NOVA_VITALITY) */
-	const NOVA_VITALITY: number;
+	const NOVA_VITALITY: Effect.Type;
 	/**
 	 * Retire des points de vie à une entité. Amplifié par la magie. Réduit le maximum de points de vie de 10% du montant de points de vie retiré.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_POISON)
 	 */
-	const POISON: number;
+	const POISON: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_POISON_TO_SCIENCE) */
-	const POISON_TO_SCIENCE: number;
+	const POISON_TO_SCIENCE: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_PROPAGATION) */
-	const PROPAGATION: number;
+	const PROPAGATION: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_PUSH) */
-	const PUSH: number;
+	const PUSH: Effect.Type;
 	/**
 	 * Procure du bouclier absolu à une entité, permettant de réduire la quantité de points de vie retirée par les dégâts (EFFECT_DAMAGE) d'un montant fixe. Non amplifiable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_ABSOLUTE_SHIELD)
 	 */
-	const RAW_ABSOLUTE_SHIELD: number;
+	const RAW_ABSOLUTE_SHIELD: Effect.Type;
 	/**
 	 * Procure de l'agilité à une entité. Non amplifiable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_AGILITY)
 	 */
-	const RAW_BUFF_AGILITY: number;
+	const RAW_BUFF_AGILITY: Effect.Type;
 	/**
 	 * Procure de la magie à une entité. Non amplifiable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_MAGIC)
 	 */
-	const RAW_BUFF_MAGIC: number;
+	const RAW_BUFF_MAGIC: Effect.Type;
 	/**
 	 * Procure des points de mouvement à une entité. Non amplifiable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_MP)
 	 */
-	const RAW_BUFF_MP: number;
+	const RAW_BUFF_MP: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_POWER) */
-	const RAW_BUFF_POWER: number;
+	const RAW_BUFF_POWER: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_RESISTANCE) */
-	const RAW_BUFF_RESISTANCE: number;
+	const RAW_BUFF_RESISTANCE: Effect.Type;
 	/**
 	 * Procure de la science à une entité. Non amplifiable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_SCIENCE)
 	 */
-	const RAW_BUFF_SCIENCE: number;
+	const RAW_BUFF_SCIENCE: Effect.Type;
 	/**
 	 * Procure de la force à une entité. Non amplifiable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_STRENGTH)
 	 */
-	const RAW_BUFF_STRENGTH: number;
+	const RAW_BUFF_STRENGTH: Effect.Type;
 	/**
 	 * Procure des points d'action à une entité. Non amplifiable.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_TP)
 	 */
-	const RAW_BUFF_TP: number;
+	const RAW_BUFF_TP: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_BUFF_WISDOM) */
-	const RAW_BUFF_WISDOM: number;
+	const RAW_BUFF_WISDOM: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_HEAL) */
-	const RAW_HEAL: number;
+	const RAW_HEAL: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RAW_RELATIVE_SHIELD) */
-	const RAW_RELATIVE_SHIELD: number;
+	const RAW_RELATIVE_SHIELD: Effect.Type;
 	/**
 	 * Procure un bouclier relatif, permettant de réduire la quantité de points de vie retiré par les dégâts (EFFECT_DAMAGE) d'un montant relatif. Amplifié par la résistance.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RELATIVE_SHIELD)
 	 */
-	const RELATIVE_SHIELD: number;
+	const RELATIVE_SHIELD: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_REMOVE_SHACKLES) */
-	const REMOVE_SHACKLES: number;
+	const REMOVE_SHACKLES: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_REPEL) */
-	const REPEL: number;
+	const REPEL: Effect.Type;
 	/**
 	 * Ressuscite une entité, avec un nombre de PV maximum égal à la moitié du nombre de PV maximum de l'entité avant résurrection, et un nombre de PV courant égal au quart du nombre de PV maximum avant résurrection.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_RESURRECT)
 	 */
-	const RESURRECT: number;
+	const RESURRECT: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_AGILITY) */
-	const SHACKLE_AGILITY: number;
+	const SHACKLE_AGILITY: Effect.Type;
 	/**
 	 * Retire de la magie à une entité. Amplifié par la magie.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_MAGIC)
 	 */
-	const SHACKLE_MAGIC: number;
+	const SHACKLE_MAGIC: Effect.Type;
 	/**
 	 * Retire des points de mouvement à une entité. Amplifié par la magie.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_MP)
 	 */
-	const SHACKLE_MP: number;
+	const SHACKLE_MP: Effect.Type;
 	/**
 	 * Retire de la force à une entité. Amplifié par la magie.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_STRENGTH)
 	 */
-	const SHACKLE_STRENGTH: number;
+	const SHACKLE_STRENGTH: Effect.Type;
 	/**
 	 * Retire des points d'action à une entité. Amplifié par la magie.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_TP)
 	 */
-	const SHACKLE_TP: number;
+	const SHACKLE_TP: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_WISDOM) */
-	const SHACKLE_WISDOM: number;
+	const SHACKLE_WISDOM: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SLIDE_TO) */
-	const SLIDE_TO: number;
+	const SLIDE_TO: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_STEAL_ABSOLUTE_SHIELD) */
-	const STEAL_ABSOLUTE_SHIELD: number;
+	const STEAL_ABSOLUTE_SHIELD: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_STEAL_LIFE) */
-	const STEAL_LIFE: number;
+	const STEAL_LIFE: Effect.Type;
 	/**
 	 * Invoque un bulbe. Aucun effet si la limite d'invocation de l'équipe est atteinte.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SUMMON)
 	 */
-	const SUMMON: number;
-	/**
-	 * Affecte les alliés.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALLIES)
-	 */
-	const TARGET_ALLIES: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALWAYS_CASTER) */
-	const TARGET_ALWAYS_CASTER: number;
-	/**
-	 * Affecte le lanceur.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_CASTER)
-	 */
-	const TARGET_CASTER: number;
-	/**
-	 * Affecte les ennemis.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ENEMIES)
-	 */
-	const TARGET_ENEMIES: number;
-	/**
-	 * Affecte les entités non-invoquées (Poireaux et tourelles).
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NON_SUMMONS)
-	 */
-	const TARGET_NON_SUMMONS: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NOT_CASTER) */
-	const TARGET_NOT_CASTER: number;
-	/**
-	 * Affecte les entités invoquées (Bulbes).
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_SUMMONS)
-	 */
-	const TARGET_SUMMONS: number;
+	const SUMMON: Effect.Type;
 	/**
 	 * Change la position du lanceur.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TELEPORT)
 	 */
-	const TELEPORT: number;
+	const TELEPORT: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TOTAL_DEBUFF) */
-	const TOTAL_DEBUFF: number;
+	const TOTAL_DEBUFF: Effect.Type;
 	/**
 	 * Retire du bouclier relatif à une entité. N'est pas amplifié par une caractéristique. Permet d'augmenter les points de vie retiré par les dégâts (EFFECT_DAMAGE) d'un montant relatif.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_VULNERABILITY)
 	 */
-	const VULNERABILITY: number;
+	const VULNERABILITY: Effect.Type;
+	namespace Modifier {
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_IRREDUCTIBLE) */
+		const IRREDUCTIBLE: Effect.Modifier;
+		/**
+		 * L'effet est multiplié par le nombre d'entités affectées dans la zone.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_MULTIPLIED_BY_TARGETS)
+		 */
+		const MULTIPLIED_BY_TARGETS: Effect.Modifier;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_NOT_REPLACEABLE) */
+		const NOT_REPLACEABLE: Effect.Modifier;
+		/**
+		 * L'effet affecte toujours le lanceur.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_ON_CASTER)
+		 */
+		const ON_CASTER: Effect.Modifier;
+		/**
+		 * L'effet est cumulable.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MODIFIER_STACKABLE)
+		 */
+		const STACKABLE: Effect.Modifier;
+	}
+	namespace Target {
+		/**
+		 * Affecte les alliés.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALLIES)
+		 */
+		const ALLIES: Effect.Target;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALWAYS_CASTER) */
+		const ALWAYS_CASTER: Effect.Target;
+		/**
+		 * Affecte le lanceur.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_CASTER)
+		 */
+		const CASTER: Effect.Target;
+		/**
+		 * Affecte les ennemis.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ENEMIES)
+		 */
+		const ENEMIES: Effect.Target;
+		/**
+		 * Affecte les entités non-invoquées (Poireaux et tourelles).
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NON_SUMMONS)
+		 */
+		const NON_SUMMONS: Effect.Target;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NOT_CASTER) */
+		const NOT_CASTER: Effect.Target;
+		/**
+		 * Affecte les entités invoquées (Bulbes).
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_SUMMONS)
+		 */
+		const SUMMONS: Effect.Target;
+	}
 }
 
-declare namespace Bulb {
+declare namespace State {
+	/** Constante de la famille State.Type (INVINCIBLE, PACIFIST, STATIC...). */
+	type Type = number;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_INVINCIBLE) */
+	const INVINCIBLE: State.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_PACIFIST) */
+	const PACIFIST: State.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_STATIC) */
+	const STATIC: State.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_UNHEALABLE) */
+	const UNHEALABLE: State.Type;
+}
+
+declare namespace Field {
+	/** Constante de la famille Field.Type (NEXUS, FACTORY, DESERT...). */
+	type Type = number;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_NEXUS) */
+	const NEXUS: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_FACTORY) */
+	const FACTORY: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_DESERT) */
+	const DESERT: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_FOREST) */
+	const FOREST: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_GLACIER) */
+	const GLACIER: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_BEACH) */
+	const BEACH: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_TEMPLE) */
+	const TEMPLE: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_CASTLE) */
+	const CASTLE: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_CEMETERY) */
+	const CEMETERY: Field.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/MAP_TEIEN) */
+	const TEIEN: Field.Type;
+}
+
+declare namespace Color {
+	/** Constante de la famille Color.Value (BLUE, GREEN, RED...). */
+	type Value = number;
+	/**
+	 * Couleur bleue.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/COLOR_BLUE)
+	 */
+	const BLUE: Color.Value;
+	/**
+	 * Couleur verte.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/COLOR_GREEN)
+	 */
+	const GREEN: Color.Value;
+	/**
+	 * Couleur rouge.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/COLOR_RED)
+	 */
+	const RED: Color.Value;
+}
+
+declare namespace Item {
+	/** Constante de la famille Item.LaunchType (CIRCLE, DIAGONAL, DIAGONAL_INVERTED...). */
+	type LaunchType = number;
+	/** Constante de la famille Item.Area (ALLIES, CIRCLE_1, CIRCLE_2...). */
+	type Area = number;
+	namespace Area {
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_ALLIES) */
+		const ALLIES: Item.Area;
+		/**
+		 * Zone circulaire de 3 cases de diamètre (croix).
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_CIRCLE_1)
+		 */
+		const CIRCLE_1: Item.Area;
+		/**
+		 * Zone circulaire de 5 cases de diamètre.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_CIRCLE_2)
+		 */
+		const CIRCLE_2: Item.Area;
+		/**
+		 * Zone circulaire de 7 cases de diamètre.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_CIRCLE_3)
+		 */
+		const CIRCLE_3: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_ENEMIES) */
+		const ENEMIES: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_FIRST_INLINE) */
+		const FIRST_INLINE: Item.Area;
+		/**
+		 * Zone d'une laser, ligne depuis la portée minimum du laser jusqu’à sa portée maximum ou bien un obstacle.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_LASER_LINE)
+		 */
+		const LASER_LINE: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_PLUS_1) */
+		const PLUS_1: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_PLUS_2) */
+		const PLUS_2: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_PLUS_3) */
+		const PLUS_3: Item.Area;
+		/**
+		 * Zone constituée d'une seule case.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_POINT)
+		 */
+		const POINT: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_SQUARE_1) */
+		const SQUARE_1: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_SQUARE_2) */
+		const SQUARE_2: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_X_1) */
+		const X_1: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_X_2) */
+		const X_2: Item.Area;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_X_3) */
+		const X_3: Item.Area;
+	}
+	namespace LaunchType {
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_CIRCLE) */
+		const CIRCLE: Item.LaunchType;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_DIAGONAL) */
+		const DIAGONAL: Item.LaunchType;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_DIAGONAL_INVERTED) */
+		const DIAGONAL_INVERTED: Item.LaunchType;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_LINE) */
+		const LINE: Item.LaunchType;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_LINE_INVERTED) */
+		const LINE_INVERTED: Item.LaunchType;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_STAR) */
+		const STAR: Item.LaunchType;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_STAR_INVERTED) */
+		const STAR_INVERTED: Item.LaunchType;
+	}
+}
+
+declare namespace Fight {
+	/** Constante de la famille Fight.Type (BATTLE_ROYALE, BOSS, CHEST_HUNT...). */
+	type Type = number;
+	/** Constante de la famille Fight.Context (BATTLE_ROYALE, CHALLENGE, GARDEN...). */
+	type Context = number;
+	/** Constante de la famille Fight.Boss (EVIL_PUMPKIN, FENNEL_KING, NASU_SAMOURAI...). */
+	type Boss = number;
+	/** Constante de la famille Fight.Erosion (CRITICAL_BONUS, DAMAGE, POISON...). */
+	type Erosion = number;
+	/** Constante de la famille Fight.Use (CRITICAL, FAILED, INVALID_COOLDOWN...). */
+	type Use = number;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CRITICAL_FACTOR) */
+	const CRITICAL_FACTOR: number;
+	/**
+	 * Nombre de tours maximum dans un combat.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/MAX_TURNS)
+	 */
+	const MAX_TURNS: number;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/SUMMON_LIMIT) */
+	const SUMMON_LIMIT: number;
+	namespace Use {
+		/**
+		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de coup critique.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_CRITICAL)
+		 */
+		const CRITICAL: Fight.Use;
+		/**
+		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de d'échec.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_FAILED)
+		 */
+		const FAILED: Fight.Use;
+		/**
+		 * Valeur renvoyée par les fonctions useChip et useChipOnCell si la puce n'est pas encore utilisable.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_INVALID_COOLDOWN)
+		 */
+		const INVALID_COOLDOWN: Fight.Use;
+		/**
+		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell si la portée est mauvaise ou la ligne de vue n'est pas dégagée.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_INVALID_POSITION)
+		 */
+		const INVALID_POSITION: Fight.Use;
+		/**
+		 * Valeur renvoyée par les fonctions useWeapon et useChip si la cible n'existe pas.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_INVALID_TARGET)
+		 */
+		const INVALID_TARGET: Fight.Use;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/USE_MAX_USES) */
+		const MAX_USES: Fight.Use;
+		/**
+		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell si le lanceur n'a pas assez de points d'action pour utiliser l'objet.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_NOT_ENOUGH_TP)
+		 */
+		const NOT_ENOUGH_TP: Fight.Use;
+		/**
+		 * Valeur renvoyée par la fonction resurrect lorsque l'entité spécifiée n'existe pas ou n'est pas encore morte.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_RESURRECT_INVALID_ENTITY)
+		 */
+		const RESURRECT_INVALID_ENTITY: Fight.Use;
+		/**
+		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de réussite.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_SUCCESS)
+		 */
+		const SUCCESS: Fight.Use;
+		/**
+		 * Erreur renvoyée par summon lorsque vous avez déjà 8 invocations vivantes.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_TOO_MANY_SUMMONS)
+		 */
+		const TOO_MANY_SUMMONS: Fight.Use;
+	}
+	namespace Erosion {
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/EROSION_CRITICAL_BONUS) */
+		const CRITICAL_BONUS: Fight.Erosion;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/EROSION_DAMAGE) */
+		const DAMAGE: Fight.Erosion;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/EROSION_POISON) */
+		const POISON: Fight.Erosion;
+	}
+	namespace Boss {
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_EVIL_PUMPKIN) */
+		const EVIL_PUMPKIN: Fight.Boss;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_FENNEL_KING) */
+		const FENNEL_KING: Fight.Boss;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_NASU_SAMOURAI) */
+		const NASU_SAMOURAI: Fight.Boss;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/BOSS_NASU_SAMURAI) */
+		const NASU_SAMURAI: Fight.Boss;
+	}
+	namespace Context {
+		/**
+		 * Contexte de combat en Battle Royale.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_BATTLE_ROYALE)
+		 */
+		const BATTLE_ROYALE: Fight.Context;
+		/**
+		 * Contexte de combat de type défi.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_CHALLENGE)
+		 */
+		const CHALLENGE: Fight.Context;
+		/**
+		 * Contexte de combat dans le potager.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_GARDEN)
+		 */
+		const GARDEN: Fight.Context;
+		/**
+		 * Contexte de combat de test.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_TEST)
+		 */
+		const TEST: Fight.Context;
+		/**
+		 * Contexte de combat de tournois.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_TOURNAMENT)
+		 */
+		const TOURNAMENT: Fight.Context;
+	}
 	namespace Type {
 		/**
-		 * Désigne le type de bulbe de Feu.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_FIRE)
+		 * Combat en Battle Royale.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_BATTLE_ROYALE)
 		 */
-		const FIRE: number;
+		const BATTLE_ROYALE: Fight.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_BOSS) */
+		const BOSS: Fight.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_CHEST_HUNT) */
+		const CHEST_HUNT: Fight.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_COLOSSUS) */
+		const COLOSSUS: Fight.Type;
 		/**
-		 * Désigne le type de bulbe Soigneur.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_HEALER)
+		 * Combat d'éleveur.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_FARMER)
 		 */
-		const HEALER: number;
+		const FARMER: Fight.Type;
 		/**
-		 * Désigne le type de bulbe Glacé.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_ICED)
+		 * Combat en solo.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_SOLO)
 		 */
-		const ICED: number;
+		const SOLO: Fight.Type;
 		/**
-		 * Désigne le type de bulbe de Foudre.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_LIGHTNING)
+		 * Combat en équipe.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_TEAM)
 		 */
-		const LIGHTNING: number;
-		/**
-		 * Désigne le type de bulbe Métallique.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_METALLIC)
-		 */
-		const METALLIC: number;
-		/**
-		 * Désigne le type de bulbe Chétif.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_PUNY)
-		 */
-		const PUNY: number;
-		/**
-		 * Désigne le type de bulbe Rocheux.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_ROCKY)
-		 */
-		const ROCKY: number;
-		/**
-		 * Désigne le type de bulbe Savant.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_SAVANT)
-		 */
-		const SAVANT: number;
-		/**
-		 * Désigne le type de bulbe Tacticien.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_TACTICIAN)
-		 */
-		const TACTICIAN: number;
-		/**
-		 * Désigne le type de bulbe Sorcier.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_WIZARD)
-		 */
-		const WIZARD: number;
+		const TEAM: Fight.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_TYPE_WAR) */
+		const WAR: Fight.Type;
 	}
 }
 
 declare namespace Entity {
+	/** Constante de la famille Entity.Stat (ABSOLUTE_SHIELD, AGILITY, CORES...). */
+	type Stat = number;
+	/** Constante de la famille Entity.Type (BULB, CHEST, LEEK...). */
+	type Type = number;
 	namespace Type {
 		/**
 		 * Désigne une entité de type Bulbe.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_BULB)
 		 */
-		const BULB: number;
+		const BULB: Entity.Type;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_CHEST) */
-		const CHEST: number;
+		const CHEST: Entity.Type;
 		/**
 		 * Désigne une entité de type Poireau.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_LEEK)
 		 */
-		const LEEK: number;
+		const LEEK: Entity.Type;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_MOB) */
-		const MOB: number;
+		const MOB: Entity.Type;
 		/**
 		 * Désigne une entité de type Tourelle.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_TURRET)
 		 */
-		const TURRET: number;
+		const TURRET: Entity.Type;
 	}
 	namespace Stat {
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_ABSOLUTE_SHIELD) */
-		const ABSOLUTE_SHIELD: number;
+		const ABSOLUTE_SHIELD: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_AGILITY) */
-		const AGILITY: number;
+		const AGILITY: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_CORES) */
-		const CORES: number;
+		const CORES: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_DAMAGE_RETURN) */
-		const DAMAGE_RETURN: number;
+		const DAMAGE_RETURN: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_FREQUENCY) */
-		const FREQUENCY: number;
+		const FREQUENCY: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_LIFE) */
-		const LIFE: number;
+		const LIFE: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_MAGIC) */
-		const MAGIC: number;
+		const MAGIC: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_MP) */
-		const MP: number;
+		const MP: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_POWER) */
-		const POWER: number;
+		const POWER: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_RAM) */
-		const RAM: number;
+		const RAM: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_RELATIVE_SHIELD) */
-		const RELATIVE_SHIELD: number;
+		const RELATIVE_SHIELD: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_RESISTANCE) */
-		const RESISTANCE: number;
+		const RESISTANCE: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_SCIENCE) */
-		const SCIENCE: number;
+		const SCIENCE: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_STRENGTH) */
-		const STRENGTH: number;
+		const STRENGTH: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_TP) */
-		const TP: number;
+		const TP: Entity.Stat;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/STAT_WISDOM) */
-		const WISDOM: number;
+		const WISDOM: Entity.Stat;
+	}
+}
+
+declare namespace Cell {
+	/** Constante de la famille Cell.Type (EMPTY, ENTITY, OBSTACLE...). */
+	type Type = number;
+	namespace Type {
+		/**
+		 * Valeur de retour de getCellContent(cell) pour une case vide.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_EMPTY)
+		 */
+		const EMPTY: Cell.Type;
+		/**
+		 * Valeur de retour de getCellContent(cell) pour une case contenant une entité.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_ENTITY)
+		 */
+		const ENTITY: Cell.Type;
+		/**
+		 * Valeur de retour de getCellContent(cell) pour une case contenant un obstacle.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_OBSTACLE)
+		 */
+		const OBSTACLE: Cell.Type;
+		/**
+		 * Valeur de retour de getCellContent(cell) pour une case contenant une entité.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_PLAYER)
+		 */
+		const PLAYER: Cell.Type;
 	}
 }
 
 declare namespace Chest {
+	/** Constante de la famille Chest.Type (DIAMOND, IRON, WOOD...). */
+	type Type = number;
 	namespace Type {
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/CHEST_DIAMOND) */
-		const DIAMOND: number;
+		const DIAMOND: Chest.Type;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/CHEST_IRON) */
-		const IRON: number;
+		const IRON: Chest.Type;
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/CHEST_WOOD) */
-		const WOOD: number;
+		const WOOD: Chest.Type;
 	}
 }
 
-declare namespace State {
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_INVINCIBLE) */
-	const INVINCIBLE: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_PACIFIST) */
-	const PACIFIST: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_STATIC) */
-	const STATIC: number;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_UNHEALABLE) */
-	const UNHEALABLE: number;
+declare namespace Bulb {
+	/** Constante de la famille Bulb.Type (FIRE, HEALER, ICED...). */
+	type Type = number;
+	namespace Type {
+		/**
+		 * Désigne le type de bulbe de Feu.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_FIRE)
+		 */
+		const FIRE: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Soigneur.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_HEALER)
+		 */
+		const HEALER: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Glacé.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_ICED)
+		 */
+		const ICED: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe de Foudre.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_LIGHTNING)
+		 */
+		const LIGHTNING: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Métallique.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_METALLIC)
+		 */
+		const METALLIC: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Chétif.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_PUNY)
+		 */
+		const PUNY: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Rocheux.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_ROCKY)
+		 */
+		const ROCKY: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Savant.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_SAVANT)
+		 */
+		const SAVANT: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Tacticien.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_TACTICIAN)
+		 */
+		const TACTICIAN: Bulb.Type;
+		/**
+		 * Désigne le type de bulbe Sorcier.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_WIZARD)
+		 */
+		const WIZARD: Bulb.Type;
+	}
+}
+
+declare namespace Mob {
+	/** Constante de la famille Mob.Type (BLUE_CRYSTAL, EVIL_PUMPKIN, FENNEL_KING...). */
+	type Type = number;
+	namespace Type {
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_BLUE_CRYSTAL) */
+		const BLUE_CRYSTAL: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_EVIL_PUMPKIN) */
+		const EVIL_PUMPKIN: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_KING) */
+		const FENNEL_KING: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_KNIGHT) */
+		const FENNEL_KNIGHT: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_SCRIBE) */
+		const FENNEL_SCRIBE: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_SQUIRE) */
+		const FENNEL_SQUIRE: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_GRAAL) */
+		const GRAAL: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_GREEN_CRYSTAL) */
+		const GREEN_CRYSTAL: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_HUBBARD) */
+		const HUBBARD: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_RONIN) */
+		const NASU_RONIN: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_SAMURAI) */
+		const NASU_SAMURAI: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_SEITO) */
+		const NASU_SEITO: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_WARRIOR) */
+		const NASU_WARRIOR: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_OFFSPRING) */
+		const OFFSPRING: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_RED_CRYSTAL) */
+		const RED_CRYSTAL: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_TURBAN) */
+		const TURBAN: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_WARTY) */
+		const WARTY: Mob.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_YELLOW_CRYSTAL) */
+		const YELLOW_CRYSTAL: Mob.Type;
+	}
+}
+
+declare namespace Message {
+	/** Constante de la famille Message.Type (ATTACK, BUFF_AGILITY, BUFF_MP...). */
+	type Type = number;
+	namespace Type {
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_ATTACK) */
+		const ATTACK: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_AGILITY) */
+		const BUFF_AGILITY: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_MP) */
+		const BUFF_MP: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_STRENGTH) */
+		const BUFF_STRENGTH: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_TP) */
+		const BUFF_TP: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_CUSTOM) */
+		const CUSTOM: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_DEBUFF) */
+		const DEBUFF: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_HEAL) */
+		const HEAL: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_AWAY) */
+		const MOVE_AWAY: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_AWAY_CELL) */
+		const MOVE_AWAY_CELL: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_TOWARD) */
+		const MOVE_TOWARD: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_TOWARD_CELL) */
+		const MOVE_TOWARD_CELL: Message.Type;
+		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_SHIELD) */
+		const SHIELD: Message.Type;
+	}
 }
 
 declare namespace Weapon {
@@ -2374,167 +2643,15 @@ declare namespace Chip {
 	const wizardry: Chip;
 }
 
-declare namespace Cell {
-	namespace Type {
-		/**
-		 * Valeur de retour de getCellContent(cell) pour une case vide.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_EMPTY)
-		 */
-		const EMPTY: number;
-		/**
-		 * Valeur de retour de getCellContent(cell) pour une case contenant une entité.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_ENTITY)
-		 */
-		const ENTITY: number;
-		/**
-		 * Valeur de retour de getCellContent(cell) pour une case contenant un obstacle.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_OBSTACLE)
-		 */
-		const OBSTACLE: number;
-		/**
-		 * Valeur de retour de getCellContent(cell) pour une case contenant une entité.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_PLAYER)
-		 */
-		const PLAYER: number;
-	}
-}
-
-declare namespace Item {
-	namespace Area {
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_ALLIES) */
-		const ALLIES: number;
-		/**
-		 * Zone circulaire de 3 cases de diamètre (croix).
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_CIRCLE_1)
-		 */
-		const CIRCLE_1: number;
-		/**
-		 * Zone circulaire de 5 cases de diamètre.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_CIRCLE_2)
-		 */
-		const CIRCLE_2: number;
-		/**
-		 * Zone circulaire de 7 cases de diamètre.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_CIRCLE_3)
-		 */
-		const CIRCLE_3: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_ENEMIES) */
-		const ENEMIES: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_FIRST_INLINE) */
-		const FIRST_INLINE: number;
-		/**
-		 * Zone d'une laser, ligne depuis la portée minimum du laser jusqu’à sa portée maximum ou bien un obstacle.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_LASER_LINE)
-		 */
-		const LASER_LINE: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_PLUS_1) */
-		const PLUS_1: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_PLUS_2) */
-		const PLUS_2: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_PLUS_3) */
-		const PLUS_3: number;
-		/**
-		 * Zone constituée d'une seule case.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/AREA_POINT)
-		 */
-		const POINT: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_SQUARE_1) */
-		const SQUARE_1: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_SQUARE_2) */
-		const SQUARE_2: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_X_1) */
-		const X_1: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_X_2) */
-		const X_2: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/AREA_X_3) */
-		const X_3: number;
-	}
-	namespace LaunchType {
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_CIRCLE) */
-		const CIRCLE: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_DIAGONAL) */
-		const DIAGONAL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_DIAGONAL_INVERTED) */
-		const DIAGONAL_INVERTED: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_LINE) */
-		const LINE: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_LINE_INVERTED) */
-		const LINE_INVERTED: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_STAR) */
-		const STAR: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/LAUNCH_TYPE_STAR_INVERTED) */
-		const STAR_INVERTED: number;
-	}
-}
-
-declare namespace Mob {
-	namespace Type {
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_BLUE_CRYSTAL) */
-		const BLUE_CRYSTAL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_EVIL_PUMPKIN) */
-		const EVIL_PUMPKIN: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_KING) */
-		const FENNEL_KING: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_KNIGHT) */
-		const FENNEL_KNIGHT: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_SCRIBE) */
-		const FENNEL_SCRIBE: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_FENNEL_SQUIRE) */
-		const FENNEL_SQUIRE: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_GRAAL) */
-		const GRAAL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_GREEN_CRYSTAL) */
-		const GREEN_CRYSTAL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_HUBBARD) */
-		const HUBBARD: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_RONIN) */
-		const NASU_RONIN: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_SAMURAI) */
-		const NASU_SAMURAI: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_SEITO) */
-		const NASU_SEITO: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_NASU_WARRIOR) */
-		const NASU_WARRIOR: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_OFFSPRING) */
-		const OFFSPRING: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_RED_CRYSTAL) */
-		const RED_CRYSTAL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_TURBAN) */
-		const TURBAN: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_WARTY) */
-		const WARTY: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MOB_YELLOW_CRYSTAL) */
-		const YELLOW_CRYSTAL: number;
-	}
-}
-
-declare namespace Message {
-	namespace Type {
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_ATTACK) */
-		const ATTACK: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_AGILITY) */
-		const BUFF_AGILITY: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_MP) */
-		const BUFF_MP: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_STRENGTH) */
-		const BUFF_STRENGTH: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_BUFF_TP) */
-		const BUFF_TP: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_CUSTOM) */
-		const CUSTOM: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_DEBUFF) */
-		const DEBUFF: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_HEAL) */
-		const HEAL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_AWAY) */
-		const MOVE_AWAY: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_AWAY_CELL) */
-		const MOVE_AWAY_CELL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_TOWARD) */
-		const MOVE_TOWARD: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_MOVE_TOWARD_CELL) */
-		const MOVE_TOWARD_CELL: number;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/MESSAGE_SHIELD) */
-		const SHIELD: number;
-	}
+declare namespace System {
+	/**
+	 * Nombre d'instructions maximales qu'une entité peut utiliser pendant son tour.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/INSTRUCTIONS_LIMIT)
+	 */
+	const INSTRUCTIONS_LIMIT: number;
+	/**
+	 * Nombre d'opérations maximales qu'une entité peut utiliser pendant son tour.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/OPERATIONS_LIMIT)
+	 */
+	const OPERATIONS_LIMIT: number;
 }
