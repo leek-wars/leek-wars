@@ -114,7 +114,7 @@
 											<div class="spacer"></div>
 											<v-icon class="copy-btn" :title="t('copy')" @click="copyCode(buildSnippet(service, activeLang))">mdi-content-copy</v-icon>
 										</div>
-										<pre class="code-snippet"><code>{{ buildSnippet(service, activeLang) }}</code></pre>
+										<pre class="code-snippet" :class="resolveCodeThemeClass()"><code v-html="snippetHtml(service)"></code></pre>
 									</div>
 								</div>
 								<div v-if="service.example" class="doc-response">
@@ -131,18 +131,47 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref, computed, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
+import { defineAsyncComponent, ref, computed, markRaw, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { i18n, locale, mixins , normalizeComponentName, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
-import { LANGS, LANG_LABELS, LANG_ICONS, buildSnippet, type Lang } from './code-examples'
+import { LANGS, LANG_LABELS, LANG_ICONS, LANG_MONACO_IDS, buildSnippet, type Lang } from './code-examples'
+import { resolveCodeThemeClass } from '@/component/editor/code-theme'
 
 // Langue d'exemple de code, partagée par tous les endpoints et persistée.
 const activeLang = ref<Lang>((localStorage.getItem('api-doc/lang') as Lang) || 'curl')
 watch(activeLang, l => localStorage.setItem('api-doc/lang', l))
+
+// Coloration des snippets par le tokenizer Monaco, comme les aperçus du chat et de
+// l'encyclopédie (#4575). Import PARESSEUX : le chunk monaco ne doit pas être tiré au
+// chargement de la page, et monaco-highlight n'importe aucun module applicatif (il ne
+// doit pas entrer dans le graphe de boot). markRaw : objet Monaco jamais proxifié par Vue.
+const highlighter = ref<typeof import('@/component/editor/monaco-highlight') | null>(null)
+// La page rend plusieurs centaines de panneaux : sans cache, chaque re-rendu
+// retokeniserait tous les snippets. Clé = endpoint + langage, le snippet est déterministe.
+const highlightCache = new Map<string, string>()
+
+function escapeHtml(text: string): string {
+	return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+// HTML du snippet : colorisé si le moteur est chargé ET le langage a une grammaire
+// (HTTP n'en a pas), sinon texte brut échappé.
+function snippetHtml(service: ApiService): string {
+	const key = service.module + '_' + service.function + '|' + activeLang.value
+	const cached = highlightCache.get(key)
+	if (cached !== undefined) { return cached }
+	const code = buildSnippet(service, activeLang.value)
+	const languageId = LANG_MONACO_IDS[activeLang.value]
+	const html = (highlighter.value && languageId)
+		? highlighter.value.highlightToHtml(code, languageId)
+		: escapeHtml(code)
+	highlightCache.set(key, html)
+	return html
+}
 
 // Composant async : utilisable directement dans le template (script setup),
 // NE PAS le référencer dans defineOptions (variable locale, hoisting interdit).
@@ -367,6 +396,10 @@ onMounted(() => {
 	// box/footer posés par meta.layout de la route (router.afterEach).
 	search.value?.focus()
 	emitter.on('back', back)
+	import(/* webpackChunkName: "monaco-highlight" */ '@/component/editor/monaco-highlight').then(h => {
+		highlighter.value = markRaw(h)
+		highlightCache.clear() // les snippets déjà rendus en brut doivent être recolorisés
+	})
 })
 
 onBeforeUnmount(() => {
@@ -705,6 +738,16 @@ onBeforeUnmount(() => {
 		font-size: 13px;
 		line-height: 1.5;
 		white-space: pre;
-		code { font-family: monospace; color: var(--text-color); background: none; padding: 0; }
+		// `display: block` + `white-space: pre` explicites : le CSS global met
+		// `code { display: flex }`, ce qui transformait chaque span de coloration en item
+		// flex aligné sur une seule ligne (espaces et retours à la ligne écrasés).
+		code {
+			display: block;
+			white-space: pre;
+			font-family: monospace;
+			color: var(--text-color);
+			background: none;
+			padding: 0;
+		}
 	}
 </style>

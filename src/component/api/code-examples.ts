@@ -14,6 +14,15 @@ export const LANG_LABELS: Record<Lang, string> = {
 	http: 'HTTP',
 }
 
+// Id de langage Monaco pour coloriser chaque snippet (cf. monaco-highlight.ts).
+// HTTP n'a pas de grammaire Monaco : rendu en texte brut, sans coloration.
+export const LANG_MONACO_IDS: Record<Lang, string | null> = {
+	curl: 'shell',
+	javascript: 'javascript',
+	python: 'python',
+	http: null,
+}
+
 // Icônes MDI par langage (noms littéraux pour que generate-mdi-icons.mjs les détecte).
 export const LANG_ICONS: Record<Lang, string> = {
 	curl: 'mdi-console',

@@ -19,6 +19,9 @@ import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api.js'
 import { conf as jsConf, language as jsLang } from 'monaco-editor/esm/vs/basic-languages/javascript/javascript.js'
 // @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
 import { conf as tsConf, language as tsLang } from 'monaco-editor/esm/vs/basic-languages/typescript/typescript.js'
+// shell = exemples d'appel cURL de la doc API (/help/api).
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as shellConf, language as shellLang } from 'monaco-editor/esm/vs/basic-languages/shell/shell.js'
 import { config as jsonConfig, tokens as jsonTokens } from './json-monarch'
 import { registerLeekScriptLanguage, type LeekScriptData } from './monaco-leekscript-language'
 import { registerPythonLanguage } from './monaco-python-language'
@@ -33,6 +36,7 @@ function ensure(id: string, extensions: string[], conf: languages.LanguageConfig
 
 ensure('javascript', ['.js', '.mjs', '.cjs'], jsConf, jsLang)
 ensure('typescript', ['.ts', '.mts', '.cts'], tsConf, tsLang)
+ensure('shell', ['.sh', '.bash'], shellConf, shellLang)
 // Python via le module partagé (grammaire étendue, noms de classes injectés au runtime par leekwars.ts).
 registerPythonLanguage(languages)
 ensure('json', ['.json'], jsonConfig, jsonTokens)
