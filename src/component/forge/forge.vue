@@ -1,7 +1,7 @@
 <template>
 	<div class="forge">
 		<div class="grid">
-			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, partial: slotStates[i] === 'partial', missing: slotStates[i] === 'missing'}">
+			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, partial: slotStates[i] === 'partial', missing: slotStates[i] === 'missing', removable: !!item && !!component}" @click="component && removeAlteration(i)">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="itemImageUrl(LeekWars.items[item[0]])">
@@ -28,6 +28,10 @@
 			</div>
 			<v-icon v-if="scheme || component" class="clear" @click="clear">mdi-refresh</v-icon>
 		</div>
+		<div v-if="component && dose > 0" class="dose">
+			{{ $t('main.alteration_dose') }} <b>{{ dose }}</b>
+			<span class="count">{{ alterationCount }} / {{ maxItems }}</span>
+		</div>
 		<div v-if="component" class="component-actions">
 			<v-btn variant="tonal" color="error" size="small" :loading="destroying" @click="destroy">
 				<v-icon start>mdi-delete</v-icon>
@@ -43,10 +47,11 @@
 	import { InventoryItem } from '@/model/farmer'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/emitter'
 	import { t } from '@/model/i18n'
 	import type { ApiError } from '@/model/api-error'
+	import { emitter } from '@/model/emitter'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	defineOptions({ name: 'Forge' })
@@ -100,6 +105,7 @@
 		LeekWars.box = true
 		emitter.on('craft', onCraft)
 		emitter.on('alter', onAlter)
+		emitter.on('add-alteration', addAlteration)
 	})
 
 	function clearIngredients() {
@@ -115,6 +121,67 @@
 		component.value = null
 		building.value = false
 		built.value = false
+	}
+
+	/** Nombre d'alterations posees, quantites comprises. */
+	const alterationCount = computed(() => forge.value.reduce((n, slot) => n + (slot ? slot[1] : 0), 0))
+	const maxItems = computed(() => LeekWars.alterations?.max_items ?? 8)
+
+	/**
+	 * Dosage de la tentative : somme des numeros publies des alterations posees.
+	 * C'est lui que le joueur ajuste pour trouver le metabolisme du composant, donc
+	 * il se met a jour a chaque ajout.
+	 */
+	const dose = computed(() => {
+		const data = LeekWars.alterations
+		if (!data) return 0
+		let total = 0
+		for (const slot of forge.value) {
+			if (!slot) continue
+			for (const id in data.alterations) {
+				if (data.alterations[id].template === slot[0]) {
+					total += data.alterations[id].number * slot[1]
+					break
+				}
+			}
+		}
+		return total
+	})
+
+	/** Pose une alteration autour du composant, ou incremente sa pile. */
+	function addAlteration(item: InventoryItem) {
+		if (!component.value) {
+			LeekWars.toast(t('main.alteration_needs_component'))
+			return
+		}
+		if (alterationCount.value >= maxItems.value) {
+			LeekWars.toast(t('main.alteration_too_many', [maxItems.value]))
+			return
+		}
+		const existing = forge.value.find(slot => slot && slot[0] === item.template)
+		const posed = existing ? existing[1] : 0
+		if (posed >= item.quantity) {
+			LeekWars.toast(t('main.alteration_not_enough'))
+			return
+		}
+		if (existing) {
+			existing[1]++
+			return
+		}
+		const free = forge.value.indexOf(null)
+		if (free === -1) {
+			LeekWars.toast(t('main.alteration_too_many', [maxItems.value]))
+			return
+		}
+		forge.value[free] = [item.template, 1]
+	}
+
+	/** Retire une alteration posee : un clic enleve un exemplaire. */
+	function removeAlteration(index: number) {
+		const slot = forge.value[index]
+		if (!slot) return
+		slot[1]--
+		if (slot[1] <= 0) forge.value[index] = null
 	}
 
 	/**
@@ -146,6 +213,7 @@
 		// composants (le scrollToForge de la page inventaire)
 		emitter.off('craft', onCraft)
 		emitter.off('alter', onAlter)
+		emitter.off('add-alteration', addAlteration)
 	})
 
 	function craft() {
@@ -201,6 +269,19 @@
 </script>
 
 <style lang="scss" scoped>
+
+.dose {
+	text-align: center;
+	padding-top: 6px;
+	font-size: 15px;
+	b { font-size: 19px; }
+	.count {
+		display: block;
+		font-size: 12px;
+		color: var(--text-color-secondary);
+	}
+}
+.cell.removable { cursor: pointer; }
 
 .component-actions {
 	display: flex;
