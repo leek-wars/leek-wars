@@ -165,6 +165,8 @@
 						<v-radio :value="1" :label="$t('received_damage')" :ripple="false" />
 						<v-radio :value="2" :label="$t('heal')" :ripple="false" />
 						<v-radio :value="3" label="Tank" :ripple="false" />
+						<v-radio :value="4" :label="$t('tp_used')" :ripple="false" />
+						<v-radio :value="5" :label="$t('mp_used')" :ripple="false" />
 					</v-radio-group>
 					<div class="spacer"></div>
 					<v-radio-group v-if="fight!.type !== FightType.BATTLE_ROYALE && fight!.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
@@ -186,6 +188,7 @@
 						<Bar :data="damagesBarsData" :options="damagesBarsOptions" :plugins="[damagesBarsTotal]" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="chart" />
 					</div>
 				</div>
+				<report-turn-chart v-if="fight && statistics" :fight="fight" :statistics="(statistics as FightStatistics)" :metric="damageChartType" :teams="damagesTeams" :display-summons="damagesDisplaySummons" />
 			</template>
 		</panel>
 
@@ -283,6 +286,7 @@
 	import { Bar, Doughnut } from 'vue-chartjs'
 	import { Chart as ChartJS, Tooltip, TooltipItem, ChartDataset, ActiveElement } from 'chart.js'
 	import ReportLifeChart from './report-life-chart.vue'
+	import ReportTurnChart from './report-turn-chart.vue'
 
 	interface LogEntry { entity: string; data: string; action: string; index: number; ai: number; line: number; resolvedAI: { path: string } | null }
 	// Raw log entry from server: [leekId, type, message, ...extra]
@@ -656,9 +660,15 @@
 			} else if (damageChartType.value === 2) {
 				total = entity.heal_out + entity.life_steal_out + entity.max_life_out
 				stats = [name, entity.leek.id, entity.leek.team, total, entity.heal_out, entity.life_steal_out, entity.max_life_out]
-			} else {
+			} else if (damageChartType.value === 3) {
 				total = entity.tank
 				stats = [name, entity.leek.id, entity.leek.team, total, entity.tank]
+			} else if (damageChartType.value === 4) {
+				total = entity.usedPT
+				stats = [name, entity.leek.id, entity.leek.team, total, entity.usedPT]
+			} else {
+				total = entity.usedPM
+				stats = [name, entity.leek.id, entity.leek.team, total, entity.usedPM]
 			}
 			if (damagesTeams.value === 1) {
 				const team = entities.find(ee => ee[2] === entity.leek.team)
@@ -705,12 +715,21 @@
 			labelKeys = ['direct', 'steal', 'max_life']
 			colors = ['#5fad1b', '#e22424', '#38e9ae']
 			legends.value = ['#5fad1b', '#e22424', '#38e9ae']
+		} else if (damageChartType.value === 4) {
+			labelKeys = ['direct']
+			colors = ['#3b8ed6']
+			legends.value = ['#3b8ed6']
+		} else if (damageChartType.value === 5) {
+			labelKeys = ['direct']
+			colors = ['#8d6e63']
+			legends.value = ['#8d6e63']
 		} else {
 			labelKeys = ['direct']
 			colors = ['orange']
 			legends.value = ['orange']
 		}
-		const labels = labelKeys.map(k => t('stat_' + k) as string)
+		// PT/PM n'ont pas de sous-composantes : on affiche leur libellé de métrique plutôt que « Direct »
+		const labels = damageChartType.value === 4 ? [t('tp_used') as string] : damageChartType.value === 5 ? [t('mp_used') as string] : labelKeys.map(k => t('stat_' + k) as string)
 
 		damagesBarsData.value = {
 			labels: entities.map(e => e[0]),
