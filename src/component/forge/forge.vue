@@ -151,6 +151,7 @@
 	interface AlterResult {
 		success: boolean
 		results: { carac: string, success: boolean, points: number, probability: number }[]
+		id?: number
 		stats: { [carac: string]: number }
 		well: { used: number, capacity: number }
 		dose: number
@@ -218,11 +219,24 @@
 			// l'objet recu ne suffit pas : il faut retrouver l'original.
 			item.stats = data.stats
 			item.altered_power = data.well.used
-			const stored = store.state.farmer?.components.find(c => c.id === item.id)
-			if (stored) {
-				stored.stats = data.stats
-				stored.altered_power = data.well.used
+			// Le serveur a pu DETACHER la piece d'un stack : dans ce cas elle a un
+			// nouvel id, et l'ancienne ligne garde le reste de la pile.
+			const newId = data.id
+			const split = newId !== undefined && newId !== item.id
+			const components = store.state.farmer?.components
+			if (components) {
+				const stored = components.find(c => c.id === item.id)
+				if (split && stored) {
+					stored.quantity--
+					if (stored.quantity <= 0) components.splice(components.indexOf(stored), 1)
+					components.push({ id: newId as number, template: item.template, quantity: 1,
+						time: item.time, stats: data.stats, altered_power: data.well.used })
+				} else if (stored) {
+					stored.stats = data.stats
+					stored.altered_power = data.well.used
+				}
 			}
+			if (split) item.id = newId as number
 			const alterations = LeekWars.alterations
 			for (const id in recipe.value) {
 				const alteration = alterations ? alterations.alterations[id] : null

@@ -260,7 +260,10 @@
 
 	function selectItem(item: InventoryItem) {
 		if (item.type === ItemType.COMPONENT) {
-			hideTooltip()
+			// Sur mobile le tap est le SEUL moyen de consulter une fiche : la fermer
+			// ici privait le joueur des stats de son composant. Sur desktop l'infobulle
+			// suit la souris, la fermer evite qu'elle masque la forge.
+			if (!LeekWars.mobile) hideTooltip()
 			emitter.emit('alter', item)
 		} else if (item.type === ItemType.ALTERATION) {
 			emitter.emit('add-alteration', item)
