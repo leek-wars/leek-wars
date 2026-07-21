@@ -93,9 +93,13 @@ const ITEM_TYPE_ICONS: { [key: number]: string } = {
 	[ItemType.ALTERATION]: 'mdi-flask',
 }
 
-// Types dont le nom d'item est déjà le nom de fichier image, sans préfixe de catégorie
-// (ex: resource « sun_shard » → /image/resource/sun_shard.png).
-const UNPREFIXED_IMAGE_TYPES: number[] = [ItemType.RESOURCE, ItemType.COMPONENT]
+/**
+ * Types dont le nom d'item EST deja le nom du fichier image : rien a retirer.
+ * Les autres sont prefixes par leur categorie (weapon_pistol, chip_shock...) et le
+ * prefixe doit sauter. Sans cette liste, une alteration comme vitamin_d finissait
+ * en /image/alteration/d.png (#622).
+ */
+const UNPREFIXED_IMAGE_TYPES: number[] = [ItemType.RESOURCE, ItemType.COMPONENT, ItemType.ALTERATION]
 
 /** Nom de fichier image d'un item, sans extension ni dossier. */
 function itemImageName(item: { type: number, name: string }): string {
@@ -103,7 +107,7 @@ function itemImageName(item: { type: number, name: string }): string {
 	return item.name.substring(item.name.indexOf('_') + 1)
 }
 
-/** URL complète de l'image d'un item. */
+/** URL complete de l'image d'un item. */
 function itemImageUrl(item: { type: number, name: string }): string {
 	return '/image/' + ITEM_CATEGORY_NAME[item.type] + '/' + itemImageName(item) + '.png'
 }

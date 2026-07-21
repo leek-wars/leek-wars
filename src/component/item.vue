@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, type ItemTemplate } from '@/model/item'
+import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, itemImageName, type ItemTemplate } from '@/model/item'
 import { i18n } from '@/model/i18n'
 
 const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
@@ -21,7 +21,7 @@ const props = defineProps<{
 	item: ItemTemplate
 }>()
 
-const image = computed(() => props.item.type === ItemType.COMPONENT ? props.item.name : props.item.name.substring(props.item.name.indexOf('_') + 1))
+const image = computed(() => itemImageName(props.item))
 const url = computed(() => '/image/' + ITEM_CATEGORY_NAME[props.item.type] + '/' + image.value + '.png')
 const is_weapon = computed(() => props.item.type === ItemType.WEAPON)
 // alt accessible : nom traduit de l'objet, repli sur le nom brut si la clé
