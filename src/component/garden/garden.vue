@@ -1044,7 +1044,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 4px;
-		margin: 6px 0;
+		margin: 10px 0;
 		font-size: 13px;
 		color: var(--text-color-secondary);
 		.v-icon { font-size: 18px; }
