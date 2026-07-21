@@ -122,7 +122,7 @@
 							<span class="group-count">({{ entry.count }})</span>
 						</div>
 						<div v-else-if="entry.placeholder" class="placeholder"></div>
-						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable, selectable: entry.item.type === ItemType.COMPONENT }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()" @click="selectItem(entry.item as InventoryItem)">
+						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable, selectable: entry.item.type === ItemType.COMPONENT || entry.item.type === ItemType.ALTERATION }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()" @click="selectItem(entry.item as InventoryItem)">
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
@@ -240,9 +240,12 @@
 	 * d'alteration (#622). Les autres types n'ont pas d'action au clic.
 	 */
 	function selectItem(item: InventoryItem) {
-		if (item.type !== ItemType.COMPONENT) return
-		hideTooltip()
-		emitter.emit('alter', item)
+		if (item.type === ItemType.COMPONENT) {
+			hideTooltip()
+			emitter.emit('alter', item)
+		} else if (item.type === ItemType.ALTERATION) {
+			emitter.emit('add-alteration', item)
+		}
 	}
 
 	function showTooltip(item: Item & { type: ItemType }, event: MouseEvent) {

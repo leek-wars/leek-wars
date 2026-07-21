@@ -72,6 +72,8 @@ type Events = {
 	'craft': SchemeTemplate,
 	/** Un composant part de l'inventaire vers la forge, pour etre altere (#622). */
 	'alter': InventoryItem,
+	/** Une alteration part de l'inventaire vers la forge (#622). */
+	'add-alteration': InventoryItem,
 }
 
 const emitter = mitt<Events>()
