@@ -103,17 +103,22 @@
 			font-weight: normal;
 		}
 	}
+	// item-preview.scss ne colore que les enfants directs de .stats, par alternance.
+	// Ces deux blocs sont en dehors : sans fond explicite, la fiche laisse voir
+	// l'inventaire au travers.
 	.note {
 		padding: 5px 8px;
 		font-size: 13px;
 		color: var(--text-color-secondary);
 		text-align: left;
+		background: var(--background-secondary);
 	}
 	.dose {
 		padding: 5px 8px;
 		border-top: 1px solid var(--border);
 		color: var(--text-color-secondary);
 		text-align: left;
+		background: var(--background);
 	}
 	body.dark {
 		.stats .stat.best { background: #23401f; }
