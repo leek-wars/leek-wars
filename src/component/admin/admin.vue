@@ -36,12 +36,6 @@
 							<h2>Items</h2>
 						</div>
 					</router-link>
-					<router-link to="/admin/alterations">
-						<div v-ripple class="section card">
-							<v-icon>mdi-flask</v-icon>
-							<h2>Altérations</h2>
-						</div>
-					</router-link>
 					<router-link to="/admin/security">
 						<div v-ripple class="section card">
 							<v-icon>mdi-shield-alert</v-icon>
@@ -136,6 +130,12 @@
 						<div v-ripple class="section card">
 							<v-icon>mdi-food-apple-outline</v-icon>
 							<h2>Composants</h2>
+						</div>
+					</router-link>
+					<router-link to="/admin/alterations">
+						<div v-ripple class="section card">
+							<v-icon>mdi-flask</v-icon>
+							<h2>Altérations</h2>
 						</div>
 					</router-link>
 					<router-link to="/admin/schemes">
