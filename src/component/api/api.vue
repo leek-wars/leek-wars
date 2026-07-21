@@ -133,7 +133,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, ref, computed, watch, onMounted, onBeforeUnmount, useTemplateRef, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { locale, mixins , useNamespacedT } from '@/model/i18n'
+import { i18n, locale, mixins , normalizeComponentName, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
@@ -260,6 +260,26 @@ const breadcrumb_items = computed(() => [
 
 const lower_query = computed(() => query.value.toLowerCase())
 
+// `i18n.global.te`/`.t` sont typés en union Composer | VueI18n, donc non appelables
+// directement : mêmes casts que useNamespacedT dans src/model/i18n.ts.
+const KEY_PREFIX = normalizeComponentName('api') + '.'
+const te = i18n.global.te as (key: string) => boolean
+const translate = i18n.global.t as (key: string) => unknown
+
+// Index des descriptions traduites, en minuscules, pour que la recherche porte aussi
+// sur le texte de la doc et pas seulement sur les noms (#4578). Pré-calculé une fois
+// par (liste de services, langue) : le refaire à chaque frappe re-traduirait plusieurs
+// centaines de services à chaque caractère saisi.
+const descriptions = computed(() => {
+	void i18n.global.locale // dépendance explicite : réindexer au changement de langue
+	const map: Record<string, string> = {}
+	for (const service of services.value) {
+		const id = service.module + '_' + service.function
+		if (te(KEY_PREFIX + id)) map[id] = String(translate(KEY_PREFIX + id)).toLowerCase()
+	}
+	return map
+})
+
 const filteredItems = computed(() => {
 	if (lower_query.value.length) {
 		return services.value.filter((item) =>
@@ -268,6 +288,7 @@ const filteredItems = computed(() => {
 			|| (item.module + '/' + item.function).indexOf(lower_query.value) !== -1
 			|| item.returns.some((r) => r.indexOf(lower_query.value) !== -1)
 			|| item.parameters.some((r) => r.indexOf(lower_query.value) !== -1)
+			|| (descriptions.value[item.module + '_' + item.function] ?? '').indexOf(lower_query.value) !== -1
 		)
 	}
 	return services.value
