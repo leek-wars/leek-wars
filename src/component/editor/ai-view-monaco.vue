@@ -116,6 +116,8 @@ let jumpToLine: number | null = 0
 let jumpToColumn: number | null = 0
 let scrollListener: monaco.IDisposable
 let analyzerTimeout: ReturnType<typeof setTimeout> | null = null
+// Numéro de la dernière analyse lancée par cet éditeur (l'indicateur ne suit qu'elle)
+let analyzeSeq = 0
 let viewStateSaveTimeout: ReturnType<typeof setTimeout> | null = null
 let currentAiPath: string | null = null
 const analyzing = ref(false)
@@ -453,14 +455,17 @@ function setAnalyzerTimeout() {
 
 		analyzer.updateTodos(ai)
 
+		// Une analyse dépassée par une plus récente se résout sans résultat : elle ne doit pas
+		// éteindre l'indicateur, l'analyse en cours n'a pas encore répondu.
+		const seq = ++analyzeSeq
 		analyzer.analyze(ai, ai.code).then((result) => {
-			analyzing.value = false
+			if (seq === analyzeSeq) analyzing.value = false
 			if (!result) return
 			analyzer.applyAnalyzeResult(result as Parameters<typeof analyzer.applyAnalyzeResult>[0])
 			analyzer.updateTodos(ai)
 			analyzer.updateCount()
 		}).catch(() => {
-			analyzing.value = false
+			if (seq === analyzeSeq) analyzing.value = false
 		})
 	}, 500)
 }

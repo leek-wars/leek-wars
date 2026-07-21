@@ -25,6 +25,23 @@ export interface CompletionResult {
 	items: Array<{ name: string }>
 }
 
+/** Une analyse envoyée au daemon dont on attend encore la réponse */
+interface PendingAnalyze {
+	path: string
+	version: number
+	resolve: (value: unknown) => void
+	timer: number
+}
+
+// Analyses en vol, indexées par identifiant de requête (le daemon le renvoie dans sa réponse).
+// Volontairement hors de l'objet reactive() plus bas : ce sont des resolveurs de promesse et des
+// identifiants de timer, que Vue n'a aucune raison de proxyfier ni de suivre.
+const pendingAnalyzes = new Map<number, PendingAnalyze>()
+
+// Au-delà, on considère la réponse perdue (socket coupé en plein vol) et on libère la requête,
+// sinon la promesse ne se résoudrait jamais et l'indicateur d'analyse resterait allumé.
+const ANALYZE_TIMEOUT = 30_000
+
 export class AnalyzerPromise {
 	// eslint-disable-next-line unicorn/no-thenable
 	public then!: (data: unknown) => void
@@ -41,8 +58,7 @@ class Analyzer {
 	public todo_count: number = 0
 	public promise!: Promise<unknown>
 	public requestID: number = 0
-	public analyzeResolve!: ((value: unknown) => void) | null
-	private analyzeVersion: number = 0
+	private analyzeVersions: {[path: string]: number} = {}
 	public hoverResolve!: (value: unknown) => void
 	public lastHover: unknown
 	public completeResolve: {[key: number]: (value: unknown) => void} = {}
@@ -143,32 +159,66 @@ class Analyzer {
 			return Promise.reject()
 		}
 
-		const version = ++this.analyzeVersion
+		// Deux analyses peuvent se chevaucher (le debounce de frappe est de 500 ms, une analyse de
+		// grosse IA avec includes dure plus longtemps). Chaque requête porte donc un identifiant, que
+		// le daemon renvoie dans sa réponse, comme le font déjà EDITOR_COMPLETE et EDITOR_REFERENCES.
+		// L'identifiant est en FIN de paquet, pas en position 1 : un daemon antérieur l'ignore
+		// simplement au lieu de décaler ai.path et le code.
+		const requestID = this.requestID++
 
-		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code])
+		// Version PAR CHEMIN : une réponse n'est périmée que si une analyse plus récente du MÊME
+		// fichier a été lancée depuis. Un compteur global jetterait le résultat valide d'un fichier dès
+		// qu'un autre est analysé (vue splittée, changement d'onglet), et l'avertissement corrigé
+		// resterait affiché.
+		const version = (this.analyzeVersions[ai.path] = (this.analyzeVersions[ai.path] ?? 0) + 1)
+
+		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code, requestID])
 
 		return new Promise<unknown>((resolve) => {
-			this.analyzeResolve = (data: unknown) => {
-				if (version === this.analyzeVersion) {
-					resolve(data)
-				}
-				// Stale result: ignore but don't clear resolve,
-				// so the next (correct) result can still resolve.
-			}
+			pendingAnalyzes.set(requestID, {
+				path: ai.path,
+				version,
+				resolve,
+				timer: window.setTimeout(() => {
+					pendingAnalyzes.delete(requestID)
+					resolve(null)
+				}, ANALYZE_TIMEOUT)
+			})
 		})
 	}
 
-	public analyzeResult(data: unknown[]) {
-		if (this.analyzeResolve) {
-			// console.timeEnd('hover')
-			this.analyzeResolve(data)
+	/**
+	 * Résout la requête d'analyse à laquelle répond le daemon.
+	 * @param requestID identifiant renvoyé par le daemon : absent s'il précède la corrélation,
+	 * négatif si la requête n'est pas passée par analyze() (restoreDaemonCache envoie des
+	 * EDITOR_ANALYZE bruts, dont la réponse ne doit résoudre aucune promesse).
+	 */
+	private resolveAnalyze(requestID: number | undefined, data: unknown) {
+		let key = requestID
+		if (key === undefined) {
+			// Daemon antérieur à la corrélation : il répond dans l'ordre des requêtes, on retombe donc
+			// sur la plus ancienne en attente (Map = ordre d'insertion). Dégradé mais fonctionnel.
+			key = pendingAnalyzes.keys().next().value
+		} else if (key < 0) {
+			return
 		}
+		if (key === undefined) { return }
+		const entry = pendingAnalyzes.get(key)
+		if (!entry) { return }
+		pendingAnalyzes.delete(key)
+		clearTimeout(entry.timer)
+		// Analyse dépassée par une plus récente du même fichier : ne rien appliquer, la réponse à jour
+		// arrive juste après.
+		entry.resolve(entry.version === this.analyzeVersions[entry.path] ? data : null)
 	}
 
-	public analyzeError() {
-		if (this.analyzeResolve) {
-			this.analyzeResolve(null)
-		}
+	public analyzeResult(data: unknown[], requestID?: number) {
+		// console.timeEnd('hover')
+		this.resolveAnalyze(requestID, data)
+	}
+
+	public analyzeError(requestID?: number) {
+		this.resolveAnalyze(requestID, null)
 	}
 
 	public applyAnalyzeResult(
