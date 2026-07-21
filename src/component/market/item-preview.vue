@@ -28,6 +28,7 @@
 		<resource-preview v-else-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
 		<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
 		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" @update:model-value="$emit('update:modelValue', $event)" />
+		<alteration-preview v-else-if="item.type === ItemType.ALTERATION" :template="item.id" />
 		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" :show-craft="!!inventory" @update:model-value="$emit('update:modelValue', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
 
@@ -69,6 +70,7 @@
 <script setup lang="ts">
 import ChipPreview from '@/component/market/chip-preview.vue'
 import ComponentPreview from '@/component/market/component-preview.vue'
+import AlterationPreview from '@/component/market/alteration-preview.vue'
 import FightPackPreview from '@/component/market/fight-pack-preview.vue'
 import HatPreview from '@/component/market/hat-preview.vue'
 import PompPreview from '@/component/market/pomp-preview.vue'
@@ -95,6 +97,7 @@ defineOptions({ name: 'ItemPreview', components: {
 	'fight-pack-preview': FightPackPreview,
 	'resource-preview': ResourcePreview,
 	'component-preview': ComponentPreview,
+	'alteration-preview': AlterationPreview,
 	'scheme-preview': SchemePreview,
 	'scheme-image': SchemeImage
 }})
