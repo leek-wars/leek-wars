@@ -16,6 +16,10 @@ interface InventoryItem {
 	quantity: number
 	time?: number
 	type?: number
+	/** Alterations portees par CETTE instance (#622), absentes de la plupart des items. */
+	stats?: { [carac: string]: number }
+	altered_power?: number
+	preferred_leek?: number
 }
 
 interface FarmerTournament {
