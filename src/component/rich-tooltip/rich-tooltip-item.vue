@@ -6,7 +6,7 @@
 			</span>
 		</template>
 		<div class="card" :style="{ maxHeight: maxHeight + 'px' }" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="(v: unknown) => setParent(v as boolean)" @retrieve="(v: unknown) => $emit('retrieve', v as unknown[])" />
+			<item-preview :item="item" :quantity="quantity" :instance="instance" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="(v: unknown) => setParent(v as boolean)" @retrieve="(v: unknown) => $emit('retrieve', v as unknown[])" />
 		</div>
 	</v-menu>
 </template>
@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import ItemPreview from '@/component/market/item-preview.vue'
+import type { InventoryItem } from '@/model/farmer'
 import { ItemTemplate } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import type { Leek } from '@/model/leek'
@@ -31,11 +32,14 @@ const props = withDefaults(defineProps<{
 	openDelay?: number
 	leek?: Leek
 	craftCost?: number
+	/** Instance affichee, quand elle porte des donnees propres (alterations, #622). */
+	instance?: InventoryItem | null
 }>(), {
 	craftCost: 0,
 	quantity: undefined,
 	openDelay: undefined,
 	leek: undefined,
+	instance: null,
 })
 
 const emit = defineEmits<{

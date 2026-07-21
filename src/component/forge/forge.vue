@@ -10,7 +10,7 @@
 				</rich-tooltip-item>
 			</div>
 			<div v-if="component" class="cell cell8 active component">
-				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :inventory="true">
+				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
 						<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 					</div>
