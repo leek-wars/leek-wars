@@ -156,9 +156,6 @@
 	}
 	refreshAvailable()
 
-	// Mode large activé sur cette page uniquement (restauré en quittant).
-	const previousLarge = ref(false)
-
 	let saveTimer: ReturnType<typeof setTimeout> | null = null
 	function persist() {
 		if (!grid) return
@@ -241,7 +238,6 @@
 	})
 
 	onMounted(() => {
-		previousLarge.value = LeekWars.large
 		LeekWars.large = true
 		nextTick(initGrid)
 	})
@@ -249,7 +245,11 @@
 	onBeforeUnmount(() => {
 		if (saveTimer) clearTimeout(saveTimer)
 		if (grid) { grid.destroy(false); grid = null }
-		LeekWars.large = previousLarge.value
+		// Ne restaure PAS `LeekWars.large` : router.afterEach a déjà appelé resetLayout()
+		// puis appliqué le meta.layout de la page de destination AVANT que cette page ne se
+		// démonte. Restaurer ici écrasait donc le layout de la destination (une page
+		// LAYOUT_BOX_LARGE, comme /help/api, perdait son mode large en arrivant depuis
+		// l'accueil). Les autres pages qui élargissent (items, talent) ne restaurent rien.
 	})
 </script>
 
