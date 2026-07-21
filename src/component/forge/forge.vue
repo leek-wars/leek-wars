@@ -9,7 +9,14 @@
 					</div>
 				</rich-tooltip-item>
 			</div>
-			<div class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
+			<div v-if="component" class="cell cell8 active component">
+				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :inventory="true">
+					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
+						<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
+					</div>
+				</rich-tooltip-item>
+			</div>
+			<div v-else class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
 					<div v-ripple v-bind="props" class="item" :class="{building}" :type="LeekWars.items[result].type">
 						<img :src="itemImageUrl(LeekWars.items[result])">
@@ -19,14 +26,22 @@
 				<v-icon v-if="result && !building && !built">mdi-hammer-wrench</v-icon>
 				<v-icon v-if="result && built">mdi-refresh</v-icon>
 			</div>
-			<v-icon v-if="scheme" class="clear" @click="clear">mdi-refresh</v-icon>
+			<v-icon v-if="scheme || component" class="clear" @click="clear">mdi-refresh</v-icon>
+		</div>
+		<div v-if="component" class="component-actions">
+			<v-btn variant="tonal" color="error" size="small" :loading="destroying" @click="destroy">
+				<v-icon start>mdi-delete</v-icon>
+				{{ $t('main.destroy') }}
+			</v-btn>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { itemImageUrl } from '@/model/item'
+	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
+	import { InventoryItem } from '@/model/farmer'
+	import { t } from '@/model/i18n'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -39,6 +54,9 @@
 	type ForgeSlot = [number, number]
 
 	const forge = ref<(ForgeSlot | null)[]>([null, null, null, null, null, null, null, null])
+	/** Composant pose au centre pour etre altere (#622). */
+	const component = ref<InventoryItem | null>(null)
+	const destroying = ref(false)
 	const scheme = ref<SchemeTemplate | null>(null)
 	const result = ref<number | null>(null)
 	const building = ref(false)
@@ -47,6 +65,10 @@
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
+		emitter.on('alter', (item: InventoryItem) => {
+			clear()
+			component.value = item
+		})
 		emitter.on('craft', (s: SchemeTemplate) => {
 			clear()
 			scheme.value = s
@@ -66,12 +88,38 @@
 		clearIngredients()
 		result.value = null
 		scheme.value = null
+		component.value = null
 		building.value = false
 		built.value = false
 	}
 
+	/**
+	 * Detruit le composant pose : il est recycle en alterations, dont la quantite
+	 * depend de son niveau et la caracteristique de sa part de puissance (#622).
+	 */
+	function destroy() {
+		if (!component.value || destroying.value) return
+		const item = component.value
+		destroying.value = true
+		LeekWars.post<{ alterations: {[id: number]: number}, count: number }>('item/recycle', { item_id: item.id }).then(data => {
+			store.commit('remove-inventory', { type: ItemType.COMPONENT, item_template: item.template, quantity: 1 })
+			const alterations = LeekWars.alterations
+			for (const id in data.alterations) {
+				const alteration = alterations ? alterations.alterations[id] : null
+				if (!alteration) continue
+				store.commit('add-inventory', { type: ItemType.ALTERATION, id: alteration.template,
+					template: alteration.template, quantity: data.alterations[id], time: Date.now() / 1000 })
+			}
+			LeekWars.toast(data.count > 0
+				? t('main.destroy_result', [data.count])
+				: t('main.destroy_nothing'))
+			clear()
+		}).error(error => LeekWars.toast(error.error)).finally(() => { destroying.value = false })
+	}
+
 	onBeforeUnmount(() => {
 		emitter.off('craft')
+		emitter.off('alter')
 	})
 
 	function craft() {
@@ -106,6 +154,16 @@
 </script>
 
 <style lang="scss" scoped>
+
+.component-actions {
+	display: flex;
+	justify-content: center;
+	padding-top: 6px;
+}
+.cell8.component .item img {
+	max-width: 100%;
+	max-height: 100%;
+}
 
 .forge {
 	display: flex;

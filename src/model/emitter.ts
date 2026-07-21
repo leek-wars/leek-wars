@@ -1,3 +1,4 @@
+import { InventoryItem } from './farmer'
 import mitt from 'mitt'
 import { ComponentPublicInstance } from 'vue'
 import { Folder, Item } from '@/component/editor/editor-item'
@@ -69,6 +70,8 @@ type Events = {
 	'open-merge': { folder: string, file: string },
 	'clover-used': void,
 	'craft': SchemeTemplate,
+	/** Un composant part de l'inventaire vers la forge, pour etre altere (#622). */
+	'alter': InventoryItem,
 }
 
 const emitter = mitt<Events>()

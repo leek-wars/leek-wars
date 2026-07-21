@@ -776,6 +776,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				} else {
 					state.farmer.components.push(data)
 				}
+			} else if (data.type === ItemType.ALTERATION) {
+				// Les alterations se stackent par template, comme les ressources (#622).
+				if (!state.farmer.alterations) { state.farmer.alterations = [] }
+				const existing = LeekWars.selectWhere(state.farmer.alterations, 'template', data.template)
+				if (existing) {
+					existing.quantity += quantity
+					existing.time = data.time
+				} else {
+					state.farmer.alterations.push({ id: data.id, template: data.template, quantity, time: data.time })
+				}
 			} else if (data.type === ItemType.SCHEME) {
 				const scheme = LeekWars.selectWhere(state.farmer.schemes, 'id', data.id)
 				if (scheme) {
@@ -831,6 +841,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				list = state.farmer.components
 			} else if (data.type === ItemType.FIGHT_PACK) {
 				list = state.farmer.fight_packs
+			} else if (data.type === ItemType.ALTERATION) {
+				list = state.farmer.alterations
 			}
 			if (!list) { return }
 			const item = LeekWars.selectWhere(list, 'template', data.item_template)
