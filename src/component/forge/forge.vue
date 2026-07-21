@@ -27,7 +27,7 @@
 				<v-icon v-if="result && built">mdi-refresh</v-icon>
 			</div>
 			<v-icon v-if="scheme || component" class="clear" @click="clear">mdi-refresh</v-icon>
-			<!-- Recyclage : coin bas droit, et seulement tant qu'aucune alteration
+			<!-- Recyclage : coin bas gauche, et seulement tant qu'aucune alteration
 			     n'est posee. Une fois qu'on en pose une, on vient alterer, pas detruire. -->
 			<v-btn v-if="component && alterationCount === 0" class="recycle" icon variant="tonal" color="error"
 				size="small" :loading="destroying" :title="$t('main.destroy')" @click="destroy">
@@ -415,9 +415,11 @@
 	}
 }
 .cell.removable { cursor: pointer; }
+// Coin bas GAUCHE : `.clear` (réinitialiser) occupe déjà le coin bas droit et les deux
+// boutons peuvent être affichés en même temps, ils se superposaient.
 .recycle {
 	position: absolute;
-	right: -4px;
+	left: -4px;
 	bottom: -4px;
 	z-index: 3;
 }
