@@ -53,6 +53,7 @@ function ensure(id: string, extensions: string[], conf: languages.LanguageConfig
 
 ensure('javascript', ['.js', '.mjs', '.cjs'], jsConf, jsLang)
 ensure('typescript', ['.ts', '.mts', '.cts'], tsConf, tsLang)
+ensure('shell', ['.sh', '.bash'], shellConf, shellLang)
 // Python via le module partagé (grammaire étendue, noms de classes injectés au runtime par leekwars.ts).
 registerPythonLanguage(languages)
 ensure('json', ['.json'], jsonConfig, jsonTokens)
