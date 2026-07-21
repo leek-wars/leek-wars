@@ -66,6 +66,7 @@
 								<span class="parameter">{{ parameter }}</span>
 							</template>
 							<template v-if="service.returns.length"> → <span class="returns">{{ service.returns.join(", ") }}</span></template>
+							<v-icon class="permalink" :title="$t('copy_section_link')" @click="copyLink(service)">mdi-link-variant</v-icon>
 						</div>
 						<div class="chips">
 							<span class="method chip" :class="service.method">{{ service.method }}</span>
@@ -161,6 +162,13 @@ function formatExample(ex: unknown): string {
 
 function copyCode(code: string) {
 	navigator.clipboard?.writeText(code)
+	LeekWars.toast(t('copied'))
+}
+
+// Lien direct vers l'endpoint : la route /help/api/:module/:function existe déjà
+// et scrolle jusqu'au panneau, mais rien ne permettait de la récupérer (#4577).
+function copyLink(service: ApiService) {
+	navigator.clipboard?.writeText(location.origin + '/help/api/' + service.module + '/' + service.function)
 	LeekWars.toast(t('copied'))
 }
 
@@ -553,6 +561,16 @@ onBeforeUnmount(() => {
 		background: #555;
 		color: white;
 		text-transform: uppercase;
+	}
+	// Toujours visible plutôt qu'au survol : au survol seulement, l'icône serait
+	// inatteignable sur mobile.
+	.permalink {
+		font-size: 15px;
+		margin-left: 8px;
+		vertical-align: middle;
+		color: var(--text-color-secondary);
+		cursor: pointer;
+		&:hover { color: var(--text-color); }
 	}
 	.demo {
 		background: white;
