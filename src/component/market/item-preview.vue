@@ -27,7 +27,7 @@
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
 		<resource-preview v-else-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
 		<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" :alterations="instance?.stats" @update:model-value="$emit('update:modelValue', $event)" />
+		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" :alterations="instance?.stats" :level="item.level as number" @update:model-value="$emit('update:modelValue', $event)" />
 		<alteration-preview v-else-if="item.type === ItemType.ALTERATION" :template="item.id" />
 		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" :show-craft="!!inventory" @update:model-value="$emit('update:modelValue', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
