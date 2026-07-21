@@ -247,14 +247,21 @@
 
 .forge {
 	display: flex;
+	// En colonne : le dosage et les boutons se placent SOUS la grille. Sans ca ils
+	// deviennent des colonnes flex a cote d'elle, ce qui la comprime en largeur et
+	// etire toutes les cellules (#622).
+	flex-direction: column;
 	align-items: center;
 	width: 260px;
-	height: 260px;
+	// La hauteur suit le contenu : 260 quand il n'y a que la grille, plus quand le
+	// dosage et le bouton s'ajoutent.
+	height: auto;
 	flex-shrink: 0;
 	padding: 10px;
 	.grid {
-		width: 100%;
-		height: 100%;
+		width: 240px;
+		height: 240px;
+		flex-shrink: 0;
 		position: relative;
 	}
 	.cell {
