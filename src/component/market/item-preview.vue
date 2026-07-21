@@ -15,7 +15,7 @@
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
 			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" :width="WeaponsData[item.params]?.width" @click="playSound(item, category)">
 			<scheme-image v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" />
-			<img v-else :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
+			<img v-else :class="item.type === ItemType.COMPONENT && instance ? alteredClass(instance, item.level as number) : ''" :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
 		</div>
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
@@ -82,6 +82,7 @@ import { CHIPS as CHIPSImport } from '@/model/chips'
 import { ITEM_CATEGORY_NAME, ItemTemplate, ItemType } from '@/model/item'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
+import { alteredClass } from '@/model/alteration'
 import type { InventoryItem } from '@/model/farmer'
 import { store } from '@/model/store'
 import { WeaponsData as WeaponsDataImport } from '@/model/weapon'

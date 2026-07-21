@@ -4,7 +4,7 @@
 			<img class="icon" :src="'/image/charac/' + stat[0] + '.png'">
 			<b :class="'color-' + stat[0]">{{ stat[1] }}</b>&nbsp;
 			<span v-html="$t('characteristic.' + stat[0])"></span>
-			<span v-if="isAltered(stat[0])" class="bonus">+{{ alterations![stat[0]] }}</span>
+			<span v-if="isAltered(stat[0])" class="bonus" :class="'color-' + stat[0]">+{{ alterations![stat[0]] }}</span>
 		</div>
 	</div>
 </template>
@@ -51,7 +51,6 @@ const isAltered = (carac: string) => !!props.alterations && !!props.alterations[
 				margin-left: auto;
 				padding-right: 8px;
 				font-weight: bold;
-				color: #5fad1b;
 			}
 			img {
 				width: 20px;

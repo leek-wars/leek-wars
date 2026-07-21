@@ -1,7 +1,7 @@
 <template lang="html">
-	<rich-tooltip-item v-if="component" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true">
+	<rich-tooltip-item v-if="component" v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="(component as any)" :bottom="true">
 		<div class="component" :class="{dragging: ($parent as any)?.draggedComponent && ($parent as any).draggedComponent.template === component.template && ($parent as any).draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="$emit('componentDragStart', 'leek', component, $event)" @dragend="$emit('componentDragEnd', component)">
-			<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
+			<img :class="alteredClass(component as any, LeekWars.items[component.template].level as number)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 		</div>
 	</rich-tooltip-item>
 	<div v-else class="component" :class="{dashed: ($parent as any)?.draggedComponent && ($parent as any).draggedComponentLocation === 'farmer'}" @dragover="$emit('dragOver')" @drop="$emit('componentsDrop', 'leek', $event, 1)"></div>
@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import type { Component } from '@/model/component'
+import { alteredClass } from '@/model/alteration'
 
 defineProps<{
 	component: Component
