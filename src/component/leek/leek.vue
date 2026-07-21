@@ -242,9 +242,9 @@
 							<div class="components-grid">
 								<template v-for="(c, i) of 8" :key="i">
 									<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
-										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
+										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 											<div v-bind="props">
-												<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+												<img :class="alteredClass(leek.components[i] as any, LeekWars.items[leek.components[i].template].level as number)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 											</div>
 										</rich-tooltip-item>
 									</div>
@@ -818,6 +818,7 @@
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
+	import { alteredClass } from '@/model/alteration'
 	import { Component } from '@/model/component'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'

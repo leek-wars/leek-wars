@@ -908,6 +908,16 @@ body {
 .rarity-border-4 { border-top: 1px solid #f8ac00 !important }
 .rarity-border-5 { border-top: 1px solid red !important }
 
+// Silhouette coloree des composants alteres (#622), par palier de remplissage du
+// puits. Globale car reutilisee dans l'inventaire, la page poireau et le dialogue de
+// selection. Le vert est assombri parce qu'il passe mal sur les composants deja verts
+// (RAM 3, kiwi, pomme).
+.altered-1 { filter: drop-shadow(2px 2px 0 #008800) drop-shadow(0 0 2px rgba(0, 136, 0, .5)); }
+.altered-2 { filter: drop-shadow(2px 2px 0 #0090ff) drop-shadow(0 0 2px rgba(0, 144, 255, .5)); }
+.altered-3 { filter: drop-shadow(2px 2px 0 #c21aff) drop-shadow(0 0 2px rgba(194, 26, 255, .5)); }
+.altered-4 { filter: drop-shadow(2px 2px 0 #f8ac00) drop-shadow(0 0 2px rgba(248, 172, 0, .5)); }
+.altered-5 { filter: drop-shadow(2px 2px 0 red) drop-shadow(0 0 2px rgba(255, 0, 0, .5)); }
+
 .spacer {
 	flex: 1;
 }

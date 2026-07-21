@@ -245,8 +245,19 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	}
 }
 
+/**
+ * Classe CSS du palier d'alteration d'un composant, ou '' s'il n'est pas altere.
+ * Point unique pour l'inventaire, la page poireau et le dialogue de composants.
+ */
+function alteredClass(item: { stats?: Stats | null, altered_power?: number, template: number },
+                      itemLevel: number): string {
+	if (!item.stats || !item.altered_power || !itemLevel) return ''
+	const tier = alterationTier(item.altered_power / well(itemLevel))
+	return tier ? 'altered-' + tier.tier : ''
+}
+
 export {
 	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
-	well, power, addedPower, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats,
+	well, power, addedPower, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }
