@@ -126,7 +126,7 @@
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
-								<img v-else-if="entry.item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
+								<img v-else-if="entry.item.type === ItemType.COMPONENT" class="image" :class="alteredClass(entry.item as InventoryItem)" :src="'/image/component/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<alteration-icon v-else-if="entry.item.type === ItemType.ALTERATION" :template="entry.item.template" :size="32" />
 								<img v-else class="image" :class="{small: entry.item.template === 37 || entry.item.template === 45 || entry.item.template === 153 || entry.item.template === 182}" :src="'/image/' + LeekWars.items[entry.item.template].name.replace('_', '/') + '.png'" loading="lazy">
 								<img v-if="LeekWars.items[entry.item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
@@ -140,7 +140,7 @@
 
 				<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 					<div class="inventory-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
-						<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :show-use="true" @retrieve="retrieve" />
+						<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :instance="tooltipInstance" :inventory="true" :show-use="true" @retrieve="retrieve" />
 					</div>
 				</v-menu>
 
@@ -176,6 +176,7 @@
 	import SchemeImage from '../market/scheme-image.vue'
 	import AlterationIcon from '../alteration/alteration-icon.vue'
 	import { emitter } from '@/model/vue'
+	import { alterationTier, well } from '@/model/alteration'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
@@ -230,6 +231,8 @@
 	const tooltipVisible = ref(false)
 	const tooltipItem = ref<ItemTemplate | null>(null)
 	const tooltipQuantity = ref(0)
+	// L'instance survolee : c'est elle qui porte les alterations (#622).
+	const tooltipInstance = ref<InventoryItem | null>(null)
 	const tooltipActivator = ref<HTMLElement | undefined>(undefined)
 	let tooltipShowTimer = 0
 	let tooltipHideTimer = 0
@@ -239,6 +242,22 @@
 	 * Clic sur un item : un composant part dans la forge, qui devient l'atelier
 	 * d'alteration (#622). Les autres types n'ont pas d'action au clic.
 	 */
+	/**
+	 * Palier d'alteration d'un composant, pour la silhouette coloree.
+	 *
+	 * Le lisere du haut de la cellule sert deja a la rarete du template : la marque
+	 * d'alteration passe donc par l'image elle-meme, ce qui epouse la decoupe de
+	 * l'objet et evite de generer 52 composants x 5 paliers d'images.
+	 */
+	function alteredClass(item: InventoryItem): string {
+		if (!item.stats || !item.altered_power) return ''
+		const template = LeekWars.items[item.template]
+		const level = template ? Number(template.level) : 0
+		if (!level) return ''
+		const tier = alterationTier(item.altered_power / well(level))
+		return tier ? 'altered-' + tier.tier : ''
+	}
+
 	function selectItem(item: InventoryItem) {
 		if (item.type === ItemType.COMPONENT) {
 			hideTooltip()
@@ -255,12 +274,14 @@
 			tooltipActivator.value = target
 			tooltipItem.value = LeekWars.items[item.template]
 			tooltipQuantity.value = item.quantity
+			tooltipInstance.value = item
 		} else {
 			clearTimeout(tooltipShowTimer)
 			tooltipShowTimer = window.setTimeout(() => {
 				tooltipActivator.value = target
 				tooltipItem.value = LeekWars.items[item.template]
 				tooltipQuantity.value = item.quantity
+				tooltipInstance.value = item
 				tooltipVisible.value = true
 			}, 500)
 		}
@@ -563,6 +584,14 @@
 	}
 }
 // Un composant part dans la forge au clic (#622).
+// Paliers d'alteration (#622) : vert, bleu, violet, jaune, rouge. Le vert est
+// assombri parce qu'il passe mal sur les composants deja verts (RAM 3, kiwi, pomme).
+.image.altered-1 { filter: drop-shadow(2px 2px 0 #008800) drop-shadow(0 0 2px rgba(0, 136, 0, .5)); }
+.image.altered-2 { filter: drop-shadow(2px 2px 0 #0090ff) drop-shadow(0 0 2px rgba(0, 144, 255, .5)); }
+.image.altered-3 { filter: drop-shadow(2px 2px 0 #c21aff) drop-shadow(0 0 2px rgba(194, 26, 255, .5)); }
+.image.altered-4 { filter: drop-shadow(2px 2px 0 #f8ac00) drop-shadow(0 0 2px rgba(248, 172, 0, .5)); }
+.image.altered-5 { filter: drop-shadow(2px 2px 0 red) drop-shadow(0 0 2px rgba(255, 0, 0, .5)); }
+
 .cell.selectable {
 	cursor: pointer;
 }

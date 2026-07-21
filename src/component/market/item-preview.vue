@@ -27,7 +27,7 @@
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
 		<resource-preview v-else-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
 		<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" @update:model-value="$emit('update:modelValue', $event)" />
+		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" :alterations="instance?.stats" @update:model-value="$emit('update:modelValue', $event)" />
 		<alteration-preview v-else-if="item.type === ItemType.ALTERATION" :template="item.id" />
 		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" :show-craft="!!inventory" @update:model-value="$emit('update:modelValue', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
@@ -82,6 +82,7 @@ import { CHIPS as CHIPSImport } from '@/model/chips'
 import { ITEM_CATEGORY_NAME, ItemTemplate, ItemType } from '@/model/item'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
+import type { InventoryItem } from '@/model/farmer'
 import { store } from '@/model/store'
 import { WeaponsData as WeaponsDataImport } from '@/model/weapon'
 import { computed, onMounted } from 'vue'
@@ -109,11 +110,14 @@ const props = withDefaults(defineProps<{
 	showUse?: boolean
 	leek?: Leek
 	craftCost?: number
+	/** Instance affichee, quand elle porte des donnees propres (alterations, #622). */
+	instance?: InventoryItem | null
 }>(), {
 	showUse: false,
 	craftCost: 0,
 	quantity: 0,
 	leek: undefined,
+	instance: null,
 })
 
 const emit = defineEmits<{

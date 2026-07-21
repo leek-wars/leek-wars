@@ -106,6 +106,23 @@ function toMap(stats: Stats | StatList | null | undefined): Stats {
 	return map
 }
 
+/**
+ * Fusionne les altérations d'une instance dans les stats de son template.
+ * Miroir de Alteration::mergeStats côté serveur : une altération renforce une carac
+ * existante ou en crée une absente, ajoutée en fin de liste.
+ */
+function mergeStats(base: StatList, added: Stats | null | undefined): StatList {
+	if (!added) return base
+	const out: StatList = base.map(s => [s[0], s[1]] as [string, number])
+	for (const carac in added) {
+		if (!added[carac]) continue
+		const existing = out.find(s => s[0] === carac)
+		if (existing) existing[1] += added[carac]
+		else out.push([carac, added[carac]])
+	}
+	return out
+}
+
 /** Capacité du puits. Indexée sur le niveau, jamais sur la puissance actuelle. */
 function well(level: number): number {
 	return WELL_COEFFICIENT * level
@@ -230,6 +247,6 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 
 export {
 	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
-	well, power, addedPower, part, difficulty, efficiencyTier, planAttempt, toMap,
+	well, power, addedPower, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }

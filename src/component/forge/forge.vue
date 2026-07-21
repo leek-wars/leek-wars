@@ -213,9 +213,16 @@
 		lastResult.value = null
 		LeekWars.post<AlterResult>('component/alter', { component_id: item.id, alterations: JSON.stringify(recipe.value) }).then(data => {
 			lastResult.value = data
-			// Le composant porte desormais ses nouvelles stats.
+			// Le composant porte desormais ses nouvelles stats. L'inventaire construit
+			// des COPIES des items du store (spread dans son computed), donc ecrire sur
+			// l'objet recu ne suffit pas : il faut retrouver l'original.
 			item.stats = data.stats
 			item.altered_power = data.well.used
+			const stored = store.state.farmer?.components.find(c => c.id === item.id)
+			if (stored) {
+				stored.stats = data.stats
+				stored.altered_power = data.well.used
+			}
 			const alterations = LeekWars.alterations
 			for (const id in recipe.value) {
 				const alteration = alterations ? alterations.alterations[id] : null
