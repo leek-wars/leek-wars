@@ -3,6 +3,7 @@
 	"parameters": "Parametrit",
 	"return": "Paluuarvo",
 	"no_desc": "Ei vielä kuvausta 😥",
+	"deprecated": "Vanhentunut",
 	"ai_bin": "Tyhjentää roskakorisi ja tuhoaa lopullisesti siinä olevat tekoälyt.",
 	"ai_create": "Luo kansioon **folder** uuden tekoälyn nimeltä **name** ja versiolla **version**.",
 	"ai_delete": "Siirtää polussa **path** olevan tekoälyn roskakoriisi.",

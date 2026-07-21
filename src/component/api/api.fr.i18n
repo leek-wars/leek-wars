@@ -3,6 +3,7 @@
 	"parameters": "Paramètres",
 	"return": "Retour",
 	"no_desc": "Pas encore de description 😥",
+	"deprecated": "Déprécié",
 	"ai_bin": "Vide votre corbeille et détruit définitivement les IA qui s'y trouvent.",
 	"ai_create": "Crée une nouvelle IA nommée **name** et de version **version** dans le dossier **folder**.",
 	"ai_delete": "Place l'IA située au chemin **path** dans votre corbeille.",

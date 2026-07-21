@@ -3,6 +3,7 @@
 	"parameters": "Parameters",
 	"return": "Return",
 	"no_desc": "No description yet 😥",
+	"deprecated": "Deprecated",
 	"ai_bin": "Empties your recycle bin and permanently destroys the AIs in it.",
 	"ai_create": "Creates a new AI named **name** with version **version** in the **folder** folder.",
 	"ai_delete": "Moves the AI at path **path** to your recycle bin.",

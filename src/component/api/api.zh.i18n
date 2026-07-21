@@ -3,6 +3,7 @@
 	"parameters": "参数",
 	"return": "返回值",
 	"no_desc": "尚无说明 😥",
+	"deprecated": "已弃用",
 	"ai_bin": "清空你的回收站，并永久销毁其中的 AI。",
 	"ai_create": "在文件夹 **folder** 中创建一个名为 **name**、版本为 **version** 的新 AI。",
 	"ai_delete": "将位于路径 **path** 的 AI 移入你的回收站。",

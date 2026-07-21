@@ -3,6 +3,7 @@
 	"parameters": "Parámetros",
 	"return": "Valor devuelto",
 	"no_desc": "Aún no hay descripción 😥",
+	"deprecated": "Obsoleto",
 	"ai_bin": "Vacía tu papelera y destruye definitivamente las IA que contiene.",
 	"ai_create": "Crea una nueva IA llamada **name** y de versión **version** en la carpeta **folder**.",
 	"ai_delete": "Mueve a tu papelera la IA situada en la ruta **path**.",

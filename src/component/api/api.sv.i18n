@@ -3,6 +3,7 @@
 	"parameters": "Parametrar",
 	"return": "Returvärde",
 	"no_desc": "Ingen beskrivning ännu 😥",
+	"deprecated": "Föråldrad",
 	"ai_bin": "Tömmer din papperskorg och förstör permanent de AI:er som finns i den.",
 	"ai_create": "Skapar en ny AI med namnet **name** och version **version** i mappen **folder**.",
 	"ai_delete": "Flyttar AI:n på sökvägen **path** till din papperskorg.",

@@ -3,6 +3,7 @@
 	"parameters": "Parametere",
 	"return": "Returverdi",
 	"no_desc": "Ingen beskrivelse ennå 😥",
+	"deprecated": "Utdatert",
 	"ai_bin": "Tømmer papirkurven din og sletter KI-ene i den permanent.",
 	"ai_create": "Oppretter en ny KI med navn **name** og versjon **version** i mappen **folder**.",
 	"ai_delete": "Flytter KI-en på stien **path** til papirkurven din.",

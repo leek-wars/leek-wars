@@ -58,7 +58,7 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<div ref="elements" class="items" @scroll="scroll">
 					<api-keys v-if="$store.state.farmer && $store.state.farmer.verified" class="service" />
-					<panel v-for="(service, s) in filteredItems" :key="s" class="service" :item="service.module + '_' + service.function" >
+					<panel v-for="(service, s) in filteredItems" :key="s" class="service" :class="{ deprecated: service.deprecated }" :item="service.module + '_' + service.function" >
 						<div class="title">
 							<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
 							<template v-for="(parameter, p) in service.parameters" :key="p">
@@ -69,6 +69,7 @@
 							<v-icon class="permalink" :title="$t('copy_section_link')" @click="copyLink(service)">mdi-link-variant</v-icon>
 						</div>
 						<div class="chips">
+							<span v-if="service.deprecated" class="deprecated chip">{{ t('deprecated') }}</span>
 							<span class="method chip" :class="service.method">{{ service.method }}</span>
 							<span v-if="service.scope" class="role chip" :class="service.scope" :title="t('role_' + service.scope + '_hint')">{{ t('role_' + service.scope) }}</span>
 							<span v-if="service.auth" class="auth chip">{{ $t('auth') }}</span>
@@ -493,13 +494,13 @@ onBeforeUnmount(() => {
 	.items .function-name {
 		color: black;
 	}
-	.items :deep(.item.deprecated .content) {
+	// Endpoint déprécié : titre et corps atténués pour le repérer en parcourant la
+	// liste, mais les chips restent pleinement lisibles pour que le badge ressorte.
+	// (Remplace deux règles qui ciblaient `.item`, une classe que `panel` ne rend
+	// pas : elles n'ont donc jamais rien atténué.)
+	.service.deprecated .title,
+	.service.deprecated .service-body {
 		opacity: 0.6;
-	}
-	.items :deep(.item .deprecated-message) {
-		color: #ff7f00;
-		font-weight: bold;
-		margin: 10px;
 	}
 	// Sidebar catégories à largeur fixe (la page est en pleine largeur, un tiers
 	// serait trop large) ; le contenu prend le reste.
@@ -559,6 +560,11 @@ onBeforeUnmount(() => {
 	}
 	.auth {
 		background: #555;
+		color: white;
+		text-transform: uppercase;
+	}
+	.deprecated.chip {
+		background: #ff7f00;
 		color: white;
 		text-transform: uppercase;
 	}

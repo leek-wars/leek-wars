@@ -3,6 +3,7 @@
 	"parameters": "Parameters",
 	"return": "Retourwaarde",
 	"no_desc": "Nog geen beschrijving 😥",
+	"deprecated": "Verouderd",
 	"ai_bin": "Leegt je prullenbak en vernietigt de AI's die erin zitten definitief.",
 	"ai_create": "Maakt een nieuwe AI met de naam **name** en versie **version** in de map **folder**.",
 	"ai_delete": "Verplaatst de AI op het pad **path** naar je prullenbak.",

@@ -3,6 +3,7 @@
 	"parameters": "Parametri",
 	"return": "Valore restituito",
 	"no_desc": "Nessuna descrizione ancora 😥",
+	"deprecated": "Deprecato",
 	"ai_bin": "Svuota il cestino e distrugge definitivamente le IA che vi si trovano.",
 	"ai_create": "Crea una nuova IA chiamata **name** di versione **version** nella cartella **folder**.",
 	"ai_delete": "Sposta nel cestino l'IA situata al percorso **path**.",
