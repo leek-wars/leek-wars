@@ -23,6 +23,10 @@
 					<img class="search-icon" src="/image/search.png">
 					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
+				<div v-if="services.length" class="tab action openapi-tab" title="OpenAPI" @click="downloadOpenApi">
+					<v-icon>mdi-download</v-icon>
+					<span>OpenAPI</span>
+				</div>
 				<!-- <div class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
 					<v-icon v-else>mdi-fullscreen</v-icon>
@@ -140,6 +144,7 @@ import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/vue'
 import { LANGS, LANG_LABELS, LANG_ICONS, LANG_MONACO_IDS, buildSnippet, type Lang } from './code-examples'
 import { resolveCodeThemeClass } from '@/component/editor/code-theme'
+import { buildOpenApi } from './openapi'
 
 // Langue d'exemple de code, partagée par tous les endpoints et persistée.
 const activeLang = ref<Lang>((localStorage.getItem('api-doc/lang') as Lang) || 'curl')
@@ -193,6 +198,23 @@ function formatExample(ex: unknown): string {
 function copyCode(code: string) {
 	navigator.clipboard?.writeText(code)
 	LeekWars.toast(t('copied'))
+}
+
+// Spec OpenAPI téléchargeable (#4571). Générée ici plutôt que côté serveur : le
+// catalogue vient de service/get-all, mais les descriptions n'existent que dans les
+// fichiers i18n du client, donc seule la page peut produire une spec documentée.
+function downloadOpenApi() {
+	const spec = buildOpenApi(services.value, (service) => {
+		const key = KEY_PREFIX + service.module + '_' + service.function
+		return te(key) ? String(translate(key)) : ''
+	})
+	const blob = new Blob([JSON.stringify(spec, null, 2)], { type: 'application/json' })
+	const url = URL.createObjectURL(blob)
+	const link = document.createElement('a')
+	link.href = url
+	link.download = 'leekwars-openapi.json'
+	link.click()
+	URL.revokeObjectURL(url)
 }
 
 // Lien direct vers l'endpoint : la route /help/api/:module/:function existe déjà
