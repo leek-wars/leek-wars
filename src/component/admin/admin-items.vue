@@ -126,7 +126,7 @@
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { ItemType, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ITEM_TYPE_NAME } from '@/model/item'
+	import { ItemType, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, itemImageUrl } from '@/model/item'
 	import type { SchemeTemplate } from '@/model/scheme'
 	import { computed, onMounted, reactive, ref } from 'vue'
 	import { useRouter } from 'vue-router'
@@ -279,11 +279,7 @@
 	// autres (weapon_/chip_/potion_…) sont préfixés → on retire le préfixe.
 	function itemImage(item: ItemTemplate): string {
 		const target = item.type === ItemType.SCHEME ? (schemeResult(item) || item) : item
-		const cat = ITEM_CATEGORY_NAME[target.type]
-		const img = (target.type === ItemType.RESOURCE || target.type === ItemType.COMPONENT)
-			? target.name
-			: target.name.substring(target.name.indexOf('_') + 1)
-		return '/image/' + cat + '/' + img + '.png'
+		return itemImageUrl(target)
 	}
 
 	// Construit une ligne à partir d'un template + ses compteurs de distribution
