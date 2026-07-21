@@ -1,6 +1,6 @@
 <template>
 	<panel :title="t('title')" icon="mdi-key-variant" class="api-keys-panel">
-		<template #actions>
+		<template v-if="!referenceOnly" #actions>
 			<div v-ripple class="button green new-key-button" @click="openDialog">
 				<v-icon>mdi-plus</v-icon>
 				<span>{{ t('new') }}</span>
@@ -23,6 +23,15 @@
 						<div class="label">{{ t('rate_limit') }}</div>
 						<code>{{ t('rate_limit_value') }}</code>
 					</div>
+				</div>
+
+				<div v-if="referenceOnly" class="roles-legend">
+					<div v-for="role in ROLES" :key="role.id" class="role-line">
+						<v-icon>{{ role.icon }}</v-icon>
+						<span class="role-chip" :class="role.id">{{ role.id }}</span>
+						<span class="role-desc">{{ t('role_' + role.id + '_desc') }}</span>
+					</div>
+					<div class="hint"><v-icon>mdi-shield-check-outline</v-icon> {{ t('hint_cumulative') }}</div>
 				</div>
 
 				<div v-if="apiKeys.length" class="keys-list">
@@ -51,7 +60,7 @@
 						<span v-else class="revoked-label">{{ t('revoked') }}</span>
 					</div>
 				</div>
-				<div v-else class="api-keys-none">
+				<div v-else-if="!referenceOnly" class="api-keys-none">
 					<v-icon>mdi-key-outline</v-icon>
 					{{ t('none') }}
 				</div>
@@ -127,6 +136,12 @@
 
 	defineOptions({ name: 'ApiKeys', i18n: {}, mixins: [...mixins] })
 
+	// referenceOnly : affiche uniquement la documentation (URL de base, en-tête
+	// d'authentification, limite de débit, rôles) sans la gestion des clés. Permet de
+	// montrer ces informations à TOUT LE MONDE sur /help/api (#4574) : jusqu'ici elles
+	// étaient enfermées dans ce panneau, invisible aux visiteurs anonymes ou non vérifiés.
+	const props = defineProps<{ referenceOnly?: boolean }>()
+
 	const t = useNamespacedT('api-keys')
 
 	interface ApiKey { id: number; name: string; prefix: string; scopes: string[]; last_used_at: number | null; revoked: boolean; usage?: number[] }
@@ -150,8 +165,12 @@
 	const creating = ref(false)
 	const copied = ref(false)
 
-	LeekWars.get('api-key/list').then(data => { apiKeys.value = data.keys ?? [] })
-	LeekWars.get<Service[]>('service/get-all').then(data => { services.value = data ?? [] })
+	// En mode référence, l'utilisateur n'est pas forcément connecté : api-key/list
+	// répondrait 401. service/get-all ne sert qu'aux listes d'endpoints du dialogue.
+	if (!props.referenceOnly) {
+		LeekWars.get('api-key/list').then(data => { apiKeys.value = data.keys ?? [] })
+		LeekWars.get<Service[]>('service/get-all').then(data => { services.value = data ?? [] })
+	}
 
 	// Endpoints AJOUTÉS par un rôle (par rapport au rôle précédent) : scope exact.
 	// (Les rôles sont cumulatifs ; on n'affiche que le delta pour rester lisible.)
@@ -309,6 +328,34 @@
 			border: 1px dashed var(--border);
 			border-radius: 4px;
 			padding: 18px;
+		}
+	}
+	// Légende des rôles affichée en mode référence (visiteur non connecté) : le
+	// dialogue de création, qui la portait jusqu'ici, ne lui est pas accessible.
+	.roles-legend {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-top: 4px;
+		.role-line {
+			display: flex;
+			align-items: baseline;
+			gap: 8px;
+			font-size: 14px;
+			.v-icon { font-size: 17px; color: var(--text-color-secondary); }
+			// Largeur fixe : sinon les trois pastilles ont des largeurs différentes et
+			// les descriptions démarrent en escalier.
+			.role-chip { flex: 0 0 62px; text-align: center; }
+			.role-desc { color: var(--text-color); }
+		}
+		.hint {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin-top: 2px;
+			font-size: 13px;
+			color: var(--text-color-secondary);
+			.v-icon { font-size: 16px; }
 		}
 	}
 	.role-chip {

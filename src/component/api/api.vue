@@ -57,7 +57,7 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<div ref="elements" class="items" @scroll="scroll">
-					<api-keys v-if="$store.state.farmer && $store.state.farmer.verified" class="service" />
+					<api-keys :reference-only="!($store.state.farmer && $store.state.farmer.verified)" class="service" />
 					<panel v-for="(service, s) in filteredItems" :key="s" class="service" :class="{ deprecated: service.deprecated }" :item="service.module + '_' + service.function" >
 						<div class="title">
 							<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
