@@ -1,7 +1,7 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Altérations (' + alterations.length + ')', link: '/admin/alterations'}]" :raw="true" /></h1>
+			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Altérations (' + rows.length + ')', link: '/admin/alterations'}]" :raw="true" /></h1>
 		</div>
 
 		<panel v-if="!data" class="first">
@@ -9,8 +9,8 @@
 		</panel>
 
 		<template v-else>
-			<!-- Matrice d'efficacité : c'est elle qui décide du gain, elle doit être lisible d'abord. -->
-			<panel class="first" title="Matrice d'efficacité">
+			<!-- La matrice décide du gain : elle se lit avant le tableau. -->
+			<panel class="first" icon="mdi-grid" title="Matrice d'efficacité">
 				<table class="matrix">
 					<tr>
 						<th></th>
@@ -26,43 +26,45 @@
 				<div class="legend">
 					Cycle parfait : chaque famille est championne d'un type, moyenne sur le suivant,
 					quasi nulle sur le dernier. Aucune famille n'est jamais inutile.
-					Puits d'un composant = {{ data.well_coefficient }} × son niveau, {{ data.max_items }} altérations par tentative au plus.
+					Puits d'un composant = {{ data.well_coefficient }} × son niveau,
+					{{ data.max_items }} altérations par tentative au plus.
 				</div>
 			</panel>
 
-			<panel title="Les 36 altérations">
-				<table class="alterations">
-					<tr>
-						<th></th>
-						<th class="left">Nom</th>
-						<th>Famille</th>
-						<th>Carac</th>
-						<th title="Numéro publié, utilisé pour composer un dosage">N°</th>
-						<th title="Gain sur son type de composant">Gain fort</th>
-						<th title="Gain sur le type suivant">moyen</th>
-						<th title="Gain sur le dernier type">faible</th>
-						<th title="Puissance consommée dans le puits par le gain fort">Puits</th>
-						<th>Item</th>
-					</tr>
-					<tr v-for="a in alterations" :key="a.id" :class="{indivisible: isIndivisible(a.carac)}">
-						<td class="icon"><alteration-icon :template="a.template" :show-number="false" /></td>
-						<td class="left name">{{ $t('alteration.' + a.name) }}</td>
-						<td>{{ familyLabel(a.family) }}</td>
-						<td><span :class="'color-' + a.carac">{{ $t('characteristic.' + a.carac) }}</span></td>
-						<td class="number">{{ a.number }}</td>
-						<td class="gain strong">+{{ gain(a.carac, 0) }}</td>
-						<td class="gain">+{{ gain(a.carac, 1) }}</td>
-						<td class="gain">+{{ gain(a.carac, 2) }}</td>
-						<td class="power">{{ power(a.carac) }}</td>
-						<td class="template">{{ a.template }}</td>
-					</tr>
-				</table>
+			<panel icon="mdi-flask" :title="'Les ' + rows.length + ' altérations'">
+				<v-data-table
+					:headers="headers"
+					:items="rows"
+					:items-per-page="36"
+					:items-per-page-options="itemsPerPageOptions"
+					:sort-by="[{ key: 'id', order: 'asc' }]"
+					density="compact"
+					class="alterations-table">
+					<template #item.name="{ item }">
+						<div class="label-cell">
+							<alteration-icon class="thumb" :template="item.template" :show-number="false" />
+							<span class="name">{{ item.name }}</span>
+						</div>
+					</template>
+					<template #item.carac="{ item }">
+						<div class="carac-cell">
+							<img class="charac-icon" :src="'/image/charac/small/' + item.carac + '.png'" :alt="item.carac">
+							<span :class="'color-' + item.carac">{{ item.caracLabel }}</span>
+						</div>
+					</template>
+					<template #item.gainStrong="{ item }"><span class="gain strong">+{{ item.gainStrong }}</span></template>
+					<template #item.gainMedium="{ item }"><span class="gain" :class="{dim: item.indivisible}">+{{ item.gainMedium }}</span></template>
+					<template #item.gainWeak="{ item }"><span class="gain" :class="{dim: item.indivisible}">+{{ item.gainWeak }}</span></template>
+					<template #item.power="{ item }"><span class="dim">{{ item.power }}</span></template>
+					<template #item.template="{ item }"><span class="dim">{{ item.template }}</span></template>
+				</v-data-table>
 				<div class="legend">
 					Le gain dépend du composant visé, pas de l'altération : une Vitamine D donne
 					+{{ gain('life', 0) }} vie sur un fruit, +{{ gain('life', 1) }} sur un composant physique
 					et +{{ gain('life', 2) }} sur un électronique.
-					Les caractéristiques indivisibles (en gris) donnent toujours +1 et encaissent
-					l'efficacité sur la probabilité au lieu du gain.
+					Les caractéristiques indivisibles donnent toujours +1 et encaissent l'efficacité
+					sur la probabilité au lieu du gain, d'où leur coût en puits de 200 à 250 contre
+					48 à 50 pour les autres.
 				</div>
 			</panel>
 		</template>
@@ -74,6 +76,7 @@
 	import { AlterationFamily, ComponentFamily } from '@/model/alteration'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { i18n, t } from '@/model/i18n'
 	import AlterationIcon from '@/component/alteration/alteration-icon.vue'
 
 	/** Page admin des altérations (#622) : catalogue et équilibrage, en lecture seule. */
@@ -90,12 +93,25 @@
 	]
 	const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
 
-	const data = computed(() => LeekWars.alterations)
+	const headers: any[] = [
+		{ title: 'ID', key: 'id', align: 'end', sortable: true },
+		{ title: 'Altération', key: 'name', align: 'start', sortable: true },
+		{ title: 'Famille', key: 'family', align: 'start', sortable: true },
+		{ title: 'Caractéristique', key: 'carac', align: 'start', sortable: true, value: 'caracLabel' },
+		{ title: 'N°', key: 'number', align: 'end', sortable: true },
+		{ title: 'Gain fort', key: 'gainStrong', align: 'end', sortable: true },
+		{ title: 'moyen', key: 'gainMedium', align: 'end', sortable: true },
+		{ title: 'faible', key: 'gainWeak', align: 'end', sortable: true },
+		{ title: 'Puits', key: 'power', align: 'end', sortable: true },
+		{ title: 'Item', key: 'template', align: 'end', sortable: true },
+	]
+	const itemsPerPageOptions = [
+		{ value: 12, title: '12' },
+		{ value: 36, title: '36' },
+		{ value: -1, title: 'Tout' },
+	]
 
-	const alterations = computed(() => {
-		if (!data.value) return []
-		return Object.values(data.value.alterations)
-	})
+	const data = computed(() => LeekWars.alterations)
 
 	function efficiency(family: number, componentFamily: number): number {
 		return (data.value?.efficiency[family] || {})[componentFamily] ?? 0
@@ -108,16 +124,31 @@
 	function gain(carac: string, tier: number): number {
 		return (data.value?.gains[carac] || [0, 0, 0])[tier]
 	}
-	/** Puissance consommée dans le puits par le gain fort : c'est elle qui limite. */
-	function power(carac: string): number {
-		return gain(carac, 0) * (data.value?.weights[carac] ?? 0)
+
+	/** Traduit, ou retombe sur la cle brute si elle n'existe pas encore. */
+	function translate(key: string, fallback: string): string {
+		return (i18n.global.te as (k: string) => boolean)(key) ? t(key) : fallback
 	}
-	function isIndivisible(carac: string): boolean {
-		return INDIVISIBLE.indexOf(carac) !== -1
-	}
-	function familyLabel(family: number): string {
-		return FAMILIES.find(f => f.id === family)?.label ?? '?'
-	}
+
+	const rows = computed(() => {
+		if (!data.value) return []
+		const weights = data.value.weights
+		return Object.values(data.value.alterations).map(a => ({
+			id: a.id,
+			name: translate('alteration.' + a.name, a.name),
+			family: FAMILIES.find(f => f.id === a.family)?.label ?? '?',
+			carac: a.carac,
+			caracLabel: translate('characteristic.' + a.carac, a.carac),
+			number: a.number,
+			gainStrong: gain(a.carac, 0),
+			gainMedium: gain(a.carac, 1),
+			gainWeak: gain(a.carac, 2),
+			// Puissance consommée dans le puits par le gain fort : c'est elle qui limite.
+			power: gain(a.carac, 0) * (weights[a.carac] ?? 0),
+			template: a.template,
+			indivisible: INDIVISIBLE.indexOf(a.carac) !== -1,
+		}))
+	})
 
 	onMounted(() => {
 		LeekWars.setTitle('Altérations')
@@ -126,29 +157,25 @@
 </script>
 
 <style lang="scss" scoped>
-	table {
-		width: 100%;
+	.matrix {
+		width: auto;
 		border-collapse: collapse;
 	}
-	th, td {
-		padding: 4px 8px;
+	.matrix th, .matrix td {
+		padding: 4px 10px;
 		text-align: center;
 		border-bottom: 1px solid var(--border);
 	}
-	th {
+	.matrix th {
 		font-weight: normal;
 		color: var(--text-color-secondary);
 		font-size: 13px;
 	}
+	.matrix td { font-weight: bold; min-width: 100px; }
 	.left { text-align: left; }
-	.name { font-weight: bold; }
-	.icon { width: 44px; }
-	.icon :deep(img) { width: 34px; height: 34px; }
 
-	.matrix { width: auto; }
-	.matrix td { font-weight: bold; min-width: 90px; }
-	// Champion, moyen, quasi nul : trois teintes claires, assombries en sombre pour
-	// rester lisibles sans flasher.
+	// Championne, moyenne, quasi nulle : trois teintes claires, assombries en sombre
+	// pour rester lisibles sans flasher.
 	.eff-0 { background: #d8f0d8; }
 	.eff-1 { background: #fdf0d0; }
 	.eff-2 { background: #f6dada; }
@@ -156,13 +183,27 @@
 	:global(body.dark) .eff-1 { background: #453a1c; }
 	:global(body.dark) .eff-2 { background: #452323; }
 
+	.label-cell, .carac-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.thumb {
+		width: 30px;
+		height: 30px;
+		flex: 0 0 auto;
+	}
+	.thumb :deep(img) { width: 30px; height: 30px; }
+	.name { font-weight: bold; }
+	.charac-icon {
+		width: 18px;
+		height: 18px;
+		flex: 0 0 auto;
+	}
+
 	.gain { font-variant-numeric: tabular-nums; }
 	.gain.strong { font-weight: bold; }
-	.number, .power, .template {
-		font-variant-numeric: tabular-nums;
-		color: var(--text-color-secondary);
-	}
-	.indivisible .gain { color: var(--text-color-secondary); }
+	.dim { color: var(--text-color-secondary); }
 
 	.legend {
 		padding: 10px 8px 4px;
