@@ -1,3 +1,4 @@
+import { InventoryItem } from './farmer'
 import mitt from 'mitt'
 import { i18n } from '@/model/i18n'
 // Imports de TYPE uniquement : ce module est importé par ~50 composants, il doit rester
@@ -76,6 +77,8 @@ type Events = {
 	'open-merge': { folder: string, file: string },
 	'clover-used': void,
 	'craft': SchemeTemplate,
+	/** Un composant part de l'inventaire vers la forge, pour etre altere (#622). */
+	'alter': InventoryItem,
 }
 
 const emitter = mitt<Events>()

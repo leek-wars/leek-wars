@@ -122,7 +122,7 @@
 							<span class="group-count">({{ entry.count }})</span>
 						</div>
 						<div v-else-if="entry.placeholder" class="placeholder"></div>
-						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()">
+						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable, selectable: entry.item.type === ItemType.COMPONENT }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()" @click="selectItem(entry.item as InventoryItem)">
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
@@ -234,6 +234,16 @@
 	let tooltipShowTimer = 0
 	let tooltipHideTimer = 0
 	let tooltipOnTooltip = false
+
+	/**
+	 * Clic sur un item : un composant part dans la forge, qui devient l'atelier
+	 * d'alteration (#622). Les autres types n'ont pas d'action au clic.
+	 */
+	function selectItem(item: InventoryItem) {
+		if (item.type !== ItemType.COMPONENT) return
+		hideTooltip()
+		emitter.emit('alter', item)
+	}
 
 	function showTooltip(item: Item & { type: ItemType }, event: MouseEvent) {
 		clearTimeout(tooltipHideTimer)
@@ -548,6 +558,10 @@
 	.hab {
 		margin-left: 5px;
 	}
+}
+// Un composant part dans la forge au clic (#622).
+.cell.selectable {
+	cursor: pointer;
 }
 .cell {
 	border: 1px solid var(--border);
