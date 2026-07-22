@@ -34,5 +34,11 @@
 	"reason_top_talent": "N°{0} au talent",
 	"reason_forum_messages": "{0} messages au forum",
 	"reason_trophies": "{0} trophées",
-	"reason_likes": "{0} j’aime"
+	"reason_likes": "{0} j’aime",
+	"widget_classement": "Classement",
+	"ranking_type": "Type de classement",
+	"ranking_leek": "Poireaux",
+	"ranking_farmer": "Éleveurs",
+	"ranking_team": "Équipes",
+	"choose_chat": "Choisir le canal"
 }

@@ -34,5 +34,11 @@
 	"reason_top_talent": "#{0} in talent",
 	"reason_forum_messages": "{0} forum messages",
 	"reason_trophies": "{0} trophies",
-	"reason_likes": "{0} likes"
+	"reason_likes": "{0} likes",
+	"widget_classement": "Ranking",
+	"ranking_type": "Ranking type",
+	"ranking_leek": "Leeks",
+	"ranking_farmer": "Farmers",
+	"ranking_team": "Teams",
+	"choose_chat": "Choose channel"
 }

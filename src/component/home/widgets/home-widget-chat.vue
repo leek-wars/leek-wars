@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-	import { defineAsyncComponent, ref } from 'vue'
+	import { computed, defineAsyncComponent } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -17,19 +17,22 @@
 		components: { chat: defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ '@/component/chat/chat.vue')) }
 	})
 
+	// Le canal choisi est stocké dans les paramètres du widget (params.chat), persistés en base.
+	const props = defineProps<{ params?: { chat?: number } }>()
+
 	const t = useNamespacedT('home')
 	const { locale } = useI18n()
 
-	// Même résolution que chat-panel : chat de groupe imposé, sinon chat public de la langue
-	// (mémorisé par navigateur), sinon rien.
-	const chatID = ref<number | null>(null)
-	const farmer = store.state.farmer
-	if (farmer?.group && farmer.group.chat && !farmer.public_chat_enabled) {
-		chatID.value = farmer.group.chat
-	} else if (farmer?.public_chat_enabled) {
+	// Chat de groupe imposé, sinon canal choisi dans les paramètres, sinon chat public de la langue.
+	const chatID = computed<number | null>(() => {
+		const farmer = store.state.farmer
+		if (farmer?.group && farmer.group.chat && !farmer.public_chat_enabled) return farmer.group.chat
+		if (!farmer?.public_chat_enabled) return null
+		const chosen = props.params?.chat
+		if (chosen && LeekWars.isPublicChat(chosen)) return chosen
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		chatID.value = parseInt(localStorage.getItem('chat-panel/home') || '0') || (LeekWars.languages as any)[locale.value].chat
-	}
+		return (LeekWars.languages as any)[locale.value].chat
+	})
 </script>
 
 <style lang="scss" scoped>
