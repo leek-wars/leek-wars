@@ -6,6 +6,7 @@
 	"level": "Eben",
 	"date": "Datum",
 	"rarity": "Knappheit",
+	"charge": "Ladung",
 	"type": "Type",
 	"no_group": "Keine Gruppe",
 	"size": "Größe",

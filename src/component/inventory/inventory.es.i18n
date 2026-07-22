@@ -6,6 +6,7 @@
 	"level": "Nivel",
 	"date": "Fecha",
 	"rarity": "Rareza",
+	"charge": "Carga",
 	"type": "Tipo",
 	"no_group": "Sin grupo",
 	"size": "Tamaño",

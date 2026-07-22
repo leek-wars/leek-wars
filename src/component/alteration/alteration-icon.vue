@@ -54,10 +54,11 @@
 
 	// Le numéro publié doit rester lisible sur les deux thèmes et par-dessus n'importe
 	// quelle teinte d'image, d'où le liseré sombre plutôt qu'une couleur de texte.
+	// En haut à gauche : le coin bas droit est réservé à la quantité possédée (#622).
 	.number {
 		position: absolute;
-		bottom: -2px;
-		right: 0;
+		top: -2px;
+		left: 0;
 		font-size: 11px;
 		font-weight: bold;
 		color: #fff;

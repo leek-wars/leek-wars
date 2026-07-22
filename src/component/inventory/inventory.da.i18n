@@ -6,6 +6,7 @@
 	"level": "Niveau",
 	"date": "Dato",
 	"rarity": "Mangel",
+	"charge": "Ladning",
 	"type": "Type",
 	"no_group": "Ingen gruppe",
 	"size": "Størrelse",

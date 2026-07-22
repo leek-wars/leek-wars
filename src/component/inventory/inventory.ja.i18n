@@ -6,6 +6,7 @@
 	"level": "レベル",
 	"date": "日にち",
 	"rarity": "希少性",
+	"charge": "充填",
 	"type": "タイプ",
 	"no_group": "グループなし",
 	"size": "サイズ",

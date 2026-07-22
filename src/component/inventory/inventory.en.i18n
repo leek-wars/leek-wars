@@ -6,6 +6,7 @@
 	"level": "Level",
 	"date": "Date",
 	"rarity": "Rarity",
+	"charge": "Charge",
 	"type": "Type",
 	"no_group": "No group",
 	"size": "Size",

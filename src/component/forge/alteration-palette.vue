@@ -58,43 +58,43 @@
 </script>
 
 <style lang="scss" scoped>
-	// Grille 5x2 : 5 colonnes, 2 lignes pour les 10 caracs. Chaque carte = une carac
-	// (icone en tete) avec ses 3 familles en dessous ; les cases retrecissent pour
-	// tenir les 5 colonnes quelle que soit la largeur du panneau (#622).
+	// Grille 4x3 : 4 colonnes, 3 lignes pour les 10 caracs. Chaque carte est une carac
+	// en ligne : son icone suivie de ses 3 familles ; les cases retrecissent pour tenir
+	// les 4 colonnes quelle que soit la largeur du panneau (#622).
 	.alteration-palette {
 		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		gap: 8px 6px;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 6px 8px;
 		padding: 8px;
 		border-bottom: 1px solid var(--border);
 	}
-	// Sous ~520px (mobile), 5 colonnes deviennent minuscules : on retombe a 2.
+	// Sous ~520px (mobile), 4 colonnes deviennent minuscules : on retombe a 2.
 	@media (max-width: 520px) {
 		.alteration-palette { grid-template-columns: repeat(2, 1fr); }
 	}
 	.palette-row {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: center;
-		gap: 4px;
+		gap: 5px;
 		min-width: 0;
 	}
 	.carac {
-		width: 20px;
-		height: 20px;
+		width: 18px;
+		height: 18px;
 		flex: 0 0 auto;
 	}
 	.cells {
 		display: flex;
-		justify-content: center;
 		gap: 3px;
-		width: 100%;
+		min-width: 0;
+		flex: 1;
 	}
 	.cell {
 		position: relative;
 		flex: 1 1 0;
 		min-width: 0;
-		max-width: 34px;
+		max-width: 32px;
 		aspect-ratio: 1;
 		padding: 3px;
 		border: 1px solid var(--border);
@@ -109,9 +109,11 @@
 		// mais estompee pour signaler qu'on ne peut pas encore la poser.
 		&.empty { opacity: 0.35; }
 	}
+	// Quantite possedee en bas a droite ; le numero de dosage est en haut a gauche,
+	// pose par alteration-icon (#622).
 	.owned {
 		position: absolute;
-		top: -5px;
+		bottom: -5px;
 		right: -5px;
 		min-width: 15px;
 		height: 15px;

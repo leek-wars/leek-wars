@@ -6,6 +6,7 @@
 	"level": "Nivå",
 	"date": "Datum",
 	"rarity": "Brist",
+	"charge": "Laddning",
 	"type": "Type",
 	"no_group": "Ingen grupp",
 	"size": "Storlek",
