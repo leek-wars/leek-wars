@@ -14,7 +14,7 @@
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
 				<svg v-if="plan && (plan.ratioBefore > 0 || plan.ratioAfter > 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
-					<path class="track" :d="RING_PATH" />
+					<!-- Pas de rail de fond : seul l'arc de charge est visible. -->
 					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
 					<path v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
 						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioAfter))" />
@@ -428,19 +428,14 @@
 // l'entourer sans masquer l'image du composant.
 .charge-ring {
 	position: absolute;
-	// Plus a l'exterieur (12px), pour laisser voir la bordure fine du carre central
-	// entre elle et l'anneau epais colore.
-	top: -12px;
-	left: -12px;
-	width: calc(100% + 24px);
-	height: calc(100% + 24px);
+	// Juste a l'exterieur du carre central (11px) : l'arc vient coller sa bordure
+	// fine sans la recouvrir.
+	top: -11px;
+	left: -11px;
+	width: calc(100% + 22px);
+	height: calc(100% + 22px);
 	pointer-events: none;
 	z-index: 1;
-	.track {
-		fill: none;
-		stroke: var(--background-secondary);
-		stroke-width: 6;
-	}
 	.fill {
 		fill: none;
 		stroke-width: 6;
