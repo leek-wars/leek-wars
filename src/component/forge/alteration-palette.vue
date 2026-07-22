@@ -58,20 +58,26 @@
 </script>
 
 <style lang="scss" scoped>
-	// Grille 2 colonnes : les caracs se lisent en deux colonnes plutot qu'en une
-	// longue liste, la palette tient sur moitie moins de hauteur (#622).
+	// Grille 5x2 : 5 colonnes, 2 lignes pour les 10 caracs. Chaque carte = une carac
+	// (icone en tete) avec ses 3 familles en dessous ; les cases retrecissent pour
+	// tenir les 5 colonnes quelle que soit la largeur du panneau (#622).
 	.alteration-palette {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 6px 10px;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 8px 6px;
 		padding: 8px;
 		border-bottom: 1px solid var(--border);
 	}
+	// Sous ~520px (mobile), 5 colonnes deviennent minuscules : on retombe a 2.
+	@media (max-width: 520px) {
+		.alteration-palette { grid-template-columns: repeat(2, 1fr); }
+	}
 	.palette-row {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		justify-content: center;
-		gap: 6px;
+		gap: 4px;
+		min-width: 0;
 	}
 	.carac {
 		width: 20px;
@@ -80,17 +86,24 @@
 	}
 	.cells {
 		display: flex;
-		gap: 5px;
+		justify-content: center;
+		gap: 3px;
+		width: 100%;
 	}
 	.cell {
 		position: relative;
-		width: 34px;
-		height: 34px;
+		flex: 1 1 0;
+		min-width: 0;
+		max-width: 34px;
+		aspect-ratio: 1;
 		padding: 3px;
 		border: 1px solid var(--border);
 		border-radius: 4px;
 		background: var(--background);
 		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		&:hover { border-color: var(--primary); }
 		// Alteration absente de l'inventaire : montree pour l'inventaire des possibles,
 		// mais estompee pour signaler qu'on ne peut pas encore la poser.

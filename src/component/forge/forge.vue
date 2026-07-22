@@ -24,7 +24,9 @@
 				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
-						<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
+						<!-- Silhouette coloree du palier si la piece porte deja de la charge (#622) ;
+						     vide (donc aucune bordure) pour un composant neuf. -->
+						<img :class="alteredClass(component, LeekWars.items[component.template].level as number)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
@@ -112,7 +114,7 @@
 	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
 	import { InventoryItem } from '@/model/farmer'
 	import { t } from '@/model/i18n'
-	import { planAttempt, alterationTier, type AlterationRecipe } from '@/model/alteration'
+	import { planAttempt, alterationTier, alteredClass, type AlterationRecipe } from '@/model/alteration'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
