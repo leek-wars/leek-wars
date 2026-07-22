@@ -73,6 +73,8 @@
 	"alteration_well": "Put",
 	"synergy_good": "Goede synergie",
 	"synergy_perfect": "Perfecte synergie",
+	"alteration_charge": "Lading",
+	"alteration_repeat": "Herhalen",
 	"alteration_dose": "Dosering",
 	"alteration_indivisible": "Ondeelbaar: de winst blijft +1, de slaagkans varieert.",
 	"alteration_needs_component": "Plaats eerst een component",

@@ -76,6 +76,8 @@
 	"alteration_well": "Pozzo",
 	"synergy_good": "Buona sinergia",
 	"synergy_perfect": "Sinergia perfetta",
+	"alteration_charge": "Carica",
+	"alteration_repeat": "Ripeti",
 	"alteration_dose": "Dosaggio",
 	"alteration_indivisible": "Indivisibile: il guadagno resta +1, a variare è la probabilità di riuscita.",
 	"alteration_needs_component": "Metti prima un componente",

@@ -73,6 +73,8 @@
 	"alteration_well": "Kaivo",
 	"synergy_good": "Hyvä synergia",
 	"synergy_perfect": "Täydellinen synergia",
+	"alteration_charge": "Lataus",
+	"alteration_repeat": "Toista",
 	"alteration_dose": "Annostus",
 	"alteration_indivisible": "Jakamaton: hyöty pysyy +1, onnistumismahdollisuus vaihtelee.",
 	"alteration_needs_component": "Aseta ensin komponentti",

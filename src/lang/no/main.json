@@ -73,6 +73,8 @@
 	"alteration_well": "Brønn",
 	"synergy_good": "God synergi",
 	"synergy_perfect": "Perfekt synergi",
+	"alteration_charge": "Ladning",
+	"alteration_repeat": "Gjenta",
 	"alteration_dose": "Dosering",
 	"alteration_indivisible": "Udelelig: gevinsten forblir +1, det er sjansen for å lykkes som varierer.",
 	"alteration_needs_component": "Plasser en komponent først",
