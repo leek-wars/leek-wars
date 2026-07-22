@@ -9,24 +9,14 @@
 					</div>
 				</rich-tooltip-item>
 			</div>
-			<div v-if="component" class="cell cell8 active component">
-				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
-				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
-				     puis en plus clair ce que la tentative ajouterait. -->
-				<svg v-if="plan && (plan.ratioBefore > 0 || plan.ratioAfter > 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
-					<!-- Pas de rail de fond : seul l'arc de charge est visible. -->
-					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
-					<path v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
-						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioAfter))" />
-					<!-- La charge actuelle, dans la couleur de son palier. -->
-					<path v-if="plan.ratioBefore > 0" class="fill" :class="'tier-' + tierBefore" :d="RING_PATH"
-						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioBefore))" />
-				</svg>
+			<div v-if="component" class="cell cell8 active component removable" @click="clear">
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
 						<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 					</div>
 				</rich-tooltip-item>
+				<!-- Charge de l'item en badge, coin bas droit de l'image (#622). -->
+				<charge-badge v-if="component.stats" class="charge" :alterations="component.stats" :level="LeekWars.items[component.template].level as number" />
 			</div>
 			<div v-else class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
@@ -38,28 +28,31 @@
 				<v-icon v-if="result && !building && !built">mdi-hammer-wrench</v-icon>
 				<v-icon v-if="result && built">mdi-refresh</v-icon>
 			</div>
-			<!-- Effacer : croix, pas une fleche circulaire qui evoquerait "refaire". -->
-			<v-icon v-if="scheme || component" class="clear" :title="$t('main.clear')" @click="clear">mdi-close</v-icon>
-			<!-- Recommencer : repose la derniere recette d'alteration (#622). -->
-			<v-btn v-if="component && lastRecipe && alterationCount === 0" class="redo" icon variant="tonal"
-				size="small" :title="$t('main.alteration_repeat')" @click="repeat">
-				<v-icon>mdi-restore</v-icon>
+			<!-- Effacer : croix, pas une fleche circulaire qui evoquerait "refaire". Coin HAUT droit. -->
+			<v-btn v-if="scheme || component" class="corner-btn clear" icon variant="flat" size="small" @click="clear">
+				<v-icon>mdi-close</v-icon>
+				<v-tooltip activator="parent" location="top">{{ $t('main.clear') }}</v-tooltip>
 			</v-btn>
-			<!-- Recyclage : coin bas gauche, tant qu'aucune alteration n'est posee. -->
-			<v-btn v-if="component && alterationCount === 0" class="recycle" icon variant="tonal" color="error"
-				size="small" :loading="destroying" :title="$t('main.destroy')" @click="destroy">
-				<v-icon>mdi-recycle</v-icon>
+			<!-- Recommencer : repose la derniere recette d'alteration (#622). Coin HAUT gauche. -->
+			<v-btn v-if="component && lastRecipe && alterationCount === 0" class="corner-btn redo" icon variant="flat"
+				size="small" @click="repeat">
+				<v-icon color="primary">mdi-restore</v-icon>
+				<v-tooltip activator="parent" location="top">{{ $t('main.alteration_repeat') }}</v-tooltip>
 			</v-btn>
-			<!-- Alterer : coin bas droit de la grille, sous la main du joueur. -->
-			<v-btn v-if="component && alterationCount > 0" class="fuse-btn" icon variant="flat" color="primary"
-				size="small" :loading="altering" :disabled="!plan || !plan.fits" :title="$t('main.alteration_fuse')" @click="alter">
-				<v-icon>mdi-flask</v-icon>
+			<!-- Recyclage : coin BAS gauche, tant qu'aucune alteration n'est posee. -->
+			<v-btn v-if="component && alterationCount === 0" class="corner-btn recycle" icon variant="flat"
+				size="small" :loading="destroying" @click="destroy">
+				<v-icon color="error">mdi-recycle</v-icon>
+				<v-tooltip activator="parent" location="bottom">{{ $t('main.destroy') }}</v-tooltip>
+			</v-btn>
+			<!-- Alterer : coin BAS droit de la grille, sous la main du joueur. -->
+			<v-btn v-if="component && alterationCount > 0" class="corner-btn fuse-btn" icon variant="flat"
+				size="small" :loading="altering" :disabled="!plan || !plan.fits" @click="alter">
+				<v-icon color="primary">mdi-flask</v-icon>
+				<v-tooltip activator="parent" location="bottom">{{ $t('main.alteration_fuse') }}</v-tooltip>
 			</v-btn>
 		</div>
-		<!-- L'anneau autour du composant porte la jauge ; ici juste le chiffre. -->
-		<div v-if="component && plan" class="charge-label">
-			{{ $t('main.alteration_charge') }} <b>{{ Math.round(plan.ratioAfter * 100) }} %</b>
-		</div>
+
 		<div v-if="component && dose > 0" class="dose">
 			{{ $t('main.alteration_dose') }} <b>{{ dose }}</b>
 			<span class="count">{{ alterationCount }} / {{ maxItems }}</span>
@@ -107,12 +100,13 @@
 	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
 	import { InventoryItem } from '@/model/farmer'
 	import { t } from '@/model/i18n'
-	import { planAttempt, alterationTier, type AlterationRecipe } from '@/model/alteration'
+	import { planAttempt, type AlterationRecipe } from '@/model/alteration'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import ChargeBadge from '@/component/market/charge-badge.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	defineOptions({ name: 'Forge' })
@@ -136,7 +130,6 @@
 			component.value = item
 		})
 		emitter.on('add-alteration', addAlteration)
-		emitter.on('workshop-mode', () => clear())
 		emitter.on('craft', (s: SchemeTemplate) => {
 			clear()
 			scheme.value = s
@@ -166,17 +159,6 @@
 	/** Derniere recette d'alteration lancee, pour le bouton Recommencer (#622). */
 	const lastRecipe = ref<AlterationRecipe | null>(null)
 
-	// Perimetre du rect arrondi (92x92, r=20) pour la jauge annulaire :
-	// 4 cotes droits + 4 quarts de cercle = 4*(92-2*20) + 2*PI*20.
-	// Rectangle arrondi parcouru en HORAIRE depuis le milieu du haut (12h), pour que la
-	// jauge parte pile en haut. Un <rect> commence son trace a rx du coin gauche, d'ou
-	// le depart decale et le glitch au coin ; un <path> explicite fixe le point de
-	// depart exactement ou on veut.
-	const RING_PATH = 'M50 4 H76 A20 20 0 0 1 96 24 V76 A20 20 0 0 1 76 96 H24 A20 20 0 0 1 4 76 V24 A20 20 0 0 1 24 4 Z'
-	const ringLength = 4 * (92 - 40) + 2 * Math.PI * 20
-	// Palier de rarete de la charge, pour colorer l'anneau (#622).
-	const tierBefore = computed(() => plan.value ? (alterationTier(plan.value.ratioBefore)?.tier ?? 1) : 1)
-	const tierAfter = computed(() => plan.value ? (alterationTier(plan.value.ratioAfter)?.tier ?? 1) : 1)
 	interface AlterResult {
 		success: boolean
 		results: { carac: string, success: boolean, points: number, probability: number }[]
@@ -388,7 +370,6 @@
 		emitter.off('craft')
 		emitter.off('alter')
 		emitter.off('add-alteration')
-		emitter.off('workshop-mode')
 	})
 
 	function craft() {
@@ -424,42 +405,14 @@
 
 <style lang="scss" scoped>
 
-// Anneau de charge autour de la cellule centrale : depasse legerement le carre pour
-// l'entourer sans masquer l'image du composant.
-.charge-ring {
+// Badge de charge en bas a droite de l'image du composant central (#622).
+.cell8.component .charge {
 	position: absolute;
-	// Juste a l'exterieur du carre central (11px) : l'arc vient coller sa bordure
-	// fine sans la recouvrir.
-	top: -11px;
-	left: -11px;
-	width: calc(100% + 22px);
-	height: calc(100% + 22px);
-	pointer-events: none;
-	z-index: 1;
-	.fill {
-		fill: none;
-		stroke-width: 6;
-		stroke-linecap: round;
-		transition: stroke-dashoffset 0.3s ease;
-		// Un rect arrondi commence deja son trace en haut et tourne dans le sens
-		// horaire : pas de rotation a appliquer, contrairement a un cercle (sinon le
-		// depart se decale sur un coin et l'arc semble detache).
-	}
-	// Couleur du palier, comme la silhouette de la vignette.
-	.fill.tier-1 { stroke: #008800; }
-	.fill.tier-2 { stroke: #0090ff; }
-	.fill.tier-3 { stroke: #c21aff; }
-	.fill.tier-4 { stroke: #f8ac00; }
-	.fill.tier-5 { stroke: red; }
-	// Ce que la tentative ajouterait : meme couleur de palier, mais estompe.
-	.fill.preview { opacity: 0.4; }
-}
-.charge-label {
-	text-align: center;
-	padding-top: 8px;
-	font-size: 13px;
-	color: var(--text-color-secondary);
-	b { color: var(--text-color); font-size: 15px; }
+	right: 2px;
+	bottom: 2px;
+	z-index: 3;
+	width: 34px;
+	height: 34px;
 }
 .preview, .result {
 	width: 100%;
@@ -498,27 +451,24 @@
 	}
 }
 .cell.removable { cursor: pointer; }
+// Les 4 boutons d'angle : meme pastille ronde, fond plein et fine bordure, pour
+// qu'ils se detachent de la grille et se ressemblent (#622). La couleur porte sur
+// l'icone (primary pour agir, error pour recycler), pas sur le fond.
+.corner-btn.v-btn {
+	position: absolute;
+	z-index: 3;
+	background-color: var(--background) !important;
+	border: 1px solid var(--border);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
 // Recommencer : coin HAUT gauche de la grille.
-.redo {
-	position: absolute;
-	left: -4px;
-	top: -4px;
-	z-index: 3;
-}
-// Recyclage : coin bas gauche.
-.recycle {
-	position: absolute;
-	left: -4px;
-	bottom: -4px;
-	z-index: 3;
-}
-// Alterer : coin bas droit, la ou tombe naturellement la main droite.
-.fuse-btn {
-	position: absolute;
-	right: -4px;
-	bottom: -4px;
-	z-index: 3;
-}
+.redo { left: -4px; top: -4px; }
+// Effacer : coin HAUT droit, aligne sur les autres (etait a -5px, decale).
+.clear { right: -4px; top: -4px; }
+// Recyclage : coin BAS gauche.
+.recycle { left: -4px; bottom: -4px; }
+// Alterer : coin BAS droit, la ou tombe naturellement la main droite.
+.fuse-btn { right: -4px; bottom: -4px; }
 .cell8.component .item img {
 	max-width: 100%;
 	max-height: 100%;
@@ -610,7 +560,7 @@
 		&.active {
 			cursor: pointer;
 		}
-		&:not(.built) .item {
+		&:not(.built):not(.component) .item {
 			opacity: 0.4;
 		}
 		.v-icon {
@@ -661,13 +611,6 @@
 			font-size: 14px;
 		}
 	}
-}
-.clear {
-	position: absolute;
-	top: -5px;
-	right: -5px;
-	z-index: 3;
-	cursor: pointer;
 }
 @keyframes item-animation {
 	0% { transform: scale(1); }

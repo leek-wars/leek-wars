@@ -7,12 +7,12 @@
 		<div class="column">
 			<inventory />
 			<div class="resizer" @mousedown="resizerMousedown"><v-icon>mdi-drag-horizontal-variant</v-icon></div>
-			<panel ref="bottomPanel" class="bottom-panel" icon="mdi-map-outline" toggle="inventory/workshop" :toggle-invert="true" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event">
+			<panel ref="bottomPanel" class="bottom-panel" toggle="inventory/workshop" :toggle-invert="true" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event">
 				<template #title>
 					<div class="workshop-tabs">
 						<div v-for="t in TABS" :key="t.mode" v-ripple class="workshop-tab" :class="{active: tab === t.mode}" @click.stop="tab = t.mode">
 							<v-icon>{{ t.icon }}</v-icon>
-							<span>{{ $t('main.' + t.label) }}</span>
+							<span>{{ $t('main.' + t.label) }}<template v-if="t.mode === 'craft'"> ({{ schemes.length }})</template></span>
 						</div>
 					</div>
 				</template>
@@ -79,8 +79,13 @@
 									<scheme v-for="(scheme, s) in schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true" :show-price="false" :shared-tooltip="true" @show-tooltip="showTooltip" @hide-tooltip="scheduleHideTooltip"></scheme>
 								</div>
 							</template>
-							<!-- Ameliorer / Detruire : l'historique de l'onglet. -->
-							<item-history v-else :action="tab === 'alter' ? 2 : 3" />
+							<!-- Ameliorer : la palette des alterations, puis l'historique des tentatives. -->
+							<div v-else-if="tab === 'alter'" class="alter-pane">
+								<alteration-palette />
+								<item-history :action="2" />
+							</div>
+							<!-- Detruire : l'historique des destructions. -->
+							<item-history v-else :action="3" />
 							<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 								<div class="scheme-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
 									<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :show-use="true" :craft-cost="tooltipCraftCost" />
@@ -102,6 +107,7 @@
 	import Scheme from '../market/scheme.vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import Forge from '../forge/forge.vue'
+	import AlterationPalette from '../forge/alteration-palette.vue'
 	import ItemHistory from '@/component/inventory/item-history.vue'
 	import PageTabs from '@/component/app/page-tabs.vue'
 	import { store } from '@/model/store'
@@ -116,7 +122,7 @@
 
 	// Onglet actif de l'atelier : fabriquer, ameliorer, detruire (#622).
 	const TABS = [
-		{ mode: 'craft', icon: 'mdi-hammer-wrench', label: 'craft_tab' },
+		{ mode: 'craft', icon: 'mdi-map-outline', label: 'craft_tab' },
 		{ mode: 'alter', icon: 'mdi-flask', label: 'improve_tab' },
 		{ mode: 'destroy', icon: 'mdi-recycle', label: 'destroy_tab' },
 	] as const
@@ -292,12 +298,14 @@
 		padding: 6px 12px;
 		cursor: pointer;
 		border-radius: 4px 4px 0 0;
-		color: var(--text-color-secondary);
+		// Le header du panel est toujours sombre (#2a2a2a) : le texte doit rester clair
+		// quel que soit le theme du site, sinon il devient sombre sur sombre en clair.
+		color: rgba(255, 255, 255, 0.6);
 		white-space: nowrap;
 		.v-icon { font-size: 18px; }
-		&:hover { background: var(--background-secondary); }
+		&:hover { background: rgba(255, 255, 255, 0.08); }
 		&.active {
-			color: var(--text-color);
+			color: #fff;
 			font-weight: bold;
 			box-shadow: inset 0 -2px 0 var(--primary);
 		}
@@ -389,7 +397,26 @@
 .schemes-list {
 	padding: 0;
 }
+// Onglet Ameliorer : palette figee en tete, historique qui remplit et defile (#622).
+.alter-pane {
+	height: 100%;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+// 12 caracs = 12 lignes : on plafonne la palette pour laisser voir l'historique.
+.alter-pane :deep(.alteration-palette) { flex: 0 0 auto; max-height: 50%; overflow-y: auto; }
+.alter-pane :deep(.item-history) { flex: 1; min-height: 0; }
 #app.app .schemes-section {
+	overflow-y: visible;
+}
+// Sur mobile tout defile ensemble : hauteurs naturelles.
+#app.app .alter-pane {
+	height: auto;
+	display: block;
+}
+#app.app .alter-pane :deep(.item-history) {
+	height: auto;
 	overflow-y: visible;
 }
 .menu-actions {
