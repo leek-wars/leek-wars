@@ -415,6 +415,9 @@
 
 	function changeArenaPreference(preference: number | null) {
 		if (preference === null) return
+		// Choix explicite du joueur : on met aussi à jour la préférence durable,
+		// pour que la prochaine inscription depuis le potager reparte sur ce mode.
+		localStorage.setItem('arena/preference', '' + preference)
 		const leek = parseInt(localStorage.getItem('arena-leek') || '', 10)
 		if (!leek) return
 		const wantsColossus = localStorage.getItem('arena-colossus') === '1'

@@ -9,6 +9,7 @@
     - "L'eliminazione dell'account è ora possibile per i creatori di squadra: la squadra passa al membro più anziano, o viene sciolta se il creatore era solo."
   fixed:
     - "#ai Assegnare un valore a un campo tipizzato di una classe tramite una variabile non tipizzata (any) applica ora le stesse conversioni del codice tipizzato, invece di fallire in combattimento con un falso errore \"campo sconosciuto\" (grazie a Bily)."
+    - "La modalità preferita in arena non cambia più da sola: il comando /br della chat iscriveva senza preferenza, e un cambio di modalità dal menu veniva dimenticato alla successiva iscrizione dall'orto."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."

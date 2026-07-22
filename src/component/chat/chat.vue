@@ -334,7 +334,8 @@
 					const lastLeekId = (arenaLeekId && farmer.leeks[arenaLeekId]) ? arenaLeekId : gardenLeekId
 					const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0]
 					if (leek) {
-						LeekWars.arena.register(leek.id)
+						const preference = parseInt(localStorage.getItem('arena/preference') || '-1', 10)
+						LeekWars.arena.register(leek.id, preference)
 					}
 				}
 			}

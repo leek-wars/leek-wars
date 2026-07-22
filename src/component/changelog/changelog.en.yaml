@@ -9,6 +9,7 @@
     - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
   fixed:
     - "#ai Assigning a value to a typed class field through an untyped (any) variable now applies the same conversions as typed code, instead of failing in fights with a bogus \"unknown field\" error (thanks to Bily)."
+    - "The preferred arena mode no longer changes on its own: the /br chat command registered you with no preference, and a mode change from the menu was forgotten on the next registration from the garden."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
