@@ -6,17 +6,13 @@
 			<span v-html="$t('characteristic.' + stat[0])"></span>
 			<span v-if="isAltered(stat[0])" class="bonus" :class="'color-' + stat[0]">+{{ alterations![stat[0]] }}</span>
 		</div>
-		<!-- Barre de puits : seulement si la piece est deja alteree (#622). -->
-		<div v-if="well" class="well">
-			<div class="bar"><div class="fill" :class="'tier-' + well.tier" :style="{width: Math.min(100, well.ratio * 100) + '%'}"></div></div>
-			<span class="label">{{ $t('main.alteration_well') }} {{ Math.round(well.ratio * 100) }} %</span>
-		</div>
+
 	</div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { mergeStats, well as wellCapacity, addedPower, alterationTier } from '@/model/alteration'
+import { mergeStats } from '@/model/alteration'
 
 defineOptions({ name: 'ComponentPreview' })
 
@@ -38,21 +34,6 @@ const isAltered = (carac: string) => !!props.alterations && !!props.alterations[
 
 // Remplissage du puits : puissance ajoutée / capacité (0,85 × niveau). Affiché
 // seulement quand la pièce porte des altérations, sinon la barre serait toujours vide.
-// Poids des caracs (couts marginaux, constants). En dur ici pour ne pas importer
-// LeekWars dans un composant de preview : ca tirerait tout le store et casserait les
-// tests unitaires, qui montent la preview sans app complete.
-const WEIGHTS: { [carac: string]: number } = {
-	life: 1, strength: 4, agility: 4, wisdom: 4, resistance: 4, science: 4, magic: 4,
-	frequency: 2, tp: 200, mp: 250, cores: 200, ram: 200,
-}
-const well = computed(() => {
-	if (!props.alterations || !props.level) return null
-	const capacity = wellCapacity(props.level)
-	if (capacity <= 0) return null
-	const ratio = addedPower(props.alterations, WEIGHTS) / capacity
-	const tier = alterationTier(ratio)
-	return ratio > 0 ? { ratio, tier: tier ? tier.tier : 1 } : null
-})
 </script>
 
 <style src='./item-preview.scss' lang='scss'></style>
@@ -83,35 +64,6 @@ const well = computed(() => {
 				margin-bottom: 1px;
 				margin-right: 6px;
 			}
-		}
-	}
-	.well {
-		padding: 6px 10px 8px;
-		.bar {
-			position: relative;
-			height: 8px;
-			border-radius: 4px;
-			background: var(--background-secondary);
-			overflow: hidden;
-		}
-		.fill {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 0;
-		}
-		// La barre reprend la couleur du palier, comme la silhouette de la vignette.
-		.fill.tier-1 { background: #008800; }
-		.fill.tier-2 { background: #0090ff; }
-		.fill.tier-3 { background: #c21aff; }
-		.fill.tier-4 { background: #f8ac00; }
-		.fill.tier-5 { background: red; }
-		.label {
-			display: block;
-			text-align: center;
-			font-size: 12px;
-			color: var(--text-color-secondary);
-			padding-top: 3px;
 		}
 	}
 	body.dark {
