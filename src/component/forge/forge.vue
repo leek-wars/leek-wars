@@ -13,11 +13,13 @@
 				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
-				<svg v-if="plan" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
+				<svg v-if="plan && (plan.ratioBefore > 0 || plan.ratioAfter > 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
 					<rect class="track" x="4" y="4" width="92" height="92" rx="20" />
-					<rect class="fill preview" x="4" y="4" width="92" height="92" rx="20"
+					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
+					<rect v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" x="4" y="4" width="92" height="92" rx="20"
 						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioAfter))" />
-					<rect class="fill" x="4" y="4" width="92" height="92" rx="20"
+					<!-- La charge actuelle, dans la couleur de son palier. -->
+					<rect v-if="plan.ratioBefore > 0" class="fill" :class="'tier-' + tierBefore" x="4" y="4" width="92" height="92" rx="20"
 						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioBefore))" />
 				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
@@ -105,7 +107,7 @@
 	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
 	import { InventoryItem } from '@/model/farmer'
 	import { t } from '@/model/i18n'
-	import { planAttempt, type AlterationRecipe } from '@/model/alteration'
+	import { planAttempt, alterationTier, type AlterationRecipe } from '@/model/alteration'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -167,6 +169,9 @@
 	// Perimetre du rect arrondi (92x92, r=20) pour la jauge annulaire :
 	// 4 cotes droits + 4 quarts de cercle = 4*(92-2*20) + 2*PI*20.
 	const ringLength = 4 * (92 - 40) + 2 * Math.PI * 20
+	// Palier de rarete de la charge, pour colorer l'anneau (#622).
+	const tierBefore = computed(() => plan.value ? (alterationTier(plan.value.ratioBefore)?.tier ?? 1) : 1)
+	const tierAfter = computed(() => plan.value ? (alterationTier(plan.value.ratioAfter)?.tier ?? 1) : 1)
 	interface AlterResult {
 		success: boolean
 		results: { carac: string, success: boolean, points: number, probability: number }[]
@@ -431,16 +436,21 @@
 	}
 	.fill {
 		fill: none;
-		stroke: var(--primary);
 		stroke-width: 6;
 		stroke-linecap: round;
-		// Part du haut, sens horaire.
-		transform: rotate(-90deg);
-		transform-origin: 50% 50%;
 		transition: stroke-dashoffset 0.3s ease;
+		// Un rect arrondi commence deja son trace en haut et tourne dans le sens
+		// horaire : pas de rotation a appliquer, contrairement a un cercle (sinon le
+		// depart se decale sur un coin et l'arc semble detache).
 	}
-	// Ce que la tentative ajouterait, en plus clair et derriere la charge actuelle.
-	.fill.preview { stroke: #9ccc65; }
+	// Couleur du palier, comme la silhouette de la vignette.
+	.fill.tier-1 { stroke: #008800; }
+	.fill.tier-2 { stroke: #0090ff; }
+	.fill.tier-3 { stroke: #c21aff; }
+	.fill.tier-4 { stroke: #f8ac00; }
+	.fill.tier-5 { stroke: red; }
+	// Ce que la tentative ajouterait : meme couleur de palier, mais estompe.
+	.fill.preview { opacity: 0.4; }
 }
 .charge-label {
 	text-align: center;
