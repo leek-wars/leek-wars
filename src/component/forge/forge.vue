@@ -14,12 +14,12 @@
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
 				<svg v-if="plan && (plan.ratioBefore > 0 || plan.ratioAfter > 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
-					<rect class="track" x="4" y="4" width="92" height="92" rx="20" />
+					<path class="track" :d="RING_PATH" />
 					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
-					<rect v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" x="4" y="4" width="92" height="92" rx="20"
+					<path v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
 						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioAfter))" />
 					<!-- La charge actuelle, dans la couleur de son palier. -->
-					<rect v-if="plan.ratioBefore > 0" class="fill" :class="'tier-' + tierBefore" x="4" y="4" width="92" height="92" rx="20"
+					<path v-if="plan.ratioBefore > 0" class="fill" :class="'tier-' + tierBefore" :d="RING_PATH"
 						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioBefore))" />
 				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
@@ -168,6 +168,11 @@
 
 	// Perimetre du rect arrondi (92x92, r=20) pour la jauge annulaire :
 	// 4 cotes droits + 4 quarts de cercle = 4*(92-2*20) + 2*PI*20.
+	// Rectangle arrondi parcouru en HORAIRE depuis le milieu du haut (12h), pour que la
+	// jauge parte pile en haut. Un <rect> commence son trace a rx du coin gauche, d'ou
+	// le depart decale et le glitch au coin ; un <path> explicite fixe le point de
+	// depart exactement ou on veut.
+	const RING_PATH = 'M50 4 H76 A20 20 0 0 1 96 24 V76 A20 20 0 0 1 76 96 H24 A20 20 0 0 1 4 76 V24 A20 20 0 0 1 24 4 Z'
 	const ringLength = 4 * (92 - 40) + 2 * Math.PI * 20
 	// Palier de rarete de la charge, pour colorer l'anneau (#622).
 	const tierBefore = computed(() => plan.value ? (alterationTier(plan.value.ratioBefore)?.tier ?? 1) : 1)
