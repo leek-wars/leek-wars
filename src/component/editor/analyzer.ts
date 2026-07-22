@@ -438,6 +438,10 @@ class Analyzer {
 		// Group problems by ai path
 		const problemsByAI = {} as {[key: string]: Problem[]}
 		const markersByAI = {} as {[key: string]: monaco.editor.IMarkerData[]}
+		// Dédoublonnage par fichier : le daemon peut renvoyer deux fois le même problème (fusion des
+		// entrypoints, includes en diamant...). Un problème identique en position ET message n'a aucune
+		// raison d'être listé — ni compté — deux fois dans un même fichier.
+		const seenByAI = {} as {[key: string]: Set<string>}
 		for (const problem of problems) {
 			const level = problem[0] as number
 			let aiPath = problem[1] as string
@@ -452,16 +456,22 @@ class Analyzer {
 			if (!problemsByAI[aiPath]) {
 				problemsByAI[aiPath] = []
 				markersByAI[aiPath] = []
+				seenByAI[aiPath] = new Set()
 			}
-			problemsByAI[aiPath].push(new Problem(problem[2] as number, problem[3] as number, problem[4] as number, problem[5] as number, level, info))
+			const startLine = problem[2] as number, startColumn = problem[3] as number
+			const endLine = problem[4] as number, endColumn = problem[5] as number
+			const dupKey = level + ':' + startLine + ':' + startColumn + ':' + endLine + ':' + endColumn + ':' + info
+			if (seenByAI[aiPath].has(dupKey)) continue
+			seenByAI[aiPath].add(dupKey)
+			problemsByAI[aiPath].push(new Problem(startLine, startColumn, endLine, endColumn, level, info))
 			const errorCode = problem[6] as number
 			markersByAI[aiPath].push({
 				message: info,
 				severity: level === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
-				startLineNumber: problem[2] as number,
-				startColumn: (problem[3] as number) + 1,
-				endLineNumber: problem[4] as number,
-				endColumn: (problem[5] as number) + 2,
+				startLineNumber: startLine,
+				startColumn: startColumn + 1,
+				endLineNumber: endLine,
+				endColumn: endColumn + 2,
 				tags: errorCode === ERROR_UNUSED_VARIABLE || errorCode === ERROR_UNUSED_FUNCTION ? [monaco.MarkerTag.Unnecessary] : [],
 			})
 		}

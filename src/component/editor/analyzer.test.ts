@@ -212,6 +212,21 @@ describe('application des résultats dans le panneau', () => {
 		expect(analyzer.problems['ia/test/nnue/test_a.leek']['ia/test/nnue/test_a.leek']).toHaveLength(1)
 	})
 
+	// Cas reconstruct-path : le daemon renvoie DEUX FOIS le même problème (même position, même message)
+	// pour un fichier. Il ne doit apparaître qu'une fois dans la liste, et le compteur doit valoir 1.
+	it('dédoublonne un problème identique renvoyé plusieurs fois pour un fichier', async () => {
+		const analyzer = await freshAnalyzer()
+		const rp = fileInFS('ia/tsp/reconstruct-path.leek')
+
+		analyzer.applyAnalyzeResult({ 'ia/tsp/reconstruct-path.leek': { problems: [
+			warn('ia/tsp/reconstruct-path.leek', 138, 149),
+			warn('ia/tsp/reconstruct-path.leek', 138, 149),
+		] } })
+
+		expect(analyzer.problems['ia/tsp/reconstruct-path.leek']['ia/tsp/reconstruct-path.leek']).toHaveLength(1)
+		expect(rp.warnings).toBe(1)
+	})
+
 	it('vide la liste quand le dernier warning est corrigé', async () => {
 		const analyzer = await freshAnalyzer()
 		const a = fileInFS('a.leek')
