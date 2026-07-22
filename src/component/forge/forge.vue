@@ -31,6 +31,8 @@
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
 				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner">{{ Math.round(plan.ratioAfter * 100) }}%</div>
+				<!-- Nombre de pieces empilees a recycler d'un coup (#622). -->
+				<div v-if="componentCount > 1" class="stack-count">×{{ componentCount }}</div>
 			</div>
 			<div v-else class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
@@ -142,6 +144,10 @@
 	const forge = ref<(ForgeSlot | null)[]>([null, null, null, null, null, null, null, null])
 	/** Composant pose au centre pour etre altere (#622). */
 	const component = ref<InventoryItem | null>(null)
+	/** Nombre d'exemplaires du composant a recycler d'un coup, en mode destruction (#622). */
+	const componentCount = ref(1)
+	/** Onglet actif de l'atelier : seul le mode destruction empile les composants. */
+	const mode = ref(localStorage.getItem('workshop/tab') || 'craft')
 	const destroying = ref(false)
 	const scheme = ref<SchemeTemplate | null>(null)
 	const result = ref<number | null>(null)
@@ -152,10 +158,19 @@
 		LeekWars.footer = false
 		LeekWars.box = true
 		emitter.on('alter', (item: InventoryItem) => {
+			// En mode destruction, recliquer le meme composant (non altere) en empile
+			// plusieurs pour les recycler d'un coup ; sinon on repose la piece (#622).
+			if (mode.value === 'destroy' && component.value && component.value.template === item.template
+				&& alterationCount.value === 0 && component.value.stats == null) {
+				if (componentCount.value < item.quantity) componentCount.value++
+				return
+			}
 			clear()
 			component.value = item
+			componentCount.value = 1
 		})
 		emitter.on('add-alteration', addAlteration)
+		emitter.on('workshop-mode', (m: string) => { mode.value = m })
 		emitter.on('craft', (s: SchemeTemplate) => {
 			clear()
 			scheme.value = s
@@ -176,6 +191,7 @@
 		result.value = null
 		scheme.value = null
 		component.value = null
+		componentCount.value = 1
 		lastResult.value = null
 		building.value = false
 		built.value = false
@@ -332,6 +348,8 @@
 			LeekWars.toast(t('main.alteration_needs_component'))
 			return
 		}
+		// Alterer porte sur une seule piece : un empilement de destruction se defait.
+		componentCount.value = 1
 		if (alterationCount.value >= maxItems.value) {
 			LeekWars.toast(t('main.alteration_too_many', [maxItems.value]))
 			return
@@ -409,15 +427,22 @@
 		confirmDestroy.value = false
 		if (!component.value || destroying.value) return
 		const item = component.value
+		const count = componentCount.value
 		destroying.value = true
-		LeekWars.post<{ alterations: {[id: number]: number}, count: number }>('item/recycle', { item_id: item.id }).then(data => {
-			store.commit('remove-inventory', { type: ItemType.COMPONENT, item_template: item.template, quantity: 1 })
+		LeekWars.post<{ alterations: {[id: number]: number}, resources: {[id: number]: number}, count: number, destroyed: number }>('item/recycle', { item_id: item.id, count }).then(data => {
+			const destroyed = data.destroyed ?? count
+			store.commit('remove-inventory', { type: ItemType.COMPONENT, item_template: item.template, quantity: destroyed })
 			const alterations = LeekWars.alterations
 			for (const id in data.alterations) {
 				const alteration = alterations ? alterations.alterations[id] : null
 				if (!alteration) continue
 				store.commit('add-inventory', { type: ItemType.ALTERATION, id: alteration.template,
 					template: alteration.template, quantity: data.alterations[id], time: Date.now() / 1000 })
+			}
+			// Ressources rendues (~25 % de la recette), ajoutees a l'inventaire.
+			for (const id in data.resources) {
+				store.commit('add-inventory', { type: ItemType.RESOURCE, id: Number(id),
+					template: Number(id), quantity: data.resources[id], time: Date.now() / 1000 })
 			}
 			LeekWars.toast(data.count > 0
 				? t('main.destroy_result', [data.count])
@@ -432,6 +457,7 @@
 		emitter.off('craft')
 		emitter.off('alter')
 		emitter.off('add-alteration')
+		emitter.off('workshop-mode')
 	})
 
 	function craft() {
@@ -510,6 +536,20 @@
 	color: #fff;
 	// Liseré sombre : lisible sur n'importe quelle teinte d'image et dans les deux thèmes.
 	text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
+	pointer-events: none;
+}
+// Compteur d'empilement pour le recyclage groupe (#622) : pastille sombre, coin bas droit.
+.cell8.component .stack-count {
+	position: absolute;
+	right: 2px;
+	bottom: 2px;
+	z-index: 3;
+	background: #000000b3;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0 5px;
+	border-radius: 4px;
 	pointer-events: none;
 }
 .preview, .result {
