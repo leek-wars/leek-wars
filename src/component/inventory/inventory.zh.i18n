@@ -6,6 +6,7 @@
 	"level": "等级",
 	"date": "日期",
 	"rarity": "稀有度",
+	"charge": "充能",
 	"type": "类型",
 	"no_group": "不分组",
 	"size": "大小",

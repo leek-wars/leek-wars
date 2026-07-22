@@ -6,6 +6,7 @@
 	"level": "레벨",
 	"date": "날짜",
 	"rarity": "희귀도",
+	"charge": "충전",
 	"type": "유형",
 	"no_group": "그룹 없음",
 	"size": "크기",

@@ -6,6 +6,7 @@
 	"level": "Tingkat",
 	"date": "Tanggal",
 	"rarity": "Kelangkaan",
+	"charge": "Muatan",
 	"type": "Tipe",
 	"no_group": "Tanpa grup",
 	"size": "Ukuran",

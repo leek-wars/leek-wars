@@ -1,56 +1,50 @@
 <template>
 	<div class="item-history">
+		<div class="history-header">{{ $t('main.history') }}</div>
 		<loader v-if="loading && !entries.length" />
 		<div v-else-if="!entries.length" class="empty">{{ $t('main.history_empty') }}</div>
 		<div v-else class="entries">
 			<div v-for="entry in entries" :key="entry.id" class="entry">
+				<!-- Une seule ligne : vignette, nom, contenu de l'action, puis la date a droite (#622). -->
 				<div class="line" :class="lineClass(entry)">
 					<img v-if="entry.template" class="thumb" :src="thumbUrl(entry.template)" :alt="itemName(entry.template)">
-					<div class="body">
-						<div class="head">
-							<span class="name">{{ itemName(entry.template) }}</span>
-							<span class="date">{{ formatDate(entry.date) }}</span>
-						</div>
+					<span class="name">{{ itemName(entry.template) }}</span>
 
-						<!-- Craft : ce qui a ete fabrique. -->
-						<div v-if="entry.action === CRAFT && entry.details" class="detail">
-							{{ $t('main.history_crafted', [entry.details.quantity || 1]) }}
-						</div>
+					<!-- Craft : ce qui a ete fabrique. -->
+					<span v-if="entry.action === CRAFT && entry.details" class="detail">
+						{{ $t('main.history_crafted', [entry.details.quantity || 1]) }}
+					</span>
 
-						<!-- Alteration : le resultat par carac, le dosage et la synergie. -->
-						<template v-else-if="entry.action === ALTER && entry.details">
-							<div class="rolls">
-								<span v-for="r in entry.details.results" :key="r.carac" class="roll" :class="{ok: r.success}">
-									<img class="ci" :src="'/image/charac/small/' + r.carac + '.png'">
-									<template v-if="r.success">+{{ r.points }}</template>
-									<template v-else>✕</template>
-								</span>
-							</div>
-							<div class="detail sub">
-								<span>{{ $t('main.alteration_dose') }} {{ entry.details.dose }}</span>
-								<span v-if="entry.details.synergy > 1" class="synergy" :class="'s' + entry.details.synergy">
-									{{ entry.details.synergy === 3 ? $t('main.synergy_perfect') : $t('main.synergy_good') }}
-								</span>
-								<span v-if="entry.details.broken" class="broken">
-									<v-icon size="14">mdi-heart-broken</v-icon>
-									-{{ entry.details.broken.lost }}
-								</span>
-							</div>
-						</template>
+					<!-- Alteration : resultat par carac, dosage, synergie, casse. -->
+					<template v-else-if="entry.action === ALTER && entry.details">
+						<span v-for="r in entry.details.results" :key="r.carac" class="roll" :class="{ok: r.success}">
+							<img class="ci" :src="'/image/charac/small/' + r.carac + '.png'">
+							<template v-if="r.success">+{{ r.points }}</template>
+							<template v-else>✕</template>
+						</span>
+						<span class="dose" :title="$t('main.alteration_dose')">{{ entry.details.dose }}</span>
+						<span v-if="entry.details.synergy > 1" class="synergy" :class="'s' + entry.details.synergy">
+							{{ entry.details.synergy === 3 ? $t('main.synergy_perfect') : $t('main.synergy_good') }}
+						</span>
+						<span v-if="entry.details.broken" class="broken">
+							<v-icon size="13">mdi-heart-broken</v-icon>-{{ entry.details.broken.lost }}
+						</span>
+					</template>
 
-						<!-- Destruction : les alterations rendues (en grand) puis les ressources. -->
-						<div v-else-if="entry.action === DESTROY && entry.details" class="rendered">
-							<span v-for="(count, id) in entry.details.alterations" :key="'a' + id" class="rendered-item alteration" :title="alterationName(Number(id))">
-								<img :src="alterationThumb(Number(id))" :alt="alterationName(Number(id))">
-								<span v-if="count > 1" class="qty">×{{ count }}</span>
-							</span>
-							<span v-for="(count, id) in entry.details.resources" :key="'r' + id" class="rendered-item resource" :title="resourceName(Number(id))">
-								<img :src="resourceThumb(Number(id))" :alt="resourceName(Number(id))">
-								<span v-if="count > 1" class="qty">×{{ count }}</span>
-							</span>
-							<span v-if="!hasRendered(entry)" class="nothing">{{ $t('main.destroy_nothing') }}</span>
-						</div>
-					</div>
+					<!-- Destruction : alterations rendues puis ressources, en ligne. -->
+					<template v-else-if="entry.action === DESTROY && entry.details">
+						<span v-for="(count, id) in entry.details.alterations" :key="'a' + id" class="rendered-item alteration" :title="alterationName(Number(id))">
+							<img :src="alterationThumb(Number(id))" :alt="alterationName(Number(id))">
+							<span v-if="count > 1" class="qty">×{{ count }}</span>
+						</span>
+						<span v-for="(count, id) in entry.details.resources" :key="'r' + id" class="rendered-item resource" :title="resourceName(Number(id))">
+							<img :src="resourceThumb(Number(id))" :alt="resourceName(Number(id))">
+							<span v-if="count > 1" class="qty">×{{ count }}</span>
+						</span>
+						<span v-if="!hasRendered(entry)" class="nothing">{{ $t('main.destroy_nothing') }}</span>
+					</template>
+
+					<span class="date">{{ formatDate(entry.date) }}</span>
 				</div>
 			</div>
 			<div v-if="entries.length < total" class="more">
@@ -61,9 +55,10 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref, watch } from 'vue'
+	import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { t } from '@/model/i18n'
+	import { emitter } from '@/model/vue'
 
 	/**
 	 * Historique d'atelier (#622), filtre par type d'action. Lit item-history/get-all,
@@ -157,7 +152,17 @@
 		load(false)
 	}
 
-	onMounted(() => load(true))
+	// Une action d'atelier du meme type vient d'avoir lieu : on recharge pour la
+	// montrer tout de suite en tete de liste (#622).
+	function onWorkshopAction(action: number) {
+		if (action === props.action) load(true)
+	}
+
+	onMounted(() => {
+		load(true)
+		emitter.on('workshop-action', onWorkshopAction)
+	})
+	onBeforeUnmount(() => emitter.off('workshop-action', onWorkshopAction))
 	// Changer d'onglet recharge l'historique du bon type.
 	watch(() => props.action, () => load(true))
 </script>
@@ -167,6 +172,15 @@
 		height: 100%;
 		overflow-y: auto;
 	}
+	// Petit titre au-dessus de la liste (#622).
+	.history-header {
+		padding: 6px 8px 4px;
+		font-size: 12px;
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		color: var(--text-color-secondary);
+	}
 	.empty {
 		padding: 20px;
 		text-align: center;
@@ -175,51 +189,36 @@
 	.entry {
 		border-bottom: 1px solid var(--border);
 	}
+	// Une seule ligne compacte par entree : tout aligne horizontalement, la date
+	// poussee a droite. flex-wrap n'est qu'un filet pour les entrees tres chargees.
 	.line {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		padding: 6px 8px;
+		flex-wrap: wrap;
+		gap: 4px 6px;
+		padding: 3px 8px;
 	}
 	// Teinte discrete selon l'issue d'une tentative (#622).
 	.line.ok { background: rgba(94, 173, 27, 0.12); }
 	.line.fail { background: rgba(198, 40, 40, 0.10); }
 	.thumb {
-		width: 34px;
-		height: 34px;
+		width: 28px;
+		height: 28px;
 		flex: 0 0 auto;
 		// Les images d'items ne sont pas toujours carrees : contain evite l'ecrasement.
 		object-fit: contain;
 	}
-	.body {
-		flex: 1;
-		min-width: 0;
-	}
-	.head {
-		display: flex;
-		justify-content: space-between;
-		gap: 8px;
-	}
-	.name { font-weight: bold; }
+	.name { font-weight: bold; white-space: nowrap; }
 	.date {
-		font-size: 12px;
+		margin-left: auto;
+		padding-left: 6px;
+		font-size: 11px;
 		color: var(--text-color-secondary);
 		white-space: nowrap;
 	}
 	.detail {
 		font-size: 13px;
 		color: var(--text-color-secondary);
-	}
-	.detail.sub {
-		display: flex;
-		gap: 10px;
-		align-items: center;
-	}
-	.rolls {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-		padding: 2px 0;
 	}
 	.roll {
 		display: inline-flex;
@@ -230,27 +229,28 @@
 	}
 	.roll.ok { color: #2e7d32; font-weight: bold; }
 	.ci { width: 15px; height: 15px; }
-	.synergy { font-weight: bold; }
+	// Dosage : petit jeton discret.
+	.dose {
+		font-size: 12px;
+		color: var(--text-color-secondary);
+		background: var(--background-secondary);
+		border-radius: 4px;
+		padding: 0 5px;
+	}
+	.synergy { font-weight: bold; font-size: 12px; }
 	.synergy.s2 { color: #0097a7; }
 	.synergy.s3 { color: #f9a825; }
-	.broken { color: #c62828; display: inline-flex; align-items: center; gap: 2px; }
-	.rendered {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px 10px;
-		align-items: center;
-		padding-top: 4px;
-	}
+	.broken { color: #c62828; display: inline-flex; align-items: center; gap: 1px; font-size: 12px; }
 	.rendered-item {
 		display: inline-flex;
 		align-items: center;
 		gap: 2px;
 		.qty { font-size: 12px; color: var(--text-color-secondary); }
 	}
-	// Les alterations rendues, bien visibles. contain : garder les proportions.
+	// contain : garder les proportions des vignettes rendues.
 	.rendered-item img { object-fit: contain; }
-	.rendered-item.alteration img { width: 34px; height: 34px; }
-	.rendered-item.resource img { width: 26px; height: 26px; }
-	.nothing { font-style: italic; color: var(--text-color-secondary); }
+	.rendered-item.alteration img { width: 30px; height: 30px; }
+	.rendered-item.resource img { width: 24px; height: 24px; }
+	.nothing { font-style: italic; color: var(--text-color-secondary); font-size: 13px; }
 	.more { text-align: center; padding: 6px; }
 </style>

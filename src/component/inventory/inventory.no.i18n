@@ -6,6 +6,7 @@
 	"level": "Nivå",
 	"date": "Dato",
 	"rarity": "Knapphet",
+	"charge": "Ladning",
 	"type": "Type",
 	"no_group": "Ingen gruppe",
 	"size": "Størrelse",

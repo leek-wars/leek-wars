@@ -6,6 +6,7 @@
 	"level": "Taso",
 	"date": "Päivämäärä",
 	"rarity": "Harvinaisuus",
+	"charge": "Lataus",
 	"type": "Tyyppi",
 	"no_group": "Ei ryhmää",
 	"size": "Koko",

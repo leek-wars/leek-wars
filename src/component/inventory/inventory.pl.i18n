@@ -6,6 +6,7 @@
 	"level": "Poziom",
 	"date": "Data",
 	"rarity": "Niedostatek",
+	"charge": "Ładunek",
 	"type": "Type",
 	"no_group": "Bez grupy",
 	"size": "Rozmiar",

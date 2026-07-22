@@ -76,6 +76,9 @@ type Events = {
 	'add-alteration': InventoryItem,
 	/** L'onglet actif de l'atelier a change (#622). */
 	'workshop-mode': string,
+	/** Une action d'atelier vient d'avoir lieu (1 craft, 2 alteration, 3 destruction) :
+	 *  l'historique du type concerne se recharge pour la montrer aussitot (#622). */
+	'workshop-action': number,
 }
 
 const emitter = mitt<Events>()

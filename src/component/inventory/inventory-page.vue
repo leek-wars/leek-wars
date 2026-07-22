@@ -385,7 +385,9 @@
 	flex: 1;
 	min-height: 0;
 	min-width: 0;
-	overflow-y: auto;
+	// Barre de defilement toujours reservee : sinon son apparition au chargement de
+	// l'historique decale tout le contenu vers la gauche (#622).
+	overflow-y: scroll;
 	display: flex;
 	flex-direction: column;
 	:deep(.loader) {

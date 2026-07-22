@@ -43,6 +43,10 @@
 						<span>{{ $t('rarity') }}</span>
 						<v-icon v-if="sort === Sort.RARITY">mdi-check</v-icon>
 					</v-list-item>
+					<v-list-item v-ripple @click="sort = Sort.CHARGE">
+						<span>{{ $t('charge') }}</span>
+						<v-icon v-if="sort === Sort.CHARGE">mdi-check</v-icon>
+					</v-list-item>
 				</v-list>
 			</v-menu>
 			<v-menu offset-y>
@@ -179,7 +183,7 @@
 	import { alteredClass } from '@/model/alteration'
 
 	enum Sort {
-		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
+		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, CHARGE
 	}
 	enum Group {
 		NONE, TYPE, RARITY
@@ -378,6 +382,8 @@
 		if (sort.value === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
 		if (sort.value === Sort.QUANTITY) return b.quantity - a.quantity
 		if (sort.value === Sort.RARITY) return LeekWars.items[b.template].rarity - LeekWars.items[a.template].rarity
+		// Tri par charge : composants les plus charges d'abord, le reste (non altere) suit (#622).
+		if (sort.value === Sort.CHARGE) return (b.altered_power || 0) - (a.altered_power || 0)
 		return LeekWars.items[b.template].level - LeekWars.items[a.template].level
 	}
 

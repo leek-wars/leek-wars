@@ -85,7 +85,7 @@
 			</div>
 			<div class="row cost">
 				<span>{{ $t('main.alteration_cost') }}</span>
-				<b class="chance">{{ $filters.number(plan.habsCost) }}</b>
+				<b class="chance">{{ $filters.number(plan.habsCost) }}<span class="hab"></span></b>
 			</div>
 		</div>
 		<!-- Resultat de la derniere tentative. -->
@@ -106,6 +106,18 @@
 			</div>
 		</div>
 
+		<!-- Confirmation avant de recycler une piece qui porte de la charge (#622). -->
+		<popup v-model="confirmDestroy" :width="460" icon="mdi-recycle">
+			<template #title>{{ $t('main.destroy_confirm_title') }}</template>
+			<div class="destroy-confirm">{{ $t('main.destroy_confirm_message') }}</div>
+			<template #actions>
+				<v-btn variant="text" @click="confirmDestroy = false">{{ $t('main.cancel') }}</v-btn>
+				<v-btn color="error" variant="flat" :loading="destroying" @click="doDestroy">
+					<v-icon start>mdi-recycle</v-icon>{{ $t('main.destroy') }}
+				</v-btn>
+			</template>
+		</popup>
+
 	</div>
 </template>
 
@@ -120,6 +132,7 @@
 	import { emitter } from '@/model/vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import Popup from '@/component/popup.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	defineOptions({ name: 'Forge' })
@@ -283,6 +296,8 @@
 			}
 			store.commit('update-habs', -data.habs_cost)
 			clearIngredients()
+			// L'historique des ameliorations montre la tentative aussitot (#622).
+			emitter.emit('workshop-action', 2)
 		}).error(error => LeekWars.toast(error.error)).finally(() => { altering.value = false })
 	}
 
@@ -371,7 +386,27 @@
 	 * Detruit le composant pose : il est recycle en alterations, dont la quantite
 	 * depend de son niveau et la caracteristique de sa part de puissance (#622).
 	 */
+	/** Le composant pose porte-t-il de la charge (des alterations) ? */
+	const componentHasCharge = computed(() => {
+		const c = component.value
+		return !!c && !!c.stats && Object.keys(c.stats).length > 0
+	})
+	/** Confirmation avant de recycler une piece chargee (#622). */
+	const confirmDestroy = ref(false)
+
 	function destroy() {
+		if (!component.value || destroying.value) return
+		// Recycler detruit la piece : si elle porte de la charge, on previent d'abord
+		// que ses ameliorations investies seront perdues (#622).
+		if (componentHasCharge.value) {
+			confirmDestroy.value = true
+			return
+		}
+		doDestroy()
+	}
+
+	function doDestroy() {
+		confirmDestroy.value = false
 		if (!component.value || destroying.value) return
 		const item = component.value
 		destroying.value = true
@@ -387,6 +422,8 @@
 			LeekWars.toast(data.count > 0
 				? t('main.destroy_result', [data.count])
 				: t('main.destroy_nothing'))
+			// L'historique des destructions montre le resultat aussitot (#622).
+			emitter.emit('workshop-action', 3)
 			clear()
 		}).error(error => LeekWars.toast(error.error)).finally(() => { destroying.value = false })
 	}
@@ -417,6 +454,8 @@
 					store.commit('remove-inventory', { type: it.type, item_template: ingredient[0], quantity: ingredient[1] })
 				}
 			}
+			// L'historique des fabrications montre le craft aussitot (#622).
+			emitter.emit('workshop-action', 1)
 		})
 
 		building.value = true
@@ -685,5 +724,19 @@
 	50% { transform: rotate(5deg) scale(1); }
 	70% { transform: rotate(0deg) scale(1); }
 	100% { transform: scale(1); opacity: 1; }
+}
+// Corps du dialogue de confirmation de recyclage (#622).
+.destroy-confirm {
+	padding: 4px 4px 8px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+// Icone habs a cote du cout : petite, calee sur le texte (#622).
+.cost .hab {
+	width: 14px;
+	height: 14px;
+	background-size: 14px;
+	margin-left: 3px;
+	vertical-align: -2px;
 }
 </style>

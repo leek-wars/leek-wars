@@ -6,6 +6,7 @@
 	"level": "Niveau",
 	"date": "Datum",
 	"rarity": "Schaarste",
+	"charge": "Lading",
 	"type": "Type",
 	"no_group": "Geen groep",
 	"size": "Grootte",
