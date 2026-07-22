@@ -100,6 +100,9 @@ const props = defineProps<{
 	t?: (key: string, values?: unknown[]) => string
 	console?: boolean
 	lineNumbers?: boolean
+	popups?: boolean
+	autoClosing?: boolean
+	autocompleteOption?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -131,6 +134,20 @@ let conflictDecorations: monaco.editor.IEditorDecorationsCollection | null = nul
 let conflictLenses: monaco.IDisposable | null = null
 let conflicts: MergeConflict[] = []
 
+// Options pilotées par les paramètres de l'éditeur ; prop absente = activée
+// (usages du composant sans ces props, comme les consoles)
+function optionalOptions(): monaco.editor.IEditorOptions {
+	const autoClosing = props.autoClosing !== false ? 'languageDefined' : 'never'
+	const autocomplete = props.autocompleteOption !== false
+	return {
+		hover: { enabled: props.popups !== false },
+		autoClosingBrackets: autoClosing,
+		autoClosingQuotes: autoClosing,
+		quickSuggestions: autocomplete,
+		suggestOnTriggerCharacters: autocomplete,
+	}
+}
+
 onMounted(() => {
 	editor = markRaw(monaco.editor.create(editorEl.value as HTMLElement, {
 		language: "leekscript",
@@ -157,6 +174,8 @@ onMounted(() => {
 		},
 		fixedOverflowWidgets: true,
 		accessibilitySupport: 'off',
+		// Options des paramètres de l'éditeur (absentes = activées, cas de la console)
+		...optionalOptions(),
 	}, {
 		storageService: {
 			get() {},
@@ -360,6 +379,11 @@ watch([() => props.theme, () => props.lineHeight, () => props.fontSize], () => {
 		lineHeight: props.lineHeight,
 		fontSize: props.fontSize,
 	})
+})
+
+watch([() => props.popups, () => props.autoClosing, () => props.autocompleteOption], () => {
+	if (!editor) return
+	editor.updateOptions(optionalOptions())
 })
 
 watch(() => props.ai?.path, () => update(), { immediate: true })
