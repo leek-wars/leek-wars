@@ -7,6 +7,8 @@
     - "#ai Sharper types across the JavaScript, TypeScript and Python API (thanks to Nyaleph): constant families are now named in signatures (Entity.Stat, Fight.Use, Item.Area...), Item finally carries what weapons and chips have in common, and registers are typed as text. Careful: an AI using the return value of Registers.delete, or a register value directly as a number, will now report an error. Use parseInt instead."
     - "#ai JavaScript, TypeScript and Python API: Effect.item now returns the weapon or chip itself instead of its number, objects can be looked up from their id (Cell.get, Entity.get, Weapon.get, Chip.get, Item.get), and the objects the API returns are shared and read-only, so they compare by identity (me.cell === me.cell). The EFFECT_MODIFIER_* and EFFECT_TARGET_* constants are regrouped as Effect.Modifier.* and Effect.Target.* (thanks to Nyaleph)."
     - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
+  fixed:
+    - "#ai Assigning a value to a typed class field through an untyped (any) variable now applies the same conversions as typed code, instead of failing in fights with a bogus \"unknown field\" error (thanks to Bily)."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
