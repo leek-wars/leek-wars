@@ -227,8 +227,14 @@ class Analyzer {
 	) {
 		for (const epPath in result) {
 			const ai = fileSystem.ais[epPath]
-			if (!ai) continue
 			const entry = result[epPath]
+			if (!ai) {
+				// Entrypoint non chargé côté client (IA absente de fileSystem.ais). On nettoie tout de même
+				// son bucket périmé s'il revient en stats-only, sinon un doublon subsisterait sans qu'aucune
+				// IA locale ne permette de l'effacer via removeProblems.
+				if (entry.problems === undefined) this.removeProblemsByPath(epPath)
+				continue
+			}
 			if (typeof entry.total_lines === 'number') ai.total_lines = entry.total_lines
 			if (typeof entry.total_chars === 'number') ai.total_chars = entry.total_chars
 			// Polyglot (.js/.ts/.py) : la validité et les problèmes sont pilotés CÔTÉ CLIENT (service TS de
@@ -252,6 +258,38 @@ class Analyzer {
 				if (typeof entry.valid === 'boolean') ai.valid = entry.valid
 				if (ai.valid && onValid) onValid(ai)
 			}
+		}
+
+		this.purgeStaleBuckets(result)
+	}
+
+	// Un fichier analysé comme entrypoint (clé du résultat avec une liste de problèmes) fait autorité
+	// sous SON propre bucket. S'il traîne encore dans le bucket d'un AUTRE entrypoint que cette analyse
+	// n'a pas rafraîchi, c'est un doublon périmé : typiquement après un redémarrage du daemon, qui perd
+	// son graphe d'includes et recompile alors le fichier en standalone sans renvoyer ses includers (donc
+	// sans ordre de nettoyage). On retire le fichier de ces buckets, sans toucher aux problèmes PROPRES
+	// de ces entrypoints (leurs autres fichiers restent intacts).
+	private purgeStaleBuckets(result: {[path: string]: {problems?: unknown[][]}}) {
+		const analyzedFiles = Object.keys(result).filter(p => result[p].problems !== undefined)
+		if (!analyzedFiles.length) return
+		for (const epPath in this.problems) {
+			// Bucket rafraîchi par cette analyse (y compris le bucket propre du fichier) : déjà à jour.
+			if (epPath in result) continue
+			// Les TODO sont gérés à part par updateTodos, qui tourne juste après : ne pas y toucher.
+			if (epPath === '_todos') continue
+			let changed = false
+			for (const filePath of analyzedFiles) {
+				if (this.problems[epPath][filePath]) {
+					delete this.problems[epPath][filePath]
+					const file = fileSystem.ais[filePath]
+					if (file && file.problems[epPath]) {
+						delete file.problems[epPath]
+						this.updateAiErrors(file)
+					}
+					changed = true
+				}
+			}
+			if (changed && Object.keys(this.problems[epPath]).length === 0) delete this.problems[epPath]
 		}
 	}
 
@@ -455,14 +493,20 @@ class Analyzer {
 	}
 
 	public removeProblems(entrypoint: AI) {
+		this.removeProblemsByPath(entrypoint.path)
+	}
+
+	// Efface le bucket d'un entrypoint par son CHEMIN (sans exiger l'IA en mémoire) : nécessaire quand le
+	// daemon renvoie un entrypoint absent de fileSystem.ais (cf. applyAnalyzeResult).
+	public removeProblemsByPath(entrypointPath: string) {
 		for (const aiPath in fileSystem.ais) {
 			const ai = fileSystem.ais[aiPath]
-			if (ai.problems && Object.values(ai.problems).length) {
-				delete ai.problems[entrypoint.path]
+			if (ai.problems && ai.problems[entrypointPath]) {
+				delete ai.problems[entrypointPath]
 				this.updateAiErrors(ai)
 			}
 		}
-		delete this.problems[entrypoint.path]
+		delete this.problems[entrypointPath]
 	}
 
 	public updateAiErrors(ai: AI) {

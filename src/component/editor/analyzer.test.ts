@@ -155,6 +155,43 @@ describe('application des résultats dans le panneau', () => {
 		expect((analyzer.problems['a.leek']['a.leek'][0] as {start_line: number}).start_line).toBe(7)
 	})
 
+	// Régression featurizer.leek : un fichier inclus apparaît sous PLUSIEURS buckets d'entrypoint. Après
+	// un redémarrage du daemon (graphe d'includes perdu), analyser le fichier le recompile en standalone :
+	// le daemon ne renvoie plus les includers, donc leur bucket n'est jamais nettoyé et le fichier reste
+	// affiché en double avec ses vieux warnings.
+	it('ne laisse pas de bucket périmé quand le daemon ne renvoie plus les includers', async () => {
+		const analyzer = await freshAnalyzer()
+		const feat = fileInFS('ia/nnue/featurizer.leek')
+		fileInFS('ia/test/nnue/test_nnue_bench.leek')
+
+		// 1) test_nnue_bench (entrypoint) analysé : ses problèmes portent sur featurizer (inclus). Le
+		//    bucket 'test_nnue_bench' contient donc featurizer.
+		analyzer.applyAnalyzeResult({ 'ia/test/nnue/test_nnue_bench.leek': { problems: [warn('ia/nnue/featurizer.leek', 75, 149)] } })
+		// 2) featurizer ouvert et analysé AVEC son includer connu : pas de doublon (le daemon renvoie
+		//    l'includer en stats-only, qui est nettoyé).
+		analyzer.applyAnalyzeResult({ 'ia/nnue/featurizer.leek': { problems: [warn('ia/nnue/featurizer.leek', 75, 149)] }, 'ia/test/nnue/test_nnue_bench.leek': { valid: true } })
+		const feat_buckets_1 = Object.keys(analyzer.problems).filter(ep => analyzer.problems[ep]['ia/nnue/featurizer.leek'])
+		expect(feat_buckets_1).toEqual(['ia/nnue/featurizer.leek'])
+
+		// 3) On re-crée l'état "post-redémarrage daemon" : test_nnue_bench ré-analysé remet featurizer
+		//    dans son bucket...
+		analyzer.applyAnalyzeResult({ 'ia/test/nnue/test_nnue_bench.leek': { problems: [warn('ia/nnue/featurizer.leek', 75, 149)] } })
+		// ...puis on édite featurizer, mais le daemon (graphe perdu) le compile STANDALONE : il ne renvoie
+		//    QUE featurizer, sans l'includer. Le bucket 'test_nnue_bench' devient périmé.
+		analyzer.applyAnalyzeResult({ 'ia/nnue/featurizer.leek': { problems: [warn('ia/nnue/featurizer.leek', 75, 149)] } })
+
+		// featurizer ne doit apparaître que sous SON bucket, pas en double.
+		const feat_buckets_2 = Object.keys(analyzer.problems).filter(ep => analyzer.problems[ep]['ia/nnue/featurizer.leek'])
+		expect(feat_buckets_2).toEqual(['ia/nnue/featurizer.leek'])
+		expect(feat.warnings).toBe(1)
+
+		// Et corriger le warning doit le retirer partout.
+		analyzer.applyAnalyzeResult({ 'ia/nnue/featurizer.leek': { problems: [] } })
+		const feat_buckets_3 = Object.keys(analyzer.problems).filter(ep => analyzer.problems[ep]['ia/nnue/featurizer.leek'])
+		expect(feat_buckets_3).toEqual([])
+		expect(feat.warnings).toBe(0)
+	})
+
 	it('vide la liste quand le dernier warning est corrigé', async () => {
 		const analyzer = await freshAnalyzer()
 		const a = fileInFS('a.leek')
@@ -204,17 +241,17 @@ describe('application des résultats dans le panneau', () => {
 		const a = fileInFS('a.leek', 'var x = 1 // TODO ranger ça\nvar y = 2\n')
 
 		// 1) updateTodos avant : pose le TODO (aucun problème serveur encore).
-		await analyzer.updateTodos(a)
+		await analyzer.updateTodos(a as never)
 		// 2) résultat daemon : deux warnings.
 		analyzer.applyAnalyzeResult({ 'a.leek': { problems: [warn('a.leek', 1, 148), warn('a.leek', 2, 148)] } })
 		// 3) updateTodos après : refusionne le TODO à côté des warnings.
-		await analyzer.updateTodos(a)
+		await analyzer.updateTodos(a as never)
 		expectPanelConsistent(analyzer)
 
 		// Correction d'un warning : nouveau cycle complet.
-		await analyzer.updateTodos(a)
+		await analyzer.updateTodos(a as never)
 		analyzer.applyAnalyzeResult({ 'a.leek': { problems: [warn('a.leek', 2, 148)] } })
-		await analyzer.updateTodos(a)
+		await analyzer.updateTodos(a as never)
 
 		expectPanelConsistent(analyzer)
 		// Le warning corrigé (ligne 1) doit avoir disparu de la LISTE, pas seulement du compteur.
