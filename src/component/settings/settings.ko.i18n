@@ -15,6 +15,7 @@
 	"confirm_password": "확인",
 	"dark": "어둡게",
 	"delete_account": "계정 삭제",
+	"export_data": "내 데이터 내보내기",
 	"delete_cancel": "취소",
 	"delete_confirm": "계정 삭제",
 	"delete_confirmation": "확인",

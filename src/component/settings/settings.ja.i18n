@@ -9,6 +9,7 @@
 	"change_password": "パスワードを変更する",
 	"confirm_password": "確認",
 	"delete_account": "彼のアカウントを削除する",
+	"export_data": "データをエクスポート",
 	"delete_cancel": "キャンセル",
 	"delete_confirm": "アカウントを削除する",
 	"delete_confirmation": "確認",

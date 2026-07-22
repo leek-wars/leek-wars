@@ -9,6 +9,7 @@
 	"change_password": "更改密码",
 	"confirm_password": "确认",
 	"delete_account": "删除他的帐户",
+	"export_data": "导出我的数据",
 	"delete_cancel": "取消",
 	"delete_confirm": "删除帐户",
 	"delete_confirmation": "确认",

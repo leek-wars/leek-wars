@@ -9,6 +9,7 @@
 	"change_password": "Vaihda salasana",
 	"confirm_password": "Vahvistus",
 	"delete_account": "Poista tilisi",
+	"export_data": "Vie tietoni",
 	"delete_cancel": "Peruuttaa",
 	"delete_confirm": "Poista tili",
 	"delete_confirmation": "Vahvistus",

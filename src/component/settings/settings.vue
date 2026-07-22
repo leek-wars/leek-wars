@@ -169,6 +169,12 @@
 				</div>
 				<two-factor v-if="view2FA" /> -->
 
+				<div v-ripple class="list-item card" @click="exportData">
+					<v-icon>mdi-download</v-icon>
+					<span class="label">{{ $t('export_data') }}</span>
+					<v-icon v-if="exporting">mdi-loading</v-icon>
+				</div>
+
 				<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
 					<v-icon>mdi-delete-forever</v-icon>
 					<span class="label">{{ $t('delete_account') }}</span>
@@ -331,6 +337,7 @@
 	const deleteFailedDialog = ref(false)
 	const deleteFailedError = ref<string>('unknown')
 	const deleteForumMessages = ref(false)
+	const exporting = ref(false)
 	const advanced = ref(false)
 	const password = ref('')
 	const newPassword1 = ref('')
@@ -449,6 +456,25 @@
 			LeekWars.toast(t('error_' + error.error, error.params))
 		})
 		return false
+	}
+
+	function exportData() {
+		if (exporting.value) return
+		exporting.value = true
+		LeekWars.get('farmer/export-data').then(data => {
+			const json = JSON.stringify(data.export, null, '\t')
+			const blob = new Blob([json], {type: 'application/json'})
+			const url = URL.createObjectURL(blob)
+			const link = document.createElement('a')
+			link.href = url
+			link.download = 'leekwars-data.json'
+			link.click()
+			URL.revokeObjectURL(url)
+			exporting.value = false
+		}).error(error => {
+			LeekWars.toast(t('error_' + error.error, error.params))
+			exporting.value = false
+		})
 	}
 
 	function deleteAccountConfirm() {

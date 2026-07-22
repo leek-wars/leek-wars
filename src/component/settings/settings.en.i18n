@@ -9,6 +9,7 @@
 	"change_password": "Change password",
 	"confirm_password": "Confirmation",
 	"delete_account": "Delete account",
+	"export_data": "Export my data",
 	"delete_cancel": "Cancel",
 	"delete_confirm": "Delete account",
 	"delete_confirmation": "Confirmation",

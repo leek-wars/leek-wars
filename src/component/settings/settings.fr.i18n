@@ -9,6 +9,7 @@
 	"change_password": "Changer de mot de passe",
 	"confirm_password": "Confirmation",
 	"delete_account": "Supprimer son compte",
+	"export_data": "Exporter mes données",
 	"delete_cancel": "Annuler",
 	"delete_confirm": "Supprimer le compte",
 	"delete_confirmation": "Confirmation",

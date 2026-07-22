@@ -9,6 +9,7 @@
 	"change_password": "Изменить пароль",
 	"confirm_password": "Подтверждение",
 	"delete_account": "Удалить его аккаунт",
+	"export_data": "Экспортировать мои данные",
 	"delete_cancel": "Отмена",
 	"delete_confirm": "Удалить аккаунт",
 	"delete_confirmation": "Подтверждение",

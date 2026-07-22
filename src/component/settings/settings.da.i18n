@@ -9,6 +9,7 @@
 	"change_password": "Skift kodeord",
 	"confirm_password": "Bekræftelse",
 	"delete_account": "Slet hans konto",
+	"export_data": "Eksportér mine data",
 	"delete_cancel": "Afbestille",
 	"delete_confirm": "Slet konto",
 	"delete_confirmation": "Bekræftelse",
