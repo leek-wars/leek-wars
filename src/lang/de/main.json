@@ -73,6 +73,8 @@
 	"alteration_well": "Speicher",
 	"synergy_good": "Gute Synergie",
 	"synergy_perfect": "Perfekte Synergie",
+	"alteration_charge": "Ladung",
+	"alteration_repeat": "Wiederholen",
 	"alteration_dose": "Dosierung",
 	"alteration_indivisible": "Unteilbar: Der Gewinn bleibt +1, nur die Erfolgschance ändert sich.",
 	"alteration_needs_component": "Zuerst eine Komponente platzieren",

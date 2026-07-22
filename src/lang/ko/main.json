@@ -73,6 +73,8 @@
 	"alteration_well": "용량",
 	"synergy_good": "좋은 시너지",
 	"synergy_perfect": "완벽한 시너지",
+	"alteration_charge": "충전",
+	"alteration_repeat": "반복",
 	"alteration_dose": "배합량",
 	"alteration_indivisible": "분할 불가: 획득량은 +1로 고정, 변하는 것은 성공 확률입니다.",
 	"alteration_needs_component": "먼저 부품을 놓으세요",

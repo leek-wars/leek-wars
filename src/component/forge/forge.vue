@@ -10,6 +10,16 @@
 				</rich-tooltip-item>
 			</div>
 			<div v-if="component" class="cell cell8 active component">
+				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
+				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
+				     puis en plus clair ce que la tentative ajouterait. -->
+				<svg v-if="plan" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
+					<rect class="track" x="4" y="4" width="92" height="92" rx="20" />
+					<rect class="fill preview" x="4" y="4" width="92" height="92" rx="20"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioAfter))" />
+					<rect class="fill" x="4" y="4" width="92" height="92" rx="20"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioBefore))" />
+				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
 						<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
@@ -26,20 +36,27 @@
 				<v-icon v-if="result && !building && !built">mdi-hammer-wrench</v-icon>
 				<v-icon v-if="result && built">mdi-refresh</v-icon>
 			</div>
-			<v-icon v-if="scheme || component" class="clear" @click="clear">mdi-refresh</v-icon>
-			<!-- Recyclage : coin bas gauche, et seulement tant qu'aucune alteration
-			     n'est posee. Une fois qu'on en pose une, on vient alterer, pas detruire. -->
+			<!-- Effacer : croix, pas une fleche circulaire qui evoquerait "refaire". -->
+			<v-icon v-if="scheme || component" class="clear" :title="$t('main.clear')" @click="clear">mdi-close</v-icon>
+			<!-- Recommencer : repose la derniere recette d'alteration (#622). -->
+			<v-btn v-if="component && lastRecipe && alterationCount === 0" class="redo" icon variant="tonal"
+				size="small" :title="$t('main.alteration_repeat')" @click="repeat">
+				<v-icon>mdi-restore</v-icon>
+			</v-btn>
+			<!-- Recyclage : coin bas gauche, tant qu'aucune alteration n'est posee. -->
 			<v-btn v-if="component && alterationCount === 0" class="recycle" icon variant="tonal" color="error"
 				size="small" :loading="destroying" :title="$t('main.destroy')" @click="destroy">
 				<v-icon>mdi-recycle</v-icon>
 			</v-btn>
+			<!-- Alterer : coin bas droit de la grille, sous la main du joueur. -->
+			<v-btn v-if="component && alterationCount > 0" class="fuse-btn" icon variant="flat" color="primary"
+				size="small" :loading="altering" :disabled="!plan || !plan.fits" :title="$t('main.alteration_fuse')" @click="alter">
+				<v-icon>mdi-flask</v-icon>
+			</v-btn>
 		</div>
-		<!-- Le puits est un plafond dur : le joueur doit voir ce qu'il lui reste. -->
-		<div v-if="component && plan" class="well">
-			<div class="bar"><div class="fill" :style="{width: Math.min(100, plan.ratioBefore * 100) + '%'}"></div>
-				<div class="fill preview" :style="{left: Math.min(100, plan.ratioBefore * 100) + '%', width: Math.max(0, Math.min(100 - plan.ratioBefore * 100, (plan.ratioAfter - plan.ratioBefore) * 100)) + '%'}"></div>
-			</div>
-			<span class="label">{{ $t('main.alteration_well') }} {{ Math.round(plan.ratioAfter * 100) }} %</span>
+		<!-- L'anneau autour du composant porte la jauge ; ici juste le chiffre. -->
+		<div v-if="component && plan" class="charge-label">
+			{{ $t('main.alteration_charge') }} <b>{{ Math.round(plan.ratioAfter * 100) }} %</b>
 		</div>
 		<div v-if="component && dose > 0" class="dose">
 			{{ $t('main.alteration_dose') }} <b>{{ dose }}</b>
@@ -79,12 +96,7 @@
 				</span>
 			</div>
 		</div>
-		<div v-if="component && alterationCount > 0" class="component-actions">
-			<v-btn variant="flat" color="primary" size="small" :loading="altering" :disabled="!plan || !plan.fits" @click="alter">
-				<v-icon start>mdi-flask</v-icon>
-				{{ $t('main.alteration_fuse') }}
-			</v-btn>
-		</div>
+
 	</div>
 </template>
 
@@ -149,6 +161,12 @@
 	}
 
 	const altering = ref(false)
+	/** Derniere recette d'alteration lancee, pour le bouton Recommencer (#622). */
+	const lastRecipe = ref<AlterationRecipe | null>(null)
+
+	// Perimetre du rect arrondi (92x92, r=20) pour la jauge annulaire :
+	// 4 cotes droits + 4 quarts de cercle = 4*(92-2*20) + 2*PI*20.
+	const ringLength = 4 * (92 - 40) + 2 * Math.PI * 20
 	interface AlterResult {
 		success: boolean
 		results: { carac: string, success: boolean, points: number, probability: number }[]
@@ -213,7 +231,9 @@
 		if (!item || altering.value || alterationCount.value === 0) return
 		altering.value = true
 		lastResult.value = null
-		LeekWars.post<AlterResult>('component/alter', { component_id: item.id, alterations: JSON.stringify(recipe.value) }).then(data => {
+		const sent = { ...recipe.value }
+		LeekWars.post<AlterResult>('component/alter', { component_id: item.id, alterations: JSON.stringify(sent) }).then(data => {
+			lastRecipe.value = sent
 			lastResult.value = data
 			// Le composant porte desormais ses nouvelles stats. L'inventaire construit
 			// des COPIES des items du store (spread dans son computed), donc ecrire sur
@@ -302,6 +322,26 @@
 		forge.value[free] = [item.template, 1]
 	}
 
+	/**
+	 * Recommence : repose la derniere recette lancee sur ce composant. Chaque
+	 * alteration n'est reposee que si le joueur en a encore, sinon on met ce qu'il a.
+	 */
+	function repeat() {
+		if (!lastRecipe.value || !component.value) return
+		clearIngredients()
+		const alterations = LeekWars.alterations
+		if (!alterations) return
+		for (const id in lastRecipe.value) {
+			const tpl = alterations.alterations[id]?.template
+			if (!tpl) continue
+			const owned = store.state.farmer?.alterations?.find(a => a.template === tpl)
+			const want = lastRecipe.value[id]
+			for (let n = 0; n < want && (owned ? n < owned.quantity : false); n++) {
+				addAlteration({ id: tpl, template: tpl, quantity: owned!.quantity } as InventoryItem)
+			}
+		}
+	}
+
 	/** Retire une alteration posee : un clic enleve un exemplaire. */
 	function removeAlteration(index: number) {
 		const slot = forge.value[index]
@@ -374,32 +414,40 @@
 
 <style lang="scss" scoped>
 
-.well {
-	width: 100%;
-	padding: 8px 4px 0;
-	.bar {
-		position: relative;
-		height: 8px;
-		border-radius: 4px;
-		background: var(--background-secondary);
-		overflow: hidden;
+// Anneau de charge autour de la cellule centrale : depasse legerement le carre pour
+// l'entourer sans masquer l'image du composant.
+.charge-ring {
+	position: absolute;
+	top: -7px;
+	left: -7px;
+	width: calc(100% + 14px);
+	height: calc(100% + 14px);
+	pointer-events: none;
+	z-index: 1;
+	.track {
+		fill: none;
+		stroke: var(--background-secondary);
+		stroke-width: 6;
 	}
 	.fill {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		background: var(--primary);
+		fill: none;
+		stroke: var(--primary);
+		stroke-width: 6;
+		stroke-linecap: round;
+		// Part du haut, sens horaire.
+		transform: rotate(-90deg);
+		transform-origin: 50% 50%;
+		transition: stroke-dashoffset 0.3s ease;
 	}
-	// Ce que la tentative ajouterait, en plus clair : le joueur voit ou il atterrit.
-	.fill.preview { background: #9ccc65; }
-	.label {
-		display: block;
-		text-align: center;
-		font-size: 12px;
-		color: var(--text-color-secondary);
-		padding-top: 2px;
-	}
+	// Ce que la tentative ajouterait, en plus clair et derriere la charge actuelle.
+	.fill.preview { stroke: #9ccc65; }
+}
+.charge-label {
+	text-align: center;
+	padding-top: 8px;
+	font-size: 13px;
+	color: var(--text-color-secondary);
+	b { color: var(--text-color); font-size: 15px; }
 }
 .preview, .result {
 	width: 100%;
@@ -438,19 +486,26 @@
 	}
 }
 .cell.removable { cursor: pointer; }
-// Coin bas GAUCHE : `.clear` (réinitialiser) occupe déjà le coin bas droit et les deux
-// boutons peuvent être affichés en même temps, ils se superposaient.
+// Recommencer : coin HAUT gauche de la grille.
+.redo {
+	position: absolute;
+	left: -4px;
+	top: -4px;
+	z-index: 3;
+}
+// Recyclage : coin bas gauche.
 .recycle {
 	position: absolute;
 	left: -4px;
 	bottom: -4px;
 	z-index: 3;
 }
-
-.component-actions {
-	display: flex;
-	justify-content: center;
-	padding-top: 6px;
+// Alterer : coin bas droit, la ou tombe naturellement la main droite.
+.fuse-btn {
+	position: absolute;
+	right: -4px;
+	bottom: -4px;
+	z-index: 3;
 }
 .cell8.component .item img {
 	max-width: 100%;
@@ -597,8 +652,10 @@
 }
 .clear {
 	position: absolute;
-	bottom: -5px;
+	top: -5px;
 	right: -5px;
+	z-index: 3;
+	cursor: pointer;
 }
 @keyframes item-animation {
 	0% { transform: scale(1); }

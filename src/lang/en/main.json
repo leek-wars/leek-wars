@@ -76,6 +76,8 @@
 	"alteration_well": "Well",
 	"synergy_good": "Good synergy",
 	"synergy_perfect": "Perfect synergy",
+	"alteration_charge": "Charge",
+	"alteration_repeat": "Repeat",
 	"alteration_dose": "Dose",
 	"alteration_indivisible": "Indivisible: the gain stays at +1, it is the success chance that varies.",
 	"alteration_needs_component": "Place a component first",

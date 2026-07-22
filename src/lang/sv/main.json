@@ -73,6 +73,8 @@
 	"alteration_well": "Brunn",
 	"synergy_good": "Bra synergi",
 	"synergy_perfect": "Perfekt synergi",
+	"alteration_charge": "Laddning",
+	"alteration_repeat": "Upprepa",
 	"alteration_dose": "Dosering",
 	"alteration_indivisible": "Odelbar: vinsten förblir +1, det är chansen att lyckas som varierar.",
 	"alteration_needs_component": "Placera en komponent först",

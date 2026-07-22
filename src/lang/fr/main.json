@@ -76,6 +76,8 @@
 	"alteration_well": "Puits",
 	"synergy_good": "Bonne synergie",
 	"synergy_perfect": "Synergie parfaite",
+	"alteration_charge": "Charge",
+	"alteration_repeat": "Recommencer",
 	"alteration_dose": "Dosage",
 	"alteration_indivisible": "Indivisible : le gain reste de +1, c'est la chance de réussite qui varie.",
 	"alteration_needs_component": "Placez d'abord un composant",

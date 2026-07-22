@@ -73,6 +73,8 @@
 	"alteration_well": "Studnia",
 	"synergy_good": "Dobra synergia",
 	"synergy_perfect": "Doskonała synergia",
+	"alteration_charge": "Ładunek",
+	"alteration_repeat": "Powtórz",
 	"alteration_dose": "Dawka",
 	"alteration_indivisible": "Niepodzielna: zysk pozostaje +1, zmienia się szansa powodzenia.",
 	"alteration_needs_component": "Najpierw umieść komponent",

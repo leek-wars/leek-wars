@@ -73,6 +73,8 @@
 	"alteration_well": "容量",
 	"synergy_good": "良い相性",
 	"synergy_perfect": "完璧な相性",
+	"alteration_charge": "充填",
+	"alteration_repeat": "繰り返す",
 	"alteration_dose": "配合量",
 	"alteration_indivisible": "分割不可：獲得は+1のまま、変わるのは成功率です。",
 	"alteration_needs_component": "先にコンポーネントを置いてください",

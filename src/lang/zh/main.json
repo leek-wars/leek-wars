@@ -73,6 +73,8 @@
 	"alteration_well": "容量",
 	"synergy_good": "良好协同",
 	"synergy_perfect": "完美协同",
+	"alteration_charge": "充能",
+	"alteration_repeat": "重复",
 	"alteration_dose": "配比",
 	"alteration_indivisible": "不可分割：收益固定为 +1，变化的是成功率。",
 	"alteration_needs_component": "请先放置一个组件",
