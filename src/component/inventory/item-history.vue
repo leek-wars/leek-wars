@@ -62,7 +62,6 @@
 	import { onMounted, ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { t } from '@/model/i18n'
-	import Loader from '@/component/loader.vue'
 
 	/**
 	 * Historique d'atelier (#622), filtre par type d'action. Lit item-history/get-all,
