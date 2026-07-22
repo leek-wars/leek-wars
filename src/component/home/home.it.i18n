@@ -34,5 +34,11 @@
 	"reason_top_talent": "N°{0} per talento",
 	"reason_forum_messages": "{0} messaggi sul forum",
 	"reason_trophies": "{0} trofei",
-	"reason_likes": "{0} mi piace"
+	"reason_likes": "{0} mi piace",
+	"widget_classement": "Classifica",
+	"ranking_type": "Tipo di classifica",
+	"ranking_leek": "Porri",
+	"ranking_farmer": "Allevatori",
+	"ranking_team": "Squadre",
+	"choose_chat": "Scegli il canale"
 }
