@@ -170,7 +170,8 @@ class Analyzer {
 		// fichier a été lancée depuis. Un compteur global jetterait le résultat valide d'un fichier dès
 		// qu'un autre est analysé (vue splittée, changement d'onglet), et l'avertissement corrigé
 		// resterait affiché.
-		const version = (this.analyzeVersions[ai.path] = (this.analyzeVersions[ai.path] ?? 0) + 1)
+		this.analyzeVersions[ai.path] = (this.analyzeVersions[ai.path] ?? 0) + 1
+		const version = this.analyzeVersions[ai.path]
 
 		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code, requestID])
 
@@ -460,7 +461,7 @@ class Analyzer {
 			}
 			const startLine = problem[2] as number, startColumn = problem[3] as number
 			const endLine = problem[4] as number, endColumn = problem[5] as number
-			const dupKey = level + ':' + startLine + ':' + startColumn + ':' + endLine + ':' + endColumn + ':' + info
+			const dupKey = `${level}:${startLine}:${startColumn}:${endLine}:${endColumn}:${info}`
 			if (seenByAI[aiPath].has(dupKey)) continue
 			seenByAI[aiPath].add(dupKey)
 			problemsByAI[aiPath].push(new Problem(startLine, startColumn, endLine, endColumn, level, info))
@@ -518,11 +519,17 @@ class Analyzer {
 	// Efface le bucket d'un entrypoint par son CHEMIN (sans exiger l'IA en mémoire) : nécessaire quand le
 	// daemon renvoie un entrypoint absent de fileSystem.ais (cf. applyAnalyzeResult).
 	public removeProblemsByPath(entrypointPath: string) {
-		for (const aiPath in fileSystem.ais) {
-			const ai = fileSystem.ais[aiPath]
-			if (ai.problems && ai.problems[entrypointPath]) {
-				delete ai.problems[entrypointPath]
-				this.updateAiErrors(ai)
+		// Les fichiers ayant des problèmes sous cet entrypoint sont exactement les clés de son bucket
+		// (setProblems écrit this.problems[ep][path] et ai.problems[ep] ensemble). On les parcourt plutôt
+		// que TOUT fileSystem.ais, ce qui évite un scan de tout le projet à chaque analyse.
+		const bucket = this.problems[entrypointPath]
+		if (bucket) {
+			for (const aiPath in bucket) {
+				const ai = fileSystem.ais[aiPath]
+				if (ai && ai.problems[entrypointPath]) {
+					delete ai.problems[entrypointPath]
+					this.updateAiErrors(ai)
+				}
 			}
 		}
 		delete this.problems[entrypointPath]

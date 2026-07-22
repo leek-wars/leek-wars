@@ -455,16 +455,15 @@ function setAnalyzerTimeout() {
 
 		analyzer.updateTodos(ai)
 
-		// Une analyse dépassée par une plus récente se résout sans résultat : elle ne doit pas
-		// éteindre l'indicateur, l'analyse en cours n'a pas encore répondu.
 		const seq = ++analyzeSeq
 		analyzer.analyze(ai, ai.code).then((result) => {
-			if (seq === analyzeSeq) analyzing.value = false
 			if (!result) return
 			analyzer.applyAnalyzeResult(result as Parameters<typeof analyzer.applyAnalyzeResult>[0])
 			analyzer.updateTodos(ai)
 			analyzer.updateCount()
-		}).catch(() => {
+		}).catch(() => { /* analyse rejetée (ex: code trop long) : rien à appliquer */ }).finally(() => {
+			// L'indicateur ne se coupe que pour l'analyse la plus récente de cet éditeur : une analyse
+			// dépassée qui se résout entre-temps ne doit pas l'éteindre alors que la courante tourne encore.
 			if (seq === analyzeSeq) analyzing.value = false
 		})
 	}, 500)
