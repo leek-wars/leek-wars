@@ -30,6 +30,7 @@
 	"error_not_same_password": "De twee ingevoerde wachtwoorden moeten identiek zijn",
 	"error_password_length": "Wachtwoord moet tussen {0} en {1} tekens bevatten",
 	"error_wrong_password": "Het wachtwoord is incorrect",
+	"error_too_many_requests": "Te veel verzoeken, probeer het over een paar minuten opnieuw",
 	"error_forbidden_name": "Deze naam is verboden",
 	"error_invalid_godfather": "Deze speler bestaat niet",
 	"error_invalid_length": "Wachtwoord moet tussen {0} en {1} tekens bevatten",

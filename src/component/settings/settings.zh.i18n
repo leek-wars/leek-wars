@@ -30,6 +30,7 @@
 	"error_not_same_password": "两次输入的密码必须相同",
 	"error_password_length": "密码必须包含 {0} 到 {1} 个字符",
 	"error_wrong_password": "密码不正确",
+	"error_too_many_requests": "请求过于频繁，请几分钟后再试",
 	"error_forbidden_name": "这个名字被禁止",
 	"error_invalid_godfather": "该玩家不存在",
 	"error_invalid_length": "密码必须包含 {0} 到 {1} 个字符",

@@ -30,6 +30,7 @@
 	"error_not_same_password": "De två lösenorden som anges måste vara identiska",
 	"error_password_length": "Lösenordet måste innehålla mellan {0} och {1} tecken",
 	"error_wrong_password": "Lösenordet är felaktigt",
+	"error_too_many_requests": "För många förfrågningar, försök igen om några minuter",
 	"error_forbidden_name": "Detta namn är förbjudet",
 	"error_invalid_godfather": "Denna spelare finns inte",
 	"error_invalid_length": "Lösenordet måste innehålla mellan {0} och {1} tecken",

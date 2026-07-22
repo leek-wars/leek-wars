@@ -30,6 +30,7 @@
 	"error_not_same_password": "De to passordene som legges inn må være identiske",
 	"error_password_length": "Passordet må inneholde mellom {0} og {1} tegn",
 	"error_wrong_password": "Passordet er feil",
+	"error_too_many_requests": "For mange forespørsler, prøv igjen om noen minutter",
 	"error_forbidden_name": "Dette navnet er forbudt",
 	"error_invalid_godfather": "Denne spilleren eksisterer ikke",
 	"error_invalid_length": "Passordet må inneholde mellom {0} og {1} tegn",

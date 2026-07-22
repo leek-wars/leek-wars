@@ -30,6 +30,7 @@
 	"error_not_same_password": "Kedua kata sandi yang dimasukkan harus identik",
 	"error_password_length": "Sandi harus berisi antara {0} dan {1} karakter",
 	"error_wrong_password": "Kata sandi salah",
+	"error_too_many_requests": "Terlalu banyak permintaan, coba lagi dalam beberapa menit",
 	"error_forbidden_name": "Nama ini dilarang",
 	"error_invalid_godfather": "Pemain ini tidak ada",
 	"error_invalid_length": "Sandi harus berisi antara {0} dan {1} karakter",

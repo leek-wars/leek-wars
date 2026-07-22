@@ -30,6 +30,7 @@
 	"error_not_same_password": "Syötettyjen kahden salasanan on oltava identtisiä",
 	"error_password_length": "Salasanan tulee sisältää {0}–{1} merkkiä",
 	"error_wrong_password": "Salasana on väärä",
+	"error_too_many_requests": "Liikaa pyyntöjä, yritä uudelleen muutaman minuutin kuluttua",
 	"error_forbidden_name": "Tämä nimi on kielletty",
 	"error_invalid_godfather": "Tätä pelaajaa ei ole olemassa",
 	"error_invalid_length": "Salasanan tulee sisältää {0}–{1} merkkiä",

@@ -30,6 +30,7 @@
 	"error_not_same_password": "Два введенных пароля должны быть идентичными",
 	"error_password_length": "Пароль должен содержать от {0} до {1} символов.",
 	"error_wrong_password": "Неправильный пароль",
+	"error_too_many_requests": "Слишком много запросов, попробуйте через несколько минут",
 	"error_forbidden_name": "Это имя запрещено",
 	"error_invalid_godfather": "Этот плеер не существует",
 	"error_invalid_length": "Пароль должен содержать от {0} до {1} символов.",

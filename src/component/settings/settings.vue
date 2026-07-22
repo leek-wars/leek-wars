@@ -465,9 +465,10 @@
 			const json = JSON.stringify(data.export, null, '\t')
 			const blob = new Blob([json], {type: 'application/json'})
 			const url = URL.createObjectURL(blob)
+			const playerName = (store.state.farmer?.name || 'export').replace(/[^a-zA-Z0-9_-]/g, '_')
 			const link = document.createElement('a')
 			link.href = url
-			link.download = 'leekwars-data.json'
+			link.download = 'leekwars-data-' + playerName + '.json'
 			link.click()
 			URL.revokeObjectURL(url)
 			exporting.value = false

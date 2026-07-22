@@ -30,6 +30,7 @@
 	"error_not_same_password": "Las dos contraseñas ingresadas deben ser idénticas",
 	"error_password_length": "La contraseña debe contener entre {0} y {1} caracteres",
 	"error_wrong_password": "La contraseña es incorrecta",
+	"error_too_many_requests": "Demasiadas solicitudes, inténtalo de nuevo en unos minutos",
 	"error_forbidden_name": "Este nombre está prohibido",
 	"error_invalid_godfather": "Este jugador no existe",
 	"error_invalid_length": "La contraseña debe contener entre {0} y {1} caracteres",

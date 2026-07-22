@@ -30,6 +30,7 @@
 	"error_not_same_password": "Dwa wprowadzone hasła muszą być identyczne",
 	"error_password_length": "Hasło musi zawierać od {0} do {1} znaków",
 	"error_wrong_password": "Hasło jest błędne",
+	"error_too_many_requests": "Zbyt wiele żądań, spróbuj ponownie za kilka minut",
 	"error_forbidden_name": "Ta nazwa jest zabroniona",
 	"error_invalid_godfather": "Ten gracz nie istnieje",
 	"error_invalid_length": "Hasło musi zawierać od {0} do {1} znaków",

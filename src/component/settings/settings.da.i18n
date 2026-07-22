@@ -30,6 +30,7 @@
 	"error_not_same_password": "De to indtastede adgangskoder skal være identiske",
 	"error_password_length": "Adgangskoden skal indeholde mellem {0} og {1} tegn",
 	"error_wrong_password": "Adgangskoden er forkert",
+	"error_too_many_requests": "For mange anmodninger, prøv igen om et par minutter",
 	"error_forbidden_name": "Dette navn er forbudt",
 	"error_invalid_godfather": "Denne spiller findes ikke",
 	"error_invalid_length": "Adgangskoden skal indeholde mellem {0} og {1} tegn",
