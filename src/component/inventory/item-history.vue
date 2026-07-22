@@ -38,15 +38,17 @@
 							</div>
 						</template>
 
-						<!-- Destruction : ce que le recyclage a rendu. -->
-						<div v-else-if="entry.action === DESTROY && entry.details" class="detail rendered">
-							<template v-if="entry.details.count > 0">
-								<span v-for="(count, id) in entry.details.alterations" :key="id" class="rendered-item">
-									<img class="ci" :src="alterationThumb(Number(id))" :alt="alterationName(Number(id))">
-									<template v-if="count > 1">×{{ count }}</template>
-								</span>
-							</template>
-							<span v-else class="nothing">{{ $t('main.destroy_nothing') }}</span>
+						<!-- Destruction : les alterations rendues (en grand) puis les ressources. -->
+						<div v-else-if="entry.action === DESTROY && entry.details" class="rendered">
+							<span v-for="(count, id) in entry.details.alterations" :key="'a' + id" class="rendered-item alteration">
+								<img :src="alterationThumb(Number(id))" :alt="alterationName(Number(id))">
+								<span v-if="count > 1" class="qty">×{{ count }}</span>
+							</span>
+							<span v-for="(count, id) in entry.details.resources" :key="'r' + id" class="rendered-item resource">
+								<img :src="resourceThumb(Number(id))" :alt="resourceName(Number(id))">
+								<span v-if="count > 1" class="qty">×{{ count }}</span>
+							</span>
+							<span v-if="!hasRendered(entry)" class="nothing">{{ $t('main.destroy_nothing') }}</span>
 						</div>
 					</div>
 				</div>
@@ -122,6 +124,19 @@
 	function alterationName(id: number): string {
 		const a = alteration(id)
 		return a ? t('alteration.' + a.name) : ''
+	}
+	function resourceThumb(template: number): string {
+		const item = LeekWars.items[template]
+		return item ? '/image/resource/' + item.name + '.png' : ''
+	}
+	function resourceName(template: number): string {
+		const item = LeekWars.items[template]
+		return item ? t('resource.' + item.name) : ''
+	}
+	/** Vrai si la destruction a rendu quoi que ce soit (alteration ou ressource). */
+	function hasRendered(entry: Entry): boolean {
+		const d = entry.details
+		return !!d && ((d.count > 0) || (d.resources && Object.keys(d.resources).length > 0))
 	}
 
 	function load(reset: boolean) {
@@ -220,10 +235,19 @@
 	.rendered {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 8px;
+		gap: 6px 10px;
 		align-items: center;
+		padding-top: 4px;
 	}
-	.rendered-item { display: inline-flex; align-items: center; gap: 1px; }
-	.nothing { font-style: italic; }
+	.rendered-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		.qty { font-size: 12px; color: var(--text-color-secondary); }
+	}
+	// Les alterations rendues, bien visibles.
+	.rendered-item.alteration img { width: 34px; height: 34px; }
+	.rendered-item.resource img { width: 26px; height: 26px; }
+	.nothing { font-style: italic; color: var(--text-color-secondary); }
 	.more { text-align: center; padding: 6px; }
 </style>
