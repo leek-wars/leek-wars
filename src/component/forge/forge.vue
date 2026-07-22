@@ -148,12 +148,17 @@
 		component.value = item
 	}
 
+	function onWorkshopMode() {
+		clear()
+	}
+
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
 		emitter.on('craft', onCraft)
 		emitter.on('alter', onAlter)
 		emitter.on('add-alteration', addAlteration)
+		emitter.on('workshop-mode', onWorkshopMode)
 	})
 
 	function clearIngredients() {
@@ -364,6 +369,7 @@
 		emitter.off('craft', onCraft)
 		emitter.off('alter', onAlter)
 		emitter.off('add-alteration', addAlteration)
+		emitter.off('workshop-mode', onWorkshopMode)
 	})
 
 	function craft() {
