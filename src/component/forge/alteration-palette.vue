@@ -58,31 +58,34 @@
 </script>
 
 <style lang="scss" scoped>
+	// Grille 2 colonnes : les caracs se lisent en deux colonnes plutot qu'en une
+	// longue liste, la palette tient sur moitie moins de hauteur (#622).
 	.alteration-palette {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 6px 10px;
 		padding: 8px;
 		border-bottom: 1px solid var(--border);
 	}
 	.palette-row {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		justify-content: center;
+		gap: 6px;
 	}
 	.carac {
-		width: 22px;
-		height: 22px;
+		width: 20px;
+		height: 20px;
 		flex: 0 0 auto;
 	}
 	.cells {
 		display: flex;
-		gap: 6px;
+		gap: 5px;
 	}
 	.cell {
 		position: relative;
-		width: 40px;
-		height: 40px;
+		width: 34px;
+		height: 34px;
 		padding: 3px;
 		border: 1px solid var(--border);
 		border-radius: 4px;
