@@ -16,6 +16,8 @@
 			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" :width="WeaponsData[item.params]?.width" @click="playSound(item, category)">
 			<scheme-image v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" />
 			<img v-else :class="item.type === ItemType.COMPONENT && instance ? alteredClass(instance, item.level as number) : ''" :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
+			<!-- Charge du composant altere, en badge coin bas droit (#622). -->
+			<charge-badge v-if="item.type === ItemType.COMPONENT && instance" class="charge" :alterations="instance.stats" :level="item.level as number" />
 		</div>
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
@@ -70,6 +72,7 @@
 <script setup lang="ts">
 import ChipPreview from '@/component/market/chip-preview.vue'
 import ComponentPreview from '@/component/market/component-preview.vue'
+import ChargeBadge from '@/component/market/charge-badge.vue'
 import AlterationPreview from '@/component/market/alteration-preview.vue'
 import FightPackPreview from '@/component/market/fight-pack-preview.vue'
 import HatPreview from '@/component/market/hat-preview.vue'
@@ -99,6 +102,7 @@ defineOptions({ name: 'ItemPreview', components: {
 	'fight-pack-preview': FightPackPreview,
 	'resource-preview': ResourcePreview,
 	'component-preview': ComponentPreview,
+	'charge-badge': ChargeBadge,
 	'alteration-preview': AlterationPreview,
 	'scheme-preview': SchemePreview,
 	'scheme-image': SchemeImage

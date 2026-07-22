@@ -4,7 +4,7 @@
 		<div v-else-if="!entries.length" class="empty">{{ $t('main.history_empty') }}</div>
 		<div v-else class="entries">
 			<div v-for="entry in entries" :key="entry.id" class="entry">
-				<div class="line">
+				<div class="line" :class="lineClass(entry)">
 					<img v-if="entry.template" class="thumb" :src="thumbUrl(entry.template)" :alt="itemName(entry.template)">
 					<div class="body">
 						<div class="head">
@@ -91,6 +91,15 @@
 	const page = ref(0)
 	const loading = ref(false)
 
+	/**
+	 * Teinte de fond d'une tentative d'alteration : vert si au moins un jet a reussi,
+	 * rouge si tous ont echoue. Neutre pour les crafts et les destructions.
+	 */
+	function lineClass(entry: Entry): string {
+		if (entry.action !== ALTER || !entry.details?.results) return ''
+		return entry.details.results.some((r: { success: boolean }) => r.success) ? 'ok' : 'fail'
+	}
+
 	function formatDate(ts: number): string {
 		return LeekWars.formatDateTime(ts)
 	}
@@ -157,6 +166,9 @@
 		gap: 8px;
 		padding: 6px 8px;
 	}
+	// Teinte discrete selon l'issue d'une tentative (#622).
+	.line.ok { background: rgba(94, 173, 27, 0.12); }
+	.line.fail { background: rgba(198, 40, 40, 0.10); }
 	.thumb {
 		width: 34px;
 		height: 34px;
