@@ -263,22 +263,31 @@ class Analyzer {
 		this.purgeStaleBuckets(result)
 	}
 
-	// Un fichier analysé comme entrypoint (clé du résultat avec une liste de problèmes) fait autorité
-	// sous SON propre bucket. S'il traîne encore dans le bucket d'un AUTRE entrypoint que cette analyse
-	// n'a pas rafraîchi, c'est un doublon périmé : typiquement après un redémarrage du daemon, qui perd
-	// son graphe d'includes et recompile alors le fichier en standalone sans renvoyer ses includers (donc
-	// sans ordre de nettoyage). On retire le fichier de ces buckets, sans toucher aux problèmes PROPRES
-	// de ces entrypoints (leurs autres fichiers restent intacts).
+	// Élimine les doublons : un même fichier ne doit apparaître QUE sous l'entrypoint dont l'analyse est la
+	// plus récente. Cette analyse vient de (re)poser des problèmes sous ses buckets (result) ; tout fichier
+	// qui y figure fait donc autorité. S'il traîne encore dans le bucket d'un AUTRE entrypoint non rafraîchi,
+	// c'est un doublon périmé — soit un include partagé par plusieurs entrypoints, soit un reliquat après un
+	// redémarrage du daemon (graphe d'includes perdu -> le fichier est recompilé en standalone sans que ses
+	// includers soient renvoyés pour nettoyage). On l'y retire, sans toucher aux problèmes PROPRES de ces
+	// autres entrypoints (leurs autres fichiers restent intacts).
 	private purgeStaleBuckets(result: {[path: string]: {problems?: unknown[][]}}) {
-		const analyzedFiles = Object.keys(result).filter(p => result[p].problems !== undefined)
-		if (!analyzedFiles.length) return
+		// Tous les fichiers que cette analyse fait autorité : l'entrypoint analysé lui-même + tous les
+		// fichiers (includes) distribués sous son bucket par handleProblems.
+		const refreshedFiles = new Set<string>()
+		for (const epPath in result) {
+			if (result[epPath].problems === undefined) continue
+			refreshedFiles.add(epPath)
+			const bucket = this.problems[epPath]
+			if (bucket) for (const filePath in bucket) refreshedFiles.add(filePath)
+		}
+		if (!refreshedFiles.size) return
 		for (const epPath in this.problems) {
 			// Bucket rafraîchi par cette analyse (y compris le bucket propre du fichier) : déjà à jour.
 			if (epPath in result) continue
 			// Les TODO sont gérés à part par updateTodos, qui tourne juste après : ne pas y toucher.
 			if (epPath === '_todos') continue
 			let changed = false
-			for (const filePath of analyzedFiles) {
+			for (const filePath of refreshedFiles) {
 				if (this.problems[epPath][filePath]) {
 					delete this.problems[epPath][filePath]
 					const file = fileSystem.ais[filePath]

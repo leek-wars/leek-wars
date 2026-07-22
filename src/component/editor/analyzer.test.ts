@@ -192,6 +192,26 @@ describe('application des résultats dans le panneau', () => {
 		expect(feat.warnings).toBe(0)
 	})
 
+	// Cas du screenshot : featurizer (inclus) apparaît sous DEUX entrypoints analysés séparément (deux
+	// runners de test qui l'incluent tous les deux), donc en double dans le panneau. Analyser le second
+	// doit retirer featurizer du bucket du premier : il ne doit rester que sous l'entrypoint le plus récent.
+	it('un include partagé par deux entrypoints n\'apparaît pas en double', async () => {
+		const analyzer = await freshAnalyzer()
+		fileInFS('ia/nnue/featurizer.leek')
+		fileInFS('ia/test/nnue/test_a.leek')
+		fileInFS('ia/test/nnue/test_b.leek')
+
+		// test_a analysé : distribue un warning sur featurizer (inclus) sous le bucket test_a.
+		analyzer.applyAnalyzeResult({ 'ia/test/nnue/test_a.leek': { problems: [warn('ia/nnue/featurizer.leek', 34, 149), warn('ia/test/nnue/test_a.leek', 5, 148)] } })
+		// test_b analysé : featurizer y figure AUSSI. Sans purge, featurizer serait sous test_a ET test_b.
+		analyzer.applyAnalyzeResult({ 'ia/test/nnue/test_b.leek': { problems: [warn('ia/nnue/featurizer.leek', 34, 149), warn('ia/test/nnue/test_b.leek', 8, 148)] } })
+
+		const featBuckets = Object.keys(analyzer.problems).filter(ep => analyzer.problems[ep]['ia/nnue/featurizer.leek'])
+		expect(featBuckets).toEqual(['ia/test/nnue/test_b.leek'])
+		// Les problèmes PROPRES de test_a (ligne 5) ne doivent pas avoir été touchés.
+		expect(analyzer.problems['ia/test/nnue/test_a.leek']['ia/test/nnue/test_a.leek']).toHaveLength(1)
+	})
+
 	it('vide la liste quand le dernier warning est corrigé', async () => {
 		const analyzer = await freshAnalyzer()
 		const a = fileInFS('a.leek')
