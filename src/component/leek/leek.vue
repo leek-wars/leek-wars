@@ -254,9 +254,9 @@
 									<router-link v-if="my_leek" :to="'/editor/' + (leek.ai.path || leek.ai.name)">
 										<ai :ai="leek.ai" :library="false" :small="false" />
 									</router-link>
-									<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.path" target="_blank">
+									<div v-else-if="$store.getters.admin" class="admin-ai" @click="openAdminAI">
 										<ai :ai="leek.ai" :library="false" :small="false" />
-									</a>
+									</div>
 									<ai v-else :ai="leek.ai" :library="false" :small="false" />
 								</template>
 								<span v-else class="empty">{{ $t('no_ai') }}</span>
@@ -703,6 +703,19 @@
 
 		<level-dialog v-if="leek" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 
+		<popup v-if="leek && !my_leek && leek.ai" v-model="adminAIDialog" :width="1000">
+			<template #icon>
+				<v-icon>mdi-code-braces</v-icon>
+			</template>
+			<template #title>
+				{{ leek.ai.path }}
+			</template>
+			<div class="admin-ai-code">
+				<loader v-if="adminAICode === null" />
+				<lw-code v-else :code="adminAICode" :language="adminAILanguage" />
+			</div>
+		</popup>
+
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="1050">
 			<template #icon>
 				<v-icon>mdi-code-braces</v-icon>
@@ -875,6 +888,8 @@
 	const levelPopup = ref(false)
 	const levelPopupData = ref<unknown>(null)
 	const aiDialog = ref(false)
+	const adminAIDialog = ref(false)
+	const adminAICode = ref<string | null>(null)
 	const draggedAI = ref<AI | null>(null)
 	const chipsDialog = ref(false)
 	const draggedChip = ref<Chip | null>(null)
@@ -1320,6 +1335,23 @@
 		if (!leek.value) return
 		leek.value.ai = null
 		LeekWars.delete('leek/remove-ai', {leek_id: leek.value.id})
+	}
+
+	// Extension du path (.js/.ts/.py) sinon LeekScript, pour la coloration de l'aperçu admin
+	const adminAILanguage = computed(() => {
+		const m = /\.(js|ts|py)$/.exec(leek.value?.ai?.path || '')
+		return m ? m[1] : 'leekscript'
+	})
+
+	function openAdminAI() {
+		if (!leek.value || !leek.value.ai) return
+		adminAIDialog.value = true
+		adminAICode.value = null
+		LeekWars.post('ai/read-admin', {farmer_id: leek.value.farmer.id, path: leek.value.ai.path}).then((data) => {
+			adminAICode.value = data.code
+		}).error(() => {
+			adminAICode.value = ''
+		})
 	}
 
 	function selectAI(ai: AI) {
@@ -1899,6 +1931,13 @@
 			display: flex;
 			justify-content: center;
 		}
+	}
+	.admin-ai {
+		cursor: pointer;
+	}
+	.admin-ai-code {
+		max-height: calc(100vh - 220px);
+		overflow-y: auto;
 	}
 	.component {
 		display: inline-block;
