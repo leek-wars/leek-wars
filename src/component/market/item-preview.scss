@@ -33,10 +33,17 @@
 		max-height: 140px;
 		background: var(--background);
 		padding: 15px;
-		& > * {
+		position: relative;
+		& > img, & > .scheme-image {
 			max-width: 100%;
 			max-height: 110px;
 			object-fit: scale-down;
+		}
+		// Jauge de charge d'un composant altere (#622), en badge coin bas droit.
+		.charge {
+			position: absolute;
+			right: 8px;
+			bottom: 8px;
 		}
 	}
 	&.chip .image img {

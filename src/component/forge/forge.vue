@@ -428,10 +428,12 @@
 // l'entourer sans masquer l'image du composant.
 .charge-ring {
 	position: absolute;
-	top: -7px;
-	left: -7px;
-	width: calc(100% + 14px);
-	height: calc(100% + 14px);
+	// Plus a l'exterieur (12px), pour laisser voir la bordure fine du carre central
+	// entre elle et l'anneau epais colore.
+	top: -12px;
+	left: -12px;
+	width: calc(100% + 24px);
+	height: calc(100% + 24px);
 	pointer-events: none;
 	z-index: 1;
 	.track {

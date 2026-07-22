@@ -5,7 +5,7 @@
 			<circle class="fill" :class="'tier-' + tier" cx="18" cy="18" r="15"
 				:stroke-dasharray="circumference" :stroke-dashoffset="circumference * (1 - Math.min(1, ratio))" />
 		</svg>
-		<span class="value">{{ percent }}</span>
+		<span class="value">{{ percent }}%</span>
 	</div>
 </template>
 
@@ -80,7 +80,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 12px;
+		font-size: 11px;
 		font-weight: bold;
 		color: var(--text-color);
 	}
