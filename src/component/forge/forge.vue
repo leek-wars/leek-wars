@@ -10,13 +10,25 @@
 				</rich-tooltip-item>
 			</div>
 			<div v-if="component" class="cell cell8 active component removable" @click="clear">
+				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
+				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
+				     puis en plus clair ce que la tentative ajouterait. -->
+				<svg v-if="plan && (plan.ratioBefore > 0 || plan.ratioAfter > 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
+					<!-- Pas de rail de fond : seul l'arc de charge est visible. -->
+					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
+					<path v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioAfter))" />
+					<!-- La charge actuelle, dans la couleur de son palier. -->
+					<path v-if="plan.ratioBefore > 0" class="fill" :class="'tier-' + tierBefore" :d="RING_PATH"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioBefore))" />
+				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
 						<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 					</div>
 				</rich-tooltip-item>
-				<!-- Charge de l'item en badge, coin bas droit de l'image (#622). -->
-				<charge-badge v-if="component.stats" class="charge" :alterations="component.stats" :level="LeekWars.items[component.template].level as number" />
+				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
+				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner">{{ Math.round(plan.ratioAfter * 100) }}%</div>
 			</div>
 			<div v-else class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
@@ -100,13 +112,12 @@
 	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
 	import { InventoryItem } from '@/model/farmer'
 	import { t } from '@/model/i18n'
-	import { planAttempt, type AlterationRecipe } from '@/model/alteration'
+	import { planAttempt, alterationTier, type AlterationRecipe } from '@/model/alteration'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
-	import ChargeBadge from '@/component/market/charge-badge.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	defineOptions({ name: 'Forge' })
@@ -158,6 +169,18 @@
 	const altering = ref(false)
 	/** Derniere recette d'alteration lancee, pour le bouton Recommencer (#622). */
 	const lastRecipe = ref<AlterationRecipe | null>(null)
+
+	// Perimetre du rect arrondi (92x92, r=20) pour la jauge annulaire :
+	// 4 cotes droits + 4 quarts de cercle = 4*(92-2*20) + 2*PI*20.
+	// Rectangle arrondi parcouru en HORAIRE depuis le milieu du haut (12h), pour que la
+	// jauge parte pile en haut. Un <rect> commence son trace a rx du coin gauche, d'ou
+	// le depart decale et le glitch au coin ; un <path> explicite fixe le point de
+	// depart exactement ou on veut.
+	const RING_PATH = 'M50 4 H76 A20 20 0 0 1 96 24 V76 A20 20 0 0 1 76 96 H24 A20 20 0 0 1 4 76 V24 A20 20 0 0 1 24 4 Z'
+	const ringLength = 4 * (92 - 40) + 2 * Math.PI * 20
+	// Palier de rarete de la charge, pour colorer l'anneau (#622).
+	const tierBefore = computed(() => plan.value ? (alterationTier(plan.value.ratioBefore)?.tier ?? 1) : 1)
+	const tierAfter = computed(() => plan.value ? (alterationTier(plan.value.ratioAfter)?.tier ?? 1) : 1)
 
 	interface AlterResult {
 		success: boolean
@@ -405,14 +428,48 @@
 
 <style lang="scss" scoped>
 
-// Badge de charge en bas a droite de l'image du composant central (#622).
-.cell8.component .charge {
+// Anneau de charge autour de la cellule centrale : depasse legerement le carre pour
+// l'entourer sans masquer l'image du composant.
+.charge-ring {
 	position: absolute;
-	right: 2px;
+	// Juste a l'exterieur du carre central (11px) : l'arc vient coller sa bordure
+	// fine sans la recouvrir.
+	top: -11px;
+	left: -11px;
+	width: calc(100% + 22px);
+	height: calc(100% + 22px);
+	pointer-events: none;
+	z-index: 1;
+	.fill {
+		fill: none;
+		stroke-width: 6;
+		stroke-linecap: round;
+		transition: stroke-dashoffset 0.3s ease;
+		// Un rect arrondi commence deja son trace en haut et tourne dans le sens
+		// horaire : pas de rotation a appliquer, contrairement a un cercle (sinon le
+		// depart se decale sur un coin et l'arc semble detache).
+	}
+	// Couleur du palier, comme la silhouette de la vignette.
+	.fill.tier-1 { stroke: #008800; }
+	.fill.tier-2 { stroke: #0090ff; }
+	.fill.tier-3 { stroke: #c21aff; }
+	.fill.tier-4 { stroke: #f8ac00; }
+	.fill.tier-5 { stroke: red; }
+	// Ce que la tentative ajouterait : meme couleur de palier, mais estompe.
+	.fill.preview { opacity: 0.4; }
+}
+// Pourcentage de charge, en petit dans le coin bas droit de l'image du composant.
+.cell8.component .charge-corner {
+	position: absolute;
+	right: 3px;
 	bottom: 2px;
 	z-index: 3;
-	width: 34px;
-	height: 34px;
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	// Liseré sombre : lisible sur n'importe quelle teinte d'image et dans les deux thèmes.
+	text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
+	pointer-events: none;
 }
 .preview, .result {
 	width: 100%;

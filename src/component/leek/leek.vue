@@ -1545,7 +1545,9 @@
 			if (leek.value) {
 				const old = leek.value.components[index]
 				if (old) store.commit('add-component', old)
-				leek.value.components[index] = {id: data.id, template: c.template, quantity: 1} as Component
+				// Conserver les alterations de la piece equipee, sinon sa tooltip retombe
+				// sur les stats de base jusqu'au rechargement de la page (#622).
+				leek.value.components[index] = {id: data.id, template: c.template, quantity: 1, stats: c.stats, altered_power: c.altered_power} as Component
 				store.commit('remove-inventory', { ...c, item_template: c.template, quantity: 1, type: ItemType.COMPONENT })
 				refreshTotalCharacteristics()
 			}

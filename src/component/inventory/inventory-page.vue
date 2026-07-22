@@ -304,9 +304,10 @@
 		white-space: nowrap;
 		.v-icon { font-size: 18px; }
 		&:hover { background: rgba(255, 255, 255, 0.08); }
+		// Pas de gras sur l'actif : il elargit le texte et decale les onglets voisins.
+		// La couleur pleine et le soulignement suffisent a le distinguer.
 		&.active {
 			color: #fff;
-			font-weight: bold;
 			box-shadow: inset 0 -2px 0 var(--primary);
 		}
 	}
@@ -397,26 +398,13 @@
 .schemes-list {
 	padding: 0;
 }
-// Onglet Ameliorer : palette figee en tete, historique qui remplit et defile (#622).
-.alter-pane {
-	height: 100%;
-	min-height: 0;
-	display: flex;
-	flex-direction: column;
-}
-// 12 caracs = 12 lignes : on plafonne la palette pour laisser voir l'historique.
-.alter-pane :deep(.alteration-palette) { flex: 0 0 auto; max-height: 50%; overflow-y: auto; }
-.alter-pane :deep(.item-history) { flex: 1; min-height: 0; }
-#app.app .schemes-section {
+// Onglet Ameliorer : palette puis historique dans UNE seule zone de defilement
+// (celle de .schemes-section). L'historique grandit a mesure qu'on descend (#622).
+.alter-pane :deep(.item-history) {
+	height: auto;
 	overflow-y: visible;
 }
-// Sur mobile tout defile ensemble : hauteurs naturelles.
-#app.app .alter-pane {
-	height: auto;
-	display: block;
-}
-#app.app .alter-pane :deep(.item-history) {
-	height: auto;
+#app.app .schemes-section {
 	overflow-y: visible;
 }
 .menu-actions {
