@@ -40,11 +40,11 @@
 
 						<!-- Destruction : les alterations rendues (en grand) puis les ressources. -->
 						<div v-else-if="entry.action === DESTROY && entry.details" class="rendered">
-							<span v-for="(count, id) in entry.details.alterations" :key="'a' + id" class="rendered-item alteration">
+							<span v-for="(count, id) in entry.details.alterations" :key="'a' + id" class="rendered-item alteration" :title="alterationName(Number(id))">
 								<img :src="alterationThumb(Number(id))" :alt="alterationName(Number(id))">
 								<span v-if="count > 1" class="qty">×{{ count }}</span>
 							</span>
-							<span v-for="(count, id) in entry.details.resources" :key="'r' + id" class="rendered-item resource">
+							<span v-for="(count, id) in entry.details.resources" :key="'r' + id" class="rendered-item resource" :title="resourceName(Number(id))">
 								<img :src="resourceThumb(Number(id))" :alt="resourceName(Number(id))">
 								<span v-if="count > 1" class="qty">×{{ count }}</span>
 							</span>
@@ -188,6 +188,8 @@
 		width: 34px;
 		height: 34px;
 		flex: 0 0 auto;
+		// Les images d'items ne sont pas toujours carrees : contain evite l'ecrasement.
+		object-fit: contain;
 	}
 	.body {
 		flex: 1;
@@ -245,7 +247,8 @@
 		gap: 2px;
 		.qty { font-size: 12px; color: var(--text-color-secondary); }
 	}
-	// Les alterations rendues, bien visibles.
+	// Les alterations rendues, bien visibles. contain : garder les proportions.
+	.rendered-item img { object-fit: contain; }
 	.rendered-item.alteration img { width: 34px; height: 34px; }
 	.rendered-item.resource img { width: 26px; height: 26px; }
 	.nothing { font-style: italic; color: var(--text-color-secondary); }
