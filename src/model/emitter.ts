@@ -74,6 +74,8 @@ type Events = {
 	'alter': InventoryItem,
 	/** Une alteration part de l'inventaire vers la forge (#622). */
 	'add-alteration': InventoryItem,
+	/** L'onglet actif de l'atelier a change (#622). */
+	'workshop-mode': string,
 }
 
 const emitter = mitt<Events>()

@@ -122,6 +122,7 @@
 			component.value = item
 		})
 		emitter.on('add-alteration', addAlteration)
+		emitter.on('workshop-mode', () => clear())
 		emitter.on('craft', (s: SchemeTemplate) => {
 			clear()
 			scheme.value = s
@@ -337,6 +338,7 @@
 		emitter.off('craft')
 		emitter.off('alter')
 		emitter.off('add-alteration')
+		emitter.off('workshop-mode')
 	})
 
 	function craft() {

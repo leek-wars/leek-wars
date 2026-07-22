@@ -9,10 +9,15 @@
 			<div class="resizer" @mousedown="resizerMousedown"><v-icon>mdi-drag-horizontal-variant</v-icon></div>
 			<panel ref="bottomPanel" class="bottom-panel" icon="mdi-map-outline" toggle="inventory/workshop" :toggle-invert="true" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event">
 				<template #title>
-					<span>{{ $t('main.schemes') }} ({{ schemes.length }}<span v-if="filter !== 0 || craftableOnly"> / {{ all_schemes.length }}</span>)</span>
+					<div class="workshop-tabs">
+						<div v-for="t in TABS" :key="t.mode" v-ripple class="workshop-tab" :class="{active: tab === t.mode}" @click.stop="tab = t.mode">
+							<v-icon>{{ t.icon }}</v-icon>
+							<span>{{ $t('main.' + t.label) }}</span>
+						</div>
+					</div>
 				</template>
 				<template #actions>
-					<v-menu offset-y>
+					<v-menu v-if="tab === 'craft'" offset-y>
 						<template #activator="{ props }">
 							<div class="button flat" v-bind="props">
 								<v-icon>mdi-sort</v-icon>
@@ -37,7 +42,7 @@
 							</v-list-item>
 						</v-list>
 					</v-menu>
-					<v-menu offset-y>
+					<v-menu v-if="tab === 'craft'" offset-y>
 						<template #activator="{ props }">
 							<div class="button flat" v-bind="props">
 								<v-badge v-if="filter !== 0 || craftableOnly" :content="(filter !== 0 ? 1 : 0) + (craftableOnly ? 1 : 0)" color="#5fad1b" floating>
@@ -67,10 +72,15 @@
 							<forge></forge>
 						</div>
 						<div class="schemes-section">
-							<loader v-if="!$store.state.farmer" />
-							<div v-else class="schemes-list">
-								<scheme v-for="(scheme, s) in schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true" :show-price="false" :shared-tooltip="true" @show-tooltip="showTooltip" @hide-tooltip="scheduleHideTooltip"></scheme>
-							</div>
+							<!-- Fabriquer : le catalogue de schemas, puis l'historique des crafts. -->
+							<template v-if="tab === 'craft'">
+								<loader v-if="!$store.state.farmer" />
+								<div v-else class="schemes-list">
+									<scheme v-for="(scheme, s) in schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true" :show-price="false" :shared-tooltip="true" @show-tooltip="showTooltip" @hide-tooltip="scheduleHideTooltip"></scheme>
+								</div>
+							</template>
+							<!-- Ameliorer / Detruire : l'historique de l'onglet. -->
+							<item-history v-else :action="tab === 'alter' ? 2 : 3" />
 							<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 								<div class="scheme-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
 									<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :show-use="true" :craft-cost="tooltipCraftCost" />
@@ -92,6 +102,7 @@
 	import Scheme from '../market/scheme.vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import Forge from '../forge/forge.vue'
+	import ItemHistory from '@/component/inventory/item-history.vue'
 	import PageTabs from '@/component/app/page-tabs.vue'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -102,6 +113,20 @@
 	}
 
 	defineOptions({ name: 'InventoryPage', i18n: {}, mixins: [...mixins] })
+
+	// Onglet actif de l'atelier : fabriquer, ameliorer, detruire (#622).
+	const TABS = [
+		{ mode: 'craft', icon: 'mdi-hammer-wrench', label: 'craft_tab' },
+		{ mode: 'alter', icon: 'mdi-flask', label: 'improve_tab' },
+		{ mode: 'destroy', icon: 'mdi-recycle', label: 'destroy_tab' },
+	] as const
+	type WorkshopMode = typeof TABS[number]['mode']
+	const tab = ref<WorkshopMode>((localStorage.getItem('workshop/tab') as WorkshopMode) || 'craft')
+	watch(tab, m => {
+		localStorage.setItem('workshop/tab', m)
+		// La forge doit refleter l'onglet : on la vide en changeant de contexte.
+		emitter.emit('workshop-mode', m)
+	})
 
 	const bottomHeight = ref(Math.max(300, parseInt(localStorage.getItem('inventory/bottom-height') || '350', 10)))
 	const bottomExpanded = ref(localStorage.getItem('inventory/workshop') !== 'false')
@@ -255,6 +280,33 @@
 </script>
 
 <style lang="scss" scoped>
+	// Onglets de l'atelier (#622), dans la barre de titre du panel.
+	.workshop-tabs {
+		display: flex;
+		gap: 2px;
+	}
+	.workshop-tab {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		padding: 6px 12px;
+		cursor: pointer;
+		border-radius: 4px 4px 0 0;
+		color: var(--text-color-secondary);
+		white-space: nowrap;
+		.v-icon { font-size: 18px; }
+		&:hover { background: var(--background-secondary); }
+		&.active {
+			color: var(--text-color);
+			font-weight: bold;
+			box-shadow: inset 0 -2px 0 var(--primary);
+		}
+	}
+	// Sur mobile, seule l'icone reste, sinon les trois onglets debordent.
+	@media (max-width: 500px) {
+		.workshop-tab span { display: none; }
+	}
+
 .column {
 	display: flex;
 	flex-direction: column;
