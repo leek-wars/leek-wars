@@ -29,7 +29,7 @@
 						<div v-if="trophy.in_fight" class="in-fight"><v-icon>mdi-sword-cross</v-icon> {{ $t('trophy.unlockable_fight') }}</div>
 						<div v-if="trophy.secret" class="in-fight"><v-icon>mdi-eye-off-outline</v-icon> {{ $t('trophy.secret') }}</div>
 						<div v-if="trophy.unique" class="in-fight"><v-icon>mdi-numeric-1-circle-outline</v-icon> {{ $t('trophy.unique') }}</div>
-						<div v-if="trophy.rarity < 0.002" class="in-fight"> {{ $t('trophy.show_in_chat') }}</div>
+						<div v-if="trophy.rarity < 0.002" class="in-fight"><v-icon>mdi-chat-outline</v-icon> {{ $t('trophy.show_in_chat') }}</div>
 					</div>
 				</div>
 			</div>
