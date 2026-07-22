@@ -94,7 +94,9 @@
 		position: relative;
 		flex: 1 1 0;
 		min-width: 0;
-		max-width: 32px;
+		// Assez grand pour bien voir la vignette : les cases grandissent jusque-la puis
+		// se partagent la place restante de la colonne (#622).
+		max-width: 44px;
 		aspect-ratio: 1;
 		padding: 3px;
 		border: 1px solid var(--border);

@@ -31,8 +31,9 @@
 						</span>
 					</template>
 
-					<!-- Destruction : alterations rendues puis ressources, en ligne. -->
+					<!-- Destruction : nombre de pieces detruites, alterations puis ressources rendues. -->
 					<template v-else-if="entry.action === DESTROY && entry.details">
+						<span v-if="entry.details.destroyed > 1" class="destroyed-count">×{{ entry.details.destroyed }}</span>
 						<span v-for="(count, id) in entry.details.alterations" :key="'a' + id" class="rendered-item alteration" :title="alterationName(Number(id))">
 							<img :src="alterationThumb(Number(id))" :alt="alterationName(Number(id))">
 							<span v-if="count > 1" class="qty">×{{ count }}</span>
@@ -252,5 +253,7 @@
 	.rendered-item.alteration img { width: 30px; height: 30px; }
 	.rendered-item.resource img { width: 24px; height: 24px; }
 	.nothing { font-style: italic; color: var(--text-color-secondary); font-size: 13px; }
+	// Nombre de pieces detruites d'un coup (#622).
+	.destroyed-count { font-weight: bold; color: var(--text-color-secondary); }
 	.more { text-align: center; padding: 6px; }
 </style>
