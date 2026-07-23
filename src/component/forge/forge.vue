@@ -55,7 +55,15 @@
 			     visible sur tout le trajet (#622). -->
 			<div v-if="particles.length" class="particles">
 				<span v-for="p in particles" :key="p.key" class="particle" :class="'color-' + p.carac"
-					:style="{ left: p.left + '%', top: p.top + '%', '--dx': p.dx + 'px', '--dy': p.dy + 'px', animationDelay: p.delay + 's' }"></span>
+					:style="{ left: p.left + '%', top: p.top + '%',
+						width: p.size + 'px', height: p.size + 'px',
+						marginLeft: -p.size / 2 + 'px', marginTop: -p.size / 2 + 'px',
+						'--sx': p.sx + 'px', '--sy': p.sy + 'px',
+						'--q1x': p.q1x + 'px', '--q1y': p.q1y + 'px',
+						'--mx': p.mx + 'px', '--my': p.my + 'px',
+						'--q3x': p.q3x + 'px', '--q3y': p.q3y + 'px',
+						'--dx': p.dx + 'px', '--dy': p.dy + 'px',
+						animationDuration: p.duration + 's', animationDelay: -p.delay + 's' }"></span>
 			</div>
 			<!-- Effacer : croix, pas une fleche circulaire qui evoquerait "refaire". Coin HAUT droit. -->
 			<v-btn v-if="scheme || component" class="corner-btn clear" icon variant="flat" size="small" @click="clear">
@@ -482,10 +490,21 @@
 	 * cellule centrale : posees dans leur case, les particules passaient derriere le
 	 * composant et la moitie du trajet disparaissait (#622).
 	 */
-	const PARTICLE_CYCLE = 0.95
 	const PARTICLES_PER_SLOT = 6
+	/**
+	 * Bruit deterministe 0..1. Deux particules voisines tirent des valeurs differentes,
+	 * mais une meme particule retire toujours la meme : avec Math.random le flux se
+	 * re-tirerait a chaque recalcul de la forge et sauterait sous les yeux du joueur.
+	 */
+	function noise(seed: number): number {
+		const x = Math.sin(seed * 127.1) * 43758.5453
+		return x - Math.floor(x)
+	}
 	const particles = computed(() => {
-		const out: { key: string, carac: string, left: number, top: number, dx: number, dy: number, delay: number }[] = []
+		const out: { key: string, carac: string, left: number, top: number, size: number,
+			sx: number, sy: number, q1x: number, q1y: number, mx: number, my: number,
+			q3x: number, q3y: number, dx: number, dy: number,
+			duration: number, delay: number }[] = []
 		if (!component.value || fusing.value) return out
 		forge.value.forEach((slot, i) => {
 			// Meme garde que cellVars : une recette peut deborder de la grille.
@@ -494,10 +513,36 @@
 			if (!slot || !center || !vec) return
 			const carac = slotCarac(slot)
 			for (let p = 0; p < PARTICLES_PER_SLOT; p++) {
+				const seed = i * 37 + p * 101
+				// Depart disperse autour du centre de la case, arrivee legerement dispersee
+				// sur le composant : sans cela toutes suivent la meme droite.
+				const sx = (noise(seed) - 0.5) * 22
+				const sy = (noise(seed + 1) - 0.5) * 22
+				const dx = vec[0] + (noise(seed + 2) - 0.5) * 16
+				const dy = vec[1] + (noise(seed + 3) - 0.5) * 16
+				// Point milieu decale perpendiculairement : la trajectoire s'incurve d'un
+				// cote ou de l'autre selon le tirage.
+				// Courbe de Bezier quadratique : point de controle decale perpendiculairement.
+				// Le decalage au milieu vaut la moitie de celui du controle, d'ou le x2.
+				// On echantillonne a 1/4, 1/2 et 3/4 : avec un seul point milieu la
+				// trajectoire ferait deux segments droits et un coude bien visible.
+				const len = Math.hypot(dx - sx, dy - sy) || 1
+				const curve = (noise(seed + 4) - 0.5) * 52
+				const cx = sx + (dx - sx) * 0.5 - ((dy - sy) / len) * curve * 2
+				const cy = sy + (dy - sy) * 0.5 + ((dx - sx) / len) * curve * 2
+				const bez = (t: number, a: number, c: number, b: number) =>
+					(1 - t) * (1 - t) * a + 2 * (1 - t) * t * c + t * t * b
+				const q1x = bez(0.25, sx, cx, dx), q1y = bez(0.25, sy, cy, dy)
+				const mx = bez(0.5, sx, cx, dx), my = bez(0.5, sy, cy, dy)
+				const q3x = bez(0.75, sx, cx, dx), q3y = bez(0.75, sy, cy, dy)
+				const duration = 0.85 + noise(seed + 5) * 1.05
 				out.push({ key: i + '-' + p, carac,
 					left: center[0], top: center[1],
-					dx: vec[0], dy: vec[1],
-					delay: p * (PARTICLE_CYCLE / PARTICLES_PER_SLOT) })
+					size: 6 + noise(seed + 6) * 7,
+					sx, sy, q1x, q1y, mx, my, q3x, q3y, dx, dy,
+					// Delai negatif : chaque particule demarre deja en cours de vol, sinon
+					// elles partent toutes ensemble a la pose.
+					duration, delay: noise(seed + 7) * duration })
 			}
 		})
 		return out
@@ -1046,22 +1091,26 @@
 }
 // Particules teintees par la carac, du centre de leur case vers le composant.
 // left/top viennent du style inline ; --dx/--dy portent le trajet restant.
+// Trajectoire en trois points : depart disperse, milieu decale sur le cote, arrivee
+// sur le composant. Taille, vitesse et courbure viennent du style inline (#622).
 @keyframes particle-flow {
-	0%   { transform: translate(0, 0) scale(0.55); opacity: 0; }
+	0%   { transform: translate(var(--sx), var(--sy)) scale(0.45); opacity: 0; }
 	12%  { opacity: 1; }
+	25%  { transform: translate(var(--q1x), var(--q1y)) scale(0.85); }
+	50%  { transform: translate(var(--mx), var(--my)) scale(1); }
+	75%  { transform: translate(var(--q3x), var(--q3y)) scale(0.8); }
 	82%  { opacity: 1; }
-	100% { transform: translate(var(--dx), var(--dy)) scale(0.25); opacity: 0; }
+	100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
 }
 .particle {
 	position: absolute;
-	width: 11px;
-	height: 11px;
-	margin: -5.5px 0 0 -5.5px;
 	border-radius: 50%;
 	background: currentColor;
-	box-shadow: 0 0 14px currentColor, 0 0 6px currentColor, 0 0 2px #fff;
+	box-shadow: 0 0 12px currentColor, 0 0 5px currentColor, 0 0 2px #fff;
 	opacity: 0;
-	animation: particle-flow 0.95s linear infinite;
+	animation-name: particle-flow;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
 }
 
 // Fusion : les alterations filent vers le composant et s'y resorbent.
