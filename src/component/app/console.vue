@@ -6,11 +6,11 @@
 					<template v-if="line.type === 'code'">
 						<!-- <span class="arrow">›</span> -->
 						<v-icon class="arrow">mdi-chevron-right</v-icon>
-						<span v-single-code><code>{{ line.code }}</code></span>
+						<lw-code :code="line.code ?? ''" single :theme="codeThemeClass" :language="language" />
 					</template>
 					<template v-else-if="line.type === 'result'">
 						<div class="line result">
-							<span v-single-code><code>{{ line.result }}</code></span>
+							<lw-code :code="String(line.result ?? '')" single :theme="codeThemeClass" :language="language" />
 							<span class="ops">{{ line.ops }} ops</span>
 						</div>
 					</template>
@@ -49,8 +49,9 @@ import { emitter } from '@/model/vue'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
 import { getLanguageVersions } from '../editor/file-types'
+import LwCode from './code.vue'
 
-defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco } })
+defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco, 'lw-code': LwCode } })
 
 interface EditorRef {
 	editor: {
@@ -223,6 +224,9 @@ function focus() {
 }
 
 const cssTheme = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(theme.value) ? 'monokai' : 'leekwars')
+// Les aperçus des lignes passées suivent le thème PROPRE de la console (pas celui du site,
+// qui peut être clair alors que la console est sombre, et inversement).
+const codeThemeClass = computed(() => 'code-theme-' + theme.value)
 
 function saveTheme() {
 	localStorage.setItem('editor/theme', theme.value)
@@ -393,5 +397,10 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language, la
 .console:deep(code) {
 	border: none;
 	padding: 0;
+	// Les thèmes sombres posent leur propre fond sur le <pre> : inutile ici, la console
+	// a déjà le fond assorti au thème.
+	pre {
+		background: transparent;
+	}
 }
 </style>
