@@ -40,17 +40,17 @@ const DATA: AlterationData = {
 const HYLOCEREUS: [string, number][] = [['life', 600], ['wisdom', 40], ['magic', 40]]
 
 describe('puits', () => {
-	it('est indexé sur le niveau', () => {
-		expect(well(295)).toBeCloseTo(250.75, 6)
-		expect(well(255)).toBeCloseTo(216.75, 6)
+	it('est indexé sur le niveau, arrondi à l\'entier', () => {
+		expect(well(295)).toBe(251) // round(0,85 × 295 = 250,75)
+		expect(well(255)).toBe(217) // round(0,85 × 255 = 216,75)
 	})
 })
 
 describe('prévisualisation d\'une tentative', () => {
-	it('reproduit la probabilité que le serveur a réellement appliquée', () => {
-		// Appel réel sur beta : 1 Vitamine D sur un hylocereus vierge -> 0.784739
+	it('reproduit la probabilité pour un puits presque vide', () => {
+		// 1 Vitamine D sur un hylocereus vierge (puits arrondi à 217).
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(plan.rolls.life.probability).toBeCloseTo(0.784739, 5)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.78551, 4)
 		expect(plan.rolls.life.points).toBe(50)
 		expect(plan.dose).toBe(20)
 		expect(plan.habsCost).toBe(65025)
@@ -58,19 +58,28 @@ describe('prévisualisation d\'une tentative', () => {
 	})
 
 	it('reproduit la recette mixte du dosage 63', () => {
-		// Appel réel sur beta, puits déjà à 50 : vie p=0.0266, sagesse p=0.0135
 		const plan = planAttempt(DATA, HYLOCEREUS, { life: 50 }, 255, ComponentFamily.FRUIT, { 1: 1, 4: 1, 13: 1 })
 		expect(plan.dose).toBe(63)
 		expect(plan.items).toBe(3)
 		expect(plan.rolls.life.points).toBe(52)
 		expect(plan.rolls.wisdom.points).toBe(12)
-		expect(plan.rolls.life.probability).toBeCloseTo(0.0266, 3)
-		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0135, 3)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.02680, 4)
+		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.013626, 5)
 	})
 
-	it('refuse une recette qui déborde du puits', () => {
-		// Deux PM coûtent 250 de puits, l'hylocereus n'en a que 216,75.
+	it('autorise un léger dépassement du puits mais le rend suicidaire', () => {
+		// Deux PM coûtent 250, l'hylocereus n'a qu'un puits de 217 (115 %) : la tentative
+		// est autorisée mais quasi impossible, et la casse est certaine.
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 10: 2 })
+		expect(plan.fits).toBe(true)
+		expect(plan.overfilled).toBe(true)
+		expect(plan.rolls.mp.probability).toBeLessThan(0.0001)
+		expect(plan.breakProbability).toBe(1)
+	})
+
+	it('refuse un dépassement au-delà du plafond souple', () => {
+		// Trois PM montent à 173 % du puits, au-delà du plafond de 130 % : refusé.
+		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 10: 3 })
 		expect(plan.fits).toBe(false)
 		expect(plan.rolls.mp.probability).toBe(0)
 		expect(plan.breakProbability).toBe(0)

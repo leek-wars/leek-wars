@@ -33,7 +33,7 @@
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
-				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner" :title="chargeTitle">{{ Math.round(plan.ratioAfter * 100) }}%</div>
+				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner" :class="{ over: plan.overfilled }" :title="chargeTitle">{{ Math.round(plan.ratioAfter * 100) }}%</div>
 				<!-- Nombre de pieces empilees a recycler d'un coup (#622). -->
 				<div v-if="componentCount > 1" class="stack-count">×{{ componentCount }}</div>
 				<!-- Destruction : 8 copies de l'image, chacune decoupee en part de pizza,
@@ -796,6 +796,8 @@
 	text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
 	pointer-events: none;
 }
+// Au-dela de 100 % du puits : rouge vif, on tente un depassement (#622).
+.cell8.component .charge-corner.over { color: #ff5252; }
 // Compteur d'empilement pour le recyclage groupe (#622) : pastille sombre, coin bas droit.
 .cell8.component .stack-count {
 	position: absolute;
