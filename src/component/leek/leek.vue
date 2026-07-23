@@ -2065,6 +2065,23 @@
 			}
 		}
 	}
+	// Le popup d'IA fait 1050 px : bien avant le mobile, l'explorateur d'IA et la
+	// grille de composants deviennent deux colonnes trop etroites. On les empile.
+	@media (max-width: 800px) {
+		.ai-popup .flex {
+			flex-direction: column;
+		}
+		// En colonne, `flex: 1` se partagerait la HAUTEUR et ecraserait les deux blocs :
+		// on les laisse prendre leur hauteur naturelle.
+		.ai-popup .flex > * {
+			flex: none;
+		}
+		// L'explorateur est fige a 460 px : empile, il repousse les composants hors de
+		// l'ecran avant meme qu'on les voie.
+		.ai-popup .explorer {
+			height: 260px;
+		}
+	}
 	#app.app .farmer-potions .potions-grid {
 		grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
 	}
