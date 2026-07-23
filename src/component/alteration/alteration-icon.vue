@@ -1,6 +1,6 @@
 <template>
-	<div class="alteration-icon" :title="title">
-		<img class="image" :src="'/image/alteration/' + name + '.png'" :alt="title" loading="lazy">
+	<div class="alteration-icon" :title="tooltip">
+		<img class="image" :src="'/image/alteration/' + name + '.png'" :alt="tooltip" loading="lazy">
 		<span v-if="number !== null" class="number">{{ number }}</span>
 	</div>
 </template>
@@ -22,7 +22,9 @@
 		/** item_template de l'altération. */
 		template: number
 		showNumber?: boolean
-	}>(), { showNumber: true })
+		/** Remplace l'infobulle par défaut (le nom seul), pour y ajouter la charge. */
+		title?: string
+	}>(), { showNumber: true, title: undefined })
 
 	const alteration = computed(() => {
 		const data = LeekWars.alterations
@@ -35,7 +37,9 @@
 
 	const name = computed(() => alteration.value ? alteration.value.name : '')
 	const number = computed(() => props.showNumber && alteration.value ? alteration.value.number : null)
-	const title = computed(() => alteration.value ? t('alteration.' + alteration.value.name) : '')
+	const tooltip = computed(() => props.title !== undefined
+		? props.title
+		: (alteration.value ? t('alteration.' + alteration.value.name) : ''))
 </script>
 
 <style lang="scss" scoped>
