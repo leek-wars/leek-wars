@@ -161,7 +161,7 @@
 
 	// --- Animations de fusion (#622) ---
 	/** Duree du vol des alterations vers le composant, en ms (calee sur fuse-travel). */
-	const FUSE_DURATION = 420
+	const FUSE_DURATION = 240
 	/**
 	 * Vecteur (px) du centre de chaque case vers le centre de la grille de 240 px :
 	 * les cases font 28,57 % et le centre est a 50 %, d'ou 68,6 px en diagonale et
@@ -914,7 +914,7 @@
 	100% { transform: translate(var(--dx), var(--dy)) scale(0.25); opacity: 0; }
 }
 .forge .grid .cell.fusing .item {
-	animation: fuse-travel 0.42s cubic-bezier(0.45, 0, 0.85, 0.6) forwards;
+	animation: fuse-travel 0.24s cubic-bezier(0.55, 0, 0.9, 0.45) forwards;
 }
 
 // Issue de la tentative, jouee sur le composant central.
