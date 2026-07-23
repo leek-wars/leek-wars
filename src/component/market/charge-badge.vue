@@ -12,6 +12,7 @@
 <script setup lang="ts">
 	import { computed } from 'vue'
 	import { well as wellCapacity, addedPower, alterationTier } from '@/model/alteration'
+	import { LeekWars } from '@/model/leekwars'
 
 	/**
 	 * Jauge circulaire de charge d'un composant altere (#622). Pose en badge sur
@@ -23,19 +24,17 @@
 		level?: number
 	}>()
 
-	// Poids des caracs (couts marginaux, constants), en dur pour ne pas importer
-	// LeekWars dans un composant de preview (cf. component-preview).
-	const WEIGHTS: { [carac: string]: number } = {
-		life: 1, strength: 4, agility: 4, wisdom: 4, resistance: 4, science: 4, magic: 4,
-		frequency: 2, tp: 200, mp: 250, cores: 200, ram: 200,
-	}
 	const circumference = 2 * Math.PI * 15
 
+	// Les poids viennent du serveur, jamais d'une copie locale : une table en dur ici
+	// derivait en silence des que l'equilibrage bougeait, et le pourcentage affiche
+	// devenait faux sans que rien ne le signale (#622).
 	const ratio = computed(() => {
-		if (!props.alterations || !props.level) return null
+		const weights = LeekWars.alterations?.weights
+		if (!props.alterations || !props.level || !weights) return null
 		const capacity = wellCapacity(props.level)
 		if (capacity <= 0) return null
-		const r = addedPower(props.alterations, WEIGHTS) / capacity
+		const r = addedPower(props.alterations, weights) / capacity
 		return r > 0 ? r : null
 	})
 	const percent = computed(() => ratio.value !== null ? Math.round(ratio.value * 100) : 0)
