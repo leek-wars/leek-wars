@@ -31,7 +31,7 @@
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
-				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner">{{ Math.round(plan.ratioAfter * 100) }}%</div>
+				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner" :title="chargeTitle">{{ Math.round(plan.ratioAfter * 100) }}%</div>
 				<!-- Nombre de pieces empilees a recycler d'un coup (#622). -->
 				<div v-if="componentCount > 1" class="stack-count">×{{ componentCount }}</div>
 				<!-- Destruction : 8 copies de l'image, chacune decoupee en part de pizza,
@@ -71,13 +71,13 @@
 			<!-- Recyclage : coin BAS gauche, tant qu'aucune alteration n'est posee. -->
 			<v-btn v-if="component && alterationCount === 0" class="corner-btn recycle" icon variant="flat"
 				size="small" :loading="destroying" @click="destroy">
-				<v-icon color="error">mdi-recycle</v-icon>
+				<v-icon color="white">mdi-recycle</v-icon>
 				<v-tooltip activator="parent" location="bottom">{{ $t('main.destroy') }}</v-tooltip>
 			</v-btn>
 			<!-- Alterer : coin BAS droit de la grille, sous la main du joueur. -->
 			<v-btn v-if="component && alterationCount > 0" class="corner-btn fuse-btn" icon variant="flat"
 				size="small" :loading="altering" :disabled="!plan || !plan.fits" @click="alter">
-				<v-icon color="primary">mdi-flask</v-icon>
+				<v-icon color="white">mdi-flask</v-icon>
 				<v-tooltip activator="parent" location="bottom">{{ $t('main.alteration_fuse') }}</v-tooltip>
 			</v-btn>
 		</div>
@@ -156,7 +156,8 @@
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
-	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+	import { forgeComponent } from '@/model/forge-state'
+	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Popup from '@/component/popup.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
@@ -359,6 +360,14 @@
 		return planAttempt(data, base, item.stats ?? {}, Number(template.level), family, recipe.value)
 	})
 
+	/** Infobulle de la charge : puissance investie sur capacite du puits (#622). */
+	const chargeTitle = computed(() => {
+		const p = plan.value
+		if (!p) return ''
+		return t('main.alteration_charge') + ' ' + LeekWars.formatNumber(Math.round(p.ratioAfter * p.capacity))
+			+ ' / ' + LeekWars.formatNumber(Math.round(p.capacity))
+	})
+
 	function percent(p: number): string {
 		if (p <= 0) return '0 %'
 		if (p >= 0.1) return Math.round(p * 100) + ' %'
@@ -473,8 +482,8 @@
 	 * cellule centrale : posees dans leur case, les particules passaient derriere le
 	 * composant et la moitie du trajet disparaissait (#622).
 	 */
-	const PARTICLE_CYCLE = 1.1
-	const PARTICLES_PER_SLOT = 4
+	const PARTICLE_CYCLE = 0.95
+	const PARTICLES_PER_SLOT = 6
 	const particles = computed(() => {
 		const out: { key: string, carac: string, left: number, top: number, dx: number, dy: number, delay: number }[] = []
 		if (!component.value || fusing.value) return out
@@ -493,6 +502,14 @@
 		})
 		return out
 	})
+
+	// La palette d'alterations chiffre la charge de chaque alteration sur la piece
+	// posee : on publie sa famille et son niveau des qu'elle change (#622).
+	watch(component, c => {
+		const tpl = c ? LeekWars.items[c.template] : null
+		forgeComponent.value = tpl ? { family: Number(tpl.params), level: Number(tpl.level) } : null
+	}, { immediate: true })
+	onBeforeUnmount(() => { forgeComponent.value = null })
 
 	/** Pose une alteration autour du composant, ou incremente sa pile. */
 	function addAlteration(item: InventoryItem) {
@@ -758,26 +775,46 @@
 	border-radius: 4px;
 	pointer-events: none;
 }
+// Gains sous la forge : une petite carte a lignes tramees plutot qu'une liste nue,
+// avec la probabilite alignee a droite en chiffres tabulaires (#622).
 .preview, .result {
 	width: 100%;
-	padding: 4px 0;
+	margin-top: 8px;
+	padding: 4px;
+	border-radius: 6px;
+	background: var(--background-secondary);
 	.row {
 		display: flex;
 		align-items: center;
-		gap: 6px;
-		padding: 2px 4px;
+		gap: 7px;
+		padding: 4px 7px;
 		font-size: 13px;
+		border-radius: 4px;
+		& + .row { margin-top: 2px; }
 	}
-	.ic { width: 16px; height: 16px; }
-	.chance { margin-left: auto; font-variant-numeric: tabular-nums; }
-	.risk { color: #c62828; }
-	.cost { color: var(--text-color-secondary); }
+	.ic { width: 17px; height: 17px; }
+	.chance {
+		margin-left: auto;
+		font-variant-numeric: tabular-nums;
+		font-weight: bold;
+	}
+	.risk {
+		color: #c62828;
+		background: rgba(198, 40, 40, 0.10);
+	}
+	// Le cout se detache du bloc de jets : c'est une depense, pas un gain.
+	.cost {
+		color: var(--text-color-secondary);
+		border-top: 1px solid var(--border);
+		border-radius: 0;
+		margin-top: 4px;
+		padding-top: 7px;
+	}
 }
 .result {
-	border-top: 1px solid var(--border);
 	.row { color: var(--text-color-secondary); }
-	.row.ok { color: #2e7d32; font-weight: bold; }
-	.row.broken { color: #c62828; }
+	.row.ok { color: #2e7d32; font-weight: bold; background: rgba(94, 173, 27, 0.12); }
+	.row.broken { color: #c62828; background: rgba(198, 40, 40, 0.10); }
 	.synergy { margin-left: auto; font-weight: bold; }
 	.synergy.s2 { color: #0097a7; }
 	.synergy.s3 { color: #f9a825; }
@@ -804,6 +841,20 @@
 	background-color: var(--background) !important;
 	border: 1px solid var(--border);
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+// Detruire et Alterer sont les deux actions engageantes : fond plein, rouge et vert,
+// pour qu'elles se distinguent des boutons neutres (#622).
+.corner-btn.recycle.v-btn {
+	background-color: #c62828 !important;
+	border-color: #9e1f1f;
+}
+.corner-btn.fuse-btn.v-btn {
+	background-color: #5fad1b !important;
+	border-color: #4a8714;
+}
+.corner-btn.fuse-btn.v-btn.v-btn--disabled {
+	background-color: var(--background-disabled) !important;
+	border-color: var(--border);
 }
 // Recommencer : coin HAUT gauche de la grille.
 .redo { left: -4px; top: -4px; }
@@ -996,21 +1047,21 @@
 // Particules teintees par la carac, du centre de leur case vers le composant.
 // left/top viennent du style inline ; --dx/--dy portent le trajet restant.
 @keyframes particle-flow {
-	0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
-	15%  { opacity: 1; }
-	75%  { opacity: 1; }
-	100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+	0%   { transform: translate(0, 0) scale(0.55); opacity: 0; }
+	12%  { opacity: 1; }
+	82%  { opacity: 1; }
+	100% { transform: translate(var(--dx), var(--dy)) scale(0.25); opacity: 0; }
 }
 .particle {
 	position: absolute;
-	width: 8px;
-	height: 8px;
-	margin: -4px 0 0 -4px;
+	width: 11px;
+	height: 11px;
+	margin: -5.5px 0 0 -5.5px;
 	border-radius: 50%;
 	background: currentColor;
-	box-shadow: 0 0 8px currentColor, 0 0 3px currentColor;
+	box-shadow: 0 0 14px currentColor, 0 0 6px currentColor, 0 0 2px #fff;
 	opacity: 0;
-	animation: particle-flow 1.1s linear infinite;
+	animation: particle-flow 0.95s linear infinite;
 }
 
 // Fusion : les alterations filent vers le composant et s'y resorbent.
@@ -1091,10 +1142,12 @@
 	object-fit: contain;
 	animation: shard-fly 0.62s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
 }
+// Les parts enflent a mi-course puis reviennent a leur taille normale en s'effacant :
+// l'explosion respire au lieu de simplement retrecir (#622).
 @keyframes shard-fly {
 	0%   { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
-	18%  { transform: translate(calc(var(--tx) * 0.1), calc(var(--ty) * 0.1)) scale(1.07); opacity: 1; }
-	100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.5); opacity: 0; }
+	45%  { transform: translate(calc(var(--tx) * 0.45), calc(var(--ty) * 0.45)) rotate(calc(var(--rot) * 0.35)) scale(1.4); opacity: 1; }
+	100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1); opacity: 0; }
 }
 
 // Butin qui rejoint l'historique, piece par piece.

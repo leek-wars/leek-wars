@@ -3,9 +3,8 @@
 		<div v-for="row in rows" :key="row.carac" class="palette-row">
 			<img class="carac" :src="'/image/charac/small/' + row.carac + '.png'" :title="$t('characteristic.' + row.carac)">
 			<div class="cells">
-				<div v-for="a in row.alterations" :key="a.id" v-ripple class="cell" :class="{empty: owned(a.template) === 0}"
-					:title="$t('alteration.' + a.name)" @click="pick(a)">
-					<alteration-icon :template="a.template" />
+				<div v-for="a in row.alterations" :key="a.id" v-ripple class="cell" :class="{empty: owned(a.template) === 0}" @click="pick(a)">
+					<alteration-icon :template="a.template" :title="cellTitle(a)" />
 					<span v-if="owned(a.template) > 0" class="owned">{{ owned(a.template) }}</span>
 				</div>
 			</div>
@@ -17,9 +16,11 @@
 	import { computed } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { t } from '@/model/i18n'
 	import { emitter } from '@/model/vue'
 	import type { InventoryItem } from '@/model/farmer'
-	import type { AlterationTemplate } from '@/model/alteration'
+	import { efficiencyTier, type AlterationTemplate } from '@/model/alteration'
+	import { forgeComponent } from '@/model/forge-state'
 	import AlterationIcon from '@/component/alteration/alteration-icon.vue'
 
 	/**
@@ -49,6 +50,28 @@
 	function owned(template: number): number {
 		const item = store.state.farmer?.alterations?.find(a => a.template === template)
 		return item ? item.quantity : 0
+	}
+
+	/**
+	 * Charge qu'ajouterait cette alteration au composant pose : son gain depend de la
+	 * famille visee via la matrice d'efficacite, donc rien a afficher sans piece en
+	 * forge (#622).
+	 */
+	function alterationCharge(a: AlterationTemplate): number | null {
+		const data = LeekWars.alterations
+		const comp = forgeComponent.value
+		if (!data || !comp) return null
+		const efficiency = (data.efficiency[a.family] || {})[comp.family] || 0
+		const points = (data.gains[a.carac] || [0, 0, 0])[efficiencyTier(efficiency)]
+		return points * (data.weights[a.carac] || 0)
+	}
+
+	/** Nom de l'alteration, suivi de la charge qu'elle coute si une piece est posee. */
+	function cellTitle(a: AlterationTemplate): string {
+		const name = t('alteration.' + a.name)
+		const charge = alterationCharge(a)
+		if (charge === null || charge <= 0) return name
+		return name + ' — ' + t('main.alteration_charge') + ' +' + LeekWars.formatNumber(Math.round(charge))
 	}
 
 	/** Pose l'alteration dans la forge : la forge verifie qu'un composant est present. */

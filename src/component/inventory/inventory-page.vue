@@ -294,7 +294,12 @@
 </script>
 
 <style lang="scss" scoped>
-	// Onglets de l'atelier (#622), dans la barre de titre du panel.
+	// Le titre de panel porte un padding de 12px : il decalait les onglets vers la
+// droite. On l'annule pour ce panneau seulement (#622).
+.column .bottom-panel :deep(.header h2) {
+	padding-left: 0;
+}
+// Onglets de l'atelier (#622), dans la barre de titre du panel.
 	.workshop-tabs {
 		display: flex;
 		gap: 2px;
@@ -378,8 +383,11 @@
 		flex-basis: 350px;
 		flex-shrink: 0;
 		display: flex;
-		align-items: center;
+		// Calee en haut : le nombre de lignes de gains sous la forge varie avec le
+		// nombre d'alterations, et un centrage vertical la faisait sauter (#622).
+		align-items: flex-start;
 		justify-content: center;
+		padding-top: 10px;
 	}
 }
 #app.app .bottom-content {
