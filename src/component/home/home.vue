@@ -365,8 +365,9 @@
 	}
 	// L'item lui-même ne défile jamais (sinon l'en-tête du panel défilerait avec) :
 	// on force overflow hidden par-dessus le CSS de gridstack (plus spécifique).
+	// NE PAS poser `inset` ici : gridstack applique sa marge (les gaps entre widgets)
+	// via le décalage de ce conteneur, un inset: 0 les supprimerait.
 	.grid-stack-item > .grid-stack-item-content {
-		inset: 0;
 		overflow: hidden;
 	}
 	.widget-panel {
