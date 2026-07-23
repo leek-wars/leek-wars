@@ -5,6 +5,8 @@
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="itemImageUrl(LeekWars.items[item[0]])">
+						<!-- Numero de dosage, en haut a gauche comme dans la palette (#622). -->
+						<span v-if="slotNumber(item) !== null" class="alt-number">{{ slotNumber(item) }}</span>
 						<!-- La cle sur la quantite fait rejouer le petit rebond a chaque ajout. -->
 						<div v-if="item[1] > 1" :key="item[1]" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
@@ -92,7 +94,6 @@
 
 		<div v-if="component && dose > 0" class="dose">
 			{{ $t('main.alteration_dose') }} <b>{{ dose }}</b>
-			<span class="count">{{ alterationCount }} / {{ maxItems }}</span>
 		</div>
 		<!-- Probabilite et risque AVANT de depenser : c'est la regle de la spec. -->
 		<div v-if="component && plan && alterationCount > 0" class="preview">
@@ -109,23 +110,6 @@
 			<div class="row cost">
 				<span>{{ $t('main.alteration_cost') }}</span>
 				<b class="chance">{{ $filters.number(plan.habsCost) }}<span class="hab"></span></b>
-			</div>
-		</div>
-		<!-- Resultat de la derniere tentative. -->
-		<div v-if="lastResult" class="result">
-			<div v-for="r in lastResult.results" :key="r.carac" class="row" :class="{ok: r.success}">
-				<img class="ic" :src="'/image/charac/small/' + r.carac + '.png'">
-				<span>{{ r.success ? '+' + r.points : $t('main.alteration_failed') }}</span>
-			</div>
-			<div v-if="lastResult.broken" class="row broken">
-				<v-icon size="16">mdi-heart-broken</v-icon>
-				<span>{{ $t('main.alteration_broken', [lastResult.broken.lost]) }}</span>
-			</div>
-			<div class="row metabolism">
-				<span>{{ $t('main.alteration_metabolism') }} <b>{{ lastResult.metabolism }}</b></span>
-				<span v-if="lastResult.synergy > 1" class="synergy" :class="'s' + lastResult.synergy">
-					{{ lastResult.synergy === 3 ? $t('main.synergy_perfect') : $t('main.synergy_good') }}
-				</span>
 			</div>
 		</div>
 
@@ -299,7 +283,6 @@
 		scheme.value = null
 		component.value = null
 		componentCount.value = 1
-		lastResult.value = null
 		building.value = false
 		built.value = false
 	}
@@ -332,7 +315,6 @@
 		broken: { carac: string, lost: number } | null
 		habs_cost: number
 	}
-	const lastResult = ref<AlterResult | null>(null)
 
 	/** Recette au format attendu par le moteur : [alteration_id => quantite]. */
 	const recipe = computed(() => {
@@ -391,7 +373,6 @@
 		const item = component.value
 		if (!item || altering.value || alterationCount.value === 0) return
 		altering.value = true
-		lastResult.value = null
 		outcome.value = null
 		// Les alterations filent vers le composant pendant que le serveur tranche (#622).
 		fusing.value = true
@@ -402,7 +383,6 @@
 			// serveur rapide escamote l'animation.
 			window.setTimeout(() => {
 				lastRecipe.value = sent
-				lastResult.value = data
 				// Le composant porte desormais ses nouvelles stats. L'inventaire construit
 				// des COPIES des items du store (spread dans son computed), donc ecrire sur
 				// l'objet recu ne suffit pas : il faut retrouver l'original.
@@ -474,6 +454,16 @@
 		}
 		return total
 	})
+
+	/** Numero de dosage publie de l'alteration posee dans cette case. */
+	function slotNumber(slot: ForgeSlot | null): number | null {
+		const data = LeekWars.alterations
+		if (!data || !slot) return null
+		for (const id in data.alterations) {
+			if (data.alterations[id].template === slot[0]) return data.alterations[id].number
+		}
+		return null
+	}
 
 	/** Caracteristique visee par l'alteration posee dans cette case, pour teinter ses particules. */
 	function slotCarac(slot: ForgeSlot | null): string {
@@ -822,7 +812,7 @@
 }
 // Gains sous la forge : une petite carte a lignes tramees plutot qu'une liste nue,
 // avec la probabilite alignee a droite en chiffres tabulaires (#622).
-.preview, .result {
+.preview {
 	width: 100%;
 	margin-top: 8px;
 	padding: 4px;
@@ -855,14 +845,6 @@
 		margin-top: 4px;
 		padding-top: 7px;
 	}
-}
-.result {
-	.row { color: var(--text-color-secondary); }
-	.row.ok { color: #2e7d32; font-weight: bold; background: rgba(94, 173, 27, 0.12); }
-	.row.broken { color: #c62828; background: rgba(198, 40, 40, 0.10); }
-	.synergy { margin-left: auto; font-weight: bold; }
-	.synergy.s2 { color: #0097a7; }
-	.synergy.s3 { color: #f9a825; }
 }
 
 .dose {
@@ -1222,6 +1204,20 @@
 	18%  { transform: translate(calc(var(--tx) * 0.08), -26px) scale(1.15); opacity: 1; }
 	80%  { opacity: 1; }
 	100% { transform: translate(var(--tx), var(--ty)) scale(0.55); opacity: 0; }
+}
+
+// Numero de dosage sur une alteration posee : meme repere qu'en palette, coin haut
+// gauche, le coin bas droit restant a la quantite (#622).
+.forge .grid .cell .item .alt-number {
+	position: absolute;
+	top: 6%;
+	left: 10%;
+	font-size: 11px;
+	font-weight: bold;
+	color: #fff;
+	text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
+	pointer-events: none;
+	z-index: 2;
 }
 
 // Icone habs a cote du cout : petite, calee sur le texte (#622).

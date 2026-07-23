@@ -388,6 +388,9 @@
 		align-items: flex-start;
 		justify-content: center;
 		padding-top: 10px;
+		// Si la colonne deborde malgre tout, elle defile pour elle-meme.
+		min-height: 0;
+		overflow-y: auto;
 	}
 }
 #app.app .bottom-content {

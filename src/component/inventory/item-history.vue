@@ -23,11 +23,19 @@
 							<template v-else>✕</template>
 						</span>
 						<span class="dose" :title="$t('main.alteration_dose')">{{ entry.details.dose }}</span>
+						<span v-if="entry.details.metabolism !== undefined" class="metabolism" :title="$t('main.alteration_metabolism')">
+							{{ entry.details.metabolism }}
+						</span>
 						<span v-if="entry.details.synergy > 1" class="synergy" :class="'s' + entry.details.synergy">
 							{{ entry.details.synergy === 3 ? $t('main.synergy_perfect') : $t('main.synergy_good') }}
 						</span>
-						<span v-if="entry.details.broken" class="broken">
-							<v-icon size="13">mdi-heart-broken</v-icon>-{{ entry.details.broken.lost }}
+						<!-- Casse : on montre QUELLE carac a saute, un coeur generique laissait
+						     croire que c'etait la vie (#622). -->
+						<span v-if="entry.details.broken" class="broken"
+							:title="$t('characteristic.' + entry.details.broken.carac)">
+							<v-icon size="13">mdi-heart-broken</v-icon>
+							<img class="ci" :src="'/image/charac/small/' + entry.details.broken.carac + '.png'">
+							−{{ entry.details.broken.lost }}
 						</span>
 					</template>
 
@@ -237,6 +245,12 @@
 		background: var(--background-secondary);
 		border-radius: 4px;
 		padding: 0 5px;
+	}
+	// Metabolisme mesure a cette tentative : information de reglage, donc discret.
+	.metabolism {
+		font-size: 12px;
+		color: var(--text-color-secondary);
+		font-variant-numeric: tabular-nums;
 	}
 	.synergy { font-weight: bold; font-size: 12px; }
 	.synergy.s2 { color: #0097a7; }
