@@ -25,7 +25,7 @@ const DATA: AlterationData = {
 	},
 	weights: {
 		life: 1, strength: 4, agility: 4, wisdom: 4, resistance: 4, science: 4, magic: 4,
-		frequency: 2, tp: 100, mp: 125, cores: 200, ram: 200,
+		frequency: 2, tp: 100, mp: 125, cores: 100, ram: 100,
 	},
 	gains: {
 		life: [50, 10, 2], strength: [12, 3, 1], agility: [12, 3, 1], wisdom: [12, 3, 1],
