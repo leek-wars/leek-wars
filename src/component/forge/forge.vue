@@ -211,6 +211,8 @@
 	// --- Animation de destruction (#622) ---
 	/** Duree de l'eclatement du composant en parts, en ms. */
 	const SHATTER_DURATION = 620
+	/** Le butin sort avec l'explosion : juste quand les parts commencent a se separer. */
+	const LOOT_DELAY = 90
 	/**
 	 * Les 8 parts facon pizza : chacune est un triangle du centre vers deux points
 	 * consecutifs du bord du carre (milieux de cotes et coins en alternance), decoupe
@@ -602,8 +604,8 @@
 			emitter.emit('workshop-action', 3)
 			// 1. Le composant vole en eclats.
 			shattering.value = true
-			// 2. A mi-eclatement, le butin s'envole vers l'historique, piece par piece.
-			window.setTimeout(() => launchLoot(data.alterations, data.resources), SHATTER_DURATION * 0.45)
+			// 2. Le butin jaillit avec l'explosion, des que les parts se separent.
+			window.setTimeout(() => launchLoot(data.alterations, data.resources), LOOT_DELAY)
 			// 3. La forge se vide une fois les parts dispersees.
 			window.setTimeout(() => {
 				shattering.value = false
@@ -650,10 +652,10 @@
 			list.push({ key: 'r' + id, src: '/image/resource/' + tpl.name + '.png',
 				x: startX, y: startY, tx: targetX - startX, ty: targetY - startY, delay: 0 })
 		}
-		list.forEach((f, i) => { f.delay = i * 0.1 })
+		list.forEach((f, i) => { f.delay = i * 0.07 })
 		flyers.value = list
 		clearTimeout(flyersTimer)
-		flyersTimer = window.setTimeout(() => { flyers.value = [] }, 700 + list.length * 100)
+		flyersTimer = window.setTimeout(() => { flyers.value = [] }, 700 + list.length * 70)
 	}
 
 	onBeforeUnmount(() => {
