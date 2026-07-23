@@ -10,6 +10,7 @@
   fixed:
     - "#ai Assegnare un valore a un campo tipizzato di una classe tramite una variabile non tipizzata (any) applica ora le stesse conversioni del codice tipizzato, invece di fallire in combattimento con un falso errore \"campo sconosciuto\" (grazie a Bily)."
     - "La modalità preferita in arena non cambia più da sola: il comando /br della chat iscriveva senza preferenza, e un cambio di modalità dal menu veniva dimenticato alla successiva iscrizione dall'orto."
+    - "Gli ostacoli delle mappe dei boss (bastioni del castello, torii...) sono ora disegnati con la loro dimensione reale sulla mappa degli spostamenti del rapporto, senza più buchi che sembravano attraversabili (grazie a TheScout)."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."

@@ -10,6 +10,7 @@
   fixed:
     - "#ai Assigner une valeur à un champ typé d'une classe à travers une variable non typée (any) applique maintenant les mêmes conversions que du code typé, au lieu d'échouer en combat avec une fausse erreur « champ inconnu » (merci à Bily)."
     - "Le mode préféré en arène ne change plus tout seul : la commande /br du chat inscrivait sans préférence, et un changement de mode depuis le menu était oublié à l'inscription suivante depuis le potager."
+    - "Les obstacles des cartes de boss (remparts du château, torii...) s'affichent maintenant avec leur taille réelle sur la carte des déplacements du rapport, sans trous qui semblaient traversables (merci à TheScout)."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
