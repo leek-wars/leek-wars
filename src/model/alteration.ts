@@ -92,6 +92,9 @@ const PROGRESS_BONUS = 2
 const PROGRESS_CAP = 0.2
 const MAX_PROBABILITY = 0.95
 const BREAK_COEFFICIENT = 0.0001
+// Le puits n'est plus un mur : on autorise a tenter jusqu'a ce plafond, ou la reussite
+// devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
+const OVERFILL_CAP = 1.3
 
 type Stats = { [carac: string]: number }
 /** Format historique des component_template : [["life", 600], ...] */
@@ -123,9 +126,14 @@ function mergeStats(base: StatList, added: Stats | null | undefined): StatList {
 	return out
 }
 
-/** Capacité du puits. Indexée sur le niveau, jamais sur la puissance actuelle. */
+/**
+ * Capacité du puits. Indexée sur le niveau, jamais sur la puissance actuelle.
+ * Arrondie à l'entier : les altérations coûtent des montants entiers, donc une
+ * capacité entière permet d'atteindre 100 % pile dans les cas propres, au lieu de
+ * laisser un résidu fractionnaire qui bloquait la dernière altération (#622).
+ */
 function well(level: number): number {
-	return WELL_COEFFICIENT * level
+	return Math.round(WELL_COEFFICIENT * level)
 }
 
 /** Puissance d'un jeu de stats, en valeur absolue (la poire a une puissance nette nulle). */
@@ -202,8 +210,12 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	}
 
 	const after = before + recipePower
-	const fits = capacity > 0 && after <= capacity
 	const rAfter = capacity > 0 ? after / capacity : 0
+	// La tentative est autorisee tant qu'on reste sous le plafond souple : au-dela de
+	// 100 % du puits la reussite devient infime et la casse quasi certaine, mais ce
+	// n'est plus un mur binaire. `overfilled` sert a prevenir visuellement (#622).
+	const allowed = capacity > 0 && rAfter <= OVERFILL_CAP
+	const overfilled = after > capacity
 
 	const rolls: { [carac: string]: { points: number, probability: number } } = {}
 	const totals = toMap(base)
@@ -212,7 +224,7 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	for (const carac in groups) {
 		const group = groups[carac]
 		let probability = 0
-		if (fits) {
+		if (allowed) {
 			const efficiency = group.points > 0 ? group.weight / group.points : 0
 			const delta = group.power / capacity
 			probability = Math.exp(-DIFFICULTY_K * rAfter * rAfter + PROGRESS_BONUS * Math.min(delta, PROGRESS_CAP))
@@ -227,16 +239,20 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		rolls[carac] = { points: group.points, probability }
 	}
 
-	// Une seule casse par tentative, indexée sur le remplissage visé.
+	// Une seule casse par tentative, indexée sur le remplissage visé. Elle grimpe avec
+	// le remplissage et devient quasi certaine au-delà de 100 % : c'est elle qui punit
+	// l'acharnement plutôt qu'un mur.
 	let breakProbability = 0
-	if (fits && capacity > 0) {
+	if (allowed && capacity > 0) {
 		const reference = Math.exp(-DIFFICULTY_K * rAfter * rAfter
 			+ PROGRESS_BONUS * Math.min(recipePower / capacity, PROGRESS_CAP))
 		breakProbability = reference > 0 ? Math.min(1, BREAK_COEFFICIENT / reference) : 0
 	}
 
 	return {
-		dose, items, power: recipePower, fits, rolls,
+		// `fits` = tentative autorisée (le bouton s'appuie dessus) ; `overfilled` = on
+		// dépasse le puits, à afficher comme un avertissement.
+		dose, items, power: recipePower, fits: allowed, overfilled, rolls,
 		capacity,
 		ratioBefore: capacity > 0 ? before / capacity : 0,
 		ratioAfter: rAfter,
