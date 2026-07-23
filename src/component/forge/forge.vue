@@ -506,10 +506,10 @@
 				const seed = i * 37 + p * 101
 				// Depart disperse autour du centre de la case, arrivee legerement dispersee
 				// sur le composant : sans cela toutes suivent la meme droite.
-				const sx = (noise(seed) - 0.5) * 22
-				const sy = (noise(seed + 1) - 0.5) * 22
-				const dx = vec[0] + (noise(seed + 2) - 0.5) * 16
-				const dy = vec[1] + (noise(seed + 3) - 0.5) * 16
+				const sx = (noise(seed) - 0.5) * 13
+				const sy = (noise(seed + 1) - 0.5) * 13
+				const dx = vec[0] + (noise(seed + 2) - 0.5) * 9
+				const dy = vec[1] + (noise(seed + 3) - 0.5) * 9
 				// Point milieu decale perpendiculairement : la trajectoire s'incurve d'un
 				// cote ou de l'autre selon le tirage.
 				// Courbe de Bezier quadratique : point de controle decale perpendiculairement.
@@ -517,7 +517,7 @@
 				// On echantillonne a 1/4, 1/2 et 3/4 : avec un seul point milieu la
 				// trajectoire ferait deux segments droits et un coude bien visible.
 				const len = Math.hypot(dx - sx, dy - sy) || 1
-				const curve = (noise(seed + 4) - 0.5) * 52
+				const curve = (noise(seed + 4) - 0.5) * 30
 				const cx = sx + (dx - sx) * 0.5 - ((dy - sy) / len) * curve * 2
 				const cy = sy + (dy - sy) * 0.5 + ((dx - sx) / len) * curve * 2
 				const bez = (t: number, a: number, c: number, b: number) =>
@@ -528,7 +528,7 @@
 				const duration = 0.85 + noise(seed + 5) * 1.05
 				out.push({ key: i + '-' + p, carac,
 					left: center[0], top: center[1],
-					size: 6 + noise(seed + 6) * 7,
+					size: 4 + noise(seed + 6) * 4.5,
 					sx, sy, q1x, q1y, mx, my, q3x, q3y, dx, dy,
 					// Delai negatif : chaque particule demarre deja en cours de vol, sinon
 					// elles partent toutes ensemble a la pose.
@@ -1088,7 +1088,7 @@
 	position: absolute;
 	border-radius: 50%;
 	background: currentColor;
-	box-shadow: 0 0 12px currentColor, 0 0 5px currentColor, 0 0 2px #fff;
+	box-shadow: 0 0 8px currentColor, 0 0 3px currentColor, 0 0 1px #fff;
 	opacity: 0;
 	animation-name: particle-flow;
 	animation-timing-function: linear;
