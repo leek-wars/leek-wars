@@ -596,9 +596,9 @@
 				store.commit('add-inventory', { type: ItemType.RESOURCE, id: Number(id),
 					template: Number(id), quantity: data.resources[id], time: Date.now() / 1000 })
 			}
-			LeekWars.toast(data.count > 0
-				? t('main.destroy_result', [data.count])
-				: t('main.destroy_nothing'))
+			// Pas de toast pour le compte : le butin qui s'envole vers l'historique le
+			// montre deja. On ne parle que du cas ou la piece n'a rien rendu (#622).
+			if (data.count === 0) LeekWars.toast(t('main.destroy_nothing'))
 			// L'historique des destructions montre le resultat aussitot (#622). On bascule
 			// d'abord : le vol du butin a besoin que l'historique existe pour viser.
 			emitter.emit('workshop-action', 3)
