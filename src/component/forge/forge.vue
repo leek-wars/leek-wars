@@ -1,6 +1,6 @@
 <template>
 	<div class="forge">
-		<div class="grid">
+		<div ref="gridEl" class="grid">
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, removable: !!item && !!component, fusing: fusing && !!item}" :style="cellVars(i)" @click="component && removeAlteration(i)">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
@@ -10,7 +10,7 @@
 					</div>
 				</rich-tooltip-item>
 			</div>
-			<div v-if="component" class="cell cell8 active component removable" :class="outcome ? 'outcome-' + outcome : ''" @click="clear">
+			<div v-if="component" class="cell cell8 active component removable" :class="[outcome ? 'outcome-' + outcome : '', { shattering }]" @click="clear">
 				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
@@ -34,6 +34,12 @@
 				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner">{{ Math.round(plan.ratioAfter * 100) }}%</div>
 				<!-- Nombre de pieces empilees a recycler d'un coup (#622). -->
 				<div v-if="componentCount > 1" class="stack-count">×{{ componentCount }}</div>
+				<!-- Destruction : 8 copies de l'image, chacune decoupee en part de pizza,
+				     qui s'eparpillent le long de leur bissectrice (#622). -->
+				<div v-if="shattering" class="shatter">
+					<img v-for="(s, i) in SHARDS" :key="'s' + i" :src="componentImage"
+						:style="{ clipPath: s.clip, '--tx': s.tx + 'px', '--ty': s.ty + 'px', '--rot': s.rot + 'deg', animationDelay: i * 0.012 + 's' }">
+				</div>
 			</div>
 			<div v-else class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
@@ -129,6 +135,15 @@
 			</template>
 		</popup>
 
+		<!-- Butin en vol de la forge vers l'historique. Teleporte dans le body et en
+		     position fixe : le trajet traverse deux composants et sort de la forge (#622). -->
+		<Teleport to="body">
+			<div v-if="flyers.length" class="loot-flight">
+				<img v-for="f in flyers" :key="f.key" class="loot" :src="f.src"
+					:style="{ left: f.x + 'px', top: f.y + 'px', '--tx': f.tx + 'px', '--ty': f.ty + 'px', animationDelay: f.delay + 's' }">
+			</div>
+		</Teleport>
+
 	</div>
 </template>
 
@@ -192,6 +207,44 @@
 	/** Issue a animer juste apres la fusion : success | fail | broken. */
 	const outcome = ref<string | null>(null)
 	let outcomeTimer = 0
+
+	// --- Animation de destruction (#622) ---
+	/** Duree de l'eclatement du composant en parts, en ms. */
+	const SHATTER_DURATION = 620
+	/**
+	 * Les 8 parts facon pizza : chacune est un triangle du centre vers deux points
+	 * consecutifs du bord du carre (milieux de cotes et coins en alternance), decoupe
+	 * par clip-path dans une copie de l'image. Chaque part part le long de sa
+	 * bissectrice, en tournant.
+	 */
+	const SHARDS = ([
+		['50% 0%', '100% 0%'], ['100% 0%', '100% 50%'],
+		['100% 50%', '100% 100%'], ['100% 100%', '50% 100%'],
+		['50% 100%', '0% 100%'], ['0% 100%', '0% 50%'],
+		['0% 50%', '0% 0%'], ['0% 0%', '50% 0%'],
+	] as [string, string][]).map((pts, i) => {
+		const angle = (-90 + 22.5 + i * 45) * Math.PI / 180
+		return {
+			clip: `polygon(50% 50%, ${pts[0]}, ${pts[1]})`,
+			tx: Math.round(Math.cos(angle) * 72),
+			ty: Math.round(Math.sin(angle) * 72),
+			rot: (i % 2 === 0 ? 1 : -1) * (30 + i * 6),
+		}
+	})
+	/** Vrai pendant que le composant vole en eclats. */
+	const shattering = ref(false)
+	/** Image du composant pose, reprise par chaque part. */
+	const componentImage = computed(() => {
+		const c = component.value
+		if (!c) return ''
+		const tpl = LeekWars.items[c.template]
+		return tpl ? '/image/component/' + tpl.name + '.png' : ''
+	})
+	/** Butin en vol entre la forge et l'historique. */
+	interface Flyer { key: string, src: string, x: number, y: number, tx: number, ty: number, delay: number }
+	const flyers = ref<Flyer[]>([])
+	const gridEl = ref<HTMLElement | null>(null)
+	let flyersTimer = 0
 	const scheme = ref<SchemeTemplate | null>(null)
 	const result = ref<number | null>(null)
 	const building = ref(false)
@@ -544,10 +597,63 @@
 			LeekWars.toast(data.count > 0
 				? t('main.destroy_result', [data.count])
 				: t('main.destroy_nothing'))
-			// L'historique des destructions montre le resultat aussitot (#622).
+			// L'historique des destructions montre le resultat aussitot (#622). On bascule
+			// d'abord : le vol du butin a besoin que l'historique existe pour viser.
 			emitter.emit('workshop-action', 3)
-			clear()
-		}).error(error => LeekWars.toast(error.error)).finally(() => { destroying.value = false })
+			// 1. Le composant vole en eclats.
+			shattering.value = true
+			// 2. A mi-eclatement, le butin s'envole vers l'historique, piece par piece.
+			window.setTimeout(() => launchLoot(data.alterations, data.resources), SHATTER_DURATION * 0.45)
+			// 3. La forge se vide une fois les parts dispersees.
+			window.setTimeout(() => {
+				shattering.value = false
+				clear()
+				destroying.value = false
+			}, SHATTER_DURATION)
+		}).error(error => {
+			destroying.value = false
+			LeekWars.toast(error.error)
+		})
+	}
+
+	/**
+	 * Envoie le butin de la forge vers l'historique, un objet apres l'autre. Le vol
+	 * traverse deux composants, d'où un calque fixe teleporte dans le body : on mesure
+	 * la forge et l'historique a l'ecran au moment du depart (#622).
+	 */
+	function launchLoot(altis: {[id: number]: number}, resources: {[id: number]: number}) {
+		const grid = gridEl.value
+		if (!grid) return
+		const g = grid.getBoundingClientRect()
+		const startX = g.left + g.width / 2
+		const startY = g.top + g.height / 2
+		// Cible : le haut de l'historique, ou a defaut un point sur sa droite.
+		const historyEl = document.querySelector('.item-history')
+		let targetX = startX + 320
+		let targetY = startY
+		if (historyEl) {
+			const h = historyEl.getBoundingClientRect()
+			targetX = h.left + Math.min(90, h.width / 2)
+			targetY = h.top + 46
+		}
+		const data = LeekWars.alterations
+		const list: Flyer[] = []
+		for (const id in altis) {
+			const alteration = data ? data.alterations[id] : null
+			if (!alteration) continue
+			list.push({ key: 'a' + id, src: '/image/alteration/' + alteration.name + '.png',
+				x: startX, y: startY, tx: targetX - startX, ty: targetY - startY, delay: 0 })
+		}
+		for (const id in resources) {
+			const tpl = LeekWars.items[Number(id)]
+			if (!tpl) continue
+			list.push({ key: 'r' + id, src: '/image/resource/' + tpl.name + '.png',
+				x: startX, y: startY, tx: targetX - startX, ty: targetY - startY, delay: 0 })
+		}
+		list.forEach((f, i) => { f.delay = i * 0.1 })
+		flyers.value = list
+		clearTimeout(flyersTimer)
+		flyersTimer = window.setTimeout(() => { flyers.value = [] }, 700 + list.length * 100)
 	}
 
 	onBeforeUnmount(() => {
@@ -964,6 +1070,55 @@
 .cell8.outcome-success::after { background: radial-gradient(circle, #5fad1b99, transparent 70%); animation: outcome-halo 0.9s ease-out; }
 .cell8.outcome-fail::after { background: radial-gradient(circle, #c6282866, transparent 70%); animation: outcome-halo 0.6s ease-out; }
 .cell8.outcome-broken::after { background: radial-gradient(circle, #c62828aa, transparent 70%); animation: outcome-halo 1.1s ease-out; }
+
+// --- Destruction : le composant vole en 8 parts (#622) ---
+// Les parts se superposent exactement a l'image d'origine, qu'on masque le temps de
+// l'eclatement pour que la decoupe paraisse continue.
+.forge .grid .cell8.shattering .item { visibility: hidden; }
+.shatter {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 4;
+}
+.shatter img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	animation: shard-fly 0.62s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
+}
+@keyframes shard-fly {
+	0%   { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+	18%  { transform: translate(calc(var(--tx) * 0.1), calc(var(--ty) * 0.1)) scale(1.07); opacity: 1; }
+	100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.5); opacity: 0; }
+}
+
+// Butin qui rejoint l'historique, piece par piece.
+.loot-flight {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 9999;
+}
+.loot {
+	position: fixed;
+	width: 34px;
+	height: 34px;
+	margin: -17px 0 0 -17px;
+	object-fit: contain;
+	opacity: 0;
+	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+	animation: loot-fly 0.62s cubic-bezier(0.35, 0, 0.35, 1) forwards;
+}
+// Petit saut vers le haut au depart : le vol se lit mieux qu'une ligne droite.
+@keyframes loot-fly {
+	0%   { transform: translate(0, 0) scale(0.5); opacity: 0; }
+	18%  { transform: translate(calc(var(--tx) * 0.08), -26px) scale(1.15); opacity: 1; }
+	80%  { opacity: 1; }
+	100% { transform: translate(var(--tx), var(--ty)) scale(0.55); opacity: 0; }
+}
 
 // Icone habs a cote du cout : petite, calee sur le texte (#622).
 .cost .hab {
