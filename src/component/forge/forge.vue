@@ -9,11 +9,6 @@
 						<div v-if="item[1] > 1" :key="item[1]" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
 				</rich-tooltip-item>
-				<!-- Particules teintees par la carac visee : elles filent vers le composant
-				     pour montrer que la fusion se prepare (#622). -->
-				<template v-if="item && component && !fusing">
-					<span v-for="p in 3" :key="'p' + p" class="particle" :class="'color-' + slotCarac(item)" :style="{ animationDelay: (p - 1) * 0.45 + 's' }"></span>
-				</template>
 			</div>
 			<div v-if="component" class="cell cell8 active component removable" :class="outcome ? 'outcome-' + outcome : ''" @click="clear">
 				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
@@ -49,6 +44,12 @@
 				</rich-tooltip-item>
 				<v-icon v-if="result && !building && !built">mdi-hammer-wrench</v-icon>
 				<v-icon v-if="result && built">mdi-refresh</v-icon>
+			</div>
+			<!-- Flux de particules vers le composant, au-dessus des cases pour rester
+			     visible sur tout le trajet (#622). -->
+			<div v-if="particles.length" class="particles">
+				<span v-for="p in particles" :key="p.key" class="particle" :class="'color-' + p.carac"
+					:style="{ left: p.left + '%', top: p.top + '%', '--dx': p.dx + 'px', '--dy': p.dy + 'px', animationDelay: p.delay + 's' }"></span>
 			</div>
 			<!-- Effacer : croix, pas une fleche circulaire qui evoquerait "refaire". Coin HAUT droit. -->
 			<v-btn v-if="scheme || component" class="corner-btn clear" icon variant="flat" size="small" @click="clear">
@@ -118,11 +119,13 @@
 		<popup v-model="confirmDestroy" :width="460" icon="mdi-recycle">
 			<template #title>{{ $t('main.destroy_confirm_title') }}</template>
 			<div class="destroy-confirm">{{ $t('main.destroy_confirm_message') }}</div>
+			<!-- La barre d'actions du popup attend des <div> : elle les etale en boutons
+			     pleine largeur, avec .red pour l'action destructrice. -->
 			<template #actions>
-				<v-btn variant="text" @click="confirmDestroy = false">{{ $t('main.cancel') }}</v-btn>
-				<v-btn color="error" variant="flat" :loading="destroying" @click="doDestroy">
-					<v-icon start>mdi-recycle</v-icon>{{ $t('main.destroy') }}
-				</v-btn>
+				<div @click="confirmDestroy = false">{{ $t('main.cancel') }}</div>
+				<div class="red" @click="doDestroy">
+					<v-icon>mdi-recycle</v-icon>{{ $t('main.destroy') }}
+				</div>
 			</template>
 		</popup>
 
@@ -157,8 +160,8 @@
 	const destroying = ref(false)
 
 	// --- Animations de fusion (#622) ---
-	/** Duree du vol des alterations vers le composant, en ms. */
-	const FUSE_DURATION = 550
+	/** Duree du vol des alterations vers le composant, en ms (calee sur fuse-travel). */
+	const FUSE_DURATION = 420
 	/**
 	 * Vecteur (px) du centre de chaque case vers le centre de la grille de 240 px :
 	 * les cases font 28,57 % et le centre est a 50 %, d'ou 68,6 px en diagonale et
@@ -168,6 +171,12 @@
 		[68.6, 68.6], [0, 85.7], [-68.6, 68.6],
 		[85.7, 0], [-85.7, 0],
 		[68.6, -68.6], [0, -85.7], [-68.6, -68.6],
+	]
+	/** Centre de chaque case, en % de la grille : point de depart des particules. */
+	const CELL_CENTERS: [number, number][] = [
+		[21.43, 21.43], [50, 14.29], [78.57, 21.43],
+		[14.29, 50], [85.71, 50],
+		[21.43, 78.57], [50, 85.71], [78.57, 78.57],
 	]
 	/** Vrai pendant que les alterations filent vers le composant. */
 	const fusing = ref(false)
@@ -394,6 +403,29 @@
 		}
 		return ''
 	}
+
+	/**
+	 * Flux de particules, case par case. Il est rendu dans une couche AU-DESSUS de la
+	 * cellule centrale : posees dans leur case, les particules passaient derriere le
+	 * composant et la moitie du trajet disparaissait (#622).
+	 */
+	const PARTICLE_CYCLE = 1.1
+	const PARTICLES_PER_SLOT = 4
+	const particles = computed(() => {
+		const out: { key: string, carac: string, left: number, top: number, dx: number, dy: number, delay: number }[] = []
+		if (!component.value || fusing.value) return out
+		forge.value.forEach((slot, i) => {
+			if (!slot) return
+			const carac = slotCarac(slot)
+			for (let p = 0; p < PARTICLES_PER_SLOT; p++) {
+				out.push({ key: i + '-' + p, carac,
+					left: CELL_CENTERS[i][0], top: CELL_CENTERS[i][1],
+					dx: CELL_VECTORS[i][0], dy: CELL_VECTORS[i][1],
+					delay: p * (PARTICLE_CYCLE / PARTICLES_PER_SLOT) })
+			}
+		})
+		return out
+	})
 
 	/** Pose une alteration autour du composant, ou incremente sa pile. */
 	function addAlteration(item: InventoryItem) {
@@ -833,37 +865,44 @@
 	animation: item-animation 0.4s ease 1;
 }
 
-// Particules teintees par la carac, de la case vers le composant, en boucle : elles
-// annoncent la fusion a venir. --dx/--dy viennent du style inline de la case.
+// Couche de particules AU-DESSUS des cases (cell8 est en z-index 2) : sinon le flux
+// disparait derriere le composant sur la moitie de son trajet.
+.particles {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 3;
+}
+// Particules teintees par la carac, du centre de leur case vers le composant.
+// left/top viennent du style inline ; --dx/--dy portent le trajet restant.
 @keyframes particle-flow {
-	0%   { transform: translate(0, 0) scale(0.5); opacity: 0; }
-	20%  { opacity: 0.9; }
-	100% { transform: translate(var(--dx), var(--dy)) scale(0.15); opacity: 0; }
+	0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
+	15%  { opacity: 1; }
+	75%  { opacity: 1; }
+	100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
 }
 .particle {
 	position: absolute;
-	left: 50%;
-	top: 50%;
-	width: 7px;
-	height: 7px;
-	margin: -3.5px 0 0 -3.5px;
+	width: 8px;
+	height: 8px;
+	margin: -4px 0 0 -4px;
 	border-radius: 50%;
 	background: currentColor;
-	box-shadow: 0 0 6px currentColor;
-	pointer-events: none;
+	box-shadow: 0 0 8px currentColor, 0 0 3px currentColor;
 	opacity: 0;
-	z-index: 1;
-	animation: particle-flow 1.35s ease-in infinite;
+	animation: particle-flow 1.1s linear infinite;
 }
 
 // Fusion : les alterations filent vers le composant et s'y resorbent.
+// Le selecteur doit battre `.forge .cell:not(.cell8) .item` (rebond de pose), qui est
+// imbrique sous .forge et donc plus specifique qu'un `.cell.fusing .item` nu.
 @keyframes fuse-travel {
 	0%   { transform: translate(0, 0) scale(1); opacity: 1; }
 	65%  { opacity: 1; }
 	100% { transform: translate(var(--dx), var(--dy)) scale(0.25); opacity: 0; }
 }
-.cell.fusing .item {
-	animation: fuse-travel 0.55s cubic-bezier(0.45, 0, 0.85, 0.6) forwards;
+.forge .grid .cell.fusing .item {
+	animation: fuse-travel 0.42s cubic-bezier(0.45, 0, 0.85, 0.6) forwards;
 }
 
 // Issue de la tentative, jouee sur le composant central.

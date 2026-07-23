@@ -400,9 +400,10 @@
 .schemes-list {
 	padding: 0;
 }
-// Onglet Ameliorer : palette puis historique dans UNE seule zone de defilement
-// (celle de .schemes-section). L'historique grandit a mesure qu'on descend (#622).
-.alter-pane :deep(.item-history) {
+// Ameliorer et Detruire : l'historique ne defile PAS pour lui-meme, c'est
+// .schemes-section qui defile. Sinon on obtient deux barres imbriquees, et la piste
+// vide de celle du dessus laisse un ecart avant le bord du panneau (#622).
+.schemes-section :deep(.item-history) {
 	height: auto;
 	overflow-y: visible;
 }
