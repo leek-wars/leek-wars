@@ -1,15 +1,21 @@
 <template>
 	<div class="forge">
 		<div class="grid">
-			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, removable: !!item && !!component}" @click="component && removeAlteration(i)">
+			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, removable: !!item && !!component, fusing: fusing && !!item}" :style="{ '--dx': CELL_VECTORS[i][0] + 'px', '--dy': CELL_VECTORS[i][1] + 'px' }" @click="component && removeAlteration(i)">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="itemImageUrl(LeekWars.items[item[0]])">
-						<div v-if="item[1] > 1" class="quantity">{{ $filters.number(item[1]) }}</div>
+						<!-- La cle sur la quantite fait rejouer le petit rebond a chaque ajout. -->
+						<div v-if="item[1] > 1" :key="item[1]" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
 				</rich-tooltip-item>
+				<!-- Particules teintees par la carac visee : elles filent vers le composant
+				     pour montrer que la fusion se prepare (#622). -->
+				<template v-if="item && component && !fusing">
+					<span v-for="p in 3" :key="'p' + p" class="particle" :class="'color-' + slotCarac(item)" :style="{ animationDelay: (p - 1) * 0.45 + 's' }"></span>
+				</template>
 			</div>
-			<div v-if="component" class="cell cell8 active component removable" @click="clear">
+			<div v-if="component" class="cell cell8 active component removable" :class="outcome ? 'outcome-' + outcome : ''" @click="clear">
 				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
@@ -26,7 +32,7 @@
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
 						<!-- Silhouette coloree du palier si la piece porte deja de la charge (#622) ;
 						     vide (donc aucune bordure) pour un composant neuf. -->
-						<img :class="alteredClass(component, LeekWars.items[component.template].level as number)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
+						<img :key="component.id" :class="alteredClass(component, LeekWars.items[component.template].level as number)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
@@ -149,6 +155,25 @@
 	/** Onglet actif de l'atelier : seul le mode destruction empile les composants. */
 	const mode = ref(localStorage.getItem('workshop/tab') || 'craft')
 	const destroying = ref(false)
+
+	// --- Animations de fusion (#622) ---
+	/** Duree du vol des alterations vers le composant, en ms. */
+	const FUSE_DURATION = 550
+	/**
+	 * Vecteur (px) du centre de chaque case vers le centre de la grille de 240 px :
+	 * les cases font 28,57 % et le centre est a 50 %, d'ou 68,6 px en diagonale et
+	 * 85,7 px en ligne droite. Sert aux particules et au vol de fusion.
+	 */
+	const CELL_VECTORS: [number, number][] = [
+		[68.6, 68.6], [0, 85.7], [-68.6, 68.6],
+		[85.7, 0], [-85.7, 0],
+		[68.6, -68.6], [0, -85.7], [-68.6, -68.6],
+	]
+	/** Vrai pendant que les alterations filent vers le composant. */
+	const fusing = ref(false)
+	/** Issue a animer juste apres la fusion : success | fail | broken. */
+	const outcome = ref<string | null>(null)
+	let outcomeTimer = 0
 	const scheme = ref<SchemeTemplate | null>(null)
 	const result = ref<number | null>(null)
 	const building = ref(false)
@@ -277,44 +302,62 @@
 		if (!item || altering.value || alterationCount.value === 0) return
 		altering.value = true
 		lastResult.value = null
+		outcome.value = null
+		// Les alterations filent vers le composant pendant que le serveur tranche (#622).
+		fusing.value = true
+		const started = Date.now()
 		const sent = { ...recipe.value }
 		LeekWars.post<AlterResult>('component/alter', { component_id: item.id, alterations: JSON.stringify(sent) }).then(data => {
-			lastRecipe.value = sent
-			lastResult.value = data
-			// Le composant porte desormais ses nouvelles stats. L'inventaire construit
-			// des COPIES des items du store (spread dans son computed), donc ecrire sur
-			// l'objet recu ne suffit pas : il faut retrouver l'original.
-			item.stats = data.stats
-			item.altered_power = data.well.used
-			// Le serveur a pu DETACHER la piece d'un stack : dans ce cas elle a un
-			// nouvel id, et l'ancienne ligne garde le reste de la pile.
-			const newId = data.id
-			const split = newId !== undefined && newId !== item.id
-			const components = store.state.farmer?.components
-			if (components) {
-				const stored = components.find(c => c.id === item.id)
-				if (split && stored) {
-					stored.quantity--
-					if (stored.quantity <= 0) components.splice(components.indexOf(stored), 1)
-					components.push({ id: newId as number, template: item.template, quantity: 1,
-						time: item.time, stats: data.stats, altered_power: data.well.used })
-				} else if (stored) {
-					stored.stats = data.stats
-					stored.altered_power = data.well.used
+			// On laisse le vol des alterations finir avant de reveler l'issue : sinon un
+			// serveur rapide escamote l'animation.
+			window.setTimeout(() => {
+				lastRecipe.value = sent
+				lastResult.value = data
+				// Le composant porte desormais ses nouvelles stats. L'inventaire construit
+				// des COPIES des items du store (spread dans son computed), donc ecrire sur
+				// l'objet recu ne suffit pas : il faut retrouver l'original.
+				item.stats = data.stats
+				item.altered_power = data.well.used
+				// Le serveur a pu DETACHER la piece d'un stack : dans ce cas elle a un
+				// nouvel id, et l'ancienne ligne garde le reste de la pile.
+				const newId = data.id
+				const split = newId !== undefined && newId !== item.id
+				const components = store.state.farmer?.components
+				if (components) {
+					const stored = components.find(c => c.id === item.id)
+					if (split && stored) {
+						stored.quantity--
+						if (stored.quantity <= 0) components.splice(components.indexOf(stored), 1)
+						components.push({ id: newId as number, template: item.template, quantity: 1,
+							time: item.time, stats: data.stats, altered_power: data.well.used })
+					} else if (stored) {
+						stored.stats = data.stats
+						stored.altered_power = data.well.used
+					}
 				}
-			}
-			if (split) item.id = newId as number
-			const alterations = LeekWars.alterations
-			for (const id in recipe.value) {
-				const alteration = alterations ? alterations.alterations[id] : null
-				if (!alteration) continue
-				store.commit('remove-inventory', { type: ItemType.ALTERATION, item_template: alteration.template, quantity: recipe.value[id] })
-			}
-			store.commit('update-habs', -data.habs_cost)
-			clearIngredients()
-			// L'historique des ameliorations montre la tentative aussitot (#622).
-			emitter.emit('workshop-action', 2)
-		}).error(error => LeekWars.toast(error.error)).finally(() => { altering.value = false })
+				if (split) item.id = newId as number
+				const alterations = LeekWars.alterations
+				for (const id in recipe.value) {
+					const alteration = alterations ? alterations.alterations[id] : null
+					if (!alteration) continue
+					store.commit('remove-inventory', { type: ItemType.ALTERATION, item_template: alteration.template, quantity: recipe.value[id] })
+				}
+				store.commit('update-habs', -data.habs_cost)
+				clearIngredients()
+				fusing.value = false
+				// Issue jouee sur le composant : reussite, echec sec, ou casse.
+				outcome.value = data.broken ? 'broken' : (data.results.some(r => r.success) ? 'success' : 'fail')
+				clearTimeout(outcomeTimer)
+				outcomeTimer = window.setTimeout(() => { outcome.value = null }, 1400)
+				// L'historique des ameliorations montre la tentative aussitot (#622).
+				emitter.emit('workshop-action', 2)
+				altering.value = false
+			}, Math.max(0, FUSE_DURATION - (Date.now() - started)))
+		}).error(error => {
+			fusing.value = false
+			altering.value = false
+			LeekWars.toast(error.error)
+		})
 	}
 
 	/** Nombre d'alterations posees, quantites comprises. */
@@ -341,6 +384,16 @@
 		}
 		return total
 	})
+
+	/** Caracteristique visee par l'alteration posee dans cette case, pour teinter ses particules. */
+	function slotCarac(slot: ForgeSlot | null): string {
+		const data = LeekWars.alterations
+		if (!data || !slot) return ''
+		for (const id in data.alterations) {
+			if (data.alterations[id].template === slot[0]) return data.alterations[id].carac
+		}
+		return ''
+	}
 
 	/** Pose une alteration autour du composant, ou incremente sa pile. */
 	function addAlteration(item: InventoryItem) {
@@ -511,7 +564,8 @@
 		fill: none;
 		stroke-width: 6;
 		stroke-linecap: round;
-		transition: stroke-dashoffset 0.3s ease;
+		// Remplissage visiblement anime quand on pose ou retire une alteration (#622).
+		transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 		// Un rect arrondi commence deja son trace en haut et tourne dans le sens
 		// horaire : pas de rotation a appliquer, contrairement a un cercle (sinon le
 		// depart se decale sur un coin et l'arc semble detache).
@@ -771,6 +825,95 @@
 	font-size: 14px;
 	line-height: 1.5;
 }
+// --- Animations de la forge (#622) ---
+//
+// Le rebond d'arrivee porte sur l'IMAGE (clef = id du composant) et non sur .item :
+// ainsi il ne rejoue pas quand la classe d'issue est retiree du parent.
+.cell8.component .item img {
+	animation: item-animation 0.4s ease 1;
+}
+
+// Particules teintees par la carac, de la case vers le composant, en boucle : elles
+// annoncent la fusion a venir. --dx/--dy viennent du style inline de la case.
+@keyframes particle-flow {
+	0%   { transform: translate(0, 0) scale(0.5); opacity: 0; }
+	20%  { opacity: 0.9; }
+	100% { transform: translate(var(--dx), var(--dy)) scale(0.15); opacity: 0; }
+}
+.particle {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 7px;
+	height: 7px;
+	margin: -3.5px 0 0 -3.5px;
+	border-radius: 50%;
+	background: currentColor;
+	box-shadow: 0 0 6px currentColor;
+	pointer-events: none;
+	opacity: 0;
+	z-index: 1;
+	animation: particle-flow 1.35s ease-in infinite;
+}
+
+// Fusion : les alterations filent vers le composant et s'y resorbent.
+@keyframes fuse-travel {
+	0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+	65%  { opacity: 1; }
+	100% { transform: translate(var(--dx), var(--dy)) scale(0.25); opacity: 0; }
+}
+.cell.fusing .item {
+	animation: fuse-travel 0.55s cubic-bezier(0.45, 0, 0.85, 0.6) forwards;
+}
+
+// Issue de la tentative, jouee sur le composant central.
+@keyframes outcome-success {
+	0%   { transform: scale(1); filter: none; }
+	35%  { transform: scale(1.22); filter: brightness(1.5) drop-shadow(0 0 12px #5fad1b); }
+	70%  { transform: scale(0.98); }
+	100% { transform: scale(1); filter: none; }
+}
+@keyframes outcome-fail {
+	0%, 100% { transform: translateX(0); }
+	15% { transform: translateX(-7px); }
+	30% { transform: translateX(6px); }
+	45% { transform: translateX(-5px); }
+	60% { transform: translateX(4px); }
+	80% { transform: translateX(-2px); }
+}
+// Casse : on secoue plus fort et la piece se desature, elle a perdu quelque chose.
+@keyframes outcome-broken {
+	0%   { transform: translateX(0) scale(1); filter: none; }
+	10%  { transform: translateX(-9px) scale(1.06); filter: drop-shadow(0 0 10px #c62828); }
+	25%  { transform: translateX(9px) scale(0.92); filter: drop-shadow(0 0 10px #c62828) saturate(0.4); }
+	40%  { transform: translateX(-7px) scale(1.02); filter: saturate(0.4); }
+	60%  { transform: translateX(5px) scale(0.96); filter: saturate(0.25) brightness(0.85); }
+	80%  { transform: translateX(-3px) scale(1); filter: saturate(0.6); }
+	100% { transform: translateX(0) scale(1); filter: none; }
+}
+.cell8.outcome-success .item { animation: outcome-success 0.9s ease-out; }
+.cell8.outcome-fail .item { animation: outcome-fail 0.6s ease-in-out; }
+.cell8.outcome-broken .item { animation: outcome-broken 1.1s ease-in-out; }
+
+// Halo colore derriere le composant, selon l'issue.
+@keyframes outcome-halo {
+	0%   { opacity: 0; transform: scale(0.75); }
+	30%  { opacity: 0.8; }
+	100% { opacity: 0; transform: scale(1.45); }
+}
+.cell8.component::after {
+	content: '';
+	position: absolute;
+	inset: -12px;
+	border-radius: 28px;
+	pointer-events: none;
+	opacity: 0;
+	z-index: 0;
+}
+.cell8.outcome-success::after { background: radial-gradient(circle, #5fad1b99, transparent 70%); animation: outcome-halo 0.9s ease-out; }
+.cell8.outcome-fail::after { background: radial-gradient(circle, #c6282866, transparent 70%); animation: outcome-halo 0.6s ease-out; }
+.cell8.outcome-broken::after { background: radial-gradient(circle, #c62828aa, transparent 70%); animation: outcome-halo 1.1s ease-out; }
+
 // Icone habs a cote du cout : petite, calee sur le texte (#622).
 .cost .hab {
 	width: 14px;
