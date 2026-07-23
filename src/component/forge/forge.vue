@@ -1,7 +1,7 @@
 <template>
 	<div class="forge">
 		<div class="grid">
-			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, removable: !!item && !!component, fusing: fusing && !!item}" :style="{ '--dx': CELL_VECTORS[i][0] + 'px', '--dy': CELL_VECTORS[i][1] + 'px' }" @click="component && removeAlteration(i)">
+			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, removable: !!item && !!component, fusing: fusing && !!item}" :style="cellVars(i)" @click="component && removeAlteration(i)">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="itemImageUrl(LeekWars.items[item[0]])">
@@ -178,6 +178,15 @@
 		[14.29, 50], [85.71, 50],
 		[21.43, 78.57], [50, 85.71], [78.57, 78.57],
 	]
+	/**
+	 * Variables de trajet d'une case. Une recette peut compter plus d'entrees que la
+	 * grille n'a de cases (les Habs occupent un emplacement d'ingredient), donc l'index
+	 * peut sortir du tableau : sans garde, tout le rendu de la forge plante.
+	 */
+	function cellVars(i: number) {
+		const v = CELL_VECTORS[i]
+		return v ? { '--dx': v[0] + 'px', '--dy': v[1] + 'px' } : {}
+	}
 	/** Vrai pendant que les alterations filent vers le composant. */
 	const fusing = ref(false)
 	/** Issue a animer juste apres la fusion : success | fail | broken. */
@@ -415,12 +424,15 @@
 		const out: { key: string, carac: string, left: number, top: number, dx: number, dy: number, delay: number }[] = []
 		if (!component.value || fusing.value) return out
 		forge.value.forEach((slot, i) => {
-			if (!slot) return
+			// Meme garde que cellVars : une recette peut deborder de la grille.
+			const center = CELL_CENTERS[i]
+			const vec = CELL_VECTORS[i]
+			if (!slot || !center || !vec) return
 			const carac = slotCarac(slot)
 			for (let p = 0; p < PARTICLES_PER_SLOT; p++) {
 				out.push({ key: i + '-' + p, carac,
-					left: CELL_CENTERS[i][0], top: CELL_CENTERS[i][1],
-					dx: CELL_VECTORS[i][0], dy: CELL_VECTORS[i][1],
+					left: center[0], top: center[1],
+					dx: vec[0], dy: vec[1],
 					delay: p * (PARTICLE_CYCLE / PARTICLES_PER_SLOT) })
 			}
 		})

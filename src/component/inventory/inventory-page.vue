@@ -272,16 +272,24 @@
 
 	const onCloverUsed = () => { tooltipVisible.value = false }
 
+	// Apres une destruction, on bascule sur l'onglet Detruire : le resultat vient d'y
+	// etre ajoute, autant l'amener sous les yeux du joueur (#622).
+	const onWorkshopAction = (action: number) => {
+		if (action === 3) tab.value = 'destroy'
+	}
+
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
 		emitter.on('craft', scrollToForge)
 		emitter.on('clover-used', onCloverUsed)
+		emitter.on('workshop-action', onWorkshopAction)
 	})
 
 	onBeforeUnmount(() => {
 		emitter.off('craft', scrollToForge)
 		emitter.off('clover-used', onCloverUsed)
+		emitter.off('workshop-action', onWorkshopAction)
 	})
 </script>
 
