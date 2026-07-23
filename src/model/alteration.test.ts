@@ -25,7 +25,7 @@ const DATA: AlterationData = {
 	},
 	weights: {
 		life: 1, strength: 4, agility: 4, wisdom: 4, resistance: 4, science: 4, magic: 4,
-		frequency: 2, tp: 200, mp: 250, cores: 200, ram: 200,
+		frequency: 2, tp: 100, mp: 125, cores: 200, ram: 200,
 	},
 	gains: {
 		life: [50, 10, 2], strength: [12, 3, 1], agility: [12, 3, 1], wisdom: [12, 3, 1],
@@ -69,8 +69,8 @@ describe('prévisualisation d\'une tentative', () => {
 	})
 
 	it('refuse une recette qui déborde du puits', () => {
-		// Un PM coûte 250 de puits, l'hylocereus n'en a que 216,75.
-		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 10: 1 })
+		// Deux PM coûtent 250 de puits, l'hylocereus n'en a que 216,75.
+		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 10: 2 })
 		expect(plan.fits).toBe(false)
 		expect(plan.rolls.mp.probability).toBe(0)
 		expect(plan.breakProbability).toBe(0)
