@@ -14,7 +14,7 @@
 		<!-- Sans ce mot, les trois "+1" d'une carac indivisible passent pour un bug. -->
 		<div v-if="indivisible" class="note">{{ $t('main.alteration_indivisible') }}</div>
 		<div class="dose">
-			{{ $t('main.alteration_number') }} <b>{{ alteration.number }}</b>
+			{{ $t('main.alteration_number') }} <b>{{ LeekWars.roman(alteration.number) }}</b>
 		</div>
 	</div>
 </template>
