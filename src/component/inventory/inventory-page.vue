@@ -71,6 +71,9 @@
 						<div class="forge-wrapper">
 							<forge></forge>
 						</div>
+						<!-- Onglet Ameliorer : colonne des stats a jour de la piece posee, entre la
+						     forge et la palette/historique (3 colonnes) (#622). -->
+						<forge-stats v-if="tab === 'alter'" />
 						<div class="schemes-section">
 							<!-- Fabriquer : le catalogue de schemas, puis l'historique des crafts. -->
 							<template v-if="tab === 'craft'">
@@ -107,6 +110,7 @@
 	import Scheme from '../market/scheme.vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import Forge from '../forge/forge.vue'
+	import ForgeStats from '../forge/forge-stats.vue'
 	import AlterationPalette from '../forge/alteration-palette.vue'
 	import ItemHistory from '@/component/inventory/item-history.vue'
 	import PageTabs from '@/component/app/page-tabs.vue'
