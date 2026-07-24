@@ -86,7 +86,7 @@ function alterationTier(ratio: number): { tier: number, color: string } | null {
 // n'en fait qu'un affichage : il ne décide de rien, et un écart se voit immédiatement
 // puisque le serveur renvoie la probabilité qu'il a réellement utilisée.
 
-const WELL_COEFFICIENT = 0.85
+const WELL_COEFFICIENT = 0.2
 const DIFFICULTY_K = 8
 const PROGRESS_BONUS = 2
 const PROGRESS_CAP = 0.2
@@ -127,13 +127,16 @@ function mergeStats(base: StatList, added: Stats | null | undefined): StatList {
 }
 
 /**
- * Capacité du puits. Indexée sur le niveau, jamais sur la puissance actuelle.
- * Arrondie à l'entier : les altérations coûtent des montants entiers, donc une
- * capacité entière permet d'atteindre 100 % pile dans les cas propres, au lieu de
- * laisser un résidu fractionnaire qui bloquait la dernière altération (#622).
+ * Capacité du puits, indexée sur la PUISSANCE des stats de base du composant
+ * (0,2 × power), jamais sur la puissance actuelle : un composant « pèse » ce que
+ * valent ses stats natives. Arrondie à l'entier pour atteindre 100 % pile dans les
+ * cas propres. Une pièce sans stats a un puits nul et n'est pas altérable (#622).
+ *
+ * Le serveur pré-calcule ce même puits par composant et l'expose dans les game data
+ * (ComponentTemplate.well) : l'affichage le lit là, seul planAttempt le recalcule ici.
  */
-function well(level: number): number {
-	return Math.round(WELL_COEFFICIENT * level)
+function well(basePower: number): number {
+	return Math.round(WELL_COEFFICIENT * basePower)
 }
 
 /** Puissance d'un jeu de stats, en valeur absolue (la poire a une puissance nette nulle). */
@@ -178,9 +181,12 @@ const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
  * destination (celle où la recette atterrit si tout passe).
  */
 function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats, level: number,
-                     componentFamily: ComponentFamily, recipe: AlterationRecipe, synergy = 1) {
+                     componentFamily: ComponentFamily, recipe: AlterationRecipe, synergy = 1,
+                     capacityOverride?: number) {
 
-	const capacity = well(level)
+	// Capacité forcée du composant (colonne component_template.capacity, ex. le RGB) si
+	// fournie, sinon la formule par défaut 0,2 × puissance des stats de base (#622).
+	const capacity = capacityOverride ?? well(power(base, data.weights))
 	const before = addedPower(added, data.weights)
 
 	let dose = 0
@@ -264,11 +270,12 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 /**
  * Classe CSS du palier d'alteration d'un composant, ou '' s'il n'est pas altere.
  * Point unique pour l'inventaire, la page poireau et le dialogue de composants.
+ * `capacity` = puits du composant, lu dans ComponentTemplate.well (#622).
  */
 function alteredClass(item: { stats?: Stats | null, altered_power?: number, template: number },
-                      itemLevel: number): string {
-	if (!item.stats || !item.altered_power || !itemLevel) return ''
-	const tier = alterationTier(item.altered_power / well(itemLevel))
+                      capacity: number): string {
+	if (!item.stats || !item.altered_power || !capacity) return ''
+	const tier = alterationTier(item.altered_power / capacity)
 	return tier ? 'altered-' + tier.tier : ''
 }
 

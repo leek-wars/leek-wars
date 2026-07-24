@@ -254,8 +254,7 @@
 	 * l'objet et evite de generer 52 composants x 5 paliers d'images.
 	 */
 	function alteredClassFor(item: InventoryItem): string {
-		const template = LeekWars.items[item.template]
-		return alteredClass(item, template ? Number(template.level) : 0)
+		return alteredClass(item, LeekWars.componentCapacity(item.template))
 	}
 
 	function selectItem(item: InventoryItem, event?: MouseEvent) {

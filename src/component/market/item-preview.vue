@@ -15,9 +15,9 @@
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
 			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" :width="WeaponsData[item.params]?.width" @click="playSound(item, category)">
 			<scheme-image v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" />
-			<img v-else :class="item.type === ItemType.COMPONENT && instance ? alteredClass(instance, item.level as number) : ''" :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
+			<img v-else :class="item.type === ItemType.COMPONENT && instance ? alteredClass(instance, LeekWars.componentCapacity(item.id)) : ''" :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
 			<!-- Charge du composant altere, en badge coin bas droit (#622). -->
-			<charge-badge v-if="item.type === ItemType.COMPONENT && instance" class="charge" :alterations="instance.stats" :level="item.level as number" />
+			<charge-badge v-if="item.type === ItemType.COMPONENT && instance" class="charge" :alterations="instance.stats" :capacity="LeekWars.componentCapacity(item.id)" />
 		</div>
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
@@ -29,7 +29,7 @@
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
 		<resource-preview v-else-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
 		<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" :alterations="instance?.stats" :level="item.level as number" @update:model-value="$emit('update:modelValue', $event)" />
+		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" :alterations="instance?.stats" :charge="instance?.altered_power" @update:model-value="$emit('update:modelValue', $event)" />
 		<alteration-preview v-else-if="item.type === ItemType.ALTERATION" :template="item.id" />
 		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" :show-craft="!!inventory" @update:model-value="$emit('update:modelValue', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
