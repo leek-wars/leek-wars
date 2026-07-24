@@ -26,9 +26,6 @@
 						<span v-if="entry.details.metabolism !== undefined" class="metabolism" :title="$t('main.alteration_metabolism')">
 							{{ entry.details.metabolism }}
 						</span>
-						<span v-if="entry.details.synergy > 1" class="synergy" :class="'s' + entry.details.synergy">
-							{{ entry.details.synergy === 3 ? $t('main.synergy_perfect') : $t('main.synergy_good') }}
-						</span>
 						<!-- Casse : on montre QUELLE carac a saute, un coeur generique laissait
 						     croire que c'etait la vie (#622). -->
 						<span v-if="entry.details.broken" class="broken"
@@ -252,9 +249,6 @@
 		color: var(--text-color-secondary);
 		font-variant-numeric: tabular-nums;
 	}
-	.synergy { font-weight: bold; font-size: 12px; }
-	.synergy.s2 { color: #0097a7; }
-	.synergy.s3 { color: #f9a825; }
 	.broken { color: #c62828; display: inline-flex; align-items: center; gap: 1px; font-size: 12px; }
 	.rendered-item {
 		display: inline-flex;

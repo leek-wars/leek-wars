@@ -313,7 +313,6 @@
 		capacity: { used: number, total: number }
 		dose: number
 		metabolism: number
-		synergy: number
 		broken: { carac: string, lost: number } | null
 		habs_cost: number
 	}
@@ -351,7 +350,7 @@
 		const base = (LeekWars.components[Number(template.params)]?.stats ?? []) as [string, number][]
 		// Capacité forcée du composant (colonne, ex. le RGB) pour que l'aperçu colle au serveur.
 		const capacity = LeekWars.components[Number(template.params)]?.capacity
-		return planAttempt(data, base, item.stats ?? {}, Number(template.level), family, recipe.value, 1, capacity)
+		return planAttempt(data, base, item.stats ?? {}, Number(template.level), family, recipe.value, capacity)
 	})
 
 	/** Infobulle de la charge : puissance investie sur capacite du puits (#622). */
