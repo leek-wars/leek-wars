@@ -33,7 +33,7 @@
 		"@vue-flow/core": "^1.48.2",
 		"chart.js": "^4.5.1",
 		"dagre": "^0.8.5",
-		"dompurify": "^3.4.0",
+		"dompurify": "^3.4.12",
 		"idb-keyval": "^6.2.2",
 		"js-beautify": "^1.13.0",
 		"katex": "^0.16.11",
