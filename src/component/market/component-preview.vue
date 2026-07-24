@@ -6,12 +6,6 @@
 			<span v-html="$t('characteristic.' + stat[0])"></span>
 			<span v-if="isAltered(stat[0])" class="bonus" :class="'color-' + stat[0]">+{{ alterations![stat[0]] }}</span>
 		</div>
-		<!-- Charge investie sur la capacité d'altération (#622). Toujours affichée pour un
-		     composant, même neuf, pour que le joueur connaisse sa capacité avant d'agir. -->
-		<div v-if="capacity" class="charge-line">
-			<span>{{ $t('main.alteration_charge') }}</span>
-			<b class="charge-value" :class="{ over: charge > capacity }">{{ charge }} / {{ capacity }}</b>
-		</div>
 	</div>
 </template>
 
@@ -25,8 +19,6 @@ const props = defineProps<{
 	component?: Record<string, unknown>
 	/** Altérations portées par l'instance affichée (#622), s'il y en a. */
 	alterations?: { [carac: string]: number } | null
-	/** Puissance investie par les altérations, pré-calculée par le serveur (#622). */
-	charge?: number
 }>()
 
 // Les stats montrées sont celles de la PIÈCE, pas celles du template : sinon un
@@ -36,12 +28,6 @@ const stats = computed(() => {
 	return mergeStats(base, props.alterations)
 })
 const isAltered = (carac: string) => !!props.alterations && !!props.alterations[carac]
-
-// Capacité pré-calculée par le serveur (colonne component_template.capacity ou formule),
-// lue dans ComponentTemplate.capacity ; charge = altered_power de l'instance. Aucun calcul
-// (donc aucun import de LeekWars) : la tooltip reste un composant pur (#622).
-const capacity = computed(() => (props.component?.capacity as number) ?? 0)
-const charge = computed(() => props.charge ?? 0)
 </script>
 
 <style src='./item-preview.scss' lang='scss'></style>
@@ -71,18 +57,6 @@ const charge = computed(() => props.charge ?? 0)
 				height: 20px;
 				margin-bottom: 1px;
 				margin-right: 6px;
-			}
-		}
-		// Ligne charge / puits : rappel du remplissage sous les stats, toujours visible
-		// pour un composant afin de connaitre son puits total avant d'agir (#622).
-		.charge-line {
-			display: flex;
-			align-items: center;
-			padding: 4px 8px 4px 60px;
-			border-top: 1px solid var(--border);
-			.charge-value {
-				margin-left: auto;
-				&.over { color: #ff5252; }
 			}
 		}
 	}

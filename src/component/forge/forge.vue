@@ -17,6 +17,8 @@
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
 				<svg v-if="plan && (plan.ratioBefore > 0 || plan.ratioAfter > 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
+					<!-- Tooltip natif au survol de l'arc : charge investie / capacite (#622). -->
+					<title>{{ chargeTitle }}</title>
 					<!-- Pas de rail de fond : seul l'arc de charge est visible. -->
 					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
 					<path v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
@@ -770,6 +772,10 @@
 		fill: none;
 		stroke-width: 6;
 		stroke-linecap: round;
+		// L'arc capte le survol (le reste du SVG reste transparent aux clics) pour
+		// afficher le tooltip charge / capacite (#622).
+		pointer-events: stroke;
+		cursor: help;
 		// Remplissage visiblement anime quand on pose ou retire une alteration (#622).
 		transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 		// Un rect arrondi commence deja son trace en haut et tourne dans le sens
