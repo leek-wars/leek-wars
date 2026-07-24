@@ -221,6 +221,7 @@ function bucketConstants(constants: readonly Constant[]): Record<string, ConstBu
 	const seen = new Set<string>()
 	const bucketFor = (c: string): ConstBucket => (buckets[c] ||= { direct: [], subs: {} })
 	for (const c of constants) {
+		if (c.deprecated) continue // pas émise dans l'API objet (cf buildLeekwarsDeclarations) #4621
 		const name = pySafe(c.name)
 		if (!name || seen.has(name)) continue
 		seen.add(name)

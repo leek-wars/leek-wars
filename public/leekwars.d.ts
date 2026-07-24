@@ -1547,7 +1547,7 @@ declare namespace Effect {
 	type Type = number;
 	/** Constante de la famille Effect.Modifier (IRREDUCTIBLE, MULTIPLIED_BY_TARGETS, NOT_REPLACEABLE...). */
 	type Modifier = number;
-	/** Constante de la famille Effect.Target (ALLIES, ALWAYS_CASTER, CASTER...). */
+	/** Constante de la famille Effect.Target (ALLIES, CASTER, ENEMIES...). */
 	type Target = number;
 	/**
 	 * Procure du bouclier absolu à une entité, permettant de réduire la quantité de points de vie retirée par les dégâts (EFFECT_DAMAGE) d'un montant fixe. Amplifié par la résistance.
@@ -1585,11 +1585,6 @@ declare namespace Effect {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_AGILITY)
 	 */
 	const BUFF_AGILITY: Effect.Type;
-	/**
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_FORCE)
-	 * @deprecated Remplacée par Effect.BUFF_STRENGTH.
-	 */
-	const BUFF_FORCE: Effect.Type;
 	/**
 	 * Procure des points de mouvement à une entité. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_MP)
@@ -1765,11 +1760,6 @@ declare namespace Effect {
 	const SHACKLE_TP: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_WISDOM) */
 	const SHACKLE_WISDOM: Effect.Type;
-	/**
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SLIDE_TO)
-	 * @deprecated Remplacée par Effect.ATTRACT.
-	 */
-	const SLIDE_TO: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_STEAL_ABSOLUTE_SHIELD) */
 	const STEAL_ABSOLUTE_SHIELD: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_STEAL_LIFE) */
@@ -1819,11 +1809,6 @@ declare namespace Effect {
 		 */
 		const ALLIES: Effect.Target;
 		/**
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALWAYS_CASTER)
-		 * @deprecated Remplacée par Effect.Modifier.ON_CASTER.
-		 */
-		const ALWAYS_CASTER: Effect.Target;
-		/**
 		 * Affecte le lanceur.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_CASTER)
 		 */
@@ -1838,11 +1823,6 @@ declare namespace Effect {
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NON_SUMMONS)
 		 */
 		const NON_SUMMONS: Effect.Target;
-		/**
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NOT_CASTER)
-		 * @deprecated Remplacée par Effect.Target.CASTER.
-		 */
-		const NOT_CASTER: Effect.Target;
 		/**
 		 * Affecte les entités invoquées (Bulbes).
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_SUMMONS)
@@ -1984,13 +1964,13 @@ declare namespace Item {
 declare namespace Fight {
 	/** Constante de la famille Fight.Type (BATTLE_ROYALE, BOSS, CHEST_HUNT...). */
 	type Type = number;
-	/** Constante de la famille Fight.Context (BATTLE_ROYALE, CHALLENGE, GARDEN...). */
+	/** Constante de la famille Fight.Context (CHALLENGE, GARDEN, TEST...). */
 	type Context = number;
 	/** Constante de la famille Fight.Boss (EVIL_PUMPKIN, FENNEL_KING, NASU_SAMOURAI...). */
 	type Boss = number;
 	/** Constante de la famille Fight.Erosion (CRITICAL_BONUS, DAMAGE, POISON...). */
 	type Erosion = number;
-	/** Constante de la famille Fight.Use (CRITICAL, FAILED, INVALID_COOLDOWN...). */
+	/** Constante de la famille Fight.Use (CRITICAL, INVALID_COOLDOWN, INVALID_POSITION...). */
 	type Use = number;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CRITICAL_FACTOR) */
 	const CRITICAL_FACTOR: number;
@@ -2007,12 +1987,6 @@ declare namespace Fight {
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_CRITICAL)
 		 */
 		const CRITICAL: Fight.Use;
-		/**
-		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de d'échec.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_FAILED)
-		 * @deprecated
-		 */
-		const FAILED: Fight.Use;
 		/**
 		 * Valeur renvoyée par les fonctions useChip et useChipOnCell si la puce n'est pas encore utilisable.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_INVALID_COOLDOWN)
@@ -2070,12 +2044,6 @@ declare namespace Fight {
 		const NASU_SAMURAI: Fight.Boss;
 	}
 	namespace Context {
-		/**
-		 * Contexte de combat en Battle Royale.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_BATTLE_ROYALE)
-		 * @deprecated
-		 */
-		const BATTLE_ROYALE: Fight.Context;
 		/**
 		 * Contexte de combat de type défi.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_CHALLENGE)
@@ -2210,12 +2178,6 @@ declare namespace Cell {
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_OBSTACLE)
 		 */
 		const OBSTACLE: Cell.Type;
-		/**
-		 * Valeur de retour de getCellContent(cell) pour une case contenant une entité.
-		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_PLAYER)
-		 * @deprecated Remplacée par Cell.Type.ENTITY.
-		 */
-		const PLAYER: Cell.Type;
 	}
 }
 
@@ -2663,19 +2625,4 @@ declare namespace Chip {
 	const wizardBulb: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_WIZARDRY) */
 	const wizardry: Chip;
-}
-
-declare namespace System {
-	/**
-	 * Nombre d'instructions maximales qu'une entité peut utiliser pendant son tour.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/INSTRUCTIONS_LIMIT)
-	 * @deprecated
-	 */
-	const INSTRUCTIONS_LIMIT: number;
-	/**
-	 * Nombre d'opérations maximales qu'une entité peut utiliser pendant son tour.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/OPERATIONS_LIMIT)
-	 * @deprecated
-	 */
-	const OPERATIONS_LIMIT: number;
 }

@@ -134,6 +134,23 @@ describe('parité stub Python <-> API TS (anti-dérive)', () => {
 		expect(dts).toMatch(/declare namespace Entity \{[\s\S]*type Stat = number;[\s\S]*namespace Stat \{/)
 	})
 
+	// #4621 : une constante dépréciée des game data (EFFECT_BUFF_FORCE, USE_FAILED...) n'est PAS émise
+	// dans l'API objet (ni d.ts, ni stub Python) : seuls les noms actuels existent. Le runtime, lui,
+	// continue de les fournir (jamais de régression d'une IA qui tourne).
+	it('constante dépréciée : absente du d.ts et du stub Python', () => {
+		const consts = [
+			{ ...cst('EFFECT_BUFF_STRENGTH'), id: 138 },
+			{ ...cst('EFFECT_BUFF_FORCE'), id: 65, deprecated: true, replacement: 138 },
+		] as Constant[]
+		const dts = buildLeekwarsDeclarations([], consts)
+		expect(dts).toContain('const BUFF_STRENGTH: Effect.Type;')
+		expect(dts).not.toContain('BUFF_FORCE')
+		expect(compileDts(dts)).toEqual([])
+		const pyi = buildLeekwarsPyi(consts)
+		expect(pyi).toContain('BUFF_STRENGTH: int')
+		expect(pyi).not.toContain('BUFF_FORCE')
+	})
+
 	it('tout membre de l\'API objet déclaré côté TS existe dans le stub Python', () => {
 		const emptyStub = buildLeekwarsPyi([]) // bloc objet statique seul (indépendant des game data)
 		const model = buildObjectApiModel() // parse OBJECT_API_DECLARATIONS (source du .d.ts)
