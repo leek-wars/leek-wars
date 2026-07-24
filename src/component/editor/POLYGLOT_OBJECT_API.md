@@ -183,6 +183,7 @@ Propriétés (lecture seule) :
 | `damageReturn` | `number` | | `teamName` / `compositionName` | `string` |
 | `frequency` | `number` | | `farmerName` / `farmerCountry` | `string` |
 | `cores` / `ram` | `number` | | `aiName` | `string` |
+| `entityType` | `Entity.Type` | | | |
 
 Méthodes :
 

@@ -90,7 +90,7 @@ const CLASSES: ClassSpec[] = [
 		'@staticmethod', 'def isChip(value: Any) -> bool: ...',
 	] },
 	{ name: 'Entity', inject: 'Entity', body: [
-		'id: int', 'life: int', 'maxLife: int', 'tp: int', 'maxTP: int', 'mp: int', 'maxMP: int',
+		'id: int', 'entityType: int', 'life: int', 'maxLife: int', 'tp: int', 'maxTP: int', 'mp: int', 'maxMP: int',
 		'strength: int', 'agility: int', 'wisdom: int', 'resistance: int', 'science: int', 'magic: int',
 		'power: int', 'level: int', 'name: str', 'absoluteShield: int', 'relativeShield: int',
 		'damageReturn: int', 'frequency: int', 'cores: int', 'ram: int', 'cell: Cell',

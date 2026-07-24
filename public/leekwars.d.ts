@@ -513,6 +513,13 @@ interface Mob extends Entity {}
 declare class Entity {
 	readonly id: number;
 	/**
+	 * Genre d'entité (Entity.Type.LEEK/BULB/TURRET/CHEST/MOB). À ne pas confondre avec le .type des sous-classes (sous-variante : Bulb.Type.*...).
+	 * Renvoie le type d'entité de l'entité entity.
+	 * @returns Le type d'entité de entity :ENTITY_LEEK s'il s'agit d'un poireau.ENTITY_BULB s'il s'agit d'un bulbe.ENTITY_TURRET s'il s'agit d'une tourelle.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getType)
+	 */
+	readonly entityType: Entity.Type;
+	/**
 	 * Renvoie la vie actuelle de l'entité d'id entity. Utilisez getLife() sans paramètre pour récupérer votre vie.
 	 * @returns La vie actuelle de l'entité entity.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getLife)
@@ -1578,7 +1585,10 @@ declare namespace Effect {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_AGILITY)
 	 */
 	const BUFF_AGILITY: Effect.Type;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_FORCE) */
+	/**
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_BUFF_FORCE)
+	 * @deprecated Remplacée par Effect.BUFF_STRENGTH.
+	 */
 	const BUFF_FORCE: Effect.Type;
 	/**
 	 * Procure des points de mouvement à une entité. Amplifié par la science.
@@ -1755,7 +1765,10 @@ declare namespace Effect {
 	const SHACKLE_TP: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SHACKLE_WISDOM) */
 	const SHACKLE_WISDOM: Effect.Type;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SLIDE_TO) */
+	/**
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SLIDE_TO)
+	 * @deprecated Remplacée par Effect.ATTRACT.
+	 */
 	const SLIDE_TO: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_STEAL_ABSOLUTE_SHIELD) */
 	const STEAL_ABSOLUTE_SHIELD: Effect.Type;
@@ -1805,7 +1818,10 @@ declare namespace Effect {
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALLIES)
 		 */
 		const ALLIES: Effect.Target;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALWAYS_CASTER) */
+		/**
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_ALWAYS_CASTER)
+		 * @deprecated Remplacée par Effect.Modifier.ON_CASTER.
+		 */
 		const ALWAYS_CASTER: Effect.Target;
 		/**
 		 * Affecte le lanceur.
@@ -1822,7 +1838,10 @@ declare namespace Effect {
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NON_SUMMONS)
 		 */
 		const NON_SUMMONS: Effect.Target;
-		/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NOT_CASTER) */
+		/**
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TARGET_NOT_CASTER)
+		 * @deprecated Remplacée par Effect.Target.CASTER.
+		 */
 		const NOT_CASTER: Effect.Target;
 		/**
 		 * Affecte les entités invoquées (Bulbes).
@@ -1991,6 +2010,7 @@ declare namespace Fight {
 		/**
 		 * Valeur renvoyée par les fonctions useWeapon, useWeaponOnCell, useChip et useChipOnCell en cas de d'échec.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/USE_FAILED)
+		 * @deprecated
 		 */
 		const FAILED: Fight.Use;
 		/**
@@ -2053,6 +2073,7 @@ declare namespace Fight {
 		/**
 		 * Contexte de combat en Battle Royale.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/FIGHT_CONTEXT_BATTLE_ROYALE)
+		 * @deprecated
 		 */
 		const BATTLE_ROYALE: Fight.Context;
 		/**
@@ -2192,6 +2213,7 @@ declare namespace Cell {
 		/**
 		 * Valeur de retour de getCellContent(cell) pour une case contenant une entité.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/CELL_PLAYER)
+		 * @deprecated Remplacée par Cell.Type.ENTITY.
 		 */
 		const PLAYER: Cell.Type;
 	}
@@ -2647,11 +2669,13 @@ declare namespace System {
 	/**
 	 * Nombre d'instructions maximales qu'une entité peut utiliser pendant son tour.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/INSTRUCTIONS_LIMIT)
+	 * @deprecated
 	 */
 	const INSTRUCTIONS_LIMIT: number;
 	/**
 	 * Nombre d'opérations maximales qu'une entité peut utiliser pendant son tour.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/OPERATIONS_LIMIT)
+	 * @deprecated
 	 */
 	const OPERATIONS_LIMIT: number;
 }

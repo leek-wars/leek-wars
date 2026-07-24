@@ -134,7 +134,9 @@ function constFamilies(): Record<string, Set<string>> {
 	return families
 }
 
-type ConstMember = { member: string, full: string, doc?: string, isInstance: boolean }
+// `deprecated` : undefined = constante active ; null = dépréciée sans remplaçante ; string = chemin
+// objet de la remplaçante (ex: "Effect.BUFF_STRENGTH"), rendu en tag @deprecated (barré dans Monaco).
+type ConstMember = { member: string, full: string, doc?: string, isInstance: boolean, deprecated?: string | null }
 type ConstBucket = { direct: ConstMember[], subs: Record<string, ConstMember[]> }
 
 // Routage d'une constante vers son membre objet selon CONST_EXACT + CONST_CONTAINERS. Retourne null
@@ -150,6 +152,15 @@ export function routeConstant(name: string): RoutedConstant | null {
 	if (!rule) return null
 	const raw = name.slice(rule.prefix.length)
 	return { container: rule.container, sub: rule.sub, member: rule.item ? camelCase(raw) : raw, isInstance: !!rule.item }
+}
+
+// Chemin objet d'une constante plate (EFFECT_BUFF_STRENGTH -> "Effect.BUFF_STRENGTH"), ou null si elle
+// n'est pas exposée dans l'API objet. Sert aux renvois @deprecated et à buildConstantPathMap.
+export function constantObjectPath(name: string): string | null {
+	const routed = routeConstant(name)
+	const member = routed && safeName(routed.member)
+	if (!routed || !member) return null
+	return routed.sub ? `${routed.container}.${routed.sub}.${member}` : `${routed.container}.${member}`
 }
 
 export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup, classDoc?: ClassDocLookup): string {
@@ -175,6 +186,7 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 	const collected: Record<string, ConstBucket> = {}
 	const bucketFor = (container: string): ConstBucket => (collected[container] ||= { direct: [], subs: {} })
 
+	const constById = new Map(constants.map((c) => [c.id, c]))
 	for (const c of constants) {
 		const name = safeName(c.name)
 		if (!name || declared.has(name)) continue
@@ -183,6 +195,10 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		const routed = routeConstant(name)
 		if (routed) {
 			const entry: ConstMember = { member: routed.member, full: name, doc: cdoc, isInstance: routed.isInstance }
+			if (c.deprecated) {
+				const replacer = c.replacement != null ? constById.get(c.replacement) : undefined
+				entry.deprecated = (replacer && constantObjectPath(replacer.name)) ?? null
+			}
 			const b = bucketFor(routed.container)
 			if (routed.sub) (b.subs[routed.sub] ||= []).push(entry)
 			else b.direct.push(entry)
@@ -194,6 +210,9 @@ export function buildLeekwarsDeclarations(functions: readonly LSFunction[], cons
 		const jlines: string[] = []
 		if (m.doc) jlines.push(sanitizeDoc(m.doc))
 		jlines.push(docLink(m.full))
+		// Tag @deprecated (barré dans la complétion/le survol Monaco), avec renvoi vers la remplaçante
+		// quand les game data en désignent une (même info que « Elle est remplacée par » dans la doc).
+		if (m.deprecated !== undefined) jlines.push(m.deprecated ? `@deprecated Remplacée par ${m.deprecated}.` : '@deprecated')
 		return renderJsdoc(jlines, indent)
 	}
 	// Rend un membre de namespace `const X: type;`. Une INSTANCE (Weapon.pistol) est typée par son
@@ -346,7 +365,7 @@ export function buildObjectApiModel(): ObjectApiModel {
 // `Entity.` -> Stat, Type (sous-namespaces) ; `Entity.Stat.` -> STRENGTH...). Clé = chemin (conteneur
 // ou conteneur.sous). isNamespace=true pour un sous-conteneur (offert au niveau du conteneur parent).
 // Même routage (CONST_CONTAINERS + camelCase) que le .d.ts, donc toujours en phase.
-export interface ConstCompletion { name: string, isNamespace: boolean, full?: string }
+export interface ConstCompletion { name: string, isNamespace: boolean, full?: string, deprecated?: boolean }
 export function buildConstantMembersByPath(constants: readonly Constant[]): Record<string, ConstCompletion[]> {
 	const byPath: Record<string, ConstCompletion[]> = {}
 	const seen: Record<string, Set<string>> = {}
@@ -365,10 +384,10 @@ export function buildConstantMembersByPath(constants: readonly Constant[]): Reco
 		const member = safeName(routed.member)
 		if (!member) continue
 		if (routed.sub) {
-			add(`${routed.container}.${routed.sub}`, { name: member, isNamespace: false, full: name })
+			add(`${routed.container}.${routed.sub}`, { name: member, isNamespace: false, full: name, deprecated: c.deprecated || undefined })
 			add(routed.container, { name: routed.sub, isNamespace: true }) // le sous-namespace au niveau du conteneur
 		} else {
-			add(routed.container, { name: member, isNamespace: false, full: name })
+			add(routed.container, { name: member, isNamespace: false, full: name, deprecated: c.deprecated || undefined })
 		}
 	}
 	return byPath
@@ -385,12 +404,8 @@ export function buildConstantPathMap(constants: readonly Constant[]): Map<string
 		const name = safeName(c.name)
 		if (!name || seen.has(name)) continue
 		seen.add(name)
-		const routed = routeConstant(name)
-		if (!routed) continue // constante plate : la notation objet == son nom, matché directement
-		const member = safeName(routed.member)
-		if (!member) continue
-		const path = routed.sub ? `${routed.container}.${routed.sub}.${member}` : `${routed.container}.${member}`
-		if (!map.has(path)) map.set(path, name)
+		const path = constantObjectPath(name) // null = constante plate, matchée directement par son nom
+		if (path && !map.has(path)) map.set(path, name)
 	}
 	return map
 }
@@ -400,6 +415,7 @@ export function buildConstantPathMap(constants: readonly Constant[]): Map<string
 // (annotateObjectApi) et Python (resolvePolyglotSymbol). À garder en phase avec objects.js/objects.py.
 export const OBJECT_MEMBER_LS: Record<string, string> = {
 	// Entity (propriétés)
+	'Entity.entityType': 'getType',
 	'Entity.life': 'getLife', 'Entity.maxLife': 'getTotalLife', 'Entity.tp': 'getTP', 'Entity.maxTP': 'getTotalTP',
 	'Entity.mp': 'getMP', 'Entity.maxMP': 'getTotalMP', 'Entity.strength': 'getStrength', 'Entity.agility': 'getAgility',
 	'Entity.wisdom': 'getWisdom', 'Entity.resistance': 'getResistance', 'Entity.science': 'getScience',
@@ -801,6 +817,8 @@ interface Mob extends Entity {}
 
 declare class Entity {
 	readonly id: number;
+	/** Genre d'entité (Entity.Type.LEEK/BULB/TURRET/CHEST/MOB). À ne pas confondre avec le .type des sous-classes (sous-variante : Bulb.Type.*...). */
+	readonly entityType: Entity.Type;
 	readonly life: number;
 	readonly maxLife: number;
 	readonly tp: number;
