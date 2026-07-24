@@ -383,9 +383,10 @@
 		flex-basis: 350px;
 		flex-shrink: 0;
 		display: flex;
-		// Calee en haut : le nombre de lignes de gains sous la forge varie avec le
-		// nombre d'alterations, et un centrage vertical la faisait sauter (#622).
-		align-items: flex-start;
+		// Etiree sur toute la hauteur : la forge (.forge, height 100%) se centre alors
+		// verticalement entre ses infos du haut (dosage) et du bas (tentative), et le
+		// haut/bas de taille variable ne fait plus sauter la grille (#622).
+		align-items: stretch;
 		justify-content: center;
 		padding-top: 10px;
 		// Barre de defilement toujours reservee (scroll et non auto) : sinon son

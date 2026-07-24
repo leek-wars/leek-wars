@@ -1,5 +1,11 @@
 <template>
 	<div class="forge">
+		<!-- HAUT : dosage total de la recette en cours (la forge reste centree). -->
+		<div class="forge-top">
+			<div v-if="component && dose > 0" class="dose">
+				{{ $t('main.alteration_dose') }} <b>{{ LeekWars.roman(dose) }}</b>
+			</div>
+		</div>
 		<div ref="gridEl" class="grid">
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, removable: !!item && !!component, fusing: fusing && !!item}" :style="cellVars(i)" @click="component && removeAlteration(i)">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
@@ -94,12 +100,11 @@
 			</v-btn>
 		</div>
 
-		<div v-if="component && dose > 0" class="dose">
-			{{ $t('main.alteration_dose') }} <b>{{ LeekWars.roman(dose) }}</b>
-		</div>
-		<!-- Probabilite et risque AVANT de depenser. Une recette = un pari unique : les
-		     gains de chaque carac, puis UNE seule proba de reussite (#622). -->
-		<div v-if="component && plan && alterationCount > 0" class="preview">
+		<!-- BAS : bonus + %, casse, cout (la forge reste centree entre haut et bas). -->
+		<div class="forge-bottom">
+			<!-- Probabilite et risque AVANT de depenser. Une recette = un pari unique : les
+			     gains de chaque carac, puis UNE seule proba de reussite (#622). -->
+			<div v-if="component && plan && alterationCount > 0" class="preview">
 			<div class="row gains">
 				<template v-for="(roll, carac) in plan.rolls" :key="carac">
 					<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
@@ -120,6 +125,7 @@
 			<div class="row cost">
 				<span>{{ $t('main.alteration_cost') }}</span>
 				<b class="chance">{{ $filters.number(plan.habsCost) }}<span class="hab"></span></b>
+			</div>
 			</div>
 		</div>
 
@@ -943,17 +949,29 @@
 
 .forge {
 	display: flex;
-	// En colonne : le dosage et les boutons se placent SOUS la grille. Sans ca ils
-	// deviennent des colonnes flex a cote d'elle, ce qui la comprime en largeur et
-	// etire toutes les cellules (#622).
+	// En colonne : le dosage (haut) et les infos de tentative (bas) encadrent la grille,
+	// qui reste centree verticalement. .forge-top et .forge-bottom prennent l'espace
+	// restant a parts egales (flex 1), ce qui centre la grille quelle que soit la
+	// hauteur des infos (#622).
 	flex-direction: column;
 	align-items: center;
 	width: 260px;
-	// La hauteur suit le contenu : 260 quand il n'y a que la grille, plus quand le
-	// dosage et le bouton s'ajoutent.
-	height: auto;
+	// Pleine hauteur de la colonne : c'est ce qui permet de centrer la grille.
+	height: 100%;
 	flex-shrink: 0;
 	padding: 10px;
+	.forge-top, .forge-bottom {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		min-height: 0;
+	}
+	// Le haut colle sous la barre du haut (dosage), le bas colle au-dessus de la grille
+	// / du bord bas : la grille se retrouve pile au milieu.
+	.forge-top { justify-content: flex-start; }
+	.forge-bottom { justify-content: flex-end; }
 	.grid {
 		width: 240px;
 		height: 240px;
