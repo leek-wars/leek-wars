@@ -102,12 +102,12 @@
 			<div v-for="(roll, carac) in plan.rolls" :key="carac" class="row">
 				<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
 				<span :class="'color-' + carac">+{{ roll.points }}</span>
-				<b class="chance">{{ percent(roll.probability) }}</b>
+				<b class="chance">{{ percent(previewProba(carac, roll.probability)) }}</b>
 			</div>
-			<div v-if="plan.breakProbability > 0.0005" class="row risk">
+			<div v-if="previewBreak > 0.0005" class="row risk">
 				<v-icon size="16">mdi-alert</v-icon>
 				<span>{{ $t('main.alteration_break_risk') }}</span>
-				<b class="chance">{{ percent(plan.breakProbability) }}</b>
+				<b class="chance">{{ percent(previewBreak) }}</b>
 			</div>
 			<div class="row cost">
 				<span>{{ $t('main.alteration_cost') }}</span>
@@ -436,6 +436,32 @@
 	/** Nombre d'alterations posees, quantites comprises. */
 	const alterationCount = computed(() => forge.value.reduce((n, slot) => n + (slot ? slot[1] : 0), 0))
 	const maxItems = computed(() => LeekWars.alterations?.max_items ?? 8)
+
+	// Vraie probabilite (gate du metabolisme inclus), recuperee par XHR debounce a chaque
+	// changement de recette. Le metabolisme reste cache : seul le serveur applique le gate,
+	// et le rate-limit global (releve en LW+) freine sa reconstruction par sondage (#622).
+	// En attendant la reponse (ou en cas de rate-limit), on retombe sur l'apercu local.
+	interface ServerPreview { rolls: { [carac: string]: { points: number, probability: number } }, break_probability: number, fits: boolean }
+	const serverPreview = ref<ServerPreview | null>(null)
+	let previewTimer: ReturnType<typeof setTimeout> | undefined
+	watch(() => (component.value && alterationCount.value > 0) ? JSON.stringify(recipe.value) : null, (key) => {
+		clearTimeout(previewTimer)
+		serverPreview.value = null // repasse a l'apercu local le temps du fetch
+		const item = component.value
+		if (!key || !item) return
+		previewTimer = setTimeout(() => {
+			const sent = { ...recipe.value }
+			LeekWars.post<ServerPreview>('component/alteration-preview', { component_id: item.id, alterations: JSON.stringify(sent) })
+				.then(data => {
+					// On ignore une reponse devenue obsolete (recette ou piece changee entre-temps).
+					if (component.value?.id === item.id && JSON.stringify(recipe.value) === JSON.stringify(sent)) serverPreview.value = data
+				})
+				.catch(() => { /* rate-limit ou erreur : l'apercu local reste affiche */ })
+		}, 300)
+	})
+	/** Proba d'une carac : la vraie (serveur) si connue, sinon la base locale. */
+	const previewProba = (carac: string, base: number) => serverPreview.value?.rolls?.[carac]?.probability ?? base
+	const previewBreak = computed(() => serverPreview.value?.break_probability ?? plan.value?.breakProbability ?? 0)
 
 	/**
 	 * Dosage de la tentative : somme des numeros publies des alterations posees.
