@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { well as wellCapacity, addedPower, alterationTier } from '@/model/alteration'
+	import { addedPower, alterationTier } from '@/model/alteration'
 	import { LeekWars } from '@/model/leekwars'
 
 	/**
@@ -21,7 +21,8 @@
 	 */
 	const props = defineProps<{
 		alterations?: { [carac: string]: number } | null
-		level?: number
+		/** Capacité d'altération, pré-calculée par le serveur (colonne ou formule, #622). */
+		capacity?: number
 	}>()
 
 	const circumference = 2 * Math.PI * 15
@@ -31,10 +32,8 @@
 	// devenait faux sans que rien ne le signale (#622).
 	const ratio = computed(() => {
 		const weights = LeekWars.alterations?.weights
-		if (!props.alterations || !props.level || !weights) return null
-		const capacity = wellCapacity(props.level)
-		if (capacity <= 0) return null
-		const r = addedPower(props.alterations, weights) / capacity
+		if (!props.alterations || !props.capacity || !weights) return null
+		const r = addedPower(props.alterations, weights) / props.capacity
 		return r > 0 ? r : null
 	})
 	const percent = computed(() => ratio.value !== null ? Math.round(ratio.value * 100) : 0)

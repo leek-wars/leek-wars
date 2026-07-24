@@ -244,7 +244,7 @@
 									<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
 										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 											<div v-bind="props">
-												<img :class="alteredClass(leek.components[i] as any, LeekWars.items[leek.components[i].template].level as number)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+												<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template))" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 											</div>
 										</rich-tooltip-item>
 									</div>
@@ -755,7 +755,7 @@
 						<div class="farmer-components" :class="{dashed: draggedComponent && draggedComponentLocation === 'leek'}" @dragover="dragOver" @drop="componentsDrop('farmer', $event)">
 							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" ref="componentTooltips" :item="LeekWars.items[component.template]" :instance="(component as any)" :bottom="true" :nodge="true">
 								<div :quantity="component.quantity" :class="{dragging: draggedComponent && draggedComponent.template === component.template && draggedComponentLocation === 'farmer', locked: LeekWars.items[component.template].level > leek.level || leek.components.find(c => c && c.template === component.template) }" :draggable="LeekWars.items[component.template].level <= leek.level" class="component" v-bind="props" @dragstart="componentDragStart('farmer', component, $event)" @dragend="componentDragEnd(component)" @click="addComponent(component)">
-									<img :class="alteredClass(component as any, LeekWars.items[component.template].level as number)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
+									<img :class="alteredClass(component as any, LeekWars.componentCapacity(component.template))" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
 								</div>
 							</rich-tooltip-item>
 						</div>

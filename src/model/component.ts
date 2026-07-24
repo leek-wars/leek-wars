@@ -12,6 +12,9 @@ class ComponentTemplate {
 	name!: string
 	stats!: [string, number][]
 	template!: number
+	// Capacité d'altération, pré-calculée par le serveur : colonne component_template.capacity
+	// si réglée (ex. le RGB), sinon la formule 0,2 × puissance des stats de base (#622).
+	capacity?: number
 }
 
 export { Component, ComponentTemplate }

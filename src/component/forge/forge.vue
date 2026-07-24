@@ -29,7 +29,7 @@
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
 						<!-- Silhouette coloree du palier si la piece porte deja de la charge (#622) ;
 						     vide (donc aucune bordure) pour un composant neuf. -->
-						<img :key="component.id" :class="alteredClass(component, LeekWars.items[component.template].level as number)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
+						<img :key="component.id" :class="alteredClass(component, LeekWars.componentCapacity(component.template))" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
@@ -308,7 +308,7 @@
 		results: { carac: string, success: boolean, points: number, probability: number }[]
 		id?: number
 		stats: { [carac: string]: number }
-		well: { used: number, capacity: number }
+		capacity: { used: number, total: number }
 		dose: number
 		metabolism: number
 		synergy: number
@@ -347,7 +347,9 @@
 		const family = data.component_families[Number(template.params)]
 		if (!family) return null
 		const base = (LeekWars.components[Number(template.params)]?.stats ?? []) as [string, number][]
-		return planAttempt(data, base, item.stats ?? {}, Number(template.level), family, recipe.value)
+		// Capacité forcée du composant (colonne, ex. le RGB) pour que l'aperçu colle au serveur.
+		const capacity = LeekWars.components[Number(template.params)]?.capacity
+		return planAttempt(data, base, item.stats ?? {}, Number(template.level), family, recipe.value, 1, capacity)
 	})
 
 	/** Infobulle de la charge : puissance investie sur capacite du puits (#622). */
@@ -387,7 +389,7 @@
 				// des COPIES des items du store (spread dans son computed), donc ecrire sur
 				// l'objet recu ne suffit pas : il faut retrouver l'original.
 				item.stats = data.stats
-				item.altered_power = data.well.used
+				item.altered_power = data.capacity.used
 				// Le serveur a pu DETACHER la piece d'un stack : dans ce cas elle a un
 				// nouvel id, et l'ancienne ligne garde le reste de la pile.
 				const newId = data.id
@@ -399,10 +401,10 @@
 						stored.quantity--
 						if (stored.quantity <= 0) components.splice(components.indexOf(stored), 1)
 						components.push({ id: newId as number, template: item.template, quantity: 1,
-							time: item.time, stats: data.stats, altered_power: data.well.used })
+							time: item.time, stats: data.stats, altered_power: data.capacity.used })
 					} else if (stored) {
 						stored.stats = data.stats
-						stored.altered_power = data.well.used
+						stored.altered_power = data.capacity.used
 					}
 				}
 				if (split) item.id = newId as number

@@ -904,6 +904,12 @@ const LeekWars = reactive({
 	complexities: Object.freeze(COMPLEXITIES),
 	components: Object.freeze(COMPONENTS),
 	alterations: null as AlterationData | null,
+	// Capacité d'altération d'un composant depuis son item_template : lue dans la valeur
+	// pré-calculée par le serveur (colonne capacity ou formule). 0 si non altérable (#622).
+	componentCapacity: (templateId: number): number => {
+		const params = LeekWars.items[templateId]?.params
+		return (params !== undefined ? LeekWars.components[params]?.capacity : 0) ?? 0
+	},
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'cores', 'ram', 'mp', 'tp']),
 	// characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'ram', 'agility', 'cores', 'resistance', 'mp', 'science', 'tp']),
 	characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'cores', 'agility', 'ram', 'resistance', 'mp', 'science', 'tp']),
