@@ -1,9 +1,14 @@
 <template>
 	<div class="forge">
-		<!-- HAUT : dosage total de la recette en cours (la forge reste centree). -->
+		<!-- HAUT : stats actuelles du composant. Elles equilibrent l'apercu de tentative
+		     du bas et gardent la grille centree entre les deux (#622). -->
 		<div class="forge-top">
-			<div v-if="component && dose > 0" class="dose">
-				{{ $t('main.alteration_dose') }} <b>{{ LeekWars.roman(dose) }}</b>
+			<div v-if="component && componentStats.length" class="stats-card">
+				<div v-for="[carac, value] in componentStats" :key="carac" class="row">
+					<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
+					<span v-html="$t('characteristic.' + carac)"></span>
+					<b class="value" :class="'color-' + carac">{{ value }}</b>
+				</div>
 			</div>
 		</div>
 		<div ref="gridEl" class="grid">
@@ -105,7 +110,11 @@
 			<!-- Probabilite et risque AVANT de depenser. Une recette = un pari unique : les
 			     gains de chaque carac, puis UNE seule proba de reussite (#622). -->
 			<div v-if="component && plan && alterationCount > 0" class="preview">
-			<div class="row gains">
+				<div class="row dose-row">
+					<span>{{ $t('main.alteration_dose') }}</span>
+					<b class="chance">{{ LeekWars.roman(dose) }}</b>
+				</div>
+				<div class="row gains">
 				<template v-for="(roll, carac) in plan.rolls" :key="carac">
 					<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
 					<span class="gain" :class="'color-' + carac">+{{ roll.points }}</span>
@@ -160,7 +169,7 @@
 	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
 	import { InventoryItem } from '@/model/farmer'
 	import { t } from '@/model/i18n'
-	import { planAttempt, alterationTier, alteredClass, type AlterationRecipe } from '@/model/alteration'
+	import { planAttempt, alterationTier, alteredClass, mergeStats, type AlterationRecipe } from '@/model/alteration'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -366,6 +375,17 @@
 		// Capacité forcée du composant (colonne, ex. le RGB) pour que l'aperçu colle au serveur.
 		const capacity = LeekWars.components[Number(template.params)]?.capacity
 		return planAttempt(data, base, item.stats ?? {}, Number(template.level), family, recipe.value, capacity)
+	})
+
+	// Stats actuelles du composant (base + altérations déjà posées), affichées en haut de
+	// la forge pour équilibrer avec l'aperçu de tentative en bas et garder la grille
+	// centrée (#622).
+	const componentStats = computed<[string, number][]>(() => {
+		const item = component.value
+		if (!item) return []
+		const template = LeekWars.items[item.template]
+		const base = (LeekWars.components[Number(template?.params)]?.stats ?? []) as [string, number][]
+		return mergeStats(base, item.stats ?? null) as [string, number][]
 	})
 
 	/** Infobulle de la charge : puissance investie sur capacite du puits (#622). */
@@ -863,6 +883,29 @@
 }
 // Gains sous la forge : une petite carte a lignes tramees plutot qu'une liste nue,
 // avec la probabilite alignee a droite en chiffres tabulaires (#622).
+// Stats du composant en haut : meme carte que l'apercu du bas, pour que les deux blocs
+// se repondent et que la grille reste optiquement centree (#622).
+.stats-card {
+	width: 100%;
+	padding: 4px;
+	border-radius: 6px;
+	background: var(--background-secondary);
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		padding: 4px 7px;
+		font-size: 13px;
+		border-radius: 4px;
+		& + .row { margin-top: 2px; }
+	}
+	.ic { width: 17px; height: 17px; }
+	.value {
+		margin-left: auto;
+		font-variant-numeric: tabular-nums;
+		font-weight: bold;
+	}
+}
 .preview {
 	width: 100%;
 	margin-top: 8px;
