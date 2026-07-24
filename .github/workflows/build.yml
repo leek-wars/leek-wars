@@ -31,14 +31,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm ci
+          cache: 'npm'
+
+      # Levier self-hosted : checkout efface node_modules a chaque run (git clean -ffdx),
+      # donc on le cache par hash du lockfile et on saute entierement npm ci quand il n'a
+      # pas bouge (le gros du temps d'install). cache: 'npm' ci-dessus garde ~/.npm chaud
+      # pour le npm ci des rares miss (bump de dependance).
+      - uses: actions/cache@v4
+        id: node-modules
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install dependencies
+        if: steps.node-modules.outputs.cache-hit != 'true'
+        run: npm ci
 
       # Push develop : build mode beta (lit .env.beta) et push vers la stack
       # leekwars_beta (volume Docker leekwars_beta_client) via une clé SSH
       # dédiée dont le ForceCommand pointe sur deploy-client-beta.sh.
+      # Sans sourcemaps : la beta n'en a pas besoin et ca coupe ~2-3 min (et le heap 8 Go).
       - name: Build for beta
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        run: npm run build-beta:sourcemaps
+        run: npm run build-beta
 
       - name: Deploy to beta
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
