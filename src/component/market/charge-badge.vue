@@ -1,5 +1,5 @@
 <template>
-	<div v-if="ratio !== null" class="charge-badge" :title="$t('main.alteration_charge') + ' ' + percent + ' %'">
+	<div v-if="ratio !== null" class="charge-badge" :title="$t('main.alteration_charge') + ' ' + chargeText">
 		<svg viewBox="0 0 36 36">
 			<circle class="track" cx="18" cy="18" r="15" />
 			<circle class="fill" :class="'tier-' + tier" cx="18" cy="18" r="15"
@@ -37,6 +37,12 @@
 		return r > 0 ? r : null
 	})
 	const percent = computed(() => ratio.value !== null ? Math.round(ratio.value * 100) : 0)
+	// Tooltip : charge investie / capacite totale, au survol de la jauge circulaire (#622).
+	const chargeText = computed(() => {
+		const cap = props.capacity ?? 0
+		const used = ratio.value !== null ? Math.round(ratio.value * cap) : 0
+		return used + ' / ' + cap
+	})
 	const tier = computed(() => {
 		if (ratio.value === null) return 1
 		const t = alterationTier(ratio.value)
