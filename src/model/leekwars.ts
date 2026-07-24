@@ -910,6 +910,16 @@ const LeekWars = reactive({
 		const params = LeekWars.items[templateId]?.params
 		return (params !== undefined ? LeekWars.components[params]?.capacity : 0) ?? 0
 	},
+	// Chiffres romains : on affiche les DOSAGES des altérations en romain pour les
+	// distinguer d'un coup d'oeil des quantités et des gains (#622).
+	roman: (n: number): string => {
+		if (!Number.isFinite(n) || n <= 0) return '' + n
+		const table: [number, string][] = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']]
+		let out = ''
+		let x = Math.floor(n)
+		for (const [v, s] of table) { while (x >= v) { out += s; x -= v } }
+		return out
+	},
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'cores', 'ram', 'mp', 'tp']),
 	// characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'ram', 'agility', 'cores', 'resistance', 'mp', 'science', 'tp']),
 	characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'cores', 'agility', 'ram', 'resistance', 'mp', 'science', 'tp']),

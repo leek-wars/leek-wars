@@ -6,7 +6,7 @@
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="itemImageUrl(LeekWars.items[item[0]])">
 						<!-- Numero de dosage, en haut a gauche comme dans la palette (#622). -->
-						<span v-if="slotNumber(item) !== null" class="alt-number">{{ slotNumber(item) }}</span>
+						<span v-if="slotNumber(item) !== null" class="alt-number">{{ LeekWars.roman(slotNumber(item)!) }}</span>
 						<!-- La cle sur la quantite fait rejouer le petit rebond a chaque ajout. -->
 						<div v-if="item[1] > 1" :key="item[1]" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
@@ -95,7 +95,7 @@
 		</div>
 
 		<div v-if="component && dose > 0" class="dose">
-			{{ $t('main.alteration_dose') }} <b>{{ dose }}</b>
+			{{ $t('main.alteration_dose') }} <b>{{ LeekWars.roman(dose) }}</b>
 		</div>
 		<!-- Probabilite et risque AVANT de depenser. Une recette = un pari unique : les
 		     gains de chaque carac, puis UNE seule proba de reussite (#622). -->
@@ -105,7 +105,12 @@
 					<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
 					<span class="gain" :class="'color-' + carac">+{{ roll.points }}</span>
 				</template>
-				<b class="chance">{{ percent(previewProbability) }}</b>
+				<!-- Loader tant que le serveur calcule la vraie proba (gate inclus) : on
+				     n'affiche pas la proba locale, qui serait le plafond trompeur (#622). -->
+				<b class="chance">
+					<v-progress-circular v-if="loadingPreview" :size="13" :width="2" indeterminate color="primary" />
+					<template v-else>{{ percent(previewProbability) }}</template>
+				</b>
 			</div>
 			<div v-if="previewBreak > 0.0005" class="row risk">
 				<v-icon size="16">mdi-alert</v-icon>
@@ -444,23 +449,24 @@
 	// Vraie probabilite (gate du metabolisme inclus), recuperee par XHR debounce a chaque
 	// changement de recette. Le metabolisme reste cache : seul le serveur applique le gate,
 	// et le rate-limit global (releve en LW+) freine sa reconstruction par sondage (#622).
-	// En attendant la reponse (ou en cas de rate-limit), on retombe sur l'apercu local.
+	// Pendant le calcul serveur on montre un loader, pas la proba locale (qui serait le
+	// plafond, trompeur). Le token ignore les reponses obsoletes (recette changee).
 	interface ServerPreview { rolls: { [carac: string]: { points: number } }, probability: number, break_probability: number, fits: boolean }
 	const serverPreview = ref<ServerPreview | null>(null)
+	const loadingPreview = ref(false)
 	let previewTimer: ReturnType<typeof setTimeout> | undefined
+	let previewToken = 0
 	watch(() => (component.value && alterationCount.value > 0) ? JSON.stringify(recipe.value) : null, (key) => {
 		clearTimeout(previewTimer)
-		serverPreview.value = null // repasse a l'apercu local le temps du fetch
+		const token = ++previewToken
+		serverPreview.value = null
 		const item = component.value
-		if (!key || !item) return
+		if (!key || !item) { loadingPreview.value = false; return }
+		loadingPreview.value = true
 		previewTimer = setTimeout(() => {
-			const sent = { ...recipe.value }
-			LeekWars.post<ServerPreview>('component/alteration-preview', { component_id: item.id, alterations: JSON.stringify(sent) })
-				.then(data => {
-					// On ignore une reponse devenue obsolete (recette ou piece changee entre-temps).
-					if (component.value?.id === item.id && JSON.stringify(recipe.value) === JSON.stringify(sent)) serverPreview.value = data
-				})
-				.catch(() => { /* rate-limit ou erreur : l'apercu local reste affiche */ })
+			LeekWars.post<ServerPreview>('component/alteration-preview', { component_id: item.id, alterations: key })
+				.then(data => { if (token === previewToken) { serverPreview.value = data; loadingPreview.value = false } })
+				.catch(() => { if (token === previewToken) loadingPreview.value = false })
 		}, 300)
 	})
 	/** Proba UNIQUE de la tentative : la vraie (serveur) si connue, sinon la base locale. */

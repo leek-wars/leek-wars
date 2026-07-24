@@ -1,7 +1,7 @@
 <template>
 	<div class="alteration-icon" :title="tooltip">
 		<img class="image" :src="'/image/alteration/' + name + '.png'" :alt="tooltip" loading="lazy">
-		<span v-if="number !== null" class="number">{{ number }}</span>
+		<span v-if="number !== null" class="number">{{ LeekWars.roman(number) }}</span>
 	</div>
 </template>
 
