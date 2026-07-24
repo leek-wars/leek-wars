@@ -55,9 +55,8 @@
 			gap: 7px;
 			padding: 4px 7px;
 			font-size: 13px;
-			border-radius: 4px;
 			& + .row { margin-top: 2px; }
-			// Carac montee par le joueur : liseré vert a gauche.
+			// Carac montee par le joueur : liseré vert a gauche, franc (pas de coin arrondi).
 			&.altered { box-shadow: inset 3px 0 0 #5fad1b; }
 		}
 		.ic { width: 17px; height: 17px; }
