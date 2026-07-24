@@ -19,7 +19,7 @@ import { LeekWars, loadGameData } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router, { getRedirectAfterLogin } from '@/router'
-import { createApp, defineAsyncComponent, defineComponent, getCurrentInstance, h, nextTick } from 'vue'
+import { createApp, defineAsyncComponent, defineComponent, Fragment, getCurrentInstance, h, nextTick } from 'vue'
 import type { App as VueApp, Component, ComponentPublicInstance } from 'vue'
 import { Translation } from 'vue-i18n'
 import { Latex } from './latex'
@@ -241,6 +241,13 @@ function findNullElVnodePath(instance: unknown): string | null {
 		// Fragment/Text/Comment (type = symbol) qui peuvent légitimement avoir un
 		// el null/anchor.
 		if (vn.el == null && typeof vn.type !== 'symbol') return [label(vn) + '(el=null)']
+		// Un Fragment monté porte el (ancre de début) ET anchor (ancre de fin) : l'un ou
+		// l'autre null = corruption, c'est le nœud qui fait crasher nextSibling(anchor || el)
+		// au patch (#4623).
+		if (vn.type === Fragment && (vn.el == null || vn.anchor == null)) {
+			const which = vn.el == null && vn.anchor == null ? 'el+anchor' : vn.el == null ? 'el' : 'anchor'
+			return [label(vn) + '(' + which + '=null)']
+		}
 		return null
 	}
 	try {
@@ -378,6 +385,10 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	const locale = i18n.locale
 	const user_agent = navigator.userAgent
 
+	// Famille corruption-DOM : évaluée une seule fois, sert au diagnostic Null-el path,
+	// aux signaux d'interférence externe et à la récupération par hard-reload.
+	const isCorruption = isDomCorruptionCrash(e?.message || '')
+
 	let componentTrace = ''
 	let routeSubtree: string | null = null
 	let nullElPath: string | null = null
@@ -417,10 +428,13 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 			const leafName = leafInstance?.type?.name || leafInstance?.type?.__name
 			if (leafName === 'RouterView' || !leafName) {
 				routeSubtree = describeRouteSubtree(leafInstance)
-				// Erreurs de patch sur un el null (cluster #4050-#4056) : pointer le vnode cassé
-				if (e?.message?.includes('parentNode') || e?.message?.includes("reading 'el'")) {
-					nullElPath = findNullElVnodePath(leafInstance)
-				}
+			}
+			// Erreurs de patch de la famille corruption-DOM (cluster #4050-#4056) : pointer le
+			// vnode cassé quel que soit le composant attribué (un crash nextSibling peut être
+			// attribué à la page elle-même, ex. <Leek> #4623). « (none found) » = l'arbre semble
+			// intact au moment du rapport (corruption transitoire ou ancre de Fragment).
+			if (isCorruption) {
+				nullElPath = findNullElVnodePath(leafInstance) || '(none found)'
 			}
 		}
 	} catch (ex) {
@@ -456,7 +470,6 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// Signaux d'interférence DOM externe, pour les familles de crashs à cause externe probable :
 	// corruption-DOM (patch sur un el null) ET ordre d'init/TDZ (import statique en TDZ alors qu'aucun
 	// cycle d'import inter-chunks n'existe → impossible sans réévaluation externe du contexte page).
-	const isCorruption = isDomCorruptionCrash(e?.message || '')
 	// Familles dont la cause probable est externe (moteur de traduction / extension) : on leur
 	// attache le diagnostic d'interférence et on les masque si une traduction est active.
 	const externallyInduced = isCorruption || isInitOrderCrash(e?.message || '')
