@@ -388,9 +388,11 @@
 		align-items: flex-start;
 		justify-content: center;
 		padding-top: 10px;
-		// Si la colonne deborde malgre tout, elle defile pour elle-meme.
+		// Barre de defilement toujours reservee (scroll et non auto) : sinon son
+		// apparition quand la forge grandit (lignes de gains, alterations posees)
+		// decale le contenu et fait sauter la mise en page (cf. .schemes-section, #622).
 		min-height: 0;
-		overflow-y: auto;
+		overflow-y: scroll;
 	}
 }
 #app.app .bottom-content {
