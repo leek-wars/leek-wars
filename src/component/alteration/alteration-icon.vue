@@ -63,7 +63,8 @@
 		position: absolute;
 		top: -2px;
 		left: 0;
-		font-size: 11px;
+		// Un peu plus petit : les dosages romains (jusqu'a LVIII) debordent en 11px (#622).
+		font-size: 9px;
 		font-weight: bold;
 		color: #fff;
 		text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
