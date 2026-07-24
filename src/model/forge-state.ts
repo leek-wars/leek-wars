@@ -11,6 +11,13 @@ import { ref } from 'vue'
  * La palette s'en sert pour chiffrer la charge de chaque altération : le gain dépend
  * de la famille du composant visé, via la matrice d'efficacité.
  */
-const forgeComponent = ref<{ family: number, level: number } | null>(null)
+const forgeComponent = ref<{
+	family: number
+	level: number
+	// item_template du composant + alterations deja posees, pour que la colonne de stats
+	// (voisine de la forge) affiche ses caracteristiques a jour (#622).
+	template: number
+	stats: { [carac: string]: number } | null
+} | null>(null)
 
 export { forgeComponent }

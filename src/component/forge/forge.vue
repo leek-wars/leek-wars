@@ -585,11 +585,15 @@
 		return out
 	})
 
-	// La palette d'alterations chiffre la charge de chaque alteration sur la piece
-	// posee : on publie sa famille et son niveau des qu'elle change (#622).
-	watch(component, c => {
+	// La palette d'alterations et la colonne de stats lisent la piece posee : on publie sa
+	// famille, son niveau, son template et ses stats des qu'elle change (les stats bougent
+	// aussi apres une tentative reussie, d'ou le suivi de component.stats) (#622).
+	watch([component, () => component.value?.stats], () => {
+		const c = component.value
 		const tpl = c ? LeekWars.items[c.template] : null
-		forgeComponent.value = tpl ? { family: Number(tpl.params), level: Number(tpl.level) } : null
+		forgeComponent.value = (c && tpl)
+			? { family: Number(tpl.params), level: Number(tpl.level), template: c.template, stats: c.stats ?? null }
+			: null
 	}, { immediate: true })
 	onBeforeUnmount(() => { forgeComponent.value = null })
 
