@@ -362,6 +362,9 @@
 		background: transparent;
 		margin-left: -6px;
 		margin-right: -6px;
+		// Annule aussi la marge de 6px que gridstack pose en haut de la 1re rangée
+		// (padding disgracieux sous l'en-tête de page).
+		margin-top: -6px;
 	}
 	// L'item lui-même ne défile jamais (sinon l'en-tête du panel défilerait avec) :
 	// on force overflow hidden par-dessus le CSS de gridstack (plus spécifique).
