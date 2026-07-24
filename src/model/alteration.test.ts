@@ -52,7 +52,7 @@ describe('prévisualisation d\'une tentative', () => {
 	it('reproduit la probabilité pour un puits presque vide', () => {
 		// 1 Vitamine D sur un hylocereus vierge (puits 184 = 0,2 × 920).
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(plan.rolls.life.probability).toBeCloseTo(0.70065, 4)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.77627, 4)
 		expect(plan.rolls.life.points).toBe(50)
 		expect(plan.dose).toBe(20)
 		expect(plan.habsCost).toBe(65025)
@@ -65,8 +65,10 @@ describe('prévisualisation d\'une tentative', () => {
 		expect(plan.items).toBe(3)
 		expect(plan.rolls.life.points).toBe(52)
 		expect(plan.rolls.wisdom.points).toBe(12)
-		expect(plan.rolls.life.probability).toBeCloseTo(0.0095773, 5)
-		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0048700, 6)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.0105173, 6)
+		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0068708, 6)
+		// Une recette = un seul jet : la proba de tentative est le min (ici la sagesse).
+		expect(plan.probability).toBeCloseTo(0.0068708, 6)
 	})
 
 	it('autorise un léger dépassement du puits mais le rend suicidaire', () => {
