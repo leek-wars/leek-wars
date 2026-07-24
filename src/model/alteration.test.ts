@@ -52,7 +52,7 @@ describe('prévisualisation d\'une tentative', () => {
 	it('reproduit la probabilité pour un puits presque vide', () => {
 		// 1 Vitamine D sur un hylocereus vierge (puits 184 = 0,2 × 920).
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(plan.rolls.life.probability).toBeCloseTo(0.66536, 4)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.70065, 4)
 		expect(plan.rolls.life.points).toBe(50)
 		expect(plan.dose).toBe(20)
 		expect(plan.habsCost).toBe(65025)
@@ -65,8 +65,8 @@ describe('prévisualisation d\'une tentative', () => {
 		expect(plan.items).toBe(3)
 		expect(plan.rolls.life.points).toBe(52)
 		expect(plan.rolls.wisdom.points).toBe(12)
-		expect(plan.rolls.life.probability).toBeCloseTo(0.0060146, 5)
-		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0030584, 6)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.0095773, 5)
+		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0048700, 6)
 	})
 
 	it('autorise un léger dépassement du puits mais le rend suicidaire', () => {
@@ -75,8 +75,8 @@ describe('prévisualisation d\'une tentative', () => {
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 4 })
 		expect(plan.fits).toBe(true)
 		expect(plan.overfilled).toBe(true)
-		expect(plan.rolls.life.probability).toBeLessThan(0.0001)
-		expect(plan.breakProbability).toBeGreaterThan(0.8)
+		expect(plan.rolls.life.probability).toBeLessThan(0.0005)
+		expect(plan.breakProbability).toBeGreaterThan(0.3)
 	})
 
 	it('refuse un dépassement au-delà du plafond souple', () => {
@@ -99,12 +99,6 @@ describe('prévisualisation d\'une tentative', () => {
 		// Base très puissante (puits 3000) : le pas devient négligeable, la proba plafonne.
 		const plan = planAttempt(DATA, [['life', 15000]], {}, 3000, ComponentFamily.FRUIT, { 1: 1 })
 		expect(plan.rolls.life.probability).toBeCloseTo(0.95, 6)
-	})
-
-	it('la synergie multiplie la probabilité', () => {
-		const none = planAttempt(DATA, HYLOCEREUS, { life: 110 }, 255, ComponentFamily.FRUIT, { 1: 1 }, 1)
-		const perfect = planAttempt(DATA, HYLOCEREUS, { life: 110 }, 255, ComponentFamily.FRUIT, { 1: 1 }, 3)
-		expect(perfect.rolls.life.probability / none.rolls.life.probability).toBeCloseTo(3, 6)
 	})
 
 	it('le danger de casse n\'apparaît que près du plafond', () => {

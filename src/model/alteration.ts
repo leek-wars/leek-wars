@@ -87,7 +87,7 @@ function alterationTier(ratio: number): { tier: number, color: string } | null {
 // puisque le serveur renvoie la probabilité qu'il a réellement utilisée.
 
 const WELL_COEFFICIENT = 0.2
-const DIFFICULTY_K = 8
+const DIFFICULTY_K = 7.3
 const PROGRESS_BONUS = 2
 const PROGRESS_CAP = 0.2
 const MAX_PROBABILITY = 0.95
@@ -181,7 +181,7 @@ const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
  * destination (celle où la recette atterrit si tout passe).
  */
 function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats, level: number,
-                     componentFamily: ComponentFamily, recipe: AlterationRecipe, synergy = 1,
+                     componentFamily: ComponentFamily, recipe: AlterationRecipe,
                      capacityOverride?: number) {
 
 	// Capacité forcée du composant (colonne component_template.capacity, ex. le RGB) si
@@ -239,7 +239,8 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 			if ((totals[carac] || 0) < 0) probability *= 2
 			// Les caracs indivisibles encaissent l'efficacité sur la probabilité.
 			if (INDIVISIBLE.indexOf(carac) !== -1) probability *= efficiency
-			probability *= synergy
+			// Pas de gate du métabolisme côté client : l'aperçu ne connaît pas M (caché
+			// serveur) et montre la proba de base, jamais la vraie proba gatée (#622).
 			probability = Math.min(MAX_PROBABILITY, probability)
 		}
 		rolls[carac] = { points: group.points, probability }
