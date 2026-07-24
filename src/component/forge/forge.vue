@@ -97,12 +97,15 @@
 		<div v-if="component && dose > 0" class="dose">
 			{{ $t('main.alteration_dose') }} <b>{{ dose }}</b>
 		</div>
-		<!-- Probabilite et risque AVANT de depenser : c'est la regle de la spec. -->
+		<!-- Probabilite et risque AVANT de depenser. Une recette = un pari unique : les
+		     gains de chaque carac, puis UNE seule proba de reussite (#622). -->
 		<div v-if="component && plan && alterationCount > 0" class="preview">
-			<div v-for="(roll, carac) in plan.rolls" :key="carac" class="row">
-				<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
-				<span :class="'color-' + carac">+{{ roll.points }}</span>
-				<b class="chance">{{ percent(previewProba(carac, roll.probability)) }}</b>
+			<div class="row gains">
+				<template v-for="(roll, carac) in plan.rolls" :key="carac">
+					<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
+					<span class="gain" :class="'color-' + carac">+{{ roll.points }}</span>
+				</template>
+				<b class="chance">{{ percent(previewProbability) }}</b>
 			</div>
 			<div v-if="previewBreak > 0.0005" class="row risk">
 				<v-icon size="16">mdi-alert</v-icon>
@@ -307,7 +310,8 @@
 
 	interface AlterResult {
 		success: boolean
-		results: { carac: string, success: boolean, points: number, probability: number }[]
+		probability: number
+		results: { carac: string, success: boolean, points: number }[]
 		id?: number
 		stats: { [carac: string]: number }
 		capacity: { used: number, total: number }
@@ -441,7 +445,7 @@
 	// changement de recette. Le metabolisme reste cache : seul le serveur applique le gate,
 	// et le rate-limit global (releve en LW+) freine sa reconstruction par sondage (#622).
 	// En attendant la reponse (ou en cas de rate-limit), on retombe sur l'apercu local.
-	interface ServerPreview { rolls: { [carac: string]: { points: number, probability: number } }, break_probability: number, fits: boolean }
+	interface ServerPreview { rolls: { [carac: string]: { points: number } }, probability: number, break_probability: number, fits: boolean }
 	const serverPreview = ref<ServerPreview | null>(null)
 	let previewTimer: ReturnType<typeof setTimeout> | undefined
 	watch(() => (component.value && alterationCount.value > 0) ? JSON.stringify(recipe.value) : null, (key) => {
@@ -459,8 +463,8 @@
 				.catch(() => { /* rate-limit ou erreur : l'apercu local reste affiche */ })
 		}, 300)
 	})
-	/** Proba d'une carac : la vraie (serveur) si connue, sinon la base locale. */
-	const previewProba = (carac: string, base: number) => serverPreview.value?.rolls?.[carac]?.probability ?? base
+	/** Proba UNIQUE de la tentative : la vraie (serveur) si connue, sinon la base locale. */
+	const previewProbability = computed(() => serverPreview.value?.probability ?? plan.value?.probability ?? 0)
 	const previewBreak = computed(() => serverPreview.value?.break_probability ?? plan.value?.breakProbability ?? 0)
 
 	/**

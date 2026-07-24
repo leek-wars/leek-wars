@@ -246,6 +246,11 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		rolls[carac] = { points: group.points, probability }
 	}
 
+	// Une recette = un pari UNIQUE : un seul jet, au taux de la carac la plus dure (le
+	// goulot). Tout passe ou rien, jamais de succès partiel (#622).
+	const probabilities = Object.keys(rolls).map(c => rolls[c].probability)
+	const probability = allowed && probabilities.length ? Math.min(...probabilities) : 0
+
 	// Une seule casse par tentative, indexée sur le remplissage visé. Elle grimpe avec
 	// le remplissage et devient quasi certaine au-delà de 100 % : c'est elle qui punit
 	// l'acharnement plutôt qu'un mur.
@@ -259,7 +264,7 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	return {
 		// `fits` = tentative autorisée (le bouton s'appuie dessus) ; `overfilled` = on
 		// dépasse le puits, à afficher comme un avertissement.
-		dose, items, power: recipePower, fits: allowed, overfilled, rolls,
+		dose, items, power: recipePower, fits: allowed, overfilled, rolls, probability,
 		capacity,
 		ratioBefore: capacity > 0 ? before / capacity : 0,
 		ratioAfter: rAfter,
