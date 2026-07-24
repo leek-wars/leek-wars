@@ -871,7 +871,6 @@
 // avec la probabilite alignee a droite en chiffres tabulaires (#622).
 .preview {
 	width: 100%;
-	margin-top: 8px;
 	padding: 4px;
 	border-radius: 6px;
 	background: var(--background-secondary);
@@ -955,29 +954,23 @@
 
 .forge {
 	display: flex;
-	// En colonne : le dosage (haut) et les infos de tentative (bas) encadrent la grille,
-	// qui reste centree verticalement. .forge-top et .forge-bottom prennent l'espace
-	// restant a parts egales (flex 1), ce qui centre la grille quelle que soit la
-	// hauteur des infos (#622).
+	// Bloc COMPACT : le dosage (haut) et les infos de tentative (bas) collent a la grille
+	// (gap 8px), et c'est tout le bloc qui est centre verticalement par .forge-wrapper.
+	// Sans ca, sur mobile, un flex 1 poussait l'info aux extremes et laissait de grands
+	// vides autour de la grille (#622).
 	flex-direction: column;
 	align-items: center;
+	gap: 8px;
 	width: 260px;
-	// Pleine hauteur de la colonne : c'est ce qui permet de centrer la grille.
-	height: 100%;
+	height: auto;
 	flex-shrink: 0;
 	padding: 10px;
 	.forge-top, .forge-bottom {
-		flex: 1;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
-		min-height: 0;
 	}
-	// Le haut colle sous la barre du haut (dosage), le bas colle au-dessus de la grille
-	// / du bord bas : la grille se retrouve pile au milieu.
-	.forge-top { justify-content: flex-start; }
-	.forge-bottom { justify-content: flex-end; }
 	.grid {
 		width: 240px;
 		height: 240px;

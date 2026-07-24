@@ -387,10 +387,10 @@
 		flex-basis: 350px;
 		flex-shrink: 0;
 		display: flex;
-		// Etiree sur toute la hauteur : la forge (.forge, height 100%) se centre alors
-		// verticalement entre ses infos du haut (dosage) et du bas (tentative), et le
-		// haut/bas de taille variable ne fait plus sauter la grille (#622).
-		align-items: stretch;
+		// Centre le bloc forge COMPACT verticalement (safe : bascule en haut plutot que
+		// de rogner s'il depasse). Sur mobile la colonne fait la hauteur du bloc, donc pas
+		// de vide ; sur desktop il flotte au milieu du panneau (#622).
+		align-items: safe center;
 		justify-content: center;
 		padding-top: 10px;
 		// Barre de defilement toujours reservee (scroll et non auto) : sinon son
