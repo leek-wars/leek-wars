@@ -164,7 +164,8 @@ function part(base: Stats | StatList, added: Stats, carac: string, weights: { [c
 }
 
 function difficulty(partValue: number): number {
-	return 1 + 2 * Math.pow(1 - partValue, 2)
+	// Créer une carac absente (part 0) coûte au plus 2× plus cher, jamais 3× (#622).
+	return 1 + Math.pow(1 - partValue, 2)
 }
 
 /** Palier d'efficacité : 0 = grande (x1), 1 = moyenne (x0,2), 2 = faible (x0,04). */
