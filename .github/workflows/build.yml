@@ -49,9 +49,13 @@ jobs:
       # Push develop : build mode beta (lit .env.beta) et push vers la stack
       # leekwars_beta (volume Docker leekwars_beta_client) via une clé SSH
       # dédiée dont le ForceCommand pointe sur deploy-client-beta.sh.
-      # Sans sourcemaps : la beta n'en a pas besoin et ca coupe ~2-3 min (et le heap 8 Go).
+      # Sans sourcemaps : la beta n'en a pas besoin et ca coupe le temps de leur
+      # generation. Le heap 8 Go reste necessaire : le build de l'app (Monaco) depasse
+      # les 2 Go par defaut de Node meme sans sourcemaps.
       - name: Build for beta
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
         run: npm run build-beta
 
       - name: Deploy to beta
