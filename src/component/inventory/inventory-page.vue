@@ -118,8 +118,9 @@
 	import ItemHistory from '@/component/inventory/item-history.vue'
 	import PageTabs from '@/component/app/page-tabs.vue'
 	import { store } from '@/model/store'
+	import type { InventoryItem } from '@/model/farmer'
 	import { emitter } from '@/model/vue'
-	import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 	enum Sort {
 		PRICE, LEVEL, RARITY, INGREDIENT_COUNT
@@ -298,14 +299,20 @@
 	const onCloverUsed = () => { tooltipVisible.value = false }
 
 	/**
-	 * Un composant vient d'etre pose dans la forge : si l'atelier est replie, il s'ouvre
-	 * a mi-hauteur pour montrer ou la piece a atterri. Un atelier deja ouvert n'est pas
-	 * touche, sinon le cran choisi par le joueur serait ecrase a chaque clic (#622).
+	 * Un composant vient d'etre clique dans l'inventaire : si l'atelier est replie, il
+	 * s'ouvre a mi-hauteur (en grand sur desktop) pour montrer ou la piece atterrit. Un
+	 * atelier deja ouvert n'est pas touche, sinon le cran choisi par le joueur serait
+	 * ecrase a chaque clic (#622).
 	 */
-	function onComponentPicked() {
+	function onComponentPicked(item: InventoryItem) {
 		const panel = bottomPanel.value
 		if (!panel || panel.state > 0) return
 		panel.state = LeekWars.mobile ? 1 : 2
+		// Le panneau DEMONTE son contenu quand il est replie : la forge n'existait pas
+		// encore et n'a donc pas pu recevoir l'evenement. On le rejoue une fois qu'elle
+		// est montee, sinon le panneau s'ouvrait sur une forge vide. Pas de boucle : au
+		// second passage l'atelier est ouvert et on ressort tout de suite.
+		nextTick(() => emitter.emit('alter', item))
 	}
 
 	// Apres une destruction, on bascule sur l'onglet Detruire : le resultat vient d'y
