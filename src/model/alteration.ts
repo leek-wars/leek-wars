@@ -90,11 +90,11 @@ function alterationTier(ratio: number): { tier: number, color: string } | null {
 // puisque le serveur renvoie la probabilité qu'il a réellement utilisée.
 
 const WELL_COEFFICIENT = 0.2
-const DIFFICULTY_K = 7.3
+const DIFFICULTY_K = 5.7
 const PROGRESS_BONUS = 2
 const PROGRESS_CAP = 0.2
 const MAX_PROBABILITY = 0.95
-const BREAK_COEFFICIENT = 0.001
+const BREAK_COEFFICIENT = 0.005
 // Le puits n'est plus un mur : on autorise a tenter jusqu'a ce plafond, ou la reussite
 // devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
 const OVERFILL_CAP = 1.3
