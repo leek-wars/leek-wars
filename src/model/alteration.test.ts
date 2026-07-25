@@ -106,7 +106,9 @@ describe('prévisualisation d\'une tentative', () => {
 	it('le danger de casse n\'apparaît que près du plafond', () => {
 		const low = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
 		const high = planAttempt(DATA, HYLOCEREUS, { life: 160 }, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(low.breakProbability).toBeLessThan(0.001)
+		// Seuil à 1 % et non 0,1 % : le coefficient de casse a été multiplié par 10, une
+		// pièce presque vide risque désormais 0,11 % au lieu de 0,011 % (#622).
+		expect(low.breakProbability).toBeLessThan(0.01)
 		expect(high.breakProbability).toBeGreaterThan(low.breakProbability)
 	})
 })
