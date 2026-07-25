@@ -27,4 +27,11 @@ const forgeComponent = ref<{
  */
 const forgePendingPower = ref(0)
 
-export { forgeComponent, forgePendingPower }
+/**
+ * Charge deja investie sur la piece posee, en points de puissance. Avec
+ * forgePendingPower et la capacite du composant, la palette sait quelles altérations
+ * ne rentrent plus (#622).
+ */
+const forgeCharge = ref(0)
+
+export { forgeComponent, forgePendingPower, forgeCharge }

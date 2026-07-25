@@ -22,9 +22,10 @@
 			<div v-if="capacity > 0" class="row charge">
 				<span>{{ $t('main.alteration_charge') }}</span>
 				<b class="value" :class="{ deficit: charge < 0 }">
-					<!-- Recette en cours : on annonce la charge qu'elle ferait ATTEINDRE, c'est
-					     elle qui decide de la prochaine tentative, pas celle qu'on a (#622). -->
-					<template v-if="pending">{{ charge }} <span class="arrow">&rarr;</span> <span class="target" :class="{ over: charge + pending > capacity }">{{ charge + pending }}</span></template>
+					<!-- Recette en cours : on affiche directement la charge qu'elle ferait
+					     ATTEINDRE, c'est elle qui decide de la prochaine tentative. La couleur
+					     suffit a dire que le chiffre est une projection (#622). -->
+					<span v-if="pending" class="target" :class="{ over: charge + pending > capacity }">{{ charge + pending }}</span>
 					<template v-else>{{ charge }}</template>
 					/ {{ capacity }}
 				</b>
@@ -132,7 +133,6 @@
 			color: var(--text-color-secondary);
 			.value { color: var(--text-color); }
 			.value.deficit { color: #7d5a5a; }
-			.arrow { color: var(--text-color-secondary); font-weight: normal; }
 			// Charge visee par la recette en cours : en vert tant qu'elle rentre, en rouge
 			// des qu'elle deborde la capacite.
 			.target { color: #5fad1b; }

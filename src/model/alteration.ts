@@ -265,7 +265,8 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 			// garde couvre les appels directs).
 			if (INDIVISIBLE.indexOf(carac) !== -1 && efficiency < 1) probability = 0
 			// Pas de gate du métabolisme côté client : l'aperçu ne connaît pas M (caché
-			// serveur) et montre la proba de base, jamais la vraie proba gatée (#622).
+			// serveur) et montre la proba de base, jamais la vraie proba gatée. Le serveur
+			// plafonne la charge selon la mesure, du quart de base au tout (#622).
 			probability = Math.min(MAX_PROBABILITY, probability)
 		}
 		rolls[carac] = { points: group.points, probability }

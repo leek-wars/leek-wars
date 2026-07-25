@@ -24,7 +24,7 @@ const DATA: AlterationData = {
 		[AlterationFamily.BOOSTER]: { 1: 0.2, 2: 0.04, 3: 1 },
 	},
 	weights: {
-		life: 1, strength: 4, agility: 4, wisdom: 4, resistance: 4, science: 4, magic: 4,
+		life: 1, strength: 2, agility: 2, wisdom: 2, resistance: 2, science: 2, magic: 2,
 		frequency: 2, tp: 100, mp: 125, cores: 100, ram: 100,
 	},
 	gains: {
@@ -41,7 +41,7 @@ const HYLOCEREUS: [string, number][] = [['life', 600], ['wisdom', 40], ['magic',
 
 describe('puits', () => {
 	it('vaut 0,2 × la puissance des stats de base, arrondi à l\'entier', () => {
-		expect(well(920)).toBe(184) // hylocereus (0,2 × 920)
+		expect(well(760)).toBe(152) // hylocereus (0,2 × 760)
 		expect(well(600)).toBe(120) // poire (0,2 × 600)
 		expect(well(100)).toBe(20)  // pomme (0,2 × 100)
 		expect(well(1)).toBe(0)     // rgb : puits nul, non altérable
@@ -50,9 +50,9 @@ describe('puits', () => {
 
 describe('prévisualisation d\'une tentative', () => {
 	it('reproduit la probabilité pour un puits presque vide', () => {
-		// 1 Vitamine D sur un hylocereus vierge (puits 184 = 0,2 × 920).
+		// 1 Vitamine D sur un hylocereus vierge (puits 152 = 0,2 × 760).
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(plan.rolls.life.probability).toBeCloseTo(0.8736231, 6)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.7709409, 6)
 		expect(plan.rolls.life.points).toBe(50)
 		expect(plan.dose).toBe(20)
 		expect(plan.habsCost).toBe(65025)
@@ -65,16 +65,16 @@ describe('prévisualisation d\'une tentative', () => {
 		expect(plan.items).toBe(3)
 		expect(plan.rolls.life.points).toBe(52)
 		expect(plan.rolls.wisdom.points).toBe(12)
-		expect(plan.rolls.life.probability).toBeCloseTo(0.0304579, 6)
-		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0198978, 6)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.0285799, 6)
+		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0150626, 6)
 		// Une recette = un seul jet : la proba de tentative est le min (ici la sagesse).
-		expect(plan.probability).toBeCloseTo(0.0198978, 6)
+		expect(plan.probability).toBeCloseTo(0.0150626, 6)
 	})
 
 	it('autorise un léger dépassement du puits mais le rend suicidaire', () => {
-		// 4 Vitamines D = 200 de puissance sur un puits de 184 (109 %) : la tentative est
-		// autorisée (sous le plafond de 130 %) mais quasi impossible, et la casse quasi certaine.
-		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 4 })
+		// 3 Vitamines D = 150 de puissance sur un puits de 152... juste en dessous : on en
+		// met 3 sur une pièce déjà chargée pour viser 118 %, sous le plafond de 130 %.
+		const plan = planAttempt(DATA, HYLOCEREUS, { life: 30 }, 255, ComponentFamily.FRUIT, { 1: 3 })
 		expect(plan.fits).toBe(true)
 		expect(plan.overfilled).toBe(true)
 		expect(plan.rolls.life.probability).toBeLessThan(0.002)
@@ -82,7 +82,7 @@ describe('prévisualisation d\'une tentative', () => {
 	})
 
 	it('refuse un dépassement au-delà du plafond souple', () => {
-		// Trois PM montent à 204 % du puits (375 / 184), au-delà du plafond de 130 % : refusé.
+		// Trois PM montent à 247 % du puits (375 / 152), au-delà du plafond de 130 % : refusé.
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 10: 3 })
 		expect(plan.fits).toBe(false)
 		expect(plan.rolls.mp.probability).toBe(0)
@@ -105,7 +105,7 @@ describe('prévisualisation d\'une tentative', () => {
 
 	it('le danger de casse n\'apparaît que près du plafond', () => {
 		const low = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		const high = planAttempt(DATA, HYLOCEREUS, { life: 160 }, 255, ComponentFamily.FRUIT, { 1: 1 })
+		const high = planAttempt(DATA, HYLOCEREUS, { life: 100 }, 255, ComponentFamily.FRUIT, { 1: 1 })
 		// Seuil à 1 % et non 0,1 % : le coefficient de casse suit DIFFICULTY_K et vaut
 		// désormais 0,005, donc une pièce presque vide risque quelques dixièmes (#622).
 		expect(low.breakProbability).toBeLessThan(0.01)
@@ -125,14 +125,14 @@ describe('pièce creusée par la casse', () => {
 	// La casse peut faire descendre une carac SOUS sa valeur de base, jusqu'à -100 % de
 	// la capacité (#622). Le miroir doit prévisualiser la réparation comme le serveur.
 	it('affiche une charge négative', () => {
-		const plan = planAttempt(DATA, HYLOCEREUS, { life: -92 }, 255, ComponentFamily.FRUIT, {})
-		expect(plan.capacity).toBe(184)
+		const plan = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, {})
+		expect(plan.capacity).toBe(152)
 		expect(plan.ratioBefore).toBeCloseTo(-0.5, 6)
 	})
 
 	it('rend la réparation facile : la difficulté se lit sur le remplissage', () => {
 		// Remonter de -50 % vers 0 est au plafond, alors que le même pas depuis 0 est dur.
-		const repair = planAttempt(DATA, HYLOCEREUS, { life: -92 }, 255, ComponentFamily.FRUIT, { 1: 1 })
+		const repair = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 1 })
 		const climb = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
 		expect(repair.probability).toBeCloseTo(0.95, 6)
 		expect(repair.probability).toBeGreaterThan(climb.probability)
@@ -141,7 +141,7 @@ describe('pièce creusée par la casse', () => {
 	})
 
 	it('facture le tarif de base, jamais moins', () => {
-		const broken = planAttempt(DATA, HYLOCEREUS, { life: -92 }, 255, ComponentFamily.FRUIT, { 1: 1 })
+		const broken = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 1 })
 		const fresh = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
 		expect(broken.habsCost).toBe(fresh.habsCost)
 	})
