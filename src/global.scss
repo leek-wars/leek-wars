@@ -575,6 +575,12 @@ img.emoji {
 body.dark img.emoji[src$="frequency.png"] {
 	filter: invert(1);
 }
+// Meme eclair noir dans les icones de caracteristique (atelier, forge, palette,
+// infobulles de composant) : invisible sur fond sombre sans inversion (#622).
+body.dark img[src$="/charac/frequency.png"],
+body.dark img[src$="/charac/small/frequency.png"] {
+	filter: invert(1);
+}
 .emoji.large {
 	width: 30px;
 	height: 30px;

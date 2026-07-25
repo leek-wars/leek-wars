@@ -4,11 +4,14 @@
 		     trois cas plutot qu'un seul chiffre, sinon le joueur croit a une valeur fixe. -->
 		<div class="stats">
 			<div v-for="row in rows" :key="row.family" class="stat" :class="{best: row.best}">
-				<img class="icon" :src="'/image/charac/' + alteration.carac + '.png'">
+				<img class="icon" :class="alteration.carac" :src="'/image/charac/' + alteration.carac + '.png'">
 				<b :class="'color-' + alteration.carac">+{{ row.gain }}</b>&nbsp;
 				<span v-html="$t('characteristic.' + alteration.carac)"></span>
 				<span class="on">{{ row.label }}</span>
 				<span class="factor">×{{ row.efficiency }}</span>
+				<!-- Charge consommee dans la capacite du composant : elle depend du palier,
+				     donc elle se lit par ligne et pas en pied d'infobulle (#622). -->
+				<span class="charge">{{ $t('main.alteration_charge') }} {{ row.charge }}</span>
 			</div>
 		</div>
 		<!-- Sans ce mot, les trois "+1" d'une carac indivisible passent pour un bug. -->
@@ -66,6 +69,9 @@
 				label: t('main.' + f.key),
 				efficiency,
 				gain: (d.gains[a.carac] || [0, 0, 0])[tier],
+				// Charge = points gagnes x poids de la carac : ce que l'alteration mange
+				// dans la capacite du composant.
+				charge: (d.gains[a.carac] || [0, 0, 0])[tier] * (d.weights[a.carac] || 0),
 				best: tier === 0,
 			}
 		})
