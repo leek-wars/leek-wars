@@ -52,7 +52,7 @@ describe('prévisualisation d\'une tentative', () => {
 	it('reproduit la probabilité pour un puits presque vide', () => {
 		// 1 Vitamine D sur un hylocereus vierge (puits 184 = 0,2 × 920).
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(plan.rolls.life.probability).toBeCloseTo(0.77627, 4)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.8736231, 6)
 		expect(plan.rolls.life.points).toBe(50)
 		expect(plan.dose).toBe(20)
 		expect(plan.habsCost).toBe(65025)
@@ -65,10 +65,10 @@ describe('prévisualisation d\'une tentative', () => {
 		expect(plan.items).toBe(3)
 		expect(plan.rolls.life.points).toBe(52)
 		expect(plan.rolls.wisdom.points).toBe(12)
-		expect(plan.rolls.life.probability).toBeCloseTo(0.0105173, 6)
-		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0068708, 6)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.0304579, 6)
+		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0198978, 6)
 		// Une recette = un seul jet : la proba de tentative est le min (ici la sagesse).
-		expect(plan.probability).toBeCloseTo(0.0068708, 6)
+		expect(plan.probability).toBeCloseTo(0.0198978, 6)
 	})
 
 	it('autorise un léger dépassement du puits mais le rend suicidaire', () => {
@@ -77,7 +77,7 @@ describe('prévisualisation d\'une tentative', () => {
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 4 })
 		expect(plan.fits).toBe(true)
 		expect(plan.overfilled).toBe(true)
-		expect(plan.rolls.life.probability).toBeLessThan(0.0005)
+		expect(plan.rolls.life.probability).toBeLessThan(0.002)
 		expect(plan.breakProbability).toBeGreaterThan(0.3)
 	})
 
@@ -106,8 +106,8 @@ describe('prévisualisation d\'une tentative', () => {
 	it('le danger de casse n\'apparaît que près du plafond', () => {
 		const low = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
 		const high = planAttempt(DATA, HYLOCEREUS, { life: 160 }, 255, ComponentFamily.FRUIT, { 1: 1 })
-		// Seuil à 1 % et non 0,1 % : le coefficient de casse a été multiplié par 10, une
-		// pièce presque vide risque désormais 0,11 % au lieu de 0,011 % (#622).
+		// Seuil à 1 % et non 0,1 % : le coefficient de casse suit DIFFICULTY_K et vaut
+		// désormais 0,005, donc une pièce presque vide risque quelques dixièmes (#622).
 		expect(low.breakProbability).toBeLessThan(0.01)
 		expect(high.breakProbability).toBeGreaterThan(low.breakProbability)
 	})
