@@ -71,6 +71,7 @@
 	"alteration_broken": "Breuk: {0} punten verloren",
 	"alteration_cost": "Kosten",
 	"alteration_failed": "Mislukt",
+	"alteration_impossible": "Onmogelijk",
 	"alteration_fuse": "Wijzigen",
 	"alteration_metabolism": "Metabolisme",
 	"alteration_well": "Put",

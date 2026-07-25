@@ -71,6 +71,7 @@
 	"alteration_broken": "Pęknięcie: utracono {0} pkt",
 	"alteration_cost": "Koszt",
 	"alteration_failed": "Nieudane",
+	"alteration_impossible": "Niemożliwe",
 	"alteration_fuse": "Modyfikuj",
 	"alteration_metabolism": "Metabolizm",
 	"alteration_well": "Studnia",

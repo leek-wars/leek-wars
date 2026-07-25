@@ -380,11 +380,22 @@
 			+ ' / ' + LeekWars.formatNumber(Math.round(p.capacity))
 	})
 
+	/**
+	 * Pourcentage d'une chance, avec TOUJOURS un chiffre significatif (#622).
+	 *
+	 * Une chance minuscule n'est pas une chance nulle : le metabolisme peut laisser
+	 * passer une tentative a 0,004 %, et l'afficher « 0 % » la faisait passer pour
+	 * interdite. On ajoute donc autant de decimales qu'il en faut pour que le premier
+	 * chiffre significatif apparaisse. Zero, lui, est un vrai mur (gate du metabolisme
+	 * ou plafond souple depasse) : il s'annonce en toutes lettres.
+	 */
 	function percent(p: number): string {
-		if (p <= 0) return '0 %'
-		if (p >= 0.1) return Math.round(p * 100) + ' %'
-		if (p >= 0.001) return (p * 100).toFixed(1) + ' %'
-		return (p * 100).toFixed(3) + ' %'
+		if (p <= 0) return t('main.alteration_impossible')
+		const v = p * 100
+		// 9,95 et non 10 : au-dela, une decimale afficherait « 10.0 % ».
+		if (v >= 9.95) return Math.round(v) + ' %'
+		const digits = Math.min(10, Math.max(1, Math.ceil(-Math.log10(v))))
+		return v.toFixed(digits) + ' %'
 	}
 
 	/**
@@ -897,6 +908,9 @@
 		padding: 4px 7px;
 		font-size: 13px;
 		border-radius: 4px;
+		// Une recette peut viser quatre caracs et le taux s'ecrire « Impossible » : sans
+		// retour a la ligne, la carte de 260 px deborderait (#622).
+		flex-wrap: wrap;
 		& + .row { margin-top: 2px; }
 	}
 	.ic { width: 17px; height: 17px; }

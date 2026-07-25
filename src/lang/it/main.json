@@ -74,6 +74,7 @@
 	"alteration_broken": "Rottura: {0} punti persi",
 	"alteration_cost": "Costo",
 	"alteration_failed": "Fallito",
+	"alteration_impossible": "Impossibile",
 	"alteration_fuse": "Alterare",
 	"alteration_metabolism": "Metabolismo",
 	"alteration_well": "Pozzo",

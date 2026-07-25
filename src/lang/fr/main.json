@@ -74,6 +74,7 @@
 	"alteration_broken": "Casse : {0} points perdus",
 	"alteration_cost": "Coût",
 	"alteration_failed": "Raté",
+	"alteration_impossible": "Impossible",
 	"alteration_fuse": "Altérer",
 	"alteration_metabolism": "Métabolisme",
 	"alteration_well": "Puits",
