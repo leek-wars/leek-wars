@@ -288,7 +288,11 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		capacity,
 		ratioBefore: capacity > 0 ? before / capacity : 0,
 		ratioAfter: rAfter,
+		// `breakProbability` est CONDITIONNELLE : le serveur ne tire la casse qu'après un
+		// échec, jamais après une réussite. `breakRisk` est ce que le joueur affronte
+		// vraiment sur cette fusion, et c'est lui que la forge affiche (#622).
 		breakProbability,
+		breakRisk: (1 - probability) * breakProbability,
 		// Charge négative ramenée à 0 : une pièce creusée coûte le tarif de base, jamais moins.
 		habsCost: Math.round(level * level * (1 + 2 * Math.max(0, capacity > 0 ? before / capacity : 0))),
 	}

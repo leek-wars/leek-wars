@@ -111,6 +111,14 @@ describe('prévisualisation d\'une tentative', () => {
 		expect(low.breakProbability).toBeLessThan(0.01)
 		expect(high.breakProbability).toBeGreaterThan(low.breakProbability)
 	})
+
+	it('le risque affiché tient compte du fait que la casse ne suit qu\'un échec', () => {
+		// Le serveur ne tire la casse qu'après un échec : le risque de la fusion entière
+		// vaut donc (1 - réussite) × P(casse), et non P(casse) seule (#622).
+		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
+		expect(plan.breakRisk).toBeCloseTo((1 - plan.probability) * plan.breakProbability, 12)
+		expect(plan.breakRisk).toBeLessThan(plan.breakProbability)
+	})
 })
 
 describe('pièce creusée par la casse', () => {
