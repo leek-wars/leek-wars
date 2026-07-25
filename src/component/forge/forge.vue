@@ -102,7 +102,8 @@
 				<v-icon>mdi-close</v-icon>
 				<v-tooltip activator="parent" location="top">{{ $t('main.clear') }}</v-tooltip>
 			</v-btn>
-			<!-- Recommencer : repose la derniere recette d'alteration (#622). Coin HAUT gauche. -->
+			<!-- Recommencer : repose la derniere recette d'alteration (#622). Coin BAS droit,
+			     la ou se trouve Fusionner : les deux ne coexistent jamais. -->
 			<v-btn v-if="component && lastRecipe && alterationCount === 0" class="corner-btn redo" icon variant="flat"
 				size="small" @click="repeat">
 				<v-icon color="primary">mdi-restore</v-icon>
@@ -1078,8 +1079,10 @@
 	background-color: var(--background-disabled) !important;
 	border-color: var(--border);
 }
-// Recommencer : coin HAUT gauche de la grille.
-.redo { left: -4px; top: -4px; }
+// Recommencer : MEME emplacement que Fusionner (coin bas droit), les deux boutons etant
+// mutuellement exclusifs (recommencer n'apparait qu'a zero alteration posee, fusionner
+// qu'a partir d'une). Le geste est ainsi toujours le meme, au meme endroit (#622).
+.redo { right: -4px; bottom: -4px; }
 // Effacer : coin HAUT droit, aligne sur les autres (etait a -5px, decale).
 .clear { right: -4px; top: -4px; }
 // Recyclage : coin BAS gauche.
