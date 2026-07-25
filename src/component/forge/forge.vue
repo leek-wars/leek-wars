@@ -273,44 +273,54 @@
 	/** Piece qui vient d'etre fabriquee, pour la reprendre telle quelle dans les autres onglets (#622). */
 	const crafted = ref<InventoryItem | null>(null)
 
-	onMounted(() => {
-		LeekWars.footer = false
-		LeekWars.box = true
-		emitter.on('alter', (item: InventoryItem) => {
-			// En mode destruction, recliquer le meme composant (non altere) en empile
-			// plusieurs pour les recycler d'un coup ; sinon on repose la piece (#622).
-			if (mode.value === 'destroy' && component.value && component.value.template === item.template
-				&& alterationCount.value === 0 && component.value.stats == null) {
-				if (componentCount.value < item.quantity) componentCount.value++
-				return
-			}
+	// Les gestionnaires d'evenements sont NOMMES pour pouvoir etre retires un par un :
+	// emitter.off(type) sans reference vide toute la liste du type, y compris les
+	// gestionnaires des AUTRES composants. La forge etant demontee des que l'atelier est
+	// replie, elle emportait ainsi ceux de la page d'inventaire (#622).
+	function onAlter(item: InventoryItem) {
+		// En mode destruction, recliquer le meme composant (non altere) en empile
+		// plusieurs pour les recycler d'un coup ; sinon on repose la piece (#622).
+		if (mode.value === 'destroy' && component.value && component.value.template === item.template
+			&& alterationCount.value === 0 && component.value.stats == null) {
+			if (componentCount.value < item.quantity) componentCount.value++
+			return
+		}
+		clear()
+		component.value = item
+		componentCount.value = 1
+	}
+
+	function onWorkshopMode(m: string) {
+		const from = mode.value
+		mode.value = m
+		// On quitte Fabriquer juste apres un craft : la piece fabriquee descend dans la
+		// forge comme un composant ordinaire. Rester en mode « recommencer » n'a pas de
+		// sens dans Ameliorer ni Detruire, qui travaillent sur une piece et pas sur une
+		// recette, et obligeait a aller la rechercher dans l'inventaire (#622).
+		if (from === 'craft' && m !== 'craft' && built.value && crafted.value) {
+			const item = crafted.value
 			clear()
 			component.value = item
 			componentCount.value = 1
-		})
+		}
+	}
+
+	function onCraftScheme(s: SchemeTemplate) {
+		clear()
+		scheme.value = s
+		for (let i = 0; i < s.items.length; ++i) {
+			forge.value[i] = s.items[i]
+		}
+		result.value = s.result
+	}
+
+	onMounted(() => {
+		LeekWars.footer = false
+		LeekWars.box = true
+		emitter.on('alter', onAlter)
 		emitter.on('add-alteration', addAlteration)
-		emitter.on('workshop-mode', (m: string) => {
-			const from = mode.value
-			mode.value = m
-			// On quitte Fabriquer juste apres un craft : la piece fabriquee descend dans la
-			// forge comme un composant ordinaire. Rester en mode « recommencer » n'a pas de
-			// sens dans Ameliorer ni Detruire, qui travaillent sur une piece et pas sur une
-			// recette, et obligeait a aller la rechercher dans l'inventaire (#622).
-			if (from === 'craft' && m !== 'craft' && built.value && crafted.value) {
-				const item = crafted.value
-				clear()
-				component.value = item
-				componentCount.value = 1
-			}
-		})
-		emitter.on('craft', (s: SchemeTemplate) => {
-			clear()
-			scheme.value = s
-			for (let i = 0; i < s.items.length; ++i) {
-				forge.value[i] = s.items[i]
-			}
-			result.value = s.result
-		})
+		emitter.on('workshop-mode', onWorkshopMode)
+		emitter.on('craft', onCraftScheme)
 	})
 
 	function clearIngredients() {
@@ -814,10 +824,10 @@
 	}
 
 	onBeforeUnmount(() => {
-		emitter.off('craft')
-		emitter.off('alter')
-		emitter.off('add-alteration')
-		emitter.off('workshop-mode')
+		emitter.off('craft', onCraftScheme)
+		emitter.off('alter', onAlter)
+		emitter.off('add-alteration', addAlteration)
+		emitter.off('workshop-mode', onWorkshopMode)
 	})
 
 	function craft() {
