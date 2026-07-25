@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import { defineComponent, h, nextTick, onMounted } from 'vue'
 import { mountComponent } from '@/test/harness'
 import Panel from '@/component/app/panel.vue'
 
@@ -58,6 +59,32 @@ describe('panel.vue', () => {
 
 		localStorage.setItem('test/panel', 'true')
 		expect(mountPanel({ states: 3 }).find('.content').exists()).toBe(true)
+	})
+
+	// L'inventaire ouvre l'atelier au clic sur un composant puis REJOUE l'evenement au
+	// nextTick, parce que le panneau demonte son contenu quand il est replie : la forge
+	// n'existe pas encore au moment du clic. Ce test verrouille l'ordonnancement dont
+	// depend ce rejeu, sinon le panneau s'ouvrirait sur une forge vide (#622).
+	it('monte le contenu avant le nextTick qui suit l\'ouverture', async () => {
+		let mountedAt = 0
+		let tick = 0
+		const child = defineComponent({
+			setup() {
+				onMounted(() => { mountedAt = ++tick })
+				return () => h('div', 'contenu')
+			},
+		})
+		localStorage.setItem('test/panel', 'false')
+		const w = mountComponent(Panel,
+			{ props: { title: 'Titre', toggle: 'test/panel' }, slots: { content: () => h(child) } },
+			{ messages: {}, leekWars: {} })
+		expect(mountedAt).toBe(0)
+
+		await toggle(w).trigger('click')
+		const replayedAt = ++tick
+		expect(mountedAt).toBeGreaterThan(0)
+		expect(mountedAt).toBeLessThan(replayedAt)
+		await nextTick()
 	})
 
 	it('relit le cran numérique', async () => {
