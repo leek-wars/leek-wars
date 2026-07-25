@@ -1,6 +1,6 @@
 <template>
 	<div v-if="ratio !== null" class="charge-badge" :title="$t('main.alteration_charge') + ' ' + chargeText">
-		<svg viewBox="0 0 36 36">
+		<svg viewBox="0 0 36 36" :class="{ reverse: ratio < 0 }">
 			<circle class="track" cx="18" cy="18" r="15" />
 			<circle class="fill" :class="'tier-' + tier" cx="18" cy="18" r="15"
 				:stroke-dasharray="circumference" :stroke-dashoffset="circumference * (1 - Math.min(1, Math.abs(ratio)))" />
@@ -63,6 +63,11 @@
 		height: 100%;
 		// Part du haut, sens horaire.
 		transform: rotate(-90deg);
+		// Charge negative : meme depart, mais l'arc tourne dans le sens ANTI-horaire.
+		// Un trou se lit alors comme l'exact inverse d'un gain, sans avoir a lire le
+		// pourcentage (#622). Miroir applique APRES la rotation, pour garder le depart
+		// en haut ; le pourcentage est un frere du svg, il n'est pas retourne.
+		&.reverse { transform: scaleX(-1) rotate(-90deg); }
 	}
 	.track {
 		fill: var(--background);
