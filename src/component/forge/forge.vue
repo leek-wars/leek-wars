@@ -492,7 +492,9 @@
 	})
 	/** Proba UNIQUE de la tentative : la vraie (serveur) si connue, sinon la base locale. */
 	const previewProbability = computed(() => serverPreview.value?.probability ?? plan.value?.probability ?? 0)
-	const previewBreak = computed(() => serverPreview.value?.break_probability ?? plan.value?.breakProbability ?? 0)
+	// Le risque affiché est celui de la fusion entière : la casse n'etant tiree qu'apres
+	// un echec, c'est (1 - reussite) x P(casse), que le serveur renvoie deja calculé (#622).
+	const previewBreak = computed(() => serverPreview.value?.break_probability ?? plan.value?.breakRisk ?? 0)
 
 	/**
 	 * Dosage de la tentative : somme des numeros publies des alterations posees.
