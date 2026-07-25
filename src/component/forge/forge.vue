@@ -293,6 +293,10 @@
 	// singleton LeekWars.schemes[id].
 	let craftToken = 0
 
+	// Les gestionnaires d'evenements sont NOMMES pour pouvoir etre retires un par un :
+	// emitter.off(type) sans reference vide toute la liste du type, y compris les
+	// gestionnaires des AUTRES composants. La forge etant demontee des que l'atelier est
+	// replie, elle emportait ainsi ceux de la page d'inventaire (#622).
 	function onCraft(s: SchemeTemplate) {
 		clear()
 		scheme.value = s
