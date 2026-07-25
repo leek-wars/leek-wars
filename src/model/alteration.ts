@@ -98,6 +98,9 @@ const BREAK_COEFFICIENT = 0.0001
 // Le puits n'est plus un mur : on autorise a tenter jusqu'a ce plafond, ou la reussite
 // devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
 const OVERFILL_CAP = 1.3
+// Plancher de charge : la casse creuse la pièce sous ses stats de base jusqu'à -100 %
+// de sa capacité, pas au-delà (à un point indivisible près, qui ne se coupe pas).
+const CHARGE_FLOOR = -1
 
 type Stats = { [carac: string]: number }
 /** Format historique des component_template : [["life", 600], ...] */
@@ -267,7 +270,10 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	// le remplissage et devient quasi certaine au-delà de 100 % : c'est elle qui punit
 	// l'acharnement plutôt qu'un mur.
 	let breakProbability = 0
-	if (allowed && capacity > 0) {
+	// Une pièce déjà au plancher n'a plus rien à perdre : annoncer un risque qui ne peut
+	// pas se produire serait un mensonge d'affichage (#622).
+	const diggable = before - CHARGE_FLOOR * capacity > 0
+	if (allowed && capacity > 0 && diggable) {
 		// Comme pour la réussite, le risque se lit sur le remplissage visé et non sur le
 		// déficit : réparer une pièce creusée n'est pas dangereux.
 		const reference = Math.exp(-DIFFICULTY_K * rEff * rEff
