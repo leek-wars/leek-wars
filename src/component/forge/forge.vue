@@ -44,10 +44,10 @@
 					<title>{{ chargeTitle }}</title>
 					<!-- Pas de rail de fond : seul l'arc de charge est visible. -->
 					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
-					<path v-if="plan.ratioAfter !== 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
+					<path v-if="plan.ratioAfter !== 0" class="fill preview" :class="['tier-' + tierAfter, { reverse: plan.ratioAfter < 0 }]" :d="RING_PATH"
 						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(plan.ratioAfter)))" />
 					<!-- La charge actuelle, dans la couleur de son palier. -->
-					<path v-if="plan.ratioBefore !== 0" class="fill" :class="'tier-' + tierBefore" :d="RING_PATH"
+					<path v-if="plan.ratioBefore !== 0" class="fill" :class="['tier-' + tierBefore, { reverse: plan.ratioBefore < 0 }]" :d="RING_PATH"
 						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(plan.ratioBefore)))" />
 				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
@@ -830,6 +830,16 @@
 		// Un rect arrondi commence deja son trace en haut et tourne dans le sens
 		// horaire : pas de rotation a appliquer, contrairement a un cercle (sinon le
 		// depart se decale sur un coin et l'arc semble detache).
+	}
+	// Charge negative : meme depart en haut, mais l'arc tourne dans le sens ANTI-horaire,
+	// pour qu'un trou se lise comme l'exact inverse d'un gain (#622). Le miroir est pose
+	// sur CHAQUE trace et non sur le svg : apres une casse, la charge actuelle peut etre
+	// negative pendant que la tentative en cours vise du positif, les deux arcs partent
+	// alors du haut dans des sens opposes.
+	.fill.reverse {
+		transform-box: fill-box;
+		transform-origin: center;
+		transform: scaleX(-1);
 	}
 	// Couleur du palier, comme la silhouette de la vignette.
 	// Palier 0 : charge negative, la piece a ete creusee sous ses stats de base (#622).
