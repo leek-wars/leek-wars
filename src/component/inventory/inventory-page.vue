@@ -7,7 +7,7 @@
 		<div class="column">
 			<inventory />
 			<div class="resizer" @mousedown="resizerMousedown"><v-icon>mdi-drag-horizontal-variant</v-icon></div>
-			<panel ref="bottomPanel" class="bottom-panel" toggle="inventory/workshop" :toggle-invert="true" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event">
+			<panel ref="bottomPanel" class="bottom-panel" toggle="inventory/workshop" :toggle-invert="true" :states="LeekWars.mobile ? 3 : 2" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event" @update:state="panelState = $event">
 				<template #title>
 					<div class="workshop-tabs">
 						<div v-for="t in TABS" :key="t.mode" v-ripple class="workshop-tab" :class="{active: tab === t.mode}" @click.stop="tab = t.mode">
@@ -140,7 +140,14 @@
 	})
 
 	const bottomHeight = ref(Math.max(300, parseInt(localStorage.getItem('inventory/bottom-height') || '350', 10)))
-	const bottomExpanded = ref(localStorage.getItem('inventory/workshop') !== 'false')
+	// Cran d'ouverture de l'atelier. Sur mobile le bouton boucle sur trois crans
+	// (replie, mi-hauteur, plein) faute de place pour un redimensionneur ; sur desktop il
+	// reste binaire et c'est la poignee qui regle la hauteur (#622).
+	const storedPanel = localStorage.getItem('inventory/workshop')
+	const panelState = ref(storedPanel === null || storedPanel === 'true' ? 2
+		: storedPanel === 'false' ? 0
+		: Math.max(0, Math.min(2, parseInt(storedPanel, 10) || 0)))
+	const bottomExpanded = ref(panelState.value > 0)
 	const sort = ref<Sort>(Math.min(parseInt(localStorage.getItem('workshop/sort') || '0', 10), Sort.INGREDIENT_COUNT) as Sort)
 	const filter = ref<number>(parseInt(localStorage.getItem('workshop/filter') || '0', 10))
 	const craftableOnly = ref(localStorage.getItem('workshop/craftable') === 'true')
@@ -230,6 +237,14 @@
 	watch(craftableOnly, () => localStorage.setItem('workshop/craftable', '' + craftableOnly.value))
 
 	const bottomPanelStyle = computed(() => {
+		// Mobile : la hauteur suit le cran, il n'y a pas de poignee de redimensionnement.
+		// Plein = 100 % de la colonne, l'inventaire se retrouve reduit a rien, ce qui est
+		// bien l'intention (« completement ouvert »).
+		if (LeekWars.mobile) {
+			if (panelState.value === 0) return { flex: '0 0 auto' }
+			if (panelState.value === 1) return { flex: '0 0 50%' }
+			return { flex: '1 1 100%' }
+		}
 		if (!bottomExpanded.value) return { flex: '0 0 auto' }
 		return { flex: '0 0 ' + bottomHeight.value + 'px' }
 	})
