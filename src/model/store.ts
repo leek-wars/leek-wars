@@ -824,7 +824,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'remove-inventory'(state: LeekWarsState, data: { type: ItemType, item_template: number, quantity?: number }) {
+		'remove-inventory'(state: LeekWarsState, data: { type: ItemType, item_template: number, quantity?: number, id?: number }) {
 			if (!state.farmer) { return }
 			// console.log("remove-inventory", data)
 			const quantity = data.quantity || 1
@@ -845,6 +845,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				list = state.farmer.alterations
 			}
 			if (!list) { return }
+			// Un composant altéré est une instance UNIQUE, qui cohabite avec la pile de ses
+			// jumelles neuves : quand l'appelant fournit un id, c'est cette ligne-là qu'il
+			// faut décrémenter, sinon on entame la pile et l'altération reste affichée (#622).
+			if (data.id !== undefined) {
+				const index = list.findIndex(i => i.id === data.id)
+				if (index !== -1) {
+					list[index].quantity -= quantity
+					if (list[index].quantity <= 0) { list.splice(index, 1) }
+					return
+				}
+			}
 			const item = LeekWars.selectWhere(list, 'template', data.item_template)
 			if (item !== null) {
 				item.quantity -= quantity
@@ -928,15 +939,22 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (i !== -1) { state.farmer.loadouts.splice(i, 1) }
 		},
 
-		'add-component'(state: LeekWarsState, component: { id: number, template: number }) {
+		'add-component'(state: LeekWarsState, component: { id: number, template: number, stats?: { [carac: string]: number } | null, altered_power?: number }) {
 			if (!state.farmer) { return }
-			for (const w of state.farmer.components) {
-				if (w.template === component.template) {
-					w.quantity++
-					return
+			// Une pièce altérée est unique : elle ne se fond JAMAIS dans une pile, et une
+			// pile n'accueille que des pièces neuves. Sans cette garde, déséquiper un
+			// composant altéré l'agrégeait au stack de son template et ses altérations
+			// disparaissaient de l'affichage jusqu'au rechargement (#622).
+			if (!component.stats) {
+				for (const w of state.farmer.components) {
+					if (w.template === component.template && !w.stats) {
+						w.quantity++
+						return
+					}
 				}
 			}
-			state.farmer.components.push({id: component.id, quantity: 1, template: component.template})
+			state.farmer.components.push({id: component.id, quantity: 1, template: component.template,
+				stats: component.stats ?? undefined, altered_power: component.altered_power})
 		},
 
 		// Réconciliation en masse du stock libre (non équipé) après un apply de loadout :

@@ -2,6 +2,9 @@
 	<!-- Toujours rendue, dans les trois onglets et meme sans piece posee : la colonne
 	     garde sa place, sinon la forge se decale d'un onglet a l'autre (#622). -->
 	<div class="forge-stats">
+		<!-- Sans piece, la colonne garde sa largeur mais ne montre RIEN : un titre suivi
+		     d'un rectangle vide donnait l'impression d'un panneau casse (#622). -->
+		<template v-if="stats.length">
 		<div class="title">{{ $t('characteristic.characteristics') }}</div>
 		<div class="card">
 			<div v-for="[carac, value] in stats" :key="carac" class="row" :class="{ altered: isAltered(carac), broken: delta(carac) < 0 }">
@@ -18,19 +21,23 @@
 			     piece, l'information qui decide de la prochaine tentative (#622). -->
 			<div v-if="capacity > 0" class="row charge">
 				<span>{{ $t('main.alteration_charge') }}</span>
-				<b class="value" :class="{ deficit: charge < 0 }">{{ charge }} / {{ capacity }}</b>
+				<b class="value" :class="{ deficit: charge < 0 }">
+					<!-- Recette en cours : on annonce la charge qu'elle ferait ATTEINDRE, c'est
+					     elle qui decide de la prochaine tentative, pas celle qu'on a (#622). -->
+					<template v-if="pending">{{ charge }} <span class="arrow">&rarr;</span> <span class="target" :class="{ over: charge + pending > capacity }">{{ charge + pending }}</span></template>
+					<template v-else>{{ charge }}</template>
+					/ {{ capacity }}
+				</b>
 				<span class="bonus"></span>
 			</div>
-			<!-- Sans piece, la carte reste presente mais muette : pas de message qui
-			     serait faux dans l'un des trois onglets, juste la place gardee (#622). -->
-			<div v-if="!stats.length" class="row empty"></div>
 		</div>
+		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { forgeComponent } from '@/model/forge-state'
+	import { forgeComponent, forgePendingPower } from '@/model/forge-state'
 	import { LeekWars } from '@/model/leekwars'
 	import { addedPower, mergeStats } from '@/model/alteration'
 
@@ -52,6 +59,8 @@
 
 	// Capacite d'alteration de la piece, pre-calculee par le serveur (colonne ou formule).
 	const capacity = computed(() => forgeComponent.value ? LeekWars.componentCapacity(forgeComponent.value.template) : 0)
+	// Puissance de la recette posee dans la forge, arrondie comme la charge.
+	const pending = computed(() => Math.round(forgePendingPower.value))
 	// Charge investie, signee : negative sur une piece creusee par la casse (#622).
 	const charge = computed(() => {
 		const weights = LeekWars.alterations?.weights
@@ -115,8 +124,6 @@
 			font-variant-numeric: tabular-nums;
 			&.negative { color: #7d5a5a; }
 		}
-		// Carte vide : la hauteur d'une ligne, pour que la colonne existe sans rien dire.
-		.empty { min-height: 25px; }
 		// La charge se detache du bloc de caracs : c'est un budget, pas une stat.
 		.charge {
 			border-top: 1px solid var(--border);
@@ -125,6 +132,11 @@
 			color: var(--text-color-secondary);
 			.value { color: var(--text-color); }
 			.value.deficit { color: #7d5a5a; }
+			.arrow { color: var(--text-color-secondary); font-weight: normal; }
+			// Charge visee par la recette en cours : en vert tant qu'elle rentre, en rouge
+			// des qu'elle deborde la capacite.
+			.target { color: #5fad1b; }
+			.target.over { color: #c62828; }
 		}
 	}
 </style>

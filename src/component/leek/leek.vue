@@ -734,9 +734,11 @@
 			<div class="ai-popup">
 				<div class="leek-ai-components components-grid">
 					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
-						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
+						<!-- :instance obligatoire, sinon l'infobulle retombe sur les stats de BASE
+						     et une piece alteree s'affiche comme une neuve (#622). -->
+						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 							<div v-if="leek.components[i]" :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i]!.template && draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="componentDragStart('leek', leek.components[i]!, $event)" @dragend="leek.components[0] && componentDragEnd(leek.components[0])" @click="leek.components[i] && removeComponent(leek.components[i]!)">
-								<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+								<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template))" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 							</div>
 						</rich-tooltip-item>
 						<div v-else><v-icon>mdi-sd</v-icon></div>

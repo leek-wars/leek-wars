@@ -174,7 +174,7 @@
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
-	import { forgeComponent } from '@/model/forge-state'
+	import { forgeComponent, forgePendingPower } from '@/model/forge-state'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Popup from '@/component/popup.vue'
@@ -475,6 +475,9 @@
 					} else if (stored) {
 						stored.stats = data.stats
 						stored.altered_power = data.capacity.used
+						// La date aussi, sinon l'inventaire trie par date ne reordonne pas :
+						// il lit le store, pas l'objet que la forge a en main (#622).
+						if (data.time !== undefined) stored.time = data.time
 					}
 				}
 				if (split) item.id = newId as number
@@ -657,7 +660,15 @@
 			? { family: Number(tpl.params), level: Number(tpl.level), template: template as number, stats: c?.stats ?? null }
 			: null
 	}, { immediate: true })
-	onBeforeUnmount(() => { forgeComponent.value = null })
+
+	// Puissance de la recette en cours : la colonne des caracteristiques s'en sert pour
+	// annoncer la charge qu'on va atteindre (#622).
+	watch(() => plan.value?.power ?? 0, power => { forgePendingPower.value = power }, { immediate: true })
+
+	onBeforeUnmount(() => {
+		forgeComponent.value = null
+		forgePendingPower.value = 0
+	})
 
 	/** Pose une alteration autour du composant, ou incremente sa pile. */
 	function addAlteration(item: InventoryItem) {
@@ -748,7 +759,9 @@
 		destroying.value = true
 		LeekWars.post<{ alterations: {[id: number]: number}, resources: {[id: number]: number}, count: number, destroyed: number }>('item/recycle', { item_id: item.id, count }).then(data => {
 			const destroyed = data.destroyed ?? count
-			store.commit('remove-inventory', { type: ItemType.COMPONENT, item_template: item.template, quantity: destroyed })
+			// Par id : la piece recyclee peut etre une instance alteree qui cohabite avec la
+			// pile de ses jumelles neuves (#622).
+			store.commit('remove-inventory', { type: ItemType.COMPONENT, id: item.id, item_template: item.template, quantity: destroyed })
 			const alterations = LeekWars.alterations
 			for (const id in data.alterations) {
 				const alteration = alterations ? alterations.alterations[id] : null

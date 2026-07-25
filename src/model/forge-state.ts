@@ -20,4 +20,11 @@ const forgeComponent = ref<{
 	stats: { [carac: string]: number } | null
 } | null>(null)
 
-export { forgeComponent }
+/**
+ * Puissance de la recette en cours de composition, publiée par la forge pour que la
+ * colonne des caractéristiques annonce la charge qu'on va ATTEINDRE, et pas seulement
+ * celle qu'on a (#622).
+ */
+const forgePendingPower = ref(0)
+
+export { forgeComponent, forgePendingPower }
