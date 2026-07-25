@@ -71,6 +71,9 @@ const ALTERATION_TIERS: { threshold: number, tier: number, color: string }[] = [
 
 /** Palier de couleur d'un composant selon son taux de remplissage. */
 function alterationTier(ratio: number): { tier: number, color: string } | null {
+	// Charge négative : la casse a creusé la pièce sous ses stats de base (#622). Palier
+	// à part, gris ardoise : ce n'est pas un degré de réussite, c'est une blessure.
+	if (ratio < 0) return { tier: 0, color: '#7d5a5a' }
 	if (ratio >= 1) return { tier: 5, color: 'red' }
 	if (ratio >= 0.85) return { tier: 4, color: '#f8ac00' }
 	if (ratio >= 0.7) return { tier: 3, color: '#c21aff' }
@@ -147,7 +150,11 @@ function power(stats: Stats | StatList, weights: { [carac: string]: number }): n
 	return total
 }
 
-/** Puissance ajoutée par les altérations. Les ajouts sont toujours positifs. */
+/**
+ * Puissance ajoutée par les altérations, SIGNÉE : positive quand la pièce a été montée,
+ * négative quand la casse l'a creusée sous ses stats de base (jusqu'à -100 % de la
+ * capacité). Somme signée et non absolue, sinon un déficit compterait comme un gain.
+ */
 function addedPower(added: Stats, weights: { [carac: string]: number }): number {
 	let total = 0
 	for (const carac in added) total += added[carac] * (weights[carac] || 0)
@@ -218,6 +225,10 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 
 	const after = before + recipePower
 	const rAfter = capacity > 0 ? after / capacity : 0
+	// La difficulté se lit sur le REMPLISSAGE, jamais sur le déficit : une pièce creusée
+	// par la casse se répare sans peine (il faut re-dépenser des altérations, c'est déjà
+	// la punition), et la courbe ne reprend qu'à partir de 0 (#622).
+	const rEff = Math.max(0, rAfter)
 	// La tentative est autorisee tant qu'on reste sous le plafond souple : au-dela de
 	// 100 % du puits la reussite devient infime et la casse quasi certaine, mais ce
 	// n'est plus un mur binaire. `overfilled` sert a prevenir visuellement (#622).
@@ -234,7 +245,7 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		if (allowed) {
 			const efficiency = group.points > 0 ? group.weight / group.points : 0
 			const delta = group.power / capacity
-			probability = Math.exp(-DIFFICULTY_K * rAfter * rAfter + PROGRESS_BONUS * Math.min(delta, PROGRESS_CAP))
+			probability = Math.exp(-DIFFICULTY_K * rEff * rEff + PROGRESS_BONUS * Math.min(delta, PROGRESS_CAP))
 			probability /= difficulty(part(base, added, carac, data.weights))
 			// Une carac strictement négative est deux fois plus facile à remonter.
 			if ((totals[carac] || 0) < 0) probability *= 2
@@ -257,7 +268,9 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	// l'acharnement plutôt qu'un mur.
 	let breakProbability = 0
 	if (allowed && capacity > 0) {
-		const reference = Math.exp(-DIFFICULTY_K * rAfter * rAfter
+		// Comme pour la réussite, le risque se lit sur le remplissage visé et non sur le
+		// déficit : réparer une pièce creusée n'est pas dangereux.
+		const reference = Math.exp(-DIFFICULTY_K * rEff * rEff
 			+ PROGRESS_BONUS * Math.min(recipePower / capacity, PROGRESS_CAP))
 		breakProbability = reference > 0 ? Math.min(1, BREAK_COEFFICIENT / reference) : 0
 	}
@@ -270,7 +283,8 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		ratioBefore: capacity > 0 ? before / capacity : 0,
 		ratioAfter: rAfter,
 		breakProbability,
-		habsCost: Math.round(level * level * (1 + 2 * (capacity > 0 ? before / capacity : 0))),
+		// Charge négative ramenée à 0 : une pièce creusée coûte le tarif de base, jamais moins.
+		habsCost: Math.round(level * level * (1 + 2 * Math.max(0, capacity > 0 ? before / capacity : 0))),
 	}
 }
 

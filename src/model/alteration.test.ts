@@ -111,8 +111,37 @@ describe('prévisualisation d\'une tentative', () => {
 	})
 })
 
+describe('pièce creusée par la casse', () => {
+	// La casse peut faire descendre une carac SOUS sa valeur de base, jusqu'à -100 % de
+	// la capacité (#622). Le miroir doit prévisualiser la réparation comme le serveur.
+	it('affiche une charge négative', () => {
+		const plan = planAttempt(DATA, HYLOCEREUS, { life: -92 }, 255, ComponentFamily.FRUIT, {})
+		expect(plan.capacity).toBe(184)
+		expect(plan.ratioBefore).toBeCloseTo(-0.5, 6)
+	})
+
+	it('rend la réparation facile : la difficulté se lit sur le remplissage', () => {
+		// Remonter de -50 % vers 0 est au plafond, alors que le même pas depuis 0 est dur.
+		const repair = planAttempt(DATA, HYLOCEREUS, { life: -92 }, 255, ComponentFamily.FRUIT, { 1: 1 })
+		const climb = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
+		expect(repair.probability).toBeCloseTo(0.95, 6)
+		expect(repair.probability).toBeGreaterThan(climb.probability)
+		// Et réparer n'est pas plus dangereux que charger à vide.
+		expect(repair.breakProbability).toBeLessThanOrEqual(climb.breakProbability)
+	})
+
+	it('facture le tarif de base, jamais moins', () => {
+		const broken = planAttempt(DATA, HYLOCEREUS, { life: -92 }, 255, ComponentFamily.FRUIT, { 1: 1 })
+		const fresh = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
+		expect(broken.habsCost).toBe(fresh.habsCost)
+	})
+})
+
 describe('paliers de couleur', () => {
 	it('suit les seuils calibrés de la spec', () => {
+		// Palier 0 : charge négative, la pièce a été creusée sous ses stats de base (#622).
+		expect(alterationTier(-0.01)?.tier).toBe(0)
+		expect(alterationTier(-1)?.tier).toBe(0)
 		expect(alterationTier(0)).toBeNull()
 		expect(alterationTier(0.01)?.tier).toBe(1)
 		expect(alterationTier(0.5)?.tier).toBe(2)

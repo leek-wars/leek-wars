@@ -37,16 +37,18 @@
 				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
-				<svg v-if="plan && (plan.ratioBefore > 0 || plan.ratioAfter > 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
+				<!-- Charge negative comprise (casse) : l'arc se remplit en valeur absolue,
+				     c'est sa couleur de palier qui dit s'il s'agit d'un gain ou d'un trou. -->
+				<svg v-if="plan && (plan.ratioBefore !== 0 || plan.ratioAfter !== 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
 					<!-- Tooltip natif au survol de l'arc : charge investie / capacite (#622). -->
 					<title>{{ chargeTitle }}</title>
 					<!-- Pas de rail de fond : seul l'arc de charge est visible. -->
 					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
-					<path v-if="plan.ratioAfter > 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
-						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioAfter))" />
+					<path v-if="plan.ratioAfter !== 0" class="fill preview" :class="'tier-' + tierAfter" :d="RING_PATH"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(plan.ratioAfter)))" />
 					<!-- La charge actuelle, dans la couleur de son palier. -->
-					<path v-if="plan.ratioBefore > 0" class="fill" :class="'tier-' + tierBefore" :d="RING_PATH"
-						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, plan.ratioBefore))" />
+					<path v-if="plan.ratioBefore !== 0" class="fill" :class="'tier-' + tierBefore" :d="RING_PATH"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(plan.ratioBefore)))" />
 				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
@@ -56,7 +58,7 @@
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
-				<div v-if="plan && plan.ratioAfter > 0" class="charge-corner" :class="{ over: plan.overfilled }" :title="chargeTitle">{{ Math.round(plan.ratioAfter * 100) }}%</div>
+				<div v-if="plan && plan.ratioAfter !== 0" class="charge-corner" :class="{ over: plan.overfilled, deficit: plan.ratioAfter < 0 }" :title="chargeTitle">{{ Math.round(plan.ratioAfter * 100) }}%</div>
 				<!-- Nombre de pieces empilees a recycler d'un coup (#622). -->
 				<div v-if="componentCount > 1" class="stack-count">×{{ componentCount }}</div>
 				<!-- Destruction : 8 copies de l'image, chacune decoupee en part de pizza,
@@ -830,6 +832,8 @@
 		// depart se decale sur un coin et l'arc semble detache).
 	}
 	// Couleur du palier, comme la silhouette de la vignette.
+	// Palier 0 : charge negative, la piece a ete creusee sous ses stats de base (#622).
+	.fill.tier-0 { stroke: #7d5a5a; }
 	.fill.tier-1 { stroke: #008800; }
 	.fill.tier-2 { stroke: #0090ff; }
 	.fill.tier-3 { stroke: #c21aff; }
@@ -853,6 +857,8 @@
 }
 // Au-dela de 100 % du puits : rouge vif, on tente un depassement (#622).
 .cell8.component .charge-corner.over { color: #ff5252; }
+// Charge negative : la casse a creuse la piece sous ses stats de base (#622).
+.cell8.component .charge-corner.deficit { color: #e0a0a0; }
 // Compteur d'empilement pour le recyclage groupe (#622) : pastille sombre, coin bas droit.
 .cell8.component .stack-count {
 	position: absolute;
