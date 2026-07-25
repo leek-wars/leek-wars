@@ -2,7 +2,7 @@
 	<div v-if="stats.length" class="forge-stats">
 		<div class="title">{{ $t('characteristic.characteristics') }}</div>
 		<div class="card">
-			<div v-for="[carac, value] in stats" :key="carac" class="row" :class="{ altered: isAltered(carac) }">
+			<div v-for="[carac, value] in stats" :key="carac" class="row" :class="{ altered: isAltered(carac), broken: delta(carac) < 0 }">
 				<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
 				<span v-html="$t('characteristic.' + carac)"></span>
 				<b class="value" :class="'color-' + carac">{{ value }}</b>
@@ -30,6 +30,8 @@
 	})
 	// Une carac que le joueur a lui-meme montee : il doit la reperer d'un coup d'oeil.
 	const isAltered = (carac: string) => !!forgeComponent.value?.stats?.[carac]
+	/** Delta porte par l'instance, signe : negatif si la casse a creuse la carac (#622). */
+	const delta = (carac: string) => forgeComponent.value?.stats?.[carac] ?? 0
 </script>
 
 <style lang="scss" scoped>
@@ -58,6 +60,8 @@
 			& + .row { margin-top: 2px; }
 			// Carac montee par le joueur : liseré vert a gauche, franc (pas de coin arrondi).
 			&.altered { box-shadow: inset 3px 0 0 #5fad1b; }
+			// Carac creusee par la casse : meme repere, dans le ton du palier negatif (#622).
+			&.broken { box-shadow: inset 3px 0 0 #7d5a5a; }
 		}
 		.ic { width: 17px; height: 17px; }
 		.value {
