@@ -60,10 +60,12 @@ describe('panel.vue', () => {
 		expect(mountPanel({ states: 3 }).find('.content').exists()).toBe(true)
 	})
 
-	it('relit le cran numérique', () => {
+	it('relit le cran numérique', async () => {
 		localStorage.setItem('test/panel', '1')
 		const w = mountPanel({ states: 3 })
 		expect(w.find('.content').exists()).toBe(true)
-		expect(w.vm.state).toBe(1)
+		// Le cran relu est bien 1 (mi-hauteur) et non 2 : le clic suivant ouvre en grand.
+		await toggle(w).trigger('click')
+		expect(w.emitted('update:state')!.at(-1)![0]).toBe(2)
 	})
 })
