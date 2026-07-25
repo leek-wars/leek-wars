@@ -175,7 +175,7 @@
 	import { t } from '@/model/i18n'
 	import type { ApiError } from '@/model/api-error'
 	import { emitter } from '@/model/emitter'
-	import { forgeComponent, forgePendingPower } from '@/model/forge-state'
+	import { forgeComponent, forgePendingPower, forgeCharge } from '@/model/forge-state'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Popup from '@/component/popup.vue'
@@ -685,10 +685,14 @@
 	// Puissance de la recette en cours : la colonne des caracteristiques s'en sert pour
 	// annoncer la charge qu'on va atteindre (#622).
 	watch(() => plan.value?.power ?? 0, power => { forgePendingPower.value = power }, { immediate: true })
+	// Charge deja investie : la palette s'en sert pour griser ce qui ne rentre plus (#622).
+	watch(() => plan.value ? plan.value.ratioBefore * plan.value.capacity : 0,
+		charge => { forgeCharge.value = charge }, { immediate: true })
 
 	onBeforeUnmount(() => {
 		forgeComponent.value = null
 		forgePendingPower.value = 0
+		forgeCharge.value = 0
 	})
 
 	/** Pose une alteration autour du composant, ou incremente sa pile. */

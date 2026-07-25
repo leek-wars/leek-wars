@@ -7,7 +7,7 @@
 				     famille de composant, la charge consommee et le dosage, ce qu'une seule
 				     ligne de texte ne pouvait pas porter (#622). -->
 				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true">
-					<div v-ripple class="cell" :class="{empty: owned(a.template) === 0}" v-bind="props" @click="pick(a)">
+					<div v-ripple class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a)}" v-bind="props" @click="pick(a)">
 						<alteration-icon :template="a.template" title="" />
 						<span v-if="owned(a.template) > 0" class="owned">{{ owned(a.template) }}</span>
 					</div>
@@ -21,6 +21,8 @@
 	import { computed, defineAsyncComponent } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { forgeComponent, forgeCharge, forgePendingPower } from '@/model/forge-state'
+	import { efficiencyTier } from '@/model/alteration'
 	import { emitter } from '@/model/vue'
 	import type { InventoryItem } from '@/model/farmer'
 	import type { AlterationTemplate } from '@/model/alteration'
@@ -54,6 +56,29 @@
 	function owned(template: number): number {
 		const item = store.state.farmer?.alterations?.find(a => a.template === template)
 		return item ? item.quantity : 0
+	}
+
+	/**
+	 * L'alteration rentre-t-elle encore dans la capacite de la piece posee, compte tenu de
+	 * ce qui est deja dans la forge ? Le plafond souple (130 %) est la borne : au-dela la
+	 * tentative est refusee, autant le montrer avant le clic (#622).
+	 *
+	 * Une indivisible mal ciblee est INERTE : elle ne consomme rien, donc elle rentre
+	 * toujours (elle ne sert qu'a ajuster le dosage).
+	 */
+	const OVERFILL_CAP = 1.3
+	const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
+	function fits(a: AlterationTemplate): boolean {
+		const data = LeekWars.alterations
+		const comp = forgeComponent.value
+		if (!data || !comp) return true
+		const capacity = LeekWars.componentCapacity(comp.template)
+		if (capacity <= 0) return true
+		const efficiency = (data.efficiency[a.family] || {})[comp.family] || 0
+		if (INDIVISIBLE.indexOf(a.carac) !== -1 && efficiency < 1) return true
+		const points = (data.gains[a.carac] || [0, 0, 0])[efficiencyTier(efficiency)]
+		const power = points * (data.weights[a.carac] || 0)
+		return forgeCharge.value + forgePendingPower.value + power <= capacity * OVERFILL_CAP
 	}
 
 	/** Pose l'alteration dans la forge : la forge verifie qu'un composant est present. */
@@ -115,6 +140,12 @@
 		// Alteration absente de l'inventaire : montree pour l'inventaire des possibles,
 		// mais estompee pour signaler qu'on ne peut pas encore la poser.
 		&.empty { opacity: 0.35; }
+		// Ne rentre plus dans la capacite de la piece posee : grisee et barree d'un liseré
+		// rouge, pour eviter le clic qui finit en refus (#622).
+		&.over {
+			opacity: 0.4;
+			border-color: #c62828;
+		}
 	}
 	// Quantite possedee en bas a droite ; le numero de dosage est en haut a gauche,
 	// pose par alteration-icon (#622). Blanc sur noir translucide comme les quantites

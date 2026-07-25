@@ -50,18 +50,18 @@ const delta = (carac: string) => props.alterations?.[carac] ?? 0
 				background: #fcc;
 			}
 			// Une carac que le joueur a montee lui-meme : il doit la reperer. Lisere a
-			// gauche ET fond tres leger, qui porte le signe du delta sur toute la ligne.
-			// Teintes translucides : elles se posent aussi bien sur le fond clair que sur
-			// le sombre, et par-dessus le rouge des stats natives negatives (#622).
+			// gauche ET fond teinte, qui porte le signe du delta sur toute la ligne.
+			// Couleurs OPAQUES : l'infobulle se pose par-dessus l'inventaire, une teinte
+			// translucide y laissait voir les vignettes du dessous (#622).
 			&.altered {
 				box-shadow: inset 3px 0 0 #5fad1b;
-				background: rgba(95, 173, 27, 0.10);
+				background: #e8f4e0;
 			}
 			// Carac creusee par la casse : meme repere, mais dans le ton du palier
 			// negatif, sinon un trou se lisait comme un gain (#622).
 			&.broken {
 				box-shadow: inset 3px 0 0 #7d5a5a;
-				background: rgba(160, 70, 70, 0.12);
+				background: #f7e6e6;
 			}
 			.bonus {
 				margin-left: auto;
@@ -83,6 +83,9 @@ const delta = (carac: string) => props.alterations?.[carac] ?? 0
 		.stats .stat.negative {
 			background: rgb(83, 14, 14);
 		}
+		// Memes teintes, calees sur le fond sombre des lignes (#622).
+		.stats .stat.altered { background: #1e2a17; }
+		.stats .stat.broken { background: #2a1a1a; }
 		.stat.frequency img {
 			filter: invert(1);
 		}
