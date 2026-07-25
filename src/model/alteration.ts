@@ -216,8 +216,16 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		const points = (data.gains[carac] || [0, 0, 0])[efficiencyTier(efficiency)]
 		const gainPower = points * (data.weights[carac] || 0)
 
+		// Le DOSAGE compte toujours, quelle que soit la famille : c'est le levier du
+		// métabolisme, et une altération mal ciblée garde ce rôle.
 		dose += alteration.number * quantity
 		items += quantity
+
+		// Une altération indivisible posée sur la mauvaise famille est INERTE : aucune
+		// chance de réussir, donc elle ne consomme pas de capacité et n'entre pas dans les
+		// jets. Elle ne sert plus qu'à ajuster le dosage (#622).
+		if (INDIVISIBLE.indexOf(carac) !== -1 && efficiency < 1) continue
+
 		recipePower += gainPower * quantity
 
 		if (!groups[carac]) groups[carac] = { points: 0, power: 0, weight: 0 }
@@ -252,8 +260,10 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 			probability /= difficulty(part(base, added, carac, data.weights))
 			// Une carac strictement négative est deux fois plus facile à remonter.
 			if ((totals[carac] || 0) < 0) probability *= 2
-			// Les caracs indivisibles encaissent l'efficacité sur la probabilité.
-			if (INDIVISIBLE.indexOf(carac) !== -1) probability *= efficiency
+			// Une carac indivisible ne prend QUE sur sa famille de prédilection : ailleurs
+			// la tentative est impossible (les inertes sont déjà écartées plus haut, cette
+			// garde couvre les appels directs).
+			if (INDIVISIBLE.indexOf(carac) !== -1 && efficiency < 1) probability = 0
 			// Pas de gate du métabolisme côté client : l'aperçu ne connaît pas M (caché
 			// serveur) et montre la proba de base, jamais la vraie proba gatée (#622).
 			probability = Math.min(MAX_PROBABILITY, probability)

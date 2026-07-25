@@ -15,8 +15,13 @@
 						{{ $t('main.history_crafted', [entry.details.quantity || 1]) }}
 					</span>
 
-					<!-- Alteration : resultat par carac, dosage, synergie, casse. -->
+					<!-- Alteration : issue, recette consommee, gains, dosage, metabolisme, casse. -->
 					<template v-else-if="entry.action === ALTER && entry.details">
+						<!-- Une seule icone d'issue, en tete de ligne : reussite, echec ou casse.
+						     Elle remplace la croix posee au milieu des gains et le coeur brise de
+						     la casse, qui se lisaient mal et faisaient deux marqueurs pour une
+						     seule information (#622). -->
+						<v-icon class="outcome" :class="outcome(entry)" size="17">{{ OUTCOME_ICONS[outcome(entry)] }}</v-icon>
 						<!-- Les alterations reellement consommees, en vignettes : c'est la recette
 						     que le joueur cherche a retrouver pour la rejouer (#622). -->
 						<span v-for="(count, id) in entry.details.recipe" :key="'u' + id" class="rendered-item alteration used" :title="alterationName(Number(id))">
@@ -25,22 +30,25 @@
 						</span>
 						<!-- Les gains ne s'affichent qu'en cas de reussite : un echec ne modifie
 						     rien, une carac barree laissait croire le contraire (#622). -->
-						<template v-if="entry.details.results && entry.details.results.some((r: {success: boolean}) => r.success)">
+						<template v-if="outcome(entry) === 'success'">
 							<span v-for="r in entry.details.results" :key="r.carac" class="roll ok">
 								<img class="ci" :src="'/image/charac/small/' + r.carac + '.png'">
 								+{{ r.points }}
 							</span>
 						</template>
-						<span v-else class="roll failed">✕</span>
 						<span class="dose" :title="$t('main.alteration_dose')">{{ entry.details.dose }}</span>
-						<span v-if="entry.details.metabolism !== undefined" class="metabolism" :title="$t('main.alteration_metabolism')">
-							{{ entry.details.metabolism }}
+						<!-- Metabolisme en %, du rouge (0, dosage hors sujet) au vert (100, le pic
+						     exact) : c'est la mesure que le joueur suit pour trouver le dosage
+						     optimal, un chiffre nu ne disait pas s'il chauffait (#622). -->
+						<span v-if="entry.details.metabolism !== undefined" class="metabolism"
+							:style="{ color: metabolismColor(entry.details.metabolism) }"
+							:title="$t('main.alteration_metabolism')">
+							{{ Math.round(entry.details.metabolism) }} %
 						</span>
-						<!-- Casse : on montre QUELLE carac a saute, un coeur generique laissait
-						     croire que c'etait la vie (#622). -->
+						<!-- Casse : on montre QUELLE carac a saute, l'icone d'issue en tete de
+						     ligne portant deja le fait qu'il y a eu casse (#622). -->
 						<span v-if="entry.details.broken" class="broken"
 							:title="$t('characteristic.' + entry.details.broken.carac)">
-							<v-icon size="13">mdi-heart-broken</v-icon>
 							<img class="ci" :src="'/image/charac/small/' + entry.details.broken.carac + '.png'">
 							−{{ entry.details.broken.lost }}
 						</span>
@@ -105,12 +113,38 @@
 	const loading = ref(false)
 
 	/**
+	 * Issue d'une tentative d'alteration, en trois cas exclusifs : la piece a pris, la
+	 * tentative a rate, ou elle a rate ET casse. La casse prime a l'affichage, c'est ce
+	 * que le joueur cherche en parcourant son historique (#622).
+	 */
+	const OUTCOME_ICONS: { [key: string]: string } = {
+		success: 'mdi-check',
+		fail: 'mdi-close',
+		broken: 'mdi-image-broken-variant',
+	}
+	function outcome(entry: Entry): string {
+		if (entry.details?.broken) return 'broken'
+		const results = entry.details?.results
+		return results && results.some((r: { success: boolean }) => r.success) ? 'success' : 'fail'
+	}
+
+	/**
 	 * Teinte de fond d'une tentative d'alteration : vert si au moins un jet a reussi,
 	 * rouge si tous ont echoue. Neutre pour les crafts et les destructions.
 	 */
 	function lineClass(entry: Entry): string {
 		if (entry.action !== ALTER || !entry.details?.results) return ''
 		return entry.details.results.some((r: { success: boolean }) => r.success) ? 'ok' : 'fail'
+	}
+
+	/**
+	 * Couleur du metabolisme, du rouge (0 %) au vert (100 %) en passant par l'orange :
+	 * la teinte HSL va de 0 a 120 degres. La clarte suit le theme, sinon le rouge sombre
+	 * devient illisible sur fond noir.
+	 */
+	function metabolismColor(m: number): string {
+		const clamped = Math.max(0, Math.min(100, m))
+		return 'hsl(' + Math.round(clamped * 1.2) + ', 70%, ' + (LeekWars.darkMode ? 58 : 38) + '%)'
 	}
 
 	function formatDate(ts: number): string {
@@ -246,8 +280,13 @@
 		color: var(--text-color-secondary);
 	}
 	.roll.ok { color: #2e7d32; font-weight: bold; }
-	// Echec : une croix seule, sans carac. Rien n'a bouge sur la piece (#622).
-	.roll.failed { font-weight: bold; }
+	// Icone d'issue, en tete de ligne : le seul marqueur de reussite / echec / casse.
+	.outcome {
+		flex-shrink: 0;
+		&.success { color: #2e7d32; }
+		&.fail { color: var(--text-color-secondary); }
+		&.broken { color: #c62828; }
+	}
 	.ci { width: 15px; height: 15px; }
 	// Dosage : petit jeton discret.
 	.dose {

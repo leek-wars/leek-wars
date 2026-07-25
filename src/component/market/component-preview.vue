@@ -49,14 +49,19 @@ const delta = (carac: string) => props.alterations?.[carac] ?? 0
 			&.negative {
 				background: #fcc;
 			}
-			// Une carac que le joueur a montee lui-meme : il doit la reperer.
+			// Une carac que le joueur a montee lui-meme : il doit la reperer. Lisere a
+			// gauche ET fond tres leger, qui porte le signe du delta sur toute la ligne.
+			// Teintes translucides : elles se posent aussi bien sur le fond clair que sur
+			// le sombre, et par-dessus le rouge des stats natives negatives (#622).
 			&.altered {
 				box-shadow: inset 3px 0 0 #5fad1b;
+				background: rgba(95, 173, 27, 0.10);
 			}
 			// Carac creusee par la casse : meme repere, mais dans le ton du palier
 			// negatif, sinon un trou se lisait comme un gain (#622).
 			&.broken {
 				box-shadow: inset 3px 0 0 #7d5a5a;
+				background: rgba(160, 70, 70, 0.12);
 			}
 			.bonus {
 				margin-left: auto;

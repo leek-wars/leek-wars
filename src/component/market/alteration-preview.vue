@@ -1,17 +1,30 @@
 <template lang="html">
 	<div v-if="alteration" class="alteration-preview">
 		<!-- Le gain depend du composant vise, pas de l'alteration : on montre donc les
-		     trois cas plutot qu'un seul chiffre, sinon le joueur croit a une valeur fixe. -->
+		     trois cas plutot qu'un seul chiffre, sinon le joueur croit a une valeur fixe.
+		     La carac visee est la MEME sur les trois lignes : elle est sortie en en-tete,
+		     et les lignes deviennent un tableau famille / efficacite / gain / charge. Tout
+		     repeter par ligne debordait des 280 px de l'infobulle (#622). -->
+		<div class="carac-head">
+			<img class="icon" :class="alteration.carac" :src="'/image/charac/' + alteration.carac + '.png'">
+			<span v-html="$t('characteristic.' + alteration.carac)"></span>
+		</div>
 		<div class="stats">
+			<div class="stat columns">
+				<span class="fam"></span>
+				<span class="factor"></span>
+				<!-- L'icone titre la colonne des gains : pas de mot a traduire, et sans elle
+				     « 50 50 » sur la vie ne dit pas lequel est le gain. -->
+				<span class="gain"><img class="mini" :class="alteration.carac" :src="'/image/charac/small/' + alteration.carac + '.png'"></span>
+				<span class="charge">{{ $t('main.alteration_charge') }}</span>
+			</div>
 			<div v-for="row in rows" :key="row.family" class="stat" :class="{best: row.best}">
-				<img class="icon" :class="alteration.carac" :src="'/image/charac/' + alteration.carac + '.png'">
-				<b :class="'color-' + alteration.carac">+{{ row.gain }}</b>&nbsp;
-				<span v-html="$t('characteristic.' + alteration.carac)"></span>
-				<span class="on">{{ row.label }}</span>
+				<span class="fam" :title="row.label">{{ row.label }}</span>
 				<span class="factor">×{{ row.efficiency }}</span>
+				<b class="gain" :class="'color-' + alteration.carac">+{{ row.gain }}</b>
 				<!-- Charge consommee dans la capacite du composant : elle depend du palier,
 				     donc elle se lit par ligne et pas en pied d'infobulle (#622). -->
-				<span class="charge">{{ $t('main.alteration_charge') }} {{ row.charge }}</span>
+				<span class="charge">{{ row.charge }}</span>
 			</div>
 		</div>
 		<!-- Sans ce mot, les trois "+1" d'une carac indivisible passent pour un bug. -->
@@ -81,33 +94,59 @@
 <style src='./item-preview.scss' lang='scss'></style>
 
 <style lang="scss" scoped>
-	.stats .stat {
-		padding: 4px 8px;
-		text-align: left;
+	// La carac visee, une seule fois, en tete de fiche.
+	.carac-head {
 		display: flex;
 		align-items: center;
-		gap: 2px;
-		img {
-			width: 20px;
-			height: 20px;
-			margin-bottom: 1px;
-			margin-right: 6px;
+		gap: 7px;
+		padding: 6px 8px;
+		font-size: 14px;
+		font-weight: bold;
+		text-align: left;
+		background: var(--background-secondary);
+		img { width: 20px; height: 20px; }
+	}
+	// Tableau a quatre colonnes. La famille prend la place restante et se tronque a
+	// l'ellipse plutot que de pousser les chiffres hors des 280 px de l'infobulle : les
+	// libelles varient beaucoup d'une langue a l'autre.
+	.stats .stat {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto 32px 40px;
+		align-items: center;
+		gap: 5px;
+		padding: 4px 6px;
+		font-size: 12px;
+		text-align: left;
+		.fam {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
+		.factor {
+			color: var(--text-color-secondary);
+			font-weight: normal;
+		}
+		.gain, .charge {
+			text-align: right;
+			font-variant-numeric: tabular-nums;
+		}
+		.charge { color: var(--text-color-secondary); }
 		// La famille de predilection est celle qui compte : elle ressort.
 		&.best {
 			background: #e3f0d8;
 			font-weight: bold;
 		}
-		.on {
-			margin-left: 6px;
-			color: var(--text-color-secondary);
-			font-weight: normal;
-		}
-		.factor {
-			margin-left: auto;
-			color: var(--text-color-secondary);
-			font-weight: normal;
-		}
+	}
+	// Ligne de titres : discrete, elle ne sert qu'a nommer les deux colonnes de chiffres.
+	.stats .stat.columns {
+		padding-top: 6px;
+		padding-bottom: 0;
+		font-size: 11px;
+		color: var(--text-color-secondary);
+		.mini { width: 15px; height: 15px; vertical-align: middle; }
+	}
+	body.dark .stats .stat.best {
+		background: #2c3a22;
 	}
 	// item-preview.scss ne colore que les enfants directs de .stats, par alternance.
 	// Ces deux blocs sont en dehors : sans fond explicite, la fiche laisse voir
