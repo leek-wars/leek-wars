@@ -71,9 +71,10 @@
 						<div class="forge-wrapper">
 							<forge></forge>
 						</div>
-						<!-- Onglet Ameliorer : colonne des stats a jour de la piece posee, entre la
-						     forge et la palette/historique (3 colonnes) (#622). -->
-						<forge-stats v-if="tab === 'alter'" />
+						<!-- Colonne des stats a jour de la piece en cours, entre la forge et la
+						     palette/historique (3 colonnes). Presente dans les TROIS onglets, et
+						     meme sans piece : sinon la forge se decale d'un onglet a l'autre (#622). -->
+						<forge-stats />
 						<div class="schemes-section">
 							<!-- Fabriquer : le catalogue de schemas, puis l'historique des crafts. -->
 							<template v-if="tab === 'craft'">

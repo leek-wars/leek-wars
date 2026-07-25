@@ -17,11 +17,21 @@
 
 					<!-- Alteration : resultat par carac, dosage, synergie, casse. -->
 					<template v-else-if="entry.action === ALTER && entry.details">
-						<span v-for="r in entry.details.results" :key="r.carac" class="roll" :class="{ok: r.success}">
-							<img class="ci" :src="'/image/charac/small/' + r.carac + '.png'">
-							<template v-if="r.success">+{{ r.points }}</template>
-							<template v-else>✕</template>
+						<!-- Les alterations reellement consommees, en vignettes : c'est la recette
+						     que le joueur cherche a retrouver pour la rejouer (#622). -->
+						<span v-for="(count, id) in entry.details.recipe" :key="'u' + id" class="rendered-item alteration used" :title="alterationName(Number(id))">
+							<img :src="alterationThumb(Number(id))" :alt="alterationName(Number(id))">
+							<span v-if="count > 1" class="qty">×{{ count }}</span>
 						</span>
+						<!-- Les gains ne s'affichent qu'en cas de reussite : un echec ne modifie
+						     rien, une carac barree laissait croire le contraire (#622). -->
+						<template v-if="entry.details.results && entry.details.results.some((r: {success: boolean}) => r.success)">
+							<span v-for="r in entry.details.results" :key="r.carac" class="roll ok">
+								<img class="ci" :src="'/image/charac/small/' + r.carac + '.png'">
+								+{{ r.points }}
+							</span>
+						</template>
+						<span v-else class="roll failed">✕</span>
 						<span class="dose" :title="$t('main.alteration_dose')">{{ entry.details.dose }}</span>
 						<span v-if="entry.details.metabolism !== undefined" class="metabolism" :title="$t('main.alteration_metabolism')">
 							{{ entry.details.metabolism }}
@@ -214,7 +224,9 @@
 		// Les images d'items ne sont pas toujours carrees : contain evite l'ecrasement.
 		object-fit: contain;
 	}
-	.name { font-weight: bold; white-space: nowrap; }
+	// Nom reduit : la ligne doit surtout montrer les vignettes des alterations
+	// consommees et le resultat, le nom de la piece n'est qu'un reperage (#622).
+	.name { font-weight: bold; white-space: nowrap; font-size: 12px; }
 	.date {
 		margin-left: auto;
 		padding-left: 6px;
@@ -234,6 +246,8 @@
 		color: var(--text-color-secondary);
 	}
 	.roll.ok { color: #2e7d32; font-weight: bold; }
+	// Echec : une croix seule, sans carac. Rien n'a bouge sur la piece (#622).
+	.roll.failed { font-weight: bold; }
 	.ci { width: 15px; height: 15px; }
 	// Dosage : petit jeton discret.
 	.dose {
@@ -259,6 +273,9 @@
 	// contain : garder les proportions des vignettes rendues.
 	.rendered-item img { object-fit: contain; }
 	.rendered-item.alteration img { width: 30px; height: 30px; }
+	// Alterations CONSOMMEES par une tentative : plus petites que celles rendues par un
+	// recyclage, la ligne d'alteration porte deja les gains et la casse (#622).
+	.rendered-item.alteration.used img { width: 22px; height: 22px; }
 	.rendered-item.resource img { width: 24px; height: 24px; }
 	.nothing { font-style: italic; color: var(--text-color-secondary); font-size: 13px; }
 	// Nombre de pieces detruites d'un coup (#622).

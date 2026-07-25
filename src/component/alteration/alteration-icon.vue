@@ -1,7 +1,7 @@
 <template>
 	<div class="alteration-icon" :title="tooltip">
 		<img class="image" :src="'/image/alteration/' + name + '.png'" :alt="tooltip" loading="lazy">
-		<span v-if="number !== null" class="number">{{ LeekWars.roman(number) }}</span>
+		<span v-if="number !== null" class="number">{{ number }}</span>
 	</div>
 </template>
 
@@ -63,8 +63,7 @@
 		position: absolute;
 		top: -2px;
 		left: 0;
-		// Un peu plus petit : les dosages romains (jusqu'a LVIII) debordent en 11px (#622).
-		font-size: 9px;
+		font-size: 11px;
 		font-weight: bold;
 		color: #fff;
 		text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;

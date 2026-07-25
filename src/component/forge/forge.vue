@@ -6,13 +6,18 @@
 			<div v-if="component && plan && alterationCount > 0" class="preview">
 				<div class="row dose-row">
 					<span>{{ $t('main.alteration_dose') }}</span>
-					<b class="chance">{{ LeekWars.roman(dose) }}</b>
+					<b class="chance">{{ dose }}</b>
 				</div>
 				<div class="row gains">
-					<template v-for="(roll, carac) in plan.rolls" :key="carac">
-						<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
-						<span class="gain" :class="'color-' + carac">+{{ roll.points }}</span>
-					</template>
+					<!-- Les gains sont tronques par une ellipse plutot que renvoyes a la ligne :
+					     une recette peut viser six caracs, et un retour a la ligne ferait grandir
+					     la carte, donc bouger la forge centree entre les deux blocs (#622). -->
+					<div class="gains-list">
+						<template v-for="(roll, carac) in plan.rolls" :key="carac">
+							<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
+							<span class="gain" :class="'color-' + carac">+{{ roll.points }}</span>
+						</template>
+					</div>
 					<!-- Loader tant que le serveur calcule la vraie proba (gate inclus). -->
 					<b class="chance">
 						<v-progress-circular v-if="loadingPreview" :size="13" :width="2" indeterminate color="primary" />
@@ -27,7 +32,7 @@
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="itemImageUrl(LeekWars.items[item[0]])">
 						<!-- Numero de dosage, en haut a gauche comme dans la palette (#622). -->
-						<span v-if="slotNumber(item) !== null" class="alt-number">{{ LeekWars.roman(slotNumber(item)!) }}</span>
+						<span v-if="slotNumber(item) !== null" class="alt-number">{{ slotNumber(item) }}</span>
 						<!-- La cle sur la quantite fait rejouer le petit rebond a chaque ajout. -->
 						<div v-if="item[1] > 1" :key="item[1]" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
@@ -120,7 +125,9 @@
 		<!-- BAS : bonus + %, casse, cout (la forge reste centree entre haut et bas). -->
 		<div class="forge-bottom">
 			<div v-if="component && plan && alterationCount > 0" class="preview">
-			<div v-if="previewBreak > 0.0005" class="row risk">
+			<!-- Toujours affichee, meme a 0 : une ligne qui disparait deplace la forge, et
+			     « aucun risque » est une information en soi (#622). -->
+			<div class="row risk">
 				<v-icon size="16">mdi-alert</v-icon>
 				<span>{{ $t('main.alteration_break_risk') }}</span>
 				<b class="chance">{{ percent(previewBreak) }}</b>
@@ -263,6 +270,8 @@
 	const result = ref<number | null>(null)
 	const building = ref(false)
 	const built = ref(false)
+	/** Piece qui vient d'etre fabriquee, pour la reprendre telle quelle dans les autres onglets (#622). */
+	const crafted = ref<InventoryItem | null>(null)
 
 	onMounted(() => {
 		LeekWars.footer = false
@@ -280,7 +289,20 @@
 			componentCount.value = 1
 		})
 		emitter.on('add-alteration', addAlteration)
-		emitter.on('workshop-mode', (m: string) => { mode.value = m })
+		emitter.on('workshop-mode', (m: string) => {
+			const from = mode.value
+			mode.value = m
+			// On quitte Fabriquer juste apres un craft : la piece fabriquee descend dans la
+			// forge comme un composant ordinaire. Rester en mode « recommencer » n'a pas de
+			// sens dans Ameliorer ni Detruire, qui travaillent sur une piece et pas sur une
+			// recette, et obligeait a aller la rechercher dans l'inventaire (#622).
+			if (from === 'craft' && m !== 'craft' && built.value && crafted.value) {
+				const item = crafted.value
+				clear()
+				component.value = item
+				componentCount.value = 1
+			}
+		})
 		emitter.on('craft', (s: SchemeTemplate) => {
 			clear()
 			scheme.value = s
@@ -304,6 +326,7 @@
 		componentCount.value = 1
 		building.value = false
 		built.value = false
+		crafted.value = null
 	}
 
 	const altering = ref(false)
@@ -327,6 +350,8 @@
 		probability: number
 		results: { carac: string, success: boolean, points: number }[]
 		id?: number
+		/** Date remontee par le serveur quand les stats ont change (tri par date, #622). */
+		time?: number
 		stats: { [carac: string]: number }
 		capacity: { used: number, total: number }
 		dose: number
@@ -421,6 +446,9 @@
 				// l'objet recu ne suffit pas : il faut retrouver l'original.
 				item.stats = data.stats
 				item.altered_power = data.capacity.used
+				// Le serveur remonte la date quand les stats ont bouge : on la reporte pour
+				// que la piece passe en tete de l'inventaire trie par date tout de suite (#622).
+				if (data.time !== undefined) item.time = data.time
 				// Le serveur a pu DETACHER la piece d'un stack : dans ce cas elle a un
 				// nouvel id, et l'ancienne ligne garde le reste de la pile.
 				const newId = data.id
@@ -558,6 +586,9 @@
 			q3x: number, q3y: number, dx: number, dy: number,
 			duration: number, delay: number }[] = []
 		if (!component.value || fusing.value) return out
+		// Rien ne coule vers une piece qui ne peut pas prendre : le flux promet une
+		// alteration en cours, il serait mensonger sur une tentative impossible (#622).
+		if (previewProbability.value <= 0) return out
 		forge.value.forEach((slot, i) => {
 			// Meme garde que cellVars : une recette peut deborder de la grille.
 			const center = CELL_CENTERS[i]
@@ -603,11 +634,16 @@
 	// La palette d'alterations et la colonne de stats lisent la piece posee : on publie sa
 	// famille, son niveau, son template et ses stats des qu'elle change (les stats bougent
 	// aussi apres une tentative reussie, d'ou le suivi de component.stats) (#622).
-	watch([component, () => component.value?.stats], () => {
+	//
+	// A defaut de piece posee, on publie la piece VISEE par le schema de fabrication : la
+	// colonne de stats montre ainsi ce qu'on est en train de fabriquer, et existe donc
+	// dans les trois onglets (#622).
+	watch([component, () => component.value?.stats, result], () => {
 		const c = component.value
-		const tpl = c ? LeekWars.items[c.template] : null
-		forgeComponent.value = (c && tpl)
-			? { family: Number(tpl.params), level: Number(tpl.level), template: c.template, stats: c.stats ?? null }
+		const template = c ? c.template : result.value
+		const tpl = template ? LeekWars.items[template] : null
+		forgeComponent.value = (tpl && tpl.type === ItemType.COMPONENT)
+			? { family: Number(tpl.params), level: Number(tpl.level), template: template as number, stats: c?.stats ?? null }
 			: null
 	}, { immediate: true })
 	onBeforeUnmount(() => { forgeComponent.value = null })
@@ -794,6 +830,14 @@
 		LeekWars.post('item/craft', { scheme_id: scheme.value.id }).then(item => {
 			const template = LeekWars.items[item.template]
 			store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: scheme.value!.quantity })
+			// On retient la piece fabriquee pour la reposer dans la forge si le joueur passe
+			// a Ameliorer ou Detruire. L'objet du store est prefere a une copie : la forge
+			// ecrit dessus (stats, altered_power) apres une fusion (#622).
+			if (template.type === ItemType.COMPONENT) {
+				const stored = store.state.farmer?.components?.find(c => c.id === item.id)
+				crafted.value = (stored as InventoryItem | undefined)
+					?? { id: item.id, template: item.template, quantity: 1, time: item.time }
+			}
 			for (const ingredient of scheme.value!.items) {
 				if (ingredient === null) continue;
 				if (ingredient[0] === 148) { // hab
@@ -910,11 +954,43 @@
 		padding: 4px 7px;
 		font-size: 13px;
 		border-radius: 4px;
-		// Une recette peut viser quatre caracs et le taux s'ecrire « Impossible » : sans
-		// retour a la ligne, la carte de 260 px deborderait (#622).
-		flex-wrap: wrap;
+		// Hauteur commune aux quatre lignes : les icones de carac (17 px) et l'icone
+		// d'alerte (16 px) ne font pas la meme hauteur naturelle, et la moindre
+		// difference entre le bloc du haut et celui du bas decale la forge, qui est
+		// centree entre les deux (#622).
+		min-height: 25px;
 		& + .row { margin-top: 2px; }
 	}
+	// Liste des gains : une seule ligne, tronquee a l'ellipse. C'est ce qui garantit que
+	// la carte du haut garde exactement la hauteur de celle du bas, quelle que soit la
+	// recette, et donc que la forge ne bouge pas (#622).
+	.gains-list {
+		flex: 1 1 auto;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		.ic { vertical-align: middle; }
+		.gain { margin: 0 7px 0 3px; }
+	}
+	.gains .chance { flex: 0 0 auto; padding-left: 4px; }
+	// Le dosage se detache du bloc de jets, en miroir EXACT du cout en bas : meme hauteur,
+	// meme marge, meme filet. C'est ce qui donne aux deux cartes la meme hauteur au pixel
+	// et fige la forge, centree entre elles (#622).
+	.dose-row, .cost {
+		// 32 px : la hauteur naturelle de la ligne de cout, imposee par l'icone Habs (20 px)
+		// et le filet. La ligne de dosage, en texte seul, s'y aligne.
+		min-height: 32px;
+	}
+	.dose-row {
+		border-bottom: 1px solid var(--border);
+		border-radius: 0;
+		margin-bottom: 4px;
+		padding-bottom: 7px;
+	}
+	// Bat `.row + .row` (plus specifique) qui ramenait la marge du cout a 2 px et cassait
+	// la symetrie avec les 4 px du dosage.
+	.row + .row.cost { margin-top: 4px; }
 	.ic { width: 17px; height: 17px; }
 	.chance {
 		margin-left: auto;

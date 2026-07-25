@@ -1,12 +1,29 @@
 <template lang="html">
-	<div v-if="stats.length" class="forge-stats">
+	<!-- Toujours rendue, dans les trois onglets et meme sans piece posee : la colonne
+	     garde sa place, sinon la forge se decale d'un onglet a l'autre (#622). -->
+	<div class="forge-stats">
 		<div class="title">{{ $t('characteristic.characteristics') }}</div>
 		<div class="card">
 			<div v-for="[carac, value] in stats" :key="carac" class="row" :class="{ altered: isAltered(carac), broken: delta(carac) < 0 }">
 				<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
 				<span v-html="$t('characteristic.' + carac)"></span>
 				<b class="value" :class="'color-' + carac">{{ value }}</b>
+				<!-- Le delta pose par le joueur, signe comme dans l'infobulle de composant.
+				     Toujours rendu, meme vide, pour que la colonne des totaux reste alignee. -->
+				<span class="bonus" :class="{ ['color-' + carac]: delta(carac) > 0, negative: delta(carac) < 0 }">
+					<template v-if="delta(carac)">{{ delta(carac) > 0 ? '+' : '−' }}{{ Math.abs(delta(carac)) }}</template>
+				</span>
 			</div>
+			<!-- Charge investie sur capacite totale : c'est le budget d'alterations de la
+			     piece, l'information qui decide de la prochaine tentative (#622). -->
+			<div v-if="capacity > 0" class="row charge">
+				<span>{{ $t('main.alteration_charge') }}</span>
+				<b class="value" :class="{ deficit: charge < 0 }">{{ charge }} / {{ capacity }}</b>
+				<span class="bonus"></span>
+			</div>
+			<!-- Sans piece, la carte reste presente mais muette : pas de message qui
+			     serait faux dans l'un des trois onglets, juste la place gardee (#622). -->
+			<div v-if="!stats.length" class="row empty"></div>
 		</div>
 	</div>
 </template>
@@ -15,7 +32,7 @@
 	import { computed } from 'vue'
 	import { forgeComponent } from '@/model/forge-state'
 	import { LeekWars } from '@/model/leekwars'
-	import { mergeStats } from '@/model/alteration'
+	import { addedPower, mergeStats } from '@/model/alteration'
 
 	defineOptions({ name: 'ForgeStats' })
 
@@ -32,23 +49,37 @@
 	const isAltered = (carac: string) => !!forgeComponent.value?.stats?.[carac]
 	/** Delta porte par l'instance, signe : negatif si la casse a creuse la carac (#622). */
 	const delta = (carac: string) => forgeComponent.value?.stats?.[carac] ?? 0
+
+	// Capacite d'alteration de la piece, pre-calculee par le serveur (colonne ou formule).
+	const capacity = computed(() => forgeComponent.value ? LeekWars.componentCapacity(forgeComponent.value.template) : 0)
+	// Charge investie, signee : negative sur une piece creusee par la casse (#622).
+	const charge = computed(() => {
+		const weights = LeekWars.alterations?.weights
+		const stats = forgeComponent.value?.stats
+		if (!weights || !stats) return 0
+		return Math.round(addedPower(stats, weights))
+	})
 </script>
 
 <style lang="scss" scoped>
 	.forge-stats {
 		width: 200px;
 		flex-shrink: 0;
-		padding: 10px;
+		// Rien a gauche : la forge est centree dans sa colonne et porte deja ses 10 px de
+		// marge interne. Un padding ici doublait l'ecart a droite de la grille par rapport
+		// a celui de gauche (#622).
+		padding: 10px 10px 10px 0;
 	}
 	.title {
 		font-size: 13px;
 		font-weight: bold;
 		color: var(--text-color-secondary);
-		text-align: center;
 		margin-bottom: 6px;
 	}
 	.card {
-		padding: 4px;
+		// Pas de marge horizontale : le liseré des caracs alterees doit toucher le bord
+		// de la carte, sinon il flotte a 4 px et ne se lit plus comme un bord (#622).
+		padding: 4px 0;
 		border-radius: 6px;
 		background: var(--background-secondary);
 		.row {
@@ -68,6 +99,26 @@
 			margin-left: auto;
 			font-variant-numeric: tabular-nums;
 			font-weight: bold;
+		}
+		// Colonne de largeur fixe : elle reste vide sur les caracs natives, ce qui garde
+		// les totaux alignes d'une ligne a l'autre.
+		.bonus {
+			flex: 0 0 36px;
+			text-align: right;
+			font-weight: bold;
+			font-variant-numeric: tabular-nums;
+			&.negative { color: #7d5a5a; }
+		}
+		// Carte vide : la hauteur d'une ligne, pour que la colonne existe sans rien dire.
+		.empty { min-height: 25px; }
+		// La charge se detache du bloc de caracs : c'est un budget, pas une stat.
+		.charge {
+			border-top: 1px solid var(--border);
+			margin-top: 4px;
+			padding-top: 7px;
+			color: var(--text-color-secondary);
+			.value { color: var(--text-color); }
+			.value.deficit { color: #7d5a5a; }
 		}
 	}
 </style>
