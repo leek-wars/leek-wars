@@ -94,7 +94,7 @@ const DIFFICULTY_K = 7.3
 const PROGRESS_BONUS = 2
 const PROGRESS_CAP = 0.2
 const MAX_PROBABILITY = 0.95
-const BREAK_COEFFICIENT = 0.0005
+const BREAK_COEFFICIENT = 0.001
 // Le puits n'est plus un mur : on autorise a tenter jusqu'a ce plafond, ou la reussite
 // devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
 const OVERFILL_CAP = 1.3
