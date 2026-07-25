@@ -912,6 +912,8 @@ body {
 // puits. Globale car reutilisee dans l'inventaire, la page poireau et le dialogue de
 // selection. Le vert est assombri parce qu'il passe mal sur les composants deja verts
 // (RAM 3, kiwi, pomme).
+// Palier 0 : charge NEGATIVE, la casse a creuse la piece sous ses stats de base (#622).
+.altered-0 { filter: drop-shadow(2px 2px 0 #7d5a5a) drop-shadow(0 0 2px rgba(125, 90, 90, .5)); }
 .altered-1 { filter: drop-shadow(2px 2px 0 #008800) drop-shadow(0 0 2px rgba(0, 136, 0, .5)); }
 .altered-2 { filter: drop-shadow(2px 2px 0 #0090ff) drop-shadow(0 0 2px rgba(0, 144, 255, .5)); }
 .altered-3 { filter: drop-shadow(2px 2px 0 #c21aff) drop-shadow(0 0 2px rgba(194, 26, 255, .5)); }

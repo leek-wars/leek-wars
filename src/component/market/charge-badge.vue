@@ -3,7 +3,7 @@
 		<svg viewBox="0 0 36 36">
 			<circle class="track" cx="18" cy="18" r="15" />
 			<circle class="fill" :class="'tier-' + tier" cx="18" cy="18" r="15"
-				:stroke-dasharray="circumference" :stroke-dashoffset="circumference * (1 - Math.min(1, ratio))" />
+				:stroke-dasharray="circumference" :stroke-dashoffset="circumference * (1 - Math.min(1, Math.abs(ratio)))" />
 		</svg>
 		<span class="value">{{ percent }}%</span>
 	</div>
@@ -34,7 +34,9 @@
 		const weights = LeekWars.alterations?.weights
 		if (!props.alterations || !props.capacity || !weights) return null
 		const r = addedPower(props.alterations, weights) / props.capacity
-		return r > 0 ? r : null
+		// Charge negative comprise : une piece creusee par la casse doit se voir, c'est
+		// justement l'information qui compte avant de l'equiper ou de l'acheter (#622).
+		return r !== 0 ? r : null
 	})
 	const percent = computed(() => ratio.value !== null ? Math.round(ratio.value * 100) : 0)
 	// Tooltip : charge investie / capacite totale, au survol de la jauge circulaire (#622).
@@ -73,6 +75,8 @@
 		stroke-linecap: round;
 		transition: stroke-dashoffset 0.3s ease;
 	}
+	// Palier 0 : charge negative, la piece a ete creusee sous ses stats de base.
+	.fill.tier-0 { stroke: #7d5a5a; }
 	.fill.tier-1 { stroke: #008800; }
 	.fill.tier-2 { stroke: #0090ff; }
 	.fill.tier-3 { stroke: #c21aff; }
