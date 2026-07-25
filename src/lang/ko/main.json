@@ -71,6 +71,7 @@
 	"alteration_broken": "파손: {0}포인트 손실",
 	"alteration_cost": "비용",
 	"alteration_failed": "실패",
+	"alteration_impossible": "불가능",
 	"alteration_fuse": "변질",
 	"alteration_metabolism": "대사",
 	"alteration_well": "용량",

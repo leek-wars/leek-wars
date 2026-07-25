@@ -71,6 +71,7 @@
 	"alteration_broken": "Rikkoutuminen: {0} pistettä menetetty",
 	"alteration_cost": "Hinta",
 	"alteration_failed": "Epäonnistui",
+	"alteration_impossible": "Mahdotonta",
 	"alteration_fuse": "Muuta",
 	"alteration_metabolism": "Aineenvaihdunta",
 	"alteration_well": "Kaivo",

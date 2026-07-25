@@ -71,6 +71,7 @@
 	"alteration_broken": "破損：{0}ポイント消失",
 	"alteration_cost": "コスト",
 	"alteration_failed": "失敗",
+	"alteration_impossible": "不可能",
 	"alteration_fuse": "変質させる",
 	"alteration_metabolism": "代謝",
 	"alteration_well": "容量",

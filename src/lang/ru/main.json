@@ -71,6 +71,7 @@
 	"alteration_broken": "Поломка: потеряно {0} очк.",
 	"alteration_cost": "Стоимость",
 	"alteration_failed": "Неудача",
+	"alteration_impossible": "Невозможно",
 	"alteration_fuse": "Изменить",
 	"alteration_metabolism": "Метаболизм",
 	"alteration_well": "Резерв",

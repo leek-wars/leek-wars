@@ -71,6 +71,7 @@
 	"alteration_broken": "破损：损失 {0} 点",
 	"alteration_cost": "花费",
 	"alteration_failed": "失败",
+	"alteration_impossible": "不可能",
 	"alteration_fuse": "改造",
 	"alteration_metabolism": "代谢",
 	"alteration_well": "容量",
