@@ -952,14 +952,17 @@
 		display: flex;
 		align-items: center;
 		gap: 7px;
-		padding: 4px 7px;
+		padding: 2px 7px;
 		font-size: 13px;
 		border-radius: 4px;
 		// Hauteur commune aux quatre lignes : les icones de carac (17 px) et l'icone
 		// d'alerte (16 px) ne font pas la meme hauteur naturelle, et la moindre
 		// difference entre le bloc du haut et celui du bas decale la forge, qui est
 		// centree entre les deux (#622).
-		min-height: 25px;
+		// 22 et non 21 : l'icone de carac alignee au milieu produit une boite en ligne de
+		// 17,1 px, la hauteur minimale absorbe ce dixieme pour que les deux cartes tombent
+		// exactement a la meme hauteur.
+		min-height: 22px;
 		& + .row { margin-top: 2px; }
 	}
 	// Liste des gains : une seule ligne, tronquee a l'ellipse. C'est ce qui garantit que
@@ -979,19 +982,19 @@
 	// meme marge, meme filet. C'est ce qui donne aux deux cartes la meme hauteur au pixel
 	// et fige la forge, centree entre elles (#622).
 	.dose-row, .cost {
-		// 32 px : la hauteur naturelle de la ligne de cout, imposee par l'icone Habs (20 px)
+		// 28 px : la hauteur naturelle de la ligne de cout, imposee par l'icone Habs (20 px)
 		// et le filet. La ligne de dosage, en texte seul, s'y aligne.
-		min-height: 32px;
+		min-height: 28px;
 	}
 	.dose-row {
 		border-bottom: 1px solid var(--border);
 		border-radius: 0;
-		margin-bottom: 4px;
-		padding-bottom: 7px;
+		margin-bottom: 3px;
+		padding-bottom: 5px;
 	}
 	// Bat `.row + .row` (plus specifique) qui ramenait la marge du cout a 2 px et cassait
-	// la symetrie avec les 4 px du dosage.
-	.row + .row.cost { margin-top: 4px; }
+	// la symetrie avec celle du dosage.
+	.row + .row.cost { margin-top: 3px; }
 	.ic { width: 17px; height: 17px; }
 	.chance {
 		margin-left: auto;
@@ -1007,8 +1010,8 @@
 		color: var(--text-color-secondary);
 		border-top: 1px solid var(--border);
 		border-radius: 0;
-		margin-top: 4px;
-		padding-top: 7px;
+		margin-top: 3px;
+		padding-top: 5px;
 	}
 }
 

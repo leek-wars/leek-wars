@@ -5,7 +5,9 @@
 			<page-tabs active="inventory" />
 		</div>
 		<div class="column">
-			<inventory />
+			<!-- Cran plein de l'atelier : l'inventaire s'efface tout a fait. A hauteur nulle
+			     son en-tete debordait encore de quelques pixels (#622). -->
+			<inventory v-show="!workshopFull" />
 			<div class="resizer" @mousedown="resizerMousedown"><v-icon>mdi-drag-horizontal-variant</v-icon></div>
 			<panel ref="bottomPanel" class="bottom-panel" toggle="inventory/workshop" :toggle-invert="true" :states="LeekWars.mobile ? 3 : 2" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event" @update:state="panelState = $event">
 				<template #title>
@@ -161,7 +163,7 @@
 	let tooltipHideTimer: number = 0
 	let tooltipOnTooltip: boolean = false
 
-	const bottomPanel = ref<{ expanded: boolean } | null>(null)
+	const bottomPanel = ref<{ expanded: boolean, state: number } | null>(null)
 	const bottomContent = ref<HTMLElement | null>(null)
 
 	function showTooltip(data: { item: ItemTemplate, quantity: number, craftCost?: number, event: MouseEvent }) {
@@ -236,6 +238,9 @@
 	watch(filter, () => localStorage.setItem('workshop/filter', '' + filter.value))
 	watch(craftableOnly, () => localStorage.setItem('workshop/craftable', '' + craftableOnly.value))
 
+	/** Atelier au cran plein sur mobile : l'inventaire n'a plus de place du tout. */
+	const workshopFull = computed(() => LeekWars.mobile && panelState.value === 2)
+
 	const bottomPanelStyle = computed(() => {
 		// Mobile : la hauteur suit le cran, il n'y a pas de poignee de redimensionnement.
 		// Plein = 100 % de la colonne, l'inventaire se retrouve reduit a rien, ce qui est
@@ -292,6 +297,17 @@
 
 	const onCloverUsed = () => { tooltipVisible.value = false }
 
+	/**
+	 * Un composant vient d'etre pose dans la forge : si l'atelier est replie, il s'ouvre
+	 * a mi-hauteur pour montrer ou la piece a atterri. Un atelier deja ouvert n'est pas
+	 * touche, sinon le cran choisi par le joueur serait ecrase a chaque clic (#622).
+	 */
+	function onComponentPicked() {
+		const panel = bottomPanel.value
+		if (!panel || panel.state > 0) return
+		panel.state = LeekWars.mobile ? 1 : 2
+	}
+
 	// Apres une destruction, on bascule sur l'onglet Detruire : le resultat vient d'y
 	// etre ajoute, autant l'amener sous les yeux du joueur (#622).
 	const onWorkshopAction = (action: number) => {
@@ -304,12 +320,14 @@
 		emitter.on('craft', scrollToForge)
 		emitter.on('clover-used', onCloverUsed)
 		emitter.on('workshop-action', onWorkshopAction)
+		emitter.on('alter', onComponentPicked)
 	})
 
 	onBeforeUnmount(() => {
 		emitter.off('craft', scrollToForge)
 		emitter.off('clover-used', onCloverUsed)
 		emitter.off('workshop-action', onWorkshopAction)
+		emitter.off('alter', onComponentPicked)
 	})
 </script>
 
