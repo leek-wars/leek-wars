@@ -70,6 +70,12 @@
 		// a celui de gauche (#622).
 		padding: 10px 10px 10px 0;
 	}
+	// Sur mobile les trois colonnes s'empilent : la carte n'a plus la forge a sa gauche
+	// pour porter l'ecart, elle collait donc au bord de l'ecran (#622).
+	#app.app .forge-stats {
+		width: 100%;
+		padding: 10px;
+	}
 	.title {
 		font-size: 13px;
 		font-weight: bold;

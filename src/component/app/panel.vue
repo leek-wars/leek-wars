@@ -7,9 +7,8 @@
 			</h2>
 			<div class="actions">
 				<slot name="actions"></slot>
-				<div v-if="toggle" class="button text expand" @click="expanded = !expanded">
-					<v-icon v-if="expanded">{{ toggleInvert ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
-					<v-icon v-else>{{ toggleInvert ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+				<div v-if="toggle" class="button text expand" @click="cycle">
+					<v-icon>{{ toggleIcon }}</v-icon>
 				</div>
 			</div>
 		</div>
@@ -32,36 +31,78 @@ const props = withDefaults(defineProps<{
 	title?: string
 	toggle?: string
 	toggleInvert?: boolean
+	/**
+	 * Nombre d'etats du bouton. 2 par defaut (replie / ouvert) ; a 3 le bouton boucle
+	 * replie -> mi-hauteur -> plein -> replie. C'est au parent de traduire l'etat en
+	 * hauteur, le panneau ne connait que son cran (#622).
+	 */
+	states?: number
 }>(), {
 	icon: undefined,
 	title: undefined,
 	toggle: undefined,
 	toggleInvert: false,
+	states: 2,
 })
 
 const emit = defineEmits<{
 	'update:expanded': [value: boolean]
+	'update:state': [value: number]
 }>()
 
 const slots = useSlots()
 
-const expanded = ref(true)
+/** 0 = replie, 1 = mi-hauteur (mode 3 crans seulement), 2 = plein. */
+const state = ref(2)
+/** Cran d'ouverture par defaut : le plein, dans les deux modes. */
+const OPEN = 2
+
+// Les appelants existants lisent et ECRIVENT `expanded` (le redimensionneur de
+// l'inventaire le passe a false) : on le garde comme vue booleenne sur le cran.
+const expanded = computed({
+	get: () => state.value > 0,
+	set: (value: boolean) => { state.value = value ? OPEN : 0 },
+})
 
 const hasTitle = computed(() => props.title || !!slots.title)
 
 if (props.toggle) {
-	if (localStorage.getItem(props.toggle) === null) { localStorage.setItem(props.toggle, 'true') }
-	expanded.value = localStorage.getItem(props.toggle) === 'true'
+	const stored = localStorage.getItem(props.toggle)
+	if (stored === null) { localStorage.setItem(props.toggle, props.states >= 3 ? '' + OPEN : 'true') }
+	// Ancien format booleen : les panneaux deja replies par le joueur le restent.
+	state.value = stored === null ? OPEN
+		: stored === 'true' ? OPEN
+		: stored === 'false' ? 0
+		: Math.max(0, Math.min(OPEN, parseInt(stored, 10) || 0))
 }
 
-watch(expanded, () => {
+const collapseIcon = computed(() => props.toggleInvert ? 'mdi-chevron-down' : 'mdi-chevron-up')
+const expandIcon = computed(() => props.toggleInvert ? 'mdi-chevron-up' : 'mdi-chevron-down')
+// L'icone annonce ce que fera le PROCHAIN clic, d'ou le double chevron au cran
+// intermediaire : un clic de plus ouvre en grand.
+const toggleIcon = computed(() => {
+	if (props.states < 3) return state.value > 0 ? collapseIcon.value : expandIcon.value
+	if (state.value === 0) return expandIcon.value
+	if (state.value === 1) return props.toggleInvert ? 'mdi-chevron-double-up' : 'mdi-chevron-double-down'
+	return collapseIcon.value
+})
+
+function cycle() {
+	state.value = props.states >= 3 ? (state.value + 1) % 3 : (state.value > 0 ? 0 : OPEN)
+}
+
+watch(state, () => {
 	if (props.toggle) {
-		localStorage.setItem(props.toggle, '' + expanded.value)
-		emit('update:expanded', expanded.value)
+		// Le format booleen historique est conserve pour les panneaux a deux crans : une
+		// vingtaine de cles existent deja chez les joueurs, et l'inventaire relit la
+		// sienne directement. Seul le mode a trois crans stocke un numero.
+		localStorage.setItem(props.toggle, props.states >= 3 ? '' + state.value : '' + (state.value > 0))
+		emit('update:expanded', state.value > 0)
+		emit('update:state', state.value)
 	}
 })
 
-defineExpose({ expanded })
+defineExpose({ expanded, state })
 </script>
 
 <style lang="scss" scoped>
