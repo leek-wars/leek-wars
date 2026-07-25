@@ -406,20 +406,21 @@
 	})
 
 	/**
-	 * Pourcentage d'une chance, avec TOUJOURS un chiffre significatif (#622).
+	 * Pourcentage d'une chance, avec TOUJOURS deux chiffres significatifs (#622).
 	 *
 	 * Une chance minuscule n'est pas une chance nulle : le metabolisme peut laisser
 	 * passer une tentative a 0,004 %, et l'afficher « 0 % » la faisait passer pour
-	 * interdite. On ajoute donc autant de decimales qu'il en faut pour que le premier
-	 * chiffre significatif apparaisse. Zero, lui, est un vrai mur (gate du metabolisme
-	 * ou plafond souple depasse) : il s'annonce en toutes lettres.
+	 * interdite. Deux chiffres et non un seul, parce que « 0,1 % » ne dit pas si l'on
+	 * est a 0,12 ou a 0,19 : sur ces ordres de grandeur c'est un facteur deux sur le
+	 * nombre de tentatives a prevoir. Zero, lui, est un vrai mur (gate du metabolisme ou
+	 * plafond souple depasse) : il s'annonce en toutes lettres.
 	 */
 	function percent(p: number): string {
 		if (p <= 0) return t('main.alteration_impossible')
 		const v = p * 100
 		// 9,95 et non 10 : au-dela, une decimale afficherait « 10.0 % ».
 		if (v >= 9.95) return Math.round(v) + ' %'
-		const digits = Math.min(10, Math.max(1, Math.ceil(-Math.log10(v))))
+		const digits = Math.min(10, Math.max(0, Math.ceil(-Math.log10(v))) + 1)
 		return v.toFixed(digits) + ' %'
 	}
 

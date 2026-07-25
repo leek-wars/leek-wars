@@ -393,7 +393,6 @@
 		// de vide ; sur desktop il flotte au milieu du panneau (#622).
 		align-items: safe center;
 		justify-content: center;
-		padding-top: 10px;
 		// Barre de defilement toujours reservee (scroll et non auto) : sinon son
 		// apparition quand la forge grandit (lignes de gains, alterations posees)
 		// decale le contenu et fait sauter la mise en page (cf. .schemes-section, #622).
