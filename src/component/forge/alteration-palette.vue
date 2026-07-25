@@ -81,17 +81,17 @@
 </script>
 
 <style lang="scss" scoped>
-	// Grille 4x3 : 4 colonnes, 3 lignes pour les 10 caracs. Chaque carte est une carac
-	// en ligne : son icone suivie de ses 3 familles ; les cases retrecissent pour tenir
-	// les 4 colonnes quelle que soit la largeur du panneau (#622).
+	// Grille 3x4 : 3 colonnes, 4 lignes pour les 10 caracs. Chaque carte est une carac
+	// en ligne : son icone suivie de ses 3 familles. A 3 colonnes plutot que 4, chaque
+	// case gagne en largeur et les vignettes deviennent lisibles (#622).
 	.alteration-palette {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(3, 1fr);
 		gap: 6px 8px;
 		padding: 8px;
 		border-bottom: 1px solid var(--border);
 	}
-	// Sous ~520px (mobile), 4 colonnes deviennent minuscules : on retombe a 2.
+	// Sous ~520px (mobile), 3 colonnes deviennent minuscules : on retombe a 2.
 	@media (max-width: 520px) {
 		.alteration-palette { grid-template-columns: repeat(2, 1fr); }
 	}
