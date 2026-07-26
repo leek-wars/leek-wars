@@ -45,12 +45,13 @@
 							:title="$t('main.alteration_metabolism')">
 							{{ Math.round(entry.details.metabolism) }} %
 						</span>
-						<!-- Casse : on montre QUELLE carac a saute, l'icone d'issue en tete de
-						     ligne portant deja le fait qu'il y a eu casse (#622). -->
-						<span v-if="entry.details.broken" class="broken"
-							:title="$t('characteristic.' + entry.details.broken.carac)">
-							<img class="ci" :src="'/image/charac/small/' + entry.details.broken.carac + '.png'">
-							−{{ entry.details.broken.lost }}
+						<!-- Casse : elle se repartit unite par unite sur plusieurs caracs, on les
+						     liste donc toutes. L'icone d'issue en tete de ligne porte deja le fait
+						     qu'il y a eu casse (#622). -->
+						<span v-for="(lost, carac) in entry.details.broken" :key="'b' + carac" class="broken"
+							:title="$t('characteristic.' + carac)">
+							<img class="ci" :src="'/image/charac/small/' + carac + '.png'">
+							−{{ lost }}
 						</span>
 					</template>
 
@@ -123,7 +124,7 @@
 		broken: 'mdi-image-broken-variant',
 	}
 	function outcome(entry: Entry): string {
-		if (entry.details?.broken) return 'broken'
+		if (entry.details?.broken && Object.keys(entry.details.broken).length) return 'broken'
 		const results = entry.details?.results
 		return results && results.some((r: { success: boolean }) => r.success) ? 'success' : 'fail'
 	}

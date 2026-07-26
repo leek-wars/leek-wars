@@ -369,7 +369,8 @@
 		capacity: { used: number, total: number }
 		dose: number
 		metabolism: number
-		broken: { carac: string, lost: number } | null
+		/** Casse : points perdus par carac, la perte s'etalant sur plusieurs stats (#622). */
+		broken: { [carac: string]: number } | null
 		habs_cost: number
 	}
 
@@ -494,7 +495,10 @@
 				clearIngredients()
 				fusing.value = false
 				// Issue jouee sur le composant : reussite, echec sec, ou casse.
-				outcome.value = data.broken ? 'broken' : (data.results.some(r => r.success) ? 'success' : 'fail')
+				// `broken` est une map carac => points : une casse peut n'avoir rien trouve a
+				// creuser (piece au plancher), auquel cas la map est vide (#622).
+				const broke = !!data.broken && Object.keys(data.broken).length > 0
+				outcome.value = broke ? 'broken' : (data.results.some(r => r.success) ? 'success' : 'fail')
 				clearTimeout(outcomeTimer)
 				outcomeTimer = window.setTimeout(() => { outcome.value = null }, 1400)
 				// L'historique des ameliorations montre la tentative aussitot (#622).
