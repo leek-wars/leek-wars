@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { addedPower, rawAddedPower, alterationTier } from '@/model/alteration'
+	import { addedPower, alterationTier, displayRatio, rawAddedPower } from '@/model/alteration'
 	import { LeekWars } from '@/model/leekwars'
 
 	/**
@@ -33,22 +33,24 @@
 	const ratio = computed(() => {
 		const weights = LeekWars.alterations?.weights
 		if (!props.alterations || !props.capacity || !weights) return null
-		// Puissance BRUTE : la jauge dit l'ETAT de la piece, donc -100 % quand la casse l'a
-		// creusee au plancher, la ou la charge budgetaire n'est qu'a -50 % (#622).
-		const r = rawAddedPower(props.alterations, weights) / props.capacity
+		// Budget au-dessus de zero, brut en dessous : cf. displayRatio, qui porte la regle
+		// pour la jauge, le liseré, la forge et le tri de l'inventaire d'un seul tenant.
+		const r = displayRatio(props.alterations, props.capacity, weights)
 		// Charge negative comprise : une piece creusee par la casse doit se voir, c'est
 		// justement l'information qui compte avant de l'equiper ou de l'acheter (#622).
 		return r !== 0 ? r : null
 	})
 	const percent = computed(() => ratio.value !== null ? Math.round(ratio.value * 100) : 0)
-	// Tooltip : charge BUDGETAIRE investie sur capacite totale. Elle differe du
-	// pourcentage de la jauge sur une piece creusee : le pourcentage dit l'etat des stats,
-	// l'infobulle dit ce qui reste a depenser (#622).
+	// Infobulle : le budget consomme sur la capacite, plus la valeur NETTE des stats quand
+	// elle en differe. L'ecart vaut la moitie de ce que la casse a creuse, et il n'est
+	// lisible nulle part ailleurs.
 	const chargeText = computed(() => {
 		const cap = props.capacity ?? 0
 		const weights = LeekWars.alterations?.weights
-		const used = props.alterations && weights ? Math.round(addedPower(props.alterations, weights)) : 0
-		return used + ' / ' + cap
+		if (!props.alterations || !weights) return '0 / ' + cap
+		const used = Math.round(addedPower(props.alterations, weights))
+		const raw = Math.round(rawAddedPower(props.alterations, weights))
+		return used + ' / ' + cap + (raw !== used ? ' (' + raw + ' net)' : '')
 	})
 	const tier = computed(() => {
 		if (ratio.value === null) return 1
