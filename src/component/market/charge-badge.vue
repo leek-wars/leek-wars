@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { addedPower, alterationTier } from '@/model/alteration'
+	import { addedPower, rawAddedPower, alterationTier } from '@/model/alteration'
 	import { LeekWars } from '@/model/leekwars'
 
 	/**
@@ -33,16 +33,21 @@
 	const ratio = computed(() => {
 		const weights = LeekWars.alterations?.weights
 		if (!props.alterations || !props.capacity || !weights) return null
-		const r = addedPower(props.alterations, weights) / props.capacity
+		// Puissance BRUTE : la jauge dit l'ETAT de la piece, donc -100 % quand la casse l'a
+		// creusee au plancher, la ou la charge budgetaire n'est qu'a -50 % (#622).
+		const r = rawAddedPower(props.alterations, weights) / props.capacity
 		// Charge negative comprise : une piece creusee par la casse doit se voir, c'est
 		// justement l'information qui compte avant de l'equiper ou de l'acheter (#622).
 		return r !== 0 ? r : null
 	})
 	const percent = computed(() => ratio.value !== null ? Math.round(ratio.value * 100) : 0)
-	// Tooltip : charge investie / capacite totale, au survol de la jauge circulaire (#622).
+	// Tooltip : charge BUDGETAIRE investie sur capacite totale. Elle differe du
+	// pourcentage de la jauge sur une piece creusee : le pourcentage dit l'etat des stats,
+	// l'infobulle dit ce qui reste a depenser (#622).
 	const chargeText = computed(() => {
 		const cap = props.capacity ?? 0
-		const used = ratio.value !== null ? Math.round(ratio.value * cap) : 0
+		const weights = LeekWars.alterations?.weights
+		const used = props.alterations && weights ? Math.round(addedPower(props.alterations, weights)) : 0
 		return used + ' / ' + cap
 	})
 	const tier = computed(() => {
