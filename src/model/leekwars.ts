@@ -32,7 +32,7 @@ import { DATA_TYPES, loadGameData as loadGameDataRaw } from './gamedata'
 import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
-const LOCAL = window.location.port === '8500' || window.location.port === '5100' || window.location.hostname === 'leekwars.local'
+const LOCAL = window.location.port === '8500' || window.location.port === '5100' || window.location.hostname === 'leekwars.local' || window.location.hostname === 'leekwars-beta.local'
 
 // Helper functions to avoid TypeScript "excessively deep" errors with vue-i18n
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

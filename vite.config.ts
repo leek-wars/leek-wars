@@ -378,11 +378,13 @@ function gameDataPlugin(): Plugin {
 				const host = req.headers['x-forwarded-host'] as string || req.headers.host || ''
 				const hostname = host.split(':')[0]
 				const port = host.split(':')[1] || ''
+				// leekwars-beta.local : API beta via le proxy Apache local (qui porte le cookie gate)
+				const beta = hostname === 'leekwars-beta.local'
 				const local = port === '8500' || port === '5100' || hostname === 'leekwars.local'
-				console.log('[game-data] Request host=' + req.headers.host + ' x-forwarded-host=' + req.headers['x-forwarded-host'] + ' → port=' + port + ' → api=' + (local ? 'local' : 'prod'))
-				const api = local
-					? 'http://localhost:' + (port || '8500') + '/api/'
+				const api = beta ? 'http://leekwars-beta.local/api/'
+					: local ? 'http://localhost:' + (port || '8500') + '/api/'
 					: 'https://leekwars.com/api/'
+				console.log('[game-data] Request host=' + req.headers.host + ' x-forwarded-host=' + req.headers['x-forwarded-host'] + ' → api=' + api)
 
 				let cache: ApiCache
 				try {

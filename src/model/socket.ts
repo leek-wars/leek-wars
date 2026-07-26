@@ -118,7 +118,9 @@ class Socket {
 		if (!store.state.farmer || this.intentionallyClosed || this.connecting() || this.connected()) {
 			return
 		}
-		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
+		// leekwars-beta.local : WS de la beta via le proxy Apache local (same-origin)
+		const url = window.location.hostname === 'leekwars-beta.local' ? "ws://" + window.location.host + "/ws"
+			: LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
 		this.socket = new WebSocket(url, [ 'leek-wars', store.state.token! ])
 		// console.log("[socket] socket", this.socket)
 
