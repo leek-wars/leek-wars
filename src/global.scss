@@ -227,6 +227,10 @@ body.beta {
 body.local {
 	background: #24344d;
 }
+// Marqueur visuel de la beta LOCALE (leekwars-beta.local) : fond extérieur violet (classe ajoutée dans main.ts)
+body.beta-local {
+	background: #322350;
+}
 body {
 	margin: 0;
 	font-family: "Roboto", sans-serif;
@@ -590,7 +594,7 @@ body.dark img[src$="/charac/small/frequency.png"] {
 	font-family: "Noto Color Emoji";
 	font-size: 16px;
 }
-.dev-label, .beta-label, .local-label {
+.dev-label, .beta-label, .local-label, .beta-local-label {
 	color: white;
 	border-radius: 4px;
 	padding: 4px 6px;
@@ -607,6 +611,9 @@ body.dark img[src$="/charac/small/frequency.png"] {
 }
 .local-label {
 	background: blue;
+}
+.beta-local-label {
+	background: #7634d8;
 }
 .moderator, a.moderator {
 	color: #ffa900;
