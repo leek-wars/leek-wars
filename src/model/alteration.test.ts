@@ -130,6 +130,19 @@ describe('pièce creusée par la casse', () => {
 		const plan = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, {})
 		expect(plan.capacity).toBe(152)
 		expect(plan.ratioBefore).toBeCloseTo(-0.25, 6)
+		// Le ratio BRUT, lui, dit l'état des stats : la pièce a bien perdu la moitié de sa
+		// capacité en points, et c'est ce chiffre que l'anneau et la jauge affichent.
+		expect(plan.rawRatioBefore).toBeCloseTo(-0.5, 6)
+	})
+
+	it('le pourcentage affiché atteint -100 % quand les stats sont au plancher', () => {
+		// Fraise : vie 300 + sagesse 50 (poids 2) => puissance 400, capacité 80. La casse
+		// peut lui manger 80 points de vie, soit -100 % en état pour -50 % en budget (#622).
+		const strawberry: [string, number][] = [['life', 300], ['wisdom', 50]]
+		const plan = planAttempt(DATA, strawberry, { life: -80 }, 157, ComponentFamily.FRUIT, {})
+		expect(plan.capacity).toBe(80)
+		expect(plan.rawRatioBefore).toBeCloseTo(-1, 6)
+		expect(plan.ratioBefore).toBeCloseTo(-0.5, 6)
 	})
 
 	it('rend la réparation facile : la difficulté se lit sur le remplissage', () => {

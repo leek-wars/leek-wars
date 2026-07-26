@@ -174,6 +174,19 @@ function addedPower(added: Stats, weights: { [carac: string]: number }): number 
 	return total
 }
 
+/**
+ * Puissance ajoutée au tarif PLEIN, déficits compris. C'est l'ÉTAT de la pièce, pas son
+ * budget : une fraise dont la casse a mangé 80 de vie est creusée à -100 % de sa
+ * capacité, alors qu'il lui reste 1,5 capacité de marge (le déficit ne rend que la
+ * moitié). Le pourcentage affiché montre cet état, la ligne de charge montre le
+ * budget (#622).
+ */
+function rawAddedPower(added: Stats, weights: { [carac: string]: number }): number {
+	let total = 0
+	for (const carac in added) total += added[carac] * (weights[carac] || 0)
+	return total
+}
+
 /** Part de la carac visée dans la puissance du composant : x1 si seule, x3 si absente. */
 function part(base: Stats | StatList, added: Stats, carac: string, weights: { [carac: string]: number }): number {
 	const total = toMap(base)
@@ -209,6 +222,8 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	// fournie, sinon la formule par défaut 0,2 × puissance des stats de base (#622).
 	const capacity = capacityOverride ?? well(power(base, data.weights))
 	const before = addedPower(added, data.weights)
+	// Etat brut de la piece, pour l'affichage du pourcentage (cf. rawAddedPower).
+	const rawBefore = rawAddedPower(added, data.weights)
 
 	let dose = 0
 	let items = 0
@@ -309,6 +324,10 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		capacity,
 		ratioBefore: capacity > 0 ? before / capacity : 0,
 		ratioAfter: rAfter,
+		// Ratios BRUTS : ce que l'anneau et le pourcentage affichent, pour qu'une piece
+		// creusee au plancher se lise -100 % et non -50 % (#622).
+		rawRatioBefore: capacity > 0 ? rawBefore / capacity : 0,
+		rawRatioAfter: capacity > 0 ? (rawBefore + recipePower) / capacity : 0,
 		// `breakProbability` est CONDITIONNELLE : le serveur ne tire la casse qu'après un
 		// échec, jamais après une réussite. `breakRisk` est ce que le joueur affronte
 		// vraiment sur cette fusion, et c'est lui que la forge affiche (#622).
@@ -333,6 +352,6 @@ function alteredClass(item: { stats?: Stats | null, altered_power?: number, temp
 
 export {
 	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
-	well, power, addedPower, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
+	well, power, addedPower, rawAddedPower, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }
