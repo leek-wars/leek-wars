@@ -124,10 +124,12 @@ describe('prévisualisation d\'une tentative', () => {
 describe('pièce creusée par la casse', () => {
 	// La casse peut faire descendre une carac SOUS sa valeur de base, jusqu'à -100 % de
 	// la capacité (#622). Le miroir doit prévisualiser la réparation comme le serveur.
-	it('affiche une charge négative', () => {
+	it('affiche une charge négative, au demi-tarif du déficit', () => {
+		// -76 de vie creusée ne rend que 38 de charge : la moitié, sinon creuser la carac
+		// la moins chère financerait l'achat de la plus chère (#622).
 		const plan = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, {})
 		expect(plan.capacity).toBe(152)
-		expect(plan.ratioBefore).toBeCloseTo(-0.5, 6)
+		expect(plan.ratioBefore).toBeCloseTo(-0.25, 6)
 	})
 
 	it('rend la réparation facile : la difficulté se lit sur le remplissage', () => {
