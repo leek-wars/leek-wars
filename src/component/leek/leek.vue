@@ -244,7 +244,7 @@
 									<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
 										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 											<div v-bind="props">
-												<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template))" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+												<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 											</div>
 										</rich-tooltip-item>
 									</div>
@@ -738,7 +738,7 @@
 						     et une piece alteree s'affiche comme une neuve (#622). -->
 						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 							<div v-if="leek.components[i]" :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i]!.template && draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="componentDragStart('leek', leek.components[i]!, $event)" @dragend="leek.components[0] && componentDragEnd(leek.components[0])" @click="leek.components[i] && removeComponent(leek.components[i]!)">
-								<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template))" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+								<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 							</div>
 						</rich-tooltip-item>
 						<div v-else><v-icon>mdi-sd</v-icon></div>
@@ -757,7 +757,7 @@
 						<div class="farmer-components" :class="{dashed: draggedComponent && draggedComponentLocation === 'leek'}" @dragover="dragOver" @drop="componentsDrop('farmer', $event)">
 							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" ref="componentTooltips" :item="LeekWars.items[component.template]" :instance="(component as any)" :bottom="true" :nodge="true">
 								<div :quantity="component.quantity" :class="{dragging: draggedComponent && draggedComponent.template === component.template && draggedComponentLocation === 'farmer', locked: LeekWars.items[component.template].level > leek.level || leek.components.find(c => c && c.template === component.template) }" :draggable="LeekWars.items[component.template].level <= leek.level" class="component" v-bind="props" @dragstart="componentDragStart('farmer', component, $event)" @dragend="componentDragEnd(component)" @click="addComponent(component)">
-									<img :class="alteredClass(component as any, LeekWars.componentCapacity(component.template))" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
+									<img :class="alteredClass(component as any, LeekWars.componentCapacity(component.template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
 								</div>
 							</rich-tooltip-item>
 						</div>

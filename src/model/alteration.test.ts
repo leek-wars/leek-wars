@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { AlterationFamily, ComponentFamily, alterationTier, planAttempt, well } from './alteration'
+import { AlterationFamily, ComponentFamily, alterationTier, alteredClass, planAttempt, well } from './alteration'
 import type { AlterationData } from './alteration'
 
 /**
@@ -159,6 +159,24 @@ describe('pièce creusée par la casse', () => {
 		const broken = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 1 })
 		const fresh = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
 		expect(broken.habsCost).toBe(fresh.habsCost)
+	})
+})
+
+describe('silhouette d\'un composant', () => {
+	// La silhouette doit porter le MEME palier que la jauge : sur la puissance brute, donc.
+	// Avec altered_power (charge budgetaire, deficits a demi-tarif), une piece a 42 % de
+	// brut affichait le liseré violet des 70 % (#622).
+	it('suit le pourcentage brut et non la charge budgetaire', () => {
+		// +100 de vie et -40 de sagesse sur une capacite de 152 : brut 20/152 = 13 %,
+		// budget 60/152 = 39 %. Le palier doit suivre le brut.
+		const item = { stats: { life: 100, wisdom: -40 }, altered_power: 60, template: 320 }
+		expect(alteredClass(item, 152, DATA.weights)).toBe('altered-1')
+		// Sans les poids, on retombe sur la charge budgetaire du serveur.
+		expect(alteredClass(item, 152)).toBe('altered-1')
+	})
+
+	it('ne marque rien sur un composant neuf', () => {
+		expect(alteredClass({ stats: null, template: 320 }, 152, DATA.weights)).toBe('')
 	})
 })
 

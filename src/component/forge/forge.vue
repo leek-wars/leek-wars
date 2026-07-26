@@ -59,7 +59,7 @@
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
 						<!-- Silhouette coloree du palier si la piece porte deja de la charge (#622) ;
 						     vide (donc aucune bordure) pour un composant neuf. -->
-						<img :key="component.id" :class="alteredClass(component, LeekWars.componentCapacity(component.template))" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
+						<img :key="component.id" :class="alteredClass(component, LeekWars.componentCapacity(component.template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'">
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
@@ -106,7 +106,7 @@
 			</v-btn>
 			<!-- Recommencer : repose la derniere recette d'alteration (#622). Coin BAS droit,
 			     la ou se trouve Fusionner : les deux ne coexistent jamais. -->
-			<v-btn v-if="component && lastRecipe && alterationCount === 0" class="corner-btn redo" icon variant="flat"
+			<v-btn v-if="component && lastForge && alterationCount === 0" class="corner-btn redo" icon variant="flat"
 				size="small" @click="repeat">
 				<v-icon color="primary">mdi-restore</v-icon>
 				<v-tooltip activator="parent" location="top">{{ $t('main.alteration_repeat') }}</v-tooltip>
@@ -343,8 +343,13 @@
 	}
 
 	const altering = ref(false)
-	/** Derniere recette d'alteration lancee, pour le bouton Recommencer (#622). */
-	const lastRecipe = ref<AlterationRecipe | null>(null)
+	/**
+	 * Disposition exacte de la derniere recette lancee : les 8 cases telles que le joueur
+	 * les avait garnies. La recette seule ne suffit pas a la rejouer a l'identique, elle
+	 * ne dit pas QUELLE case portait quoi, et « Recommencer » reconstituait donc un
+	 * agencement different du sien (#622).
+	 */
+	const lastForge = ref<(ForgeSlot | null)[] | null>(null)
 
 	// Perimetre du rect arrondi (92x92, r=20) pour la jauge annulaire :
 	// 4 cotes droits + 4 quarts de cercle = 4*(92-2*20) + 2*PI*20.
@@ -455,7 +460,7 @@
 			// On laisse le vol des alterations finir avant de reveler l'issue : sinon un
 			// serveur rapide escamote l'animation.
 			window.setTimeout(() => {
-				lastRecipe.value = sent
+				lastForge.value = forge.value.map(slot => slot ? [slot[0], slot[1]] as ForgeSlot : null)
 				// Le composant porte desormais ses nouvelles stats. L'inventaire construit
 				// des COPIES des items du store (spread dans son computed), donc ecrire sur
 				// l'objet recu ne suffit pas : il faut retrouver l'original.
@@ -716,19 +721,23 @@
 	 * alteration n'est reposee que si le joueur en a encore, sinon on met ce qu'il a.
 	 */
 	function repeat() {
-		if (!lastRecipe.value || !component.value) return
+		if (!lastForge.value || !component.value) return
 		clearIngredients()
-		const alterations = LeekWars.alterations
-		if (!alterations) return
-		for (const id in lastRecipe.value) {
-			const tpl = alterations.alterations[id]?.template
-			if (!tpl) continue
-			const owned = store.state.farmer?.alterations?.find(a => a.template === tpl)
-			const want = lastRecipe.value[id]
-			for (let n = 0; n < want && (owned ? n < owned.quantity : false); n++) {
-				addAlteration({ id: tpl, template: tpl, quantity: owned!.quantity } as InventoryItem)
-			}
-		}
+		// Case par case, dans l'agencement exact de la derniere tentative : c'est ce que
+		// le joueur veut rejouer, et le dosage total en depend (#622).
+		const posed: { [template: number]: number } = {}
+		lastForge.value.forEach((slot, index) => {
+			if (!slot) return
+			const [template, wanted] = slot
+			const owned = store.state.farmer?.alterations?.find(a => a.template === template)
+			// On ne repose que ce qu'il reste en stock, le compte tenant sur toutes les cases
+			// puisqu'une meme alteration peut en occuper plusieurs.
+			const left = (owned ? owned.quantity : 0) - (posed[template] ?? 0)
+			const quantity = Math.min(wanted, Math.max(0, left))
+			if (quantity <= 0) return
+			forge.value[index] = [template, quantity]
+			posed[template] = (posed[template] ?? 0) + quantity
+		})
 	}
 
 	/** Retire une alteration posee : un clic enleve un exemplaire. */
