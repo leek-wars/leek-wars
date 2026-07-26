@@ -101,6 +101,9 @@ const OVERFILL_CAP = 1.3
 // Plancher de charge : la casse creuse la pièce sous ses stats de base jusqu'à -100 %
 // de sa capacité, pas au-delà (à un point indivisible près, qui ne se coupe pas).
 const CHARGE_FLOOR = -1
+// Part de la charge rendue par une stat cassée : à taux plein, creuser la carac la moins
+// chère finançait l'achat de la plus chère, c'était la stratégie dominante (#622).
+const DEFICIT_REFUND = 0.5
 
 type Stats = { [carac: string]: number }
 /** Format historique des component_template : [["life", 600], ...] */
@@ -154,13 +157,20 @@ function power(stats: Stats | StatList, weights: { [carac: string]: number }): n
 }
 
 /**
- * Puissance ajoutée par les altérations, SIGNÉE : positive quand la pièce a été montée,
- * négative quand la casse l'a creusée sous ses stats de base (jusqu'à -100 % de la
- * capacité). Somme signée et non absolue, sinon un déficit compterait comme un gain.
+ * Charge portée par les altérations, SIGNÉE : positive quand la pièce a été montée,
+ * négative quand la casse l'a creusée sous ses stats de base.
+ *
+ * Une stat CASSÉE ne rend que la MOITIÉ de sa puissance (DEFICIT_REFUND). Sans ce
+ * demi-tarif, retirer une stat bon marché libérait autant de budget qu'en acheter une
+ * chère : creuser 152 de vie sur un hylocereus finançait deux PT, la vie valant 1 de
+ * charge par point contre 100 pour un PT (#622).
  */
 function addedPower(added: Stats, weights: { [carac: string]: number }): number {
 	let total = 0
-	for (const carac in added) total += added[carac] * (weights[carac] || 0)
+	for (const carac in added) {
+		const power = added[carac] * (weights[carac] || 0)
+		total += added[carac] >= 0 ? power : power * DEFICIT_REFUND
+	}
 	return total
 }
 
