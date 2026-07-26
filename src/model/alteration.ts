@@ -259,7 +259,14 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		groups[carac].weight += efficiency * points * quantity
 	}
 
-	const after = before + recipePower
+	// Charge d'arrivée PROJETÉE : on applique les points de la recette aux deltas et on
+	// recalcule la charge, au lieu d'additionner la puissance. Remplir un déficit coûte la
+	// puissance pleine mais ne rend que la moitié de la charge (DEFICIT_REFUND), donc
+	// l'addition linéaire promettait une destination qui n'arrivait jamais : sur une pièce
+	// creusée au plancher, l'aperçu annonçait 114 % pour 64 % réellement livrés (#622).
+	const projected: Stats = { ...added }
+	for (const carac in groups) projected[carac] = (projected[carac] ?? 0) + groups[carac].points
+	const after = addedPower(projected, data.weights)
 	const rAfter = capacity > 0 ? after / capacity : 0
 	// La difficulté se lit sur le REMPLISSAGE, jamais sur le déficit : une pièce creusée
 	// par la casse se répare sans peine (il faut re-dépenser des altérations, c'est déjà
@@ -327,7 +334,7 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		// Ratios BRUTS : ce que l'anneau et le pourcentage affichent, pour qu'une piece
 		// creusee au plancher se lise -100 % et non -50 % (#622).
 		rawRatioBefore: capacity > 0 ? rawBefore / capacity : 0,
-		rawRatioAfter: capacity > 0 ? (rawBefore + recipePower) / capacity : 0,
+		rawRatioAfter: capacity > 0 ? rawAddedPower(projected, data.weights) / capacity : 0,
 		// `breakProbability` est CONDITIONNELLE : le serveur ne tire la casse qu'après un
 		// échec, jamais après une réussite. `breakRisk` est ce que le joueur affronte
 		// vraiment sur cette fusion, et c'est lui que la forge affiche (#622).

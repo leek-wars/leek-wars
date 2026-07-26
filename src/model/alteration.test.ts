@@ -155,6 +155,17 @@ describe('pièce creusée par la casse', () => {
 		expect(repair.breakProbability).toBeLessThanOrEqual(climb.breakProbability)
 	})
 
+	it('annonce la charge qui sera reellement livree', () => {
+		// Remplir un déficit coûte la puissance pleine mais ne rend que la moitié de la
+		// charge : additionner « avant + puissance » promettait une destination qui
+		// n'arrivait jamais. Bug trouvé par le bot d'optimisation sur beta (#622).
+		const dug = { life: -152 }   // hylocereus creusé au plancher, capacité 152
+		const plan = planAttempt(DATA, HYLOCEREUS, dug, 255, ComponentFamily.FRUIT, { 1: 5 })
+		// 5 Vitamines D = 250 de puissance appliquées à une vie de -152 : la vie finit à +98,
+		// donc 98 de charge, soit 64 % et non les 114 % de l'addition linéaire.
+		expect(plan.ratioAfter).toBeCloseTo(98 / 152, 6)
+	})
+
 	it('facture le tarif de base, jamais moins', () => {
 		const broken = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 1 })
 		const fresh = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
