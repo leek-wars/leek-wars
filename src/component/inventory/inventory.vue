@@ -180,7 +180,7 @@
 	import SchemeImage from '../market/scheme-image.vue'
 	import AlterationIcon from '../alteration/alteration-icon.vue'
 	import { emitter } from '@/model/vue'
-	import { alteredClass } from '@/model/alteration'
+	import { alteredClass, rawAddedPower } from '@/model/alteration'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, CHARGE
@@ -372,6 +372,20 @@
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	type InventoryItem = any
+
+	/**
+	 * Charge d'un composant en fraction de sa capacite, telle que l'affiche sa jauge :
+	 * puissance BRUTE, deficits au tarif plein. 0 pour tout ce qui n'est pas un composant
+	 * altere, qui se retrouve donc en fin de tri (#622).
+	 */
+	function chargeRatio(item: InventoryItem): number {
+		const weights = LeekWars.alterations?.weights
+		if (!item.stats || !weights) return 0
+		const capacity = LeekWars.componentCapacity(item.template)
+		if (!capacity) return 0
+		return rawAddedPower(item.stats, weights) / capacity
+	}
+
 	function sortCompare(a: InventoryItem, b: InventoryItem) {
 		if (sort.value === Sort.DATE) {
 			if (b.time === a.time) return a.id - b.id
@@ -381,8 +395,10 @@
 		if (sort.value === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
 		if (sort.value === Sort.QUANTITY) return b.quantity - a.quantity
 		if (sort.value === Sort.RARITY) return LeekWars.items[b.template].rarity - LeekWars.items[a.template].rarity
-		// Tri par charge : composants les plus charges d'abord, le reste (non altere) suit (#622).
-		if (sort.value === Sort.CHARGE) return (b.altered_power || 0) - (a.altered_power || 0)
+		// Tri par charge : en POURCENTAGE de la capacite et non en points, sinon une grosse
+		// piece a peine entamee passait devant une petite piece au maximum. C'est aussi le
+		// chiffre que porte la jauge, donc le tri suit ce que le joueur voit (#622).
+		if (sort.value === Sort.CHARGE) return chargeRatio(b) - chargeRatio(a)
 		return LeekWars.items[b.template].level - LeekWars.items[a.template].level
 	}
 
