@@ -52,10 +52,11 @@ describe('prévisualisation d\'une tentative', () => {
 	it('reproduit la probabilité pour un puits presque vide', () => {
 		// 1 Vitamine D sur un hylocereus vierge (puits 152 = 0,2 × 760).
 		const plan = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(plan.rolls.life.probability).toBeCloseTo(0.8316039, 6)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.8291814, 6)
 		expect(plan.rolls.life.points).toBe(50)
 		expect(plan.dose).toBe(20)
-		expect(plan.habsCost).toBe(65025)
+		// 255^2 x (1 + 2 x 50/152) : le tarif suit la charge VISÉE.
+		expect(plan.habsCost).toBe(107805)
 		expect(plan.fits).toBe(true)
 	})
 
@@ -65,10 +66,10 @@ describe('prévisualisation d\'une tentative', () => {
 		expect(plan.items).toBe(3)
 		expect(plan.rolls.life.points).toBe(52)
 		expect(plan.rolls.wisdom.points).toBe(12)
-		expect(plan.rolls.life.probability).toBeCloseTo(0.0462338, 6)
-		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0243668, 6)
+		expect(plan.rolls.life.probability).toBeCloseTo(0.0219028, 6)
+		expect(plan.rolls.wisdom.probability).toBeCloseTo(0.0115435, 6)
 		// Une recette = un seul jet : la proba de tentative est le min (ici la sagesse).
-		expect(plan.probability).toBeCloseTo(0.0243668, 6)
+		expect(plan.probability).toBeCloseTo(0.0115435, 6)
 	})
 
 	it('autorise un léger dépassement du puits mais le rend suicidaire', () => {
@@ -208,10 +209,20 @@ describe('pièce creusée par la casse', () => {
 		expect(plan.ratioAfter).toBeCloseTo(98 / 152, 6)
 	})
 
-	it('facture le tarif de base, jamais moins', () => {
-		const broken = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 1 })
+	it('facture la charge VISÉE, donc une pièce creusée qui vise bas paie moins', () => {
+		// Le tarif suit ce qu'on tente d'atteindre, pas d'où l'on part. Réparer une pièce
+		// creusée vise bas, donc coûte le tarif plancher : c'est voulu, la casse est déjà
+		// la punition. Ce qui n'est plus possible, c'est de viser le plafond au tarif
+		// plancher en gardant la pièce en négatif (#622).
+		const repair = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 1 })
 		const fresh = planAttempt(DATA, HYLOCEREUS, {}, 255, ComponentFamily.FRUIT, { 1: 1 })
-		expect(broken.habsCost).toBe(fresh.habsCost)
+		expect(repair.ratioAfter).toBeLessThan(0)
+		expect(repair.habsCost).toBeLessThan(fresh.habsCost)
+
+		// Depuis la même pièce creusée, viser le plafond coûte le prix du plafond.
+		const allIn = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 4 })
+		expect(allIn.ratioAfter).toBeGreaterThan(0.8)
+		expect(allIn.habsCost).toBeGreaterThan(repair.habsCost * 2)
 	})
 })
 

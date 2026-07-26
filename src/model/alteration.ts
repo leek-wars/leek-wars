@@ -95,6 +95,12 @@ const PROGRESS_BONUS = 2
 const PROGRESS_CAP = 0.2
 const MAX_PROBABILITY = 0.95
 const BREAK_COEFFICIENT = 0.01
+// Surcoût du SOMMET, en puissance sixième du remplissage visé : il divise par 10 la chance
+// d'une tentative à pleine charge et ne touche presque rien en dessous (-0,2 % à 30 %, -4 %
+// à 50 %, -24 % à 70 %). Monter DIFFICULTY_K aurait durci toute la courbe, y compris les
+// premières altérations d'un joueur ordinaire, alors que le prix à corriger était celui du
+// sans-faute : une pièce exacte revenait à 1 258 altérations, on en veut dix fois plus (#622).
+const TOP_PENALTY = Math.log(10)
 // Le puits n'est plus un mur : on autorise a tenter jusqu'a ce plafond, ou la reussite
 // devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
 const OVERFILL_CAP = 1.3
@@ -309,7 +315,9 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		if (allowed) {
 			const efficiency = group.points > 0 ? group.weight / group.points : 0
 			const delta = group.power / capacity
-			probability = Math.exp(-DIFFICULTY_K * rEff * rEff + PROGRESS_BONUS * Math.min(delta, PROGRESS_CAP))
+			probability = Math.exp(-DIFFICULTY_K * rEff * rEff
+				- TOP_PENALTY * Math.pow(rEff, 6)
+				+ PROGRESS_BONUS * Math.min(delta, PROGRESS_CAP))
 			probability /= difficulty(part(base, added, carac, data.weights))
 			// Une carac strictement négative est deux fois plus facile à remonter.
 			if ((totals[carac] || 0) < 0) probability *= 2
@@ -346,6 +354,7 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		// Comme pour la réussite, le risque se lit sur le remplissage visé et non sur le
 		// déficit : réparer une pièce creusée n'est pas dangereux.
 		const reference = Math.exp(-DIFFICULTY_K * rEff * rEff
+			- TOP_PENALTY * Math.pow(rEff, 6)
 			+ PROGRESS_BONUS * Math.min(recipePower / capacity, PROGRESS_CAP))
 		breakProbability = reference > 0 ? Math.min(1, BREAK_COEFFICIENT / reference) : 0
 	}
@@ -367,7 +376,10 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 		breakProbability,
 		breakRisk: (1 - probability) * breakProbability,
 		// Charge négative ramenée à 0 : une pièce creusée coûte le tarif de base, jamais moins.
-		habsCost: Math.round(level * level * (1 + 2 * Math.max(0, capacity > 0 ? before / capacity : 0))),
+		// Tarif sur la charge VISÉE et non sur celle du départ : indexé sur le point de
+		// départ, il suffisait de garder la pièce creusée pour payer le tarif d'une pièce
+		// vide sur chaque tentative, y compris celle qui vise 100 % (#622).
+		habsCost: Math.round(level * level * (1 + 2 * Math.max(0, rAfter))),
 	}
 }
 
