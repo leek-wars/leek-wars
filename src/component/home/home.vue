@@ -48,6 +48,12 @@
 												{{ t('ranking_' + cat) }}
 											</div>
 										</template>
+										<template v-else-if="widget.type === 'leek_stats'">
+											<div class="config-title">{{ t('choose_leek') }}</div>
+											<div v-for="l in myLeeks" :key="l.id" v-ripple class="config-option" :class="{ selected: leekOf(widget) === l.id }" @click="setParam(widget, 'leek', l.id)">
+												{{ l.name }}
+											</div>
+										</template>
 									</div>
 								</v-menu>
 								<div class="button flat" @click="removeWidget(widget.id)">
@@ -70,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-	import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+	import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { GridStack, type GridStackWidget } from 'gridstack'
 	import 'gridstack/dist/gridstack.min.css'
 	import { LeekWars } from '@/model/leekwars'
@@ -86,6 +92,7 @@
 	import HomeWidgetForum from '@/component/home/widgets/home-widget-forum.vue'
 	import HomeWidgetTournaments from '@/component/home/widgets/home-widget-tournaments.vue'
 	import HomeWidgetClassement from '@/component/home/widgets/home-widget-classement.vue'
+	import HomeWidgetLeekStats from '@/component/home/widgets/home-widget-leek-stats.vue'
 
 	defineOptions({ name: 'Home', i18n: {}, mixins: [...mixins] })
 
@@ -116,6 +123,7 @@
 		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/collection' },
 		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 4, defaultH: 4, minW: 3, minH: 3 },
 		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 4, defaultH: 5, minW: 3, minH: 3, link: '/ranking', multi: true, configurable: true },
+		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true },
 		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies' },
 		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum' },
 		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 4, defaultH: 3, minW: 3, minH: 2 },
@@ -184,6 +192,9 @@
 		country: (LeekWars.languages as any)[c.language]?.country ?? c.language
 	})))
 
+	// Poireaux de l'éleveur, pour la config du widget "statistiques d'un poireau".
+	const myLeeks = computed(() => Object.values(store.state.farmer?.leeks ?? {}).map(l => ({ id: l.id, name: l.name })))
+
 	// Widgets encore disponibles à l'ajout : les "multi" toujours, les uniques si absents.
 	const availableToAdd = ref<{ type: string, icon: string }[]>([])
 	function refreshAvailable() {
@@ -202,6 +213,9 @@
 	}
 	function categoryOf(widget: WidgetInstance): string {
 		return (widget.params.category as string) || 'leek'
+	}
+	function leekOf(widget: WidgetInstance): number | undefined {
+		return (widget.params.leek as number | undefined) ?? myLeeks.value[0]?.id
 	}
 
 	// Mode large activé sur cette page uniquement (restauré en quittant).

@@ -40,5 +40,13 @@
 	"ranking_leek": "Leeks",
 	"ranking_farmer": "Farmers",
 	"ranking_team": "Teams",
-	"choose_chat": "Choose channel"
+	"choose_chat": "Choose channel",
+	"widget_leek_stats": "Leek statistics",
+	"choose_leek": "Choose leek",
+	"stat_xp": "XP",
+	"stat_victories": "Wins",
+	"stat_draws": "Draws",
+	"stat_defeats": "Losses",
+	"stat_tournaments": "Tournaments",
+	"no_leek": "No leek."
 }
