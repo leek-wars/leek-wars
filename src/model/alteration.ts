@@ -336,7 +336,12 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	let breakProbability = 0
 	// Une pièce déjà au plancher n'a plus rien à perdre : annoncer un risque qui ne peut
 	// pas se produire serait un mensonge d'affichage (#622).
-	const diggable = before - CHARGE_FLOOR * capacity > 0
+	//
+	// Le plancher se lit sur la charge NETTE au tarif plein, exactement celle que la jauge
+	// affiche en négatif : la casse s'arrête donc pile quand la pièce atteint les -100 %
+	// affichés. Le serveur testait la seule somme des déficits, en ignorant les gains, et
+	// rendait increvable une pièce pourtant pleine (#622).
+	const diggable = rawBefore > CHARGE_FLOOR * capacity
 	if (allowed && capacity > 0 && diggable) {
 		// Comme pour la réussite, le risque se lit sur le remplissage visé et non sur le
 		// déficit : réparer une pièce creusée n'est pas dangereux.
