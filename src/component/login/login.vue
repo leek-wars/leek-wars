@@ -22,7 +22,7 @@
 						<div class="center"><v-btn size="large" color="primary" type="submit" :loading="loading">{{ $t('connection') }}</v-btn></div>
 						<br>
 						<div v-if="error" class="error">
-							<span v-if="error.error">{{ $t('error_' + error.error) }}</span>
+							<span v-if="error.error && knownError(error.error)">{{ $t('error_' + error.error) }}</span>
 							<span v-else>{{ $t('error_server') }}</span>
 						</div>
 						<br>
@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { mixins , useNamespacedT } from '@/model/i18n'
+import { i18n, mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { getRedirectAfterLogin } from '@/router'
@@ -51,6 +51,12 @@ import { getRedirectAfterLogin } from '@/router'
 defineOptions({ name: 'Login', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('login')
+// Un code d'erreur serveur inconnu du dictionnaire (ex. internal_error) doit afficher
+// le message générique, pas la clé i18n brute (pas de fallback global dans vue-i18n ici)
+const knownError = (code: string) => {
+	const te = i18n.global.te as (key: string) => boolean
+	return te('login.error_' + code) || te('error_' + code)
+}
 const route = useRoute()
 const router = useRouter()
 
