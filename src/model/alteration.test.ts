@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { AlterationFamily, ComponentFamily, alterationTier, alteredClass, planAttempt, well } from './alteration'
+import { AlterationFamily, ComponentFamily, addedPower, alterationTier, alteredClass, displayRatio, planAttempt, power, rawAddedPower, well } from './alteration'
 import type { AlterationData } from './alteration'
 
 /**
@@ -145,6 +145,35 @@ describe('pièce creusée par la casse', () => {
 		expect(plan.ratioBefore).toBeCloseTo(-0.5, 6)
 	})
 
+	it('une pièce creusée puis remplie à ras bord affiche 100 %, pas 77 %', () => {
+		// Le cas signalé sur la carte mère avancée : science et fréquence creusées à leur
+		// plancher (-20 chacune, poids 2) puis 216 de vie posés dessus. Le budget est
+		// exactement plein, donc la jauge doit dire 100 % ; la puissance BRUTE, elle, ne vaut
+		// que 136 sur 176 parce qu'elle compte les déficits au tarif plein, et afficher ce
+		// 77 % laissait croire qu'il restait 23 % de marge alors que plus rien ne rentre.
+		const motherboard: [string, number][] = [['life', 100], ['science', 20], ['frequency', 20],
+			['cores', 3], ['ram', 3], ['tp', 1]]
+		const full = { life: 216, science: -20, frequency: -20 }
+		const weights = DATA.weights
+		expect(well(power(motherboard, weights))).toBe(176)
+		expect(addedPower(full, weights)).toBe(176)
+		expect(rawAddedPower(full, weights)).toBe(136)
+		// La jauge, le liseré et le tri de l'inventaire lisent tous cette même valeur.
+		expect(displayRatio(full, 176, weights)).toBeCloseTo(1, 6)
+		expect(alteredClass({ stats: full, template: 381 }, 176, weights)).toBe('altered-5')
+	})
+
+	it('mais une pièce creusée continue d\'afficher -100 % au plancher', () => {
+		// L'autre bout de l'axe ne mesure pas la même chose : sous zéro, c'est le BRUT qui
+		// parle, sinon la fraise vidée de 80 de vie n'afficherait que -50 % et l'ampleur des
+		// dégâts serait sous-estimée de moitié (demandé le 23/07, #622).
+		const strawberry = { life: -80 }
+		const weights = DATA.weights
+		expect(addedPower(strawberry, weights)).toBe(-40)
+		expect(rawAddedPower(strawberry, weights)).toBe(-80)
+		expect(displayRatio(strawberry, 80, weights)).toBeCloseTo(-1, 6)
+	})
+
 	it('rend la réparation facile : la difficulté se lit sur le remplissage', () => {
 		// Remonter de -50 % vers 0 est au plafond, alors que le même pas depuis 0 est dur.
 		const repair = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, { 1: 1 })
@@ -177,13 +206,14 @@ describe('silhouette d\'un composant', () => {
 	// La silhouette doit porter le MEME palier que la jauge : sur la puissance brute, donc.
 	// Avec altered_power (charge budgetaire, deficits a demi-tarif), une piece a 42 % de
 	// brut affichait le liseré violet des 70 % (#622).
-	it('suit le pourcentage brut et non la charge budgetaire', () => {
-		// +100 de vie et -40 de sagesse sur une capacite de 152 : brut 20/152 = 13 %,
-		// budget 60/152 = 39 %. Le palier doit suivre le brut.
-		const item = { stats: { life: 100, wisdom: -40 }, altered_power: 60, template: 320 }
-		expect(alteredClass(item, 152, DATA.weights)).toBe('altered-1')
-		// Sans les poids, on retombe sur la charge budgetaire du serveur.
-		expect(alteredClass(item, 152)).toBe('altered-1')
+	it('suit la charge budgetaire, comme la jauge', () => {
+		// +120 de vie et -40 de sagesse sur une capacite de 152 : budget 80/152 = 53 %
+		// (palier 2), brut 40/152 = 26 % (palier 1). Le liseré doit suivre le budget, sinon
+		// il annonce un palier que le pourcentage de la jauge contredit (#622).
+		const item = { stats: { life: 120, wisdom: -40 }, altered_power: 80, template: 320 }
+		expect(alteredClass(item, 152, DATA.weights)).toBe('altered-2')
+		// Sans les poids on lit altered_power, qui porte deja cette meme charge budgetaire.
+		expect(alteredClass(item, 152)).toBe('altered-2')
 	})
 
 	it('ne marque rien sur un composant neuf', () => {

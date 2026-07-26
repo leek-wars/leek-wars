@@ -44,16 +44,16 @@
 				     puis en plus clair ce que la tentative ajouterait. -->
 				<!-- Charge negative comprise (casse) : l'arc se remplit en valeur absolue,
 				     c'est sa couleur de palier qui dit s'il s'agit d'un gain ou d'un trou. -->
-				<svg v-if="plan && (plan.rawRatioBefore !== 0 || plan.rawRatioAfter !== 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
+				<svg v-if="plan && (chargeBefore !== 0 || chargeAfter !== 0)" class="charge-ring" viewBox="0 0 100 100" preserveAspectRatio="none">
 					<!-- Tooltip natif au survol de l'arc : charge investie / capacite (#622). -->
 					<title>{{ chargeTitle }}</title>
 					<!-- Pas de rail de fond : seul l'arc de charge est visible. -->
 					<!-- Ce que la tentative ajouterait, en semi-transparent derriere la charge. -->
-					<path v-if="plan.rawRatioAfter !== 0" class="fill preview" :class="['tier-' + tierAfter, { reverse: plan.rawRatioAfter < 0 }]" :d="RING_PATH"
-						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(plan.rawRatioAfter)))" />
+					<path v-if="chargeAfter !== 0" class="fill preview" :class="['tier-' + tierAfter, { reverse: chargeAfter < 0 }]" :d="RING_PATH"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(chargeAfter)))" />
 					<!-- La charge actuelle, dans la couleur de son palier. -->
-					<path v-if="plan.rawRatioBefore !== 0" class="fill" :class="['tier-' + tierBefore, { reverse: plan.rawRatioBefore < 0 }]" :d="RING_PATH"
-						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(plan.rawRatioBefore)))" />
+					<path v-if="chargeBefore !== 0" class="fill" :class="['tier-' + tierBefore, { reverse: chargeBefore < 0 }]" :d="RING_PATH"
+						:stroke-dasharray="ringLength" :stroke-dashoffset="ringLength * (1 - Math.min(1, Math.abs(chargeBefore)))" />
 				</svg>
 				<rich-tooltip-item v-slot="{ props }" :item="LeekWars.items[component.template]" :instance="component" :inventory="true">
 					<div class="item" v-bind="props" :type="LeekWars.items[component.template].type">
@@ -63,9 +63,10 @@
 					</div>
 				</rich-tooltip-item>
 				<!-- Pourcentage de charge, en petit dans le coin bas droit de l'image (#622). -->
-				<!-- Pourcentage BRUT : il dit l'ETAT de la piece (-100 % = creusee au plancher),
-				     la ligne de charge de la colonne voisine disant le budget (#622). -->
-				<div v-if="plan && plan.rawRatioAfter !== 0" class="charge-corner" :class="{ over: plan.overfilled, deficit: plan.rawRatioAfter < 0 }" :title="chargeTitle">{{ Math.round(plan.rawRatioAfter * 100) }}%</div>
+				<!-- Charge BUDGETAIRE, comme la jauge de l'inventaire : c'est elle qui dit s'il
+				     reste de la place. Le brut comptait les deficits au tarif plein et affichait
+				     77 % sur une piece pourtant pleine, qui n'acceptait plus rien (#622). -->
+				<div v-if="plan && chargeAfter !== 0" class="charge-corner" :class="{ over: plan.overfilled, deficit: chargeAfter < 0 }" :title="chargeTitle">{{ Math.round(chargeAfter * 100) }}%</div>
 				<!-- Nombre de pieces empilees a recycler d'un coup (#622). -->
 				<div v-if="componentCount > 1" class="stack-count">×{{ componentCount }}</div>
 				<!-- Destruction : 8 copies de l'image, chacune decoupee en part de pizza,
@@ -360,8 +361,15 @@
 	const RING_PATH = 'M50 4 H76 A20 20 0 0 1 96 24 V76 A20 20 0 0 1 76 96 H24 A20 20 0 0 1 4 76 V24 A20 20 0 0 1 24 4 Z'
 	const ringLength = 4 * (92 - 40) + 2 * Math.PI * 20
 	// Palier de rarete de la charge, pour colorer l'anneau (#622).
-	const tierBefore = computed(() => plan.value ? (alterationTier(plan.value.rawRatioBefore)?.tier ?? 1) : 1)
-	const tierAfter = computed(() => plan.value ? (alterationTier(plan.value.rawRatioAfter)?.tier ?? 1) : 1)
+	// Meme regle que la jauge de l'inventaire (cf. displayRatio) : le budget au-dessus de
+	// zero, parce que c'est lui qui dit s'il reste de la place, et le brut en dessous, parce
+	// qu'il dit l'ampleur reelle des degats (#622).
+	const chargeBefore = computed(() => !plan.value ? 0
+		: (plan.value.ratioBefore >= 0 ? plan.value.ratioBefore : plan.value.rawRatioBefore))
+	const chargeAfter = computed(() => !plan.value ? 0
+		: (plan.value.ratioAfter >= 0 ? plan.value.ratioAfter : plan.value.rawRatioAfter))
+	const tierBefore = computed(() => alterationTier(chargeBefore.value)?.tier ?? 1)
+	const tierAfter = computed(() => alterationTier(chargeAfter.value)?.tier ?? 1)
 
 	interface AlterResult {
 		success: boolean

@@ -180,7 +180,7 @@
 	import SchemeImage from '../market/scheme-image.vue'
 	import AlterationIcon from '../alteration/alteration-icon.vue'
 	import { emitter } from '@/model/vue'
-	import { alteredClass, rawAddedPower } from '@/model/alteration'
+	import { alteredClass, displayRatio } from '@/model/alteration'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, CHARGE
@@ -374,16 +374,14 @@
 	type InventoryItem = any
 
 	/**
-	 * Charge d'un composant en fraction de sa capacite, telle que l'affiche sa jauge :
-	 * puissance BRUTE, deficits au tarif plein. 0 pour tout ce qui n'est pas un composant
-	 * altere, qui se retrouve donc en fin de tri (#622).
+	 * Charge d'un composant en fraction de sa capacite, exactement telle que l'affiche sa
+	 * jauge (cf. displayRatio). 0 pour tout ce qui n'est pas un composant altere, qui se
+	 * retrouve donc en fin de tri (#622).
 	 */
 	function chargeRatio(item: InventoryItem): number {
 		const weights = LeekWars.alterations?.weights
 		if (!item.stats || !weights) return 0
-		const capacity = LeekWars.componentCapacity(item.template)
-		if (!capacity) return 0
-		return rawAddedPower(item.stats, weights) / capacity
+		return displayRatio(item.stats, LeekWars.componentCapacity(item.template), weights)
 	}
 
 	function sortCompare(a: InventoryItem, b: InventoryItem) {

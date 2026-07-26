@@ -187,6 +187,27 @@ function rawAddedPower(added: Stats, weights: { [carac: string]: number }): numb
 	return total
 }
 
+/**
+ * Ratio de charge AFFICHÉ, signé. Point unique pour la jauge, le liseré de silhouette, le
+ * coin de la forge et le tri de l'inventaire : ces quatre lectures doivent toujours dire le
+ * même chiffre, sinon l'une contredit l'autre.
+ *
+ * Les deux moitiés de l'axe ne mesurent pas la même chose, parce que le déficit n'est
+ * remboursé qu'à moitié (DEFICIT_REFUND) :
+ *
+ * - au-dessus de zéro, le BUDGET. C'est le seul chiffre actionnable, celui qui dit s'il
+ *   reste de la place. Le brut comptait les déficits au tarif plein et affichait 77 % sur
+ *   une carte mère pourtant pleine, qui n'acceptait plus rien ;
+ * - en dessous, le BRUT. Il dit l'ampleur réelle des dégâts et atteint -100 % quand la
+ *   casse a creusé la pièce à son plancher, là où le budget ne descend qu'à -50 %.
+ */
+function displayRatio(added: Stats | null | undefined, capacity: number,
+                      weights: { [carac: string]: number }): number {
+	if (!added || !capacity) return 0
+	const budget = addedPower(added, weights)
+	return (budget >= 0 ? budget : rawAddedPower(added, weights)) / capacity
+}
+
 /** Part de la carac visée dans la puissance du composant : x1 si seule, x3 si absente. */
 function part(base: Stats | StatList, added: Stats, carac: string, weights: { [carac: string]: number }): number {
 	const total = toMap(base)
@@ -353,18 +374,17 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 function alteredClass(item: { stats?: Stats | null, altered_power?: number, template: number },
                       capacity: number, weights?: { [carac: string]: number }): string {
 	if (!item.stats || !capacity) return ''
-	// Puissance BRUTE quand les poids sont fournis, comme la jauge et le pourcentage :
-	// altered_power est la charge BUDGETAIRE (deficits a demi-tarif), et les deux divergent
-	// des qu'une piece porte a la fois des gains et des deficits. Une carte mere a 42 % de
-	// brut affichait alors le liseré violet des 70 % (#622).
-	const charge = weights ? rawAddedPower(item.stats, weights) : (item.altered_power ?? 0)
-	if (!charge) return ''
-	const tier = alterationTier(charge / capacity)
+	// Exactement le ratio de la jauge (cf. displayRatio), sinon le liseré annonce un palier
+	// que le pourcentage affiche juste a cote contredit (#622). Sans les poids on retombe sur
+	// altered_power, qui porte deja la charge budgetaire calculee par le serveur.
+	const ratio = weights ? displayRatio(item.stats, capacity, weights) : (item.altered_power ?? 0) / capacity
+	if (!ratio) return ''
+	const tier = alterationTier(ratio)
 	return tier ? 'altered-' + tier.tier : ''
 }
 
 export {
 	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
-	well, power, addedPower, rawAddedPower, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
+	well, power, addedPower, rawAddedPower, displayRatio, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }
