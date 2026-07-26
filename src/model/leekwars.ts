@@ -33,6 +33,8 @@ import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
 const LOCAL = window.location.port === '8500' || window.location.port === '5100' || window.location.hostname === 'leekwars.local' || window.location.hostname === 'leekwars-beta.local'
+// Client develop local branché sur le backend beta : identité visuelle violette
+const BETA_LOCAL = window.location.hostname === 'leekwars-beta.local'
 
 // Helper functions to avoid TypeScript "excessively deep" errors with vue-i18n
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -357,6 +359,7 @@ const LeekWars = reactive({
 	smart_version: packageJson.version.replace(/\.0$/, ''),
 	DEV,
 	LOCAL,
+	BETA_LOCAL,
 	API: LOCAL ? window.location.origin + '/api/' : (DEV ? 'https://leekwars.com/api/' : 'https://' + window.location.host + '/api/'),
 	SERVER: LOCAL ? window.location.origin + '/' : (DEV ? 'https://leekwars.com/' : 'https://' + window.location.host + '/'),
 	AVATAR: LOCAL ? window.location.origin + '/' : (DEV ? 'https://leekwars.com/' : 'https://' + window.location.host + '/'),
@@ -1131,7 +1134,9 @@ function setMeta(options: MetaOptions = {}) {
 }
 
 function setFavicon(reset: boolean = false) {
-	if (env.BETA) {
+	if (BETA_LOCAL) {
+		LeekWars.favicon('/image/favicon_beta_local.png')
+	} else if (env.BETA) {
 		LeekWars.favicon('/image/favicon_beta.png')
 	} else if (LeekWars.DEV) {
 		LeekWars.favicon('/image/favicon_dev.png')

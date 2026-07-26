@@ -5,7 +5,8 @@
 				<div class="logo-wrapper">
 					<img class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : '/image/leekwars.svg'">
 					<span v-if="seasonDecoration" class="season-decoration">{{ seasonDecoration }}</span>
-					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
+					<span v-if="LeekWars.BETA_LOCAL" class="beta-local-label">Bêta locale</span>
+					<span v-else-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
 					<!-- <v-tooltip>
