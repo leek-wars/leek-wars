@@ -60,13 +60,16 @@
 
 	/**
 	 * L'alteration rentre-t-elle encore dans la capacite de la piece posee, compte tenu de
-	 * ce qui est deja dans la forge ? Le plafond souple (130 %) est la borne : au-dela la
-	 * tentative est refusee, autant le montrer avant le clic (#622).
+	 * ce qui est deja dans la forge ?
+	 *
+	 * La borne est la capacite PLEINE et non le plafond souple de 130 % : le metabolisme
+	 * ne laisse jamais depasser 100 % de charge, meme au dosage exact, donc tout ce qui
+	 * passe au-dela est perdu d'avance. A 130 %, une piece a 160/200 ne grisait rien en
+	 * dessous de 100 de charge alors que la vraie marge etait de 40 (#622).
 	 *
 	 * Une indivisible mal ciblee est INERTE : elle ne consomme rien, donc elle rentre
 	 * toujours (elle ne sert qu'a ajuster le dosage).
 	 */
-	const OVERFILL_CAP = 1.3
 	const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
 	function fits(a: AlterationTemplate): boolean {
 		const data = LeekWars.alterations
@@ -78,7 +81,7 @@
 		if (INDIVISIBLE.indexOf(a.carac) !== -1 && efficiency < 1) return true
 		const points = (data.gains[a.carac] || [0, 0, 0])[efficiencyTier(efficiency)]
 		const power = points * (data.weights[a.carac] || 0)
-		return forgeCharge.value + forgePendingPower.value + power <= capacity * OVERFILL_CAP
+		return forgeCharge.value + forgePendingPower.value + power <= capacity
 	}
 
 	/** Pose l'alteration dans la forge : la forge verifie qu'un composant est present. */

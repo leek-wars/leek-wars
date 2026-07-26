@@ -344,9 +344,15 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
  * `capacity` = puits du composant, lu dans ComponentTemplate.well (#622).
  */
 function alteredClass(item: { stats?: Stats | null, altered_power?: number, template: number },
-                      capacity: number): string {
-	if (!item.stats || !item.altered_power || !capacity) return ''
-	const tier = alterationTier(item.altered_power / capacity)
+                      capacity: number, weights?: { [carac: string]: number }): string {
+	if (!item.stats || !capacity) return ''
+	// Puissance BRUTE quand les poids sont fournis, comme la jauge et le pourcentage :
+	// altered_power est la charge BUDGETAIRE (deficits a demi-tarif), et les deux divergent
+	// des qu'une piece porte a la fois des gains et des deficits. Une carte mere a 42 % de
+	// brut affichait alors le liseré violet des 70 % (#622).
+	const charge = weights ? rawAddedPower(item.stats, weights) : (item.altered_power ?? 0)
+	if (!charge) return ''
+	const tier = alterationTier(charge / capacity)
 	return tier ? 'altered-' + tier.tier : ''
 }
 
