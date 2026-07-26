@@ -163,6 +163,19 @@ describe('pièce creusée par la casse', () => {
 		expect(alteredClass({ stats: full, template: 381 }, 176, weights)).toBe('altered-5')
 	})
 
+	it('un échec à charge pleine casse à coup sûr, même sur une pièce creusée', () => {
+		// Le miroir doit annoncer le même risque que le serveur : une carte mère pleine dont
+		// la casse a creusé science et fréquence garde 216 points de vie à perdre. Le plancher
+		// se lit sur la charge NETTE (136), pas sur la somme des déficits (-80), sinon la
+		// pièce passe pour increvable et l'acharnement devient gratuit (#622).
+		const motherboard: [string, number][] = [['life', 100], ['science', 20], ['frequency', 20],
+			['cores', 3], ['ram', 3], ['tp', 1]]
+		const full = { life: 216, science: -20, frequency: -20 }
+		const plan = planAttempt(DATA, motherboard, full, 106, ComponentFamily.ELECTRONIC, { 13: 1 })
+		expect(plan.capacity).toBe(176)
+		expect(plan.breakProbability).toBeCloseTo(1, 6)
+	})
+
 	it('mais une pièce creusée continue d\'afficher -100 % au plancher', () => {
 		// L'autre bout de l'axe ne mesure pas la même chose : sous zéro, c'est le BRUT qui
 		// parle, sinon la fraise vidée de 80 de vie n'afficherait que -50 % et l'ampleur des
