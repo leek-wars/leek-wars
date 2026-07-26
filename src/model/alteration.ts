@@ -104,9 +104,6 @@ const TOP_PENALTY = Math.log(10)
 // Le puits n'est plus un mur : on autorise a tenter jusqu'a ce plafond, ou la reussite
 // devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
 const OVERFILL_CAP = 1.3
-// Plancher de charge : la casse creuse la pièce sous ses stats de base jusqu'à -100 %
-// de sa capacité, pas au-delà (à un point indivisible près, qui ne se coupe pas).
-const CHARGE_FLOOR = -1
 // Part de la charge rendue par une stat cassée : à taux plein, creuser la carac la moins
 // chère finançait l'achat de la plus chère, c'était la stratégie dominante (#622).
 const DEFICIT_REFUND = 0.5
@@ -194,6 +191,25 @@ function rawAddedPower(added: Stats, weights: { [carac: string]: number }): numb
 }
 
 /**
+ * Reste-t-il une carac que la casse peut entamer ?
+ *
+ * Miroir de Alteration::breakableCaracs : une carac est épuisée quand la casse lui a déjà
+ * retiré 100 % de sa valeur NATIVE, en valeur absolue. Une stat qui part négative peut donc
+ * doubler son malus (la poire à -400 de vie descend à -800), elle ne s'arrête pas à zéro.
+ */
+function hasBreakableCarac(base: Stats | StatList, added: Stats): boolean {
+	const natives = toMap(base)
+	const totals = toMap(base)
+	for (const c in added) totals[c] = (totals[c] || 0) + added[c]
+	for (const carac in totals) {
+		if (Math.abs(totals[carac]) <= 0) continue
+		if ((added[carac] || 0) + Math.abs(natives[carac] || 0) <= 0) continue
+		return true
+	}
+	return false
+}
+
+/**
  * Ratio de charge AFFICHÉ, signé. Point unique pour la jauge, le liseré de silhouette, le
  * coin de la forge et le tri de l'inventaire : ces quatre lectures doivent toujours dire le
  * même chiffre, sinon l'une contredit l'autre.
@@ -211,6 +227,10 @@ function displayRatio(added: Stats | null | undefined, capacity: number,
                       weights: { [carac: string]: number }): number {
 	if (!added || !capacity) return 0
 	const budget = addedPower(added, weights)
+	// Jamais borné : une pièce peut descendre jusqu'à -500 % de sa capacité (la casse creuse
+	// chaque carac jusqu'à 100 % de sa valeur native, et la capacité ne vaut qu'un cinquième
+	// de la puissance de base). L'anneau, lui, se contente d'être plein au-delà d'un tour :
+	// c'est le CHIFFRE qui porte l'information, et le vrai chiffre vaut mieux qu'un plafond.
 	return (budget >= 0 ? budget : rawAddedPower(added, weights)) / capacity
 }
 
@@ -342,14 +362,14 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 	// le remplissage et devient quasi certaine au-delà de 100 % : c'est elle qui punit
 	// l'acharnement plutôt qu'un mur.
 	let breakProbability = 0
-	// Une pièce déjà au plancher n'a plus rien à perdre : annoncer un risque qui ne peut
-	// pas se produire serait un mensonge d'affichage (#622).
+	// Une pièce qui n'a plus RIEN à perdre n'annonce aucun risque : ce serait un mensonge
+	// d'affichage. Mais c'est le seul cas, et il se lit carac par carac.
 	//
-	// Le plancher se lit sur la charge NETTE au tarif plein, exactement celle que la jauge
-	// affiche en négatif : la casse s'arrête donc pile quand la pièce atteint les -100 %
-	// affichés. Le serveur testait la seule somme des déficits, en ignorant les gains, et
-	// rendait increvable une pièce pourtant pleine (#622).
-	const diggable = rawBefore > CHARGE_FLOOR * capacity
+	// Il y avait avant un plancher global sur la charge, qui coupait le risque dès -100 % de
+	// la capacité. Il créait un refuge : mesuré sur beta, 2 152 tentatives d'affilée à 0 % de
+	// risque sur une pièce qui gardait neuf caracs au-dessus de leur plancher natif. Le
+	// risque suit désormais la charge VISÉE partout (#622).
+	const diggable = hasBreakableCarac(base, added)
 	if (allowed && capacity > 0 && diggable) {
 		// Comme pour la réussite, le risque se lit sur le remplissage visé et non sur le
 		// déficit : réparer une pièce creusée n'est pas dangereux.

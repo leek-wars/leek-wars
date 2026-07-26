@@ -177,6 +177,20 @@ describe('pièce creusée par la casse', () => {
 		expect(plan.breakProbability).toBeCloseTo(1, 6)
 	})
 
+	it('la jauge descend jusqu\'à -500 %, la casse ne s\'arrête plus à -100 %', () => {
+		// La casse creuse chaque carac jusqu'à 100 % de sa valeur native, ce qui mène une
+		// pièce jusqu'à -500 % de sa capacité, et la jauge affiche ce vrai chiffre : l'anneau
+		// est simplement plein. C'est la suppression du plancher global qui a fermé le refuge
+		// où une pièce assez creusée devenait intouchable (#622).
+		// Fraise : vie 300 + sagesse 50 (poids 2) => puissance 400, capacité 80. Vidée de
+		// toutes ses stats natives, elle porte -400 de puissance brute.
+		const ruinée = { life: -300, wisdom: -50 }
+		const weights = DATA.weights
+		// -500 % exactement : la capacité vaut un cinquième de la puissance de base, et la
+		// casse peut prendre toute cette puissance. La jauge affiche ce vrai chiffre.
+		expect(displayRatio(ruinée, 80, weights)).toBeCloseTo(-5, 6)
+	})
+
 	it('mais une pièce creusée continue d\'afficher -100 % au plancher', () => {
 		// L'autre bout de l'axe ne mesure pas la même chose : sous zéro, c'est le BRUT qui
 		// parle, sinon la fraise vidée de 80 de vie n'afficherait que -50 % et l'ampleur des
