@@ -40,5 +40,13 @@
 	"ranking_leek": "Poireaux",
 	"ranking_farmer": "Éleveurs",
 	"ranking_team": "Équipes",
-	"choose_chat": "Choisir le canal"
+	"choose_chat": "Choisir le canal",
+	"widget_leek_stats": "Statistiques d’un poireau",
+	"choose_leek": "Choisir le poireau",
+	"stat_xp": "XP",
+	"stat_victories": "Victoires",
+	"stat_draws": "Nuls",
+	"stat_defeats": "Défaites",
+	"stat_tournaments": "Tournois",
+	"no_leek": "Aucun poireau."
 }

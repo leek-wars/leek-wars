@@ -40,5 +40,13 @@
 	"ranking_leek": "Porri",
 	"ranking_farmer": "Allevatori",
 	"ranking_team": "Squadre",
-	"choose_chat": "Scegli il canale"
+	"choose_chat": "Scegli il canale",
+	"widget_leek_stats": "Statistiche di un porro",
+	"choose_leek": "Scegli il porro",
+	"stat_xp": "XP",
+	"stat_victories": "Vittorie",
+	"stat_draws": "Pareggi",
+	"stat_defeats": "Sconfitte",
+	"stat_tournaments": "Tornei",
+	"no_leek": "Nessun porro."
 }
