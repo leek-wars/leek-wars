@@ -125,12 +125,13 @@ describe('prévisualisation d\'une tentative', () => {
 describe('pièce creusée par la casse', () => {
 	// La casse peut faire descendre une carac SOUS sa valeur de base, jusqu'à -100 % de
 	// la capacité (#622). Le miroir doit prévisualiser la réparation comme le serveur.
-	it('affiche une charge négative, au demi-tarif du déficit', () => {
-		// -76 de vie creusée ne rend que 38 de charge : la moitié, sinon creuser la carac
-		// la moins chère financerait l'achat de la plus chère (#622).
+	it('affiche une charge négative, au quart du tarif du déficit', () => {
+		// -76 de vie creusée ne rend que 19 de charge : le quart, sinon creuser la carac la
+		// moins chère financerait l'achat de la plus chère, et il deviendrait rentable
+		// d'acheter une pièce juste pour la vider (#622).
 		const plan = planAttempt(DATA, HYLOCEREUS, { life: -76 }, 255, ComponentFamily.FRUIT, {})
 		expect(plan.capacity).toBe(152)
-		expect(plan.ratioBefore).toBeCloseTo(-0.25, 6)
+		expect(plan.ratioBefore).toBeCloseTo(-0.125, 6)
 		// Le ratio BRUT, lui, dit l'état des stats : la pièce a bien perdu la moitié de sa
 		// capacité en points, et c'est ce chiffre que l'anneau et la jauge affichent.
 		expect(plan.rawRatioBefore).toBeCloseTo(-0.5, 6)
@@ -143,22 +144,22 @@ describe('pièce creusée par la casse', () => {
 		const plan = planAttempt(DATA, strawberry, { life: -80 }, 157, ComponentFamily.FRUIT, {})
 		expect(plan.capacity).toBe(80)
 		expect(plan.rawRatioBefore).toBeCloseTo(-1, 6)
-		expect(plan.ratioBefore).toBeCloseTo(-0.5, 6)
+		expect(plan.ratioBefore).toBeCloseTo(-0.25, 6)
 	})
 
 	it('une pièce creusée puis remplie à ras bord affiche 100 %, pas 77 %', () => {
 		// Le cas signalé sur la carte mère avancée : science et fréquence creusées à leur
 		// plancher (-20 chacune, poids 2) puis toute la vie que le budget permet. Le budget
 		// est exactement plein, donc la jauge doit dire 100 % ; la puissance BRUTE, elle, ne
-		// vaut que 76 sur 116 parce qu'elle compte les déficits au tarif plein, et afficher ce
-		// 66 % laisserait croire qu'il reste de la marge alors que plus rien ne rentre.
+		// vaut que 56 sur 116 parce qu'elle compte les déficits au tarif plein, et afficher ce
+		// 48 % laisserait croire qu'il reste de la marge alors que plus rien ne rentre.
 		const motherboard: [string, number][] = [['life', 100], ['science', 20], ['frequency', 20],
 			['cores', 3], ['ram', 3], ['tp', 1]]
-		const full = { life: 156, science: -20, frequency: -20 }
+		const full = { life: 136, science: -20, frequency: -20 }
 		const weights = DATA.weights
 		expect(well(power(motherboard, weights))).toBe(116)
 		expect(addedPower(full, weights)).toBe(116)
-		expect(rawAddedPower(full, weights)).toBe(76)
+		expect(rawAddedPower(full, weights)).toBe(56)
 		// La jauge, le liseré et le tri de l'inventaire lisent tous cette même valeur.
 		expect(displayRatio(full, 116, weights)).toBeCloseTo(1, 6)
 		expect(alteredClass({ stats: full, template: 381 }, 116, weights)).toBe('altered-5')
@@ -171,7 +172,7 @@ describe('pièce creusée par la casse', () => {
 		// pièce passe pour increvable et l'acharnement devient gratuit (#622).
 		const motherboard: [string, number][] = [['life', 100], ['science', 20], ['frequency', 20],
 			['cores', 3], ['ram', 3], ['tp', 1]]
-		const full = { life: 156, science: -20, frequency: -20 }
+		const full = { life: 136, science: -20, frequency: -20 }
 		const plan = planAttempt(DATA, motherboard, full, 106, ComponentFamily.ELECTRONIC, { 13: 1 })
 		expect(plan.capacity).toBe(116)
 		expect(plan.breakProbability).toBeCloseTo(1, 6)
@@ -197,7 +198,7 @@ describe('pièce creusée par la casse', () => {
 		// dégâts serait sous-estimée de moitié (demandé le 23/07, #622).
 		const strawberry = { life: -80 }
 		const weights = DATA.weights
-		expect(addedPower(strawberry, weights)).toBe(-40)
+		expect(addedPower(strawberry, weights)).toBe(-20)
 		expect(rawAddedPower(strawberry, weights)).toBe(-80)
 		expect(displayRatio(strawberry, 80, weights)).toBeCloseTo(-1, 6)
 	})

@@ -106,8 +106,10 @@ const TOP_PENALTY = Math.log(4)
 // devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
 const OVERFILL_CAP = 1.3
 // Part de la charge rendue par une stat cassée : à taux plein, creuser la carac la moins
-// chère finançait l'achat de la plus chère, c'était la stratégie dominante (#622).
-const DEFICIT_REFUND = 0.5
+// chère finançait l'achat de la plus chère, c'était la stratégie dominante. Ramenée de 0,5 à
+// 0,25 parce que c'est le CREUSAGE, et non le puits, qui finance les builds extrêmes : sur
+// une carte mère 3, le puits vaut 174 quand vider les stats inutiles rend 385 (#622).
+const DEFICIT_REFUND = 0.25
 
 type Stats = { [carac: string]: number }
 /** Format historique des component_template : [["life", 600], ...] */
