@@ -371,8 +371,8 @@
             "frequency": 2,
             "tp": 100,
             "mp": 125,
-            "cores": 100,
-            "ram": 100
+            "cores": 40,
+            "ram": 60
         },
         "gains": {
             "life": [
@@ -587,7 +587,7 @@
             "family": 1,
             "added": {
                 "strength": -117,
-                "ram": -2,
+                "ram": -83,
                 "mp": -1
             },
             "recipe": {
@@ -600,14 +600,14 @@
             "expected": {
                 "dose": 86,
                 "items": 3,
-                "power": 102,
+                "power": 42,
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.513332554,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.003262229,
-                "ratioBefore": -1.838815789,
-                "ratioAfter": -1.167763158,
+                "ratioBefore": -17.5625,
+                "ratioAfter": -17.286184211,
                 "habsCost": 11236,
                 "rolls": {
                     "cores": {
@@ -639,7 +639,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": 1,
+                "cores": 103,
                 "mp": -3,
                 "life": 33
             },
@@ -656,26 +656,26 @@
                 "dose": 153,
                 "items": 5,
                 "power": 34,
-                "fits": true,
-                "overfilled": false,
-                "probability": 0.513332554,
-                "breakProbability": 0.0067032,
-                "breakRisk": 0.003262229,
-                "ratioBefore": -0.358552632,
-                "ratioAfter": -0.134868421,
-                "habsCost": 11236,
+                "fits": false,
+                "overfilled": true,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": 26.088815789,
+                "ratioAfter": 26.3125,
+                "habsCost": 602531,
                 "rolls": {
                     "science": {
                         "points": 1,
-                        "probability": 0.513332554
+                        "probability": 0
                     },
                     "strength": {
                         "points": 15,
-                        "probability": 0.741996807
+                        "probability": 0
                     },
                     "frequency": {
                         "points": 1,
-                        "probability": 0.513332554
+                        "probability": 0
                     }
                 }
             }
@@ -880,39 +880,39 @@
             "expected": {
                 "dose": 245,
                 "items": 7,
-                "power": 328,
-                "fits": false,
-                "overfilled": true,
-                "probability": 0,
-                "breakProbability": 0,
-                "breakRisk": 0,
+                "power": 188,
+                "fits": true,
+                "overfilled": false,
+                "probability": 0.011539856,
+                "breakProbability": 0.314295546,
+                "breakRisk": 0.310668621,
                 "ratioBefore": -0.411184211,
-                "ratioAfter": 1.746710526,
-                "habsCost": 50488,
+                "ratioAfter": 0.825657895,
+                "habsCost": 29790,
                 "rolls": {
                     "resistance": {
                         "points": 3,
-                        "probability": 0
+                        "probability": 0.011539856
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0
+                        "probability": 0.012629944
                     },
                     "ram": {
                         "points": 2,
-                        "probability": 0
+                        "probability": 0.015908593
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 0
+                        "probability": 0.012163484
                     },
                     "cores": {
                         "points": 1,
-                        "probability": 0
+                        "probability": 0.015908593
                     },
                     "science": {
                         "points": 3,
-                        "probability": 0
+                        "probability": 0.011539856
                     }
                 }
             }
@@ -948,31 +948,31 @@
             "expected": {
                 "dose": 226,
                 "items": 6,
-                "power": 178,
+                "power": 138,
                 "fits": true,
-                "overfilled": true,
-                "probability": 2.0207e-5,
-                "breakProbability": 1,
-                "breakRisk": 0.999979793,
+                "overfilled": false,
+                "probability": 0.005117489,
+                "breakProbability": 0.898133595,
+                "breakRisk": 0.893537406,
                 "ratioBefore": 0,
-                "ratioAfter": 1.171052632,
-                "habsCost": 37552,
+                "ratioAfter": 0.907894737,
+                "habsCost": 31638,
                 "rolls": {
                     "magic": {
                         "points": 15,
-                        "probability": 2.4289e-5
+                        "probability": 0.006151303
                     },
                     "ram": {
                         "points": 1,
-                        "probability": 2.1982e-5
+                        "probability": 0.005567101
                     },
                     "resistance": {
                         "points": 12,
-                        "probability": 2.0207e-5
+                        "probability": 0.005117489
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 2.2445e-5
+                        "probability": 0.005684349
                     }
                 }
             }
@@ -1010,15 +1010,15 @@
             "expected": {
                 "dose": 196,
                 "items": 5,
-                "power": 160,
+                "power": 120,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 1.157894737,
-                "ratioAfter": 2.210526316,
-                "habsCost": 60911,
+                "ratioAfter": 1.947368421,
+                "habsCost": 54997,
                 "rolls": {
                     "strength": {
                         "points": 4,
@@ -1258,7 +1258,7 @@
             "family": 1,
             "added": {
                 "mp": -3,
-                "cores": -1,
+                "cores": -73,
                 "tp": -3,
                 "strength": -32
             },
@@ -1283,8 +1283,8 @@
                 "probability": 0.513332554,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.003262229,
-                "ratioBefore": -2.759868421,
-                "ratioAfter": -2.5625,
+                "ratioBefore": -12.036184211,
+                "ratioAfter": -11.838815789,
                 "habsCost": 11236,
                 "rolls": {
                     "resistance": {
@@ -1297,7 +1297,7 @@
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.568820583
+                        "probability": 0.550957739
                     },
                     "science": {
                         "points": 3,
@@ -1309,7 +1309,7 @@
                     },
                     "life": {
                         "points": 2,
-                        "probability": 0.738431669
+                        "probability": 0.587713305
                     }
                 }
             }
@@ -1332,7 +1332,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": 3,
+                "cores": 18,
                 "strength": -63
             },
             "recipe": {
@@ -1347,15 +1347,15 @@
             "expected": {
                 "dose": 252,
                 "items": 6,
-                "power": 308,
+                "power": 168,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.559210526,
-                "ratioAfter": 3.585526316,
-                "habsCost": 91810,
+                "ratioBefore": 4.322368421,
+                "ratioAfter": 5.427631579,
+                "habsCost": 133206,
                 "rolls": {
                     "resistance": {
                         "points": 3,
@@ -1450,7 +1450,7 @@
             "family": 1,
             "added": {
                 "strength": 218,
-                "ram": 2,
+                "ram": 11,
                 "magic": 84
             },
             "recipe": {
@@ -1470,9 +1470,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 5.289473684,
-                "ratioAfter": 5.486842105,
-                "habsCost": 134536,
+                "ratioBefore": 8.315789474,
+                "ratioAfter": 8.513157895,
+                "habsCost": 202544,
                 "rolls": {
                     "agility": {
                         "points": 3,
@@ -1504,7 +1504,7 @@
             "family": 1,
             "added": {
                 "mp": -3,
-                "ram": -1
+                "ram": -64
             },
             "recipe": {
                 "25": 1,
@@ -1525,13 +1525,13 @@
                 "probability": 0.513332554,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.003262229,
-                "ratioBefore": -1.5625,
-                "ratioAfter": -1.3125,
+                "ratioBefore": -13.865131579,
+                "ratioAfter": -13.615131579,
                 "habsCost": 11236,
                 "rolls": {
                     "life": {
                         "points": 10,
-                        "probability": 0.902130867
+                        "probability": 0.643209176
                     },
                     "resistance": {
                         "points": 1,
@@ -1539,7 +1539,7 @@
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.731522033
+                        "probability": 0.696785261
                     },
                     "frequency": {
                         "points": 1,
@@ -1729,14 +1729,14 @@
             "expected": {
                 "dose": 237,
                 "items": 7,
-                "power": 228,
+                "power": 128,
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.703954245,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.001984454,
                 "ratioBefore": -1.756578947,
-                "ratioAfter": -0.256578947,
+                "ratioAfter": -0.914473684,
                 "habsCost": 11236,
                 "rolls": {
                     "resistance": {
@@ -2122,7 +2122,7 @@
             "family": 1,
             "added": {
                 "frequency": -25,
-                "cores": -4
+                "cores": -61
             },
             "recipe": {
                 "30": 1
@@ -2138,8 +2138,8 @@
                 "probability": 0.541073683,
                 "breakProbability": 0.009240886,
                 "breakRisk": 0.004240886,
-                "ratioBefore": -1.480263158,
-                "ratioAfter": -1.440789474,
+                "ratioBefore": -8.190789474,
+                "ratioAfter": -8.151315789,
                 "habsCost": 11236,
                 "rolls": {
                     "science": {
@@ -2226,35 +2226,35 @@
             "expected": {
                 "dose": 246,
                 "items": 7,
-                "power": 136,
+                "power": 76,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.004603862,
-                "breakProbability": 0.747409725,
-                "breakRisk": 0.743968754,
+                "probability": 0.143920784,
+                "breakProbability": 0.023908784,
+                "breakRisk": 0.020467813,
                 "ratioBefore": 0,
-                "ratioAfter": 0.894736842,
-                "habsCost": 31343,
+                "ratioAfter": 0.5,
+                "habsCost": 22472,
                 "rolls": {
                     "life": {
                         "points": 4,
-                        "probability": 0.009052049
+                        "probability": 0.282975064
                     },
                     "science": {
                         "points": 12,
-                        "probability": 0.00614949
+                        "probability": 0.192238487
                     },
                     "cores": {
                         "points": 1,
-                        "probability": 0.006689771
+                        "probability": 0.209128156
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.004603862
+                        "probability": 0.143920784
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0.005390186
+                        "probability": 0.168501962
                     }
                 }
             }
@@ -2381,8 +2381,8 @@
             "family": 1,
             "added": {
                 "tp": -1,
-                "cores": 1,
-                "ram": -3,
+                "cores": 28,
+                "ram": -87,
                 "frequency": -91
             },
             "recipe": {
@@ -2405,17 +2405,17 @@
                 "probability": 0.513332554,
                 "breakProbability": 0.008101577,
                 "breakRisk": 0.003942774,
-                "ratioBefore": -1.256578947,
-                "ratioAfter": -1.151315789,
+                "ratioBefore": -10.730263158,
+                "ratioAfter": -10.625,
                 "habsCost": 11236,
                 "rolls": {
                     "life": {
                         "points": 10,
-                        "probability": 0.850610367
+                        "probability": 0.618545472
                     },
                     "wisdom": {
                         "points": 1,
-                        "probability": 0.542600174
+                        "probability": 0.518925769
                     },
                     "agility": {
                         "points": 1,
@@ -2586,7 +2586,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": 3
+                "cores": 81
             },
             "recipe": {
                 "22": 1,
@@ -2604,9 +2604,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.973684211,
-                "ratioAfter": 2.144736842,
-                "habsCost": 59433,
+                "ratioBefore": 21.315789474,
+                "ratioAfter": 21.486842105,
+                "habsCost": 494088,
                 "rolls": {
                     "science": {
                         "points": 12,
@@ -2687,15 +2687,15 @@
             "expected": {
                 "dose": 261,
                 "items": 5,
-                "power": 138,
+                "power": 78,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 4.7125,
-                "ratioAfter": 6.4375,
-                "habsCost": 155900,
+                "ratioAfter": 5.6875,
+                "habsCost": 139046,
                 "rolls": {
                     "strength": {
                         "points": 7,
@@ -2788,7 +2788,7 @@
             "family": 1,
             "added": {
                 "strength": -99,
-                "ram": -2
+                "ram": -77
             },
             "recipe": {
                 "14": 1,
@@ -2810,8 +2810,8 @@
                 "probability": 0.525635548,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.00317976,
-                "ratioBefore": -2.4875,
-                "ratioAfter": -1.6375,
+                "ratioBefore": -30.1125,
+                "ratioAfter": -29.2625,
                 "habsCost": 11236,
                 "rolls": {
                     "strength": {
@@ -2820,7 +2820,7 @@
                     },
                     "wisdom": {
                         "points": 13,
-                        "probability": 0.845189656
+                        "probability": 0.760344286
                     },
                     "science": {
                         "points": 1,
@@ -2861,15 +2861,15 @@
             "expected": {
                 "dose": 295,
                 "items": 8,
-                "power": 162,
+                "power": 122,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 2.025,
-                "habsCost": 56742,
+                "ratioAfter": 1.525,
+                "habsCost": 45506,
                 "rolls": {
                     "ram": {
                         "points": 1,
@@ -3229,15 +3229,15 @@
             "expected": {
                 "dose": 219,
                 "items": 6,
-                "power": 176,
+                "power": 116,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 1.65,
-                "ratioAfter": 3.85,
-                "habsCost": 97753,
+                "ratioAfter": 3.1,
+                "habsCost": 80899,
                 "rolls": {
                     "resistance": {
                         "points": 2,
@@ -3290,15 +3290,15 @@
             "expected": {
                 "dose": 197,
                 "items": 7,
-                "power": 158,
+                "power": 118,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 1.975,
-                "habsCost": 55618,
+                "ratioAfter": 1.475,
+                "habsCost": 44382,
                 "rolls": {
                     "ram": {
                         "points": 1,
@@ -3342,7 +3342,7 @@
             "family": 1,
             "added": {
                 "magic": 45,
-                "cores": 3,
+                "cores": 63,
                 "frequency": 64
             },
             "recipe": {
@@ -3365,9 +3365,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 6.475,
-                "ratioAfter": 9.3375,
-                "habsCost": 221068,
+                "ratioBefore": 34.225,
+                "ratioAfter": 37.0875,
+                "habsCost": 844666,
                 "rolls": {
                     "wisdom": {
                         "points": 2,
@@ -3460,7 +3460,7 @@
             "added": {
                 "tp": -2,
                 "life": -104,
-                "cores": -1,
+                "cores": -34,
                 "magic": 29
             },
             "recipe": {
@@ -3477,14 +3477,14 @@
             "expected": {
                 "dose": 271,
                 "items": 7,
-                "power": 140,
+                "power": 80,
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.525635548,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.00317976,
-                "ratioBefore": -1.8,
-                "ratioAfter": -0.675,
+                "ratioBefore": -9.675,
+                "ratioAfter": -8.925,
                 "habsCost": 11236,
                 "rolls": {
                     "science": {
@@ -3493,11 +3493,11 @@
                     },
                     "magic": {
                         "points": 15,
-                        "probability": 0.814984306
+                        "probability": 0.768858067
                     },
                     "wisdom": {
                         "points": 4,
-                        "probability": 0.711122715
+                        "probability": 0.643440772
                     },
                     "cores": {
                         "points": 1,
@@ -3564,7 +3564,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": 2
+                "cores": 26
             },
             "recipe": {
                 "21": 1
@@ -3580,9 +3580,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 2.5,
-                "ratioAfter": 2.5,
-                "habsCost": 67416,
+                "ratioBefore": 13,
+                "ratioAfter": 13,
+                "habsCost": 303372,
                 "rolls": []
             }
         },
@@ -3641,7 +3641,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": 2,
+                "cores": 80,
                 "ram": 1,
                 "wisdom": -92
             },
@@ -3659,9 +3659,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 2.6,
-                "ratioAfter": 2.725,
-                "habsCost": 72472,
+                "ratioBefore": 39.6,
+                "ratioAfter": 39.725,
+                "habsCost": 903936,
                 "rolls": {
                     "life": {
                         "points": 10,
@@ -3778,9 +3778,9 @@
             ],
             "family": 1,
             "added": {
-                "cores": -1,
+                "cores": -43,
                 "mp": -3,
-                "ram": -3
+                "ram": -93
             },
             "recipe": {
                 "28": 1,
@@ -3803,13 +3803,13 @@
                 "probability": 0.525635548,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.00317976,
-                "ratioBefore": -4.84375,
-                "ratioAfter": -3.3875,
+                "ratioBefore": -47.96875,
+                "ratioAfter": -46.5125,
                 "habsCost": 11236,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.632452401
+                        "probability": 0.588155683
                     },
                     "magic": {
                         "points": 12,
@@ -3825,7 +3825,7 @@
                     },
                     "life": {
                         "points": 12,
-                        "probability": 0.868327928
+                        "probability": 0.700469632
                     },
                     "frequency": {
                         "points": 5,
@@ -3848,7 +3848,7 @@
             ],
             "family": 1,
             "added": {
-                "ram": -3
+                "ram": -57
             },
             "recipe": {
                 "10": 1,
@@ -3865,8 +3865,8 @@
                 "probability": 0.745912349,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.0017032,
-                "ratioBefore": -1.875,
-                "ratioAfter": -0.3125,
+                "ratioBefore": -21.375,
+                "ratioAfter": -19.8125,
                 "habsCost": 11236,
                 "rolls": {
                     "mp": {
@@ -3997,7 +3997,7 @@
             "family": 1,
             "added": {
                 "life": -41,
-                "cores": -2
+                "cores": -20
             },
             "recipe": {
                 "16": 1,
@@ -4011,16 +4011,16 @@
                 "power": 2,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.627916866,
+                "probability": 0.572936653,
                 "breakProbability": 0.009512294,
-                "breakRisk": 0.003539364,
-                "ratioBefore": -1.50625,
-                "ratioAfter": -1.48125,
+                "breakRisk": 0.004062352,
+                "ratioBefore": -5.25625,
+                "ratioAfter": -5.23125,
                 "habsCost": 11236,
                 "rolls": {
                     "wisdom": {
                         "points": 1,
-                        "probability": 0.627916866
+                        "probability": 0.572936653
                     }
                 }
             }
@@ -4041,7 +4041,7 @@
             "added": {
                 "science": -66,
                 "strength": -66,
-                "ram": -3,
+                "ram": -45,
                 "tp": 2
             },
             "recipe": {
@@ -4057,30 +4057,30 @@
                 "dose": 144,
                 "items": 6,
                 "power": 229,
-                "fits": false,
-                "overfilled": true,
-                "probability": 0,
-                "breakProbability": 0,
-                "breakRisk": 0,
-                "ratioBefore": -1.025,
-                "ratioAfter": 1.5375,
-                "habsCost": 45787,
+                "fits": true,
+                "overfilled": false,
+                "probability": 0.580917121,
+                "breakProbability": 0.0067032,
+                "breakRisk": 0.002809197,
+                "ratioBefore": -16.025,
+                "ratioAfter": -13.4625,
+                "habsCost": 11236,
                 "rolls": {
                     "strength": {
                         "points": 24,
-                        "probability": 0
+                        "probability": 0.95
                     },
                     "mp": {
                         "points": 1,
-                        "probability": 0
+                        "probability": 0.745912349
                     },
                     "life": {
                         "points": 50,
-                        "probability": 0
+                        "probability": 0.811331961
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0
+                        "probability": 0.580917121
                     }
                 }
             }
@@ -4318,15 +4318,15 @@
             "expected": {
                 "dose": 297,
                 "items": 8,
-                "power": 212,
+                "power": 172,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 2.65,
-                "habsCost": 70787,
+                "ratioAfter": 2.15,
+                "habsCost": 59551,
                 "rolls": {
                     "agility": {
                         "points": 3,
@@ -4538,7 +4538,7 @@
             "family": 1,
             "added": {
                 "science": 94,
-                "cores": 3,
+                "cores": 96,
                 "strength": 48
             },
             "recipe": {
@@ -4557,9 +4557,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 7.3,
-                "ratioAfter": 7.35,
-                "habsCost": 176405,
+                "ratioBefore": 51.55,
+                "ratioAfter": 51.6,
+                "habsCost": 1170791,
                 "rolls": {
                     "life": {
                         "points": 2,
@@ -4587,7 +4587,7 @@
             "family": 1,
             "added": {
                 "mp": -3,
-                "ram": -4,
+                "ram": -103,
                 "strength": -65
             },
             "recipe": {
@@ -4610,8 +4610,8 @@
                 "probability": 0.610701379,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.002609547,
-                "ratioBefore": -5.65625,
-                "ratioAfter": -2.44375,
+                "ratioBefore": -41.78125,
+                "ratioAfter": -38.56875,
                 "habsCost": 11236,
                 "rolls": {
                     "mp": {
@@ -4718,27 +4718,27 @@
                 "27": 2
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 205,
                 "items": 6,
                 "power": 54,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.333935027,
-                "breakProbability": 0.010744871,
-                "breakRisk": 0.007156783,
+                "probability": 0.185011265,
+                "breakProbability": 0.020090052,
+                "breakRisk": 0.016373166,
                 "ratioBefore": 0,
-                "ratioAfter": 0.306818182,
-                "habsCost": 18131,
+                "ratioAfter": 0.465517241,
+                "habsCost": 21697,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.333935027
+                        "probability": 0.185011265
                     },
                     "agility": {
                         "points": 24,
-                        "probability": 0.46533828
+                        "probability": 0.248879399
                     }
                 }
             }
@@ -4773,7 +4773,7 @@
             ],
             "family": 3,
             "added": {
-                "cores": 2,
+                "cores": 107,
                 "wisdom": 36
             },
             "recipe": {
@@ -4782,7 +4782,7 @@
                 "19": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 80,
                 "items": 3,
@@ -4792,9 +4792,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.545454545,
-                "ratioAfter": 2.426136364,
-                "habsCost": 65756,
+                "ratioBefore": 37.517241379,
+                "ratioAfter": 38.853448276,
+                "habsCost": 884351,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
@@ -4852,19 +4852,19 @@
                 "22": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 184,
                 "items": 8,
-                "power": 486,
+                "power": 366,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": -0.085227273,
-                "ratioAfter": 2.607954545,
-                "habsCost": 69842,
+                "ratioBefore": -0.129310345,
+                "ratioAfter": 2.922413793,
+                "habsCost": 76908,
                 "rolls": {
                     "cores": {
                         "points": 2,
@@ -4926,39 +4926,39 @@
                 "15": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 157,
                 "items": 5,
                 "power": 193,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.091344843,
-                "breakProbability": 0.039280695,
-                "breakRisk": 0.035692606,
-                "ratioBefore": -0.494318182,
-                "ratioAfter": 0.585227273,
-                "habsCost": 24387,
+                "probability": 0.005455043,
+                "breakProbability": 0.681366974,
+                "breakRisk": 0.677650088,
+                "ratioBefore": -0.75,
+                "ratioAfter": 0.887931034,
+                "habsCost": 31190,
                 "rolls": {
                     "mp": {
                         "points": 1,
-                        "probability": 0.12728899
+                        "probability": 0.00733819
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.222715505
+                        "probability": 0.01425674
                     },
                     "life": {
                         "points": 50,
-                        "probability": 0.139028154
+                        "probability": 0.008272756
                     },
                     "resistance": {
                         "points": 3,
-                        "probability": 0.091344843
+                        "probability": 0.005455043
                     },
                     "agility": {
                         "points": 3,
-                        "probability": 0.091344843
+                        "probability": 0.005455043
                     }
                 }
             }
@@ -5001,23 +5001,23 @@
                 "12": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 163,
                 "items": 5,
-                "power": 100,
+                "power": 60,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.197593704,
-                "breakProbability": 0.035282258,
-                "breakRisk": 0.028310706,
+                "probability": 0.258380669,
+                "breakProbability": 0.026227941,
+                "breakRisk": 0.019451148,
                 "ratioBefore": 0,
-                "ratioAfter": 0.568181818,
-                "habsCost": 24004,
+                "ratioAfter": 0.517241379,
+                "habsCost": 22859,
                 "rolls": {
                     "ram": {
                         "points": 1,
-                        "probability": 0.197593704
+                        "probability": 0.258380669
                     }
                 }
             }
@@ -5062,35 +5062,35 @@
                 "19": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 131,
                 "items": 5,
                 "power": 42,
-                "fits": true,
+                "fits": false,
                 "overfilled": true,
-                "probability": 7.939e-6,
-                "breakProbability": 1,
-                "breakRisk": 0.999992061,
-                "ratioBefore": 0.954545455,
-                "ratioAfter": 1.193181818,
-                "habsCost": 38049,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": 1.448275862,
+                "ratioAfter": 1.810344828,
+                "habsCost": 51918,
                 "rolls": {
                     "life": {
                         "points": 2,
-                        "probability": 8.345e-6
+                        "probability": 0
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 1.0117e-5
+                        "probability": 0
                     },
                     "strength": {
                         "points": 12,
-                        "probability": 9.741e-6
+                        "probability": 0
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 7.939e-6
+                        "probability": 0
                     }
                 }
             }
@@ -5126,7 +5126,7 @@
             "family": 3,
             "added": {
                 "strength": -101,
-                "cores": -4,
+                "cores": -79,
                 "life": -90
             },
             "recipe": {
@@ -5138,23 +5138,23 @@
                 "17": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 262,
                 "items": 7,
                 "power": 74,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.562996081,
+                "probability": 0.560668792,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.002929325,
-                "ratioBefore": -1.965909091,
-                "ratioAfter": -1.551136364,
+                "breakRisk": 0.002944925,
+                "ratioBefore": -14.879310345,
+                "ratioAfter": -14.25,
                 "habsCost": 11236,
                 "rolls": {
                     "science": {
                         "points": 3,
-                        "probability": 0.562996081
+                        "probability": 0.560668792
                     },
                     "agility": {
                         "points": 18,
@@ -5162,7 +5162,7 @@
                     },
                     "resistance": {
                         "points": 15,
-                        "probability": 0.703112698
+                        "probability": 0.745912349
                     },
                     "strength": {
                         "points": 1,
@@ -5216,7 +5216,7 @@
                 "9": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 243,
                 "items": 8,
@@ -5226,9 +5226,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 0.951704545,
-                "ratioAfter": 1.463068182,
-                "habsCost": 44114,
+                "ratioBefore": 1.443965517,
+                "ratioAfter": 2.219827586,
+                "habsCost": 61120,
                 "rolls": {
                     "magic": {
                         "points": 3,
@@ -5293,43 +5293,43 @@
                 "23": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 197,
                 "items": 7,
                 "power": 169,
-                "fits": true,
-                "overfilled": false,
-                "probability": 0.001716828,
-                "breakProbability": 1,
-                "breakRisk": 0.998283172,
+                "fits": false,
+                "overfilled": true,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 0.960227273,
-                "habsCost": 32814,
+                "ratioAfter": 1.456896552,
+                "habsCost": 43975,
                 "rolls": {
                     "mp": {
                         "points": 1,
-                        "probability": 0.002503653
+                        "probability": 0
                     },
                     "frequency": {
                         "points": 1,
-                        "probability": 0.001796637
+                        "probability": 0
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.00210593
+                        "probability": 0
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.001796666
+                        "probability": 0
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.002204451
+                        "probability": 0
                     },
                     "resistance": {
                         "points": 1,
-                        "probability": 0.001716828
+                        "probability": 0
                     }
                 }
             }
@@ -5364,7 +5364,7 @@
             ],
             "family": 3,
             "added": {
-                "cores": 4
+                "cores": 79
             },
             "recipe": {
                 "26": 1,
@@ -5373,7 +5373,7 @@
                 "10": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 122,
                 "items": 4,
@@ -5383,9 +5383,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 2.272727273,
-                "ratioAfter": 2.420454545,
-                "habsCost": 65628,
+                "ratioBefore": 27.24137931,
+                "ratioAfter": 27.465517241,
+                "habsCost": 628441,
                 "rolls": {
                     "strength": {
                         "points": 13,
@@ -5425,7 +5425,7 @@
             "family": 3,
             "added": {
                 "strength": -119,
-                "ram": -1
+                "ram": -13
             },
             "recipe": {
                 "8": 1,
@@ -5438,39 +5438,39 @@
                 "9": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 249,
                 "items": 8,
                 "power": 134,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.531986274,
+                "probability": 0.534533966,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.00313719,
-                "ratioBefore": -0.960227273,
-                "ratioAfter": -0.198863636,
+                "breakRisk": 0.003120112,
+                "ratioBefore": -4.387931034,
+                "ratioAfter": -3.232758621,
                 "habsCost": 11236,
                 "rolls": {
                     "frequency": {
                         "points": 1,
-                        "probability": 0.531986274
+                        "probability": 0.534533966
                     },
                     "science": {
                         "points": 1,
-                        "probability": 0.531986274
+                        "probability": 0.534533966
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.535279969
+                        "probability": 0.554494215
                     },
                     "tp": {
                         "points": 1,
-                        "probability": 0.822764367
+                        "probability": 0.808588561
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.656770979
+                        "probability": 0.745912349
                     }
                 }
             }
@@ -5507,7 +5507,7 @@
             "added": {
                 "life": 17,
                 "science": -1,
-                "cores": -3
+                "cores": -9
             },
             "recipe": {
                 "28": 1,
@@ -5517,31 +5517,31 @@
                 "24": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 169,
                 "items": 5,
                 "power": 173,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.513709841,
-                "breakProbability": 0.00856995,
-                "breakRisk": 0.004167482,
-                "ratioBefore": -0.761363636,
-                "ratioAfter": 0.221590909,
-                "habsCost": 16216,
+                "probability": 0.723796082,
+                "breakProbability": 0.006908023,
+                "breakRisk": 0.001908023,
+                "ratioBefore": -1.413793103,
+                "ratioAfter": 0.077586207,
+                "habsCost": 12980,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.513709841
+                        "probability": 0.723796082
                     },
                     "mp": {
                         "points": 1,
-                        "probability": 0.583433992
+                        "probability": 0.723796082
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.513709841
+                        "probability": 0.723796082
                     }
                 }
             }
@@ -5581,27 +5581,27 @@
                 "28": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 48,
                 "items": 2,
                 "power": 26,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.458611858,
-                "breakProbability": 0.008300051,
-                "breakRisk": 0.004493549,
+                "probability": 0.402512449,
+                "breakProbability": 0.008618835,
+                "breakRisk": 0.005149647,
                 "ratioBefore": 0,
-                "ratioAfter": 0.147727273,
-                "habsCost": 14556,
+                "ratioAfter": 0.224137931,
+                "habsCost": 16273,
                 "rolls": {
                     "agility": {
                         "points": 1,
-                        "probability": 0.458611858
+                        "probability": 0.402512449
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.588869282
+                        "probability": 0.580124808
                     }
                 }
             }
@@ -5645,27 +5645,27 @@
                 "20": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 116,
                 "items": 4,
                 "power": 16,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.322193751,
-                "breakProbability": 0.013851642,
-                "breakRisk": 0.009388729,
-                "ratioBefore": 0.227272727,
-                "ratioAfter": 0.318181818,
-                "habsCost": 18386,
+                "probability": 0.169903159,
+                "breakProbability": 0.024767957,
+                "breakRisk": 0.020559803,
+                "ratioBefore": 0.344827586,
+                "ratioAfter": 0.482758621,
+                "habsCost": 22085,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.322193751
+                        "probability": 0.169903159
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 0.35215511
+                        "probability": 0.194156258
                     }
                 }
             }
@@ -5700,7 +5700,7 @@
             ],
             "family": 3,
             "added": {
-                "ram": -2,
+                "ram": -80,
                 "strength": -33
             },
             "recipe": {
@@ -5711,31 +5711,31 @@
                 "2": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 130,
                 "items": 6,
                 "power": 26,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.511493752,
-                "breakProbability": 0.007441932,
-                "breakRisk": 0.00363543,
-                "ratioBefore": -0.755681818,
-                "ratioAfter": -0.613636364,
+                "probability": 0.517542091,
+                "breakProbability": 0.0067032,
+                "breakRisk": 0.003234012,
+                "ratioBefore": -20.974137931,
+                "ratioAfter": -20.75862069,
                 "habsCost": 11236,
                 "rolls": {
                     "science": {
                         "points": 1,
-                        "probability": 0.539653856
+                        "probability": 0.521628424
                     },
                     "life": {
                         "points": 20,
-                        "probability": 0.717293516
+                        "probability": 0.719888411
                     },
                     "agility": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     },
                     "strength": {
                         "points": 1,
@@ -5774,13 +5774,13 @@
             ],
             "family": 3,
             "added": {
-                "ram": 3
+                "ram": 99
             },
             "recipe": {
                 "3": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 21,
                 "items": 1,
@@ -5790,9 +5790,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.704545455,
-                "ratioAfter": 1.715909091,
-                "habsCost": 49796,
+                "ratioBefore": 51.206896552,
+                "ratioAfter": 51.224137931,
+                "habsCost": 1162345,
                 "rolls": {
                     "agility": {
                         "points": 1,
@@ -5839,31 +5839,31 @@
                 "14": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 166,
                 "items": 5,
                 "power": 32,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.433545189,
-                "breakProbability": 0.008201262,
-                "breakRisk": 0.004645644,
+                "probability": 0.353534296,
+                "breakProbability": 0.009812876,
+                "breakRisk": 0.006343688,
                 "ratioBefore": 0,
-                "ratioAfter": 0.181818182,
-                "habsCost": 15322,
+                "ratioAfter": 0.275862069,
+                "habsCost": 17435,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.556683042
+                        "probability": 0.50953459
                     },
                     "resistance": {
                         "points": 1,
-                        "probability": 0.433545189
+                        "probability": 0.353534296
                     },
                     "strength": {
                         "points": 3,
-                        "probability": 0.45370653
+                        "probability": 0.378776384
                     }
                 }
             }
@@ -5912,7 +5912,7 @@
                 "2": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 261,
                 "items": 8,
@@ -5922,9 +5922,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.846590909,
-                "ratioAfter": 2.153409091,
-                "habsCost": 59627,
+                "ratioBefore": 2.801724138,
+                "ratioAfter": 3.267241379,
+                "habsCost": 84657,
                 "rolls": {
                     "resistance": {
                         "points": 1,
@@ -5985,7 +5985,7 @@
                 "11": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 44,
                 "items": 1,
@@ -5995,8 +5995,8 @@
                 "probability": 0,
                 "breakProbability": 0.01,
                 "breakRisk": 0.01,
-                "ratioBefore": -0.522727273,
-                "ratioAfter": -0.522727273,
+                "ratioBefore": -0.793103448,
+                "ratioAfter": -0.793103448,
                 "habsCost": 11236,
                 "rolls": []
             }
@@ -6042,35 +6042,35 @@
                 "36": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 162,
                 "items": 6,
-                "power": 136,
+                "power": 96,
                 "fits": true,
-                "overfilled": false,
-                "probability": 0.003458917,
-                "breakProbability": 0.991248189,
-                "breakRisk": 0.987819544,
-                "ratioBefore": 0.142045455,
-                "ratioAfter": 0.914772727,
-                "habsCost": 31793,
+                "overfilled": true,
+                "probability": 0.000376446,
+                "breakProbability": 1,
+                "breakRisk": 0.999623554,
+                "ratioBefore": 0.215517241,
+                "ratioAfter": 1.043103448,
+                "habsCost": 34677,
                 "rolls": {
                     "agility": {
                         "points": 12,
-                        "probability": 0.004441337
+                        "probability": 0.000542557
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.003458917
+                        "probability": 0.000376446
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.004347057
+                        "probability": 0.000530385
                     },
                     "ram": {
                         "points": 1,
-                        "probability": 0.006972332
+                        "probability": 0.000726569
                     }
                 }
             }
@@ -6115,31 +6115,31 @@
                 "22": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 313,
                 "items": 8,
                 "power": 60,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.298723601,
-                "breakProbability": 0.012011401,
-                "breakRisk": 0.008423312,
+                "probability": 0.141714742,
+                "breakProbability": 0.026227941,
+                "breakRisk": 0.022511055,
                 "ratioBefore": 0,
-                "ratioAfter": 0.340909091,
-                "habsCost": 18897,
+                "ratioAfter": 0.517241379,
+                "habsCost": 22859,
                 "rolls": {
                     "science": {
                         "points": 24,
-                        "probability": 0.435622162
+                        "probability": 0.20423593
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0.298723601
+                        "probability": 0.141714742
                     },
                     "strength": {
                         "points": 3,
-                        "probability": 0.298723601
+                        "probability": 0.141714742
                     }
                 }
             }
@@ -6181,27 +6181,27 @@
                 "25": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 28,
                 "items": 2,
                 "power": 60,
-                "fits": true,
+                "fits": false,
                 "overfilled": true,
-                "probability": 2.0125e-5,
-                "breakProbability": 1,
-                "breakRisk": 0.999979875,
-                "ratioBefore": 0.829545455,
-                "ratioAfter": 1.170454545,
-                "habsCost": 37538,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": 1.25862069,
+                "ratioAfter": 1.775862069,
+                "habsCost": 51143,
                 "rolls": {
                     "frequency": {
                         "points": 5,
-                        "probability": 2.0125e-5
+                        "probability": 0
                     },
                     "life": {
                         "points": 50,
-                        "probability": 2.4667e-5
+                        "probability": 0
                     }
                 }
             }
@@ -6238,7 +6238,7 @@
             "added": {
                 "frequency": -64,
                 "tp": -1,
-                "cores": -3
+                "cores": -72
             },
             "recipe": {
                 "22": 1,
@@ -6251,43 +6251,43 @@
                 "2": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 219,
                 "items": 8,
                 "power": 48,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.511493752,
+                "probability": 0.517542091,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.003274555,
-                "ratioBefore": -1.5,
-                "ratioAfter": -1.227272727,
+                "breakRisk": 0.003234012,
+                "ratioBefore": -13.396551724,
+                "ratioAfter": -12.982758621,
                 "habsCost": 11236,
                 "rolls": {
                     "resistance": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     },
                     "science": {
                         "points": 3,
-                        "probability": 0.57736277
+                        "probability": 0.561539601
                     },
                     "agility": {
                         "points": 13,
-                        "probability": 0.671868505
+                        "probability": 0.745912349
                     },
                     "magic": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.676094802
+                        "probability": 0.613133185
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     }
                 }
             }
@@ -6334,7 +6334,7 @@
                 "30": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 236,
                 "items": 6,
@@ -6344,9 +6344,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.215909091,
-                "ratioAfter": 1.892045455,
-                "habsCost": 53754,
+                "ratioBefore": 1.844827586,
+                "ratioAfter": 2.870689655,
+                "habsCost": 75746,
                 "rolls": {
                     "magic": {
                         "points": 27,
@@ -6401,31 +6401,31 @@
                 "17": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 177,
                 "items": 5,
-                "power": 154,
+                "power": 114,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.00766794,
-                "breakProbability": 0.574139566,
-                "breakRisk": 0.569737098,
+                "probability": 0.001710199,
+                "breakProbability": 1,
+                "breakRisk": 0.998289801,
                 "ratioBefore": 0,
-                "ratioAfter": 0.875,
-                "habsCost": 30899,
+                "ratioAfter": 0.982758621,
+                "habsCost": 33321,
                 "rolls": {
                     "resistance": {
                         "points": 15,
-                        "probability": 0.008208989
+                        "probability": 0.001710199
                     },
                     "ram": {
                         "points": 1,
-                        "probability": 0.012142609
+                        "probability": 0.002317933
                     },
                     "strength": {
                         "points": 12,
-                        "probability": 0.00766794
+                        "probability": 0.001710199
                     }
                 }
             }
@@ -6467,19 +6467,19 @@
                 "36": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 23,
                 "items": 1,
-                "power": 100,
+                "power": 60,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.511363636,
-                "ratioAfter": 2.079545455,
-                "habsCost": 57968,
+                "ratioBefore": 2.293103448,
+                "ratioAfter": 2.810344828,
+                "habsCost": 74390,
                 "rolls": {
                     "ram": {
                         "points": 1,
@@ -6529,23 +6529,23 @@
                 "8": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 63,
                 "items": 4,
                 "power": 6,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.511493752,
-                "breakProbability": 0.009340906,
-                "breakRisk": 0.004563091,
-                "ratioBefore": -1.323863636,
-                "ratioAfter": -1.295454545,
+                "probability": 0.517542091,
+                "breakProbability": 0.009017227,
+                "breakRisk": 0.004350432,
+                "ratioBefore": -2.00862069,
+                "ratioAfter": -1.965517241,
                 "habsCost": 11236,
                 "rolls": {
                     "magic": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     },
                     "strength": {
                         "points": 1,
@@ -6553,7 +6553,7 @@
                     },
                     "frequency": {
                         "points": 1,
-                        "probability": 0.527424272
+                        "probability": 0.5385717
                     }
                 }
             }
@@ -6589,9 +6589,9 @@
             "family": 3,
             "added": {
                 "science": 1,
-                "cores": -3,
+                "cores": -30,
                 "mp": -3,
-                "ram": -1
+                "ram": -46
             },
             "recipe": {
                 "24": 1,
@@ -6601,31 +6601,31 @@
                 "3": 2
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 167,
                 "items": 6,
                 "power": 14,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.523251718,
-                "breakProbability": 0.008529188,
-                "breakRisk": 0.004066276,
-                "ratioBefore": -2.190340909,
-                "ratioAfter": -2.110795455,
+                "probability": 0.522601739,
+                "breakProbability": 0.007855436,
+                "breakRisk": 0.003750172,
+                "ratioBefore": -18.668103448,
+                "ratioAfter": -18.547413793,
                 "habsCost": 11236,
                 "rolls": {
                     "science": {
                         "points": 1,
-                        "probability": 0.537174603
+                        "probability": 0.522601739
                     },
                     "strength": {
                         "points": 4,
-                        "probability": 0.54758472
+                        "probability": 0.573948191
                     },
                     "agility": {
                         "points": 2,
-                        "probability": 0.523251718
+                        "probability": 0.535699632
                     }
                 }
             }
@@ -6668,35 +6668,35 @@
                 "19": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 126,
                 "items": 5,
                 "power": 70,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.241378825,
-                "breakProbability": 0.01486497,
-                "breakRisk": 0.011276881,
+                "probability": 0.083962118,
+                "breakProbability": 0.044268606,
+                "breakRisk": 0.04055172,
                 "ratioBefore": 0,
-                "ratioAfter": 0.397727273,
-                "habsCost": 20174,
+                "ratioAfter": 0.603448276,
+                "habsCost": 24797,
                 "rolls": {
                     "life": {
                         "points": 50,
-                        "probability": 0.376740181
+                        "probability": 0.134069596
                     },
                     "magic": {
                         "points": 4,
-                        "probability": 0.246927522
+                        "probability": 0.08690786
                     },
                     "science": {
                         "points": 3,
-                        "probability": 0.252599678
+                        "probability": 0.089951772
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.241378825
+                        "probability": 0.083962118
                     }
                 }
             }
@@ -6740,7 +6740,7 @@
                 "22": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 67,
                 "items": 2,
@@ -6750,9 +6750,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 2.613636364,
-                "ratioAfter": 2.625,
-                "habsCost": 70225,
+                "ratioBefore": 3.965517241,
+                "ratioAfter": 3.982758621,
+                "habsCost": 100737,
                 "rolls": {
                     "resistance": {
                         "points": 1,
@@ -6803,39 +6803,39 @@
                 "2": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 158,
                 "items": 7,
                 "power": 68,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.511493752,
+                "probability": 0.517542091,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.003274555,
-                "ratioBefore": -0.710227273,
-                "ratioAfter": -0.323863636,
+                "breakRisk": 0.003234012,
+                "ratioBefore": -1.077586207,
+                "ratioAfter": -0.49137931,
                 "habsCost": 11236,
                 "rolls": {
                     "agility": {
                         "points": 12,
-                        "probability": 0.656770979
+                        "probability": 0.745912349
                     },
                     "resistance": {
                         "points": 13,
-                        "probability": 0.671868505
+                        "probability": 0.745912349
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 0.580352165
+                        "probability": 0.623404335
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0.535279969
+                        "probability": 0.554494215
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     }
                 }
             }
@@ -6877,27 +6877,27 @@
                 "7": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 72,
                 "items": 2,
                 "power": 4,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.511493752,
-                "breakProbability": 0.00955563,
-                "breakRisk": 0.004667985,
-                "ratioBefore": -0.568181818,
-                "ratioAfter": -0.545454545,
+                "probability": 0.517542091,
+                "breakProbability": 0.009333589,
+                "breakRisk": 0.004503064,
+                "ratioBefore": -0.862068966,
+                "ratioAfter": -0.827586207,
                 "habsCost": 11236,
                 "rolls": {
                     "wisdom": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     },
                     "magic": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     }
                 }
             }
@@ -6938,27 +6938,27 @@
                 "12": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 61,
                 "items": 4,
                 "power": 14,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.506956345,
-                "breakProbability": 0.008803346,
-                "breakRisk": 0.004340434,
+                "probability": 0.498069371,
+                "breakProbability": 0.008448932,
+                "breakRisk": 0.004240778,
                 "ratioBefore": 0,
-                "ratioAfter": 0.079545455,
-                "habsCost": 13024,
+                "ratioAfter": 0.120689655,
+                "habsCost": 13948,
                 "rolls": {
                     "frequency": {
                         "points": 5,
-                        "probability": 0.567956632
+                        "probability": 0.591756709
                     },
                     "strength": {
                         "points": 2,
-                        "probability": 0.506956345
+                        "probability": 0.498069371
                     }
                 }
             }
@@ -7001,27 +7001,27 @@
                 "19": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 91,
                 "items": 3,
                 "power": 56,
-                "fits": true,
+                "fits": false,
                 "overfilled": true,
-                "probability": 0.000468097,
-                "breakProbability": 1,
-                "breakRisk": 0.999531903,
-                "ratioBefore": 0.715909091,
-                "ratioAfter": 1.034090909,
-                "habsCost": 34474,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": 1.086206897,
+                "ratioAfter": 1.568965517,
+                "habsCost": 46494,
                 "rolls": {
                     "frequency": {
                         "points": 25,
-                        "probability": 0.000678745
+                        "probability": 0
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0.000468097
+                        "probability": 0
                     }
                 }
             }
@@ -7067,18 +7067,18 @@
                 "29": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 174,
                 "items": 5,
                 "power": 58,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.54758472,
+                "probability": 0.563948176,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.00303263,
-                "ratioBefore": -1.65625,
-                "ratioAfter": -1.394886364,
+                "breakRisk": 0.002922943,
+                "ratioBefore": -2.512931034,
+                "ratioAfter": -2.11637931,
                 "habsCost": 11236,
                 "rolls": {
                     "strength": {
@@ -7087,15 +7087,15 @@
                     },
                     "agility": {
                         "points": 4,
-                        "probability": 0.54758472
+                        "probability": 0.573948191
                     },
                     "life": {
                         "points": 2,
-                        "probability": 0.547647616
+                        "probability": 0.563948176
                     },
                     "resistance": {
                         "points": 12,
-                        "probability": 0.656770979
+                        "probability": 0.745912349
                     }
                 }
             }
@@ -7140,7 +7140,7 @@
                 "25": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 80,
                 "items": 4,
@@ -7150,9 +7150,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 2.613636364,
-                "ratioAfter": 3.676136364,
-                "habsCost": 93846,
+                "ratioBefore": 2.931034483,
+                "ratioAfter": 4.543103448,
+                "habsCost": 113329,
                 "rolls": {
                     "magic": {
                         "points": 3,
@@ -7211,35 +7211,35 @@
                 "27": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 172,
                 "items": 6,
                 "power": 76,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.228631145,
-                "breakProbability": 0.017182781,
-                "breakRisk": 0.013254262,
+                "probability": 0.066627386,
+                "breakProbability": 0.063974503,
+                "breakRisk": 0.059712049,
                 "ratioBefore": 0,
-                "ratioAfter": 0.431818182,
-                "habsCost": 20940,
+                "ratioAfter": 0.655172414,
+                "habsCost": 25959,
                 "rolls": {
                     "science": {
                         "points": 12,
-                        "probability": 0.2681244
+                        "probability": 0.083731606
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.256213916
+                        "probability": 0.078156137
                     },
                     "life": {
                         "points": 4,
-                        "probability": 0.228631145
+                        "probability": 0.066627386
                     },
                     "agility": {
                         "points": 12,
-                        "probability": 0.256213916
+                        "probability": 0.078156137
                     }
                 }
             }
@@ -7277,14 +7277,14 @@
                 "strength": 71,
                 "magic": 68,
                 "wisdom": 51,
-                "ram": 3
+                "ram": 69
             },
             "recipe": {
                 "17": 1,
                 "15": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 99,
                 "items": 2,
@@ -7294,9 +7294,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 3.863636364,
-                "ratioAfter": 3.931818182,
-                "habsCost": 99592,
+                "ratioBefore": 38.965517241,
+                "ratioAfter": 39.068965517,
+                "habsCost": 889194,
                 "rolls": {
                     "resistance": {
                         "points": 3,
@@ -7341,7 +7341,7 @@
             "added": {
                 "life": -102,
                 "strength": -224,
-                "cores": -1
+                "cores": -91
             },
             "recipe": {
                 "7": 1,
@@ -7352,23 +7352,23 @@
                 "18": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 189,
                 "items": 6,
                 "power": 66,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.511493752,
+                "probability": 0.517542091,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.003274555,
-                "ratioBefore": -1.846590909,
-                "ratioAfter": -1.619318182,
+                "breakRisk": 0.003234012,
+                "ratioBefore": -18.060344828,
+                "ratioAfter": -17.715517241,
                 "habsCost": 11236,
                 "rolls": {
                     "magic": {
                         "points": 1,
-                        "probability": 0.511493752
+                        "probability": 0.517542091
                     },
                     "life": {
                         "points": 52,
@@ -7376,11 +7376,11 @@
                     },
                     "resistance": {
                         "points": 3,
-                        "probability": 0.535279969
+                        "probability": 0.554494215
                     },
                     "science": {
                         "points": 3,
-                        "probability": 0.554563077
+                        "probability": 0.559640222
                     }
                 }
             }
@@ -7425,31 +7425,31 @@
                 "12": 1
             },
             "level": 106,
-            "capacity": 176,
+            "capacity": 116,
             "expected": {
                 "dose": 254,
                 "items": 6,
                 "power": 54,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.473759321,
-                "breakProbability": 0.007573653,
-                "breakRisk": 0.003985565,
-                "ratioBefore": -0.150568182,
-                "ratioAfter": 0.15625,
-                "habsCost": 14747,
+                "probability": 0.418552281,
+                "breakProbability": 0.008880338,
+                "breakRisk": 0.005163452,
+                "ratioBefore": -0.228448276,
+                "ratioAfter": 0.237068966,
+                "habsCost": 16563,
                 "rolls": {
                     "resistance": {
                         "points": 3,
-                        "probability": 0.473759321
+                        "probability": 0.418552281
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.58128716
+                        "probability": 0.563041609
                     },
                     "agility": {
                         "points": 12,
-                        "probability": 0.58128716
+                        "probability": 0.563041609
                     }
                 }
             }
@@ -7577,7 +7577,7 @@
             "added": {
                 "wisdom": -32,
                 "mp": -1,
-                "ram": -1
+                "ram": -28
             },
             "recipe": {
                 "35": 1,
@@ -7597,13 +7597,13 @@
                 "probability": 0.522723447,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.00319928,
-                "ratioBefore": -1.605555556,
-                "ratioAfter": -1.294444444,
+                "ratioBefore": -10.383333333,
+                "ratioAfter": -10.072222222,
                 "habsCost": 11236,
                 "rolls": {
                     "life": {
                         "points": 2,
-                        "probability": 0.727088596
+                        "probability": 0.582093569
                     },
                     "science": {
                         "points": 1,
@@ -7632,7 +7632,7 @@
             "added": {
                 "frequency": 9,
                 "science": 77,
-                "ram": 3
+                "ram": 18
             },
             "recipe": {
                 "24": 1,
@@ -7652,9 +7652,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 5.244444444,
-                "ratioAfter": 5.288888889,
-                "habsCost": 130088,
+                "ratioBefore": 13.911111111,
+                "ratioAfter": 13.955555556,
+                "habsCost": 324845,
                 "rolls": {
                     "science": {
                         "points": 1,
@@ -7759,7 +7759,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": -2
+                "cores": -92
             },
             "recipe": {
                 "14": 1,
@@ -7776,8 +7776,8 @@
                 "probability": 0.522723447,
                 "breakProbability": 0.009565287,
                 "breakRisk": 0.004565287,
-                "ratioBefore": -1.111111111,
-                "ratioAfter": -1.088888889,
+                "ratioBefore": -20.444444444,
+                "ratioAfter": -20.422222222,
                 "habsCost": 11236,
                 "rolls": {
                     "strength": {
@@ -7904,7 +7904,7 @@
             "added": {
                 "wisdom": 48,
                 "life": 55,
-                "cores": 2,
+                "cores": 56,
                 "tp": 2
             },
             "recipe": {
@@ -7927,9 +7927,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 6.122222222,
-                "ratioAfter": 8.766666667,
-                "habsCost": 208241,
+                "ratioBefore": 28.788888889,
+                "ratioAfter": 31.433333333,
+                "habsCost": 717606,
                 "rolls": {
                     "science": {
                         "points": 13,
@@ -7964,7 +7964,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": -2,
+                "cores": -89,
                 "wisdom": -56
             },
             "recipe": {
@@ -7984,8 +7984,8 @@
                 "probability": 0.571315406,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.002873559,
-                "ratioBefore": -1.733333333,
-                "ratioAfter": -1.233333333,
+                "ratioBefore": -20.4,
+                "ratioAfter": -19.9,
                 "habsCost": 11236,
                 "rolls": {
                     "agility": {
@@ -8237,15 +8237,15 @@
             "expected": {
                 "dose": 108,
                 "items": 3,
-                "power": 106,
+                "power": 66,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 4.811111111,
-                "ratioAfter": 5.988888889,
-                "habsCost": 145818,
+                "ratioAfter": 5.544444444,
+                "habsCost": 135831,
                 "rolls": {
                     "ram": {
                         "points": 1,
@@ -8384,7 +8384,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": -1,
+                "cores": -34,
                 "life": -107,
                 "magic": -88
             },
@@ -8400,14 +8400,14 @@
             "expected": {
                 "dose": 209,
                 "items": 5,
-                "power": 160,
+                "power": 100,
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.745912349,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.0017032,
-                "ratioBefore": -2.127777778,
-                "ratioAfter": -0.905555556,
+                "ratioBefore": -9.127777778,
+                "ratioAfter": -8.238888889,
                 "habsCost": 11236,
                 "rolls": {
                     "cores": {
@@ -8455,15 +8455,15 @@
             "expected": {
                 "dose": 199,
                 "items": 6,
-                "power": 285,
+                "power": 225,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 4.022222222,
-                "ratioAfter": 7.188888889,
-                "habsCost": 172785,
+                "ratioAfter": 6.522222222,
+                "habsCost": 157803,
                 "rolls": {
                     "cores": {
                         "points": 1,
@@ -8559,7 +8559,7 @@
             "added": {
                 "frequency": 117,
                 "mp": 3,
-                "ram": 3
+                "ram": 90
             },
             "recipe": {
                 "36": 1
@@ -8575,9 +8575,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 10.1,
-                "ratioAfter": 10.1,
-                "habsCost": 238203,
+                "ratioBefore": 66.766666667,
+                "ratioAfter": 66.766666667,
+                "habsCost": 1511617,
                 "rolls": []
             }
         },
@@ -8595,7 +8595,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": -2,
+                "cores": -38,
                 "frequency": -73,
                 "life": -28
             },
@@ -8615,8 +8615,8 @@
                 "probability": 0.522723447,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.00319928,
-                "ratioBefore": -2.077777778,
-                "ratioAfter": -1.5,
+                "ratioBefore": -9.411111111,
+                "ratioAfter": -8.833333333,
                 "habsCost": 11236,
                 "rolls": {
                     "frequency": {
@@ -8767,7 +8767,7 @@
             "family": 1,
             "added": {
                 "magic": 25,
-                "ram": 3
+                "ram": 54
             },
             "recipe": {
                 "23": 1,
@@ -8783,15 +8783,15 @@
             "expected": {
                 "dose": 307,
                 "items": 8,
-                "power": 256,
+                "power": 176,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 3.888888889,
-                "ratioAfter": 6.733333333,
-                "habsCost": 162547,
+                "ratioBefore": 36.555555556,
+                "ratioAfter": 38.511111111,
+                "habsCost": 876658,
                 "rolls": {
                     "frequency": {
                         "points": 1,
@@ -8842,14 +8842,14 @@
             "expected": {
                 "dose": 108,
                 "items": 4,
-                "power": 114,
+                "power": 74,
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.682470436,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.002128464,
                 "ratioBefore": -1.322222222,
-                "ratioAfter": -0.055555556,
+                "ratioAfter": -0.5,
                 "habsCost": 11236,
                 "rolls": {
                     "ram": {
@@ -8892,31 +8892,31 @@
             "expected": {
                 "dose": 185,
                 "items": 6,
-                "power": 176,
+                "power": 116,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.34411048,
-                "breakProbability": 0.010182544,
-                "breakRisk": 0.006678624,
+                "probability": 0.522723447,
+                "breakProbability": 0.0067032,
+                "breakRisk": 0.00319928,
                 "ratioBefore": -1.666666667,
-                "ratioAfter": 0.288888889,
-                "habsCost": 17728,
+                "ratioAfter": -0.377777778,
+                "habsCost": 11236,
                 "rolls": {
                     "agility": {
                         "points": 1,
-                        "probability": 0.34411048
+                        "probability": 0.522723447
                     },
                     "cores": {
                         "points": 1,
-                        "probability": 0.491036431
+                        "probability": 0.745912349
                     },
                     "life": {
                         "points": 50,
-                        "probability": 0.907954156
+                        "probability": 0.95
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.491036431
+                        "probability": 0.745912349
                     }
                 }
             }
@@ -8982,7 +8982,7 @@
             "added": {
                 "science": 140,
                 "magic": 60,
-                "ram": 2
+                "ram": 8
             },
             "recipe": {
                 "3": 1
@@ -8998,9 +8998,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 6.666666667,
-                "ratioAfter": 6.933333333,
-                "habsCost": 167042,
+                "ratioBefore": 9.777777778,
+                "ratioAfter": 10.044444444,
+                "habsCost": 236955,
                 "rolls": {
                     "agility": {
                         "points": 12,
@@ -9023,7 +9023,7 @@
             ],
             "family": 1,
             "added": {
-                "ram": -1,
+                "ram": -67,
                 "mp": -2,
                 "wisdom": -82
             },
@@ -9042,14 +9042,14 @@
             "expected": {
                 "dose": 247,
                 "items": 8,
-                "power": 222,
+                "power": 182,
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.571315406,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.002873559,
-                "ratioBefore": -2.855555556,
-                "ratioAfter": -0.944444444,
+                "ratioBefore": -24.633333333,
+                "ratioAfter": -22.944444444,
                 "habsCost": 11236,
                 "rolls": {
                     "frequency": {
@@ -9070,7 +9070,7 @@
                     },
                     "life": {
                         "points": 50,
-                        "probability": 0.95
+                        "probability": 0.785069635
                     }
                 }
             }
@@ -9201,7 +9201,7 @@
             ],
             "family": 1,
             "added": {
-                "cores": 3,
+                "cores": 93,
                 "magic": 109,
                 "mp": 1
             },
@@ -9222,9 +9222,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 7.144444444,
-                "ratioAfter": 8.788888889,
-                "habsCost": 208740,
+                "ratioBefore": 45.144444444,
+                "ratioAfter": 46.788888889,
+                "habsCost": 1062676,
                 "rolls": {
                     "magic": {
                         "points": 12,
@@ -9256,7 +9256,7 @@
             "family": 1,
             "added": {
                 "magic": -118,
-                "ram": -3
+                "ram": -81
             },
             "recipe": {
                 "31": 2,
@@ -9275,8 +9275,8 @@
                 "probability": 0.95,
                 "breakProbability": 0.007326325,
                 "breakRisk": 0.000366316,
-                "ratioBefore": -2.977777778,
-                "ratioAfter": -2.9,
+                "ratioBefore": -28.311111111,
+                "ratioAfter": -28.233333333,
                 "habsCost": 11236,
                 "rolls": {
                     "magic": {
@@ -9365,31 +9365,31 @@
             "expected": {
                 "dose": 172,
                 "items": 5,
-                "power": 154,
-                "fits": false,
+                "power": 114,
+                "fits": true,
                 "overfilled": true,
-                "probability": 0,
-                "breakProbability": 0,
-                "breakRisk": 0,
+                "probability": 5.59e-7,
+                "breakProbability": 1,
+                "breakRisk": 0.999999441,
                 "ratioBefore": 0,
-                "ratioAfter": 1.711111111,
-                "habsCost": 49688,
+                "ratioAfter": 1.266666667,
+                "habsCost": 39701,
                 "rolls": {
                     "life": {
                         "points": 50,
-                        "probability": 0
+                        "probability": 1.333e-6
                     },
                     "wisdom": {
                         "points": 1,
-                        "probability": 0
+                        "probability": 5.59e-7
                     },
                     "ram": {
                         "points": 1,
-                        "probability": 0
+                        "probability": 7.98e-7
                     },
                     "resistance": {
                         "points": 1,
-                        "probability": 0
+                        "probability": 5.59e-7
                     }
                 }
             }
@@ -9420,15 +9420,15 @@
             "expected": {
                 "dose": 194,
                 "items": 5,
-                "power": 304,
+                "power": 124,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 2.044444444,
-                "ratioAfter": 5.422222222,
-                "habsCost": 133084,
+                "ratioAfter": 3.422222222,
+                "habsCost": 88140,
                 "rolls": {
                     "cores": {
                         "points": 3,
@@ -9460,7 +9460,7 @@
             "family": 1,
             "added": {
                 "mp": -2,
-                "ram": -2
+                "ram": -11
             },
             "recipe": {
                 "23": 1,
@@ -9482,8 +9482,8 @@
                 "probability": 0.522723447,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.00319928,
-                "ratioBefore": -2.5,
-                "ratioAfter": -1.944444444,
+                "ratioBefore": -5.055555556,
+                "ratioAfter": -4.5,
                 "habsCost": 11236,
                 "rolls": {
                     "strength": {
@@ -9500,7 +9500,7 @@
                     },
                     "life": {
                         "points": 12,
-                        "probability": 0.858044778
+                        "probability": 0.783608828
                     },
                     "magic": {
                         "points": 3,
@@ -9580,27 +9580,27 @@
                 "17": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 146,
                 "items": 5,
                 "power": 8,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.499999307,
-                "breakProbability": 0.008607092,
-                "breakRisk": 0.004303552,
+                "probability": 0.472965681,
+                "breakProbability": 0.008233164,
+                "breakRisk": 0.00433916,
                 "ratioBefore": 0,
-                "ratioAfter": 0.1,
-                "habsCost": 13483,
+                "ratioAfter": 0.166666667,
+                "habsCost": 14981,
                 "rolls": {
                     "strength": {
                         "points": 1,
-                        "probability": 0.499999307
+                        "probability": 0.472965681
                     },
                     "resistance": {
                         "points": 3,
-                        "probability": 0.552584693
+                        "probability": 0.558742932
                     }
                 }
             }
@@ -9627,7 +9627,7 @@
                 "20": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 228,
                 "items": 6,
@@ -9637,9 +9637,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 8.7,
-                "ratioAfter": 9.075,
-                "habsCost": 215169,
+                "ratioBefore": 14.5,
+                "ratioAfter": 15.125,
+                "habsCost": 351125,
                 "rolls": {
                     "magic": {
                         "points": 3,
@@ -9682,19 +9682,19 @@
                 "5": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 231,
                 "items": 8,
-                "power": 335,
+                "power": 295,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": -0.00625,
-                "ratioAfter": 4.18125,
-                "habsCost": 105197,
+                "ratioBefore": -0.010416667,
+                "ratioAfter": 6.135416667,
+                "habsCost": 149111,
                 "rolls": {
                     "strength": {
                         "points": 3,
@@ -9744,7 +9744,7 @@
                 "32": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 306,
                 "items": 8,
@@ -9754,9 +9754,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 4.525,
-                "ratioAfter": 5.6125,
-                "habsCost": 137360,
+                "ratioBefore": 7.541666667,
+                "ratioAfter": 9.354166667,
+                "habsCost": 221443,
                 "rolls": {
                     "wisdom": {
                         "points": 4,
@@ -9792,27 +9792,27 @@
                 "26": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 68,
                 "items": 2,
                 "power": 74,
-                "fits": true,
-                "overfilled": false,
-                "probability": 0.004341027,
-                "breakProbability": 1,
-                "breakRisk": 0.995658973,
+                "fits": false,
+                "overfilled": true,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 0.925,
-                "habsCost": 32023,
+                "ratioAfter": 1.541666667,
+                "habsCost": 45880,
                 "rolls": {
                     "life": {
                         "points": 50,
-                        "probability": 0.004341027
+                        "probability": 0
                     },
                     "strength": {
                         "points": 12,
-                        "probability": 0.004341027
+                        "probability": 0
                     }
                 }
             }
@@ -9829,7 +9829,7 @@
             "added": {
                 "tp": 1,
                 "frequency": 185,
-                "ram": 3
+                "ram": 90
             },
             "recipe": {
                 "12": 1,
@@ -9838,19 +9838,19 @@
                 "36": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 103,
                 "items": 4,
-                "power": 152,
+                "power": 112,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 9.625,
-                "ratioAfter": 11.525,
-                "habsCost": 270226,
+                "ratioBefore": 122.291666667,
+                "ratioAfter": 124.625,
+                "habsCost": 2811809,
                 "rolls": {
                     "life": {
                         "points": 50,
@@ -9887,7 +9887,7 @@
                 "25": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 161,
                 "items": 5,
@@ -9897,8 +9897,8 @@
                 "probability": 0.745912349,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.0017032,
-                "ratioBefore": -2.34375,
-                "ratioAfter": -0.0375,
+                "ratioBefore": -3.90625,
+                "ratioAfter": -0.0625,
                 "habsCost": 11236,
                 "rolls": {
                     "agility": {
@@ -9934,7 +9934,7 @@
             ],
             "family": 3,
             "added": {
-                "ram": -2,
+                "ram": -107,
                 "strength": -109
             },
             "recipe": {
@@ -9942,7 +9942,7 @@
                 "33": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 95,
                 "items": 2,
@@ -9950,10 +9950,10 @@
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.745912349,
-                "breakProbability": 0.0067032,
-                "breakRisk": 0.0017032,
-                "ratioBefore": -2.6125,
-                "ratioAfter": -1.3625,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": -69.145833333,
+                "ratioAfter": -67.0625,
                 "habsCost": 11236,
                 "rolls": {
                     "tp": {
@@ -9980,27 +9980,27 @@
                 "3": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 89,
                 "items": 4,
                 "power": 36,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.230579714,
-                "breakProbability": 0.018664,
-                "breakRisk": 0.014360461,
+                "probability": 0.03500103,
+                "breakProbability": 0.142852939,
+                "breakRisk": 0.137852939,
                 "ratioBefore": 0,
-                "ratioAfter": 0.45,
-                "habsCost": 21348,
+                "ratioAfter": 0.75,
+                "habsCost": 28090,
                 "rolls": {
                     "agility": {
                         "points": 13,
-                        "probability": 0.267895408
+                        "probability": 0.03500103
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.230579714
+                        "probability": 0.03500103
                     }
                 }
             }
@@ -10024,7 +10024,7 @@
                 "2": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 51,
                 "items": 3,
@@ -10034,9 +10034,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.525,
-                "ratioAfter": 1.55,
-                "habsCost": 46068,
+                "ratioBefore": 2.541666667,
+                "ratioAfter": 2.583333333,
+                "habsCost": 69289,
                 "rolls": {
                     "strength": {
                         "points": 1,
@@ -10057,7 +10057,7 @@
             "added": {
                 "life": -35,
                 "tp": -1,
-                "ram": -2
+                "ram": -20
             },
             "recipe": {
                 "2": 2,
@@ -10066,23 +10066,23 @@
                 "15": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 115,
                 "items": 5,
                 "power": 60,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.552585459,
-                "breakProbability": 0.0067032,
-                "breakRisk": 0.002999109,
-                "ratioBefore": -2.09375,
-                "ratioAfter": -1.5625,
+                "probability": 0.590680206,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": -13.90625,
+                "ratioAfter": -13.020833333,
                 "habsCost": 11236,
                 "rolls": {
                     "strength": {
                         "points": 2,
-                        "probability": 0.552585459
+                        "probability": 0.590680206
                     },
                     "life": {
                         "points": 50,
@@ -10090,7 +10090,7 @@
                     },
                     "agility": {
                         "points": 3,
-                        "probability": 0.580917121
+                        "probability": 0.642012708
                     }
                 }
             }
@@ -10111,18 +10111,18 @@
                 "35": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 5,
                 "items": 1,
-                "power": 100,
+                "power": 40,
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.745912349,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.0017032,
-                "ratioBefore": -1.45,
-                "ratioAfter": -0.2,
+                "ratioBefore": -2.416666667,
+                "ratioAfter": -1.583333333,
                 "habsCost": 11236,
                 "rolls": {
                     "cores": {
@@ -10146,23 +10146,23 @@
                 "28": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 27,
                 "items": 1,
                 "power": 24,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.475134295,
-                "breakProbability": 0.010523341,
-                "breakRisk": 0.005523341,
+                "probability": 0.209128156,
+                "breakProbability": 0.023908784,
+                "breakRisk": 0.018908784,
                 "ratioBefore": 0,
-                "ratioAfter": 0.3,
-                "habsCost": 17978,
+                "ratioAfter": 0.5,
+                "habsCost": 22472,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.475134295
+                        "probability": 0.209128156
                     }
                 }
             }
@@ -10186,7 +10186,7 @@
                 "6": 2
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 213,
                 "items": 5,
@@ -10196,9 +10196,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 4.6875,
-                "ratioAfter": 6.1125,
-                "habsCost": 148596,
+                "ratioBefore": 7.8125,
+                "ratioAfter": 10.1875,
+                "habsCost": 240170,
                 "rolls": {
                     "tp": {
                         "points": 1,
@@ -10227,7 +10227,7 @@
             "added": {
                 "life": -114,
                 "science": -63,
-                "cores": -3,
+                "cores": -96,
                 "mp": -2
             },
             "recipe": {
@@ -10240,23 +10240,23 @@
                 "20": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 257,
                 "items": 8,
                 "power": 56,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.525635548,
+                "probability": 0.543452025,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.00317976,
-                "ratioBefore": -4.9375,
-                "ratioAfter": -4.2375,
+                "breakRisk": 0.003060333,
+                "ratioBefore": -45.104166667,
+                "ratioAfter": -43.9375,
                 "habsCost": 11236,
                 "rolls": {
                     "strength": {
                         "points": 4,
-                        "probability": 0.610701379
+                        "probability": 0.697806213
                     },
                     "resistance": {
                         "points": 18,
@@ -10264,11 +10264,11 @@
                     },
                     "magic": {
                         "points": 1,
-                        "probability": 0.525635548
+                        "probability": 0.543452025
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 0.642012708
+                        "probability": 0.745912349
                     }
                 }
             }
@@ -10294,7 +10294,7 @@
                 "12": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 189,
                 "items": 6,
@@ -10304,9 +10304,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.5625,
-                "ratioAfter": 2.1375,
-                "habsCost": 59270,
+                "ratioBefore": 2.604166667,
+                "ratioAfter": 3.5625,
+                "habsCost": 91293,
                 "rolls": {
                     "agility": {
                         "points": 12,
@@ -10344,7 +10344,7 @@
                 "33": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 133,
                 "items": 4,
@@ -10355,8 +10355,8 @@
                 "breakProbability": 0,
                 "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 1.375,
-                "habsCost": 42135,
+                "ratioAfter": 2.291666667,
+                "habsCost": 62734,
                 "rolls": {
                     "frequency": {
                         "points": 1,
@@ -10383,7 +10383,7 @@
             ],
             "family": 3,
             "added": {
-                "cores": 1
+                "cores": 67
             },
             "recipe": {
                 "1": 1,
@@ -10392,7 +10392,7 @@
                 "21": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 95,
                 "items": 4,
@@ -10402,9 +10402,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 1.25,
-                "ratioAfter": 1.925,
-                "habsCost": 54495,
+                "ratioBefore": 55.833333333,
+                "ratioAfter": 56.958333333,
+                "habsCost": 1291204,
                 "rolls": {
                     "life": {
                         "points": 52,
@@ -10433,7 +10433,7 @@
                 "9": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 10,
                 "items": 1,
@@ -10443,8 +10443,8 @@
                 "probability": 0,
                 "breakProbability": 0.01,
                 "breakRisk": 0.01,
-                "ratioBefore": -0.2875,
-                "ratioAfter": -0.2875,
+                "ratioBefore": -0.479166667,
+                "ratioAfter": -0.479166667,
                 "habsCost": 11236,
                 "rolls": []
             }
@@ -10459,8 +10459,8 @@
             ],
             "family": 3,
             "added": {
-                "ram": -3,
-                "cores": -3,
+                "ram": -84,
+                "cores": -51,
                 "magic": -67
             },
             "recipe": {
@@ -10473,18 +10473,18 @@
                 "13": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 279,
                 "items": 7,
                 "power": 232,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.642012708,
-                "breakProbability": 0.0067032,
-                "breakRisk": 0.002399661,
-                "ratioBefore": -4.5875,
-                "ratioAfter": -1.8375,
+                "probability": 0.745912349,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": -75.145833333,
+                "ratioAfter": -70.5625,
                 "habsCost": 11236,
                 "rolls": {
                     "magic": {
@@ -10509,7 +10509,7 @@
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.642012708
+                        "probability": 0.745912349
                     }
                 }
             }
@@ -10530,23 +10530,23 @@
                 "11": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 120,
                 "items": 3,
                 "power": 2,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.523995501,
-                "breakProbability": 0.009542067,
-                "breakRisk": 0.004542067,
+                "probability": 0.538754971,
+                "breakProbability": 0.009280657,
+                "breakRisk": 0.004280657,
                 "ratioBefore": 0,
-                "ratioAfter": 0.025,
-                "habsCost": 11798,
+                "ratioAfter": 0.041666667,
+                "habsCost": 12172,
                 "rolls": {
                     "magic": {
                         "points": 1,
-                        "probability": 0.523995501
+                        "probability": 0.538754971
                     }
                 }
             }
@@ -10572,7 +10572,7 @@
                 "2": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 120,
                 "items": 5,
@@ -10582,9 +10582,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 3.725,
-                "ratioAfter": 3.775,
-                "habsCost": 96068,
+                "ratioBefore": 6.208333333,
+                "ratioAfter": 6.291666667,
+                "habsCost": 152622,
                 "rolls": {
                     "magic": {
                         "points": 1,
@@ -10607,7 +10607,7 @@
             ],
             "family": 3,
             "added": {
-                "ram": -2,
+                "ram": -35,
                 "tp": -1
             },
             "recipe": {
@@ -10619,23 +10619,23 @@
                 "29": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 196,
                 "items": 7,
                 "power": 60,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.674929404,
-                "breakProbability": 0.0067032,
-                "breakRisk": 0.002179013,
-                "ratioBefore": -1.875,
-                "ratioAfter": -1.125,
+                "probability": 0.745912349,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": -22.916666667,
+                "ratioAfter": -21.666666667,
                 "habsCost": 11236,
                 "rolls": {
                     "magic": {
                         "points": 6,
-                        "probability": 0.674929404
+                        "probability": 0.745912349
                     },
                     "science": {
                         "points": 12,
@@ -10658,7 +10658,7 @@
             ],
             "family": 3,
             "added": {
-                "cores": -1,
+                "cores": -82,
                 "tp": 1,
                 "frequency": -84
             },
@@ -10670,35 +10670,35 @@
                 "1": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 134,
                 "items": 5,
                 "power": 153,
-                "fits": false,
-                "overfilled": true,
-                "probability": 0,
-                "breakProbability": 0,
-                "breakRisk": 0,
-                "ratioBefore": -0.425,
-                "ratioAfter": 1.4875,
-                "habsCost": 44663,
+                "fits": true,
+                "overfilled": false,
+                "probability": 0.543452025,
+                "breakProbability": 0.0067032,
+                "breakRisk": 0.003060333,
+                "ratioBefore": -33.833333333,
+                "ratioAfter": -30.645833333,
+                "habsCost": 11236,
                 "rolls": {
                     "strength": {
                         "points": 1,
-                        "probability": 0
+                        "probability": 0.543452025
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 0
+                        "probability": 0.745912349
                     },
                     "mp": {
                         "points": 1,
-                        "probability": 0
+                        "probability": 0.745912349
                     },
                     "life": {
                         "points": 2,
-                        "probability": 0
+                        "probability": 0.543452025
                     }
                 }
             }
@@ -10720,27 +10720,27 @@
                 "28": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 88,
                 "items": 4,
                 "power": 32,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.234845966,
-                "breakProbability": 0.015003198,
-                "breakRisk": 0.011479757,
+                "probability": 0.052144273,
+                "breakProbability": 0.069861323,
+                "breakRisk": 0.066218455,
                 "ratioBefore": 0,
-                "ratioAfter": 0.4,
-                "habsCost": 20225,
+                "ratioAfter": 0.666666667,
+                "habsCost": 26217,
                 "rolls": {
                     "wisdom": {
                         "points": 15,
-                        "probability": 0.33326229
+                        "probability": 0.07157036
                     },
                     "life": {
                         "points": 2,
-                        "probability": 0.234845966
+                        "probability": 0.052144273
                     }
                 }
             }
@@ -10768,7 +10768,7 @@
                 "11": 2
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 276,
                 "items": 7,
@@ -10778,9 +10778,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 4.05,
-                "ratioAfter": 5.075,
-                "habsCost": 125281,
+                "ratioBefore": 6.75,
+                "ratioAfter": 8.458333333,
+                "habsCost": 201312,
                 "rolls": {
                     "science": {
                         "points": 1,
@@ -10820,7 +10820,7 @@
                 "11": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 128,
                 "items": 3,
@@ -10830,8 +10830,8 @@
                 "probability": 0.95,
                 "breakProbability": 0.0067032,
                 "breakRisk": 0.00033516,
-                "ratioBefore": -2.475,
-                "ratioAfter": -1.7,
+                "ratioBefore": -4.125,
+                "ratioAfter": -2.833333333,
                 "habsCost": 11236,
                 "rolls": {
                     "wisdom": {
@@ -10855,7 +10855,7 @@
             ],
             "family": 3,
             "added": {
-                "cores": 1,
+                "cores": 19,
                 "magic": 107,
                 "tp": -3
             },
@@ -10869,7 +10869,7 @@
                 "9": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 218,
                 "items": 8,
@@ -10879,9 +10879,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 2.05,
-                "ratioAfter": 2.3,
-                "habsCost": 62922,
+                "ratioBefore": 17.166666667,
+                "ratioAfter": 17.583333333,
+                "habsCost": 406369,
                 "rolls": {
                     "agility": {
                         "points": 1,
@@ -10917,23 +10917,23 @@
                 "21": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 53,
                 "items": 2,
                 "power": 24,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.475134295,
-                "breakProbability": 0.010523341,
-                "breakRisk": 0.005523341,
+                "probability": 0.209128156,
+                "breakProbability": 0.023908784,
+                "breakRisk": 0.018908784,
                 "ratioBefore": 0,
-                "ratioAfter": 0.3,
-                "habsCost": 17978,
+                "ratioAfter": 0.5,
+                "habsCost": 22472,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.475134295
+                        "probability": 0.209128156
                     }
                 }
             }
@@ -10957,7 +10957,7 @@
                 "33": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 172,
                 "items": 4,
@@ -10967,9 +10967,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 3.125,
-                "ratioAfter": 5.1,
-                "habsCost": 125843,
+                "ratioBefore": 5.208333333,
+                "ratioAfter": 8.5,
+                "habsCost": 202248,
                 "rolls": {
                     "frequency": {
                         "points": 5,
@@ -11002,7 +11002,7 @@
             "added": {
                 "mp": -1,
                 "life": -59,
-                "ram": -2,
+                "ram": -62,
                 "tp": -3
             },
             "recipe": {
@@ -11013,7 +11013,7 @@
                 "29": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 132,
                 "items": 5,
@@ -11021,10 +11021,10 @@
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.745912349,
-                "breakProbability": 0.0067032,
-                "breakRisk": 0.0017032,
-                "ratioBefore": -4.275,
-                "ratioAfter": -2.725,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": -43.791666667,
+                "ratioAfter": -41.208333333,
                 "habsCost": 11236,
                 "rolls": {
                     "magic": {
@@ -11056,7 +11056,7 @@
             ],
             "family": 3,
             "added": {
-                "ram": -3
+                "ram": -18
             },
             "recipe": {
                 "23": 1,
@@ -11065,31 +11065,31 @@
                 "14": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 185,
                 "items": 4,
                 "power": 14,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.525635548,
-                "breakProbability": 0.007046881,
-                "breakRisk": 0.00334279,
-                "ratioBefore": -1.875,
-                "ratioAfter": -1.7,
+                "probability": 0.543452025,
+                "breakProbability": 0,
+                "breakRisk": 0,
+                "ratioBefore": -11.25,
+                "ratioAfter": -10.958333333,
                 "habsCost": 11236,
                 "rolls": {
                     "agility": {
                         "points": 3,
-                        "probability": 0.580917121
+                        "probability": 0.642012708
                     },
                     "life": {
                         "points": 2,
-                        "probability": 0.525635548
+                        "probability": 0.543452025
                     },
                     "strength": {
                         "points": 3,
-                        "probability": 0.580917121
+                        "probability": 0.642012708
                     }
                 }
             }
@@ -11111,31 +11111,31 @@
                 "25": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 104,
                 "items": 4,
                 "power": 98,
-                "fits": true,
+                "fits": false,
                 "overfilled": true,
-                "probability": 3.799e-6,
-                "breakProbability": 1,
-                "breakRisk": 0.999996201,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 1.225,
-                "habsCost": 38764,
+                "ratioAfter": 2.041666667,
+                "habsCost": 57116,
                 "rolls": {
                     "resistance": {
                         "points": 12,
-                        "probability": 3.799e-6
+                        "probability": 0
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 3.799e-6
+                        "probability": 0
                     },
                     "life": {
                         "points": 50,
-                        "probability": 3.799e-6
+                        "probability": 0
                     }
                 }
             }
@@ -11151,7 +11151,7 @@
             "family": 3,
             "added": {
                 "strength": 62,
-                "cores": 1
+                "cores": 106
             },
             "recipe": {
                 "6": 1,
@@ -11164,7 +11164,7 @@
                 "34": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 207,
                 "items": 8,
@@ -11174,9 +11174,9 @@
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 2.8,
-                "ratioAfter": 4.4625,
-                "habsCost": 111517,
+                "ratioBefore": 90.916666667,
+                "ratioAfter": 93.6875,
+                "habsCost": 2116582,
                 "rolls": {
                     "science": {
                         "points": 1,
@@ -11220,7 +11220,7 @@
                 "6": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 51,
                 "items": 1,
@@ -11228,10 +11228,10 @@
                 "fits": true,
                 "overfilled": false,
                 "probability": 0.95,
-                "breakProbability": 0.009512294,
-                "breakRisk": 0.000475615,
-                "ratioBefore": -1.2375,
-                "ratioAfter": -1.225,
+                "breakProbability": 0.009200444,
+                "breakRisk": 0.000460022,
+                "ratioBefore": -2.0625,
+                "ratioAfter": -2.041666667,
                 "habsCost": 11236,
                 "rolls": {
                     "science": {
@@ -11263,19 +11263,19 @@
                 "34": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 238,
                 "items": 8,
-                "power": 333,
+                "power": 213,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": -0.6625,
-                "ratioAfter": 3.5,
-                "habsCost": 89888,
+                "ratioBefore": -1.104166667,
+                "ratioAfter": 3.333333333,
+                "habsCost": 86143,
                 "rolls": {
                     "cores": {
                         "points": 2,
@@ -11313,27 +11313,27 @@
                 "31": 2
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 182,
                 "items": 5,
                 "power": 100,
-                "fits": true,
+                "fits": false,
                 "overfilled": true,
-                "probability": 1.524e-6,
-                "breakProbability": 1,
-                "breakRisk": 0.999998476,
+                "probability": 0,
+                "breakProbability": 0,
+                "breakRisk": 0,
                 "ratioBefore": 0,
-                "ratioAfter": 1.25,
-                "habsCost": 39326,
+                "ratioAfter": 2.083333333,
+                "habsCost": 58053,
                 "rolls": {
                     "magic": {
                         "points": 25,
-                        "probability": 1.524e-6
+                        "probability": 0
                     },
                     "frequency": {
                         "points": 25,
-                        "probability": 1.524e-6
+                        "probability": 0
                     }
                 }
             }
@@ -11350,7 +11350,7 @@
             "added": {
                 "tp": 6,
                 "magic": 72,
-                "ram": 3
+                "ram": 90
             },
             "recipe": {
                 "11": 1,
@@ -11363,19 +11363,19 @@
                 "10": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 263,
                 "items": 8,
-                "power": 180,
+                "power": 140,
                 "fits": false,
                 "overfilled": true,
                 "probability": 0,
                 "breakProbability": 0,
                 "breakRisk": 0,
-                "ratioBefore": 13.05,
-                "ratioAfter": 15.3,
-                "habsCost": 355058,
+                "ratioBefore": 128,
+                "ratioAfter": 130.916666667,
+                "habsCost": 2953195,
                 "rolls": {
                     "frequency": {
                         "points": 25,
@@ -11415,23 +11415,23 @@
                 "22": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 240,
                 "items": 7,
                 "power": 54,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.525635548,
+                "probability": 0.543452025,
                 "breakProbability": 0.0067032,
-                "breakRisk": 0.00317976,
-                "ratioBefore": -3.31875,
-                "ratioAfter": -2.83125,
+                "breakRisk": 0.003060333,
+                "ratioBefore": -5.53125,
+                "ratioAfter": -4.71875,
                 "habsCost": 11236,
                 "rolls": {
                     "frequency": {
                         "points": 5,
-                        "probability": 0.642012708
+                        "probability": 0.745912349
                     },
                     "wisdom": {
                         "points": 12,
@@ -11439,11 +11439,11 @@
                     },
                     "resistance": {
                         "points": 1,
-                        "probability": 0.525635548
+                        "probability": 0.543452025
                     },
                     "strength": {
                         "points": 6,
-                        "probability": 0.674929404
+                        "probability": 0.745912349
                     },
                     "magic": {
                         "points": 3,
@@ -11471,27 +11471,27 @@
                 "24": 1
             },
             "level": 106,
-            "capacity": 80,
+            "capacity": 48,
             "expected": {
                 "dose": 191,
                 "items": 6,
-                "power": 212,
-                "fits": false,
-                "overfilled": true,
-                "probability": 0,
-                "breakProbability": 0,
-                "breakRisk": 0,
-                "ratioBefore": -1.0875,
-                "ratioAfter": 1.5625,
-                "habsCost": 46349,
+                "power": 132,
+                "fits": true,
+                "overfilled": false,
+                "probability": 0.003592593,
+                "breakProbability": 1,
+                "breakRisk": 0.996407407,
+                "ratioBefore": -1.8125,
+                "ratioAfter": 0.9375,
+                "habsCost": 32304,
                 "rolls": {
                     "resistance": {
                         "points": 6,
-                        "probability": 0
+                        "probability": 0.003592593
                     },
                     "ram": {
                         "points": 2,
-                        "probability": 0
+                        "probability": 0.00610651
                     }
                 }
             }
