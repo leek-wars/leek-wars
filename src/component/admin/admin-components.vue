@@ -17,9 +17,9 @@
 								<!-- Capacité d'altération, recalculée EN DIRECT à partir des stats éditées :
 								     c'est l'effet le moins visible d'un changement de stat, alors que le
 								     puits vaut 0,2 × la puissance et conditionne tout le reste (#622). -->
-								<div class="capacity" :class="{ none: capacityOf(component) === 0 }">
-									{{ capacityOf(component) === 0 ? 'non altérable' : 'capacité ' + capacityOf(component) }}
-									<span v-if="component.capacity" class="override" title="Capacité forcée en base (component_template.capacity)">forcée</span>
+								<div class="capacity">
+									<span v-if="alterable(component)">capacité {{ capacityOf(component) }}</span>
+									<span v-else class="tag" title="Aucune famille d'altération : le serveur refuse toute tentative (not_alterable)">inaltérable</span>
 								</div>
 								<div v-for="(stat, s) in component.stats" :key="s" class="stat">
 									<img :src="'/image/charac/' + stat[0] + '.png'">
@@ -71,13 +71,24 @@ onMounted(() => {
 })
 
 /**
+ * Le composant est-il altérable ?
+ *
+ * C'est la FAMILLE qui décide, pas la capacité : sans famille, le serveur refuse toute
+ * tentative (`not_alterable`). Tester une capacité nulle serait faux, les pièces de
+ * récupération ayant au contraire un puits énorme (19 cœurs à niveau 1) — c'est bien pour ça
+ * qu'elles ont été exclues du registre (#622).
+ */
+function alterable(component: ComponentTemplate): boolean {
+	return LeekWars.alterations?.component_families?.[component.id] !== undefined
+}
+
+/**
  * Capacité d'altération du composant, telle que le serveur la calculera.
  *
  * Recalculée depuis les stats affichées plutôt que lue dans `component.capacity` : sur cette
  * page les stats sont en cours d'édition, et voir le puits bouger en même temps qu'elles est
- * tout l'intérêt. La colonne en base ne sert que de surcharge (le RGB), et prime alors.
- *
- * 0 = pas de puits, donc composant non altérable (les pièces de récupération).
+ * tout l'intérêt. La colonne en base ne sert que de surcharge, et prime alors (un seul
+ * composant l'utilise aujourd'hui, le RGB).
  */
 function capacityOf(component: ComponentTemplate): number {
 	if (component.capacity) return component.capacity
@@ -130,14 +141,10 @@ function updateComponent(component: ComponentTemplate) {
 		font-size: 12px;
 		color: var(--text-color-secondary);
 		margin-bottom: 5px;
-		&.none {
-			font-style: italic;
-		}
-		.override {
+		.tag {
 			background: var(--background-secondary);
 			border-radius: 3px;
-			padding: 0 4px;
-			margin-left: 4px;
+			padding: 1px 5px;
 		}
 	}
 	.stat {
