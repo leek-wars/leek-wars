@@ -95,12 +95,13 @@ const PROGRESS_BONUS = 2
 const PROGRESS_CAP = 0.2
 const MAX_PROBABILITY = 0.95
 const BREAK_COEFFICIENT = 0.01
-// Surcoût du SOMMET, en puissance sixième du remplissage visé : il divise par 10 la chance
-// d'une tentative à pleine charge et ne touche presque rien en dessous (-0,2 % à 30 %, -4 %
-// à 50 %, -24 % à 70 %). Monter DIFFICULTY_K aurait durci toute la courbe, y compris les
+// Surcoût du SOMMET, en puissance sixième du remplissage visé : il divise par 4 la chance
+// d'une tentative à pleine charge et ne touche presque rien en dessous (-0,1 % à 30 %, -2 %
+// à 50 %, -15 % à 70 %). Monter DIFFICULTY_K aurait durci toute la courbe, y compris les
 // premières altérations d'un joueur ordinaire, alors que le prix à corriger était celui du
-// sans-faute : une pièce exacte revenait à 1 258 altérations, on en veut dix fois plus (#622).
-const TOP_PENALTY = Math.log(10)
+// sans-faute. Calé à ln(10) d'abord, ramené à ln(4) : le tir final passe de 0,04 % à 0,1 %,
+// ce qui reste un mur sans mettre le 100 % hors de portée (#622).
+const TOP_PENALTY = Math.log(4)
 // Le puits n'est plus un mur : on autorise a tenter jusqu'a ce plafond, ou la reussite
 // devient infime et la casse quasi certaine. Au-dela, la tentative est refusee (#622).
 const OVERFILL_CAP = 1.3

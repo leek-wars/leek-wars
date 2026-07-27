@@ -476,36 +476,36 @@
                 "power": 193,
                 "fits": true,
                 "overfilled": true,
-                "probability": 1.1e-8,
+                "probability": 5.26e-7,
                 "breakProbability": 1,
-                "breakRisk": 0.999999989,
+                "breakRisk": 0.999999474,
                 "ratioBefore": 0,
                 "ratioAfter": 1.269736842,
                 "habsCost": 39770,
                 "rolls": {
                     "science": {
                         "points": 12,
-                        "probability": 1.4e-8
+                        "probability": 6.49e-7
                     },
                     "strength": {
                         "points": 12,
-                        "probability": 1.4e-8
+                        "probability": 6.49e-7
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 1.2e-8
+                        "probability": 5.4e-7
                     },
                     "mp": {
                         "points": 1,
-                        "probability": 1.5e-8
+                        "probability": 7.06e-7
                     },
                     "agility": {
                         "points": 4,
-                        "probability": 1.1e-8
+                        "probability": 5.26e-7
                     },
                     "magic": {
                         "points": 1,
-                        "probability": 1.2e-8
+                        "probability": 5.4e-7
                     }
                 }
             }
@@ -756,24 +756,24 @@
                 "power": 124,
                 "fits": true,
                 "overfilled": true,
-                "probability": 5.97e-7,
+                "probability": 8.885e-6,
                 "breakProbability": 1,
-                "breakRisk": 0.999999403,
+                "breakRisk": 0.999991115,
                 "ratioBefore": 0.381578947,
                 "ratioAfter": 1.197368421,
                 "habsCost": 38143,
                 "rolls": {
                     "agility": {
                         "points": 12,
-                        "probability": 5.97e-7
+                        "probability": 8.885e-6
                     },
                     "life": {
                         "points": 50,
-                        "probability": 1.213e-6
+                        "probability": 1.805e-5
                     },
                     "frequency": {
                         "points": 25,
-                        "probability": 6.97e-7
+                        "probability": 1.0376e-5
                     }
                 }
             }
@@ -951,28 +951,28 @@
                 "power": 178,
                 "fits": true,
                 "overfilled": true,
-                "probability": 1.902e-6,
+                "probability": 2.0207e-5,
                 "breakProbability": 1,
-                "breakRisk": 0.999998098,
+                "breakRisk": 0.999979793,
                 "ratioBefore": 0,
                 "ratioAfter": 1.171052632,
                 "habsCost": 37552,
                 "rolls": {
                     "magic": {
                         "points": 15,
-                        "probability": 2.286e-6
+                        "probability": 2.4289e-5
                     },
                     "ram": {
                         "points": 1,
-                        "probability": 2.069e-6
+                        "probability": 2.1982e-5
                     },
                     "resistance": {
                         "points": 12,
-                        "probability": 1.902e-6
+                        "probability": 2.0207e-5
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 2.113e-6
+                        "probability": 2.2445e-5
                     }
                 }
             }
@@ -1171,24 +1171,24 @@
                 "power": 50,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.297964627,
-                "breakProbability": 0.011548253,
-                "breakRisk": 0.008107282,
+                "probability": 0.298310733,
+                "breakProbability": 0.011534855,
+                "breakRisk": 0.008093884,
                 "ratioBefore": 0,
                 "ratioAfter": 0.328947368,
                 "habsCost": 18628,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.442084588
+                        "probability": 0.442598098
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.297964627
+                        "probability": 0.298310733
                     },
                     "agility": {
                         "points": 12,
-                        "probability": 0.39799859
+                        "probability": 0.398460892
                     }
                 }
             }
@@ -1225,16 +1225,16 @@
                 "power": 50,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.164463636,
-                "breakProbability": 0.030401857,
-                "breakRisk": 0.025401857,
+                "probability": 0.168220614,
+                "breakProbability": 0.029722873,
+                "breakRisk": 0.024722873,
                 "ratioBefore": 0.210526316,
                 "ratioAfter": 0.539473684,
                 "habsCost": 23359,
                 "rolls": {
                     "frequency": {
                         "points": 25,
-                        "probability": 0.164463636
+                        "probability": 0.168220614
                     }
                 }
             }
@@ -1409,24 +1409,24 @@
                 "power": 76,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.149542043,
-                "breakProbability": 0.02425355,
-                "breakRisk": 0.020626624,
+                "probability": 0.151698442,
+                "breakProbability": 0.023908784,
+                "breakRisk": 0.020281859,
                 "ratioBefore": 0,
                 "ratioAfter": 0.5,
                 "habsCost": 22472,
                 "rolls": {
                     "strength": {
                         "points": 3,
-                        "probability": 0.149542043
+                        "probability": 0.151698442
                     },
                     "life": {
                         "points": 60,
-                        "probability": 0.39481218
+                        "probability": 0.40050538
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 0.15762348
+                        "probability": 0.159896415
                     }
                 }
             }
@@ -1680,16 +1680,16 @@
                 "power": 6,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.346863702,
-                "breakProbability": 0.01592017,
-                "breakRisk": 0.010398041,
+                "probability": 0.347266608,
+                "breakProbability": 0.015901699,
+                "breakRisk": 0.01037957,
                 "ratioBefore": 0.289473684,
                 "ratioAfter": 0.328947368,
                 "habsCost": 18628,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.346863702
+                        "probability": 0.347266608
                     }
                 }
             }
@@ -1836,24 +1836,24 @@
                 "power": 84,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.139463153,
-                "breakProbability": 0.032956293,
-                "breakRisk": 0.028360105,
+                "probability": 0.14315112,
+                "breakProbability": 0.032107248,
+                "breakRisk": 0.02751106,
                 "ratioBefore": 0,
                 "ratioAfter": 0.552631579,
                 "habsCost": 23655,
                 "rolls": {
                     "frequency": {
                         "points": 25,
-                        "probability": 0.151716092
+                        "probability": 0.155728075
                     },
                     "agility": {
                         "points": 12,
-                        "probability": 0.139463153
+                        "probability": 0.14315112
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.222153783
+                        "probability": 0.228028422
                     }
                 }
             }
@@ -2229,32 +2229,32 @@
                 "power": 136,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.00287709,
-                "breakProbability": 1,
-                "breakRisk": 0.99712291,
+                "probability": 0.004603862,
+                "breakProbability": 0.747409725,
+                "breakRisk": 0.743968754,
                 "ratioBefore": 0,
                 "ratioAfter": 0.894736842,
                 "habsCost": 31343,
                 "rolls": {
                     "life": {
                         "points": 4,
-                        "probability": 0.005656894
+                        "probability": 0.009052049
                     },
                     "science": {
                         "points": 12,
-                        "probability": 0.003842999
+                        "probability": 0.00614949
                     },
                     "cores": {
                         "points": 1,
-                        "probability": 0.004180636
+                        "probability": 0.006689771
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.00287709
+                        "probability": 0.004603862
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0.003368487
+                        "probability": 0.005390186
                     }
                 }
             }
@@ -2546,7 +2546,7 @@
                 "power": 32,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.537543118,
+                "probability": 0.537543119,
                 "breakProbability": 0.006747227,
                 "breakRisk": 0.003120301,
                 "ratioBefore": -0.167763158,
@@ -2555,11 +2555,11 @@
                 "rolls": {
                     "agility": {
                         "points": 3,
-                        "probability": 0.537543118
+                        "probability": 0.537543119
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.762365011
+                        "probability": 0.762365012
                     },
                     "life": {
                         "points": 2,
@@ -2644,16 +2644,16 @@
                 "power": 6,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.564806214,
-                "breakProbability": 0.008852594,
-                "breakRisk": 0.003852594,
+                "probability": 0.564806306,
+                "breakProbability": 0.008852592,
+                "breakRisk": 0.003852592,
                 "ratioBefore": 0,
                 "ratioAfter": 0.075,
                 "habsCost": 12921,
                 "rolls": {
                     "resistance": {
                         "points": 3,
-                        "probability": 0.564806214
+                        "probability": 0.564806306
                     }
                 }
             }
@@ -3076,7 +3076,7 @@
                 "power": 4,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.51910598,
+                "probability": 0.519105987,
                 "breakProbability": 0.009162189,
                 "breakRisk": 0.004406042,
                 "ratioBefore": 0,
@@ -3085,11 +3085,11 @@
                 "rolls": {
                     "resistance": {
                         "points": 1,
-                        "probability": 0.51910598
+                        "probability": 0.519105987
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.51910598
+                        "probability": 0.519105987
                     }
                 }
             }
@@ -3422,24 +3422,24 @@
                 "power": 132,
                 "fits": true,
                 "overfilled": true,
-                "probability": 3.99e-6,
+                "probability": 3.3224e-5,
                 "breakProbability": 1,
-                "breakRisk": 0.99999601,
+                "breakRisk": 0.999966776,
                 "ratioBefore": -0.5,
                 "ratioAfter": 1.15,
                 "habsCost": 37079,
                 "rolls": {
                     "resistance": {
                         "points": 4,
-                        "probability": 3.99e-6
+                        "probability": 3.3224e-5
                     },
                     "science": {
                         "points": 12,
-                        "probability": 4.874e-6
+                        "probability": 4.058e-5
                     },
                     "frequency": {
                         "points": 50,
-                        "probability": 4.874e-6
+                        "probability": 4.058e-5
                     }
                 }
             }
@@ -3532,20 +3532,20 @@
                 "power": 30,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.285739286,
-                "breakProbability": 0.013627821,
-                "breakRisk": 0.009733817,
+                "probability": 0.286468314,
+                "breakProbability": 0.01359314,
+                "breakRisk": 0.009699136,
                 "ratioBefore": 0,
                 "ratioAfter": 0.375,
                 "habsCost": 19663,
                 "rolls": {
                     "strength": {
                         "points": 3,
-                        "probability": 0.285739286
+                        "probability": 0.286468314
                     },
                     "resistance": {
                         "points": 12,
-                        "probability": 0.366896505
+                        "probability": 0.367832596
                     }
                 }
             }
@@ -3698,20 +3698,20 @@
                 "power": 8,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.499998849,
-                "breakProbability": 0.0086071,
-                "breakRisk": 0.00430356,
+                "probability": 0.499999307,
+                "breakProbability": 0.008607092,
+                "breakRisk": 0.004303552,
                 "ratioBefore": 0,
                 "ratioAfter": 0.1,
                 "habsCost": 13483,
                 "rolls": {
                     "resistance": {
                         "points": 3,
-                        "probability": 0.552584187
+                        "probability": 0.552584693
                     },
                     "agility": {
                         "points": 1,
-                        "probability": 0.499998849
+                        "probability": 0.499999307
                     }
                 }
             }
@@ -4114,24 +4114,24 @@
                 "power": 40,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.145275248,
-                "breakProbability": 0.02425355,
-                "breakRisk": 0.020730109,
+                "probability": 0.147370121,
+                "breakProbability": 0.023908784,
+                "breakRisk": 0.020385344,
                 "ratioBefore": 0,
                 "ratioAfter": 0.5,
                 "habsCost": 22472,
                 "rolls": {
                     "resistance": {
                         "points": 7,
-                        "probability": 0.196101073
+                        "probability": 0.198928855
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.20615539
+                        "probability": 0.209128156
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.145275248
+                        "probability": 0.147370121
                     }
                 }
             }
@@ -4470,16 +4470,16 @@
                 "power": 6,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.001448284,
+                "probability": 0.002840379,
                 "breakProbability": 1,
-                "breakRisk": 0.998551716,
+                "breakRisk": 0.997159621,
                 "ratioBefore": 0.875,
                 "ratioAfter": 0.95,
                 "habsCost": 32584,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.001448284
+                        "probability": 0.002840379
                     }
                 }
             }
@@ -4509,16 +4509,16 @@
                 "power": 24,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.474817022,
-                "breakProbability": 0.010530372,
-                "breakRisk": 0.005530372,
+                "probability": 0.475134295,
+                "breakProbability": 0.010523341,
+                "breakRisk": 0.005523341,
                 "ratioBefore": 0,
                 "ratioAfter": 0.3,
                 "habsCost": 17978,
                 "rolls": {
                     "resistance": {
                         "points": 12,
-                        "probability": 0.474817022
+                        "probability": 0.475134295
                     }
                 }
             }
@@ -4725,20 +4725,20 @@
                 "power": 54,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.333679865,
-                "breakProbability": 0.010753088,
-                "breakRisk": 0.007164999,
+                "probability": 0.333935027,
+                "breakProbability": 0.010744871,
+                "breakRisk": 0.007156783,
                 "ratioBefore": 0,
                 "ratioAfter": 0.306818182,
                 "habsCost": 18131,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.333679865
+                        "probability": 0.333935027
                     },
                     "agility": {
                         "points": 24,
-                        "probability": 0.464982712
+                        "probability": 0.46533828
                     }
                 }
             }
@@ -4933,32 +4933,32 @@
                 "power": 193,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.088043462,
-                "breakProbability": 0.04075361,
-                "breakRisk": 0.037165521,
+                "probability": 0.091344843,
+                "breakProbability": 0.039280695,
+                "breakRisk": 0.035692606,
                 "ratioBefore": -0.494318182,
                 "ratioAfter": 0.585227273,
                 "habsCost": 24387,
                 "rolls": {
                     "mp": {
                         "points": 1,
-                        "probability": 0.122688517
+                        "probability": 0.12728899
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.214666131
+                        "probability": 0.222715505
                     },
                     "life": {
                         "points": 50,
-                        "probability": 0.134003404
+                        "probability": 0.139028154
                     },
                     "resistance": {
                         "points": 3,
-                        "probability": 0.088043462
+                        "probability": 0.091344843
                     },
                     "agility": {
                         "points": 3,
-                        "probability": 0.088043462
+                        "probability": 0.091344843
                     }
                 }
             }
@@ -5008,16 +5008,16 @@
                 "power": 100,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.191595058,
-                "breakProbability": 0.036386909,
-                "breakRisk": 0.029415357,
+                "probability": 0.197593704,
+                "breakProbability": 0.035282258,
+                "breakRisk": 0.028310706,
                 "ratioBefore": 0,
                 "ratioAfter": 0.568181818,
                 "habsCost": 24004,
                 "rolls": {
                     "ram": {
                         "points": 1,
-                        "probability": 0.191595058
+                        "probability": 0.197593704
                     }
                 }
             }
@@ -5069,28 +5069,28 @@
                 "power": 42,
                 "fits": true,
                 "overfilled": true,
-                "probability": 5.64e-7,
+                "probability": 7.939e-6,
                 "breakProbability": 1,
-                "breakRisk": 0.999999436,
+                "breakRisk": 0.999992061,
                 "ratioBefore": 0.954545455,
                 "ratioAfter": 1.193181818,
                 "habsCost": 38049,
                 "rolls": {
                     "life": {
                         "points": 2,
-                        "probability": 5.93e-7
+                        "probability": 8.345e-6
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 7.19e-7
+                        "probability": 1.0117e-5
                     },
                     "strength": {
                         "points": 12,
-                        "probability": 6.92e-7
+                        "probability": 9.741e-6
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 5.64e-7
+                        "probability": 7.939e-6
                     }
                 }
             }
@@ -5300,36 +5300,36 @@
                 "power": 169,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.000837131,
+                "probability": 0.001716828,
                 "breakProbability": 1,
-                "breakRisk": 0.999162869,
+                "breakRisk": 0.998283172,
                 "ratioBefore": 0,
                 "ratioAfter": 0.960227273,
                 "habsCost": 32814,
                 "rolls": {
                     "mp": {
                         "points": 1,
-                        "probability": 0.00122079
+                        "probability": 0.002503653
                     },
                     "frequency": {
                         "points": 1,
-                        "probability": 0.000876046
+                        "probability": 0.001796637
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.001026859
+                        "probability": 0.00210593
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.00087606
+                        "probability": 0.001796666
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.001074897
+                        "probability": 0.002204451
                     },
                     "resistance": {
                         "points": 1,
-                        "probability": 0.000837131
+                        "probability": 0.001716828
                     }
                 }
             }
@@ -5524,24 +5524,24 @@
                 "power": 173,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.513654117,
-                "breakProbability": 0.008570879,
-                "breakRisk": 0.004168412,
+                "probability": 0.513709841,
+                "breakProbability": 0.00856995,
+                "breakRisk": 0.004167482,
                 "ratioBefore": -0.761363636,
                 "ratioAfter": 0.221590909,
                 "habsCost": 16216,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.513654117
+                        "probability": 0.513709841
                     },
                     "mp": {
                         "points": 1,
-                        "probability": 0.583370705
+                        "probability": 0.583433992
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.513654117
+                        "probability": 0.513709841
                     }
                 }
             }
@@ -5588,20 +5588,20 @@
                 "power": 26,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.45860749,
-                "breakProbability": 0.00830013,
-                "breakRisk": 0.004493628,
+                "probability": 0.458611858,
+                "breakProbability": 0.008300051,
+                "breakRisk": 0.004493549,
                 "ratioBefore": 0,
                 "ratioAfter": 0.147727273,
                 "habsCost": 14556,
                 "rolls": {
                     "agility": {
                         "points": 1,
-                        "probability": 0.45860749
+                        "probability": 0.458611858
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.588863674
+                        "probability": 0.588869282
                     }
                 }
             }
@@ -5652,20 +5652,20 @@
                 "power": 16,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.321887558,
-                "breakProbability": 0.013864818,
-                "breakRisk": 0.009401906,
+                "probability": 0.322193751,
+                "breakProbability": 0.013851642,
+                "breakRisk": 0.009388729,
                 "ratioBefore": 0.227272727,
                 "ratioAfter": 0.318181818,
                 "habsCost": 18386,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.321887558
+                        "probability": 0.322193751
                     },
                     "frequency": {
                         "points": 5,
-                        "probability": 0.351820442
+                        "probability": 0.35215511
                     }
                 }
             }
@@ -5846,24 +5846,24 @@
                 "power": 32,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.433530838,
-                "breakProbability": 0.008201534,
-                "breakRisk": 0.004645916,
+                "probability": 0.433545189,
+                "breakProbability": 0.008201262,
+                "breakRisk": 0.004645644,
                 "ratioBefore": 0,
                 "ratioAfter": 0.181818182,
                 "habsCost": 15322,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.556664615
+                        "probability": 0.556683042
                     },
                     "resistance": {
                         "points": 1,
-                        "probability": 0.433530838
+                        "probability": 0.433545189
                     },
                     "strength": {
                         "points": 3,
-                        "probability": 0.453691511
+                        "probability": 0.45370653
                     }
                 }
             }
@@ -6049,28 +6049,28 @@
                 "power": 136,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.002021888,
-                "breakProbability": 1,
-                "breakRisk": 0.997978112,
+                "probability": 0.003458917,
+                "breakProbability": 0.991248189,
+                "breakRisk": 0.987819544,
                 "ratioBefore": 0.142045455,
                 "ratioAfter": 0.914772727,
                 "habsCost": 31793,
                 "rolls": {
                     "agility": {
                         "points": 12,
-                        "probability": 0.002596156
+                        "probability": 0.004441337
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.002021888
+                        "probability": 0.003458917
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.002541045
+                        "probability": 0.004347057
                     },
                     "ram": {
                         "points": 1,
-                        "probability": 0.004075633
+                        "probability": 0.006972332
                     }
                 }
             }
@@ -6122,24 +6122,24 @@
                 "power": 60,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.298294241,
-                "breakProbability": 0.01202869,
-                "breakRisk": 0.008440601,
+                "probability": 0.298723601,
+                "breakProbability": 0.012011401,
+                "breakRisk": 0.008423312,
                 "ratioBefore": 0,
                 "ratioAfter": 0.340909091,
                 "habsCost": 18897,
                 "rolls": {
                     "science": {
                         "points": 24,
-                        "probability": 0.434996035
+                        "probability": 0.435622162
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0.298294241
+                        "probability": 0.298723601
                     },
                     "strength": {
                         "points": 3,
-                        "probability": 0.298294241
+                        "probability": 0.298723601
                     }
                 }
             }
@@ -6188,20 +6188,20 @@
                 "power": 60,
                 "fits": true,
                 "overfilled": true,
-                "probability": 1.908e-6,
+                "probability": 2.0125e-5,
                 "breakProbability": 1,
-                "breakRisk": 0.999998092,
+                "breakRisk": 0.999979875,
                 "ratioBefore": 0.829545455,
                 "ratioAfter": 1.170454545,
                 "habsCost": 37538,
                 "rolls": {
                     "frequency": {
                         "points": 5,
-                        "probability": 1.908e-6
+                        "probability": 2.0125e-5
                     },
                     "life": {
                         "points": 50,
-                        "probability": 2.339e-6
+                        "probability": 2.4667e-5
                     }
                 }
             }
@@ -6408,24 +6408,24 @@
                 "power": 154,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.00508259,
-                "breakProbability": 0.866185859,
-                "breakRisk": 0.861783392,
+                "probability": 0.00766794,
+                "breakProbability": 0.574139566,
+                "breakRisk": 0.569737098,
                 "ratioBefore": 0,
                 "ratioAfter": 0.875,
                 "habsCost": 30899,
                 "rolls": {
                     "resistance": {
                         "points": 15,
-                        "probability": 0.005441217
+                        "probability": 0.008208989
                     },
                     "ram": {
                         "points": 1,
-                        "probability": 0.008048564
+                        "probability": 0.012142609
                     },
                     "strength": {
                         "points": 12,
-                        "probability": 0.00508259
+                        "probability": 0.00766794
                     }
                 }
             }
@@ -6675,28 +6675,28 @@
                 "power": 70,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.240504933,
-                "breakProbability": 0.014918983,
-                "breakRisk": 0.011330894,
+                "probability": 0.241378825,
+                "breakProbability": 0.01486497,
+                "breakRisk": 0.011276881,
                 "ratioBefore": 0,
                 "ratioAfter": 0.397727273,
                 "habsCost": 20174,
                 "rolls": {
                     "life": {
                         "points": 50,
-                        "probability": 0.375376226
+                        "probability": 0.376740181
                     },
                     "magic": {
                         "points": 4,
-                        "probability": 0.246033542
+                        "probability": 0.246927522
                     },
                     "science": {
                         "points": 3,
-                        "probability": 0.251685163
+                        "probability": 0.252599678
                     },
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.240504933
+                        "probability": 0.241378825
                     }
                 }
             }
@@ -6945,20 +6945,20 @@
                 "power": 14,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.506956228,
-                "breakProbability": 0.008803349,
-                "breakRisk": 0.004340436,
+                "probability": 0.506956345,
+                "breakProbability": 0.008803346,
+                "breakRisk": 0.004340434,
                 "ratioBefore": 0,
                 "ratioAfter": 0.079545455,
                 "habsCost": 13024,
                 "rolls": {
                     "frequency": {
                         "points": 5,
-                        "probability": 0.5679565
+                        "probability": 0.567956632
                     },
                     "strength": {
                         "points": 2,
-                        "probability": 0.506956228
+                        "probability": 0.506956345
                     }
                 }
             }
@@ -7008,20 +7008,20 @@
                 "power": 56,
                 "fits": true,
                 "overfilled": true,
-                "probability": 0.000152665,
+                "probability": 0.000468097,
                 "breakProbability": 1,
-                "breakRisk": 0.999847335,
+                "breakRisk": 0.999531903,
                 "ratioBefore": 0.715909091,
                 "ratioAfter": 1.034090909,
                 "habsCost": 34474,
                 "rolls": {
                     "frequency": {
                         "points": 25,
-                        "probability": 0.000221365
+                        "probability": 0.000678745
                     },
                     "magic": {
                         "points": 3,
-                        "probability": 0.000152665
+                        "probability": 0.000468097
                     }
                 }
             }
@@ -7218,28 +7218,28 @@
                 "power": 76,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.227276939,
-                "breakProbability": 0.017285163,
-                "breakRisk": 0.013356644,
+                "probability": 0.228631145,
+                "breakProbability": 0.017182781,
+                "breakRisk": 0.013254262,
                 "ratioBefore": 0,
                 "ratioAfter": 0.431818182,
                 "habsCost": 20940,
                 "rolls": {
                     "science": {
                         "points": 12,
-                        "probability": 0.266536271
+                        "probability": 0.2681244
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.254696333
+                        "probability": 0.256213916
                     },
                     "life": {
                         "points": 4,
-                        "probability": 0.227276939
+                        "probability": 0.228631145
                     },
                     "agility": {
                         "points": 12,
-                        "probability": 0.254696333
+                        "probability": 0.256213916
                     }
                 }
             }
@@ -7432,24 +7432,24 @@
                 "power": 54,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.473753004,
-                "breakProbability": 0.007573754,
-                "breakRisk": 0.003985666,
+                "probability": 0.473759321,
+                "breakProbability": 0.007573653,
+                "breakRisk": 0.003985565,
                 "ratioBefore": -0.150568182,
                 "ratioAfter": 0.15625,
                 "habsCost": 14747,
                 "rolls": {
                     "resistance": {
                         "points": 3,
-                        "probability": 0.473753004
+                        "probability": 0.473759321
                     },
                     "magic": {
                         "points": 12,
-                        "probability": 0.581279409
+                        "probability": 0.58128716
                     },
                     "agility": {
                         "points": 12,
-                        "probability": 0.581279409
+                        "probability": 0.58128716
                     }
                 }
             }
@@ -7539,24 +7539,24 @@
                 "power": 14,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.001464364,
+                "probability": 0.002683484,
                 "breakProbability": 1,
-                "breakRisk": 0.998535636,
+                "breakRisk": 0.997316516,
                 "ratioBefore": 0.777777778,
                 "ratioAfter": 0.933333333,
                 "habsCost": 32210,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.001830292
+                        "probability": 0.003354056
                     },
                     "frequency": {
                         "points": 1,
-                        "probability": 0.001464364
+                        "probability": 0.002683484
                     },
                     "science": {
                         "points": 3,
-                        "probability": 0.00160049
+                        "probability": 0.002932938
                     }
                 }
             }
@@ -7858,32 +7858,32 @@
                 "power": 70,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.015250633,
-                "breakProbability": 0.229755715,
-                "breakRisk": 0.226251795,
+                "probability": 0.018680254,
+                "breakProbability": 0.187573473,
+                "breakRisk": 0.184069553,
                 "ratioBefore": 0,
                 "ratioAfter": 0.777777778,
                 "habsCost": 28714,
                 "rolls": {
                     "wisdom": {
                         "points": 3,
-                        "probability": 0.01666832
+                        "probability": 0.020416755
                     },
                     "magic": {
                         "points": 1,
-                        "probability": 0.015250633
+                        "probability": 0.018680254
                     },
                     "strength": {
                         "points": 3,
-                        "probability": 0.01666832
+                        "probability": 0.020416755
                     },
                     "frequency": {
                         "points": 25,
-                        "probability": 0.021762244
+                        "probability": 0.026656221
                     },
                     "resistance": {
                         "points": 3,
-                        "probability": 0.01666832
+                        "probability": 0.020416755
                     }
                 }
             }
@@ -8348,24 +8348,24 @@
                 "power": 54,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.011651602,
-                "breakProbability": 0.300724318,
-                "breakRisk": 0.297220398,
+                "probability": 0.014815054,
+                "breakProbability": 0.236510793,
+                "breakRisk": 0.233006873,
                 "ratioBefore": 0.2,
                 "ratioAfter": 0.8,
                 "habsCost": 29214,
                 "rolls": {
                     "science": {
                         "points": 1,
-                        "probability": 0.011651602
+                        "probability": 0.014815054
                     },
                     "frequency": {
                         "points": 25,
-                        "probability": 0.016626524
+                        "probability": 0.021140684
                     },
                     "wisdom": {
                         "points": 1,
-                        "probability": 0.011651602
+                        "probability": 0.014815054
                     }
                 }
             }
@@ -8521,24 +8521,24 @@
                 "power": 70,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.015250633,
-                "breakProbability": 0.229755715,
-                "breakRisk": 0.226251795,
+                "probability": 0.018680254,
+                "breakProbability": 0.187573473,
+                "breakRisk": 0.184069553,
                 "ratioBefore": 0,
                 "ratioAfter": 0.777777778,
                 "habsCost": 28714,
                 "rolls": {
                     "life": {
                         "points": 62,
-                        "probability": 0.036345192
+                        "probability": 0.044518638
                     },
                     "resistance": {
                         "points": 3,
-                        "probability": 0.01666832
+                        "probability": 0.020416755
                     },
                     "wisdom": {
                         "points": 1,
-                        "probability": 0.015250633
+                        "probability": 0.018680254
                     }
                 }
             }
@@ -8665,20 +8665,20 @@
                 "power": 20,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.514718617,
-                "breakProbability": 0.006807448,
-                "breakRisk": 0.003303528,
+                "probability": 0.514718631,
+                "breakProbability": 0.006807447,
+                "breakRisk": 0.003303527,
                 "ratioBefore": -0.133333333,
                 "ratioAfter": 0.055555556,
                 "habsCost": 12484,
                 "rolls": {
                     "agility": {
                         "points": 1,
-                        "probability": 0.514718617
+                        "probability": 0.514718631
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.843240051
+                        "probability": 0.843240074
                     },
                     "magic": {
                         "points": 3,
@@ -8686,7 +8686,7 @@
                     },
                     "strength": {
                         "points": 1,
-                        "probability": 0.514718617
+                        "probability": 0.514718631
                     }
                 }
             }
@@ -8895,28 +8895,28 @@
                 "power": 176,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.343927248,
-                "breakProbability": 0.010187969,
-                "breakRisk": 0.006684049,
+                "probability": 0.34411048,
+                "breakProbability": 0.010182544,
+                "breakRisk": 0.006678624,
                 "ratioBefore": -1.666666667,
                 "ratioAfter": 0.288888889,
                 "habsCost": 17728,
                 "rolls": {
                     "agility": {
                         "points": 1,
-                        "probability": 0.343927248
+                        "probability": 0.34411048
                     },
                     "cores": {
                         "points": 1,
-                        "probability": 0.490774965
+                        "probability": 0.491036431
                     },
                     "life": {
                         "points": 50,
-                        "probability": 0.907470689
+                        "probability": 0.907954156
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.490774965
+                        "probability": 0.491036431
                     }
                 }
             }
@@ -8948,20 +8948,20 @@
                 "power": 26,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.490774965,
-                "breakProbability": 0.010187969,
-                "breakRisk": 0.005187969,
+                "probability": 0.491036431,
+                "breakProbability": 0.010182544,
+                "breakRisk": 0.005182544,
                 "ratioBefore": 0,
                 "ratioAfter": 0.288888889,
                 "habsCost": 17728,
                 "rolls": {
                     "resistance": {
                         "points": 12,
-                        "probability": 0.490774965
+                        "probability": 0.491036431
                     },
                     "life": {
                         "points": 2,
-                        "probability": 0.574393961
+                        "probability": 0.574699976
                     }
                 }
             }
@@ -9169,20 +9169,20 @@
                 "power": 32,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.276525089,
-                "breakProbability": 0.012671255,
-                "breakRisk": 0.009167335,
+                "probability": 0.277037496,
+                "breakProbability": 0.012647819,
+                "breakRisk": 0.009143899,
                 "ratioBefore": 0,
                 "ratioAfter": 0.355555556,
                 "habsCost": 19226,
                 "rolls": {
                     "wisdom": {
                         "points": 1,
-                        "probability": 0.276525089
+                        "probability": 0.277037496
                     },
                     "strength": {
                         "points": 15,
-                        "probability": 0.39459389
+                        "probability": 0.395325081
                     }
                 }
             }
@@ -9317,24 +9317,24 @@
                 "power": 112,
                 "fits": true,
                 "overfilled": true,
-                "probability": 5.61e-7,
+                "probability": 8.66e-6,
                 "breakProbability": 1,
-                "breakRisk": 0.999999439,
+                "breakRisk": 0.99999134,
                 "ratioBefore": 0.566666667,
                 "ratioAfter": 1.2,
                 "habsCost": 38202,
                 "rolls": {
                     "frequency": {
                         "points": 1,
-                        "probability": 5.61e-7
+                        "probability": 8.66e-6
                     },
                     "life": {
                         "points": 10,
-                        "probability": 7.19e-7
+                        "probability": 1.1091e-5
                     },
                     "tp": {
                         "points": 1,
-                        "probability": 7.31e-7
+                        "probability": 1.1277e-5
                     }
                 }
             }
@@ -9587,20 +9587,20 @@
                 "power": 8,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.499998849,
-                "breakProbability": 0.0086071,
-                "breakRisk": 0.00430356,
+                "probability": 0.499999307,
+                "breakProbability": 0.008607092,
+                "breakRisk": 0.004303552,
                 "ratioBefore": 0,
                 "ratioAfter": 0.1,
                 "habsCost": 13483,
                 "rolls": {
                     "strength": {
                         "points": 1,
-                        "probability": 0.499998849
+                        "probability": 0.499999307
                     },
                     "resistance": {
                         "points": 3,
-                        "probability": 0.552584187
+                        "probability": 0.552584693
                     }
                 }
             }
@@ -9799,20 +9799,20 @@
                 "power": 74,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.002445252,
+                "probability": 0.004341027,
                 "breakProbability": 1,
-                "breakRisk": 0.997554748,
+                "breakRisk": 0.995658973,
                 "ratioBefore": 0,
                 "ratioAfter": 0.925,
                 "habsCost": 32023,
                 "rolls": {
                     "life": {
                         "points": 50,
-                        "probability": 0.002445252
+                        "probability": 0.004341027
                     },
                     "strength": {
                         "points": 12,
-                        "probability": 0.002445252
+                        "probability": 0.004341027
                     }
                 }
             }
@@ -9987,20 +9987,20 @@
                 "power": 36,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.228831968,
-                "breakProbability": 0.01880655,
-                "breakRisk": 0.01450301,
+                "probability": 0.230579714,
+                "breakProbability": 0.018664,
+                "breakRisk": 0.014360461,
                 "ratioBefore": 0,
                 "ratioAfter": 0.45,
                 "habsCost": 21348,
                 "rolls": {
                     "agility": {
                         "points": 13,
-                        "probability": 0.265864817
+                        "probability": 0.267895408
                     },
                     "life": {
                         "points": 10,
-                        "probability": 0.228831968
+                        "probability": 0.230579714
                     }
                 }
             }
@@ -10153,16 +10153,16 @@
                 "power": 24,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.474817022,
-                "breakProbability": 0.010530372,
-                "breakRisk": 0.005530372,
+                "probability": 0.475134295,
+                "breakProbability": 0.010523341,
+                "breakRisk": 0.005523341,
                 "ratioBefore": 0,
                 "ratioAfter": 0.3,
                 "habsCost": 17978,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.474817022
+                        "probability": 0.475134295
                     }
                 }
             }
@@ -10727,20 +10727,20 @@
                 "power": 32,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.233966212,
-                "breakProbability": 0.015059612,
-                "breakRisk": 0.011536172,
+                "probability": 0.234845966,
+                "breakProbability": 0.015003198,
+                "breakRisk": 0.011479757,
                 "ratioBefore": 0,
                 "ratioAfter": 0.4,
                 "habsCost": 20225,
                 "rolls": {
                     "wisdom": {
                         "points": 15,
-                        "probability": 0.332013858
+                        "probability": 0.33326229
                     },
                     "life": {
                         "points": 2,
-                        "probability": 0.233966212
+                        "probability": 0.234845966
                     }
                 }
             }
@@ -10924,16 +10924,16 @@
                 "power": 24,
                 "fits": true,
                 "overfilled": false,
-                "probability": 0.474817022,
-                "breakProbability": 0.010530372,
-                "breakRisk": 0.005530372,
+                "probability": 0.475134295,
+                "breakProbability": 0.010523341,
+                "breakRisk": 0.005523341,
                 "ratioBefore": 0,
                 "ratioAfter": 0.3,
                 "habsCost": 17978,
                 "rolls": {
                     "wisdom": {
                         "points": 12,
-                        "probability": 0.474817022
+                        "probability": 0.475134295
                     }
                 }
             }
@@ -11118,24 +11118,24 @@
                 "power": 98,
                 "fits": true,
                 "overfilled": true,
-                "probability": 1.72e-7,
+                "probability": 3.799e-6,
                 "breakProbability": 1,
-                "breakRisk": 0.999999828,
+                "breakRisk": 0.999996201,
                 "ratioBefore": 0,
                 "ratioAfter": 1.225,
                 "habsCost": 38764,
                 "rolls": {
                     "resistance": {
                         "points": 12,
-                        "probability": 1.72e-7
+                        "probability": 3.799e-6
                     },
                     "wisdom": {
                         "points": 12,
-                        "probability": 1.72e-7
+                        "probability": 3.799e-6
                     },
                     "life": {
                         "points": 50,
-                        "probability": 1.72e-7
+                        "probability": 3.799e-6
                     }
                 }
             }
@@ -11320,20 +11320,20 @@
                 "power": 100,
                 "fits": true,
                 "overfilled": true,
-                "probability": 4.6e-8,
+                "probability": 1.524e-6,
                 "breakProbability": 1,
-                "breakRisk": 0.999999954,
+                "breakRisk": 0.999998476,
                 "ratioBefore": 0,
                 "ratioAfter": 1.25,
                 "habsCost": 39326,
                 "rolls": {
                     "magic": {
                         "points": 25,
-                        "probability": 4.6e-8
+                        "probability": 1.524e-6
                     },
                     "frequency": {
                         "points": 25,
-                        "probability": 4.6e-8
+                        "probability": 1.524e-6
                     }
                 }
             }
