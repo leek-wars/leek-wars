@@ -346,23 +346,46 @@
 		})
 	}
 
+	/**
+	 * L'inventaire, assemblé depuis les dix listes du fermier.
+	 *
+	 * Chaque liste est traitée défensivement, pour deux raisons vécues :
+	 *
+	 * - une liste ABSENTE de la réponse serveur (`.map` sur `undefined`) faisait planter le
+	 *   calcul, donc le panneau entier disparaissait ;
+	 * - un objet dont le TEMPLATE est inconnu des données de jeu casse le rendu plus loin
+	 *   (`LeekWars.items[template]` vaut `undefined`, et les composants qui l'affichent
+	 *   attendent un objet). C'est arrivé avec un cache IndexedDB antérieur aux altérations :
+	 *   36 objets inconnus suffisaient à vider un inventaire de 428.
+	 *
+	 * Dans les deux cas on préfère afficher ce qu'on sait afficher, et signaler le reste une
+	 * fois en console plutôt que de tout perdre.
+	 */
 	const inventory = computed(() => {
+		const farmer = store.state.farmer
+		if (!farmer) return []
 		const inventory = []
-		if (store.state.farmer) {
-			for (const weapon of store.state.farmer.weapons) {
-				inventory.push({type: ItemType.WEAPON, ...weapon})
+		const inconnus: number[] = []
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const listes: [ItemType, any[]][] = [
+			[ItemType.WEAPON, farmer.weapons], [ItemType.CHIP, farmer.chips],
+			[ItemType.POTION, farmer.potions], [ItemType.HAT, farmer.hats],
+			[ItemType.POMP, farmer.pomps], [ItemType.RESOURCE, farmer.resources],
+			[ItemType.COMPONENT, farmer.components], [ItemType.SCHEME, farmer.schemes],
+			[ItemType.ALTERATION, farmer.alterations], [ItemType.FIGHT_PACK, farmer.fight_packs],
+		]
+		for (const [type, liste] of listes) {
+			for (const item of (liste || [])) {
+				if (!LeekWars.items[item.template]) { inconnus.push(item.template); continue }
+				inventory.push({ type, ...item })
 			}
-			inventory.push(...store.state.farmer.chips.map(chip => ({type: ItemType.CHIP, ...chip})))
-			inventory.push(...store.state.farmer.potions.map(potion => ({type: ItemType.POTION, ...potion})))
-			inventory.push(...store.state.farmer.hats.map(hat => ({type: ItemType.HAT, ...hat})))
-			inventory.push(...store.state.farmer.pomps.map(pomp => ({type: ItemType.POMP, ...pomp})))
-			inventory.push(...store.state.farmer.resources.map(resource => ({type: ItemType.RESOURCE, ...resource})))
-			inventory.push(...store.state.farmer.components.map(p => ({type: ItemType.COMPONENT, ...p})))
-			inventory.push(...store.state.farmer.schemes.map(p => ({type: ItemType.SCHEME, ...p})))
-			inventory.push(...(store.state.farmer.alterations || []).map(p => ({type: ItemType.ALTERATION, ...p})))
-			inventory.push(...(store.state.farmer.fight_packs || []).map(p => ({type: ItemType.FIGHT_PACK, ...p})))
 		}
-		return withKnownTemplate(inventory)
+		if (inconnus.length) {
+			console.warn(`[Inventaire] ${inconnus.length} objet(s) ignoré(s), template inconnu des`
+				+ ` données de jeu : ${[...new Set(inconnus)].join(', ')}.`
+				+ ` Cache périmé ? indexedDB.deleteDatabase('leek-wars-data') puis recharger.`)
+		}
+		return inventory
 	})
 
 	const filtered_inventory = computed(() => {
