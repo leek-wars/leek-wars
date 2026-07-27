@@ -786,12 +786,16 @@ const I18nTWrapper = defineComponent({
 delete (app as any)._context.components['i18n-t']
 app.component('i18n-t', I18nTWrapper)
 
+// `env` est une PROPRIÉTÉ GLOBALE et non une donnée de mixin. Le mixin l'affectait dans
+// `created()` sur chaque composant, ce qui déclenchait « Cannot mutate <script setup> binding
+// "env" from Options API » sur les six composants qui importent déjà `env` en <script setup>,
+// et l'écriture y échouait silencieusement. En propriété globale, les templates y accèdent
+// toujours, et une liaison locale du même nom la masque proprement.
+app.config.globalProperties.env = env
+
 app.mixin({
 	data() {
 		return { LeekWars }
-	},
-	created() {
-		this.env = env
 	}
 })
 
