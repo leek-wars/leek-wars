@@ -16,6 +16,7 @@ import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
 import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, type ApiMember } from './leekwars-dts'
 import { buildLeekwarsPyi } from './leekwars-pyi'
+import { escapeMarkdownText } from './markdown-safe'
 import { pyComplete, pyDefinition, pyHover, pyResolveCompletion, pySetStub } from './pyright';
 // monaco-stripped importe la contribution TS pour ses effets de bord (enregistrement du langage), mais
 // n'assemble PAS le namespace `monaco.languages.typescript` (fait uniquement par `editor.main` complet,
@@ -186,6 +187,22 @@ monaco.editor.registerEditorOpener({
 
 const ANNOTATION_NAMES = new Set(['unused', 'deprecated', 'pure', 'nodiscard', 'override', 'tailrec', 'todo'])
 
+// Lien « Défini dans <fichier> ligne N » des survols (LeekScript et Python), cliquable via la commande
+// `jump`. Le chemin est ÉCHAPPÉ (escapeMarkdownText) : un nom de fichier est quasi libre côté serveur
+// et peut venir d'un dépôt git cloné, donc d'un tiers ; sans échappement, `"` ou `)` referme le lien
+// et le reste du nom est reparsé comme un SECOND lien markdown. Et la confiance est RESTREINTE à la
+// seule commande `jump` : même si une injection passait, aucune autre commande Monaco (type, paste...)
+// ne serait exécutable.
+function definedInLink(path: string, line: number, column: number): monaco.IMarkdownString {
+	const safePath = escapeMarkdownText(path)
+	const args = encodeURIComponent(JSON.stringify({ ai: path, line, column }))
+	const label = i18n.t('leekscript.defined_in', ['`' + safePath + '`', line], { escapeParameter: false })
+	return {
+		value: '[' + label + '](command:jump?' + args + ' "' + safePath + ':' + line + ':' + column + '")',
+		isTrusted: { enabledCommands: ['jump'] },
+	}
+}
+
 // --- Survol du NOM d'une classe de l'API (Debug, Field, Weapon...) ---
 // Les MEMBRES ont déjà leur fiche (resolvePolyglotSymbol -> DocumentationFunction/Constant) ; la
 // classe elle-même ne résout vers aucun symbole plat, donc n'avait AUCUN survol. On rend ici une
@@ -238,7 +255,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 				hover.location[3],
 				hover.location[4] + 2,
 			)
-			let details = ''
+			let details: monaco.IMarkdownString = { value: '' }
 			const text = model.getValueInRange(range)
 			const previousToken = text.includes('.') ? text.split('.')[0] : undefined
 			const mainToken = text.includes('.') ? text.split('.')[1] : text
@@ -249,8 +266,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 				if (defAi) {
 					const line = hover.defined[1]
 					const column = hover.defined[2]
-					const args = encodeURIComponent(JSON.stringify({ ai: defAi.path, line, column }))
-					details += "[" + i18n.t('leekscript.defined_in', [ '`' + defAi.path + '`', line ], { escapeParameter: false }) + "](command:jump?" + args + ' "' + defAi.path + ':' + line + ':' + column + '")'
+					details = definedInLink(defAi.path, line, column)
 				}
 				if (symbol) {
 					fileSystem.symbols[text] = symbol
@@ -260,7 +276,7 @@ monaco.languages.registerHoverProvider("leekscript", {
 				range: range,
 				contents: [
 					{ value: "```leekscript\n" + text + "\n```" },
-					{ value: details, isTrusted: true },
+					details,
 					{ value: "```leekscript\n" + hover.type + "\n```" },
 				],
 			}
@@ -328,11 +344,7 @@ monaco.languages.registerHoverProvider('python', {
 		if (def && defAi) {
 			const line = def.range.startLineNumber
 			const column = def.range.startColumn - 1 // la commande jump attend une colonne 0-based
-			const args = encodeURIComponent(JSON.stringify({ ai: defAi.path, line, column }))
-			contents.push({
-				value: '[' + i18n.t('leekscript.defined_in', ['`' + defAi.path + '`', line], { escapeParameter: false }) + '](command:jump?' + args + ' "' + defAi.path + ':' + line + ':' + column + '")',
-				isTrusted: true,
-			})
+			contents.push(definedInLink(defAi.path, line, column))
 		}
 		if (!contents.length) return null
 		return { range, contents }
@@ -367,7 +379,10 @@ function pyConstMembers() {
 }
 function pyItemDoc(path: string): monaco.IMarkdownString | undefined {
 	const flat = resolvePolyglotSymbol(path)
-	return flat ? { value: `📖 [Documentation](https://leekwars.com/help/documentation/${flat})`, isTrusted: true } : undefined
+	// Pas d'isTrusted : le lien est en https, Monaco le rend cliquable sans confiance. En marquer la
+	// chaîne de confiance contaminait la fusion avec la doc Pyright (docstring arbitraire) dans
+	// resolveCompletionPy, et y rendait exécutables des liens `command:`.
+	return flat ? { value: `📖 [Documentation](https://leekwars.com/help/documentation/${flat})` } : undefined
 }
 
 // Détecte un accès membre avant le mot courant (`Conteneur.`, `me.`, `Entity.Stat.`...) : renvoie le

@@ -147,10 +147,14 @@ async function loadPlayerPyFiles(out: Record<string, string>): Promise<void> {
 	}))
 }
 
-// Recalcule les extraPaths depuis les fichiers montés ; pousse la config au worker si ça change
-// (nouveau dossier). Les dossiers d'un fichier supprimé sont gardés : inoffensif.
+// Chemins de recherche = dossiers des IA d'ENTRÉE (assignées à un poireau), comme au runtime.
+function currentImportRoots(): string[] {
+	return importRoots(Object.values(fileSystem.leekAIs).filter(isPlayerPy))
+}
+
+// Recalcule les extraPaths ; pousse la config au worker si ça change (nouvelle IA d'entrée, renommage).
 function maybeUpdateExtraPaths(): void {
-	const next = importRoots(seeded)
+	const next = currentImportRoots()
 	if (next.join('\n') === extraPaths.join('\n')) return
 	extraPaths = next
 	connection?.sendNotification('workspace/didChangeConfiguration', { settings: { python: { analysis: pySettings() } } })
@@ -237,7 +241,7 @@ function ensure(): Promise<void> {
 		await Promise.race([playerFilesPromise, new Promise((resolve) => setTimeout(resolve, 10000))])
 		const playerFiles = { ...filesAcc }
 		for (const key of Object.keys(playerFiles)) seeded.add(key.slice(1))
-		extraPaths = importRoots(seeded) // prêt AVANT que le worker demande sa config
+		extraPaths = currentImportRoots() // prêt AVANT que le worker demande sa config
 		await conn.sendRequest('initialize', {
 			processId: null,
 			rootUri: 'file:///',
@@ -464,9 +468,12 @@ export async function resolveCompletionPy(item: monaco.languages.CompletionItem)
 	if (doc) {
 		const existing = item.documentation
 		const existingValue = typeof existing === 'string' ? existing : existing?.value
-		// isTrusted conservé lors de la fusion : la doc existante est le lien 📖 (command:) posé par
-		// monaco.ts, qui devient inerte sans lui.
-		item.documentation = existingValue ? { value: `${doc.value}\n\n${existingValue}`, isTrusted: true } : doc
+		// JAMAIS isTrusted ici : `doc.value` est la DOCSTRING du symbole, donc du contenu de fichier
+		// arbitraire (et potentiellement d'un tiers via un dépôt git cloné). Marquer la fusion de
+		// confiance rendait cliquable un `[…](command:…)` écrit dans une docstring, ce qui exécute une
+		// commande Monaco arbitraire (type/jump/...) sur un clic. La doc existante est le lien 📖 en
+		// https, qui n'a pas besoin de confiance pour rester cliquable.
+		item.documentation = existingValue ? { value: `${doc.value}\n\n${existingValue}` } : doc
 	}
 	return item
 }
