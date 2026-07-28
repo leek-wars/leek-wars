@@ -42,6 +42,12 @@ const pendingAnalyzes = new Map<number, PendingAnalyze>()
 // sinon la promesse ne se résoudrait jamais et l'indicateur d'analyse resterait allumé.
 const ANALYZE_TIMEOUT = 30_000
 
+// Au-delà de cette taille, analyze() et complete() répondent « pas de résultat » (null).
+// Surtout ne JAMAIS reject() sans raison ici : complete() remonte telle quelle à
+// provideCompletionItems (await sans catch), et le handler d'erreur par défaut de Monaco
+// crashe en boucle sur un rejet undefined (« can't access property "stack" », #11807887).
+const MAX_ANALYZE_CODE_SIZE = 60_000
+
 export class AnalyzerPromise {
 	// eslint-disable-next-line unicorn/no-thenable
 	public then!: (data: unknown) => void
@@ -155,8 +161,8 @@ class Analyzer {
 		if (language !== 'leekscript') {
 			return Promise.resolve(null)
 		}
-		if (code.length > 60_000) {
-			return Promise.reject()
+		if (code.length > MAX_ANALYZE_CODE_SIZE) {
+			return Promise.resolve(null)
 		}
 
 		// Deux analyses peuvent se chevaucher (le debounce de frappe est de 500 ms, une analyse de
@@ -323,9 +329,8 @@ class Analyzer {
 
 	public complete(ai: AI, code: string, line: number, column: number): Promise<CompletionResult | null> {
 
-		if (code.length > 60_000) {
-			// return { ...Promise.reject(), abort: () => null }
-			return Promise.reject()
+		if (code.length > MAX_ANALYZE_CODE_SIZE) {
+			return Promise.resolve(null)
 		}
 
 		const requestID = this.requestID++

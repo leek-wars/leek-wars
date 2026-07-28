@@ -297,3 +297,19 @@ describe('application des résultats dans le panneau', () => {
 		expect(a.warnings).toBe(1)
 	})
 })
+
+describe('fichiers trop gros (> 60 k)', () => {
+
+	beforeEach(() => { sent.length = 0 })
+
+	// Le garde de taille doit résoudre null (« pas de résultat »), JAMAIS rejeter undefined :
+	// complete() remonte à provideCompletionItems (await sans catch) → onUnexpectedError de
+	// Monaco, dont le handler par défaut crashe en boucle sur un rejet sans raison (#11807887).
+	it('analyze() et complete() résolvent null sans rien envoyer au daemon', async () => {
+		const analyzer = await freshAnalyzer()
+		const big = 'x'.repeat(60_001)
+		await expect(analyzer.analyze(ai('a.leek'), big)).resolves.toBe(null)
+		await expect(analyzer.complete(ai('a.leek'), big, 1, 1)).resolves.toBe(null)
+		expect(sent).toHaveLength(0)
+	})
+})

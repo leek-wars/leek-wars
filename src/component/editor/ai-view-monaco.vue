@@ -481,11 +481,12 @@ function setAnalyzerTimeout() {
 
 		const seq = ++analyzeSeq
 		analyzer.analyze(ai, ai.code).then((result) => {
+			// null = pas d'analyse (polyglot, ou fichier > MAX_ANALYZE_CODE_SIZE) : rien à appliquer.
 			if (!result) return
 			analyzer.applyAnalyzeResult(result as Parameters<typeof analyzer.applyAnalyzeResult>[0])
 			analyzer.updateTodos(ai)
 			analyzer.updateCount()
-		}).catch(() => { /* analyse rejetée (ex: code trop long) : rien à appliquer */ }).finally(() => {
+		}).finally(() => {
 			// L'indicateur ne se coupe que pour l'analyse la plus récente de cet éditeur : une analyse
 			// dépassée qui se résout entre-temps ne doit pas l'éteindre alors que la courante tourne encore.
 			if (seq === analyzeSeq) analyzing.value = false
