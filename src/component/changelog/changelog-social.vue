@@ -79,9 +79,9 @@ const FORMATS: SocialFormat[] = [
 
 const descriptions = ref<string[]>([])
 const included = ref<boolean[]>([])
-const socialDescriptions = ref<Record<string, { emoji: string, description: string }>>({})
+const socialDescriptions = ref<Record<string, { emoji: string, description: string, cover?: string }>>({})
 
-import('@/component/changelog/social-descriptions.json').then((module: { default: Record<string, { emoji: string, description: string }> }) => {
+import('@/component/changelog/social-descriptions.json').then((module: { default: Record<string, { emoji: string, description: string, cover?: string }> }) => {
 	socialDescriptions.value = module.default
 })
 
@@ -173,6 +173,7 @@ function saveSocialState() {
 
 watch([socialEntries, socialDescriptions], () => loadSocialState(), { immediate: true })
 watch([descriptions, included], () => saveSocialState(), { deep: true })
+watch(included, () => nextTick(() => { for (const f of FORMATS) { renderCoverCanvas(f) } }), { deep: true })
 
 // --- Rendering ---
 
@@ -381,6 +382,87 @@ function drawCaption(ctx: CanvasRenderingContext2D, text: string, description: s
 
 // --- Cover canvas ---
 
+interface CoverSlot { cx: number, cy: number, w: number, h: number, rot: number }
+
+// Collage slots per format (fractions of W/H), leaving the center free for the text
+const COVER_SLOTS: Record<string, CoverSlot[]> = {
+	square: [
+		{ cx: 0.20, cy: 0.13, w: 0.44, h: 0.26, rot: -5 },
+		{ cx: 0.63, cy: 0.10, w: 0.40, h: 0.24, rot: 3 },
+		{ cx: 0.82, cy: 0.26, w: 0.34, h: 0.22, rot: 7 },
+		{ cx: 0.12, cy: 0.91, w: 0.40, h: 0.24, rot: 5 },
+		{ cx: 0.52, cy: 0.95, w: 0.42, h: 0.24, rot: -3 },
+		{ cx: 0.91, cy: 0.89, w: 0.34, h: 0.24, rot: -7 },
+	],
+	feed: [
+		{ cx: 0.21, cy: 0.13, w: 0.48, h: 0.22, rot: -5 },
+		{ cx: 0.70, cy: 0.09, w: 0.42, h: 0.18, rot: 3 },
+		{ cx: 0.78, cy: 0.28, w: 0.40, h: 0.18, rot: 7 },
+		{ cx: 0.15, cy: 0.89, w: 0.40, h: 0.18, rot: 5 },
+		{ cx: 0.58, cy: 0.93, w: 0.42, h: 0.18, rot: -3 },
+		{ cx: 0.93, cy: 0.86, w: 0.32, h: 0.16, rot: -7 },
+	],
+	story: [
+		{ cx: 0.26, cy: 0.13, w: 0.46, h: 0.16, rot: -5 },
+		{ cx: 0.77, cy: 0.10, w: 0.40, h: 0.14, rot: 4 },
+		{ cx: 0.60, cy: 0.29, w: 0.54, h: 0.15, rot: -2 },
+		{ cx: 0.24, cy: 0.78, w: 0.44, h: 0.14, rot: 4 },
+		{ cx: 0.76, cy: 0.76, w: 0.42, h: 0.14, rot: -3 },
+		{ cx: 0.52, cy: 0.91, w: 0.48, h: 0.15, rot: -5 },
+	],
+}
+
+// First image of each included entry, in changelog order (most important features first).
+// An entry can override the image used in the collage with a "cover" field in social-descriptions.json.
+const coverImageUrls = computed<string[]>(() => socialEntries.value
+	.filter((e, i) => included.value[i] ?? true)
+	.slice(0, 6)
+	.map(e => {
+		const cover = socialDescriptions.value[e.imageNames[0]]?.cover
+		return cover ? `/image/changelog/${cover}.png` : e.imageUrls[0]
+	}))
+
+function drawCoverCollage(ctx: CanvasRenderingContext2D, imgs: HTMLImageElement[], format: SocialFormat, W: number, H: number) {
+	const slots = COVER_SLOTS[format.key] || []
+	const radius = 12
+	for (let i = 0; i < imgs.length && i < slots.length; i++) {
+		const img = imgs[i]
+		if (!img.width || !img.height) continue
+		const slot = slots[i]
+		const scale = Math.min(slot.w * W / img.width, slot.h * H / img.height)
+		const w = img.width * scale
+		const h = img.height * scale
+		ctx.save()
+		ctx.translate(slot.cx * W, slot.cy * H)
+		ctx.rotate(slot.rot * Math.PI / 180)
+
+		ctx.shadowColor = 'rgba(0,0,0,0.5)'
+		ctx.shadowBlur = 35
+		ctx.shadowOffsetY = 10
+		ctx.beginPath()
+		ctx.roundRect(-w / 2, -h / 2, w, h, radius)
+		ctx.fillStyle = '#222'
+		ctx.fill()
+		ctx.shadowColor = 'transparent'
+		ctx.shadowBlur = 0
+		ctx.shadowOffsetY = 0
+
+		ctx.save()
+		ctx.beginPath()
+		ctx.roundRect(-w / 2, -h / 2, w, h, radius)
+		ctx.clip()
+		ctx.drawImage(img, -w / 2, -h / 2, w, h)
+		ctx.restore()
+
+		ctx.strokeStyle = 'rgba(255,255,255,0.2)'
+		ctx.lineWidth = 1.5
+		ctx.beginPath()
+		ctx.roundRect(-w / 2, -h / 2, w, h, radius)
+		ctx.stroke()
+		ctx.restore()
+	}
+}
+
 function renderCoverCanvas(format: SocialFormat) {
 	const canvas = coverCanvasRefs[format.key]
 	if (!canvas) return
@@ -389,37 +471,49 @@ function renderCoverCanvas(format: SocialFormat) {
 	const { width: W, height: H } = format
 	const isStory = format.key === 'story'
 
-	drawBackground(ctx, W, H, 95, 173, 27)
+	loadImages(coverImageUrls.value).then(imgs => {
+		drawBackground(ctx, W, H, 95, 173, 27)
 
-	const safeTop = isStory ? 120 : 0
-	const safeBottom = isStory ? 100 : 0
+		const safeTop = isStory ? 120 : 0
+		const safeBottom = isStory ? 100 : 0
+		const centerY = (H + safeTop - safeBottom) / 2
 
-	const iconSize = isStory ? 160 : 140
-	const centerY = (H + safeTop - safeBottom) / 2
-	if (iconImage.value) {
-		ctx.drawImage(iconImage.value, (W - iconSize) / 2, centerY - iconSize - 60, iconSize, iconSize)
-	}
+		// Vignette behind the text so it stays readable (under the collage: no filter on the screenshots)
+		const vignette = ctx.createRadialGradient(W / 2, centerY, 0, W / 2, centerY, Math.max(W, H) * 0.5)
+		vignette.addColorStop(0, 'rgba(10, 20, 5, 0.5)')
+		vignette.addColorStop(0.55, 'rgba(10, 20, 5, 0.22)')
+		vignette.addColorStop(1, 'rgba(0,0,0,0)')
+		ctx.fillStyle = vignette
+		ctx.fillRect(0, 0, W, H)
 
-	const titleSize = isStory ? 120 : 100
-	ctx.font = `bold ${titleSize}px "Roboto", sans-serif`
-	ctx.fillStyle = '#ffffff'
-	ctx.textAlign = 'center'
-	ctx.textBaseline = 'middle'
-	ctx.fillText(`Update ${props.versionName}`, W / 2, centerY + 30)
+		drawCoverCollage(ctx, imgs, format, W, H)
 
-	const versionData = englishChangelog.value[props.version] as { title?: string, added?: string[], improved?: string[], fixed?: string[] } | undefined
-	if (versionData?.title && versionData.title !== 'WIP') {
-		const subSize = isStory ? 56 : 48
-		ctx.font = `400 ${subSize}px "Roboto", sans-serif`
-		ctx.fillStyle = 'rgba(255,255,255,0.6)'
-
-		const lines = wrapText(ctx, versionData.title, W - 100)
-		const lineH = subSize * 1.6
-		const subY = centerY + 30 + titleSize * 1.1
-		for (let i = 0; i < lines.length; i++) {
-			ctx.fillText(lines[i], W / 2, subY + i * lineH)
+		const iconSize = isStory ? 160 : 140
+		if (iconImage.value) {
+			ctx.drawImage(iconImage.value, (W - iconSize) / 2, centerY - iconSize - 60, iconSize, iconSize)
 		}
-	}
+
+		const titleSize = isStory ? 120 : 100
+		ctx.font = `bold ${titleSize}px "Roboto", sans-serif`
+		ctx.fillStyle = '#ffffff'
+		ctx.textAlign = 'center'
+		ctx.textBaseline = 'middle'
+		ctx.fillText(`Update ${props.versionName}`, W / 2, centerY + 30)
+
+		const versionData = englishChangelog.value[props.version] as { title?: string, added?: string[], improved?: string[], fixed?: string[] } | undefined
+		if (versionData?.title && versionData.title !== 'WIP') {
+			const subSize = isStory ? 56 : 48
+			ctx.font = `400 ${subSize}px "Roboto", sans-serif`
+			ctx.fillStyle = 'rgba(255,255,255,0.6)'
+
+			const lines = wrapText(ctx, versionData.title, W - 100)
+			const lineH = subSize * 1.6
+			const subY = centerY + 30 + titleSize * 1.1
+			for (let i = 0; i < lines.length; i++) {
+				ctx.fillText(lines[i], W / 2, subY + i * lineH)
+			}
+		}
+	})
 }
 
 // --- Entry canvas ---
