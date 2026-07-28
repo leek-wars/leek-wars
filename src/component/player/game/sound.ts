@@ -1,4 +1,5 @@
 import { Game } from '@/component/player/game/game'
+import { playAudio } from '@/model/audio'
 import { LeekWars } from '@/model/leekwars'
 
 // var _iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
@@ -69,7 +70,7 @@ class Sound {
 			this.changeVolume(game.sound ? game.volume : 0)
 			this.sound.playbackRate = game.speed
 			this.sound.currentTime = 0
-			this.sound.play()
+			playAudio(this.sound)
 		}
 	}
 	public loop(game: Game) {
@@ -81,10 +82,10 @@ class Sound {
 			} else {
 				this.sound.addEventListener('timeupdate', () => {
 					this.sound.currentTime = 0
-					this.sound.play()
+					playAudio(this.sound)
 				}, false)
 			}
-			this.sound.play()
+			playAudio(this.sound)
 		}
 	}
 	public stop() {

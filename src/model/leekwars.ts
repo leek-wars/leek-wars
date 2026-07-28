@@ -2,6 +2,7 @@ import packageJson from '@/../package.json'
 import { env } from '@/env'
 import { locale } from '@/locale'
 import { Arena } from '@/model/arena'
+import { playAudio } from '@/model/audio'
 import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, COMPLEXITIES } from '@/model/data'
 import { linkify, toChatLink } from '@/model/linkify'
 import { buildObjectApiModel } from '@/component/editor/leekwars-dts'
@@ -1408,7 +1409,7 @@ function lucky(isFake: boolean = false) {
 	if (!LeekWars.sfw) {
 		const audio = new Audio('/sound/move.mp3')
 		audio.volume = 0.4
-		audio.play()
+		playAudio(audio)
 		if (document.hidden) {
 			const cancel = () => {
 				audio.pause()

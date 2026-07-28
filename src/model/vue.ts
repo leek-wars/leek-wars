@@ -314,6 +314,14 @@ function isInitOrderCrash(m: string): boolean {
 	return m.includes('before initialization')
 }
 
+// Crawlers connus (Baiduspider-render, Googlebot… #11807436) : environnements headless
+// dégradés, erreurs non actionnables → leurs rapports partent en masqué. Propriété de
+// session (UA constant), évaluée une fois. Les génériques spider/crawler couvrent les
+// variantes (Baiduspider, Bytespider…) ; pas de /bot/i nu, qui matcherait des UA réels
+// (téléphones Cubot). À terme, cette classification aurait sa place côté serveur dans
+// ErrorController::shouldIgnoreClientError (couvre tous les canaux, modifiable à chaud).
+const IS_BOT = /googlebot|bingbot|yandex|duckduckbot|slurp|sogou|petalbot|semrush|ahrefs|applebot|facebookexternalhit|headlesschrome|crawler|spider/i.test(navigator.userAgent)
+
 // Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
 // Prédicat partagé entre le canal Vue (reportVueError) et le handler unhandledrejection,
 // pour qu'un même échec d'import() soit classé pareil quel que soit le canal d'arrivée.
@@ -524,7 +532,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// mesurer son volume sans créer d'issue GitHub ni noyer #admin/errors. Sans marqueur de traduction,
 	// on garde le rapport complet : un nextSibling/parentNode null « nu » peut être un vrai bug de
 	// patch, un TDZ « nu » une vraie régression de bundling (cycle d'import réintroduit).
-	const hidden = externallyInduced && interference.translation
+	const hidden = (externallyInduced && interference.translation) || IS_BOT
 	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit, hidden })
 
 	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
@@ -663,6 +671,14 @@ const app = createApp({
 				let detail: string
 				try { detail = JSON.stringify(event.reason)?.slice(0, 200) ?? String(event.reason) } catch { detail = '(unserializable)' }
 				reportHidden('unhandledrejection: ' + detail)
+				return
+			}
+			// Rejet de lecture média (HTMLMediaElement.play() sans catch, cf. model/audio.ts) :
+			// autoplay bloqué, codec absent (crawlers headless), lecture interrompue. Attendu,
+			// masqué — filet pour les sites d'appel qui n'utilisent pas playAudio (#11807436).
+			const name = event.reason.name
+			if (name === 'NotAllowedError' || name === 'NotSupportedError' || name === 'AbortError') {
+				reportHidden('unhandledrejection: ' + event.reason, event.reason.stack)
 				return
 			}
 			// Échec réseau banal (offline, requête annulée) : masqué, pas d'issue. Les échecs
