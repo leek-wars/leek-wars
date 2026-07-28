@@ -182,15 +182,19 @@ describe('Pyright bundlé accepte l\'API `Any` (anti-régression #4540)', () => 
 
 	it.runIf(hasBundledPyright)('Debug.mark(Cell) / mark(list) / markText ne sont PAS signalés incompatibles', () => {
 		const dir = mkdtempSync(join(tmpdir(), 'lwpy4540-'))
-		// Stub `leekwars` résolu comme module local (comme le worker le seede sous /leekwars.pyi).
-		writeFileSync(join(dir, 'leekwars.pyi'), buildLeekwarsPyi([cst('COLOR_BLUE'), cst('COLOR_RED')]))
-		// Code du rapport #4540 (+ variantes liste / markText), avec l'import injecté par pyright-inject.
+		// Stub monté comme __builtins__.pyi à la racine (comme le worker) : les noms de l'API doivent
+		// résoudre SANS import — le test vérifie donc aussi ce mécanisme, pas seulement les signatures.
+		writeFileSync(join(dir, '__builtins__.pyi'), buildLeekwarsPyi([cst('COLOR_BLUE'), cst('COLOR_RED')]))
+		// Code du rapport #4540 (+ variantes liste / markText), tel que le joueur l'écrit. La dernière
+		// ligne garde la stdlib sous surveillance : __builtins__.pyi REMPLACE le module builtins dans la
+		// résolution, print/len ne survivent que par le chaînage de scopes — un bump pyright/typeshed
+		// qui le casserait rendrait tout builtin « not defined » en prod.
 		writeFileSync(join(dir, 'ia.py'), [
-			'from leekwars import *',
 			'sud = Field.cellFromXY(17, 0)',
 			'Debug.mark(sud, Color.BLUE, 1)',
 			'Debug.mark([sud, sud], Color.BLUE, 1)',
 			'Debug.markText(sud, "hp", Color.RED)',
+			'print(len(str(sud.id)))',
 		].join('\n'))
 		writeFileSync(join(dir, 'pyrightconfig.json'), JSON.stringify({
 			typeCheckingMode: 'basic', reportMissingImports: 'none', typeshedPath,

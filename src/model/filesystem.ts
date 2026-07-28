@@ -224,6 +224,7 @@ class FileSystem {
 		this.ais[ai.path] = ai
 		folder.items.push(new AIItem(ai, folder.id))
 		this.sortFolder(folder)
+		emitter.emit('ai-created', ai.path)
 	}
 
 	public add_folder(folder: Folder, parent: Folder) {
@@ -284,6 +285,7 @@ class FileSystem {
 		removeAICache(ai.path)
 		this.bin.items.push(...item)
 		this.sortFolder(this.bin)
+		emitter.emit('ai-deleted', oldPath)
 		LeekWars.delete('ai/delete', {path: oldPath}).then((data) => {
 			if (data.trash_name && data.trash_name !== ai.name) {
 				delete this.ais[ai.path]
@@ -331,6 +333,7 @@ class FileSystem {
 		this.ais[ai.path] = ai
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
+		emitter.emit('ai-created', ai.path)
 		LeekWars.post('ai/restore', {trash_name: trashName}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 	}
 

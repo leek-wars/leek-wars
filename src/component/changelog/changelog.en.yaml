@@ -2,6 +2,7 @@
   title: "WIP"
   added:
     - "The LeekScript console becomes the Console: run JavaScript, TypeScript and Python interactively too, with state kept between lines."
+    - "#ai The Python editor becomes a real IDE: autocompletion of your functions, variables and modules with type inference, hover showing a symbol's type and where it is defined, Ctrl+click to go to definition, and import resolution across your AIs."
   improved:
     - "#ai The JavaScript, TypeScript and Python API is now 100% object-oriented: no more global functions or constants, everything goes through objects (Fight, me, Weapon.pistol, System.operations, Network, Color...). The LeekScript stdlib is replaced by the language natives (Math, JSON, random...)."
     - "#ai Sharper types across the JavaScript, TypeScript and Python API (thanks to Nyaleph): constant families are now named in signatures (Entity.Stat, Fight.Use, Item.Area...), Item finally carries what weapons and chips have in common, and registers are typed as text. Careful: an AI using the return value of Registers.delete, or a register value directly as a number, will now report an error. Use parseInt instead."

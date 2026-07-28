@@ -16,7 +16,7 @@ import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
 import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, type ApiMember } from './leekwars-dts'
 import { buildLeekwarsPyi } from './leekwars-pyi'
-import { pySetStub } from './pyright';
+import { pyComplete, pyDefinition, pyHover, pyResolveCompletion, pySetStub } from './pyright';
 // monaco-stripped importe la contribution TS pour ses effets de bord (enregistrement du langage), mais
 // n'assemble PAS le namespace `monaco.languages.typescript` (fait uniquement par `editor.main` complet,
 // non importé ici) -> `monaco.languages.typescript` est TOUJOURS undefined dans ce build. On récupère
@@ -300,30 +300,65 @@ function resolvePolyglotSymbol(path: string): string | undefined {
 }
 
 monaco.languages.registerHoverProvider('python', {
-	provideHover: (model, position) => {
+	provideHover: async (model, position) => {
 		const word = model.getWordAtPosition(position)
 		if (!word) return null
-		// Préfixe `Ident.` éventuel juste avant le mot (accès membre : Weapon.pistol, me.setWeapon...).
-		const before = model.getLineContent(position.lineNumber).slice(0, word.startColumn - 1)
-		const prefix = before.match(/([A-Za-z_$][\w$]*)\.\s*$/)
-		const path = prefix ? `${prefix[1]}.${word.word}` : word.word
+		const range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn)
+		// Préfixe pointé éventuel juste avant le mot, multi-segment (me.setWeapon, Entity.Stat.MAX_LIFE...) :
+		// même détection que la complétion (pyDotPath), hover à la position -> même startColumn de mot.
+		const dotPath = pyDotPath(model, position)
+		const path = dotPath ? `${dotPath}.${word.word}` : word.word
 		const flat = resolvePolyglotSymbol(path)
-		// Pas de symbole plat : c'est peut-être le NOM d'une classe de l'API (Debug, Field...).
-		if (!flat) return classHoverFor(word, position)
-		return {
-			range: new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
-			// 1re ligne = nom plat du symbole : le hook de carte (ai-view-monaco) le résout et monte la fiche.
-			contents: [{ value: flat }],
+		if (flat) {
+			return {
+				range,
+				// 1re ligne = nom plat du symbole : le hook de carte (ai-view-monaco) le résout et monte la fiche.
+				contents: [{ value: flat }],
+			}
 		}
+		// Nom d'une classe de l'API (Debug, Field...) : carte de classe.
+		const cls = classHoverFor(word, position)
+		if (cls) return cls
+		// Symbole du joueur : Pyright fournit le type (+ docstring), et la définition donne le lien de
+		// saut « défini dans <fichier> ligne N » (même commande `jump` que le hover LeekScript).
+		const [hover, def] = await Promise.all([pyHover(model, position), pyDefinition(model, position)])
+		const contents: monaco.IMarkdownString[] = []
+		if (hover) contents.push({ value: hover.contents })
+		const defAi = def ? fileSystem.getAIByPath(def.path) : null
+		if (def && defAi) {
+			const line = def.range.startLineNumber
+			const column = def.range.startColumn - 1 // la commande jump attend une colonne 0-based
+			const args = encodeURIComponent(JSON.stringify({ ai: defAi.path, line, column }))
+			contents.push({
+				value: '[' + i18n.t('leekscript.defined_in', ['`' + defAi.path + '`', line], { escapeParameter: false }) + '](command:jump?' + args + ' "' + defAi.path + ':' + line + ':' + column + '")',
+				isTrusted: true,
+			})
+		}
+		if (!contents.length) return null
+		return { range, contents }
+	},
+})
+
+// Ctrl+clic / F12 sur un symbole python : saut à la définition via Pyright. Seuls les fichiers du
+// joueur sont des cibles (les stubs sont filtrés côté client) ; l'ouverture d'un autre fichier passe
+// par le même mécanisme que le LeekScript (URI file:///<path> -> onglet éditeur).
+monaco.languages.registerDefinitionProvider('python', {
+	provideDefinition: async (model, position) => {
+		const def = await pyDefinition(model, position)
+		if (!def) return null
+		const defAi = fileSystem.getAIByPath(def.path)
+		if (!defAi) return null
+		return { uri: monaco.Uri.file(defAi.path), range: def.range }
 	},
 })
 
 // --- Autocomplétion des IA polyglot Python ---
-// Monaco n'a pas de language service Python (juste la coloration) : on fournit un CompletionItemProvider
-// alimenté par le modèle de l'API objet (buildObjectApiModel, même source que le leekwars.d.ts) + les
-// constantes des game data. Sans inférence de types : après `Conteneur.` on liste ses membres/constantes,
-// après `me.` les membres de Me/Entity, après une autre variable l'union des membres d'instance, et sans
-// point les points d'entrée (conteneurs de l'API objet + fonctions plates). JS/TS ont, eux, le service TS.
+// Deux étages. Chemin principal : Pyright (le worker LSP qui valide déjà les .py, cf pyright-client),
+// qui voit le code du joueur (fonctions, variables, classes, avec inférence : `w = me.weapon` puis `w.`
+// -> membres de Weapon) ET l'API via le stub leekwars.pyi. Repli si le worker est indisponible (boot
+// échoué, doc pas encore ouvert) : la complétion statique historique bâtie sur le modèle de l'API objet
+// (buildObjectApiModel, même source que le leekwars.d.ts) + les constantes des game data — sans
+// inférence ni symboles du joueur, mais l'API reste proposée. JS/TS ont, eux, le service TS de Monaco.
 let _pyConstMembers: { src: unknown, val: Record<string, { name: string, isNamespace: boolean, full?: string }[]> } | null = null
 function pyConstMembers() {
 	const src = LeekWars.constants ?? []
@@ -335,69 +370,96 @@ function pyItemDoc(path: string): monaco.IMarkdownString | undefined {
 	return flat ? { value: `📖 [Documentation](https://leekwars.com/help/documentation/${flat})`, isTrusted: true } : undefined
 }
 
+// Détecte un accès membre avant le mot courant (`Conteneur.`, `me.`, `Entity.Stat.`...) : renvoie le
+// chemin pointé, partagé par l'enrichissement doc du chemin Pyright et par la complétion statique.
+function pyDotPath(model: monaco.editor.ITextModel, position: monaco.Position): string | null {
+	const word = model.getWordUntilPosition(position)
+	const before = model.getLineContent(position.lineNumber).slice(0, word.startColumn - 1)
+	return before.match(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\.\s*$/)?.[1] ?? null
+}
+
+function staticPythonCompletions(model: monaco.editor.ITextModel, position: monaco.Position): monaco.languages.CompletionItem[] {
+	const K = monaco.languages.CompletionItemKind
+	const word = model.getWordUntilPosition(position)
+	const range = {
+		startLineNumber: position.lineNumber, endLineNumber: position.lineNumber,
+		startColumn: word.startColumn, endColumn: word.endColumn,
+	}
+	const dotPath = pyDotPath(model, position)
+	const apiModel = buildObjectApiModel()
+	const constByPath = pyConstMembers()
+	const suggestions: monaco.languages.CompletionItem[] = []
+
+	const pushApiMember = (m: ApiMember, ownerPath: string) => {
+		suggestions.push({
+			label: m.name,
+			kind: m.kind === 'method' ? K.Method : K.Property,
+			detail: m.detail, insertText: m.name, range,
+			documentation: pyItemDoc(ownerPath === 'me' ? 'me.' + m.name : m.container + '.' + m.name),
+		})
+	}
+	const pushConst = (c: { name: string, isNamespace: boolean, full?: string }, path: string) => {
+		suggestions.push({
+			label: c.name,
+			kind: c.isNamespace ? K.Module : K.EnumMember,
+			detail: c.isNamespace ? `${path}.${c.name}` : (c.full ?? c.name),
+			insertText: c.name, range,
+			documentation: c.full ? pyItemDoc(`${path}.${c.name}`) : undefined,
+		})
+	}
+
+	if (dotPath) {
+		const path = dotPath
+		if (apiModel.singletons.includes(path)) {
+			for (const m of apiModel.members[path] ?? []) pushApiMember(m, path)
+			for (const c of constByPath[path] ?? []) pushConst(c, path)
+		} else if (apiModel.classes.includes(path)) {
+			// Nom de CLASSE : membres statiques (Weapon.getAll...) + constantes (Weapon.pistol...).
+			for (const m of apiModel.statics[path] ?? []) pushApiMember(m, path)
+			for (const c of constByPath[path] ?? []) pushConst(c, path)
+		} else if (constByPath[path]) {
+			// Sous-conteneur de constantes (Entity.Stat, Fight.Type...).
+			for (const c of constByPath[path]) pushConst(c, path)
+		} else {
+			// variable non typée : `me` -> membres de Me+Entity ; sinon union des membres d'instance.
+			const union = path === 'me' ? apiModel.meMembers : apiModel.instanceUnion
+			for (const m of union) pushApiMember(m, path)
+		}
+	} else {
+		// Points d'entrée globaux : les conteneurs de l'API objet (Fight, Weapon, Entity, System...).
+		// Plus AUCUNE fonction plate : l'API est 100% objet.
+		const containers = new Set<string>([
+			...apiModel.singletons, ...apiModel.classes,
+			...Object.keys(constByPath).filter((k) => !k.includes('.')),
+		])
+		for (const name of containers) {
+			suggestions.push({ label: name, kind: K.Class, detail: 'API de combat', insertText: name, range })
+		}
+	}
+	return suggestions
+}
+
 monaco.languages.registerCompletionItemProvider('python', {
 	triggerCharacters: ['.'],
-	provideCompletionItems: (model, position) => {
-		const K = monaco.languages.CompletionItemKind
-		const word = model.getWordUntilPosition(position)
-		const range = {
-			startLineNumber: position.lineNumber, endLineNumber: position.lineNumber,
-			startColumn: word.startColumn, endColumn: word.endColumn,
-		}
-		const before = model.getLineContent(position.lineNumber).slice(0, word.startColumn - 1)
-		const dot = before.match(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\.\s*$/)
-		const apiModel = buildObjectApiModel()
-		const constByPath = pyConstMembers()
-		const suggestions: monaco.languages.CompletionItem[] = []
-
-		const pushApiMember = (m: ApiMember, ownerPath: string) => {
-			suggestions.push({
-				label: m.name,
-				kind: m.kind === 'method' ? K.Method : K.Property,
-				detail: m.detail, insertText: m.name, range,
-				documentation: pyItemDoc(ownerPath === 'me' ? 'me.' + m.name : m.container + '.' + m.name),
-			})
-		}
-		const pushConst = (c: { name: string, isNamespace: boolean, full?: string }, path: string) => {
-			suggestions.push({
-				label: c.name,
-				kind: c.isNamespace ? K.Module : K.EnumMember,
-				detail: c.isNamespace ? `${path}.${c.name}` : (c.full ?? c.name),
-				insertText: c.name, range,
-				documentation: c.full ? pyItemDoc(`${path}.${c.name}`) : undefined,
-			})
-		}
-
-		if (dot) {
-			const path = dot[1]
-			if (apiModel.singletons.includes(path)) {
-				for (const m of apiModel.members[path] ?? []) pushApiMember(m, path)
-				for (const c of constByPath[path] ?? []) pushConst(c, path)
-			} else if (apiModel.classes.includes(path)) {
-				// Nom de CLASSE : membres statiques (Weapon.getAll...) + constantes (Weapon.pistol...).
-				for (const m of apiModel.statics[path] ?? []) pushApiMember(m, path)
-				for (const c of constByPath[path] ?? []) pushConst(c, path)
-			} else if (constByPath[path]) {
-				// Sous-conteneur de constantes (Entity.Stat, Fight.Type...).
-				for (const c of constByPath[path]) pushConst(c, path)
-			} else {
-				// variable non typée : `me` -> membres de Me+Entity ; sinon union des membres d'instance.
-				const union = path === 'me' ? apiModel.meMembers : apiModel.instanceUnion
-				for (const m of union) pushApiMember(m, path)
+	provideCompletionItems: async (model, position) => {
+		const fromPyright = await pyComplete(model, position)
+		if (fromPyright) {
+			// Lien vers la doc LW sur les membres de l'API. Seulement après un point : les listes sans
+			// point sont grosses (builtins, mots-clés) et quasi toutes hors API -> résolutions inutiles.
+			const dotPath = pyDotPath(model, position)
+			if (dotPath) {
+				for (const sug of fromPyright.suggestions) {
+					if (sug.documentation) continue
+					const label = typeof sug.label === 'string' ? sug.label : sug.label.label
+					const doc = pyItemDoc(`${dotPath}.${label}`)
+					if (doc) sug.documentation = doc
+				}
 			}
-		} else {
-			// Points d'entrée globaux : les conteneurs de l'API objet (Fight, Weapon, Entity, System...).
-			// Plus AUCUNE fonction plate : l'API est 100% objet.
-			const containers = new Set<string>([
-				...apiModel.singletons, ...apiModel.classes,
-				...Object.keys(constByPath).filter((k) => !k.includes('.')),
-			])
-			for (const name of containers) {
-				suggestions.push({ label: name, kind: K.Class, detail: 'API de combat', insertText: name, range })
-			}
+			return fromPyright
 		}
-		return { suggestions }
+		return { suggestions: staticPythonCompletions(model, position) }
 	},
+	resolveCompletionItem: (item) => pyResolveCompletion(item),
 })
 
 monaco.languages.registerDefinitionProvider("leekscript", {

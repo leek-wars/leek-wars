@@ -2,10 +2,12 @@
 // Pendant Python de `leekwars-dts.ts` (le .d.ts TS) : MÊME source (CONST_CONTAINERS + API objet) pour
 // que l'API vue par Pyright reste alignée sur celle du moteur, sans redéfinir les symboles à la main.
 //
-// Le stub est exposé comme module `leekwars` ; le client injecte `from leekwars import *` en tête du
-// document envoyé à Pyright -> les noms runtime (Fight, Weapon, System...) sont résolus SANS import.
-// L'API est 100% OBJET : AUCUNE fonction ni constante plate n'est émise (le runtime ne les expose
-// plus) ; un appel plat (getLife()) produit « "getLife" is not defined », comme au combat.
+// Le stub est monté comme `__builtins__.pyi` à la racine de la FS du worker : Pyright fusionne ses
+// symboles dans le scope builtins de TOUS les fichiers -> les noms runtime (Fight, Weapon, System...)
+// sont résolus SANS import, dans le fichier principal comme dans les modules importés — exactement la
+// sémantique du generator (noms publics posés sur les builtins). L'API est 100% OBJET : AUCUNE
+// fonction ni constante plate n'est émise (le runtime ne les expose plus) ; un appel plat (getLife())
+// produit « "getLife" is not defined », comme au combat.
 //
 // Nullabilité : on N'émet PAS d'`Optional`/`| None` sur l'API objet (getNearestEnemy -> Entity, pas
 // Entity | None). Pyright traite None strictement (pas d'équivalent « strictNullChecks off ») ; or le
