@@ -20,3 +20,17 @@ export function escapeMarkdownText(text: string): string {
 		.replace(/[`[\]()"'<>]/g, (c) => '\\' + c)
 		.replace(/[\r\n]+/g, ' ')
 }
+
+/**
+ * Fusionne la documentation d'un item de complétion venue de Pyright (`fromServer`, c'est-à-dire la
+ * DOCSTRING du symbole, donc du contenu de fichier arbitraire) avec celle déjà posée côté client
+ * (`existing`, le lien 📖 en https).
+ *
+ * Le résultat n'est JAMAIS de confiance, et c'est tout l'intérêt d'isoler cette fonction : dans
+ * Monaco, une chaîne markdown de confiance rend cliquables les liens `command:`, donc une docstring
+ * `[…](command:type?…)` deviendrait une commande exécutable en un clic (insertion de code chez la
+ * victime). Un lien https reste cliquable sans confiance : rien n'est perdu.
+ */
+export function mergeCompletionDocumentation(fromServer: string, existing?: string): { value: string } {
+	return { value: existing ? `${fromServer}\n\n${existing}` : fromServer }
+}

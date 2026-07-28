@@ -13,6 +13,7 @@ import * as monaco from 'monaco-editor'
 import { BrowserMessageReader, BrowserMessageWriter, createMessageConnection, type MessageConnection } from 'vscode-jsonrpc/browser'
 import type { CompletionItem as LspCompletionItem, CompletionList as LspCompletionList, Diagnostic, Hover as LspHover, Location as LspLocation, MarkupContent, PublishDiagnosticsParams, ConfigurationParams, Range as LspRange } from 'vscode-languageserver-protocol'
 import { importRoots } from './pyright-map'
+import { mergeCompletionDocumentation } from './markdown-safe'
 import { getLanguageForPath } from './file-types'
 import { fileSystem } from '@/model/filesystem'
 import { emitter } from '@/model/emitter'
@@ -468,12 +469,9 @@ export async function resolveCompletionPy(item: monaco.languages.CompletionItem)
 	if (doc) {
 		const existing = item.documentation
 		const existingValue = typeof existing === 'string' ? existing : existing?.value
-		// JAMAIS isTrusted ici : `doc.value` est la DOCSTRING du symbole, donc du contenu de fichier
-		// arbitraire (et potentiellement d'un tiers via un dépôt git cloné). Marquer la fusion de
-		// confiance rendait cliquable un `[…](command:…)` écrit dans une docstring, ce qui exécute une
-		// commande Monaco arbitraire (type/jump/...) sur un clic. La doc existante est le lien 📖 en
-		// https, qui n'a pas besoin de confiance pour rester cliquable.
-		item.documentation = existingValue ? { value: `${doc.value}\n\n${existingValue}` } : doc
+		// Fusion déléguée à markdown-safe : elle garantit l'absence d'isTrusted (la docstring venue de
+		// Pyright est du contenu de fichier arbitraire) et ce contrat y est testé.
+		item.documentation = mergeCompletionDocumentation(doc.value, existingValue)
 	}
 	return item
 }
