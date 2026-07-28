@@ -159,12 +159,29 @@ function reportHidden(message: string, stack?: string) {
 	} catch { /* best effort */ }
 }
 
-// Suppress Monaco internal error when hovering markers on a disposed editor
+// Erreurs hors canal Vue : throw dans un listener natif, un timer, ou un callback
+// post-flush que le scheduler Vue appelle SANS wrapper d'erreur. Historiquement seul le
+// bruit Monaco était traité ici : tout le reste était INVISIBLE (ni rapport, ni
+// recordEvent, ni récupération). Or la famille corruption-DOM (#4652, erreur 11807081)
+// naît d'un patch interrompu par un throw : l'arbre de vnodes garde des nœuds jamais
+// montés (el=null) et le re-render suivant crashe en nextSibling(null) — le crash
+// VISIBLE est donc le 2e ordre, et son throw racine peut fuir hors du canal Vue.
+// On route désormais tout vers reportVueError : trail de diagnostic complet, throttle,
+// et récupération hard-reload si le message est de la famille corruption-DOM.
 window.addEventListener('error', (event) => {
+	// Monaco : survol de markers sur un éditeur disposé, bruit connu → masqué.
 	if (event.error?.message?.includes('InstantiationService has been disposed')) {
 		reportHidden(event.error.message, event.error.stack)
 		event.preventDefault()
+		return
 	}
+	// Erreur cross-origin opaque ("Script error.") ou événement sans Error attaché
+	// (erreur de chargement de ressource) : volume mesuré en masqué, pas d'issue.
+	if (!event.error) {
+		if (event.message) { reportHidden('window: ' + event.message) }
+		return
+	}
+	reportVueError(event.error, null, 'window-error', 'window')
 })
 
 let lastErrorSent = 0
@@ -216,10 +233,14 @@ function findNullElVnodePath(instance: unknown): string | null {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const label = (vn: any): string => {
 		const t = vn?.type
-		if (t == null) return 'vnode'
-		if (typeof t === 'symbol') return t.description || 'Fragment'
-		if (typeof t === 'string') return t
-		return t.name || t.__name || t.__file || 'Component'
+		let base: string
+		if (t == null) base = 'vnode'
+		else if (typeof t === 'symbol') base = t.description || 'Fragment'
+		else if (typeof t === 'string') base = t
+		else base = t.name || t.__name || t.__file || 'Component'
+		// La clé identifie la BRANCHE d'un v-if/v-else (le compilateur assigne key 0/1/…) :
+		// indispensable pour savoir quelle branche du conditionnel est le nœud corrompu.
+		return vn?.key != null ? base + '#' + String(vn.key) : base
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const visit = (vn: any, depth: number): string[] | null => {
@@ -234,6 +255,18 @@ function findNullElVnodePath(instance: unknown): string | null {
 				if (c && typeof c === 'object' && 'type' in c) {
 					const r = visit(c, depth + 1)
 					if (r) return [label(vn), ...r]
+				}
+			}
+		}
+		// Un patch interrompu (throw pendant unmount/mount d'une branche) laisse dans
+		// dynamicChildren des vnodes JAMAIS montés, parfois absents de `children`
+		// (blocs optimisés). Même descente que children ; le préfixe dyn: signale que
+		// le nœud n'était atteignable que par le bloc optimisé (#4652).
+		if (Array.isArray(vn.dynamicChildren)) {
+			for (const c of vn.dynamicChildren) {
+				if (c && typeof c === 'object' && 'type' in c) {
+					const r = visit(c, depth + 1)
+					if (r) return [label(vn), 'dyn:' + r[0], ...r.slice(1)]
 				}
 			}
 		}
@@ -279,6 +312,17 @@ function isDomCorruptionCrash(m: string): boolean {
 // DOM : diagnostic d'interférence attaché, masqué si traduction active (voir reportVueError).
 function isInitOrderCrash(m: string): boolean {
 	return m.includes('before initialization')
+}
+
+// Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
+// Prédicat partagé entre le canal Vue (reportVueError) et le handler unhandledrejection,
+// pour qu'un même échec d'import() soit classé pareil quel que soit le canal d'arrivée.
+function isChunkLoadError(m: string): boolean {
+	return m.includes('Failed to fetch dynamically imported module') ||
+		m.includes('error loading dynamically imported module') ||
+		m.includes('Loading chunk') ||
+		m.includes('Loading CSS chunk') ||
+		m.includes('Unable to preload CSS')
 }
 
 // Empreintes DOM d'interférence externe (moteurs de traduction, extensions), collées aux
@@ -345,14 +389,10 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		}
 	} catch { /* empty */ }
 
-	// Échecs de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
-	// On les logge en masqué SANS recharger : la récupération après déploiement est gérée par le
-	// handler `vite:preloadError` (HEAD-checké) qui fire pour le même échec et ne recharge que sur un vrai 404.
-	if (e?.message?.includes('Failed to fetch dynamically imported module') ||
-		e?.message?.includes('error loading dynamically imported module') ||
-		e?.message?.includes('Loading chunk') ||
-		e?.message?.includes('Loading CSS chunk') ||
-		e?.message?.includes('Unable to preload CSS')) {
+	// Échecs de chargement de chunk/CSS : loggés en masqué SANS recharger, la récupération
+	// après déploiement est gérée par le handler `vite:preloadError` (HEAD-checké) qui fire
+	// pour le même échec et ne recharge que sur un vrai 404.
+	if (isChunkLoadError(e?.message || '')) {
 		recordEvent('chunk', e?.message)
 		reportHidden(e?.message || String(e), e?.stack)
 		return
@@ -607,12 +647,33 @@ const app = createApp({
 			emitter.emit('htmlclick')
 		})
 
-		// Ignore Monaco "Canceled" errors (normal behavior when switching files/canceling operations)
+		// Rejets de promesse non gérés. Même logique que le listener 'error' global :
+		// avant, seuls deux bruits Monaco étaient traités et tout le reste était invisible.
 		window.addEventListener('unhandledrejection', (event) => {
+			// Monaco : annulation normale au changement de fichier → masqué.
 			if (event.reason?.message === 'Canceled' || event.reason?.message === 'Model not found') {
 				reportHidden(event.reason.message, event.reason.stack)
 				event.preventDefault()
+				return
 			}
+			// Rejet non-Error (payload API, valeur brute) : mesuré en masqué, sans issue.
+			// NB : `Error` est shadowé dans ce module par le composant error.vue (import
+			// ligne 3), d'où le globalThis explicite.
+			if (!(event.reason instanceof globalThis.Error)) {
+				let detail: string
+				try { detail = JSON.stringify(event.reason)?.slice(0, 200) ?? String(event.reason) } catch { detail = '(unserializable)' }
+				reportHidden('unhandledrejection: ' + detail)
+				return
+			}
+			// Échec réseau banal (offline, requête annulée) : masqué, pas d'issue. Les échecs
+			// de chunk (import() sans catch) passent au travers : reportVueError les classe
+			// avec le même prédicat que le canal Vue (recordEvent 'chunk' + masqué).
+			const m = event.reason.message || ''
+			if (!isChunkLoadError(m) && (m.includes('NetworkError') || m.includes('Failed to fetch') || m.includes('Load failed'))) {
+				reportHidden('unhandledrejection: ' + m, event.reason.stack)
+				return
+			}
+			reportVueError(event.reason, null, 'unhandledrejection', 'window')
 		})
 
 		emitter.on('loaded', () => {
