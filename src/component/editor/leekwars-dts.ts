@@ -440,7 +440,8 @@ export const OBJECT_MEMBER_LS: Record<string, string> = {
 	'Cell.path': 'getPath', 'Cell.onSameLine': 'isOnSameLine',
 	// Field
 	'Field.type': 'getMapType', 'Field.cellFromXY': 'getCellFromXY', 'Field.getObstacles': 'getObstacles',
-	'Field.distance': 'getDistance', 'Field.cellDistance': 'getCellDistance', 'Field.pathLength': 'getPathLength',
+	'Field.distance': 'getCellDistance', 'Field.cellDistance': 'getCellDistance',
+	'Field.euclideanDistance': 'getDistance', 'Field.pathLength': 'getPathLength',
 	'Field.lineOfSight': 'lineOfSight', 'Field.onSameLine': 'isOnSameLine', 'Field.path': 'getPath',
 	// Fight
 	'Fight.me': 'getEntity', 'Fight.turn': 'getTurn', 'Fight.id': 'getFightID', 'Fight.type': 'getFightType',
@@ -977,8 +978,11 @@ declare namespace Field {
 	const type: Field.Type;
 	function cellFromXY(x: number, y: number): Cell | null;
 	function getObstacles(): Cell[];
+	/** Distance en nombre de cases, comme Cell.distance et Entity.distance (alias : cellDistance). */
 	function distance(a: Cell | Entity | number, b: Cell | Entity | number): number;
 	function cellDistance(a: Cell | Entity | number, b: Cell | Entity | number): number;
+	/** Distance à vol d'oiseau (réel, non entier). */
+	function euclideanDistance(a: Cell | Entity | number, b: Cell | Entity | number): number;
 	function pathLength(a: Cell | Entity | number, b: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): number;
 	function lineOfSight(a: Cell | Entity | number, b: Cell | Entity | number, ignoredEntities?: Entity | number | (Entity | number)[]): boolean;
 	/** Les deux cases sont-elles alignées (même ligne ou colonne). */

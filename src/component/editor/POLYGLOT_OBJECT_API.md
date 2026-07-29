@@ -95,8 +95,9 @@ Sous-conteneurs de constantes : `Fight.Type`, `Fight.Context`, `Fight.Boss`, `Fi
 | `type` | `number` | Type de carte (`Field.<MAP>`). |
 | `cellFromXY(x, y)` | `Cell \| null` | Case aux coordonnées `(x, y)`. |
 | `getObstacles()` | `Cell[]` | Cases obstacle. |
-| `distance(a, b)` | `number` | Distance à vol d'oiseau. |
+| `distance(a, b)` | `number` | Distance en cases (alias de `cellDistance`). |
 | `cellDistance(a, b)` | `number` | Distance en cases. |
+| `euclideanDistance(a, b)` | `number` | Distance à vol d'oiseau (réel). |
 | `pathLength(a, b, ignoredCells?)` | `number` | Longueur du chemin. |
 | `lineOfSight(a, b, ignoredEntities?)` | `boolean` | Ligne de vue dégagée. |
 | `onSameLine(a, b)` | `boolean` | Les deux cases sont alignées. |

@@ -14,6 +14,7 @@
     - "La modalità preferita in arena non cambia più da sola: il comando /br della chat iscriveva senza preferenza, e un cambio di modalità dal menu veniva dimenticato alla successiva iscrizione dall'orto."
     - "Gli ostacoli delle mappe dei boss (bastioni del castello, torii...) sono ora disegnati con la loro dimensione reale sulla mappa degli spostamenti del rapporto, senza più buchi che sembravano attraversabili (grazie a TheScout)."
     - "Il ruolo referente diventa discreto come gli altri ruoli in modalità discreta: nome senza grassetto nella chat e badge di grado sobrio (grazie a Portevent)."
+    - "#ai API JavaScript, TypeScript e Python: Field.distance restituisce ora una distanza in numero di caselle, come Cell.distance e Entity.distance, invece della distanza in linea d'aria. La distanza in linea d'aria resta disponibile con Field.euclideanDistance (grazie a GSoMan)."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."

@@ -14,6 +14,7 @@
     - "Le mode préféré en arène ne change plus tout seul : la commande /br du chat inscrivait sans préférence, et un changement de mode depuis le menu était oublié à l'inscription suivante depuis le potager."
     - "Les obstacles des cartes de boss (remparts du château, torii...) s'affichent maintenant avec leur taille réelle sur la carte des déplacements du rapport, sans trous qui semblaient traversables (merci à TheScout)."
     - "Le rôle référent devient discret comme les autres rôles en mode discret : pseudo sans gras dans le chat et badge de grade sobre (merci à Portevent)."
+    - "#ai API JavaScript, TypeScript et Python : Field.distance renvoie maintenant une distance en nombre de cases, comme Cell.distance et Entity.distance, au lieu de la distance à vol d'oiseau. Le vol d'oiseau reste disponible avec Field.euclideanDistance (merci à GSoMan)."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."

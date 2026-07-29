@@ -183,6 +183,7 @@ const CLASSES: ClassSpec[] = [
 		'def getObstacles(self) -> list[Cell]: ...',
 		'def distance(self, a: CellLike, b: CellLike) -> int: ...',
 		'def cellDistance(self, a: CellLike, b: CellLike) -> int: ...',
+		'def euclideanDistance(self, a: CellLike, b: CellLike) -> float: ...',
 		'def pathLength(self, a: CellLike, b: CellLike, ignoredCells: list = ...) -> int: ...',
 		'def lineOfSight(self, a: CellLike, b: CellLike, ignoredEntities: Any = ...) -> bool: ...',
 		'def onSameLine(self, a: CellLike, b: CellLike) -> bool: ...',
