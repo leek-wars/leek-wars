@@ -53,8 +53,8 @@ declare class Message {
 	readonly raw: any[];
 	/**
 	 * Entité alliée qui a envoyé le message. Toujours définie.
-	 * Renvoie l'id de l'entité auteur du message message.
-	 * @returns L'id de l'entité auteur du message message.
+	 * Renvoie l'entité auteur du message message.
+	 * @returns L'entité auteur du message message.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getMessageAuthor)
 	 */
 	readonly author: Entity;
@@ -117,7 +117,7 @@ declare class Cell {
 	readonly obstacle: boolean;
 	/**
 	 * Renvoie l'entité qui se trouve sur la cellule cell.
-	 * @returns L'id de l'entité se trouvant sur la cellule, ou -1 si la cellule ne comporte pas d'entité.
+	 * @returns L'entité se trouvant sur la cellule, ou -1 si la cellule ne comporte pas d'entité.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEntityOnCell)
 	 */
 	readonly entity: Entity | null;
@@ -298,7 +298,7 @@ declare class Weapon extends Item {
 	 * @param weapon (optionnel) L'arme à tester.
 	 * @param cell La cellule cible.
 	 * @param from (optionnel) La cellule depuis laquelle l'arme est utilisée.
-	 * @returns Le tableau contenant les ids de toutes les cellules qui seront affectées.
+	 * @returns Le tableau contenant toutes les cellules qui seront affectées.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponEffectiveArea)
 	 */
 	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
@@ -444,7 +444,7 @@ declare class Chip extends Item {
 	 * @param chip La puce à tester.
 	 * @param cell La cellule cible.
 	 * @param from (optionnel) La cellule depuis laquelle la puce est utilisée.
-	 * @returns Le tableau contenant les ids de toutes les cellules qui seront affectés.
+	 * @returns Le tableau contenant toutes les cellules qui seront affectées.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChipEffectiveArea)
 	 */
 	effectiveArea(cell: Cell | Entity | number, from?: Cell | Entity | number): Cell[];
@@ -643,25 +643,25 @@ declare class Entity {
 	readonly ram: number;
 	/**
 	 * Retourne la cellule où se trouve l'entité d'id entity. Utilisez getCell() sans paramètre pour récupérer votre cellule.
-	 * @returns Le numéro de la cellule où se trouve l'entité entity.
+	 * @returns La cellule où se trouve l'entité entity.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCell)
 	 */
 	readonly cell: Cell;
 	/**
 	 * Renvoie l'arme actuellement équipée l'entité entity.
-	 * @returns L'id de l'arme actuellement équipée sur l'entité entity, null si l'entité n'a pas d'arme équipée ou si l'entité n'existe pas.
+	 * @returns L'arme actuellement équipée sur l'entité entity, null si l'entité n'a pas d'arme équipée ou si l'entité n'existe pas.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeapon)
 	 */
 	readonly weapon: Weapon | null;
 	/**
 	 * Renvoie les armes de l'entité d'id entity.
-	 * @returns Un tableau contenant les ids des armes de l'entité entity.
+	 * @returns Un tableau contenant les armes de l'entité entity.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeapons)
 	 */
 	readonly weapons: Weapon[];
 	/**
 	 * Renvoie les puces de l'entité d'id entity.
-	 * @returns Un tableau contenant les ids des puces de l'entité entity.
+	 * @returns Un tableau contenant les puces de l'entité entity.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChips)
 	 */
 	readonly chips: Chip[];
@@ -682,14 +682,14 @@ declare class Entity {
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getStates) */
 	readonly states: State.Type[];
 	/**
-	 * Renvoie la liste des ids des invocations actuellement en vie de l'entité d'id entity.
-	 * @returns La liste des ids des invocations de l'entité d'id entity.
+	 * Renvoie la liste des invocations actuellement en vie de l'entité d'id entity.
+	 * @returns La liste des invocations de l'entité d'id entity.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getSummons)
 	 */
 	readonly summons: Entity[];
 	/**
 	 * Renvoie l'entité a invoqué l'entité entity, s'il s'agit d'une invocation.
-	 * @returns L'id de l'entité a invoqué entity s'il s'agit d'une invocation, null sinon.
+	 * @returns L'entité qui a invoqué entity s'il s'agit d'une invocation, null sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getSummoner)
 	 */
 	readonly summoner: Entity | null;
@@ -1055,7 +1055,7 @@ declare class Me extends Entity {
 	 * Renvoie les entités qui seront affectées si l'arme weapon est utilisée sur la cellule cell.
 	 * @param weapon (optionnel) L'arme à tester.
 	 * @param cell La cellule cible.
-	 * @returns Le tableau contenant les ids de tous les entités qui seront affectées.
+	 * @returns Le tableau contenant toutes les entités qui seront affectées.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponTargets)
 	 */
 	weaponTargets(cell: Cell | Entity | number, weapon?: Weapon | number): Entity[];
@@ -1064,7 +1064,7 @@ declare class Me extends Entity {
 	 * Renvoie les entités qui seront affectées si la puce chip est utilisée sur la cellule cell.
 	 * @param chip La puce à tester.
 	 * @param cell La cellule cible.
-	 * @returns Le tableau contenant les ids de tous les entités qui seront affectées.
+	 * @returns Le tableau contenant toutes les entités qui seront affectées.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChipTargets)
 	 */
 	chipTargets(chip: Chip | number, cell: Cell | Entity | number): Entity[];
@@ -1108,8 +1108,8 @@ declare const Registers: {
 declare namespace Fight {
 	/**
 	 * L'IA courante (votre entité).
-	 * Renvoie l'id de votre entité.
-	 * @returns L'id de votre entité.
+	 * Renvoie votre entité.
+	 * @returns Votre entité.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEntity)
 	 */
 	const me: Me;
@@ -1166,45 +1166,45 @@ declare namespace Fight {
 	const enemiesLife: number;
 	/**
 	 * Renvoie l'entité ennemie la plus proche de votre entité.
-	 * @returns L'id de l'entité ennemie la plus proche.
+	 * @returns L'entité ennemie la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestEnemy)
 	 */
 	function getNearestEnemy(): Entity | null;
 	/**
 	 * Renvoie l'entité alliée la plus proche de votre entité.
-	 * @returns L'id de l'entité alliée la plus proche.
+	 * @returns L'entité alliée la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestAlly)
 	 */
 	function getNearestAlly(): Entity | null;
 	/**
 	 * Détermine l'ennemi le plus éloigné de votre entité, à vol d'oiseau.
-	 * @returns L'id de l'entité ennemie la plus éloignée.
+	 * @returns L'entité ennemie la plus éloignée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFarthestEnemy)
 	 */
 	function getFarthestEnemy(): Entity | null;
 	/**
 	 * Détermine l'allié le plus éloigné de votre entité, à vol d'oiseau.
-	 * @returns L'id de l'entité alliée la plus éloignée.
+	 * @returns L'entité alliée la plus éloignée.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFarthestAlly)
 	 */
 	function getFarthestAlly(): Entity | null;
 	/**
 	 * Renvoie l'entité ennemie la plus proche de l'entité fourni en paramètre.
 	 * @param entity L'id de l'entité dont on veut connaitre l'ennemi le plus proche.
-	 * @returns L'id de l'entité ennemie la plus proche.
+	 * @returns L'entité ennemie la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestEnemyTo)
 	 */
 	function getNearestEnemyTo(target: Entity | number): Entity | null;
 	/**
 	 * Renvoie l'entité alliée la plus proche de l'entité fourni en paramètre.
 	 * @param entity L'id de l'entité dont on veut connaitre l'allié le plus proche.
-	 * @returns L'id de l'entitée alliée la plus proche.
+	 * @returns L'entité alliée la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestAllyTo)
 	 */
 	function getNearestAllyTo(target: Entity | number): Entity | null;
 	/**
 	 * Renvoie les entités ennemies (vivantes ou mortes) dans le combat.
-	 * @returns Un tableau contenant les ids de tous les entités ennemies.
+	 * @returns Un tableau contenant toutes les entités ennemies.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEnemies)
 	 */
 	function getEnemies(): Entity[];
@@ -1216,13 +1216,13 @@ declare namespace Fight {
 	function getAllies(): Entity[];
 	/**
 	 * Retourne un tableau de tous vos ennemis vivants dans le combat.
-	 * @returns Un tableau contenant les ids de tous vos ennemis vivants.
+	 * @returns Un tableau contenant tous vos ennemis vivants.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAliveEnemies)
 	 */
 	function getAliveEnemies(): Entity[];
 	/**
 	 * Retourne un tableau de tous vos alliés vivants dans le combat.
-	 * @returns Un tableau contenant les ids de tous vos alliés vivants.
+	 * @returns Un tableau contenant tous vos alliés vivants.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAliveAllies)
 	 */
 	function getAliveAllies(): Entity[];
@@ -1265,14 +1265,14 @@ declare namespace Fight {
 	 */
 	function getDeadEnemiesCount(): number;
 	/**
-	 * Retourne l'id de la tourelle de votre équipe ou -1 si elle n'existe pas.
-	 * @returns L'id de la tourelle de votre équipe.
+	 * Retourne la tourelle de votre équipe, ou null si elle n'existe pas.
+	 * @returns La tourelle de votre équipe.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAlliedTurret)
 	 */
 	function getAlliedTurret(): Entity | null;
 	/**
-	 * Retourne l'id de la tourelle ennemie ou -1 si elle n'existe pas.
-	 * @returns L'id de la tourelle ennemie.
+	 * Retourne la tourelle ennemie, ou null si elle n'existe pas.
+	 * @returns La tourelle ennemie.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEnemyTurret)
 	 */
 	function getEnemyTurret(): Entity | null;
@@ -1280,27 +1280,27 @@ declare namespace Fight {
 	 * Entité alliée/ennemie la plus proche d'une CELLULE.
 	 * Renvoie l'entité ennemie la plus proche de la cellule fournie en paramètre.
 	 * @param cell L'id de la cellule dont on veut connaitre l'ennemi le plus proche.
-	 * @returns L'id de l'entité ennemie la plus proche.
+	 * @returns L'entité ennemie la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestEnemyToCell)
 	 */
 	function getNearestEnemyToCell(cell: Cell | Entity | number): Entity | null;
 	/**
 	 * Renvoie l'entité alliée la plus proche de la cellule fournie en paramètre.
 	 * @param cell L'id de la cellule dont on veut connaitre l'allié le plus proche.
-	 * @returns L'id de l'entité alliée la plus proche.
+	 * @returns L'entité alliée la plus proche.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNearestAllyToCell)
 	 */
 	function getNearestAllyToCell(cell: Cell | Entity | number): Entity | null;
 	/**
 	 * Joueur suivant / précédent dans l'ordre de jeu (défaut : relatif à soi).
-	 * Renvoie l'id de l'entité qui jouera après l'entité entity. Sans paramètre, renvoie l'entité qui jouera après le joueur actuel.
+	 * Renvoie l'entité qui jouera après l'entité entity. Sans paramètre, renvoie l'entité qui jouera après le joueur actuel.
 	 * @param entity (optionnel) L'id de l'entité de référence.
 	 * @returns Le joueur suivant.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getNextPlayer)
 	 */
 	function getNextPlayer(entity?: Entity | number): Entity | null;
 	/**
-	 * Renvoie l'id de l'entité ayant joué avant l'entité entity. Sans paramètre, renvoie l'entité ayant joué avant le joueur actuel.
+	 * Renvoie l'entité ayant joué avant l'entité entity. Sans paramètre, renvoie l'entité ayant joué avant le joueur actuel.
 	 * @param entity (optionnel) L'id de l'entité de référence.
 	 * @returns Le joueur précédent.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getPreviousPlayer)
@@ -1323,25 +1323,26 @@ declare namespace Field {
 	 */
 	const type: Field.Type;
 	/**
-	 * Retourne l'id de la cellule se trouvant à la position (x, y).
+	 * Retourne la cellule se trouvant à la position (x, y).
 	 * @param x La position en x de la cellule.
 	 * @param y La position en y de la cellule.
-	 * @returns L'id de la cellule à la position (x, y), null si la cellule n'existe pas.
+	 * @returns La cellule à la position (x, y), null si la cellule n'existe pas.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellFromXY)
 	 */
 	function cellFromXY(x: number, y: number): Cell | null;
 	/**
 	 * Renvoie la liste des cases obstacles du terrain.
-	 * @returns Le tableau contenant les id des cellules obstacles.
+	 * @returns Le tableau contenant les cellules obstacles.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getObstacles)
 	 */
 	function getObstacles(): Cell[];
 	/**
-	 * Calcule la distance à vol d'oiseau entre deux cellules cell1 et cell2. Pour obtenir la distance en nombre de cellules, voir getCellDistance, et pour obtenir la longueur du chemin entre les deux cellules en esquivant les divers obstacles, voir getPathLength.
-	 * @param cell1 La cellule de départ.
-	 * @param cell2 La cellule d'arrivée.
-	 * @returns La distance à vol d'oiseau entre les deux cellules.
-	 * 📖 [Documentation](https://leekwars.com/help/documentation/getDistance)
+	 * Distance en nombre de cases, comme Cell.distance et Entity.distance (alias : cellDistance).
+	 * Retourne la distance entre deux cellules cell1 et cell2. La distance retournée est exprimée en nombre de cellules, et ne tient pas compte des divers obstacles entre les deux cellules. Pour obtenir la distance à vol d'oiseau, voir getDistance et pour obtenir la distance du chemin entre les deux cellules en évitant les obstacles, voir getPathLength.
+	 * @param cell1 L'id de la cellule de départ.
+	 * @param cell2 L'id de la cellule d'arrivée.
+	 * @returns La distance entre les deux cellules cell1 et cell2.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellDistance)
 	 */
 	function distance(a: Cell | Entity | number, b: Cell | Entity | number): number;
 	/**
@@ -1352,6 +1353,15 @@ declare namespace Field {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellDistance)
 	 */
 	function cellDistance(a: Cell | Entity | number, b: Cell | Entity | number): number;
+	/**
+	 * Distance à vol d'oiseau (réel, non entier).
+	 * Calcule la distance à vol d'oiseau entre deux cellules cell1 et cell2. Pour obtenir la distance en nombre de cellules, voir getCellDistance, et pour obtenir la longueur du chemin entre les deux cellules en esquivant les divers obstacles, voir getPathLength.
+	 * @param cell1 La cellule de départ.
+	 * @param cell2 La cellule d'arrivée.
+	 * @returns La distance à vol d'oiseau entre les deux cellules.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getDistance)
+	 */
+	function euclideanDistance(a: Cell | Entity | number, b: Cell | Entity | number): number;
 	/**
 	 * Renvoie la longueur du chemin entre deux cellules cell1 et cell2, en esquivant les obstacles, en ignorant les cellules contenues dans le tableau ignoredCells. Cette fonction équivaut à count(getPath(cell1, cell2, ignoredCells)). Si un joueur se situe sur une cellule ignorée, le chemin peut passer sur lui. La cellule de départ cell1 n'est jamais comptée dans le résultat. La cellule cell2 est comptée dans le résultat si et seulement si elle est vide ou ignorée par ignoredCells. Si aucun chemin n'existe entre les deux cellules, getPathLength renvoie null.
 	 * @param cell1 La cellule de départ.
