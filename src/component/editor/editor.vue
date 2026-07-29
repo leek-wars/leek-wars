@@ -339,7 +339,8 @@
 	// plutôt que composant invisible définitif).
 	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
 		.finally(() => { explorerI18nReady.value = true })
-	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+	const editorTestReady = import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+		.catch(() => undefined)
 		.finally(() => { editorTestI18nReady.value = true })
 
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
@@ -376,11 +377,6 @@
 		openNewAI(folder: Folder): void
 		openNewFolder(folder: Folder): void
 		deleteAI(ai: AI): void
-	}
-	interface EditorTestInstance {
-		currentTab: string | number
-		allLeeks: Record<number, unknown>
-		selectLeek(leek: unknown): void
 	}
 
 	defineOptions({
@@ -468,7 +464,7 @@
 	const finder = useTemplateRef<InstanceType<typeof EditorFinder>>('finder')
 	const editors = useTemplateRef<HTMLElement>('editors')
 	const explorerEl = useTemplateRef<ExplorerInstance>('explorerEl')
-	const editorTestRef = useTemplateRef<EditorTestInstance>('editorTestRef')
+	const editorTestRef = useTemplateRef<InstanceType<typeof EditorTest>>('editorTestRef')
 
 	const gitLogCount = computed(() => gitLog.entries.length)
 	const problemsCount = computed(() => analyzer.error_count + analyzer.warning_count + analyzer.todo_count)
@@ -701,18 +697,13 @@
 	function update() {
 		const routeHash = route.params.hash as string | undefined
 		const isDiffRoute = routeHash || route.path.endsWith('/diff')
-		if (route.hash) {
-			if (route.hash.startsWith('#leek-')) {
-				const id = parseInt(route.hash.substring(6))
+		if (route.hash.startsWith('#leek-')) {
+			const id = parseInt(route.hash.substring(6))
+			if (!isNaN(id)) {
 				testDialog.value = true
-				setTimeout(() => {
-					const test = editorTestRef.value
-					if (!test) return
-					test.currentTab = 1
-					if (test.allLeeks[id]) {
-						test.selectLeek(test.allLeeks[id])
-					}
-				}, 200)
+				// editor-test est monté derrière un v-if (i18n) : on attend sa résolution
+				// puis le flush du rendu pour que le template ref soit disponible.
+				editorTestReady.then(() => nextTick(() => editorTestRef.value?.openLeek(id)))
 			}
 		}
 		if (route.params.id) {

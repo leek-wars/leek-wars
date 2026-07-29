@@ -700,6 +700,25 @@
 		localStorage.setItem('editor/leek', '' + leek.id)
 	}
 
+	function selectLeekById(id: number) {
+		const leek = leeks.value.find(l => l.id === id)
+		if (leek) selectLeek(leek)
+		return leek !== undefined
+	}
+
+	// Sélection demandée depuis /editor#leek-<id> (copie d'un poireau en poireau de
+	// test) alors que la liste n'est pas encore chargée : appliquée à la fin de load().
+	let pendingLeekSelection: number | null = null
+
+	function openLeek(id: number) {
+		currentTab.value = 'leeks'
+		if (initialized.value) {
+			selectLeekById(id)
+		} else {
+			pendingLeekSelection = id
+		}
+	}
+
 	type ScenarioPersistData = Partial<Pick<TestScenario, 'type' | 'map' | 'seed' | 'max_turns' | 'turret_ai_team1' | 'turret_ai_team2'>> & { ai: string }
 	const pendingPersist = new WeakMap<TestScenario, Promise<void>>()
 	function persistDefaultScenario(scenario: TestScenario): Promise<void> {
@@ -1254,11 +1273,10 @@
 					leek.real = false
 					leek.ai = null
 				}
-				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
-				if (startLeekID && startLeekID in leeks.value) {
-					const found = leeks.value.find(l => l.id === startLeekID)
-					if (found) selectLeek(found)
-				} else if (leeks.value.length) {
+				// Le poireau demandé par openLeek() prime sur le dernier poireau utilisé.
+				const startLeekID = pendingLeekSelection ?? parseInt(localStorage.getItem('editor/leek') || '', 10)
+				pendingLeekSelection = null
+				if (!selectLeekById(startLeekID) && leeks.value.length) {
 					selectLeek(leeks.value[0])
 				}
 
@@ -1330,7 +1348,7 @@
 		}
 	}
 
-	defineExpose({ onAIDeleted })
+	defineExpose({ onAIDeleted, openLeek })
 </script>
 
 
