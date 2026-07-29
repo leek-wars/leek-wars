@@ -315,7 +315,7 @@
 }
 #app.app .bottom-content {
 	flex-direction: column;
-	overflow-y: auto;
+	overflow-y: scroll;
 	.forge-wrapper {
 		flex-basis: auto;
 	}
