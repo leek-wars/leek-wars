@@ -1,6 +1,7 @@
 import packageJson from '@/../package.json'
 import { env } from '@/env'
 import { locale } from '@/locale'
+import { normalizeApiError, type ApiError } from '@/model/api-error'
 import { Arena } from '@/model/arena'
 import { playAudio } from '@/model/audio'
 import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, COMPLEXITIES } from '@/model/data'
@@ -85,12 +86,6 @@ function retryDelay(retry: number) {
 	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
 }
 
-interface ApiError {
-	error: string
-	params?: unknown[]
-	[key: string]: unknown
-}
-
 interface ExtendedPromise<T> extends Promise<T> {
 	abort: () => void
 	error: (callback: (error: ApiError) => void) => ExtendedPromise<T>
@@ -137,7 +132,7 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 						console.error(message)
 						// LeekWars.toast(message, 5000)
 					}
-					reject(xhr.response)
+					reject(normalizeApiError(xhr.response))
 				}
 			}
 			xhr.onerror = () => {

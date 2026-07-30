@@ -442,6 +442,7 @@
 
 <script setup lang="ts">
 	import { locale } from '@/locale'
+	import type { ApiError } from '@/model/api-error'
 	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
@@ -535,9 +536,9 @@
 			.reduce((sum, p) => sum + p.quantity, 0)
 	})
 
-	function batchErrorToast(error: unknown) {
-		const key = typeof error === 'string' ? error : (error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : null) || 'unknown_error'
-		LeekWars.toast(t(key))
+	// La forme du corps d'erreur est déjà normalisée par LeekWars.request().
+	function batchErrorToast(error: ApiError) {
+		LeekWars.toast(t(error.error))
 	}
 	function batchSoloAttack() {
 		if (!selectedLeek.value) return
@@ -812,7 +813,7 @@
 		LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
 			router.push('/fight/' + data.fight)
 			store.commit('update-fights', -1)
-		}).error(error => LeekWars.toast(t('error_' + (error?.error || 'unknown_error'), error?.params || [])))
+		}).error(error => LeekWars.toast(t(error.error) as string))
 	}
 
 	function clickCompositionOpponent(composition: Composition) {

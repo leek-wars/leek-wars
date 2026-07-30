@@ -28,13 +28,18 @@ async function freshAnalyzer() {
 	return (await import('./analyzer')).analyzer
 }
 
+// resetModules() force à retransformer tout le graphe de l'analyzer (Monaco compris) : le premier
+// test à le payer dépasse les 5 s par défaut dès que la suite tourne chargée. C'est un coût de
+// transformation, pas une lenteur du code testé, d'où un budget large plutôt qu'un test allégé.
+const COLD_IMPORT_TIMEOUT = 30_000
+
 // analyze() n'utilise de l'AI que son chemin.
 const ai = (path: string) => ({ path }) as never
 
 /** Identifiant de requête envoyé au daemon, en fin de paquet : [op, path, code, requestID] */
 const lastRequestID = () => sent[sent.length - 1][3] as number
 
-describe('corrélation des analyses', () => {
+describe('corrélation des analyses', { timeout: COLD_IMPORT_TIMEOUT }, () => {
 
 	beforeEach(() => { sent.length = 0 })
 
@@ -105,7 +110,7 @@ describe('corrélation des analyses', () => {
 	})
 })
 
-describe('application des résultats dans le panneau', () => {
+describe('application des résultats dans le panneau', { timeout: COLD_IMPORT_TIMEOUT }, () => {
 
 	beforeEach(() => {
 		sent.length = 0
@@ -298,7 +303,7 @@ describe('application des résultats dans le panneau', () => {
 	})
 })
 
-describe('fichiers trop gros (> 60 k)', () => {
+describe('fichiers trop gros (> 60 k)', { timeout: COLD_IMPORT_TIMEOUT }, () => {
 
 	beforeEach(() => { sent.length = 0 })
 
