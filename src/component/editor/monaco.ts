@@ -513,6 +513,16 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 	},
 })
 
+/**
+ * Les numéros de ligne de l'analyse (ai.functions/classes/globals) sont calculés sur
+ * ai.code, mis à jour avec 500ms de débounce : entre une frappe et la ré-analyse, ils
+ * peuvent désigner une ligne qui n'existe plus dans le modèle Monaco, et getLineContent()
+ * lève alors « Illegal value for lineNumber ». Toujours valider avant d'y toucher.
+ */
+function validLine(model: monaco.editor.ITextModel, line: number | undefined): line is number {
+	return !!line && line >= 1 && line <= model.getLineCount()
+}
+
 function findEnclosingClassName(ai: AI, line: number): string {
 	let className = ''
 	for (const cn in ai.classes) {
@@ -537,11 +547,12 @@ monaco.languages.registerReferenceProvider("leekscript", {
 			const className = findEnclosingClassName(ai, position.lineNumber)
 			if (!className) { return [] }
 			const cls = ai.classes[className]
-			const clsContent = model.getLineContent(cls.line!)
+			if (!cls || !validLine(model, cls.line)) { return [] }
+			const clsContent = model.getLineContent(cls.line)
 			const clsCol = clsContent.indexOf(className)
 			if (clsCol < 0) { return [] }
 			const paramCount = countConstructorParams(model.getLineContent(position.lineNumber))
-			locations = await analyzer.references(ai, cls.line!, clsCol, paramCount)
+			locations = await analyzer.references(ai, cls.line, clsCol, paramCount)
 		} else {
 			locations = await analyzer.references(ai, position.lineNumber, position.column - 1)
 		}
@@ -582,7 +593,7 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 			const pattern = isMethod ? label + '(' : label
 			for (let offset = 0; offset <= 3; offset++) {
 				for (const line of [lineHint + offset, lineHint - offset]) {
-					if (line < 1 || line > model.getLineCount()) continue
+					if (!validLine(model, line)) continue
 					const content = model.getLineContent(line)
 					const col = content.indexOf(pattern)
 					if (col < 0) continue
@@ -635,7 +646,7 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 			const className = parts[1]
 			const paramCount = parseInt(parts[2])
 			const cls = ai.classes[className]
-			if (!cls || !cls.line) { return codeLens }
+			if (!cls || !validLine(model, cls.line)) { return codeLens }
 			const clsContent = model.getLineContent(cls.line)
 			const clsCol = clsContent.indexOf(className)
 			if (clsCol < 0) { return codeLens }
@@ -644,6 +655,7 @@ monaco.languages.registerCodeLensProvider("leekscript", {
 			const count = locations?.length || 0
 
 			const ctorLine = codeLens.range.startLineNumber
+			if (!validLine(model, ctorLine)) { return codeLens }
 			const ctorContent = model.getLineContent(ctorLine)
 			const ctorCol = ctorContent.indexOf('constructor') + 1
 			codeLens.command = {
@@ -674,13 +686,12 @@ monaco.languages.registerDocumentSymbolProvider("leekscript", {
 	provideDocumentSymbols(model) {
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
 		if (!ai) { return [] }
-		const lineCount = model.getLineCount()
 
 		const symbols: monaco.languages.DocumentSymbol[] = []
 
 		// Functions
 		for (const fun of ai.functions) {
-			if (!fun.line || fun.line < 1 || fun.line > lineCount) continue
+			if (!validLine(model, fun.line)) continue
 			const endLine = findBlockEnd(model, fun.line)
 			symbols.push({
 				name: fun.label + '(' + (fun.arguments || []).join(', ') + ')',
@@ -695,7 +706,7 @@ monaco.languages.registerDocumentSymbolProvider("leekscript", {
 		// Classes with their members
 		for (const name in ai.classes) {
 			const cls = ai.classes[name]
-			if (!cls.line || cls.line < 1 || cls.line > lineCount) continue
+			if (!validLine(model, cls.line)) continue
 			const classEndLine = findBlockEnd(model, cls.line)
 			const children: monaco.languages.DocumentSymbol[] = []
 
@@ -743,7 +754,7 @@ monaco.languages.registerDocumentSymbolProvider("leekscript", {
 		for (const name in ai.globals) {
 			if (RESERVED_SYMBOLS.has(name)) continue
 			const g = ai.globals[name]
-			if (!g.line) continue
+			if (!validLine(model, g.line)) continue
 			symbols.push({
 				name,
 				detail: '',
