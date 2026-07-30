@@ -64,7 +64,6 @@ class Chat {
 		if (this.messages.length && this.messages[this.messages.length - 1].id === message.id) return
 		this.prepare(message)
 		this.messages.push(message)
-		message.subMessages = []
 
 		if (!this.messages_by_day[message.day]) {
 			this.messages_by_day[message.day] = []
@@ -99,6 +98,13 @@ class Chat {
 		message.day = this.getDay(message.date)
 		if (!message.reactions) {
 			message.reactions = {}
+		}
+		// JSON brut du serveur : pas une instance de ChatMessage, donc l'initialisation de
+		// champ de la classe ne s'applique pas. C'est ici, le seul passage obligé de add()
+		// comme de unshift(), que l'invariant « subMessages est un tableau » est posé pour
+		// tous les consommateurs (#11810512).
+		if (!message.subMessages) {
+			message.subMessages = []
 		}
 	}
 

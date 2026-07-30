@@ -382,11 +382,9 @@
 		if (message.censored === 0) {
 			censoredMessages.value[message.id] = true
 		}
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				if (sub.censored === 0) {
-					censoredMessages.value[sub.id] = true
-				}
+		for (const sub of message.subMessages) {
+			if (sub.censored === 0) {
+				censoredMessages.value[sub.id] = true
 			}
 		}
 	}
@@ -398,10 +396,8 @@
 		muteFarmer.value = message.farmer
 		deletedMessages.value = {}
 		deletedMessages.value[message.id] = true
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				deletedMessages.value[sub.id] = true
-			}
+		for (const sub of message.subMessages) {
+			deletedMessages.value[sub.id] = true
 		}
 	}
 
@@ -510,10 +506,8 @@
 	}
 
 	function formatMessage(message: ChatMessage) {
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				formatMessage(sub)
-			}
+		for (const sub of message.subMessages) {
+			formatMessage(sub)
 		}
 		if (message.formatted) return message
 
