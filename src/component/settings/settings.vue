@@ -297,6 +297,7 @@
 
 <script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
+	import { apiErrorKey, apiFieldMessages } from '@/model/api-error'
 	import { mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -560,16 +561,12 @@
 			} else {
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(payload => {
+		}).error(error => {
 			submittingVerify.value = false
-			if (Array.isArray(payload)) {
-				for (const error of payload) {
-					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-					addError(form, t('error_' + error[1], error[2]) as string)
-				}
+			if (error.fields) {
+				for (const [field, message] of apiFieldMessages(error, t)) addError(field, message)
 			} else {
-				const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
-				LeekWars.toast(t('error_' + code) as string)
+				LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 			}
 		})
 		return false

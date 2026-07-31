@@ -41,6 +41,7 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getRedirectAfterLogin } from '@/router'
 import { mixins, useNamespacedT } from '@/model/i18n'
+import { apiErrorKey } from '@/model/api-error'
 import { LeekWars } from '@/model/leekwars'
 import { AI_LANGUAGES } from '@/component/editor/file-types'
 import { store } from '@/model/store'
@@ -163,12 +164,12 @@ function submit() {
 		store.commit('connect', data)
 		store.commit('connected', '$')
 		router.push(getRedirectAfterLogin())
-	}).error((errs: unknown) => {
+	}).error(err => {
 		loading.value = false
-		const first = (errs as [number, string, (string | number)[]][])[0]
-		error.value = first ? t('error_' + first[1], first[2] || []) : t('error_register')
+		// error.error/params portent la première erreur de champ renvoyée par register-fast.
+		const message = t(apiErrorKey(err), err.params ?? [])
 		// clé non traduite (code d'erreur inconnu) : retomber sur le message générique
-		if (error.value.startsWith('error_')) { error.value = t('error_register') }
+		error.value = message.startsWith('error_') ? t('error_register') : message
 	})
 }
 </script>

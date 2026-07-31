@@ -19,6 +19,12 @@ describe('normalizeApiError', () => {
 		expect(normalizeApiError({ error: { code: 17 }, detail: 'boom' })).toEqual({ detail: 'boom', error: 'unknown_error' })
 	})
 
+	// Régression #11811619 : le tableau d'erreurs de formulaire finissait étalé en objet.
+	it('conserve un tableau d\'erreurs de formulaire dans fields', () => {
+		const body = [[0, 'login_length', [3, 30]], [2, 'mail_already_used']]
+		expect(normalizeApiError(body)).toEqual({ error: 'login_length', params: [3, 30], fields: body })
+	})
+
 	it('rattrape les corps vides ou de type inattendu', () => {
 		// null = réponse non-JSON (502, timeout Traefik) lue en responseType 'json'.
 		for (const body of [null, undefined, '', { error: '' }, 500, ['a']]) {

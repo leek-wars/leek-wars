@@ -388,6 +388,7 @@
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import Avatar from '@/component/avatar.vue'
 	import { locale } from '@/locale'
+	import { apiErrorKey, apiFieldMessages } from '@/model/api-error'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { AI_LANGUAGES } from '@/component/editor/file-types'
@@ -544,10 +545,11 @@
 				localStorage.setItem('login-attempt', 'true')
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(errs => {
-			for (const error of (errs as unknown as [number, string, (string | number)[]][])) {
-				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-				addError(form, t('error_' + error[1], error[2]) as string)
+		}).error(error => {
+			if (error.fields) {
+				for (const [field, message] of apiFieldMessages(error, t)) addError(field, message)
+			} else {
+				LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 			}
 		})
 		return false
