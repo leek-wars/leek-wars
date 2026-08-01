@@ -270,6 +270,18 @@
 		tooltipVisible.value = false
 	}
 
+	// Chaque objet affiché est rendu à partir de LeekWars.items[item.template] (rareté,
+	// image, prix) : un template absent des game data — ressource de saison tout juste
+	// droppée, données de jeu pas encore rafraîchies — fait planter la page entière
+	// (#4503). On l'écarte plutôt que de perdre tout l'inventaire.
+	function withKnownTemplate<T extends { template: number }>(items: T[]): T[] {
+		return items.filter(item => {
+			if (item.template in LeekWars.items) return true
+			console.warn('[inventory] template inconnu, objet ignoré :', item.template)
+			return false
+		})
+	}
+
 	const inventory = computed(() => {
 		const inventory = []
 		if (store.state.farmer) {
@@ -285,7 +297,7 @@
 			inventory.push(...store.state.farmer.schemes.map(p => ({type: ItemType.SCHEME, ...p})))
 			inventory.push(...(store.state.farmer.fight_packs || []).map(p => ({type: ItemType.FIGHT_PACK, ...p})))
 		}
-		return inventory
+		return withKnownTemplate(inventory)
 	})
 
 	const filtered_inventory = computed(() => {
@@ -435,7 +447,7 @@
 	}
 
 	function retrieve(items: unknown[]) {
-		const typedItems = items as Item[]
+		const typedItems = withKnownTemplate(items as Item[])
 		if (typedItems.length) {
 			retrieveDialog.value = true
 			retrieveItems.value = typedItems

@@ -15,6 +15,8 @@
     - "Les obstacles des cartes de boss (remparts du château, torii...) s'affichent maintenant avec leur taille réelle sur la carte des déplacements du rapport, sans trous qui semblaient traversables (merci à TheScout)."
     - "Le rôle référent devient discret comme les autres rôles en mode discret : pseudo sans gras dans le chat et badge de grade sobre (merci à Portevent)."
     - "#ai API JavaScript, TypeScript et Python : Field.distance renvoie maintenant une distance en nombre de cases, comme Cell.distance et Entity.distance, au lieu de la distance à vol d'oiseau. Le vol d'oiseau reste disponible avec Field.euclideanDistance (merci à GSoMan)."
+    - "La page Inventaire ne plante plus au premier butin d'une nouvelle saison : les ressources d'une saison (Sable doré, Ambre marin...) sont maintenant publiées automatiquement la veille de son début."
+    - "Les saisons commencent et se terminent maintenant à minuit heure française, et non à 2 h du matin."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
