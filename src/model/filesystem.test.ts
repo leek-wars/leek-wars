@@ -239,10 +239,9 @@ describe('FileSystem.restore', () => {
 		expect(fs.ais['.trash/oldfile']).toBeUndefined()
 	})
 
-	// Régression : à la racine un fichier "oldfile" pouvait déjà exister → le serveur suffixe en
-	// "oldfile_2". Avant le fix le client ignorait la réponse et gardait path="oldfile" → désync
-	// (affichage/sauvegarde sous le mauvais chemin).
-	it('réaligne le path (via setPath) quand le serveur suffixe le nom sur conflit', () => {
+	// Le serveur suffixe le nom sur conflit (oldfile -> oldfile_2) : le client doit poser le path
+	// autoritatif renvoyé, pas le nom deviné.
+	it('pose le path suffixé renvoyé par le serveur sur conflit', () => {
 		const fs = new FileSystem(); fs.init(tree())
 		const ai = fs.ais['.trash/oldfile']
 		;(LeekWars.post as ReturnType<typeof vi.fn>).mockReturnValueOnce(req({ path: 'oldfile_2' }))
@@ -251,6 +250,23 @@ describe('FileSystem.restore', () => {
 		expect(ai.name).toBe('oldfile_2')
 		expect(ai.path).toBe('oldfile_2')
 		expect(fs.ais['oldfile']).toBeUndefined()
-		expect(emitterMock.emit).toHaveBeenCalledWith('ai-path-changed', { oldPath: 'oldfile', newPath: 'oldfile_2' })
+		expect(emitterMock.emit).toHaveBeenCalledWith('ai-created', 'oldfile_2')
+	})
+
+	// Régression F1 : restaurer un fichier dont le nom existe déjà à la racine ne doit PAS écraser
+	// l'entrée de map ni le cache du fichier existant (le serveur suffixe le restauré en _2).
+	it('ne clobbe pas un fichier racine existant du même nom', () => {
+		const fs = new FileSystem(); fs.init(tree())
+		const existing = new AI({ name: 'oldfile', path: 'oldfile', folder: 0 })
+		fs.ais['oldfile'] = existing
+		const trashed = fs.ais['.trash/oldfile']
+		;(LeekWars.post as ReturnType<typeof vi.fn>).mockReturnValueOnce(req({ path: 'oldfile_2' }))
+		fs.restore(trashed)
+		// le fichier existant reste intact (map + cache non touchés)
+		expect(fs.ais['oldfile']).toBe(existing)
+		expect(cache.removeAICache).not.toHaveBeenCalledWith('oldfile')
+		// le restauré prend le path suffixé
+		expect(fs.ais['oldfile_2']).toBe(trashed)
+		expect(trashed.path).toBe('oldfile_2')
 	})
 })

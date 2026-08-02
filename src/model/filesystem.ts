@@ -334,28 +334,26 @@ class FileSystem {
 		const oldPath = ai.path
 		const item = this.bin.items.splice(this.bin.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
 		ai.folder = 0
-		ai.path = ai.name
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		// Retirer l'ancienne clé corbeille de la map (sinon deux entrées pointent sur la même IA).
+		// Libérer la clé corbeille + son cache.
 		delete this.ais[oldPath]
-		// Path corbeille libéré ET path cible réutilisé : invalider les deux caches, sinon un
-		// contenu périmé (ancien fichier du même nom) ressortirait sur le fichier restauré (#4318).
 		removeAICache(oldPath)
-		removeAICache(ai.path)
-		this.ais[ai.path] = ai
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
-		emitter.emit('ai-created', ai.path)
+		// On N'INSCRIT PAS l'IA dans la map/cache sous un nom deviné : à la racine un fichier du même
+		// nom peut déjà exister, auquel cas le serveur suffixe (main -> main_2). Réclamer 'main'
+		// localement écraserait l'entrée de map et le cache du fichier existant. On attend donc le
+		// path autoritatif renvoyé par le serveur pour poser la clé définitive.
 		LeekWars.post('ai/restore', {trash_name: trashName}).then((data) => {
-			// Conflit de nom à la racine : le serveur suffixe (main -> main_2). On réaligne le path
-			// client (via setPath : re-clé la map, invalide le cache, émet ai-path-changed pour que
-			// les onglets ouverts suivent) sinon on afficherait/sauvegarderait sous le mauvais chemin.
-			if (data.path && data.path !== ai.path) {
-				ai.name = data.path.split('/').pop()!
-				this.setPath(ai, data.path)
-				item[0].name = ai.name
-				this.sortFolder(this.rootFolder)
-			}
+			const path = data.path || trashName
+			ai.name = path.split('/').pop()!
+			ai.path = path
+			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+			removeAICache(path)
+			this.ais[path] = ai
+			item[0].name = ai.name
+			this.sortFolder(this.rootFolder)
+			emitter.emit('ai-created', path)
 		}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 	}
 
