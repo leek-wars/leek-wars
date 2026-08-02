@@ -1029,4 +1029,32 @@ declare namespace Color {
 	function green(color: Color.Value): number;
 	function blue(color: Color.Value): number;
 }
+
+interface Math {
+	/** Vrai si les deux entiers ont exactement les mêmes chiffres, dans un ordre quelconque. */
+	isPermutation(a: number, b: number): boolean;
+	/** Convertit des radians en degrés. */
+	toDegrees(radians: number): number;
+	/** Convertit des degrés en radians. */
+	toRadians(degrees: number): number;
+	/** Entier aléatoire dans [a, b) — borne haute EXCLUE, comme en LeekScript. */
+	randInt(a: number, b: number): number;
+	/** Réel aléatoire dans [a, b). */
+	randReal(a: number, b: number): number;
+	isInfinite(x: number): boolean;
+	/** Nombre de bits à 1. Opère sur 64 bits, contrairement aux opérateurs bitwise de JS. */
+	bitCount(x: number): number;
+	bitLength(x: number): number;
+	testBit(x: number, bit: number): boolean;
+	setBit(x: number, bit: number, value?: boolean): number;
+	bitReverse(x: number): number;
+	byteReverse(x: number): number;
+	rotateLeft(x: number, count: number): number;
+	rotateRight(x: number, count: number): number;
+	leadingZeros(x: number): number;
+	trailingZeros(x: number): number;
+	/** Représentation binaire brute du réel, en entier 64 bits. */
+	realBits(x: number): number;
+	bitsToReal(bits: number): number;
+}
 `

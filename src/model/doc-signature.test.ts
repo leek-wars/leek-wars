@@ -104,11 +104,21 @@ describe('flatNameForObjectPath', () => {
 })
 
 describe('équivalents de bibliothèque standard', () => {
-	it('donne Math.abs en TypeScript et abs natif en Python', () => {
-		// Le cas qui manquait : `abs` n'a aucune entrée dans l'API objet, la fiche affichait
-		// donc la forme plate avec un badge « LeekScript uniquement » — faux en TS.
+	it('montre la forme native de CHAQUE langage', () => {
+		// `abs` n'a aucune entrée dans l'API objet : la fiche affichait la forme plate avec un
+		// badge « LeekScript uniquement », faux dans les deux langages.
 		expect(objectSignatureOf('abs', undefined, 'typescript')!.path).toBe('Math.abs')
+		// Python garde son builtin : on ne double pas sa stdlib.
 		expect(objectSignatureOf('abs', undefined, 'python')!.path).toBe('abs')
+	})
+
+	it('signale l’arrondi bancaire de Python au lieu de le masquer', () => {
+		// round(2.5) vaut 2 en Python, 3 en LeekScript et en JS. Une IA Python doit se comporter
+		// comme du Python : l'écart est ASSUMÉ, la doc le dit.
+		const python = objectSignatureOf('round', undefined, 'python')!
+		expect(python.path).toBe('round')
+		expect(python.python).toContain('BANCAIRE')
+		expect(objectSignatureOf('round', undefined, 'typescript')!.path).toBe('Math.round')
 	})
 
 	it('couvre toute la trigonométrie et les logarithmes', () => {
@@ -124,25 +134,39 @@ describe('équivalents de bibliothèque standard', () => {
 		expect(signature.typescript).toBe('Math.sqrt(x: number): number')
 	})
 
+	it('renvoie chaque langage vers SA bibliothèque', () => {
+		for (const n of ['sqrt', 'cos', 'sin', 'tan', 'log', 'exp', 'floor', 'ceil', 'hypot']) {
+			expect(objectSignatureOf(n, undefined, 'typescript')!.path, n).toBe('Math.' + n)
+			expect(objectSignatureOf(n, undefined, 'python')!.path, n).toBe('math.' + n)
+		}
+	})
+
 	it('traduit les fonctions de chaîne en méthodes du langage hôte', () => {
 		expect(objectSignatureOf('toUpper', undefined, 'typescript')!.path).toBe('s.toUpperCase')
 		expect(objectSignatureOf('toUpper', undefined, 'python')!.path).toBe('s.upper')
 		expect(objectSignatureOf('length', undefined, 'python')!.path).toBe('len')
 	})
 
-	it('ne prétend pas avoir un équivalent quand il n’y en a pas', () => {
-		// Les utilitaires de bits et les tirages entiers n'ont pas de contrepartie native :
-		// le badge « LeekScript uniquement » est alors correct.
-		expect(objectSignatureOf('rotateLeft', undefined, 'typescript')).toBeNull()
-		// randInt et randReal n'ont pas de fonction dédiée en JS, seulement l'idiome autour de
-		// Math.random() : on l'affiche plutôt que de prétendre qu'il n'y a rien.
-		expect(objectSignatureOf('randInt', undefined, 'typescript')!.path).toBe('Math.random()')
-		// bitCount fait exception : Python a int.bit_count() depuis la 3.10, pas JavaScript.
-		expect(objectSignatureOf('bitCount', undefined, 'typescript')).toBeNull()
-		expect(objectSignatureOf('bitCount', undefined, 'python')).not.toBeNull()
-		// toDegrees existe en Python (math.degrees) mais pas en JS.
-		expect(objectSignatureOf('toDegrees', undefined, 'typescript')).toBeNull()
+	it('expose sous Math les utilitaires que le langage hôte n’a pas', () => {
+		// Le prélude polyglot les greffe désormais sur Math : même nom dans les quatre langages.
+		// Avant, elles n'étaient atteignables par AUCUNE IA polyglot.
+		// Absentes des DEUX langages : Math les porte de part et d'autre.
+		for (const name of ['rotateLeft', 'isPermutation', 'setBit', 'realBits', 'testBit', 'bitReverse']) {
+			expect(objectSignatureOf(name, undefined, 'typescript')!.path, name).toBe('Math.' + name)
+			expect(objectSignatureOf(name, undefined, 'python')!.path, name).toBe('Math.' + name)
+		}
+		// Absentes de JS SEULEMENT : Python a déjà de quoi faire.
+		expect(objectSignatureOf('bitCount', undefined, 'typescript')!.path).toBe('Math.bitCount')
+		expect(objectSignatureOf('bitCount', undefined, 'python')!.path).toBe('x.bit_count()')
+		expect(objectSignatureOf('toDegrees', undefined, 'typescript')!.path).toBe('Math.toDegrees')
 		expect(objectSignatureOf('toDegrees', undefined, 'python')!.path).toBe('math.degrees')
+	})
+
+	it('ne prétend pas avoir un équivalent quand il n’y en a vraiment pas', () => {
+		// Les intervalles n'ont pas de type équivalent : le badge « LeekScript uniquement »
+		// reste la bonne réponse.
+		expect(objectSignatureOf('intervalMin', undefined, 'typescript')).toBeNull()
+		expect(objectSignatureOf('arrayPartition', undefined, 'python')).toBeNull()
 	})
 
 	it('laisse l’API de jeu à l’API objet', () => {
@@ -181,9 +205,11 @@ describe('couverture de la table stdlib', () => {
 		expect(enPY('setDifference')!.path).toBe('s - t')
 	})
 
-	it('n’utilise pas randint pour randInt', () => {
-		// randInt est [a, b) en LeekScript : randint de Python est INCLUSIF, ce serait faux.
+	it('renvoie randInt vers randrange et non randint', () => {
+		// randInt est [a, b) en LeekScript, exactement randrange. random.randint serait FAUX
+		// (inclusif), et l'erreur passerait inaperçue. JS n'a pas de tirage borné : Math.randInt.
 		expect(enPY('randInt')!.path).toBe('random.randrange')
+		expect(enTS('randInt')!.path).toBe('Math.randInt')
 	})
 
 	it('couvre un langage sans l’autre quand c’est le cas', () => {
@@ -193,6 +219,9 @@ describe('couverture de la table stdlib', () => {
 		// console.warn existe en JS ; Python n'a pas de canal d'avertissement séparé.
 		expect(enTS('debugW')).not.toBeNull()
 		expect(enPY('debugW')).toBeNull()
+		// bitCount, lui, est désormais couvert des DEUX côtés via Math.
+		expect(enTS('bitCount')).not.toBeNull()
+		expect(enPY('bitCount')).not.toBeNull()
 	})
 
 	it('laisse les intervalles sans équivalent', () => {

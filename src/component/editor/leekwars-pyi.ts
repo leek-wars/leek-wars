@@ -212,6 +212,25 @@ const CLASSES: ClassSpec[] = [
 		'def green(self, color: int) -> int: ...',
 		'def blue(self, color: int) -> int: ...',
 	] },
+	// Math : UNIQUEMENT ce que Python n'a pas. Le module `math`, les builtins (abs, round, min,
+	// max, pow) et `random` restent la référence — le moteur seede déjà `random`, donc
+	// random.randrange() est déterministe. On ne double pas la stdlib : `Math` et `math` à une
+	// majuscule près serait une chausse-trappe, et une IA Python doit se comporter comme du
+	// Python (round(2.5) y vaut 2, et c'est ce que son auteur attend).
+	{ name: '_Math', instance: 'Math', body: [
+		'def isPermutation(self, a: int, b: int) -> bool: ...',
+		'def signum(self, x: float) -> int: ...',
+		'def setBit(self, x: int, bit: int, value: bool = True) -> int: ...',
+		'def testBit(self, x: int, bit: int) -> bool: ...',
+		'def bitReverse(self, x: int) -> int: ...',
+		'def byteReverse(self, x: int) -> int: ...',
+		'def rotateLeft(self, x: int, count: int) -> int: ...',
+		'def rotateRight(self, x: int, count: int) -> int: ...',
+		'def leadingZeros(self, x: int) -> int: ...',
+		'def trailingZeros(self, x: int) -> int: ...',
+		'def realBits(self, x: float) -> int: ...',
+		'def bitsToReal(self, bits: int) -> float: ...',
+	] },
 ]
 
 type ConstMember = { member: string, isInstance: boolean }

@@ -37,6 +37,11 @@ type Row = [string, string | null, string | null, string | null, string | null]
 
 const ROWS: Row[] = [
 	// --- Mathématiques ---------------------------------------------------------------------
+	// Côté Python on montre les formes NATIVES (`math.sqrt`, `round`, `random.randrange`) : le
+	// conteneur `Math` du prélude ne reprend que ce que le langage n'a pas. Doubler la stdlib
+	// aurait fait cohabiter `Math` et `math` à une majuscule près, et surtout une IA Python doit
+	// se comporter comme du Python — `round(2.5)` y vaut 2, et c'est ce que son auteur attend.
+	// L'écart avec LeekScript et JS est réel : la doc le SIGNALE au lieu de le masquer.
 	['abs', 'Math.abs', 'Math.abs(x: number): number', 'abs', 'abs(x: int | float) -> int | float'],
 	['acos', 'Math.acos', 'Math.acos(x: number): number', 'math.acos', 'math.acos(x: float) -> float'],
 	['asin', 'Math.asin', 'Math.asin(x: number): number', 'math.asin', 'math.asin(x: float) -> float'],
@@ -56,17 +61,17 @@ const ROWS: Row[] = [
 	['pow', 'Math.pow', 'Math.pow(base: number, exp: number): number', 'pow', 'pow(base, exp)'],
 	// `round` Python fait de l'arrondi bancaire (2.5 -> 2), contrairement à Math.round et au
 	// round de LeekScript : c'est un piège signalé dans ia-py/TRANSLATION.md.
-	['round', 'Math.round', 'Math.round(x: number): number', 'round', 'round(x) — arrondi bancaire, diffère de LeekScript'],
-	['signum', 'Math.sign', 'Math.sign(x: number): number', null, null],
+	['round', 'Math.round', 'Math.round(x: number): number', 'round', 'round(x) -> int — arrondi BANCAIRE : round(2.5) vaut 2, LeekScript et JS donnent 3'],
+	['signum', 'Math.sign', 'Math.sign(x: number): number', 'Math.signum', 'Math.signum(x: float) -> int'],
 	['sin', 'Math.sin', 'Math.sin(x: number): number', 'math.sin', 'math.sin(x: float) -> float'],
 	['sqrt', 'Math.sqrt', 'Math.sqrt(x: number): number', 'math.sqrt', 'math.sqrt(x: float) -> float'],
 	['tan', 'Math.tan', 'Math.tan(x: number): number', 'math.tan', 'math.tan(x: float) -> float'],
-	['toDegrees', null, null, 'math.degrees', 'math.degrees(rad: float) -> float'],
-	['toRadians', null, null, 'math.radians', 'math.radians(deg: float) -> float'],
+	['toDegrees', 'Math.toDegrees', 'Math.toDegrees(radians: number): number', 'math.degrees', 'math.degrees(radians: float) -> float'],
+	['toRadians', 'Math.toRadians', 'Math.toRadians(degrees: number): number', 'math.radians', 'math.radians(degrees: float) -> float'],
 	['rand', 'Math.random', 'Math.random(): number', 'random.random', 'random.random() -> float'],
 	['isNaN', 'Number.isNaN', 'Number.isNaN(x: number): boolean', 'math.isnan', 'math.isnan(x: float) -> bool'],
 	['isFinite', 'Number.isFinite', 'Number.isFinite(x: number): boolean', 'math.isfinite', 'math.isfinite(x: float) -> bool'],
-	['isInfinite', null, null, 'math.isinf', 'math.isinf(x: float) -> bool'],
+	['isInfinite', 'Math.isInfinite', 'Math.isInfinite(x: number): boolean', 'math.isinf', 'math.isinf(x: float) -> bool'],
 	['binString', 'x.toString(2)', 'x.toString(2): string', 'bin', 'bin(x: int) -> str'],
 	['hexString', 'x.toString(16)', 'x.toString(16): string', 'hex', 'hex(x: int) -> str'],
 	['number', 'Number', 'Number(value): number', 'float', 'float(value) / int(value)'],
@@ -123,12 +128,26 @@ const ROWS: Row[] = [
 	// rotateRight, isPermutation, realBits et bitsToReal demandent une vraie implémentation
 	// dans les deux langages : les laisser absents affiche la forme LeekScript, ce qui est
 	// honnête, plutôt qu'un pseudo-équivalent que le joueur recopierait faux.
-	['bitCount', null, null, 'x.bit_count()', 'x.bit_count() -> int'],
-	['bitLength', null, null, 'x.bit_length()', 'x.bit_length() -> int'],
-	['testBit', '(x >> bit & 1) === 1', '(x >> bit & 1) === 1: boolean', 'bool(x >> bit & 1)', 'bool(x >> bit & 1) -> bool'],
+	['bitCount', 'Math.bitCount', 'Math.bitCount(x: number): number', 'x.bit_count()', 'x.bit_count() -> int'],
+	['bitLength', 'Math.bitLength', 'Math.bitLength(x: number): number', 'x.bit_length()', 'x.bit_length() -> int'],
+	['testBit', 'Math.testBit', 'Math.testBit(x: number, bit: number): boolean', 'Math.testBit', 'Math.testBit(x: int, bit: int) -> bool'],
 	// randInt est [a, b) en LeekScript, comme randrange : randint de Python serait FAUX (inclusif).
-	['randInt', 'Math.random()', 'Math.floor(Math.random() * (b - a)) + a', 'random.randrange', 'random.randrange(a, b) -> int'],
-	['randReal', 'Math.random()', 'a + Math.random() * (b - a)', 'random.uniform', 'random.uniform(a, b) -> float'],
+	['randInt', 'Math.randInt', 'Math.randInt(a: number, b: number): number — borne haute exclue', 'random.randrange', 'random.randrange(a, b) -> int — borne haute exclue, comme LeekScript'],
+	['randReal', 'Math.randReal', 'Math.randReal(a: number, b: number): number', 'random.uniform', 'random.uniform(a, b) -> float'],
+
+	// Exposées sous `Math` par le prélude polyglot depuis qu'on a comblé le trou : elles n'ont
+	// pas d'équivalent natif, et passer par l'hôte est la seule façon d'opérer sur 64 bits — les
+	// opérateurs bitwise de JS travaillent sur 32.
+	['isPermutation', 'Math.isPermutation', 'Math.isPermutation(a: number, b: number): boolean', 'Math.isPermutation', 'Math.isPermutation(a: int, b: int) -> bool'],
+	['setBit', 'Math.setBit', 'Math.setBit(x: number, bit: number, value?: boolean): number', 'Math.setBit', 'Math.setBit(x: int, bit: int, value: bool = True) -> int'],
+	['bitReverse', 'Math.bitReverse', 'Math.bitReverse(x: number): number', 'Math.bitReverse', 'Math.bitReverse(x: int) -> int'],
+	['byteReverse', 'Math.byteReverse', 'Math.byteReverse(x: number): number', 'Math.byteReverse', 'Math.byteReverse(x: int) -> int'],
+	['rotateLeft', 'Math.rotateLeft', 'Math.rotateLeft(x: number, count: number): number', 'Math.rotateLeft', 'Math.rotateLeft(x: int, count: int) -> int'],
+	['rotateRight', 'Math.rotateRight', 'Math.rotateRight(x: number, count: number): number', 'Math.rotateRight', 'Math.rotateRight(x: int, count: int) -> int'],
+	['leadingZeros', 'Math.leadingZeros', 'Math.leadingZeros(x: number): number', 'Math.leadingZeros', 'Math.leadingZeros(x: int) -> int'],
+	['trailingZeros', 'Math.trailingZeros', 'Math.trailingZeros(x: number): number', 'Math.trailingZeros', 'Math.trailingZeros(x: int) -> int'],
+	['realBits', 'Math.realBits', 'Math.realBits(x: number): number', 'Math.realBits', 'Math.realBits(x: float) -> int'],
+	['bitsToReal', 'Math.bitsToReal', 'Math.bitsToReal(bits: number): number', 'Math.bitsToReal', 'Math.bitsToReal(bits: int) -> float'],
 
 	// --- Listes (suite) ----------------------------------------------------------------------
 	['arrayMin', 'Math.min', 'Math.min(...a): number', 'min', 'min(a)'],
