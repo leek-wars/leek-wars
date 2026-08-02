@@ -38,7 +38,7 @@
 				</router-link>
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">
-				<doc-language-selector v-if="onDocumentation" class="bar-doc-language" />
+				<doc-language-selector v-if="onDocumentation" />
 				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
 					<img v-if="action.image" :src="'/image/' + action.image" class="action">
 					<v-icon v-else-if="action.icon" class="action">{{ action.icon }}</v-icon>
@@ -98,13 +98,17 @@ function readNotification(notification: Notification) {
 </script>
 
 <style lang="scss" scoped>
-	// Le sélecteur hérite des styles de .action de la barre : on neutralise le padding pour
-	// que les 4 logos tiennent à côté des autres actions sur un écran de téléphone.
-	.bar-doc-language {
-		:deep(.doc-language) {
-			padding: 0 4px;
-			height: auto;
-		}
+	// Le sélecteur n'est pas dans une `.page-bar .tabs`, il ne reçoit donc PAS la mise en forme
+	// d'onglet du site : sans hauteur ni centrage explicites il se calait en haut d'une barre
+	// de 56px. On l'aligne sur les autres actions, qui font toute la hauteur.
+	// `:deep` et non une classe passée au composant : sa racine est un `<v-menu>`, dont
+	// l'héritage d'attributs n'atteint pas l'élément activateur — la classe se perdait en route.
+	.actions :deep(.doc-language-selector) {
+		display: inline-flex;
+		align-items: center;
+		height: 56px;
+		padding: 0 12px;
+		vertical-align: top;
 	}
 
 	.app-bar {

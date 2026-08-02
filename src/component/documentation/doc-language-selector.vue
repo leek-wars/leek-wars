@@ -62,8 +62,8 @@
 	// est plus spécifique que tout sélecteur scopé du composant, et s'appliquerait aussi bien
 	// au logo qu'au chevron, qui n'ont pas la même taille.
 	.doc-language-logo {
-		width: 18px !important;
-		height: 18px;
+		width: 22px !important;
+		height: 22px;
 	}
 	.doc-language-caret {
 		width: 10px !important;

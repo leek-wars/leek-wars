@@ -112,7 +112,7 @@
 		4: 'mdi-code-braces-box',
 		13: 'mdi-code-not-equal-variant',
 		14: 'mdi-code-brackets',
-		5: 'mdi-account',
+		5: 'mdi-leek',
 		6: 'mdi-sword',
 		7: 'mdi-chip',
 		8: 'mdi-grid',
