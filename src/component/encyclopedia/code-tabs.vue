@@ -17,7 +17,7 @@
 	import { computed, nextTick, onMounted, ref, watch } from 'vue'
 	import { AI_LANGUAGES } from '@/component/editor/file-types'
 	import { resolveCodeThemeClass } from '@/component/editor/code-theme'
-	import { DocLanguage, docLanguage, setDocLanguage } from '@/model/doc-language'
+	import { DocLanguage, docLanguage, setDocLanguage, toSelectableDocLanguage } from '@/model/doc-language'
 	import { LeekWars } from '@/model/leekwars'
 
 	/**
@@ -45,8 +45,12 @@
 		return props.blocks[0].language
 	})
 
-	const labelOf = (language: DocLanguage) => AI_LANGUAGES.find(l => l.id === language)?.label ?? language
-	const logoOf = (language: DocLanguage): string | undefined => AI_LANGUAGES.find(l => l.id === language)?.logo
+	// Un bloc ```js est étiqueté « TypeScript » : les deux langages ne font qu'un pour le
+	// lecteur (même API, même runtime) et le sélecteur n'offre plus JavaScript. Afficher
+	// « JavaScript » sur l'onglet alors que le sélecteur affiche TypeScript sèmerait le doute.
+	const displayed = (language: DocLanguage) => toSelectableDocLanguage(language)
+	const labelOf = (language: DocLanguage) => AI_LANGUAGES.find(l => l.id === displayed(language))?.label ?? language
+	const logoOf = (language: DocLanguage): string | undefined => AI_LANGUAGES.find(l => l.id === displayed(language))?.logo
 
 	function select(language: DocLanguage) {
 		setDocLanguage(language)

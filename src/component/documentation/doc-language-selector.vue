@@ -1,7 +1,7 @@
 <template>
 	<v-menu offset-y>
 		<template #activator="{ props }">
-			<div v-ripple class="doc-language-selector" :title="currentLabel" v-bind="props">
+			<div v-ripple class="tab doc-language-selector" :title="currentLabel" v-bind="props">
 				<img :src="currentLogo" class="doc-language-logo" :alt="currentLabel">
 				<img width="10" src="/image/selector.png" class="doc-language-caret">
 			</div>
@@ -51,24 +51,24 @@
 </script>
 
 <style lang="scss" scoped>
+	// La classe `tab` (global.scss : .page-bar .tabs .tab) fournit la forme d'onglet noire,
+	// le fond, la hauteur et les pseudo-éléments en parallélogramme des voisins. On n'ajoute
+	// ici que ce qui est propre au sélecteur, sans redéfinir display/padding/height : les
+	// écraser sortait le bouton du flux des onglets et cassait l'alignement de la barre.
 	.doc-language-selector {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		padding: 0 8px;
-		height: 100%;
 		cursor: pointer;
-		opacity: 0.85;
-		&:hover {
-			opacity: 1;
-		}
 	}
+	// `!important` à contrecœur : `.page-bar .tabs .tab img { width: 22px }` (global.scss:445)
+	// est plus spécifique que tout sélecteur scopé du composant, et s'appliquerait aussi bien
+	// au logo qu'au chevron, qui n'ont pas la même taille.
 	.doc-language-logo {
-		width: 18px;
+		width: 18px !important;
 		height: 18px;
 	}
 	.doc-language-caret {
+		width: 10px !important;
 		opacity: 0.7;
+		margin-left: 2px;
 	}
 	.doc-language-name {
 		margin-left: 8px;

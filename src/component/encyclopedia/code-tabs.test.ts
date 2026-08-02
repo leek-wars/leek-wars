@@ -57,6 +57,6 @@ describe('code-tabs', () => {
 		setDocLanguage('typescript')
 		const wrapper = mountTabs([BLOCKS[0], BLOCKS[1]])
 		await wrapper.vm.$nextTick()
-		expect(wrapper.find('.code-tab.active').text()).toContain('JavaScript')
+		expect(wrapper.find('.code-tab.active').text()).toContain('TypeScript')
 	})
 })
