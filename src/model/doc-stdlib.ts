@@ -117,6 +117,100 @@ const ROWS: Row[] = [
 	['mapValues', 'm.values', '[...m.values()]: any[]', 'm.values', 'list(m.values()) -> list'],
 	['mapRemove', 'm.delete', 'm.delete(key): boolean', 'del m[key]', 'del m[key]'],
 	['mapContainsKey', 'm.has', 'm.has(key): boolean', 'key in m', 'key in m -> bool'],
+
+	// --- Bits et aléatoire -------------------------------------------------------------------
+	// Seuls les cas à contrepartie NATIVE sont listés. bitReverse, byteReverse, rotateLeft,
+	// rotateRight, isPermutation, realBits et bitsToReal demandent une vraie implémentation
+	// dans les deux langages : les laisser absents affiche la forme LeekScript, ce qui est
+	// honnête, plutôt qu'un pseudo-équivalent que le joueur recopierait faux.
+	['bitCount', null, null, 'x.bit_count()', 'x.bit_count() -> int'],
+	['bitLength', null, null, 'x.bit_length()', 'x.bit_length() -> int'],
+	['testBit', '(x >> bit & 1) === 1', '(x >> bit & 1) === 1: boolean', 'bool(x >> bit & 1)', 'bool(x >> bit & 1) -> bool'],
+	// randInt est [a, b) en LeekScript, comme randrange : randint de Python serait FAUX (inclusif).
+	['randInt', 'Math.random()', 'Math.floor(Math.random() * (b - a)) + a', 'random.randrange', 'random.randrange(a, b) -> int'],
+	['randReal', 'Math.random()', 'a + Math.random() * (b - a)', 'random.uniform', 'random.uniform(a, b) -> float'],
+
+	// --- Listes (suite) ----------------------------------------------------------------------
+	['arrayMin', 'Math.min', 'Math.min(...a): number', 'min', 'min(a)'],
+	['arrayMax', 'Math.max', 'Math.max(...a): number', 'max', 'max(a)'],
+	['average', 'a.reduce', 'a.reduce((s, x) => s + x, 0) / a.length', 'statistics.mean', 'statistics.mean(a) -> float'],
+	['arrayConcat', 'a.concat', 'a.concat(b): any[]', 'a + b', 'a + b -> list'],
+	['arrayEvery', 'a.every', 'a.every(callback): boolean', 'all', 'all(f(x) for x in a) -> bool'],
+	['arraySome', 'a.some', 'a.some(callback): boolean', 'any', 'any(f(x) for x in a) -> bool'],
+	['arrayFind', 'a.find', 'a.find(callback): any', 'next', 'next((x for x in a if f(x)), None)'],
+	['arrayFlatten', 'a.flat', 'a.flat(depth?): any[]', 'itertools.chain', 'list(itertools.chain.from_iterable(a))'],
+	['arrayFoldLeft', 'a.reduce', 'a.reduce(callback, initial): any', 'functools.reduce', 'functools.reduce(f, a, initial)'],
+	['arrayFoldRight', 'a.reduceRight', 'a.reduceRight(callback, initial): any', 'functools.reduce', 'functools.reduce(f, reversed(a), initial)'],
+	['arrayIter', 'a.forEach', 'a.forEach(callback): void', 'for x in a', 'for x in a: f(x)'],
+	['arraySlice', 'a.slice', 'a.slice(start?, end?): any[]', 'a[start:end]', 'a[start:end] -> list'],
+	['subArray', 'a.slice', 'a.slice(start, end + 1): any[]', 'a[start:end + 1]', 'a[start:end + 1] -> list'],
+	// arraySort renvoie un NOUVEAU tableau : `[...a]` et `sorted` plutôt que `a.sort` / `a.sort()`.
+	['arraySort', '[...a].sort', '[...a].sort(comparator?): any[]', 'sorted', 'sorted(a, key=...) -> list'],
+	['arrayToSet', 'new Set', 'new Set(a): Set', 'set', 'set(a) -> set'],
+	['arrayUnique', '[...new Set(a)]', '[...new Set(a)]: any[]', 'dict.fromkeys', 'list(dict.fromkeys(a)) -> list'],
+	['arrayClear', 'a.length = 0', 'a.length = 0', 'a.clear', 'a.clear() -> None'],
+	['arrayFrequencies', null, null, 'collections.Counter', 'collections.Counter(a) -> Counter'],
+	['arrayRemoveAll', 'a.filter', 'a.filter(x => x !== value): any[]', '[x for x in a if x != value]', '[x for x in a if x != value]'],
+	['arrayGet', 'a.at', 'a.at(index) ?? fallback', 'a[index]', 'a[index] if -len(a) <= index < len(a) else fallback'],
+	['fill', 'a.fill', 'a.fill(value): any[]', 'a[:] = [value] * n', 'a[:] = [value] * n'],
+	['insert', 'a.splice', 'a.splice(index, 0, value): void', 'a.insert', 'a.insert(index, value) -> None'],
+	['isEmpty', 'a.length === 0', 'a.length === 0: boolean', 'not a', 'not a -> bool'],
+	['pushAll', 'a.push', 'a.push(...b): void', 'a.extend', 'a.extend(b) -> None'],
+	['remove', 'a.splice', 'a.splice(index, 1): any[]', 'del a[index]', 'del a[index]'],
+	['search', 'a.indexOf', 'a.indexOf(value, from?): number', 'a.index', 'a.index(value) -> int'],
+	['shuffle', null, null, 'random.shuffle', 'random.shuffle(a) -> None'],
+	// GraalPy est en Python 3.12 : itertools.batched (3.12) et random.sample existent. Côté JS
+	// il n'y a pas d'équivalent natif, d'où l'entrée à moitié remplie — la fiche affichera la
+	// forme LeekScript en TypeScript et l'équivalent en Python.
+	['arrayChunk', null, null, 'itertools.batched', 'list(itertools.batched(a, size)) -> list'],
+	['arrayRandom', null, null, 'random.sample', 'random.sample(a, count) -> list'],
+
+	// --- Tables (suite) ----------------------------------------------------------------------
+	['mapClear', 'm.clear', 'm.clear(): void', 'm.clear', 'm.clear() -> None'],
+	['mapIsEmpty', 'm.size === 0', 'm.size === 0: boolean', 'not m', 'not m -> bool'],
+	['mapContains', '[...m.values()].includes', '[...m.values()].includes(value): boolean', 'in m.values()', 'value in m.values() -> bool'],
+	['mapSum', '[...m.values()].reduce', '[...m.values()].reduce((s, x) => s + x, 0)', 'sum', 'sum(m.values())'],
+	['mapAverage', '[...m.values()]', '[...m.values()].reduce((s, x) => s + x, 0) / m.size', 'statistics.mean', 'statistics.mean(m.values()) -> float'],
+	['mapMin', 'Math.min', 'Math.min(...m.values()): number', 'min', 'min(m.values())'],
+	['mapMax', 'Math.max', 'Math.max(...m.values()): number', 'max', 'max(m.values())'],
+	['mapIter', 'm.forEach', 'm.forEach(callback): void', 'for k, v in m.items()', 'for key, value in m.items(): f(key, value)'],
+	['mapMap', 'new Map', 'new Map([...m].map(([k, v]) => [k, f(v)]))', 'dict comprehension', '{k: f(v) for k, v in m.items()}'],
+	['mapFilter', 'new Map', 'new Map([...m].filter(([k, v]) => f(k, v)))', 'dict comprehension', '{k: v for k, v in m.items() if f(k, v)}'],
+	['mapEvery', 'all', '[...m].every(([k, v]) => f(k, v)): boolean', 'all', 'all(f(k, v) for k, v in m.items()) -> bool'],
+	['mapSome', 'any', '[...m].some(([k, v]) => f(k, v)): boolean', 'any', 'any(f(k, v) for k, v in m.items()) -> bool'],
+	['mapFold', '[...m].reduce', '[...m].reduce(callback, initial)', 'functools.reduce', 'functools.reduce(f, m.items(), initial)'],
+	['mapMerge', 'new Map', 'new Map([...a, ...b]): Map', '{**a, **b}', '{**a, **b} -> dict'],
+	['mapPutAll', 'b.forEach', 'b.forEach((v, k) => a.set(k, v)): void', 'a.update', 'a.update(b) -> None'],
+	['mapReplace', 'm.set', 'm.set(key, value): Map', 'm[key] = value', 'm[key] = value'],
+	['mapReplaceAll', 'a.forEach', 'b.forEach((v, k) => a.has(k) && a.set(k, v))', 'a.update', 'a.update(b) -> None'],
+	['mapSearch', '[...m].find', '[...m].find(([k, v]) => v === value)?.[0]', 'next', 'next((k for k, v in m.items() if v == value), None)'],
+	['mapRemoveAll', '[...m].forEach', '[...m].forEach(([k, v]) => v === value && m.delete(k))', 'dict comprehension', '{k: v for k, v in m.items() if v != value}'],
+	['mapFill', 'm.set', 'for (const k of m.keys()) m.set(k, value)', 'dict.fromkeys', 'dict.fromkeys(m, value)'],
+	['removeKey', 'm.delete', 'm.delete(key): boolean', 'del m[key]', 'del m[key]'],
+
+	// --- Ensembles ---------------------------------------------------------------------------
+	// Formes par étalement (`[...s, ...t]`) plutôt que les méthodes natives `s.union(t)` : ces
+	// dernières sont ES2025 et je n'ai pas pu vérifier qu'elles sont bien exposées par GraalJS.
+	// L'étalement, lui, fonctionne partout — mieux vaut une forme sûre dans une doc qu'on recopie.
+	['setPut', 's.add', 's.add(value): Set', 's.add', 's.add(value) -> None'],
+	['setRemove', 's.delete', 's.delete(value): boolean', 's.discard', 's.discard(value) -> None'],
+	['setClear', 's.clear', 's.clear(): void', 's.clear', 's.clear() -> None'],
+	['setContains', 's.has', 's.has(value): boolean', 'value in s', 'value in s -> bool'],
+	['setSize', 's.size', 's.size: number', 'len', 'len(s) -> int'],
+	['setIsEmpty', 's.size === 0', 's.size === 0: boolean', 'not s', 'not s -> bool'],
+	['setIsSubsetOf', '[...s].every', '[...s].every(x => t.has(x)): boolean', 's <= t', 's <= t -> bool'],
+	['setUnion', 'new Set', 'new Set([...s, ...t]): Set', 's | t', 's | t -> set'],
+	['setIntersection', 'new Set', 'new Set([...s].filter(x => t.has(x))): Set', 's & t', 's & t -> set'],
+	['setDifference', 'new Set', 'new Set([...s].filter(x => !t.has(x))): Set', 's - t', 's - t -> set'],
+	['setDisjunction', 'new Set', 'new Set([...s, ...t].filter(x => !(s.has(x) && t.has(x))))', 's ^ t', 's ^ t -> set'],
+	['setFilter', 'new Set', 'new Set([...s].filter(callback)): Set', 'set comprehension', '{x for x in s if f(x)}'],
+	['setToArray', '[...s]', '[...s]: any[]', 'list', 'list(s) -> list'],
+
+	// --- Journal et modules ------------------------------------------------------------------
+	['debugC', 'Debug.log', 'Debug.log(value, color): void', 'Debug.log', 'Debug.log(value, color) -> None'],
+	['debugW', 'console.warn', 'console.warn(value): void', null, null],
+	['debugE', 'console.error', 'console.error(value): void', null, null],
+	['include', 'import', "import { x } from './fichier.js'", 'import', 'from fichier import x'],
 ]
 
 const BY_NAME: { [flat: string]: StdlibEquivalent } = {}

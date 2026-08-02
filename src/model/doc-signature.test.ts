@@ -134,8 +134,12 @@ describe('équivalents de bibliothèque standard', () => {
 		// Les utilitaires de bits et les tirages entiers n'ont pas de contrepartie native :
 		// le badge « LeekScript uniquement » est alors correct.
 		expect(objectSignatureOf('rotateLeft', undefined, 'typescript')).toBeNull()
-		expect(objectSignatureOf('randInt', undefined, 'typescript')).toBeNull()
-		expect(objectSignatureOf('bitCount', undefined, 'python')).toBeNull()
+		// randInt et randReal n'ont pas de fonction dédiée en JS, seulement l'idiome autour de
+		// Math.random() : on l'affiche plutôt que de prétendre qu'il n'y a rien.
+		expect(objectSignatureOf('randInt', undefined, 'typescript')!.path).toBe('Math.random()')
+		// bitCount fait exception : Python a int.bit_count() depuis la 3.10, pas JavaScript.
+		expect(objectSignatureOf('bitCount', undefined, 'typescript')).toBeNull()
+		expect(objectSignatureOf('bitCount', undefined, 'python')).not.toBeNull()
 		// toDegrees existe en Python (math.degrees) mais pas en JS.
 		expect(objectSignatureOf('toDegrees', undefined, 'typescript')).toBeNull()
 		expect(objectSignatureOf('toDegrees', undefined, 'python')!.path).toBe('math.degrees')
@@ -148,5 +152,55 @@ describe('équivalents de bibliothèque standard', () => {
 
 	it('n’affiche aucun équivalent stdlib en LeekScript', () => {
 		expect(objectSignatureOf('abs', undefined, 'leekscript')).toBeNull()
+	})
+})
+
+describe('couverture de la table stdlib', () => {
+	const enTS = (n: string) => objectSignatureOf(n, undefined, 'typescript')
+	const enPY = (n: string) => objectSignatureOf(n, undefined, 'python')
+
+	it('couvre les listes, tables et ensembles', () => {
+		for (const n of ['count', 'push', 'pop', 'arrayConcat', 'arrayEvery', 'arraySome', 'arraySlice',
+			'arrayToSet', 'arrayUnique', 'isEmpty', 'pushAll', 'search', 'insert']) {
+			expect(enTS(n), n).not.toBeNull()
+			expect(enPY(n), n).not.toBeNull()
+		}
+		for (const n of ['mapClear', 'mapIsEmpty', 'mapMerge', 'mapPutAll', 'mapSearch', 'mapFilter']) {
+			expect(enTS(n), n).not.toBeNull()
+			expect(enPY(n), n).not.toBeNull()
+		}
+		for (const n of ['setPut', 'setRemove', 'setContains', 'setSize', 'setUnion', 'setIntersection',
+			'setDifference', 'setToArray', 'setIsSubsetOf']) {
+			expect(enTS(n), n).not.toBeNull()
+			expect(enPY(n), n).not.toBeNull()
+		}
+	})
+
+	it('utilise les opérateurs d’ensemble de Python', () => {
+		expect(enPY('setUnion')!.path).toBe('s | t')
+		expect(enPY('setDifference')!.path).toBe('s - t')
+	})
+
+	it('n’utilise pas randint pour randInt', () => {
+		// randInt est [a, b) en LeekScript : randint de Python est INCLUSIF, ce serait faux.
+		expect(enPY('randInt')!.path).toBe('random.randrange')
+	})
+
+	it('couvre un langage sans l’autre quand c’est le cas', () => {
+		// itertools.batched est du 3.12, JS n'a pas d'équivalent natif.
+		expect(enPY('arrayChunk')).not.toBeNull()
+		expect(enTS('arrayChunk')).toBeNull()
+		// console.warn existe en JS ; Python n'a pas de canal d'avertissement séparé.
+		expect(enTS('debugW')).not.toBeNull()
+		expect(enPY('debugW')).toBeNull()
+	})
+
+	it('laisse les intervalles sans équivalent', () => {
+		// Aucun type intervalle en JS ni en Python : la forme LeekScript et son badge sont
+		// la bonne réponse, pas un pseudo-équivalent.
+		for (const n of ['intervalMin', 'intervalContains', 'intervalToArray']) {
+			expect(enTS(n), n).toBeNull()
+			expect(enPY(n), n).toBeNull()
+		}
 	})
 })
