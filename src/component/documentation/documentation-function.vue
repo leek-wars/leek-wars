@@ -107,13 +107,16 @@ const expanded = ref(false)
  */
 const objectSignature = computed(() => {
 	if (docLanguage.value === 'leekscript') return null
-	return objectSignatureOf(props.fun.name, props.fun.return_type)
+	return objectSignatureOf(props.fun.name, props.fun.return_type, docLanguage.value)
 })
 
 const signatureText = computed(() => {
 	const signature = objectSignature.value
 	if (!signature) return null
 	const body = docLanguage.value === 'python' ? signature.python : signature.typescript
+	// Une entrée stdlib porte déjà son chemin complet (`Math.abs(x)`, `s.length`) : lui coller
+	// un receveur donnerait `math.Math.abs(x)`.
+	if (signature.stdlib) return body
 	const receiver = receiverFor(signature.container, docLanguage.value)
 	return receiver ? receiver + '.' + body : signature.container + '.' + body
 })

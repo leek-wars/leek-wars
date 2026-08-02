@@ -267,7 +267,7 @@
 
 	function objectPathOf(name: string): string | null {
 		if (docLanguage.value === 'leekscript') return null
-		return objectSignatureOf(name)?.path ?? null
+		return objectSignatureOf(name, undefined, docLanguage.value)?.path ?? null
 	}
 
 	function navigate(item: string) {

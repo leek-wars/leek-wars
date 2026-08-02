@@ -1,5 +1,6 @@
 import { buildObjectApiModel, OBJECT_MEMBER_LS, type ApiMember } from '@/component/editor/leekwars-dts'
 import type { DocLanguage } from '@/model/doc-language'
+import { stdlibEquivalent } from '@/model/doc-stdlib'
 
 /**
  * Signature d'une fonction rendue dans le langage que le lecteur a choisi.
@@ -25,6 +26,8 @@ export interface ObjectSignature {
 	typescript: string
 	/** Même signature translittérée en Python. */
 	python: string
+	/** Vrai pour un équivalent de bibliothèque standard du langage hôte, pas de l'API objet. */
+	stdlib?: boolean
 }
 
 let _flatToPath: Record<string, string> | null = null
@@ -115,7 +118,25 @@ function findMember(container: string, member: string): ApiMember | null {
  * cas des fonctions dépréciées (`getForce`) et de celles retirées avant la v4 (`getLeek`),
  * que l'API objet n'a volontairement pas reprises.
  */
-export function objectSignatureOf(flatName: string, returnTypeCode?: number): ObjectSignature | null {
+export function objectSignatureOf(flatName: string, returnTypeCode?: number, language?: DocLanguage): ObjectSignature | null {
+	// La stdlib n'est pas dans l'API objet du runtime : en JS/TS et en Python c'est celle du
+	// langage hôte. `abs` -> `Math.abs` en TS, `abs` natif en Python. On la consulte d'abord,
+	// car ces noms n'ont par construction aucune entrée dans OBJECT_MEMBER_LS.
+	if (language) {
+		const stdlib = stdlibEquivalent(flatName, language)
+		if (stdlib) {
+			const [container, ...rest] = stdlib.path.split('.')
+			return {
+				path: stdlib.path,
+				container,
+				member: rest.join('.') || stdlib.path,
+				kind: 'method',
+				typescript: stdlib.signature,
+				python: stdlib.signature,
+				stdlib: true,
+			}
+		}
+	}
 	const path = flatToObjectPath()[flatName]
 	if (!path) return null
 	const [container, member] = path.split('.')

@@ -356,7 +356,7 @@
 				// du titre induirait en erreur. On montre le membre objet, seul nom appelable.
 				// Le titre de la page reste le nom plat : c'est la clé de l'encyclopédie.
 				if (docLanguage.value !== 'leekscript') {
-					const signature = objectSignatureOf(fun.name, fun.return_type)
+					const signature = objectSignatureOf(fun.name, fun.return_type, docLanguage.value)
 					if (!signature) return undefined
 					const body = docLanguage.value === 'python' ? signature.python : signature.typescript
 					const receiver = receiverFor(signature.container, docLanguage.value)

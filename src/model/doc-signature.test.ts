@@ -102,3 +102,51 @@ describe('flatNameForObjectPath', () => {
 		expect(flatNameForObjectPath('Entity.inexistant')).toBeNull()
 	})
 })
+
+describe('équivalents de bibliothèque standard', () => {
+	it('donne Math.abs en TypeScript et abs natif en Python', () => {
+		// Le cas qui manquait : `abs` n'a aucune entrée dans l'API objet, la fiche affichait
+		// donc la forme plate avec un badge « LeekScript uniquement » — faux en TS.
+		expect(objectSignatureOf('abs', undefined, 'typescript')!.path).toBe('Math.abs')
+		expect(objectSignatureOf('abs', undefined, 'python')!.path).toBe('abs')
+	})
+
+	it('couvre toute la trigonométrie et les logarithmes', () => {
+		for (const name of ['sqrt', 'cos', 'sin', 'tan', 'log', 'log2', 'log10', 'exp', 'pow', 'floor', 'ceil', 'round']) {
+			expect(objectSignatureOf(name, undefined, 'typescript'), name).not.toBeNull()
+			expect(objectSignatureOf(name, undefined, 'python'), name).not.toBeNull()
+		}
+	})
+
+	it('marque les entrées stdlib pour ne pas leur coller un receveur', () => {
+		const signature = objectSignatureOf('sqrt', undefined, 'typescript')!
+		expect(signature.stdlib).toBe(true)
+		expect(signature.typescript).toBe('Math.sqrt(x: number): number')
+	})
+
+	it('traduit les fonctions de chaîne en méthodes du langage hôte', () => {
+		expect(objectSignatureOf('toUpper', undefined, 'typescript')!.path).toBe('s.toUpperCase')
+		expect(objectSignatureOf('toUpper', undefined, 'python')!.path).toBe('s.upper')
+		expect(objectSignatureOf('length', undefined, 'python')!.path).toBe('len')
+	})
+
+	it('ne prétend pas avoir un équivalent quand il n’y en a pas', () => {
+		// Les utilitaires de bits et les tirages entiers n'ont pas de contrepartie native :
+		// le badge « LeekScript uniquement » est alors correct.
+		expect(objectSignatureOf('rotateLeft', undefined, 'typescript')).toBeNull()
+		expect(objectSignatureOf('randInt', undefined, 'typescript')).toBeNull()
+		expect(objectSignatureOf('bitCount', undefined, 'python')).toBeNull()
+		// toDegrees existe en Python (math.degrees) mais pas en JS.
+		expect(objectSignatureOf('toDegrees', undefined, 'typescript')).toBeNull()
+		expect(objectSignatureOf('toDegrees', undefined, 'python')!.path).toBe('math.degrees')
+	})
+
+	it('laisse l’API de jeu à l’API objet', () => {
+		// La stdlib ne doit pas court-circuiter getLife -> Entity.life.
+		expect(objectSignatureOf('getLife', 6, 'typescript')!.path).toBe('Entity.life')
+	})
+
+	it('n’affiche aucun équivalent stdlib en LeekScript', () => {
+		expect(objectSignatureOf('abs', undefined, 'leekscript')).toBeNull()
+	})
+})
