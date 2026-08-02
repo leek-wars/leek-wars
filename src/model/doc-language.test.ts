@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { findCodeBlockGroups, matchesDocLanguage, normalizeDocLanguage } from '@/model/doc-language'
+import { docLanguage, findCodeBlockGroups, matchesDocLanguage, normalizeDocLanguage, SELECTABLE_DOC_LANGUAGES, setDocLanguage, toSelectableDocLanguage } from '@/model/doc-language'
 
 function render(html: string): Element {
 	const root = document.createElement('div')
@@ -92,5 +92,31 @@ describe('findCodeBlockGroups', () => {
 		const groups = findCodeBlockGroups(root)
 		expect(groups[0].elements).toHaveLength(2)
 		expect(groups[0].elements.every(e => e.tagName === 'PRE')).toBe(true)
+	})
+})
+
+describe('langages proposés au sélecteur', () => {
+	it('n’offre pas JavaScript séparément de TypeScript', () => {
+		// Même API objet, même runtime : un quatrième choix ne ferait que doubler une entrée.
+		expect(SELECTABLE_DOC_LANGUAGES).toEqual(['leekscript', 'typescript', 'python'])
+	})
+
+	it('ramène JavaScript sur TypeScript', () => {
+		expect(toSelectableDocLanguage('javascript')).toBe('typescript')
+		expect(toSelectableDocLanguage('python')).toBe('python')
+		expect(toSelectableDocLanguage('leekscript')).toBe('leekscript')
+	})
+
+	it('n’enregistre jamais javascript comme préférence', () => {
+		// Un joueur qui code en JS, un `?lang=js`, une préférence d'avant ce changement :
+		// tous doivent atterrir sur un choix qui existe dans le menu.
+		setDocLanguage('javascript')
+		expect(docLanguage.value).toBe('typescript')
+		expect(localStorage.getItem('doc/language')).toBe('typescript')
+	})
+
+	it('affiche toujours un bloc ```js au lecteur en TypeScript', () => {
+		// La restriction porte sur le CHOIX, pas sur la reconnaissance du contenu.
+		expect(matchesDocLanguage('js', 'typescript')).toBe(true)
 	})
 })

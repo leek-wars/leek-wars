@@ -33,6 +33,23 @@ const ALIASES: { [alias: string]: DocLanguage } = {
 	python: 'python', py: 'python',
 }
 
+/**
+ * Langages PROPOSÉS dans le sélecteur. JavaScript en est absent volontairement : il partage
+ * l'API objet, les types et le runtime de TypeScript (le TS est transpilé au build), donc
+ * l'offrir en quatrième choix ferait doubler une entrée sans rien apporter au lecteur. Un
+ * bloc ```js reste évidemment reconnu et affiché — cf. `matchesDocLanguage`.
+ */
+export const SELECTABLE_DOC_LANGUAGES = ['leekscript', 'typescript', 'python'] as const
+
+/**
+ * Ramène un langage au choix équivalent proposé dans le sélecteur : `javascript` -> `typescript`.
+ * Appliqué aux ENTRÉES (préférence stockée, `?lang=js`, langage d'IA du joueur), pour qu'un
+ * joueur qui code en JavaScript arrive sur TypeScript plutôt que sur un choix inexistant.
+ */
+export function toSelectableDocLanguage(language: DocLanguage): DocLanguage {
+	return language === 'javascript' ? 'typescript' : language
+}
+
 /** Normalise un identifiant de langage, ou null s'il ne désigne pas un langage d'IA. */
 export function normalizeDocLanguage(language: string | undefined | null): DocLanguage | null {
 	if (!language) return null
@@ -55,18 +72,20 @@ export function initDocLanguage(farmerLanguage?: string | null) {
 	// L'URL gagne : un lien partagé doit s'ouvrir dans le langage de celui qui l'a envoyé,
 	// pas dans la préférence de celui qui le reçoit.
 	const fromUrl = normalizeDocLanguage(new URLSearchParams(window.location.search).get('lang'))
-	if (fromUrl) { docLanguage.value = fromUrl; return }
+	if (fromUrl) { docLanguage.value = toSelectableDocLanguage(fromUrl); return }
 	const stored = normalizeDocLanguage(localStorage.getItem(STORAGE_KEY))
-	if (stored) { docLanguage.value = stored; return }
+	if (stored) { docLanguage.value = toSelectableDocLanguage(stored); return }
 	// Sinon le langage dans lequel le joueur écrit ses IA : c'est presque toujours celui
 	// dans lequel il veut lire la doc.
-	docLanguage.value = normalizeDocLanguage(farmerLanguage) ?? DEFAULT
+	const fromFarmer = normalizeDocLanguage(farmerLanguage)
+	docLanguage.value = fromFarmer ? toSelectableDocLanguage(fromFarmer) : DEFAULT
 }
 
 export function setDocLanguage(language: DocLanguage) {
-	if (docLanguage.value === language) return
-	docLanguage.value = language
-	localStorage.setItem(STORAGE_KEY, language)
+	const selectable = toSelectableDocLanguage(language)
+	if (docLanguage.value === selectable) return
+	docLanguage.value = selectable
+	localStorage.setItem(STORAGE_KEY, selectable)
 }
 
 /**
