@@ -24,6 +24,15 @@ vi.mock('@/model/ai', () => ({
 import { FileSystem, translateFileSystemError, type FarmerTree } from '@/model/filesystem'
 import { Folder, AIItem } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
+import { LeekWars } from '@/model/leekwars'
+
+// Fabrique une réponse LeekWars.post/get factice supportant le chaînage `.then().error()`
+// utilisé par le vrai client. `.then` appelle le callback synchronement avec `data`, `.error`
+// est un no-op sur le chemin succès. Les deux renvoient `this` pour permettre le chaînage.
+const req = (data: unknown) => ({
+	then(cb: (d: unknown) => void) { cb(data); return this },
+	error() { return this },
+})
 
 const tree = (): FarmerTree => ({
 	folders: ['Combat', 'Move', 'Combat/utils'],
@@ -198,5 +207,50 @@ describe('FileSystem.load (cache hit)', () => {
 		await fs.load(ai)
 		expect(ai.code).toBe('DU_CACHE')
 		expect(analyze).toHaveBeenCalled()
+		expect(LeekWars.post).not.toHaveBeenCalled()
+	})
+
+	// Régression : un fichier fraîchement créé/restauré/en corbeille a ai.mtime===0. Avant le fix,
+	// la garde `cached.mtime >= ai.mtime` valait `cached.mtime >= 0` (toujours vrai) → une entrée de
+	// cache orpheline (ancien fichier du même nom) écrasait le vrai code serveur = mauvais contenu.
+	it('ne sert PAS un cache orphelin quand ai.mtime===0 : le serveur fait autorité', async () => {
+		const fs = new FileSystem(); fs.init(tree())
+		const ai = fs.ais['main']
+		ai.mtime = 0
+		cache.getAICache.mockResolvedValueOnce({ code: 'CACHE_PERIME', mtime: 123456 })
+		;(LeekWars.post as ReturnType<typeof vi.fn>).mockReturnValueOnce(req({ code: 'DU_SERVEUR', mtime: 999 }))
+		await fs.load(ai)
+		expect(LeekWars.post).toHaveBeenCalledWith('ai/read', { path: 'main' })
+		expect(ai.code).toBe('DU_SERVEUR')
+	})
+})
+
+describe('FileSystem.restore', () => {
+	beforeEach(() => { (LeekWars.post as ReturnType<typeof vi.fn>).mockClear() })
+
+	it('invalide le cache du path corbeille ET du path cible restauré', () => {
+		const fs = new FileSystem(); fs.init(tree())
+		const ai = fs.ais['.trash/oldfile']
+		;(LeekWars.post as ReturnType<typeof vi.fn>).mockReturnValueOnce(req({ path: 'oldfile' }))
+		fs.restore(ai)
+		expect(cache.removeAICache).toHaveBeenCalledWith('.trash/oldfile')
+		expect(cache.removeAICache).toHaveBeenCalledWith('oldfile')
+		expect(fs.ais['oldfile']).toBe(ai)
+		expect(fs.ais['.trash/oldfile']).toBeUndefined()
+	})
+
+	// Régression : à la racine un fichier "oldfile" pouvait déjà exister → le serveur suffixe en
+	// "oldfile_2". Avant le fix le client ignorait la réponse et gardait path="oldfile" → désync
+	// (affichage/sauvegarde sous le mauvais chemin).
+	it('réaligne le path (via setPath) quand le serveur suffixe le nom sur conflit', () => {
+		const fs = new FileSystem(); fs.init(tree())
+		const ai = fs.ais['.trash/oldfile']
+		;(LeekWars.post as ReturnType<typeof vi.fn>).mockReturnValueOnce(req({ path: 'oldfile_2' }))
+		fs.restore(ai)
+		expect(fs.ais['oldfile_2']).toBe(ai)
+		expect(ai.name).toBe('oldfile_2')
+		expect(ai.path).toBe('oldfile_2')
+		expect(fs.ais['oldfile']).toBeUndefined()
+		expect(emitterMock.emit).toHaveBeenCalledWith('ai-path-changed', { oldPath: 'oldfile', newPath: 'oldfile_2' })
 	})
 })

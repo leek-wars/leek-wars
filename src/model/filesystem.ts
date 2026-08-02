@@ -336,6 +336,8 @@ class FileSystem {
 		ai.folder = 0
 		ai.path = ai.name
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+		// Retirer l'ancienne clé corbeille de la map (sinon deux entrées pointent sur la même IA).
+		delete this.ais[oldPath]
 		// Path corbeille libéré ET path cible réutilisé : invalider les deux caches, sinon un
 		// contenu périmé (ancien fichier du même nom) ressortirait sur le fichier restauré (#4318).
 		removeAICache(oldPath)
