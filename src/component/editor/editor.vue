@@ -693,6 +693,7 @@
 	}
 
 	let updateGen = 0
+	let load1Gen = 0
 	let load2Gen = 0
 	function update() {
 		const routeHash = route.params.hash as string | undefined
@@ -860,23 +861,29 @@
 		aiEditor.save()
 		aiEditor.serverError = false
 
+		// editor1/editor2 sont réutilisés d'un onglet à l'autre (props.ai change au changement
+		// d'onglet, et aiEditor.ai renvoie toujours l'IA courante). Sur connexion lente, l'utilisateur
+		// peut changer d'onglet pendant que la requête ai/write est en vol : on capture l'IA visée ICI
+		// pour que le callback écrive le cache/mtime/modified sur CE fichier, et pas sur celui désormais
+		// affiché — sinon le code sauvegardé atterrit dans le cache du mauvais fichier (corruption).
+		const savedAI = aiEditor.ai
 		const content = aiEditor.editor.getValue()
-		aiEditor.ai.code = content
+		savedAI.code = content
 
 		LeekWars.track('save-ai')
 
-		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
+		LeekWars.post('ai/write', {path: savedAI.path, code: content}).then((data) => {
 			aiEditor.saving = false
-			aiEditor.ai.mtime = data.modified || Date.now()
-			setAICache(aiEditor.ai.path, content, aiEditor.ai.mtime)
-			aiEditor.ai.modified = false
+			savedAI.mtime = data.modified || Date.now()
+			setAICache(savedAI.path, content, savedAI.mtime)
+			savedAI.modified = false
 
 			if (data.result) {
 				aiEditor.goods = []
 				analyzer.applyAnalyzeResult(data.result, (ai) => {
 					if (aiEditor.goods.length === 0) aiEditor.goods.push({ai})
 				})
-				analyzer.updateTodos(aiEditor.ai)
+				analyzer.updateTodos(savedAI)
 				analyzer.updateCount()
 				setTimeout(() => aiEditor.goods = [], 2000)
 			}
@@ -885,6 +892,11 @@
 		}).error((error) => {
 			aiEditor.serverError = true
 			aiEditor.saving = false
+			// aiEditor.save() a passé modified=false de façon optimiste AVANT le POST. Sur échec
+			// (connexion lente/coupée), on re-signale le fichier comme non sauvegardé : sinon l'UI
+			// affiche « sauvegardé », le garde onBeforeRouteLeave ne prévient plus, et l'utilisateur
+			// perd ses modifications en croyant les avoir enregistrées.
+			savedAI.modified = true
 			LeekWars.toast(translateFileSystemError(error))
 		})
 	}
@@ -1474,7 +1486,12 @@
 		const aiObj = fileSystem.ais[ai]
 		if (aiObj) {
 			if (side === 1) {
-				fileSystem.load(aiObj).then(() => { currentAI1.value = ai })
+				// Garde anti-course : sur connexion lente, cliquer A puis B où load(B) résout
+				// avant load(A) laisserait le .then le plus lent poser currentAI1 = A alors que
+				// l'onglet actif est B. L'éditeur afficherait A sous l'onglet B → une sauvegarde
+				// écrirait le contenu dans le mauvais fichier. (Symétrique du garde de droite.)
+				const gen = ++load1Gen
+				fileSystem.load(aiObj).then(() => { if (gen === load1Gen) currentAI1.value = ai })
 			} else {
 				// Garde anti-course : un switch rapide d'onglets droits ne doit pas
 				// laisser le .then le plus lent écraser currentAI2 du plus récent.

@@ -190,8 +190,13 @@ class FileSystem {
 	 */
 	public load(ai: AI): Promise<AI> {
 		return getAICache(ai.path).then((cached) => {
-			// Cache hit : le mtime local correspond au mtime serveur
-			if (cached !== null && cached.mtime > 0 && cached.mtime >= ai.mtime) {
+			// Cache hit : le mtime local correspond au mtime serveur.
+			// On exige `ai.mtime > 0` : un fichier fraîchement créé/restauré/en corbeille a
+			// ai.mtime===0, et alors `cached.mtime >= 0` serait toujours vrai — n'importe quelle
+			// entrée de cache orpheline pour ce path (laissée par un ancien fichier au même nom)
+			// gagnerait et écraserait le vrai code renvoyé par le serveur. Sans mtime de référence
+			// fiable, le serveur fait autorité.
+			if (cached !== null && cached.mtime > 0 && ai.mtime > 0 && cached.mtime >= ai.mtime) {
 				ai.code = cached.code
 				if (!ai.functions.length) { ai.analyze() }
 				return ai
@@ -326,15 +331,30 @@ class FileSystem {
 
 	public restore(ai: AI) {
 		const trashName = ai.name
+		const oldPath = ai.path
 		const item = this.bin.items.splice(this.bin.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
 		ai.folder = 0
 		ai.path = ai.name
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+		// Path corbeille libéré ET path cible réutilisé : invalider les deux caches, sinon un
+		// contenu périmé (ancien fichier du même nom) ressortirait sur le fichier restauré (#4318).
+		removeAICache(oldPath)
+		removeAICache(ai.path)
 		this.ais[ai.path] = ai
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
 		emitter.emit('ai-created', ai.path)
-		LeekWars.post('ai/restore', {trash_name: trashName}).error((error) => LeekWars.toast(translateFileSystemError(error)))
+		LeekWars.post('ai/restore', {trash_name: trashName}).then((data) => {
+			// Conflit de nom à la racine : le serveur suffixe (main -> main_2). On réaligne le path
+			// client (via setPath : re-clé la map, invalide le cache, émet ai-path-changed pour que
+			// les onglets ouverts suivent) sinon on afficherait/sauvegarderait sous le mauvais chemin.
+			if (data.path && data.path !== ai.path) {
+				ai.name = data.path.split('/').pop()!
+				this.setPath(ai, data.path)
+				item[0].name = ai.name
+				this.sortFolder(this.rootFolder)
+			}
+		}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	public restoreFolder(folder: Folder) {
