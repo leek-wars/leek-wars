@@ -20,7 +20,7 @@
 						<span class="tab-label">{{ $t('main.tutorial') }}</span>
 					</div>
 				</router-link>
-				<doc-language-selector />
+				<doc-language-selector v-if="!inAppBar" />
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
 					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -82,6 +82,7 @@
 	import { FUNCTION_CATEGORIES } from '@/model/function_categories'
 	import { i18n, mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
@@ -256,6 +257,14 @@
 	 * plate. Sans ça la colonne annoncerait `getLife` à un lecteur en Python, à qui la fiche
 	 * de droite affiche `entity.life`.
 	 */
+	/**
+	 * La barre d'application mobile (lw-bar) porte déjà le sélecteur de langage, mais elle
+	 * n'existe que connecté (`#app:not(.connected) .app-bar { display: none }`). Hors de ce
+	 * cas — desktop, ou mobile déconnecté — c'est la barre d'onglets de la page qui le porte,
+	 * sans quoi il n'y en aurait aucun.
+	 */
+	const inAppBar = computed(() => LeekWars.mobile && store.state.connected)
+
 	function objectPathOf(name: string): string | null {
 		if (docLanguage.value === 'leekscript') return null
 		return objectSignatureOf(name)?.path ?? null

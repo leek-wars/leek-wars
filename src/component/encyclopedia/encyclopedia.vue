@@ -12,7 +12,7 @@
 				</div>
 			</div>
 			<div v-if="page" class="tabs">
-				<doc-language-selector v-if="!edition" />
+				<doc-language-selector v-if="!edition && !inAppBar" />
 				<v-menu v-if="contributor && edition" offset-y>
 					<template #activator="{ props }">
 						<div class="page-language info" v-bind="props">
@@ -341,6 +341,14 @@
 		}
 		return list.reverse()
 	})
+	/**
+	 * La barre d'application mobile (lw-bar) porte déjà le sélecteur de langage, mais elle
+	 * n'existe que connecté (`#app:not(.connected) .app-bar { display: none }`). Hors de ce
+	 * cas — desktop, ou mobile déconnecté — c'est la barre d'onglets de la page qui le porte,
+	 * sans quoi il n'y en aurait aucun.
+	 */
+	const inAppBar = computed(() => LeekWars.mobile && store.state.connected)
+
 	const function_args = computed(() => {
 		for (const fun of FUNCTIONS) {
 			if (fun.name === code.value) {

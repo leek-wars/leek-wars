@@ -38,6 +38,7 @@
 				</router-link>
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">
+				<doc-language-selector v-if="onDocumentation" class="bar-doc-language" />
 				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
 					<img v-if="action.image" :src="'/image/' + action.image" class="action">
 					<v-icon v-else-if="action.icon" class="action">{{ action.icon }}</v-icon>
@@ -53,12 +54,25 @@
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 import type { Notification } from '@/model/notification'
 
 defineOptions({ name: 'LwBar' })
 
 const dark = ref(false)
+const route = useRoute()
+
+/**
+ * Le sélecteur de langage n'a de sens que là où on LIT de la documentation. Sur mobile la
+ * barre d'onglets de la page n'existe pas — c'est cette barre d'application qui la remplace —
+ * donc sans ça le sélecteur serait tout simplement absent sur téléphone.
+ */
+const onDocumentation = computed(() => {
+	const path = route.path
+	return path.startsWith('/help/documentation') || path.startsWith('/encyclopedia')
+})
 
 function mainButton() {
 	if (LeekWars.menuExpanded || !LeekWars.splitBack) {
@@ -84,6 +98,15 @@ function readNotification(notification: Notification) {
 </script>
 
 <style lang="scss" scoped>
+	// Le sélecteur hérite des styles de .action de la barre : on neutralise le padding pour
+	// que les 4 logos tiennent à côté des autres actions sur un écran de téléphone.
+	.bar-doc-language {
+		:deep(.doc-language) {
+			padding: 0 4px;
+			height: auto;
+		}
+	}
+
 	.app-bar {
 		position: fixed;
 		top: 0;
