@@ -10,6 +10,8 @@
 	import { Latex } from '@/model/latex'
 	import { createSubApp } from '@/model/vue'
 	import { resolveCodeThemeClass } from '@/component/editor/code-theme'
+	import CodeTabs from '@/component/encyclopedia/code-tabs.vue'
+	import { findCodeBlockGroups } from '@/model/doc-language'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
@@ -150,6 +152,17 @@
 					svg.appendChild(pathEl)
 					item.replaceWith(svg)
 				})
+				// Un même exemple décliné en plusieurs langages s'écrit en fences CONSÉCUTIVES
+				// (```leekscript puis ```js puis ```python) : on les regroupe en onglets. Les blocs
+				// restants — l'immense majorité des pages — passent par le chemin normal ci-dessous.
+				for (const group of findCodeBlockGroups(mdEl)) {
+					const container = document.createElement('div')
+					group.elements[0].replaceWith(container)
+					group.elements.forEach(e => e.remove())
+					const app = createSubApp(CodeTabs, { blocks: group.blocks }, 'encyclopedia-code-tabs')
+					app.mount(container)
+					components.push({ $destroy: () => app.unmount() })
+				}
 				mdEl.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')

@@ -1,11 +1,16 @@
 <template lang="html">
 	<div v-if="fun" class="doc-function lw" :class="{deprecated: fun.deprecated}">
 		<h2>
-			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">,&nbsp;</span>
-			</span>)
-			<span v-if="fun.return_type != 0">
-				&nbsp;<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span>&nbsp;{{ fun.return_name }}
-			</span>
+			<span v-if="signatureText" class="object-signature">{{ signatureText }}</span>
+			<template v-else>
+				<img v-if="docLanguage !== 'leekscript'" src="/image/language/leekscript.svg"
+					class="leekscript-only" title="LeekScript" alt="LeekScript">
+				{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">,&nbsp;</span>
+				</span>)
+				<span v-if="fun.return_type != 0">
+					&nbsp;<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span>&nbsp;{{ fun.return_name }}
+				</span>
+			</template>
 			<div class="spacer"></div>
 			<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + fun.name" :title="'Encyclopédie > ' + fun.name + '()'">
 				<v-icon class="book">mdi-book-open-page-variant</v-icon>
@@ -78,12 +83,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { FUNCTION_BY_ID } from '@/model/function_by_id'
 import { locale } from '@/locale'
 import type { LSFunction } from '@/model/function'
 import { LeekWars } from '@/model/leekwars'
+import { docLanguage } from '@/model/doc-language'
+import { objectSignatureOf, receiverFor } from '@/model/doc-signature'
 
 defineOptions({ name: 'DocumentationFunction' })
 
@@ -92,6 +99,24 @@ const props = defineProps<{
 }>()
 
 const expanded = ref(false)
+
+/**
+ * Signature dans le langage choisi. En LeekScript on garde le rendu plat historique (typé
+ * par le registre serveur) ; en JS/TS/Python on affiche le membre objet, qui est le SEUL nom
+ * appelable dans ces langages — `getLife(entity)` n'y existe tout simplement pas.
+ */
+const objectSignature = computed(() => {
+	if (docLanguage.value === 'leekscript') return null
+	return objectSignatureOf(props.fun.name, props.fun.return_type)
+})
+
+const signatureText = computed(() => {
+	const signature = objectSignature.value
+	if (!signature) return null
+	const body = docLanguage.value === 'python' ? signature.python : signature.typescript
+	const receiver = receiverFor(signature.container, docLanguage.value)
+	return receiver ? receiver + '.' + body : signature.container + '.' + body
+})
 const new_fun = ref<{ description: string, primary: Record<string, string>, secondary: Record<string, string> } | null>(null)
 
 watch(() => props.fun, () => {
@@ -103,6 +128,18 @@ watch(() => props.fun, () => {
 </script>
 
 <style lang="scss" scoped>
+	// Fonction sans équivalent dans l'API objet (alias historiques comme getForce, formes
+	// retirées avant la v4) : on garde la signature plate et on marque qu'elle est
+	// LeekScript-only. Un logo plutôt qu'une phrase : rien à traduire en 17 langues.
+	.leekscript-only {
+		width: 16px;
+		height: 16px;
+		margin-right: 6px;
+		vertical-align: -3px;
+	}
+	.object-signature {
+		white-space: pre-wrap;
+	}
 	h2 {
 		margin-bottom: 12px;
 		font-size: 17px;

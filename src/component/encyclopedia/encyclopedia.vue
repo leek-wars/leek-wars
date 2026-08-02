@@ -12,6 +12,7 @@
 				</div>
 			</div>
 			<div v-if="page" class="tabs">
+				<doc-language-selector v-if="!edition" />
 				<v-menu v-if="contributor && edition" offset-y>
 					<template #activator="{ props }">
 						<div class="page-language info" v-bind="props">
@@ -218,6 +219,9 @@
 	import type * as Monaco from 'monaco-editor'
 	import '@/component/editor/monaco-csp'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
+	import { docLanguage } from '@/model/doc-language'
+	import { flatNameForObjectPath, objectSignatureOf, receiverFor } from '@/model/doc-signature'
 	import { locale } from '@/locale'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -340,6 +344,19 @@
 	const function_args = computed(() => {
 		for (const fun of FUNCTIONS) {
 			if (fun.name === code.value) {
+				// En JS/TS/Python la fonction plate n'existe PAS : afficher sa signature à côté
+				// du titre induirait en erreur. On montre le membre objet, seul nom appelable.
+				// Le titre de la page reste le nom plat : c'est la clé de l'encyclopédie.
+				if (docLanguage.value !== 'leekscript') {
+					const signature = objectSignatureOf(fun.name, fun.return_type)
+					if (!signature) return undefined
+					const body = docLanguage.value === 'python' ? signature.python : signature.typescript
+					const receiver = receiverFor(signature.container, docLanguage.value)
+					// La flèche sépare le titre de la page du membre objet : sans elle les deux se
+					// collent (`getLifeentity.life`), le `(` de la forme plate faisant office
+					// de séparateur implicite.
+					return ' → <span class="lstype">' + LeekWars.protect((receiver ?? signature.container) + '.' + body) + '</span>'
+				}
 				let name = "("
 				let i = 0
 				for (const a in fun.arguments_names) {
@@ -470,6 +487,14 @@
 		selectedHistoryIndex.value = null
 		referencedBy.value = null
 		destroyDiffEditor()
+
+		// Adresse écrite avec le nom OBJET (`Entity.life`) : les pages sont titrées du nom plat,
+		// on redirige vers la bonne, en réutilisant le bandeau « redirigé depuis » existant.
+		const flat = flatNameForObjectPath(code.value)
+		if (flat && flat !== code.value) {
+			router.replace('/encyclopedia/' + language.value + '/' + flat + '?from=' + encodeURIComponent(code.value))
+			return
+		}
 
 		LeekWars.get<EncyclopediaPage & { redirect?: string }>('encyclopedia/get/' + language.value + '/' + code.value).then(p => {
 			if (p.redirect) {
