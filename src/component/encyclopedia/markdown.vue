@@ -255,14 +255,14 @@
 				// Tutorial menu
 				mdEl.querySelectorAll('.tutorial-menu').forEach((item) => {
 					const track = toTutorialTrack(item.getAttribute('data-track'))
-					const app = createSubApp(TutorialMenu, { locale: props.locale, track }, 'tutorial-menu')
+					const app = createSubApp(TutorialMenu, { locale: language.value, track }, 'tutorial-menu')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
 				mdEl.querySelectorAll('.tutorial-progress').forEach((item) => {
 					const track = toTutorialTrack(item.getAttribute('data-track'))
-					const app = createSubApp(TutorialProgress, { locale: props.locale, track }, 'tutorial-progress')
+					const app = createSubApp(TutorialProgress, { locale: language.value, track }, 'tutorial-progress')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
