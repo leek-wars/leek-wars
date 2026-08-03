@@ -218,6 +218,7 @@
 <script setup lang="ts">
 	import type * as Monaco from 'monaco-editor'
 	import '@/component/editor/monaco-csp'
+	import { colorDecoratorOptions } from '@/component/editor/monaco-color-decorators'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 	import { docLanguage } from '@/model/doc-language'
@@ -611,6 +612,7 @@ ${ret}
 					overviewRulerBorder: false,
 					renderLineHighlight: "line",
 					accessibilitySupport: 'off', // Workaround Firefox : sélection backward + remplacement (#2802)
+					...colorDecoratorOptions,
 				}))
 
 				editor.value.onDidChangeModelContent(() => {
@@ -825,6 +827,7 @@ ${ret}
 				wordWrap: 'on',
 				hideUnchangedRegions: { enabled: true },
 				theme: LeekWars.darkMode ? 'vs-dark' : 'vs',
+				...colorDecoratorOptions,
 			}))
 			diffEditor.value.setModel({
 				original: markRaw(monaco.editor.createModel(oldContent, 'markdown')),

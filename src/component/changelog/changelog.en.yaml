@@ -17,6 +17,7 @@
     - "#ai JavaScript, TypeScript and Python API: Field.distance now returns a distance in number of cells, like Cell.distance and Entity.distance, instead of the straight-line distance. The straight-line distance is still available as Field.euclideanDistance (thanks to GSoMan)."
     - "The Inventory page no longer crashes on the first loot of a new season: a season's resources (Golden Sand, Sea Amber...) are now published automatically the day before it starts."
     - "Seasons now start and end at midnight French time, instead of 2 a.m."
+    - "The editor no longer throws an error on every keystroke on old Safari versions (iPhone and iPad on iOS 15): Monaco's color detection used a regular expression those browsers don't understand."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

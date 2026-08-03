@@ -31,6 +31,7 @@ import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer } from './analyzer'
 import { getLanguageForPath } from './file-types'
+import { colorDecoratorOptions } from './monaco-color-decorators'
 import { pyOpen, pyChange, pyClose } from './pyright'
 import { code, dochash, createSubApp, emitter } from '@/model/vue'
 import { useNamespacedT } from '@/model/i18n'
@@ -176,6 +177,7 @@ onMounted(() => {
 		accessibilitySupport: 'off',
 		// Options des paramètres de l'éditeur (absentes = activées, cas de la console)
 		...optionalOptions(),
+		...colorDecoratorOptions,
 	}, {
 		storageService: {
 			get() {},

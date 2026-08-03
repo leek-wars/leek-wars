@@ -17,6 +17,7 @@
     - "#ai API JavaScript, TypeScript e Python: Field.distance restituisce ora una distanza in numero di caselle, come Cell.distance e Entity.distance, invece della distanza in linea d'aria. La distanza in linea d'aria resta disponibile con Field.euclideanDistance (grazie a GSoMan)."
     - "La pagina Inventario non va più in crash al primo bottino di una nuova stagione: le risorse di una stagione (Sabbia dorata, Ambra marina...) sono ora pubblicate automaticamente il giorno prima del suo inizio."
     - "Le stagioni iniziano e finiscono ora a mezzanotte ora francese, invece che alle 2 del mattino."
+    - "L'editor non genera più un errore a ogni battitura sulle vecchie versioni di Safari (iPhone e iPad con iOS 15): il rilevamento dei colori di Monaco usava un'espressione regolare che quei browser non comprendono."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."

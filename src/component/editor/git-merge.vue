@@ -7,6 +7,7 @@ import * as monaco from 'monaco-editor'
 import { markRaw, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { getLanguageForPath } from './file-types'
 import { buildConflictDecorations, parseConflicts, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
+import { colorDecoratorOptions } from './monaco-color-decorators'
 
 defineOptions({ name: 'GitMerge', i18n: {} })
 
@@ -94,6 +95,7 @@ function createEditor() {
 		glyphMargin: true,
 		lineNumbersMinChars: 3,
 		wordWrap: 'on',
+		...colorDecoratorOptions,
 	}))
 
 	parseAndDecorate()
