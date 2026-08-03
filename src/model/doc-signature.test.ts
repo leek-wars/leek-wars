@@ -254,3 +254,25 @@ describe('displaySignature', () => {
 		expect(displaySignature('intervalMin', undefined, 'python')).toBeNull()
 	})
 })
+
+describe('catégorie sans équivalent dans le langage lu', () => {
+	// Règle appliquée par documentation.vue : une catégorie dont AUCUNE fonction n'existe dans
+	// le langage lu est masquée. En pratique ce sont les intervalles, absents de JS et Python.
+	const INTERVALLES = ['intervalMin', 'intervalMax', 'intervalContains', 'intervalToArray',
+		'intervalToSet', 'intervalIsEmpty', 'intervalAverage', 'intervalSize']
+	const LISTES = ['count', 'push', 'pop', 'arrayFilter', 'arraySort']
+
+	it('aucune fonction d’intervalle n’a d’équivalent', () => {
+		for (const langue of ['typescript', 'python'] as const) {
+			for (const n of INTERVALLES) {
+				expect(displaySignature(n, undefined, langue), `${n} en ${langue}`).toBeNull()
+			}
+		}
+	})
+
+	it('les listes en ont, elles restent affichées', () => {
+		for (const langue of ['typescript', 'python'] as const) {
+			expect(LISTES.some(n => displaySignature(n, undefined, langue) !== null), langue).toBe(true)
+		}
+	})
+})

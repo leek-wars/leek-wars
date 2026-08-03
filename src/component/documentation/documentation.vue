@@ -73,7 +73,7 @@
 	import { locale } from '@/locale'
 	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 	import { docLanguage } from '@/model/doc-language'
-	import { objectSignatureOf } from '@/model/doc-signature'
+	import { displaySignature, objectSignatureOf } from '@/model/doc-signature'
 	import type { Constant } from '@/model/constant'
 	import type { LSFunction } from '@/model/function'
 	import { FUNCTIONS } from '@/model/functions'
@@ -149,7 +149,19 @@
 			if (!(item.category in cats)) cats[item.category] = []
 			cats[item.category].push(item)
 		}
-		return cats
+		if (docLanguage.value === 'leekscript') return cats
+		// Une catégorie dont AUCUNE fonction n'existe dans le langage lu n'a rien à y faire :
+		// les intervalles n'ont pas de type équivalent en JS ni en Python, afficher leurs 16
+		// entrées à un lecteur qui ne peut en utiliser aucune est du bruit.
+		// Règle sur la catégorie ENTIÈRE, pas sur chaque fonction : une fonction isolée sans
+		// équivalent reste affichée avec son badge LeekScript, ce qui est une information.
+		const retenues: {[key: number]: (LSFunction | Constant)[]} = {}
+		for (const [categorie, items] of Object.entries(cats)) {
+			const utile = items.some(item => 'return_type' in item
+				&& displaySignature(item.name, (item as LSFunction).return_type, docLanguage.value) !== null)
+			if (utile) retenues[Number(categorie)] = items
+		}
+		return retenues
 	})
 
 	;(async () => {
