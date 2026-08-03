@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { flatNameForObjectPath, flatToObjectPath, objectSignatureOf, receiverFor, typescriptTypeToPython } from '@/model/doc-signature'
+import { displaySignature, flatNameForObjectPath, flatToObjectPath, objectSignatureOf, receiverFor, typescriptTypeToPython } from '@/model/doc-signature'
 
 describe('typescriptTypeToPython', () => {
 	it('translittère les types de base', () => {
@@ -231,5 +231,26 @@ describe('couverture de la table stdlib', () => {
 			expect(enTS(n), n).toBeNull()
 			expect(enPY(n), n).toBeNull()
 		}
+	})
+})
+
+describe('displaySignature', () => {
+	it('ne colle pas de receveur devant une forme stdlib', () => {
+		// Régression : la fiche affichait `m.list(m.keys())` en prod, un receveur devant une
+		// forme qui portait déjà son chemin. La composition était dupliquée entre la fiche et
+		// le titre de page ; une seule des deux avait été corrigée.
+		expect(displaySignature('mapKeys', undefined, 'python')).toBe('list(m.keys()) -> list')
+		expect(displaySignature('abs', undefined, 'typescript')).toBe('Math.abs(x: number): number')
+		expect(displaySignature('sqrt', undefined, 'python')).toBe('math.sqrt(x: float) -> float')
+	})
+
+	it('compose le receveur pour l’API de jeu', () => {
+		expect(displaySignature('getLife', 6, 'python')).toBe('entity.life: int')
+		expect(displaySignature('useWeapon', undefined, 'typescript')).toMatch(/^Fight\.me\.useWeapon\(/)
+	})
+
+	it('ne renvoie rien en LeekScript ni sans équivalent', () => {
+		expect(displaySignature('getLife', 6, 'leekscript')).toBeNull()
+		expect(displaySignature('intervalMin', undefined, 'python')).toBeNull()
 	})
 })

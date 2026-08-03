@@ -221,7 +221,7 @@
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 	import { docLanguage } from '@/model/doc-language'
-	import { flatNameForObjectPath, objectSignatureOf, receiverFor } from '@/model/doc-signature'
+	import { displaySignature, flatNameForObjectPath } from '@/model/doc-signature'
 	import { locale } from '@/locale'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -356,14 +356,12 @@
 				// du titre induirait en erreur. On montre le membre objet, seul nom appelable.
 				// Le titre de la page reste le nom plat : c'est la clé de l'encyclopédie.
 				if (docLanguage.value !== 'leekscript') {
-					const signature = objectSignatureOf(fun.name, fun.return_type, docLanguage.value)
+					const signature = displaySignature(fun.name, fun.return_type, docLanguage.value)
 					if (!signature) return undefined
-					const body = docLanguage.value === 'python' ? signature.python : signature.typescript
-					const receiver = receiverFor(signature.container, docLanguage.value)
 					// La flèche sépare le titre de la page du membre objet : sans elle les deux se
 					// collent (`getLifeentity.life`), le `(` de la forme plate faisant office
 					// de séparateur implicite.
-					return ' → <span class="lstype">' + LeekWars.protect((receiver ?? signature.container) + '.' + body) + '</span>'
+					return ' → <span class="lstype">' + LeekWars.protect(signature) + '</span>'
 				}
 				let name = "("
 				let i = 0

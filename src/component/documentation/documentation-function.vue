@@ -90,7 +90,7 @@ import { locale } from '@/locale'
 import type { LSFunction } from '@/model/function'
 import { LeekWars } from '@/model/leekwars'
 import { docLanguage } from '@/model/doc-language'
-import { objectSignatureOf, receiverFor } from '@/model/doc-signature'
+import { displaySignature } from '@/model/doc-signature'
 
 defineOptions({ name: 'DocumentationFunction' })
 
@@ -105,20 +105,8 @@ const expanded = ref(false)
  * par le registre serveur) ; en JS/TS/Python on affiche le membre objet, qui est le SEUL nom
  * appelable dans ces langages — `getLife(entity)` n'y existe tout simplement pas.
  */
-const objectSignature = computed(() => {
-	if (docLanguage.value === 'leekscript') return null
-	return objectSignatureOf(props.fun.name, props.fun.return_type, docLanguage.value)
-})
-
 const signatureText = computed(() => {
-	const signature = objectSignature.value
-	if (!signature) return null
-	const body = docLanguage.value === 'python' ? signature.python : signature.typescript
-	// Une entrée stdlib porte déjà son chemin complet (`Math.abs(x)`, `s.length`) : lui coller
-	// un receveur donnerait `math.Math.abs(x)`.
-	if (signature.stdlib) return body
-	const receiver = receiverFor(signature.container, docLanguage.value)
-	return receiver ? receiver + '.' + body : signature.container + '.' + body
+	return displaySignature(props.fun.name, props.fun.return_type, docLanguage.value)
 })
 const new_fun = ref<{ description: string, primary: Record<string, string>, secondary: Record<string, string> } | null>(null)
 

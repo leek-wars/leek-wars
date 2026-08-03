@@ -167,3 +167,23 @@ export function receiverFor(container: string, language: DocLanguage): string | 
 	void language
 	return container.charAt(0).toLowerCase() + container.slice(1)
 }
+
+/**
+ * Signature complète à AFFICHER pour une fonction, dans le langage demandé, ou null si elle
+ * n'a pas d'équivalent (la fiche retombe alors sur la forme plate LeekScript et son badge).
+ *
+ * Fonction unique volontairement : la fiche de doc et le titre de page d'encyclopédie
+ * composaient chacun la leur, et une correction n'appliquée qu'à l'une a produit un
+ * `m.list(m.keys())` en production — un receveur collé devant une forme stdlib qui portait
+ * déjà son chemin complet.
+ */
+export function displaySignature(flatName: string, returnTypeCode: number | undefined, language: DocLanguage): string | null {
+	if (language === 'leekscript') return null
+	const signature = objectSignatureOf(flatName, returnTypeCode, language)
+	if (!signature) return null
+	const body = language === 'python' ? signature.python : signature.typescript
+	// Une entrée stdlib porte déjà son chemin complet (`Math.abs(x)`, `list(m.keys())`).
+	if (signature.stdlib) return body
+	const receiver = receiverFor(signature.container, language) ?? signature.container
+	return receiver + '.' + body
+}
