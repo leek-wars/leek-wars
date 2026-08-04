@@ -319,7 +319,10 @@
 							<td><div class="country-wrapper"><flag v-if="row.country" :code="row.country" /></div></td>
 							<td>{{ row.turns }}</td>
 							<td>{{ row.leeks }}</td>
-							<td>{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</td>
+							<!-- La colonne montre la somme des niveaux, mais les classements sont triés sur le
+							     power (superlinéaire en niveau) : les deux ne sont pas monotones l'un par rapport
+							     à l'autre, d'où le power en survol pour expliquer l'ordre (#3627). -->
+							<td :title="$t('team_power') + ' : ' + LeekWars.formatNumber(row.power)">{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</td>
 							<td>{{ new Date(row.date * 1000).toLocaleDateString() }}</td>
 							<td class="fight-link-cell">
 								<router-link v-if="row.fight" :to="'/fight/' + row.fight" :title="$t('main.fight')" style="vertical-align: bottom;">

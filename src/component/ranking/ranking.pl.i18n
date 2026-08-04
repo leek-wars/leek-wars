@@ -60,6 +60,7 @@
 	"boss": "Boss",
 	"turns": "Turns",
 	"power": "Level",
+	"team_power": "Siła drużyny",
 	"date": "Date",
 	"boss_mode_turns": "Fastest",
 	"boss_mode_leeks": "Fewest leeks",
