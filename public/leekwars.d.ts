@@ -946,15 +946,13 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeapon)
 	 */
-	canUseWeapon(target: Entity | number): boolean;
+	canUseWeapon(target: Entity | number, weapon?: Weapon | number): boolean;
 	/**
-	 * Détermine si votre entité peut tirer sur l'entité d'id entity avec l'arme weapon.
-	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
-	 * @param entity L'id de l'entité sur lequel vous voulez tirer.
-	 * @returns true si votre entité peut tirer, false sinon.
+	 * Ordre historique (celui des fonctions LeekScript) : l'arme d'abord. Accepté tant que l'arme est un
+	 * OBJET Weapon — avec deux ids bruts, c'est l'ordre (target, weapon) ci-dessus qui s'applique.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeapon)
 	 */
-	canUseWeapon(weapon: Weapon | number, target: Entity | number): boolean;
+	canUseWeapon(weapon: Weapon, target: Entity | number): boolean;
 	/**
 	 * Peut-on utiliser l'arme courante sur la case 'cell' — ou 'weapon' sur 'cell' (2 arguments).
 	 * Détermine si votre entité peut tirer sur la cellule cell avec l'arme weapon.
@@ -963,15 +961,13 @@ declare class Me extends Entity {
 	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeaponOnCell)
 	 */
-	canUseWeaponOnCell(cell: Cell | Entity | number): boolean;
+	canUseWeaponOnCell(cell: Cell | Entity | number, weapon?: Weapon | number): boolean;
 	/**
-	 * Détermine si votre entité peut tirer sur la cellule cell avec l'arme weapon.
-	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
-	 * @param cell Le numéro de la cellule sur laquelle vous voulez tirer.
-	 * @returns true si votre entité peut tirer, false sinon.
+	 * Ordre historique (celui des fonctions LeekScript) : l'arme d'abord. Accepté tant que l'arme est un
+	 * OBJET Weapon — avec deux ids bruts, c'est l'ordre (cell, weapon) ci-dessus qui s'applique.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeaponOnCell)
 	 */
-	canUseWeaponOnCell(weapon: Weapon | number, cell: Cell | Entity | number): boolean;
+	canUseWeaponOnCell(weapon: Weapon, cell: Cell | Entity | number): boolean;
 	/**
 	 * Détermine si votre entité peut utiliser la puce chip sur l'entité d'id entity.
 	 * @param chip Le numéro de la puce à tester.

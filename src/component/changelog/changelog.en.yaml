@@ -15,6 +15,7 @@
     - "Obstacles on boss maps (castle ramparts, torii...) are now drawn at their real size on the report's movement map, with no more gaps that looked walkable (thanks to TheScout)."
     - "The referent role now goes discreet like the other roles in discreet mode: no bold username in the chat and a sober grade badge (thanks to Portevent)."
     - "#ai JavaScript, TypeScript and Python API: Field.distance now returns a distance in number of cells, like Cell.distance and Entity.distance, instead of the straight-line distance. The straight-line distance is still available as Field.euclideanDistance (thanks to GSoMan)."
+    - "#ai JavaScript, TypeScript and Python API: passing an explicit weapon to me.weaponCell, me.weaponCells, me.weaponTargets or me.canUseWeapon finally works. The list came back empty, and in Python the weapon keyword was rejected: the arguments reached the engine in reverse order. These methods take the target first and the weapon second, as documented, and the reverse order is still accepted (thanks to GSoMan)."
     - "The Inventory page no longer crashes on the first loot of a new season: a season's resources (Golden Sand, Sea Amber...) are now published automatically the day before it starts."
     - "Seasons now start and end at midnight French time, instead of 2 a.m."
     - "The editor no longer throws an error on every keystroke on old Safari versions (iPhone and iPad on iOS 15): Monaco's color detection used a regular expression those browsers don't understand."

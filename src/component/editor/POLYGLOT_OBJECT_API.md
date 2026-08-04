@@ -211,8 +211,8 @@ En plus de tout `Entity` :
 | `setWeapon(weapon)` | `boolean` | Équipe `weapon` (coûte 1 PT). |
 | `say(message)` | `boolean` | Fait parler ton entité. |
 | `lama()` | `void` | « lama » (trophée). |
-| `canUseWeapon(target)` / `canUseWeapon(weapon, target)` | `number` | Test d'attaque à l'arme. |
-| `canUseWeaponOnCell(cell)` / `canUseWeaponOnCell(weapon, cell)` | `number` | Idem sur case. |
+| `canUseWeapon(target, weapon?)` | `number` | Test d'attaque à l'arme (celle équipée par défaut). |
+| `canUseWeaponOnCell(cell, weapon?)` | `number` | Idem sur case. |
 | `canUseChip(chip, target)` / `canUseChipOnCell(chip, cell)` | `number` | Test de lancement de puce. |
 | `resurrect(target, cell)` | `number` | Ressuscite `target` sur `cell`. |
 | `itemUses(item)` | `number` | Utilisations de l'item ce tour. |

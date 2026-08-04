@@ -888,12 +888,14 @@ declare class Me extends Entity {
 	// Les canUse* renvoient un BOOLÉEN (moteur : Type.BOOL), pas un code Fight.Use : ce sont des
 	// prédicats « est-ce possible », pas des tentatives. Seules les actions réelles (useWeapon,
 	// useChip, resurrect, summon) renvoient un Fight.Use.
-	/** Peut-on utiliser l'arme courante sur 'target' — ou 'weapon' sur 'target' (2 arguments). */
-	canUseWeapon(target: Entity | number): boolean;
-	canUseWeapon(weapon: Weapon | number, target: Entity | number): boolean;
-	/** Peut-on utiliser l'arme courante sur la case 'cell' — ou 'weapon' sur 'cell' (2 arguments). */
-	canUseWeaponOnCell(cell: Cell | Entity | number): boolean;
-	canUseWeaponOnCell(weapon: Weapon | number, cell: Cell | Entity | number): boolean;
+	// Même forme que weaponCell/weaponTargets : la cible d'abord, l'arme optionnelle ensuite (l'arme
+	// équipée par défaut). L'ordre historique arme-en-premier reste accepté quand l'arme est un OBJET.
+	/** Peut-on utiliser l'arme (celle équipée, ou 'weapon') sur 'target'. */
+	canUseWeapon(target: Entity | number, weapon?: Weapon | number): boolean;
+	canUseWeapon(weapon: Weapon, target: Entity | number): boolean;
+	/** Peut-on utiliser l'arme (celle équipée, ou 'weapon') sur la case 'cell'. */
+	canUseWeaponOnCell(cell: Cell | Entity | number, weapon?: Weapon | number): boolean;
+	canUseWeaponOnCell(weapon: Weapon, cell: Cell | Entity | number): boolean;
 	canUseChip(chip: Chip | number, target: Entity | number): boolean;
 	canUseChipOnCell(chip: Chip | number, cell: Cell | Entity | number): boolean;
 	resurrect(target: Entity | number, cell: Cell | Entity | number): Fight.Use;

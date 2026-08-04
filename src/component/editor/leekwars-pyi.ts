@@ -125,8 +125,8 @@ const CLASSES: ClassSpec[] = [
 		'def lama(self) -> None: ...',
 		// Prédicats -> bool (moteur : Type.BOOL), à ne pas confondre avec les actions useWeapon/useChip
 		// qui renvoient un code USE_*. Miroir du .d.ts.
-		'def canUseWeapon(self, target: WeaponLike | EntityLike, target2: EntityLike = ...) -> bool: ...',
-		'def canUseWeaponOnCell(self, cell: WeaponLike | CellLike, cell2: CellLike = ...) -> bool: ...',
+		'def canUseWeapon(self, target: EntityLike | WeaponLike, weapon: WeaponLike | EntityLike = ...) -> bool: ...',
+		'def canUseWeaponOnCell(self, cell: CellLike | WeaponLike, weapon: WeaponLike | CellLike = ...) -> bool: ...',
 		'def canUseChip(self, chip: ChipLike, target: EntityLike) -> bool: ...',
 		'def canUseChipOnCell(self, chip: ChipLike, cell: CellLike) -> bool: ...',
 		'def resurrect(self, target: EntityLike, cell: CellLike) -> int: ...',
