@@ -7,6 +7,7 @@ import { Team } from '@/model/team'
 
 import Vuex, { Store } from 'vuex'
 import { clearAICache } from './ai-code-cache'
+import { setLocalStorageSafe } from './storage'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
@@ -157,6 +158,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			state.accounts = merged
 			localStorage.setItem('accounts', JSON.stringify(merged))
+			// Prévient les autres onglets du compte désormais actif (cf. onStorage dans app.vue).
+			setLocalStorageSafe('active-account', '' + state.farmer.id)
 			for (const id in state.farmer.leeks) {
 				state.farmer.leeks[id].country = state.farmer.country
 			}
@@ -233,6 +236,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.removeItem('login-attempt')
 			localStorage.removeItem('token')
 			localStorage.removeItem('accounts')
+			localStorage.removeItem('active-account')
 			state.token = null
 			state.farmer = null
 			state.accounts = []
@@ -974,6 +978,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'level-up'(state: LeekWarsState, data: { leek: number, level: number, capital: number }) {
 			if (state.farmer) {
+				// Poireau d'un autre compte : même raison que 'update-xp' plus bas.
 				const leek = state.farmer.leeks[data.leek]
 				if (!leek) { return }
 				leek.level = data.level
@@ -1082,16 +1087,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		// Comme 'level-up', ces mutations sont pilotées par le WebSocket, qui peut être
+		// authentifié sur un autre compte que celui affiché : le poireau du message
+		// n'appartient alors pas à l'éleveur courant (cf. store-leek-updates.test.ts).
 		'update-xp'(state: LeekWarsState, data: { leek: number, xp: number }) {
-			if (state.farmer) {
-				state.farmer.leeks[data.leek].xp += data.xp
-			}
+			const leek = state.farmer?.leeks[data.leek]
+			if (leek) { leek.xp += data.xp }
 		},
 
 		'update-leek-talent'(state: LeekWarsState, data: { leek: number, talent: number }) {
-			if (state.farmer) {
-				state.farmer.leeks[data.leek].talent += data.talent
-			}
+			const leek = state.farmer?.leeks[data.leek]
+			if (leek) { leek.talent += data.talent }
 		},
 
 		'update-farmer-talent'(state: LeekWarsState, talent: number) {

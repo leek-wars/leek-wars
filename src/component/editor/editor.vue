@@ -843,10 +843,7 @@
 	}
 
 	onBeforeRouteLeave((_to, _from, next) => {
-		let num = 0
-		for (const i in fileSystem.ais) {
-			if (fileSystem.ais[i].modified && !fileSystem.ais[i].path.startsWith('.trash/')) { num++ }
-		}
+		const num = fileSystem.unsavedAIs.length
 		if (num > 0 && !window.confirm(t('n_ais_unsaved', [num]) as string)) {
 			next(false)
 		} else {

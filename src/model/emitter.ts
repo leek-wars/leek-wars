@@ -22,6 +22,7 @@ type Events = {
 	keyup: KeyboardEvent
 	resize: void
 	focus: void
+	visible: void
 	htmlclick: void
 	loaded: void
 	connected: Farmer

@@ -67,6 +67,12 @@ class FileSystem {
 	// Même map que `ais`, en lecture par chemin arbitraire (URI d'un modèle Monaco, argument d'une
 	// commande) : typée `| undefined` pour que le compilateur impose la garde qui manquait au crash #4709.
 	public get aiByFullPath(): {[key: string]: AI | undefined} { return this.ais }
+	// IA ouvertes dont le code modifié ne vit que dans le modèle Monaco. La corbeille
+	// est exclue : son contenu n'est plus enregistrable. Définition partagée par la
+	// confirmation de sortie de l'éditeur et le rechargement sur changement de compte.
+	public get unsavedAIs(): AI[] {
+		return Object.values(this.ais).filter(ai => ai.modified && !ai.path.startsWith('.trash/'))
+	}
 	public aiCount: number = 0
 	public rootFolder!: Folder
 	public bin!: Folder

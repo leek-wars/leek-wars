@@ -648,6 +648,9 @@ const app = createApp({
 		})
 		document.addEventListener('visibilitychange', () => {
 			if (document.visibilityState === 'visible') {
+				// Avant checkAlive() : celui-ci rebranche la socket sur le compte du
+				// cookie, qui peut avoir changé pendant que l'onglet était en veille.
+				emitter.emit('visible')
 				LeekWars.socket.checkAlive()
 			}
 		})
