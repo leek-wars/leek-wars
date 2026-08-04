@@ -18,6 +18,7 @@
     - "La page Inventaire ne plante plus au premier butin d'une nouvelle saison : les ressources d'une saison (Sable doré, Ambre marin...) sont maintenant publiées automatiquement la veille de son début."
     - "Les saisons commencent et se terminent maintenant à minuit heure française, et non à 2 h du matin."
     - "L'éditeur ne déclenche plus une erreur à chaque frappe sur les vieux Safari (iPhone et iPad sous iOS 15) : la détection des couleurs de Monaco utilisait une expression régulière que ces navigateurs ne comprennent pas."
+    - "#ai L'éditeur ne plante plus quand, dans une IA JavaScript ou TypeScript, on clique sur le titre de la fenêtre des définitions ou des références pour un symbole de l'API : cette cible n'est pas un de vos fichiers, elle est maintenant simplement ignorée (merci à Hurracan)."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."

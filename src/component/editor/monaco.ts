@@ -95,7 +95,11 @@ monaco.editor.addKeybindingRules([
 ]);
 
 monaco.editor.registerCommand('jump', (_accessor, args) => {
-	emitter.emit('jump', { ai: fileSystem.aiByFullPath[args.ai], line: args.line, column: args.column })
+	// Le chemin est figé dans le lien du survol : le fichier peut avoir été supprimé ou renommé depuis.
+	// Sans cible, ne rien faire plutôt que de propager un `ai` undefined jusqu'à l'éditeur.
+	const ai = fileSystem.aiByFullPath[args.ai]
+	if (!ai) { return }
+	emitter.emit('jump', { ai, line: args.line, column: args.column })
 })
 
 monaco.editor.registerCommand('findReferencesAtPosition', (_accessor, uri: monaco.Uri, position: monaco.IPosition) => {
@@ -174,7 +178,13 @@ monaco.editor.defineTheme("monokai", {
 
 monaco.editor.registerEditorOpener({
 	openCodeEditor: async (_source, resource, selectionOrPosition) => {
+		// La cible n'est pas forcément un fichier du joueur : dans une IA polyglot .ts/.js, « aller à la
+		// définition » / « références » peut pointer vers une lib du service TypeScript de Monaco
+		// (file:///leekwars.d.ts, lib.esnext.d.ts...), qu'aucun onglet ne sait afficher (#4709). Pas de
+		// getAIByPath ici : la Console n'a pas de fichier serveur, le load() ci-dessous échouerait.
+		// `false` = « non pris en charge » : Monaco reprend la main avec son gestionnaire par défaut.
 		const ai = fileSystem.aiByFullPath[resource.path.substring(1)]
+		if (!ai) { return false }
 		await fileSystem.load(ai)
 		const uri = monaco.Uri.file(ai.path)
 		const model = monaco.editor.getModel(resource) || markRaw(monaco.editor.createModel(ai.code, getLanguageForPath(ai.path), uri))
@@ -483,6 +493,7 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 
 		// Make a fresh hover request instead of using potentially stale lastHover
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
+		if (!ai) { return null }
 		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
 
 		if (hover?.defined) {
@@ -831,6 +842,7 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 
 		const path = model.uri.path.substring(1)
 		const ai = fileSystem.getAIByPath(path)
+		if (!ai) { return { suggestions: [] } }
 
 		const completions = await analyzer.complete(ai, model.getValue(), position.lineNumber, position.column - 2)
 

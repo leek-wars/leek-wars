@@ -64,7 +64,9 @@ class FileSystem {
 
 	public ais: {[key: string]: AI} = {}
 	public folderById: {[key: number]: Folder} = {}
-	public get aiByFullPath() { return this.ais } // alias pour compatibilité
+	// Même map que `ais`, en lecture par chemin arbitraire (URI d'un modèle Monaco, argument d'une
+	// commande) : typée `| undefined` pour que le compilateur impose la garde qui manquait au crash #4709.
+	public get aiByFullPath(): {[key: string]: AI | undefined} { return this.ais }
 	public aiCount: number = 0
 	public rootFolder!: Folder
 	public bin!: Folder
@@ -238,9 +240,12 @@ class FileSystem {
 		this.sortFolder(parent)
 	}
 
-	public getAIByPath(path: string) {
+	// Résolution d'un chemin quelconque (URI d'un modèle Monaco, argument de commande) : peut ne rien
+	// trouver — un modèle survit à son fichier (suppression, renommage, changement de branche git), et
+	// certaines URI ne désignent aucun fichier du joueur. Le type le dit pour que les appelants gardent.
+	public getAIByPath(path: string): AI | undefined {
 		if (path.includes(FileSystem.CONSOLE_MAGIC_KEY)) {
-			return this.consoleAI!
+			return this.consoleAI ?? undefined
 		}
 		return this.ais[path] || this.ais['/' + path]
 	}

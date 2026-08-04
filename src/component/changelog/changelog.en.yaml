@@ -18,6 +18,7 @@
     - "The Inventory page no longer crashes on the first loot of a new season: a season's resources (Golden Sand, Sea Amber...) are now published automatically the day before it starts."
     - "Seasons now start and end at midnight French time, instead of 2 a.m."
     - "The editor no longer throws an error on every keystroke on old Safari versions (iPhone and iPad on iOS 15): Monaco's color detection used a regular expression those browsers don't understand."
+    - "#ai The editor no longer crashes when, in a JavaScript or TypeScript AI, you click the title of the definitions or references window for an API symbol: that target is not one of your files, and is now simply ignored (thanks to Hurracan)."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
