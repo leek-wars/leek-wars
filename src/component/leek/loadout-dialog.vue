@@ -19,7 +19,7 @@
 							</div>
 							<div class="loadout-name">
 								{{ loadout.name }}
-								<v-tooltip v-if="loadoutStatus[loadout.id]?.statsDiffer" location="bottom">
+								<v-tooltip v-if="loadoutStatus[loadout.id]?.requiresRestat" location="bottom">
 									<template #activator="{ props }">
 										<img v-bind="props" src="/image/potion/restat.png" width="18" height="18" class="loadout-restat-icon">
 									</template>
@@ -453,8 +453,8 @@
 			hasAnyForgotten(): boolean {
 				return this.allWeapons.some((w: Weapon) => this.isForgottenTemplate(w.template))
 			},
-			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } {
-				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } = {}
+			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } {
+				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } = {}
 				if (!this.leek) return result
 				const leek = this.leek
 				const leekWeapons = (leek.weapons || []).map((w: Weapon) => w.template).sort((a: number, b: number) => a - b)
@@ -493,7 +493,8 @@
 						else for (const k of leekCompKeys) if (leekComps[+k] !== ldComps[+k]) { itemsDiffer = true; break }
 					}
 					const statsDiffer = this.statsDifferFromLeek(loadout)
-					result[loadout.id] = { itemsDiffer, statsDiffer, fullyApplied: !itemsDiffer && !statsDiffer }
+					const requiresRestat = statsDiffer && this.statsRequireRestatFromLeek(loadout)
+					result[loadout.id] = { itemsDiffer, statsDiffer, requiresRestat, fullyApplied: !itemsDiffer && !statsDiffer }
 				}
 				return result
 			},
@@ -800,8 +801,10 @@
 			},
 			apply(loadout: Loadout) {
 				if (!this.leek) return
-				// Détection locale d'un changement de stats → confirmation potion de restat
-				if (this.statsDifferFromLeek(loadout)) {
+				// Une potion de restat n'est nécessaire que pour *réduire* le capital
+				// investi sur une stat. Un changement additif (ex. juste après un
+				// restat, capital libre) s'investit directement, sans potion (#4716).
+				if (this.statsDifferFromLeek(loadout) && this.statsRequireRestatFromLeek(loadout)) {
 					this.pendingApply = loadout
 					this.restatDialogOpen = true
 					return
@@ -867,9 +870,11 @@
 						store.commit('set-components', data.inventory.components)
 					}
 					if (data.stats_changed) {
-						// Mise à jour des stats du leek + décrément potion côté store
+						// Mise à jour des stats du leek côté store
 						this.applyStatsLocally(loadout)
-						this.decrementRestatPotion()
+						// Potion décrémentée seulement si le serveur en a réellement
+						// consommé une (changement réducteur, pas additif — #4716)
+						if (data.restat_used) this.decrementRestatPotion()
 					}
 					this.$emit('applied')
 					if (data.skipped && data.skipped.length > 0) {
@@ -895,6 +900,19 @@
 					const target = (loadout.stats && loadout.stats[stat]) || 0
 					const current = statBonusToCapital(stat, baseBonuses[stat] || 0)
 					if (target !== current) return true
+				}
+				return false
+			},
+			// Miroir client de LoadoutController::statsRequireRestat : un restat
+			// (potion) n'est requis que pour *réduire* le capital d'une stat.
+			statsRequireRestatFromLeek(loadout: Loadout): boolean {
+				if (!this.leek) return false
+				const leek = this.leek
+				for (const stat of CHARACTERISTICS) {
+					const bonus = (leek[stat] as number) - baseStatFor(leek.level, stat)
+					const current = statBonusToCapital(stat, bonus)
+					const target = (loadout.stats && loadout.stats[stat]) || 0
+					if (target < current) return true
 				}
 				return false
 			},
