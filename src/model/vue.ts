@@ -32,6 +32,7 @@ import { locale as initialLocale } from '@/locale'
 import { watch } from 'vue'
 import { aliases as mdiSvgAliases } from 'vuetify/iconsets/mdi-svg'
 import { mdiIconSet } from './icon-set'
+import { isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
 import { formatEmojis } from './emojis'
 import { displayWarningMessage, emitter, setVueMain } from './emitter'
 import '@/chart'
@@ -291,29 +292,6 @@ function findNullElVnodePath(instance: unknown): string | null {
 	} catch { return null }
 }
 
-// Famille de crashs = corruption de l'arbre de vnodes de Vue (el/anchor/instance devenus
-// null pendant le patch, cause probable moteur de traduction/extension qui mute le DOM).
-// Une seule définition, partagée par le diagnostic ET la récupération par hard reload, pour
-// éviter que les deux listes de motifs divergent.
-function isDomCorruptionCrash(m: string): boolean {
-	return m.includes('parentNode') || m.includes('nextSibling') ||
-		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'") ||
-		m.includes("reading 'insertBefore'") || m.includes('"insertBefore"') || m.includes('emitsOptions')
-}
-
-// Crash d'ordre d'initialisation (TDZ) : accès à une liaison `const`/import avant son
-// initialisation (« Cannot access 'X' before initialization » sur V8/JSC, « can't access
-// lexical declaration 'X' before initialization » sur Firefox). Le rendu d'une page référence
-// un import statique de composant (ex. <Conversation> dans messages.vue) qui remonte TDZ.
-// Or nos bundles n'ont AUCUN cycle d'import inter-chunks (vérifié au build) : un import statique
-// ne PEUT donc pas être en TDZ pour un moteur conforme sur un graphe de modules sain. Quand ça
-// arrive quand même (observé sur Safari iOS), la cause est externe — un moteur de traduction /
-// une extension qui réévalue ou mute le contexte de la page. Traité comme la famille corruption
-// DOM : diagnostic d'interférence attaché, masqué si traduction active (voir reportVueError).
-function isInitOrderCrash(m: string): boolean {
-	return m.includes('before initialization')
-}
-
 // Crawlers connus (Baiduspider-render, Googlebot… #11807436) : environnements headless
 // dégradés, erreurs non actionnables → leurs rapports partent en masqué. Propriété de
 // session (UA constant), évaluée une fois. Les génériques spider/crawler couvrent les
@@ -321,17 +299,6 @@ function isInitOrderCrash(m: string): boolean {
 // (téléphones Cubot). À terme, cette classification aurait sa place côté serveur dans
 // ErrorController::shouldIgnoreClientError (couvre tous les canaux, modifiable à chaud).
 const IS_BOT = /googlebot|bingbot|yandex|duckduckbot|slurp|sogou|petalbot|semrush|ahrefs|applebot|facebookexternalhit|headlesschrome|crawler|spider/i.test(navigator.userAgent)
-
-// Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
-// Prédicat partagé entre le canal Vue (reportVueError) et le handler unhandledrejection,
-// pour qu'un même échec d'import() soit classé pareil quel que soit le canal d'arrivée.
-function isChunkLoadError(m: string): boolean {
-	return m.includes('Failed to fetch dynamically imported module') ||
-		m.includes('error loading dynamically imported module') ||
-		m.includes('Loading chunk') ||
-		m.includes('Loading CSS chunk') ||
-		m.includes('Unable to preload CSS')
-}
 
 // Empreintes DOM d'interférence externe (moteurs de traduction, extensions), collées aux
 // rapports de crash de la famille corruption-DOM (nextSibling/parentNode/insertBefore null).
