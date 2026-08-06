@@ -92,7 +92,8 @@
 		"minimatch": "^10.2.1",
 		"monaco-editor": {
 			"dompurify": "$dompurify"
-		}
+		},
+		"brace-expansion": "^5.0.9"
 	},
 	"postcss": {
 		"plugins": {
