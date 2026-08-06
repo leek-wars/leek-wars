@@ -21,6 +21,7 @@
     - "L'editor non genera più un errore a ogni battitura sulle vecchie versioni di Safari (iPhone e iPad con iOS 15): il rilevamento dei colori di Monaco usava un'espressione regolare che quei browser non comprendono."
     - "Cambiare account in una scheda non fa più andare in crash le schede rimaste aperte sull'account precedente: ora si ricaricano automaticamente sul nuovo account, o propongono di farlo se contengono IA non salvate (grazie a Portevent)."
     - "#ai L'editor non va più in crash quando, in un'IA JavaScript o TypeScript, si clicca sul titolo della finestra delle definizioni o dei riferimenti per un simbolo dell'API: quel bersaglio non è uno dei tuoi file, e ora viene semplicemente ignorato (grazie a Hurracan)."
+    - "La visualizzazione di un combattimento sulla mappa fabbrica non va più in errore quando lo scenario viene ridisegnato durante il caricamento: le ombre dei bulloni sul terreno venivano disegnate prima di essere pronte (grazie a Nyctéis)."
     - "Applicare un equipaggiamento che si limita a investire capitale libero (ad esempio subito dopo una pozione di ridistribuzione) non consuma più una pozione: una pozione è richiesta solo quando una caratteristica va effettivamente ridotta (grazie a Smartiz)."
 
 249:

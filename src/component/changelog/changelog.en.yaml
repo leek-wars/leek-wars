@@ -21,6 +21,7 @@
     - "The editor no longer throws an error on every keystroke on old Safari versions (iPhone and iPad on iOS 15): Monaco's color detection used a regular expression those browsers don't understand."
     - "Switching accounts in one tab no longer crashes the tabs left open on the previous account: they now reload automatically on the new account, or offer to do so if unsaved AIs are open (thanks to Portevent)."
     - "#ai The editor no longer crashes when, in a JavaScript or TypeScript AI, you click the title of the definitions or references window for an API symbol: that target is not one of your files, and is now simply ignored (thanks to Hurracan)."
+    - "A fight on the factory map no longer crashes when the scenery is redrawn while it loads: the shadows of the bolts on the ground were drawn before they were ready (thanks to Nyctéis)."
     - "Applying a loadout that only invests free capital (for example right after a restat potion) no longer consumes a potion: a potion is only required when a characteristic actually has to be reduced (thanks to Smartiz)."
 
 249:

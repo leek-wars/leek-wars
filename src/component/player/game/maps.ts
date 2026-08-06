@@ -108,6 +108,20 @@ abstract class Map {
 	drawDetails(_ctx: CanvasRenderingContext2D) {
 		// nothing by default
 	}
+	// Projection commune à tous les décors de carte, appelée depuis un contexte
+	// déjà translaté sur l'objet. `shadow` est encore nul tant que la texture
+	// n'a pas fini de charger : `Ground.resize` n'attend que `initialized` et
+	// peut donc redessiner le fond en plein chargement (#4730).
+	protected drawShadow(ctx: CanvasRenderingContext2D, texture: Texture, w: number, h: number = w) {
+		if (!texture.shadow) { return }
+		ctx.save()
+		ctx.scale(1, -SHADOW_SCALE)
+		ctx.rotate(-Math.PI / 4)
+		ctx.translate(0, -h)
+		ctx.globalAlpha = SHADOW_ALPHA
+		ctx.drawImage(texture.shadow, -w / 2, 0, w, h)
+		ctx.restore()
+	}
 	drawCellDetails(_ctx: CanvasRenderingContext2D, _cell: Cell) {
 		// nothing by default
 	}
@@ -436,13 +450,7 @@ class Factory extends Map {
 			ctx.save()
 			ctx.translate(x, y)
 
-			ctx.save()
-			ctx.scale(1, -SHADOW_SCALE)
-			ctx.rotate(-Math.PI / 4)
-			ctx.translate(0, -s * r)
-			ctx.globalAlpha = SHADOW_ALPHA
-			ctx.drawImage(T.factory_bolt.shadow!, -s / 2, 0, s, s * r)
-			ctx.restore()
+			this.drawShadow(ctx, T.factory_bolt, s, s * r)
 
 			ctx.drawImage(T.factory_bolt.texture, -s / 2, -s * r, s, s * r)
 			ctx.restore()
@@ -576,15 +584,7 @@ class Forest extends Map {
 			ctx.save()
 			ctx.translate(x, y)
 
-			if (tex.shadow) {
-				ctx.save()
-				ctx.scale(1, -SHADOW_SCALE)
-				ctx.rotate(-Math.PI / 4)
-				ctx.translate(0, -s)
-				ctx.globalAlpha = SHADOW_ALPHA
-				ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-				ctx.restore()
-			}
+			this.drawShadow(ctx, tex, s)
 
 			ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 			ctx.restore()
@@ -881,15 +881,7 @@ class Temple extends Map {
 			ctx.save()
 			ctx.translate(x, y)
 
-			if (tex.shadow) {
-				ctx.save()
-				ctx.scale(1, -SHADOW_SCALE)
-				ctx.rotate(-Math.PI / 4)
-				ctx.translate(0, -s)
-				ctx.globalAlpha = SHADOW_ALPHA
-				ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-				ctx.restore()
-			}
+			this.drawShadow(ctx, tex, s)
 
 			ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 			ctx.restore()
@@ -997,15 +989,7 @@ class Japan extends Map {
 				ctx.save()
 				ctx.translate(x, y)
 
-				if (tex.shadow) {
-					ctx.save()
-					ctx.scale(1, -SHADOW_SCALE)
-					ctx.rotate(-Math.PI / 4)
-					ctx.translate(0, -s)
-					ctx.globalAlpha = SHADOW_ALPHA
-					ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-					ctx.restore()
-				}
+				this.drawShadow(ctx, tex, s)
 
 				ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 				ctx.restore()
@@ -1169,15 +1153,7 @@ class Castle extends Map {
 				ctx.save()
 				ctx.translate(x, y)
 
-				if (tex.shadow) {
-					ctx.save()
-					ctx.scale(1, -SHADOW_SCALE)
-					ctx.rotate(-Math.PI / 4)
-					ctx.translate(0, -s)
-					ctx.globalAlpha = SHADOW_ALPHA
-					ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-					ctx.restore()
-				}
+				this.drawShadow(ctx, tex, s)
 
 				ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 				ctx.restore()
@@ -1335,15 +1311,7 @@ class Cemetery extends Map {
 				ctx.save()
 				ctx.translate(x, y)
 
-				if (tex.shadow) {
-					ctx.save()
-					ctx.scale(1, -SHADOW_SCALE)
-					ctx.rotate(-Math.PI / 4)
-					ctx.translate(0, -s)
-					ctx.globalAlpha = SHADOW_ALPHA
-					ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-					ctx.restore()
-				}
+				this.drawShadow(ctx, tex, s)
 
 				ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 				ctx.restore()

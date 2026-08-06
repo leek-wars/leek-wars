@@ -21,6 +21,7 @@
     - "L'éditeur ne déclenche plus une erreur à chaque frappe sur les vieux Safari (iPhone et iPad sous iOS 15) : la détection des couleurs de Monaco utilisait une expression régulière que ces navigateurs ne comprennent pas."
     - "Changer de compte dans un onglet ne fait plus planter les onglets restés ouverts sur l'ancien compte : ils se rechargent maintenant automatiquement sur le nouveau compte, ou vous proposent de le faire si des IA non enregistrées y sont ouvertes (merci à Portevent)."
     - "#ai L'éditeur ne plante plus quand, dans une IA JavaScript ou TypeScript, on clique sur le titre de la fenêtre des définitions ou des références pour un symbole de l'API : cette cible n'est pas un de vos fichiers, elle est maintenant simplement ignorée (merci à Hurracan)."
+    - "L'affichage d'un combat sur la carte usine ne plante plus quand le décor est redessiné pendant le chargement : les ombres des boulons du sol étaient dessinées avant d'être prêtes (merci à Nyctéis)."
     - "Appliquer un équipement qui ne fait qu'investir du capital libre (par exemple juste après une potion de restat) ne consomme plus de potion : une potion n'est demandée que lorsqu'il faut réellement réduire une caractéristique (merci à Smartiz)."
 
 249:
