@@ -68,12 +68,16 @@ async function refresh() {
 		const data = await LeekWars.get('health/check')
 		applyResponse(data)
 	} catch (e: unknown) {
-		if (e && typeof e === 'object' && 'services' in e) {
-			applyResponse(e as { services?: { [k: string]: string }, healthy?: boolean })
-		} else {
-			services.value = { api: 'error' }
-			healthy.value = false
+		// L'endpoint renvoie 503 dès qu'UN service est down, mais avec le détail par
+		// service dans le corps : on l'affiche (les services up restent up, seuls les
+		// down passent en rouge) au lieu de tout marquer hors service.
+		const body = e && typeof e === 'object' ? e as { services?: { [k: string]: string }, healthy?: boolean } : null
+		if (body && body.services && Object.keys(body.services).length) {
+			applyResponse(body)
 		}
+		// Sinon : impossible de joindre le service de statut lui-même (réseau/timeout).
+		// On ne sait pas si les services sont down, donc on GARDE le dernier état connu
+		// plutôt que d'afficher faussement une panne majeure ; « vérifié il y a … » en témoigne.
 	}
 	lastChecked.value = new Date()
 	loaded.value = true
