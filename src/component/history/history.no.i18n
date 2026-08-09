@@ -1,5 +1,8 @@
 {
 	"1week": "1 uke",
+	"custom_date": "Egendefinert",
+	"date_from": "Fra",
+	"date_to": "Til",
 	"24h": "24 timer",
 	"2days": "2 dager",
 	"battle_royale": "Battle Royale",
