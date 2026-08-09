@@ -901,8 +901,8 @@ declare class Me extends Entity {
 	resurrect(target: Entity | number, cell: Cell | Entity | number): Fight.Use;
 	/** Nombre d'utilisations de l'item (arme ou puce) ce tour. */
 	itemUses(item: Item | number): number;
-	/** Change l'équipement courant (nom du loadout). */
-	setLoadout(name: string, keep?: boolean): boolean;
+	/** Change l'équipement courant (nom du loadout). 'changeStats' (défaut true) applique aussi sa répartition de capital. */
+	setLoadout(name: string, changeStats?: boolean): boolean;
 	/** Invoque un bulbe : 'callback' est rejouée à chaque tour du bulbe (me désigne alors le bulbe). */
 	summon(chip: Chip | number, cell: Cell | Entity | number, callback: () => void, name?: string): Fight.Use;
 	/** Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target' (une entité OU une case). */

@@ -131,7 +131,7 @@ const CLASSES: ClassSpec[] = [
 		'def canUseChipOnCell(self, chip: ChipLike, cell: CellLike) -> bool: ...',
 		'def resurrect(self, target: EntityLike, cell: CellLike) -> int: ...',
 		'def itemUses(self, item: WeaponLike | ChipLike) -> int: ...',
-		'def setLoadout(self, name: str, keep: bool = ...) -> bool: ...',
+		'def setLoadout(self, name: str, changeStats: bool = ...) -> bool: ...',
 		'def summon(self, chip: ChipLike, cell: CellLike, callback: Callable[..., Any], name: str = ...) -> int: ...',
 		'def weaponCell(self, target: EntityLike | CellLike, weapon: WeaponLike = ..., ignoredCells: list = ...) -> Cell: ...',
 		'def weaponCells(self, target: EntityLike | CellLike, weapon: WeaponLike = ..., ignoredCells: list = ...) -> list[Cell]: ...',

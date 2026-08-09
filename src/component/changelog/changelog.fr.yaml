@@ -29,6 +29,8 @@
     - "L'affichage d'un combat ne se fige plus quand une image ne se charge pas (icône de PT/PM, d'effet ou d'état) : l'image manquante est simplement ignorée au lieu d'interrompre tout le rendu."
     - "L'affichage d'un combat sur la carte usine ne plante plus quand le décor est redessiné pendant le chargement : les ombres des boulons du sol étaient dessinées avant d'être prêtes (merci à Nyctéis)."
     - "Appliquer un équipement qui ne fait qu'investir du capital libre (par exemple juste après une potion de restat) ne consomme plus de potion : une potion n'est demandée que lorsqu'il faut réellement réduire une caractéristique (merci à Smartiz)."
+    - "#ai setLoadout() suit maintenant la même règle en combat : un équipement qui n'ajoute que des composants, ou qui n'investit que du capital libre, s'applique sans potion de restat. Et quand la potion manque vraiment, les composants de l'équipement s'appliquent quand même au lieu d'être perdus — un équipement qui n'ajoutait qu'un SSD et une carte mère laissait le poireau avec ses anciennes caractéristiques (merci à Portevent)."
+    - "#ai setLoadout() n'applique plus les caractéristiques d'un équipement qui demande plus de capital que le poireau n'en a : la répartition est refusée avec un avertissement, comme dans l'élevage. Les armes, puces et composants, eux, s'appliquent toujours."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."

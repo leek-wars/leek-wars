@@ -34,6 +34,7 @@
 	"error_1008": "Funktionen {0}() kan inte anropas i en beforeFight()- eller afterFight()-hook.",
 	"error_1009": "Loadout \"{0}\": inget glömt vapen tillgängligt, alla kandidater är redan utrustade på uppfödarens andra purjolökar.",
 	"error_1010": "Loadout \"{0}\": inget restat-elixir tillgängligt, egenskaperna ändrades inte.",
+	"error_1011": "Loadout \"{0}\": kräver mer kapital än vad purjolöken har, egenskaperna ändrades inte.",
 	"error_101": "AI-avbrott: För många operationer förbrukade.",
 	"error_103": "Avbruten AI: för mycket RAM-minne förbrukas.",
 	"error_104": "Endast en på varandra följande numerisk avgränsare är tillåten.",

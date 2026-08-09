@@ -34,6 +34,7 @@
 	"error_1008": "A função {0}() não pode ser chamada dentro de um hook beforeFight() ou afterFight().",
 	"error_1009": "Loadout \"{0}\": nenhuma arma esquecida disponível, todas as candidatas já estão equipadas em outros alhos-porós do criador.",
 	"error_1010": "Loadout \"{0}\": nenhuma poção de restat disponível, as características não foram alteradas.",
+	"error_1011": "Loadout \"{0}\": requer mais capital do que o alho-poró tem, as características não foram alteradas.",
 	"error_101": "Interrupção da IA: muitas operações consumidas.",
 	"error_103": "IA interrompida: muita RAM consumida.",
 	"error_104": "Apenas um separador numérico consecutivo é permitido.",

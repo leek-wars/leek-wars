@@ -28,6 +28,8 @@
     - "La visualizzazione di un combattimento non si blocca più quando un'immagine non si carica (icona di PT/PM, di effetto o di stato): l'immagine mancante viene semplicemente ignorata invece di interrompere tutto il rendering."
     - "La visualizzazione di un combattimento sulla mappa fabbrica non va più in errore quando lo scenario viene ridisegnato durante il caricamento: le ombre dei bulloni sul terreno venivano disegnate prima di essere pronte (grazie a Nyctéis)."
     - "Applicare un equipaggiamento che si limita a investire capitale libero (ad esempio subito dopo una pozione di ridistribuzione) non consuma più una pozione: una pozione è richiesta solo quando una caratteristica va effettivamente ridotta (grazie a Smartiz)."
+    - "#ai setLoadout() segue ora la stessa regola in combattimento: un equipaggiamento che aggiunge solo componenti, o che si limita a investire capitale libero, si applica senza pozione di ridistribuzione. E quando la pozione manca davvero, i componenti dell'equipaggiamento si applicano comunque invece di andare persi — un equipaggiamento che aggiungeva solo un SSD e una scheda madre lasciava il porro con le sue vecchie caratteristiche (grazie a Portevent)."
+    - "#ai setLoadout() non applica più le caratteristiche di un equipaggiamento che richiede più capitale di quanto il porro ne abbia: la ripartizione viene rifiutata con un avviso, come nell'allevamento. Armi, chip e componenti si applicano comunque."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."

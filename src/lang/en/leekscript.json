@@ -34,6 +34,7 @@
 	"error_1008": "The {0}() function cannot be called inside a beforeFight() or afterFight() hook.",
 	"error_1009": "Loadout \"{0}\": no forgotten weapon available, all candidates are already equipped on other leeks of the farmer.",
 	"error_1010": "Loadout \"{0}\": no restat potion available, characteristics were not changed.",
+	"error_1011": "Loadout \"{0}\": requires more capital than the leek has, characteristics were not changed.",
 	"error_101": "AI interrupted: too many operations consumed.",
 	"error_103": "AI interrupted: too much RAM consumed.",
 	"error_104": "Only one numeric separator in a row is allowed.",

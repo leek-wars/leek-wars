@@ -1017,7 +1017,8 @@
 	"func_getCompositionName_return": "实体 <b>entity</b> 的阵容名称。",
 	"func_getWinner": "返回获胜方。仅在 <b>afterFight()</b> 中使用。如果战斗尚未结束，则返回 <i>-1</i>。",
 	"func_getWinner_return": "获胜方：0（我方）、1（敌方）、2（平局），或者 -1 表示战斗进行中。",
-	"func_setLoadout": "为此次战斗应用一个装备配置，不修改韭菜的持久装备。仅在 <b>beforeFight()</b> 中使用。如果名称不存在，或者 <b>setLoadout</b> 在 <b>beforeFight()</b> 之外被调用，函数将返回 <i>false</i>，并在战报中添加一条警告。",
+	"func_setLoadout": "为此次战斗应用一个装备配置，不修改韭菜的持久装备。仅在 <b>beforeFight()</b> 中使用。如果名称不存在，或者 <b>setLoadout</b> 在 <b>beforeFight()</b> 之外被调用，函数将返回 <i>false</i>，并在战报中添加一条警告。 只有当装备的分配需要降低某项特性时才会消耗重置药水；没有药水时，或装备所需资本超过该韭菜拥有的资本时，只应用装备。",
 	"func_setLoadout_arg_1": "要应用的装备配置的精确名称（区分大小写）。",
+	"func_setLoadout_arg_2": "是否同时应用该装备的资本分配（默认为 <i>true</i>）。设为 <i>false</i> 时只更换武器、芯片和组件，特性保持不变。",
 	"func_setLoadout_return": "如果装备配置已应用，则返回 <i>true</i>，否则返回 <i>false</i>。"
 }

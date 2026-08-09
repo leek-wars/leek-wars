@@ -34,6 +34,7 @@
 	"error_1008": "Funktionen {0}() kan ikke kaldes i et beforeFight()- eller afterFight()-hook.",
 	"error_1009": "Loadout \"{0}\": intet glemt våben tilgængeligt, alle kandidater er allerede udstyret på andre porrer hos avleren.",
 	"error_1010": "Loadout \"{0}\": ingen restat-eliksir tilgængelig, egenskaberne blev ikke ændret.",
+	"error_1011": "Loadout \"{0}\": kræver mere kapital end porren har, egenskaberne blev ikke ændret.",
 	"error_101": "AI-afbrydelse: Der forbruges for mange operationer.",
 	"error_103": "Afbrudt AI: for meget RAM forbrugt.",
 	"error_104": "Kun én på hinanden følgende numerisk separator er tilladt.",

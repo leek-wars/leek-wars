@@ -29,6 +29,8 @@
     - "A fight no longer freezes when an image fails to load (TP/MP, effect or state icon): the missing image is simply skipped instead of stopping the whole rendering."
     - "A fight on the factory map no longer crashes when the scenery is redrawn while it loads: the shadows of the bolts on the ground were drawn before they were ready (thanks to Nyctéis)."
     - "Applying a loadout that only invests free capital (for example right after a restat potion) no longer consumes a potion: a potion is only required when a characteristic actually has to be reduced (thanks to Smartiz)."
+    - "#ai setLoadout() now follows the same rule in fights: a loadout that only adds components, or that only invests free capital, applies without a restat potion. And when no potion is really available, the loadout's components still apply instead of being lost — a loadout that only added an SSD and a motherboard left the leek with its old characteristics (thanks to Portevent)."
+    - "#ai setLoadout() no longer applies the characteristics of a loadout that requires more capital than the leek has: the allocation is refused with a warning, as in the breeding page. Weapons, chips and components still apply."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
