@@ -244,6 +244,16 @@ onMounted(() => {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const suggestionWidget = (editor.getContribution('editor.contrib.suggestController') as any).widget
+	// Repositionne le panneau de détails une fois la fiche Vue montée et mesurée. Le report à la tâche
+	// suivante laisse le temps à la suggestion d'être fermée : Monaco remet alors _anchorBox à undefined
+	// et _placeAtAnchor plante en lisant anchorBox.top (#4745). Monaco fait la même garde de son côté.
+	const placeSuggestDetails = (doc: { $el: HTMLElement }) => {
+		setTimeout(() => {
+			const details = suggestionWidget.value._details
+			if (!details._anchorBox) return
+			details._placeAtAnchor(details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
+		})
+	}
 	suggestionWidget.value.onDidShow(() => {
 		const widget = suggestionWidget.value._details.widget
 		widget.onDidChangeContents(() => {
@@ -260,9 +270,7 @@ onMounted(() => {
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
-				setTimeout(() => {
-					suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
-				})
+				placeSuggestDetails(doc)
 			}
 			const constant = LeekWars.constants.find((c) => c.name === docs.innerText)
 			if (constant) {
@@ -271,9 +279,7 @@ onMounted(() => {
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
-				setTimeout(() => {
-					suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
-				})
+				placeSuggestDetails(doc)
 			}
 			const symbol = fileSystem.symbols[docs.innerText]
 			if (symbol && symbol.javadoc) {
@@ -281,9 +287,7 @@ onMounted(() => {
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
-				setTimeout(() => {
-					suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
-				})
+				placeSuggestDetails(doc)
 			}
 		})
 	})
