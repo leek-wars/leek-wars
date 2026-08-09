@@ -2384,6 +2384,8 @@ declare namespace Weapon {
 	const neutrino: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_PISTOL) */
 	const pistol: Weapon;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_PLUTONIUM_BAZOOKA) */
+	const plutoniumBazooka: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_QUANTUM_RIFLE) */
 	const quantumRifle: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_REVOKED_M_LASER) */
