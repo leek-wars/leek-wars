@@ -2,7 +2,7 @@ import { Bubble } from '@/component/player/game/bubble'
 import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
-import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
+import { loadDrawableImage, SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
 import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
@@ -1322,10 +1322,10 @@ abstract class FightEntity extends Entity {
 
 	addState(state: number) {
 		this.states.add(state)
-		// Load image
-		const image = new Image()
-		image.src = LeekWars.STATIC + "image/state/" + state + ".svg"
-		FightEntity.stateImages.set(state, image)
+		// Load image, mutualisée par loadDrawableImage : les états dépourvus d'icône
+		// (2, 4...) renvoient un 404, dont le repli évite une Image « broken », que
+		// drawImage refuserait (#11819723).
+		FightEntity.stateImages.set(state, loadDrawableImage(LeekWars.STATIC + "image/state/" + state + ".svg"))
 	}
 }
 

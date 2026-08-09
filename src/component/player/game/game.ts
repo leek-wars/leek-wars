@@ -12,7 +12,7 @@ import { Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, J
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
-import { T, Texture } from '@/component/player/game/texture'
+import { loadDrawableImage, T, Texture } from '@/component/player/game/texture'
 import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, PlutoniumBazooka, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
@@ -1737,7 +1737,11 @@ class Game {
 					"scythe", // 39
 
 				][template - 1]
-					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
+					// Le tableau s'arrête aux armes connues du client : le serveur peut
+					// être déployé avant lui et envoyer un template plus récent.
+					if (img) {
+						image = LeekWars.STATIC + "image/weapon/" + img + ".png"
+					}
 					// Gestion des états du poireau
 					if (template === 8) {
 						leek.burn()
@@ -1746,8 +1750,9 @@ class Game {
 					}
 				}
 			}
-			const texture = new Image()
-			texture.src = image
+			// Une icône absente du serveur laisserait l'Image dans l'état « broken »,
+			// où drawImage lève InvalidStateError et casse le rendu (#11819723).
+			const texture = loadDrawableImage(image)
 
 			// Ajout de l'effet
 			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture, modifiers }

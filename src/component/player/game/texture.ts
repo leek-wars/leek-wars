@@ -16,6 +16,9 @@ class Texture {
 	public ctx!: CanvasRenderingContext2D
 	public loaded: boolean = false
 
+	// Le repli n'est posé qu'en cas d'échec, et repart dès qu'une Image le remplace
+	private get failed() { return this.texture === BROKEN_PLACEHOLDER }
+
 	constructor(path: string, buildShadow: boolean = false, quality: number = 1) {
 		this.path = path + '?0'
 		this.buildShadow = buildShadow
@@ -24,7 +27,7 @@ class Texture {
 
 	public load(game: Game) {
 		// Already loaded
-		if (this.texture) {
+		if (this.texture && !this.failed) {
 			game.numData++
 			setTimeout(() => {
 				game.resourceLoaded(this.path)
@@ -32,12 +35,20 @@ class Texture {
 			return this
 		}
 
+		// Reprise après échec : les textures de T sont partagées par tous les combats
+		// de la session, garder le repli 1×1 laisserait le mob sans main jusqu'au
+		// rechargement de la page.
+		this.loaded = false
+
 		game.numData++
 		this.texture = new Image()
 		this.texture.crossOrigin = "anonymous"
 
+		// Le premier événement retire les trois écouteurs : leur closure capture le
+		// Game, qui resterait sinon accroché aux textures statiques de T.
+		const listeners = new AbortController()
 		const onload = () => {
-			this.texture.removeEventListener('error', onerror)
+			listeners.abort()
 			if (this.path.includes('.svg')) {
 				this.texture = this.getBitmap()
 			}
@@ -50,17 +61,41 @@ class Texture {
 		// Double flèche d'origine `() => () => {...}` : le corps n'était jamais
 		// exécuté, donc une texture en échec/abort (réseau instable) n'incrémentait
 		// pas loadedData et pouvait bloquer le compteur de chargement (#11573).
+		// 'error' et 'abort' partagent ce handler : se désabonner évite aussi de
+		// compter la ressource deux fois (loadedData est comparé à numData par
+		// égalité stricte, un dépassement bloquerait le chargement pour toujours).
 		const onerror = () => {
 			console.warn("Error loading : " + this.path)
+			listeners.abort()
+			const image = this.texture
+			// Une Image en échec reste dans l'état « broken » : drawImage lèverait
+			// InvalidStateError (#4699). Le canvas transparent, lui, se dessine.
+			this.texture = BROKEN_PLACEHOLDER
+			// Les ombres sont dessinées via `shadow!`, sans garde
+			if (this.buildShadow) {
+				this.shadow = BROKEN_PLACEHOLDER
+			}
+			this.loaded = true
 			game.resourceLoaded(this.path)
-			this.texture.removeEventListener('load', onload)
+			// Les appelants (leek.ts, mob.ts...) attendent un 'load' sur l'Image pour
+			// lire la taille de base : sans cet événement ils resteraient à 0×0, une
+			// taille que drawImage refuse. Émis une fois le repli en place, pour
+			// qu'ils y mesurent 1×1, et en dernier pour que `loaded` soit déjà vrai.
+			image.dispatchEvent(new Event('load'))
 		}
-		this.texture.addEventListener('load', onload)
-		this.texture.addEventListener('error', onerror)
-		this.texture.addEventListener('abort', onerror)
+		const options = { signal: listeners.signal }
+		this.texture.addEventListener('load', onload, options)
+		this.texture.addEventListener('error', onerror, options)
+		this.texture.addEventListener('abort', onerror, options)
 
 		this.texture.src = this.path // Start loading
 		return this
+	}
+
+	// Le cache de T ne rappelle jamais load() : sans ça une texture de corps en
+	// échec garderait le repli 1×1 jusqu'au rechargement de la page.
+	public retryIfFailed(game: Game) {
+		return this.failed ? this.load(game) : this
 	}
 
 	getBitmap() {
@@ -77,7 +112,9 @@ class Texture {
 	}
 
 	getScaled(width: number) {
-		if (width === this.texture.width) {
+		// Mettre à l'échelle le repli 1×1 remplirait le cache (jamais purgé) d'un
+		// canvas transparent par largeur demandée, donc par niveau de zoom.
+		if (this.failed || width === this.texture.width) {
 			return this.texture
 		}
 		if (width in this.cache) {
@@ -99,8 +136,10 @@ class Texture {
 	getScaledTexture(width: number) {
 		const result = new Texture('')
 		const canvas = document.createElement('canvas')
-		canvas.width = width
-		canvas.height = this.texture.height * (width / this.texture.width)
+		// Un canvas de dimension nulle est refusé comme source par drawImage
+		// (InvalidStateError) : le repli 1×1, réduit par Bulb.SCALE, y tomberait.
+		canvas.width = Math.max(1, width)
+		canvas.height = Math.max(1, this.texture.height * (width / this.texture.width))
 		const ctx = canvas.getContext('2d')!
 		ctx.drawImage(this.texture, 0, 0, width, canvas.height)
 		result.texture = canvas
@@ -462,7 +501,7 @@ class T {
 
 	static get(game: Game, path: string, buildShadow: boolean = false, quality: number = 1, domain: string = LeekWars.STATIC) {
 		if (path in this.cache) {
-			return this.cache[path]
+			return this.cache[path].retryIfFailed(game)
 		}
 		const texture = new Texture(domain + path, buildShadow, quality).load(game)
 		this.cache[path] = texture
@@ -470,6 +509,37 @@ class T {
 	}
 
 	private static cache: {[key: string]: Texture} = {}
+}
+
+// Canvas transparent 1×1 partagé, repli dessinable des textures dont le
+// chargement a échoué (une Image en échec reste en état « broken »).
+const BROKEN_PLACEHOLDER = document.createElement('canvas')
+BROKEN_PLACEHOLDER.width = 1
+BROKEN_PLACEHOLDER.height = 1
+
+const TRANSPARENT_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+
+const imageCache: {[src: string]: HTMLImageElement} = {}
+
+// Chargement d'une image hors d'une Texture (icônes d'effet et d'état), toujours
+// dessinable : réaffecter la source sort l'Image de l'état « broken », où
+// drawImage lèverait InvalidStateError. Une garde sur la taille au moment du
+// dessin ne conviendrait pas : un SVG sans width/height intrinsèques mesure 0
+// sur certains navigateurs tout en étant parfaitement dessinable.
+function loadDrawableImage(src: string): HTMLImageElement {
+	if (src in imageCache) {
+		return imageCache[src]
+	}
+	const image = new Image()
+	const onerror = () => {
+		console.warn("Error loading : " + image.src)
+		image.src = TRANSPARENT_PIXEL
+	}
+	image.addEventListener('error', onerror, { once: true })
+	image.addEventListener('abort', onerror, { once: true })
+	image.src = src || TRANSPARENT_PIXEL
+	imageCache[src] = image
+	return image
 }
 
 function buildTextureShadow(texture: Texture, quality: number) {
@@ -497,4 +567,4 @@ function buildTextureShadow(texture: Texture, quality: number) {
 	}
 }
 
-export { T, Texture, SHADOW_QUALITY }
+export { T, Texture, SHADOW_QUALITY, loadDrawableImage }
