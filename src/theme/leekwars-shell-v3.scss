@@ -1,0 +1,197 @@
+/* Thème v3 : la coquille (#1101).
+ *
+ * Les jetons ont repeint le site, mais la coquille (barre du haut, menu de
+ * gauche, panneau social, pied de page) garde des formes du v2 qu'aucune
+ * variable ne peut changer : biseaux en trapèze, aplats translucides, absence
+ * de trait. C'est ce que ce fichier redessine.
+ *
+ * Tout est encapsulé dans `body:not(.v2)` : l'ancien design n'en voit rien, et
+ * la bascule des réglages continue de rendre le site tel qu'il était.
+ * La spécificité (0,3,1 pour une règle à deux classes) passe devant les styles
+ * scoped des composants (0,3,0), ce qui évite tout !important.
+ *
+ * Principes repris du mockup : surfaces franches séparées par un trait, aucune
+ * ombre portée, l'état actif marqué par un liseré vert plutôt que par un fond.
+ */
+
+body:not(.v2) {
+
+	/* ====== Barre du haut ====== */
+
+	/* Le v2 posait le logo directement sur le fond extérieur. Le v3 en fait une
+	   vraie barre : une surface, un trait en bas, et c'est tout. */
+	.header {
+		background: var(--background-header);
+		border-bottom: 1px solid var(--border);
+	}
+
+	/* Les boutons étaient des trapèzes, dessinés par deux pseudo-éléments qui
+	   portent les biseaux. Le v3 les veut rectangulaires : on neutralise les
+	   biseaux plutôt que de réécrire le composant. */
+	.header .header-button::before,
+	.header .header-button::after,
+	.header .button-wrapper::before,
+	.header .button-wrapper::after {
+		display: none;
+	}
+	.header .header-button {
+		background: var(--header-button-background);
+		border: 1px solid var(--border);
+		color: var(--header-color);
+		margin-left: 8px;
+		padding: 0 12px;
+		height: 34px;
+		line-height: 34px;
+		transition: border-color .12s ease, color .12s ease;
+	}
+	.header .header-button:hover {
+		background: var(--header-button-background);
+		border-color: var(--primary);
+		color: var(--primary);
+	}
+	.header .header-button .v-icon,
+	.header .header-button i {
+		color: inherit;
+	}
+	/* Le bouton d'inscription reste l'action principale de la barre. */
+	.header .signup-button.header-button {
+		background: var(--primary);
+		border-color: var(--primary);
+		color: var(--primary-text);
+	}
+	.header .signup-button.header-button:hover {
+		background: var(--primary);
+		border-color: var(--primary);
+		color: var(--primary-text);
+		filter: brightness(1.08);
+	}
+
+	/* ====== Barre de page (titre + onglets) ====== */
+
+	/* Même traitement que la barre du haut : une surface, un trait, et les
+	   biseaux en trapèze des onglets neutralisés. */
+	.page-header.page-bar,
+	.page-bar {
+		background: var(--background-header);
+		border-bottom: 1px solid var(--border);
+	}
+	.page-bar .tabs .tab::before,
+	.page-bar .tabs .tab::after,
+	.page-bar .tabs .tab:first-child.selected::before,
+	.page-bar .tabs .tab:first-child.selected::after,
+	.page-bar .tabs .tab:first-child.active::before,
+	.page-bar .tabs .tab:first-child.active::after {
+		display: none;
+	}
+	.page-bar .tabs .tab {
+		background: transparent;
+		color: var(--text-color-secondary);
+		border-bottom: 2px solid transparent;
+		margin-right: 0;
+		margin-left: 0;
+		padding: 0 14px;
+	}
+	.page-bar .tabs .tab:not(.disabled):hover {
+		background-color: transparent;
+		color: var(--text-color);
+	}
+	/* L'onglet actif : un trait vert dessous, pas un aplat vert.
+	   Deux classes coexistent dans le code, `selected` et `active`. */
+	.page-bar .tabs .tab.selected,
+	.page-bar .tabs .tab.active {
+		background-color: transparent;
+		border-bottom-color: var(--primary);
+		color: var(--primary);
+	}
+
+	/* Le titre de page garde son aplat vert, qui est une signature de Leek
+	   Wars, mais perd le biseau qui le prolongeait. */
+	h1 {
+		border-top-left-radius: 0;
+	}
+	h1::after {
+		display: none;
+	}
+
+	/* ====== Menu de gauche ====== */
+
+	.menu .menu-wrapper {
+		background: var(--background-secondary);
+		border-right: 1px solid var(--border);
+		border-top: 1px solid var(--border);
+		padding: 8px 0;
+	}
+
+	/* Une entrée de menu : pas de fond, un liseré à gauche qui s'allume.
+	   Le v2 empilait des aplats gris, ce qui rendait l'état actif peu lisible. */
+	.menu .section {
+		background: transparent;
+		border-left: 3px solid transparent;
+		color: var(--text-color-secondary);
+		font-size: 15px;
+		padding-left: 6px;
+		transition: color .12s ease, background .12s ease, border-color .12s ease;
+	}
+	.menu .section:hover {
+		background: var(--background);
+		color: var(--text-color);
+	}
+	.menu .section.router-link-active,
+	.menu .section.active {
+		background: var(--background);
+		border-left-color: var(--primary);
+		color: var(--primary);
+	}
+	.menu .section .v-icon,
+	.menu .section i {
+		color: inherit;
+	}
+	/* Les pastilles de compteur reprennent la forme des jetons du mockup :
+	   un rectangle bordé, pas une bulle. */
+	.menu .section[label]::after,
+	.menu .awards::after {
+		background: var(--background-header);
+		border: 1px solid var(--border);
+		color: var(--text-color-secondary);
+		border-radius: 0;
+	}
+
+	/* Les deux poignées de repli (menu et panneau social) étaient deux carrés
+	   gris translucides posés dans le vide. */
+	.menu-button,
+	.blabla-button {
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
+		color: var(--text-color-secondary);
+	}
+	.menu-button:hover,
+	.blabla-button:hover {
+		background: var(--background);
+		border-color: var(--primary);
+		color: var(--primary);
+	}
+	.menu-button .v-icon,
+	.blabla-button .v-icon {
+		color: inherit;
+	}
+
+	/* ====== Panneau social ====== */
+
+	/* Le panneau est une colonne, pas une pile de cartes : les panneaux qu'il
+	   contient perdent leur marge et se séparent d'un simple trait. */
+	.blabla-panel .content {
+		background: var(--background-secondary);
+		border-left: 1px solid var(--border);
+	}
+	.blabla-panel .panel {
+		margin-bottom: 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	/* ====== Pied de page ====== */
+
+	footer .footer,
+	.footer {
+		border-top: 1px solid var(--border);
+	}
+}
