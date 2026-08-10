@@ -488,7 +488,7 @@ watch(viewMode, () => {
 		background: var(--border);
 	}
 	body.dark .chip { --c: #7ec93f; }
-	.res-win { --c: #5fad1b; }
+	.res-win { --c: var(--primary); }
 	.res-draw { --c: #8a8a8a; }
 	.res-defeat { --c: #d3382f; }
 	.res-generating { --c: #3f86d6; }

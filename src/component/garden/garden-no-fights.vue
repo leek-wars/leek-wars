@@ -190,7 +190,7 @@
 		}
 	}
 	a {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: 500;
 	}
 	.buy-buttons {

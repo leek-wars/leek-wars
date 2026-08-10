@@ -821,7 +821,7 @@
 		ul {
 			margin-bottom: 0;
 			i {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 	}

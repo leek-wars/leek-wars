@@ -168,7 +168,7 @@
 	.details {
 		margin-top: 5px;
 		a {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: bold;
 		}
 	}

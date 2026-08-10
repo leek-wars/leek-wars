@@ -274,7 +274,7 @@ const capital = computed(() => props.totalCapital - usedCapital.value)
 	.capital {
 		color: white;
 		font-size: 18px;
-		background: #5fad1b;
+		background: var(--primary);
 		display: inline-block;
 		padding: 5px 10px;
 	}

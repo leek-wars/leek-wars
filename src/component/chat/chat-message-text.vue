@@ -63,18 +63,18 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 	.text:deep(a) {
-		color: #5fad1b;
+		color: var(--primary);
 		&.lw {
 			border: 1px solid var(--border);
 			border-radius: 4px;
 			padding: 0 4px;
 			&:hover {
-				border: 1px solid #5fad1b;
+				border: 1px solid var(--primary);
 			}
 		}
 	}
 	.text:deep(.v-icon) {
-		color: #5fad1b;
+		color: var(--primary);
 		font-size: 18px;
 		margin-right: 4px;
 		vertical-align: baseline;

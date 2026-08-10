@@ -108,8 +108,8 @@ defineExpose({ expanded, state })
 <style lang="scss" scoped>
 	.panel {
 		background: var(--background);
-		border-radius: 4px;
-		box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
+		border-radius: var(--radius);
+		box-shadow: var(--panel-shadow);
 		display: flex;
 		flex-direction: column;
 		width: 100%;
@@ -129,17 +129,17 @@ defineExpose({ expanded, state })
 	}
 	.panel > .header {
 		height: 36px;
-		background: #2a2a2a;
+		background: var(--panel-header-background);
 		position: relative;
 		text-align: left;
-		border-top-left-radius: 3px;
-		border-top-right-radius: 3px;
+		border-top-left-radius: var(--radius-small);
+		border-top-right-radius: var(--radius-small);
 		display: flex;
 		i {
 			margin-right: 7px;
 		}
 		h2 {
-			color: #eee;
+			color: var(--panel-header-color);
 			font-size: 17px;
 			display: inline-flex;
 			align-items: center;
@@ -148,7 +148,7 @@ defineExpose({ expanded, state })
 			padding: 0 12px;
 			position: relative;
 			white-space: nowrap;
-			border-top-left-radius: 3px;
+			border-top-left-radius: var(--radius-small);
 			text-overflow: ellipsis;
 			overflow: hidden;
 			flex: 1;
@@ -206,7 +206,7 @@ defineExpose({ expanded, state })
 	.header > .actions :deep(> div:last-child.button),
 	.header > .actions :deep(> a:last-child .button),
 	.header > .actions :deep(> div:last-child .button) {
-		border-top-right-radius: 3px;
+		border-top-right-radius: var(--radius-small);
 	}
 	.header > .actions :deep(.button :last-child) {
 		margin-right: 0;

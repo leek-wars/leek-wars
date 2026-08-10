@@ -749,7 +749,7 @@
 		margin: 5px 0;
 	}
 	input[status=valid], input[status=valid]:focus {
-		border: 2px solid #5fad1b;
+		border: 2px solid var(--primary);
 	}
 	.space {
 		height: 8px;
@@ -762,7 +762,7 @@
 		text-align: center;
 		margin-bottom: 10px;
 		a {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 	.ranking {
@@ -981,7 +981,7 @@
 				height: 24px;
 			}
 			&.selected {
-				border-color: #5FAD1B;
+				border-color: var(--primary);
 				background: rgba(95, 173, 27, 0.12);
 			}
 		}
@@ -1075,7 +1075,7 @@
 			margin-bottom: 30px;
 			&:after {
 				width: 100%;
-				background: #5fad1b;
+				background: var(--primary);
 				height: 2px;
 				content: "";
 				position: absolute;

@@ -735,7 +735,7 @@ onBeforeUnmount(() => {
 			border-bottom: 2px solid transparent;
 			.v-icon { font-size: 16px; }
 			&:hover { color: var(--text-color); }
-			&.active { color: var(--text-color); border-bottom-color: #5fad1b; font-weight: 500; }
+			&.active { color: var(--text-color); border-bottom-color: var(--primary); font-weight: 500; }
 		}
 		// Écran étroit : plus de place pour les libellés + le bouton copier, on ne
 		// garde que les icônes (le nom du langage reste dans l'attribut title).

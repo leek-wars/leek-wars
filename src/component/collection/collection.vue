@@ -306,7 +306,7 @@
 			margin-left: auto;
 			font-size: 26px;
 			font-weight: 700;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 	.summary-progress {
@@ -316,7 +316,7 @@
 		overflow: hidden;
 		.summary-bar {
 			height: 100%;
-			background-color: #5fad1b;
+			background-color: var(--primary);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 9px, transparent 9px, transparent 18px);
 			border-radius: 9px;
 			transition: width 0.4s;
@@ -362,7 +362,7 @@
 		background: var(--background-header);
 	}
 	&.active {
-		border-color: #5fad1b;
+		border-color: var(--primary);
 		background: var(--pure-white);
 	}
 	.cat-tab-head {
@@ -403,7 +403,7 @@
 		overflow: hidden;
 		.cat-bar {
 			height: 100%;
-			background-color: #5fad1b;
+			background-color: var(--primary);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 7px, transparent 7px, transparent 14px);
 			border-radius: 7px;
 			transition: width 0.3s;

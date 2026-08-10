@@ -167,7 +167,7 @@ function setTheme(theme: string) {
 		}
 		&.active {
 			font-weight: bold;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 }
@@ -193,7 +193,7 @@ body.dark .lang-menu {
 		}
 		&.active {
 			font-weight: bold;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 }

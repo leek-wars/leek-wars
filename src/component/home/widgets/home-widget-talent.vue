@@ -45,7 +45,7 @@
 	}
 	.ratio {
 		font-weight: bold;
-		.win { color: #5fad1b; }
+		.win { color: var(--primary); }
 		.draw { color: var(--text-color-secondary); }
 		.lose { color: #c0392b; }
 	}

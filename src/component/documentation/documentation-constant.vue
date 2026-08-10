@@ -169,7 +169,7 @@ const weapons = computed(() => {
 		font-weight: bold;
 	}
 	:deep(a) {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: 500;
 		&:hover {
 			text-decoration: underline;

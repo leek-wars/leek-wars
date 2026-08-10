@@ -956,7 +956,7 @@ h1 {
 	flex-direction: column;
 	gap: 10px;
 	a {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: bold;
 	}
 	.contributors {
@@ -1015,7 +1015,7 @@ h1 {
 			align-items: center;
 			gap: 5px;
 			margin: 0 8px;
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: bold;
 			.flag {
 				max-width: 25px;
@@ -1058,7 +1058,7 @@ h1 {
 		}
 		&.active {
 			background: #5fad1b22;
-			border-left: 3px solid #5fad1b;
+			border-left: 3px solid var(--primary);
 			padding-left: 7px;
 		}
 		.history-info {

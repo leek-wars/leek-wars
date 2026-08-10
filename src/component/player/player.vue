@@ -1007,7 +1007,7 @@
 	}
 	.progress-bar .bar {
 		height: 100%;
-		background-color: #5fad1b;
+		background-color: var(--primary);
 		display: inline-block;
 		vertical-align: top;
 		transition: all 0.2s;

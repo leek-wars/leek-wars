@@ -366,7 +366,7 @@
 			color: var(--pure-white);
 			text-transform: uppercase;
 			&.weapon { background: #c0612a; }
-			&.chip { background: #5fad1b; }
+			&.chip { background: var(--primary); }
 		}
 		.name {
 			font-size: 11px;

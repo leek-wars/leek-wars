@@ -870,7 +870,7 @@
 	opacity: 0.6;
 	flex-shrink: 0;
 	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
-	&.active { opacity: 1; background: rgba(95, 173, 27, 0.2); color: #5fad1b; }
+	&.active { opacity: 1; background: rgba(95, 173, 27, 0.2); color: var(--primary); }
 	.v-icon { font-size: 22px; }
 }
 .commit-area {
@@ -1086,7 +1086,7 @@
 	white-space: nowrap;
 	min-width: 0;
 }
-.branch-list .create-branch { color: #5fad1b; }
+.branch-list .create-branch { color: var(--primary); }
 .branch-delete {
 	font-size: 18px !important;
 	opacity: 0.4;
@@ -1164,10 +1164,10 @@
 	.sync-error-close { color: #f44; }
 }
 .sync-info {
-	color: #5fad1b;
+	color: var(--primary);
 	background: rgba(95, 173, 27, 0.1);
 	border-top-color: rgba(95, 173, 27, 0.2);
-	.sync-info-close { color: #5fad1b; }
+	.sync-info-close { color: var(--primary); }
 }
 .no-changes {
 	padding: 20px;

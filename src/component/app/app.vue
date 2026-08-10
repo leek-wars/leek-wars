@@ -972,7 +972,7 @@
 		}
 		a {
 			font-weight: 500;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 

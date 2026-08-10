@@ -99,7 +99,7 @@
 		font-size: 15px;
 		flex-shrink: 0;
 	}
-	.attr.resolved { color: #5fad1b; }
+	.attr.resolved { color: var(--primary); }
 	.attr.not-reproduced { color: #e67e22; }
 	.attr.not-planned { color: var(--text-color-secondary); }
 	.attr.not-a-bug { color: #c0392b; }

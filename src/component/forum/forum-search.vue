@@ -281,7 +281,7 @@
 		width: 100%;
 	}
 	.query:focus {
-		border: 1px solid #5fad1b;
+		border: 1px solid var(--primary);
 	}
 	select {
 		height: 36px;
@@ -307,7 +307,7 @@
 		align-items: center;
 		gap: 4px;
 		.v-icon.resolved {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 		.v-icon {
 			font-size: 22px;
@@ -318,7 +318,7 @@
 		font-size: 14px;
 	}
 	.result :deep(b) {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: bold;
 	}
 	.info {
@@ -361,7 +361,7 @@
 		font-weight: bold;
 	}
 	.vote.up, .vote.up i {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.vote.down {
 		color: red;

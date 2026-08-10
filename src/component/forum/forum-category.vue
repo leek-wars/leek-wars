@@ -795,7 +795,7 @@ i.attr {
 	// color: #666;
 	font-size: 19px;
 	&.resolved {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	&.not-reproduced {
 		color: orange;
@@ -904,7 +904,7 @@ body.dark .topic .seen img.seen {
 			font-weight: bold;
 		}
 		.vote.up, .vote.up i {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 		.vote.down {
 			color: red;
@@ -1084,7 +1084,7 @@ body.dark .topic .seen img.seen {
 }
 .filter-item-icon {
 	margin-right: 4px;
-	&.resolved { color: #5fad1b; }
+	&.resolved { color: var(--primary); }
 	&.not-reproduced { color: orange; }
 	&.not-planned { color: var(--text-color); opacity: 0.7; }
 	&.not-a-bug { color: var(--text-color-secondary); }

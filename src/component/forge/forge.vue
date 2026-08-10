@@ -1095,7 +1095,7 @@
 	border-color: #9e1f1f;
 }
 .corner-btn.fuse-btn.v-btn {
-	background-color: #5fad1b !important;
+	background-color: var(--primary) !important;
 	border-color: #4a8714;
 }
 .corner-btn.fuse-btn.v-btn.v-btn--disabled {
@@ -1337,7 +1337,7 @@
 // Issue de la tentative, jouee sur le composant central.
 @keyframes outcome-success {
 	0%   { transform: scale(1); filter: none; }
-	35%  { transform: scale(1.22); filter: brightness(1.5) drop-shadow(0 0 12px #5fad1b); }
+	35%  { transform: scale(1.22); filter: brightness(1.5) drop-shadow(0 0 12px var(--primary)); }
 	70%  { transform: scale(0.98); }
 	100% { transform: scale(1); filter: none; }
 }

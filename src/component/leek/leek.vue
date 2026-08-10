@@ -1812,7 +1812,7 @@
 			stroke-width: 2px;
 		}
 		:deep(.ct-point) {
-			stroke: #5fad1b;
+			stroke: var(--primary);
 		}
 		:deep(.ct-area) {
 			fill: rgba(95, 173, 27, 1);

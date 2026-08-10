@@ -77,7 +77,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				}
 			}
 			&.completed {
-				background: #5fad1b;
+				background: var(--primary);
 				div {
 					color: white;
 				}

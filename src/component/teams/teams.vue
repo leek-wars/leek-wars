@@ -248,7 +248,7 @@ loadTeams()
 		font-size: 22px;
 		font-weight: 500;
 		margin-bottom: 6px;
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	p {
 		color: var(--text-color-secondary);

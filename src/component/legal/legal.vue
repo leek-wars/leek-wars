@@ -41,7 +41,7 @@ onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 <style lang="scss" scoped>
 	a {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	h2 {
 		margin-bottom: 20px;

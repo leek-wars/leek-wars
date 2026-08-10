@@ -169,7 +169,7 @@
 		background: var(--background-disabled);
 	}
 	.new_xp {
-		background-color: #5fad1b;
+		background-color: var(--primary);
 	}
 	.bonus {
 		background-color: #0075df;

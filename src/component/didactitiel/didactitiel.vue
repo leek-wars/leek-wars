@@ -260,6 +260,6 @@ updateHeight()
 		}
 	}
 	.text :deep(a) {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 </style>

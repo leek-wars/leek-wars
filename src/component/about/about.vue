@@ -374,13 +374,13 @@ onMounted(() => {
 		display: inline-block;
 	}
 	.links a {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.green {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	a.green:visited {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.social {
 		display: flex;

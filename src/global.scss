@@ -1,3 +1,7 @@
+// Jetons du thème actuel. Doit rester en premier : tout le reste du fichier
+// consomme ses variables. cf. src/theme/leekwars-theme-v2.scss
+@use './theme/leekwars-theme-v2.scss';
+
 // Roboto variable font (self-hosted)
 @font-face {
 	font-family: 'Roboto';
@@ -121,8 +125,8 @@
 	opacity: 1;
 }
 .accent--text, .primary--text {
-	color: #5fad1b !important;
-	caret-color: #5fad1b !important;
+	color: var(--primary) !important;
+	caret-color: var(--primary) !important;
 }
 .v-input.v-input--selection-controls {
 	margin-top: 0;
@@ -178,8 +182,8 @@
 	}
 }
 .primary {
-    background-color: #5fad1b !important;
-    border-color: #5fad1b !important;
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
 }
 button {
 	border-style: none;
@@ -235,37 +239,12 @@ body {
 	margin: 0;
 	font-family: "Roboto", sans-serif;
 	font-size: 15px;
-	background: #333;
+	background: var(--background-outer);
 	color: var(--text-color);
-	--primary: #5fad1b;
-	--pure-white: #fff;
-	--pure-black: #000;
-	--background: #f2f2f2;
-	--background-secondary: #eee;
-	--background-disabled: #bbb;
-	--background-header: #e5e5e5;
-	--border: #ddd;
-	--text-color: #111;
-	--text-color-secondary: #686868;
-	--type-color: #0000D0;
-	--link-color: #0645ad;
-	&.dark {
-		--pure-white: #000;
-		--pure-black: #fff;
-		--background: #1f1f1f;
-		--background-secondary: #171717;
-		--background-disabled: #555;
-		--background-header: #2f2f2f;
-		--border: #444;
-		--text-color: #f7f7f7;
-		--text-color-secondary: #999;
-		--type-color: #0099d0;
-		--link-color: #4bbaff;
-	}
 }
 ::selection {
-	background: #61b01c;
-	color: white;
+	background: var(--selection-background);
+	color: var(--selection-color);
 }
 table {
 	border-collapse: collapse;
@@ -289,7 +268,7 @@ h1 {
 	padding: 0 15px;
 	color: white;
 	position: relative;
-	background: #5fad1b;
+	background: var(--primary);
 	text-shadow: 0px 2px 3px rgba(0,0,0,0.2), 0px 1px 3px rgba(0,0,0,0.1), 0px 3px 6px rgba(0,0,0,0.1);
 	border-top-left-radius: 3px;
 }
@@ -305,7 +284,7 @@ h1::after {
 	height: 0;
 	border-style: solid;
 	border-width: 36px 0 0 19px;
-	border-color: transparent transparent transparent #5fad1b;
+	border-color: transparent transparent transparent var(--primary);
 }
 h2 {
 	font-size: 25px;
@@ -314,7 +293,7 @@ h3 {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	margin-left: -15px;
-	background: #5fad1b;
+	background: var(--primary);
 	display: inline-block;
 	color: white;
 	padding: 5px 10px;
@@ -340,7 +319,7 @@ h3::after {
 	height: 0;
 	border-style: solid;
 	border-width: 32px 0 0 12px;
-	border-color: transparent transparent transparent #5fad1b;
+	border-color: transparent transparent transparent var(--primary);
 }
 h4 {
 	font-size: 18px;
@@ -379,9 +358,9 @@ ul, ol {
 	height: 36px;
 	vertical-align: top;
 	margin-right: 20px;
-	color: #eee;
+	color: var(--page-bar-color);
 	position: relative;
-	background: rgba(0, 0, 0, 0.3);
+	background: var(--page-bar-tab-background);
 	margin-left: 2px;
 	user-select: none;
 	gap: 6px;
@@ -390,7 +369,7 @@ ul, ol {
 	cursor: pointer;
 }
 .page-bar .tabs .tab:not(.disabled):hover {
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: var(--page-bar-tab-background-hover);
 }
 .page-bar .tabs .tab::before {
 	content: "";
@@ -401,10 +380,10 @@ ul, ol {
 	height: 0;
 	border-style: solid;
 	border-width: 0 20px 36px 0;
-	border-color: transparent rgba(0, 0, 0, 0.3) transparent transparent;
+	border-color: transparent var(--page-bar-tab-background) transparent transparent;
 }
 .page-bar .tabs .tab:not(.disabled):hover::before {
-	border-color: transparent rgba(0, 0, 0, 0.6) transparent transparent ;
+	border-color: transparent var(--page-bar-tab-background-hover) transparent transparent;
 }
 .page-bar .tabs .tab::after {
 	content: "";
@@ -415,7 +394,7 @@ ul, ol {
 	height: 0;
 	border-style: solid;
 	border-width: 36px 0 0 20px;
-	border-color: transparent transparent transparent rgba(0, 0, 0, 0.3);
+	border-color: transparent transparent transparent var(--page-bar-tab-background);
 }
 .page-bar .tabs .tab:not(.disabled):hover::after {
 	border-color: transparent  transparent transparent rgba(0, 0, 0, 0.6);
@@ -947,7 +926,7 @@ body {
 .skin-8 { background: #9d00f8 }
 
 a.green-link {
-	color: #5fad1b;
+	color: var(--primary);
 	font-weight: 500;
 	&:hover {
 		text-decoration: underline;
@@ -1022,7 +1001,7 @@ a.green-link {
 		font-family: Roboto;
 		font-size: 13px;
 		a {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 500;
 		}
 	}

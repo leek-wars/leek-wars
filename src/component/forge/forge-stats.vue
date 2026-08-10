@@ -106,7 +106,7 @@
 			font-size: 13px;
 			& + .row { margin-top: 2px; }
 			// Carac montee par le joueur : liseré vert a gauche, franc (pas de coin arrondi).
-			&.altered { box-shadow: inset 3px 0 0 #5fad1b; }
+			&.altered { box-shadow: inset 3px 0 0 var(--primary); }
 			// Carac creusee par la casse : meme repere, dans le ton du palier negatif (#622).
 			&.broken { box-shadow: inset 3px 0 0 #7d5a5a; }
 		}
@@ -135,7 +135,7 @@
 			.value.deficit { color: #7d5a5a; }
 			// Charge visee par la recette en cours : en vert tant qu'elle rentre, en rouge
 			// des qu'elle deborde la capacite.
-			.target { color: #5fad1b; }
+			.target { color: var(--primary); }
 			.target.over { color: #c62828; }
 		}
 	}

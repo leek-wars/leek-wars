@@ -491,7 +491,7 @@
 		text-align: center;
 		padding: 8px;
 		margin-bottom: 10px;
-		background: #5fad1b;
+		background: var(--primary);
 		color: white;
 		border-radius: 5px;
 		cursor: pointer;

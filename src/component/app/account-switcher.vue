@@ -200,7 +200,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 		opacity: 1 !important;
 	}
 	.status-active {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.status-connected {
 		color: #4fc3f7;

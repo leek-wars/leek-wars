@@ -32,7 +32,7 @@
 		margin-right: 6px;
 	}
 	.formating b {
-		color: #5fad1b;
+		color: var(--primary);
 		font-size: 16px;
 	}
 	.example {

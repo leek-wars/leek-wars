@@ -1936,7 +1936,7 @@
 			margin-top: 0;
 		}
 		.title {
-			color: #5fad1b;
+			color: var(--primary);
 			font-size: 18px;
 			font-weight: 500;
 			margin-top: 15px;
@@ -1963,7 +1963,7 @@
 			}
 			.storage-bar-fill {
 				height: 100%;
-				background: #5fad1b;
+				background: var(--primary);
 				transition: width 0.3s ease;
 			}
 			.storage-bar-warn {
@@ -2058,9 +2058,9 @@
 				margin-bottom: 3px;
 			}
 			.no-error {
-				color: #5fad1b;
+				color: var(--primary);
 				.v-icon {
-					color: #5fad1b;
+					color: var(--primary);
 				}
 			}
 			.errors {
@@ -2109,7 +2109,7 @@
 				}
 			}
 			.ready {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 			.running, .running i {
 				color: #0084a8;
@@ -2154,7 +2154,7 @@
 			}
 		}
 		.green {
-			background: #5fad1b;
+			background: var(--primary);
 			color: white;
 			padding: 0 6px;
 			border-radius: 20px;
@@ -2162,7 +2162,7 @@
 		}
 		.link {
 			padding: 5px;
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 500;
 			display: block;
 			i {

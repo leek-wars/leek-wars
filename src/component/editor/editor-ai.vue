@@ -123,7 +123,7 @@ function click(e: Event) {
 		margin-right: 4px;
 		vertical-align: top;
 		&.valid {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 		&.error {
 			color: red;
