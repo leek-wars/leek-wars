@@ -89,6 +89,23 @@ body:not(.v2) {
 		filter: brightness(1.08);
 	}
 
+	/* ====== Conteneur de page ====== */
+
+	/* Le v2 posait un voile blanc à 10 % et 12 px de marge autour du contenu,
+	   pour détacher la colonne du fond sombre. Le v3 sépare par des traits et
+	   des surfaces franches : ce voile ne fait plus qu'éclaircir le fond, et la
+	   marge empêche les panneaux d'aller au bord.
+	   La règle du mobile (`#app.app`) faisait déjà exactement ça. */
+	.page-wrapper {
+		background: none;
+		padding: 0;
+	}
+	@media screen and (max-width: 999px) {
+		.page-wrapper {
+			padding: 0;
+		}
+	}
+
 	/* ====== Barre de page (titre + onglets) ====== */
 
 	/* Même traitement que la barre du haut : une surface, un trait, et les
