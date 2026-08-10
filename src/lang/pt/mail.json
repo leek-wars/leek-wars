@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% para lançar o seu grupo Leek Wars 🌱",
 	"demo_relance2_button": "Ver a oferta",
 	"demo_relance2_html": "Olá <b>%1$s</b>, você gostou da demonstração do grupo privado?<br/><br/>Para passar a um grupo de verdade (participantes que jogam, convites, torneios até 64 jogadores, suporte), te dou <b>-10%%</b> com o código <b>%3$s</b>, válido por uma semana.<br/><br/>%2$s<br/><br/>Responda a este e-mail ou escreva para contact@leekwars.com.<br/>— Pierre, criador do Leek Wars",
-	"demo_relance2_text": "Olá %1$s, para transformar a sua demonstração num grupo privado de verdade, te dou -10%% com o código %3$s (válido por uma semana). A oferta: %2$s — ou responda a este e-mail. — Pierre, criador do Leek Wars"
+	"demo_relance2_text": "Olá %1$s, para transformar a sua demonstração num grupo privado de verdade, te dou -10%% com o código %3$s (válido por uma semana). A oferta: %2$s — ou responda a este e-mail. — Pierre, criador do Leek Wars",
+	"register_relance_verify_subject": "Os teus 50 cristais continuam à espera 🌱",
+	"register_relance_verify_button": "Validar a minha conta",
+	"register_relance_verify_text": "Olá %1$s, já lançaste os teus primeiros combates no Leek Wars, mas o teu email ainda não está validado. Até lá, os teus 50 cristais e 20 combates de boas-vindas ficam bloqueados. Basta um clique: %2$s — Pierre, criador do Leek Wars",
+	"register_relance_verify_html": "Olá <b>%1$s</b>, já lançaste os teus primeiros combates no Leek Wars 🌱<br/><br/>Só falta validar o teu email. Até lá, os teus <b>50 cristais</b> e <b>20 combates</b> de boas-vindas ficam bloqueados.<br/><br/>%2$s<br/><br/>Um clique e são teus.<br/>— Pierre, criador do Leek Wars",
+	"register_relance_play_subject": "O teu alho-porro está à tua espera 🌱",
+	"register_relance_play_button": "Retomar o tutorial",
+	"register_relance_play_text": "Olá %1$s, lançaste os teus primeiros combates no Leek Wars e depois paraste. É normalmente aí que emperra: é preciso escrever um pouco de código para o teu alho-porro combater sozinho. O tutorial guia-te passo a passo: %2$s — Pierre, criador do Leek Wars",
+	"register_relance_play_html": "Olá <b>%1$s</b>, lançaste os teus primeiros combates no Leek Wars, e depois nada 🌱<br/><br/>Emperra normalmente no mesmo sítio: é preciso escrever um pouco de código para o teu alho-porro combater sozinho. O tutorial guia-te passo a passo, e podes testar a tua IA em combate em cada etapa.<br/><br/>%2$s<br/><br/>Podes também responder a este email se estiveres bloqueado.<br/>— Pierre, criador do Leek Wars"
 }

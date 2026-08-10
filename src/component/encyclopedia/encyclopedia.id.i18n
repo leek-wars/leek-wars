@@ -19,5 +19,6 @@
 	"linked_from": "Halaman yang berisi tautan",
 	"n_references": "referensi | referensi | referensi",
 	"referencing_translations": "Terjemahan terkait",
-	"views": "dilihat"
+	"views": "dilihat",
+	"quiz_locked": "Selesaikan dulu bab {0} untuk menjawab kuis ini."
 }

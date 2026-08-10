@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% pour lancer ton groupe Leek Wars 🌱",
 	"demo_relance2_button": "Voir l'offre",
 	"demo_relance2_html": "Salut <b>%1$s</b>, ta démo de groupe privé t'a plu ?<br/><br/>Pour passer à un vrai groupe (participants qui jouent, invitations, tournois jusqu'à 64 joueurs, support), je te fais <b>-10%%</b> avec le code <b>%3$s</b>, valable une semaine.<br/><br/>%2$s<br/><br/>Réponds à ce mail ou écris à contact@leekwars.com.<br/>— Pierre, créateur de Leek Wars",
-	"demo_relance2_text": "Salut %1$s, pour passer ta démo en vrai groupe privé, je te fais -10%% avec le code %3$s (valable une semaine). L'offre : %2$s — ou réponds à ce mail. — Pierre, créateur de Leek Wars"
+	"demo_relance2_text": "Salut %1$s, pour passer ta démo en vrai groupe privé, je te fais -10%% avec le code %3$s (valable une semaine). L'offre : %2$s — ou réponds à ce mail. — Pierre, créateur de Leek Wars",
+	"register_relance_verify_subject": "Tes 50 cristaux t'attendent toujours 🌱",
+	"register_relance_verify_button": "Valider mon compte",
+	"register_relance_verify_text": "Salut %1$s, tu as déjà lancé tes premiers combats sur Leek Wars, mais ton adresse email n'est toujours pas validée. Tant qu'elle ne l'est pas, tes 50 cristaux et tes 20 combats de bienvenue restent bloqués. Un clic suffit : %2$s — Pierre, créateur de Leek Wars",
+	"register_relance_verify_html": "Salut <b>%1$s</b>, tu as déjà lancé tes premiers combats sur Leek Wars 🌱<br/><br/>Il reste juste ton adresse email à valider. Tant que ce n'est pas fait, tes <b>50 cristaux</b> et tes <b>20 combats</b> de bienvenue restent bloqués.<br/><br/>%2$s<br/><br/>Un seul clic, et c'est à toi.<br/>— Pierre, créateur de Leek Wars",
+	"register_relance_play_subject": "Ton poireau t'attend 🌱",
+	"register_relance_play_button": "Reprendre le tutoriel",
+	"register_relance_play_text": "Salut %1$s, tu as lancé tes premiers combats sur Leek Wars puis tu t'es arrêté. C'est souvent là que ça coince : il faut écrire un peu de code pour que ton poireau se batte tout seul. Le tutoriel te prend par la main, une notion à la fois : %2$s — Pierre, créateur de Leek Wars",
+	"register_relance_play_html": "Salut <b>%1$s</b>, tu as lancé tes premiers combats sur Leek Wars, puis plus rien 🌱<br/><br/>C'est souvent au même endroit que ça coince : il faut écrire un peu de code pour que ton poireau se batte tout seul. Le tutoriel te prend par la main, une notion à la fois, et tu peux tester ton IA en combat à chaque étape.<br/><br/>%2$s<br/><br/>Tu peux aussi simplement répondre à ce mail si tu es bloqué.<br/>— Pierre, créateur de Leek Wars"
 }

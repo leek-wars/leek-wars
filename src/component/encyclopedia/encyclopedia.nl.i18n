@@ -19,5 +19,6 @@
 	"n_references": "referentie | referentie | referenties",
 	"views": "weergaven",
 	"history": "Geschiedenis",
-	"initial": "aanmaak"
+	"initial": "aanmaak",
+	"quiz_locked": "Rond eerst hoofdstuk {0} af om deze quiz te beantwoorden."
 }

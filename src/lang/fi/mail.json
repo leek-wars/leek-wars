@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% Leek Wars -ryhmäsi käynnistämiseen 🌱",
 	"demo_relance2_button": "Katso tarjous",
 	"demo_relance2_html": "Hei <b>%1$s</b>, piditkö yksityisryhmän demosta?<br/><br/>Siirtyäksesi oikeaan ryhmään (pelaavat osallistujat, kutsut, turnaukset jopa 64 pelaajalle, tuki) annan sinulle <b>-10%%</b> koodilla <b>%3$s</b>, voimassa viikon.<br/><br/>%2$s<br/><br/>Vastaa tähän sähköpostiin tai kirjoita osoitteeseen contact@leekwars.com.<br/>— Pierre, Leek Warsin tekijä",
-	"demo_relance2_text": "Hei %1$s, muuttaaksesi demosi oikeaksi yksityisryhmäksi annan sinulle -10%% koodilla %3$s (voimassa viikon). Tarjous: %2$s — tai vastaa tähän sähköpostiin. — Pierre, Leek Warsin tekijä"
+	"demo_relance2_text": "Hei %1$s, muuttaaksesi demosi oikeaksi yksityisryhmäksi annan sinulle -10%% koodilla %3$s (voimassa viikon). Tarjous: %2$s — tai vastaa tähän sähköpostiin. — Pierre, Leek Warsin tekijä",
+	"register_relance_verify_subject": "50 kristallisi odottavat yhä 🌱",
+	"register_relance_verify_button": "Vahvista tilini",
+	"register_relance_verify_text": "Hei %1$s, olet jo käynyt ensimmäiset taistelusi Leek Warsissa, mutta sähköpostiosoitettasi ei ole vielä vahvistettu. Siihen asti 50 tervetuliaiskristalliasi ja 20 taisteluasi pysyvät lukittuina. Yksi klikkaus riittää: %2$s — Pierre, Leek Warsin tekijä",
+	"register_relance_verify_html": "Hei <b>%1$s</b>, olet jo käynyt ensimmäiset taistelusi Leek Warsissa 🌱<br/><br/>Jäljellä on enää sähköpostiosoitteesi vahvistus. Siihen asti <b>50 kristalliasi</b> ja <b>20 taisteluasi</b> pysyvät lukittuina.<br/><br/>%2$s<br/><br/>Yksi klikkaus, ja ne ovat sinun.<br/>— Pierre, Leek Warsin tekijä",
+	"register_relance_play_subject": "Purjosi odottaa sinua 🌱",
+	"register_relance_play_button": "Jatka opasta",
+	"register_relance_play_text": "Hei %1$s, kävit ensimmäiset taistelusi Leek Warsissa ja sitten lopetit. Yleensä juuri siinä jumitutaan: sinun on kirjoitettava vähän koodia, jotta purjosi taistelee itsekseen. Opas vie sinua kädestä pitäen, yksi asia kerrallaan: %2$s — Pierre, Leek Warsin tekijä",
+	"register_relance_play_html": "Hei <b>%1$s</b>, kävit ensimmäiset taistelusi Leek Warsissa, ja sitten ei mitään 🌱<br/><br/>Yleensä juuri samassa kohdassa jumitutaan: sinun on kirjoitettava vähän koodia, jotta purjosi taistelee itsekseen. Opas vie sinua kädestä pitäen, yksi asia kerrallaan, ja voit testata tekoälyäsi taistelussa joka vaiheessa.<br/><br/>%2$s<br/><br/>Voit myös vastata tähän viestiin, jos jäät jumiin.<br/>— Pierre, Leek Warsin tekijä"
 }

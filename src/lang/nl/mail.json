@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% om je Leek Wars-groep te lanceren 🌱",
 	"demo_relance2_button": "Bekijk het aanbod",
 	"demo_relance2_html": "Hoi <b>%1$s</b>, vond je de demo van de privégroep leuk?<br/><br/>Om over te stappen op een echte groep (deelnemers die spelen, uitnodigingen, toernooien tot 64 spelers, support) geef ik je <b>-10%%</b> met de code <b>%3$s</b>, een week geldig.<br/><br/>%2$s<br/><br/>Antwoord op deze e-mail of schrijf naar contact@leekwars.com.<br/>— Pierre, maker van Leek Wars",
-	"demo_relance2_text": "Hoi %1$s, om je demo om te zetten in een echte privégroep geef ik je -10%% met de code %3$s (een week geldig). Het aanbod: %2$s — of antwoord op deze e-mail. — Pierre, maker van Leek Wars"
+	"demo_relance2_text": "Hoi %1$s, om je demo om te zetten in een echte privégroep geef ik je -10%% met de code %3$s (een week geldig). Het aanbod: %2$s — of antwoord op deze e-mail. — Pierre, maker van Leek Wars",
+	"register_relance_verify_subject": "Je 50 kristallen wachten nog steeds 🌱",
+	"register_relance_verify_button": "Mijn account bevestigen",
+	"register_relance_verify_text": "Hoi %1$s, je hebt je eerste gevechten op Leek Wars al gespeeld, maar je e-mailadres is nog niet bevestigd. Tot dan blijven je 50 welkomstkristallen en 20 gevechten geblokkeerd. Eén klik volstaat: %2$s — Pierre, maker van Leek Wars",
+	"register_relance_verify_html": "Hoi <b>%1$s</b>, je hebt je eerste gevechten op Leek Wars al gespeeld 🌱<br/><br/>Alleen je e-mailadres moet nog bevestigd worden. Tot dan blijven je <b>50 kristallen</b> en <b>20 gevechten</b> geblokkeerd.<br/><br/>%2$s<br/><br/>Eén klik en ze zijn van jou.<br/>— Pierre, maker van Leek Wars",
+	"register_relance_play_subject": "Je prei wacht op je 🌱",
+	"register_relance_play_button": "Tutorial hervatten",
+	"register_relance_play_text": "Hoi %1$s, je hebt je eerste gevechten op Leek Wars gespeeld en bent toen gestopt. Daar loopt het meestal vast: je moet wat code schrijven zodat je prei zelf vecht. De tutorial neemt je stap voor stap mee: %2$s — Pierre, maker van Leek Wars",
+	"register_relance_play_html": "Hoi <b>%1$s</b>, je hebt je eerste gevechten op Leek Wars gespeeld, en daarna niets meer 🌱<br/><br/>Het loopt meestal op dezelfde plek vast: je moet wat code schrijven zodat je prei zelf vecht. De tutorial neemt je stap voor stap mee, en je kunt je AI bij elke stap in een gevecht testen.<br/><br/>%2$s<br/><br/>Je kunt ook gewoon op deze mail antwoorden als je vastloopt.<br/>— Pierre, maker van Leek Wars"
 }

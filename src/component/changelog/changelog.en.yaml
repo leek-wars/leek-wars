@@ -32,6 +32,7 @@
     - "#ai setLoadout() now follows the same rule in fights: a loadout that only adds components, or that only invests free capital, applies without a restat potion. And when no potion is really available, the loadout's components still apply instead of being lost — a loadout that only added an SSD and a motherboard left the leek with its old characteristics (thanks to Portevent)."
     - "#ai setLoadout() no longer applies the characteristics of a loadout that requires more capital than the leek has: the allocation is refused with a warning, as in the breeding page. Weapons, chips and components still apply."
     - "#ai The editor no longer crashes when autocompletion closes at the exact moment the documentation of a function or a constant finishes displaying next to it."
+    - "The tutorial quiz now says why it is not responding: the checkboxes stayed silent, without any message, until the previous chapter was completed. Answers are also better shuffled."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

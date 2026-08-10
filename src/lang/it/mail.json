@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% per lanciare il tuo gruppo Leek Wars 🌱",
 	"demo_relance2_button": "Vedi l'offerta",
 	"demo_relance2_html": "Ciao <b>%1$s</b>, ti è piaciuta la demo del gruppo privato?<br/><br/>Per passare a un vero gruppo (partecipanti che giocano, inviti, tornei fino a 64 giocatori, supporto), ti faccio <b>-10%%</b> con il codice <b>%3$s</b>, valido una settimana.<br/><br/>%2$s<br/><br/>Rispondi a questa email o scrivi a contact@leekwars.com.<br/>— Pierre, creatore di Leek Wars",
-	"demo_relance2_text": "Ciao %1$s, per trasformare la tua demo in un vero gruppo privato, ti faccio -10%% con il codice %3$s (valido una settimana). L'offerta: %2$s — o rispondi a questa email. — Pierre, creatore di Leek Wars"
+	"demo_relance2_text": "Ciao %1$s, per trasformare la tua demo in un vero gruppo privato, ti faccio -10%% con il codice %3$s (valido una settimana). L'offerta: %2$s — o rispondi a questa email. — Pierre, creatore di Leek Wars",
+	"register_relance_verify_subject": "I tuoi 50 cristalli ti aspettano ancora 🌱",
+	"register_relance_verify_button": "Convalida il mio account",
+	"register_relance_verify_text": "Ciao %1$s, hai già lanciato i tuoi primi combattimenti su Leek Wars, ma il tuo indirizzo email non è ancora convalidato. Finché non lo sarà, i tuoi 50 cristalli e 20 combattimenti di benvenuto restano bloccati. Basta un clic: %2$s — Pierre, creatore di Leek Wars",
+	"register_relance_verify_html": "Ciao <b>%1$s</b>, hai già lanciato i tuoi primi combattimenti su Leek Wars 🌱<br/><br/>Manca solo la convalida del tuo indirizzo email. Fino ad allora i tuoi <b>50 cristalli</b> e <b>20 combattimenti</b> di benvenuto restano bloccati.<br/><br/>%2$s<br/><br/>Un solo clic e sono tuoi.<br/>— Pierre, creatore di Leek Wars",
+	"register_relance_play_subject": "Il tuo porro ti aspetta 🌱",
+	"register_relance_play_button": "Riprendi il tutorial",
+	"register_relance_play_text": "Ciao %1$s, hai lanciato i tuoi primi combattimenti su Leek Wars e poi ti sei fermato. Di solito è lì che ci si blocca: bisogna scrivere un po' di codice perché il tuo porro combatta da solo. Il tutorial ti guida passo dopo passo: %2$s — Pierre, creatore di Leek Wars",
+	"register_relance_play_html": "Ciao <b>%1$s</b>, hai lanciato i tuoi primi combattimenti su Leek Wars, e poi più nulla 🌱<br/><br/>Di solito ci si blocca nello stesso punto: bisogna scrivere un po' di codice perché il tuo porro combatta da solo. Il tutorial ti guida passo dopo passo, e puoi provare la tua IA in combattimento a ogni tappa.<br/><br/>%2$s<br/><br/>Puoi anche semplicemente rispondere a questa mail se sei bloccato.<br/>— Pierre, creatore di Leek Wars"
 }

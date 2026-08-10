@@ -32,6 +32,7 @@
     - "#ai setLoadout() suit maintenant la même règle en combat : un équipement qui n'ajoute que des composants, ou qui n'investit que du capital libre, s'applique sans potion de restat. Et quand la potion manque vraiment, les composants de l'équipement s'appliquent quand même au lieu d'être perdus — un équipement qui n'ajoutait qu'un SSD et une carte mère laissait le poireau avec ses anciennes caractéristiques (merci à Portevent)."
     - "#ai setLoadout() n'applique plus les caractéristiques d'un équipement qui demande plus de capital que le poireau n'en a : la répartition est refusée avec un avertissement, comme dans l'élevage. Les armes, puces et composants, eux, s'appliquent toujours."
     - "#ai L'éditeur ne plante plus quand l'autocomplétion se ferme au moment précis où la documentation d'une fonction ou d'une constante finit de s'afficher à côté."
+    - "Le quiz du tutoriel dit maintenant pourquoi il ne répond pas : les cases restaient muettes, sans le moindre message, tant que le chapitre précédent n'était pas terminé. L'ordre des réponses est aussi mieux mélangé."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."

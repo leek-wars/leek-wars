@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% for å lansere Leek Wars-gruppen din 🌱",
 	"demo_relance2_button": "Se tilbudet",
 	"demo_relance2_html": "Hei <b>%1$s</b>, likte du demoen av den private gruppen?<br/><br/>For å bytte til en ekte gruppe (deltakere som spiller, invitasjoner, turneringer opptil 64 spillere, støtte) gir jeg deg <b>-10%%</b> med koden <b>%3$s</b>, gyldig en uke.<br/><br/>%2$s<br/><br/>Svar på denne e-posten eller skriv til contact@leekwars.com.<br/>— Pierre, skaperen av Leek Wars",
-	"demo_relance2_text": "Hei %1$s, for å gjøre demoen din til en ekte privat gruppe gir jeg deg -10%% med koden %3$s (gyldig en uke). Tilbudet: %2$s — eller svar på denne e-posten. — Pierre, skaperen av Leek Wars"
+	"demo_relance2_text": "Hei %1$s, for å gjøre demoen din til en ekte privat gruppe gir jeg deg -10%% med koden %3$s (gyldig en uke). Tilbudet: %2$s — eller svar på denne e-posten. — Pierre, skaperen av Leek Wars",
+	"register_relance_verify_subject": "De 50 krystallene dine venter fortsatt 🌱",
+	"register_relance_verify_button": "Bekreft kontoen min",
+	"register_relance_verify_text": "Hei %1$s, du har allerede kjørt dine første kamper på Leek Wars, men e-postadressen din er fortsatt ikke bekreftet. Inntil da er de 50 velkomstkrystallene og 20 kampene dine låst. Ett klikk holder: %2$s — Pierre, skaperen av Leek Wars",
+	"register_relance_verify_html": "Hei <b>%1$s</b>, du har allerede kjørt dine første kamper på Leek Wars 🌱<br/><br/>Det gjenstår bare å bekrefte e-postadressen din. Inntil da er <b>50 krystaller</b> og <b>20 kamper</b> låst.<br/><br/>%2$s<br/><br/>Ett klikk, og de er dine.<br/>— Pierre, skaperen av Leek Wars",
+	"register_relance_play_subject": "Purren din venter på deg 🌱",
+	"register_relance_play_button": "Fortsett opplæringen",
+	"register_relance_play_text": "Hei %1$s, du kjørte dine første kamper på Leek Wars og stoppet så. Det er som regel der det stopper opp: du må skrive litt kode så purren din kjemper selv. Opplæringen tar deg i hånden, ett begrep om gangen: %2$s — Pierre, skaperen av Leek Wars",
+	"register_relance_play_html": "Hei <b>%1$s</b>, du kjørte dine første kamper på Leek Wars, og så ingenting mer 🌱<br/><br/>Det stopper som regel opp på samme sted: du må skrive litt kode så purren din kjemper selv. Opplæringen tar deg i hånden, ett begrep om gangen, og du kan teste KI-en din i kamp for hvert steg.<br/><br/>%2$s<br/><br/>Du kan også bare svare på denne e-posten hvis du står fast.<br/>— Pierre, skaperen av Leek Wars"
 }

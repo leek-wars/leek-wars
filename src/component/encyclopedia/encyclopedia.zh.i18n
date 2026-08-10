@@ -19,5 +19,6 @@
 	"linked_from": "包含链接的页面",
 	"n_references": "引用 | 引用 | 引用",
 	"referencing_translations": "相关翻译",
-	"views": "次观看"
+	"views": "次观看",
+	"quiz_locked": "请先完成第 {0} 章，才能作答该测验。"
 }

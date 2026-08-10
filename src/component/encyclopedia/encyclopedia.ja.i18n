@@ -19,5 +19,6 @@
 	"referencing_translations": "関連翻訳",
 	"linked_from": "リンク元ページ",
 	"n_references": "参照 | 参照 | 参照",
-	"views": "ビュー"
+	"views": "ビュー",
+	"quiz_locked": "このクイズに答えるには、まず第{0}章を終わらせてください。"
 }

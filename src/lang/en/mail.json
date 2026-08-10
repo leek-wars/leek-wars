@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% to launch your Leek Wars group 🌱",
 	"demo_relance2_button": "See the offer",
 	"demo_relance2_html": "Hi <b>%1$s</b>, did you enjoy your private group demo?<br/><br/>To move to a real group (participants who play, invitations, tournaments up to 64 players, support), here's <b>-10%%</b> with the code <b>%3$s</b>, valid for one week.<br/><br/>%2$s<br/><br/>Reply to this email or write to contact@leekwars.com.<br/>— Pierre, creator of Leek Wars",
-	"demo_relance2_text": "Hi %1$s, to turn your demo into a real private group, here's -10%% with the code %3$s (valid one week). The offer: %2$s — or reply to this email. — Pierre, creator of Leek Wars"
+	"demo_relance2_text": "Hi %1$s, to turn your demo into a real private group, here's -10%% with the code %3$s (valid one week). The offer: %2$s — or reply to this email. — Pierre, creator of Leek Wars",
+	"register_relance_verify_subject": "Your 50 crystals are still waiting 🌱",
+	"register_relance_verify_button": "Verify my account",
+	"register_relance_verify_text": "Hi %1$s, you already ran your first fights on Leek Wars, but your email address still isn't verified. Until it is, your 50 welcome crystals and 20 fights stay locked. One click is all it takes: %2$s — Pierre, creator of Leek Wars",
+	"register_relance_verify_html": "Hi <b>%1$s</b>, you already ran your first fights on Leek Wars 🌱<br/><br/>All that's left is verifying your email address. Until that's done, your <b>50 crystals</b> and <b>20 fights</b> welcome pack stay locked.<br/><br/>%2$s<br/><br/>One click and they're yours.<br/>— Pierre, creator of Leek Wars",
+	"register_relance_play_subject": "Your leek is waiting 🌱",
+	"register_relance_play_button": "Resume the tutorial",
+	"register_relance_play_text": "Hi %1$s, you ran your first fights on Leek Wars and then stopped. That's usually where it gets tricky: you need to write a bit of code so your leek fights on its own. The tutorial walks you through it, one idea at a time: %2$s — Pierre, creator of Leek Wars",
+	"register_relance_play_html": "Hi <b>%1$s</b>, you ran your first fights on Leek Wars, and then nothing 🌱<br/><br/>It usually gets tricky at the same spot: you need to write a bit of code so your leek fights on its own. The tutorial walks you through it, one idea at a time, and you can test your AI in a fight at every step.<br/><br/>%2$s<br/><br/>You can also just reply to this email if you're stuck.<br/>— Pierre, creator of Leek Wars"
 }

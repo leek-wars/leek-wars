@@ -275,14 +275,21 @@
 						}
 					})
 
-					// Désactivé si pas le chapitre N + 1
-					if (store.state.farmer && chapter !== store.state.farmer.tutorial_progress + 1) {
+					// Le tutoriel est linéaire : on ne peut répondre qu'au chapitre N + 1. Le menu
+					// laisse pourtant ouvrir n'importe quel chapitre, donc un joueur en avance
+					// tombait sur un quiz inerte sans le moindre message (#4761).
+					const progress = store.state.farmer ? store.state.farmer.tutorial_progress : 0
+					const completed = !!store.state.farmer && progress >= chapter
+					const locked = !!store.state.farmer && chapter > progress + 1
+
+					if (store.state.farmer && chapter !== progress + 1) {
 						item.querySelectorAll('ul').forEach((answers) => {
-							[...answers.children].forEach(child => child.classList.add('disabled'))
+							[...answers.children].forEach(child => {
+								child.classList.add('disabled')
+								if (locked) child.classList.add('locked')
+							})
 						})
 					}
-
-					const completed = store.state.farmer && store.state.farmer.tutorial_progress >= chapter
 					let submitContainer: HTMLElement | null = null
 					const set_finished = () => {
 						if (submitContainer) submitContainer.style.display = 'none'
@@ -342,29 +349,44 @@
 						}
 					}
 
-					// Create submit button using Vue 3 createApp with reactive disabled state
-					submitContainer = document.createElement('div')
-					item.append(submitContainer)
-					const BtnWrapper = defineComponent({
-						setup() {
-							return () => h(VBtn, {
-								color: 'primary',
-								disabled: btnDisabled.value,
-								onClick: handleSubmit
-							}, () => i18n.t('main.validate'))
-						}
-					})
-					const btnApp = createSubApp(BtnWrapper, undefined, 'tutorial-quiz-btn')
-					btnApp.mount(submitContainer)
-					components.push({ $destroy: () => btnApp.unmount() })
+					if (locked) {
+						// Pas de bouton de validation : on explique pourquoi les cases ne
+						// répondent pas plutôt que de laisser le joueur cliquer dans le vide.
+						const message = document.createElement('div')
+						message.className = 'quiz-locked'
+						message.textContent = i18n.t('encyclopedia.quiz_locked', [progress + 1]) as string
+						item.append(message)
+					} else {
+						// Create submit button using Vue 3 createApp with reactive disabled state
+						submitContainer = document.createElement('div')
+						item.append(submitContainer)
+						const BtnWrapper = defineComponent({
+							setup() {
+								return () => h(VBtn, {
+									color: 'primary',
+									disabled: btnDisabled.value,
+									onClick: handleSubmit
+								}, () => i18n.t('main.validate'))
+							}
+						})
+						const btnApp = createSubApp(BtnWrapper, undefined, 'tutorial-quiz-btn')
+						btnApp.mount(submitContainer)
+						components.push({ $destroy: () => btnApp.unmount() })
+					}
 
 					item.querySelectorAll('ul').forEach(answers => {
 						;[...answers.children].forEach((child, index) => {
 							child.setAttribute('index', '' + index)
 						})
-						answers.append(...Array.from(answers.children).sort((_a, _b) => {
-							return Math.random() - 0.5
-						}))
+						// Fisher-Yates : un sort((a, b) => Math.random() - 0.5) n'est pas un
+						// comparateur transitif et laisse la bonne réponse près de sa position
+						// d'origine, ce qui la rend devinable.
+						const shuffled = Array.from(answers.children)
+						for (let i = shuffled.length - 1; i > 0; i--) {
+							const j = Math.floor(Math.random() * (i + 1))
+							;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+						}
+						answers.append(...shuffled)
 						let answer = Array(answers.children.length).fill(false)
 						form.push(answer)
 						;[...answers.children].forEach((child, index) => {
@@ -795,6 +817,12 @@
 				&.disabled {
 					pointer-events: none;
 				}
+				&.locked {
+					opacity: 0.5;
+					cursor: default;
+					box-shadow: none;
+					border: 1px dashed var(--border);
+				}
 				.letter {
 					font-weight: 500;
 					color: var(--text-color-secondary);
@@ -822,6 +850,14 @@
 				}
 			}
 		}
+	}
+	.md :deep(.quiz-locked) {
+		margin-top: 15px;
+		padding: 12px 15px;
+		border-radius: 4px;
+		background: var(--background-secondary);
+		color: var(--text-color-secondary);
+		font-weight: 500;
 	}
 	.md :deep(.lock) {
 		font-weight: 500;

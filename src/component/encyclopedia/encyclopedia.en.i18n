@@ -19,5 +19,6 @@
 	"referencing_translations": "Linked translations",
 	"linked_from": "Pages linking here",
 	"n_references": "reference | reference | references",
-	"views": "views"
+	"views": "views",
+	"quiz_locked": "Finish chapter {0} first to answer this quiz."
 }

@@ -12,5 +12,6 @@
 	"end_edition": "Lopeta muokkaus",
 	"editing_by_x": "Tällä hetkellä muokkaa {0}",
 	"redirected_from": "Uudelleenohjattu kohteesta {0}",
-	"aliases": "Tunnetaan myös nimellä: {0}"
+	"aliases": "Tunnetaan myös nimellä: {0}",
+	"quiz_locked": "Suorita ensin luku {0} vastataksesi tähän tietovisaan."
 }

@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "-10% na start Twojej grupy Leek Wars 🌱",
 	"demo_relance2_button": "Zobacz ofertę",
 	"demo_relance2_html": "Cześć <b>%1$s</b>, podobała Ci się wersja demo grupy prywatnej?<br/><br/>Aby przejść na prawdziwą grupę (grający uczestnicy, zaproszenia, turnieje do 64 graczy, wsparcie), daję Ci <b>-10%%</b> z kodem <b>%3$s</b>, ważnym tydzień.<br/><br/>%2$s<br/><br/>Odpowiedz na tego e-maila lub napisz na contact@leekwars.com.<br/>— Pierre, twórca Leek Wars",
-	"demo_relance2_text": "Cześć %1$s, aby zmienić swoje demo w prawdziwą grupę prywatną, daję Ci -10%% z kodem %3$s (ważnym tydzień). Oferta: %2$s — albo odpowiedz na tego e-maila. — Pierre, twórca Leek Wars"
+	"demo_relance2_text": "Cześć %1$s, aby zmienić swoje demo w prawdziwą grupę prywatną, daję Ci -10%% z kodem %3$s (ważnym tydzień). Oferta: %2$s — albo odpowiedz na tego e-maila. — Pierre, twórca Leek Wars",
+	"register_relance_verify_subject": "Twoje 50 kryształów wciąż czeka 🌱",
+	"register_relance_verify_button": "Potwierdź moje konto",
+	"register_relance_verify_text": "Cześć %1$s, rozegrałeś już pierwsze walki w Leek Wars, ale twój adres email wciąż nie jest potwierdzony. Do tego czasu 50 kryształów powitalnych i 20 walk pozostaje zablokowanych. Wystarczy jedno kliknięcie: %2$s — Pierre, twórca Leek Wars",
+	"register_relance_verify_html": "Cześć <b>%1$s</b>, rozegrałeś już pierwsze walki w Leek Wars 🌱<br/><br/>Zostało tylko potwierdzenie adresu email. Do tego czasu twoje <b>50 kryształów</b> i <b>20 walk</b> pozostaje zablokowanych.<br/><br/>%2$s<br/><br/>Jedno kliknięcie i są twoje.<br/>— Pierre, twórca Leek Wars",
+	"register_relance_play_subject": "Twój por na ciebie czeka 🌱",
+	"register_relance_play_button": "Wróć do samouczka",
+	"register_relance_play_text": "Cześć %1$s, rozegrałeś pierwsze walki w Leek Wars i przestałeś. Zwykle właśnie tam się blokuje: trzeba napisać trochę kodu, żeby twój por walczył sam. Samouczek prowadzi cię krok po kroku: %2$s — Pierre, twórca Leek Wars",
+	"register_relance_play_html": "Cześć <b>%1$s</b>, rozegrałeś pierwsze walki w Leek Wars, a potem nic 🌱<br/><br/>Zwykle blokuje się w tym samym miejscu: trzeba napisać trochę kodu, żeby twój por walczył sam. Samouczek prowadzi cię krok po kroku, a na każdym etapie możesz przetestować swoją SI w walce.<br/><br/>%2$s<br/><br/>Możesz też po prostu odpowiedzieć na tego maila, jeśli utkniesz.<br/>— Pierre, twórca Leek Wars"
 }

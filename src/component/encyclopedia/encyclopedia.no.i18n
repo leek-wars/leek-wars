@@ -19,5 +19,6 @@
 	"redirected_from": "Omdirigert fra {0}",
 	"referencing_translations": "Relaterte oversettelser",
 	"search": "Finn en side",
-	"views": "visninger"
+	"views": "visninger",
+	"quiz_locked": "Fullfør kapittel {0} først for å svare på denne quizen."
 }

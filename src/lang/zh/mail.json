@@ -52,5 +52,13 @@
 	"demo_relance2_subject": "启动你的 Leek Wars 群组立减 10% 🌱",
 	"demo_relance2_button": "查看方案",
 	"demo_relance2_html": "你好 <b>%1$s</b>，喜欢这个私人群组演示吗？<br/><br/>升级到真正的群组（参与者可游玩、邀请、最多 64 人比赛、支持服务），用优惠码 <b>%3$s</b> 享 <b>-10%%</b>，一周内有效。<br/><br/>%2$s<br/><br/>回复这封邮件，或写信至 contact@leekwars.com。<br/>— Pierre，Leek Wars 作者",
-	"demo_relance2_text": "你好 %1$s，把演示升级为真正的私人群组，用优惠码 %3$s 享 -10%%（一周内有效）。方案：%2$s —— 或回复这封邮件。— Pierre，Leek Wars 作者"
+	"demo_relance2_text": "你好 %1$s，把演示升级为真正的私人群组，用优惠码 %3$s 享 -10%%（一周内有效）。方案：%2$s —— 或回复这封邮件。— Pierre，Leek Wars 作者",
+	"register_relance_verify_subject": "你的 50 颗水晶还在等你 🌱",
+	"register_relance_verify_button": "验证我的账号",
+	"register_relance_verify_text": "你好 %1$s，你已经在 Leek Wars 打过最初的几场战斗了，但邮箱地址还没有验证。在验证之前，50 颗欢迎水晶和 20 场战斗一直被锁着。点一下就好：%2$s — Leek Wars 作者 Pierre",
+	"register_relance_verify_html": "你好 <b>%1$s</b>，你已经在 Leek Wars 打过最初的几场战斗了 🌱<br/><br/>只差验证邮箱地址这一步。在此之前，你的 <b>50 颗水晶</b>和 <b>20 场战斗</b>一直被锁着。<br/><br/>%2$s<br/><br/>点一下，它们就是你的了。<br/>— Leek Wars 作者 Pierre",
+	"register_relance_play_subject": "你的韭葱在等你 🌱",
+	"register_relance_play_button": "继续教程",
+	"register_relance_play_text": "你好 %1$s，你在 Leek Wars 打了最初几场战斗，然后就停下了。通常就是卡在这里：得写一点代码，你的韭葱才会自己战斗。教程会手把手带你，一次讲一个概念：%2$s — Leek Wars 作者 Pierre",
+	"register_relance_play_html": "你好 <b>%1$s</b>，你在 Leek Wars 打了最初几场战斗，然后就没有了 🌱<br/><br/>通常都卡在同一个地方：得写一点代码，你的韭葱才会自己战斗。教程会手把手带你，一次讲一个概念，每一步都能让你的 AI 上场试试。<br/><br/>%2$s<br/><br/>如果卡住了，直接回复这封邮件也行。<br/>— Leek Wars 作者 Pierre"
 }

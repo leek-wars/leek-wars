@@ -14,5 +14,6 @@
 	"redirected_from": "Reindirizzato da {0}",
 	"aliases": "Conosciuto anche come: {0}",
 	"history": "Cronologia",
-	"initial": "creazione"
+	"initial": "creazione",
+	"quiz_locked": "Completa prima il capitolo {0} per rispondere a questo quiz."
 }

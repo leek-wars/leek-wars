@@ -12,5 +12,6 @@
 	"end_edition": "Beenden der Bearbeitung",
 	"editing_by_x": "Wird derzeit von {0} bearbeitet",
 	"redirected_from": "Weitergeleitet von {0}",
-	"aliases": "Auch bekannt als: {0}"
+	"aliases": "Auch bekannt als: {0}",
+	"quiz_locked": "Schließe zuerst Kapitel {0} ab, um dieses Quiz zu beantworten."
 }
