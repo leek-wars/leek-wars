@@ -18,6 +18,12 @@
 body {
 	/* Marque */
 	--primary: #1F8A3B;
+	/* Encre posee SUR un aplat de marque. Indispensable ici : le vert du v3 en
+	   mode sombre est un neon clair, du texte blanc dessus est illisible. */
+	--primary-text: #FBF7E8;
+	/* Le vert quand il sert d'encre sur une surface claire : le neon du mode
+	   sombre est illisible dans ce role, d'ou un jeton distinct. */
+	--primary-strong: #146128;
 
 	/* Encre et fonds */
 	--pure-white: #FBF7E8;
@@ -29,6 +35,7 @@ body {
 	--background-disabled: #DCD6C0;
 	--background-header: #FBF7E8;
 	--background-outer: #E7E1CC;
+	--footer-color: #4A5847;
 	--border: rgba(14, 20, 16, 0.12);
 	--text-color: #0E1410;
 	--text-color-secondary: #4A5847;
@@ -59,10 +66,15 @@ body {
 	--page-bar-tab-background: rgba(14, 20, 16, 0.06);
 	--page-bar-tab-background-hover: rgba(14, 20, 16, 0.12);
 
-	/* Échelle de gris, du plus foncé au plus clair. Le v2 la laissait
-	   identique en sombre, ce qui rendait plusieurs textes illisibles ; ici
-	   elle s'inverse (cf. bloc .dark), donc un composant qui prend --grey-4
-	   pour du texte secondaire reste lisible dans les deux thèmes. */
+	/* Échelle de gris, du plus foncé au plus clair, identique dans les deux
+	   thèmes comme dans le v2.
+	   J'ai essayé de l'inverser en mode sombre, pour qu'un composant qui prend
+	   --grey-4 comme encre secondaire reste lisible partout. Mauvaise idée : la
+	   moitié des composants s'en sert dans l'autre sens, comme encre CLAIRE
+	   posée sur le chrome sombre (--grey-13 pour « du texte presque blanc »).
+	   L'inversion rendait ces textes invisibles. Tant que l'échelle porte deux
+	   sens contradictoires, elle ne peut pas s'inverser : c'est la conversion
+	   vers de vrais rôles qui reglera ça, pas un jeu de valeurs. */
 	--grey-1: #0E1410;
 	--grey-2: #1E2A20;
 	--grey-3: #2C3A2E;
@@ -95,16 +107,16 @@ body {
 
 	&.dark {
 		--primary: #7CFF6B;
+		--primary-text: #0B0F0B;
 
 		--pure-white: #0B0F0B;
 		--pure-black: #E8F0E6;
-		--white: #0E1316;
-		--black: #E8F0E6;
 		--background: #0B0F0B;
 		--background-secondary: #0E1316;
 		--background-disabled: #2A2F2C;
 		--background-header: #11161A;
 		--background-outer: #07090A;
+		--footer-color: #A8B4A4;
 		--border: rgba(255, 255, 255, 0.08);
 		--text-color: #E8F0E6;
 		--text-color-secondary: #A8B4A4;
@@ -120,22 +132,6 @@ body {
 		--page-bar-color: #E8F0E6;
 		--page-bar-tab-background: rgba(255, 255, 255, 0.06);
 		--page-bar-tab-background-hover: rgba(255, 255, 255, 0.12);
-
-		/* Échelle inversée : --grey-1 reste « l'encre la plus contrastée »,
-		   ce qui en sombre veut dire la plus claire. */
-		--grey-1: #E8F0E6;
-		--grey-2: #D6E0D2;
-		--grey-3: #C2CEBE;
-		--grey-4: #A8B4A4;
-		--grey-5: #98A494;
-		--grey-6: #889483;
-		--grey-7: #7A8676;
-		--grey-8: #6B7A66;
-		--grey-9: #5C6B58;
-		--grey-10: #4D5A4A;
-		--grey-11: #3A453A;
-		--grey-12: #262E26;
-		--grey-13: #131A1E;
 
 		--success: #7CFF6B;
 		--warning: #FFB23A;

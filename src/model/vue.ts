@@ -57,16 +57,32 @@ const vuetify = createVuetify({
 	},
 	theme: {
 		cspNonce,
+		// Vuetify ne lit pas les variables CSS : sa palette doit être doublée ici,
+		// et suivre la même bascule que le thème (cf. app.vue). D'où quatre thèmes
+		// et non deux. Vuetify déduit tout seul la couleur du texte posé sur
+		// `primary` selon sa luminosité, ce qui donne du texte sombre sur le vert
+		// néon du v3 et du blanc sur le vert du v2.
 		themes: {
 			dark: {
 				colors: {
-					primary: '#5fad1b',
+					primary: '#7CFF6B',
 				},
 			},
 			light: {
 				colors: {
+					primary: '#1F8A3B',
+				},
+			},
+			'dark-v2': {
+				dark: true,
+				colors: {
 					primary: '#5fad1b',
-
+				},
+			},
+			'light-v2': {
+				dark: false,
+				colors: {
+					primary: '#5fad1b',
 				},
 			},
 		},
