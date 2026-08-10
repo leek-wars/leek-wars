@@ -16,6 +16,28 @@
 
 body:not(.v2) {
 
+	/* ====== Marqueurs d'environnement, neutralisés TEMPORAIREMENT ======
+	 *
+	 * Les marqueurs repeignent le fond extérieur (prune en beta, violet en beta
+	 * locale, bleu en local) : impossible de juger la vraie couleur du thème
+	 * tant qu'ils sont là. Neutralisés le temps de valider la palette, à la
+	 * demande de Pierre.
+	 *
+	 * L'environnement reste identifié par le badge à côté du logo (« Bêta »,
+	 * « Bêta locale », « local »), donc on ne perd pas l'information.
+	 *
+	 * POUR LES REMETTRE : supprimer ce bloc, rien d'autre. Les couleurs elles-
+	 * mêmes vivent toujours dans global.scss. */
+	/* `html &` est nécessaire : la variante sombre du marqueur
+	   (`body.beta-local.dark`) a la même spécificité qu'une règle
+	   `body:not(.v2).beta-local` et vient après dans global.scss, donc elle
+	   gagnerait à l'ordre. Le sélecteur d'élément supplémentaire tranche. */
+	html &.beta,
+	html &.local,
+	html &.beta-local {
+		background: var(--background-outer);
+	}
+
 	/* ====== Barre du haut ====== */
 
 	/* Pas de surface propre : la barre reste posée sur le fond extérieur, comme
