@@ -195,13 +195,54 @@ body:not(.v2) {
 	/* Attention au `>` : la classe `content` est aussi celle du corps de chaque
 	   notification. Sans lui, chaque notification recevait un aplat sombre
 	   par-dessus son fond, ce qui rendait le texte des trophées illisible. */
+	/* Le panneau occupe toute la colonne : sans ça ses blocs s'empilent en haut
+	   et laissent un grand vide sur le fond extérieur. Le dernier bloc (le
+	   chat) prend la place restante, comme l'aside du mockup. */
 	.blabla-panel > .content {
 		background: var(--background-secondary);
 		border-left: 1px solid var(--border);
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 	.blabla-panel .panel {
 		margin-bottom: 0;
 		border-bottom: 1px solid var(--border);
+	}
+	.blabla-panel > .content > .panel:last-child {
+		flex: 1;
+		min-height: 0;
+	}
+
+	/* ====== Coffre des récompenses ====== */
+
+	/* Il flottait sous le menu, sans surface ni alignement. On le pose comme une
+	   entrée de menu : même largeur utile, un trait, et le doré réservé à
+	   l'icône plutôt qu'à tout le bloc. */
+	.soussous-dans-popoche {
+		margin: 12px 8px;
+		padding: 8px;
+		border: 1px solid var(--border);
+		background: var(--background-secondary);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.soussous-dans-popoche:hover {
+		border-color: var(--warning);
+	}
+
+	/* ====== Décor ====== */
+
+	/* Les deux poireaux géants des marges viennent du v2 : ils encadraient une
+	   colonne posée sur un fond sombre. Le v3 traite ces marges comme la suite
+	   de l'interface, et un décor de 500 px de haut en plein milieu s'y lit
+	   comme une erreur. Masqués ici, et pas supprimés du template : l'ancien
+	   design les garde, et une seule ligne suffit à les remettre (ou à les
+	   passer en `opacity: .15` si tu veux garder une texture). */
+	.big-leek-1,
+	.big-leek-2 {
+		display: none;
 	}
 
 	/* ====== Pied de page ====== */
