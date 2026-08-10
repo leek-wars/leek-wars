@@ -217,6 +217,7 @@
 
 <style lang="scss" scoped>
 	.logo {
+		filter: var(--header-logo-filter);
 		width: 100%;
 		max-width: 320px;
 		max-height: 45px;
@@ -286,16 +287,16 @@
 		font-size: 17px;
 		height: 42px;
 		margin-left: 25px;
-		color: var(--grey-13);
+		color: var(--header-color);
 		position: relative;
-		background: rgba(80, 80, 80, 0.6);
+		background: var(--header-button-background);
 		vertical-align: bottom;
 		white-space: nowrap;
 		user-select: none;
 		align-items: center;
 		line-height: 42px;
 		i {
-			color: var(--grey-13);
+			color: var(--header-color);
 			font-size: 26px;
 		}
 		&.merge-left {
@@ -340,7 +341,7 @@
 		height: 0;
 		border-style: solid;
 		border-width: 0 0 42px 20px;
-		border-color: transparent transparent rgba(80, 80, 80, 0.6) transparent;
+		border-color: transparent transparent var(--header-button-background) transparent;
 	}
 	.header-button:not(.mobile):after {
 		content: "";
@@ -352,19 +353,19 @@
 		height: 0;
 		border-style: solid;
 		border-width: 42px 20px 0 0;
-		border-color: rgba(80, 80, 80, 0.6) transparent transparent transparent;
+		border-color: var(--header-button-background) transparent transparent transparent;
 	}
 	.header .button-wrapper:last-child .header-button:after {
 		border: none;
 	}
 	.header .header-button:hover {
-		background: rgba(200, 200, 200, 0.4);
+		background: var(--header-button-background-hover);
 	}
 	.header .header-button:hover:before {
-		border-color: transparent transparent rgba(200, 200, 200, 0.4) transparent;
+		border-color: transparent transparent var(--header-button-background-hover) transparent;
 	}
 	.header .header-button:hover:after {
-		border-color: rgba(200, 200, 200, 0.4) transparent transparent transparent;
+		border-color: var(--header-button-background-hover) transparent transparent transparent;
 	}
 	.farmer-avatar {
 		height: 42px;
