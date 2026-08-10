@@ -356,7 +356,7 @@ loadTeams()
 	flex: none;
 }
 .closed-badge {
-	color: #999;
+	color: var(--grey-8);
 	font-size: 12px;
 	display: flex;
 	align-items: center;

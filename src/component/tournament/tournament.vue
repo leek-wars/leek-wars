@@ -218,7 +218,7 @@ function generateTournament() {
 		width: auto;
 	}
 	.line {
-		stroke: #aaa;
+		stroke: var(--grey-9);
 		stroke-width: 3;
 		fill: none;
 	}

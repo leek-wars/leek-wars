@@ -842,7 +842,7 @@
 		padding: 40px;
 		text-align: center;
 		font-size: 18px;
-		color: #888;
+		color: var(--grey-7);
 	}
 	.title-wrapper {
 		flex: 1;
@@ -953,7 +953,7 @@
 	}
 	.farmer.deleted {
 		font-style: italic;
-		color: #aaa;
+		color: var(--grey-9);
 	}
 	.profile .avatar {
 		width: 130px;
@@ -1018,7 +1018,7 @@
 	}
 	.message .deleted.text {
 		font-style: italic;
-		color: #aaa;
+		color: var(--grey-9);
 		margin-bottom: 0;
 	}
 	.message a {
@@ -1028,7 +1028,7 @@
 		position: absolute;
 		top: 5px;
 		right: 7px;
-		color: #ccc;
+		color: var(--grey-11);
 		font-size: 18px;
 		display: none;
 	}

@@ -1738,12 +1738,12 @@
 		--pure-white: #fff;
 		--pure-black: #000;
 		--background: #f2f2f2;
-		--background-secondary: #eee;
-		--background-disabled: #bbb;
+		--background-secondary: var(--grey-13);
+		--background-disabled: var(--grey-10);
 		--background-header: #e5e5e5;
-		--border: #ddd;
+		--border: var(--grey-12);
 		--text-color: #111;
-		--text-color-secondary: #777;
+		--text-color-secondary: var(--grey-6);
 		--type-color: #0000D0;
 		color: var(--text-color);
 	}
@@ -1752,11 +1752,11 @@
 		--pure-black: #fff;
 		--background: #1f1f1f;
 		--background-secondary: #171717;
-		--background-disabled: #555;
+		--background-disabled: var(--grey-4);
 		--background-header: #2f2f2f;
-		--border: #444;
+		--border: var(--grey-3);
 		--text-color: #f7f7f7;
-		--text-color-secondary: #aaa;
+		--text-color-secondary: var(--grey-9);
 		--type-color: #0099d0;
 		color: var(--text-color);
 	}
@@ -1925,7 +1925,7 @@
 	}
 	.column3 .panel {
 		margin-right: 0;
-		border-right: 1px solid #ddd;
+		border-right: 1px solid var(--grey-12);
 	}
 	.settings-dialog {
 		h3 {
@@ -2180,7 +2180,7 @@
 	}
 	.shortcut {
 		font-size: 12px;
-		color: #888;
+		color: var(--grey-7);
 		font-weight: 500;
 		margin-left: 10px;
 	}

@@ -255,7 +255,7 @@ function setLanguage(l: Language) {
 		img {
 			max-width: 100%;
 			max-height: 230px;
-			background: repeating-conic-gradient(#bbb 0% 25%, #777 0% 50%) 50% / 15px 15px;
+			background: repeating-conic-gradient(var(--grey-10) 0% 25%, var(--grey-6) 0% 50%) 50% / 15px 15px;
 			&.alpha {
 				padding: 15px;
 			}
@@ -264,7 +264,7 @@ function setLanguage(l: Language) {
 	.legend {
 		text-align: center;
 		font-weight: 500;
-		color: #555;
+		color: var(--grey-4);
 		font-size: 16px;
 		padding-top: 5px;
 	}
@@ -282,7 +282,7 @@ function setLanguage(l: Language) {
 		padding: 0 4px;
 		background: #fff;
 		margin-right: 4px;
-		border: 1px solid #aaa;
+		border: 1px solid var(--grey-9);
 	}
 	.language-button {
 		cursor: pointer;
@@ -297,7 +297,7 @@ function setLanguage(l: Language) {
 		gap: 8px;
 		align-items: center;
 		margin-bottom: 10px;
-		border: 1px solid #aaa;
+		border: 1px solid var(--grey-9);
 		border-radius: 4px;
 	}
 	.flag {

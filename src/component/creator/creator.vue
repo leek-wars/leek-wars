@@ -569,7 +569,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 				&[contenteditable="true"] {
 					border: 1px solid var(--border);
 				&:hover {
-					border: 1px solid #777;
+					border: 1px solid var(--grey-6);
 				}
 				}
 			}
@@ -625,7 +625,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 	.v-icon {
 		font-size: 50px;
 		border-radius: 50%;
-		color: #ccc;
+		color: var(--grey-11);
 		&.active {
 			color: black;
 		}

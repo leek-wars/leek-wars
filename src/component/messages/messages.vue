@@ -382,7 +382,7 @@
 		}
 	}
 	.chat-preview {
-		color: #555;
+		color: var(--grey-4);
 		display: flex;
 		position: relative;
 		.wrapper {

@@ -311,11 +311,11 @@ function selectPseudo(pseudo: string | null) {
 	.chat-input .chat-input-content:empty:before {
 		content: attr(placeholder);
 		display: block;
-		color: #aaa;
+		color: var(--grey-9);
 	}
 	.chat-input .chat-input-content:focus {
 		outline: 0px solid transparent;
-		border: 1px solid #ccc;
+		border: 1px solid var(--grey-11);
 	}
 	.commands {
 		z-index: 8;

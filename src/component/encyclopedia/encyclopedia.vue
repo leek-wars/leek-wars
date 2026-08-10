@@ -902,11 +902,11 @@ ${ret}
     z-index: 2;
 }
 h1 {
-	background: #222;
+	background: var(--grey-1);
 	font-size: 20px;
 	display: inline-flex;
 	&::after {
-		border-color: transparent transparent transparent #222;
+		border-color: transparent transparent transparent var(--grey-1);
 	}
 	gap: 10px;
 	.book {
@@ -987,7 +987,7 @@ h1 {
 		& > * {
 			flex: 1;
 			&:first-child {
-				border-right: 1px solid #ccc;
+				border-right: 1px solid var(--grey-11);
 			}
 			&:last-child {
 				padding-left: 20px;
@@ -1004,7 +1004,7 @@ h1 {
 		font-size: 20px;
 	}
 	.v-icon {
-		color: #ccc;
+		color: var(--grey-11);
 		font-size: 150px;
 	}
 	.available-translations {

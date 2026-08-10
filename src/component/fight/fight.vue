@@ -327,7 +327,7 @@
 		width: 80px;
 		font-size: 20px;
 		text-align: center;
-		color: #eee;
+		color: var(--grey-13);
 	}
 	.fight-info td:nth-child(1) {
 		text-align: right;
@@ -338,7 +338,7 @@
 	.fight-info .farmer {
 		display: inline-block;
 		text-align: center;
-		color: #eee;
+		color: var(--grey-13);
 		margin-bottom: 10px;
 		margin-left: 5px;
 		margin-right: 5px;
@@ -368,7 +368,7 @@
 		display: inline-block;
 		padding-top: 10px;
 		vertical-align: top;
-		color: #eee;
+		color: var(--grey-13);
 	}
 	.views-counter {
 		color: white;

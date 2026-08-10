@@ -102,7 +102,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				left: 9px;
 				top: 9px;
 				padding: 7px;
-				color: #222;
+				color: var(--grey-1);
 				width: 50px;
 				height: 50px;
 			}

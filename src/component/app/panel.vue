@@ -212,7 +212,7 @@ defineExpose({ expanded, state })
 		margin-right: 0;
 	}
 	.header > .actions :deep(.button:hover) {
-		background: #888;
+		background: var(--grey-7);
 	}
 	.header > .actions :deep(.button.green:hover) {
 		background: rgba(110, 201, 31, 0.8) 0%;

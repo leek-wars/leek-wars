@@ -393,7 +393,7 @@ function deleteTrophy() {
 			background: #30bb00;
 		}
 		&.full .bar {
-			background: #ddd;
+			background: var(--grey-12);
 		}
 	}
 	.stats {

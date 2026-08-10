@@ -195,12 +195,12 @@
 		width: 100%;
 	}
 	tr:not(:first-child):hover {
-		background: #eee;
+		background: var(--grey-13);
 	}
 	td, th {
 		padding: 0 10px;
 		text-align: center;
-		border: 1px solid #ddd;
+		border: 1px solid var(--grey-12);
 		height: 25px;
 		vertical-align: middle;
 	}

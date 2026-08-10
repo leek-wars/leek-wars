@@ -239,7 +239,7 @@ function setParent(event: boolean) {
 	.talent-more {
 		font-size: 15px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--grey-7);
 		display: inline-block;
 		vertical-align: top;
 		margin-top: 10px;

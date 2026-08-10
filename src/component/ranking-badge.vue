@@ -42,7 +42,7 @@ defineProps<{
 			border: none;
 		}
 		&.ten {
-			background: linear-gradient(0deg, #000000, #aaa);
+			background: linear-gradient(0deg, #000000, var(--grey-9));
 			color: white;
 			padding: 1px 2px;
 		}
@@ -54,7 +54,7 @@ defineProps<{
 			text-shadow: 1.5px 0 0 #ff9b29, -1.5px 0 0 #ffb029, 0 1.5px 0 #ffb029, 0 -1.5px 0 #ffb029;
 		}
 		&.second {
-			background: linear-gradient(0deg, #b1b1b1, #dddddd);
+			background: linear-gradient(0deg, #b1b1b1, var(--grey-12));
 			border: 1px solid #a0a0a0;
 			color: white;
 			font-weight: bold;

@@ -286,7 +286,7 @@
 		font-size: 17px;
 		height: 42px;
 		margin-left: 25px;
-		color: #eee;
+		color: var(--grey-13);
 		position: relative;
 		background: rgba(80, 80, 80, 0.6);
 		vertical-align: bottom;
@@ -295,7 +295,7 @@
 		align-items: center;
 		line-height: 42px;
 		i {
-			color: #eee;
+			color: var(--grey-13);
 			font-size: 26px;
 		}
 		&.merge-left {
@@ -468,9 +468,9 @@
 	}
 	.beta {
 		background: white;
-		color: #333;
+		color: var(--grey-2);
 		padding: 2px 4px;
-		border: 1px solid #aaa;
+		border: 1px solid var(--grey-9);
 		border-radius: 4px;
 		font-size: 12px;
 		margin-left: 8px;

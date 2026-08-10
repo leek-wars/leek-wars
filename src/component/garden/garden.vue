@@ -970,7 +970,7 @@
 		}
 		.tab:not(.enabled) {
 			opacity: 0.4;
-			background: #ccc;
+			background: var(--grey-11);
 			cursor: default;
 		}
 		.tab h2 {

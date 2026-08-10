@@ -399,7 +399,7 @@
 		pointer-events: auto;
 		font-size: 20px;
 		opacity: 1;
-		color: #aaa;
+		color: var(--grey-9);
 	}
 	&:hover .v-icon {
 		opacity: 1;

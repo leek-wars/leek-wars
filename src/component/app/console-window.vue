@@ -155,7 +155,7 @@ function consolePopup() {
 body.dark .theme-menu {
 	background: #2a2a2a;
 	.theme-item {
-		color: #eee;
+		color: var(--grey-13);
 		&:hover {
 			background: #3a3a3a;
 		}
@@ -164,7 +164,7 @@ body.dark .theme-menu {
 body.dark .lang-menu {
 	background: #2a2a2a;
 	.lang-item {
-		color: #eee;
+		color: var(--grey-13);
 		&:hover {
 			background: #3a3a3a;
 		}
@@ -188,7 +188,7 @@ body.dark .lang-menu {
 		font-size: 14px;
 		white-space: nowrap;
 		&:hover {
-			background: #eee;
+			background: var(--grey-13);
 		}
 		&.active {
 			font-weight: bold;
@@ -209,7 +209,7 @@ body.dark .lang-menu {
 		font-size: 14px;
 		white-space: nowrap;
 		&:hover {
-			background: #eee;
+			background: var(--grey-13);
 		}
 		&.active {
 			font-weight: bold;

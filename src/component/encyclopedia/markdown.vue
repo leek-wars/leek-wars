@@ -699,7 +699,7 @@
 			color: var(--text-color-secondary);
 			padding: 4px 0;
 		}
-		border-left: .3em solid #aaa;
+		border-left: .3em solid var(--grey-9);
 	}
 	.md :deep(code) {
 		background: var(--pure-white);

@@ -214,7 +214,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-		color: #333; // le fond reste clair en mode sombre
+		color: var(--grey-2); // le fond reste clair en mode sombre
 		p { margin: 0; }
 	}
 	// Le fond de .delete-confirm reste clair en mode sombre, pas d'override dark

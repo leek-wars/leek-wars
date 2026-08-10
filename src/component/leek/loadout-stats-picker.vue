@@ -124,7 +124,7 @@ function clear(charac: string) {
 	padding: 10px 0;
 }
 .sup {
-	color: #555;
+	color: var(--grey-4);
 }
 .charac .stat,
 .charac .sup,

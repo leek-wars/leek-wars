@@ -86,7 +86,7 @@
 		padding: 20px;
 		i {
 			font-size: 100px;
-			color: #ccc;
+			color: var(--grey-11);
 		}
 	}
 	.muted-list {

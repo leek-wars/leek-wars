@@ -272,23 +272,23 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language, la
 
 		--pure-white: #fff;
 		--background: #f2f2f2;
-		--background-secondary: #eee;
-		--background-disabled: #bbb;
+		--background-secondary: var(--grey-13);
+		--background-disabled: var(--grey-10);
 		--background-header: #e5e5e5;
-		--border: #ddd;
+		--border: var(--grey-12);
 		--text-color: #111;
-		--text-color-secondary: #777;
+		--text-color-secondary: var(--grey-6);
 		--type-color: #0000D0;
 	}
 	.theme-monokai {
 		--pure-white: #000;
 		--background: #1f1f1f;
 		--background-secondary: #171717;
-		--background-disabled: #555;
+		--background-disabled: var(--grey-4);
 		--background-header: #2f2f2f;
-		--border: #444;
+		--border: var(--grey-3);
 		--text-color: #f7f7f7;
-		--text-color-secondary: #aaa;
+		--text-color-secondary: var(--grey-9);
 		--type-color: #0099d0;
 	}
 	.scroll {
@@ -328,7 +328,7 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language, la
 		.ops {
 			font-size: 13px;
 			font-weight: normal;
-			color: #888;
+			color: var(--grey-7);
 			margin-left: 10px;
 		}
 	}

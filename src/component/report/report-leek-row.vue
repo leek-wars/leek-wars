@@ -179,7 +179,7 @@
 		border-radius: 3px;
 	}
 	.talent-bonus {
-		background-color: #888;
+		background-color: var(--grey-7);
 		color: white;
 		font-weight: bold;
 		padding: 0 4px;
@@ -193,6 +193,6 @@
 	}
 	.xp-blocked {
 		font-size: 16px;
-		color: #666;
+		color: var(--grey-5);
 	}
 </style>

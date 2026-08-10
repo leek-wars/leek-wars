@@ -1252,7 +1252,7 @@ body.dark .characteristic.frequency img {
 			margin-bottom: 10px;
 			button {
 				font-size: 20px;
-				color: #555;
+				color: var(--grey-4);
 			}
 		}
 		.level {

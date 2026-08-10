@@ -163,7 +163,7 @@ function showError(error: ApiError) {
 			border-radius: 4px;
 			padding: 10px 12px;
 			background: #fff;
-			color: #222;
+			color: var(--grey-1);
 			font-size: 15px;
 			&:focus {
 				border-color: var(--primary);
@@ -225,7 +225,7 @@ function showError(error: ApiError) {
 		}
 		&.google {
 			background: #fff;
-			color: #444;
+			color: var(--grey-3);
 			border: 1px solid #dadce0;
 			&:hover { background: #f7f7f7; }
 		}

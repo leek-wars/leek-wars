@@ -109,6 +109,6 @@ function pick(emoji: string) {
 		padding: 4px;
 	}
 	.emoji:hover {
-		background: #ccc;
+		background: var(--grey-11);
 	}
 </style>

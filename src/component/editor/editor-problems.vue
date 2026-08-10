@@ -162,7 +162,7 @@ function jumpProblem(path: string, problem: Problem) {
 		}
 		.line {
 			padding-left: 6px;
-			color: #999;
+			color: var(--grey-8);
 			user-select: none;
 			flex-shrink: 0;
 			padding-right: 8px;

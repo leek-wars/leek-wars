@@ -241,14 +241,14 @@ function submit() {
 			width: 100%;
 			max-width: 310px;
 			background: white;
-			color: #222;
+			color: var(--grey-1);
 			border: none;
 			border-radius: 8px;
 			padding: 10px 14px;
 			font-size: 15px;
 			outline: none;
 			&::placeholder {
-				color: #999;
+				color: var(--grey-8);
 			}
 		}
 	}

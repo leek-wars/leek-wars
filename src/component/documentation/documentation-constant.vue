@@ -188,7 +188,7 @@ const weapons = computed(() => {
 		position: absolute;
 		right: 12px;
 		top: 15px;
-		color: #aaa;
+		color: var(--grey-9);
 		i {
 			font-size: 18px;
 		}

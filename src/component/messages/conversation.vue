@@ -56,11 +56,11 @@ const formattedLastMessage = computed(() => formatChatPreview(props.chat.last_me
 		}
 	}
 	.selected {
-		background: #ddd;
+		background: var(--grey-12);
 		color: var(--pure-white);
 	}
 	.selected:hover {
-		background: #999;
+		background: var(--grey-8);
 	}
 	.content {
 		flex: 1;
@@ -82,7 +82,7 @@ const formattedLastMessage = computed(() => formatChatPreview(props.chat.last_me
 		max-width: 100%;
 	}
 	.selected .last-message {
-		color: #333;
+		color: var(--grey-2);
 	}
 	.name {
 		margin-bottom: 4px;

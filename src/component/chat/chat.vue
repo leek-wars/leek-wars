@@ -560,7 +560,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #aaa;
+		color: var(--grey-9);
 	}
 	.chat-new-messages {
 		position: absolute;
@@ -682,8 +682,8 @@
 			transform: scale(1.6) translateY(-6px);
 		}
 		.emoji.selected {
-			border: 1px solid #777;
-			background: #eee;
+			border: 1px solid var(--grey-6);
+			background: var(--grey-13);
 			border-radius: 50%;
 		}
 		.more {

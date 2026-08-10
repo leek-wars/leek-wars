@@ -432,7 +432,7 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 	.title {
 		font-size: 20px;
-		color: #aaa;
+		color: var(--grey-9);
 		margin-bottom: 6px;
 		font-family: monospace;
 	}
@@ -459,7 +459,7 @@ onBeforeUnmount(() => {
 	.service .label {
 		display: inline-block;
 		color: var(--pure-white);
-		background: #aaa;
+		background: var(--grey-9);
 		border-radius: 2px;
 		padding: 2px 5px;
 		font-size: 12px;
@@ -635,7 +635,7 @@ onBeforeUnmount(() => {
 		&.put { background: #95507c; }
 	}
 	.auth {
-		background: #555;
+		background: var(--grey-4);
 		color: white;
 		text-transform: uppercase;
 	}
@@ -656,11 +656,11 @@ onBeforeUnmount(() => {
 	}
 	.demo {
 		background: white;
-		color: #333;
-		border: 1px solid #aaa;
+		color: var(--grey-2);
+		border: 1px solid var(--grey-9);
 		.v-icon {
 			font-size: 13px;
-			color: #333;
+			color: var(--grey-2);
 		}
 	}
 	h4 {
@@ -689,7 +689,7 @@ onBeforeUnmount(() => {
 		&.base { background: #2f8132; color: white; }
 		&.player { background: #7d4bc4; color: white; }
 		&.account { background: #cc3333; color: white; }
-		&.session { background: #888; color: white; }
+		&.session { background: var(--grey-7); color: white; }
 	}
 	// Grand écran : description (+ paramètres / retour) à gauche, exemples de code à
 	// droite. Quand le contenu descend sous ~760px, les deux colonnes se replient

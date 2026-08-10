@@ -168,7 +168,7 @@ function setParent(event: boolean) {
 	.talent-more {
 		font-size: 15px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--grey-7);
 		display: inline-block;
 		vertical-align: top;
 		margin-top: 10px;
@@ -185,7 +185,7 @@ function setParent(event: boolean) {
 		margin-left: 5px;
 		vertical-align: top;
 		margin-top: 10px;
-		color: #555;
+		color: var(--grey-4);
 		img {
 			width: 16px;
 			opacity: 0.5;

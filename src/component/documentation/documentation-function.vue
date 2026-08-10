@@ -186,7 +186,7 @@ watch(() => props.fun, () => {
 		user-select: none;
 	}
 	.encyclo {
-		color: #aaa;
+		color: var(--grey-9);
 		margin-left: 12px;
 		i {
 			font-size: 18px;

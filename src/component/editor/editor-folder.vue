@@ -176,8 +176,8 @@ function click(e: Event) {
 		pointer-events: none;
 	}
 	.folder.dragover {
-		border: 1px dashed #777;
-		background: #ddd;
+		border: 1px dashed var(--grey-6);
+		background: var(--grey-12);
 	}
 	.folder.dragover > .label {
 		margin-top: -1px;
@@ -208,7 +208,7 @@ function click(e: Event) {
 	}
 	.count {
 		border-radius: 10px;
-		color: #333;
+		color: var(--grey-2);
 		padding: 1px 4px;
 		font-size: 12px;
 		margin-left: 6px;

@@ -300,7 +300,7 @@
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			border: 1px solid #aaa;
+			border: 1px solid var(--grey-9);
 			padding: 2px 6px;
 			border-radius: 4px;
 			.avatar {
@@ -332,7 +332,7 @@
 		.user-agent {
 			font-family: monospace;
 			font-size: 11px;
-			color: #666;
+			color: var(--grey-5);
 			max-width: 200px;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -353,13 +353,13 @@
 		.build {
 			font-family: monospace;
 			font-size: 11px;
-			color: #666;
+			color: var(--grey-5);
 			display: inline-flex;
 			align-items: center;
 			gap: 3px;
 			padding: 2px 6px;
 			border-radius: 3px;
-			background: #eee;
+			background: var(--grey-13);
 			.build-age {
 				opacity: 0.7;
 			}
@@ -416,7 +416,7 @@
 		background: white;
 	}
 	.codes th {
-		border: 2px solid #ddd;
+		border: 2px solid var(--grey-12);
 		padding: 5px;
 		background: white;
 		font-weight: normal;
@@ -425,7 +425,7 @@
 	}
 	.codes td {
 		width: 50%;
-		border: 2px solid #ddd;
+		border: 2px solid var(--grey-12);
 		padding: 0;
 		font-size: 12px;
 		vertical-align: top;
@@ -510,7 +510,7 @@
 		align-items: center;
 		gap: 10px;
 		padding: 10px 15px;
-		border-bottom: 1px solid #ddd;
+		border-bottom: 1px solid var(--grey-12);
 		h2 {
 			margin: 0;
 			font-size: 18px;

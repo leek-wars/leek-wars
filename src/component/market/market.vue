@@ -839,14 +839,14 @@ const t = useNamespacedT('market')
 			padding: 2px 4px;
 			font-size: 12px;
 			text-align: center;
-			color: #eee;
+			color: var(--grey-13);
 			font-weight: bold;
 		}
 		.leek-count {
 			background-color: var(--primary);
 		}
 		.farmer-count {
-			background-color: #555;
+			background-color: var(--grey-4);
 		}
 	}
 	.items .item.too-expensive img {

@@ -789,7 +789,7 @@
 		.vs {
 			font-size: 25px;
 			font-weight: bold;
-			color: #666;
+			color: var(--grey-5);
 			width: 9%;
 			padding: 10px;
 			min-width: 50px;
@@ -986,7 +986,7 @@
 		right: 0;
 		z-index: 1;
 		cursor: pointer;
-		background: #eee;
+		background: var(--grey-13);
 		transition: all 0.2s;
 		white-space: nowrap;
 		.preview-bar {
@@ -994,7 +994,7 @@
 			position: absolute;
 			top: 0;
 			height: 6px;
-			background: #aaa;
+			background: var(--grey-9);
 			height: 100%;
 		}
 	}
@@ -1020,7 +1020,7 @@
 		position: absolute;
 		top: 0;
 		border-radius: 50%;
-		background: #ccc;
+		background: var(--grey-11);
 		vertical-align: top;
 		border: 4px solid #f2f2f2;
 		z-index: 2;
@@ -1060,7 +1060,7 @@
 		align-items: center;
 		justify-content: center;
 		&:hover {
-			background: #444;
+			background: var(--grey-3);
 		}
 	}
 	.play-pause {
@@ -1091,7 +1091,7 @@
 		background: #1E1E1E;
 		&:deep(i) {
 			// padding-right: 10px;
-			color: #eee;
+			color: var(--grey-13);
 			opacity: 1;
 		}
 		input[type="text"] {
@@ -1151,11 +1151,11 @@
 	}
 	.map-menu {
 		background: #1E1E1E;
-		color: #eee;
+		color: var(--grey-13);
 		padding: 10px;
 		overflow: hidden;
 		:deep(.theme--light.v-label) {
-			color: #eee;
+			color: var(--grey-13);
 		}
 	}
 	.section {

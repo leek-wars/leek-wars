@@ -126,9 +126,9 @@ function throwCookies() {
 		position: relative;
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-		color: #666;
+		color: var(--grey-5);
 		a, h4, .item, .v-icon {
-			color: #666;
+			color: var(--grey-5);
 			transition: color 0.15s ease;
 			.v-icon {
 				font-size: 16px;
@@ -136,19 +136,19 @@ function throwCookies() {
 			}
 		}
 		#app.xp & {
-			color: #222;
+			color: var(--grey-1);
 		}
 		#app.xp & a, #app.xp & .item, #app.xp & .v-icon {
-			color: #222;
+			color: var(--grey-1);
 			&:hover {
 				color: #316ac5;
 			}
 		}
 		#app.xp & h4 {
-			color: #222;
+			color: var(--grey-1);
 		}
 		h4.version {
-			color: #999;
+			color: var(--grey-8);
 		}
 		a {
 			font-weight: 500;
@@ -184,13 +184,13 @@ function throwCookies() {
 			opacity: 1;
 		}
 		h4 {
-			color: #999;
+			color: var(--grey-8);
 		}
 		.item, .v-icon {
-			color: #ccc;
+			color: var(--grey-11);
 		}
 		a {
-			color: #ccc;
+			color: var(--grey-11);
 			&:hover {
 				color: var(--primary);
 			}

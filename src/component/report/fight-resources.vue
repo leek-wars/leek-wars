@@ -61,7 +61,7 @@
 			font-size: 12px;
 			content: attr(quantity);
 			text-align: center;
-			color: #eee;
+			color: var(--grey-13);
 			border-radius: 4px;
 			font-weight: bold;
 			background: rgba(0, 0, 0, 0.75);

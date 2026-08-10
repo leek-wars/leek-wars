@@ -333,7 +333,7 @@
 	}
 	.threads {
 		text-align: left;
-		color: #555;
+		color: var(--grey-4);
 		padding-top: 15px;
 		margin-top: 8px;
 	}

@@ -27,7 +27,7 @@
 		margin-bottom: 4px;
 	}
 	.formating .rule {
-		color: #888;
+		color: var(--grey-7);
 		font-weight: bold;
 		margin-right: 6px;
 	}

@@ -79,7 +79,7 @@ function start() {
 		box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
 		.v-icon {
 			font-size: 24px;
-			color: #222;
+			color: var(--grey-1);
 		}
 		.num {
 			position: absolute;

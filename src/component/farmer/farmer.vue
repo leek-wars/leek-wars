@@ -1378,7 +1378,7 @@
 	}
 	.infos .add {
 		font-size: 13px;
-		color: #999;
+		color: var(--grey-8);
 		margin: 3px 0;
 		img {
 			width: 20px;
@@ -1392,7 +1392,7 @@
 	}
 	.infos .info {
 		padding: 1px;
-		color: #888;
+		color: var(--grey-7);
 		font-size: 14px;
 		word-break: break-all;
 		display: flex;
@@ -1400,7 +1400,7 @@
 		gap: 6px;
 	}
 	.infos .info a {
-		color: #888;
+		color: var(--grey-7);
 	}
 	.infos .info img, .infos .info .flag {
 		width: 20px;
@@ -1457,7 +1457,7 @@
 	.talent-more {
 		font-size: 18px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--grey-7);
 	}
 	.talent-history {
 		margin-top: 3px;
@@ -1488,7 +1488,7 @@
 			color: var(--text-color-secondary);
 		}
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		.v-icon {
 			color: var(--text-color-secondary);
@@ -1498,7 +1498,7 @@
 		margin-top: 10px;
 		padding: 0 15px;
 		font-size: 13px;
-		color: #999;
+		color: var(--grey-8);
 		text-align: left;
 	}
 	.grades {
@@ -1626,11 +1626,11 @@
 		padding-top: 4px;
 		font-size: 13px;
 		font-style: italic;
-		color: #ddd;
+		color: var(--grey-12);
 	}
 	.trophies.grid .trophy {
 		background: white;
-		border: 1px solid #ddd;
+		border: 1px solid var(--grey-12);
 	}
 	.trophies-bonus {
 		margin: 5px;
@@ -1660,11 +1660,11 @@
 			}
 			.date {
 				font-size: 12px;
-				color: #666;
+				color: var(--grey-5);
 			}
 			.author {
 				font-size: 12px;
-				color: #666;
+				color: var(--grey-5);
 			}
 		}
 	}
@@ -1747,7 +1747,7 @@
 	}
 	.sponsorship {
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		.godfather-manage .gf-row {
 			display: flex;

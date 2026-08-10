@@ -544,7 +544,7 @@
 		.code {
 			font-weight: 500;
 			font-size: 13px;
-			color: #555;
+			color: var(--grey-4);
 		}
 		.count {
 			margin-left: auto;
@@ -572,7 +572,7 @@
 		.name {
 			word-break: break-all;
 			font-weight: 500;
-			color: #555;
+			color: var(--grey-4);
 			&:hover {
 				color: #000;
 			}
@@ -705,7 +705,7 @@
 	}
 	.email-cell {
 		font-size: 12px;
-		color: #888;
+		color: var(--grey-7);
 		overflow: hidden;
 		gap: 4px;
 		.addr {
@@ -732,7 +732,7 @@
 			}
 			.clicked { color: #4caf50; }
 			.opened { color: #2196f3; }
-			.unopened { color: #bbb; }
+			.unopened { color: var(--grey-10); }
 			.bounced { color: #b71c1c; }
 		}
 	}
@@ -741,7 +741,7 @@
 			color: #4caf50;
 		}
 		.pending {
-			color: #bbb;
+			color: var(--grey-10);
 		}
 		.progress {
 			font-weight: 600;
@@ -797,7 +797,7 @@
 	}
 	.team-cell {
 		.team {
-			color: #555;
+			color: var(--grey-4);
 			text-decoration: none;
 			&:hover {
 				color: #000;
@@ -808,7 +808,7 @@
 		}
 	}
 	.source {
-		color: #555;
+		color: var(--grey-4);
 		&:hover {
 			color: #000;
 		}

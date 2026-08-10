@@ -304,7 +304,7 @@
 		padding: 20px;
 		i {
 			font-size: 100px;
-			color: #ccc;
+			color: var(--grey-11);
 		}
 	}
 	.faults {
@@ -351,7 +351,7 @@
 		}
 	}
 	.faults .fault .reporter {
-		color: #666;
+		color: var(--grey-5);
 		font-size: 14px;
 	}
 	.title {
@@ -385,7 +385,7 @@
 	}
 	.desc {
 		font-weight: normal;
-		color: #555;
+		color: var(--grey-4);
 		white-space: normal;
 	}
 	.details {
@@ -398,7 +398,7 @@
 	.says {
 		max-height: 150px;
 		overflow-y: auto;
-		border: 1px solid #ddd;
+		border: 1px solid var(--grey-12);
 		padding: 4px;
 		margin: 4px 0;
 	}

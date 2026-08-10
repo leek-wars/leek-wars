@@ -738,7 +738,7 @@
 		height: 30px;
 	}
 	input[type=text]:focus, input[type=password]:focus {
-		border: 2px solid #555;
+		border: 2px solid var(--grey-4);
 	}
 	input[status=error], input[status=error]:focus {
 		border: 2px solid red;
@@ -905,7 +905,7 @@
 		align-items: center;
 	}
 	.info {
-		color: #eee;
+		color: var(--grey-13);
 	}
 	.leek-creator {
 		display: flex;
@@ -1138,7 +1138,7 @@
 	}
 	h2 {
 		font-weight: 500;
-		color: #222;
+		color: var(--grey-1);
 		font-size: 20px;
 		margin-bottom: 10px;
 	}

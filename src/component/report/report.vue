@@ -876,7 +876,7 @@
 	}
 	.turn {
 		font-size: 18px;
-		color: #888;
+		color: var(--grey-7);
 		margin-left: -20px;
 	}
 	.log {
@@ -1063,8 +1063,8 @@
 		display: inline-block;
 		.black {
 			font-size: 16px;
-			background: #333;
-			color: #eee;
+			background: var(--grey-2);
+			color: var(--grey-13);
 			font-weight: 500;
 			display: inline-flex;
 			padding: 3px 10px;
