@@ -74,7 +74,7 @@ function changeMode() {
 		gap: 0 8px;
 		font-size: 14px;
 		.progress {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 700;
 		}
 		.countdown {
@@ -82,13 +82,13 @@ function changeMode() {
 			font-weight: 700;
 		}
 		.mode-selected {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 600;
 			font-size: 12px;
 			padding: 1px 8px;
 		}
 		.btn {
-			background: #5fad1b;
+			background: var(--primary);
 			color: white;
 			padding: 1px 8px;
 			border-radius: 4px;

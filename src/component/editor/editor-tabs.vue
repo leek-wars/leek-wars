@@ -252,7 +252,7 @@
 			vertical-align: baseline;
 			margin-right: 2px;
 			transition: none;
-			color: #5fad1b;
+			color: var(--primary);
 			&.error {
 				color: red
 			}

@@ -54,7 +54,7 @@ const delta = (carac: string) => props.alterations?.[carac] ?? 0
 			// Couleurs OPAQUES : l'infobulle se pose par-dessus l'inventaire, une teinte
 			// translucide y laissait voir les vignettes du dessous (#622).
 			&.altered {
-				box-shadow: inset 3px 0 0 #5fad1b;
+				box-shadow: inset 3px 0 0 var(--primary);
 				background: #e8f4e0;
 			}
 			// Carac creusee par la casse : meme repere, mais dans le ton du palier

@@ -349,14 +349,14 @@ body.dark .remote-item {
 	.add-btn {
 		cursor: pointer;
 		padding: 4px 14px;
-		background: #5fad1b;
+		background: var(--primary);
 		color: white;
 		border: none;
 		border-radius: 4px;
 		font-size: 13px;
 		font-weight: 500;
 		&:hover { background: #73d120; }
-		&:disabled { opacity: 0.3; cursor: default; background: #5fad1b; }
+		&:disabled { opacity: 0.3; cursor: default; background: var(--primary); }
 	}
 }
 body.dark .add-remote .input {
@@ -412,7 +412,7 @@ body.dark .add-remote .input {
 		font-size: 18px;
 		opacity: 0.4;
 		transition: opacity 0.15s ease, color 0.15s ease;
-		&:hover { opacity: 1; color: #5fad1b; }
+		&:hover { opacity: 1; color: var(--primary); }
 	}
 	.credential-delete {
 		cursor: pointer;
@@ -547,7 +547,7 @@ body.dark .credential-info {
 			}
 			.pat-save {
 				padding: 4px 12px;
-				background: #5fad1b;
+				background: var(--primary);
 				color: white;
 				border-radius: 4px;
 				cursor: pointer;

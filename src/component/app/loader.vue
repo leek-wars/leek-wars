@@ -32,7 +32,7 @@ const w = computed(() => Math.max(3, s.value / 14))
 	position: relative;
 	border-style: solid;
 	border-radius: 50%;
-	border-right-color: #5fad1b;
+	border-right-color: var(--primary);
 	animation: rotate 0.8s linear infinite;
 	vertical-align: bottom;
 }

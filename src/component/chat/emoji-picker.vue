@@ -62,7 +62,7 @@ function pick(emoji: string) {
 		font-size: 20px;
 	}
 	.indicator {
-		background: #5fad1b;
+		background: var(--primary);
 	}
 	.tabs {
 		// height: 264px;

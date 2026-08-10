@@ -320,6 +320,6 @@ function setLanguage(l: Language) {
 		height: 240px;
 	}
 	.panel .green {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 </style>

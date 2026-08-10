@@ -149,7 +149,7 @@ function click(e: Event) {
 	.item.ai .label:before {
 		content: "✔";
 		font-weight: bold;
-		color: #5fad1b;
+		color: var(--primary);
 		padding-right: 5px;
 	}
 	.item .label:hover {

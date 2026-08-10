@@ -1990,7 +1990,7 @@
 		.sort-order {
 			cursor: pointer;
 			&:hover {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 	}
@@ -2006,7 +2006,7 @@
 		cursor: pointer;
 	}
 	.change_owner_popup .farmer.selected {
-		background: #5fad1b;
+		background: var(--primary);
 	}
 	.change_owner_popup .farmer.selected .name {
 		color: white;
@@ -2184,7 +2184,7 @@
 				}
 			}
 			.no-ai {
-				color: #5fad1b;
+				color: var(--primary);
 				font-weight: bold;
 				text-decoration: underline;
 				cursor: pointer;

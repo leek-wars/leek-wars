@@ -409,7 +409,7 @@ h2 {
 	font-weight: 500;
 	font-size: 25px;
 	margin-bottom: 10px;
-	// color: #5fad1b;
+	// color: var(--primary);
 }
 .targets {
 	display: grid;
@@ -429,7 +429,7 @@ h2 {
 			font-size: 20px;
 			font-weight: 500;
 			margin-bottom: 5px;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 }
@@ -478,7 +478,7 @@ h2 {
 			font-size: 15px;
 			margin: 5px 0;
 			.v-icon {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 		.price {

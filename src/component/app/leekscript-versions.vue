@@ -101,7 +101,7 @@ const strict = defineModel<boolean>("strict", { required: true })
 		}
 	}
 	.green {
-		background: #5fad1b;
+		background: var(--primary);
 		color: white;
 		padding: 0 6px;
 		border-radius: 20px;
@@ -109,7 +109,7 @@ const strict = defineModel<boolean>("strict", { required: true })
 	}
 	.link {
 		padding: 5px;
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: 500;
 		display: block;
 		i {

@@ -134,7 +134,7 @@ const closed = complete
 		transform: scale(1);
 	}
 	.text a {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: 500;
 	}
 	img {

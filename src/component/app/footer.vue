@@ -192,7 +192,7 @@ function throwCookies() {
 		a {
 			color: #ccc;
 			&:hover {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 	}
@@ -241,7 +241,7 @@ function throwCookies() {
 		cursor: pointer;
 		font-size: 20px;
 		&:hover {
-			color: #5fad1b !important;
+			color: var(--primary) !important;
 		}
 	}
 </style>

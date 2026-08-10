@@ -291,7 +291,7 @@
 				border-radius: 4px;
 				padding: 10px 12px;
 				background: var(--background);
-				&:hover { border-color: #5fad1b; }
+				&:hover { border-color: var(--primary); }
 				&.revoked { opacity: 0.45; &:hover { border-color: var(--border); } .name { text-decoration: line-through; } }
 				.key-icon { color: var(--text-color-secondary); }
 				.key-infos {
@@ -312,7 +312,7 @@
 						flex-wrap: wrap;
 						margin-top: 5px;
 						.last-used { color: var(--text-color-secondary); font-size: 12px; margin-left: 4px; white-space: nowrap; .v-icon { font-size: 14px; vertical-align: -2px; } }
-						.sparkline { height: 16px; width: 55px; margin-left: 4px; rect { fill: #5fad1b; } }
+						.sparkline { height: 16px; width: 55px; margin-left: 4px; rect { fill: var(--primary); } }
 					}
 				}
 				.revoked-label { color: var(--text-color-secondary); font-size: 12px; font-style: italic; }
@@ -381,7 +381,7 @@
 			padding: 8px 10px;
 			color: var(--text-color);
 			margin-bottom: 14px;
-			&:focus { outline: none; border-color: #5fad1b; }
+			&:focus { outline: none; border-color: var(--primary); }
 			&::placeholder { color: var(--text-color-secondary); }
 		}
 		h4 { margin: 0 0 8px; }
@@ -398,8 +398,8 @@
 				padding: 10px;
 				cursor: pointer;
 				user-select: none;
-				&:hover { border-color: #5fad1b; }
-				&.selected { border-color: #5fad1b; background: var(--background-secondary); .check { color: #5fad1b; } }
+				&:hover { border-color: var(--primary); }
+				&.selected { border-color: var(--primary); background: var(--background-secondary); .check { color: var(--primary); } }
 				.check { color: var(--text-color-secondary); }
 				.role-icon { color: var(--text-color-secondary); }
 				.texts {
@@ -438,7 +438,7 @@
 	}
 	.secret-step {
 		.secret-warning { font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; .v-icon { color: #e8a33d; } }
-		.secret-row code { display: block; word-break: break-all; background: var(--background-secondary); border: 1px solid #5fad1b; padding: 10px 12px; border-radius: 4px; font-size: 14px; user-select: all; }
+		.secret-row code { display: block; word-break: break-all; background: var(--background-secondary); border: 1px solid var(--primary); padding: 10px 12px; border-radius: 4px; font-size: 14px; user-select: all; }
 		.center { text-align: center; margin-top: 14px; }
 	}
 	.action.disabled { opacity: 0.5; pointer-events: none; }

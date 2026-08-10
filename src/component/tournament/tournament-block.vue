@@ -133,7 +133,7 @@ function mouseleave() {
 		stroke-width: 2;
 	}
 	.entry[me="true"] {
-		stroke: #5fad1b;
+		stroke: var(--primary);
 		fill: #78ff0355;
 	}
 	.no-fight {

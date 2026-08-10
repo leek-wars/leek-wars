@@ -187,7 +187,7 @@ function submit() {
 		padding: 16px 18px 16px 22px;
 		border-radius: 14px;
 		color: white;
-		background: linear-gradient(115deg, #2a7a05, #5fad1b, #8bc34a, #5fad1b, #2a7a05);
+		background: linear-gradient(115deg, #2a7a05, var(--primary), #8bc34a, var(--primary), #2a7a05);
 		background-size: 300% 300%;
 		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
 		transform: translateX(-50%) translateY(calc(100% + 80px));
@@ -401,7 +401,7 @@ function submit() {
 		border-radius: 16px;
 		cursor: pointer;
 		color: white;
-		background: linear-gradient(135deg, #2a7a05, #5fad1b, #8bc34a);
+		background: linear-gradient(135deg, #2a7a05, var(--primary), #8bc34a);
 		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 		animation: visitor-bubble-pop 0.4s cubic-bezier(0.22, 1.6, 0.36, 1);
 		transition: transform 0.15s ease;

@@ -1041,7 +1041,7 @@
 		line-height: 1.6;
 	}
 	.message .text :deep(a) {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.message .md {
 		padding: 0;
@@ -1217,9 +1217,9 @@
 		font-weight: bold;
 	}
 	.vote.up, .vote.up.zero:hover {
-		color: #5fad1b;
+		color: var(--primary);
 		.v-icon {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 	.vote.up.zero, .vote.down.zero {
@@ -1236,7 +1236,7 @@
 	}
 	.vote.up.active {
 		color: white;
-		background: #5fad1b;
+		background: var(--primary);
 		.v-icon {
 			color: white;
 		}
@@ -1348,7 +1348,7 @@
 		align-items: center;
 		gap: 8px;
 		padding: 12px 16px;
-		background: #5fad1b;
+		background: var(--primary);
 		color: white;
 		font-weight: 500;
 		font-size: 15px;

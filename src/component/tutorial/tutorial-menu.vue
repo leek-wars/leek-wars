@@ -75,7 +75,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 					gap: 8px;
 					.v-icon {
 						color: white;
-						background: #5fad1b;
+						background: var(--primary);
 						border-radius: 50%;
 						padding: 2px;
 						font-size: 11px;

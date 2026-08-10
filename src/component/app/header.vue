@@ -386,7 +386,7 @@
 		position: absolute;
 		top: -2px;
 		right: -6px;
-		background: #5fad1b;
+		background: var(--primary);
 		padding: 4px 5px;
 		color: white;
 		border-radius: 5px;

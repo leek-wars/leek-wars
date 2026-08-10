@@ -1438,7 +1438,7 @@
 		background: #222;
 	}
 	.item.selected {
-		background: #5fad1b;
+		background: var(--primary);
 		color: white;
 	}
 	.lateral-column .add {
@@ -1877,7 +1877,7 @@
 				font-size: 42px;
 			}
 			&.selected {
-				border: 3px solid #5fad1b;
+				border: 3px solid var(--primary);
 				background: var(--pure-white);
 			}
 		}

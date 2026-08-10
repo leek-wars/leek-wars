@@ -163,7 +163,7 @@ function disable() {
 		}
 	}
 	.step .title {
-		background: #5fad1b;
+		background: var(--primary);
 		color: white;
 		font-weight: bold;
 		padding: 5px 10px;

@@ -294,7 +294,7 @@
 	.server .load div {
 		height: 100%;
 		width: 13px;
-		background: #5fad1b;
+		background: var(--primary);
 		transition: margin-top 0.4s ease;
 	}
 	.servers .name {

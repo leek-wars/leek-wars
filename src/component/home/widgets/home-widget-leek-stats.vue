@@ -177,7 +177,7 @@
 		font-weight: bold;
 		font-size: 16px;
 	}
-	.wdl-cell .v.win { color: #5fad1b; }
+	.wdl-cell .v.win { color: var(--primary); }
 	.wdl-cell .v.draw { color: var(--text-color-secondary); }
 	.wdl-cell .v.lose { color: #c0392b; }
 	.wdl-cell .l {

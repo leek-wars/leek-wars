@@ -62,7 +62,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 		margin-bottom: 10px
 	}
 	.service .module {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.service .function, .service .returns {
 		color: var(--pure-black);
@@ -86,7 +86,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 		background: red;
 	}
 	.service .implemented {
-		background: #5fad1b;
+		background: var(--primary);
 	}
 	.service .admin {
 		background: #009aff;

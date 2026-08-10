@@ -199,7 +199,7 @@
 			gap: 10px;
 			flex-wrap: wrap;
 			.sent {
-				color: #5fad1b;
+				color: var(--primary);
 				font-size: 14px;
 				display: inline-flex;
 				align-items: center;

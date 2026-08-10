@@ -109,7 +109,7 @@ const sections = computed(() => {
 			color: var(--text-color);
 		}
 		.screenshot {
-			color: #5fad1b;
+			color: var(--primary);
 			cursor: pointer;
 			margin: 0 4px;
 			border-radius: 4px;

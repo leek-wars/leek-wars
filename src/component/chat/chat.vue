@@ -588,7 +588,7 @@
 		bottom: 39px;
 		right: 0;
 		left: 0;
-		background: #5fad1b;
+		background: var(--primary);
 		color: var(--pure-white);
 		text-align: center;
 		line-height: 30px;

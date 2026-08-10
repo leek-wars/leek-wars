@@ -95,7 +95,7 @@ function setChatLanguage(chat: number) {
 }
 .unread-circle {
 	display: inline-block;
-	background: #5fad1b;
+	background: var(--primary);
 	border-radius: 50%;
 	width: 10px;
 	height: 10px;

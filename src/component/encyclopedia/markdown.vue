@@ -821,7 +821,7 @@
 					background: var(--background-secondary);
 				}
 				&.correct {
-					background: #5fad1b;
+					background: var(--primary);
 				}
 				&.wrong {
 					background: red;

@@ -846,7 +846,7 @@ const t = useNamespacedT('market')
 		padding: 6px 0;
 	}
 	.preview .leek {
-		background: #5fad1b;
+		background: var(--primary);
 		color: white;
 		padding: 4px 8px;
 		border-radius: 3px;
@@ -919,7 +919,7 @@ const t = useNamespacedT('market')
 			font-weight: bold;
 		}
 		.leek-count {
-			background-color: #5fad1b;
+			background-color: var(--primary);
 		}
 		.farmer-count {
 			background-color: #555;

@@ -271,7 +271,7 @@
 			font-size: 14px;
 			margin-right: 6px;
 			&.valid {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 			&.error {
 				color: red

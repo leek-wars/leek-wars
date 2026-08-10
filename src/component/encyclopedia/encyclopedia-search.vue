@@ -189,7 +189,7 @@ h1 {
 	border: none;
 }
 .query:focus {
-	border: 1px solid #5fad1b;
+	border: 1px solid var(--primary);
 }
 .switch {
 	margin-bottom: 15px;
@@ -222,7 +222,7 @@ h2 {
 	font-size: 14px;
 }
 .result :deep(b) {
-	color: #5fad1b;
+	color: var(--primary);
 	font-weight: bold;
 }
 .info {

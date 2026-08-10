@@ -1,0 +1,76 @@
+/* Thème v2 : le design actuel de Leek Wars, en jetons.
+ *
+ * Ce fichier est la seule source des valeurs du thème. Tout ce qui est écrit en
+ * dur dans un composant (couleur, rayon, ombre) doit finir ici sous forme de
+ * variable CSS. C'est ce qui rendra le thème v3 possible sans retoucher les
+ * composants : il suffira de redéfinir ces mêmes variables.
+ *
+ * Les variables sont posées sur `body` et non `:root`, comme avant, parce que
+ * le mode sombre est porté par `body.dark` et doit garder la même cascade.
+ *
+ * Convention : une variable ne décrit jamais une couleur ("vert"), elle décrit
+ * un rôle ("fond d'en-tête de panneau"). Sinon le v3 hérite de noms qui mentent.
+ */
+
+body {
+	/* Marque */
+	--primary: #5fad1b;
+
+	/* Encre et fonds */
+	--pure-white: #fff;
+	--pure-black: #000;
+	--background: #f2f2f2;
+	--background-secondary: #eee;
+	--background-disabled: #bbb;
+	--background-header: #e5e5e5;
+	/* Fond hors de la page, visible autour du contenu */
+	--background-outer: #333;
+	--border: #ddd;
+	--text-color: #111;
+	--text-color-secondary: #686868;
+	--type-color: #0000D0;
+	--link-color: #0645ad;
+	--selection-background: #61b01c;
+	--selection-color: #fff;
+
+	/* Rayons. Le v2 est arrondi, le v3 sera à angles francs : ces cinq
+	   variables sont le principal levier de bascule. */
+	--radius-small: 3px;
+	--radius: 4px;
+	--radius-medium: 6px;
+	--radius-large: 8px;
+	--radius-pill: 20px;
+
+	/* Chrome : panneaux */
+	--panel-background: var(--background);
+	--panel-header-background: #2a2a2a;
+	--panel-header-color: #eee;
+	--panel-header-height: 36px;
+	--panel-shadow: 0px 10px 11px -11px rgba(0, 0, 0, 0.75);
+
+	/* Chrome : barre de page et ses onglets */
+	--page-bar-color: #eee;
+	--page-bar-tab-background: rgba(0, 0, 0, 0.3);
+	--page-bar-tab-background-hover: rgba(0, 0, 0, 0.6);
+
+	/* Couleurs sémantiques. Elles existaient en dur dans une trentaine de
+	   composants, sous quatre rouges et trois verts différents. */
+	--success: #4caf50;
+	--warning: #ff9800;
+	--error: #c62828;
+	--info: #2196f3;
+
+	&.dark {
+		--pure-white: #000;
+		--pure-black: #fff;
+		--background: #1f1f1f;
+		--background-secondary: #171717;
+		--background-disabled: #555;
+		--background-header: #2f2f2f;
+		--border: #444;
+		--text-color: #f7f7f7;
+		--text-color-secondary: #999;
+		--type-color: #0099d0;
+		--link-color: #4bbaff;
+	}
+}

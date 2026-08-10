@@ -424,7 +424,7 @@
 	}
 	&:hover .v-icon {
 		opacity: 1;
-		color: #5fad1b;
+		color: var(--primary);
 	}
 }
 #app.app .resizer {
