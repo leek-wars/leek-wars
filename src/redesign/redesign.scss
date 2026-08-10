@@ -1,0 +1,6 @@
+/* Leek Wars 3.0 (#1101) : point d’entrée des styles du redesign.
+ * Chargé par les pages du redesign uniquement, jamais par main.ts :
+ * tant que le chantier n'est pas basculé, le site actuel ne doit rien voir. */
+
+@use './tokens.scss';
+@use './components.scss';

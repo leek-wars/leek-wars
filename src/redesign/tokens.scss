@@ -1,0 +1,69 @@
+/* Leek Wars 3.0 : jetons de design (#1101)
+ *
+ * Source : projet Claude Design « Leek Wars redesign » (handoff/tokens.css).
+ * Ne pas éditer à la main sans reporter le changement dans le projet de design.
+ *
+ * Les jetons sont posés sur [data-redesign] et non sur :root, pour qu'ils
+ * n'existent que sur les pages du redesign tant que la bascule n'est pas faite.
+ */
+
+:root[data-redesign] {
+	/* Type */
+	--f-pixel: 'Press Start 2P', ui-monospace, monospace;
+	--f-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+	--f-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+	/* Sombre (défaut) */
+	--bg: #0B0F0B;
+	--bg-elev: #11161A;
+	--bg-panel: #0E1316;
+	--bg-row: #131A1E;
+	--bg-row-alt: #0F1518;
+	--bg-input: #0A0E10;
+	--line: rgba(255, 255, 255, 0.08);
+	--line-strong: rgba(255, 255, 255, 0.16);
+	--line-black: #000;
+	--ink: #E8F0E6;
+	--ink-2: #A8B4A4;
+	--ink-3: #6B7A66;
+	--green: #7CFF6B;
+	--green-deep: #2BB04A;
+	--green-glow: rgba(124, 255, 107, 0.18);
+	--lime: #D4FF3A;
+	--magenta: #FF3D7F;
+	--cyan: #5CE0FF;
+	--amber: #FFB23A;
+	--red: #FF5040;
+	--gold: #FFD23A;
+
+	/* Élément */
+	--radius: 0px; /* angles pixel, francs */
+	--radius-soft: 2px;
+	--shadow-pixel: 4px 4px 0 #000;
+	--shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+:root[data-redesign][data-theme="light"] {
+	--bg: #F2EEDF;
+	--bg-elev: #FBF7E8;
+	--bg-panel: #F7F2DF;
+	--bg-row: #FBF7E8;
+	--bg-row-alt: #F2ECD6;
+	--bg-input: #FFFCF0;
+	--line: rgba(14, 20, 16, 0.12);
+	--line-strong: rgba(14, 20, 16, 0.28);
+	--line-black: #0E1410;
+	--ink: #0E1410;
+	--ink-2: #4A5847;
+	--ink-3: #7A8676;
+	--green: #1F8A3B;
+	--green-deep: #146128;
+	--green-glow: rgba(31, 138, 59, 0.15);
+	--lime: #6FA31C;
+	--magenta: #C32265;
+	--cyan: #1A7AA0;
+	--amber: #C77A0E;
+	--red: #C2382A;
+	--gold: #B88A0E;
+	--shadow-pixel: 4px 4px 0 #0E1410;
+}

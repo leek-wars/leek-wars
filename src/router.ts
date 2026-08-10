@@ -77,6 +77,7 @@ const NewLeek = () => import(/* webpackChunkName: "[request]" */ `@/component/ne
 const Notifications = () => import(/* webpackChunkName: "[request]" */ `@/component/notifications/notifications.${locale}.i18n`)
 const PressKit = () => import(/* webpackChunkName: "[request]" */ `@/component/press-kit/press-kit.${locale}.i18n`)
 const Ranking = () => import(/* webpackChunkName: "[request]" */ `@/component/ranking/ranking.${locale}.i18n`)
+const RedesignStyleguide = () => import(/* webpackChunkName: "redesign" */ `@/component/redesign/redesign-styleguide.vue`)
 const Report = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report.${locale}.i18n`)
 const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/settings/settings.${locale}.i18n`)
 const Signup = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`))
@@ -263,6 +264,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/ranking/:category/page-:page', component: Ranking },
 	{ path: '/ranking/:category/:order', component: Ranking },
 	{ path: '/ranking/:category/:order/page-:page', component: Ranking },
+	{ path: '/redesign', component: RedesignStyleguide },
 	{ path: '/report/:id', component: Report },
 	{ path: '/settings', component: Settings, beforeEnter: connected },
 	{ path: '/signup/success/:farmer', component: SignupResult, props: { result: 'success' } },
