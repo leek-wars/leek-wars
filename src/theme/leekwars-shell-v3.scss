@@ -18,10 +18,11 @@ body:not(.v2) {
 
 	/* ====== Barre du haut ====== */
 
-	/* Le v2 posait le logo directement sur le fond extérieur. Le v3 en fait une
-	   vraie barre : une surface, un trait en bas, et c'est tout. */
+	/* Pas de surface propre : la barre reste posée sur le fond extérieur, comme
+	   dans le v2. Lui donner un aplat en faisait une bande pleine largeur, en
+	   travers d'une interface dont tout le reste est une colonne centrée.
+	   Seul le trait du bas est gardé, pour asseoir la barre. */
 	.header {
-		background: var(--background-header);
 		border-bottom: 1px solid var(--border);
 	}
 
@@ -146,6 +147,18 @@ body:not(.v2) {
 	.menu .section i {
 		color: inherit;
 	}
+	/* Le v2 prolongeait l'entrée active par un triangle vert débordant sur la
+	   droite, pour la faire pointer vers la page. Le liseré de gauche joue ce
+	   rôle maintenant, et le triangle dépassait du menu. */
+	.menu-center .section.router-link-active::before,
+	#app.menu-collapsed .menu-center .section.router-link-active::before {
+		display: none;
+	}
+	/* Ombre portée sur le texte de l'entrée active : elle servait à détacher du
+	   blanc sur l'aplat vert, elle n'a plus lieu d'être. */
+	.menu-center .section.router-link-active {
+		text-shadow: none;
+	}
 	/* Les pastilles de compteur reprennent la forme des jetons du mockup :
 	   un rectangle bordé, pas une bulle. */
 	.menu .section[label]::after,
@@ -179,7 +192,10 @@ body:not(.v2) {
 
 	/* Le panneau est une colonne, pas une pile de cartes : les panneaux qu'il
 	   contient perdent leur marge et se séparent d'un simple trait. */
-	.blabla-panel .content {
+	/* Attention au `>` : la classe `content` est aussi celle du corps de chaque
+	   notification. Sans lui, chaque notification recevait un aplat sombre
+	   par-dessus son fond, ce qui rendait le texte des trophées illisible. */
+	.blabla-panel > .content {
 		background: var(--background-secondary);
 		border-left: 1px solid var(--border);
 	}
