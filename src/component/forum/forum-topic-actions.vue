@@ -103,7 +103,7 @@ defineEmits<{
 	align-items: center;
 	gap: 4px;
 	padding: 6px;
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	.v-icon {
 		font-size: 17px;
 	}

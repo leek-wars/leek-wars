@@ -514,7 +514,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 	.id, .size {
 		position: absolute;
 		background: #fff7;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 1.5px 4.5px;
 		font-size: 12px;
 		color: #000;
@@ -563,7 +563,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 				display: inline-block;
 				font-weight: bold;
 				padding: 2px 4px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				min-width: 120px;
 				margin-right: 10px;
 				&[contenteditable="true"] {

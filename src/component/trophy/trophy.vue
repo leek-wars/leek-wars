@@ -381,14 +381,14 @@ function deleteTrophy() {
 		height: 10px;
 		position: relative;
 		background: var(--pure-white);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		margin-top: 6px;
 		border: 1px solid var(--border);
 		margin: 10px 0;
 		flex: 1;
 		.bar {
 			height: 8px;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			position: absolute;
 			background: #30bb00;
 		}

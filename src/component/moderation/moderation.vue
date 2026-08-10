@@ -315,7 +315,7 @@
 		padding: 8px;
 		padding-bottom: 4px;
 		border: 1px solid var(--border);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		margin-bottom: 10px;
 	}
 	.fault.router-link-active {
@@ -487,7 +487,7 @@
 	.forum-message {
 		border: 1px solid var(--border);
 		margin: 5px 0;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: var(--background);
 		max-height: 250px;
 		overflow-y: auto;

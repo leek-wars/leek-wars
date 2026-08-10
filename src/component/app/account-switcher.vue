@@ -164,7 +164,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 <style lang="scss" scoped>
 	.account-switcher-menu {
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.active {
 		background: rgba(95, 173, 27, 0.1);
@@ -210,7 +210,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 	}
 	.login-submenu {
 		padding: 12px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 		width: 220px;
 		form {
@@ -226,7 +226,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 		width: 100%;
 		padding: 6px 8px;
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 13px;
 	}
 	.login-error {

@@ -103,7 +103,7 @@ function disown(g: Godson) {
 	color: var(--error, #c0392b);
 	cursor: pointer;
 	padding: 6px 12px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	white-space: nowrap;
 	&:hover { background: rgba(192, 57, 43, 0.1); }
 }

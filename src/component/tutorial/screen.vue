@@ -30,7 +30,7 @@ const extended = ref(false)
 		display: block;
 		width: 65%;
 		margin: 0 auto;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 	}
 	.screen.extended img {
 		cursor: zoom-out;

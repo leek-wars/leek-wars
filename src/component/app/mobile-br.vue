@@ -17,7 +17,7 @@
 		color: white;
 		transform: rotate(-90deg);
 		padding: 7px 10px;
-		border-top-left-radius: 6px;
-		border-top-right-radius: 6px;
+		border-top-left-radius: var(--radius-medium);
+		border-top-right-radius: var(--radius-medium);
 	}
 </style>

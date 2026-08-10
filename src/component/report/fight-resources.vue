@@ -62,7 +62,7 @@
 			content: attr(quantity);
 			text-align: center;
 			color: var(--grey-13);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			font-weight: bold;
 			background: rgba(0, 0, 0, 0.75);
 		}

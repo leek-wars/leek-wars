@@ -2061,7 +2061,7 @@
 				content: attr(quantity);
 				text-align: center;
 				color: var(--grey-13);
-				border-radius: 20px;
+				border-radius: var(--radius-pill);
 				font-weight: bold;
 				background-color: var(--text-color-secondary);
 			}
@@ -2158,7 +2158,7 @@
 			color: #fff;
 			font-size: 14px;
 			font-weight: bold;
-			border-radius: 8px 0 0 0;
+			border-radius: var(--radius-large) 0 0 0;
 			img {
 				height: 20px;
 				width: auto;
@@ -2232,7 +2232,7 @@
 		content: attr(quantity);
 		text-align: center;
 		color: var(--grey-13);
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		background-color: #0a0;
 		font-weight: bold;
 		padding-left: 4px;

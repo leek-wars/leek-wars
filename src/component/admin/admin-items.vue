@@ -383,7 +383,7 @@
 	margin-left: 8px;
 	padding: 5px 10px;
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	font-size: 13px;
 	background: var(--pure-white);
 	color: var(--text-color);
@@ -424,7 +424,7 @@
 		align-items: center;
 		justify-content: center;
 		background: var(--pure-white);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.18);
 		padding: 3px;
 		img {
@@ -451,12 +451,12 @@
 .ibar {
 	height: 5px;
 	background: var(--background-disabled, #e0e0e0);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	overflow: hidden;
 	.fill {
 		height: 100%;
 		background: #2196f3;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 }
 .price {
@@ -502,7 +502,7 @@
 		padding: 10px 8px;
 		background: var(--background-secondary);
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		.card-thumb {
 			width: 96px;
 			height: 96px;
@@ -510,7 +510,7 @@
 			align-items: center;
 			justify-content: center;
 			background: var(--pure-white);
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 			padding: 6px;
 			cursor: pointer;

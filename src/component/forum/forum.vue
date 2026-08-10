@@ -252,7 +252,7 @@
 	.forum-language {
 		display: inline-flex;
 		padding: 0 4px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		cursor: pointer;
 		align-items: center;
 		height: 100%;
@@ -270,7 +270,7 @@
 			gap: 6px;
 			cursor: pointer;
 			padding: 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			border: 1px solid var(--border);
 			img.flag {
 				width: 28px;

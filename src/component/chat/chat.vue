@@ -653,7 +653,7 @@
 			padding: 6px 8px;
 			margin-bottom: 12px;
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			background: var(--pure-white);
 			font-family: inherit;
 			font-size: 14px;

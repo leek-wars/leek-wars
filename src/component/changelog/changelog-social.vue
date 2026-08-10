@@ -696,7 +696,7 @@ function downloadAll() {
 	padding: 4px 8px;
 	margin-bottom: 10px;
 	border: 1px solid rgba(255,255,255,0.15);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	background: rgba(255,255,255,0.05);
 	color: var(--text-color);
 	font-size: 14px;
@@ -717,7 +717,7 @@ function downloadAll() {
 .social-canvas {
 	width: 100%;
 	height: auto;
-	border-radius: 8px;
+	border-radius: var(--radius-large);
 	box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 .canvas-label {

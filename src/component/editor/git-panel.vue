@@ -866,7 +866,7 @@
 	width: 40px;
 	height: 40px;
 	cursor: pointer;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	opacity: 0.6;
 	flex-shrink: 0;
 	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
@@ -892,7 +892,7 @@
 	padding: 0 12px;
 	height: 40px;
 	background: rgba(124, 142, 218, 0.15);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	color: #7c8eda;
 	.rebase-label-icon { font-size: 18px; }
 }
@@ -906,7 +906,7 @@
 	width: 40px;
 	height: 40px;
 	cursor: pointer;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	flex-shrink: 0;
 	color: #4caf50;
 	&.disabled { opacity: 0.3; cursor: default; }
@@ -937,7 +937,7 @@
 .count {
 	background: rgba(128, 128, 128, 0.3);
 	color: inherit;
-	border-radius: 8px;
+	border-radius: var(--radius-large);
 	padding: 0 6px;
 	font-size: 11px;
 	margin-right: 4px;
@@ -947,7 +947,7 @@
 	padding: 9px;
 	margin-left: 2px;
 	opacity: 0.5;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	cursor: pointer;
 	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.2); }
 }
@@ -978,7 +978,7 @@
 	line-height: 16px;
 	padding-top: 4px;
 	font-weight: bold;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	margin-right: 6px;
 	flex-shrink: 0;
 	&.status-m, &.status-M { color: #e8a838; }
@@ -1001,7 +1001,7 @@
 }
 .file-action-icon {
 	padding: 4px 6px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	align-self: stretch;
 	display: inline-flex;
 	align-items: center;
@@ -1023,7 +1023,7 @@
 	margin-left: auto;
 	cursor: pointer;
 	opacity: 0.8;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 2px;
 	&:hover { opacity: 1; background: rgba(0, 0, 0, 0.2); }
 	.v-icon { font-size: 18px; }
@@ -1035,7 +1035,7 @@
 	margin-left: auto;
 	cursor: pointer;
 	opacity: 0.9;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 2px;
 	&:hover { opacity: 1; background: rgba(0, 0, 0, 0.2); }
 	&.disabled { opacity: 0.4; cursor: default; pointer-events: none; }
@@ -1071,7 +1071,7 @@
 	gap: 4px;
 	cursor: pointer;
 	padding: 2px 4px;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	user-select: none;
 	min-width: 0;
 	max-width: 100%;
@@ -1105,7 +1105,7 @@
 	align-items: center;
 	gap: 3px;
 	padding: 4px 8px;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	cursor: pointer;
 	font-size: 12px;
 	font-weight: bold;
@@ -1120,7 +1120,7 @@
 .pull-group {
 	display: flex;
 	align-items: center;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	&:hover:not(.disabled) { background: rgba(128, 128, 128, 0.15); }
 	&.disabled .sync-btn {
 		opacity: 0.35;

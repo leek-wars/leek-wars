@@ -902,7 +902,7 @@
 		padding: 10px;
 		margin: 20px 100px;
 		background: #ffb6b6;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 	}
 	.warnings-error .ai {
 		color: var(--text-color-secondary);
@@ -1069,7 +1069,7 @@
 			display: inline-flex;
 			padding: 3px 10px;
 			padding-right: 3px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			align-items: center;
 			.label {
 				padding-right: 5px;

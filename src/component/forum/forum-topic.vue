@@ -890,12 +890,12 @@
 	}
 	.topic-title[contenteditable="true"] {
 		border: 1px solid white;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		padding: 4px 6px;
 		background: rgb(53, 97, 14);
 	}
 	.message-wrapper {
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		width: 100%;
 		margin-bottom: 15px;
 		height: 100%;
@@ -1067,7 +1067,7 @@
 		color: var(--text-color-secondary);
 		padding: 6px 10px;
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		margin-top: 10px;
 		word-break: break-all;
 		display: flex;
@@ -1092,7 +1092,7 @@
 			display: inline-flex;
 			gap: 4px;
 			padding: 6px;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.action:hover {
 			color: var(--text-color);
@@ -1194,7 +1194,7 @@
 		cursor: pointer;
 		font-size: 16px;
 		padding: 2px 6px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		&.up:hover {
 			background: #5fad1b22;
 		}
@@ -1331,7 +1331,7 @@
 		display: flex;
 		flex-direction: column;
 		margin: 15px 0;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		overflow: hidden;
 		text-decoration: none;
 		transition: opacity 0.2s;

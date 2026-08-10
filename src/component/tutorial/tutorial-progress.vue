@@ -59,7 +59,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 		margin: 25px 0;
 		.item {
 			height: 30px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			background: var(--background-secondary);
 			box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
 			text-decoration: none !important;

@@ -257,7 +257,7 @@
 	height: 8px;
 	border: 1px solid var(--grey-8);
 	margin: 0 6px;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 }
 .details .details-bar {
 	height: 6px;

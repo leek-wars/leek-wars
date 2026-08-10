@@ -73,8 +73,8 @@ function sendMessage(message: string, id: number) {
 		.header {
 			background: #2a2a2a;
 			color: white;
-			border-top-left-radius: 6px;
-			border-top-right-radius: 6px;
+			border-top-left-radius: var(--radius-medium);
+			border-top-right-radius: var(--radius-medium);
 			display: flex;
 			user-select: none;
 			cursor: pointer;

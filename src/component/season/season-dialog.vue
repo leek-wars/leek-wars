@@ -75,7 +75,7 @@
 	gap: 10px;
 	margin-top: 16px;
 	padding: 14px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	color: white;
 	font-weight: bold;
 	font-size: 16px;

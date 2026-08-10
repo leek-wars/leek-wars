@@ -362,8 +362,8 @@
 		min-width: 0;
 		padding: 3px 0;
 		position: relative;
-		border-top-left-radius: 3px;
-		border-top-right-radius: 3px;
+		border-top-left-radius: var(--radius-small);
+		border-top-right-radius: var(--radius-small);
 		align-items: flex-end;
 		cursor: pointer;
 		min-width: 0;
@@ -383,7 +383,7 @@
 	}
 	.timeline .entity .bar {
 		flex: 7px 0 0;
-		border-top-left-radius: 3px;
+		border-top-left-radius: var(--radius-small);
 		border: 1px solid black;
 		margin-top: -3px;
 		margin-bottom: -3px;

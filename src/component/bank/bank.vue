@@ -358,7 +358,7 @@ watch(() => LeekWars.currency, () => {
 		gap: 16px;
 		padding: 12px 16px;
 		margin: 10px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		border: 1px solid var(--border);
 		color: var(--text-color);
@@ -453,7 +453,7 @@ watch(() => LeekWars.currency, () => {
 		margin: 10px;
 		font-size: 16px;
 		font-weight: 600;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: #7b1fa2;
 		color: white;
 	}
@@ -499,7 +499,7 @@ watch(() => LeekWars.currency, () => {
 		padding: 6px 14px;
 		color: white;
 		background: rgba(150, 150, 150, 0.2);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		text-decoration: none;
 		&:hover {
 			background: rgba(150, 150, 150, 0.35);

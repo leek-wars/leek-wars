@@ -496,7 +496,7 @@
 			height: 27px;
 			width: calc(100% - 35px);
 			font-size: 20px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			vertical-align: bottom;
 			margin-left: 5px;
 		}

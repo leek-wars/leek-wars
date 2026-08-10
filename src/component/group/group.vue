@@ -1111,7 +1111,7 @@
 	background: var(--background);
 	border: 1px solid var(--primary);
 	border-left: 4px solid var(--primary);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 12px 18px;
 	margin-bottom: 10px;
 	.demo-banner-text {
@@ -1223,7 +1223,7 @@ input[type="text"], input[type="email"] {
 			display: inline-block;
 			font-weight: bold;
 			padding: 2px 4px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			min-width: 120px;
 			margin-right: 10px;
 			border: 1px solid #0000;

@@ -88,7 +88,7 @@ function start() {
 			min-width: 16px;
 			height: 16px;
 			padding: 0 3px;
-			border-radius: 8px;
+			border-radius: var(--radius-large);
 			background: var(--primary);
 			color: #fff;
 			font-size: 11px;

@@ -48,7 +48,7 @@
 		align-items: center;
 		gap: 10px;
 		padding: 8px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		text-decoration: none;
 		color: var(--text-color);
 	}

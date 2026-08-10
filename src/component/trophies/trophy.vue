@@ -109,7 +109,7 @@ defineProps<{
 		.points {
 			border: 1px solid var(--border);
 			padding: 1px 4px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			margin-left: 5px;
 			font-weight: 500;
 		}
@@ -141,12 +141,12 @@ defineProps<{
 			height: 10px;
 			position: relative;
 			background: var(--pure-white);
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			margin-top: 6px;
 			border: 1px solid var(--border);
 			.bar {
 				height: 8px;
-				border-radius: 6px;
+				border-radius: var(--radius-medium);
 				position: absolute;
 				background: #30bb00;
 			}

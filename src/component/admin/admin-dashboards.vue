@@ -257,7 +257,7 @@
 		top: 2px;
 		bottom: 2px;
 		background: rgba(95, 173, 27, 0.15);
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 	.score-cell {
 		position: relative;
@@ -276,7 +276,7 @@
 		left: 0;
 		top: 2px;
 		bottom: 2px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		&.red { background: rgba(229, 57, 53, 0.28); }
 		&.green { background: rgba(67, 160, 71, 0.28); }
 	}

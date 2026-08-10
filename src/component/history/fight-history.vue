@@ -107,7 +107,7 @@ const arenaLabel = computed<[string, string]>(() => {
 		margin: 5px;
 		// color: #333;
 		text-align: center;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 15px;
 		height: 42px;
 		white-space: nowrap;
@@ -211,8 +211,8 @@ const arenaLabel = computed<[string, string]>(() => {
 		right: 0;
 		height: 3px;
 		background: var(--background-disabled);
-		border-bottom-left-radius: 3px;
-		border-bottom-right-radius: 3px;
+		border-bottom-left-radius: var(--radius-small);
+		border-bottom-right-radius: var(--radius-small);
 		overflow: hidden;
 	}
 	.progress-bar-fill {

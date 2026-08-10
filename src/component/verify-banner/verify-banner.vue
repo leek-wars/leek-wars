@@ -114,7 +114,7 @@ function reopen() {
 		align-items: center;
 		gap: 6px;
 		background: rgba(255, 255, 255, 0.22);
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		padding: 5px 10px;
 		font-size: 14px;
 		img {

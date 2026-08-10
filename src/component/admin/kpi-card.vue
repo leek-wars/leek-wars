@@ -34,7 +34,7 @@
 	.kpi {
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 8px 10px;
 		text-align: center;
 	}

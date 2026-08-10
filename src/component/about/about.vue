@@ -412,7 +412,7 @@ onMounted(() => {
 		min-width: 150px;
 		box-sizing: border-box;
 		padding: 6px 14px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		border: 1px solid var(--border);
 		color: var(--text-color);

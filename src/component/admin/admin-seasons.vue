@@ -117,7 +117,7 @@
 		gap: 14px;
 		padding: 10px 14px;
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		.emoji {
 			font-size: 30px;

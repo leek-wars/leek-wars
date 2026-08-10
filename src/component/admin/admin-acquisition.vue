@@ -457,7 +457,7 @@ h4 {
 .filter-input {
 	padding: 4px 8px;
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	font-size: 13px;
 	background: var(--pure-white);
 	color: var(--text-color);
@@ -487,7 +487,7 @@ h4 {
 	padding: 10px 14px;
 	background: var(--pure-white);
 	border: 1px solid var(--border);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	.dual-icon .v-icon {
 		font-size: 28px;
 		color: var(--text-color-secondary);
@@ -572,12 +572,12 @@ h4 {
 .ibar {
 	height: 5px;
 	background: var(--background-disabled, #e0e0e0);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	overflow: hidden;
 	.fill {
 		height: 100%;
 		background: #2196f3;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 }
 .empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
@@ -597,7 +597,7 @@ h4 {
 		padding: 10px 14px;
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		.gf-head {
 			display: flex;
 			align-items: center;

@@ -737,7 +737,7 @@
 		background: var(--primary);
 		color: #fff;
 		font-weight: 500;
-		border-radius: 0 0 4px 4px;
+		border-radius: 0 0 var(--radius) var(--radius);
 		transition: top 0.15s ease;
 		&:focus {
 			top: 0;
@@ -995,7 +995,7 @@
 		margin-top: 12px;
 		padding: 8px 10px;
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.logout-account {
 		display: flex;

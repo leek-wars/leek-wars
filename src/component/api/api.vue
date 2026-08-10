@@ -460,7 +460,7 @@ onBeforeUnmount(() => {
 		display: inline-block;
 		color: var(--pure-white);
 		background: var(--grey-9);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		padding: 2px 5px;
 		font-size: 12px;
 		font-weight: bold;
@@ -606,7 +606,7 @@ onBeforeUnmount(() => {
 			background: var(--background);
 			color: var(--text-color);
 			font-size: 20px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			vertical-align: bottom;
 			margin-left: 5px;
 		}
@@ -619,7 +619,7 @@ onBeforeUnmount(() => {
 	}
 	.chip {
 		padding: 3px 5px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 11px;
 		font-weight: 500;
 		min-width: 48px;
@@ -676,7 +676,7 @@ onBeforeUnmount(() => {
 		color: var(--text-color);
 		border: 1px solid var(--border);
 		padding: 8px 10px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		max-height: 300px;
 		overflow: auto;
 		font-size: 13px;
@@ -714,7 +714,7 @@ onBeforeUnmount(() => {
 	}
 	.code-block {
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		overflow: hidden;
 		background: var(--background-secondary);
 	}

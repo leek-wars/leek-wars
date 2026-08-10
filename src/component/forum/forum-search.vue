@@ -347,7 +347,7 @@
 		display: inline-block;
 		font-size: 16px;
 		margin-right: 12px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 	}
 	.vote i {
 		vertical-align: bottom;

@@ -109,7 +109,7 @@ function nativeShare() {
 .invite-url {
 	background: var(--background-secondary);
 	border: 1px solid var(--border);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 10px 14px;
 	font-family: monospace;
 	font-size: 16px;
@@ -122,7 +122,7 @@ function nativeShare() {
 	display: block;
 	margin: 16px auto 0;
 	background: white;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 6px;
 }
 .share-buttons {
@@ -139,7 +139,7 @@ function nativeShare() {
 	justify-content: center;
 	gap: 6px;
 	padding: 10px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	color: white;
 	text-decoration: none;
 	cursor: pointer;

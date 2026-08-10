@@ -653,7 +653,7 @@
 		min-width: 130px;
 		height: 90px;
 		padding: 4px 14px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		border: 2px solid var(--border);
 		cursor: pointer;
 		color: var(--text-color);
@@ -758,7 +758,7 @@
 			}
 		}
 		tr:first-child th:last-child {
-			border-top-right-radius: 3px;
+			border-top-right-radius: var(--radius-small);
 		}
 		th {
 			padding: 0 5px;

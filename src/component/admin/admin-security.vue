@@ -362,7 +362,7 @@
 	.agg-card {
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 8px;
 		h4 {
 			margin: 0 0 6px;
@@ -401,7 +401,7 @@
 	.filter-input {
 		padding: 4px 8px;
 		border: 1px solid var(--border);
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 13px;
 		flex: 0 0 auto;
 		width: 130px;
@@ -446,7 +446,7 @@
 		font-family: monospace;
 		font-weight: bold;
 		padding: 1px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 12px;
 		&.http-ok { background: #c8e6c9; color: #2e7d32; }
 		&.http-4xx { background: #ffe0b2; color: #e65100; }
@@ -457,7 +457,7 @@
 		font-family: monospace;
 		font-size: 11px;
 		padding: 1px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		&.sev-low { background: #eceff1; color: #455a64; }
 		&.sev-mid { background: #fff3e0; color: #e65100; }
 		&.sev-high { background: #ffcdd2; color: #b71c1c; font-weight: bold; }
@@ -480,7 +480,7 @@
 		background: #e3f2fd;
 		color: #0277bd;
 		padding: 1px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 11px;
 		font-weight: bold;
 		text-decoration: none;
@@ -517,7 +517,7 @@
 		pre {
 			background: var(--background-secondary);
 			padding: 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			max-height: 300px;
 			overflow: auto;
 			margin: 4px 0;
@@ -536,7 +536,7 @@
 		background: var(--pure-white);
 		color: var(--text-color);
 		padding: 16px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 	}
 	.ip-dialog-header {
 		display: flex;
@@ -549,7 +549,7 @@
 		margin-bottom: 12px;
 		padding: 8px;
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		display: flex;
 		gap: 20px;
 		flex-wrap: wrap;
@@ -560,7 +560,7 @@
 		padding: 2px 6px;
 		background: #e3f2fd;
 		color: #0277bd;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		text-decoration: none;
 		font-weight: bold;
 	}

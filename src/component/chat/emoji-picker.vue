@@ -95,7 +95,7 @@ function pick(emoji: string) {
 		display: block;
 	}
 	.emoji {
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		cursor: pointer;
 		padding: 2px;
 		vertical-align: middle;

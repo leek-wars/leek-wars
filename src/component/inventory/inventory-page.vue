@@ -355,7 +355,7 @@
 		gap: 5px;
 		padding: 6px 12px;
 		cursor: pointer;
-		border-radius: 4px 4px 0 0;
+		border-radius: var(--radius) var(--radius) 0 0;
 		// Le header du panel est toujours sombre (#2a2a2a) : le texte doit rester clair
 		// quel que soit le theme du site, sinon il devient sombre sur sombre en clair.
 		color: rgba(255, 255, 255, 0.6);

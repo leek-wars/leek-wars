@@ -133,7 +133,7 @@
 		aspect-ratio: 1;
 		padding: 3px;
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: var(--background);
 		cursor: pointer;
 		display: flex;
@@ -158,7 +158,7 @@
 		right: 0;
 		bottom: 0;
 		padding: 0 4px;
-		border-top-left-radius: 4px;
+		border-top-left-radius: var(--radius);
 		background: #000000b3;
 		color: #fff;
 		font-size: 11px;

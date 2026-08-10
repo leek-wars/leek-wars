@@ -175,7 +175,7 @@ const item_present = computed(() => items.value.map(item => {
 			bottom: 0;
 			right: 0;
 			background: #000b;
-			border-top-left-radius: 4px;
+			border-top-left-radius: var(--radius);
 			color: white;
 			padding: 1.5px 4.5px;
 			font-weight: 500;

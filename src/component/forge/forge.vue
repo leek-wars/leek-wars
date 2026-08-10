@@ -989,7 +989,7 @@
 	font-size: 14px;
 	font-weight: bold;
 	padding: 0 5px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	pointer-events: none;
 }
 // Gains sous la forge : une petite carte a lignes tramees plutot qu'une liste nue,
@@ -997,7 +997,7 @@
 .preview {
 	width: 100%;
 	padding: 4px;
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background: var(--background-secondary);
 	.row {
 		display: flex;
@@ -1005,7 +1005,7 @@
 		gap: 7px;
 		padding: 2px 7px;
 		font-size: 13px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		// Hauteur commune aux quatre lignes : les icones de carac (17 px) et l'icone
 		// d'alerte (16 px) ne font pas la meme hauteur naturelle, et la moindre
 		// difference entre le bloc du haut et celui du bas decale la forge, qui est
@@ -1146,7 +1146,7 @@
 		width: 28.5714285714%;
 		height: 28.5714285714%;
 		border: 1px solid var(--background-disabled);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		transition: all 0.3s ease;
 		background: var(--background-secondary);
 		position: absolute;
@@ -1201,7 +1201,7 @@
 		top: 28.5714285714%;
 		left: 28.5714285714%;
 		z-index: 2;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		border: 2px solid var(--background-disabled);
 		&:hover {
 			background: var(--background-secondary);
@@ -1226,7 +1226,7 @@
 			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 		}
 		& :deep(.v-ripple__container) {
-			border-radius: 20px;
+			border-radius: var(--radius-pill);
 		}
 		.item.building {
 			animation: hithere 0.7s ease 1;
@@ -1253,7 +1253,7 @@
 			bottom: 12%;
 			right: 12%;
 			background: #000b;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			color: white;
 			padding: 1.5px 4.5px;
 			font-weight: 500;

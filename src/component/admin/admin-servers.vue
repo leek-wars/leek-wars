@@ -289,7 +289,7 @@
 		background: var(--pure-white);
 		overflow: hidden;
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 	}
 	.server .load div {
 		height: 100%;

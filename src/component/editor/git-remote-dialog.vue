@@ -280,7 +280,7 @@
 	padding: 8px 10px;
 	margin-bottom: 4px;
 	border: 1px solid rgba(0,0,0,0.08);
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background: rgba(0,0,0,0.02);
 	font-size: 13px;
 	transition: background 0.15s ease, border-color 0.15s ease;
@@ -298,7 +298,7 @@
 		font-weight: 600;
 		padding: 2px 8px;
 		background: rgba(0,0,0,0.06);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 12px;
 	}
 	.remote-url {
@@ -339,7 +339,7 @@ body.dark .remote-item {
 	.input {
 		background: rgba(0,0,0,0.1);
 		border: 1px solid rgba(0,0,0,0.15);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 4px 8px;
 		font-size: 13px;
 		color: inherit;
@@ -352,7 +352,7 @@ body.dark .remote-item {
 		background: var(--primary);
 		color: white;
 		border: none;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 13px;
 		font-weight: 500;
 		&:hover { background: #73d120; }
@@ -370,7 +370,7 @@ body.dark .add-remote .input {
 	padding: 8px 10px;
 	margin-bottom: 4px;
 	border: 1px solid rgba(0,0,0,0.08);
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background: rgba(0,0,0,0.02);
 	font-size: 13px;
 	transition: background 0.15s ease, border-color 0.15s ease;
@@ -389,7 +389,7 @@ body.dark .add-remote .input {
 		font-weight: 600;
 		padding: 2px 8px;
 		background: rgba(0,0,0,0.06);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		color: var(--grey-5);
 	}
 	.credential-user {
@@ -446,7 +446,7 @@ body.dark .credential-info {
 		align-items: center;
 		gap: 6px;
 		padding: 6px 14px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 		font-size: 13px;
 		font-weight: bold;
@@ -474,7 +474,7 @@ body.dark .credential-info {
 				gap: 4px;
 				padding: 10px 6px;
 				border: 1px solid rgba(0,0,0,0.12);
-				border-radius: 6px;
+				border-radius: var(--radius-medium);
 				cursor: pointer;
 				font-size: 12px;
 				font-weight: 500;
@@ -526,7 +526,7 @@ body.dark .credential-info {
 			box-sizing: border-box;
 			background: rgba(0,0,0,0.1);
 			border: 1px solid rgba(0,0,0,0.15);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 4px 8px;
 			font-size: 13px;
 			color: inherit;
@@ -540,7 +540,7 @@ body.dark .credential-info {
 				flex: 1;
 				background: rgba(0,0,0,0.1);
 				border: 1px solid rgba(0,0,0,0.15);
-				border-radius: 4px;
+				border-radius: var(--radius);
 				padding: 4px 8px;
 				font-size: 13px;
 				color: inherit;
@@ -549,7 +549,7 @@ body.dark .credential-info {
 				padding: 4px 12px;
 				background: var(--primary);
 				color: white;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				cursor: pointer;
 				font-size: 13px;
 				&:hover { background: #73d120; }

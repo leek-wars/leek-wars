@@ -632,7 +632,7 @@ defineExpose({
 }
 .compiling {
 	padding: 5px 10px;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	background: var(--pure-white);
 	margin: 4px;
 	display: inline-block;
@@ -651,7 +651,7 @@ defineExpose({
 }
 .results .good, .results .error {
 	padding: 5px 10px;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	margin: 4px;
 	pointer-events: auto;
 }

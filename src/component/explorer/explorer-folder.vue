@@ -27,7 +27,7 @@ defineProps<{
 		height: 135px;
 		width: 100%;
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		overflow: hidden;
 		&:hover {
 			background: var(--pure-white);

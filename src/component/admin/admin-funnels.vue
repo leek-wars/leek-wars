@@ -527,7 +527,7 @@
 		input[type="date"] {
 			padding: 8px 12px;
 			border: 1px solid var(--grey-11);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			font-size: 14px;
 		}
 		.v-select {
@@ -551,7 +551,7 @@
 	}
 	.flow-container {
 		border: 1px solid var(--grey-13);
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		overflow: hidden;
 	}
 	body.dark .flow-container {
@@ -560,7 +560,7 @@
 	.flow-node {
 		background: white;
 		border: 2px solid #4caf50;
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		padding: 8px 12px;
 		width: 220px;
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -572,7 +572,7 @@
 			left: 0;
 			height: 100%;
 			opacity: 0.4;
-			border-radius: 6px 0 0 6px;
+			border-radius: var(--radius-medium) 0 0 var(--radius-medium);
 		}
 		&.root {
 			border-color: #1976d2;
@@ -655,7 +655,7 @@
 		align-items: center;
 		padding: 4px 8px;
 		background: #f5f5f5;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 13px;
 	}
 	body.dark .meta-row {
@@ -669,7 +669,7 @@
 	.meta-tag {
 		background: #e0e0e0;
 		padding: 2px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 12px;
 		font-family: monospace;
 	}

@@ -33,8 +33,9 @@ body {
 	--selection-background: #61b01c;
 	--selection-color: #fff;
 
-	/* Rayons. Le v2 est arrondi, le v3 sera à angles francs : ces cinq
+	/* Rayons. Le v2 est arrondi, le v3 sera à angles francs : ces six
 	   variables sont le principal levier de bascule. */
+	--radius-tiny: 2px;
 	--radius-small: 3px;
 	--radius: 4px;
 	--radius-medium: 6px;

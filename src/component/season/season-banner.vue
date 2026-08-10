@@ -38,7 +38,7 @@
 	gap: 12px;
 	padding: 10px 16px;
 	// Coins bas carrés + collé aux panneaux du potager en dessous.
-	border-radius: 4px 4px 0 0;
+	border-radius: var(--radius) var(--radius) 0 0;
 	margin-bottom: 0;
 	color: white;
 	cursor: pointer;

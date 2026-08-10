@@ -741,7 +741,7 @@
 		padding-top: 5px;
 		padding-bottom: 5px;
 		padding-right: 20px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		ul {
 			margin: 0;
 		}
@@ -786,7 +786,7 @@
 				background: var(--pure-white);
 				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 				padding: 15px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				cursor: pointer;
 				display: flex;
 				gap: 4px;
@@ -880,7 +880,7 @@
 			background: var(--pure-white);
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 			padding: 10px 15px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			margin: 0;
 		}
 	}

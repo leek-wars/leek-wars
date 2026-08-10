@@ -339,7 +339,7 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 6px 2px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 		border: 2px solid transparent;
 		background: var(--background-secondary);
@@ -362,7 +362,7 @@
 			font-size: 9px;
 			line-height: 1;
 			padding: 2px 3px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			color: var(--pure-white);
 			text-transform: uppercase;
 			&.weapon { background: #c0612a; }
@@ -402,14 +402,14 @@
 		min-height: 0;
 		color: var(--text-color-secondary);
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.player-zone {
 		flex: 1;
 		min-height: 0;
 		width: 100%;
 		background: #2a2a2a;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		overflow: hidden;
 	}
 	.current-entry {

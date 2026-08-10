@@ -143,7 +143,7 @@ function updateComponent(component: ComponentTemplate) {
 		margin-bottom: 5px;
 		.tag {
 			background: var(--background-secondary);
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			padding: 1px 5px;
 		}
 	}

@@ -785,8 +785,8 @@
 			background: #2a2a2a;
 			color: white;
 			display: flex;
-			border-top-left-radius: 6px;
-			border-top-right-radius: 6px;
+			border-top-left-radius: var(--radius-medium);
+			border-top-right-radius: var(--radius-medium);
 			user-select: none;
 			cursor: pointer;
 			.title {
@@ -854,7 +854,7 @@
 			width: 80px;
 			padding: 4px;
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			text-align: center;
 			cursor: pointer;
 			opacity: 0.45;
@@ -897,7 +897,7 @@
 	}
 	.soussous-dans-popoche {
 		padding: 10px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 		display: inline-block;
 		margin: 15px;

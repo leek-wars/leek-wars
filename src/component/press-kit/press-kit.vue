@@ -298,7 +298,7 @@ function setLanguage(l: Language) {
 		align-items: center;
 		margin-bottom: 10px;
 		border: 1px solid var(--grey-9);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.flag {
 		max-width: 30px;

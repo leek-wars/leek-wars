@@ -957,7 +957,7 @@
 			padding: 10px;
 			display: block;
 			border: 1px solid var(--border);
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			.player-count {
 				font-size: 20px;
 				color: var(--text-color-secondary);
@@ -1000,7 +1000,7 @@
 	.leek, .farmer, .composition-wrapper {
 		width: 100%;
 		display: inline-block;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		border: 1px solid var(--border);
 	}
 	.opponents {

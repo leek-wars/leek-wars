@@ -336,7 +336,7 @@ onBeforeMount(() => {
 }
 .guest-dialog {
 	background: var(--background);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 25px;
 	display: flex;
 	flex-direction: column;
@@ -438,7 +438,7 @@ h2 {
 	.offer {
 		max-width: 300px;
 		padding: 20px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		display: flex;
 		flex-direction: column;
 		border: 1px solid var(--border);

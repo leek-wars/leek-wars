@@ -147,7 +147,7 @@
 	}
 	.xp-bar {
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		height: 8px;
 		overflow: hidden;
 	}
@@ -170,7 +170,7 @@
 		flex-direction: column;
 		align-items: center;
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 6px 2px;
 	}
 	.wdl-cell .v {

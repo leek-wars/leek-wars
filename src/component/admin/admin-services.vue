@@ -76,7 +76,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 	.service .label {
 		color: white;
 		background: var(--grey-8);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		padding: 2px 5px;
 		font-size: 12px;
 		font-weight: bold;

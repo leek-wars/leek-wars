@@ -24,7 +24,7 @@ defineProps<{
 		font-size: 16px;
 		padding: 3px 4px;
 		font-weight: 500;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		border: 1px solid var(--border);
 		.v-icon {
 			font-size: 21px;

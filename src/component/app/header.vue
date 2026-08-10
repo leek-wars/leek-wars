@@ -396,7 +396,7 @@
 	.dialog {
 		background: var(--background);
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.dialog-items {
 		width: 400px;
@@ -471,7 +471,7 @@
 		color: var(--grey-2);
 		padding: 2px 4px;
 		border: 1px solid var(--grey-9);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 12px;
 		margin-left: 8px;
 	}

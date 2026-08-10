@@ -207,8 +207,8 @@
 		overflow-y: hidden;
 		white-space: nowrap;
 		position: relative;
-		border-top-left-radius: 4px;
-		border-top-right-radius: 4px;
+		border-top-left-radius: var(--radius);
+		border-top-right-radius: var(--radius);
 	}
 	#app:not(.app) .list {
 		&::-webkit-scrollbar {

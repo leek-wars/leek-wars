@@ -1831,7 +1831,7 @@
 			font-size: 14px;
 			margin-top: 3px;
 			padding-top: 2px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			&.me {
 				cursor: pointer;
 				&:hover {
@@ -1942,7 +1942,7 @@
 			display: flex;
 			align-items: center;
 			padding: 0 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			transition: background 0.15s;
 			&:hover {
 				background: rgba(128, 128, 128, 0.1);
@@ -1982,7 +1982,7 @@
 		.sort-select {
 			flex: 1;
 			padding: 4px 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			border: 1px solid var(--border-color);
 			background: var(--background);
 			color: var(--text-color);
@@ -2002,7 +2002,7 @@
 	.change_owner_popup .farmer {
 		padding: 4px;
 		padding-top: 10px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 	}
 	.change_owner_popup .farmer.selected {
@@ -2132,7 +2132,7 @@
 				align-items: center;
 				gap: 10px;
 				padding: 6px 12px;
-				border-radius: 8px;
+				border-radius: var(--radius-large);
 				transition: background 0.15s;
 				&:hover {
 					background: rgba(128, 128, 128, 0.1);
@@ -2340,7 +2340,7 @@
 			margin: 5px;
 			cursor: pointer;
 			border: 1px solid var(--border);
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			.flag {
 				height: 22px;
 				margin-bottom: 10px;
