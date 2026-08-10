@@ -80,6 +80,7 @@
 	"auto": "Авто",
 	"theme": "Тема",
 	"modern_theme": "Современная тема (бета)",
+	"legacy_theme": "Старый дизайн",
 	"xp_theme": "Тема XP",
 	"purchase_history": "История покупок"
 }

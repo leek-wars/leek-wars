@@ -80,6 +80,7 @@
 	"auto": "Auto",
 	"theme": "Teema",
 	"modern_theme": "Moderni teema (beta)",
+	"legacy_theme": "Vanha ulkoasu",
 	"xp_theme": "XP-teema",
 	"purchase_history": "Ostohistoria"
 }

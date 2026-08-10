@@ -1,6 +1,7 @@
-// Jetons du thème actuel. Doit rester en premier : tout le reste du fichier
-// consomme ses variables. cf. src/theme/leekwars-theme-v2.scss
-@use './theme/leekwars-theme-v2.scss';
+// Jetons du thème par défaut. Doit rester en premier : tout le reste du fichier
+// consomme ses variables. L'ancien thème (leekwars-theme-v2.scss) est une
+// option, chargée à la demande depuis app.vue.
+@use './theme/leekwars-theme-v3.scss';
 
 // Roboto variable font (self-hosted)
 @font-face {

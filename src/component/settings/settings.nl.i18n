@@ -80,6 +80,7 @@
 	"auto": "Auto",
 	"theme": "Thema",
 	"modern_theme": "Modern thema (bèta)",
+	"legacy_theme": "Oud ontwerp",
 	"xp_theme": "XP-thema",
 	"purchase_history": "Aankoopgeschiedenis"
 }

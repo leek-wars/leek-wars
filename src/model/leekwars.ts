@@ -417,6 +417,9 @@ const LeekWars = reactive({
 		return stored
 	})(),
 	xpTheme: localStorage.getItem('theme') === 'xp',
+	// Ancien design (v2). Le défaut est le nouveau design (v3), pose par
+	// global.scss ; l'ancien thème est charge a la demande. cf. src/theme/
+	legacyTheme: localStorage.getItem('design') === 'v2',
 	xpCursorsInit() {
 		if (xpCursorListenerRegistered) return
 		xpCursorListenerRegistered = true

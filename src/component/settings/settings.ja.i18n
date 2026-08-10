@@ -79,6 +79,7 @@
 	"auto": "オート",
 	"theme": "テーマ",
 	"modern_theme": "モダンテーマ（ベータ）",
+	"legacy_theme": "旧デザイン",
 	"xp_theme": "XPテーマ",
 	"error_already_unregistered": "このアカウントはすでに削除されています。",
 	"error_impossible_owner_team": "チームの作成者である間はアカウントを削除できません。",

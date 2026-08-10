@@ -80,6 +80,7 @@
 	"auto": "Otomatis",
 	"theme": "Tema",
 	"modern_theme": "Tema modern (beta)",
+	"legacy_theme": "Desain lama",
 	"xp_theme": "Tema XP",
 	"purchase_history": "Riwayat pembelian"
 }
