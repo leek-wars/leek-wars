@@ -160,7 +160,7 @@
 		padding: 0 4px;
 		border-top-left-radius: var(--radius);
 		background: #000000b3;
-		color: #fff;
+		color: var(--white);
 		font-size: 11px;
 		font-weight: 500;
 		line-height: 15px;

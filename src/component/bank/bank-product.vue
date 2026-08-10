@@ -108,7 +108,7 @@ function onCardClick(event: Event) {
 		top: 8px;
 		left: 8px;
 		background: #7b1fa2;
-		color: white;
+		color: var(--white);
 		font-weight: 700;
 		font-size: 14px;
 		padding: 2px 8px;

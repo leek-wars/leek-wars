@@ -263,8 +263,8 @@
 		// (template + buildMailHTML inchanges).
 		.mail-body {
 			padding: 15px;
-			background-color: #fff;
-			color: #000;
+			background-color: var(--white);
+			color: var(--black);
 			// Le contenu du mail est injecte en v-html : les styles GLOBAUX du site
 			// s'y appliquent et cassent le rendu (h3 = banniere verte avec ::before
 			// et ::after, h4 = taille/couleur imposees...). On les neutralise ; le

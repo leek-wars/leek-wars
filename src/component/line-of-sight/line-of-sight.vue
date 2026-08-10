@@ -97,7 +97,7 @@ function clickCell(x: number, y: number) {
 		flex: 1;
 	}
 	.cell.obstacle {
-		background: black;
+		background: var(--black);
 	}
 	.cell.los {
 		background: var(--primary);

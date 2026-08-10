@@ -300,7 +300,7 @@ watch(() => LeekWars.darkMode, () => {
 		font-weight: 600;
 		border-radius: var(--radius);
 		background: #7b1fa2;
-		color: white;
+		color: var(--white);
 	}
 	.back {
 		padding: 10px;

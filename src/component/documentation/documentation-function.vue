@@ -193,7 +193,7 @@ watch(() => props.fun, () => {
 		}
 		&:hover {
 			text-decoration: none;
-			color: #000;
+			color: var(--black);
 		}
 	}
 </style>

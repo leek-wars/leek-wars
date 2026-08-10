@@ -163,7 +163,7 @@ const item_present = computed(() => items.value.map(item => {
 		position: relative;
 		padding: 4px;
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		box-shadow: var(--elevation-1);
 		img {
 			width: 42px;
 			height: 42px;
@@ -176,7 +176,7 @@ const item_present = computed(() => items.value.map(item => {
 			right: 0;
 			background: #000b;
 			border-top-left-radius: var(--radius);
-			color: white;
+			color: var(--white);
 			padding: 1.5px 4.5px;
 			font-weight: 500;
 			font-size: 14px;
@@ -240,7 +240,7 @@ const item_present = computed(() => items.value.map(item => {
 	background: var(--pure-white);
 	border: 1px solid var(--grey-9);
 	border-radius: 100%;
-	box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+	box-shadow: var(--elevation-1);
 	&.arrow {
 		margin: 14px;
 		margin-right: 18px;

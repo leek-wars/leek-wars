@@ -577,7 +577,7 @@
 		height: 30px;
 		line-height: 30px;
 		background-color: #d3324d;
-		color: white;
+		color: var(--white);
 		text-align: center;
 		transition: height ease 0.5s;
 		position: absolute;

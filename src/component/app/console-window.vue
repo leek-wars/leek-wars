@@ -153,7 +153,7 @@ function consolePopup() {
 	box-shadow: 0 11px 15px -7px #0003, 0 24px 38px 3px #00000024, 0 9px 46px 8px #0000001f;
 }
 body.dark .theme-menu {
-	background: #2a2a2a;
+	background: var(--panel-header-background);
 	.theme-item {
 		color: var(--grey-13);
 		&:hover {
@@ -162,7 +162,7 @@ body.dark .theme-menu {
 	}
 }
 body.dark .lang-menu {
-	background: #2a2a2a;
+	background: var(--panel-header-background);
 	.lang-item {
 		color: var(--grey-13);
 		&:hover {
@@ -180,7 +180,7 @@ body.dark .lang-menu {
 }
 
 .theme-menu {
-	background: white;
+	background: var(--white);
 	padding: 4px 0;
 	.theme-item {
 		padding: 6px 16px;
@@ -198,7 +198,7 @@ body.dark .lang-menu {
 }
 
 .lang-menu {
-	background: white;
+	background: var(--white);
 	padding: 4px 0;
 	.lang-item {
 		display: flex;

@@ -23,7 +23,7 @@ const extended = ref(false)
 		margin-bottom: 20px;
 	}
 	.screen:hover .legend {
-		color: black;
+		color: var(--black);
 	}
 	.screen img {
 		cursor: zoom-in;

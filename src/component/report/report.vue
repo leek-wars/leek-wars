@@ -835,7 +835,7 @@
 		margin: 0 auto 12px;
 		padding: 5px 12px;
 		border-radius: 14px;
-		color: white;
+		color: var(--white);
 		font-weight: bold;
 		font-size: 13px;
 		cursor: help;
@@ -1050,7 +1050,7 @@
 		.v-btn {
 			margin-bottom: 6px;
 			&:not(.all):not(.t4) {
-				color: white;
+				color: var(--white);
 			}
 		}
 	}

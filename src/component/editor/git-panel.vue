@@ -1012,7 +1012,7 @@
 .merge-banner {
 	padding: 8px;
 	background: #e8a838;
-	color: white;
+	color: var(--white);
 	display: flex;
 	align-items: center;
 	gap: 4px;

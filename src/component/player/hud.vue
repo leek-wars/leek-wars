@@ -384,7 +384,7 @@
 	.timeline .entity .bar {
 		flex: 7px 0 0;
 		border-top-left-radius: var(--radius-small);
-		border: 1px solid black;
+		border: 1px solid var(--black);
 		margin-top: -3px;
 		margin-bottom: -3px;
 	}
@@ -461,7 +461,7 @@
 		overflow: hidden;
 		overscroll-behavior: contain;
 		position: absolute;
-		background: #fff;
+		background: var(--white);
 		border-top-right-radius: 5px;
 		box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 		left: 0;
@@ -499,7 +499,7 @@
 			max-height: calc(100% - 5px);
 			max-width: 1000px;
 			border-top-right-radius: 0;
-			background-color: #fff;
+			background-color: var(--white);
 			overflow-y: auto;
 			&:hover {
 				width: max(100%, 600px) !important;
@@ -562,7 +562,7 @@
 		color: #ff1900;
 	}
 	.notif-trophy {
-		color: black;
+		color: var(--black);
 		padding: 4px;
 		display: flex;
 		align-items: center;

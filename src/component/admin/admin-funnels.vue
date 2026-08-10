@@ -558,7 +558,7 @@
 		border-color: var(--grey-3);
 	}
 	.flow-node {
-		background: white;
+		background: var(--white);
 		border: 2px solid #4caf50;
 		border-radius: var(--radius-large);
 		padding: 8px 12px;
@@ -610,7 +610,7 @@
 		}
 	}
 	body.dark .flow-node {
-		background: #2a2a2a;
+		background: var(--panel-header-background);
 		color: var(--grey-13);
 		&.root {
 			background: #1a3a5c;
@@ -659,7 +659,7 @@
 		font-size: 13px;
 	}
 	body.dark .meta-row {
-		background: #2a2a2a;
+		background: var(--panel-header-background);
 	}
 	.meta-keys {
 		display: flex;

@@ -97,6 +97,6 @@ function refuse() {
 }
 .action.green {
 	background: var(--success, #5cb85c);
-	color: white;
+	color: var(--white);
 }
 </style>

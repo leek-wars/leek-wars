@@ -1361,7 +1361,7 @@
 				max-height: 40px;
 			}
 			&:hover {
-				background: white;
+				background: var(--white);
 			}
 			h4 {
 				font-size: 14px;
@@ -1507,7 +1507,7 @@
 	}
 	.grade {
 		border-radius: 5px;
-		color: white;
+		color: var(--white);
 		display: inline-block;
 		padding: 3px 6px;
 		margin-top: 5px;
@@ -1598,7 +1598,7 @@
 	}
 	.leek:hover {
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	.trophies-mode-button {
 		padding: 8px 10px;
@@ -1629,7 +1629,7 @@
 		color: var(--grey-12);
 	}
 	.trophies.grid .trophy {
-		background: white;
+		background: var(--white);
 		border: 1px solid var(--grey-12);
 	}
 	.trophies-bonus {
@@ -1649,7 +1649,7 @@
 		}
 		.warning {
 			padding: 5px;
-			background: white;
+			background: var(--white);
 			border-radius: var(--radius-tiny);
 			width: 250px;
 			display: inline-block;
@@ -1823,7 +1823,7 @@
 				padding: 8px 18px;
 				border-radius: var(--radius);
 				font-weight: 500;
-				color: #fff;
+				color: var(--white);
 				background: var(--primary);
 				white-space: nowrap;
 				&:hover { filter: brightness(1.1); }
@@ -1865,7 +1865,7 @@
 				white-space: nowrap;
 				font-weight: 500;
 				&.accept {
-					color: #fff;
+					color: var(--white);
 					background: var(--primary);
 					&:hover { filter: brightness(1.1); }
 				}
@@ -1887,7 +1887,7 @@
 				text-align: center;
 				font-weight: 500;
 				&.notif-trophy .v-icon {
-					color: black;
+					color: var(--black);
 				}
 				.level {
 					font-size: 18px;

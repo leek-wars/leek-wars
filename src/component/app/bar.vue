@@ -118,7 +118,7 @@ function readNotification(notification: Notification) {
 		height: 56px;
 		z-index: 6;
 		background: #4b9e06;
-		color: white;
+		color: var(--white);
 		line-height: 55px;
 		font-size: 18px;
 		overflow: hidden;
@@ -144,7 +144,7 @@ function readNotification(notification: Notification) {
 		height: 2px;
 		border-radius: var(--radius-tiny);
 		margin: 5px 0;
-		background: white;
+		background: var(--white);
 		transition: all ease 400ms;
 	}
 	.app-bar .menu-button.back .bar:first-child {
@@ -209,7 +209,7 @@ function readNotification(notification: Notification) {
 		width: 56px;
 		height: 56px;
 		padding: 15px;
-		color: white;
+		color: var(--white);
 	}
 	.action img {
 		width: 56px;
@@ -221,7 +221,7 @@ function readNotification(notification: Notification) {
 		height: 56px;
 		line-height: 56px;
 		padding: 0 12px;
-		color: white;
+		color: var(--white);
 		font-size: 16px;
 		white-space: nowrap;
 	}
@@ -239,7 +239,7 @@ function readNotification(notification: Notification) {
 		right: 5px;
 		padding: 4px 3px;
 		background: #ff6f00;
-		color: #fff;
+		color: var(--white);
 		border-radius: 5px;
 		height: 20px;
 		line-height: 12px;

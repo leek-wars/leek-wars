@@ -1339,7 +1339,7 @@ body.dark .characteristic.frequency img {
 }
 .alert {
 	color: red;
-	background: white;
+	background: var(--white);
 	border-radius: 50%;
 	padding: 1px;
 	z-index: 1;

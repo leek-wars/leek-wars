@@ -388,7 +388,7 @@
 		right: -6px;
 		background: var(--primary);
 		padding: 4px 5px;
-		color: white;
+		color: var(--white);
 		border-radius: 5px;
 		height: 20px;
 		line-height: 12px;
@@ -467,7 +467,7 @@
 		margin-right: 8px;
 	}
 	.beta {
-		background: white;
+		background: var(--white);
 		color: var(--grey-2);
 		padding: 2px 4px;
 		border: 1px solid var(--grey-9);

@@ -177,12 +177,12 @@
 	background: #e8e8e8;
 	padding: 3px;
 	&:not(.active) {
-		border: 2px inset white;
+		border: 2px inset var(--white);
 		padding: 0;
 	}
 	&.active {
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		background: var(--white);
+		box-shadow: var(--elevation-1);
 	}
 }
 

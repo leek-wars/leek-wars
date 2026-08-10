@@ -2009,7 +2009,7 @@
 		background: var(--primary);
 	}
 	.change_owner_popup .farmer.selected .name {
-		color: white;
+		color: var(--white);
 	}
 	.no-compos {
 		color: var(--grey-9);
@@ -2026,7 +2026,7 @@
 		padding-top: 1px;
 	}
 	.level-talent .level {
-		color: white;
+		color: var(--white);
 		line-height: 32px;
 		margin-left: 30px;
 		margin-right: 10px;
@@ -2347,7 +2347,7 @@
 			}
 			&.selected {
 				background: var(--pure-white);
-				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+				box-shadow: var(--elevation-1);
 			}
 		}
 	}

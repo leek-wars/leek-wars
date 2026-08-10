@@ -471,7 +471,7 @@
 	border-radius: 10px;
 	font-size: 11px;
 	font-weight: 600;
-	color: white;
+	color: var(--white);
 	white-space: nowrap;
 }
 .empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }

@@ -105,12 +105,12 @@
 			box-shadow: 0px 0px 80px black;
 			cursor: zoom-out;
 			border-radius: 10px;
-			border: 6px solid white;
+			border: 6px solid var(--white);
 		}
 	}
 	.biglegend {
 		padding-top: 10px;
-		color: white;
+		color: var(--white);
 		font-size: 20px;
 		text-shadow: 0px 0px 20px black;
 	}

@@ -371,11 +371,11 @@
 		}
 		&.color {
 			.value, .value.total, .label, .type {
-				color: white;
+				color: var(--white);
 			}
 		}
 		&.show_today.color:hover .value {
-			color: white;
+			color: var(--white);
 		}
 	}
 	#app.app .statistic {

@@ -89,7 +89,7 @@ function click(square: Square) {
 	}
 	.result {
 		position: absolute;
-		background: white;
+		background: var(--white);
 		height: 24px;
 		width: 24px;
 		border-radius: 50%;

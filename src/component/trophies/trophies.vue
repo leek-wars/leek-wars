@@ -451,7 +451,7 @@ watch(sort_by, () => {
 		width: 100%;
 		.stats {
 			display: inline-block;
-			color: white;
+			color: var(--white);
 			font-size: 16px;
 			margin: 9px 10px;
 		}
@@ -521,7 +521,7 @@ watch(sort_by, () => {
 		.trophy-bar {
 			height: 10px;
 			position: relative;
-			background: white;
+			background: var(--white);
 			border-radius: var(--radius-medium);
 			margin-top: 6px;
 			border: 1px solid var(--grey-12);
@@ -545,7 +545,7 @@ watch(sort_by, () => {
 			font-size: 13px;
 			font-style: italic;
 			.fight {
-				color: black;
+				color: var(--black);
 			}
 		}
 	}

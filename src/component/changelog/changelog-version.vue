@@ -94,7 +94,7 @@ const sections = computed(() => {
 		:deep(.ai) {
 			background: #00a3cc;
 			padding: 0 4px;
-			color: white;
+			color: var(--white);
 			border-radius: var(--radius);
 			cursor: help;
 		}

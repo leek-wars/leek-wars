@@ -47,7 +47,7 @@ const page = computed(() => props.query ? '&page=' : '/page-')
 		}
 	}
 	a.current {
-		color: white;
+		color: var(--white);
 		background-color: var(--primary);
 		font-weight: 500;
 	}

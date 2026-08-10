@@ -777,7 +777,7 @@ const t = useNamespacedT('market')
 	}
 	.preview .leek {
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		padding: 4px 8px;
 		border-radius: var(--radius-small);
 		margin: 3px 1px;
@@ -821,7 +821,7 @@ const t = useNamespacedT('market')
 	}
 	.items .item.router-link-active {
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	.buy-label {
 		display: inline-block;

@@ -162,7 +162,7 @@ function mouseleave() {
 		max-width: 100%;
 		box-sizing: border-box;
 		font-weight: 500;
-		color: #fff;
+		color: var(--white);
 		background: rgba(0, 0, 0, 0.55);
 		white-space: nowrap;
 		overflow: hidden;

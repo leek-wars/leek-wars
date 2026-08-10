@@ -735,13 +735,13 @@
 		z-index: 10000;
 		padding: 10px 16px;
 		background: var(--primary);
-		color: #fff;
+		color: var(--white);
 		font-weight: 500;
 		border-radius: 0 0 var(--radius) var(--radius);
 		transition: top 0.15s ease;
 		&:focus {
 			top: 0;
-			outline: 2px solid #fff;
+			outline: 2px solid var(--white);
 			outline-offset: -4px;
 		}
 	}
@@ -754,7 +754,7 @@
 		display: none;
 		font-size: 30px;
 		opacity: 0.5;
-		color: white;
+		color: var(--white);
 		&:hover {
 			opacity: 1;
 		}
@@ -891,7 +891,7 @@
 		position: fixed;
 		top: 0; bottom: 0;
 		left: 0; right: 0;
-		background: black;
+		background: var(--black);
 		opacity: 0;
 		z-index: 5;
 		transition: opacity ease 200ms;

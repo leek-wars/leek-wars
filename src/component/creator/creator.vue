@@ -517,7 +517,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 		border-radius: var(--radius);
 		padding: 1.5px 4.5px;
 		font-size: 12px;
-		color: #000;
+		color: var(--black);
 		font-weight: 500;
 	}
 	.id {
@@ -534,7 +534,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 		left: calc(50% - 15px);
 		width: 30px;
 		height: 30px;
-		background: white;
+		background: var(--white);
 		padding: 5px;
 		border-radius: 50%;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.25), 0px 1px 1px 0px rgba(0,0,0,0.18), 0px 1px 3px 0px rgba(0,0,0,0.16);
@@ -627,7 +627,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 		border-radius: 50%;
 		color: var(--grey-11);
 		&.active {
-			color: black;
+			color: var(--black);
 		}
 	}
 }
@@ -635,7 +635,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 	margin: 50px;
 	font-size: 40px;
 	align-self: center;
-	background: white;
+	background: var(--white);
 	border-radius: 50%;
 	padding: 10px;
 	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.25), 0px 1px 1px 0px rgba(0,0,0,0.18), 0px 1px 3px 0px rgba(0,0,0,0.16);

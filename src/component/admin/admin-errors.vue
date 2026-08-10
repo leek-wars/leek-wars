@@ -314,7 +314,7 @@
 			padding: 2px 6px;
 			border-radius: var(--radius-small);
 			background: #e57373;
-			color: white;
+			color: var(--white);
 		}
 		.hidden-tag {
 			font-size: 11px;
@@ -322,7 +322,7 @@
 			padding: 2px 6px;
 			border-radius: var(--radius-small);
 			background: #9e9e9e;
-			color: white;
+			color: var(--white);
 			text-transform: uppercase;
 		}
 		.ip {
@@ -344,11 +344,11 @@
 			padding: 2px 6px;
 			border-radius: var(--radius-small);
 			text-transform: uppercase;
-			&.daemon { background: #9c27b0; color: white; }
-			&.worker { background: #ff9800; color: white; }
-			&.api { background: #2196f3; color: white; }
-			&.cron { background: #607d8b; color: white; }
-			&.client { background: #4caf50; color: white; }
+			&.daemon { background: #9c27b0; color: var(--white); }
+			&.worker { background: #ff9800; color: var(--white); }
+			&.api { background: #2196f3; color: var(--white); }
+			&.cron { background: #607d8b; color: var(--white); }
+			&.client { background: #4caf50; color: var(--white); }
 		}
 		.build {
 			font-family: monospace;
@@ -413,12 +413,12 @@
 	}
 	.codes {
 		font-size: 12px;
-		background: white;
+		background: var(--white);
 	}
 	.codes th {
 		border: 2px solid var(--grey-12);
 		padding: 5px;
-		background: white;
+		background: var(--white);
 		font-weight: normal;
 		color: var(--text-color-secondary);
 		font-size: 18px;
@@ -492,7 +492,7 @@
 		padding: 8px;
 		margin-bottom: 10px;
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		border-radius: 5px;
 		cursor: pointer;
 	}

@@ -889,7 +889,7 @@
 		padding: 0;
 	}
 	.topic-title[contenteditable="true"] {
-		border: 1px solid white;
+		border: 1px solid var(--white);
 		border-radius: var(--radius-tiny);
 		padding: 4px 6px;
 		background: rgb(53, 97, 14);
@@ -966,7 +966,7 @@
 	}
 	.grade {
 		border-radius: 5px;
-		color: white;
+		color: var(--white);
 		display: inline-block;
 		padding: 2px 4px;
 		margin-bottom: 5px;
@@ -1161,7 +1161,7 @@
 		font-size: 22px;
 		margin: 0 6px;
 		&.status-not-a-bug {
-			color: white;
+			color: var(--white);
 		}
 		&.status-acknowledged {
 			color: #6f42c1;
@@ -1171,12 +1171,12 @@
 			opacity: 0.7;
 		}
 		&.hidden-icon {
-			color: white;
+			color: var(--white);
 		}
 	}
 	.release-badge {
 		background: #28a745;
-		color: white;
+		color: var(--white);
 		border-radius: 5px;
 		font-size: 13px;
 		font-weight: 500;
@@ -1235,17 +1235,17 @@
 		}
 	}
 	.vote.up.active {
-		color: white;
+		color: var(--white);
 		background: var(--primary);
 		.v-icon {
-			color: white;
+			color: var(--white);
 		}
 	}
 	.vote.down.active {
-		color: white;
+		color: var(--white);
 		background: red;
 		.v-icon {
-			color: white;
+			color: var(--white);
 		}
 	}
 	.tooltip.votes-tooltip .content img {
@@ -1349,11 +1349,11 @@
 		gap: 8px;
 		padding: 12px 16px;
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		font-weight: 500;
 		font-size: 15px;
 		.v-icon {
-			color: white;
+			color: var(--white);
 		}
 	}
 </style>

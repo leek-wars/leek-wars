@@ -164,7 +164,7 @@ function show_didactitiel() {
 		padding-bottom: 2px;
 	}
 	.advanced-button {
-		color: white;
+		color: var(--white);
 		background: rgba(150, 150, 150, 0.2);
 		padding: 2px 12px;
 		display: inline-flex;

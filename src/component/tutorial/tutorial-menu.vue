@@ -55,7 +55,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 			align-items: flex-end;
 			text-decoration: none !important;
 			border-radius: var(--radius);
-			box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+			box-shadow: var(--elevation-1);
 			overflow: hidden;
 			.bottom {
 				padding-top: 20px;
@@ -63,7 +63,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				padding-left: 12px;
 				background: linear-gradient(transparent, #000d);
 				flex: 1;
-				color: white;
+				color: var(--white);
 				text-align: left;
 				border-bottom-left-radius: var(--radius);
 				border-bottom-right-radius: var(--radius);
@@ -74,7 +74,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 					align-items: center;
 					gap: 8px;
 					.v-icon {
-						color: white;
+						color: var(--white);
 						background: var(--primary);
 						border-radius: 50%;
 						padding: 2px;
@@ -96,7 +96,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 			.icon {
 				position: absolute;
 				font-size: 36px;
-				background: white;
+				background: var(--white);
 				border-radius: 50%;
 				box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 5px;
 				left: 9px;
@@ -110,7 +110,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				font-size: 14px;
 				margin: 0;
 				margin-top: 5px;
-				color: white;
+				color: var(--white);
 				padding-left: 18px;
 			}
 		}

@@ -648,7 +648,7 @@
 		align-items: center;
 		gap: 16px;
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		padding: 12px 20px;
 		border-radius: var(--radius);
 		margin-bottom: 12px;
@@ -950,8 +950,8 @@
 			width: 35px;
 			height: 35px;
 			border-radius: 50%;
-			border: 2px solid white;
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			border: 2px solid var(--white);
+			box-shadow: var(--elevation-1);
 			cursor: pointer;
 		}
 		.hats {
@@ -1116,7 +1116,7 @@
 	background: #000a;
 	z-index: 10;
 	img {
-		border: 5px solid white;
+		border: 5px solid var(--white);
 		box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
 		border-radius: 10px;
 		max-width: 90vw;

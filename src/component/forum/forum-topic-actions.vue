@@ -154,7 +154,7 @@ defineEmits<{
 }
 .issue-badge {
 	background: #0366d6;
-	color: white;
+	color: var(--white);
 	border-radius: 5px;
 	font-size: 13px;
 	font-weight: 500;

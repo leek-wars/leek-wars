@@ -90,7 +90,7 @@ function close() {
 	left: 0;
 }
 .title {
-	background: #2a2a2a;
+	background: var(--panel-header-background);
 	color: var(--grey-13);
 	padding: 0 10px;
 	padding-top: 6px;
@@ -113,7 +113,7 @@ function close() {
 		margin-bottom: -4px;
 		margin-right: -10px;
 		&:deep(.option) {
-			background: black;
+			background: var(--black);
 			height: 40px;
 			width: 40px;
 			padding: 7px;

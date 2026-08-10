@@ -546,7 +546,7 @@ onBeforeUnmount(() => {
 	.items-list .item:hover, .item.router-link-active {
 		font-weight: bold;
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	.items {
 		overflow-y: scroll;
@@ -568,7 +568,7 @@ onBeforeUnmount(() => {
 		margin-bottom: 0;
 	}
 	.items .function-name {
-		color: black;
+		color: var(--black);
 	}
 	// Endpoint déprécié : titre et corps atténués pour le repérer en parcourant la
 	// liste, mais les chips restent pleinement lisibles pour que le badge ressorte.
@@ -626,7 +626,7 @@ onBeforeUnmount(() => {
 		text-align: center;
 	}
 	.method {
-		color: white;
+		color: var(--white);
 		text-transform: uppercase;
 		display: inline-block;
 		&.get { background: #2f8132; }
@@ -636,12 +636,12 @@ onBeforeUnmount(() => {
 	}
 	.auth {
 		background: var(--grey-4);
-		color: white;
+		color: var(--white);
 		text-transform: uppercase;
 	}
 	.deprecated.chip {
 		background: #ff7f00;
-		color: white;
+		color: var(--white);
 		text-transform: uppercase;
 	}
 	// Toujours visible plutôt qu'au survol : au survol seulement, l'icône serait
@@ -655,7 +655,7 @@ onBeforeUnmount(() => {
 		&:hover { color: var(--text-color); }
 	}
 	.demo {
-		background: white;
+		background: var(--white);
 		color: var(--grey-2);
 		border: 1px solid var(--grey-9);
 		.v-icon {
@@ -686,10 +686,10 @@ onBeforeUnmount(() => {
 	}
 	.role {
 		text-transform: uppercase;
-		&.base { background: #2f8132; color: white; }
-		&.player { background: #7d4bc4; color: white; }
-		&.account { background: #cc3333; color: white; }
-		&.session { background: var(--grey-7); color: white; }
+		&.base { background: #2f8132; color: var(--white); }
+		&.player { background: #7d4bc4; color: var(--white); }
+		&.account { background: #cc3333; color: var(--white); }
+		&.session { background: var(--grey-7); color: var(--white); }
 	}
 	// Grand écran : description (+ paramètres / retour) à gauche, exemples de code à
 	// droite. Quand le contenu descend sous ~760px, les deux colonnes se replient

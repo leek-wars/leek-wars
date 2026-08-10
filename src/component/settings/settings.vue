@@ -654,7 +654,7 @@
 	}
 	.languages .language.selected {
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	.misc-settings {
 		width: 100%;
@@ -723,7 +723,7 @@
 		}
 	}
 	.advanced-button {
-		color: white;
+		color: var(--white);
 		background: rgba(150, 150, 150, 0.2);
 		padding: 2px 12px;
 		display: inline-block;
@@ -741,7 +741,7 @@
 		gap: 8px;
 		padding: 0 8px;
 		> span {
-			color: white;
+			color: var(--white);
 		}
 		.push-warning {
 			color: #ffca28;

@@ -969,7 +969,7 @@
 	z-index: 3;
 	font-size: 12px;
 	font-weight: bold;
-	color: #fff;
+	color: var(--white);
 	// Liseré sombre : lisible sur n'importe quelle teinte d'image et dans les deux thèmes.
 	text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
 	pointer-events: none;
@@ -985,7 +985,7 @@
 	bottom: 2px;
 	z-index: 3;
 	background: #000000b3;
-	color: #fff;
+	color: var(--white);
 	font-size: 14px;
 	font-weight: bold;
 	padding: 0 5px;
@@ -1153,7 +1153,7 @@
 		padding: 0;
 		&.active {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			box-shadow: var(--elevation-1);
 		}
 		&:not(.cell8) .item {
 			animation: item-animation 0.5s ease 1;
@@ -1223,7 +1223,7 @@
 			background: var(--pure-white);
 			border-radius: 50%;
 			pointer-events: none;
-			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			box-shadow: var(--elevation-1);
 		}
 		& :deep(.v-ripple__container) {
 			border-radius: var(--radius-pill);
@@ -1254,7 +1254,7 @@
 			right: 12%;
 			background: #000b;
 			border-radius: var(--radius);
-			color: white;
+			color: var(--white);
 			padding: 1.5px 4.5px;
 			font-weight: 500;
 			font-size: 14px;
@@ -1443,7 +1443,7 @@
 	// larges que les chiffres arabes et deborderaient du badge (#622).
 	font-size: 9px;
 	font-weight: bold;
-	color: #fff;
+	color: var(--white);
 	text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
 	pointer-events: none;
 	z-index: 2;

@@ -71,8 +71,8 @@ function sendMessage(message: string, id: number) {
 		box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12);
 		pointer-events: all;
 		.header {
-			background: #2a2a2a;
-			color: white;
+			background: var(--panel-header-background);
+			color: var(--white);
 			border-top-left-radius: var(--radius-medium);
 			border-top-right-radius: var(--radius-medium);
 			display: flex;
@@ -112,7 +112,7 @@ function sendMessage(message: string, id: number) {
 	}
 	@keyframes unread {
 		0% { background:var(--primary); }
-		50% { background:#2a2a2a; }
+		50% { background:var(--panel-header-background); }
 		100% { background:var(--primary); }
 	}
 </style>

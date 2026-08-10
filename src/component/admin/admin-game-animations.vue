@@ -408,7 +408,7 @@
 		flex: 1;
 		min-height: 0;
 		width: 100%;
-		background: #2a2a2a;
+		background: var(--panel-header-background);
 		border-radius: var(--radius);
 		overflow: hidden;
 	}

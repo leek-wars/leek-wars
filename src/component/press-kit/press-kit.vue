@@ -280,7 +280,7 @@ function setLanguage(l: Language) {
 	}
 	.format {
 		padding: 0 4px;
-		background: #fff;
+		background: var(--white);
 		margin-right: 4px;
 		border: 1px solid var(--grey-9);
 	}
@@ -312,8 +312,8 @@ function setLanguage(l: Language) {
 		padding-left: 8px;
 	}
 	object {
-		background: white;
-		color: black;
+		background: var(--white);
+		color: var(--black);
 	}
 	.item:only-of-type object {
 		width: 500px;

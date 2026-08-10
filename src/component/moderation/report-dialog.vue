@@ -162,7 +162,7 @@
 		border: 1px solid var(--grey-12);
 		border-radius: var(--radius-tiny);
 		&:hover {
-			background: white;
+			background: var(--white);
 		}
 		.farmer {
 			display: inline-flex;

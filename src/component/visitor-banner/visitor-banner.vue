@@ -186,7 +186,7 @@ function submit() {
 		width: min(720px, calc(100vw - 24px));
 		padding: 16px 18px 16px 22px;
 		border-radius: 14px;
-		color: white;
+		color: var(--white);
 		background: linear-gradient(115deg, #2a7a05, var(--primary), #8bc34a, var(--primary), #2a7a05);
 		background-size: 300% 300%;
 		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
@@ -240,7 +240,7 @@ function submit() {
 		input {
 			width: 100%;
 			max-width: 310px;
-			background: white;
+			background: var(--white);
 			color: var(--grey-1);
 			border: none;
 			border-radius: var(--radius-large);
@@ -289,7 +289,7 @@ function submit() {
 			transform: scale(1.15);
 		}
 		&.selected {
-			border-color: white;
+			border-color: var(--white);
 			transform: scale(1.2);
 			box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 		}
@@ -319,7 +319,7 @@ function submit() {
 			background: rgba(255, 255, 255, 0.4);
 		}
 		&.selected {
-			background: white;
+			background: var(--white);
 			border-color: rgba(0, 0, 0, 0.1);
 		}
 	}
@@ -347,7 +347,7 @@ function submit() {
 			background: rgba(255, 255, 255, 0.4);
 		}
 		&.selected {
-			background: white;
+			background: var(--white);
 			border-color: rgba(0, 0, 0, 0.1);
 		}
 	}
@@ -361,7 +361,7 @@ function submit() {
 	.cta {
 		flex-shrink: 0;
 		align-self: center;
-		background: white;
+		background: var(--white);
 		color: #3e8a00;
 		font-weight: bold;
 		font-size: 16px;
@@ -400,7 +400,7 @@ function submit() {
 		padding: 10px 16px 10px 12px;
 		border-radius: 16px;
 		cursor: pointer;
-		color: white;
+		color: var(--white);
 		background: linear-gradient(135deg, #2a7a05, var(--primary), #8bc34a);
 		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 		animation: visitor-bubble-pop 0.4s cubic-bezier(0.22, 1.6, 0.36, 1);

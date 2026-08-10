@@ -1836,7 +1836,7 @@
 		margin: 10px 0;
 	}
 	.edit-button:hover {
-		color: black;
+		color: var(--black);
 	}
 	.dragging {
 		opacity: 0.2;
@@ -2155,7 +2155,7 @@
 			gap: 3px;
 			padding: 2px 7px;
 			background: rgba(0, 0, 0, 0.6);
-			color: #fff;
+			color: var(--white);
 			font-size: 14px;
 			font-weight: bold;
 			border-radius: var(--radius-large) 0 0 0;

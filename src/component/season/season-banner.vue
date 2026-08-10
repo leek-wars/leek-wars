@@ -40,7 +40,7 @@
 	// Coins bas carrés + collé aux panneaux du potager en dessous.
 	border-radius: var(--radius) var(--radius) 0 0;
 	margin-bottom: 0;
-	color: white;
+	color: var(--white);
 	cursor: pointer;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	user-select: none;
@@ -73,7 +73,7 @@
 	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
 .season-info {
-	color: white;
+	color: var(--white);
 	opacity: 0.85;
 }
 @media (max-width: 640px) {

@@ -371,7 +371,7 @@
 		color: var(--grey-13);
 	}
 	.views-counter {
-		color: white;
+		color: var(--white);
 		font-size: 20px;
 		padding: 6px 12px;
 	}

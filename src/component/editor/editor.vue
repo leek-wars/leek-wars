@@ -1820,7 +1820,7 @@
 		margin: 10px;
 		background-color: var(--pure-white);
 		font-size: 14px;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	#app.app .ai-stats {
 		display: none;
@@ -1890,7 +1890,7 @@
 	}
 	.ai-list :deep(.router-link-active > .item > .label) {
 		background: #cacaca;
-		color: black;
+		color: var(--black);
 	}
 	.panel.editor-panel {
 		background: var(--background);
@@ -1990,7 +1990,7 @@
 		&:hover {
 			background: #0086bc;
 			.v-icon {
-				color: white;
+				color: var(--white);
 			}
 		}
 	}
@@ -2155,7 +2155,7 @@
 		}
 		.green {
 			background: var(--primary);
-			color: white;
+			color: var(--white);
 			padding: 0 6px;
 			border-radius: var(--radius-pill);
 			margin-left: 4px;

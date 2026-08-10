@@ -822,7 +822,7 @@ i.attr {
 }
 .topic:not(.header):hover {
 	background-color: var(--pure-white);
-	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+	box-shadow: var(--elevation-1);
 }
 .topic > .seen {
 	flex: 0 0 50px;
@@ -848,7 +848,7 @@ body.dark .topic .seen img.seen {
 	display: inline-block;
 	.issue, .release-badge {
 		background: #0366d6;
-		color: white;
+		color: var(--white);
 		border-radius: 5px;
 		font-size: 13px;
 		font-weight: 500;

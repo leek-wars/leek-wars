@@ -42,7 +42,7 @@ defineProps<{
 		padding-bottom: 6px;
 		border-radius: 50%;
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	img {
 		width: 24px;
@@ -56,7 +56,7 @@ defineProps<{
 		padding: 3px 10px;
 		padding-left: 14px;
 		font-weight: 500;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 		border-top-right-radius: 14px;
 		border-bottom-right-radius: 14px;
 	}

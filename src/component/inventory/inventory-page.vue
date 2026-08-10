@@ -356,7 +356,7 @@
 		padding: 6px 12px;
 		cursor: pointer;
 		border-radius: var(--radius) var(--radius) 0 0;
-		// Le header du panel est toujours sombre (#2a2a2a) : le texte doit rester clair
+		// Le header du panel est toujours sombre (var(--panel-header-background)) : le texte doit rester clair
 		// quel que soit le theme du site, sinon il devient sombre sur sombre en clair.
 		color: rgba(255, 255, 255, 0.6);
 		white-space: nowrap;
@@ -365,7 +365,7 @@
 		// Pas de gras sur l'actif : il elargit le texte et decale les onglets voisins.
 		// La couleur pleine et le soulignement suffisent a le distinguer.
 		&.active {
-			color: #fff;
+			color: var(--white);
 			box-shadow: inset 0 -2px 0 var(--primary);
 		}
 	}

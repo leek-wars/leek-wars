@@ -1390,7 +1390,7 @@
 		width: 120px;
 	}
 	.leek-column .leek:hover {
-		background-color: white;
+		background-color: var(--white);
 		opacity: 0.35;
 	}
 	.leek-column .leek.selected {
@@ -1420,7 +1420,7 @@
 	}
 	.lateral-column h4 {
 		padding: 5px 10px;
-		color: white;
+		color: var(--white);
 		text-transform: uppercase;
 		font-size: 16px;
 		background: var(--grey-4);
@@ -1439,7 +1439,7 @@
 	}
 	.item.selected {
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 	}
 	.lateral-column .add {
 		background: var(--grey-3);
@@ -1462,7 +1462,7 @@
 		.v-icon {
 			font-size: 20px;
 			opacity: 0.5;
-			color: white;
+			color: var(--white);
 			&:hover {
 				opacity: 1;
 			}
@@ -1563,7 +1563,7 @@
 	}
 	.column-scenario .leek .delete {
 		color: red;
-		background: white;
+		background: var(--white);
 		border-radius: 50%;
 		border-bottom: 2px solid var(--grey-9);
 		display: inline-block;
@@ -1631,7 +1631,7 @@
 	}
 	.item.leek .bot, .item.scenario .base {
 		background: var(--grey-6);
-		color: white;
+		color: var(--white);
 		border-radius: var(--radius);
 		padding: 0 4px;
 		flex-shrink: 0;
@@ -1916,8 +1916,8 @@
 			border-radius: var(--radius);
 			border: 1px solid var(--grey-11);
 			&:hover {
-				background: white;
-				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+				background: var(--white);
+				box-shadow: var(--elevation-1);
 			}
 		}
 		& > * {

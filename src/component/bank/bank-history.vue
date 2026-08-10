@@ -124,7 +124,7 @@ LeekWars.get('bank/get-history').then(data => {
 		align-items: center;
 		gap: 6px;
 		padding: 8px 16px;
-		color: white;
+		color: var(--white);
 		background: #4caf50;
 		border-radius: var(--radius);
 		text-decoration: none;

@@ -152,7 +152,7 @@ function setTheme(theme: string) {
 	object-fit: contain;
 }
 .lang-menu {
-	background: white;
+	background: var(--white);
 	padding: 4px 0;
 	.lang-item {
 		display: flex;
@@ -172,7 +172,7 @@ function setTheme(theme: string) {
 	}
 }
 body.dark .lang-menu {
-	background: #2a2a2a;
+	background: var(--panel-header-background);
 	.lang-item {
 		color: var(--grey-13);
 		&:hover {
@@ -181,7 +181,7 @@ body.dark .lang-menu {
 	}
 }
 .theme-menu {
-	background: white;
+	background: var(--white);
 	padding: 4px 0;
 	.theme-item {
 		padding: 6px 16px;
@@ -198,7 +198,7 @@ body.dark .lang-menu {
 	}
 }
 body.dark .theme-menu {
-	background: #2a2a2a;
+	background: var(--panel-header-background);
 	.theme-item {
 		color: var(--grey-13);
 		&:hover {
