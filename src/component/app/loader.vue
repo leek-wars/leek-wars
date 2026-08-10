@@ -49,7 +49,7 @@ const w = computed(() => Math.max(3, s.value / 14))
 	height: 18px;
 	border: 1px solid #686868;
 	border-radius: var(--radius);
-	background: #fff;
+	background: var(--white);
 	box-shadow: inset 0 0 1px rgba(104, 104, 104, 1);
 	overflow: hidden;
 	padding: 1px 2px;
@@ -59,7 +59,7 @@ const w = computed(() => Math.max(3, s.value / 14))
 	border-radius: var(--radius-tiny);
 	background: repeating-linear-gradient(
 		to right,
-		#fff 0px, #fff 2px,
+		var(--white) 0px, #fff 2px,
 		transparent 2px, transparent 10px
 	),
 	linear-gradient(

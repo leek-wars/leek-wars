@@ -69,7 +69,7 @@ defineProps<{
 		width: 100%;
 		.stats {
 			display: inline-block;
-			color: white;
+			color: var(--white);
 			font-size: 16px;
 			margin: 9px 10px;
 		}

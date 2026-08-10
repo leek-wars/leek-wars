@@ -102,7 +102,7 @@ const strict = defineModel<boolean>("strict", { required: true })
 	}
 	.green {
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		padding: 0 6px;
 		border-radius: var(--radius-pill);
 		margin-left: 4px;

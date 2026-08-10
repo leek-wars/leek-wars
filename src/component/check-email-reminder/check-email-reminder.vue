@@ -225,11 +225,11 @@ function useProvider(provider: 'github' | 'google') {
 		}
 		&.gh {
 			background: #1f1f1f;
-			color: #fff;
+			color: var(--white);
 			&:hover { background: #2f2f2f; }
 		}
 		&.google {
-			background: #fff;
+			background: var(--white);
 			color: var(--grey-3);
 			border: 1px solid #dadce0;
 			&:hover { background: #f7f7f7; }

@@ -191,7 +191,7 @@
 
 <style lang="scss" scoped>
 	.trophies {
-		background: white;
+		background: var(--white);
 		width: 100%;
 	}
 	tr:not(:first-child):hover {

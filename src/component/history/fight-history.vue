@@ -111,7 +111,7 @@ const arenaLabel = computed<[string, string]>(() => {
 		font-size: 15px;
 		height: 42px;
 		white-space: nowrap;
-		background: white;
+		background: var(--white);
 		position: relative;
 		.center {
 			background: rgba(255, 255, 255, 0.3);

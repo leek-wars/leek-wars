@@ -90,7 +90,7 @@ onMounted(() => {
 		display: inline-block;
 		padding: 4px 8px;
 		margin: 0 2px;
-		// color: black;
+		// color: var(--black);
 	}
 	.thank-you {
 		font-size: 30px;

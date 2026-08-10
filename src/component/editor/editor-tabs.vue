@@ -344,7 +344,7 @@
 		&:hover {
 			background: rgba(0, 0, 0, 0.35);
 			.v-icon {
-				color: #fff;
+				color: var(--white);
 			}
 		}
 	}

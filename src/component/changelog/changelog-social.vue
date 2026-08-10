@@ -744,7 +744,7 @@ function downloadAll() {
 		opacity: 1;
 	}
 	.v-icon {
-		color: white;
+		color: var(--white);
 		font-size: 18px;
 	}
 }

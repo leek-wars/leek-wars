@@ -208,7 +208,7 @@
 	width: 100%;
 	height: 100px;
 	padding: 4px 5px;
-	background-color: #fff;
+	background-color: var(--white);
 	box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 	border-top-left-radius: 5px;
 	display: flex;
@@ -291,7 +291,7 @@
 		}
 	}
 	&.black {
-		color: black;
+		color: var(--black);
 		&.dark {
 			filter: invert(100%);
 		}
@@ -349,7 +349,7 @@
 	bottom: 4px;
 	padding: 1px 2px;
 	content: attr(value);
-	color: white;
+	color: var(--white);
 	font-weight: bold;
 	background: rgba(0,0,0,0.5);
 	border-top-right-radius: 7px;
@@ -362,7 +362,7 @@
 	top: 0;
 	padding: 1px 2px;
 	content: attr(turns);
-	color: white;
+	color: var(--white);
 	font-weight: bold;
 	background: rgba(0,0,0,0.5);
 	border-bottom-left-radius: 7px;

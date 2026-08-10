@@ -228,6 +228,6 @@
 	}
 	.buy-crystals-button {
 		background: #e91e9e;
-		color: white;
+		color: var(--white);
 	}
 </style>

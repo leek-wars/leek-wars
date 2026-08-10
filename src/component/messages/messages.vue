@@ -424,7 +424,7 @@
 		}
 		&.unread {
 			font-weight: bold;
-			color: black;
+			color: var(--black);
 			.unread {
 				display: inline-block;
 			}

@@ -961,7 +961,7 @@
 		}
 		.tab.router-link-active {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			box-shadow: var(--elevation-1);
 		}
 		.tab:not(.enabled) {
 			opacity: 0.4;
@@ -1024,7 +1024,7 @@
 	}
 	.leek:hover:not(.disabled), .my-farmer, .composition-wrapper:hover, .opponents .farmer:hover, .participant.active:hover, .squad:not(.disabled):hover {
 		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	.bosses {
 		display: flex;
@@ -1108,7 +1108,7 @@
 	}
 	a.my-leek.router-link-active, a.my-composition.router-link-active {
 		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	:deep(.talent) {
 		font-size: 22px;

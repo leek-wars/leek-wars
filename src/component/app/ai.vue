@@ -74,19 +74,19 @@ const show_lines = computed(() => {
 		margin: 0 auto;
 		&.blue {
 			background-image: url("/image/ai/ai_blue.png");
-			color: white;
+			color: var(--white);
 		}
 		&.green {
 			background-image: url("/image/ai/ai_green.png");
-			color: white;
+			color: var(--white);
 		}
 		&.black {
 			background-image: url("/image/ai/ai_black.png");
-			color: white;
+			color: var(--white);
 		}
 		&.red {
 			background-image: url("/image/ai/ai_red.png");
-			color: white;
+			color: var(--white);
 		}
 		.name {
 			font-size: 16px;
@@ -146,7 +146,7 @@ const show_lines = computed(() => {
 		background-image: url("/image/ai/ai_black.png");
 		&.black {
 			background-image: url("/image/ai/ai.png");
-			color: black;
+			color: var(--black);
 		}
 	}
 </style>

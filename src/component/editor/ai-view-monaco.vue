@@ -660,11 +660,11 @@ defineExpose({
 	cursor: pointer;
 }
 .results .good {
-	color: white;
+	color: var(--white);
 	background: #2cdc20;
 }
 .results .error {
-	color: white;
+	color: var(--white);
 	background: #ff0008;
 }
 .compiling img {

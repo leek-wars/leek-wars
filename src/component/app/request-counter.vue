@@ -16,7 +16,7 @@
 	.requests {
 		display: none;
 		background: rgba(0,0,0,0.8);
-		color: white;
+		color: var(--white);
 		padding: 10px;
 		position: fixed;
 		top: 10px;

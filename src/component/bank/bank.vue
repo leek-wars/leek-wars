@@ -455,7 +455,7 @@ watch(() => LeekWars.currency, () => {
 		font-weight: 600;
 		border-radius: var(--radius);
 		background: #7b1fa2;
-		color: white;
+		color: var(--white);
 	}
 	.packs {
 		display: grid;
@@ -476,7 +476,7 @@ watch(() => LeekWars.currency, () => {
 		.refresh-button {
 			// le header est posé sur le fond d'app (sombre dans les deux thèmes),
 			// comme le titre : on garde le bouton blanc en permanence.
-			color: white;
+			color: var(--white);
 			opacity: 0.75;
 			&:hover {
 				opacity: 1;
@@ -485,7 +485,7 @@ watch(() => LeekWars.currency, () => {
 	}
 	.items-title {
 		background: var(--grey-1);
-		color: white;
+		color: var(--white);
 		font-size: 17px;
 		&::after {
 			border-color: transparent transparent transparent var(--grey-1);
@@ -497,7 +497,7 @@ watch(() => LeekWars.currency, () => {
 		gap: 6px;
 		margin: 20px 0;
 		padding: 6px 14px;
-		color: white;
+		color: var(--white);
 		background: rgba(150, 150, 150, 0.2);
 		border-radius: var(--radius);
 		text-decoration: none;

@@ -625,7 +625,7 @@
 	display: flex;
 	align-items: stretch;
 	align-self: stretch;
-	color: white;
+	color: var(--white);
 	.category {
 		cursor: pointer;
 		display: flex;
@@ -713,7 +713,7 @@
 		right: 0;
 		bottom: 0;
 		font-size: 14px;
-		color: white;
+		color: var(--white);
 		font-weight: 500;
 	}
 	.size-0 &:after {

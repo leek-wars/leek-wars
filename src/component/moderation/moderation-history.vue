@@ -124,7 +124,7 @@
 		border-radius: 10px;
 		font-size: 12px;
 		font-weight: bold;
-		color: white;
+		color: var(--white);
 		&.severity-1 { background: #4caf50; }
 		&.severity-2 { background: #ff9800; }
 		&.severity-3 { background: #f44336; }

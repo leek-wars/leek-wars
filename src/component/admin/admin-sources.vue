@@ -574,7 +574,7 @@
 			font-weight: 500;
 			color: var(--grey-4);
 			&:hover {
-				color: #000;
+				color: var(--black);
 			}
 		}
 		.count {
@@ -800,7 +800,7 @@
 			color: var(--grey-4);
 			text-decoration: none;
 			&:hover {
-				color: #000;
+				color: var(--black);
 			}
 			.v-icon {
 				font-size: 18px;
@@ -810,7 +810,7 @@
 	.source {
 		color: var(--grey-4);
 		&:hover {
-			color: #000;
+			color: var(--black);
 		}
 	}
 	&.deleted {

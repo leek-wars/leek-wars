@@ -344,7 +344,7 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language, la
 		input {
 			border: none;
 			background: transparent;
-			// color: white;
+			// color: var(--white);
 			font-family: monospace;
 			margin: 0;
 			padding: 0;

@@ -117,7 +117,7 @@
 		padding: 2px 8px;
 		border-radius: 12px;
 		font-size: 12px;
-		color: white;
+		color: var(--white);
 		&.chat {
 			background: #e67e22;
 		}

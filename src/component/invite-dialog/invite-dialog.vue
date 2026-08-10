@@ -121,7 +121,7 @@ function nativeShare() {
 .invite-qr {
 	display: block;
 	margin: 16px auto 0;
-	background: white;
+	background: var(--white);
 	border-radius: var(--radius);
 	padding: 6px;
 }
@@ -140,14 +140,14 @@ function nativeShare() {
 	gap: 6px;
 	padding: 10px;
 	border-radius: var(--radius);
-	color: white;
+	color: var(--white);
 	text-decoration: none;
 	cursor: pointer;
 	font-weight: 500;
 	.v-icon {
-		color: white;
+		color: var(--white);
 	}
-	&.x { background: #000; }
+	&.x { background: var(--black); }
 	&.whatsapp { background: #25d366; }
 	&.telegram { background: #29a9eb; }
 	&.native { background: var(--primary); }

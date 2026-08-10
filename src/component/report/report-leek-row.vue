@@ -173,14 +173,14 @@
 	}
 	.bonus {
 		background-color: #0075df;
-		color: white;
+		color: var(--white);
 		font-weight: bold;
 		padding: 0 4px;
 		border-radius: var(--radius-small);
 	}
 	.talent-bonus {
 		background-color: var(--grey-7);
-		color: white;
+		color: var(--white);
 		font-weight: bold;
 		padding: 0 4px;
 		margin-left: 10px;

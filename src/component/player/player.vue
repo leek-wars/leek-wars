@@ -762,7 +762,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
-		background: #2a2a2a;
+		background: var(--panel-header-background);
 	}
 	.layers {
 		position: relative;
@@ -893,7 +893,7 @@
 	.controls .control {
 		padding: 5px 12px;
 		cursor: pointer;
-		color: white;
+		color: var(--white);
 		text-align: center;
 		min-width: 48px;
 		height: 36px;
@@ -918,7 +918,7 @@
 	}
 	.controls .turn {
 		line-height: 36px;
-		color: white;
+		color: var(--white);
 		display: inline-block;
 		vertical-align: top;
 		padding: 0 8px;
@@ -1054,8 +1054,8 @@
 		position: absolute;
 		top: 8px;
 		right: 8px;
-		background: #2a2a2a;
-		color: white;
+		background: var(--panel-header-background);
+		color: var(--white);
 		cursor: pointer;
 		font-size: 24px;
 		z-index: 5;
@@ -1075,7 +1075,7 @@
 		top: calc(50% - 50px);
 		left: calc(50% - 50px);
 		font-size: 50px;
-		color: white;
+		color: var(--white);
 		background: rgba(0, 0, 0, 0.5);
 		border-radius: 50%;
 		text-align: center;
@@ -1164,7 +1164,7 @@
 		}
 	}
 	.section {
-		color: white;
+		color: var(--white);
 		padding: 4px 8px;
 		font-size: 13px;
 	}

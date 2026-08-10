@@ -148,7 +148,7 @@ function readAllNotifications() {
 		.v-icon {
 			width: 30px;
 			height: 30px;
-			color: white;
+			color: var(--white);
 			font-size: 30px;
 		}
 	}
@@ -172,7 +172,7 @@ function readAllNotifications() {
 	}
 	.header .label {
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		border-radius: 5px;
 		margin-left: 8px;
 		margin-right: -6px;

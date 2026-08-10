@@ -63,7 +63,7 @@ function reopen() {
 		width: min(740px, calc(100vw - 24px));
 		padding: 16px 18px 16px 22px;
 		border-radius: 14px;
-		color: white;
+		color: var(--white);
 		background: linear-gradient(115deg, #b06000, #e89318, #ffc14d, #e89318, #b06000);
 		background-size: 300% 300%;
 		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
@@ -125,7 +125,7 @@ function reopen() {
 	}
 	.cta {
 		flex-shrink: 0;
-		background: white;
+		background: var(--white);
 		color: #b06000;
 		font-weight: bold;
 		font-size: 16px;
@@ -159,7 +159,7 @@ function reopen() {
 		padding: 10px 16px 10px 12px;
 		border-radius: 16px;
 		cursor: pointer;
-		color: white;
+		color: var(--white);
 		background: linear-gradient(135deg, #b06000, #e89318);
 		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 		animation: verify-bubble-pop 0.4s cubic-bezier(0.22, 1.6, 0.36, 1);

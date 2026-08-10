@@ -72,7 +72,7 @@ function start() {
 		width: 44px;
 		height: 44px;
 		border-radius: 50%;
-		background: #fff;
+		background: var(--white);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -90,7 +90,7 @@ function start() {
 			padding: 0 3px;
 			border-radius: var(--radius-large);
 			background: var(--primary);
-			color: #fff;
+			color: var(--white);
 			font-size: 11px;
 			font-weight: bold;
 			line-height: 16px;

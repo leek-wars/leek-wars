@@ -159,12 +159,12 @@ function disable() {
 			font-weight: bold;
 		}
 		div:hover {
-			background: white;
+			background: var(--white);
 		}
 	}
 	.step .title {
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		font-weight: bold;
 		padding: 5px 10px;
 		display: inline-block;

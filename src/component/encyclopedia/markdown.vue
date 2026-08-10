@@ -691,7 +691,7 @@
 		display: none;
 	}
 	.md :deep(h2) {
-		// color: #000;
+		// color: var(--black);
 		&:not(:first-of-type) {
 			margin-top: 1em;
 		}
@@ -761,7 +761,7 @@
 	}
 	.md :deep(.summary) {
 		// border: 1px solid #aaa;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 		display: inline-block;
 		background: var(--pure-white);
 		margin: 5px 0;
@@ -776,7 +776,7 @@
 	.md :deep(.item-preview) {
 		width: 350px;
 		display: inline-block;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 		h2 {
 			border-bottom: none;
 			padding: 0;
@@ -811,7 +811,7 @@
 			padding-inline-start: 0;
 			li {
 				background: var(--pure-white);
-				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+				box-shadow: var(--elevation-1);
 				padding: 15px;
 				border-radius: var(--radius);
 				cursor: pointer;
@@ -830,15 +830,15 @@
 					background: orange;
 				}
 				&.correct, &.wrong, &.missed {
-					color: white;
+					color: var(--white);
 					pre {
-						color: black;
+						color: var(--black);
 					}
 					.letter {
-						color: white;
+						color: var(--white);
 					}
 					.v-icon {
-						color: white !important;
+						color: var(--white) !important;
 					}
 				}
 				&.disabled {
@@ -905,7 +905,7 @@
 		}
 		p {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			box-shadow: var(--elevation-1);
 			padding: 10px 15px;
 			border-radius: var(--radius);
 			margin: 0;

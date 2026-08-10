@@ -144,7 +144,7 @@
 		padding: 4px;
 		height: 50px;
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		box-shadow: var(--elevation-1);
 		img {
 			width: 42px;
 			height: 42px;
@@ -157,7 +157,7 @@
 			right: 0;
 			background: #000b;
 			border-top-left-radius: var(--radius);
-			color: white;
+			color: var(--white);
 			padding: 1.5px 4.5px;
 			font-weight: 500;
 			font-size: 14px;
@@ -201,7 +201,7 @@
 	background: var(--pure-white);
 	border: 1px solid var(--grey-9);
 	border-radius: 100%;
-	box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+	box-shadow: var(--elevation-1);
 	&.arrow {
 		margin: 14px;
 		margin-right: 18px;
@@ -221,7 +221,7 @@
 	padding: 4px 10px;
 	font-size: 13px;
 	background: var(--color-primary);
-	color: white;
+	color: var(--white);
 	border: none;
 	border-radius: var(--radius-small);
 	cursor: pointer;
@@ -251,7 +251,7 @@
 		padding: 0;
 		&.active {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			box-shadow: var(--elevation-1);
 		}
 	}
 	.cell0 {
@@ -312,7 +312,7 @@
 			background: var(--pure-white);
 			border-radius: 50%;
 			pointer-events: none;
-			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			box-shadow: var(--elevation-1);
 		}
 	}
 	.cell.building {

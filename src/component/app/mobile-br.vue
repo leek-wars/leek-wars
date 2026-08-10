@@ -13,8 +13,8 @@
 		position: fixed;
 		top: 50%;
 		right: -34px;
-		background: #2a2a2a;
-		color: white;
+		background: var(--panel-header-background);
+		color: var(--white);
 		transform: rotate(-90deg);
 		padding: 7px 10px;
 		border-top-left-radius: var(--radius-medium);

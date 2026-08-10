@@ -36,34 +36,34 @@ defineProps<{
 			padding-right: 5px;
 		}
 		&.cent {
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			box-shadow: var(--elevation-1);
 			background: var(--pure-white);
 			font-size: 18px;
 			border: none;
 		}
 		&.ten {
-			background: linear-gradient(0deg, #000000, var(--grey-9));
-			color: white;
+			background: linear-gradient(0deg, var(--black), var(--grey-9));
+			color: var(--white);
 			padding: 1px 2px;
 		}
 		&.first {
 			background: linear-gradient(0deg, #ffb029, #ffdc3a);
 			border: 1px solid #ffb430;
-			color: white;
+			color: var(--white);
 			font-weight: bold;
 			text-shadow: 1.5px 0 0 #ff9b29, -1.5px 0 0 #ffb029, 0 1.5px 0 #ffb029, 0 -1.5px 0 #ffb029;
 		}
 		&.second {
 			background: linear-gradient(0deg, #b1b1b1, var(--grey-12));
 			border: 1px solid #a0a0a0;
-			color: white;
+			color: var(--white);
 			font-weight: bold;
 			text-shadow: 1.5px 0 0 #909090, -1.5px 0 0 #909090, 0 1.5px 0 #909090, 0 -1.5px 0 #909090;
 		}
 		&.third {
 			background: linear-gradient(0deg, #ae4e00, #ff7300);
 			border: 1px solid #ae4e00;
-			color: white;
+			color: var(--white);
 			font-weight: bold;
 			text-shadow: 1.5px 0 0 #ae4e00, -1.5px 0 0 #ae4e00, 0 1.5px 0 #ae4e00, 0 -1.5px 0 #ae4e00;
 		}

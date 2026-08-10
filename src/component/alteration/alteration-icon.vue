@@ -65,7 +65,7 @@
 		left: 0;
 		font-size: 11px;
 		font-weight: bold;
-		color: #fff;
+		color: var(--white);
 		text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
 		pointer-events: none;
 	}

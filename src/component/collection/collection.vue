@@ -450,7 +450,7 @@
 		font-weight: 800;
 		letter-spacing: 0.6px;
 		text-transform: uppercase;
-		color: #000;
+		color: var(--black);
 		background: linear-gradient(0deg, #ffb029, #ffdc3a);
 		border: 1px solid #ffb430;
 		box-shadow: 0 2px 9px rgba(150, 100, 0, 0.45);

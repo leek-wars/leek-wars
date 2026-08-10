@@ -518,7 +518,7 @@
 		display: none;
 	}
 	.menu-button .v-icon {
-		color: white;
+		color: var(--white);
 		font-size: 30px;
 	}
 	.menu .section {
@@ -543,7 +543,7 @@
 		top: 50%;
 		margin-top: -11px;
 		content: attr(label);
-		color: white;
+		color: var(--white);
 		border-radius: 5px;
 		padding: 2px 4px;
 		line-height: normal;
@@ -578,7 +578,7 @@
 	}
 	.menu-center .section.router-link-active {
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 2px 6px rgba(0, 0, 0, 0.3);
 		&:before {
 			content: "";
@@ -782,8 +782,8 @@
 			margin: 2px 0;
 		}
 		.header {
-			background: #2a2a2a;
-			color: white;
+			background: var(--panel-header-background);
+			color: var(--white);
 			display: flex;
 			border-top-left-radius: var(--radius-medium);
 			border-top-right-radius: var(--radius-medium);
@@ -797,7 +797,7 @@
 				text-overflow: ellipsis;
 			}
 			.v-icon {
-				color: white;
+				color: var(--white);
 				padding: 0;
 				margin-right: 2px;
 				margin-bottom: 1px;
@@ -933,10 +933,10 @@
 			align-items: center;
 			justify-content: space-between;
 			padding: 12px 10px;
-			background: #2a2a2a;
-			color: white;
+			background: var(--panel-header-background);
+			color: var(--white);
 			h4 {
-				color: white;
+				color: var(--white);
 				margin-bottom: 5px;
 			}
 		}

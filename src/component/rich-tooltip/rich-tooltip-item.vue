@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
 	padding: 4px;
 }
 .stats > div:nth-child(2n+1) {
-	background-color: white;
+	background-color: var(--white);
 }
 .stats > div:nth-child(2n) {
 	background-color: #f2f2f2;

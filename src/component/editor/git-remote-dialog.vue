@@ -350,7 +350,7 @@ body.dark .remote-item {
 		cursor: pointer;
 		padding: 4px 14px;
 		background: var(--primary);
-		color: white;
+		color: var(--white);
 		border: none;
 		border-radius: var(--radius);
 		font-size: 13px;
@@ -450,7 +450,7 @@ body.dark .credential-info {
 		cursor: pointer;
 		font-size: 13px;
 		font-weight: bold;
-		color: white;
+		color: var(--white);
 		&.github { background: #24292e; }
 		&.github:hover { background: #3a3f44; }
 	}
@@ -493,11 +493,11 @@ body.dark .credential-info {
 					box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 				}
 				&.active {
-					color: white;
+					color: var(--white);
 					border-color: transparent;
 					transform: translateY(-1px);
 					box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-					.v-icon { color: white; }
+					.v-icon { color: var(--white); }
 				}
 				&.github.active    { background: #24292e; &:hover { background: #3a3f44; } }
 				&.gitlab.active    { background: #fc6d26; &:hover { background: #e24329; } }
@@ -548,7 +548,7 @@ body.dark .credential-info {
 			.pat-save {
 				padding: 4px 12px;
 				background: var(--primary);
-				color: white;
+				color: var(--white);
 				border-radius: var(--radius);
 				cursor: pointer;
 				font-size: 13px;

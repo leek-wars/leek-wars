@@ -443,25 +443,25 @@ onMounted(() => {
 	.social-btn.facebook {
 		background: #1877f2;
 		border-color: #1877f2;
-		color: #fff;
+		color: var(--white);
 		&:hover { background: #1465d8; }
 	}
 	.social-btn.x {
-		background: #000;
-		border-color: #000;
-		color: #fff;
+		background: var(--black);
+		border-color: var(--black);
+		color: var(--white);
 		&:hover { background: var(--grey-1); }
 	}
 	.social-btn.instagram {
 		background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 		border-color: #cc2366;
-		color: #fff;
+		color: var(--white);
 		&:hover { filter: brightness(1.08); }
 	}
 	.social-btn.linkedin {
 		background: #0a66c2;
 		border-color: #0a66c2;
-		color: #fff;
+		color: var(--white);
 		&:hover { background: #08529c; }
 	}
 </style>

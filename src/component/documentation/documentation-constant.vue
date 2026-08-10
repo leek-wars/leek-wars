@@ -254,7 +254,7 @@ const weapons = computed(() => {
 		}
 		&:hover {
 			text-decoration: none;
-			color: #000;
+			color: var(--black);
 		}
 	}
 </style>

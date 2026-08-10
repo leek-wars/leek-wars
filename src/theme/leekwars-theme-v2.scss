@@ -17,8 +17,15 @@ body {
 	--primary: #5fad1b;
 
 	/* Encre et fonds */
+	/* Attention aux deux paires, elles ne font pas la même chose :
+	   --pure-white / --pure-black S'INVERSENT en mode sombre (c'est la paire
+	   historique, utilisee pour « la couleur du fond de page » et « la couleur
+	   du texte ») ; --white / --black sont des constantes, elles valent blanc
+	   et noir dans les deux themes. */
 	--pure-white: #fff;
 	--pure-black: #000;
+	--white: #fff;
+	--black: #000;
 	--background: #f2f2f2;
 	--background-secondary: #eee;
 	--background-disabled: #bbb;
@@ -48,6 +55,8 @@ body {
 	--panel-header-color: #eee;
 	--panel-header-height: 36px;
 	--panel-shadow: 0px 10px 11px -11px rgba(0, 0, 0, 0.75);
+	/* Elevation Material niveau 2, copiee telle quelle dans 41 composants. */
+	--elevation-1: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 
 	/* Chrome : barre de page et ses onglets */
 	--page-bar-color: #eee;

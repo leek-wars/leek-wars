@@ -134,14 +134,14 @@ const lastCheckedLabel = computed(() => {
 	padding: 20px 25px;
 	border-radius: var(--radius);
 	margin-bottom: 20px;
-	color: white;
+	color: var(--white);
 	&.ok { background: var(--primary); }
 	&.partial { background: #f0ad4e; }
 	&.down { background: #d9534f; }
 }
 .overall-icon {
 	font-size: 42px !important;
-	color: white !important;
+	color: var(--white) !important;
 }
 .overall-title {
 	font-size: 22px;

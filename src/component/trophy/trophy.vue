@@ -364,7 +364,7 @@ function deleteTrophy() {
 		}
 	}
 	.difficulty {
-		color: white;
+		color: var(--white);
 	}
 	.in-fight {
 		border: 1px solid var(--text-color-secondary);
