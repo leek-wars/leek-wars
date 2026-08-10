@@ -1481,9 +1481,21 @@ async function loadGameData() {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const data = rawData as { [key: string]: any }
 
+	// Le client peut être plus récent que l'API : un type de données introduit
+	// par une feature non déployée n'existe pas encore côté serveur. C'est le cas
+	// nominal du client develop branché sur l'API de production (port 8080), et
+	// c'est aussi ce qui se passe en prod entre le déploiement du client et celui
+	// de l'API. On ne bloque donc que sur les types sans lesquels l'interface ne
+	// peut rien rendre ; les autres sont simplement absents (leur valeur par
+	// défaut est conservée) et chaque affectation plus bas est déjà gardée.
+	const CORE_TYPES: string[] = ['items', 'weapons', 'chips', 'hats', 'potions', 'constants', 'functions']
 	const missing = DATA_TYPES.filter(t => !data[t])
+	const missingCore = missing.filter(t => CORE_TYPES.includes(t))
+	if (missingCore.length > 0) {
+		throw new Error('[GameData] Incomplete dataset, missing: ' + missingCore.join(', '))
+	}
 	if (missing.length > 0) {
-		throw new Error('[GameData] Incomplete dataset, missing: ' + missing.join(', '))
+		console.warn('[GameData] Types absents de l\'API (client plus récent que le serveur) : ' + missing.join(', '))
 	}
 
 	const t0 = performance.now()

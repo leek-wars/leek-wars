@@ -13,6 +13,10 @@ export const DATA_TYPES = [
 interface Meta {
 	master_version: string
 	hashes: { [key: string]: string }
+	// Types que le serveur connait reellement, deduits des hashes qu'il envoie.
+	// Sans ca, un client plus recent que l'API invalide son cache a chaque
+	// chargement, puisqu'un type de DATA_TYPES ne sera jamais rempli.
+	types?: string[]
 }
 
 type GameDataMap = { [key: string]: unknown }
@@ -70,13 +74,19 @@ async function loadFromIdb(skipVersionCheck = false): Promise<GameDataMap | null
 			}
 		}
 
+		const expected: readonly string[] = meta.types && meta.types.length ? meta.types : DATA_TYPES
 		const result: GameDataMap = {}
 		for (let i = 0; i < DATA_TYPES.length; i++) {
+			const type = DATA_TYPES[i]
 			if (values[i + 1] == null) {
-				console.warn(`[GameData] Missing type '${DATA_TYPES[i]}' in IndexedDB → invalidating cache`)
-				return null
+				// Type absent du cache : anormal seulement si le serveur le sert.
+				if (expected.includes(type)) {
+					console.warn(`[GameData] Missing type '${type}' in IndexedDB → invalidating cache`)
+					return null
+				}
+				continue
 			}
-			result[DATA_TYPES[i]] = values[i + 1]
+			result[type] = values[i + 1]
 		}
 		return result
 	} catch {
@@ -85,7 +95,7 @@ async function loadFromIdb(skipVersionCheck = false): Promise<GameDataMap | null
 }
 
 function saveToIdb(masterVersion: string, hashes: { [key: string]: string }, data: GameDataMap) {
-	const entries: [string, unknown][] = [['meta', { master_version: masterVersion, hashes } as Meta]]
+	const entries: [string, unknown][] = [['meta', { master_version: masterVersion, hashes, types: Object.keys(hashes) } as Meta]]
 	for (const type of Object.keys(data)) {
 		entries.push(['data:' + type, data[type]])
 	}
@@ -107,10 +117,14 @@ function loadFromLs(skipVersionCheck = false): GameDataMap | null {
 			if (cookieVersion && meta.master_version !== cookieVersion) return null
 		}
 
+		const expected: readonly string[] = meta.types && meta.types.length ? meta.types : DATA_TYPES
 		const result: GameDataMap = {}
 		for (const type of DATA_TYPES) {
 			const item = localStorage.getItem(LS_PREFIX + type)
-			if (item == null) return null
+			if (item == null) {
+				if (expected.includes(type)) return null
+				continue
+			}
 			result[type] = JSON.parse(item)
 		}
 		console.log('[GameData] Loaded from localStorage (fallback)')
@@ -122,7 +136,7 @@ function loadFromLs(skipVersionCheck = false): GameDataMap | null {
 
 function saveToLs(masterVersion: string, hashes: { [key: string]: string }, data: GameDataMap) {
 	try {
-		localStorage.setItem(LS_PREFIX + 'meta', JSON.stringify({ master_version: masterVersion, hashes }))
+		localStorage.setItem(LS_PREFIX + 'meta', JSON.stringify({ master_version: masterVersion, hashes, types: Object.keys(hashes) }))
 		for (const type of Object.keys(data)) {
 			localStorage.setItem(LS_PREFIX + type, JSON.stringify(data[type]))
 		}
