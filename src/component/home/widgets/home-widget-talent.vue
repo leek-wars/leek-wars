@@ -45,9 +45,9 @@
 	}
 	.ratio {
 		font-weight: bold;
-		.win { color: var(--primary); }
-		.draw { color: var(--text-color-secondary); }
-		.lose { color: #c0392b; }
+		.win { color: var(--result-win-text); }
+		.draw { color: var(--result-draw); }
+		.lose { color: var(--result-defeat-text); }
 	}
 	.fights-title {
 		display: flex;

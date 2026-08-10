@@ -237,22 +237,16 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 			filter: brightness(1.06);
 		}
 	}
-	:deep(.fight-row.win > td:first-child) { box-shadow: inset 4px 0 0 #6fbf3e; }
-	:deep(.fight-row.draw > td:first-child) { box-shadow: inset 4px 0 0 var(--grey-9); }
-	:deep(.fight-row.defeat > td:first-child) { box-shadow: inset 4px 0 0 #d96058; }
+	:deep(.fight-row.win > td:first-child) { box-shadow: inset 4px 0 0 var(--result-win); }
+	:deep(.fight-row.draw > td:first-child) { box-shadow: inset 4px 0 0 var(--result-draw); }
+	:deep(.fight-row.defeat > td:first-child) { box-shadow: inset 4px 0 0 var(--result-defeat); }
 	:deep(.fight-row.generating > td:first-child) { box-shadow: inset 4px 0 0 var(--text-color-secondary); }
 
-	body.dark :deep(.fight-row.win > td:first-child) { box-shadow: inset 4px 0 0 #7ddc7d; }
-	body.dark :deep(.fight-row.draw > td:first-child) { box-shadow: inset 4px 0 0 var(--grey-7); }
-	body.dark :deep(.fight-row.defeat > td:first-child) { box-shadow: inset 4px 0 0 #ff7068; }
 
-	:deep(.fight-row.win > td:nth-child(2)) { background-color: rgba(111, 191, 62, 0.18); }
-	:deep(.fight-row.draw > td:nth-child(2)) { background-color: rgba(170, 170, 170, 0.18); }
-	:deep(.fight-row.defeat > td:nth-child(2)) { background-color: rgba(217, 96, 88, 0.18); }
+	:deep(.fight-row.win > td:nth-child(2)) { background-color: var(--result-win-background); }
+	:deep(.fight-row.draw > td:nth-child(2)) { background-color: var(--result-draw-background); }
+	:deep(.fight-row.defeat > td:nth-child(2)) { background-color: var(--result-defeat-background); }
 
-	body.dark :deep(.fight-row.win > td:nth-child(2)) { background-color: rgba(125, 220, 125, 0.15); }
-	body.dark :deep(.fight-row.draw > td:nth-child(2)) { background-color: rgba(180, 180, 180, 0.12); }
-	body.dark :deep(.fight-row.defeat > td:nth-child(2)) { background-color: rgba(255, 112, 104, 0.18); }
 
 	.type-cell {
 		display: inline-flex;
@@ -286,13 +280,9 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 	}
 	.result-icon {
 		font-size: 20px;
-		&.win { color: #2e7d32; }
-		&.defeat { color: #c62828; }
-		&.draw { color: var(--text-color-secondary); }
-	}
-	body.dark .result-icon {
-		&.win { color: #c8e6c9; }
-		&.defeat { color: #ffcdd2; }
+		&.win { color: var(--result-win-text); }
+		&.defeat { color: var(--result-defeat-text); }
+		&.draw { color: var(--result-draw); }
 	}
 	body.dark .type-cell .v-icon { color: var(--text-color); }
 

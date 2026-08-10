@@ -87,6 +87,21 @@ body {
 	--error: #c62828;
 	--info: #2196f3;
 
+	/* Résultat d'un combat. Deux rôles distincts, à ne pas confondre :
+	   l'accent (barre de ligne, icône, pastille) est saturé et se lit sur le
+	   fond ; le texte doit rester lisible, donc foncé en clair et clair en
+	   sombre. La paire retenue est celle de l'historique de combat, la plus
+	   récemment dessinée ; l'infobulle de combat et les widgets d'accueil
+	   utilisaient trois autres verts et deux autres rouges, ils s'alignent. */
+	--result-win: #6fbf3e;
+	--result-win-text: #2e7d32;
+	--result-win-background: rgba(111, 191, 62, 0.18);
+	--result-defeat: #d96058;
+	--result-defeat-text: #c62828;
+	--result-defeat-background: rgba(217, 96, 88, 0.18);
+	--result-draw: var(--text-color-secondary);
+	--result-draw-background: rgba(170, 170, 170, 0.18);
+
 	&.dark {
 		--pure-white: #000;
 		--pure-black: #fff;
@@ -99,5 +114,13 @@ body {
 		--text-color-secondary: #999;
 		--type-color: #0099d0;
 		--link-color: #4bbaff;
+
+		--result-win: #7ddc7d;
+		--result-win-text: #c8e6c9;
+		--result-win-background: rgba(125, 220, 125, 0.15);
+		--result-defeat: #ff7068;
+		--result-defeat-text: #ffcdd2;
+		--result-defeat-background: rgba(255, 112, 104, 0.18);
+		--result-draw-background: rgba(180, 180, 180, 0.12);
 	}
 }

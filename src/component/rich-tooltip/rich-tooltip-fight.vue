@@ -443,12 +443,10 @@ const metaItems = computed(() => {
 		display: inline-flex;
 		align-items: center;
 		.v-icon { font-size: 22px; }
-		&.win .v-icon { color: #4caf50; }
-		&.defeat .v-icon { color: #e53935; }
-		&.draw .v-icon { color: var(--text-color-secondary); }
+		&.win .v-icon { color: var(--result-win); }
+		&.defeat .v-icon { color: var(--result-defeat); }
+		&.draw .v-icon { color: var(--result-draw); }
 	}
-	body.dark .result-badge.win .v-icon { color: #7ddc7d; }
-	body.dark .result-badge.defeat .v-icon { color: #ff7068; }
 
 	.sides {
 		display: flex;
