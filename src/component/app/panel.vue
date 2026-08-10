@@ -153,7 +153,7 @@ defineExpose({ expanded, state })
 			overflow: hidden;
 			flex: 1;
 			&:deep(a, a:visited) {
-				color: var(--white);
+				color: var(--panel-header-color);
 				font-weight: bold;
 				vertical-align: top;
 			}
@@ -180,7 +180,7 @@ defineExpose({ expanded, state })
 	}
 	.header > .actions :deep(.button) {
 		height: 36px;
-		color: var(--white);
+		color: var(--panel-header-color);
 		padding: 0 10px;
 		cursor: pointer;
 		display: inline-flex;
@@ -200,7 +200,7 @@ defineExpose({ expanded, state })
 			padding: 6px 0;
 			box-sizing: content-box;
 			opacity: 0.9;
-			color: var(--white);
+			color: var(--panel-header-color);
 		}
 	}
 	.header > .actions :deep(> div:last-child.button),

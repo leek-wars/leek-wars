@@ -362,7 +362,7 @@ function submit() {
 		flex-shrink: 0;
 		align-self: center;
 		background: var(--white);
-		color: #3e8a00;
+		color: var(--primary-strong);
 		font-weight: bold;
 		font-size: 16px;
 		padding: 12px 22px;

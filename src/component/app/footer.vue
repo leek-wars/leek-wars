@@ -126,9 +126,9 @@ function throwCookies() {
 		position: relative;
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-		color: var(--grey-5);
+		color: var(--footer-color);
 		a, h4, .item, .v-icon {
-			color: var(--grey-5);
+			color: var(--footer-color);
 			transition: color 0.15s ease;
 			.v-icon {
 				font-size: 16px;

@@ -267,14 +267,14 @@ h1 {
 	display: inline-block;
 	height: 36px;
 	padding: 0 15px;
-	color: white;
+	color: var(--primary-text);
 	position: relative;
 	background: var(--primary);
 	text-shadow: 0px 2px 3px rgba(0,0,0,0.2), 0px 1px 3px rgba(0,0,0,0.1), 0px 3px 6px rgba(0,0,0,0.1);
 	border-top-left-radius: var(--radius-small);
 }
 h1 a, h1 a:visited {
-	color: white;
+	color: var(--primary-text);
 }
 h1::after {
 	content: "";
@@ -296,7 +296,7 @@ h3 {
 	margin-left: -15px;
 	background: var(--primary);
 	display: inline-block;
-	color: white;
+	color: var(--primary-text);
 	padding: 5px 10px;
 	font-size: 18px;
 	position: relative;

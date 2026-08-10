@@ -476,8 +476,13 @@
 		return store.state.accounts.filter((a: AccountInfo) => a.connected || a.id === farmerId)
 	})
 
+	// Le thème Vuetify porte le même couple (clair/sombre) × (v3/v2) que le CSS.
+	const applyVuetifyTheme = () => {
+		theme.change((LeekWars.darkMode ? 'dark' : 'light') + (LeekWars.legacyTheme ? '-v2' : ''))
+	}
+
 	watch(() => LeekWars.darkMode, () => {
-		theme.change(LeekWars.darkMode ? 'dark' : 'light')
+		applyVuetifyTheme()
 		if (LeekWars.darkMode)
 			document.body.classList.add('dark')
 		else
@@ -501,6 +506,7 @@
 		} else {
 			document.body.classList.remove('v2')
 		}
+		applyVuetifyTheme()
 	}, { immediate: true })
 
 	// Flags de layout (large/flex/box/footer/lightBar) appliqués en IMPÉRATIF, hors du
@@ -747,7 +753,7 @@
 		z-index: 10000;
 		padding: 10px 16px;
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		font-weight: 500;
 		border-radius: 0 0 var(--radius) var(--radius);
 		transition: top 0.15s ease;

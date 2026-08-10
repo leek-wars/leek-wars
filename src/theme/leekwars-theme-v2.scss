@@ -17,6 +17,10 @@
 html body.v2 {
 	/* Marque */
 	--primary: #5fad1b;
+	/* Encre posee SUR un aplat de marque. */
+	--primary-text: #fff;
+	/* Le vert quand il sert d'encre sur une surface claire. */
+	--primary-strong: #3e8a00;
 
 	/* Encre et fonds */
 	/* Attention aux deux paires, elles ne font pas la même chose :
@@ -34,6 +38,8 @@ html body.v2 {
 	--background-header: #e5e5e5;
 	/* Fond hors de la page, visible autour du contenu */
 	--background-outer: #333;
+	/* Encre du pied de page, pose sur ce fond exterieur et non sur la page */
+	--footer-color: #666;
 	--border: #ddd;
 	--text-color: #111;
 	--text-color-secondary: #686868;
