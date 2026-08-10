@@ -38,6 +38,8 @@
 		flex-wrap: wrap;
 		gap: 10px;
 		justify-content: center;
+		align-content: center;
+		height: 100%;
 	}
 	.leek {
 		display: flex;
@@ -47,6 +49,13 @@
 		padding: 10px;
 		text-decoration: none;
 		color: var(--text-color);
+	}
+	// L'image s'adapte à la hauteur du panel (container = contenu du panel) :
+	// grande quand il y a de la place, réduite sur un panel bas, sans couper.
+	// Enfant direct seulement : ne pas toucher les petites icônes svg des badges.
+	.leek > :deep(svg) {
+		width: auto;
+		height: clamp(60px, 100cqh - 100px, 160px);
 	}
 	.leek:hover {
 		background: var(--background-secondary);

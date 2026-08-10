@@ -9,15 +9,18 @@
 			</div>
 		</div>
 		<h4 class="fights-title"><v-icon>mdi-history</v-icon> {{ t('latest_fights') }}</h4>
-		<fights-history v-if="fights.length" :fights="fights" />
+		<div v-if="fights.length" ref="fightsEl" class="fights">
+			<fights-history :fights="visibleFights" />
+		</div>
 		<div v-else class="none">{{ t('no_fight') }}</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { computed, defineAsyncComponent } from 'vue'
+	import { computed, defineAsyncComponent, ref } from 'vue'
 	import { store } from '@/model/store'
 	import { useNamespacedT } from '@/model/i18n'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 
 	defineOptions({
 		name: 'HomeWidgetTalent',
@@ -27,7 +30,11 @@
 	const t = useNamespacedT('home')
 
 	const farmer = computed(() => store.state.farmer)
-	const fights = computed(() => (store.state.farmer?.fight_history ?? []).slice(0, 6))
+	const fights = computed(() => (store.state.farmer?.fight_history ?? []).slice(0, 12))
+	// Autant de combats que la hauteur du panel le permet, jamais coupés.
+	const fightsEl = ref<HTMLElement | null>(null)
+	const fightCount = useFitCount(fightsEl, '.wrapper', 12)
+	const visibleFights = computed(() => fights.value.slice(0, fightCount.value))
 </script>
 
 <style lang="scss" scoped>
@@ -35,6 +42,17 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		height: 100%;
+	}
+	// La liste occupe la hauteur restante ; overflow hidden en filet de sécurité,
+	// le nombre de combats affichés est calculé pour tenir sans couper.
+	.fights {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
+	}
+	.fights :deep(.history) {
+		padding: 0;
 	}
 	.talent-header {
 		display: flex;
