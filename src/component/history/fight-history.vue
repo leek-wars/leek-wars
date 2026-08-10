@@ -127,7 +127,7 @@ const arenaLabel = computed<[string, string]>(() => {
 				opacity: 0.8;
 			}
 			i {
-				color: #333;
+				color: var(--grey-2);
 				line-height: 42px;
 				font-size: 26px;
 				margin: 8px;
@@ -193,7 +193,7 @@ const arenaLabel = computed<[string, string]>(() => {
 		background: #dcdcdc;
 	}
 	body.dark .draw {
-		background: #444;
+		background: var(--grey-3);
 	}
 	.defeat {
 		background-color: #ffb3ae;

@@ -503,7 +503,7 @@ watch(sort_by, () => {
 			margin-bottom: 5px;
 		}
 		.points {
-			border: 1px solid #aaa;
+			border: 1px solid var(--grey-9);
 			padding: 1px 4px;
 			border-radius: 4px;
 			margin-left: 5px;
@@ -524,7 +524,7 @@ watch(sort_by, () => {
 			background: white;
 			border-radius: 6px;
 			margin-top: 6px;
-			border: 1px solid #ddd;
+			border: 1px solid var(--grey-12);
 			.bar {
 				height: 8px;
 				border-radius: 6px;
@@ -532,7 +532,7 @@ watch(sort_by, () => {
 				background: #30bb00;
 			}
 			&.full .bar {
-				background: #ddd;
+				background: var(--grey-12);
 			}
 		}
 		.unlock {
@@ -541,7 +541,7 @@ watch(sort_by, () => {
 			margin-top: 4px;
 		}
 		.date, .rarity {
-			color: #888;
+			color: var(--grey-7);
 			font-size: 13px;
 			font-style: italic;
 			.fight {

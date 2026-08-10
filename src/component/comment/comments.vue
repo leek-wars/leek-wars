@@ -83,6 +83,6 @@ function send(message: string) {
 	}
 	.comment .date {
 		font-size: 12px;
-		color: #aaa;
+		color: var(--grey-9);
 	}
 </style>

@@ -1798,7 +1798,7 @@
 			color: var(--text-color-secondary);
 		}
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid var(--border);
@@ -1841,7 +1841,7 @@
 	.edit-button {
 		float: right;
 		cursor: pointer;
-		color: #aaa;
+		color: var(--grey-9);
 		margin: 10px 0;
 	}
 	.edit-button:hover {
@@ -2069,7 +2069,7 @@
 				padding-right: 4px;
 				content: attr(quantity);
 				text-align: center;
-				color: #eee;
+				color: var(--grey-13);
 				border-radius: 20px;
 				font-weight: bold;
 				background-color: var(--text-color-secondary);
@@ -2240,7 +2240,7 @@
 		height: 20px;
 		content: attr(quantity);
 		text-align: center;
-		color: #eee;
+		color: var(--grey-13);
 		border-radius: 20px;
 		background-color: #0a0;
 		font-weight: bold;
@@ -2294,9 +2294,9 @@
 						opacity: 0.5;
 					}
 					.name {
-						color: #555;
+						color: var(--grey-4);
 						.v-icon {
-							color: #999;
+							color: var(--grey-8);
 						}
 					}
 				}
@@ -2327,7 +2327,7 @@
 		}
 	}
 	.empty {
-		color: #999;
+		color: var(--grey-8);
 	}
 	.explorer {
 		height: 460px;

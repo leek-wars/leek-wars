@@ -631,7 +631,7 @@
 		display: flex;
 		align-items: center;
 		&.selected {
-			background: #666;
+			background: var(--grey-5);
 		}
 		.v-icon {
 			padding: 0 12px;
@@ -644,7 +644,7 @@
 	align-items: center;
 	vertical-align: bottom;
 	font-size: 15px;
-	color: #eee;
+	color: var(--grey-13);
 	margin: 0 10px;
 	.hab {
 		margin-left: 5px;

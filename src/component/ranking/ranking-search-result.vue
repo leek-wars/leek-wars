@@ -74,7 +74,7 @@ const description = computed(() => {
 		text-align: center;
 	}
 	.result .level {
-		color: #aaa;
+		color: var(--grey-9);
 		font-size: 13px;
 	}
 	button {

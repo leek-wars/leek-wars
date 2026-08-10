@@ -1717,7 +1717,7 @@
 		[contenteditable]:empty:before {
 			content: attr(data-placeholder);
 			font-style: italic;
-			color: #999;
+			color: var(--grey-8);
 		}
 	}
 	.guillemet {
@@ -1732,7 +1732,7 @@
 	}
 	.team-status.empty {
 		font-style: italic;
-		color: #999;
+		color: var(--grey-8);
 	}
 	.bar {
 		width: 100%;
@@ -1773,7 +1773,7 @@
 			color: var(--text-color-secondary);
 		}
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid var(--border);
@@ -1794,7 +1794,7 @@
 	}
 	.candidacies .empty {
 		padding: 10px;
-		color: #999;
+		color: var(--grey-8);
 		text-align: center;
 	}
 	.candidacies .farmer {
@@ -1835,7 +1835,7 @@
 			&.me {
 				cursor: pointer;
 				&:hover {
-					background: #ddd;
+					background: var(--grey-12);
 				}
 			}
 			&.hidden {
@@ -2012,7 +2012,7 @@
 		color: white;
 	}
 	.no-compos {
-		color: #aaa;
+		color: var(--grey-9);
 		font-size: 18px;
 		margin: 20px;
 		text-align: center;
@@ -2094,7 +2094,7 @@
 		top: 50%; bottom: 50%;
 		margin-top: -9px;
 		font-weight: 300;
-		color: #aaa;
+		color: var(--grey-9);
 		font-size: 18px;
 	}
 	.compo-tournament {
@@ -2105,17 +2105,17 @@
 		margin-right: 8px;
 		margin-bottom: 3px;
 		font-size: 18px;
-		color: #444;
+		color: var(--grey-3);
 	}
 	.tournament-info {
 		font-size: 18px;
-		color: #444;
+		color: var(--grey-3);
 	}
 	.compo:not(.in-tournament) .leek {
 		cursor: move;
 	}
 	.compo .leeks.dashed {
-		border: 4px dashed #aaa;
+		border: 4px dashed var(--grey-9);
 	}
 	.panel :deep(.turret-wrapper) {
 		display: flex;

@@ -484,11 +484,11 @@ watch(() => LeekWars.currency, () => {
 		}
 	}
 	.items-title {
-		background: #222;
+		background: var(--grey-1);
 		color: white;
 		font-size: 17px;
 		&::after {
-			border-color: transparent transparent transparent #222;
+			border-color: transparent transparent transparent var(--grey-1);
 		}
 	}
 	.history-link {

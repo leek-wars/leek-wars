@@ -233,7 +233,7 @@ updateHeight()
 		left: 0; right: 0;
 		font-size: 20px;
 		text-align: center;
-		color: #aaa;
+		color: var(--grey-9);
 		padding: 10px;
 	}
 	.stats {

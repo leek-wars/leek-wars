@@ -117,11 +117,11 @@ onMounted(() => {
 	}
 	.locked {
 		height: 67px;
-		background: #ddd;
+		background: var(--grey-12);
 		border-radius: 4px;
 		line-height: 67px;
 		font-weight: bold;
 		font-size: 30px;
-		color: #888;
+		color: var(--grey-7);
 	}
 </style>

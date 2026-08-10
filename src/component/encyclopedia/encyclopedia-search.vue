@@ -148,11 +148,11 @@ function searchButton() {
 
 <style lang="scss" scoped>
 h1 {
-	background: #222;
+	background: var(--grey-1);
 	font-size: 20px;
 	display: inline-flex;
 	&::after {
-		border-color: transparent transparent transparent #222;
+		border-color: transparent transparent transparent var(--grey-1);
 	}
 	.book {
 		margin-right: 10px;
@@ -226,11 +226,11 @@ h2 {
 	font-weight: bold;
 }
 .info {
-	color: #aaa;
+	color: var(--grey-9);
 	margin-bottom: 10px;
 }
 .result .dark {
-	color: #555;
+	color: var(--grey-4);
 }
 .pagination {
 	text-align: center;
@@ -238,7 +238,7 @@ h2 {
 .no-results {
 	text-align: center;
 	padding: 10px;
-	color: #999;
+	color: var(--grey-8);
 	img {
 		margin-bottom: 8px;
 	}

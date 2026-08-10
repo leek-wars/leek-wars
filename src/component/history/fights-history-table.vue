@@ -238,12 +238,12 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 		}
 	}
 	:deep(.fight-row.win > td:first-child) { box-shadow: inset 4px 0 0 #6fbf3e; }
-	:deep(.fight-row.draw > td:first-child) { box-shadow: inset 4px 0 0 #aaa; }
+	:deep(.fight-row.draw > td:first-child) { box-shadow: inset 4px 0 0 var(--grey-9); }
 	:deep(.fight-row.defeat > td:first-child) { box-shadow: inset 4px 0 0 #d96058; }
 	:deep(.fight-row.generating > td:first-child) { box-shadow: inset 4px 0 0 var(--text-color-secondary); }
 
 	body.dark :deep(.fight-row.win > td:first-child) { box-shadow: inset 4px 0 0 #7ddc7d; }
-	body.dark :deep(.fight-row.draw > td:first-child) { box-shadow: inset 4px 0 0 #888; }
+	body.dark :deep(.fight-row.draw > td:first-child) { box-shadow: inset 4px 0 0 var(--grey-7); }
 	body.dark :deep(.fight-row.defeat > td:first-child) { box-shadow: inset 4px 0 0 #ff7068; }
 
 	:deep(.fight-row.win > td:nth-child(2)) { background-color: rgba(111, 191, 62, 0.18); }
@@ -262,7 +262,7 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 		gap: 3px;
 		.v-icon {
 			font-size: 22px;
-			color: #333;
+			color: var(--grey-2);
 			&.timersand { animation: rotate 2s linear infinite; }
 		}
 		img {

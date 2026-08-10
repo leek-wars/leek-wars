@@ -478,7 +478,7 @@
 		left: 0;
 		transform: translateX(-250px);
 		bottom: 0;
-		background: #222;
+		background: var(--grey-1);
 		z-index: 5;
 		transition: transform ease 200ms;
 		padding: 0;
@@ -527,10 +527,10 @@
 		position: relative;
 		font-weight: 400;
 		font-size: 17px;
-		color: #eee;
+		color: var(--grey-13);
 		white-space: nowrap;
 		display: block;
-		background: #222;
+		background: var(--grey-1);
 		cursor: pointer;
 	}
 	.menu a div, .menu .text {
@@ -538,7 +538,7 @@
 	}
 	.menu .section[label]:after, .awards:after {
 		position: absolute;
-		background: #333;
+		background: var(--grey-2);
 		right: -10px;
 		top: 50%;
 		margin-top: -11px;
@@ -635,11 +635,11 @@
 		height: 12px;
 	}
 	.menu-top {
-		background: #333;
-		color: #eee;
+		background: var(--grey-2);
+		color: var(--grey-13);
 	}
 	.menu-top a {
-		color: #eee;
+		color: var(--grey-13);
 	}
 	#app.app .menu .top {
 		display: flex;

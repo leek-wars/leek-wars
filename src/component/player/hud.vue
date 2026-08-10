@@ -515,7 +515,7 @@
 		}
 		.load-marker {
 			text-align: center;
-			color: #888;
+			color: var(--grey-7);
 			font-size: 12px;
 			padding: 4px 0;
 			user-select: none;
@@ -536,8 +536,8 @@
 	}
 	.hud.dark {
 		.fight-actions {
-			background-color: #222;
-			color: #eee;
+			background-color: var(--grey-1);
+			color: var(--grey-13);
 			&:hover {
 				background-color: #222d;
 			}
@@ -553,7 +553,7 @@
 		pointer-events: none;
 	}
 	.pause {
-		color: #999;
+		color: var(--grey-8);
 	}
 	.warning {
 		color: #ff5f00;

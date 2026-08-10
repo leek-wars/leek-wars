@@ -144,12 +144,12 @@ function show_didactitiel() {
 			padding: 15px;
 		}
 		h2 {
-			color: #444;
+			color: var(--grey-3);
 		}
 	}
 	.description {
 		font-size: 15px;
-		color: #555;
+		color: var(--grey-4);
 	}
 	img {
 		width: 90px;

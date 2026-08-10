@@ -37,7 +37,7 @@ defineProps<{
 	.icon {
 		font-size: 66px;
 		padding-top: 12px;
-		color: #666;
+		color: var(--grey-5);
 	}
 	.name {
 		text-overflow: ellipsis;

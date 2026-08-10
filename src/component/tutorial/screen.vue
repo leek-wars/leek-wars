@@ -40,7 +40,7 @@ const extended = ref(false)
 		text-align: center;
 		font-size: 18px;
 		font-weight: 300;
-		color: #555;
+		color: var(--grey-4);
 		font-style: italic;
 		padding: 5px;
 	}

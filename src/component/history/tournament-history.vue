@@ -35,7 +35,7 @@ defineProps<{
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		background: #ddd;
+		background: var(--grey-12);
 		&:hover .foreground {
 			background: #7772;
 		}
@@ -79,7 +79,7 @@ defineProps<{
 	}
 
 	body.dark .tournament {
-		background: #444;
+		background: var(--grey-3);
 		.win {
 			background: #3c651b;
 		}

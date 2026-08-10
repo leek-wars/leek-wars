@@ -642,7 +642,7 @@
 				right: -5px;
 				background: var(--pure-white);
 				padding: 2px 4px;
-				border: 1px solid #aaa;
+				border: 1px solid var(--grey-9);
 				border-radius: 4px;
 				font-size: 12px;
 			}

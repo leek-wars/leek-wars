@@ -81,7 +81,7 @@
 		padding: 20px;
 		i {
 			font-size: 100px;
-			color: #ccc;
+			color: var(--grey-11);
 		}
 	}
 	.faults {
@@ -91,7 +91,7 @@
 		display: block;
 		padding: 8px;
 		padding-bottom: 4px;
-		border: 1px solid #ddd;
+		border: 1px solid var(--grey-12);
 		border-radius: 2px;
 		margin-bottom: 10px;
 	}
@@ -104,7 +104,7 @@
 		margin-bottom: 10px;
 	}
 	.faults .fault.selected {
-		border: 2px solid #ddd;
+		border: 2px solid var(--grey-12);
 		opacity: 1;
 	}
 	.faults .fault img {
@@ -128,7 +128,7 @@
 		}
 	}
 	.faults .fault .reporter {
-		color: #666;
+		color: var(--grey-5);
 		font-size: 14px;
 	}
 	.title {
@@ -137,7 +137,7 @@
 		text-transform: uppercase;
 		margin-top: -2px;
 		font-size: 14px;
-		color: #555;
+		color: var(--grey-4);
 		margin-bottom: 8px;
 	}
 	.warning {
@@ -162,7 +162,7 @@
 	}
 	.desc {
 		font-weight: normal;
-		color: #555;
+		color: var(--grey-4);
 		white-space: normal;
 	}
 	.details {
@@ -175,7 +175,7 @@
 	.says {
 		max-height: 150px;
 		overflow-y: auto;
-		border: 1px solid #ddd;
+		border: 1px solid var(--grey-12);
 		padding: 4px;
 		margin: 4px 0;
 	}
@@ -212,7 +212,7 @@
 		margin-top: 6px;
 		text-align: justify;
 		.text {
-			color: #555;
+			color: var(--grey-4);
 		}
 	}
 	.warning-message {

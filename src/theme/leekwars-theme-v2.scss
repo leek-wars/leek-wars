@@ -53,6 +53,32 @@ body {
 	--page-bar-tab-background: rgba(0, 0, 0, 0.3);
 	--page-bar-tab-background-hover: rgba(0, 0, 0, 0.6);
 
+	/* Échelle de gris : inventaire, pas design.
+	 *
+	 * Le site utilise aujourd'hui douze gris différents, écrits en dur, pour
+	 * trois rôles seulement (encre secondaire, bordure, fond). On les sort ici
+	 * un par un, à valeur identique, pour ne rien changer au rendu actuel et
+	 * avoir enfin la liste complète en un seul endroit.
+	 *
+	 * C'est volontairement nommé par teinte et non par rôle : ces variables
+	 * sont un état de transition. Le thème v3 les fera converger vers ses
+	 * propres rôles (une encre secondaire, une bordure), et cette échelle
+	 * disparaîtra à ce moment-là. Pour du code neuf, utiliser les variables de
+	 * rôle (--text-color-secondary, --border) et pas cette échelle. */
+	--grey-1: #222;
+	--grey-2: #333;
+	--grey-3: #444;
+	--grey-4: #555;
+	--grey-5: #666;
+	--grey-6: #777;
+	--grey-7: #888;
+	--grey-8: #999;
+	--grey-9: #aaa;
+	--grey-10: #bbb;
+	--grey-11: #ccc;
+	--grey-12: #ddd;
+	--grey-13: #eee;
+
 	/* Couleurs sémantiques. Elles existaient en dur dans une trentaine de
 	   composants, sous quatre rouges et trois verts différents. */
 	--success: #4caf50;

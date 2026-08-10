@@ -352,7 +352,7 @@ onMounted(() => {
 		}
 		.role {
 			font-style: italic;
-			color: #666;
+			color: var(--grey-5);
 			margin-top: 4px;
 			font-weight: 500;
 		}
@@ -450,7 +450,7 @@ onMounted(() => {
 		background: #000;
 		border-color: #000;
 		color: #fff;
-		&:hover { background: #222; }
+		&:hover { background: var(--grey-1); }
 	}
 	.social-btn.instagram {
 		background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);

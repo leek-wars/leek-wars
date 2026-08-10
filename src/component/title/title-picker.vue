@@ -213,7 +213,7 @@ defineExpose({ getTitle })
 	color: rgb(242, 97, 255);
 }
 .rarity {
-	color: #999;
+	color: var(--grey-8);
 	font-size: 13px;
 	padding-left: 20px;
 }

@@ -526,7 +526,7 @@
 		flex-wrap: wrap;
 		input[type="date"] {
 			padding: 8px 12px;
-			border: 1px solid #ccc;
+			border: 1px solid var(--grey-11);
 			border-radius: 4px;
 			font-size: 14px;
 		}
@@ -550,12 +550,12 @@
 		}
 	}
 	.flow-container {
-		border: 1px solid #eee;
+		border: 1px solid var(--grey-13);
 		border-radius: 8px;
 		overflow: hidden;
 	}
 	body.dark .flow-container {
-		border-color: #444;
+		border-color: var(--grey-3);
 	}
 	.flow-node {
 		background: white;
@@ -597,12 +597,12 @@
 		}
 		.node-stats {
 			font-size: 13px;
-			color: #666;
+			color: var(--grey-5);
 			white-space: nowrap;
 		}
 		.node-duration {
 			font-size: 13px;
-			color: #666;
+			color: var(--grey-5);
 			display: flex;
 			align-items: center;
 			gap: 2px;
@@ -611,17 +611,17 @@
 	}
 	body.dark .flow-node {
 		background: #2a2a2a;
-		color: #eee;
+		color: var(--grey-13);
 		&.root {
 			background: #1a3a5c;
 		}
-		.node-stats { color: #aaa; }
-		.node-ring circle:first-child { stroke: #444; }
+		.node-stats { color: var(--grey-9); }
+		.node-ring circle:first-child { stroke: var(--grey-3); }
 	}
 	.empty {
 		padding: 40px;
 		text-align: center;
-		color: #888;
+		color: var(--grey-7);
 	}
 
 	// Line chart

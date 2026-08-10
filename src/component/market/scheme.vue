@@ -200,7 +200,7 @@ const item_present = computed(() => items.value.map(item => {
 				bottom: 2px;
 				left: 2px;
 				font-size: 11px;
-				color: #555;
+				color: var(--grey-4);
 				opacity: 0.6;
 			}
 		}
@@ -238,7 +238,7 @@ const item_present = computed(() => items.value.map(item => {
 	margin: -2px;
 	z-index: 2;
 	background: var(--pure-white);
-	border: 1px solid #aaa;
+	border: 1px solid var(--grey-9);
 	border-radius: 100%;
 	box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
 	&.arrow {

@@ -214,8 +214,8 @@
 	display: flex;
 	align-items: center;
 	&.dark {
-		background-color: #222;
-		color: #eee;
+		background-color: var(--grey-1);
+		color: var(--grey-13);
 	}
 	& > * {
 		flex: 1;
@@ -255,7 +255,7 @@
 .details .bar-wrapper {
 	flex-basis: 200px;
 	height: 8px;
-	border: 1px solid #999;
+	border: 1px solid var(--grey-8);
 	margin: 0 6px;
 	border-radius: 3px;
 }

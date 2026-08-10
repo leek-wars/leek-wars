@@ -1413,8 +1413,8 @@
 	}
 	.lateral-column {
 		flex: 220px 0 0;
-		background: #333;
-		color: #bbb;
+		background: var(--grey-2);
+		color: var(--grey-10);
 		display: flex;
 		flex-direction: column;
 	}
@@ -1423,7 +1423,7 @@
 		color: white;
 		text-transform: uppercase;
 		font-size: 16px;
-		background: #555;
+		background: var(--grey-4);
 		display: block;
 	}
 	.items {
@@ -1435,14 +1435,14 @@
 		position: relative;
 	}
 	.item:hover {
-		background: #222;
+		background: var(--grey-1);
 	}
 	.item.selected {
 		background: var(--primary);
 		color: white;
 	}
 	.lateral-column .add {
-		background: #444;
+		background: var(--grey-3);
 	}
 	.lateral-column .item {
 		display: flex;
@@ -1565,7 +1565,7 @@
 		color: red;
 		background: white;
 		border-radius: 50%;
-		border-bottom: 2px solid #aaa;
+		border-bottom: 2px solid var(--grey-9);
 		display: inline-block;
 		vertical-align: top;
 		padding: 1px 7px;
@@ -1630,7 +1630,7 @@
 		vertical-align: bottom;
 	}
 	.item.leek .bot, .item.scenario .base {
-		background: #777;
+		background: var(--grey-6);
 		color: white;
 		border-radius: 4px;
 		padding: 0 4px;
@@ -1720,7 +1720,7 @@
 				&[contenteditable="true"] {
 					border: 1px solid var(--border);
 				&:hover {
-					border: 1px solid #777;
+					border: 1px solid var(--grey-6);
 				}
 				}
 			}
@@ -1804,7 +1804,7 @@
 		background: transparent;
 	}
 	.map .cell:not(.disabled).obstacle {
-		background: #666;
+		background: var(--grey-5);
 	}
 	.map .cell:not(.disabled).team1 {
 		background: blue;
@@ -1823,7 +1823,7 @@
 		margin: 0 3px;
 	}
 	.map-column .instructions {
-		color: #aaa;
+		color: var(--grey-9);
 		padding-left: 20px;
 		margin-top: -20px;
 	}
@@ -1866,14 +1866,14 @@
 			}
 			.count {
 				font-size: 20px;
-				color: #555;
+				color: var(--grey-4);
 				vertical-align: top;
 				padding-top: 10px;
 				display: inline-block;
 				font-weight: bold;
 			}
 			i {
-				color: #555;
+				color: var(--grey-4);
 				font-size: 42px;
 			}
 			&.selected {
@@ -1914,7 +1914,7 @@
 			padding: 6px;
 			cursor: pointer;
 			border-radius: 4px;
-			border: 1px solid #ccc;
+			border: 1px solid var(--grey-11);
 			&:hover {
 				background: white;
 				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
@@ -1933,7 +1933,7 @@
 		display: inline-flex;
 		width: 65px;
 		height: 87px;
-		border: 2px dashed #777;
+		border: 2px dashed var(--grey-6);
 		margin-top: 10px;
 		margin-left: -30px;
 		vertical-align: top;

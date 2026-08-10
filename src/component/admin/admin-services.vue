@@ -58,7 +58,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 		padding: 10px;
 		vertical-align: top;
 		font-size: 20px;
-		color: #ccc;
+		color: var(--grey-11);
 		margin-bottom: 10px
 	}
 	.service .module {
@@ -75,7 +75,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 	}
 	.service .label {
 		color: white;
-		background: #999;
+		background: var(--grey-8);
 		border-radius: 2px;
 		padding: 2px 5px;
 		font-size: 12px;

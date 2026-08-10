@@ -37,6 +37,6 @@ function click(e: Event) {
 		stroke-dasharray: 5.5;
 	}
 	.fight:not(.no-fight) {
-		fill: #777;
+		fill: var(--grey-6);
 	}
 </style>

@@ -175,7 +175,7 @@ function disable() {
 		max-width: 120px;
 	}
 	.code::-webkit-input-placeholder {
-		color: #ddd;
+		color: var(--grey-12);
 	}
 	.secret {
 		margin: 5px 0;

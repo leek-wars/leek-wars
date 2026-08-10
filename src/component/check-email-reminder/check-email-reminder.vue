@@ -230,7 +230,7 @@ function useProvider(provider: 'github' | 'google') {
 		}
 		&.google {
 			background: #fff;
-			color: #444;
+			color: var(--grey-3);
 			border: 1px solid #dadce0;
 			&:hover { background: #f7f7f7; }
 		}

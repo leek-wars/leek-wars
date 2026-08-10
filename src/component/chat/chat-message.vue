@@ -181,7 +181,7 @@ function toggleReaction(emoji: string) {
 		}
 		i.v-icon {
 			font-size: 18px;
-			color: #aaa;
+			color: var(--grey-9);
 		}
 	}
 	.add {

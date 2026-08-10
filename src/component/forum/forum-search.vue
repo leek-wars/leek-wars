@@ -322,11 +322,11 @@
 		font-weight: bold;
 	}
 	.info {
-		color: #aaa;
+		color: var(--grey-9);
 		margin-bottom: 10px;
 	}
 	.result .dark {
-		color: #555;
+		color: var(--grey-4);
 	}
 	.pagination {
 		text-align: center;
@@ -334,7 +334,7 @@
 	.no-results {
 		text-align: center;
 		padding: 10px;
-		color: #999;
+		color: var(--grey-8);
 		img {
 			margin-bottom: 8px;
 		}
@@ -371,9 +371,9 @@
 		}
 	}
 	.vote.up.zero, .vote.down.zero {
-		color: #555;
+		color: var(--grey-4);
 		i {
-			color: #555;
+			color: var(--grey-4);
 		}
 	}
 </style>

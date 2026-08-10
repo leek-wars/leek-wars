@@ -94,8 +94,8 @@ function click(square: Square) {
 		width: 24px;
 		border-radius: 50%;
 		text-align: center;
-		border-bottom: 2px solid #ccc;
-		border-right: 2px solid #ccc;
+		border-bottom: 2px solid var(--grey-11);
+		border-right: 2px solid var(--grey-11);
 		left: 2px;
 		top: 2px;
 		i {

@@ -279,7 +279,7 @@ const capital = computed(() => props.totalCapital - usedCapital.value)
 		padding: 5px 10px;
 	}
 	.capital.zero {
-		background: #888;
+		background: var(--grey-7);
 	}
 	.characteristics {
 		display: grid;
@@ -287,7 +287,7 @@ const capital = computed(() => props.totalCapital - usedCapital.value)
 		padding: 20px 0;
 	}
 	.sup {
-		color: #555;
+		color: var(--grey-4);
 	}
 	.content img {
 		width: 40px;

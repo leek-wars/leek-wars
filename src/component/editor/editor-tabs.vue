@@ -262,7 +262,7 @@
 		}
 	}
 	.tab .v-icon {
-		color: #eee;
+		color: var(--grey-13);
 		font-size: 20px;
 		margin-right: 6px;
 		&.hidden::before {

@@ -40,6 +40,6 @@ const farmer = computed(() => route.params.farmer)
 <style lang="scss" scoped>
 	h2 {
 		font-size: 18px;
-		color: #333;
+		color: var(--grey-2);
 	}
 </style>

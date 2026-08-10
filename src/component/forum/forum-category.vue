@@ -913,9 +913,9 @@ body.dark .topic .seen img.seen {
 			}
 		}
 		.vote.up.zero, .vote.down.zero {
-			color: #555;
+			color: var(--grey-4);
 			i {
-				color: #555;
+				color: var(--grey-4);
 			}
 		}
 	}
@@ -943,7 +943,7 @@ body.dark .topic .seen img.seen {
 
 .topic .farmer.deleted {
 	font-style: italic;
-	color: #aaa;
+	color: var(--grey-9);
 }
 .topic .num-views {
 	flex: 0 0 100px;
@@ -1016,7 +1016,7 @@ body.dark .topic .seen img.seen {
 	cursor: pointer;
 }
 .grey {
-	color: #888;
+	color: var(--grey-7);
 }
 
 .breadcrumb-sort {
@@ -1045,7 +1045,7 @@ body.dark .topic .seen img.seen {
 	}
 	.empty-subtitle {
 		font-size: 14px;
-		color: #888;
+		color: var(--grey-7);
 	}
 }
 .filter-list {

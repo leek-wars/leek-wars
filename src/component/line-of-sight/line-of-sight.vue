@@ -91,7 +91,7 @@ function clickCell(x: number, y: number) {
 	}
 	.cell {
 		aspect-ratio: 1;
-		background: #ddd;
+		background: var(--grey-12);
 		margin: 0.5px;
 		cursor: pointer;
 		flex: 1;
