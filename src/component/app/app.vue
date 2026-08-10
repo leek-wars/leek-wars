@@ -491,6 +491,18 @@
 			document.body.classList.remove('xp')
 	}, { immediate: true })
 
+	// Ancien design : le nouveau thème est le défaut, l'ancien est une option.
+	// Sa feuille n'est chargée qu'à la demande, comme celle du thème XP, donc
+	// personne ne paye pour un thème qu'il n'a pas activé.
+	watch(() => LeekWars.legacyTheme, () => {
+		if (LeekWars.legacyTheme) {
+			import('@/theme/leekwars-theme-v2.scss')
+			document.body.classList.add('v2')
+		} else {
+			document.body.classList.remove('v2')
+		}
+	}, { immediate: true })
+
 	// Flags de layout (large/flex/box/footer/lightBar) appliqués en IMPÉRATIF, hors du
 	// rendu de app.vue. Crucial : si app.vue lit ces flags dans son template, toute
 	// nav (resetLayout en beforeEach, puis onMounted de la page) re-render app.vue et

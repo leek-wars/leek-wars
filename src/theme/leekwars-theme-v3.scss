@@ -1,0 +1,153 @@
+/* Thème v3 : Leek Wars 3.0, le nouveau design (#1101).
+ *
+ * Même jeu de variables que leekwars-theme-v2.scss, autres valeurs. C'est tout
+ * ce que la bascule demande : les composants ne connaissent que les rôles, pas
+ * les couleurs. Toute variable ajoutée ici doit exister dans le v2, et
+ * inversement, sinon un des deux thèmes se retrouve avec un trou.
+ *
+ * Les valeurs viennent du projet Claude Design « Leek Wars redesign ». Le
+ * mockup est sombre par défaut ; ici le bloc `body` porte le thème clair
+ * (parchemin) et `body.dark` le thème sombre (néon sur presque noir), pour
+ * garder la cascade du site.
+ *
+ * Deux partis pris du mockup qui se lisent directement dans les valeurs :
+ * les angles sont francs (rayons à 0) et il n'y a pas d'ombre floue, la
+ * profondeur vient des bordures.
+ */
+
+body {
+	/* Marque */
+	--primary: #1F8A3B;
+
+	/* Encre et fonds */
+	--pure-white: #FBF7E8;
+	--pure-black: #0E1410;
+	--white: #FBF7E8;
+	--black: #0E1410;
+	--background: #F2EEDF;
+	--background-secondary: #F7F2DF;
+	--background-disabled: #DCD6C0;
+	--background-header: #FBF7E8;
+	--background-outer: #E7E1CC;
+	--border: rgba(14, 20, 16, 0.12);
+	--text-color: #0E1410;
+	--text-color-secondary: #4A5847;
+	--type-color: #1A7AA0;
+	--link-color: #1A7AA0;
+	--selection-background: #1F8A3B;
+	--selection-color: #FBF7E8;
+
+	/* Angles francs. Seul --radius-tiny garde 2 px, l'adoucissement que le
+	   mockup s'autorise sur les plus petits éléments. */
+	--radius-tiny: 2px;
+	--radius-small: 0;
+	--radius: 0;
+	--radius-medium: 0;
+	--radius-large: 0;
+	--radius-pill: 0;
+
+	/* Chrome : panneaux. Pas d'ombre portée, la profondeur vient du trait. */
+	--panel-background: var(--background-secondary);
+	--panel-header-background: #FBF7E8;
+	--panel-header-color: #0E1410;
+	--panel-header-height: 36px;
+	--panel-shadow: none;
+	--elevation-1: none;
+
+	/* Chrome : barre de page et ses onglets */
+	--page-bar-color: #0E1410;
+	--page-bar-tab-background: rgba(14, 20, 16, 0.06);
+	--page-bar-tab-background-hover: rgba(14, 20, 16, 0.12);
+
+	/* Échelle de gris, du plus foncé au plus clair. Le v2 la laissait
+	   identique en sombre, ce qui rendait plusieurs textes illisibles ; ici
+	   elle s'inverse (cf. bloc .dark), donc un composant qui prend --grey-4
+	   pour du texte secondaire reste lisible dans les deux thèmes. */
+	--grey-1: #0E1410;
+	--grey-2: #1E2A20;
+	--grey-3: #2C3A2E;
+	--grey-4: #4A5847;
+	--grey-5: #5A6857;
+	--grey-6: #6A7867;
+	--grey-7: #7A8676;
+	--grey-8: #8A9686;
+	--grey-9: #9AA696;
+	--grey-10: #AAB6A6;
+	--grey-11: #C6CFBC;
+	--grey-12: #DCD6C0;
+	--grey-13: #F2ECD6;
+
+	/* Couleurs sémantiques */
+	--success: #1F8A3B;
+	--warning: #C77A0E;
+	--error: #C2382A;
+	--info: #1A7AA0;
+
+	/* Résultat d'un combat */
+	--result-win: #1F8A3B;
+	--result-win-text: #146128;
+	--result-win-background: rgba(31, 138, 59, 0.15);
+	--result-defeat: #C2382A;
+	--result-defeat-text: #8E2419;
+	--result-defeat-background: rgba(194, 56, 42, 0.15);
+	--result-draw: var(--text-color-secondary);
+	--result-draw-background: rgba(122, 134, 118, 0.15);
+
+	&.dark {
+		--primary: #7CFF6B;
+
+		--pure-white: #0B0F0B;
+		--pure-black: #E8F0E6;
+		--white: #0E1316;
+		--black: #E8F0E6;
+		--background: #0B0F0B;
+		--background-secondary: #0E1316;
+		--background-disabled: #2A2F2C;
+		--background-header: #11161A;
+		--background-outer: #07090A;
+		--border: rgba(255, 255, 255, 0.08);
+		--text-color: #E8F0E6;
+		--text-color-secondary: #A8B4A4;
+		--type-color: #5CE0FF;
+		--link-color: #5CE0FF;
+		--selection-background: #7CFF6B;
+		--selection-color: #0B0F0B;
+
+		--panel-background: var(--background-secondary);
+		--panel-header-background: #11161A;
+		--panel-header-color: #E8F0E6;
+
+		--page-bar-color: #E8F0E6;
+		--page-bar-tab-background: rgba(255, 255, 255, 0.06);
+		--page-bar-tab-background-hover: rgba(255, 255, 255, 0.12);
+
+		/* Échelle inversée : --grey-1 reste « l'encre la plus contrastée »,
+		   ce qui en sombre veut dire la plus claire. */
+		--grey-1: #E8F0E6;
+		--grey-2: #D6E0D2;
+		--grey-3: #C2CEBE;
+		--grey-4: #A8B4A4;
+		--grey-5: #98A494;
+		--grey-6: #889483;
+		--grey-7: #7A8676;
+		--grey-8: #6B7A66;
+		--grey-9: #5C6B58;
+		--grey-10: #4D5A4A;
+		--grey-11: #3A453A;
+		--grey-12: #262E26;
+		--grey-13: #131A1E;
+
+		--success: #7CFF6B;
+		--warning: #FFB23A;
+		--error: #FF5040;
+		--info: #5CE0FF;
+
+		--result-win: #7CFF6B;
+		--result-win-text: #A8E89C;
+		--result-win-background: rgba(124, 255, 107, 0.15);
+		--result-defeat: #FF5040;
+		--result-defeat-text: #FFB0A8;
+		--result-defeat-background: rgba(255, 80, 64, 0.15);
+		--result-draw-background: rgba(168, 180, 164, 0.12);
+	}
+}

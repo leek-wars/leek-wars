@@ -80,6 +80,7 @@
 	"auto": "Automático",
 	"theme": "Tema",
 	"modern_theme": "Tema moderno (beta)",
+	"legacy_theme": "Design antigo",
 	"xp_theme": "Tema XP",
 	"purchase_history": "Histórico de compras"
 }

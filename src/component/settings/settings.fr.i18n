@@ -86,6 +86,7 @@
 	"dark": "Sombre",
 	"auto": "Auto",
 	"modern_theme": "Thème moderne (bêta)",
+	"legacy_theme": "Ancien design",
 	"xp_theme": "Thème XP",
 	"purchase_history": "Historique des achats"
 }

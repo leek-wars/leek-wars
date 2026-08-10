@@ -136,6 +136,10 @@
 						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
 					</div>
 					<div class="setting">
+						<div>{{ $t('legacy_theme') }}</div>
+						<div><v-switch v-model="LeekWars.legacyTheme" hide-details /></div>
+					</div>
+					<div class="setting">
 						<div>{{ $t('modern_theme') }}</div>
 						<div><v-switch v-model="modernTheme" hide-details /></div>
 					</div>
@@ -429,6 +433,10 @@
 
 	watch(modernTheme, () => {
 		LeekWars.themeSetting = modernTheme.value ? 'xp' : 'auto'
+	})
+
+	watch(() => LeekWars.legacyTheme, () => {
+		localStorage.setItem('design', LeekWars.legacyTheme ? 'v2' : 'v3')
 	})
 
 	watch(notifsPopups, () => {

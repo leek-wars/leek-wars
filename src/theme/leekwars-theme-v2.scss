@@ -1,18 +1,20 @@
-/* Thème v2 : le design actuel de Leek Wars, en jetons.
+/* Thème v2 : l'ancien design de Leek Wars, en jetons.
  *
- * Ce fichier est la seule source des valeurs du thème. Tout ce qui est écrit en
- * dur dans un composant (couleur, rayon, ombre) doit finir ici sous forme de
- * variable CSS. C'est ce qui rendra le thème v3 possible sans retoucher les
- * composants : il suffira de redéfinir ces mêmes variables.
+ * Ce n'est plus le thème par défaut : c'est une option, activable dans les
+ * réglages. Le défaut est leekwars-theme-v3.scss, charge par global.scss ;
+ * ce fichier n'est charge qu'a la demande et vient repeindre par-dessus.
  *
- * Les variables sont posées sur `body` et non `:root`, comme avant, parce que
- * le mode sombre est porté par `body.dark` et doit garder la même cascade.
+ * D'ou le selecteur `html body.v2` : il doit gagner sur `body.dark` du v3 sans
+ * dependre de l'ordre de chargement, et perdre face a `html body.v2.dark`.
+ *
+ * Toute variable ajoutée ici doit exister dans le v3, et inversement, sinon un
+ * des deux thèmes se retrouve avec un trou.
  *
  * Convention : une variable ne décrit jamais une couleur ("vert"), elle décrit
  * un rôle ("fond d'en-tête de panneau"). Sinon le v3 hérite de noms qui mentent.
  */
 
-body {
+html body.v2 {
 	/* Marque */
 	--primary: #5fad1b;
 
