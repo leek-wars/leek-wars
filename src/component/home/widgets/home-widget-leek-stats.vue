@@ -177,9 +177,9 @@
 		font-weight: bold;
 		font-size: 16px;
 	}
-	.wdl-cell .v.win { color: var(--primary); }
-	.wdl-cell .v.draw { color: var(--text-color-secondary); }
-	.wdl-cell .v.lose { color: #c0392b; }
+	.wdl-cell .v.win { color: var(--result-win-text); }
+	.wdl-cell .v.draw { color: var(--result-draw); }
+	.wdl-cell .v.lose { color: var(--result-defeat-text); }
 	.wdl-cell .l {
 		font-size: 11px;
 		color: var(--text-color-secondary);
