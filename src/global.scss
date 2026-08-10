@@ -2,6 +2,9 @@
 // consomme ses variables. L'ancien thème (leekwars-theme-v2.scss) est une
 // option, chargée à la demande depuis app.vue.
 @use './theme/leekwars-theme-v3.scss';
+// Formes de la coquille propres au nouveau design (barre du haut, menu,
+// panneau social, pied de page). Encapsulé dans body:not(.v2).
+@use './theme/leekwars-shell-v3.scss';
 
 // Roboto variable font (self-hosted)
 @font-face {
