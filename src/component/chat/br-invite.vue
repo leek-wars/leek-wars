@@ -91,7 +91,7 @@ function changeMode() {
 			background: var(--primary);
 			color: white;
 			padding: 1px 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			cursor: pointer;
 			font-size: 12px;
 			&:hover {

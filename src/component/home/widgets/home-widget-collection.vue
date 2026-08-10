@@ -109,7 +109,7 @@
 	}
 	.bar {
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		height: 10px;
 		overflow: hidden;
 	}

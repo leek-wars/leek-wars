@@ -340,7 +340,7 @@
 		align-items: center;
 		gap: 8px;
 		background: var(--background);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 10px 12px;
 		margin-bottom: 12px;
 	}
@@ -423,7 +423,7 @@
 		align-items: center;
 		gap: 8px;
 		padding: 6px 8px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 	}
 	.config-option:hover {

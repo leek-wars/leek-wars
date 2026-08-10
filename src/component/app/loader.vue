@@ -48,7 +48,7 @@ const w = computed(() => Math.max(3, s.value / 14))
 	display: inline-block;
 	height: 18px;
 	border: 1px solid #686868;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	background: #fff;
 	box-shadow: inset 0 0 1px rgba(104, 104, 104, 1);
 	overflow: hidden;
@@ -56,7 +56,7 @@ const w = computed(() => Math.max(3, s.value / 14))
 }
 .xp-progress-bar {
 	height: 100%;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	background: repeating-linear-gradient(
 		to right,
 		#fff 0px, #fff 2px,

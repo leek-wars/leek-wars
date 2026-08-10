@@ -128,7 +128,7 @@
 	padding: 15px;
 	.banner {
 		width: 100%;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		margin-bottom: 15px;
 	}
 	.title {
@@ -145,7 +145,7 @@
 			display: flex;
 			align-items: center;
 			padding: 0 6px;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.vote i {
 			font-size: 18px;
@@ -162,7 +162,7 @@
 		gap: 6px;
 		margin-top: 20px;
 		padding: 8px 16px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		color: var(--text-color);
 		font-weight: 500;

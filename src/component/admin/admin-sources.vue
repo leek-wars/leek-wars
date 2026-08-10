@@ -503,7 +503,7 @@
 	.retention-card {
 		background: var(--panel-bg, #f7f7f7);
 		border: 1px solid rgba(0,0,0,0.05);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		padding: 10px 15px;
 		text-align: center;
 		.retention-label {
@@ -774,12 +774,12 @@
 			height: 100%;
 			display: flex;
 			align-items: flex-end;
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			background: var(--background-disabled, #e0e0e0);
 			overflow: hidden;
 			.fill {
 				width: 100%;
-				border-radius: 2px;
+				border-radius: var(--radius-tiny);
 			}
 			&.a .fill {
 				background: #4caf50;

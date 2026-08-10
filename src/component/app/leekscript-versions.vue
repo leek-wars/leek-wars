@@ -104,7 +104,7 @@ const strict = defineModel<boolean>("strict", { required: true })
 		background: var(--primary);
 		color: white;
 		padding: 0 6px;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		margin-left: 4px;
 	}
 	.link {

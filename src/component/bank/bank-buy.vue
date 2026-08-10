@@ -298,7 +298,7 @@ watch(() => LeekWars.darkMode, () => {
 		margin: 10px 0;
 		font-size: 16px;
 		font-weight: 600;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: #7b1fa2;
 		color: white;
 	}

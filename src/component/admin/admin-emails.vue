@@ -210,7 +210,7 @@
 		padding: 10px;
 		background: #fff3cd;
 		border: 1px solid #ffc107;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		display: flex;
 		flex-direction: column;
 		gap: 8px;

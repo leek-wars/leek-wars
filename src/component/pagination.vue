@@ -41,7 +41,7 @@ const page = computed(() => props.query ? '&page=' : '/page-')
 		vertical-align: middle;
 		font-size: 18px;
 		display: inline-block;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		&:hover {
 			background: var(--border);
 		}

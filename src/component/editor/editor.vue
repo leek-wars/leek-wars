@@ -1872,7 +1872,7 @@
 			color: var(--text-color-secondary);
 			padding: 6px 10px;
 			background: rgba(0, 0, 0, 0.04);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			.v-icon { flex-shrink: 0; margin-top: 1px; }
 		}
 		.clone-auth-btn {
@@ -1968,7 +1968,7 @@
 			}
 			.storage-bar {
 				height: 8px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				background: var(--border);
 				overflow: hidden;
 			}
@@ -2098,7 +2098,7 @@
 			.count {
 				background: rgba(128, 128, 128, 0.25);
 				padding: 1px 6px;
-				border-radius: 8px;
+				border-radius: var(--radius-large);
 				font-size: 11px;
 				line-height: 14px;
 			}
@@ -2168,7 +2168,7 @@
 			background: var(--primary);
 			color: white;
 			padding: 0 6px;
-			border-radius: 20px;
+			border-radius: var(--radius-pill);
 			margin-left: 4px;
 		}
 		.link {

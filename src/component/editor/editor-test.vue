@@ -1632,7 +1632,7 @@
 	.item.leek .bot, .item.scenario .base {
 		background: var(--grey-6);
 		color: white;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 0 4px;
 		flex-shrink: 0;
 	}
@@ -1714,7 +1714,7 @@
 				display: inline-block;
 				font-weight: bold;
 				padding: 2px 4px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				min-width: 120px;
 				margin-right: 10px;
 				&[contenteditable="true"] {
@@ -1795,7 +1795,7 @@
 		border: 1px solid var(--border);
 		margin: 2px;
 		cursor: pointer;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		background: var(--pure-white);
 		vertical-align: top;
 	}
@@ -1913,7 +1913,7 @@
 		& > .ai {
 			padding: 6px;
 			cursor: pointer;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			border: 1px solid var(--grey-11);
 			&:hover {
 				background: white;
@@ -1938,7 +1938,7 @@
 		margin-left: -30px;
 		vertical-align: top;
 		background: var(--pure-white);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 	}
 </style>

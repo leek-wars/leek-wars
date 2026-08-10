@@ -160,7 +160,7 @@
 		padding: 5px;
 		cursor: pointer;
 		border: 1px solid var(--grey-12);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		&:hover {
 			background: white;
 		}

@@ -142,7 +142,7 @@ function readNotification(notification: Notification) {
 	.app-bar .menu-button .bar {
 		width: 20px;
 		height: 2px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		margin: 5px 0;
 		background: white;
 		transition: all ease 400ms;

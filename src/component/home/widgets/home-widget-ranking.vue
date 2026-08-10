@@ -58,7 +58,7 @@
 		align-items: center;
 		gap: 10px;
 		padding: 6px 8px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		text-decoration: none;
 		color: var(--text-color);
 	}
@@ -68,7 +68,7 @@
 	.avatar {
 		width: 34px;
 		height: 34px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		flex-shrink: 0;
 	}
 	.info {

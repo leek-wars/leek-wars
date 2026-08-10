@@ -427,7 +427,7 @@ watch(sort_by, () => {
 		height: 14px;
 		position: relative;
 		background: var(--pure-white);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		margin: 5px 0;
 		border: 1px solid var(--border);
 		.bar {
@@ -435,7 +435,7 @@ watch(sort_by, () => {
 			width: 0;
 			background: #30bb00;
 			position: absolute;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.bar.blue {
 			background: #008fbb;
@@ -460,7 +460,7 @@ watch(sort_by, () => {
 		height: 12px;
 		position: relative;
 		background: var(--pure-white);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		flex: 1;
 		margin-top: 12px;
 		border: 1px solid var(--border);
@@ -505,7 +505,7 @@ watch(sort_by, () => {
 		.points {
 			border: 1px solid var(--grey-9);
 			padding: 1px 4px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			margin-left: 5px;
 			font-weight: 500;
 		}
@@ -522,12 +522,12 @@ watch(sort_by, () => {
 			height: 10px;
 			position: relative;
 			background: white;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			margin-top: 6px;
 			border: 1px solid var(--grey-12);
 			.bar {
 				height: 8px;
-				border-radius: 6px;
+				border-radius: var(--radius-medium);
 				position: absolute;
 				background: #30bb00;
 			}

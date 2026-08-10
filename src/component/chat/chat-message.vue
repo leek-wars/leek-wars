@@ -118,7 +118,7 @@ function toggleReaction(emoji: string) {
 	}
 	.bubble {
 		padding: 3px 7px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: var(--pure-white);
 		position: relative;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.07), 0px 1px 3px 0px rgba(0,0,0,0.06);
@@ -218,7 +218,7 @@ function toggleReaction(emoji: string) {
 		.reaction {
 			background: var(--pure-white);
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.07), 0px 1px 3px 0px rgba(0,0,0,0.06);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 2.5px 5px;
 			border: 1px solid var(--border);
 			color: var(--text-color-secondary);

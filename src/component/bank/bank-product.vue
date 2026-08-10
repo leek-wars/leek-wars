@@ -101,7 +101,7 @@ function onCardClick(event: Event) {
 		font-weight: 600;
 		font-size: 14px;
 		padding: 2px 8px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.x2-label {
 		position: absolute;
@@ -112,7 +112,7 @@ function onCardClick(event: Event) {
 		font-weight: 700;
 		font-size: 14px;
 		padding: 2px 8px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.x2-crystals {
 		color: #7b1fa2;

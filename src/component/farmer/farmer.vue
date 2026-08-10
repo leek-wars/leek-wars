@@ -1445,7 +1445,7 @@
 	.team img {
 		width: 150px;
 		height: 150px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 	}
 	.talent-wrapper {
 		text-align: center;
@@ -1650,7 +1650,7 @@
 		.warning {
 			padding: 5px;
 			background: white;
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			width: 250px;
 			display: inline-block;
 			margin: 6px;
@@ -1789,7 +1789,7 @@
 			flex-wrap: wrap;
 			padding: 12px;
 			margin-bottom: 14px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			background: rgba(90, 194, 0, 0.12);
 			border: 1px solid var(--primary);
 			.ap-text {
@@ -1821,7 +1821,7 @@
 			.ap-claim {
 				cursor: pointer;
 				padding: 8px 18px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				font-weight: 500;
 				color: #fff;
 				background: var(--primary);
@@ -1861,7 +1861,7 @@
 			.req-action {
 				cursor: pointer;
 				padding: 6px 14px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				white-space: nowrap;
 				font-weight: 500;
 				&.accept {

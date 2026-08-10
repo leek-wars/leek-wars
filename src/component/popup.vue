@@ -99,8 +99,8 @@ function close() {
 	font-size: 20px;
 	line-height: 28px;
 	text-align: left;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
+	border-top-left-radius: var(--radius-tiny);
+	border-top-right-radius: var(--radius-tiny);
 	display: flex;
 	.main {
 		flex: 1;
@@ -145,8 +145,8 @@ body.dark .content {
 	background: rgba(15,15,15, 0.95);
 }
 .v-dialog.no-actions .content {
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: var(--radius-small);
+	border-bottom-right-radius: var(--radius-small);
 }
 .actions {
 	height: 40px;

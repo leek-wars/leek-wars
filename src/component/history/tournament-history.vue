@@ -31,7 +31,7 @@ defineProps<{
 		line-height: 42px;
 		font-size: 15px;
 		text-align: center;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -54,12 +54,12 @@ defineProps<{
 		.round {
 			width: 20%;
 			&:first-child {
-				border-top-left-radius: 3px;
-				border-bottom-left-radius: 3px;
+				border-top-left-radius: var(--radius-small);
+				border-bottom-left-radius: var(--radius-small);
 			}
 			&:last-child {
-				border-top-right-radius: 3px;
-				border-bottom-right-radius: 3px;
+				border-top-right-radius: var(--radius-small);
+				border-bottom-right-radius: var(--radius-small);
 			}
 			&.win {
 				background: #b6f182;

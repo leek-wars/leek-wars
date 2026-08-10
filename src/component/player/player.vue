@@ -1140,7 +1140,7 @@
 		height: 14px;
 		position: relative;
 		background: var(--pure-white);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		border: 1px solid var(--border);
 		text-align: left;
 		max-width: 700px;
@@ -1150,7 +1150,7 @@
 			width: 0;
 			background: #30bb00;
 			position: absolute;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			transition: width 1s;
 		}
 	}

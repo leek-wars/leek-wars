@@ -66,7 +66,7 @@
 		align-items: center;
 		gap: 8px;
 		padding: 6px 8px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		text-decoration: none;
 		color: var(--text-color);
 	}

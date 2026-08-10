@@ -302,7 +302,7 @@
 			gap: 8px;
 			border: 1px solid var(--grey-9);
 			padding: 2px 6px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			.avatar {
 				width: 26px;
 				height: 26px;
@@ -312,7 +312,7 @@
 			font-size: 11px;
 			font-weight: bold;
 			padding: 2px 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			background: #e57373;
 			color: white;
 		}
@@ -320,7 +320,7 @@
 			font-size: 11px;
 			font-weight: bold;
 			padding: 2px 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			background: #9e9e9e;
 			color: white;
 			text-transform: uppercase;
@@ -342,7 +342,7 @@
 			font-size: 11px;
 			font-weight: bold;
 			padding: 2px 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			text-transform: uppercase;
 			&.daemon { background: #9c27b0; color: white; }
 			&.worker { background: #ff9800; color: white; }
@@ -358,7 +358,7 @@
 			align-items: center;
 			gap: 3px;
 			padding: 2px 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			background: var(--grey-13);
 			.build-age {
 				opacity: 0.7;

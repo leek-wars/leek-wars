@@ -172,7 +172,7 @@ function useProvider(provider: 'github' | 'google') {
 		padding: 10px 12px;
 		background: rgba(255, 152, 0, 0.12);
 		border-left: 3px solid #ff9800;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 13px;
 		color: var(--text-color);
 		.v-icon {
@@ -215,7 +215,7 @@ function useProvider(provider: 'github' | 'google') {
 		justify-content: center;
 		gap: 8px;
 		padding: 10px 16px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 		font-weight: 500;
 		font-size: 14px;

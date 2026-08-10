@@ -890,7 +890,7 @@ body.dark .topic .seen img.seen {
 		margin-left: 6px;
 		.vote {
 			display: inline-block;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.vote i {
 			vertical-align: bottom;
@@ -984,7 +984,7 @@ body.dark .topic .seen img.seen {
 	color: var(--text-color-secondary);
 	padding: 8px 10px;
 	background: var(--background-secondary);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	margin-top: 10px;
 	display: flex;
 	align-items: center;

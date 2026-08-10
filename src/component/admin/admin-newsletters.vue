@@ -219,7 +219,7 @@
 			margin-top: 12px;
 			padding: 8px 12px;
 			background: var(--background-secondary);
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			font-size: 13px;
 			.stat {
 				display: inline-flex;

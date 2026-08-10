@@ -294,7 +294,7 @@
 		font-size: 12px;
 		color: var(--text-color-secondary);
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 0 5px;
 	}
 	// Metabolisme mesure a cette tentative : information de reglage, donc discret.

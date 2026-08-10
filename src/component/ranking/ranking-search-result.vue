@@ -56,7 +56,7 @@ const description = computed(() => {
 	.result .main {
 		flex: 1;
 		padding: 2px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		cursor: pointer;
 	}
 	.result img {

@@ -160,7 +160,7 @@ function showError(error: ApiError) {
 		}
 		input {
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 10px 12px;
 			background: #fff;
 			color: var(--grey-1);
@@ -210,7 +210,7 @@ function showError(error: ApiError) {
 		justify-content: center;
 		gap: 8px;
 		padding: 10px 16px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 		font-weight: 500;
 		font-size: 14px;

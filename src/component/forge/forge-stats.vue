@@ -96,7 +96,7 @@
 		// Pas de marge horizontale : le liseré des caracs alterees doit toucher le bord
 		// de la carte, sinon il flotte a 4 px et ne se lit plus comme un bord (#622).
 		padding: 4px 0;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		.row {
 			display: flex;

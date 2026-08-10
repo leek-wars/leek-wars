@@ -614,7 +614,7 @@
 		gap: 10px;
 		margin-top: 12px;
 		padding: 8px 12px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: #fff3e0;
 		color: #a04000;
 		.v-icon {
@@ -634,7 +634,7 @@
 			margin: 5px;
 			cursor: pointer;
 			border: 1px solid var(--border);
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			position: relative;
 			.beta {
 				position: absolute;
@@ -643,7 +643,7 @@
 				background: var(--pure-white);
 				padding: 2px 4px;
 				border: 1px solid var(--grey-9);
-				border-radius: 4px;
+				border-radius: var(--radius);
 				font-size: 12px;
 			}
 			.flag {

@@ -272,7 +272,7 @@
 			.quickstart-item {
 				flex: 1 1 200px;
 				background: var(--background-secondary);
-				border-radius: 4px;
+				border-radius: var(--radius);
 				padding: 8px 12px;
 				min-width: 0;
 				.label { color: var(--text-color-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
@@ -288,7 +288,7 @@
 				align-items: center;
 				gap: 12px;
 				border: 1px solid var(--border);
-				border-radius: 4px;
+				border-radius: var(--radius);
 				padding: 10px 12px;
 				background: var(--background);
 				&:hover { border-color: var(--primary); }
@@ -303,7 +303,7 @@
 						gap: 8px;
 						flex-wrap: wrap;
 						.name { font-weight: 500; }
-						.prefix { color: var(--text-color-secondary); font-size: 11px; background: var(--background-secondary); padding: 1px 6px; border-radius: 3px; }
+						.prefix { color: var(--text-color-secondary); font-size: 11px; background: var(--background-secondary); padding: 1px 6px; border-radius: var(--radius-small); }
 					}
 					.key-meta {
 						display: flex;
@@ -326,7 +326,7 @@
 			color: var(--text-color-secondary);
 			background: var(--background-secondary);
 			border: 1px dashed var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 18px;
 		}
 	}
@@ -377,7 +377,7 @@
 			width: 100%;
 			background: var(--background);
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 8px 10px;
 			color: var(--text-color);
 			margin-bottom: 14px;
@@ -394,7 +394,7 @@
 				align-items: center;
 				gap: 10px;
 				border: 1px solid var(--border);
-				border-radius: 4px;
+				border-radius: var(--radius);
 				padding: 10px;
 				cursor: pointer;
 				user-select: none;
@@ -410,7 +410,7 @@
 						align-items: center;
 						gap: 8px;
 						code { font-size: 14px; font-weight: 500; }
-						.scope-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 3px; padding: 1px 5px; font-weight: 600; &.sensible { background: #f5d6d6; color: #a83232; } }
+						.scope-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-radius: var(--radius-small); padding: 1px 5px; font-weight: 600; &.sensible { background: #f5d6d6; color: #a83232; } }
 					}
 					.role-desc { color: var(--text-color-secondary); font-size: 12px; margin-top: 2px; }
 				}
@@ -420,7 +420,7 @@
 					font-size: 12px;
 					white-space: nowrap;
 					padding: 2px 6px;
-					border-radius: 3px;
+					border-radius: var(--radius-small);
 					&:hover { color: var(--text-color); background: var(--background); }
 					.v-icon { font-size: 14px; vertical-align: -2px; }
 				}
@@ -438,7 +438,7 @@
 	}
 	.secret-step {
 		.secret-warning { font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; .v-icon { color: #e8a33d; } }
-		.secret-row code { display: block; word-break: break-all; background: var(--background-secondary); border: 1px solid var(--primary); padding: 10px 12px; border-radius: 4px; font-size: 14px; user-select: all; }
+		.secret-row code { display: block; word-break: break-all; background: var(--background-secondary); border: 1px solid var(--primary); padding: 10px 12px; border-radius: var(--radius); font-size: 14px; user-select: all; }
 		.center { text-align: center; margin-top: 14px; }
 	}
 	.action.disabled { opacity: 0.5; pointer-events: none; }
@@ -450,7 +450,7 @@
 	.endpoints-menu {
 		background: var(--background);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 		width: 300px;
 		.endpoints-menu-header {
@@ -483,7 +483,7 @@
 				.ep-method {
 					font-size: 10px;
 					font-weight: 600;
-					border-radius: 3px;
+					border-radius: var(--radius-small);
 					padding: 0 4px;
 					min-width: 42px;
 					text-align: center;

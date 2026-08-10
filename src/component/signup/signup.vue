@@ -650,7 +650,7 @@
 		background: var(--primary);
 		color: white;
 		padding: 12px 20px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		margin-bottom: 12px;
 		.godfather-avatar {
 			width: 56px;
@@ -973,7 +973,7 @@
 			align-items: center;
 			padding: 6px 8px;
 			border: 2px solid transparent;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			background: rgba(0, 0, 0, 0.05);
 			cursor: pointer;
 			img {

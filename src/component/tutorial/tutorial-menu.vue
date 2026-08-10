@@ -54,7 +54,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 			display: flex;
 			align-items: flex-end;
 			text-decoration: none !important;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
 			overflow: hidden;
 			.bottom {
@@ -65,8 +65,8 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				flex: 1;
 				color: white;
 				text-align: left;
-				border-bottom-left-radius: 4px;
-				border-bottom-right-radius: 4px;
+				border-bottom-left-radius: var(--radius);
+				border-bottom-right-radius: var(--radius);
 				margin-bottom: -28px;
 				transition: margin-bottom 200ms ease;
 				.name {

@@ -849,7 +849,7 @@ const t = useNamespacedT('market')
 		background: var(--primary);
 		color: white;
 		padding: 4px 8px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		margin: 3px 1px;
 		display: inline-block;
 	}
@@ -907,7 +907,7 @@ const t = useNamespacedT('market')
 		bottom: -5px;
 		right: -5px;
 		display: flex;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		overflow: hidden;
 		span {
 			min-width: 18px;
@@ -1064,7 +1064,7 @@ const t = useNamespacedT('market')
 		flex: 0 0 auto;
 		.item {
 			background: var(--background);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
 			padding: 8px 5px;
 			cursor: pointer;

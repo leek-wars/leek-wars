@@ -92,7 +92,7 @@
 		padding: 8px;
 		padding-bottom: 4px;
 		border: 1px solid var(--grey-12);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		margin-bottom: 10px;
 	}
 	.fault.router-link-active {

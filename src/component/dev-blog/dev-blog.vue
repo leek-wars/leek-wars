@@ -105,7 +105,7 @@ onBeforeMount(() => {
 			align-items: center;
 			// font-size: 16px;
 			padding: 0 6px;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.vote i {
 			font-size: 18px;

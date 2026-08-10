@@ -126,7 +126,7 @@ LeekWars.get('bank/get-history').then(data => {
 		padding: 8px 16px;
 		color: white;
 		background: #4caf50;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		text-decoration: none;
 		font-weight: 600;
 		&:hover {

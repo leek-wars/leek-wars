@@ -103,7 +103,7 @@
 		display: inline-block;
 		margin: 0.2%;
 		cursor: pointer;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		vertical-align: top;
 		border: 1px solid transparent;
 		&.enabled {

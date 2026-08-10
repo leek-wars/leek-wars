@@ -132,7 +132,7 @@ const lastCheckedLabel = computed(() => {
 	align-items: center;
 	gap: 20px;
 	padding: 20px 25px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	margin-bottom: 20px;
 	color: white;
 	&.ok { background: var(--primary); }
@@ -162,7 +162,7 @@ const lastCheckedLabel = computed(() => {
 	align-items: center;
 	gap: 12px;
 	padding: 14px 16px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	background: var(--grey-lighter, #f5f5f5);
 	border-left: 4px solid transparent;
 	&.ok { border-left-color: var(--primary); }

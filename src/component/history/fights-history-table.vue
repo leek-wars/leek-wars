@@ -275,7 +275,7 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 			width: 36px;
 			height: 3px;
 			background: var(--background-disabled);
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			overflow: hidden;
 		}
 		.progress-bar-fill {

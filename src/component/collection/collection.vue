@@ -353,7 +353,7 @@
 	overflow: hidden;
 	min-width: 0;
 	border: 1px solid var(--border);
-	border-radius: 8px;
+	border-radius: var(--radius-large);
 	padding: 18px 20px 20px;
 	cursor: pointer;
 	background: var(--background-secondary);

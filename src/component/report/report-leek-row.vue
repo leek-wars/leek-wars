@@ -176,7 +176,7 @@
 		color: white;
 		font-weight: bold;
 		padding: 0 4px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 	.talent-bonus {
 		background-color: var(--grey-7);
@@ -184,7 +184,7 @@
 		font-weight: bold;
 		padding: 0 4px;
 		margin-left: 10px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 	.resources {
 		padding: 0 5px;

@@ -180,7 +180,7 @@ function formatDate(timestamp: number): string {
 	align-items: center;
 	padding: 5px 10px 5px 24px;
 	font-size: 14px;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	&:hover { background: rgba(128, 128, 128, 0.1); }
 }
 .status {
@@ -193,7 +193,7 @@ function formatDate(timestamp: number): string {
 	line-height: 16px;
 	padding-top: 4px;
 	font-weight: bold;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	margin-right: 6px;
 	flex-shrink: 0;
 	&.status-m, &.status-M { color: #e8a838; }

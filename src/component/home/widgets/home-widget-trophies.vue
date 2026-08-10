@@ -95,7 +95,7 @@
 		flex: 1;
 		text-align: center;
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 10px;
 	}
 	.stat .value {

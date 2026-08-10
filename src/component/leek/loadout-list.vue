@@ -125,7 +125,7 @@ function remove(loadout: Loadout) {
 	align-items: center;
 	gap: 10px;
 	padding: 6px 10px;
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background: #f5f5f5;
 }
 .loadout-icon {

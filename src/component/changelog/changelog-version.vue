@@ -95,7 +95,7 @@ const sections = computed(() => {
 			background: #00a3cc;
 			padding: 0 4px;
 			color: white;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			cursor: help;
 		}
 		:deep(code) {
@@ -103,7 +103,7 @@ const sections = computed(() => {
 			background: var(--background-secondary);
 			border: 1px solid var(--border);
 			padding: 0 5px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			font-family: monospace;
 			font-size: 0.9em;
 			color: var(--text-color);
@@ -112,7 +112,7 @@ const sections = computed(() => {
 			color: var(--primary);
 			cursor: pointer;
 			margin: 0 4px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			font-size: 20px;
 			vertical-align: top;
 			display: inline-block;

@@ -59,7 +59,7 @@
 	position: absolute;
 	color: white;
 	padding: 5px 16px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	line-height: 20px;
 	.v-icon {
 		font-size: 20px;
@@ -192,7 +192,7 @@ button {
 .v-btn {
 	text-transform: none;
 	margin: 0 3px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	font-weight: normal;
 	letter-spacing: normal;
 }
@@ -270,7 +270,7 @@ h1 {
 	position: relative;
 	background: var(--primary);
 	text-shadow: 0px 2px 3px rgba(0,0,0,0.2), 0px 1px 3px rgba(0,0,0,0.1), 0px 3px 6px rgba(0,0,0,0.1);
-	border-top-left-radius: 3px;
+	border-top-left-radius: var(--radius-small);
 }
 h1 a, h1 a:visited {
 	color: white;
@@ -575,7 +575,7 @@ body.dark img[src$="/charac/small/frequency.png"] {
 }
 .dev-label, .beta-label, .local-label, .beta-local-label {
 	color: white;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 4px 6px;
 	vertical-align: top;
 	line-height: 70px;
@@ -616,7 +616,7 @@ body.dark img[src$="/charac/small/frequency.png"] {
 }
 .card {
 	background: var(--pure-white);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 .flex {
@@ -670,14 +670,14 @@ body.dark img[src$="/charac/small/frequency.png"] {
 	z-index: 1;
 	background-image: linear-gradient(-45deg,rgba(255,255,255,.2) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.2) 75%,transparent 75%,transparent);
 	background-size: 50px 50px;
-	border-top-left-radius: 20px;
-	border-bottom-left-radius: 20px;
+	border-top-left-radius: var(--radius-pill);
+	border-bottom-left-radius: var(--radius-pill);
 	overflow: hidden;
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background-repeat: initial;
 }
 .rounded4 {
-	border-radius: 4px;
+	border-radius: var(--radius);
 }
 .color-life { color: red; }
 .color-max-life { color: #00d5b5; }
@@ -734,7 +734,7 @@ code {
 		vertical-align: bottom;
 		border: 1px solid var(--border);
 		padding: 1px 4px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		pre {
 			white-space: pre-wrap;
 		}
@@ -811,7 +811,7 @@ code {
 }
 .toast {
 	padding: 4px 8px;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	font-weight: 300;
 	font-size: 18px;
 	font-family: "Roboto", sans-serif;
@@ -866,7 +866,7 @@ body {
 
 .notif-trophy {
 	background: linear-gradient(0deg, #ffb029, #ffdc3a);
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	border: 1px solid #ffb430;
 	color: black !important;
 	a, .message, .date {
@@ -878,7 +878,7 @@ body {
 }
 .notif-bigwin {
 	background: linear-gradient(0deg, #0d2ad3, #329cff);
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	border: 1px solid #329cff;
 	&, .date, .message, .title {
 		color: white;

@@ -708,7 +708,7 @@
 		position: absolute;
 		content: attr(quantity);
 		background: #000b;
-		border-top-left-radius: 4px;
+		border-top-left-radius: var(--radius);
 		padding: 1.5px 4.5px;
 		right: 0;
 		bottom: 0;

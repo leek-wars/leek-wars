@@ -171,7 +171,7 @@
 		padding: 14px 22px 12px;
 		font-size: 14px;
 		font-weight: 500;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		img {
 			height: 75px;
 		}

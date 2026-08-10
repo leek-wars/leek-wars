@@ -66,7 +66,7 @@ onBeforeUnmount(() => {
 		color: var(--primary);
 		&.lw {
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 0 4px;
 			&:hover {
 				border: 1px solid var(--primary);

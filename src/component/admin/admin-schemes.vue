@@ -156,7 +156,7 @@
 			bottom: 0;
 			right: 0;
 			background: #000b;
-			border-top-left-radius: 4px;
+			border-top-left-radius: var(--radius);
 			color: white;
 			padding: 1.5px 4.5px;
 			font-weight: 500;
@@ -223,7 +223,7 @@
 	background: var(--color-primary);
 	color: white;
 	border: none;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	cursor: pointer;
 	&:hover {
 		opacity: 0.9;
@@ -245,7 +245,7 @@
 		width: 28.5714285714%;
 		height: 28.5714285714%;
 		border: 1px solid var(--background-disabled);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		background: var(--background-secondary);
 		position: absolute;
 		padding: 0;
@@ -296,7 +296,7 @@
 		top: 28.5714285714%;
 		left: 28.5714285714%;
 		z-index: 2;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		border: 2px solid var(--background-disabled);
 		&:hover {
 			background: var(--background-secondary);

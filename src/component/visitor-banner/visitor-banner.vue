@@ -243,7 +243,7 @@ function submit() {
 			background: white;
 			color: var(--grey-1);
 			border: none;
-			border-radius: 8px;
+			border-radius: var(--radius-large);
 			padding: 10px 14px;
 			font-size: 15px;
 			outline: none;
@@ -265,7 +265,7 @@ function submit() {
 		align-items: center;
 		justify-content: center;
 		background: rgba(255, 255, 255, 0.22);
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		cursor: pointer;
 		transition: background 0.15s ease, transform 0.3s ease;
 		&:hover {
@@ -307,7 +307,7 @@ function submit() {
 		justify-content: center;
 		background: rgba(255, 255, 255, 0.22);
 		border: 2px solid transparent;
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		cursor: pointer;
 		transition: background 0.15s ease;
 		img {
@@ -336,7 +336,7 @@ function submit() {
 		justify-content: center;
 		background: rgba(255, 255, 255, 0.22);
 		border: 2px solid transparent;
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		cursor: pointer;
 		transition: background 0.15s ease;
 		img {
@@ -355,7 +355,7 @@ function submit() {
 		font-size: 13px;
 		font-weight: bold;
 		background: rgba(140, 0, 0, 0.45);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		padding: 4px 10px;
 	}
 	.cta {

@@ -224,7 +224,7 @@ const content = computed(() => (locale.value === 'fr' ? FR : EN))
 }
 .content {
 	background: var(--background);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 20px 30px;
 	max-width: 900px;
 	margin: 0 auto;
