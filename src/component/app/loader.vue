@@ -59,7 +59,7 @@ const w = computed(() => Math.max(3, s.value / 14))
 	border-radius: var(--radius-tiny);
 	background: repeating-linear-gradient(
 		to right,
-		var(--white) 0px, #fff 2px,
+		var(--white) 0px, var(--white) 2px,
 		transparent 2px, transparent 10px
 	),
 	linear-gradient(
