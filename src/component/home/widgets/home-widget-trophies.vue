@@ -12,18 +12,18 @@
 					<div class="label">{{ t('points') }}</div>
 				</div>
 			</div>
-			<template v-for="s in sections" :key="s.key">
-				<template v-if="s.list.length">
+			<div ref="sectionsEl" class="sections">
+				<div v-for="s in visibleSections" :key="s.key" class="section-block">
 					<h4 class="section"><v-icon>{{ s.icon }}</v-icon> {{ t(s.key) }}</h4>
 					<div class="trophy-row">
-						<rich-tooltip-trophy v-for="trophy in s.list" :key="trophy.code" :trophy="trophy" :bottom="true" :instant="true" v-slot="{ props }">
+						<rich-tooltip-trophy v-for="trophy in s.list" :key="trophy.code" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true">
 							<router-link :to="'/trophies/' + farmerId" v-bind="props">
 								<trophy-icon :code="trophy.code" class="trophy" />
 							</router-link>
 						</rich-tooltip-trophy>
 					</div>
-				</template>
-			</template>
+				</div>
+			</div>
 			<div v-if="!anyTrophies" class="none">{{ t('no_trophy') }}</div>
 		</template>
 	</div>
@@ -35,6 +35,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { useNamespacedT } from '@/model/i18n'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 
 	defineOptions({ name: 'HomeWidgetTrophies' })
@@ -58,8 +59,13 @@
 		{ key: 'best_trophies', icon: 'mdi-trophy-outline', list: best.value },
 		{ key: 'rarest_trophies', icon: 'mdi-star-outline', list: rarest.value },
 		{ key: 'latest_trophies', icon: 'mdi-history', list: latest.value },
-	])
+	].filter(s => s.list.length))
 	const anyTrophies = computed(() => best.value.length > 0)
+
+	// Autant de sections que la hauteur du panel le permet, jamais coupées.
+	const sectionsEl = ref<HTMLElement | null>(null)
+	const sectionCount = useFitCount(sectionsEl, '.section-block', 3, 8)
+	const visibleSections = computed(() => sections.value.slice(0, sectionCount.value))
 
 	if (store.state.farmer) {
 		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
@@ -73,9 +79,9 @@
 			}
 			points.value = pts
 			const unlocked = all.filter(tr => tr.unlocked && tr.category !== 0)
-			best.value = [...unlocked].sort((a, b) => b.points - a.points).slice(0, 8)
-			rarest.value = [...unlocked].sort((a, b) => a.rarity - b.rarity).slice(0, 8)
-			latest.value = [...unlocked].sort((a, b) => b.date - a.date).slice(0, 8)
+			best.value = [...unlocked].sort((a, b) => b.points - a.points).slice(0, 12)
+			rarest.value = [...unlocked].sort((a, b) => a.rarity - b.rarity).slice(0, 12)
+			latest.value = [...unlocked].sort((a, b) => b.date - a.date).slice(0, 12)
 			loaded.value = true
 		})
 	}
@@ -83,6 +89,22 @@
 
 <style lang="scss" scoped>
 	.trophies-widget {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		height: 100%;
+	}
+	// Les sections occupent la hauteur restante ; on n'affiche que celles
+	// qui tiennent entièrement (useFitCount), overflow hidden en filet.
+	.sections {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.section-block {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
@@ -123,6 +145,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
+		// Une seule rangée : les trophées en surplus passent à la ligne
+		// et sont entièrement masqués (pas de coupe partielle).
+		height: 40px;
+		overflow: hidden;
 	}
 	.trophy-row .trophy {
 		width: 40px;

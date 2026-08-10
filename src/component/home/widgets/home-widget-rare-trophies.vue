@@ -1,8 +1,8 @@
 <template>
 	<div class="rare-trophies-widget">
 		<loader v-if="!loaded" />
-		<template v-else-if="rarest.length">
-			<rich-tooltip-trophy v-for="trophy in rarest" :key="trophy.code" :trophy="trophy" :bottom="true" :instant="true" v-slot="{ props }">
+		<div v-else-if="rarest.length" ref="linesEl" class="lines">
+			<rich-tooltip-trophy v-for="trophy in visibleRarest" :key="trophy.code" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true">
 				<router-link :to="'/trophies/' + farmerId" class="trophy-line" v-bind="props">
 					<trophy-icon :code="trophy.code" class="trophy" />
 					<div class="info">
@@ -11,7 +11,7 @@
 					</div>
 				</router-link>
 			</rich-tooltip-trophy>
-		</template>
+		</div>
 		<div v-else class="none">{{ t('no_trophy') }}</div>
 	</div>
 </template>
@@ -22,6 +22,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { useNamespacedT } from '@/model/i18n'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 
 	defineOptions({ name: 'HomeWidgetRareTrophies' })
@@ -34,6 +35,11 @@
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rarest = ref<any[]>([])
 
+	// Autant de lignes que la hauteur du panel le permet, jamais coupées.
+	const linesEl = ref<HTMLElement | null>(null)
+	const lineCount = useFitCount(linesEl, '.trophy-line', 10, 4)
+	const visibleRarest = computed(() => rarest.value.slice(0, lineCount.value))
+
 	if (store.state.farmer) {
 		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +47,7 @@
 			rarest.value = all
 				.filter(tr => tr.unlocked && tr.category !== 0)
 				.sort((a, b) => a.rarity - b.rarity)
-				.slice(0, 6)
+				.slice(0, 10)
 			loaded.value = true
 		}).error(() => { loaded.value = true })
 	} else {
@@ -51,6 +57,16 @@
 
 <style lang="scss" scoped>
 	.rare-trophies-widget {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+	// La liste occupe toute la hauteur ; on n'affiche que les lignes
+	// qui tiennent entièrement (useFitCount), overflow hidden en filet.
+	.lines {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 		gap: 4px;

@@ -96,7 +96,9 @@
 			}] as any
 		}
 		chartOptions.value = {
-			aspectRatio: 2.4,
+			// Le graphique remplit la hauteur restante du panel (pas de ratio figé).
+			responsive: true,
+			maintainAspectRatio: false,
 			plugins: { legend: { display: false } },
 			elements: { point: { radius: 3, hoverRadius: 5 } },
 		}
@@ -120,6 +122,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		height: 100%;
 	}
 	.head {
 		display: flex;
@@ -186,6 +189,16 @@
 	}
 	.chart-wrap {
 		width: 100%;
+		flex: 1 1 auto;
+		min-height: 0;
+		position: relative;
+	}
+	// Panel trop bas pour un graphique lisible : on le masque plutôt que
+	// de l'écraser (container = contenu du panel).
+	@container (max-height: 330px) {
+		.chart-wrap {
+			display: none;
+		}
 	}
 	.none {
 		color: var(--text-color-secondary);

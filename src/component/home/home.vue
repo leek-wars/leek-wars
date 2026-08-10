@@ -5,30 +5,44 @@
 				<h1>{{ t('title') }}</h1>
 			</div>
 			<div class="tabs">
-				<div class="tab" @click="toggleEdit">
+				<v-menu location="bottom end">
+					<template #activator="{ props }">
+						<div class="tab" v-bind="props" :title="t('add_widget')">
+							<v-icon>mdi-plus</v-icon>
+						</div>
+					</template>
+					<div class="widget-config card">
+						<div v-for="w in availableToAdd" :key="w.type" v-ripple class="config-option" @click="addWidget(w.type)">
+							<v-icon>{{ w.icon }}</v-icon> {{ t('widget_' + w.type) }}
+						</div>
+						<div v-if="!availableToAdd.length" class="config-title">{{ t('all_widgets_added') }}</div>
+					</div>
+				</v-menu>
+				<div class="tab" :title="t(editMode ? 'done' : 'customize')" @click="toggleEdit">
 					<v-icon>{{ editMode ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
-					<span>{{ t(editMode ? 'done' : 'customize') }}</span>
 				</div>
-			</div>
-		</div>
-
-		<div v-if="editMode" class="add-bar">
-			<span class="add-label"><v-icon>mdi-plus</v-icon> {{ t('add_widget') }}</span>
-			<div v-for="w in availableToAdd" :key="w.type" v-ripple class="add-chip" @click="addWidget(w.type)">
-				<v-icon>{{ w.icon }}</v-icon> {{ t('widget_' + w.type) }}
 			</div>
 		</div>
 
 		<div v-if="!widgets.length" class="empty card">
 			<v-icon>mdi-view-dashboard-outline</v-icon>
 			<span>{{ editMode ? t('empty_edit') : t('empty') }}</span>
-			<div v-if="!editMode" v-ripple class="button" @click="toggleEdit">{{ t('customize') }}</div>
+			<v-menu location="bottom">
+				<template #activator="{ props }">
+					<div v-ripple class="button" v-bind="props"><v-icon>mdi-plus</v-icon> {{ t('add_widget') }}</div>
+				</template>
+				<div class="widget-config card">
+					<div v-for="w in availableToAdd" :key="w.type" v-ripple class="config-option" @click="addWidget(w.type)">
+						<v-icon>{{ w.icon }}</v-icon> {{ t('widget_' + w.type) }}
+					</div>
+				</div>
+			</v-menu>
 		</div>
 
 		<div ref="gridEl" class="grid-stack" :class="{ editing: editMode }">
 			<div v-for="widget in widgets" :key="widget.id" class="grid-stack-item" :gs-id="widget.id" :gs-x="widget.x" :gs-y="widget.y" :gs-w="widget.w" :gs-h="widget.h">
 				<div class="grid-stack-item-content">
-					<panel :title="t('widget_' + widget.type)" :icon="widgetMeta[widget.type].icon" class="widget-panel">
+					<panel :title="t('widget_' + widget.type)" :icon="widgetMeta[widget.type].icon" class="widget-panel" :class="{ 'no-scroll': widgetMeta[widget.type].noScroll }">
 						<template #actions>
 							<template v-if="editMode">
 								<v-menu v-if="widgetMeta[widget.type].configurable" :close-on-content-click="false" location="bottom end">
@@ -113,18 +127,19 @@
 		link?: string
 		multi?: boolean        // peut être ajouté plusieurs fois
 		configurable?: boolean // a un menu de configuration (params)
+		noScroll?: boolean     // contenu clippé sans défilement interne : la molette va à la page
 	}
 
 	const widgetMeta: Record<string, WidgetDefinition> = {
-		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), defaultW: 6, defaultH: 4, minW: 3, minH: 3, link: '/farmer' },
-		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), defaultW: 6, defaultH: 4, minW: 4, minH: 3, link: '/farmer' },
-		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 4, defaultH: 3, minW: 3, minH: 2, link: '/trophies' },
+		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), defaultW: 6, defaultH: 4, minW: 3, minH: 3, link: '/farmer', noScroll: true },
+		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), defaultW: 6, defaultH: 4, minW: 4, minH: 3, link: '/farmer', noScroll: true },
+		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 4, defaultH: 3, minW: 3, minH: 2, link: '/trophies', noScroll: true },
 		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 4, defaultH: 5, minW: 3, minH: 3, multi: true, configurable: true },
 		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/collection' },
 		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 4, defaultH: 4, minW: 3, minH: 3 },
 		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 4, defaultH: 5, minW: 3, minH: 3, link: '/ranking', multi: true, configurable: true },
-		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true },
-		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies' },
+		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true, noScroll: true },
+		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies', noScroll: true },
 		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum' },
 		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 4, defaultH: 3, minW: 3, minH: 2 },
 	}
@@ -222,20 +237,62 @@
 	const previousLarge = ref(false)
 
 	let saveTimer: ReturnType<typeof setTimeout> | null = null
-	function persist() {
-		if (!grid) return
+	// Disposition calculée mais pas encore envoyée au serveur (debounce en cours).
+	let pendingLayout: string | null = null
+
+	function computeLayout(): string | null {
+		if (!grid) return null
 		const nodes = grid.save(false, false) as GridStackWidget[]
 		const byId = new Map(widgets.value.map(w => [w.id, w]))
 		const layout = nodes.map(n => {
 			const inst = byId.get(String(n.id))
 			return { id: String(n.id), type: inst?.type, x: n.x ?? 0, y: n.y ?? 0, w: n.w ?? 1, h: n.h ?? 1, params: inst?.params ?? {} }
 		})
+		return JSON.stringify(layout)
+	}
+
+	function flushSave() {
+		if (saveTimer) { clearTimeout(saveTimer); saveTimer = null }
+		if (pendingLayout === null) return
+		const json = pendingLayout
+		pendingLayout = null
+		store.commit('set-home-layout', json)
+		LeekWars.put('farmer/set-home-layout', { home_layout: json })
+	}
+
+	function dropPendingSave() {
+		if (saveTimer) { clearTimeout(saveTimer); saveTimer = null }
+		pendingLayout = null
+	}
+
+	// Sauvegarde immédiate : ajout/suppression/config, actions ponctuelles.
+	function persistNow() {
+		const json = computeLayout()
+		if (json === null) return
+		pendingLayout = json
+		flushSave()
+	}
+
+	// Sauvegarde débouncée : déplacements/redimensionnements en rafale.
+	function persist() {
+		const json = computeLayout()
+		if (json === null) return
+		pendingLayout = json
 		if (saveTimer) clearTimeout(saveTimer)
-		saveTimer = setTimeout(() => {
-			const json = JSON.stringify(layout)
-			store.commit('set-home-layout', json)
-			LeekWars.put('farmer/set-home-layout', { home_layout: json })
-		}, 500)
+		saveTimer = setTimeout(flushSave, 500)
+	}
+
+	// F5 / fermeture d'onglet : un XHR classique serait tué avec la page,
+	// on envoie la sauvegarde en attente via fetch keepalive.
+	function flushOnPageHide() {
+		if (pendingLayout === null) return
+		if (saveTimer) { clearTimeout(saveTimer); saveTimer = null }
+		const json = pendingLayout
+		pendingLayout = null
+		store.commit('set-home-layout', json)
+		const headers: Record<string, string> = { 'Content-Type': 'application/json; charset=UTF-8' }
+		if (store.state.connected) headers['Authorization'] = 'Bearer ' + store.state.token
+		fetch(LeekWars.API + 'farmer/set-home-layout', { method: 'PUT', headers, credentials: 'include', keepalive: true, body: JSON.stringify({ home_layout: json }) })
 	}
 
 	function initGrid() {
@@ -291,7 +348,7 @@
 				grid.makeWidget(el)
 				grid.update(el, { minW: def.minW, minH: def.minH })
 			}
-			persist()
+			persistNow()
 		})
 	}
 
@@ -300,16 +357,19 @@
 		if (el && grid) grid.removeWidget(el, false)
 		widgets.value = widgets.value.filter(w => w.id !== id)
 		refreshAvailable()
-		persist()
+		persistNow()
 	}
 
 	function setParam(widget: WidgetInstance, key: string, value: unknown) {
 		widget.params = { ...widget.params, [key]: value }
-		persist()
+		persistNow()
 	}
 
 	// Changement de compte : recharge la disposition et reconstruit la grille.
+	// Une sauvegarde en attente est abandonnée : elle appartient à l'ancien compte,
+	// l'envoyer maintenant l'écrirait sur le nouveau.
 	watch(() => store.state.farmer?.id, () => {
+		dropPendingSave()
 		widgets.value = parseLayout(store.state.farmer?.home_layout)
 		refreshAvailable()
 		editMode.value = false
@@ -323,49 +383,19 @@
 	onMounted(() => {
 		previousLarge.value = LeekWars.large
 		LeekWars.large = true
+		window.addEventListener('pagehide', flushOnPageHide)
 		nextTick(initGrid)
 	})
 
 	onBeforeUnmount(() => {
-		if (saveTimer) clearTimeout(saveTimer)
+		window.removeEventListener('pagehide', flushOnPageHide)
+		flushSave()
 		if (grid) { grid.destroy(false); grid = null }
 		LeekWars.large = previousLarge.value
 	})
 </script>
 
 <style lang="scss" scoped>
-	.add-bar {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 8px;
-		background: var(--background);
-		border-radius: var(--radius);
-		padding: 10px 12px;
-		margin-bottom: 12px;
-	}
-	.add-label {
-		font-weight: bold;
-		color: var(--text-color-secondary);
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-	}
-	.add-chip {
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-		padding: 4px 10px;
-		border: 1px solid var(--border);
-		border-radius: 16px;
-		cursor: pointer;
-		user-select: none;
-		font-size: 14px;
-	}
-	.add-chip:hover {
-		background: var(--background-secondary);
-		border-color: var(--primary);
-	}
 	// La page ne défile pas horizontalement : on masque le débord de 6px créé par
 	// la marge négative ci-dessous (gridstack insère une marge de 6px autour de chaque
 	// widget, y compris sur les bords ; on l'annule pour aligner le 1er widget sur le titre).
@@ -392,12 +422,21 @@
 		height: 100%;
 		margin-bottom: 0;
 	}
-	// En-tête fixe, seul le contenu défile, sans propager le scroll à la page.
+	// En-tête fixe, seul le contenu défile. Pas d'overscroll-behavior: contain ici :
+	// il bloquerait la molette même sur un widget sans débord, et la page ne
+	// défilerait plus dès que la souris est sur un panel.
 	.widget-panel:deep(.content) {
 		flex: 1 1 auto;
 		min-height: 0;
 		overflow-y: auto;
-		overscroll-behavior: contain;
+	}
+	// Widgets sans défilement interne (noScroll) : le contenu est clippé,
+	// la molette fait toujours défiler la page. Le contenu est aussi un
+	// container CSS : les widgets adaptent leur mise en page à sa hauteur
+	// (@container, unités cq*) pour ne jamais couper le contenu.
+	.widget-panel.no-scroll:deep(.content) {
+		overflow-y: hidden;
+		container-type: size;
 	}
 	.grid-stack.editing .drag-handle {
 		cursor: grab;
