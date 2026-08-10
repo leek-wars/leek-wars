@@ -66,6 +66,15 @@ html body.v2 {
 	/* Elevation Material niveau 2, copiee telle quelle dans 41 composants. */
 	--elevation-1: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 
+	/* Chrome : barre du haut. Elle est posee sur le fond exterieur, pas sur la
+	   page. Le logo est un SVG blanc charge en <img>, donc increcolorable en
+	   CSS : --header-logo-filter est la seule prise pour l'adapter a un fond
+	   clair. */
+	--header-color: #eee;
+	--header-button-background: rgba(80, 80, 80, 0.6);
+	--header-button-background-hover: rgba(200, 200, 200, 0.4);
+	--header-logo-filter: none;
+
 	/* Chrome : barre de page et ses onglets */
 	--page-bar-color: #eee;
 	--page-bar-tab-background: rgba(0, 0, 0, 0.3);

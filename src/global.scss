@@ -224,17 +224,24 @@ html {
 *, *:before, *:after {
 	box-sizing: inherit;
 }
-// Marqueur visuel de la beta : fond extérieur légèrement rosé (classe ajoutée dans vue.ts si env.BETA)
+// Marqueurs visuels d'environnement : ils teintent le fond extérieur pour qu'on
+// sache d'un coup d'œil qu'on n'est pas en production.
+// Chacun a sa version claire et sa version sombre : avec une seule couleur en
+// dur, le fond extérieur restait sombre en thème clair, au point de rendre le
+// thème clair intestable en local.
+// Ils peignent `background` et ne redéfinissent pas --background-outer, pour
+// rester au-dessus des deux thèmes quelle que soit leur cascade.
 body.beta {
-	background: #492e46;
+	background: #f0e2ee; // beta (classe posée dans vue.ts si env.BETA)
+	&.dark { background: #492e46; }
 }
-// Marqueur visuel du dev local (leekwars.local) : fond extérieur bleuté (classe ajoutée dans main.ts)
 body.local {
-	background: #24344d;
+	background: #dde6f4; // dev local, leekwars.local (classe posée dans main.ts)
+	&.dark { background: #24344d; }
 }
-// Marqueur visuel de la beta LOCALE (leekwars-beta.local) : fond extérieur violet (classe ajoutée dans main.ts)
 body.beta-local {
-	background: #322350;
+	background: #e5ddf5; // beta locale, leekwars-beta.local (classe posée dans main.ts)
+	&.dark { background: #322350; }
 }
 body {
 	margin: 0;
