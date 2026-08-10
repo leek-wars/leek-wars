@@ -232,6 +232,7 @@
 		<panel class="last" icon="mdi-flask-outline" title="Outils de test">
 			<template #content>
 				<div class="admin-grid">
+					<v-btn prepend-icon="mdi-palette" to="/redesign">Design system 3.0</v-btn>
 					<v-btn prepend-icon="mdi-image" @click="square">Square notif image</v-btn>
 					<v-btn prepend-icon="mdi-star" @click="squareIcon">Square notif icon</v-btn>
 					<v-btn prepend-icon="mdi-trophy" @click="squareTrophy">Square notif trophy</v-btn>
