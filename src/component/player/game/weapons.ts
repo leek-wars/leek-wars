@@ -635,6 +635,8 @@ class SunSpear extends WhiteWeaponAnimation {
 	public thrust = 0
 	/** 0 = portée pointe levée, 1 = mise en ligne avec la cible visée. */
 	public aim = 0
+	/** Trois temps : mise en garde, piqué, puis retour au port une fois la lance dégagée. */
+	public steps = 3
 
 	constructor(game: Game) {
 		super(game, T.sun_spear, 42)
@@ -674,12 +676,17 @@ class SunSpear extends WhiteWeaponAnimation {
 			const i = Math.min(1, this.inte)
 			this.aim = i
 			this.thrust = -SunSpear.PULL_BACK * i
-		} else {
-			// Détente le long de l'axe, puis remontée en position de port sur la fin.
+		} else if (this.step === 2) {
+			// Détente : la lance reste dans l'axe, elle transperce puis se retire.
 			this.inte += dt * 0.09
 			const i = Math.min(1, this.inte)
-			this.aim = 1 - Math.max(0, (i - 0.6) / 0.4)
+			this.aim = 1
 			this.thrust = -SunSpear.PULL_BACK * (1 - i) + SunSpear.REACH * Math.sin(i * Math.PI)
+		} else {
+			// La lance est dégagée : seulement maintenant on relève la pointe.
+			this.inte += dt * 0.08
+			this.aim = 1 - Math.min(1, this.inte)
+			this.thrust = 0
 		}
 		if (this.inte >= 1) {
 			this.step++
