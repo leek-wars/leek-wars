@@ -13,7 +13,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { loadDrawableImage, T, Texture } from '@/component/player/game/texture'
-import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, PlutoniumBazooka, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, DesertSaber, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, PlutoniumBazooka, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
@@ -201,6 +201,7 @@ export const WEAPONS = [
 	Excalibur, // 38
 	Scythe, // 39
 	QuantumRifle, // 40
+	DesertSaber, // 41
 ]
 
 export const CHIP_ANIMATIONS = [
