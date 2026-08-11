@@ -59,7 +59,7 @@ import { LeekWars } from '@/model/leekwars'
 import type { Notification } from '@/model/notification'
 import { store } from '@/model/store'
 import { emitter } from '@/model/vue'
-import { defineAsyncComponent, nextTick, ref } from 'vue'
+import { defineAsyncComponent, nextTick, ref, watch } from 'vue'
 
 const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
@@ -76,6 +76,14 @@ const widthStored = localStorage.getItem('main/social-width')
 if (widthStored) {
 	panelWidth.value = parseInt(widthStored, 10)
 }
+
+// La largeur du panneau est exposée en variable CSS pour que la mise en page
+// puisse réserver la place correspondante à droite. Sans ça, la marge du
+// contenu reste figée à 400 px (cf. app.vue) alors que le panneau peut aller
+// jusqu'à 800, et le panneau agrandi passe par-dessus la page.
+watch(panelWidth, (width) => {
+	document.documentElement.style.setProperty('--social-width', width + 'px')
+}, { immediate: true })
 
 function toggleSocial() {
 	LeekWars.socialCollapsed = !LeekWars.socialCollapsed
