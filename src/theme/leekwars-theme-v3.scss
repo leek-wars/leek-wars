@@ -109,6 +109,9 @@ body {
 	--grey-12: #DCD6C0;
 	--grey-13: #F2ECD6;
 
+	/* Etat inactif : le gris du v2 (#9c9c9c) tombe a 2.6 sur le parchemin */
+	--inactive-color: #56634F;
+
 	/* Podium du classement. Le v2 utilise un or #ffa900 qui tombe a 1,8 de
 	   contraste sur le parchemin. Les teintes sombres reprennent celles du
 	   mockup (gold, argent #C0C8D0, bronze #C77A0E), les claires sont leurs
@@ -177,6 +180,8 @@ body {
 		--page-bar-color: #E8F0E6;
 		--page-bar-tab-background: rgba(255, 255, 255, 0.06);
 		--page-bar-tab-background-hover: rgba(255, 255, 255, 0.12);
+
+		--inactive-color: #8A9686;
 
 		--rank-first: #FFD23A;
 		--rank-second: #C0C8D0;
