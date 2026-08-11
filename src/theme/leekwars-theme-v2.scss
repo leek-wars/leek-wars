@@ -41,6 +41,8 @@ html body.v2 {
 	/* Encre du pied de page, pose sur ce fond exterieur et non sur la page */
 	--footer-color: #666;
 	--border: #ddd;
+	/* Trait plus marque, pour delimiter une surface et non separer deux lignes */
+	--border-strong: #ccc;
 	--text-color: #111;
 	--text-color-secondary: #686868;
 	--type-color: #0000D0;
@@ -136,6 +138,7 @@ html body.v2 {
 		--background-disabled: #555;
 		--background-header: #2f2f2f;
 		--border: #444;
+		--border-strong: #555;
 		--text-color: #f7f7f7;
 		--text-color-secondary: #999;
 		--type-color: #0099d0;
