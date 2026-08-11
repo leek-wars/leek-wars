@@ -40,6 +40,9 @@ html body.v2 {
 	--background-outer: #333;
 	/* Encre du pied de page, pose sur ce fond exterieur et non sur la page */
 	--footer-color: #666;
+	/* Surface de survol d'une ligne de liste, et troisieme encre (la plus pale) */
+	--background-row: #e8e8e8;
+	--text-color-faint: #999;
 	--border: #ddd;
 	/* Trait plus marque, pour delimiter une surface et non separer deux lignes */
 	--border-strong: #ccc;
@@ -151,6 +154,8 @@ html body.v2 {
 		--background-secondary: #171717;
 		--background-disabled: #555;
 		--background-header: #2f2f2f;
+		--background-row: #2a2a2a;
+		--text-color-faint: #777;
 		--border: #444;
 		--border-strong: #555;
 		--text-color: #f7f7f7;

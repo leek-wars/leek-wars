@@ -89,6 +89,20 @@ body:not(.v2) {
 		filter: brightness(1.08);
 	}
 
+	/* Compteurs de la barre du haut : le mockup en fait des « topstat », des
+	   boîtes bordées en chiffres monospacés, pas des boutons. La police pixel du
+	   mockup n'étant pas embarquée (elle n'a ni cyrillique ni CJK, cf. les 17
+	   langues), on garde le monospace du système, qui donne le même alignement
+	   de chiffres. */
+	.header .header-button .farmer-habs,
+	.header .header-button .farmer-crystals,
+	.header .header-button .farmer-fights {
+		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+		font-size: 12.5px;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+	}
+
 	/* ====== Largeur ======
 	 *
 	 * Le v2 borne le contenu à 1100 px et n'ouvre la pleine largeur que sur les
@@ -202,41 +216,72 @@ body:not(.v2) {
 		color: var(--primary);
 	}
 
-	/* Le titre de page garde son aplat vert, qui est une signature de Leek
-	   Wars, mais perd le biseau qui le prolongeait. */
+	/* ====== Titre de page ======
+	 *
+	 * Le mockup ne met pas le titre dans un aplat vert : c'est du texte, en
+	 * capitales espacées, souligné par un tiret vert pointillé (`.px-sep`).
+	 * L'aplat vert et son biseau sautent, la barre de page reçoit le pointillé.
+	 *
+	 * La police pixel du mockup n'est pas embarquée : elle n'a ni cyrillique ni
+	 * CJK, et le site tourne en 17 langues. Le traitement typographique
+	 * (capitales, corps réduit, interlettrage) le remplace. */
 	h1 {
+		background: none;
+		color: var(--text-color);
+		font-size: 18px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		text-shadow: none;
 		border-top-left-radius: 0;
+	}
+	h1 a, h1 a:visited {
+		color: var(--text-color);
 	}
 	h1::after {
 		display: none;
 	}
+	/* Le pointillé vert du mockup, en border-image sur la barre de page. */
+	.page-header.page-bar {
+		border-bottom: 3px solid transparent;
+		border-image: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px) 3;
+	}
 
 	/* ====== Menu de gauche ====== */
 
+	/* `.sidebar` du mockup : fond de panneau, trait fort a droite, 12 px de
+	   respiration verticale. */
 	.menu .menu-wrapper {
-		background: var(--background-secondary);
-		border-right: 1px solid var(--border);
-		border-top: 1px solid var(--border);
-		padding: 8px 0;
+		background: var(--panel-background);
+		border-right: 1.5px solid var(--border-strong);
+		border-top: 1.5px solid var(--border-strong);
+		padding: 12px 0;
 	}
 
 	/* Une entrée de menu : pas de fond, un liseré à gauche qui s'allume.
 	   Le v2 empilait des aplats gris, ce qui rendait l'état actif peu lisible. */
+	/* `.nav-item` du mockup, aux valeurs exactes : 9/16 de marge, 10 de
+	   gouttiere, corps 12,5, graisse 500, lisere de 3 px. */
 	.menu .section {
 		background: transparent;
 		border-left: 3px solid transparent;
 		color: var(--text-color-secondary);
-		font-size: 15px;
-		padding-left: 6px;
+		font-size: 12.5px;
+		font-weight: 500;
+		height: auto;
+		line-height: normal;
+		padding: 9px 16px;
+		gap: 10px;
+		display: flex;
+		align-items: center;
 		transition: color .12s ease, background .12s ease, border-color .12s ease;
 	}
 	.menu .section:hover {
-		background: var(--background);
+		background: var(--background-row);
 		color: var(--text-color);
 	}
 	.menu .section.router-link-active,
 	.menu .section.active {
-		background: var(--background);
+		background: var(--background-row);
 		border-left-color: var(--primary);
 		color: var(--primary);
 	}
@@ -256,14 +301,34 @@ body:not(.v2) {
 	.menu-center .section.router-link-active {
 		text-shadow: none;
 	}
+	/* Les intitulés de section du menu : capitales, corps réduit, très espacés,
+	   comme les « ◆ MES POIREAUX » du mockup. */
+	/* Les intitules de section, facon « ◆ MES POIREAUX » : tres petits, tres
+	   espaces, dans l'encre la plus pale. */
+	.menu h4 {
+		font-size: 9px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--text-color-faint);
+		font-weight: 500;
+		padding: 4px 14px 8px;
+	}
 	/* Les pastilles de compteur reprennent la forme des jetons du mockup :
 	   un rectangle bordé, pas une bulle. */
+	/* `.nav-badge` : fond de champ, trait fort, 10 px monospace, colle a droite */
 	.menu .section[label]::after,
 	.menu .awards::after {
-		background: var(--background-header);
-		border: 1px solid var(--border);
+		background: var(--background-secondary);
+		border: 1px solid var(--border-strong);
 		color: var(--text-color-secondary);
 		border-radius: 0;
+		font-family: ui-monospace, 'SF Mono', monospace;
+		font-size: 10px;
+		padding: 1px 5px;
+	}
+	.menu .section.router-link-active[label]::after {
+		color: var(--primary);
+		border-color: var(--primary);
 	}
 
 	/* Les deux poignées de repli (menu et panneau social) étaient deux carrés
@@ -296,15 +361,49 @@ body:not(.v2) {
 	   et laissent un grand vide sur le fond extérieur. Le dernier bloc (le
 	   chat) prend la place restante, comme l'aside du mockup. */
 	.blabla-panel > .content {
-		background: var(--background-secondary);
-		border-left: 1px solid var(--border);
+		background: var(--panel-background);
+		border-left: 1.5px solid var(--border-strong);
 		height: 100%;
 		display: flex;
 		flex-direction: column;
 	}
 	.blabla-panel .panel {
 		margin-bottom: 0;
-		border-bottom: 1px solid var(--border);
+		border: none;
+		border-bottom: 1px solid var(--border-strong);
+	}
+	/* En-tête de section du panneau social : capitales espacées et corps réduit,
+	   comme les `.aside-head` du mockup. */
+	/* `.aside-head` : 10/14 de marge, corps 9, interlettrage 0.06, capitales,
+	   sur la surface haute et non sur celle du panneau. */
+	.blabla-panel .panel > .header {
+		height: auto;
+		background: var(--background-header);
+		border-bottom: 1.5px solid var(--border);
+	}
+	.blabla-panel .panel > .header h2 {
+		font-size: 9px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		height: auto;
+		line-height: normal;
+		padding: 10px 14px;
+		color: var(--text-color);
+	}
+	/* Le compteur de non-lus devient la pastille verte du mockup. */
+	/* `.aside-head .count` : pastille verte pleine, chiffres monospacés. */
+	.blabla-panel .panel > .header .label {
+		background: var(--primary);
+		color: var(--primary-text);
+		border-radius: 0;
+		font-family: ui-monospace, 'SF Mono', monospace;
+		font-size: 10px;
+		padding: 1px 6px;
+	}
+	/* Survol d'une notification ou d'un message : la surface de ligne. */
+	.blabla-panel .notification:hover,
+	.blabla-panel .conversation:hover {
+		background: var(--background-row);
 	}
 	.blabla-panel > .content > .panel:last-child {
 		flex: 1;
@@ -407,20 +506,6 @@ body:not(.v2) {
 	.skip-link {
 		background: var(--primary-strong);
 		border-color: var(--primary-strong);
-	}
-	/* Le titre de page passe en gras. Le mockup le veut ainsi, et à 21 px gras
-	   il devient du « grand texte » au sens WCAG : le seuil tombe à 3, que les
-	   4.11 de l'aplat vert franchissent. */
-	h1 {
-		font-weight: 700;
-		/* L'encyclopédie repeint son titre en `--grey-1`, un gris sombre, alors
-		   que l'encre des titres (`--primary-text`) est calculée pour l'aplat
-		   vert : en mode sombre le fil d'Ariane devenait noir sur noir. Le v3
-		   n'a qu'un seul traitement de titre, on le lui applique aussi. */
-		background: var(--primary);
-		&::after {
-			border-left-color: var(--primary);
-		}
 	}
 	/* La ligne de version du pied de page utilisait --grey-8, trop clair sur le
 	   fond extérieur clair (2.36). Elle rejoint l'encre du pied de page. */
