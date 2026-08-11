@@ -55,6 +55,9 @@ body {
 	/* `bg-row` et `ink-3` du mockup : surface de survol et encre la plus pale */
 	--background-row: #FBF7E8;
 	--text-color-faint: #7A8676;
+	/* `bg-input` du mockup : la surface d'un champ, d'une case ou d'un compteur,
+	   toujours un cran plus claire que la page en clair, plus sombre en sombre. */
+	--background-input: #FFFCF0;
 	--border: rgba(14, 20, 16, 0.12);
 	/* `line-strong` du mockup : c'est ce trait qui delimite les panneaux, le
 	   design ne comptant sur aucune ombre pour les detacher du fond. */
@@ -170,6 +173,7 @@ body {
 		--footer-color: #A8B4A4;
 		--background-row: #131A1E;
 		--text-color-faint: #6B7A66;
+		--background-input: #0A0E10;
 		--border: rgba(255, 255, 255, 0.08);
 		--border-strong: rgba(255, 255, 255, 0.16);
 		--text-color: #E8F0E6;

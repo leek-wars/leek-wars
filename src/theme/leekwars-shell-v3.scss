@@ -90,12 +90,14 @@ body:not(.v2) {
 	}
 
 	/* Compteurs de la barre du haut : le mockup en fait des « topstat », des
-	   boîtes bordées aux chiffres pixel, pas des boutons. */
+	   boîtes bordées, pas des boutons. Chiffres en monospace et non dans la
+	   police pixel : c'est ce que fait le mockup (`.topstat` est en `--f-mono`),
+	   et un montant à onze chiffres doit rester lisible d'un coup d'œil. */
 	.header .header-button .farmer-habs,
 	.header .header-button .farmer-crystals,
 	.header .header-button .farmer-fights {
-		font-family: var(--font-display);
-		font-size: 13px;
+		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+		font-size: 12.5px;
 		font-weight: 600;
 		letter-spacing: 0.02em;
 	}
@@ -163,6 +165,31 @@ body:not(.v2) {
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 	}
+	/* Un `h2` d'en-tête ne contient pas toujours qu'un titre : l'inventaire y
+	   loge ses catégories, l'atelier ses trois onglets. Ces blocs héritaient des
+	   capitales pixel en corps 14 et devenaient illisibles ; ils reprennent la
+	   typo courante. Nommés un par un : le titre lui-même est un `div` sans
+	   classe, une règle générale sur les `div` l'emporterait avec. */
+	.panel > .header h2 .workshop-tabs,
+	.panel > .header h2 .categories {
+		font-family: "Roboto", sans-serif;
+		font-size: 15px;
+		letter-spacing: normal;
+		text-transform: none;
+	}
+	/* Ces onglets écrivaient en blanc translucide, parce que l'en-tête de panneau
+	   du v2 était toujours sombre. En v3 il est clair : blanc sur crème, on ne
+	   lisait plus rien. */
+	.workshop-tab {
+		color: var(--text-color-secondary);
+	}
+	.workshop-tab:hover {
+		background: var(--background-row);
+		color: var(--text-color);
+	}
+	.workshop-tab.active {
+		color: var(--primary);
+	}
 
 	/* Trois panneaux par ligne au maximum.
 	 *
@@ -221,6 +248,28 @@ body:not(.v2) {
 		border-bottom-color: var(--primary);
 		color: var(--primary);
 	}
+	/* Les `tab action` ne sont pas des onglets mais des compteurs (potions de
+	   restat, combats restants). Comme les compteurs de la barre du haut, ils
+	   repassent en monospace : la police pixel confond 5 et S, ce qui n'est pas
+	   grave sur un libellé et l'est sur un nombre. */
+	.page-bar .tabs .tab.action {
+		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+		font-size: 13px;
+	}
+	/* Champ de recherche de la barre de page : il était peint en noir translucide
+	   avec du texte blanc, ce qui supposait une barre sombre. La barre est claire
+	   en v3, le champ y devenait une tache. */
+	.page-bar .tabs .tab input[type="text"],
+	.page-bar .tabs .tab input[type="number"] {
+		background: var(--background-input);
+		border: 1px solid var(--border-strong);
+		color: var(--text-color);
+		padding: 0 8px;
+	}
+	.page-bar .tabs .tab input[type="text"]:focus,
+	.page-bar .tabs .tab input[type="number"]:focus {
+		border-color: var(--primary);
+	}
 
 	/* ====== Titre de page ======
 	 *
@@ -228,10 +277,11 @@ body:not(.v2) {
 	 * capitales espacées, souligné par un tiret vert pointillé (`.px-sep`).
 	 * L'aplat vert et son biseau sautent, la barre de page reçoit le pointillé.
 	 *
-	 * La police pixel du mockup n'est pas embarquée : elle n'a ni cyrillique ni
-	 * CJK, et le site tourne en 17 langues. Le traitement typographique
-	 * (capitales, corps réduit, interlettrage) le remplace. */
-	h1 {
+	 * `.items-title` (la bande « Ils n'attendent que vous » de la banque) peint
+	 * son propre aplat sombre et gagnait à la spécificité : elle est nommée pour
+	 * qu'elle suive la règle, sinon c'est le seul titre encadré du site. */
+	h1,
+	h1.items-title {
 		background: none;
 		color: var(--text-color);
 		font-family: var(--font-display);
@@ -315,7 +365,9 @@ body:not(.v2) {
 		font-size: 10px;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: var(--text-color-faint);
+		/* `--text-color-faint` (l'`ink-3` du mockup) ne donne que 3,56:1 sur la
+		   surface haute à ce corps : un cran plus foncé pour rester lisible. */
+		color: var(--text-color-secondary);
 		font-weight: 500;
 		padding: 4px 14px 8px;
 	}
@@ -327,8 +379,8 @@ body:not(.v2) {
 		border: 1px solid var(--border-strong);
 		color: var(--text-color-secondary);
 		border-radius: 0;
-		font-family: var(--font-display);
-		font-size: 11px;
+		font-family: ui-monospace, 'SF Mono', monospace;
+		font-size: 10px;
 		padding: 1px 5px;
 	}
 	.menu .section.router-link-active[label]::after {
@@ -399,8 +451,8 @@ body:not(.v2) {
 		background: var(--primary);
 		color: var(--primary-text);
 		border-radius: 0;
-		font-family: var(--font-display);
-		font-size: 11px;
+		font-family: ui-monospace, 'SF Mono', monospace;
+		font-size: 10px;
 		padding: 1px 6px;
 	}
 	/* Survol d'une notification ou d'un message : la surface de ligne. */
@@ -411,6 +463,175 @@ body:not(.v2) {
 	.blabla-panel > .content > .panel:last-child {
 		flex: 1;
 		min-height: 0;
+	}
+
+	/* ====== Tableaux ======
+	 *
+	 * Le v2 quadrillait : un filet sous chaque ligne ET un filet entre chaque
+	 * colonne, si bien qu'une page de classement était un damier. La `.lw-table`
+	 * du mockup ne trace que l'horizontale, et fait porter la structure par
+	 * l'en-tête : capitales, tout petit corps, encre pâle, typo d'affichage.
+	 *
+	 * Les filets verticaux ne sont posés que par cinq pages (classement, équipe,
+	 * inscription et deux pages d'admin) qui partagent la classe `.ranking` ou
+	 * le même patron : on les efface là, pas globalement. */
+	/* Les variantes `.ranking` sont là pour la spécificité : le style scoped du
+	   composant vaut `.ranking[data-v-x] th`, deux classes, donc un simple
+	   `table th` ne passerait pas devant. */
+	table th,
+	table tr.header th,
+	table tr.header td,
+	.ranking th,
+	.ranking tr.header th,
+	.ranking tr.header td {
+		font-family: var(--font-display);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		/* `--text-color-faint` (l'`ink-3` du mockup) ne donne que 3,56:1 sur la
+		   surface haute à ce corps : un cran plus foncé pour rester lisible. */
+		color: var(--text-color-secondary);
+	}
+	.ranking th,
+	.ranking td {
+		border-right: none;
+	}
+	/* Survol de ligne : la surface de ligne du mockup, jamais sur l'en-tête. */
+	.ranking tr:not(.header):hover td {
+		background: var(--background-row);
+	}
+	/* Le forum n'utilise pas de tableau : sa ligne d'en-tête est un `div.header`.
+	   Même traitement, sinon « Catégorie / Sujets / Messages » reste le seul
+	   en-tête de liste du site à ne pas ressembler aux autres. */
+	.header.category {
+		font-family: var(--font-display);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		/* `--text-color-faint` (l'`ink-3` du mockup) ne donne que 3,56:1 sur la
+		   surface haute à ce corps : un cran plus foncé pour rester lisible. */
+		color: var(--text-color-secondary);
+	}
+
+	/* ====== Pagination ======
+	 *
+	 * Les numéros étaient des pastilles rondes posées sur rien. Le mockup en fait
+	 * des cases carrées bordées, de taille fixe, la page courante en vert plein
+	 * (`.pager .pg`). */
+	.pagination a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 28px;
+		height: 28px;
+		padding: 0 6px;
+		border: 1px solid var(--border-strong);
+		border-radius: 0;
+		background: var(--background-header);
+		color: var(--text-color-secondary);
+		font-family: var(--font-display);
+		font-size: 13px;
+	}
+	.pagination a:hover {
+		background: var(--background-header);
+		border-color: var(--primary);
+		color: var(--primary);
+	}
+	.pagination a.current {
+		background: var(--primary);
+		border-color: var(--primary);
+		color: var(--primary-text);
+	}
+
+	/* La classe utilitaire `.grey` sert d'encre de libellé (« victoires »,
+	   « égalités »…) et pointe sur `--grey-8`, un gris de milieu de gamme : 2,8:1
+	   sur la crème. L'encre secondaire dit la même chose et se lit. */
+	.panel .grey {
+		color: var(--text-color-secondary);
+	}
+
+	/* Compteur « obtenus / total » des catégories de trophées : il est écrit en
+	   `--white`, ce qui marchait quand l'en-tête de panneau était sombre. Il est
+	   posé à côté de la barre, sur la surface haute : encre normale. */
+	.category-bar-wrapper .stats {
+		color: var(--text-color);
+	}
+
+	/* Pastille « + N offerts » de la banque : un vert Material clair écrit en
+	   plein sur la crème, 2,6:1. Le vert de marque du thème est fait pour ça. */
+	.bonus-badge {
+		border-color: var(--primary);
+		color: var(--primary);
+	}
+
+	/* ====== Fiche d'objet (marché, inventaire, forge) ======
+	 *
+	 * `item-preview.scss` peint sa barre de titre en #2a2a2a avec du texte #eee,
+	 * en dur : c'était le vieux « header de panneau toujours sombre » du v2. Au
+	 * milieu des crèmes du v3, cette bande noire est le seul élément à ne suivre
+	 * aucun jeton. Elle redevient un en-tête de panneau comme les autres. */
+	.item-preview > .header {
+		background: var(--background-header);
+		border-bottom: 1px solid var(--border);
+		color: var(--text-color);
+	}
+	.item-preview > .header h2.name {
+		color: var(--text-color);
+		font-family: var(--font-display);
+		font-size: 14px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	.item-preview .rarity {
+		border-radius: 0;
+	}
+
+	/* ====== Boutons ======
+	 *
+	 * Les boutons Vuetify « elevated » sont peints en blanc pur, hérité d'un
+	 * thème Material : sur les crèmes du v3 ils ressortaient comme des trous
+	 * blancs, et en sombre une règle de global.scss les peint en noir pur. Le
+	 * mockup en fait des rectangles posés sur la surface haute, bordés d'un trait
+	 * franc, dont le survol passe au vert (`.btn`).
+	 *
+	 * Les boutons colorés par Vuetify (`color="primary"`, `bg-*`) sont exclus :
+	 * ce sont les actions principales, elles gardent leur aplat. */
+	.v-btn--elevated:not([class*="bg-"]),
+	.v-btn--variant-outlined:not([class*="bg-"]) {
+		background-color: var(--background-header);
+		border: 1px solid var(--border-strong);
+		box-shadow: none;
+		color: var(--text-color);
+		transition: border-color .12s ease, color .12s ease;
+	}
+	.v-btn--elevated:not([class*="bg-"]):hover,
+	.v-btn--variant-outlined:not([class*="bg-"]):hover {
+		border-color: var(--primary);
+		color: var(--primary);
+	}
+	/* L'ombre portée des boutons colorés tombe aussi : le v3 n'a pas d'ombre. */
+	.v-btn {
+		box-shadow: none;
+	}
+
+	/* ====== Champs ======
+	 *
+	 * Le v2 posait un filet clair sur la couleur de page. Le mockup donne au
+	 * champ sa propre surface (`--background-input`, déjà appliquée dans
+	 * global.scss) et un trait franc, et marque le focus par le vert plutôt que
+	 * par un halo. */
+	input,
+	textarea,
+	select {
+		border-color: var(--border-strong);
+		border-radius: 0;
+	}
+	input:focus,
+	textarea:focus,
+	select:focus {
+		border-color: var(--primary);
 	}
 
 	/* ====== Coffre des récompenses ====== */

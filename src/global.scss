@@ -558,7 +558,9 @@ input, textarea {
 	min-height: 26px;
 	padding: 0 4px;
 	outline: 0;
-	background: var(--pure-white);
+	// Surface de champ : --background-input vaut --pure-white en v2, donc
+	// l'ancien thème rend exactement comme avant.
+	background: var(--background-input);
 	color: var(--text-color);
 }
 select {
@@ -569,7 +571,7 @@ select {
 select {
 	-webkit-appearance: menulist-button;
 	border: solid 1px var(--border);
-	background-color: var(--pure-white);
+	background-color: var(--background-input);
 	color: var(--text-color);
 }
 input:active, input:focus {
