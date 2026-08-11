@@ -625,6 +625,11 @@ class SunSpear extends WhiteWeaponAnimation {
 	static SPEAR_RANGE = 3
 	/** Inclinaison de port, pointe levée, quand la lance n'est pas en train de piquer. */
 	static REST_TILT = Math.PI / 4
+	/**
+	 * Vu de face, c'est-à-dire en visant vers le bas de l'écran, le poireau ne remonte pas ses
+	 * mains des 10 px qu'il prend de dos : la lance passe alors au-dessus de la ligne visée.
+	 */
+	static FRONT_DROP = 10
 	/** Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance. */
 	static PULL_BACK = 30
 	static REACH = 110
@@ -705,14 +710,14 @@ class SunSpear extends WhiteWeaponAnimation {
 		}
 	}
 
-	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, _front: boolean = true): void {
+	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, front: boolean = true): void {
 		// Contrairement à une épée, la lance pivote DANS la main : on tourne autour du point de
 		// tenue, puis on la place le long de son propre axe. Faire l'inverse (le tourner-déplacer
 		// des armes blanches) reculerait la prise vers le bas de l'écran au lieu de la hampe.
 		// Le repère reçu est déjà orienté vers la cible par le poireau, donc pointe levée de
 		// REST_TILT au repos, et parfaitement dans l'axe une fois en garde.
 		ctx.rotate(-SunSpear.REST_TILT * (1 - this.aim))
-		ctx.translate(this.x + this.thrust, this.z)
+		ctx.translate(this.x + this.thrust, this.z + (front ? SunSpear.FRONT_DROP : 0))
 		ctx.drawImage(texture, 0, 0, this.w, this.h)
 	}
 }
