@@ -642,6 +642,8 @@ class SunSpear extends WhiteWeaponAnimation {
 	public aim = 0
 	/** Trois temps : mise en garde, piqué, puis retour au port une fois la lance dégagée. */
 	public steps = 3
+	/** Cibles embrochées en cours de repoussée (EFFECT_REPEL) : glissement visuel pendant le retrait. */
+	private repels: { entity: FightEntity, cell: Cell, sx: number, sy: number, ex: number, ey: number }[] = []
 
 	constructor(game: Game) {
 		super(game, T.sun_spear, 42)
@@ -649,6 +651,7 @@ class SunSpear extends WhiteWeaponAnimation {
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
 		const duration = super.shoot(leekX, leekY, handPos, angle, orientation, pos, targets, caster, cell, scale)
+		this.repels = []
 		if (caster.cell && cell) {
 			const dx = Math.sign(cell.x - caster.cell.x)
 			const dy = Math.sign(cell.y - caster.cell.y)
@@ -663,6 +666,14 @@ class SunSpear extends WhiteWeaponAnimation {
 				if (cells.length) {
 					this.game.setEffectAreaLaser(cells, '#ffb029', dx, dy, duration + 40)
 				}
+			}
+			// Rejoue l'EFFECT_REPEL du serveur : cellules logiques à jour dès maintenant
+			// (le log de combat n'a pas d'action de déplacement), le visuel glisse pendant
+			// la détente puis est scellé par setCell en fin de piqué.
+			for (const move of this.game.applyWeaponRepel(caster, cell, LeekWars.weapons[LeekWars.items[this.id].params])) {
+				const xy = this.game.ground.field.cellToXY(move.cell)
+				const pixels = this.game.ground.xyToXYPixels(xy.x, xy.y)
+				this.repels.push({ entity: move.entity, cell: move.cell, sx: move.entity.ox, sy: move.entity.oy, ex: pixels.x, ey: pixels.y })
 			}
 		}
 		return duration
@@ -687,6 +698,13 @@ class SunSpear extends WhiteWeaponAnimation {
 			const i = Math.min(1, this.inte)
 			this.aim = 1
 			this.thrust = -SunSpear.PULL_BACK * (1 - i) + SunSpear.REACH * Math.sin(i * Math.PI)
+			// La pointe est en bout de course à mi-détente : les cibles embrochées
+			// glissent alors vers leur cellule de repoussée pendant le retrait du fer.
+			const slide = Math.max(0, (i - 0.5) * 2)
+			for (const repel of this.repels) {
+				repel.entity.ox = repel.sx + (repel.ex - repel.sx) * slide
+				repel.entity.oy = repel.sy + (repel.ey - repel.sy) * slide
+			}
 		} else {
 			// La lance est dégagée : seulement maintenant on relève la pointe.
 			this.inte += dt * 0.08
@@ -697,6 +715,13 @@ class SunSpear extends WhiteWeaponAnimation {
 			this.step++
 			if (this.step === 2) {
 				S.sword.play(this.game)
+			}
+			if (this.step === 3) {
+				// Lance dégagée : positions visuelles scellées sur les cellules logiques.
+				for (const repel of this.repels) {
+					repel.entity.setCell(repel.cell)
+				}
+				this.repels = []
 			}
 			if (this.step <= this.steps) {
 				this.inte = 0.001

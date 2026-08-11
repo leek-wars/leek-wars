@@ -5,6 +5,7 @@ const AcceptConditions = () => import(/* webpackChunkName: "[request]" */ `@/com
 const AdminEmails = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-emails.vue`)
 const AdminErrors = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-errors.vue`)
 const AdminHats = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-hats.vue`)
+const AdminWeapons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-weapons.vue`)
 const AdminSkins = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-skins.vue`)
 const AdminNewsletters = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-newsletters.vue`)
 const AdminServers = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-servers.vue`)
@@ -153,6 +154,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/emails', component: AdminEmails, beforeEnter: connected },
 	{ path: '/admin/skins', component: AdminSkins, beforeEnter: connected },
 	{ path: '/admin/hats', component: AdminHats, beforeEnter: connected },
+	{ path: '/admin/weapons', component: AdminWeapons, beforeEnter: connected },
 	{ path: '/admin/newsletters', component: AdminNewsletters, beforeEnter: connected },
 	{ path: '/admin/errors', component: AdminErrors, beforeEnter: connected },
 	{ path: '/admin/servers', component: AdminServers, beforeEnter: connected },

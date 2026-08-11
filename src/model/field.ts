@@ -283,6 +283,24 @@ class Field {
 		return current
 	}
 
+	/**
+	 * Miroir de Map.getRepelLastAvailableCell (générateur) : repousse une entité de
+	 * `distance` cases en s'éloignant du lanceur, arrêt net sur le premier obstacle,
+	 * la première entité ou le bord de la carte. C'est le déplacement d'EFFECT_REPEL.
+	 */
+	public computeRepelCell(casterCell: Cell, entityCell: Cell, distance: number) {
+		const dx = Math.sign(entityCell.x - casterCell.x)
+		const dy = Math.sign(entityCell.y - casterCell.y)
+		if (dx === 0 && dy === 0) { return entityCell } // même case : pas de direction
+		let current = entityCell
+		for (let i = 0; i < distance; ++i) {
+			const next = this.next_cell(current, dx, dy)
+			if (!next || next.obstacle || next.entity) { break }
+			current = next
+		}
+		return current
+	}
+
 	public canFit(obstacle: Obstacle, cell: Cell): boolean {
 		for (const coord of obstacle.geometry.cells) {
 			const c = this.next_cell(cell, coord[0], coord[1])

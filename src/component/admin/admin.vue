@@ -108,6 +108,12 @@
 							<h2>Chapeaux</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/weapons">
+						<div v-ripple class="section card">
+							<v-icon>mdi-pistol</v-icon>
+							<h2>Armes</h2>
+						</div>
+					</router-link>
 					<router-link to="/admin/skins">
 						<div v-ripple class="section card">
 							<v-icon>mdi-palette</v-icon>

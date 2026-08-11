@@ -24,6 +24,7 @@ import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
+import { WeaponTemplate } from '@/model/weapon'
 
 import { Chest } from './chest'
 import { Mob } from './mob'
@@ -1369,6 +1370,11 @@ class Game {
 			}
 
 			if (this.jumping) {
+				// Le log n'a pas d'action de déplacement pour les effets de mouvement :
+				// on rejoue l'EFFECT_REPEL (lance du soleil), comme le grappin et le
+				// gant de boxe plus haut côté puces. La resynchro visuelle de fin de
+				// saut lit les cellules logiques mises à jour ici.
+				this.applyWeaponRepel(leek, cell, weapon_template)
 				this.actionDone()
 				break
 			}
@@ -2378,6 +2384,53 @@ class Game {
 				}
 		// 	}
 		// }
+	}
+
+	/**
+	 * Rejoue la branche TYPE_REPEL du serveur (Attack.java) pour une arme : le log de
+	 * combat ne contient pas d'action de déplacement pour les effets de mouvement,
+	 * c'est au client de recalculer (comme le grappin / gant de boxe côté puces).
+	 * Les entités de la zone, de la plus proche à la plus lointaine, sont repoussées
+	 * de value1 cases en s'éloignant du tireur. Poussées séquentielles, occupation
+	 * mise à jour entre chaque : une entité déjà arrêtée bloque la suivante, comme
+	 * sur le serveur. Seules les cellules logiques sont mises à jour ici, l'appelant
+	 * anime (ou pas) le déplacement visuel à partir des mouvements retournés.
+	 */
+	public applyWeaponRepel(caster: FightEntity, cell: Cell, template: WeaponTemplate): {entity: FightEntity, cell: Cell}[] {
+		const repel = template.effects.find((e) => e.id === EffectType.REPEL)
+		if (!repel || !caster.cell) { return [] }
+
+		// Entités de la zone. Cas laser à part : comme AreaLaserLine côté serveur, la
+		// ligne va de min_range à max_range dans la direction visée (getAreaCells ne
+		// sait pas produire cette zone-là), stoppée par un obstacle si l'arme a la ligne
+		// de vue. La plus proche d'abord : l'ordre de poussée en dépend.
+		const entities = [] as FightEntity[]
+		if (template.area === Area.LASER_LINE) {
+			const dx = Math.sign(cell.x - caster.cell.x)
+			const dy = Math.sign(cell.y - caster.cell.y)
+			if ((dx === 0) === (dy === 0)) { return [] } // pas aligné : zone vide
+			let current: Cell | null = caster.cell
+			for (let i = 1; i <= template.max_range; ++i) {
+				current = this.ground.field.next_cell(current, dx, dy)
+				if (!current) { break }
+				if (i < template.min_range) { continue }
+				if (template.los && current.obstacle) { break }
+				if (current.entity) { entities.push(current.entity as FightEntity) }
+			}
+		} else {
+			entities.push(...this.ground.field.getTargets(cell, template.area, caster.cell, template.max_range, template.min_range) as FightEntity[])
+		}
+
+		const moves = [] as {entity: FightEntity, cell: Cell}[]
+		for (const entity of entities) {
+			if (entity === caster || entity.dead) { continue }
+			if (entity.states.has(State.STATIC)) { continue } // slideEntity ignore les statiques
+			const destination = this.ground.field.computeRepelCell(caster.cell, entity.cell!, repel.value1)
+			if (destination === entity.cell) { continue }
+			destination.setEntity(entity) // cellule logique à jour, sans toucher au visuel
+			moves.push({ entity, cell: destination })
+		}
+		return moves
 	}
 
 	public createEffectAreaCells(cells: Cell[], lines: number[][], convert: {[key: number]: [number, number]}) {
