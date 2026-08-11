@@ -378,7 +378,11 @@ body:not(.v2) {
 	.versus {
 		color: var(--text-color);
 	}
-	.views-counter {
+	/* Même cas, ailleurs : tout ce qui est glissé dans le slot `#actions` d'un
+	   panneau se retrouve sur l'en-tête, et plusieurs composants y écrivent en
+	   encre claire fixe. */
+	.views-counter,
+	.level-talent .level {
 		color: var(--panel-header-color);
 	}
 
