@@ -145,6 +145,25 @@ body:not(.v2) {
 		border-bottom: 1px solid var(--border);
 	}
 
+	/* Trois panneaux par ligne au maximum.
+	 *
+	 * Les pages posent leurs panneaux dans un `.container` en flex, avec une
+	 * base de 320 px (400 px en `large`) : le nombre de colonnes ne dépend que
+	 * de la largeur disponible. Tant que le contenu était borné à 1100 px ça
+	 * donnait 3 colonnes ; en pleine largeur on monte à 5 sur un grand écran, et
+	 * les panneaux deviennent des bandes.
+	 *
+	 * `max()` garde les deux comportements : en dessous de ~1000 px c'est la
+	 * base en pixels qui gagne et les panneaux se replient normalement, au delà
+	 * c'est le tiers qui gagne et plafonne à 3 colonnes. Les 8 px retranchés
+	 * compensent les deux gouttières de 12 px réparties sur trois colonnes. */
+	.container > .panel {
+		flex-basis: max(320px, calc(33.333% - 8px));
+	}
+	.container.large > .panel {
+		flex-basis: max(400px, calc(33.333% - 8px));
+	}
+
 	/* ====== Barre de page (titre + onglets) ====== */
 
 	/* Même traitement que la barre du haut : une surface, un trait, et les
