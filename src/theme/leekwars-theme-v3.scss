@@ -46,6 +46,9 @@ body {
 	--background-header: #FBF7E8;
 	--background-outer: #E7E1CC;
 	--footer-color: #4A5847;
+	/* `bg-row` et `ink-3` du mockup : surface de survol et encre la plus pale */
+	--background-row: #FBF7E8;
+	--text-color-faint: #7A8676;
 	--border: rgba(14, 20, 16, 0.12);
 	/* `line-strong` du mockup : c'est ce trait qui delimite les panneaux, le
 	   design ne comptant sur aucune ombre pour les detacher du fond. */
@@ -159,6 +162,8 @@ body {
 		--background-header: #11161A;
 		--background-outer: #07090A;
 		--footer-color: #A8B4A4;
+		--background-row: #131A1E;
+		--text-color-faint: #6B7A66;
 		--border: rgba(255, 255, 255, 0.08);
 		--border-strong: rgba(255, 255, 255, 0.16);
 		--text-color: #E8F0E6;
