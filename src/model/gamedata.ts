@@ -25,7 +25,7 @@ interface InlineData {
 
 function getApiUrl(): string {
 	const port = window.location.port
-	const LOCAL = port === '8500' || port === '5100'
+	const LOCAL = port === '8500' || port === '5100' || window.location.hostname === 'leekwars.local'
 	const DEV = port === '8080'
 	if (LOCAL) return window.location.origin + '/api/'
 	if (DEV) return 'https://leekwars.com/api/'

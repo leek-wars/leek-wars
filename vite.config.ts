@@ -376,10 +376,12 @@ function gameDataPlugin(): Plugin {
 
 				// Utiliser la même source API que le client selon le port d'accès
 				const host = req.headers['x-forwarded-host'] as string || req.headers.host || ''
+				const hostname = host.split(':')[0]
 				const port = host.split(':')[1] || ''
-				console.log('[game-data] Request host=' + req.headers.host + ' x-forwarded-host=' + req.headers['x-forwarded-host'] + ' → port=' + port + ' → api=' + ((port === '8500' || port === '5100') ? 'local' : 'prod'))
-				const api = (port === '8500' || port === '5100')
-					? 'http://localhost:' + port + '/api/'
+				const local = port === '8500' || port === '5100' || hostname === 'leekwars.local'
+				console.log('[game-data] Request host=' + req.headers.host + ' x-forwarded-host=' + req.headers['x-forwarded-host'] + ' → port=' + port + ' → api=' + (local ? 'local' : 'prod'))
+				const api = local
+					? 'http://localhost:' + (port || '8500') + '/api/'
 					: 'https://leekwars.com/api/'
 
 				let cache: ApiCache
@@ -499,6 +501,8 @@ export default defineConfig({
 	server: {
 		port: 8080,
 		host: true,
+		// Hostnames locaux servis via le proxy Apache (sinon Vite rejette le WS HMR par Origin)
+		allowedHosts: ['leekwars.local', 'leekwars-beta.local'],
 		// Static files from public/ are served automatically by Vite
 		watch: {
 			// Use polling to avoid ENOSPC error on systems with low file watcher limit
