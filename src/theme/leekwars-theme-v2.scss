@@ -15,6 +15,9 @@
  */
 
 html body.v2 {
+	/* Police d'affichage : titres, en-tetes, onglets, libelles de section */
+	--font-display: "Roboto", sans-serif;
+
 	/* Marque */
 	--primary: #5fad1b;
 	/* Encre posee SUR un aplat de marque. */

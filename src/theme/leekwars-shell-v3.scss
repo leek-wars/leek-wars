@@ -90,15 +90,12 @@ body:not(.v2) {
 	}
 
 	/* Compteurs de la barre du haut : le mockup en fait des « topstat », des
-	   boîtes bordées en chiffres monospacés, pas des boutons. La police pixel du
-	   mockup n'étant pas embarquée (elle n'a ni cyrillique ni CJK, cf. les 17
-	   langues), on garde le monospace du système, qui donne le même alignement
-	   de chiffres. */
+	   boîtes bordées aux chiffres pixel, pas des boutons. */
 	.header .header-button .farmer-habs,
 	.header .header-button .farmer-crystals,
 	.header .header-button .farmer-fights {
-		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
-		font-size: 12.5px;
+		font-family: var(--font-display);
+		font-size: 13px;
 		font-weight: 600;
 		letter-spacing: 0.02em;
 	}
@@ -158,6 +155,14 @@ body:not(.v2) {
 	.panel > .header {
 		border-bottom: 1px solid var(--border);
 	}
+	/* En-tete de panneau : la typo d'affichage, en capitales espacees, comme le
+	   `.panel-header` du mockup. */
+	.panel > .header h2 {
+		font-family: var(--font-display);
+		font-size: 14px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
 
 	/* Trois panneaux par ligne au maximum.
 	 *
@@ -196,6 +201,7 @@ body:not(.v2) {
 		display: none;
 	}
 	.page-bar .tabs .tab {
+		font-family: var(--font-display);
 		background: transparent;
 		color: var(--text-color-secondary);
 		border-bottom: 2px solid transparent;
@@ -228,6 +234,7 @@ body:not(.v2) {
 	h1 {
 		background: none;
 		color: var(--text-color);
+		font-family: var(--font-display);
 		font-size: 18px;
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
@@ -301,29 +308,27 @@ body:not(.v2) {
 	.menu-center .section.router-link-active {
 		text-shadow: none;
 	}
-	/* Les intitulés de section du menu : capitales, corps réduit, très espacés,
-	   comme les « ◆ MES POIREAUX » du mockup. */
-	/* Les intitules de section, facon « ◆ MES POIREAUX » : tres petits, tres
-	   espaces, dans l'encre la plus pale. */
+	/* Les intitulés de section du menu, façon « ◆ MES POIREAUX » du mockup :
+	   capitales, corps réduit, très espacées, dans l'encre la plus pâle. */
 	.menu h4 {
-		font-size: 9px;
+		font-family: var(--font-display);
+		font-size: 10px;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--text-color-faint);
 		font-weight: 500;
 		padding: 4px 14px 8px;
 	}
-	/* Les pastilles de compteur reprennent la forme des jetons du mockup :
-	   un rectangle bordé, pas une bulle. */
-	/* `.nav-badge` : fond de champ, trait fort, 10 px monospace, colle a droite */
+	/* Les pastilles de compteur reprennent la forme des `.nav-badge` du mockup :
+	   un rectangle bordé sur le fond de champ, pas une bulle. */
 	.menu .section[label]::after,
 	.menu .awards::after {
 		background: var(--background-secondary);
 		border: 1px solid var(--border-strong);
 		color: var(--text-color-secondary);
 		border-radius: 0;
-		font-family: ui-monospace, 'SF Mono', monospace;
-		font-size: 10px;
+		font-family: var(--font-display);
+		font-size: 11px;
 		padding: 1px 5px;
 	}
 	.menu .section.router-link-active[label]::after {
@@ -372,17 +377,16 @@ body:not(.v2) {
 		border: none;
 		border-bottom: 1px solid var(--border-strong);
 	}
-	/* En-tête de section du panneau social : capitales espacées et corps réduit,
-	   comme les `.aside-head` du mockup. */
-	/* `.aside-head` : 10/14 de marge, corps 9, interlettrage 0.06, capitales,
-	   sur la surface haute et non sur celle du panneau. */
+	/* En-tête de section du panneau social, façon `.aside-head` du mockup :
+	   capitales espacées et corps réduit, sur la surface haute. */
 	.blabla-panel .panel > .header {
 		height: auto;
 		background: var(--background-header);
 		border-bottom: 1.5px solid var(--border);
 	}
 	.blabla-panel .panel > .header h2 {
-		font-size: 9px;
+		font-family: var(--font-display);
+		font-size: 10px;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		height: auto;
@@ -390,14 +394,13 @@ body:not(.v2) {
 		padding: 10px 14px;
 		color: var(--text-color);
 	}
-	/* Le compteur de non-lus devient la pastille verte du mockup. */
-	/* `.aside-head .count` : pastille verte pleine, chiffres monospacés. */
+	/* Le compteur de non-lus devient la pastille verte pleine du mockup. */
 	.blabla-panel .panel > .header .label {
 		background: var(--primary);
 		color: var(--primary-text);
 		border-radius: 0;
-		font-family: ui-monospace, 'SF Mono', monospace;
-		font-size: 10px;
+		font-family: var(--font-display);
+		font-size: 11px;
 		padding: 1px 6px;
 	}
 	/* Survol d'une notification ou d'un message : la surface de ligne. */

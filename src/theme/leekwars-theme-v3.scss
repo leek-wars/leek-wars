@@ -16,6 +16,12 @@
  */
 
 body {
+	/* Police d'affichage. Le mockup demande Press Start 2P, qui n'a que du
+	   latin ; Pixelify Sans a le meme esprit pixel et couvre le cyrillique.
+	   Roboto ferme la chaine pour le japonais, le coreen et le chinois, qui
+	   n'ont pas d'equivalent pixel : le navigateur y retombe glyphe par glyphe. */
+	--font-display: "Pixelify Sans", "Roboto", sans-serif;
+
 	/* Marque.
 	 *
 	 * #146128 et non le #1F8A3B du mockup : mesure faite, le vert sert 113 fois
