@@ -629,7 +629,7 @@ class SunSpear extends WhiteWeaponAnimation {
 	 * Vu de face, c'est-à-dire en visant vers le bas de l'écran, le poireau ne remonte pas ses
 	 * mains des 10 px qu'il prend de dos : la lance passe alors au-dessus de la ligne visée.
 	 */
-	static FRONT_DROP = 26
+	static FRONT_DROP = 32
 	/** Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance. */
 	static PULL_BACK = 30
 	static REACH = 110
