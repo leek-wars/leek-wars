@@ -99,6 +99,22 @@ body {
 	--grey-12: #DCD6C0;
 	--grey-13: #F2ECD6;
 
+	/* Podium du classement. Le v2 utilise un or #ffa900 qui tombe a 1,8 de
+	   contraste sur le parchemin. Les teintes sombres reprennent celles du
+	   mockup (gold, argent #C0C8D0, bronze #C77A0E), les claires sont leurs
+	   equivalents fonces. */
+	--rank-first: #8A6200;
+	--rank-second: #56634F;
+	--rank-third: #8A3D00;
+
+	/* Couleurs de grade, appliquees aux pseudos. Les teintes du v2 (#ffa900,
+	   #df1500) tombent a 1,8 de contraste sur le parchemin : illisibles. Elles
+	   sont foncees en theme clair et gardees vives en sombre. */
+	--grade-moderator: #A66A00;
+	--grade-admin: #C2382A;
+	--grade-contributor: #0F7A2A;
+	--grade-referent: #1A7AA0;
+
 	/* Couleurs sémantiques */
 	--success: #1F8A3B;
 	--warning: #C77A0E;
@@ -118,6 +134,9 @@ body {
 	&.dark {
 		--primary: #7CFF6B;
 		--primary-text: #0B0F0B;
+		/* En sombre, « le vert lisible comme encre » est le neon lui-meme : le
+		   vert fonce du theme clair donnerait du vert sur noir. */
+		--primary-strong: #7CFF6B;
 
 		--pure-white: #0B0F0B;
 		--pure-black: #E8F0E6;
@@ -148,6 +167,15 @@ body {
 		--page-bar-color: #E8F0E6;
 		--page-bar-tab-background: rgba(255, 255, 255, 0.06);
 		--page-bar-tab-background-hover: rgba(255, 255, 255, 0.12);
+
+		--rank-first: #FFD23A;
+		--rank-second: #C0C8D0;
+		--rank-third: #C77A0E;
+
+		--grade-moderator: #FFB23A;
+		--grade-admin: #FF5040;
+		--grade-contributor: #7CFF6B;
+		--grade-referent: #5CE0FF;
 
 		--success: #7CFF6B;
 		--warning: #FFB23A;

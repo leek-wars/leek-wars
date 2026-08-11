@@ -771,15 +771,15 @@
 			border-right: none;
 		}
 		:deep(.first a) {
-			color: #ffa900;
+			color: var(--rank-first);
 			font-weight: bold;
 		}
 		:deep(.second a) {
-			color: #9c9c9c;
+			color: var(--rank-second);
 			font-weight: bold;
 		}
 		:deep(.third a) {
-			color: #ae4e00;
+			color: var(--rank-third);
 			font-weight: bold;
 		}
 		tr.me {
