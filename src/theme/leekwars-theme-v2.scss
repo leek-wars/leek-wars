@@ -39,6 +39,9 @@ html body.v2 {
 	--background-secondary: #eee;
 	--background-disabled: #bbb;
 	--background-header: #e5e5e5;
+	/* Surface d'un champ : le v2 peignait les champs en --pure-white, le jeton
+	   garde exactement cette valeur (et son inversion en sombre). */
+	--background-input: var(--pure-white);
 	/* Fond hors de la page, visible autour du contenu */
 	--background-outer: #333;
 	/* Encre du pied de page, pose sur ce fond exterieur et non sur la page */
