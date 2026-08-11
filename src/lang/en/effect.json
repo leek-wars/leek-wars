@@ -48,6 +48,7 @@
 	"stackable": "stackable",
 	"state_1": "Statue",
 	"state_11": "Static",
+	"state_12": "Sterile",
 	"state_2": "Unhealable",
 	"state_3": "Invincible",
 	"state_4": "Pacifist",

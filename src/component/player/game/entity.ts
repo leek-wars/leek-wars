@@ -43,7 +43,7 @@ abstract class FightEntity extends Entity {
 
 	static stateImages: Map<number, HTMLImageElement> = new Map()
 	static stateColors = [
-		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue'
+		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue', 'orange'
 	]
 
 	// Infos générales

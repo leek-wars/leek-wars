@@ -48,6 +48,7 @@
 	"stackable": "kumulativ",
 	"state_1": "Statue",
 	"state_11": "Statisch",
+	"state_12": "Steril",
 	"state_2": "Nicht heilbar",
 	"state_3": "Unbesiegbar",
 	"state_4": "Pazifist",

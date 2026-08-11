@@ -48,6 +48,7 @@
 	"stackable": "acumulable",
 	"state_1": "Estatua",
 	"state_11": "Estático",
+	"state_12": "Estéril",
 	"state_2": "Incurable",
 	"state_3": "Invencible",
 	"state_4": "Pacifista",

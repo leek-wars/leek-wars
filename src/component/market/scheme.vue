@@ -3,12 +3,12 @@
 		<div v-if="showResult" v-ripple class="group result" @click="possible && emitter.emit('craft', scheme)">
 			<rich-tooltip-item v-if="!sharedTooltip" v-slot="{ props }" :item="result" :bottom="true" :inventory="true" :craft-cost="ingredientCost" @update:model-value="$emit('update:modelValue', $event)">
 				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
-					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type" loading="lazy">
+					<img :src="itemImageUrl(result)" :type="result.type" loading="lazy">
 					<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 				</div>
 			</rich-tooltip-item>
 			<div v-else class="item" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}" @click.stop="possible && emitter.emit('craft', scheme)" @mouseenter="$emit('show-tooltip', { item: result, quantity: 1, craftCost: ingredientCost, event: $event })" @mouseleave="$emit('hide-tooltip')">
-				<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
+				<img :src="itemImageUrl(result)" :type="result.type">
 				<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 			</div>
 		</div>
@@ -18,13 +18,13 @@
 				<template v-if="ingredient">
 					<rich-tooltip-item v-if="!sharedTooltip" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('update:modelValue', $event)">
 						<div class="item" v-bind="props" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)">
-							<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type" loading="lazy">
+							<img :src="itemImageUrl(ingredient.item)" :type="ingredient.item.type" loading="lazy">
 							<div v-if="ingredient.quantity > 1" class="quantity">{{ $filters.number(ingredient.quantity) }}</div>
 							<v-icon v-if="ingredientScheme(ingredient)" class="craft-icon">mdi-hammer-wrench</v-icon>
 						</div>
 					</rich-tooltip-item>
 					<div v-else :key="'s' + i" class="item" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)" @mouseenter="$emit('show-tooltip', { item: ingredient.item, quantity: ingredient.quantity, event: $event })" @mouseleave="$emit('hide-tooltip')">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type" loading="lazy">
+						<img :src="itemImageUrl(ingredient.item)" :type="ingredient.item.type" loading="lazy">
 						<div v-if="ingredient.quantity > 1" class="quantity">{{ $filters.number(ingredient.quantity) }}</div>
 						<v-icon v-if="ingredientScheme(ingredient)" class="craft-icon">mdi-hammer-wrench</v-icon>
 					</div>
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-import { ITEM_CATEGORY_NAME, ItemTemplate } from '@/model/item'
+import { ItemTemplate, itemImageUrl } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { SchemeTemplate } from '@/model/scheme'
 import { store } from '@/model/store'

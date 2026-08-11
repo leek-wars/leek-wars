@@ -48,6 +48,7 @@
 	"stackable": "kumulatif",
 	"state_1": "Patung",
 	"state_11": "Statis",
+	"state_12": "Steril",
 	"state_2": "Tidak dapat disembuhkan",
 	"state_3": "Tak terkalahkan",
 	"state_4": "Pasifis",

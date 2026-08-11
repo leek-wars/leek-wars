@@ -9,7 +9,7 @@
 					<div v-ripple class="group result">
 						<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @update:model-value="$emit('update:modelValue', $event)">
 							<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
-								<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" :type="LeekWars.items[scheme.result].type">
+								<img :src="itemImageUrl(LeekWars.items[scheme.result])" :type="LeekWars.items[scheme.result].type">
 								<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 							</div>
 						</rich-tooltip-item>
@@ -44,7 +44,7 @@
 						<div v-for="(_, i) in 9" :key="i" class="cell" :class="{['cell' + i]: true}">
 							<rich-tooltip-item v-if="scheme.items[i] && LeekWars.items[scheme.items[i][0]]" :key="i" :item="LeekWars.items[scheme.items[i][0]]" :bottom="true" :inventory="true" :quantity="scheme.items[i][1]">
 								<div class="item" :type="LeekWars.items[scheme.items[i][0]].type">
-									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.items[i][0]].type] + '/' + LeekWars.items[scheme.items[i][0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
+									<img :src="itemImageUrl(LeekWars.items[scheme.items[i][0]])">
 								</div>
 							</rich-tooltip-item>
 							<input v-if="scheme.items[i]" v-model="scheme.items[i]![0]" class="item-id">
@@ -53,7 +53,7 @@
 						<div class="cell" :class="{cell8: true}">
 							<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">
 								<div class="item" :type="LeekWars.items[scheme.result].type">
-									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'">
+									<img :src="itemImageUrl(LeekWars.items[scheme.result])">
 									<input v-model="scheme.result" class="item-id">
 									<input v-model="scheme.quantity" class="quantity">
 								</div>
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
+	import { itemImageUrl } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
@@ -84,8 +84,6 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	defineOptions({})
-
-	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
 
 	const router = useRouter()
 	const schemes = ref<SchemeTemplate[] | null>(null)
