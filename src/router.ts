@@ -33,6 +33,7 @@ const BankBuy = () => import(/* webpackChunkName: "bank" */ `@/component/bank/ba
 const BankValidate = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-validate.vue`)
 const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank.${locale}.i18n`)
 const BankHistory = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-history.vue`)
+const LWPlus = () => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus.${locale}.i18n`)
 const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/component/change-email/change-email.${locale}.i18n`)
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)
@@ -308,6 +309,9 @@ if (import.meta.env.VITE_BANK !== 'false') {
 		{ path: '/bank/validate/success/:crystals/:vendor', component: BankValidate, props: { success: true }, beforeEnter: connected },
 		{ path: '/bank/validate/failed/:reason', component: BankValidate, props: { success: false }, beforeEnter: connected },
 		{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: { success: false }, beforeEnter: connected },
+		// Abonnement LW+ (#3303) : sous le même drapeau que la banque, un groupe qui
+		// coupe les paiements ne doit pas se voir proposer un abonnement non plus.
+		{ path: '/lwplus', component: LWPlus, beforeEnter: connected },
 	)
 }
 

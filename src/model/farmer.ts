@@ -102,6 +102,8 @@ class Farmer {
 	public pass!: boolean
 	public errors!: number
 	public contributor!: boolean
+	public lwplus!: boolean // #3303 abonné LW+ (badge, public)
+	public lwplus_until!: number // #3303 fin de la période payée, en secondes (bloc privé : soi uniquement)
 	public referent!: boolean
 	public rewards!: Reward[]
 	public resources!: InventoryItem[]
