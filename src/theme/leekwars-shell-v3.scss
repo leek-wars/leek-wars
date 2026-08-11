@@ -89,6 +89,25 @@ body:not(.v2) {
 		filter: brightness(1.08);
 	}
 
+	/* ====== Largeur ======
+	 *
+	 * Le v2 borne le contenu à 1100 px et n'ouvre la pleine largeur que sur les
+	 * pages marquées `large` dans le routeur. Le v3 est pleine largeur partout :
+	 * sa coquille (menu à gauche, panneau social à droite) encadre déjà le
+	 * contenu, et une colonne de 1100 px flottant au milieu de deux colonnes
+	 * collées aux bords ne tient pas debout.
+	 *
+	 * Le drapeau `large` du routeur reste en place et sans effet ici : il
+	 * redeviendra utile le jour où on voudra borner une page en particulier. */
+	.app-wrapper {
+		max-width: none;
+	}
+	/* Le pied de page suit, sinon il reste centré sur 1100 px sous un contenu
+	   qui va au bord. */
+	.footer .wrapper {
+		max-width: none;
+	}
+
 	/* ====== Conteneur de page ====== */
 
 	/* Le v2 posait un voile blanc à 10 % et 12 px de marge autour du contenu,
@@ -104,6 +123,26 @@ body:not(.v2) {
 		.page-wrapper {
 			padding: 0;
 		}
+	}
+
+	/* ====== Panneaux ======
+	 *
+	 * Deux problèmes se cumulaient. Le composant peint `background:
+	 * var(--background)`, soit exactement la couleur de la page : en v2 la
+	 * séparation venait uniquement de l'ombre portée, que le v3 a supprimée. Il
+	 * ne restait donc plus aucune limite visible.
+	 *
+	 * On rétablit ce que fait le mockup : une surface légèrement distincte, et
+	 * surtout un trait. C'est le trait qui porte la lisibilité dans ce design,
+	 * pas l'ombre. */
+	.panel {
+		background: var(--panel-background);
+		border: 1px solid var(--border-strong);
+	}
+	/* L'en-tête est déjà sur sa propre surface : son trait du bas suffit, sinon
+	   on double la bordure du panneau. */
+	.panel > .header {
+		border-bottom: 1px solid var(--border);
 	}
 
 	/* ====== Barre de page (titre + onglets) ====== */

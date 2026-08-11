@@ -37,6 +37,9 @@ body {
 	--background-outer: #E7E1CC;
 	--footer-color: #4A5847;
 	--border: rgba(14, 20, 16, 0.12);
+	/* `line-strong` du mockup : c'est ce trait qui delimite les panneaux, le
+	   design ne comptant sur aucune ombre pour les detacher du fond. */
+	--border-strong: rgba(14, 20, 16, 0.28);
 	--text-color: #0E1410;
 	--text-color-secondary: #4A5847;
 	--type-color: #1A7AA0;
@@ -125,6 +128,7 @@ body {
 		--background-outer: #07090A;
 		--footer-color: #A8B4A4;
 		--border: rgba(255, 255, 255, 0.08);
+		--border-strong: rgba(255, 255, 255, 0.16);
 		--text-color: #E8F0E6;
 		--text-color-secondary: #A8B4A4;
 		--type-color: #5CE0FF;
