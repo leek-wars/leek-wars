@@ -4,29 +4,27 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 
-		<panel class="first">
-			<div class="pitch">{{ $t('pitch') }}</div>
+		<panel class="first hero-panel">
+			<div class="hero">
+				<div class="mark">LW<span class="plus-sign">+</span></div>
+				<div class="pitch">{{ $t('pitch') }}</div>
+				<div class="price">
+					<span class="amount">{{ $t('price_per_month', [priceEur]) }}</span>
+					<span class="notice">{{ $t('price_notice') }}</span>
+				</div>
+			</div>
 
-			<table class="benefits">
-				<thead>
-					<tr>
-						<th class="benefit"></th>
-						<th class="free">{{ $t('column_free') }}</th>
-						<th class="plus">{{ $t('column_plus') }}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="benefit in benefits" :key="benefit.key">
-						<td class="benefit">{{ $t('benefit_' + benefit.key) }}</td>
-						<td class="free">{{ $t('free_' + benefit.key) }}</td>
-						<td class="plus">{{ $t('plus_' + benefit.key) }}</td>
-					</tr>
-				</tbody>
-			</table>
-
-			<div class="price">
-				<span class="amount">{{ $t('price_per_month', [priceEur]) }}</span>
-				<span class="notice">{{ $t('price_notice') }}</span>
+			<div class="benefits">
+				<div v-for="benefit in benefits" :key="benefit.key" class="benefit">
+					<v-icon class="icon">{{ benefit.icon }}</v-icon>
+					<div class="label">{{ $t('benefit_' + benefit.key) }}</div>
+					<div class="plus-value">{{ $t('plus_' + benefit.key) }}</div>
+					<!-- « Gratuit : - » ne veut rien dire : sur les avantages qui n'existent
+					     pas du tout en gratuit, on n'affiche simplement pas la ligne. -->
+					<div v-if="$t('free_' + benefit.key) !== '-'" class="free-value">
+						{{ $t('column_free') }} : {{ $t('free_' + benefit.key) }}
+					</div>
+				</div>
 			</div>
 		</panel>
 
@@ -61,7 +59,7 @@
 				<loader v-if="stripeLoading" />
 				<div id="stripe-subscription-element"></div>
 				<div v-if="error" class="error-message">{{ error }}</div>
-				<v-btn v-if="stripeReady" color="primary" size="large" :loading="paying" block class="pay-btn" @click="subscribe">
+				<v-btn v-if="stripeReady" size="large" :loading="paying" block class="pay-btn" @click="subscribe">
 					<template #prepend><v-icon>mdi-lock</v-icon></template>
 					{{ $t('subscribe_for', [priceEur]) }}
 				</v-btn>
@@ -83,14 +81,16 @@ defineOptions({ name: 'lwplus', i18n: {}, mixins: [...mixins] })
 const t = useNamespacedT('lwplus')
 
 // Ordre d'affichage du comparatif. Les clés servent aussi de suffixe i18n
-// (benefit_*, free_*, plus_*), donc une ligne = une seule entrée ici.
+// (benefit_*, free_*, plus_*), donc une carte = une seule entrée ici.
+// Les noms d'icônes sont écrits en toutes lettres pour que
+// scripts/generate-mdi-icons.mjs les trouve au scan (sinon icône vide).
 const benefits = [
-	{ key: 'fights' },
-	{ key: 'queue' },
-	{ key: 'ratelimit' },
-	{ key: 'accounts' },
-	{ key: 'badge' },
-	{ key: 'crystals' },
+	{ key: 'fights', icon: 'mdi-sword-cross' },
+	{ key: 'queue', icon: 'mdi-fast-forward' },
+	{ key: 'ratelimit', icon: 'mdi-speedometer' },
+	{ key: 'accounts', icon: 'mdi-account-multiple' },
+	{ key: 'badge', icon: 'mdi-shield-star' },
+	{ key: 'crystals', icon: 'mdi-diamond-stone' },
 ]
 
 const priceEur = ref(3)
@@ -237,56 +237,119 @@ async function resume() {
 </script>
 
 <style lang="scss" scoped>
-	.pitch {
-		padding: 10px;
+	// Violet identitaire de LW+, le même que le badge du profil (farmer.vue).
+	$lwplus: #8e44ad;
+	$lwplus-light: #a55fc4;
+
+	.hero-panel :deep(.content) {
+		padding: 0;
+	}
+	.hero {
+		background: linear-gradient(135deg, $lwplus 0%, $lwplus-light 60%, #6c3483 100%);
+		color: #fff;
+		padding: 28px 20px 24px;
 		text-align: center;
 	}
-	table.benefits {
-		width: 100%;
-		border-collapse: collapse;
-		margin: 10px 0;
-		th, td {
-			padding: 8px 10px;
-			border-bottom: 1px solid #ddd;
-			text-align: center;
-		}
-		th.benefit, td.benefit {
-			text-align: left;
-		}
-		td.free {
-			color: #888;
-		}
-		th.plus, td.plus {
-			font-weight: bold;
-			color: var(--primary);
+	.mark {
+		font-size: 46px;
+		font-weight: 800;
+		line-height: 1;
+		letter-spacing: -1px;
+		text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+		.plus-sign {
+			color: #ffd85e;
 		}
 	}
-	.price {
-		text-align: center;
-		padding: 10px;
+	.hero .pitch {
+		margin: 12px auto 0;
+		max-width: 520px;
+		opacity: 0.92;
+	}
+	.hero .price {
+		margin-top: 18px;
 		.amount {
-			display: block;
-			font-size: 22px;
-			font-weight: bold;
+			display: inline-block;
+			background: rgba(0, 0, 0, 0.22);
+			padding: 6px 16px;
+			border-radius: var(--radius);
+			font-size: 24px;
+			font-weight: 700;
 		}
 		.notice {
+			display: block;
+			margin-top: 8px;
 			font-size: 13px;
-			color: #888;
+			opacity: 0.85;
+		}
+	}
+	.benefits {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1px;
+		background: var(--border);
+	}
+	.benefit {
+		background: var(--panel-background);
+		padding: 16px 12px;
+		text-align: center;
+		transition: background 120ms ease;
+		&:hover {
+			background: var(--background-secondary);
+		}
+		.icon {
+			color: $lwplus;
+			font-size: 30px;
+			margin-bottom: 6px;
+		}
+		.label {
+			font-size: 13px;
+			color: var(--text-color-secondary);
+		}
+		.plus-value {
+			font-size: 19px;
+			font-weight: 700;
+			color: var(--text-color);
+			margin: 2px 0;
+		}
+		.free-value {
+			font-size: 12px;
+			color: var(--text-color-secondary);
+			opacity: 0.7;
+		}
+	}
+	@media screen and (max-width: 700px) {
+		.benefits {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		.mark {
+			font-size: 38px;
+		}
+	}
+	@media screen and (max-width: 380px) {
+		.benefits {
+			grid-template-columns: 1fr;
 		}
 	}
 	.status {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		padding: 10px;
+		gap: 10px;
+		padding: 14px 12px;
+		font-size: 16px;
 		.ok {
-			color: var(--primary);
+			color: $lwplus;
+			font-size: 26px;
 		}
+	}
+	.pay-btn {
+		background: $lwplus;
+		color: #fff;
+		margin-top: 12px;
 	}
 	.canceled-notice, .not-verified, .cancel-anytime {
 		padding: 0 10px 10px;
 		font-size: 13px;
-		color: #888;
+		color: var(--text-color-secondary);
 	}
 	.cancel-anytime {
 		text-align: center;
@@ -297,9 +360,9 @@ async function resume() {
 	}
 	.error-message {
 		padding: 10px;
-		color: red;
+		color: #c62828;
 	}
-	.pay-btn {
-		margin-top: 12px;
+	body.dark .error-message {
+		color: #ef9a9a;
 	}
 </style>
