@@ -623,8 +623,17 @@ class DesertSaber extends WhiteWeaponAnimation {
  */
 class SunSpear extends WhiteWeaponAnimation {
 	static SPEAR_RANGE = 3
-	static textures = [T.slash, T.sun_spear]
+	/** Garde : la lance reste pointée vers la cible, elle n'est jamais levée comme une épée. */
+	static AIM_ANGLE = Math.PI / 2.6
+	/** Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance. */
+	static PULL_BACK = 30
+	static REACH = 110
+	static textures = [T.sun_spear]
 	static sounds = [S.sword]
+
+	/** Décalage courant le long de l'axe de la lance : négatif = armé, positif = transperce. */
+	public thrust = 0
+
 	constructor(game: Game) {
 		super(game, T.sun_spear, 42)
 	}
@@ -648,6 +657,44 @@ class SunSpear extends WhiteWeaponAnimation {
 			}
 		}
 		return duration
+	}
+
+	/**
+	 * Estoc : on arme en reculant, puis la lance part d'un coup en avant et revient.
+	 * Pas de rotation, donc pas d'entaille : elle transperce tout ce qui est sur la ligne.
+	 */
+	public update(dt: number): void {
+		if (this.inte >= 1) { return }
+		if (this.step === 1) {
+			this.inte += dt * 0.05
+			this.thrust = -SunSpear.PULL_BACK * Math.min(1, this.inte)
+		} else {
+			this.inte += dt * 0.09
+			const i = Math.min(1, this.inte)
+			this.thrust = -SunSpear.PULL_BACK * (1 - i) + SunSpear.REACH * Math.sin(i * Math.PI)
+		}
+		if (this.inte >= 1) {
+			this.step++
+			if (this.step === 2) {
+				S.sword.play(this.game)
+			}
+			if (this.step <= this.steps) {
+				this.inte = 0.001
+			} else {
+				this.game.actionDone()
+				this.step = 0
+				this.inte = 1
+				this.thrust = 0
+			}
+		}
+	}
+
+	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, front: boolean = true): void {
+		ctx.rotate(front ? -Math.PI / 2 : -Math.PI / 4)
+		ctx.translate(this.x, this.z)
+		ctx.rotate(SunSpear.AIM_ANGLE)
+		ctx.translate(this.thrust, 0)
+		ctx.drawImage(texture, 0, 0, this.w, this.h)
 	}
 }
 
