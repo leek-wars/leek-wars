@@ -440,6 +440,14 @@ body:not(.v2) {
 		color: var(--primary-text);
 	}
 
+	/* L'indication « glisser pour faire défiler » du carrousel d'inscription est
+	   en --grey-13, un gris presque blanc : juste sur le fond sombre du v2,
+	   invisible (1.1) sur le parchemin. Corrigé ici et pas dans le composant,
+	   pour ne pas dégrader l'ancien thème. */
+	.info {
+		color: var(--text-color-secondary);
+	}
+
 	/* ====== Encyclopédie : couleurs écrites dans le contenu ======
 	 *
 	 * 331 des 9392 articles contiennent une couleur en dur dans leur HTML :

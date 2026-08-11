@@ -110,6 +110,9 @@ html body.v2 {
 
 	/* Couleurs sémantiques. Elles existaient en dur dans une trentaine de
 	   composants, sous quatre rouges et trois verts différents. */
+	/* Etat inactif (poireau ou eleveur qui ne joue plus) */
+	--inactive-color: #9c9c9c;
+
 	/* Podium du classement : or, argent, bronze */
 	--rank-first: #ffa900;
 	--rank-second: var(--text-color-secondary);

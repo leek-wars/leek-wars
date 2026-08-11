@@ -800,7 +800,7 @@
 			font-weight: bold;
 		}
 		.second a {
-			color: var(--rank-second);
+			color: var(--inactive-color);
 			font-weight: bold;
 		}
 		.third a {
@@ -905,7 +905,7 @@
 		align-items: center;
 	}
 	.info {
-		color: var(--text-color-secondary);
+		color: var(--grey-13);
 	}
 	.leek-creator {
 		display: flex;
