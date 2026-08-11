@@ -305,11 +305,26 @@ body:not(.v2) {
 
 	/* ====== Menu de gauche ====== */
 
-	/* `.sidebar` du mockup : fond de panneau, trait fort a droite, 12 px de
-	   respiration verticale. */
-	.menu .menu-wrapper {
+	/* La colonne du mockup fait 220 px (`.shell` : 220px 1fr 320px), contre
+	   170 px en v2. Le contenu suit, sauf en replié où les 64 px restent. */
+	.menu {
+		width: 220px;
+	}
+	#app.connected:not(.app):not(.menu-collapsed) .app-center {
+		margin-left: 220px;
+	}
+
+	/* `.sidebar` du mockup : fond de panneau, trait fort à droite, 12 px de
+	   respiration verticale. La surface est portée par la colonne entière
+	   (`.menu`, fixée du haut en bas de l'écran) et pas seulement par le
+	   wrapper, qui s'arrêtait à la dernière entrée : le mockup fait courir le
+	   panneau jusqu'en bas, coffre des récompenses compris. */
+	.menu {
 		background: var(--panel-background);
 		border-right: 1.5px solid var(--border-strong);
+	}
+	.menu .menu-wrapper {
+		background: transparent;
 		border-top: 1.5px solid var(--border-strong);
 		padding: 12px 0;
 	}
@@ -346,6 +361,45 @@ body:not(.v2) {
 	.menu .section i {
 		color: inherit;
 	}
+	/* Les icônes du v2 étaient flottées en 24 px avec leurs propres marges ;
+	   dans une entrée flex du mockup c'est la gouttière qui espace, et le
+	   corps de 12,5 appelle une icône plus petite (le mockup est à 14-18). */
+	.menu .section img {
+		width: 18px;
+		height: 18px;
+		float: none;
+		margin: 0;
+		flex: none;
+	}
+	.menu .section .v-icon,
+	.menu .section i {
+		float: none;
+		margin: 0;
+		font-size: 18px;
+	}
+	/* Les entrées de poireau logent icône et texte dans un conteneur
+	   intermédiaire : il devient la ligne flex, même gouttière. */
+	.menu .section div[leek] {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		flex: 1;
+		min-width: 0;
+	}
+	.menu .section .text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	/* La jauge des arènes soulignait l'entrée en v2 (marge négative sous une
+	   ligne de 40 px) : posée au bas de l'entrée, en absolu, elle garde ce
+	   rôle sans participer à la ligne flex. */
+	.menu .section .progress-bar {
+		position: absolute;
+		left: 0;
+		right: auto;
+		bottom: 0;
+		margin-top: 0;
+	}
 	/* Le v2 prolongeait l'entrée active par un triangle vert débordant sur la
 	   droite, pour la faire pointer vers la page. Le liseré de gauche joue ce
 	   rôle maintenant, et le triangle dépassait du menu. */
@@ -371,8 +425,15 @@ body:not(.v2) {
 		font-weight: 500;
 		padding: 4px 14px 8px;
 	}
+	/* Le losange des intitulés du mockup (« ◆ MES POIREAUX ») : dans la
+	   feuille et pas dans les traductions, c'est du décor. */
+	.menu h4::before {
+		content: '◆ ';
+	}
 	/* Les pastilles de compteur reprennent la forme des `.nav-badge` du mockup :
-	   un rectangle bordé sur le fond de champ, pas une bulle. */
+	   un rectangle bordé sur le fond de champ, pas une bulle. Le v2 les
+	   suspendait en absolu à cheval sur le bord droit du menu ; ici la pastille
+	   redevient un enfant flex poussé en bout de ligne (`margin-left: auto`). */
 	.menu .section[label]::after,
 	.menu .awards::after {
 		background: var(--background-secondary);
@@ -382,10 +443,50 @@ body:not(.v2) {
 		font-family: ui-monospace, 'SF Mono', monospace;
 		font-size: 10px;
 		padding: 1px 5px;
+		position: static;
+		margin: 0 0 0 auto;
 	}
 	.menu .section.router-link-active[label]::after {
 		color: var(--primary);
 		border-color: var(--primary);
+	}
+
+	/* ====== Menu replié (64 px) ====== */
+
+	/* Le mockup n'a pas d'état replié : on garde celui du site, adapté aux
+	   entrées flex. Icônes centrées un cran plus grandes, intitulés masqués,
+	   pastilles en coin d'entrée plutôt qu'en bout d'une ligne qui n'existe
+	   plus. Les sélecteurs recopient ceux du composant pour la spécificité. */
+	#app.menu-collapsed .menu .section {
+		justify-content: center;
+		padding: 11px 0;
+	}
+	#app.menu-collapsed .menu h4 {
+		display: none;
+	}
+	#app.menu-collapsed .menu-center .section img {
+		width: 22px;
+		height: 22px;
+		margin: 0;
+	}
+	#app.menu-collapsed .menu-center a.section i,
+	#app.menu-collapsed .menu-center .section .v-icon {
+		font-size: 22px;
+		margin: 0;
+	}
+	#app.menu-collapsed .menu .section[label]::after {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		margin: 0;
+	}
+	#app.menu-collapsed .soussous-dans-popoche {
+		margin: 12px 6px;
+		padding: 6px;
+	}
+	#app.menu-collapsed .soussous-dans-popoche img {
+		width: 38px;
+		height: 38px;
 	}
 
 	/* Les deux poignées de repli (menu et panneau social) étaient deux carrés
@@ -650,6 +751,11 @@ body:not(.v2) {
 	}
 	.soussous-dans-popoche:hover {
 		border-color: var(--warning);
+	}
+	/* chest.svg est une encre sombre : posé sur la surface du panneau en mode
+	   sombre il disparaissait. Même recette que les éclairs de global.scss. */
+	&.dark .soussous-dans-popoche img {
+		filter: invert(1);
 	}
 
 	/* ====== Décor ====== */

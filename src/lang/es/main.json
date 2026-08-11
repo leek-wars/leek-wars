@@ -66,6 +66,7 @@
 	"destroy_result": "{0} alteración(es) recuperada(s)",
 	"destroy_confirm_title": "¿Reciclar este componente mejorado?",
 	"destroy_confirm_message": "Este componente lleva alteraciones. Reciclarlo lo destruirá y sus mejoras se perderán. A cambio, recuperarás algunas alteraciones y parte de los recursos de su receta.",
+	"game": "Juego",
 	"history": "Historial",
 	"alteration_break_risk": "Riesgo de rotura",
 	"alteration_broken": "Rotura: {0} puntos perdidos",

@@ -69,6 +69,7 @@
 	"destroy_result": "{0} altération(s) récupérée(s)",
 	"destroy_confirm_title": "Recycler ce composant amélioré ?",
 	"destroy_confirm_message": "Ce composant porte des altérations. Le recycler le détruira et ses améliorations seront perdues. En échange, vous récupérerez des altérations et une partie des ressources de sa recette.",
+	"game": "Jeu",
 	"history": "Historique",
 	"alteration_break_risk": "Risque de casse",
 	"alteration_broken": "Casse : {0} points perdus",
