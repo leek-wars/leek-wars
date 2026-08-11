@@ -89,4 +89,19 @@ const ITEM_TYPE_ICONS: { [key: number]: string } = {
 	[ItemType.SCHEME]: 'mdi-map-outline',
 }
 
-export { Item, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_NAME, ITEM_TYPE_ICONS }
+// Types dont le nom d'item est déjà le nom de fichier image, sans préfixe de catégorie
+// (ex: resource « sun_shard » → /image/resource/sun_shard.png).
+const UNPREFIXED_IMAGE_TYPES: number[] = [ItemType.RESOURCE, ItemType.COMPONENT]
+
+/** Nom de fichier image d'un item, sans extension ni dossier. */
+function itemImageName(item: { type: number, name: string }): string {
+	if (UNPREFIXED_IMAGE_TYPES.indexOf(item.type) !== -1) return item.name
+	return item.name.substring(item.name.indexOf('_') + 1)
+}
+
+/** URL complète de l'image d'un item. */
+function itemImageUrl(item: { type: number, name: string }): string {
+	return '/image/' + ITEM_CATEGORY_NAME[item.type] + '/' + itemImageName(item) + '.png'
+}
+
+export { Item, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_NAME, ITEM_TYPE_ICONS, itemImageName, itemImageUrl }
