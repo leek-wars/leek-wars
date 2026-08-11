@@ -16,8 +16,18 @@
  */
 
 body {
-	/* Marque */
-	--primary: #1F8A3B;
+	/* Marque.
+	 *
+	 * #146128 et non le #1F8A3B du mockup : mesure faite, le vert sert 113 fois
+	 * comme couleur de TEXTE dans les composants, contre 58 fois comme fond. En
+	 * encre sur le parchemin, #1F8A3B plafonne a 3.9 de contraste, sous le seuil
+	 * de 4.5 ; corriger les 113 cas un par un ne tenait pas. En fond, le vert
+	 * fonce ne perd rien : l'encre claire dessus passe de 4.1 a 7.4.
+	 *
+	 * Contrepartie assumee : le vert du theme clair est moins vif que celui du
+	 * mockup. Une ligne a changer si tu preferes l'inverse. Le theme sombre
+	 * garde le neon, qui lui fonctionne dans les deux roles. */
+	--primary: #146128;
 	/* Encre posee SUR un aplat de marque. Indispensable ici : le vert du v3 en
 	   mode sombre est un neon clair, du texte blanc dessus est illisible. */
 	--primary-text: #FBF7E8;
