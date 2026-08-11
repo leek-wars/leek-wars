@@ -127,7 +127,7 @@ const WeaponsData = {
 	// Sabre du désert
 	41: { width: 230, height: 54, centerX: 30, centerZ: 45, x: -40, z: -15, hand1x: 28, hand1z: 24, hand2x: 44, hand2z: 24, top: -5, bottom: 2, right: 110, white: true },
 	// Lance du soleil
-	42: { width: 328, height: 54, centerX: 40, centerZ: 62, x: -120, z: -26, hand1x: 96, hand1z: 26, hand2x: 144, hand2z: 26, top: -5, bottom: 2, right: 90, white: true },
+	42: { width: 440, height: 73, centerX: 40, centerZ: 62, x: -161, z: -36, hand1x: 137, hand1z: 36, hand2x: 185, hand2z: 36, top: -5, bottom: 2, right: 121, white: true },
 } as {[key: number]: WeaponData}
 
 const FishData = { width: 150, height: 65, centerX: 25, centerZ: 45, x: -35, z: -15, hand1x: 12, hand1z: 44, hand2x: 53, hand2z: 57, sx: 110, sz: 10, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 50, white: false } as WeaponData
