@@ -705,15 +705,14 @@ class SunSpear extends WhiteWeaponAnimation {
 		}
 	}
 
-	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, front: boolean = true): void {
-		// Repère de base des armes blanches, que le poireau a déjà tourné vers sa cible.
-		const base = front ? -Math.PI / 2 : -Math.PI / 4
-		ctx.rotate(base)
-		ctx.translate(this.x, this.z)
-		// Annuler la rotation de base aligne la lance sur la direction visée : c'est la pose
-		// de piqué. Au repos on relève la pointe de REST_TILT au-dessus de cette ligne.
-		ctx.rotate(-base - SunSpear.REST_TILT * (1 - this.aim))
-		ctx.translate(this.thrust, 0)
+	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, _front: boolean = true): void {
+		// Contrairement à une épée, la lance pivote DANS la main : on tourne autour du point de
+		// tenue, puis on la place le long de son propre axe. Faire l'inverse (le tourner-déplacer
+		// des armes blanches) reculerait la prise vers le bas de l'écran au lieu de la hampe.
+		// Le repère reçu est déjà orienté vers la cible par le poireau, donc pointe levée de
+		// REST_TILT au repos, et parfaitement dans l'axe une fois en garde.
+		ctx.rotate(-SunSpear.REST_TILT * (1 - this.aim))
+		ctx.translate(this.x + this.thrust, this.z)
 		ctx.drawImage(texture, 0, 0, this.w, this.h)
 	}
 }
