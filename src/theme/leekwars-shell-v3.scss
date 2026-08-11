@@ -428,6 +428,18 @@ body:not(.v2) {
 		color: var(--footer-color);
 	}
 
+	/* La pastille « AI » du changelog : blanc sur un cyan moyen écrit en dur,
+	   mesuré à 2.75 et répété 38 fois sur la page. Elle passe sur la couleur
+	   d'information du thème, avec l'encre prévue pour un aplat saturé : claire
+	   quand l'aplat est foncé (thème clair), foncée quand il est vif (sombre). */
+	/* `.change .ai` et non `.ai` seul : le composant la stylise via
+	   `.change { :deep(.ai) }`, ce qui donne deux classes plus l'attribut de
+	   portée, soit une spécificité qu'une règle à une classe ne bat pas. */
+	.change .ai {
+		background: var(--info);
+		color: var(--primary-text);
+	}
+
 	/* ====== Encyclopédie : couleurs écrites dans le contenu ======
 	 *
 	 * 331 des 9392 articles contiennent une couleur en dur dans leur HTML :
