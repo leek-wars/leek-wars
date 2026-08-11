@@ -413,11 +413,39 @@ body:not(.v2) {
 	   4.11 de l'aplat vert franchissent. */
 	h1 {
 		font-weight: 700;
+		/* L'encyclopédie repeint son titre en `--grey-1`, un gris sombre, alors
+		   que l'encre des titres (`--primary-text`) est calculée pour l'aplat
+		   vert : en mode sombre le fil d'Ariane devenait noir sur noir. Le v3
+		   n'a qu'un seul traitement de titre, on le lui applique aussi. */
+		background: var(--primary);
+		&::after {
+			border-left-color: var(--primary);
+		}
 	}
 	/* La ligne de version du pied de page utilisait --grey-8, trop clair sur le
 	   fond extérieur clair (2.36). Elle rejoint l'encre du pied de page. */
 	.footer h4.version {
 		color: var(--footer-color);
+	}
+
+	/* ====== Encyclopédie : couleurs écrites dans le contenu ======
+	 *
+	 * 331 des 9392 articles contiennent une couleur en dur dans leur HTML :
+	 * `#333` 555 fois, `#777` 55, `#aaa` 18. Ces gris ont été choisis pour un
+	 * fond précis et se battent avec le thème : le `#333` est déjà illisible en
+	 * mode sombre du v2, les `#777` et `#aaa` le deviennent sur le parchemin.
+	 *
+	 * Les neutraliser ici évite une migration de 331 articles en base, qu'il
+	 * faudrait rejouer en production. Les couleurs vives (#a00, #ff0000,
+	 * #00ff00) sont laissées : elles portent du sens dans les exemples de code.
+	 *
+	 * `!important` est inévitable, c'est le seul moyen de passer devant un
+	 * attribut `style`. Transitoire : à remplacer par une passe de nettoyage du
+	 * contenu quand quelqu'un s'en occupera. */
+	.md [style*="#333"],
+	.md [style*="#777"],
+	.md [style*="#aaa"] {
+		color: var(--text-color-secondary) !important;
 	}
 
 	/* ====== Pied de page ====== */
