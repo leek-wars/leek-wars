@@ -216,6 +216,7 @@ function weaponSound(id: number) {
 			39: ['sword'],
 			40: ['quantum_rifle'],
 			41: ['sword'],
+			42: ['sword'],
 		} as {[key: number]: unknown[]})[id]
 	}
 

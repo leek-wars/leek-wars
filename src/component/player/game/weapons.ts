@@ -617,6 +617,40 @@ class DesertSaber extends WhiteWeaponAnimation {
 	}
 }
 
+/**
+ * Lance du soleil : arme blanche qui embroche toute une ligne (1 à 3 cases), d'où la zone
+ * surlignée comme celle d'un laser en plus du mouvement d'arme blanche.
+ */
+class SunSpear extends WhiteWeaponAnimation {
+	static SPEAR_RANGE = 3
+	static textures = [T.slash, T.sun_spear]
+	static sounds = [S.sword]
+	constructor(game: Game) {
+		super(game, T.sun_spear, 42)
+	}
+
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
+		const duration = super.shoot(leekX, leekY, handPos, angle, orientation, pos, targets, caster, cell, scale)
+		if (caster.cell && cell) {
+			const dx = Math.sign(cell.x - caster.cell.x)
+			const dy = Math.sign(cell.y - caster.cell.y)
+			if (dx !== 0 || dy !== 0) {
+				const cells = [] as Cell[]
+				let current = this.game.ground.field.next_cell(caster.cell, dx, dy)
+				for (let r = 0; r < SunSpear.SPEAR_RANGE; ++r) {
+					if (!current || current.obstacle) { break }
+					cells.push(current)
+					current = this.game.ground.field.next_cell(current, dx, dy)
+				}
+				if (cells.length) {
+					this.game.setEffectAreaLaser(cells, '#ffb029', dx, dy, duration + 40)
+				}
+			}
+		}
+		return duration
+	}
+}
+
 class Laser extends LaserWeapon {
 	static textures = [T.laser, T.laser_bullet, T.cart_laser]
 	static sounds = [S.laser]
@@ -1030,4 +1064,4 @@ class QuantumRifle extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, DesertSaber, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, PlutoniumBazooka, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword, QuantumRifle }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, DesertSaber, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, PlutoniumBazooka, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword, QuantumRifle, SunSpear }
