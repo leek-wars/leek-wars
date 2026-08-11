@@ -140,6 +140,9 @@
 						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
 						<div v-if="farmer.referent" class="grade referent">{{ $t('referent') }}</div>
 						<div v-else-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+						<!-- #3303 : orthogonal aux autres grades, donc pas de v-else-if.
+						     Pas de clé i18n, « LW+ » est un nom de marque. -->
+						<div v-if="farmer.lwplus" class="grade lwplus">LW+</div>
 					</div>
 
 
@@ -1526,6 +1529,9 @@
 	}
 	.grade.referent {
 		background: #2196f3;
+	}
+	.grade.lwplus {
+		background: #8e44ad;
 	}
 	.grade-options {
 		display: flex;
