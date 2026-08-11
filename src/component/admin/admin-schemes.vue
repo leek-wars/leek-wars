@@ -21,7 +21,7 @@
 							<div v-if="ingredient">
 								<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @update:model-value="$emit('update:modelValue', $event)">
 									<div class="item" v-bind="props" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
-										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[ingredient[0]].type] + '/' + LeekWars.items[ingredient[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'" :type="LeekWars.items[ingredient[0]].type">
+										<img :src="itemImageUrl(LeekWars.items[ingredient[0]])" :type="LeekWars.items[ingredient[0]].type">
 										<div v-if="ingredient[1] > 1" class="quantity">{{ $filters.number(ingredient[1]) }}</div>
 									</div>
 								</rich-tooltip-item>

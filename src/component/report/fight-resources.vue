@@ -4,18 +4,18 @@
 			<template #activator="{ props }">
 				<span class="resource" v-bind="props">
 					<scheme-image v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[resource[0]].params]" />
-					<img v-else :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('hat_', '').replace('potion_', '') + '.png'">
+					<img v-else :src="itemImageUrl(LeekWars.items[resource[0]])">
 					<span v-if="resource[1] > 1" class="quantity">{{ resource[1] }}</span>
 				</span>
 			</template>
-			{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(ITEM_CATEGORY_NAME[LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].type] + '.' + LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].name.replace('hat_', '').replace('potion_', ''))]) }}</b><b v-else>{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('hat_', '').replace('potion_', '')) }}</b>
+			{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(itemTranslationKey(LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result]))]) }}</b><b v-else>{{ $t(itemTranslationKey(LeekWars.items[resource[0]])) }}</b>
 		</v-tooltip>
 	</span>
 </template>
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
+	import { ItemType, itemImageUrl, itemTranslationKey } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import SchemeImage from '../market/scheme-image.vue'
 

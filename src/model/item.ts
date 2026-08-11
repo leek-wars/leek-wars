@@ -104,4 +104,9 @@ function itemImageUrl(item: { type: number, name: string }): string {
 	return '/image/' + ITEM_CATEGORY_NAME[item.type] + '/' + itemImageName(item) + '.png'
 }
 
-export { Item, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_NAME, ITEM_TYPE_ICONS, itemImageName, itemImageUrl }
+/** Clé de traduction du nom d'un item (ex: weapon.desert_saber, resource.sun_shard). */
+function itemTranslationKey(item: { type: number, name: string }): string {
+	return ITEM_CATEGORY_NAME[item.type] + '.' + itemImageName(item)
+}
+
+export { Item, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_NAME, ITEM_TYPE_ICONS, itemImageName, itemImageUrl, itemTranslationKey }
