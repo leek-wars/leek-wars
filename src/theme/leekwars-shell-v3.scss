@@ -342,6 +342,27 @@ body:not(.v2) {
 		display: none;
 	}
 
+	/* Le contenu recule quand le panneau s'élargit.
+	 *
+	 * app.vue réserve 400 px à droite, en dur, alors que le panneau est
+	 * redimensionnable de 400 à 800 px : au-delà de 400 il passait par-dessus la
+	 * page. La largeur réelle est maintenant exposée par social.vue dans
+	 * --social-width, et la marge la suit.
+	 *
+	 * La valeur de repli (400 px) couvre le cas où le panneau n'est pas monté,
+	 * et le sélecteur reprend celui d'app.vue pour rester dans les mêmes
+	 * conditions (écran ≥ 1600 px, connecté, panneau déplié, hors appli mobile). */
+	@media screen and (min-width: 1600px) {
+		#app.connected:not(.social-collapsed):not(.app) {
+			.app-center {
+				margin-right: var(--social-width, 400px);
+			}
+			.chats {
+				padding-right: var(--social-width, 400px);
+			}
+		}
+	}
+
 	/* ====== Pied de page ====== */
 
 	footer .footer,
