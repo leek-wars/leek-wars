@@ -623,8 +623,8 @@ class DesertSaber extends WhiteWeaponAnimation {
  */
 class SunSpear extends WhiteWeaponAnimation {
 	static SPEAR_RANGE = 3
-	/** Garde : la lance reste pointée vers la cible, elle n'est jamais levée comme une épée. */
-	static AIM_ANGLE = Math.PI / 2.6
+	/** Inclinaison de port, pointe levée, quand la lance n'est pas en train de piquer. */
+	static REST_TILT = Math.PI / 4
 	/** Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance. */
 	static PULL_BACK = 30
 	static REACH = 110
@@ -633,6 +633,8 @@ class SunSpear extends WhiteWeaponAnimation {
 
 	/** Décalage courant le long de l'axe de la lance : négatif = armé, positif = transperce. */
 	public thrust = 0
+	/** 0 = portée pointe levée, 1 = mise en ligne avec la cible visée. */
+	public aim = 0
 
 	constructor(game: Game) {
 		super(game, T.sun_spear, 42)
@@ -660,17 +662,23 @@ class SunSpear extends WhiteWeaponAnimation {
 	}
 
 	/**
-	 * Estoc : on arme en reculant, puis la lance part d'un coup en avant et revient.
-	 * Pas de rotation, donc pas d'entaille : elle transperce tout ce qui est sur la ligne.
+	 * Estoc : la lance descend de sa position de port jusque dans l'axe de la cible tout en
+	 * reculant, puis part d'un coup en avant et revient. Pas de rotation pendant la détente,
+	 * donc pas d'entaille : elle transperce tout ce qui est sur la ligne.
 	 */
 	public update(dt: number): void {
 		if (this.inte >= 1) { return }
 		if (this.step === 1) {
+			// Mise en garde : la pointe s'abaisse vers la cible pendant que la lance recule.
 			this.inte += dt * 0.05
-			this.thrust = -SunSpear.PULL_BACK * Math.min(1, this.inte)
+			const i = Math.min(1, this.inte)
+			this.aim = i
+			this.thrust = -SunSpear.PULL_BACK * i
 		} else {
+			// Détente le long de l'axe, puis remontée en position de port sur la fin.
 			this.inte += dt * 0.09
 			const i = Math.min(1, this.inte)
+			this.aim = 1 - Math.max(0, (i - 0.6) / 0.4)
 			this.thrust = -SunSpear.PULL_BACK * (1 - i) + SunSpear.REACH * Math.sin(i * Math.PI)
 		}
 		if (this.inte >= 1) {
@@ -685,14 +693,19 @@ class SunSpear extends WhiteWeaponAnimation {
 				this.step = 0
 				this.inte = 1
 				this.thrust = 0
+				this.aim = 0
 			}
 		}
 	}
 
 	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, front: boolean = true): void {
-		ctx.rotate(front ? -Math.PI / 2 : -Math.PI / 4)
+		// Repère de base des armes blanches, que le poireau a déjà tourné vers sa cible.
+		const base = front ? -Math.PI / 2 : -Math.PI / 4
+		ctx.rotate(base)
 		ctx.translate(this.x, this.z)
-		ctx.rotate(SunSpear.AIM_ANGLE)
+		// Annuler la rotation de base aligne la lance sur la direction visée : c'est la pose
+		// de piqué. Au repos on relève la pointe de REST_TILT au-dessus de cette ligne.
+		ctx.rotate(-base - SunSpear.REST_TILT * (1 - this.aim))
 		ctx.translate(this.thrust, 0)
 		ctx.drawImage(texture, 0, 0, this.w, this.h)
 	}
