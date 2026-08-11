@@ -606,19 +606,19 @@ body.dark img[src$="/charac/small/frequency.png"] {
 	background: #7634d8;
 }
 .moderator, a.moderator {
-	color: #ffa900;
+	color: var(--grade-moderator);
 	font-weight: bold;
 }
 .admin, a.admin {
-	color: #df1500;
+	color: var(--grade-admin);
 	font-weight: bold;
 }
 .contributor, a.contributor {
-	color: #009c1d;
+	color: var(--grade-contributor);
 	font-weight: bold;
 }
 .referent, a.referent {
-	color: #2196f3;
+	color: var(--grade-referent);
 	font-weight: bold;
 }
 .bot, a.bot {

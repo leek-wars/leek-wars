@@ -386,6 +386,40 @@ body:not(.v2) {
 		color: var(--panel-header-color);
 	}
 
+	/* ====== Lisibilité du vert de marque ======
+	 *
+	 * Mesuré au contraste sur la beta : `--primary` (#1F8A3B en clair) échoue
+	 * dans les deux sens, à 4.11 pour 4.5 requis. Blanc dessus : 4.11. Vert sur
+	 * fond clair : 4.11 aussi. Il est pile au milieu.
+	 *
+	 * D'où la séparation des rôles, que `--primary-strong` (#146128) portait
+	 * déjà sans être utilisée partout : le vert de marque reste la surface, le
+	 * vert foncé devient l'encre. */
+	.page-bar .tabs .tab.selected,
+	.page-bar .tabs .tab.active,
+	.forgot-password {
+		color: var(--primary-strong);
+	}
+	/* Petit texte blanc sur vert : on fonce l'aplat plutôt que d'éclaircir
+	   l'encre, qui est déjà au maximum. */
+	.header .signup-button.header-button,
+	.header .signup-button.header-button:hover,
+	.skip-link {
+		background: var(--primary-strong);
+		border-color: var(--primary-strong);
+	}
+	/* Le titre de page passe en gras. Le mockup le veut ainsi, et à 21 px gras
+	   il devient du « grand texte » au sens WCAG : le seuil tombe à 3, que les
+	   4.11 de l'aplat vert franchissent. */
+	h1 {
+		font-weight: 700;
+	}
+	/* La ligne de version du pied de page utilisait --grey-8, trop clair sur le
+	   fond extérieur clair (2.36). Elle rejoint l'encre du pied de page. */
+	.footer h4.version {
+		color: var(--footer-color);
+	}
+
 	/* ====== Pied de page ====== */
 
 	footer .footer,

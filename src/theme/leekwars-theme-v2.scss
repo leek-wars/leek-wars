@@ -110,6 +110,17 @@ html body.v2 {
 
 	/* Couleurs sémantiques. Elles existaient en dur dans une trentaine de
 	   composants, sous quatre rouges et trois verts différents. */
+	/* Podium du classement : or, argent, bronze */
+	--rank-first: #ffa900;
+	--rank-second: var(--text-color-secondary);
+	--rank-third: #ae4e00;
+
+	/* Couleurs de grade, appliquees aux pseudos */
+	--grade-moderator: #ffa900;
+	--grade-admin: #df1500;
+	--grade-contributor: #009c1d;
+	--grade-referent: #2196f3;
+
 	--success: #4caf50;
 	--warning: #ff9800;
 	--error: #c62828;
