@@ -363,6 +363,25 @@ body:not(.v2) {
 		}
 	}
 
+	/* ====== Page de combat ======
+	 *
+	 * Même famille de bug que l'en-tête de panneau : ces textes sont écrits en
+	 * encre claire fixe (`--grey-13`, `--white`) parce que le v2 gardait le fond
+	 * de page sombre dans les deux thèmes. En thème clair du v3 le fond devient
+	 * parchemin, et noms d'éleveurs, « VS » et compteur de vues disparaissent.
+	 *
+	 * Chacun reprend le rôle de la surface sur laquelle il est réellement posé :
+	 * le fond de page pour les premiers, l'en-tête de panneau pour le compteur
+	 * de vues, qui vit dans les actions du panneau des commentaires. */
+	.fight-info .farmer,
+	.fight-info .br-versus,
+	.versus {
+		color: var(--text-color);
+	}
+	.views-counter {
+		color: var(--panel-header-color);
+	}
+
 	/* ====== Pied de page ====== */
 
 	footer .footer,
