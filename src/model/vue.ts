@@ -70,7 +70,11 @@ const vuetify = createVuetify({
 			},
 			light: {
 				colors: {
-					primary: '#1F8A3B',
+					// Le vert foncé (--primary-strong) et non le vert de marque :
+					// Vuetify pose du texte blanc sur ses boutons primaires, et sur
+					// #1F8A3B ça donne 4.41 de contraste, sous le seuil de 4.5.
+					// Sur #146128 on passe à 7.4.
+					primary: '#146128',
 				},
 			},
 			'dark-v2': {
