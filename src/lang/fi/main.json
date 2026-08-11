@@ -66,6 +66,7 @@
 	"destroy_result": "{0} muutosta talteen",
 	"destroy_confirm_title": "Kierrätetäänkö tämä paranneltu komponentti?",
 	"destroy_confirm_message": "Tässä komponentissa on muutoksia. Kierrätys tuhoaa sen ja sen parannukset menetetään. Vastineeksi saat joitakin muutoksia ja osan sen reseptin resursseista takaisin.",
+	"game": "Peli",
 	"history": "Historia",
 	"alteration_break_risk": "Rikkoutumisriski",
 	"alteration_broken": "Rikkoutuminen: {0} pistettä menetetty",

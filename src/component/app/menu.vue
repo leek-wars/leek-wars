@@ -42,11 +42,18 @@
 			</div>
 
 			<div class="menu-center">
+				<!-- Intitulés de section du v3 (« ◆ Poireaux », « ◆ Jeu »), absents du
+				     DOM en v2 pour que l'ancien design reste identique au pixel. -->
+				<h4 v-if="!LeekWars.legacyTheme && $store.state.farmer && $store.state.farmer.leeks">{{ $t('main.leeks') }}</h4>
 				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
 					<span v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" class="dida-element">
 						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': (i == 0 && isHomePage) || RegExp('/leek/' + leek.id + '(/|$)').test($route.path), bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
 							<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
-								<img :src="LeekWars.xpTheme ? '/image/icon/xp_leek.png' : '/image/icon/house.png'">
+								<!-- En v3 les icônes PNG blanches du menu deviennent des MDI :
+								     elles suivent la couleur du texte, donc restent lisibles sur
+								     les surfaces claires et passent au vert sur l'entrée active. -->
+								<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-sprout</v-icon>
+								<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_leek.png' : '/image/icon/house.png'">
 								<div class="text">{{ leek.name }}</div>
 							</div>
 						</router-link>
@@ -70,6 +77,8 @@
 
 				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
+				<h4 v-if="!LeekWars.legacyTheme">{{ $t('main.game') }}</h4>
+
 				<span class="dida-element">
 					<router-link v-ripple to="/editor" class="section" :class="{'router-link-active': $route.path.startsWith('/editor'), bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click="clickItem">
 						<img v-if="LeekWars.xpTheme" src="/image/icon/xp_editor.png">
@@ -84,7 +93,8 @@
 
 				<span class="dida-element">
 					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click="clickItem">
-						<img :src="LeekWars.xpTheme ? '/image/icon/xp_garden.png' : '/image/icon/garden.png'">
+						<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-sword</v-icon>
+						<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_garden.png' : '/image/icon/garden.png'">
 						<div class="text">{{ $t("main.garden") }}</div>
 					</router-link>
 					<span v-if="LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')" class="dida-hint right">
@@ -94,7 +104,8 @@
 				</span>
 
 				<router-link v-ripple to="/market" class="section" :class="{'router-link-active': $route.path.startsWith('/market')}" @click="clickItem">
-					<img src="/image/icon/market.png">
+					<v-icon v-if="!LeekWars.legacyTheme">mdi-store</v-icon>
+					<img v-else src="/image/icon/market.png">
 					<div class="text">{{ $t("main.market") }}</div>
 				</router-link>
 
@@ -105,21 +116,25 @@
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click="clickItem">
-					<img :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
+					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-shield</v-icon>
+					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
 				<router-link v-else-if="$store.state.farmer && $store.state.farmer.total_level >= 5" v-ripple to="/teams" class="section" :class="{'router-link-active': $route.path.startsWith('/teams')}" @click="clickItem">
-					<img :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
+					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-shield</v-icon>
+					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.teams') }}</div>
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click="clickItem">
-					<img :src="LeekWars.xpTheme ? '/image/icon/xp_trophies.png' : '/image/icon/trophy.png'">
+					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-trophy</v-icon>
+					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_trophies.png' : '/image/icon/trophy.png'">
 					<div class="text">{{ $t("main.trophies") }}</div>
 				</router-link>
 
 				<router-link v-ripple :to="rankingURL" class="section" :class="{'router-link-active': $route.path.startsWith('/ranking')}" @click="clickItem">
-					<img :src="LeekWars.xpTheme ? '/image/icon/xp_ranking.png' : '/image/icon/ranking.png'">
+					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-podium</v-icon>
+					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_ranking.png' : '/image/icon/ranking.png'">
 					<div class="text">{{ $t("main.ranking") }}</div>
 				</router-link>
 
@@ -130,7 +145,8 @@
 				</router-link>
 
 				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" :class="{'router-link-active': $route.path.startsWith('/forum')}" @click="clickItem">
-					<img :src="LeekWars.xpTheme ? '/image/icon/xp_forum.png' : '/image/icon/forum.png'">
+					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-forum</v-icon>
+					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_forum.png' : '/image/icon/forum.png'">
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>
 

@@ -66,6 +66,7 @@
 	"destroy_result": "{0} alteração(ões) recuperada(s)",
 	"destroy_confirm_title": "Reciclar este componente aprimorado?",
 	"destroy_confirm_message": "Este componente possui alterações. Reciclá-lo irá destruí-lo e suas melhorias serão perdidas. Em troca, você recuperará algumas alterações e parte dos recursos da sua receita.",
+	"game": "Jogo",
 	"history": "Histórico",
 	"alteration_break_risk": "Risco de quebra",
 	"alteration_broken": "Quebra: {0} pontos perdidos",

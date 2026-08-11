@@ -69,6 +69,7 @@
 	"destroy_result": "{0} alterazione/i recuperata/e",
 	"destroy_confirm_title": "Riciclare questo componente potenziato?",
 	"destroy_confirm_message": "Questo componente porta delle alterazioni. Riciclarlo lo distruggerà e i suoi potenziamenti andranno persi. In cambio, recupererai delle alterazioni e una parte delle risorse della sua ricetta.",
+	"game": "Gioco",
 	"history": "Cronologia",
 	"alteration_break_risk": "Rischio di rottura",
 	"alteration_broken": "Rottura: {0} punti persi",

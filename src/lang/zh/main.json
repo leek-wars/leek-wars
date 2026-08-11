@@ -66,6 +66,7 @@
 	"destroy_result": "回收了 {0} 个改造",
 	"destroy_confirm_title": "回收这个已强化的组件？",
 	"destroy_confirm_message": "该组件带有改造。回收会销毁它，其强化将丢失。作为交换，你将回收一些改造以及部分配方资源。",
+	"game": "游戏",
 	"history": "历史记录",
 	"alteration_break_risk": "破损风险",
 	"alteration_broken": "破损：损失 {0} 点",

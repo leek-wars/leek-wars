@@ -66,6 +66,7 @@
 	"destroy_result": "{0} ændring(er) genvundet",
 	"destroy_confirm_title": "Genbrug denne opgraderede komponent?",
 	"destroy_confirm_message": "Denne komponent bærer ændringer. Genbrug vil ødelægge den, og dens forbedringer går tabt. Til gengæld får du nogle ændringer og en del af ressourcerne fra dens opskrift tilbage.",
+	"game": "Spil",
 	"history": "Historik",
 	"alteration_break_risk": "Brudrisiko",
 	"alteration_broken": "Brud: {0} point tabt",

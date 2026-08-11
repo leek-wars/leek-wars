@@ -66,6 +66,7 @@
 	"destroy_result": "{0} Veränderung(en) erhalten",
 	"destroy_confirm_title": "Diese verbesserte Komponente recyceln?",
 	"destroy_confirm_message": "Diese Komponente trägt Veränderungen. Beim Recyceln wird sie zerstört und ihre Verbesserungen gehen verloren. Im Gegenzug erhältst du einige Veränderungen und einen Teil der Ressourcen ihres Rezepts zurück.",
+	"game": "Spiel",
 	"history": "Verlauf",
 	"alteration_break_risk": "Bruchrisiko",
 	"alteration_broken": "Bruch: {0} Punkte verloren",

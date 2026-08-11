@@ -66,6 +66,7 @@
 	"destroy_result": "{0} endring(er) gjenvunnet",
 	"destroy_confirm_title": "Resirkulere denne oppgraderte komponenten?",
 	"destroy_confirm_message": "Denne komponenten bærer endringer. Resirkulering vil ødelegge den, og forbedringene går tapt. Til gjengjeld får du noen endringer og en del av ressursene fra oppskriften tilbake.",
+	"game": "Spill",
 	"history": "Historikk",
 	"alteration_break_risk": "Bruddrisiko",
 	"alteration_broken": "Brudd: {0} poeng tapt",
