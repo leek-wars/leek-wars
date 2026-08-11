@@ -796,15 +796,15 @@
 			border-right: none;
 		}
 		.first a {
-			color: #ffa900;
+			color: var(--rank-first);
 			font-weight: bold;
 		}
 		.second a {
-			color: #9c9c9c;
+			color: var(--rank-second);
 			font-weight: bold;
 		}
 		.third a {
-			color: #ae4e00;
+			color: var(--rank-third);
 			font-weight: bold;
 		}
 		.p15 {
@@ -905,7 +905,7 @@
 		align-items: center;
 	}
 	.info {
-		color: var(--grey-13);
+		color: var(--text-color-secondary);
 	}
 	.leek-creator {
 		display: flex;
