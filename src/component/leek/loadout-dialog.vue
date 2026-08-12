@@ -344,6 +344,31 @@
 		reason: string
 	}
 
+	// Union des templates possédés (exemplaires équipés compris) enrichie avec les
+	// items de l'inventaire libre quand ils y sont. Fallback sur l'inventaire libre
+	// tant que `loadout/get-all` n'a pas répondu. Tri par niveau puis template :
+	// l'ordre du DISTINCT SQL est arbitraire.
+	function ownedItemList(ownedTemplates: number[], inventory: { template: number }[]) {
+		const inventoryByTpl: { [k: number]: { template: number } } = {}
+		for (const it of inventory) inventoryByTpl[it.template] = it
+		const seen = new Set<number>()
+		const result: { template: number }[] = []
+		for (const tpl of ownedTemplates) {
+			if (seen.has(tpl)) continue
+			seen.add(tpl)
+			result.push(inventoryByTpl[tpl] ?? { id: 0, template: tpl, quantity: 1 })
+		}
+		if (result.length === 0) {
+			for (const it of inventory) {
+				if (seen.has(it.template)) continue
+				seen.add(it.template)
+				result.push(it)
+			}
+		}
+		result.sort((a, b) => ((LeekWars.items[a.template]?.level ?? 0) - (LeekWars.items[b.template]?.level ?? 0)) || (a.template - b.template))
+		return result
+	}
+
 
 	export default defineComponent({
 		name: 'LoadoutDialog',
@@ -370,6 +395,8 @@
 				skippedDialogOpen: false,
 				skippedItems: [] as SkippedItem[],
 				ownedWeaponTemplates: [] as number[],
+				ownedChipTemplates: [] as number[],
+				ownedComponentTemplates: [] as number[],
 				originalEditingSnapshot: '',
 				confirmCloseDialogOpen: false,
 			}
@@ -419,39 +446,15 @@
 				const p = farmer.potions.find((p: Potion) => p.template === 49)
 				return p ? p.quantity : 0
 			},
-			allWeapons() {
-				// Source de vérité : la liste `owned_weapons` retournée par
-				// `loadout/get-all` (DISTINCT item.template côté serveur, équipées ou non).
-				// On enrichit avec `farmer.weapons` pour les méta-données dispo, mais
-				// l'union finale couvre tout ce que l'éleveur possède — y compris les
-				// oubliées actuellement équipées sur d'autres poireaux.
-				const farmer = store.state.farmer
-				const inventoryByTpl: { [k: number]: Weapon } = {}
-				if (farmer) {
-					for (const w of farmer.weapons) inventoryByTpl[w.template] = w
-				}
-				const seen = new Set<number>()
-				const result: Weapon[] = []
-				for (const tpl of this.ownedWeaponTemplates) {
-					if (seen.has(tpl)) continue
-					seen.add(tpl)
-					result.push(inventoryByTpl[tpl] ?? { id: 0, template: tpl, quantity: 1 })
-				}
-				// Fallback : si `owned_weapons` n'a pas encore été chargé (premier
-				// affichage avant la réponse), montrer au moins l'inventaire libre.
-				if (result.length === 0 && farmer) {
-					for (const w of farmer.weapons) {
-						if (seen.has(w.template)) continue
-						seen.add(w.template)
-						result.push(w)
-					}
-				}
-				return result
-			},
-			allChips() { return store.state.farmer?.chips ?? [] },
-			allComponents() { return store.state.farmer?.components ?? [] },
+			// Source de vérité : les listes `owned_*` retournées par `loadout/get-all`
+			// (DISTINCT item.template côté serveur, exemplaires équipés compris) :
+			// l'inventaire libre du farmer omet les items dont tous les exemplaires
+			// sont équipés sur des poireaux (#4792).
+			allWeapons() { return ownedItemList(this.ownedWeaponTemplates, store.state.farmer?.weapons ?? []) },
+			allChips() { return ownedItemList(this.ownedChipTemplates, store.state.farmer?.chips ?? []) },
+			allComponents() { return ownedItemList(this.ownedComponentTemplates, store.state.farmer?.components ?? []) },
 			hasAnyForgotten(): boolean {
-				return this.allWeapons.some((w: Weapon) => this.isForgottenTemplate(w.template))
+				return this.allWeapons.some((w) => this.isForgottenTemplate(w.template))
 			},
 			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } {
 				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } = {}
@@ -591,6 +594,8 @@
 				LeekWars.get('loadout/get-all').then((data) => {
 					store.commit('set-loadouts', data.loadouts)
 					this.ownedWeaponTemplates = Array.isArray(data.owned_weapons) ? data.owned_weapons : []
+					this.ownedChipTemplates = Array.isArray(data.owned_chips) ? data.owned_chips : []
+					this.ownedComponentTemplates = Array.isArray(data.owned_components) ? data.owned_components : []
 					this.loading = false
 				}).error(() => { this.loading = false })
 			},
