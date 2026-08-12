@@ -143,7 +143,9 @@
 				</v-tooltip>
 
 				<template v-if="leek && leek.level >= 100">
-					<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" ratio="ct-major-eleventh" class="talent-history" />
+					<div class="chart-wrap">
+						<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
+					</div>
 				</template>
 			</panel>
 
@@ -196,13 +198,13 @@
 					<div class="weapons-wrapper center">
 						<loader v-if="!leek" />
 						<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
-						<template v-else>
+						<div v-else class="weapons">
 							<div v-for="weapon in orderedWeapons" :key="weapon.id" class="weapon">
 								<rich-tooltip-item  v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek">
 									<img v-bind="props" :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" :width="WeaponsData[LeekWars.items[weapon.template].params].width" @click="setWeapon(weapon.template)">
 								</rich-tooltip-item>
 							</div>
-						</template>
+						</div>
 					</div>
 				</template>
 			</panel>
@@ -1293,7 +1295,8 @@
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} as any
 		chartOptions.value = {
-			aspectRatio: 2.5,
+			// Hauteur fixée par .chart-wrap : le graphique ne dicte pas la hauteur du panel.
+			maintainAspectRatio: false,
 			plugins: { legend: { display: false } },
 			elements: { point: { radius: 4, hoverRadius: 6 } },
 		}
@@ -1801,6 +1804,10 @@
 		align-items: center;
 		justify-content: center;
 	}
+	.chart-wrap {
+		position: relative;
+		height: 150px;
+	}
 	.talent-history {
 		margin-top: 3px;
 		// margin-left: -10px;
@@ -1883,17 +1890,25 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		container-type: inline-size;
 		.loader {
 			margin: 20px;
 		}
 	}
+	// Taille des puces proportionnelle à la largeur du panel, plafonnée à 64px :
+	// la grille occupe toute la largeur, l'espace excédentaire part dans les
+	// espacements entre puces, pas dans leur taille. À 24 puces max (niveau 301)
+	// on reste sur 3 rangées, sans dépasser la hauteur des panels voisins.
 	.panel .chips {
 		text-align: center;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-		grid-gap: 3px;
-		margin: 8px;
+		grid-template-columns: repeat(auto-fill, minmax(clamp(50px, 10cqw, 64px), 1fr));
+		grid-gap: clamp(4px, 1.2cqw, 10px);
+		margin: 10px;
 		flex: 1;
+	}
+	.panel .chips .chip img {
+		max-width: 64px;
 	}
 	.chip {
 		display: inline-block;
@@ -2208,14 +2223,35 @@
 		}
 	}
 	.weapons-wrapper {
-		padding: 6px 0;
+		padding: 10px;
 		height: 100%;
 		justify-content: center;
 		display: flex;
 		flex-direction: column;
+		container-type: inline-size;
 		.weapon img {
 			vertical-align: bottom;
 			max-width: 100%;
+		}
+	}
+	.weapons {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	// Panel assez large : les armes passent en grille 2 colonnes (2x2 à 4 armes)
+	// au lieu de la pile verticale qui laisse tout l'espace horizontal vide.
+	@container (min-width: 460px) {
+		.weapons {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			align-items: center;
+			justify-items: center;
+			row-gap: 10px;
+		}
+		// Nombre impair : la dernière arme est centrée sur toute la largeur.
+		.weapons .weapon:last-child:nth-child(odd) {
+			grid-column: span 2;
 		}
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat, .farmer-components .component {
