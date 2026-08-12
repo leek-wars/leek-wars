@@ -16,7 +16,7 @@
     - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
     - "#ai Deprecated constants (EFFECT_BUFF_FORCE, USE_FAILED...) are no longer offered in the JavaScript, TypeScript and Python API: only the current names exist (Effect.BUFF_STRENGTH...) (thanks to WiseMan)."
     - "#ai The documentation of the STATE_* constants now lists the weapons and chips that apply the state, like the other constant families."
-    - "The Medium and Oracle trophies become bonus trophies, with no points or habs. The Polyglot trophy goes from 50 to 80 points to keep the total at a round 18,000, and every farmer's trophy score has been recalculated."
+    - "The Medium and Oracle trophies become bonus trophies, with no points or habs. The Nasu, Fenouil and Potiron Destroyer trophies go up to 30, 50 and 80 points to keep the total at a round 18,000, and every farmer's trophy score has been recalculated."
   fixed:
     - "#ai Assigning a value to a typed class field through an untyped (any) variable now applies the same conversions as typed code, instead of failing in fights with a bogus \"unknown field\" error (thanks to Bily)."
     - "The preferred arena mode no longer changes on its own: the /br chat command registered you with no preference, and a mode change from the menu was forgotten on the next registration from the garden."
