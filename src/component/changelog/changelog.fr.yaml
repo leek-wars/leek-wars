@@ -16,6 +16,7 @@
     - "Suppression de compte possible pour le créateur d'une équipe : elle est transmise au membre le plus ancien, ou dissoute s'il est seul."
     - "#ai Les constantes dépréciées (EFFECT_BUFF_FORCE, USE_FAILED...) ne sont plus proposées dans l'API JavaScript, TypeScript et Python : seuls les noms actuels existent (Effect.BUFF_STRENGTH...) (merci à WiseMan)."
     - "#ai La documentation des constantes STATE_* liste maintenant les armes et les puces qui appliquent l'état, comme pour les autres familles de constantes."
+    - "Les trophées Médium et Oracle deviennent des trophées bonus, sans points ni habs. Le trophée Polyglotte passe de 50 à 80 points pour conserver un total rond de 18 000 points, et les scores de trophées de tous les éleveurs ont été recalculés."
   fixed:
     - "#ai Assigner une valeur à un champ typé d'une classe à travers une variable non typée (any) applique maintenant les mêmes conversions que du code typé, au lieu d'échouer en combat avec une fausse erreur « champ inconnu » (merci à Bily)."
     - "Le mode préféré en arène ne change plus tout seul : la commande /br du chat inscrivait sans préférence, et un changement de mode depuis le menu était oublié à l'inscription suivante depuis le potager."
