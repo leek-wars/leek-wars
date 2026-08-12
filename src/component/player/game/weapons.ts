@@ -633,6 +633,13 @@ class SunSpear extends WhiteWeaponAnimation {
 	/** Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance. */
 	static PULL_BACK = 30
 	static REACH = 110
+	/**
+	 * Frames jusqu'au bout de course de la pointe : mise en garde (1 / 0.05 = 20)
+	 * + demi-détente (0.5 / 0.09 ≈ 6). Le log avance à l'IMPACT — les dégâts
+	 * s'affichent quand le fer touche, comme le moteur les applique (dégâts PUIS
+	 * repoussée) — pendant que retrait et glissement se finissent en roue libre.
+	 */
+	static IMPACT_DELAY = 26
 	static textures = [T.sun_spear]
 	static sounds = [S.sword]
 
@@ -650,7 +657,7 @@ class SunSpear extends WhiteWeaponAnimation {
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
-		const duration = super.shoot(leekX, leekY, handPos, angle, orientation, pos, targets, caster, cell, scale)
+		super.shoot(leekX, leekY, handPos, angle, orientation, pos, targets, caster, cell, scale)
 		this.repels = []
 		if (caster.cell && cell) {
 			const dx = Math.sign(cell.x - caster.cell.x)
@@ -664,7 +671,7 @@ class SunSpear extends WhiteWeaponAnimation {
 					current = this.game.ground.field.next_cell(current, dx, dy)
 				}
 				if (cells.length) {
-					this.game.setEffectAreaLaser(cells, '#ffb029', dx, dy, duration + 40)
+					this.game.setEffectAreaLaser(cells, '#ffb029', dx, dy, SunSpear.IMPACT_DELAY + 60)
 				}
 			}
 			// Rejoue l'EFFECT_REPEL du serveur : cellules logiques à jour dès maintenant
@@ -676,7 +683,7 @@ class SunSpear extends WhiteWeaponAnimation {
 				this.repels.push({ entity: move.entity, cell: move.cell, sx: move.entity.ox, sy: move.entity.oy, ex: pixels.x, ey: pixels.y })
 			}
 		}
-		return duration
+		return SunSpear.IMPACT_DELAY
 	}
 
 	/**
@@ -700,8 +707,11 @@ class SunSpear extends WhiteWeaponAnimation {
 			this.thrust = -SunSpear.PULL_BACK * (1 - i) + SunSpear.REACH * Math.sin(i * Math.PI)
 			// La pointe est en bout de course à mi-détente : les cibles embrochées
 			// glissent alors vers leur cellule de repoussée pendant le retrait du fer.
+			// Le log avance à l'impact, donc les dégâts tombent PENDANT ce retrait :
+			// une cible tuée ne glisse plus (le moteur ne repousse pas les morts).
 			const slide = Math.max(0, (i - 0.5) * 2)
 			for (const repel of this.repels) {
+				if (repel.entity.dead) { continue }
 				repel.entity.ox = repel.sx + (repel.ex - repel.sx) * slide
 				repel.entity.oy = repel.sy + (repel.ey - repel.sy) * slide
 			}
@@ -719,6 +729,7 @@ class SunSpear extends WhiteWeaponAnimation {
 			if (this.step === 3) {
 				// Lance dégagée : positions visuelles scellées sur les cellules logiques.
 				for (const repel of this.repels) {
+					if (repel.entity.dead) { continue }
 					repel.entity.setCell(repel.cell)
 				}
 				this.repels = []
@@ -726,7 +737,8 @@ class SunSpear extends WhiteWeaponAnimation {
 			if (this.step <= this.steps) {
 				this.inte = 0.001
 			} else {
-				this.game.actionDone()
+				// Pas d'actionDone ici : le log a déjà avancé à l'impact (IMPACT_DELAY),
+				// le retrait et le relevé de pointe se finissent en roue libre.
 				this.step = 0
 				this.inte = 1
 				this.thrust = 0
