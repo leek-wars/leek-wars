@@ -629,9 +629,22 @@ class SunSpear extends WhiteWeaponAnimation {
 	 * mains des 10 px qu'il prend de dos : la lance passe alors au-dessus de la ligne visée.
 	 */
 	static FRONT_DROP = 32
-	/** Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance. */
-	static PULL_BACK = 30
+	/**
+	 * Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance.
+	 * L'allonge maximale en bout de détente vaut REACH - PULL_BACK / 2.
+	 */
+	static PULL_BACK = 60
 	static REACH = 110
+	/**
+	 * centerX/centerZ/x/z de WeaponsData sont réglés pour l'aperçu statique, où leek-image
+	 * tourne le sprite autour du centre de sa boîte englobante (transform-box: fill-box),
+	 * ce qui affiche la hampe bien sous le pivot. En combat le pivot est la prise
+	 * elle-même : hauteur de port figée ici (GRIP_*), et point de tenue sur la hampe
+	 * dérivé des mains (hand1/2, partagées avec le statique) dans le constructeur —
+	 * le poireau tient la lance là où ses mains sont dessinées, comme en statique.
+	 */
+	static GRIP_X = 40
+	static GRIP_Z = 62
 	/**
 	 * Frames jusqu'au bout de course de la pointe : mise en garde (1 / 0.05 = 20)
 	 * + demi-détente (0.5 / 0.09 ≈ 6). Le log avance à l'IMPACT — les dégâts
@@ -653,6 +666,10 @@ class SunSpear extends WhiteWeaponAnimation {
 
 	constructor(game: Game) {
 		super(game, T.sun_spear, 42)
+		this.cx = SunSpear.GRIP_X
+		this.cz = SunSpear.GRIP_Z
+		this.x = -(this.mx1 + this.mx2) / 2
+		this.z = -(this.mz1 + this.mz2) / 2
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
