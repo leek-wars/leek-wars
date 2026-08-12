@@ -64,7 +64,7 @@ import { locale } from '@/locale'
 import Markdown from '../encyclopedia/markdown.vue'
 import { ChipTemplate } from '@/model/chip'
 import { WeaponTemplate } from '@/model/weapon'
-import { Effect } from '@/model/effect'
+import { Effect, EffectType } from '@/model/effect'
 
 defineOptions({ name: 'DocumentationConstant', components: { ItemPreview } })
 
@@ -110,6 +110,10 @@ const chips = computed(() => {
 		for (const i in CHIPS) {
 			if (CHIPS[i].launch_type === value_int.value) items.push(CHIPS[i])
 		}
+	} else if (props.constant.name.startsWith('STATE_')) {
+		for (const i in CHIPS) {
+			if (CHIPS[i].effects.some((e: Effect) => e.id === EffectType.ADD_STATE && e.value1 === value_int.value)) items.push(CHIPS[i])
+		}
 	}
 	return items
 })
@@ -135,6 +139,13 @@ const weapons = computed(() => {
 	} else if (props.constant.name.startsWith('LAUNCH_TYPE_')) {
 		for (const i in LeekWars.weapons) {
 			if (LeekWars.weapons[i].launch_type === value_int.value) items.push(LeekWars.weapons[i])
+		}
+	} else if (props.constant.name.startsWith('STATE_')) {
+		const applies_state = (e: Effect) => e.id === EffectType.ADD_STATE && e.value1 === value_int.value
+		for (const i in LeekWars.weapons) {
+			if (LeekWars.weapons[i].effects.some(applies_state) || LeekWars.weapons[i].passive_effects.some(applies_state)) {
+				items.push(LeekWars.weapons[i])
+			}
 		}
 	}
 	return items

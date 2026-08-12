@@ -15,6 +15,7 @@
     - "Boss rankings are now settled on merit rather than seniority: on a tie, \"Fastest\" compares the number of leeks then their level, \"Fewest leeks\" compares turns then level, and \"Lowest level\" compares leeks then turns. The run date is only the last resort."
     - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
     - "#ai Deprecated constants (EFFECT_BUFF_FORCE, USE_FAILED...) are no longer offered in the JavaScript, TypeScript and Python API: only the current names exist (Effect.BUFF_STRENGTH...) (thanks to WiseMan)."
+    - "#ai The documentation of the STATE_* constants now lists the weapons and chips that apply the state, like the other constant families."
   fixed:
     - "#ai Assigning a value to a typed class field through an untyped (any) variable now applies the same conversions as typed code, instead of failing in fights with a bogus \"unknown field\" error (thanks to Bily)."
     - "The preferred arena mode no longer changes on its own: the /br chat command registered you with no preference, and a mode change from the menu was forgotten on the next registration from the garden."
