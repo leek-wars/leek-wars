@@ -622,7 +622,6 @@ class DesertSaber extends WhiteWeaponAnimation {
  * surlignée comme celle d'un laser en plus du mouvement d'arme blanche.
  */
 class SunSpear extends WhiteWeaponAnimation {
-	static SPEAR_RANGE = 3
 	/** Inclinaison de port, pointe levée, quand la lance n'est pas en train de piquer. */
 	static REST_TILT = Math.PI / 4
 	/**
@@ -659,13 +658,14 @@ class SunSpear extends WhiteWeaponAnimation {
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
 		super.shoot(leekX, leekY, handPos, angle, orientation, pos, targets, caster, cell, scale)
 		this.repels = []
+		const template = LeekWars.weapons[LeekWars.items[this.id].params]
 		if (caster.cell && cell) {
 			const dx = Math.sign(cell.x - caster.cell.x)
 			const dy = Math.sign(cell.y - caster.cell.y)
 			if (dx !== 0 || dy !== 0) {
 				const cells = [] as Cell[]
 				let current = this.game.ground.field.next_cell(caster.cell, dx, dy)
-				for (let r = 0; r < SunSpear.SPEAR_RANGE; ++r) {
+				for (let r = 0; r < template.max_range; ++r) {
 					if (!current || current.obstacle) { break }
 					cells.push(current)
 					current = this.game.ground.field.next_cell(current, dx, dy)
@@ -677,7 +677,7 @@ class SunSpear extends WhiteWeaponAnimation {
 			// Rejoue l'EFFECT_REPEL du serveur : cellules logiques à jour dès maintenant
 			// (le log de combat n'a pas d'action de déplacement), le visuel glisse pendant
 			// la détente puis est scellé par setCell en fin de piqué.
-			for (const move of this.game.applyWeaponRepel(caster, cell, LeekWars.weapons[LeekWars.items[this.id].params])) {
+			for (const move of this.game.applyWeaponRepel(caster, cell, template)) {
 				const xy = this.game.ground.field.cellToXY(move.cell)
 				const pixels = this.game.ground.xyToXYPixels(xy.x, xy.y)
 				this.repels.push({ entity: move.entity, cell: move.cell, sx: move.entity.ox, sy: move.entity.oy, ex: pixels.x, ey: pixels.y })
