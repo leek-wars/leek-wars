@@ -96,6 +96,7 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
 	import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+	import { useRoute, useRouter } from 'vue-router'
 
 	enum Sort {
 		PRICE, LEVEL, RARITY, INGREDIENT_COUNT
@@ -241,11 +242,20 @@
 
 	const onCloverUsed = () => { tooltipVisible.value = false }
 
+	const route = useRoute()
+	const router = useRouter()
+
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
 		emitter.on('craft', scrollToForge)
 		emitter.on('clover-used', onCloverUsed)
+		// Arrivée depuis le marché (bouton Fabriquer) : pré-remplir la forge avec le schéma
+		const craftId = parseInt('' + route.query.craft, 10)
+		if (craftId && LeekWars.schemes[craftId]) {
+			emitter.emit('craft', LeekWars.schemes[craftId])
+			router.replace('/inventory')
+		}
 	})
 
 	onBeforeUnmount(() => {

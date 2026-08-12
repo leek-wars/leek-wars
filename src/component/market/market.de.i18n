@@ -39,6 +39,7 @@
 	"potion_selled": "Trank verkauft!",
 	"price": "Preis",
 	"resell": "Weiterverkaufen",
+	"scheme_required": "Sie besitzen das Schema nicht",
 	"sell": "Verkaufen",
 	"summon_available_chips": "Ausgestattete Chips",
 	"summon_characteristics": "Merkmale",

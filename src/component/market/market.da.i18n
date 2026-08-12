@@ -39,6 +39,7 @@
 	"potion_selled": "Drik solgt!",
 	"price": "Pris",
 	"resell": "Videresælge",
+	"scheme_required": "Du ejer ikke diagrammet",
 	"sell": "Sælge",
 	"summon_available_chips": "Udstyret chips",
 	"summon_characteristics": "Funktioner",

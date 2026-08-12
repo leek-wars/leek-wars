@@ -17,6 +17,7 @@
     - "#ai Les constantes dépréciées (EFFECT_BUFF_FORCE, USE_FAILED...) ne sont plus proposées dans l'API JavaScript, TypeScript et Python : seuls les noms actuels existent (Effect.BUFF_STRENGTH...) (merci à WiseMan)."
     - "#ai La documentation des constantes STATE_* liste maintenant les armes et les puces qui appliquent l'état, comme pour les autres familles de constantes."
     - "Les trophées Médium et Oracle deviennent des trophées bonus, sans points ni habs. Les trophées Destructeur de Nasu, de Fenouil et de Potiron passent à 30, 50 et 80 points pour conserver un total rond de 18 000 points, et les scores de trophées de tous les éleveurs ont été recalculés."
+    - "Les armes fabricables (Sabre du désert, Lance du soleil) apparaissent maintenant dans la collection et au marché : grisées tant qu'on n'a pas trouvé le schéma, avec un bouton Fabriquer qui emmène à l'inventaire en plaçant les ingrédients directement dans la forge."
   fixed:
     - "#ai Assigner une valeur à un champ typé d'une classe à travers une variable non typée (any) applique maintenant les mêmes conversions que du code typé, au lieu d'échouer en combat avec une fausse erreur « champ inconnu » (merci à Bily)."
     - "Le mode préféré en arène ne change plus tout seul : la commande /br du chat inscrivait sans préférence, et un changement de mode depuis le menu était oublié à l'inscription suivante depuis le potager."
@@ -38,6 +39,7 @@
     - "#ai setLoadout() n'applique plus les caractéristiques d'un équipement qui demande plus de capital que le poireau n'en a : la répartition est refusée avec un avertissement, comme dans l'élevage. Les armes, puces et composants, eux, s'appliquent toujours."
     - "#ai L'éditeur ne plante plus quand l'autocomplétion se ferme au moment précis où la documentation d'une fonction ou d'une constante finit de s'afficher à côté."
     - "Le quiz du tutoriel dit maintenant pourquoi il ne répond pas : les cases restaient muettes, sans le moindre message, tant que le chapitre précédent n'était pas terminé. L'ordre des réponses est aussi mieux mélangé."
+    - "Une puce ou un composant dont tous les exemplaires sont équipés sur vos poireaux apparaît maintenant dans l'éditeur d'équipements, comme les armes. Les listes d'items y sont aussi triées par niveau (merci à Kraspen)."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."

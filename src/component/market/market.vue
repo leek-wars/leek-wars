@@ -31,7 +31,7 @@
 					<template #content>
 						<loader v-if="!weapons.length" />
 						<div v-else class="items weapons">
-							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level}">
+							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level, 'craft-locked': craftLocked.has(weapon.id)}">
 								<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'" loading="lazy">
 								<div v-if="items[weapon.id].leek_count || items[weapon.id].farmer_count" class="counts">
 									<span v-if="items[weapon.id].leek_count" class="leek-count">{{ items[weapon.id].leek_count }}</span>
@@ -147,8 +147,13 @@
 								</router-link>
 
 								<div class="buy-buttons">
-									<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
+									<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals && !selectedScheme" class="already-have">
 										{{ $t('cannot_buy') }}
+									</div>
+									<div v-if="selectedScheme" class="buy">
+										<h4 class="buy-label">{{ $t('main.craft') }}</h4>
+										<v-btn class="craft-button" :disabled="!selectedSchemeOwned" prepend-icon="mdi-hammer-wrench" @click="goCraft()">{{ $t('main.craft') }}</v-btn>
+										<div v-if="!selectedSchemeOwned" class="already-have">{{ $t('scheme_required') }}</div>
 									</div>
 									<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }}</h4>
@@ -311,6 +316,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { PompTemplate } from '@/model/pomp'
 	import { PotionTemplate } from '@/model/potion'
+	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import ItemPreview from './item-preview.vue'
 	import SchemeImage from './scheme-image.vue'
@@ -366,6 +372,53 @@ const t = useNamespacedT('market')
 		}
 		return 0
 	})
+
+	// Schéma dont l'item est le résultat, pour les items craft-only du marché
+	// (market mais non achetables : Sabre du désert, Lance du soleil...)
+	function resultScheme(itemId: number): SchemeTemplate | null {
+		for (const s of Object.values(LeekWars.schemes) as SchemeTemplate[]) {
+			if (s.result === itemId) { return s }
+		}
+		return null
+	}
+
+	// Ids des schémas (scheme_template) possédés par l'éleveur
+	const farmerSchemes = computed(() => {
+		const set = new Set<number>()
+		if (store.state.farmer) {
+			for (const s of store.state.farmer.schemes) {
+				const template = LeekWars.items[s.template]
+				if (template) { set.add(parseInt('' + template.params, 10)) }
+			}
+		}
+		return set
+	})
+
+	const selectedScheme = computed(() => {
+		const item = selectedItem.value
+		if (!item || item.buyable || item.buyable_crystals) { return null }
+		return resultScheme(item.id)
+	})
+	const selectedSchemeOwned = computed(() => !!selectedScheme.value && farmerSchemes.value.has(selectedScheme.value.id))
+
+	// Items craft-only dont l'éleveur n'a pas le schéma : grisés dans les listes
+	const craftLocked = computed(() => {
+		const set = new Set<number>()
+		for (const s of Object.values(LeekWars.schemes) as SchemeTemplate[]) {
+			const item = LeekWars.items[s.result]
+			if (!item || item.buyable || item.buyable_crystals) { continue }
+			if (!farmerSchemes.value.has(s.id)) { set.add(s.result) }
+		}
+		return set
+	})
+
+	function goCraft() {
+		if (selectedScheme.value) {
+			// Le panneau Schémas doit être déplié pour que la forge soit montée à l'arrivée
+			localStorage.setItem('inventory/workshop', 'true')
+			router.push('/inventory?craft=' + selectedScheme.value.id)
+		}
+	}
 
 	function matchesSearch(item: ItemTemplate): boolean {
 		if (!search.value) { return true }
@@ -817,6 +870,12 @@ const t = useNamespacedT('market')
 		text-align: center;
 		&.toohigh {
 			opacity: 0.4;
+		}
+		&.craft-locked {
+			opacity: 0.4;
+			img {
+				filter: grayscale(1);
+			}
 		}
 	}
 	.items .item.router-link-active {

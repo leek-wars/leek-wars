@@ -39,6 +39,7 @@
 	"potion_selled": "Зелье продано!",
 	"price": "Цена",
 	"resell": "Перепродать",
+	"scheme_required": "У вас нет схемы",
 	"sell": "Продавать",
 	"summon_available_chips": "Оборудованные чипы",
 	"summon_characteristics": "Функции",

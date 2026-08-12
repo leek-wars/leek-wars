@@ -39,6 +39,7 @@
 	"potion_selled": "ポーションが売れた！",
 	"price": "価格",
 	"resell": "転売",
+	"scheme_required": "ダイアグラムを所持していません",
 	"sell": "売る",
 	"summon_available_chips": "搭載チップ",
 	"summon_characteristics": "特徴",
