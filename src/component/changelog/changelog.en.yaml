@@ -40,6 +40,7 @@
     - "#ai The editor no longer crashes when autocompletion closes at the exact moment the documentation of a function or a constant finishes displaying next to it."
     - "The tutorial quiz now says why it is not responding: the checkboxes stayed silent, without any message, until the previous chapter was completed. Answers are also better shuffled."
     - "A chip or a component whose every copy is equipped on your leeks now appears in the loadout editor, like weapons. Item lists there are also sorted by level (thanks to Kraspen)."
+    - "Items bought with crystals now count in the collection, even once equipped: past purchases have been recovered."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

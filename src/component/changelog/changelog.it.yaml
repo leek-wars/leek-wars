@@ -40,6 +40,7 @@
     - "#ai L'editor non va più in crash quando l'autocompletamento si chiude nell'istante preciso in cui la documentazione di una funzione o di una costante finisce di comparire accanto."
     - "Il quiz del tutorial ora dice perché non risponde: le caselle restavano mute, senza alcun messaggio, finché il capitolo precedente non era completato. Anche l'ordine delle risposte è mescolato meglio."
     - "Un chip o un componente i cui esemplari sono tutti equipaggiati sui tuoi porri ora appare nell'editor dei loadout, come le armi. Le liste di oggetti sono anche ordinate per livello (grazie a Kraspen)."
+    - "Gli oggetti acquistati in cristalli contano ora nella collezione, anche una volta equipaggiati: gli acquisti passati sono stati recuperati."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."
