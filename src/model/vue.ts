@@ -32,7 +32,7 @@ import { locale as initialLocale } from '@/locale'
 import { watch } from 'vue'
 import { aliases as mdiSvgAliases } from 'vuetify/iconsets/mdi-svg'
 import { mdiIconSet } from './icon-set'
-import { isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
+import { isBrowserExtensionCrash, isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
 import { formatEmojis } from './emojis'
 import { displayWarningMessage, emitter, setVueMain } from './emitter'
 import '@/chart'
@@ -345,6 +345,36 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 
 	if (LeekWars.DEV) return
 
+	const message = e?.message || ''
+	// Famille corruption-DOM : évaluée une seule fois, sert au diagnostic Null-el path,
+	// aux signaux d'interférence externe et à la récupération par hard-reload.
+	const isCorruption = isDomCorruptionCrash(message)
+	// Familles dont la cause probable est externe (moteur de traduction / extension) :
+	// corruption-DOM (patch sur un el null) ET ordre d'init/TDZ (import statique en TDZ alors
+	// qu'aucun cycle d'import inter-chunks n'existe → impossible sans réévaluation externe du
+	// contexte page).
+	const externallyInduced = isCorruption || isInitOrderCrash(message)
+
+	// Familles connues non actionnables : loggées en masqué (volume mesuré, ni issue GitHub ni
+	// notification admin), le suffixe nommant la famille dans le rapport.
+	const hide = (kind: string, suffix = '') => {
+		recordEvent(kind, message)
+		reportHidden((message || String(e)) + suffix, e?.stack)
+	}
+
+	// Crash entièrement contenu dans une extension du navigateur (cf. crash-classify).
+	// Branché AVANT la mémorisation de la première erreur de session : sinon un rejet
+	// d'extension prend la place `lw_first_crash` et se fait passer, dans tous les rapports
+	// suivants de la session, pour le corrupteur racine que traque l'instrumentation #4163.
+	// Exception, les familles à cause externe probable : elles gardent le traitement COMPLET
+	// même sur une stack d'extension, car c'est précisément le throw externe qu'elles cherchent
+	// et lui seul déclenche le diagnostic d'interférence et la récupération par hard reload.
+	// Prédicats de message d'abord : ils tranchent sans scanner la stack.
+	if (!externallyInduced && isBrowserExtensionCrash(e?.stack || '')) {
+		hide('extension', ' [browser extension]')
+		return
+	}
+
 	// Instrumentation v2 (#4163) : mémoriser LA première erreur de la session (corrupteur
 	// racine d'un el null) en sessionStorage — le buffer roule et la perd. Capturée pour TOUT
 	// type d'erreur (y compris chunk/async-loader) et réinjectée dans chaque rapport complet.
@@ -353,7 +383,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		const stored = sessionStorage.getItem('lw_first_crash')
 		if (!stored) {
 			sessionStorage.setItem('lw_first_crash', JSON.stringify({
-				m: (e?.message || String(e) || '').slice(0, 100), info: String(infoAny),
+				m: (message || String(e)).slice(0, 100), info: String(infoAny),
 				route: currentNav?.fullPath || null, prev: previousNav?.fullPath || null,
 				sinceNav: currentNav ? Date.now() - currentNav.at : null, at: Date.now(),
 			}))
@@ -367,31 +397,29 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// Échecs de chargement de chunk/CSS : loggés en masqué SANS recharger, la récupération
 	// après déploiement est gérée par le handler `vite:preloadError` (HEAD-checké) qui fire
 	// pour le même échec et ne recharge que sur un vrai 404.
-	if (isChunkLoadError(e?.message || '')) {
-		recordEvent('chunk', e?.message)
-		reportHidden(e?.message || String(e), e?.stack)
+	if (isChunkLoadError(message)) {
+		hide('chunk')
 		return
 	}
 
 	// runtime-13 = ASYNC_COMPONENT_LOADER : sur un échec de chunk, le handler vite:preloadError
 	// gère déjà la récup ; sur un vrai throw de composant, recharger ne sert à rien (boucle). On logge.
 	if (infoAny?.includes?.('runtime-13')) {
-		recordEvent('async-loader', e?.message)
-		reportHidden((e?.message || String(e)) + ' [' + infoAny + ']', e?.stack)
+		hide('async-loader', ' [' + infoAny + ']')
 		return
 	}
 
 	if (Date.now() - lastErrorSent < 1000) {
 		droppedSinceLastReport++
-		recordEvent('dropped', e?.message)
+		recordEvent('dropped', message)
 		return
 	}
 	lastErrorSent = Date.now()
-	recordEvent('crash', e?.message)
+	recordEvent('crash', message)
 
 	let errorBody: string
 	try {
-		errorBody = e?.message || (e && typeof e === 'object' ? JSON.stringify(e) : String(e))
+		errorBody = message || (e && typeof e === 'object' ? JSON.stringify(e) : String(e))
 	} catch {
 		errorBody = String(e)
 	}
@@ -399,10 +427,6 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	const file = document.location.href
 	const locale = i18n.locale
 	const user_agent = navigator.userAgent
-
-	// Famille corruption-DOM : évaluée une seule fois, sert au diagnostic Null-el path,
-	// aux signaux d'interférence externe et à la récupération par hard-reload.
-	const isCorruption = isDomCorruptionCrash(e?.message || '')
 
 	let componentTrace = ''
 	let routeSubtree: string | null = null
@@ -482,12 +506,9 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		droppedSinceLastReport = 0
 	} catch { /* empty */ }
 
-	// Signaux d'interférence DOM externe, pour les familles de crashs à cause externe probable :
-	// corruption-DOM (patch sur un el null) ET ordre d'init/TDZ (import statique en TDZ alors qu'aucun
-	// cycle d'import inter-chunks n'existe → impossible sans réévaluation externe du contexte page).
-	// Familles dont la cause probable est externe (moteur de traduction / extension) : on leur
-	// attache le diagnostic d'interférence et on les masque si une traduction est active.
-	const externallyInduced = isCorruption || isInitOrderCrash(e?.message || '')
+	// Signaux d'interférence DOM externe pour les familles à cause externe probable (moteur de
+	// traduction / extension) : on leur attache le diagnostic, et on les masque plus bas si une
+	// traduction est active.
 	const interference = externallyInduced ? detectDOMInterference() : { text: '', translation: false }
 	const domInterference = interference.text
 

@@ -1,7 +1,7 @@
-// Classification des messages de crash JS, par famille. Prédicats purs (pas d'accès au DOM
-// ni à l'app) : extraits de model/vue.ts, qui importe une vingtaine de composants et ne peut
-// donc pas être chargé dans un test. Ils pilotent le diagnostic et la récupération dans
-// reportVueError — leur donner un test évite qu'un motif disparaisse en silence.
+// Classification des crashs JS par famille, d'après leur message ou leur stack. Prédicats purs
+// (pas d'accès au DOM ni à l'app) : extraits de model/vue.ts, qui importe une vingtaine de
+// composants et ne peut donc pas être chargé dans un test. Ils pilotent le diagnostic et la
+// récupération dans reportVueError — leur donner un test évite qu'un motif disparaisse en silence.
 
 // Corruption de l'arbre de vnodes de Vue (el/anchor/instance devenus null pendant le patch,
 // cause probable moteur de traduction/extension qui mute le DOM). Une seule définition,
@@ -27,6 +27,29 @@ export function isDomCorruptionCrash(m: string): boolean {
 // sans marqueur de traduction reste donc à prendre au sérieux. #11820505
 export function isInitOrderCrash(m: string): boolean {
 	return m.includes('before initialization') || m.includes('uninitialized variable')
+}
+
+// Crash né DANS une extension de navigateur : les frames ne citent que des scripts d'extension
+// (chrome-extension:// sur Chromium, moz-extension:// sur Firefox, safari-web-extension:// sur
+// Safari, qui masque en webkit-masked-url:// l'URL des scripts qu'il injecte depuis 16.4) et
+// aucun script de la page. Cas réel : une extension qui wrappe XMLHttpRequest crashe dans son
+// propre onreadystatechange et le rejet remonte en unhandledrejection dans la page (`reading
+// 'M_ID'`, 342 rapports d'un seul joueur, erreur #11832526 / issue #4787). Rien d'actionnable
+// côté app → rapport masqué, le seul canal où ça se décide étant reportVueError. Le pendant
+// serveur, modifiable à chaud si le volume dérape avant que les builds périmés ne tournent,
+// est ErrorController::shouldIgnoreClientError, qui reçoit message ET stack.
+// On raisonne sur les FRAMES (URL suivie de :ligne:colonne) des DEUX côtés, jamais sur la ligne
+// de message où une URL citée ne prouve rien : un message d'extension mentionne très souvent une
+// URL du site (« Failed to fetch https://leekwars.com/api/… ») et sur V8 une stack sans frames
+// N'EST que cette ligne de message. Une seule frame de la page rend le rapport visible : une
+// stack MIXTE est un bug applicatif simplement traversé par un wrapper d'extension.
+const EXTENSION_FRAME = /\b(?:(?:chrome|moz|safari-web)-extension|webkit-masked-url):\/\/\S*:\d+:\d+/i
+const PAGE_FRAME = /\bhttps?:\/\/\S*:\d+:\d+/i
+
+export function isBrowserExtensionCrash(stack: string): boolean {
+	// Frame de page d'abord : elle tranche dès la première frame sur un crash applicatif, alors
+	// que l'alternation d'extensions, elle, parcourt toute la stack avant d'échouer.
+	return !PAGE_FRAME.test(stack) && EXTENSION_FRAME.test(stack)
 }
 
 // Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
