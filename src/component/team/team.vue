@@ -2331,6 +2331,49 @@
 	.compos {
 		margin-bottom: 12px;
 	}
+	/* Compositions sur deux colonnes dès que la place le permet.
+	   `auto-fit` plutôt qu'un point de rupture en pixels : ce qui compte est la
+	   largeur DISPONIBLE, qui dépend du menu replié ou non et du panneau social
+	   ouvert ou non, pas de celle de la fenêtre. 600 px est la largeur sous
+	   laquelle une composition ne tiendrait plus ses six poireaux à leur taille
+	   actuelle (600 / 6 = 100 px par poireau, gouttières comprises). */
+	body:not(.v2) .compos {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+		gap: 12px;
+		/* Sans ça les panneaux d'une même ligne s'étirent à la hauteur du plus
+		   grand, et une composition de deux poireaux traîne un grand vide. */
+		align-items: start;
+	}
+	body:not(.v2) .compos > .panel {
+		margin-bottom: 0;
+	}
+	/* Six colonnes fixes : c'est la taille maximale d'une composition, donc les
+	   poireaux occupent toujours le même sixième et s'alignent d'une
+	   composition à l'autre, quel que soit leur nombre. La grille `auto-fill`
+	   d'origine les collait à gauche, en colonnes de largeurs différentes.
+	   Ne vaut que dans les compositions : le panneau des poireaux non classés
+	   n'a pas de limite à six et garde son remplissage automatique. */
+	body:not(.v2) .compos .leeks {
+		grid-template-columns: repeat(6, 1fr);
+		/* Une image de poireau est plus large que sa cellule : l'arme et le
+		   chapeau débordent (jusqu'à ~150 px pour une cellule de ~105). Elles
+		   sont centrées, donc le premier et le dernier poireau sortaient du
+		   panneau. Cette marge leur donne la place de déborder à l'intérieur. */
+		padding: 5px 24px;
+	}
+	body:not(.v2) .compos .leek {
+		width: auto;
+		min-width: 0;
+		/* Centrage en flex et non par `text-align` : une image plus large que sa
+		   cellule est une boîte en ligne, que `text-align: center` ne recentre
+		   pas — elle part de la gauche et déborde uniquement à droite. Le
+		   centrage transversal d'un flex, lui, déborde des deux côtés à parts
+		   égales, ce que la marge du conteneur absorbe. */
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 	.team-language-popup {
 		text-align: center;
 		.language {
