@@ -487,6 +487,17 @@
 			document.body.classList.add('dark')
 		else
 			document.body.classList.remove('dark')
+		// Cookie miroir, comme `leek_theme` : il permet au serveur de poser la
+		// classe sur <body> dès le HTML. Sans lui, le CSS clair (le défaut) peint
+		// la page entre le chargement de la feuille et le montage de Vue, ce qui
+		// fait un flash blanc à chaque chargement en mode sombre.
+		//
+		// On écrit la valeur RÉSOLUE et non le réglage : en « auto », le serveur
+		// ne peut pas connaître la préférence système. Ce watch couvre les trois
+		// sources (réglage, bascule, changement de thème de l'OS via le listener
+		// matchMedia de vue.ts), et son `immediate` migre les comptes existants
+		// dès le premier chargement.
+		document.cookie = 'dark=' + (LeekWars.darkMode ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax'
 	}, { immediate: true })
 
 	watch(() => LeekWars.xpTheme, () => {
