@@ -25,6 +25,8 @@
     - "La pagina Inventario non va più in crash al primo bottino di una nuova stagione: le risorse di una stagione (Sabbia dorata, Ambra marina...) sono ora pubblicate automaticamente il giorno prima del suo inizio."
     - "Le stagioni iniziano e finiscono ora a mezzanotte ora francese, invece che alle 2 del mattino."
     - "L'editor non genera più un errore a ogni battitura sulle vecchie versioni di Safari (iPhone e iPad con iOS 15): il rilevamento dei colori di Monaco usava un'espressione regolare che quei browser non comprendono."
+    - "Git: push, pull e aggiornamento ora funzionano qualunque sia il nome del repository remoto. Un remote chiamato diversamente da «origin» faceva fallire tutte le operazioni di rete con «fatal: transport 'file' not allowed» e lasciava il selettore dei branch senza alcun branch remoto. Anche il fallimento di un aggiornamento viene ora segnalato, invece di passare inosservato."
+    - "Il selettore dei branch dell'editor non propone più un falso branch «origin»: era l'HEAD del repository remoto, e sceglierlo staccava l'HEAD, facendo sparire il selettore."
     - "Cambiare account in una scheda non fa più andare in crash le schede rimaste aperte sull'account precedente: ora si ricaricano automaticamente sul nuovo account, o propongono di farlo se contengono IA non salvate (grazie a Portevent)."
     - "La pagina Notifiche non resta più vuota quando una notifica riguarda un porro che non è più nell'allevamento."
     - "#ai L'editor non va più in crash quando, in un'IA JavaScript o TypeScript, si clicca sul titolo della finestra delle definizioni o dei riferimenti per un simbolo dell'API: quel bersaglio non è uno dei tuoi file, e ora viene semplicemente ignorato (grazie a Hurracan)."

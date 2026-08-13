@@ -33,6 +33,7 @@
 	"push_force_confirm": "⚠️ Push paksa: ini akan menimpa riwayat di remote. Lanjutkan?",
 	"push_strategy": "Strategi push",
 	"quota_files_exceeded": "Kuota berkas terlampaui. Hapus berkas untuk turun di bawah batas.",
+	"no_remote": "Tidak ada remote yang dikonfigurasi.",
 	"quota_size_exceeded": "Kuota ruang terlampaui. Hapus berkas untuk membebaskan ruang.",
 	"rebase": "Rebase",
 	"rebase_abort": "Batalkan rebase",
