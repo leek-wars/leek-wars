@@ -280,17 +280,17 @@
 
 		<div v-if="group && group.is_supervisor" class="container last">
 			<panel :title="$t('settings')" icon="mdi-cog-outline">
-				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details @change="updateSettingChat" />
+				<lw-switch v-model="group.setting_chat" :label="$t('setting_chat')" @change="updateSettingChat" />
 			</panel>
 			<panel :title="$t('member_options')" icon="mdi-cog-outline">
-				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
-				<v-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" />
-				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" />
-				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" />
-				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" />
-				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" />
-				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('main.xp_blocked')" @change="updateXpBlocked" />
-				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" />
+				<lw-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" @change="updateSettingPublicChat" />
+				<lw-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" @change="updateSettingBuyFights" />
+				<lw-switch v-model="group.setting_bank" :label="$t('setting_bank')" @change="updateSettingBank" />
+				<lw-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" @change="updateSettingTournaments" />
+				<lw-switch v-model="group.setting_br" :label="$t('setting_br')" @change="updateSettingBr" />
+				<lw-switch v-model="group.setting_new_leek" :label="$t('new_leek')" @change="updateNewLeek" />
+				<lw-switch v-model="group.setting_xp_blocked" :label="$t('main.xp_blocked')" @change="updateXpBlocked" />
+				<lw-switch v-model="group.setting_equipment_blocked" :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" />
 			</panel>
 		</div>
 
@@ -372,16 +372,16 @@
 			-->
 			<!-- <br><br> -->
 			<h4>{{ $t('main_options') }}</h4>
-			<v-checkbox v-model="group.setting_chat" :label="$t('setting_chat')" hide-details />
+			<lw-checkbox v-model="group.setting_chat" :label="$t('setting_chat')" />
 			<br>
 
 			<h4>{{ $t('member_options') }}</h4>
-			<!-- <v-checkbox v-model="group.setting_trophies" :label="$t('setting_trophies')" hide-details /> -->
-			<v-checkbox v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
-			<v-checkbox v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" />
-			<v-checkbox v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" />
-			<v-checkbox v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" />
-			<v-checkbox v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" />
+			<!-- <lw-checkbox v-model="group.setting_trophies" :label="$t('setting_trophies')" /> -->
+			<lw-checkbox v-model="group.setting_public_chat" :label="$t('setting_public_chat')" @change="updateSettingPublicChat" />
+			<lw-checkbox v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" @change="updateSettingBuyFights" />
+			<lw-checkbox v-model="group.setting_bank" :label="$t('setting_bank')" @change="updateSettingBank" />
+			<lw-checkbox v-model="group.setting_tournaments" :label="$t('setting_tournaments')" @change="updateSettingTournaments" />
+			<lw-checkbox v-model="group.setting_br" :label="$t('setting_br')" @change="updateSettingBr" />
 		</popup>
 
 		<popup v-if="group" v-model="weaponsDialog" :width="800">

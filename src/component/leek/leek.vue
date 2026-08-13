@@ -39,7 +39,7 @@
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props" @click="updateGarden">
 								<span>{{ $t('garden') }}</span>
-								<v-switch :model-value="leek.in_garden" hide-details />
+								<lw-switch :model-value="leek.in_garden" />
 							</div>
 						</template>
 						{{ $t('authorize_agressions') }}
@@ -356,7 +356,7 @@
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props" @click="updateXpBlocked">
 							<span>{{ $t('main.xp_blocked') }}</span>
-							<v-switch :model-value="leek.xp_blocked" hide-details />
+							<lw-switch :model-value="leek.xp_blocked" />
 						</div>
 					</template>
 					{{ $t('xp_blocked_desc') }}
@@ -629,7 +629,7 @@
 				<div class="container">
 					<div class="column6">
 						<div v-if="$store.state.farmer" class="pomp">
-							<v-switch :model-value="$store.state.farmer.show_ai_lines" hide-details :disabled="!showAiLinesEnabled" @change="changeShowAiLines">
+							<lw-switch :model-value="$store.state.farmer.show_ai_lines" :disabled="!showAiLinesEnabled" @change="changeShowAiLines">
 								<template #label>
 									<span>{{ $t('pomp.ai_lines') }}</span>
 									<v-tooltip :disabled="showAiLinesEnabled">
@@ -639,10 +639,10 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
 									</v-tooltip>
 								</template>
-							</v-switch>
+							</lw-switch>
 						</div>
 						<div v-if="leek" class="pomp">
-							<v-switch :model-value="leek.metal" hide-details :disabled="!metalEnabled" @change="changeMetal">
+							<lw-switch :model-value="leek.metal" :disabled="!metalEnabled" @change="changeMetal">
 								<template #label>
 									<span>{{ $t('pomp.metal') }}</span>
 									<v-tooltip :disabled="metalEnabled">
@@ -652,17 +652,17 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
 									</v-tooltip>
 								</template>
-							</v-switch>
+							</lw-switch>
 						</div>
 					</div>
 					<div v-if="leek" class="pomp column6">
-						<v-radio-group v-model="leek.face" hide-details @update:model-value="changeFace">
-							<v-radio :value="0">
+						<lw-radio-group v-model="leek.face" @update:model-value="changeFace">
+							<lw-radio :value="0">
 								<template #label>
           							{{ $t('neutral') }}
 								</template>
-							</v-radio>
-							<v-radio :value="1" :disabled="!happyEnabled">
+							</lw-radio>
+							<lw-radio :value="1" :disabled="!happyEnabled">
 								<template #label>
           							{{ $t('happy') }}
 									<v-tooltip :disabled="happyEnabled">
@@ -672,8 +672,8 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.happy') }}
 									</v-tooltip>
 								</template>
-							</v-radio>
-							<v-radio :value="2" :disabled="!angryEnabled">
+							</lw-radio>
+							<lw-radio :value="2" :disabled="!angryEnabled">
 								<template #label>
 									{{ $t('angry') }}
 									<v-tooltip :disabled="angryEnabled">
@@ -683,8 +683,8 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.angry') }}
 									</v-tooltip>
 								</template>
-							</v-radio>
-						</v-radio-group>
+							</lw-radio>
+						</lw-radio-group>
 					</div>
 				</div>
 				<v-btn size="small" @click="downloadLeekImage">{{ $t('download_leek_image') }}</v-btn>
@@ -2340,9 +2340,8 @@
 			cursor: pointer;
 			pointer-events: auto;
 		}
-		.v-radio.v-radio--is-disabled {
+		.lw-radio.disabled {
 			opacity: 0.7;
-			pointer-events: auto;
 		}
 	}
 	.rename-button {

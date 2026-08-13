@@ -195,8 +195,8 @@
 
 				<div class="title">{{ $t('display') }}</div>
 				<template v-if="!LeekWars.mobile">
-					<v-checkbox v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
-					<v-checkbox v-model="hideHeader" :label="$t('hide_header')" hide-details />
+					<lw-checkbox v-model="enlargeWindow" :label="$t('enlarge_window')" />
+					<lw-checkbox v-model="hideHeader" :label="$t('hide_header')" />
 					<br>
 				</template>
 				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30" @keyup.stop>
@@ -205,34 +205,34 @@
 
 				<div class="title">{{ $t('theme') }}</div>
 
-				<v-checkbox v-model="themeAuto" :label="$t('theme_auto')" hide-details />
+				<lw-checkbox v-model="themeAuto" :label="$t('theme_auto')" />
 
 				<div v-if="themeAuto" class="theme-selectors">
 					<v-select v-model="lightTheme" :items="LIGHT_THEME_OPTIONS" :label="$t('light_theme')" density="compact" variant="outlined" hide-details />
 					<v-select v-model="darkTheme" :items="DARK_THEME_OPTIONS" :label="$t('dark_theme')" density="compact" variant="outlined" hide-details />
 				</div>
-				<v-radio-group v-else v-model="theme" hide-details class="themes">
-					<v-radio label="Leek Wars" value="leek-wars" />
-					<v-radio label="Monokai" value="monokai" />
-					<v-radio label="VS Code clair" value="vs" />
-					<v-radio label="VS Code sombre" value="vs-dark" />
-					<v-radio label="High Contrast clair" value="hc-light" />
-					<v-radio label="High Contrast sombre" value="hc-black" />
-				</v-radio-group>
+				<lw-radio-group v-else v-model="theme" class="themes">
+					<lw-radio label="Leek Wars" value="leek-wars" />
+					<lw-radio label="Monokai" value="monokai" />
+					<lw-radio label="VS Code clair" value="vs" />
+					<lw-radio label="VS Code sombre" value="vs-dark" />
+					<lw-radio label="High Contrast clair" value="hc-light" />
+					<lw-radio label="High Contrast sombre" value="hc-black" />
+				</lw-radio-group>
 				<!-- Custom theme name
 				<input v-model="theme"> -->
 
 				<div class="title">{{ $t('settings_editor') }}</div>
 
-				<v-checkbox v-model="autoClosing" :label="$t('auto_closing')" hide-details />
-				<!-- <v-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" hide-details /> -->
-				<v-checkbox v-model="autocomplete" :label="$t('autocompletion')" hide-details />
-				<v-checkbox v-model="popups" :label="$t('popups')" hide-details />
+				<lw-checkbox v-model="autoClosing" :label="$t('auto_closing')" />
+				<!-- <lw-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" /> -->
+				<lw-checkbox v-model="autocomplete" :label="$t('autocompletion')" />
+				<lw-checkbox v-model="popups" :label="$t('popups')" />
 
 				<div class="title">{{ $t('settings_diff') }}</div>
 
-				<v-checkbox v-model="diffInline" :label="$t('diff_inline')" hide-details />
-				<v-checkbox v-model="diffCollapseUnchanged" :label="$t('diff_collapse_unchanged')" hide-details />
+				<lw-checkbox v-model="diffInline" :label="$t('diff_inline')" />
+				<lw-checkbox v-model="diffCollapseUnchanged" :label="$t('diff_collapse_unchanged')" />
 
 				<div class="title">{{ $t('shortcuts') }}</div>
 

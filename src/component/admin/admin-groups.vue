@@ -39,7 +39,7 @@
 						{{ $filters.date(item.creation_date) }}
 					</template>
 					<template #item.archived="{ item }">
-						<v-checkbox v-model="item.archived" :hide-details="true" />
+						<lw-checkbox v-model="item.archived" />
 					</template>
 					<template #item.demo="{ item }">
 						<div v-if="isDemo(item)" class="demo-cell">

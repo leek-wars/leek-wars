@@ -32,11 +32,11 @@
 				</v-menu>
 				<div class="tab" @click="group_by_categories = !group_by_categories">
 					<span>{{ $t('group_by_categories') }}</span>
-					<v-switch :model-value="group_by_categories" hide-details />
+					<lw-switch :model-value="group_by_categories" />
 				</div>
 				<div class="tab" @click="hide_unlocked = !hide_unlocked">
 					<span>{{ $t('hide_unlocked') }}</span>
-					<v-switch :model-value="hide_unlocked" hide-details />
+					<lw-switch :model-value="hide_unlocked" />
 				</div>
 			</div>
 		</div>

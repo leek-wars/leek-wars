@@ -16,7 +16,7 @@
 						<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 							<template #prepend>
 								<v-list-item-action start>
-									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop @update:model-value="updateCategories" />
+									<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop @update:model-value="updateCategories" />
 								</v-list-item-action>
 							</template>
 							<div class="flex">
@@ -62,7 +62,7 @@
 										<v-list-item v-for="r in readFilterItems" :key="r.value" density="compact" @click="filterRead = r.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterRead" :value="r.value" density="compact" hide-details @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
+													<lw-radio :model-value="filterRead" :value="r.value" @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ r.title }}</span>
@@ -73,7 +73,7 @@
 										<v-list-item density="compact" @click="filterStatus = []; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterStatus.length === 0" density="compact" hide-details @click.stop @update:model-value="filterStatus = []; saveFilters()" />
+													<lw-checkbox :model-value="filterStatus.length === 0" @click.stop @update:model-value="filterStatus = []; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ $t('filter_all') }}</span>
@@ -81,7 +81,7 @@
 										<v-list-item v-for="s in statusFilterItems" :key="s.value" density="compact" @click="toggleStatusFilter(s.value)">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterStatus.includes(s.value)" density="compact" hide-details @click.stop @update:model-value="toggleStatusFilter(s.value)" />
+													<lw-checkbox :model-value="filterStatus.includes(s.value)" @click.stop @update:model-value="toggleStatusFilter(s.value)" />
 												</v-list-item-action>
 											</template>
 											<v-icon v-if="s.icon" size="small" :class="s.iconClass" class="filter-item-icon">{{ s.icon }}</v-icon>
@@ -93,7 +93,7 @@
 										<v-list-item v-for="a in acknowledgedFilterItems" :key="a.value" density="compact" @click="filterAcknowledged = a.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterAcknowledged" :value="a.value" density="compact" hide-details @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
+													<lw-radio :model-value="filterAcknowledged" :value="a.value" @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ a.title }}</span>
@@ -104,7 +104,7 @@
 										<v-list-item v-for="l in lockedFilterItems" :key="l.value" density="compact" @click="filterLocked = l.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterLocked" :value="l.value" density="compact" hide-details @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
+													<lw-radio :model-value="filterLocked" :value="l.value" @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ l.title }}</span>
@@ -115,7 +115,7 @@
 										<v-list-item density="compact" @click="filterPriority = []; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterPriority.length === 0" density="compact" hide-details @click.stop @update:model-value="filterPriority = []; saveFilters()" />
+													<lw-checkbox :model-value="filterPriority.length === 0" @click.stop @update:model-value="filterPriority = []; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ $t('filter_all') }}</span>
@@ -123,7 +123,7 @@
 										<v-list-item v-for="p in priorityFilterItems" :key="p.value" density="compact" @click="togglePriorityFilter(p.value)">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterPriority.includes(p.value)" density="compact" hide-details @click.stop @update:model-value="togglePriorityFilter(p.value)" />
+													<lw-checkbox :model-value="filterPriority.includes(p.value)" @click.stop @update:model-value="togglePriorityFilter(p.value)" />
 												</v-list-item-action>
 											</template>
 											<v-icon v-if="p.icon" size="small" :class="p.iconClass" class="filter-item-icon">{{ p.icon }}</v-icon>
@@ -297,14 +297,14 @@
 				<textarea v-model="createMessage" class="topic-message card" @keyup="updateDraft"></textarea>
 
 				<div class="grid">
-					<v-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang" hide-details>
-						<v-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
-					</v-radio-group>
+					<lw-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang">
+						<lw-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
+					</lw-radio-group>
 					<template v-if="$store.state.farmer && $store.state.farmer.admin">
 						<div>
 							<v-text-field v-model.number="createRelease" label="Release" type="number" placeholder="245" hide-details variant="outlined" density="compact" />
 						</div>
-						<v-checkbox v-model="createHidden" :label="$t('hidden_topic')" hide-details />
+						<lw-checkbox v-model="createHidden" :label="$t('hidden_topic')" />
 					</template>
 				</div>
 				<formatting-rules />

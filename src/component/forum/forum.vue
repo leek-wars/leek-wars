@@ -13,7 +13,7 @@
 					<v-list :dense="true" class="mobile-forum-languages">
 						<v-list-item v-for="(language, i) in languages" :key="i" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 							<template #prepend>
-								<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details density="compact" @click.stop="pickForumLanguage(language)" />
+								<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop="pickForumLanguage(language)" />
 							</template>
 							<div class="language">
 								<flag :code="language.country" :clickable="false" />
@@ -52,7 +52,7 @@
 						<v-list :dense="true" class="mobile-forum-languages">
 							<v-list-item v-for="(language, i) in languages" :key="i" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 								<template #prepend>
-									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details density="compact" @click.stop="pickForumLanguage(language)" />
+									<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop="pickForumLanguage(language)" />
 								</template>
 								<div class="language">
 									<flag :code="language.country" :clickable="false" />
@@ -141,7 +141,7 @@
 			<div class="tabs">
 				<div class="tab" @click="notifyNewTopics = !notifyNewTopics">
 					<span>{{ $t('new_topic_notification') }}</span>
-					<v-switch v-model="notifyNewTopics" hide-details @click.stop />
+					<lw-switch v-model="notifyNewTopics" @click.stop />
 				</div>
 			</div>
 		</div>
@@ -412,7 +412,7 @@
 	.mobile-forum-languages .v-list-item {
 		min-height: 36px;
 	}
-	.mobile-forum-languages .v-checkbox .v-selection-control {
+	.mobile-forum-languages .lw-checkbox {
 		margin-right: 10px;
 	}
 </style>

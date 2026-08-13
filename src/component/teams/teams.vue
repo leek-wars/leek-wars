@@ -22,7 +22,7 @@
 				<v-text-field v-model="search" :label="$t('search')" prepend-inner-icon="mdi-magnify" density="compact" variant="outlined" hide-details clearable class="filter-search" />
 				<v-select v-model="activityFilter" :items="activityOptions" :label="$t('activity')" density="compact" variant="outlined" hide-details class="filter-select" />
 				<v-select v-model="sizeFilter" :items="sizeOptions" :label="$t('team_size')" density="compact" variant="outlined" hide-details class="filter-select" />
-				<v-switch v-model="showClosed" :label="$t('show_closed')" density="compact" hide-details color="primary" class="filter-switch" />
+				<lw-switch v-model="showClosed" :label="$t('show_closed')" class="filter-switch" />
 			</div>
 
 			<loader v-if="!teams" />

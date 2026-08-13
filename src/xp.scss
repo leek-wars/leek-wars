@@ -685,17 +685,16 @@ $xp-taskbar-gradient-end: #3c7ee6;
 		border-radius: 0;
 	}
 
-	// Checkbox - XP style
-	.v-checkbox .v-selection-control__input > .v-icon {
-		color: $xp-dialog-blue;
-	}
-	.v-checkbox .v-selection-control__input {
-		color: $xp-dialog-blue;
+	// Checkbox - XP style (lw-checkbox depuis la sortie de v-checkbox)
+	.lw-checkbox input:checked ~ .box {
+		background: $xp-dialog-blue;
+		border-color: $xp-dialog-blue;
 	}
 
-	// Radio - XP style
-	.v-radio .v-selection-control__input {
-		color: $xp-dialog-blue;
+	// Radio - XP style (lw-radio depuis la sortie de v-radio)
+	.lw-radio input:checked ~ .box {
+		background: $xp-dialog-blue;
+		border-color: $xp-dialog-blue;
 	}
 
 	// ====================================

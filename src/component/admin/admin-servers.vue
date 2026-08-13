@@ -71,7 +71,7 @@
 				<div class="queue">
 					<div class="flex" :style="{'align-items': 'center'}">
 						<h4>➤ Queue ({{ queue.length }})</h4>
-						<v-switch v-model="show_ids" hide-details label="IDs" />
+						<lw-switch v-model="show_ids" label="IDs" />
 					</div>
 					<div class="farmers">
 						<div v-for="(task, t) in queue" :key="t" class="card farmer" :style="{background: show_ids ? colorFromID(task[1].queue_id ?? '') : undefined}">

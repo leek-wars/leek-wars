@@ -11,7 +11,7 @@
 				<loader v-if="!errors" />
 				<div v-else>
 					<div class="toolbar">
-						<v-switch v-model="showHidden" color="primary" density="compact" hide-details label="Erreurs masquées" @update:model-value="onShowHiddenChange" />
+						<lw-switch v-model="showHidden" label="Erreurs masquées" @update:model-value="onShowHiddenChange" />
 						<div class="delete-query">
 							<label for="delete-query">Supprimer par mot-clé</label>
 							<input id="delete-query" v-model="deleteQuery" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -445,7 +445,7 @@
 		align-items: center;
 		gap: 10px 16px;
 		margin-bottom: 10px;
-		.v-switch {
+		.lw-switch {
 			flex: none;
 		}
 	}

@@ -19,7 +19,8 @@
 	import SearchBar from './search-bar.vue'
 	import TutorialMenu from '../tutorial/tutorial-menu.vue'
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
-	import { VBtn, VCheckbox } from 'vuetify/components'
+	import { VBtn } from 'vuetify/components'
+	import LWCheckbox from '@/component/ui/lw-checkbox.vue'
 	import { tutorial_items, toTutorialTrack } from '../tutorial/tutorial-items'
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
@@ -403,9 +404,7 @@
 
 							const CheckboxWrapper = defineComponent({
 								setup() {
-									// eslint-disable-next-line @typescript-eslint/no-explicit-any
-							return () => h(VCheckbox as any, {
-										hideDetails: true,
+									return () => h(LWCheckbox, {
 										modelValue: checked.value,
 										'onUpdate:modelValue': (newValue: boolean) => {
 											checked.value = newValue

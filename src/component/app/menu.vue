@@ -221,13 +221,13 @@
 					</div>
 					<div class="arena-popup-preference">
 						<h4>{{ $t('main.arena_preference') }}</h4>
-						<v-radio-group :model-value="$store.state.arenaPreference" inline hide-details @update:model-value="changeArenaPreference">
-							<v-radio :label="$t('main.arena_no_preference')" :value="-1" />
-							<v-radio :label="$t('main.arena_mode_br')" :value="0" />
-							<v-radio :label="$t('main.arena_mode_war')" :value="1" />
-							<v-radio :label="$t('main.arena_mode_chest_hunt')" :value="2" />
-							<v-radio :label="$t('main.arena_mode_colossus')" :value="3" />
-						</v-radio-group>
+						<lw-radio-group :model-value="$store.state.arenaPreference" inline @update:model-value="changeArenaPreference">
+							<lw-radio :label="$t('main.arena_no_preference')" :value="-1" />
+							<lw-radio :label="$t('main.arena_mode_br')" :value="0" />
+							<lw-radio :label="$t('main.arena_mode_war')" :value="1" />
+							<lw-radio :label="$t('main.arena_mode_chest_hunt')" :value="2" />
+							<lw-radio :label="$t('main.arena_mode_colossus')" :value="3" />
+						</lw-radio-group>
 					</div>
 					<br>
 					<div class="center">
@@ -907,7 +907,7 @@
 			color: var(--text-color-secondary);
 			margin-bottom: 4px;
 		}
-		:deep(.v-radio-group) {
+		:deep(.lw-radio-group) {
 			justify-content: center;
 		}
 	}

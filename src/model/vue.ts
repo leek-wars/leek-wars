@@ -13,6 +13,10 @@ import NotificationElement from '@/component/notifications/notification.vue'
 import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
+import LWCheckbox from '@/component/ui/lw-checkbox.vue'
+import LWRadio from '@/component/ui/lw-radio.vue'
+import LWRadioGroup from '@/component/ui/lw-radio-group.vue'
+import LWSwitch from '@/component/ui/lw-switch.vue'
 import { env } from '@/env'
 import { i18n, loadLanguageAsync, normalizeComponentName } from '@/model/i18n'
 import { LeekWars, loadGameData } from '@/model/leekwars'
@@ -92,18 +96,6 @@ const vuetify = createVuetify({
 		},
 	},
 	defaults: {
-		VSwitch: {
-			color: 'primary',
-		},
-		VRadio: {
-			color: 'primary',
-		},
-		VRadioGroup: {
-			color: 'primary',
-		},
-		VCheckbox: {
-			color: 'primary',
-		},
 		VTooltip: {
 			location: 'bottom',
 		},
@@ -832,6 +824,10 @@ app.component('panel', Panel)
 app.component('popup', Popup)
 app.component('loader', LWLoader)
 app.component('flag', Flag)
+app.component('lw-switch', LWSwitch)
+app.component('lw-checkbox', LWCheckbox)
+app.component('lw-radio', LWRadio)
+app.component('lw-radio-group', LWRadioGroup)
 
 app.directive('autostopscroll', {
 	mounted: (el, binding) => {

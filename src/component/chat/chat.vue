@@ -62,15 +62,15 @@
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in censorMessagesList" :key="message.id">
-							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :hide-details="true">
+							<lw-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]">
 								<template #label>
 									<span v-html="message.content"></span>
 								</template>
-							</v-checkbox>
+							</lw-checkbox>
 						</div>
 					</div>
 				</div>
-				<v-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
+				<lw-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="censorDialog = false">{{ $t('main.cancel') }}</div>
@@ -85,15 +85,15 @@
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in deleteMessagesList" :key="message.id">
-							<v-checkbox v-model="deletedMessages[message.id]" :hide-details="true">
+							<lw-checkbox v-model="deletedMessages[message.id]">
 								<template #label>
 									<span v-html="message.content"></span>
 								</template>
-							</v-checkbox>
+							</lw-checkbox>
 						</div>
 					</div>
 				</div>
-				<v-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
+				<lw-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('main.cancel') }}</div>

@@ -63,7 +63,7 @@
 
         <v-list-item v-ripple :lines="false" @click="strict = !strict">
             <template #prepend>
-                <v-checkbox v-model="strict" :hide-details="true" @click.stop />
+                <lw-checkbox v-model="strict" @click.stop />
             </template>
             <v-list-item-title>{{ $t('leekscript.strict_mode') }}</v-list-item-title>
             <v-list-item-subtitle>

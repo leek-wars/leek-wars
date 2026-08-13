@@ -123,8 +123,8 @@
 						<v-btn v-else-if="category === 'farmer'" @click="LeekWars.goToRanking('farmer', order, $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="LeekWars.goToRanking('team', order, $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
-					<v-switch v-if="!category.startsWith('boss')" v-model="activeSwitch" :label="$t('hide_inactives')" hide-details class="inactives" @change="toggleInactives" />
-					<v-switch v-if="category === 'team' || category === 'composition'" v-model="compositionMode" :label="$t('compositions')" hide-details class="inactives" @change="toggleCompositionMode" />
+					<lw-switch v-if="!category.startsWith('boss')" v-model="activeSwitch" :label="$t('hide_inactives')" class="inactives" @change="toggleInactives" />
+					<lw-switch v-if="category === 'team' || category === 'composition'" v-model="compositionMode" :label="$t('compositions')" class="inactives" @change="toggleCompositionMode" />
 				</div>
 				<div class="scroll-x">
 					<table v-if="displayCategory === 'leek'" class="ranking large">
@@ -343,9 +343,9 @@
 		<popup v-model="searchDialog" :width="500" icon="mdi-magnify" :title="$t('search_in_ranking')">
 			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" :aria-label="$t('search_name')" class="query" type="text">
 			<div class="flex">
-				<v-checkbox v-model="searchLeeks" :label="$t('leeks')" hide-details />
-				<v-checkbox v-model="searchFarmers" :label="$t('farmers')" hide-details />
-				<v-checkbox v-model="searchTeams" :label="$t('teams')" hide-details />
+				<lw-checkbox v-model="searchLeeks" :label="$t('leeks')" />
+				<lw-checkbox v-model="searchFarmers" :label="$t('farmers')" />
+				<lw-checkbox v-model="searchTeams" :label="$t('teams')" />
 			</div>
 			<br>
 			<loader v-if="!searchResults && searchQuery.length" />
