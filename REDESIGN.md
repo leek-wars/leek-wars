@@ -168,6 +168,12 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   embarqué) : `v-select` (10 fichiers), `v-text-field` (9).
   Faits : `v-switch`, `v-checkbox`, `v-radio`/`v-radio-group`.
 - **Loader** : le spinner circulaire Material, candidat à un traitement pixel.
+- **Flash au chargement en « Ancien design »** : le flash blanc du thème
+  sombre est corrigé (cookie `dark` lu par le PHP, 2026-08-13), mais les
+  joueurs en v2 voient toujours le v3 un instant — leur feuille est chargée à
+  la demande au montage. Même remède possible : un cookie `design` miroir, la
+  classe `v2` posée dès le HTML, et la feuille v2 en `<link>` plutôt qu'en
+  import dynamique.
 - **Logo** (Pierre) et **puces/apparats** (autre session) : en attente.
 
 ## À reporter dans le projet Claude Design
