@@ -863,9 +863,36 @@ body:not(.v2) {
 		border-color: var(--primary);
 		color: var(--primary);
 	}
-	/* L'ombre portée des boutons colorés tombe aussi : le v3 n'a pas d'ombre. */
+	/* L'ombre floue Material tombe partout. */
 	.v-btn {
 		box-shadow: none;
+	}
+
+	/* Les boutons d'ACCENT (l'action principale, sur un aplat de couleur)
+	   reçoivent en échange l'ombre pixel du mockup — c'est la seule ombre du
+	   design, franche et sans flou, et le handoff la décrit précisément sur
+	   `.btn-primary`. Elle ne va qu'à eux : les boutons neutres restent posés
+	   à plat, sinon toute la page se met à flotter.
+	   Le jeu des trois états donne le relief : au repos 3 px, au survol le
+	   bouton se décale d'un pixel vers le haut et l'ombre passe à 4 px (il se
+	   lève), au clic il redescend d'un pixel et l'ombre tombe à 2 px. */
+	.v-btn[class*="bg-"],
+	.button.green,
+	.button.red {
+		box-shadow: var(--shadow-pixel-small);
+		transition: box-shadow .12s ease, transform .12s ease;
+	}
+	.v-btn[class*="bg-"]:hover,
+	.button.green:hover,
+	.button.red:hover {
+		box-shadow: var(--shadow-pixel);
+		transform: translate(-1px, -1px);
+	}
+	.v-btn[class*="bg-"]:active,
+	.button.green:active,
+	.button.red:active {
+		box-shadow: var(--shadow-pixel-pressed);
+		transform: translate(1px, 1px);
 	}
 
 	/* ====== Ripple ======
