@@ -1001,6 +1001,74 @@ body:not(.v2) {
 		box-shadow: none;
 	}
 
+	/* ====== Barres de progression ======
+	 *
+	 * Elles étaient rondes (rayons de 5 à 9 px) et peintes de couleurs hors
+	 * palette (#30bb00, #2196f3). Le v3 en fait des jauges franches : un cadre,
+	 * une piste creuse, et un remplissage SEGMENTÉ — les encoches laissent voir
+	 * la piste, ce qui donne la jauge en blocs des interfaces de jeu et marche
+	 * dans les deux thèmes sans couleur supplémentaire.
+	 *
+	 * Les sélecteurs sont nommés un par un : `.bar` seul est trop générique
+	 * (barre de page, barres de graphiques), d'où le `:has()` qui ne retient
+	 * que les conteneurs de barre d'XP. */
+	.collection-summary .summary-progress,
+	.cat-tab .cat-progress,
+	.bar:has(> .xp-bar) {
+		border-radius: 0;
+		background: var(--background-input);
+		border: 1px solid var(--border-strong);
+		overflow: hidden;
+	}
+	/* Les remplissages sont déclarés IMBRIQUÉS dans leurs composants
+	   (`.summary-progress .summary-bar[data-v-…]`), ce qui pèse plus lourd
+	   qu'un sélecteur de classe seul : on reprend la même profondeur, sinon la
+	   règle ne passe jamais devant. */
+	.collection-summary .summary-progress .summary-bar,
+	.cat-tab .cat-progress .cat-bar,
+	.bar > .xp-bar {
+		border-radius: 0;
+		background-color: var(--primary);
+		/* Remplace les rayures à 45° du v2 : des encoches verticales tous les
+		   8 px, dans la couleur de la piste. */
+		background-image: repeating-linear-gradient(90deg, transparent 0 6px, var(--background-input) 6px 8px);
+	}
+	/* L'état « complet » passait par un bleu Material en dur. */
+	.collection-summary .summary-progress .summary-bar.complete,
+	.cat-tab .cat-progress .cat-bar.complete,
+	.bar > .xp-bar.blue {
+		background-color: var(--info);
+	}
+	/* Les deux barres qui méritent le coup d'œil — la collection dans son
+	   ensemble et l'XP vers le niveau suivant — reçoivent un reflet qui les
+	   traverse lentement. Les barres de catégorie restent sages, sinon la page
+	   entière scintille. */
+	.collection-summary .summary-progress .summary-bar,
+	.bar > .xp-bar {
+		position: relative;
+		overflow: hidden;
+	}
+	.collection-summary .summary-progress .summary-bar::after,
+	.bar > .xp-bar::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: -40%;
+		width: 30%;
+		background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+		animation: lw-bar-sheen 3.2s ease-in-out infinite;
+		pointer-events: none;
+	}
+	/* Une animation perpétuelle est exactement ce que ce réglage système
+	   demande de couper. */
+	@media (prefers-reduced-motion: reduce) {
+		.collection-summary .summary-progress .summary-bar::after,
+		.bar > .xp-bar::after {
+			animation: none;
+		}
+	}
+
 	/* ====== Tooltips ======
 	 *
 	 * La bulle grise à flèche de global.scss est passée aux variables
@@ -1225,6 +1293,18 @@ body:not(.v2) {
    bande part hors cadre à gauche et traverse la rangée. 320 % de sa propre
    largeur (50 % de la rangée) suffisent à sortir à droite quelle que soit la
    largeur. Au niveau racine : un @keyframes ne se scope pas. */
+/* Reflet des barres de progression importantes (section « Barres de
+   progression »). La bande part hors cadre à gauche, traverse, et l'attente se
+   fait en fin de course : d'où le palier à 60 %. */
+@keyframes lw-bar-sheen {
+	0% {
+		transform: translateX(0);
+	}
+	60%, 100% {
+		transform: translateX(500%);
+	}
+}
+
 @keyframes lw-notif-shine {
 	from {
 		transform: translateX(0);
