@@ -1122,14 +1122,41 @@ body:not(.v2) {
 	.rarity-band {
 		padding: 0;
 		height: 2px;
-		box-shadow:
-			0 0 4px var(--rarity),
-			0 0 12px color-mix(in srgb, var(--rarity) 55%, transparent);
+		position: relative;
+		/* Sans ça, la lumière est bien peinte mais aussitôt recouverte : les
+		   blocs qui suivent dans la fiche (image, statistiques) ont leur propre
+		   fond et se dessinent après elle. */
+		z-index: 1;
+		/* Le trait plein de bout en bout laisse place à une ligne qui s'éteint
+		   sur les bords : c'est ce qui enlève la raideur de l'ancienne bande.
+		   Elle remplace l'aplat que `.difficulty-N` pose dans global.scss. */
+		background: linear-gradient(90deg, transparent, var(--rarity) 20%, var(--rarity) 80%, transparent);
+		box-shadow: 0 0 10px color-mix(in srgb, var(--rarity) 60%, transparent);
 	}
-	/* Rareté 0 (objet commun) : pas de couleur, donc pas de halo — la barre
-	   reste le simple filet de séparation qu'elle était. */
+	/* Et la lumière déborde sur la fiche : une ellipse accrochée au milieu du
+	   trait, qui s'étire vers le bas et s'éteint sur les côtés. C'est ce
+	   débordement qu'on lit comme un halo, plus que la ligne — comme si la
+	   fiche était éclairée par la couleur de rareté. */
+	.rarity-band::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		height: 64px;
+		background: radial-gradient(ellipse 55% 100% at 50% 0%,
+			color-mix(in srgb, var(--rarity) 38%, transparent),
+			color-mix(in srgb, var(--rarity) 10%, transparent) 45%,
+			transparent 75%);
+		pointer-events: none;
+	}
+	/* Rareté 0 (objet commun) : pas de couleur, donc ni halo ni diffusion — la
+	   barre reste le simple filet de séparation qu'elle était. */
 	.rarity-band.difficulty-0 {
 		box-shadow: none;
+	}
+	.rarity-band.difficulty-0::after {
+		display: none;
 	}
 
 	/* ====== Tooltips ======

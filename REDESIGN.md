@@ -187,6 +187,40 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - Barres de progression rondes → jauges franches segmentées, `--info` pour
     l'état complet, reflet animé sur les deux barres importantes.
 
+## Le halo, motif réutilisable (2026-08-14)
+
+Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
+ailleurs mais avec modération**.
+
+Le motif : une source de couleur (un trait fin qui s'éteint sur ses bords) et
+surtout son **débordement lumineux** — une ellipse accrochée à la source, qui
+s'étire et s'éteint. C'est le débordement qu'on lit, pas la source. Recette :
+
+```scss
+.source {
+    position: relative;
+    z-index: 1; /* sinon les blocs suivants, qui ont leur propre fond, la couvrent */
+    background: linear-gradient(90deg, transparent, var(--couleur) 20%, var(--couleur) 80%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--couleur) 60%, transparent);
+}
+.source::after { /* la lumière qui déborde */
+    content: ""; position: absolute; top: 100%; left: 0; right: 0; height: 64px;
+    background: radial-gradient(ellipse 55% 100% at 50% 0%,
+        color-mix(in srgb, var(--couleur) 38%, transparent),
+        color-mix(in srgb, var(--couleur) 10%, transparent) 45%, transparent 75%);
+    pointer-events: none;
+}
+```
+
+**Où il a sa place** : ce qui est rare, précieux ou mérité — rareté d'un objet,
+notification de trophée, tête d'une jauge. **Où il n'a pas sa place** : le
+mobilier ordinaire (panneaux, tableaux, formulaires, barres de navigation). Le
+halo ne garde sa valeur que s'il reste rare : s'il éclaire tout, il ne signale
+plus rien.
+
+Rappel de doctrine : un halo est une **émission de lumière**, pas une ombre
+d'élévation — c'est ce qui le rend compatible avec la règle « zéro ombre ».
+
 ## Questions ouvertes
 
 - **Avatars carrés partout ?** Le mockup les fait carrés et bordés ; pour
