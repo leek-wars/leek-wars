@@ -309,12 +309,20 @@ body:not(.v2) {
 	 * `.items-title` (la bande « Ils n'attendent que vous » de la banque) peint
 	 * son propre aplat sombre et gagnait à la spécificité : elle est nommée pour
 	 * qu'elle suive la règle, sinon c'est le seul titre encadré du site. */
+	/* 26 px et non les 18 px du mockup : la conversion de police n'est pas
+	   neutre. Press Start 2P a une hauteur de capitale égale au cadratin
+	   entier (1000/1000 unités), Pixelify Sans seulement 0,7 — à taille égale
+	   nos titres sont donc 30 % plus courts que ceux du mockup. 18 / 0,7 ≈ 26
+	   redonne exactement la hauteur de capitale d'origine (18 px).
+	   Ce facteur 1,43 vaut pour tout report d'une taille du mockup en police
+	   d'affichage. */
 	h1,
 	h1.items-title {
 		background: none;
 		color: var(--text-color);
 		font-family: var(--font-display);
-		font-size: 18px;
+		font-size: 26px;
+		line-height: 36px;
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
 		text-shadow: none;
