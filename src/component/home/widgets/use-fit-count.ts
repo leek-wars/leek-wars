@@ -22,12 +22,20 @@ export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: st
 		const firstRect = (items[0] as HTMLElement).getBoundingClientRect()
 		if (firstRect.height <= 0) return
 		// Éléments par rangée : ceux alignés avec le premier (grilles multi-colonnes).
+		// Pas de rangée : distance réelle entre les deux premières rangées si possible
+		// (marges internes et gaps compris), sinon hauteur + marges + gap.
 		let perRow = 0
+		let pitch = 0
 		for (const item of items) {
-			if (Math.abs((item as HTMLElement).getBoundingClientRect().top - firstRect.top) < 1) perRow++
-			else break
+			const top = (item as HTMLElement).getBoundingClientRect().top
+			if (Math.abs(top - firstRect.top) < 1) perRow++
+			else { pitch = top - firstRect.top; break }
 		}
-		const rows = Math.max(1, Math.floor((el.clientHeight + gap) / (firstRect.height + gap)))
+		if (pitch <= 0) {
+			const style = getComputedStyle(items[0] as HTMLElement)
+			pitch = firstRect.height + (parseFloat(style.marginTop) || 0) + (parseFloat(style.marginBottom) || 0) + gap
+		}
+		const rows = Math.max(1, Math.floor((el.clientHeight + gap) / pitch))
 		const fit = Math.min(max, rows * Math.max(1, perRow))
 		if (fit !== count.value) {
 			count.value = fit

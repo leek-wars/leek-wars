@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "Live",
+	"live_trophy": "unlocked the \"{0}\" trophy",
+	"live_victories": "reached {0} victories",
+	"live_bosses": "reached {0} boss kills",
+	"live_tournaments": "reached {0} tournament wins",
+	"live_topic": "created the topic",
+	"live_empty": "No recent events."
 }

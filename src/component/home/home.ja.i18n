@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "ライブ",
+	"live_trophy": "がトロフィー「{0}」を獲得",
+	"live_victories": "が{0}勝を達成",
+	"live_bosses": "がボス{0}体撃破を達成",
+	"live_tournaments": "がトーナメント{0}勝を達成",
+	"live_topic": "がトピックを作成：",
+	"live_empty": "最近のイベントはありません。"
 }

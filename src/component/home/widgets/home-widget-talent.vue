@@ -32,8 +32,9 @@
 	const farmer = computed(() => store.state.farmer)
 	const fights = computed(() => (store.state.farmer?.fight_history ?? []).slice(0, 12))
 	// Autant de combats que la hauteur du panel le permet, jamais coupés.
+	// On mesure .fight (et pas son wrapper) : ses marges font partie du pas.
 	const fightsEl = ref<HTMLElement | null>(null)
-	const fightCount = useFitCount(fightsEl, '.wrapper', 12)
+	const fightCount = useFitCount(fightsEl, '.fight', 12)
 	const visibleFights = computed(() => fights.value.slice(0, fightCount.value))
 </script>
 
@@ -53,6 +54,29 @@
 	}
 	.fights :deep(.history) {
 		padding: 0;
+	}
+	// Panel bas : lignes de combat compactes, on réduit au lieu de tronquer.
+	@container (max-height: 300px) {
+		.fights :deep(.fight) {
+			height: 34px;
+			margin: 3px 4px;
+			font-size: 13px;
+		}
+		.fights :deep(.fight .fighters) {
+			height: 34px;
+		}
+		.fights :deep(.fight .fighter) {
+			height: 26px;
+			line-height: 26px;
+		}
+		.fights :deep(.fight .center i) {
+			line-height: 34px;
+			font-size: 20px;
+			margin: 0 6px;
+		}
+		.fights :deep(.fight .center img) {
+			margin: 6px;
+		}
 	}
 	.talent-header {
 		display: flex;

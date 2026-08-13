@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "Live",
+	"live_trophy": "har låst trofæet \"{0}\" op",
+	"live_victories": "når {0} sejre",
+	"live_bosses": "når {0} dræbte bosser",
+	"live_tournaments": "når {0} vundne turneringer",
+	"live_topic": "har oprettet emnet",
+	"live_empty": "Ingen nylige begivenheder."
 }

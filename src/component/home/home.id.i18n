@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "Langsung",
+	"live_trophy": "membuka trofi \"{0}\"",
+	"live_victories": "mencapai {0} kemenangan",
+	"live_bosses": "mencapai {0} bos dikalahkan",
+	"live_tournaments": "mencapai {0} kemenangan turnamen",
+	"live_topic": "membuat topik",
+	"live_empty": "Tidak ada peristiwa terbaru."
 }

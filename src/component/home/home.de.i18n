@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "Live",
+	"live_trophy": "hat die Trophäe „{0}“ freigeschaltet",
+	"live_victories": "erreicht {0} Siege",
+	"live_bosses": "erreicht {0} besiegte Bosse",
+	"live_tournaments": "erreicht {0} Turniersiege",
+	"live_topic": "hat das Thema erstellt:",
+	"live_empty": "Keine aktuellen Ereignisse."
 }

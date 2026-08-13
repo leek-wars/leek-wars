@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "Suorana",
+	"live_trophy": "avasi palkinnon ”{0}”",
+	"live_victories": "saavuttaa {0} voittoa",
+	"live_bosses": "saavuttaa {0} tapettua pomoa",
+	"live_tournaments": "saavuttaa {0} voitettua turnausta",
+	"live_topic": "loi aiheen",
+	"live_empty": "Ei viimeaikaisia tapahtumia."
 }
