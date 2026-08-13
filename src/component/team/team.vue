@@ -29,7 +29,7 @@
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props" @click="updateOpened">
 							<span>{{ $t('opened') }}</span>
-							<v-switch :model-value="team.opened ?? false" hide-details @click.stop />
+							<lw-switch :model-value="team.opened ?? false" @click.stop />
 						</div>
 					</template>
 					{{ $t('recrutment_mode') }}
@@ -262,7 +262,7 @@
 							<div v-for="col in columnsConfigList" :key="col.key"
 								class="column-config-item" :data-key="col.key">
 								<v-icon class="drag-handle">mdi-drag</v-icon>
-								<v-checkbox-btn v-model="col.visible" :disabled="col.key === 'name'" density="compact" color="primary" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
+								<lw-checkbox-btn v-model="col.visible" :disabled="col.key === 'name'" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
 							</div>
 						</div>
 						<div class="sort-config">
@@ -808,11 +808,11 @@
 		<popup v-if="team && is_member" v-model="logsDialog" :width="600" icon="mdi-playlist-check" :title="$t('log_change')">
 			<div>{{ $t('log_change_text') }}</div>
 			<br>
-			<v-radio-group v-model="logsLevel" hide-details @update:model-value="updateLogsLevel">
-				<v-radio :value="0" :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
-				<v-radio :value="1" :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
-				<v-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
-			</v-radio-group>
+			<lw-radio-group v-model="logsLevel" @update:model-value="updateLogsLevel">
+				<lw-radio :value="0" :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
+				<lw-radio :value="1" :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
+				<lw-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
+			</lw-radio-group>
 		</popup>
 
 		<invite-dialog v-model="inviteDialog" />

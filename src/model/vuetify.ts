@@ -60,18 +60,6 @@ export const vuetify = createVuetify({
 		},
 	},
 	defaults: {
-		VSwitch: {
-			color: 'primary',
-		},
-		VRadio: {
-			color: 'primary',
-		},
-		VRadioGroup: {
-			color: 'primary',
-		},
-		VCheckbox: {
-			color: 'primary',
-		},
 		VTooltip: {
 			location: 'bottom',
 		},

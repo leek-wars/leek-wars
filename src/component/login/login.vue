@@ -17,7 +17,7 @@
 							<input id="code-field" v-model="form.code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" autocapitalize="none" autocorrect="off" spellcheck="false">
 							<br><br>
 						</template>
-						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
+						<lw-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" />
 						<br><br>
 						<div class="center"><v-btn size="large" color="primary" type="submit" :loading="loading">{{ $t('connection') }}</v-btn></div>
 						<br>

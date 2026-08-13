@@ -15,8 +15,8 @@
 					<input v-model="options.farmer" class="query card" type="text" @keydown.enter="search">
 				</div>
 				<div>
-					<v-switch v-model="options.moderator" :label="$t('main.grade_moderator')" class="switch" hide-details @change="search" />
-					<v-switch v-model="options.admin" :label="$t('main.grade_admin')" class="switch" hide-details @change="search" />
+					<lw-switch v-model="options.moderator" :label="$t('main.grade_moderator')" class="switch" @change="search" />
+					<lw-switch v-model="options.admin" :label="$t('main.grade_admin')" class="switch" @change="search" />
 				</div>
 				<div>
 					<div class="label">{{ $t('category') }}</div>

@@ -87,11 +87,11 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<v-radio-group v-model="signupMethod" class="radio" :inline="true" :dense="true" :hide-details="true">
-										<v-radio :label="$t('email_password')" :value="1" />
-										<v-radio label="GitHub" :value="2" />
-										<v-radio label="Google" :value="3" />
-									</v-radio-group>
+									<lw-radio-group v-model="signupMethod" class="radio" :inline="true">
+										<lw-radio :label="$t('email_password')" :value="1" />
+										<lw-radio label="GitHub" :value="2" />
+										<lw-radio label="Google" :value="3" />
+									</lw-radio-group>
 								</td>
 							</tr>
 							<tr v-if="signupMethod === 1">

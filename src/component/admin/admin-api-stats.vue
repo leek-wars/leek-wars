@@ -25,8 +25,8 @@
 							<input v-model="dateTo" type="datetime-local" class="date-input" />
 							<v-btn size="small" color="primary" @click="loadAll">Appliquer</v-btn>
 						</template>
-						<v-checkbox v-model="compare" density="compact" hide-details label="Comparer" @update:modelValue="loadAggregates" />
-						<v-checkbox v-model="autoRefresh" density="compact" hide-details label="Auto-refresh" @update:modelValue="onAutoRefreshChange" />
+						<lw-checkbox v-model="compare" label="Comparer" @update:modelValue="loadAggregates" />
+						<lw-checkbox v-model="autoRefresh" label="Auto-refresh" @update:modelValue="onAutoRefreshChange" />
 						<select v-if="autoRefresh" v-model.number="refreshInterval" class="interval-select" @change="onAutoRefreshChange">
 							<option :value="10">10s</option>
 							<option :value="30">30s</option>

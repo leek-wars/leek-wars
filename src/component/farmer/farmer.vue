@@ -41,7 +41,7 @@
 					</v-tooltip>
 					<div v-if="$store.getters.leek_count >= 2" class="tab" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
-						<v-switch :model-value="farmer.in_garden" hide-details />
+						<lw-switch :model-value="farmer.in_garden" />
 					</div>
 					<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" @click="logout">
 						<v-icon>mdi-power</v-icon>

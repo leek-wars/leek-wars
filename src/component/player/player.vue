@@ -165,9 +165,9 @@
 							<template #activator="{ props: menuProps }">
 								<v-icon v-ripple class="control" v-bind="{...tooltipProps, ...menuProps}">mdi-map</v-icon>
 							</template>
-							<v-radio-group v-model="game.mapType" class="map-menu" hide-details :mandatory="true">
-								<v-radio v-for="(map, m) of game.maps" :key="m" :label="map.constructor.name" :value="m" />
-							</v-radio-group>
+							<lw-radio-group v-model="game.mapType" class="map-menu">
+								<lw-radio v-for="(map, m) of game.maps" :key="m" :label="map.constructor.name" :value="m" />
+							</lw-radio-group>
 						</v-menu>
 					</template>
 					Carte
@@ -188,46 +188,46 @@
 							<v-list density="compact" class="settings-menu">
 								<div class="section">INTERFACE</div>
 								<v-list-item v-ripple prepend-icon="mdi-heart-half-full" @click="game.showLifes = !game.showLifes">
-									<v-switch :model-value="game.showLifes" :label="$t('display_life_bars') + ' (L)'" hide-details />
+									<lw-switch :model-value="game.showLifes" :label="$t('display_life_bars') + ' (L)'" />
 								</v-list-item>
 								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-flare" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null">
-									<v-switch :model-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" hide-details />
+									<lw-switch :model-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" />
 								</v-list-item>
 								<v-list-item v-if="!LeekWars.mobile" v-ripple prepend-icon="mdi-format-list-bulleted" @click="game.showActions = !game.showActions">
-									<v-switch :model-value="game.showActions" :label="$t('show_actions') + ' (A)'" hide-details />
+									<lw-switch :model-value="game.showActions" :label="$t('show_actions') + ' (A)'" />
 								</v-list-item>
 								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" prepend-icon="mdi-view-split-vertical" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
-									<v-switch :model-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
+									<lw-switch :model-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" />
 								</v-list-item>
 								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" prepend-icon="mdi-math-log" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
-									<v-switch :model-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
+									<lw-switch :model-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" />
 									<template #append>
-										<v-checkbox v-model="game.displayAILines" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Lignes" hide-details class="ally-debug" @click.stop />
-										<v-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" hide-details class="ally-debug" @click.stop />
+										<lw-checkbox v-model="game.displayAILines" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Lignes" class="ally-debug" @click.stop />
+										<lw-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" class="ally-debug" @click.stop />
 									</template>
 								</v-list-item>
 								<div class="section">GRAPHISMES</div>
 								<v-list-item v-ripple prepend-icon="mdi-box-shadow" @click="game.shadows = !game.shadows">
-									<v-switch :model-value="game.shadows" :label="$t('display_shadows') + ' (O)'" hide-details />
+									<lw-switch :model-value="game.shadows" :label="$t('display_shadows') + ' (O)'" />
 								</v-list-item>
 								<v-list-item prepend-icon="mdi-weather-night">
-									<v-switch v-if="!game.autoDark" v-model="game.dark" :label="$t('dark_mode') + ' (N)'" class="night" hide-details />
+									<lw-switch v-if="!game.autoDark" v-model="game.dark" :label="$t('dark_mode') + ' (N)'" class="night" />
 									<template #append>
-										<v-checkbox v-model="game.autoDark" label="Auto" hide-details />
+										<lw-checkbox v-model="game.autoDark" label="Auto" />
 									</template>
 								</v-list-item>
 								<div class="section">DEVELOPEMENT</div>
 								<v-list-item v-ripple prepend-icon="mdi-view-comfy" @click="game.tactic = !game.tactic">
-									<v-switch :model-value="game.tactic" :label="$t('tactic_mode') + ' (T)'" hide-details />
+									<lw-switch :model-value="game.tactic" :label="$t('tactic_mode') + ' (T)'" />
 								</v-list-item>
 								<v-list-item v-ripple prepend-icon="mdi-format-color-fill" @click="game.plainBackground = !game.plainBackground">
-									<v-switch :model-value="game.plainBackground" :label="$t('plain_background') + ' (U)'" hide-details />
+									<lw-switch :model-value="game.plainBackground" :label="$t('plain_background') + ' (U)'" />
 								</v-list-item>
 								<v-list-item v-ripple prepend-icon="mdi-numeric-1-box" @click="game.showCells = !game.showCells">
-									<v-switch :model-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" hide-details />
+									<lw-switch :model-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" />
 								</v-list-item>
 								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-key" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
-									<v-switch :model-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
+									<lw-switch :model-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" />
 								</v-list-item>
 							</v-list>
 						</v-menu>

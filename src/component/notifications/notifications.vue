@@ -8,7 +8,7 @@
 						<v-icon v-if="pushHint" class="push-warning">mdi-alert-circle-outline</v-icon>
 						<v-icon v-else>mdi-bell-ring-outline</v-icon>
 						<span>{{ $t('push_notifications') }}</span>
-						<v-switch :model-value="pushNotifications" hide-details />
+						<lw-switch :model-value="pushNotifications" />
 					</span>
 				</template>
 				{{ pushHint }}
@@ -73,8 +73,5 @@ LeekWars.get('notification/get-latest/500').then(data => {
 		.push-warning {
 			color: #ffca28;
 		}
-	}
-	:deep(.v-switch .v-selection-control) {
-		min-height: unset;
 	}
 </style>

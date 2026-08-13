@@ -14,9 +14,9 @@
 					</div>
 				</div>
 				<h4>{{ message }}</h4>
-				<v-radio-group v-model="selectedReason" :mandatory="false" class="radio">
-					<v-radio v-for="reason in reasons" :key="reason" :label="$t('warning.reason_' + reason)" :value="reason" />
-				</v-radio-group>
+				<lw-radio-group v-model="selectedReason" class="radio">
+					<lw-radio v-for="reason in reasons" :key="reason" :label="$t('warning.reason_' + reason)" :value="reason" />
+				</lw-radio-group>
 				<h4>{{ $t('warning.report_informations') }}</h4>
 				<textarea v-model="additionalMessage" class="report-message"></textarea>
 			</div>

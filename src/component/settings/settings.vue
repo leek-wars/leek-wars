@@ -48,11 +48,11 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<v-radio-group v-model="signupMethod" class="radio" :inline="true" :dense="true" :hide-details="true">
-									<v-radio label="Email / mot de passe" :value="1" />
-									<v-radio label="GitHub" :value="2" />
-									<v-radio label="Google" :value="3" />
-								</v-radio-group>
+								<lw-radio-group v-model="signupMethod" class="radio" :inline="true">
+									<lw-radio label="Email / mot de passe" :value="1" />
+									<lw-radio label="GitHub" :value="2" />
+									<lw-radio label="Google" :value="3" />
+								</lw-radio-group>
 							</td>
 						</tr>
 						<tr v-if="signupMethod === 1">
@@ -100,48 +100,48 @@
 					<div id="dark-button" class="setting">
 						<div>{{ $t('theme') }}</div>
 						<div width="100">
-							<v-radio-group v-model="LeekWars.themeSetting" hide-details inline>
-								<v-radio :label="$t('auto')" value="auto"></v-radio>
-								<v-radio :label="$t('light')" value="light"></v-radio>
-								<v-radio :label="$t('dark')" value="dark"></v-radio>
-							</v-radio-group>
+							<lw-radio-group v-model="LeekWars.themeSetting" inline>
+								<lw-radio :label="$t('auto')" value="auto"></lw-radio>
+								<lw-radio :label="$t('light')" value="light"></lw-radio>
+								<lw-radio :label="$t('dark')" value="dark"></lw-radio>
+							</lw-radio-group>
 						</div>
 					</div>
 					<div id="sfw-button" class="setting">
 						<div>{{ $t('activate_discrete_mode') }}</div>
-						<div><v-switch v-model="sfwMode" hide-details /></div>
+						<div><lw-switch v-model="sfwMode" /></div>
 					</div>
 					<div id="notifs-popups-button" class="setting">
 						<div>{{ $t('notifs_popups') }}</div>
-						<div><v-switch v-model="notifsPopups" hide-details /></div>
+						<div><lw-switch v-model="notifsPopups" /></div>
 					</div>
 					<div id="notifs-results-button" class="setting">
 						<div>{{ $t('notifs_results') }}</div>
-						<div><v-switch v-model="notifsResults" hide-details /></div>
+						<div><lw-switch v-model="notifsResults" /></div>
 					</div>
 					<div id="notifs-open-report-button" class="setting">
 						<div>{{ $t('notifs_open_report') }}</div>
-						<div><v-switch v-model="notifsOpenReport" hide-details /></div>
+						<div><lw-switch v-model="notifsOpenReport" /></div>
 					</div>
 					<div v-if="LeekWars.mobile" class="setting">
 						<div>{{ $t('chat_first') }}</div>
-						<div><v-switch v-model="chatFirst" hide-details /></div>
+						<div><lw-switch v-model="chatFirst" /></div>
 					</div>
 					<div class="setting">
 						<div>{{ $t('home_dashboard') }}</div>
-						<div><v-switch v-model="homeDashboard" hide-details /></div>
+						<div><lw-switch v-model="homeDashboard" /></div>
 					</div>
 					<div v-if="!LeekWars.mobile" class="setting">
 						<div>{{ $t('leek_theme') }}</div>
-						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
+						<div><lw-switch v-model="LeekWars.leekTheme" /></div>
 					</div>
 					<div class="setting">
 						<div>{{ $t('legacy_theme') }}</div>
-						<div><v-switch v-model="LeekWars.legacyTheme" hide-details /></div>
+						<div><lw-switch v-model="LeekWars.legacyTheme" /></div>
 					</div>
 					<div class="setting">
 						<div>{{ $t('modern_theme') }}</div>
-						<div><v-switch v-model="modernTheme" hide-details /></div>
+						<div><lw-switch v-model="modernTheme" /></div>
 					</div>
 				</div>
 			</panel>
@@ -199,8 +199,8 @@
 					<v-icon>mdi-chevron-right</v-icon>
 				</router-link>
 
-				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" hide-details @change="updateGithubLogin" />
-				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" hide-details @change="updateGoogleLogin" />
+				<lw-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" @change="updateGithubLogin" />
+				<lw-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" @change="updateGoogleLogin" />
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
@@ -210,7 +210,7 @@
 							<span class="push-notifs-button" v-bind="props" @click="updatePushNotifications">
 								<v-icon v-if="pushHint" class="push-warning">mdi-alert-circle-outline</v-icon>
 								<span>{{ $t('push_notifications') }}</span>
-								<v-switch :model-value="pushNotifications" hide-details />
+								<lw-switch :model-value="pushNotifications" />
 							</span>
 						</template>
 						{{ pushHint }}
@@ -231,10 +231,10 @@
 										{{ $t('notification.category_' + category.id + '_desc') }}
 									</td>
 									<td v-if="settings" class="push">
-										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @update:model-value="updateNotif('push_' + category.name, settings['push_' + category.name])" />
+										<lw-checkbox v-model="settings['push_' + category.name]" label="Push" @update:model-value="updateNotif('push_' + category.name, settings['push_' + category.name])" />
 									</td>
 									<td v-if="settings" class="mail">
-										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @update:model-value="updateNotif('mail_' + category.name, settings['mail_' + category.name])" />
+										<lw-checkbox v-model="settings['mail_' + category.name]" label="E-mail" @update:model-value="updateNotif('mail_' + category.name, settings['mail_' + category.name])" />
 									</td>
 								</tr>
 							</template>
@@ -273,7 +273,7 @@
 				<span v-else>{{ $t('delete_team_transfer', [teamName]) }}</span>
 			</div>
 			<br v-if="$store.state.farmer?.verified">
-			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
+			<lw-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" />
 			<template #actions>
 				<div v-ripple class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
@@ -671,15 +671,6 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			.v-input--radio-group--row :deep(.v-input--radio-group__input) {
-				flex-wrap: nowrap;
-			}
-			.v-radio {
-				margin-right: 8px;
-				&:last-child {
-					margin-right: 0;
-				}
-			}
 		}
 		.flex {
 			gap: 8px;
@@ -794,11 +785,8 @@
 			vertical-align: top;
 		}
 	}
-	.v-input--switch {
+	.lw-switch {
 		margin-left: 8px;
-	}
-	:deep(.v-switch .v-selection-control) {
-		min-height: unset;
 	}
 	.account {
 		text-align: left;

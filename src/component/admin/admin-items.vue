@@ -36,7 +36,7 @@
 						<v-btn v-if="search || category !== ItemType.ALL" size="small" variant="text" @click="resetFilters">
 							<v-icon>mdi-filter-remove-outline</v-icon> Réinitialiser
 						</v-btn>
-						<v-switch v-model="showUnowned" density="compact" hide-details inset color="primary" label="Possédés par personne" class="unowned-switch" />
+						<lw-switch v-model="showUnowned" label="Possédés par personne" class="unowned-switch" />
 						<div class="view-toggle">
 							<v-btn size="small" variant="text" icon="mdi-format-list-bulleted" :class="{active: viewMode === 'list'}" @click="viewMode = 'list'" />
 							<v-btn size="small" variant="text" icon="mdi-view-grid" :class="{active: viewMode === 'grid'}" @click="viewMode = 'grid'" />

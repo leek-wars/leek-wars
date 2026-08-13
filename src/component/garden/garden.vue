@@ -188,10 +188,10 @@
 								<span class="title"><v-icon>mdi-arrow-left-right</v-icon> {{ $t('main.side') }}</span>
 								<span class="desc">{{ $t('main.side_desc') }}</span>
 							</div>
-							<v-radio-group v-model="side">
-								<v-radio value="left" :label="$t('main.side_left')"></v-radio>
-								<v-radio value="right" :label="$t('main.side_right')"></v-radio>
-							</v-radio-group>
+							<lw-radio-group v-model="side">
+								<lw-radio value="left" :label="$t('main.side_left')"></lw-radio>
+								<lw-radio value="right" :label="$t('main.side_right')"></lw-radio>
+							</lw-radio-group>
 						</div>
 					</div>
 					<div v-else>
@@ -297,13 +297,13 @@
 								<br>
 								<div class="arena-preferences">
 									<h4>{{ $t('arena_preference') }}</h4>
-									<v-radio-group v-model="arenaPreference" inline hide-details>
-										<v-radio :label="$t('arena_no_preference')" :value="-1" />
-										<v-radio :label="$t('arena_mode_br')" :value="0" />
-										<v-radio :label="$t('arena_mode_war')" :value="1" />
-										<v-radio :label="$t('arena_mode_chest_hunt')" :value="2" />
-										<v-radio :label="$t('arena_mode_colossus')" :value="3" />
-									</v-radio-group>
+									<lw-radio-group v-model="arenaPreference" inline>
+										<lw-radio :label="$t('arena_no_preference')" :value="-1" />
+										<lw-radio :label="$t('arena_mode_br')" :value="0" />
+										<lw-radio :label="$t('arena_mode_war')" :value="1" />
+										<lw-radio :label="$t('arena_mode_chest_hunt')" :value="2" />
+										<lw-radio :label="$t('arena_mode_colossus')" :value="3" />
+									</lw-radio-group>
 								</div>
 								<br>
 								<v-btn v-if="garden.fights" color="primary" :disabled="!arenaEnabled" @click="arenaRegister">{{ $t('main.select') }}</v-btn>

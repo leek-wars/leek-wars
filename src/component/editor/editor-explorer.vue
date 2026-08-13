@@ -170,7 +170,7 @@
 				<a v-if="newAILanguage !== 'leekscript'" href="/help/polyglot" target="_blank" rel="noopener" class="polyglot-help">
 					<v-icon size="16">mdi-book-open-variant</v-icon> {{ polyglotHelpLabel }}
 				</a>
-				<v-checkbox v-model="newAIStarter" :label="$t('include_starter')" density="compact" hide-details class="starter-checkbox" />
+				<lw-checkbox v-model="newAIStarter" :label="$t('include_starter')" class="starter-checkbox" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
