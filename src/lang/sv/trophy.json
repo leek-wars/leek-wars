@@ -726,5 +726,17 @@
 	"enchanting": "Sagolik",
 	"enchanting_f": "Sagolik",
 	"polyglot": "Polyglott",
-	"polyglot_f": "Polyglott"
+	"polyglot_f": "Polyglott",
+	"apprentice": "Lärling",
+	"apprentice_f": "Lärling",
+	"artisan": "Hantverkare",
+	"artisan_f": "Hantverkare",
+	"blacksmith": "Smed",
+	"blacksmith_f": "Smed",
+	"cyclops": "Cyklop",
+	"cyclops_f": "Cyklop",
+	"hephaestus": "Hefaistos",
+	"hephaestus_f": "Hefaistos",
+	"tetrarch": "Tetrark",
+	"tetrarch_f": "Tetrark"
 }

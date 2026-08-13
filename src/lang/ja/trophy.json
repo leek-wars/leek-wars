@@ -726,5 +726,17 @@
 	"enchanting": "幻想的",
 	"enchanting_f": "幻想的",
 	"polyglot": "ポリグロット",
-	"polyglot_f": "ポリグロット"
+	"polyglot_f": "ポリグロット",
+	"apprentice": "見習い",
+	"apprentice_f": "見習い",
+	"artisan": "職人",
+	"artisan_f": "職人",
+	"blacksmith": "鍛冶屋",
+	"blacksmith_f": "鍛冶屋",
+	"cyclops": "サイクロプス",
+	"cyclops_f": "サイクロプス",
+	"hephaestus": "ヘパイストス",
+	"hephaestus_f": "ヘパイストス",
+	"tetrarch": "四冠王",
+	"tetrarch_f": "四冠王"
 }

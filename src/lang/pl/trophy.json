@@ -726,5 +726,17 @@
 	"enchanting": "Baśniowy",
 	"enchanting_f": "Baśniowy",
 	"polyglot": "Poliglota",
-	"polyglot_f": "Poliglota"
+	"polyglot_f": "Poliglota",
+	"apprentice": "Uczeń",
+	"apprentice_f": "Uczennica",
+	"artisan": "Rzemieślnik",
+	"artisan_f": "Rzemieślniczka",
+	"blacksmith": "Kowal",
+	"blacksmith_f": "Kowalka",
+	"cyclops": "Cyklop",
+	"cyclops_f": "Cyklop",
+	"hephaestus": "Hefajstos",
+	"hephaestus_f": "Hefajstos",
+	"tetrarch": "Tetrarcha",
+	"tetrarch_f": "Tetrarcha"
 }

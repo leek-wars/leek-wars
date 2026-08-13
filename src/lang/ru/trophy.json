@@ -726,5 +726,17 @@
 	"enchanting": "Волшебный",
 	"enchanting_f": "Волшебный",
 	"polyglot": "Полиглот",
-	"polyglot_f": "Полиглот"
+	"polyglot_f": "Полиглот",
+	"apprentice": "Ученик",
+	"apprentice_f": "Ученица",
+	"artisan": "Ремесленник",
+	"artisan_f": "Ремесленница",
+	"blacksmith": "Кузнец",
+	"blacksmith_f": "Кузнец",
+	"cyclops": "Циклоп",
+	"cyclops_f": "Циклоп",
+	"hephaestus": "Гефест",
+	"hephaestus_f": "Гефест",
+	"tetrarch": "Тетрарх",
+	"tetrarch_f": "Тетрарх"
 }

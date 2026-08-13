@@ -726,5 +726,17 @@
 	"enchanting": "몽환",
 	"enchanting_f": "몽환",
 	"polyglot": "폴리글롯",
-	"polyglot_f": "폴리글롯"
+	"polyglot_f": "폴리글롯",
+	"apprentice": "견습생",
+	"apprentice_f": "견습생",
+	"artisan": "장인",
+	"artisan_f": "장인",
+	"blacksmith": "대장장이",
+	"blacksmith_f": "대장장이",
+	"cyclops": "키클롭스",
+	"cyclops_f": "키클롭스",
+	"hephaestus": "헤파이스토스",
+	"hephaestus_f": "헤파이스토스",
+	"tetrarch": "4관왕",
+	"tetrarch_f": "4관왕"
 }

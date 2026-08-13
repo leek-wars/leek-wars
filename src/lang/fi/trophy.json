@@ -726,5 +726,17 @@
 	"enchanting": "Satumainen",
 	"enchanting_f": "Satumainen",
 	"polyglot": "Polyglotti",
-	"polyglot_f": "Polyglotti"
+	"polyglot_f": "Polyglotti",
+	"apprentice": "Oppipoika",
+	"apprentice_f": "Oppipoika",
+	"artisan": "Käsityöläinen",
+	"artisan_f": "Käsityöläinen",
+	"blacksmith": "Seppä",
+	"blacksmith_f": "Seppä",
+	"cyclops": "Kyklooppi",
+	"cyclops_f": "Kyklooppi",
+	"hephaestus": "Hefaistos",
+	"hephaestus_f": "Hefaistos",
+	"tetrarch": "Tetrarkki",
+	"tetrarch_f": "Tetrarkki"
 }
