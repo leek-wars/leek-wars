@@ -157,6 +157,10 @@ class Chat {
 		this.messages = []
 		this.messages_by_day = {}
 		this.days = []
+		// La conversation est rechargée à ses 30 derniers messages : l'historique n'est plus
+		// épuisé, même si on l'avait remonté jusqu'au bout avant. Sans ça, load-chat-history
+		// refusait définitivement de charger les messages plus anciens.
+		this.fully_loaded = false
 	}
 
 	trim(max: number) {

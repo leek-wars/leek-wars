@@ -32,6 +32,12 @@ function updateChatFarmer(chat: Chat, farmer: Farmer) {
 	}
 }
 
+// Numéro de la dernière requête de chargement lancée pour chaque conversation. Deux
+// rechargements peuvent se chevaucher (rafraîchissement immédiat au retour sur l'app +
+// rechargement à la reconnexion de la socket) : seule la réponse de la requête la plus
+// récente doit être appliquée, sinon une réponse en retard réécrase les messages frais.
+const chatLoadSequence: {[id: number]: number} = {}
+
 export interface AccountInfo {
 	id: number
 	name: string
@@ -299,7 +305,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			// console.log("load chat", chat, chat.id)
 			state.chat[chat.id].opened = true
 			state.chat[chat.id].loading = true
+			const sequence = chatLoadSequence[chat.id] = (chatLoadSequence[chat.id] || 0) + 1
 			LeekWars.get('message/get-messages/' + chat.id + '/' + 30 + '/0').then(data => {
+				// Réponse périmée : une requête plus récente est en cours, c'est elle qui
+				// remplira la conversation (et qui remettra loading à false). Conversation
+				// disparue : déconnexion ou changement de compte pendant la requête ('reset'
+				// vide state.chat), il n'y a plus rien à remplir.
+				if (chatLoadSequence[chat.id] !== sequence || !state.chat[chat.id]) return
 				store.commit('clear-chat', chat.id)
 				for (const farmer of data.mentions) {
 					state.farmer_by_name[farmer.name] = farmer
@@ -313,6 +325,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.chat[chat.id].loaded = true
 				state.chat[chat.id].loading = false
 			}).error(() => {
+				if (chatLoadSequence[chat.id] !== sequence || !state.chat[chat.id]) return
 				store.commit('clear-chat', chat.id)
 				state.chat[chat.id].loaded = true
 				state.chat[chat.id].loading = false

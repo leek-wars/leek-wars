@@ -42,6 +42,7 @@
     - "#ai L'éditeur ne plante plus quand l'autocomplétion se ferme au moment précis où la documentation d'une fonction ou d'une constante finit de s'afficher à côté."
     - "Le quiz du tutoriel dit maintenant pourquoi il ne répond pas : les cases restaient muettes, sans le moindre message, tant que le chapitre précédent n'était pas terminé. L'ordre des réponses est aussi mieux mélangé."
     - "Une puce ou un composant dont tous les exemplaires sont équipés sur vos poireaux apparaît maintenant dans l'éditeur d'équipements, comme les armes. Les listes d'items y sont aussi triées par niveau (merci à Kraspen)."
+    - "Le chat se rafraîchit tout de suite au retour sur l'application mobile ou sur l'onglet : les messages reçus pendant la mise en veille n'apparaissaient qu'après plusieurs secondes, le temps que la connexion temps réel, morte en silence, soit détectée puis rétablie."
     - "Les objets achetés en cristaux comptent maintenant dans la collection, même une fois équipés : les achats passés ont été récupérés."
 
 249:

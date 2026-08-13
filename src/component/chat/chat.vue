@@ -180,6 +180,7 @@
 
 	const isScrollBottom = ref(true)
 	let userScroll = false
+	let lastRefresh = 0
 	const unread = ref(false)
 
 	const menuMessage = ref<ChatMessage | null>(null)
@@ -229,6 +230,7 @@
 	emitter.on('chat-history', chatHistory)
 	emitter.on('resize', onResize)
 	emitter.on('wsconnected', update)
+	emitter.on('visible', refresh)
 	if (store.state.wsconnected) {
 		update()
 	}
@@ -246,6 +248,7 @@
 		emitter.off('chat-history', chatHistory)
 		emitter.off('resize', onResize)
 		emitter.off('wsconnected', update)
+		emitter.off('visible', refresh)
 	})
 
 	function newMessage(e: number[]) {
@@ -315,8 +318,26 @@
 
 	function update() {
 		if (!props.id) { return }
+		lastRefresh = Date.now()
 		store.commit('register-chat', {id: props.id})
 		store.commit('load-chat', chat.value)
+		read()
+	}
+
+	// Retour sur l'onglet ou sur l'app mobile : on recharge les messages en HTTP tout de
+	// suite, sans attendre la socket. Pendant la mise en veille elle meurt en silence, et
+	// sa reconnexion (détection + poignée de main + auth) prend plusieurs secondes pendant
+	// lesquelles la conversation affichée restait figée sur son ancien contenu.
+	function refresh() {
+		if (!props.id) { return }
+		// Socket manifestement vivante (onglet simplement passé au second plan sur un
+		// ordinateur) : elle a livré les messages au fil de l'eau, rien à rattraper.
+		if (!LeekWars.socket.maybeStale()) { return }
+		if (!chat.value) { update(); return }
+		// Aller-retour éclair entre deux apps : rien de neuf à aller chercher.
+		if (Date.now() - lastRefresh < 2000) { return }
+		lastRefresh = Date.now()
+		store.commit('reload-chat', chat.value)
 		read()
 	}
 

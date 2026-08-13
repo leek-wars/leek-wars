@@ -97,12 +97,23 @@ enum SocketMessage {
 	HISTORY_UNREGISTER = 96,
 }
 
-// On visibility change, if no message received for this long, send a probe ping
-const PROBE_STALE_THRESHOLD = 25000
+// Le daemon diffuse CONNECTED_COUNT à TOUS les clients toutes les 30 s
+// (WebSocketServer.scheduleFarmerUpdates) : c'est le seul battement de cœur qu'une socket
+// vivante mais silencieuse est garantie de recevoir, donc la seule mesure fiable de son
+// état côté client.
+const SERVER_HEARTBEAT = 30000
+// On visibility change, if no message received for this long, send a probe ping. Calé sur le
+// battement de cœur + une marge : en dessous, une socket parfaitement saine serait déclarée
+// suspecte à chaque retour sur l'onglet.
+const PROBE_STALE_THRESHOLD = SERVER_HEARTBEAT + 10000
 // Beyond this, skip the probe and reconnect directly (almost certainly dead, e.g. mobile suspend)
 const PROBE_DEAD_THRESHOLD = 60000
-// Force-reconnect if probe ping gets no response within this time
-const PROBE_RESPONSE_TIMEOUT = 3000
+// Force-reconnect if probe ping gets no response within this time.
+// ATTENTION : le daemon n'a pas de `case PING` (les constantes PING/PONG sont déclarées des
+// deux côtés mais rien ne répond), donc la sonde expire TOUJOURS et ne peut que conclure à
+// une socket morte. Ce délai est le prix payé avant chaque reconnexion : à garder court tant
+// que le serveur ne renvoie pas de PONG.
+const PROBE_RESPONSE_TIMEOUT = 2000
 
 class Socket {
 	public socket!: WebSocket
@@ -454,6 +465,15 @@ class Socket {
 				this.reconnect()
 			}, PROBE_RESPONSE_TIMEOUT)
 		}
+	}
+
+	// Vrai si la socket a pu rater des messages : pas connectée, ou silencieuse depuis plus
+	// longtemps que le battement de cœur du serveur. Sert à décider s'il faut rattraper le
+	// contenu en HTTP au retour sur l'app : un onglet d'ordinateur simplement passé au
+	// second plan a continué de recevoir, il n'y a rien à rattraper.
+	public maybeStale() {
+		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) { return true }
+		return Date.now() - this.lastReceivedTime > PROBE_STALE_THRESHOLD
 	}
 
 	private clearPongProbe() {
