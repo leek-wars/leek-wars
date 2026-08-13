@@ -1029,15 +1029,38 @@ body:not(.v2) {
 	.bar > .xp-bar {
 		border-radius: 0;
 		background-color: var(--primary);
-		/* Remplace les rayures à 45° du v2 : des encoches verticales tous les
-		   8 px, dans la couleur de la piste. */
-		background-image: repeating-linear-gradient(90deg, transparent 0 6px, var(--background-input) 6px 8px);
+		/* Deux couches : les encoches par-dessus (tous les 8 px, dans la couleur
+		   de la piste), et dessous un dégradé qui part d'un vert éteint pour
+		   s'éclaircir jusqu'au bout — la jauge se lit comme une charge.
+		   L'arête de tête, elle, marque l'arrêt exact de la progression : 3 px
+		   de vert éclairci (et non de blanc, qui trancherait trop sur le vert
+		   foncé du thème clair) et un halo, la même émission de lumière que les
+		   notifications de trophée. */
+		background-image:
+			repeating-linear-gradient(90deg, transparent 0 6px, var(--background-input) 6px 8px),
+			linear-gradient(90deg, color-mix(in srgb, var(--primary) 50%, var(--background-input)), var(--primary));
+		box-shadow:
+			inset -3px 0 0 color-mix(in srgb, var(--primary) 55%, #fff),
+			0 0 7px color-mix(in srgb, var(--primary) 65%, transparent);
+		/* Le remplissage monte de zéro à son niveau à l'arrivée sur la page.
+		   Pas de `to` : la valeur d'arrivée est la largeur déjà posée par le
+		   composant, donc l'animation s'adapte à n'importe quel taux. */
+		animation: lw-bar-fill .6s ease-out;
 	}
 	/* L'état « complet » passait par un bleu Material en dur. */
 	.collection-summary .summary-progress .summary-bar.complete,
 	.cat-tab .cat-progress .cat-bar.complete,
 	.bar > .xp-bar.blue {
 		background-color: var(--info);
+		background-image:
+			repeating-linear-gradient(90deg, transparent 0 6px, var(--background-input) 6px 8px),
+			linear-gradient(90deg, color-mix(in srgb, var(--info) 50%, var(--background-input)), var(--info));
+		box-shadow:
+			inset -3px 0 0 color-mix(in srgb, var(--info) 55%, #fff),
+			0 0 7px color-mix(in srgb, var(--info) 65%, transparent);
+		/* Une catégorie terminée respire : petite récompense, lente pour ne pas
+		   attirer l'œil en permanence. Elle démarre après le remplissage. */
+		animation: lw-bar-fill .6s ease-out, lw-bar-complete 2.4s ease-in-out .6s infinite;
 	}
 	/* Les deux barres qui méritent le coup d'œil — la collection dans son
 	   ensemble et l'XP vers le niveau suivant — reçoivent un reflet qui les
@@ -1063,10 +1086,46 @@ body:not(.v2) {
 	/* Une animation perpétuelle est exactement ce que ce réglage système
 	   demande de couper. */
 	@media (prefers-reduced-motion: reduce) {
+		.collection-summary .summary-progress .summary-bar,
+		.cat-tab .cat-progress .cat-bar,
+		.bar > .xp-bar,
+		.collection-summary .summary-progress .summary-bar.complete,
+		.cat-tab .cat-progress .cat-bar.complete,
+		.bar > .xp-bar.blue,
 		.collection-summary .summary-progress .summary-bar::after,
 		.bar > .xp-bar::after {
 			animation: none;
 		}
+	}
+
+	/* ====== Rareté des objets ======
+	 *
+	 * La rareté se lit sur la barre posée sous le titre de la fiche. Elle était
+	 * un aplat franc ; elle devient un trait plus fin qui ÉMET sa couleur —
+	 * même nuance que les notifications de trophée : un halo est une émission
+	 * de lumière, pas une ombre d'élévation. Plus discret et plus joli qu'une
+	 * bande pleine, tout en restant identifiable d'un coup d'œil.
+	 *
+	 * Les cinq couleurs sont codées en dur dans global.scss (`.difficulty-N`,
+	 * en fond) : on les redéclare une fois en variable pour pouvoir les
+	 * réutiliser en lumière, ici et ailleurs (bordure des cases d'objet). */
+	.difficulty-1 { --rarity: #00aa00; }
+	.difficulty-2 { --rarity: #0090ff; }
+	.difficulty-3 { --rarity: #c21aff; }
+	.difficulty-4 { --rarity: #f8ac00; }
+	.difficulty-5 { --rarity: #ff3b30; }
+
+	.rarity-band {
+		padding: 0;
+		height: 2px;
+		box-shadow:
+			0 0 4px var(--rarity),
+			0 0 12px color-mix(in srgb, var(--rarity) 55%, transparent);
+	}
+	/* Rareté 0 (objet commun) : pas de couleur, donc pas de halo — la barre
+	   reste le simple filet de séparation qu'elle était. */
+	.rarity-band.difficulty-0 {
+		box-shadow: none;
 	}
 
 	/* ====== Tooltips ======
@@ -1293,6 +1352,24 @@ body:not(.v2) {
    bande part hors cadre à gauche et traverse la rangée. 320 % de sa propre
    largeur (50 % de la rangée) suffisent à sortir à droite quelle que soit la
    largeur. Au niveau racine : un @keyframes ne se scope pas. */
+/* Remplissage à l'arrivée sur la page. Sans `to` : la valeur d'arrivée est
+   celle que le composant a posée, donc une seule règle sert tous les taux. */
+@keyframes lw-bar-fill {
+	from {
+		width: 0;
+	}
+}
+
+/* Respiration d'une jauge terminée. */
+@keyframes lw-bar-complete {
+	0%, 100% {
+		filter: brightness(1);
+	}
+	50% {
+		filter: brightness(1.3);
+	}
+}
+
 /* Reflet des barres de progression importantes (section « Barres de
    progression »). La bande part hors cadre à gauche, traverse, et l'attente se
    fait en fin de course : d'où le palier à 60 %. */
