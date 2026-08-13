@@ -105,6 +105,10 @@ class Farmer {
 	public lwplus!: boolean // #3303 abonné LW+ (badge, public)
 	public lwplus_until!: number // #3303 fin de la période payée, en secondes (bloc privé : soi uniquement)
 	public referent!: boolean
+	// #3237 comptes déclarés du joueur (public), null si compte solo. Ne pas
+	// confondre avec store.state.accounts, qui liste les comptes connectés du
+	// sélecteur de comptes — tout autre chose.
+	public linked_accounts!: { id: number, name: string, avatar_changed: number, main: boolean }[] | null
 	public rewards!: Reward[]
 	public resources!: InventoryItem[]
 	public components!: InventoryItem[]

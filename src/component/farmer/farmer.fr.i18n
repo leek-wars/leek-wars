@@ -132,5 +132,7 @@
 	"aposteriori_title": "Récompenses de parrainage à réclamer",
 	"aposteriori_desc": "Le système de récompenses de parrainage est récent : réclamez celles de vos filleuls et de votre parrain.",
 	"aposteriori_claim": "Réclamer",
-	"aposteriori_claimed": "Récompenses reçues !"
+	"aposteriori_claimed": "Récompenses reçues !",
+	"linked_accounts": "{0} comptes",
+	"linked_main": "principal"
 }

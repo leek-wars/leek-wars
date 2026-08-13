@@ -132,5 +132,7 @@
 	"aposteriori_title": "Patenschafts-Belohnungen abzuholen",
 	"aposteriori_desc": "Das Belohnungssystem für Patenschaften ist neu: hol dir die für deine Patenkinder und deinen Paten.",
 	"aposteriori_claim": "Abholen",
-	"aposteriori_claimed": "Belohnungen erhalten!"
+	"aposteriori_claimed": "Belohnungen erhalten!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

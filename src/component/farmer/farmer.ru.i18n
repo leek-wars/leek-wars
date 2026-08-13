@@ -132,5 +132,7 @@
 	"aposteriori_title": "Награды за наставничество",
 	"aposteriori_desc": "Система наград за наставничество новая: получите награды за подопечных и наставника.",
 	"aposteriori_claim": "Получить",
-	"aposteriori_claimed": "Награды получены!"
+	"aposteriori_claimed": "Награды получены!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

@@ -394,7 +394,7 @@ const LeekWars = reactive({
 	// Version affichée en tête des CGU. À garder synchro avec
 	// FarmerController::LAST_CGU_VERSION côté serveur (qui, lui, remplit farmer.cgu
 	// à l'inscription) : le shell HTML n'injecte pas la valeur serveur ici.
-	cgu_version: 2,
+	cgu_version: 2, // v2 : règle multi-comptes (#3237)
 	mobile: false,
 	// Firefox gère mal le loading="lazy" sur les pages à forte densité d'images
 	// (trophées, marché) : les images ne se chargent pas de façon fiable. On

@@ -132,5 +132,7 @@
 	"aposteriori_title": "Hadiah perwalian untuk diklaim",
 	"aposteriori_desc": "Sistem hadiah perwalian masih baru: klaim hadiah untuk anak baptis dan wali baptismu.",
 	"aposteriori_claim": "Klaim",
-	"aposteriori_claimed": "Hadiah diterima!"
+	"aposteriori_claimed": "Hadiah diterima!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

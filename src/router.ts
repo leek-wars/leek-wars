@@ -80,6 +80,7 @@ const PressKit = () => import(/* webpackChunkName: "[request]" */ `@/component/p
 const Ranking = () => import(/* webpackChunkName: "[request]" */ `@/component/ranking/ranking.${locale}.i18n`)
 const RedesignStyleguide = () => import(/* webpackChunkName: "redesign" */ `@/component/redesign/redesign-styleguide.vue`)
 const Report = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report.${locale}.i18n`)
+const AccountsConsole = () => import(/* webpackChunkName: "[request]" */ `@/component/accounts/accounts-console.${locale}.i18n`)
 const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/settings/settings.${locale}.i18n`)
 const Signup = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`))
 const Statistics = () => import(/* webpackChunkName: "[request]" */ `@/component/statistics/statistics.${locale}.i18n`)
@@ -267,6 +268,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/ranking/:category/:order/page-:page', component: Ranking },
 	{ path: '/redesign', component: RedesignStyleguide },
 	{ path: '/report/:id', component: Report },
+	{ path: '/accounts', component: AccountsConsole, beforeEnter: connected },
 	{ path: '/settings', component: Settings, beforeEnter: connected },
 	{ path: '/signup/success/:farmer', component: SignupResult, props: { result: 'success' } },
 	{ path: '/signup/failed', component: SignupResult, props: { result: 'failed' } },

@@ -132,5 +132,7 @@
 	"aposteriori_title": "可领取的师徒奖励",
 	"aposteriori_desc": "师徒奖励系统是新功能：领取你的徒弟和师傅的奖励。",
 	"aposteriori_claim": "领取",
-	"aposteriori_claimed": "已领取奖励！"
+	"aposteriori_claimed": "已领取奖励！",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

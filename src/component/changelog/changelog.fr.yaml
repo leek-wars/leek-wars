@@ -1,6 +1,7 @@
 250:
   title: "WIP"
   added:
+    - "Déclaration des multi-comptes : depuis Réglages > Mes comptes, indiquez les autres comptes qui vous appartiennent. Ils vous suivent sur tous vos appareils sans ressaisir leur mot de passe et apparaissent sur votre profil. 3 comptes déclarables, 10 avec un abonnement."
     - "La console LeekScript devient la Console : exécutez aussi du JavaScript, du TypeScript et du Python en interactif, avec un état conservé entre les lignes."
     - "#ai L'éditeur Python devient un vrai IDE : autocomplétion de vos fonctions, variables et modules avec inférence de types, survol d'un symbole avec son type et l'endroit où il est défini, Ctrl+clic pour aller à la définition, et résolution des imports entre vos IA."
     - "Nouvelle arme au corps à corps, le Sabre du désert (niveau 151, légendaire) : 75 à 85 dégâts et la cible devient Stérile pendant 2 tours, elle ne peut plus invoquer. Elle se fabrique à la forge, avec un schéma qui se trouve en combattant sur la carte du désert."

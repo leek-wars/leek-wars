@@ -1,0 +1,18 @@
+{
+	"title": "Account console",
+	"manage": "Manage my accounts",
+	"account": "Account",
+	"talent": "Talent",
+	"fights": "Fights",
+	"garden": "Garden",
+	"tournament": "Tournament",
+	"main": "main",
+	"register_all": "Register all for the tournament",
+	"enter_all": "Put all in the garden",
+	"exit_all": "Take all out of the garden",
+	"registered_n": "{0} leeks registered for the tournament.",
+	"empty": "You have not declared any other account.",
+	"empty_link": "Declare my accounts",
+	"error_no_player": "You have not declared any other account.",
+	"error_wrong_token": "Session expired."
+}

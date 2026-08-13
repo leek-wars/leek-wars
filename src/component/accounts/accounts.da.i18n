@@ -1,0 +1,23 @@
+{
+	"title": "My accounts",
+	"desc": "Declare the other accounts you own. You will find them on all your devices without typing their password again, and they will show up as yours on your profile.",
+	"main_account": "main",
+	"set_main": "Set as main account",
+	"unlink": "Unlink",
+	"unlink_message": "Remove {0} from your accounts?",
+	"unlink_cooldown_warning": "An unlinked account can only be declared again after 7 days.",
+	"cancel": "Cancel",
+	"no_linkable": "To declare an account, first connect it from the account switcher, at the top right.",
+	"cap_reached": "You have reached the limit of {0} declared accounts.",
+	"cap_reached_upsell": "Limit of {0} accounts reached. A subscription lets you declare up to {1}:",
+	"error_account_not_connected": "This account must be connected to be declared.",
+	"error_already_linked": "This account is already declared.",
+	"error_invalid_account": "This account cannot be declared.",
+	"error_no_player": "You have no declared account.",
+	"error_no_such_farmer": "Account not found.",
+	"error_not_linked": "This account is not one of yours.",
+	"error_same_account": "This is the account you are connected to.",
+	"error_too_many_declared_accounts": "You have reached the limit of declared accounts.",
+	"error_unlink_cooldown": "This account was unlinked less than 7 days ago.",
+	"console": "Console"
+}
