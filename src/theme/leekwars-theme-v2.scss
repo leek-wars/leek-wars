@@ -17,6 +17,8 @@
 html body.v2 {
 	/* Police d'affichage : titres, en-tetes, onglets, libelles de section */
 	--font-display: "Roboto", sans-serif;
+	/* Police de corps historique, inchangée : seul le v3 passe à Inter. */
+	--font-body: "Roboto", sans-serif;
 
 	/* Marque */
 	--primary: #5fad1b;

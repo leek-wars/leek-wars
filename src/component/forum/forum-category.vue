@@ -1010,7 +1010,7 @@ body.dark .topic .seen img.seen {
 	margin-bottom: 10px;
 	padding: 10px;
 	font-size: 15px;
-	font-family: "Roboto", sans-serif;
+	font-family: var(--font-body);
 }
 .search-box img {
 	cursor: pointer;

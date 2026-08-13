@@ -201,7 +201,7 @@ body:not(.v2) {
 	   classe, une règle générale sur les `div` l'emporterait avec. */
 	.panel > .header h2 .workshop-tabs,
 	.panel > .header h2 .categories {
-		font-family: "Roboto", sans-serif;
+		font-family: var(--font-body);
 		font-size: 15px;
 		letter-spacing: normal;
 		text-transform: none;
@@ -597,14 +597,26 @@ body:not(.v2) {
 
 	/* Notifications à peau v2 : le trophée en dégradé d'or et le « bigwin » en
 	   dégradé bleu juraient au milieu des rangées neutres, avec leur texte
-	   noir forcé. L'accent passe dans la langue du v3 — un liseré — et la
-	   rangée reste une rangée. Partout où ces notifications apparaissent
-	   (panneau social, menu de la barre, page /notifications). Les !important
-	   répondent à ceux du bloc v2 de global.scss. */
-	.notif-trophy {
-		background: var(--background-row);
+	   noir forcé. Elles restent spéciales, mais dans la langue du v3 : un
+	   liseré, une teinte de la couleur d'accent, et un HALO — une émission de
+	   lumière (box-shadow interne sans direction), pas une ombre d'élévation,
+	   qui colle au néon du thème sombre. Au survol, le halo s'intensifie et un
+	   reflet balaie la rangée, façon objet brillant de jeu. Partout où ces
+	   notifications apparaissent (panneau social, menu de la barre, page
+	   /notifications). Les !important répondent à ceux du bloc v2 de
+	   global.scss. */
+	.notif-trophy,
+	.notif-bigwin {
+		position: relative;
+		overflow: hidden;
 		border: none;
-		border-left: 3px solid var(--rank-first);
+		border-left: 3px solid var(--notif-accent);
+		background: color-mix(in srgb, var(--notif-accent) 10%, transparent);
+		box-shadow: inset 0 0 14px color-mix(in srgb, var(--notif-accent) 22%, transparent);
+		transition: box-shadow .2s ease, background-color .2s ease;
+	}
+	.notif-trophy {
+		--notif-accent: var(--rank-first);
 		color: var(--text-color) !important;
 	}
 	.notif-trophy a,
@@ -613,15 +625,46 @@ body:not(.v2) {
 		color: var(--text-color) !important;
 	}
 	.notif-bigwin {
-		background: var(--background-row);
-		border: none;
-		border-left: 3px solid var(--info);
+		--notif-accent: var(--info);
 	}
 	.notif-bigwin,
 	.notif-bigwin .date,
 	.notif-bigwin .message,
 	.notif-bigwin .title {
 		color: var(--text-color);
+	}
+	/* Le survol garde la teinte d'accent (la règle générale .notification:hover
+	   posait la surface de rangée par-dessus) et allume le halo. */
+	.notification.notif-trophy:hover,
+	.notification.notif-bigwin:hover {
+		background: color-mix(in srgb, var(--notif-accent) 16%, transparent);
+		box-shadow: inset 0 0 22px color-mix(in srgb, var(--notif-accent) 34%, transparent);
+	}
+	/* Le reflet : une bande claire inclinée, hors cadre à gauche, qui traverse
+	   la rangée une fois à chaque survol. `overflow: hidden` la clippe, et au
+	   repos comme en fin de course elle est hors champ. */
+	.notif-trophy::after,
+	.notif-bigwin::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: -60%;
+		width: 50%;
+		background: linear-gradient(105deg,
+			transparent 0%,
+			color-mix(in srgb, var(--notif-accent) 30%, transparent) 50%,
+			transparent 100%);
+		pointer-events: none;
+	}
+	.notification.notif-trophy:hover::after,
+	.notification.notif-bigwin:hover::after {
+		animation: lw-notif-shine .7s ease;
+	}
+	/* Non-lu : la teinte d'accent doit gagner sur la teinte verte générique. */
+	.notification.unread.notif-trophy,
+	.notification.unread.notif-bigwin {
+		background: color-mix(in srgb, var(--notif-accent) 14%, transparent);
 	}
 	/* Non-lu : la teinte du vert v2 (#5ac200 à 20 %) passe au vert du thème,
 	   et le survol reprend la surface de rangée (le v2 posait du blanc pur et
@@ -1131,5 +1174,18 @@ body:not(.v2) {
 	footer .footer,
 	.footer {
 		border-top: 1px solid var(--border);
+	}
+}
+
+/* Reflet des notifications trophée/bigwin (section « Panneau social ») : la
+   bande part hors cadre à gauche et traverse la rangée. 320 % de sa propre
+   largeur (50 % de la rangée) suffisent à sortir à droite quelle que soit la
+   largeur. Au niveau racine : un @keyframes ne se scope pas. */
+@keyframes lw-notif-shine {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(320%);
 	}
 }
