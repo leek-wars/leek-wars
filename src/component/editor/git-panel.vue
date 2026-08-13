@@ -411,6 +411,7 @@
 		const code = err?.error
 		if (code === 'quota_size_exceeded') return t('quota_size_exceeded') as string
 		if (code === 'quota_files_exceeded') return t('quota_files_exceeded') as string
+		if (code === 'no_remote') return t('no_remote') as string
 		if (err?.quota_exceeded) return t('quota_size_exceeded') as string
 		return err?.details || code || 'error'
 	}
@@ -451,7 +452,10 @@
 			await gitCall('git/fetch', { folder: selectedRepo.value })
 			lastFetchAt[selectedRepo.value] = Date.now()
 			await Promise.all([loadBranches(), refreshStatus()])
-		} catch {
+		} catch (e: unknown) {
+			// Le fetch alimente les branches distantes : en cas d'échec la liste
+			// reste muette et donne l'impression que le remote n'a qu'une branche.
+			syncError.value = 'Fetch: ' + gitErrorMessage(e)
 			await Promise.all([loadBranches(), refreshStatus()])
 		} finally {
 			fetching.value = false

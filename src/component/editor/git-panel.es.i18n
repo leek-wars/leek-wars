@@ -54,6 +54,7 @@
 	"undo_last_commit_done": "Último commit deshecho. Los cambios están en stage.",
 	"quota_size_exceeded": "Cuota de espacio superada. Elimina archivos para liberar espacio.",
 	"quota_files_exceeded": "Cuota de archivos superada. Elimina archivos para bajar del límite.",
+	"no_remote": "Ningún remote configurado.",
 	"optimize_repo": "Compactar el repositorio",
 	"optimize_repo_done": "Repositorio compactado, {0} liberados"
 }
