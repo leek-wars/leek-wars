@@ -262,7 +262,7 @@
 							<div v-for="col in columnsConfigList" :key="col.key"
 								class="column-config-item" :data-key="col.key">
 								<v-icon class="drag-handle">mdi-drag</v-icon>
-								<lw-checkbox-btn v-model="col.visible" :disabled="col.key === 'name'" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
+								<lw-checkbox v-model="col.visible" :disabled="col.key === 'name'" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
 							</div>
 						</div>
 						<div class="sort-config">
