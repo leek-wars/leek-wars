@@ -369,7 +369,7 @@ const LeekWars = reactive({
 	get,
 	put,
 	delete: del,
-	cgu_version: 1,
+	cgu_version: 2, // #3237 : ajout de la règle multi-comptes. Écrasé par la valeur serveur.
 	mobile: false,
 	// Firefox gère mal le loading="lazy" sur les pages à forte densité d'images
 	// (trophées, marché) : les images ne se chargent pas de façon fiable. On

@@ -132,5 +132,7 @@
 	"aposteriori_title": "Fadderbelønninger å hente",
 	"aposteriori_desc": "Belønningssystemet for fadderskap er nytt: hent dem for fadderbarna dine og fadderen din.",
 	"aposteriori_claim": "Hent",
-	"aposteriori_claimed": "Belønninger mottatt!"
+	"aposteriori_claimed": "Belønninger mottatt!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

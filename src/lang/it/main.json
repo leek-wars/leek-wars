@@ -7,6 +7,7 @@
 	"account_changed_other_tab": "Hai cambiato account in un'altra scheda. Questa scheda mostra ancora il vecchio account e deve essere ricaricata, ma contiene IA non salvate: copia il tuo codice prima di ricaricare, non potrà essere salvato su questo account.",
 	"account_changed_other_tab_reload": "Ricarica",
 	"account_changed_other_tab_title": "Account cambiato in un'altra scheda",
+	"account_console": "Console degli account",
 	"account_connected": "Connesso",
 	"account_disconnect": "Disconnetti",
 	"account_error_banned": "Questo account è stato bannato",

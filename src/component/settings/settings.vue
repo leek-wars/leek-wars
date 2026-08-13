@@ -246,6 +246,8 @@
 				</template>
 			</panel>
 
+			<accounts v-if="$store.state.farmer && $store.state.farmer.verified" />
+
 			<api-keys v-if="$store.state.farmer && $store.state.farmer.verified" />
 		</div>
 
@@ -319,6 +321,7 @@
 	// Composant async : utilisable directement dans le template (script setup),
 	// NE PAS le référencer dans defineOptions (variable locale, hoisting interdit).
 	const ApiKeys = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/api-keys/api-keys.${locale}.i18n`))
+	const Accounts = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/accounts/accounts.${locale}.i18n`))
 
 	defineOptions({ name: 'Settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
 

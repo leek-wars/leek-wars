@@ -1,0 +1,23 @@
+{
+	"title": "I miei account",
+	"desc": "Dichiara gli altri account che ti appartengono. Li ritroverai su tutti i tuoi dispositivi senza reinserire la password, e appariranno come tuoi sul tuo profilo.",
+	"main_account": "principale",
+	"set_main": "Imposta come account principale",
+	"unlink": "Scollega",
+	"unlink_message": "Rimuovere {0} dai tuoi account?",
+	"unlink_cooldown_warning": "Un account scollegato può essere dichiarato di nuovo solo dopo 7 giorni.",
+	"cancel": "Annulla",
+	"no_linkable": "Per dichiarare un account, collegalo prima dal selettore di account, in alto a destra.",
+	"cap_reached": "Hai raggiunto il limite di {0} account dichiarati.",
+	"cap_reached_upsell": "Limite di {0} account raggiunto. Un abbonamento permette di dichiararne fino a {1}:",
+	"error_account_not_connected": "Questo account deve essere collegato per essere dichiarato.",
+	"error_already_linked": "Questo account è già dichiarato.",
+	"error_invalid_account": "Questo account non può essere dichiarato.",
+	"error_no_player": "Non hai alcun account dichiarato.",
+	"error_no_such_farmer": "Account non trovato.",
+	"error_not_linked": "Questo account non è uno dei tuoi.",
+	"error_same_account": "È l'account con cui sei collegato.",
+	"error_too_many_declared_accounts": "Hai raggiunto il limite di account dichiarati.",
+	"error_unlink_cooldown": "Questo account è stato scollegato meno di 7 giorni fa.",
+	"console": "Console"
+}

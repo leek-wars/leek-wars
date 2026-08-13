@@ -4,6 +4,7 @@
 	"account_active": "Aktiivinen tili",
 	"account_add": "Lisää tili",
 	"account_already_activated": "Tilisi on jo aktivoitu!",
+	"account_console": "Account console",
 	"account_connected": "Yhdistetty",
 	"account_disconnect": "Katkaise yhteys",
 	"account_error_banned": "Tämä tili on estetty",

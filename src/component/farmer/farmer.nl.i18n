@@ -132,5 +132,7 @@
 	"aposteriori_title": "Peetschap-beloningen om te claimen",
 	"aposteriori_desc": "Het beloningssysteem voor peetschap is nieuw: claim die voor je petekinderen en je peetvader.",
 	"aposteriori_claim": "Claimen",
-	"aposteriori_claimed": "Beloningen ontvangen!"
+	"aposteriori_claimed": "Beloningen ontvangen!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

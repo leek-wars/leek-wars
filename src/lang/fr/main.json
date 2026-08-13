@@ -7,6 +7,7 @@
 	"account_changed_other_tab": "Vous avez changé de compte dans un autre onglet. Cet onglet affiche encore l'ancien compte et doit être rechargé, mais des IA non enregistrées y sont ouvertes : copiez votre code avant de recharger, il ne pourra pas être enregistré sur ce compte.",
 	"account_changed_other_tab_reload": "Recharger",
 	"account_changed_other_tab_title": "Compte changé dans un autre onglet",
+	"account_console": "Console de comptes",
 	"account_connected": "Connecté",
 	"account_disconnect": "Déconnecter",
 	"account_error_banned": "Ce compte a été banni",

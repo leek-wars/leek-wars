@@ -1,0 +1,23 @@
+{
+	"title": "Mes comptes",
+	"desc": "Déclare les autres comptes qui t'appartiennent. Tu les retrouveras sur tous tes appareils sans ressaisir leur mot de passe, et ils apparaîtront comme tiens sur ton profil.",
+	"main_account": "principal",
+	"set_main": "Définir comme compte principal",
+	"unlink": "Délier",
+	"unlink_message": "Retirer {0} de tes comptes ?",
+	"unlink_cooldown_warning": "Un compte délié ne peut être redéclaré qu'au bout de 7 jours.",
+	"cancel": "Annuler",
+	"no_linkable": "Pour déclarer un compte, connecte-le d'abord depuis le sélecteur de comptes, en haut à droite.",
+	"cap_reached": "Tu as atteint la limite de {0} comptes déclarés.",
+	"cap_reached_upsell": "Limite de {0} comptes atteinte. Un abonnement permet d'en déclarer jusqu'à {1} :",
+	"error_account_not_connected": "Ce compte doit être connecté pour être déclaré.",
+	"error_already_linked": "Ce compte est déjà déclaré.",
+	"error_invalid_account": "Ce compte ne peut pas être déclaré.",
+	"error_no_player": "Tu n'as aucun compte déclaré.",
+	"error_no_such_farmer": "Compte introuvable.",
+	"error_not_linked": "Ce compte ne fait pas partie des tiens.",
+	"error_same_account": "C'est le compte sur lequel tu es connecté.",
+	"error_too_many_declared_accounts": "Tu as atteint la limite de comptes déclarés.",
+	"error_unlink_cooldown": "Ce compte a été délié il y a moins de 7 jours.",
+	"console": "Console"
+}

@@ -143,6 +143,22 @@
 						<!-- #3303 : orthogonal aux autres grades, donc pas de v-else-if.
 						     Pas de clé i18n, « LW+ » est un nom de marque. -->
 						<div v-if="farmer.lwplus" class="grade lwplus">LW+</div>
+						<!-- #3237 : comptes déclarés du joueur. C'est la contrepartie visible
+						     de la déclaration — l'afficher est tout l'objet du dispositif. -->
+						<v-menu v-if="farmer.linked_accounts && farmer.linked_accounts.length > 1" location="bottom">
+							<template #activator="{ props }">
+								<div class="grade linked" v-bind="props">
+									<v-icon>mdi-account-multiple</v-icon>
+									<span>{{ $t('linked_accounts', [farmer.linked_accounts.length]) }}</span>
+								</div>
+							</template>
+							<div class="linked-accounts-menu">
+								<router-link v-for="account in farmer.linked_accounts" :key="account.id" :to="'/farmer/' + account.id" class="linked-account">
+									<span>{{ account.name }}</span>
+									<span v-if="account.main" class="main">{{ $t('linked_main') }}</span>
+								</router-link>
+							</div>
+						</v-menu>
 					</div>
 
 
@@ -1532,6 +1548,35 @@
 	}
 	.grade.lwplus {
 		background: #8e44ad;
+	}
+	// #3237 : gris neutre volontaire — déclarer ses comptes n'est ni une
+	// distinction ni un avertissement, c'est une information.
+	.grade.linked {
+		background: #6b7a75;
+		cursor: pointer;
+		.v-icon {
+			font-size: 16px;
+			margin-right: 3px;
+		}
+	}
+	.linked-accounts-menu {
+		background: var(--background);
+		border: 1px solid var(--border);
+		padding: 4px 0;
+	}
+	.linked-account {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 12px;
+		color: var(--text-color);
+		&:hover {
+			background: var(--background-secondary);
+		}
+		.main {
+			color: var(--text-color-secondary);
+			font-size: 12px;
+		}
 	}
 	.grade-options {
 		display: flex;

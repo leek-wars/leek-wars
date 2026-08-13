@@ -125,5 +125,7 @@
 	"aposteriori_title": "Lunastettavat kummipalkkiot",
 	"aposteriori_desc": "Kummipalkkiojärjestelmä on uusi: lunasta palkkiot kummilapsistasi ja kummistasi.",
 	"aposteriori_claim": "Lunasta",
-	"aposteriori_claimed": "Palkkiot vastaanotettu!"
+	"aposteriori_claimed": "Palkkiot vastaanotettu!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

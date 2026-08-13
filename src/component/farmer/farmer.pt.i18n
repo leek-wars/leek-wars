@@ -132,5 +132,7 @@
 	"aposteriori_title": "Recompensas de apadrinhamento a resgatar",
 	"aposteriori_desc": "O sistema de recompensas de apadrinhamento é recente: resgate as dos seus afilhados e do seu padrinho.",
 	"aposteriori_claim": "Resgatar",
-	"aposteriori_claimed": "Recompensas recebidas!"
+	"aposteriori_claimed": "Recompensas recebidas!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

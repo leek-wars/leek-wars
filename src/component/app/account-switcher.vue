@@ -48,6 +48,14 @@
 				</v-card>
 			</v-menu>
 		</v-list-item>
+		<!-- #3237 : la console ne s'adresse qu'aux joueurs qui ont déclaré leurs
+		     comptes ; inutile de la montrer aux autres, elle serait vide. -->
+		<v-list-item v-if="hasDeclaredAccounts" link :ripple="true" to="/accounts">
+			<template #prepend>
+				<v-icon>mdi-view-dashboard-outline</v-icon>
+			</template>
+			<v-list-item-title>{{ $t('main.account_console') }}</v-list-item-title>
+		</v-list-item>
 	</v-list>
 </template>
 
@@ -55,7 +63,7 @@
 import { LeekWars } from '@/model/leekwars'
 import { AccountInfo, store } from '@/model/store'
 import router from '@/router'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({ name: 'AccountSwitcher' })
@@ -76,6 +84,10 @@ const addMenuOpen = ref(false)
 const switchingId = ref<number | null>(null)
 const loadingId = ref<number | null>(null)
 const loadingAction = ref<string | null>(null)
+
+// linked_accounts est la liste DÉCLARÉE du joueur (côté serveur), à ne pas confondre
+// avec store.state.accounts, qui est la liste des comptes connectés de ce switcher.
+const hasDeclaredAccounts = computed(() => (store.state.farmer?.linked_accounts?.length ?? 0) > 1)
 
 function isActive(account: AccountInfo) {
 	return account.id === store.state.farmer?.id

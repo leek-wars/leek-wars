@@ -1,6 +1,7 @@
 250:
   title: "WIP"
   added:
+    - "Multi-account declaration: from Settings > My accounts, declare the other accounts you own. They follow you across all your devices without typing their password again, and show up on your profile. 3 accounts, or 10 with a subscription."
     - "The LeekScript console becomes the Console: run JavaScript, TypeScript and Python interactively too, with state kept between lines."
     - "#ai The Python editor becomes a real IDE: autocompletion of your functions, variables and modules with type inference, hover showing a symbol's type and where it is defined, Ctrl+click to go to definition, and import resolution across your AIs."
     - "New melee weapon, the Desert Saber (level 151, legendary): 75 to 85 damage and the target becomes Sterile for 2 turns, unable to summon. Craft it at the forge, with a scheme that drops when fighting on the desert map."

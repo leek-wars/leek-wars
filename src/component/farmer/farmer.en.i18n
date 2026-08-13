@@ -132,5 +132,7 @@
 	"aposteriori_title": "Sponsorship rewards to claim",
 	"aposteriori_desc": "The sponsorship reward system is recent: claim those for your godsons and your godfather.",
 	"aposteriori_claim": "Claim",
-	"aposteriori_claimed": "Rewards received!"
+	"aposteriori_claimed": "Rewards received!",
+	"linked_accounts": "{0} accounts",
+	"linked_main": "main"
 }

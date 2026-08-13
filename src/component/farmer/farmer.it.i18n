@@ -132,5 +132,7 @@
 	"aposteriori_title": "Ricompense di padrinato da riscuotere",
 	"aposteriori_desc": "Il sistema di ricompense di padrinato è recente: riscuoti quelle dei tuoi figliocci e del tuo padrino.",
 	"aposteriori_claim": "Riscuoti",
-	"aposteriori_claimed": "Ricompense ricevute!"
+	"aposteriori_claimed": "Ricompense ricevute!",
+	"linked_accounts": "{0} account",
+	"linked_main": "principale"
 }

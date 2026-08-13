@@ -4,6 +4,7 @@
 	"account_active": "当前账号",
 	"account_add": "添加账号",
 	"account_already_activated": "您的账号已经激活！",
+	"account_console": "Account console",
 	"account_connected": "已连接",
 	"account_disconnect": "断开连接",
 	"account_error_banned": "此账号已被封禁",
