@@ -102,6 +102,35 @@ body:not(.v2) {
 		letter-spacing: 0.02em;
 	}
 
+	/* Avatar du fermier : le rond Material devient le carré bordé du mockup
+	   (`.avatar` : trait fort, surface de rangée). Appliqué à la barre, au menu
+	   du compte et au panneau social — le rond reste ailleurs tant que la
+	   question « avatars carrés partout ? » n'est pas tranchée (REDESIGN.md). */
+	.header .avatar,
+	.account-switcher .avatar,
+	.blabla-panel .avatar,
+	.chat .avatar {
+		border-radius: 0;
+		border: 1px solid var(--border-strong);
+		background: var(--background-row);
+	}
+	/* Ramené à 24 px : les 42 px du v2 débordaient du bouton de 34 px et
+	   recouvraient le pseudo. */
+	.header .header-button .avatar {
+		height: 24px;
+		width: 24px;
+		margin: 0 0 0 8px;
+	}
+	/* Le cristal est taillé pour dépasser de la barre du v2 (17×40, marges
+	   négatives) : dans une boîte de compteur, il sortait du cadre. Rangé. */
+	.header .header-button .crystal {
+		height: 22px;
+		width: 14px;
+		margin: 0 0 0 2px;
+		background-size: contain;
+		background-position: center;
+	}
+
 	/* ====== Largeur ======
 	 *
 	 * Le v2 borne le contenu à 1100 px et n'ouvre la pleine largeur que sur les
@@ -566,6 +595,74 @@ body:not(.v2) {
 		min-height: 0;
 	}
 
+	/* Notifications à peau v2 : le trophée en dégradé d'or et le « bigwin » en
+	   dégradé bleu juraient au milieu des rangées neutres, avec leur texte
+	   noir forcé. L'accent passe dans la langue du v3 — un liseré — et la
+	   rangée reste une rangée. Partout où ces notifications apparaissent
+	   (panneau social, menu de la barre, page /notifications). Les !important
+	   répondent à ceux du bloc v2 de global.scss. */
+	.notif-trophy {
+		background: var(--background-row);
+		border: none;
+		border-left: 3px solid var(--rank-first);
+		color: var(--text-color) !important;
+	}
+	.notif-trophy a,
+	.notif-trophy .message,
+	.notif-trophy .date {
+		color: var(--text-color) !important;
+	}
+	.notif-bigwin {
+		background: var(--background-row);
+		border: none;
+		border-left: 3px solid var(--info);
+	}
+	.notif-bigwin,
+	.notif-bigwin .date,
+	.notif-bigwin .message,
+	.notif-bigwin .title {
+		color: var(--text-color);
+	}
+	/* Non-lu : la teinte du vert v2 (#5ac200 à 20 %) passe au vert du thème,
+	   et le survol reprend la surface de rangée (le v2 posait du blanc pur et
+	   une ombre Material). */
+	.notification.unread {
+		background-color: var(--result-win-background);
+	}
+	.notification:hover {
+		background-color: var(--background-row);
+	}
+	.notification.unread:hover {
+		background-color: var(--result-win-background);
+	}
+
+	/* Bannière de déconnexion du chat : un rouge v2 en dur (#d3324d). */
+	.chat-disconnected {
+		background-color: var(--error);
+		color: var(--primary-text);
+	}
+
+	/* Entrée du chat : la bande basse du mockup. Le champ devient la bande
+	   elle-même, détachée par le trait fort qui passe au vert au focus ; pas
+	   de padding sur le conteneur, l'avatar et l'emoji y sont posés en absolu.
+	   Vaut pour tous les chats (panneau social, accueil, rapport de combat). */
+	.chat .chat-input .chat-input-content {
+		background: var(--background-input);
+		border: none;
+		border-top: 1.5px solid var(--border-strong);
+	}
+	.chat .chat-input .chat-input-content:focus {
+		border: none;
+		border-top: 1.5px solid var(--primary);
+	}
+	/* Les popups de l'entrée (commandes, pseudos) sont des surfaces
+	   flottantes : trait et ombre pixel, comme les menus. */
+	.chat .chat-input .commands {
+		background: var(--panel-background);
+		border: 1px solid var(--border-strong);
+		box-shadow: var(--shadow-pixel);
+	}
+
 	/* ====== Tableaux ======
 	 *
 	 * Le v2 quadrillait : un filet sous chaque ligne ET un filet entre chaque
@@ -858,7 +955,8 @@ body:not(.v2) {
 	}
 	input:not([type="checkbox"]):not([type="radio"]):focus-visible,
 	textarea:focus-visible,
-	select:focus-visible {
+	select:focus-visible,
+	[contenteditable]:focus-visible {
 		outline: none;
 	}
 
