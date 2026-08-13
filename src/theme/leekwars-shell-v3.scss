@@ -1150,6 +1150,34 @@ body:not(.v2) {
 			transparent 75%);
 		pointer-events: none;
 	}
+	/* L'étiquette de rareté était une pastille pleine à encre blanche : sur
+	   l'or elle plafonnait à 2:1, et elle butait contre le bord de la fiche.
+	   Elle devient du texte dans sa propre couleur, en capitales de la police
+	   d'affichage, avec la même lueur que le trait — la rareté se lit alors
+	   d'un seul geste graphique.
+	   L'encre est mêlée à celle du thème : un peu plus claire que la couleur
+	   pure en thème sombre, nettement plus foncée en clair, où l'or pur sur le
+	   parchemin serait illisible. */
+	.rarity-wrapper {
+		padding: 6px 10px;
+	}
+	.rarity-wrapper .rarity {
+		background: none;
+		padding: 0;
+		color: color-mix(in srgb, var(--rarity) 75%, var(--text-color));
+		font-family: var(--font-display);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		text-shadow: 0 0 8px color-mix(in srgb, var(--rarity) 55%, transparent);
+	}
+	/* Le parchemin demande une encre bien plus foncée : à la dose du thème
+	   sombre, l'or tombait à 2,85 de contraste. Mesuré à cette dose : 5,7 pour
+	   l'or, au-dessus de 7 pour les autres. */
+	&:not(.dark) .rarity-wrapper .rarity {
+		color: color-mix(in srgb, var(--rarity) 48%, var(--text-color));
+	}
+
 	/* Rareté 0 (objet commun) : pas de couleur, donc ni halo ni diffusion — la
 	   barre reste le simple filet de séparation qu'elle était. */
 	.rarity-band.difficulty-0 {
