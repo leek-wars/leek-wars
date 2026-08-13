@@ -245,13 +245,17 @@ body:not(.v2) {
 	   biseaux en trapèze des onglets neutralisés. */
 	/* La barre est plus haute que dans le v2 : le mockup lui donne de l'air
 	   autour du titre. On ne touche pas à sa structure (titre + onglets sur une
-	   ligne), juste à la hauteur — 48 px au lieu de 36. Les enfants sont
-	   recentrés, sinon les onglets restent collés en haut. */
+	   ligne), juste à la hauteur — 48 px au lieu de 36. */
 	.page-header.page-bar,
 	.page-bar {
 		background: var(--background-header);
 		border-bottom: 1px solid var(--border);
 		min-height: 48px;
+	}
+	/* Recentrage vertical, sauf quand la barre contient un bloc plus haut
+	   qu'elle : l'éditeur y loge son propre menu d'outils, et centrer laissait
+	   sa barre d'onglets flotter au milieu du vide au lieu de rester en haut. */
+	.page-bar:not(:has(> .menu)) {
 		align-items: center;
 	}
 	.page-bar .tabs .tab::before,
@@ -350,7 +354,7 @@ body:not(.v2) {
 
 	/* La colonne du mockup fait 220 px (`.shell` : 220px 1fr 320px), contre
 	   170 px en v2. Le contenu suit, sauf en replié où les 64 px restent. */
-	.menu {
+	nav.menu {
 		width: 220px;
 	}
 	#app.connected:not(.app):not(.menu-collapsed) .app-center {
@@ -362,7 +366,7 @@ body:not(.v2) {
 	   (`.menu`, fixée du haut en bas de l'écran) et pas seulement par le
 	   wrapper, qui s'arrêtait à la dernière entrée : le mockup fait courir le
 	   panneau jusqu'en bas, coffre des récompenses compris. */
-	.menu {
+	nav.menu {
 		background: var(--panel-background);
 		border-right: 1.5px solid var(--border-strong);
 	}
