@@ -777,7 +777,7 @@ const t = useNamespacedT('market')
 	}
 	.preview .leek {
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		padding: 4px 8px;
 		border-radius: var(--radius-small);
 		margin: 3px 1px;
@@ -844,6 +844,11 @@ const t = useNamespacedT('market')
 		}
 		.leek-count {
 			background-color: var(--primary);
+			/* L'encre du bloc est `--grey-13`, une crème identique dans les deux
+			   thèmes : sur le vert néon du sombre elle tombait à 1,1 de contraste.
+			   `--primary-text` est justement l'encre calibrée pour un aplat de
+			   marque (sombre en thème sombre, crème en clair). */
+			color: var(--primary-text);
 		}
 		.farmer-count {
 			background-color: var(--grey-4);

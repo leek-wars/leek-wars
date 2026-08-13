@@ -90,7 +90,7 @@ function start() {
 			padding: 0 3px;
 			border-radius: var(--radius-large);
 			background: var(--primary);
-			color: var(--white);
+			color: var(--primary-text);
 			font-size: 11px;
 			font-weight: bold;
 			line-height: 16px;

@@ -86,11 +86,14 @@
 								<router-link :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" class="name">{{ translateItemName(item) }}</router-link>
 								<v-tooltip location="bottom">
 									<template #activator="{ props: tprops }">
+										<!-- `primary` et non un #4caf50 Material en dur : sur le vert néon du
+										     v3, Vuetify calcule l'encre selon la luminosité et pose du sombre,
+										     là où le vert Material gardait du blanc à 2,8 de contraste. -->
 										<v-btn
 											v-bind="tprops"
 											class="buy-button"
 											:class="{ 'not-enough': !hasEnough(item) }"
-											:color="hasEnough(item) ? '#4caf50' : undefined"
+											:color="hasEnough(item) ? 'primary' : undefined"
 											variant="flat"
 											prepend-icon="mdi-cart-outline"
 											@click="onBuyClick(item)">

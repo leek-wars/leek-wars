@@ -594,7 +594,7 @@
 	}
 	.menu-center .section.router-link-active {
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 2px 6px rgba(0, 0, 0, 0.3);
 		&:before {
 			content: "";

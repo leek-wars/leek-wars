@@ -648,7 +648,7 @@
 		align-items: center;
 		gap: 16px;
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		padding: 12px 20px;
 		border-radius: var(--radius);
 		margin-bottom: 12px;

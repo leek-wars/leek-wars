@@ -568,7 +568,7 @@
 		right: 0;
 		left: 0;
 		background: var(--primary);
-		color: var(--pure-white);
+		color: var(--primary-text);
 		text-align: center;
 		line-height: 30px;
 		cursor: pointer;

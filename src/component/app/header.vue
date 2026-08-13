@@ -389,7 +389,7 @@
 		right: -6px;
 		background: var(--primary);
 		padding: 4px 5px;
-		color: var(--white);
+		color: var(--primary-text);
 		border-radius: 5px;
 		height: 20px;
 		line-height: 12px;

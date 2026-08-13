@@ -492,7 +492,7 @@
 		padding: 8px;
 		margin-bottom: 10px;
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		border-radius: 5px;
 		cursor: pointer;
 	}

@@ -164,7 +164,7 @@ function disable() {
 	}
 	.step .title {
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		font-weight: bold;
 		padding: 5px 10px;
 		display: inline-block;
