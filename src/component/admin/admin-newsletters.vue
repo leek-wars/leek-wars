@@ -21,7 +21,7 @@
 							<div class="actions">
 								<template v-if="n.sent === 0">
 									<v-btn v-if="$store.state.farmer" variant="tonal" @click="test(n, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
-									<v-text-field v-model="n.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 130px" />
+									<lw-input v-model="n.testTarget" type="number" label="Farmer ID" style="max-width: 130px" />
 									<v-btn variant="tonal" @click="test(n, n.testTarget ?? 0)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 								</template>
 								<span v-else class="sent"><v-icon>mdi-check-circle-outline</v-icon> Envoyé le {{ $filters.date(n.sent) }}</span>

@@ -243,10 +243,16 @@ body:not(.v2) {
 
 	/* Même traitement que la barre du haut : une surface, un trait, et les
 	   biseaux en trapèze des onglets neutralisés. */
+	/* La barre est plus haute que dans le v2 : le mockup lui donne de l'air
+	   autour du titre. On ne touche pas à sa structure (titre + onglets sur une
+	   ligne), juste à la hauteur — 48 px au lieu de 36. Les enfants sont
+	   recentrés, sinon les onglets restent collés en haut. */
 	.page-header.page-bar,
 	.page-bar {
 		background: var(--background-header);
 		border-bottom: 1px solid var(--border);
+		min-height: 48px;
+		align-items: center;
 	}
 	.page-bar .tabs .tab::before,
 	.page-bar .tabs .tab::after,

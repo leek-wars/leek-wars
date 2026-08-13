@@ -8,7 +8,7 @@
 			<template #content>
 				<div class="toolbar">
 					<div class="search">
-						<v-text-field v-model="search" prepend-inner-icon="mdi-magnify" placeholder="Rechercher une arme ou une puce..." hide-details density="compact" clearable />
+						<lw-input v-model="search" prepend-inner-icon="mdi-magnify" placeholder="Rechercher une arme ou une puce..." clearable />
 					</div>
 					<div class="options">
 						<div class="option">

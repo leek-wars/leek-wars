@@ -14,6 +14,7 @@ import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
 import LWCheckbox from '@/component/ui/lw-checkbox.vue'
+import LWInput from '@/component/ui/lw-input.vue'
 import LWRadio from '@/component/ui/lw-radio.vue'
 import LWRadioGroup from '@/component/ui/lw-radio-group.vue'
 import LWSwitch from '@/component/ui/lw-switch.vue'
@@ -847,6 +848,7 @@ app.component('loader', LWLoader)
 app.component('flag', Flag)
 app.component('lw-switch', LWSwitch)
 app.component('lw-checkbox', LWCheckbox)
+app.component('lw-input', LWInput)
 app.component('lw-radio', LWRadio)
 app.component('lw-radio-group', LWRadioGroup)
 

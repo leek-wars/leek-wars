@@ -24,8 +24,8 @@
 				<div class="guest-dialog">
 					<h2>{{ $t('demo_form_title') }}</h2>
 					<div class="guest-intro">{{ $t('demo_form_intro') }}</div>
-					<v-text-field v-model="guestName" :label="$t('demo_form_name')" variant="outlined" density="comfortable" :hide-details="true" @keyup.enter="submitGuest" />
-					<v-text-field v-model="guestEmail" :label="$t('demo_form_email')" type="email" variant="outlined" density="comfortable" :hide-details="true" @keyup.enter="submitGuest" />
+					<lw-input v-model="guestName" :label="$t('demo_form_name')" @keyup.enter="submitGuest" />
+					<lw-input v-model="guestEmail" :label="$t('demo_form_email')" type="email" @keyup.enter="submitGuest" />
 					<div v-if="guestError" class="guest-error">{{ guestError }}</div>
 					<v-btn size="large" color="primary" :loading="submitting" :block="true" @click="submitGuest">
 						<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ $t('try_demo') }}

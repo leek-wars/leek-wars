@@ -109,7 +109,7 @@
 
 		<popup v-model="renameDialog" :width="500" icon="mdi-pencil" :title="$t('rename')">
 			<div class="padding">
-				<v-text-field ref="nameInput" v-model="newName" variant="outlined" density="compact" autofocus
+				<lw-input ref="nameInput" v-model="newName" autofocus
 					:error-messages="renameError ? [renameError] : []"
 					:messages="!renameError && windowsWarning(newName) ? [isWindowsReservedName(newName) ? $t('windows_warning_reserved', [newName]) : $t('windows_warning_char', [windowsWarning(newName)])] : []"
 					:color="!renameError && windowsWarning(newName) ? 'warning' : undefined"
@@ -155,7 +155,7 @@
 
 		<popup v-model="newAIDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('new_desc')">
 			<div class="padding">
-				<v-text-field ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" :suffix="newAIExtension" variant="outlined" density="compact" autofocus
+				<lw-input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" :suffix="newAIExtension" autofocus
 					:error-messages="newAIError ? [newAIError] : []"
 					:messages="!newAIError && windowsWarning(newAIName) ? [isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)])] : []"
 					:color="!newAIError && windowsWarning(newAIName) ? 'warning' : undefined"
@@ -180,7 +180,7 @@
 
 		<popup v-model="newFolderDialog" :width="500" icon="mdi-folder-plus" :title="$t('new_folder')">
 			<div class="padding">
-				<v-text-field ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" variant="outlined" density="compact" autofocus
+				<lw-input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" autofocus
 					:error-messages="newFolderError ? [newFolderError] : []"
 					:messages="!newFolderError && windowsWarning(newFolderName) ? [isWindowsReservedName(newFolderName) ? $t('windows_warning_reserved', [newFolderName]) : $t('windows_warning_char', [windowsWarning(newFolderName)])] : []"
 					:color="!newFolderError && windowsWarning(newFolderName) ? 'warning' : undefined"
@@ -675,7 +675,7 @@
 	opacity: 0.5;
 	pointer-events: none;
 }
-.text-field-warning :deep(.v-messages__message) {
+.text-field-warning :deep(.message) {
 	color: #d35400;
 }
 .language-toggle {
