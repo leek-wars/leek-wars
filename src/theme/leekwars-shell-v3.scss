@@ -453,7 +453,8 @@ body:not(.v2) {
 	   capitales, corps réduit, très espacées, dans l'encre la plus pâle. */
 	.menu h4 {
 		font-family: var(--font-display);
-		font-size: 10px;
+		/* Même conversion que les autres intitulés en police d'affichage. */
+		font-size: 13px;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		/* `--text-color-faint` (l'`ink-3` du mockup) ne donne que 3,56:1 sur la
@@ -576,7 +577,9 @@ body:not(.v2) {
 	}
 	.blabla-panel .panel > .header h2 {
 		font-family: var(--font-display);
-		font-size: 10px;
+		/* 13 px : les 9 px de l'`aside-head` du mockup, convertis au facteur
+		   1,43 de Press Start 2P vers Pixelify Sans (cf. les titres de page). */
+		font-size: 13px;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		height: auto;
@@ -734,7 +737,7 @@ body:not(.v2) {
 	.ranking tr.header th,
 	.ranking tr.header td {
 		font-family: var(--font-display);
-		font-size: 11px;
+		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
@@ -755,7 +758,7 @@ body:not(.v2) {
 	   en-tête de liste du site à ne pas ressembler aux autres. */
 	.header.category {
 		font-family: var(--font-display);
-		font-size: 11px;
+		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
