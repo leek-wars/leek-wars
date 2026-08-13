@@ -113,6 +113,30 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   aller-retour), rendu v2 conforme (cercle/coche Material), et build de
   production complet passé (tous les templates compilent).
 
+- **2026-08-13, lot 4 — barre du haut connectée et panneau social** :
+  - Barre : avatar carré bordé (24 px dans le bouton fermier, qui débordait en
+    rond de 42 px), cristal rangé dans son compteur (il était taillé pour
+    dépasser de la barre v2), même carré bordé pour les avatars du menu du
+    compte, du panneau social et des chats.
+  - Panneau social : les peaux v2 des notifications (dégradé d'or du trophée,
+    dégradé bleu du bigwin, texte noir forcé) deviennent des rangées neutres à
+    liseré (`--rank-first` / `--info`) ; non-lu teinté du vert du thème ;
+    survol en surface de rangée ; bannière « Déconnecté » sur `--error` au
+    lieu du rouge en dur ; entrée de chat en bande basse du mockup (surface de
+    champ, trait fort qui passe au vert au focus), popups commandes/pseudos en
+    surfaces flottantes (trait + ombre pixel). Vaut pour tous les chats et
+    toutes les pages où ces notifications apparaissent.
+  - `[contenteditable]` exclu de l'anneau `:focus-visible` (l'entrée du chat
+    a déjà son trait de focus).
+  - Vérifié bêta locale (accueil, /notifications), deux thèmes, v2 intact
+    (dégradés, rond, cristal débordant, rouge historique).
+
+## Questions ouvertes
+
+- **Avatars carrés partout ?** Le mockup les fait carrés et bordés ; pour
+  l'instant seuls la barre du haut, le menu du compte, le panneau social et
+  les chats le sont (lot 4). Généraliser (profils, classements, forum) ?
+
 ## Chantier restant (mesuré au 2026-08-12)
 
 - **Ombres floues** : ~84 `box-shadow` en dur hors fichiers de thème.
