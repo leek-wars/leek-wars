@@ -56,6 +56,13 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
 
 - Typo d'affichage pixel : `Press Start 2P` sur `/redesign` (latin seul),
   `Pixelify Sans` sur le site (couvre le cyrillique), Roboto en repli CJK.
+  **Attention en reportant une taille du mockup** : la substitution n'est pas
+  neutre. Press Start 2P a une hauteur de capitale égale au cadratin entier
+  (1000/1000), Pixelify Sans seulement 0,7 — à taille égale le site est 30 %
+  plus petit. **Multiplier par 1,43** (18 px du mockup → 26 px sur le site).
+  Corrigé sur les titres de page le 2026-08-13 ; les autres tailles en police
+  d'affichage (en-têtes de panneau 14, panneau social 10, en-têtes de tableau)
+  n'ont pas encore été repassées à ce facteur.
 - Typo de corps (2026-08-13, demande de Pierre — « j'en peux plus de
   Roboto ») : **Inter**, le `--f-body` du mockup, via `--font-body`
   (v2 : Roboto inchangé). Auto-hébergée en 4 sous-ensembles woff2
@@ -148,6 +155,18 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   **Inter** (voir Partis pris) : variable `--font-body` dans les deux thèmes,
   7 points de consommation convertis, plus un seul `Roboto` en dur hors
   `@font-face`.
+
+- **2026-08-13, lot 6** : titres de page à 26 px (facteur de conversion de
+  police, voir Partis pris) ; page équipe — compositions sur deux colonnes en
+  `auto-fit` dès 600 px de large, poireaux à un sixième fixe pour qu'ils
+  s'alignent d'une composition à l'autre, débordement des images (arme,
+  chapeau) contenu dans le panneau. Correction au passage d'une régression du
+  lot 3 : `<v-checkbox-btn>` attrapé par le remplacement en masse.
+  **Le projet Claude Design est lisible avec l'outil DesignSync**
+  (`projectId` 019deda9-539b-7467-ad87-bac4e42c3ae0) : `handoff/tokens.css`,
+  `handoff/components.css` et un écran par page dans `screens/`. À consulter
+  avant de deviner une valeur. Son écran équipe n'a pas de compositions : la
+  mise en page à deux colonnes est une décision de Pierre, pas du mockup.
 
 ## Questions ouvertes
 
