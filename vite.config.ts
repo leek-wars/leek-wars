@@ -331,6 +331,10 @@ function gameDataPlugin(): Plugin {
 	}
 	const caches: Record<string, ApiCache> = {}
 	let lastInjection = 'null' // Shared between middleware and transformIndexHtml
+	// Idem pour la classe de <body> : en production c'est le PHP qui la pose
+	// depuis le cookie `dark` (cf. api/http/index.php), le dev doit faire parein
+	// sinon le flash blanc au chargement n'existe qu'ici.
+	let lastBodyClass = ''
 
 	function getCache(api: string): ApiCache {
 		if (!caches[api]) {
@@ -373,6 +377,10 @@ function gameDataPlugin(): Plugin {
 				// Only intercept page navigations (not assets, HMR, etc.)
 				const accept = req.headers.accept || ''
 				if (!accept.includes('text/html')) return next()
+
+				// Posé avant tout `return next()` en cas d'échec du fetch des données :
+				// la classe de thème ne dépend pas de l'API.
+				lastBodyClass = /(?:^|;\s*)dark=1(?:;|$)/.test(req.headers.cookie || '') ? 'dark' : ''
 
 				// Utiliser la même source API que le client selon le port d'accès
 				const host = req.headers['x-forwarded-host'] as string || req.headers.host || ''
@@ -436,7 +444,16 @@ function gameDataPlugin(): Plugin {
 		},
 
 		transformIndexHtml(html) {
-			return html.replace('var __DATA__=null', 'var __DATA__=' + lastInjection)
+			html = html.replace('var __DATA__=null', 'var __DATA__=' + lastInjection)
+			if (lastBodyClass) {
+				// Même précaution que le PHP : compléter la classe existante (le
+				// build beta pose `<body class="beta">`) plutôt qu'ajouter un
+				// second attribut, que le navigateur ignorerait.
+				html = /<body class="/.test(html)
+					? html.replace(/<body class="([^"]*)"/, '<body class="$1 ' + lastBodyClass + '"')
+					: html.replace('<body>', '<body class="' + lastBodyClass + '">')
+			}
+			return html
 		}
 	}
 }
