@@ -79,6 +79,8 @@ html body.v2 {
 	/* L'ombre pixel n'existe que dans le v3 ; présente ici pour la parité des
 	   variables. Un composant du v2 ne doit jamais la consommer. */
 	--shadow-pixel: none;
+	--shadow-pixel-small: none;
+	--shadow-pixel-pressed: none;
 
 	/* Tooltips : les valeurs historiques de global.scss, au pixel près. La
 	   flèche garde son alpha de 0.9 d'origine. */

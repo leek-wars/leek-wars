@@ -87,6 +87,11 @@ body {
 	   façon pixel — celle du mockup. Réservée aux surfaces flottantes
 	   (dialogues, menus déroulants), les panneaux posés gardent le trait seul. */
 	--shadow-pixel: 4px 4px 0 #0E1410;
+	/* La variante courte, pour les boutons d'accent : le mockup les pose à 3 px
+	   au repos et passe à 4 px au survol (`--shadow-pixel`) en décalant le
+	   bouton d'un pixel, ce qui le fait « se lever ». */
+	--shadow-pixel-small: 3px 3px 0 #0E1410;
+	--shadow-pixel-pressed: 2px 2px 0 #0E1410;
 
 	/* Tooltips : même surface qu'un en-tête de panneau, le trait et l'ombre
 	   pixel les détachent (posés dans la coquille). La flèche n'existe plus en
@@ -201,6 +206,8 @@ body {
 		--selection-color: #0B0F0B;
 
 		--shadow-pixel: 4px 4px 0 #000;
+		--shadow-pixel-small: 3px 3px 0 #000;
+		--shadow-pixel-pressed: 2px 2px 0 #000;
 
 		--tooltip-background: #11161A;
 		--tooltip-color: #E8F0E6;
