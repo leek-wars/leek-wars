@@ -49,7 +49,7 @@
 					</div>
 				</template>
 				<template v-else>
-					<v-text-field v-model="commitMessage" :placeholder="$t('commit_message')" density="compact" variant="solo-filled" flat hide-details class="commit-input" :theme="isDark ? 'dark' : 'light'" @keyup.enter="commit" @keyup.stop />
+					<lw-input v-model="commitMessage" :placeholder="$t('commit_message')" class="commit-input" @keyup.enter="commit" @keyup.stop />
 					<div class="commit-btn" :class="{disabled: !canCommit}" :title="$t('commit')" @click="commit">
 						<v-icon>mdi-check</v-icon>
 					</div>

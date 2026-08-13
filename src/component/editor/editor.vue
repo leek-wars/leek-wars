@@ -262,8 +262,8 @@
 
 		<popup v-model="cloneDialog" :width="480" icon="mdi-git" :title="$t('clone_repo')">
 			<div class="clone-dialog">
-				<v-text-field v-model="cloneUrl" :label="$t('clone_url')" :placeholder="$t('clone_url_placeholder')" variant="solo" density="compact" autofocus @input="onCloneUrlInput" @keyup.enter="doClone" @keyup.stop />
-				<v-text-field v-model="cloneFolder" :label="$t('clone_folder')" variant="solo" density="compact" :error-messages="cloneFolderError ? [cloneFolderError] : []" @keyup.enter="doClone" @keyup.stop />
+				<lw-input v-model="cloneUrl" :label="$t('clone_url')" :placeholder="$t('clone_url_placeholder')" autofocus @input="onCloneUrlInput" @keyup.enter="doClone" @keyup.stop />
+				<lw-input v-model="cloneFolder" :label="$t('clone_folder')" :error-messages="cloneFolderError ? [cloneFolderError] : []" @keyup.enter="doClone" @keyup.stop />
 				<div class="clone-hint">
 					<v-icon size="small">mdi-information-outline</v-icon>
 					<span>{{ $t('clone_auth_hint') }}</span>

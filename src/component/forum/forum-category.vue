@@ -302,7 +302,7 @@
 					</lw-radio-group>
 					<template v-if="$store.state.farmer && $store.state.farmer.admin">
 						<div>
-							<v-text-field v-model.number="createRelease" label="Release" type="number" placeholder="245" hide-details variant="outlined" density="compact" />
+							<lw-input v-model.number="createRelease" label="Release" type="number" placeholder="245" />
 						</div>
 						<lw-checkbox v-model="createHidden" :label="$t('hidden_topic')" />
 					</template>
