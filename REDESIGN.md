@@ -26,7 +26,10 @@ Décisions de Pierre — ne pas les rediscuter, les appliquer.
    autocomplétions) se détachent du fond par la **même bordure que les
    panneaux** (`--border-strong`). Seule ombre admise (2026-08-12) :
    **l'ombre pixel du mockup** (`--shadow-pixel`, `4px 4px 0`, zéro flou),
-   réservée aux surfaces flottantes.
+   réservée aux surfaces flottantes. Nuance (2026-08-13) : un **halo** —
+   émission de lumière sans direction (`box-shadow` interne floue) — n'est pas
+   une ombre d'élévation et est admis pour les éléments « précieux »
+   (notifications trophée/bigwin), avec reflet animé au survol.
 2. **Pas d'arrondis, zéro exception** (2026-08-12). Angles francs partout :
    tous les `--radius*` du v3 valent 0, **y compris `--radius-tiny`** (les
    2 px que s'autorisait le mockup sautent). Restent les valeurs en dur, voir
@@ -53,6 +56,11 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
 
 - Typo d'affichage pixel : `Press Start 2P` sur `/redesign` (latin seul),
   `Pixelify Sans` sur le site (couvre le cyrillique), Roboto en repli CJK.
+- Typo de corps (2026-08-13, demande de Pierre — « j'en peux plus de
+  Roboto ») : **Inter**, le `--f-body` du mockup, via `--font-body`
+  (v2 : Roboto inchangé). Auto-hébergée en 4 sous-ensembles woff2
+  (latin, latin-ext, cyrillique, cyrillique-ext — le cyrillique manquait
+  à notre Roboto), repli Roboto puis chaîne système pour le CJK.
 - Vert de marque : `#7CFF6B` (néon) en sombre ; en clair `#146128` et non le
   `#1F8A3B` du mockup (contraste mesuré comme encre : 3,9 → insuffisant).
 - Tout écart de couleur se **mesure à la sonde de contraste** (seuil 4,5:1
@@ -130,6 +138,16 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     a déjà son trait de focus).
   - Vérifié bêta locale (accueil, /notifications), deux thèmes, v2 intact
     (dégradés, rond, cristal débordant, rouge historique).
+
+- **2026-08-13, lot 5** : retour de Pierre sur les notifications spéciales
+  (« le liseré seul est trop sec ») → halo doré/bleu (teinte d'accent 10 %,
+  `box-shadow` interne, `color-mix` sur `--rank-first`/`--info`), qui
+  s'intensifie au survol avec un reflet qui balaie la rangée
+  (`@keyframes lw-notif-shine`). Le coffre du menu (qui porte aussi
+  `notif-trophy`) hérite du halo. Et bascule de la police de corps sur
+  **Inter** (voir Partis pris) : variable `--font-body` dans les deux thèmes,
+  7 points de consommation convertis, plus un seul `Roboto` en dur hors
+  `@font-face`.
 
 ## Questions ouvertes
 

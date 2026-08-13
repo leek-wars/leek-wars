@@ -22,6 +22,10 @@ body {
 	   n'ont pas d'equivalent pixel : le navigateur y retombe glyphe par glyphe. */
 	--font-display: "Pixelify Sans", "Roboto", sans-serif;
 
+	/* Police de corps : l'Inter du mockup (--f-body). Roboto reste en repli
+	   pour les glyphes hors sous-ensembles, puis la chaîne système. */
+	--font-body: "Inter", "Roboto", system-ui, sans-serif;
+
 	/* Marque.
 	 *
 	 * #146128 et non le #1F8A3B du mockup : mesure faite, le vert sert 113 fois
