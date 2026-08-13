@@ -749,5 +749,17 @@
 	"enchanting": "Fatato",
 	"enchanting_f": "Fatato",
 	"polyglot": "Poliglotta",
-	"polyglot_f": "Poliglotta"
+	"polyglot_f": "Poliglotta",
+	"apprentice": "Apprendista",
+	"apprentice_f": "Apprendista",
+	"artisan": "Artigiano",
+	"artisan_f": "Artigiana",
+	"blacksmith": "Fabbro",
+	"blacksmith_f": "Fabbra",
+	"cyclops": "Ciclope",
+	"cyclops_f": "Ciclope",
+	"hephaestus": "Efesto",
+	"hephaestus_f": "Efesto",
+	"tetrarch": "Tetrarca",
+	"tetrarch_f": "Tetrarca"
 }

@@ -726,5 +726,17 @@
 	"enchanting": "Betoverend",
 	"enchanting_f": "Betoverend",
 	"polyglot": "Polyglot",
-	"polyglot_f": "Polyglot"
+	"polyglot_f": "Polyglot",
+	"apprentice": "Leerling",
+	"apprentice_f": "Leerling",
+	"artisan": "Ambachtsman",
+	"artisan_f": "Ambachtsvrouw",
+	"blacksmith": "Smid",
+	"blacksmith_f": "Smid",
+	"cyclops": "Cycloop",
+	"cyclops_f": "Cycloop",
+	"hephaestus": "Hephaistos",
+	"hephaestus_f": "Hephaistos",
+	"tetrarch": "Tetrarch",
+	"tetrarch_f": "Tetrarch"
 }

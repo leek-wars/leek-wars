@@ -726,5 +726,17 @@
 	"enchanting": "Feenhaft",
 	"enchanting_f": "Feenhaft",
 	"polyglot": "Polyglott",
-	"polyglot_f": "Polyglott"
+	"polyglot_f": "Polyglott",
+	"apprentice": "Lehrling",
+	"apprentice_f": "Lehrling",
+	"artisan": "Handwerker",
+	"artisan_f": "Handwerkerin",
+	"blacksmith": "Schmied",
+	"blacksmith_f": "Schmiedin",
+	"cyclops": "Zyklop",
+	"cyclops_f": "Zyklop",
+	"hephaestus": "Hephaistos",
+	"hephaestus_f": "Hephaistos",
+	"tetrarch": "Tetrarch",
+	"tetrarch_f": "Tetrarch"
 }

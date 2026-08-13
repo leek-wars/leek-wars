@@ -726,5 +726,17 @@
 	"enchanting": "Eventyrlig",
 	"enchanting_f": "Eventyrlig",
 	"polyglot": "Polyglott",
-	"polyglot_f": "Polyglott"
+	"polyglot_f": "Polyglott",
+	"apprentice": "Lærling",
+	"apprentice_f": "Lærling",
+	"artisan": "Håndverker",
+	"artisan_f": "Håndverker",
+	"blacksmith": "Smed",
+	"blacksmith_f": "Smed",
+	"cyclops": "Kyklop",
+	"cyclops_f": "Kyklop",
+	"hephaestus": "Hefaistos",
+	"hephaestus_f": "Hefaistos",
+	"tetrarch": "Tetrark",
+	"tetrarch_f": "Tetrark"
 }

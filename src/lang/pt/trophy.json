@@ -749,5 +749,17 @@
 	"enchanting": "Feérico",
 	"enchanting_f": "Feérico",
 	"polyglot": "Poliglota",
-	"polyglot_f": "Poliglota"
+	"polyglot_f": "Poliglota",
+	"apprentice": "Aprendiz",
+	"apprentice_f": "Aprendiza",
+	"artisan": "Artesão",
+	"artisan_f": "Artesã",
+	"blacksmith": "Ferreiro",
+	"blacksmith_f": "Ferreira",
+	"cyclops": "Ciclope",
+	"cyclops_f": "Ciclope",
+	"hephaestus": "Hefesto",
+	"hephaestus_f": "Hefesto",
+	"tetrarch": "Tetrarca",
+	"tetrarch_f": "Tetrarca"
 }

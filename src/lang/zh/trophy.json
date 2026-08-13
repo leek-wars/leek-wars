@@ -726,5 +726,17 @@
 	"enchanting": "梦幻",
 	"enchanting_f": "梦幻",
 	"polyglot": "多语言者",
-	"polyglot_f": "多语言者"
+	"polyglot_f": "多语言者",
+	"apprentice": "学徒",
+	"apprentice_f": "学徒",
+	"artisan": "工匠",
+	"artisan_f": "工匠",
+	"blacksmith": "铁匠",
+	"blacksmith_f": "铁匠",
+	"cyclops": "独眼巨人",
+	"cyclops_f": "独眼巨人",
+	"hephaestus": "赫菲斯托斯",
+	"hephaestus_f": "赫菲斯托斯",
+	"tetrarch": "四冠王",
+	"tetrarch_f": "四冠王"
 }

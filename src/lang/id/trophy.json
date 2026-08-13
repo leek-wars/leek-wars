@@ -726,5 +726,17 @@
 	"enchanting": "Ajaib",
 	"enchanting_f": "Ajaib",
 	"polyglot": "Poliglot",
-	"polyglot_f": "Poliglot"
+	"polyglot_f": "Poliglot",
+	"apprentice": "Magang",
+	"apprentice_f": "Magang",
+	"artisan": "Perajin",
+	"artisan_f": "Perajin",
+	"blacksmith": "Penempa",
+	"blacksmith_f": "Penempa",
+	"cyclops": "Siklop",
+	"cyclops_f": "Siklop",
+	"hephaestus": "Hefaistos",
+	"hephaestus_f": "Hefaistos",
+	"tetrarch": "Tetrark",
+	"tetrarch_f": "Tetrark"
 }
