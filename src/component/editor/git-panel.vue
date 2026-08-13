@@ -173,7 +173,7 @@
 						</v-list-item>
 					</template>
 					<v-divider />
-					<v-list-item prepend-icon="mdi-refresh" :disabled="fetching" @click.stop="fetchRemote">
+					<v-list-item prepend-icon="mdi-refresh" :disabled="fetching || !hasRemote" @click.stop="fetchRemote">
 						<v-list-item-title>{{ fetching ? $t('fetching') : $t('fetch') }}</v-list-item-title>
 					</v-list-item>
 					<v-list-item prepend-icon="mdi-plus" class="create-branch" @click="promptCreateBranch">
@@ -417,6 +417,10 @@
 	}
 
 	watch(selectedRepo, (repo) => {
+		// Les bannières parlent du dépôt qu'on quitte : les garder afficherait une
+		// erreur de push ou de fetch au-dessus d'un autre dépôt.
+		syncError.value = ''
+		syncInfo.value = ''
 		if (repo === '') {
 			changes.value = []
 			branch.value = ''
@@ -447,7 +451,12 @@
 
 	async function fetchRemote() {
 		if (fetching.value) return
+		// Un dépôt volontairement local n'a rien à actualiser : sans cette garde le
+		// simple fait d'ouvrir le sélecteur de branches déclenchait un git/fetch voué
+		// à l'échec, et donc une bannière rouge à chaque ouverture.
+		if (!hasRemote.value) { await loadBranches(); return }
 		fetching.value = true
+		syncError.value = ''
 		try {
 			await gitCall('git/fetch', { folder: selectedRepo.value })
 			lastFetchAt[selectedRepo.value] = Date.now()
