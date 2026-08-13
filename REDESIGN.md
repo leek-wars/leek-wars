@@ -168,6 +168,15 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   avant de deviner une valeur. Son écran équipe n'a pas de compositions : la
   mise en page à deux colonnes est une décision de Pierre, pas du mockup.
 
+- **2026-08-13, lot 7** : reste des intitulés en police d'affichage repassés au
+  facteur 1,43 (sections du menu et en-têtes du panneau social 10 → 13 px,
+  en-têtes de tableau et du forum 11 → 12 px ; en-têtes de panneau et
+  pagination étaient déjà au-dessus de leur équivalent converti).
+- **2026-08-13, lot 8** : ombre pixel sur les boutons d'accent, comme le décrit
+  le guide d'intégration du projet Design (3 px au repos, 4 px + décalage d'un
+  pixel au survol, 2 px enfoncé au clic). Réservée aux boutons portant un aplat
+  de couleur ; jetons `--shadow-pixel-small` / `--shadow-pixel-pressed`.
+
 ## Questions ouvertes
 
 - **Avatars carrés partout ?** Le mockup les fait carrés et bordés ; pour
