@@ -6,8 +6,9 @@
 				<router-link :to="'/trophies/' + farmerId" class="trophy-line" v-bind="props">
 					<trophy-icon :code="trophy.code" class="trophy" />
 					<div class="info">
-						<span class="name">{{ trophy.name }}</span>
-						<span class="rarity">{{ trophy.rarity }}%</span>
+						<!-- L'API ne renvoie plus de nom traduit, seulement le code -->
+						<span class="name">{{ $t('trophy.' + trophy.code) }}</span>
+						<span class="rarity">{{ rarityText(trophy.rarity) }}</span>
 					</div>
 				</router-link>
 			</rich-tooltip-trophy>
@@ -39,6 +40,14 @@
 	const linesEl = ref<HTMLElement | null>(null)
 	const lineCount = useFitCount(linesEl, '.trophy-line', 10, 4)
 	const visibleRarest = computed(() => rarest.value.slice(0, lineCount.value))
+
+	// Rareté lisible : arrondie selon l'ordre de grandeur, pas de queue de décimales.
+	function rarityText(rarity: number): string {
+		if (rarity >= 1) return Math.round(rarity) + '%'
+		if (rarity >= 0.1) return rarity.toFixed(1) + '%'
+		if (rarity >= 0.01) return rarity.toFixed(2) + '%'
+		return '< 0.01%'
+	}
 
 	if (store.state.farmer) {
 		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {

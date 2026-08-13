@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "Live",
+	"live_trophy": "heeft de trofee \"{0}\" ontgrendeld",
+	"live_victories": "bereikt {0} overwinningen",
+	"live_bosses": "bereikt {0} verslagen bazen",
+	"live_tournaments": "bereikt {0} gewonnen toernooien",
+	"live_topic": "heeft het onderwerp aangemaakt:",
+	"live_empty": "Geen recente gebeurtenissen."
 }

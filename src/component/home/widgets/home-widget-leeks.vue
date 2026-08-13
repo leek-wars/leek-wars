@@ -33,12 +33,14 @@
 </script>
 
 <style lang="scss" scoped>
+	// Répartition équitable des cartes dans l'espace du panel : sur un grand
+	// panel, les poireaux se répartissent au lieu de rester agglutinés au centre.
 	.leeks-widget {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 10px;
-		justify-content: center;
-		align-content: center;
+		justify-content: space-evenly;
+		align-content: space-evenly;
 		height: 100%;
 	}
 	.leek {

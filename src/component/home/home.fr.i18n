@@ -48,5 +48,12 @@
 	"stat_draws": "Nuls",
 	"stat_defeats": "Défaites",
 	"stat_tournaments": "Tournois",
-	"no_leek": "Aucun poireau."
+	"no_leek": "Aucun poireau.",
+	"widget_live": "En direct",
+	"live_trophy": "a débloqué le trophée « {0} »",
+	"live_victories": "atteint les {0} victoires",
+	"live_bosses": "atteint les {0} boss tués",
+	"live_tournaments": "atteint les {0} tournois gagnés",
+	"live_topic": "a créé le sujet",
+	"live_empty": "Aucun événement récent."
 }

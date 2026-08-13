@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "实时动态",
+	"live_trophy": "解锁了奖杯「{0}」",
+	"live_victories": "达到 {0} 场胜利",
+	"live_bosses": "达到击杀 {0} 个首领",
+	"live_tournaments": "达到 {0} 次锦标赛冠军",
+	"live_topic": "创建了主题",
+	"live_empty": "暂无最近事件。"
 }

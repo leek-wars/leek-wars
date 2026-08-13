@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "Прямой эфир",
+	"live_trophy": "разблокировал(а) трофей «{0}»",
+	"live_victories": "достигает {0} побед",
+	"live_bosses": "достигает {0} убитых боссов",
+	"live_tournaments": "достигает {0} выигранных турниров",
+	"live_topic": "создал(а) тему",
+	"live_empty": "Нет недавних событий."
 }

@@ -145,14 +145,26 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
-		// Une seule rangée : les trophées en surplus passent à la ligne
-		// et sont entièrement masqués (pas de coupe partielle).
-		height: 40px;
+		// Une seule rangée : les icônes rétrécissent pour que les 12 tiennent
+		// en largeur plutôt que d'en masquer. Overflow hidden en dernier filet.
+		max-height: 40px;
 		overflow: hidden;
 	}
 	.trophy-row .trophy {
-		width: 40px;
-		height: 40px;
+		width: clamp(24px, calc((100cqw - 66px) / 12), 40px);
+		height: clamp(24px, calc((100cqw - 66px) / 12), 40px);
+	}
+	// Panel bas : résumé compact pour laisser la place aux sections.
+	@container (max-height: 260px) {
+		.stat {
+			padding: 5px;
+		}
+		.stat .value {
+			font-size: 18px;
+		}
+		.stat .value .total {
+			font-size: 13px;
+		}
 	}
 	.none {
 		color: var(--text-color-secondary);

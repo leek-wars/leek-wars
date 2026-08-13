@@ -9,12 +9,14 @@
 				</div>
 				<div class="bar"><div class="fill" :class="{ complete: totalOwned === totalCount && totalCount > 0 }" :style="{ width: percent(totalOwned, totalCount) + '%' }"></div></div>
 			</div>
-			<div class="cats-grid">
-				<div v-for="c in stats" :key="c.type" class="cat" :class="{ complete: c.owned === c.total }">
-					<v-progress-circular :model-value="percent(c.owned, c.total)" :size="54" :width="4" class="ring">
-						<v-icon class="cat-icon">{{ icons[c.type] }}</v-icon>
-					</v-progress-circular>
-					<span class="cat-count">{{ c.owned }}/{{ c.total }}</span>
+			<div ref="catsEl" class="cats">
+				<div class="cats-grid">
+					<div v-for="c in visibleStats" :key="c.type" class="cat" :class="{ complete: c.owned === c.total }">
+						<v-progress-circular :model-value="percent(c.owned, c.total)" :size="54" :width="4" class="ring">
+							<v-icon class="cat-icon">{{ icons[c.type] }}</v-icon>
+						</v-progress-circular>
+						<span class="cat-count">{{ c.owned }}/{{ c.total }}</span>
+					</div>
 				</div>
 			</div>
 		</template>
@@ -25,6 +27,7 @@
 	import { computed, ref } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS } from '@/model/item'
 
 	defineOptions({ name: 'HomeWidgetCollection' })
@@ -66,6 +69,11 @@
 	const totalCount = computed(() => stats.value.reduce((s, c) => s + c.total, 0))
 	const totalOwned = computed(() => stats.value.reduce((s, c) => s + c.owned, 0))
 
+	// Autant de catégories que l'espace du panel le permet, jamais coupées.
+	const catsEl = ref<HTMLElement | null>(null)
+	const catCount = useFitCount(catsEl, '.cat', 8, 12)
+	const visibleStats = computed(() => stats.value.slice(0, catCount.value))
+
 	function percent(o: number, t: number): number {
 		return t ? Math.floor(o / t * 100) : 0
 	}
@@ -92,6 +100,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
+		height: 100%;
+	}
+	// Les catégories occupent la hauteur restante ; on n'affiche que les
+	// rangées complètes (useFitCount), overflow hidden en filet.
+	.cats {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
 	}
 	.overall-head {
 		display: flex;
@@ -150,5 +166,18 @@
 	.cat-count {
 		font-size: 12px;
 		color: var(--text-color-secondary);
+	}
+	// Panel bas : anneaux réduits, on diminue au lieu de tronquer.
+	@container (max-height: 260px) {
+		.cat :deep(.v-progress-circular) {
+			width: 44px !important;
+			height: 44px !important;
+		}
+		.cat-icon {
+			font-size: 18px;
+		}
+		.cat-count {
+			font-size: 11px;
+		}
 	}
 </style>

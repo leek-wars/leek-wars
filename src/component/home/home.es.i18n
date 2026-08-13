@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "En directo",
+	"live_trophy": "ha desbloqueado el trofeo «{0}»",
+	"live_victories": "alcanza las {0} victorias",
+	"live_bosses": "alcanza los {0} jefes derrotados",
+	"live_tournaments": "alcanza los {0} torneos ganados",
+	"live_topic": "ha creado el tema",
+	"live_empty": "Ningún evento reciente."
 }

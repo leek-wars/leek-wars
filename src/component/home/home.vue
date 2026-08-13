@@ -42,7 +42,7 @@
 		<div ref="gridEl" class="grid-stack" :class="{ editing: editMode }">
 			<div v-for="widget in widgets" :key="widget.id" class="grid-stack-item" :gs-id="widget.id" :gs-x="widget.x" :gs-y="widget.y" :gs-w="widget.w" :gs-h="widget.h">
 				<div class="grid-stack-item-content">
-					<panel :title="t('widget_' + widget.type)" :icon="widgetMeta[widget.type].icon" class="widget-panel" :class="{ 'no-scroll': widgetMeta[widget.type].noScroll }">
+					<panel :title="widgetTitle(widget)" :icon="widgetMeta[widget.type].icon" class="widget-panel" :class="{ 'no-scroll': widgetMeta[widget.type].noScroll }">
 						<template #actions>
 							<template v-if="editMode">
 								<v-menu v-if="widgetMeta[widget.type].configurable" :close-on-content-click="false" location="bottom end">
@@ -73,13 +73,17 @@
 								<div class="button flat" @click="removeWidget(widget.id)">
 									<v-icon>mdi-close</v-icon>
 								</div>
-								<div class="button flat drag-handle">
-									<v-icon>mdi-drag</v-icon>
-								</div>
 							</template>
-							<router-link v-else-if="widgetMeta[widget.type].link" :to="widgetMeta[widget.type].link!" class="button flat">
+							<router-link v-if="!editMode && widgetMeta[widget.type].link" :to="widgetMeta[widget.type].link!" class="button flat">
 								<v-icon>mdi-arrow-right</v-icon>
 							</router-link>
+							<!-- v-show et pas v-if : gridstack résout ses poignées de drag à
+								l'activation ; l'élément doit exister en permanence dans le DOM,
+								sinon les poignées deviennent obsolètes ou retombent sur l'item
+								entier selon le moment de l'activation. -->
+							<div v-show="editMode" class="button flat drag-handle">
+								<v-icon>mdi-drag</v-icon>
+							</div>
 						</template>
 						<component :is="widgetMeta[widget.type].component" v-bind="widgetProps(widget)" />
 					</panel>
@@ -91,6 +95,7 @@
 
 <script setup lang="ts">
 	import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
 	import { GridStack, type GridStackWidget } from 'gridstack'
 	import 'gridstack/dist/gridstack.min.css'
 	import { LeekWars } from '@/model/leekwars'
@@ -107,6 +112,7 @@
 	import HomeWidgetTournaments from '@/component/home/widgets/home-widget-tournaments.vue'
 	import HomeWidgetClassement from '@/component/home/widgets/home-widget-classement.vue'
 	import HomeWidgetLeekStats from '@/component/home/widgets/home-widget-leek-stats.vue'
+	import HomeWidgetLive from '@/component/home/widgets/home-widget-live.vue'
 
 	defineOptions({ name: 'Home', i18n: {}, mixins: [...mixins] })
 
@@ -134,13 +140,15 @@
 		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), defaultW: 6, defaultH: 4, minW: 3, minH: 3, link: '/farmer', noScroll: true },
 		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), defaultW: 6, defaultH: 4, minW: 4, minH: 3, link: '/farmer', noScroll: true },
 		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 4, defaultH: 3, minW: 3, minH: 2, link: '/trophies', noScroll: true },
-		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 4, defaultH: 5, minW: 3, minH: 3, multi: true, configurable: true },
-		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/collection' },
+		// noScroll : le panel ne défile jamais, la zone de messages du chat gère son propre défilement.
+		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 4, defaultH: 5, minW: 3, minH: 3, multi: true, configurable: true, noScroll: true },
+		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/collection', noScroll: true },
 		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 4, defaultH: 4, minW: 3, minH: 3 },
 		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 4, defaultH: 5, minW: 3, minH: 3, link: '/ranking', multi: true, configurable: true },
 		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true, noScroll: true },
 		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies', noScroll: true },
 		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum' },
+		live: { icon: 'mdi-access-point', component: markRaw(HomeWidgetLive), defaultW: 4, defaultH: 5, minW: 3, minH: 3 },
 		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 4, defaultH: 3, minW: 3, minH: 2 },
 	}
 	const WIDGET_TYPES = Object.keys(widgetMeta)
@@ -223,6 +231,30 @@
 	function widgetProps(widget: WidgetInstance): Record<string, unknown> {
 		return widgetMeta[widget.type].configurable ? { params: widget.params } : {}
 	}
+
+	const { locale } = useI18n()
+
+	// Titre du panel : le widget chat précise son canal (« Chat — Général »),
+	// avec la même résolution que le widget lui-même : chat de groupe imposé,
+	// canal choisi dans les params, sinon chat public de la langue.
+	function widgetTitle(widget: WidgetInstance): string {
+		const base = t('widget_' + widget.type)
+		if (widget.type !== 'chat') return base
+		const farmer = store.state.farmer
+		let id: number | null = null
+		if (farmer?.group && farmer.group.chat && !farmer.public_chat_enabled) {
+			id = farmer.group.chat
+		} else if (farmer?.public_chat_enabled) {
+			const chosen = widget.params.chat as number | undefined
+			if (chosen && LeekWars.isPublicChat(chosen)) id = chosen
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			else id = (LeekWars.languages as any)[locale.value]?.chat ?? null
+		}
+		if (id == null) return base
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const name = chatChannels.value.find(c => c.id === id)?.name ?? (store.state.chat as any)[id]?.name
+		return name ? base + ' — ' + name : base
+	}
 	function chatOf(widget: WidgetInstance): number | undefined {
 		return widget.params.chat as number | undefined
 	}
@@ -303,8 +335,12 @@
 			margin: 6,
 			float: false,
 			staticGrid: true,
-			handle: '.drag-handle',
+			// Poignées de drag : l'icône dédiée ET la barre de titre du panel.
+			handle: '.drag-handle, .widget-panel > .header > h2',
 			minRow: 1,
+			// Pas d'animation à l'arrivée sur la page (les panels « voleraient »
+			// en place) ; réactivée après le premier rendu pour le drag & drop.
+			animate: false,
 			columnOpts: { breakpointForWindow: true, breakpoints: [{ w: 768, c: 1 }] }
 		}, gridEl.value)
 		if (!grid) return
@@ -313,6 +349,7 @@
 			if (el) grid.update(el, { minW: widgetMeta[w.type].minW, minH: widgetMeta[w.type].minH })
 		}
 		grid.on('change', persist)
+		requestAnimationFrame(() => requestAnimationFrame(() => grid?.setAnimation(true)))
 	}
 
 	function toggleEdit() {
@@ -321,10 +358,35 @@
 		grid.setStatic(!editMode.value)
 	}
 
+	// Positions actuelles des widgets : la vérité vient de la grille (les x/y de
+	// widgets.value ne sont pas resynchronisés après un drag), avec repli sur l'état.
+	function currentRects(): { x: number, y: number, w: number, h: number }[] {
+		if (grid) {
+			const nodes = grid.save(false, false) as GridStackWidget[]
+			return nodes.map(n => ({ x: n.x ?? 0, y: n.y ?? 0, w: n.w ?? 1, h: n.h ?? 1 }))
+		}
+		return widgets.value
+	}
+
 	function nextFreeY(): number {
 		let maxY = 0
-		for (const w of widgets.value) maxY = Math.max(maxY, w.y + w.h)
+		for (const r of currentRects()) maxY = Math.max(maxY, r.y + r.h)
 		return maxY
+	}
+
+	// Premier emplacement (haut-gauche) où un widget w×h tient sans chevauchement :
+	// un widget ajouté complète les lignes existantes au lieu d'aller sous tout.
+	function firstFreePosition(w: number, h: number): { x: number, y: number } {
+		const rects = currentRects()
+		const bottom = nextFreeY()
+		for (let y = 0; y <= bottom; y++) {
+			for (let x = 0; x <= COLUMNS - w; x++) {
+				if (!rects.some(r => x < r.x + r.w && r.x < x + w && y < r.y + r.h && r.y < y + h)) {
+					return { x, y }
+				}
+			}
+		}
+		return { x: 0, y: bottom }
 	}
 
 	// id unique : première instance = type, puis type-2, type-3...
@@ -340,7 +402,8 @@
 		const def = widgetMeta[type]
 		if (!def.multi && widgets.value.some(w => w.type === type)) return
 		const id = genId(type)
-		widgets.value.push({ id, type, x: 0, y: nextFreeY(), w: def.defaultW, h: def.defaultH, params: {} })
+		const pos = firstFreePosition(def.defaultW, def.defaultH)
+		widgets.value.push({ id, type, x: pos.x, y: pos.y, w: def.defaultW, h: def.defaultH, params: {} })
 		refreshAvailable()
 		nextTick(() => {
 			const el = gridEl.value?.querySelector(`[gs-id="${id}"]`) as HTMLElement | null
@@ -422,6 +485,20 @@
 		height: 100%;
 		margin-bottom: 0;
 	}
+	// Icônes d'en-tête plus discrètes sur les widgets que sur les grands
+	// panels du site (titre et boutons d'action).
+	.widget-panel:deep(> .header h2 .v-icon) {
+		font-size: 18px;
+	}
+	.widget-panel:deep(> .header .actions .button .v-icon) {
+		font-size: 18px;
+		width: 18px;
+		height: 18px;
+		padding: 9px 0;
+	}
+	.widget-panel:deep(> .header .actions .button) {
+		padding: 0 8px;
+	}
 	// En-tête fixe, seul le contenu défile. Pas d'overscroll-behavior: contain ici :
 	// il bloquerait la molette même sur un widget sans débord, et la page ne
 	// défilerait plus dès que la souris est sur un panel.
@@ -442,6 +519,13 @@
 		cursor: grab;
 	}
 	.grid-stack.editing .drag-handle:active {
+		cursor: grabbing;
+	}
+	// La barre de titre est aussi une poignée de drag en mode édition.
+	.grid-stack.editing .widget-panel:deep(> .header > h2) {
+		cursor: grab;
+	}
+	.grid-stack.editing .widget-panel:deep(> .header > h2:active) {
 		cursor: grabbing;
 	}
 	.widget-config {

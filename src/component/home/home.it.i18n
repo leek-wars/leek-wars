@@ -48,5 +48,12 @@
 	"stat_draws": "Pareggi",
 	"stat_defeats": "Sconfitte",
 	"stat_tournaments": "Tornei",
-	"no_leek": "Nessun porro."
+	"no_leek": "Nessun porro.",
+	"widget_live": "In diretta",
+	"live_trophy": "ha sbloccato il trofeo «{0}»",
+	"live_victories": "raggiunge {0} vittorie",
+	"live_bosses": "raggiunge {0} boss uccisi",
+	"live_tournaments": "raggiunge {0} tornei vinti",
+	"live_topic": "ha creato l'argomento",
+	"live_empty": "Nessun evento recente."
 }

@@ -48,5 +48,12 @@
 	"stat_draws": "Draws",
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
-	"no_leek": "No leek."
+	"no_leek": "No leek.",
+	"widget_live": "라이브",
+	"live_trophy": "님이 트로피 「{0}」 획득",
+	"live_victories": "님이 승리 {0}회 달성",
+	"live_bosses": "님이 보스 {0}마리 처치 달성",
+	"live_tournaments": "님이 토너먼트 {0}회 우승 달성",
+	"live_topic": "님이 주제를 작성함:",
+	"live_empty": "최근 이벤트가 없습니다."
 }
