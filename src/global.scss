@@ -85,13 +85,13 @@
 	color: inherit;
 }
 .v-overlay[role="tooltip"] .v-overlay__content, .v-tooltip__content {
-	background: #333 !important;
+	background: var(--tooltip-background) !important;
 	font-size: 14px !important;
 	pointer-events: none;
 	max-width: 250px !important;
 	transition: none !important;
 	position: absolute;
-	color: white;
+	color: var(--tooltip-color);
 	padding: 5px 16px;
 	border-radius: var(--radius);
 	line-height: 20px;
@@ -108,14 +108,14 @@
 		height: 0;
 		border-left: 4px solid transparent;
 		border-right: 4px solid transparent;
-		border-bottom: 4px solid rgba(51,51,51, 0.9);
+		border-bottom: 4px solid var(--tooltip-arrow);
 		content: " ";
 	}
 	&.top::before {
 		top: auto;
 		bottom: -7px;
 		border-bottom: none;
-		border-top: 7px solid rgba(51,51,51, 0.9);
+		border-top: 7px solid var(--tooltip-arrow);
 	}
 	&.left::before {
 		left: auto;
@@ -124,7 +124,7 @@
 		top: 50%;
 		border-bottom: none;
 		border-top: 4px solid transparent;
-		border-left: 7px solid rgba(51,51,51, 0.9);
+		border-left: 7px solid var(--tooltip-arrow);
 		border-bottom: 4px solid transparent;
 	}
 	&.fluid {
@@ -135,7 +135,7 @@
 	top: auto;
 	bottom: -7px;
 	border-bottom: none;
-	border-top: 7px solid rgba(51,51,51, 0.9);
+	border-top: 7px solid var(--tooltip-arrow);
 }
 .v-overlay[role="tooltip"] .v-overlay__content[style*="anchor-origin: left"]::before {
 	left: auto;
@@ -144,7 +144,7 @@
 	top: 50%;
 	border-bottom: none;
 	border-top: 4px solid transparent;
-	border-left: 7px solid rgba(51,51,51, 0.9);
+	border-left: 7px solid var(--tooltip-arrow);
 	border-bottom: 4px solid transparent;
 }
 
@@ -1179,15 +1179,3 @@ a.green-link {
 	// --v-selection-control-size: 24px;
 }
 
-.v-checkbox .v-selection-control {
-	--v-selection-control-size: 28px;
-	min-height: auto !important;
-	gap: 6px;
-}
-.v-switch .v-selection-control {
-	min-height: auto !important;
-	gap: 6px;
-	.v-selection-control__wrapper {
-		height: 30px;
-	}
-}

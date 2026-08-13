@@ -69,14 +69,27 @@ body {
 	--selection-background: #1F8A3B;
 	--selection-color: #FBF7E8;
 
-	/* Angles francs. Seul --radius-tiny garde 2 px, l'adoucissement que le
-	   mockup s'autorise sur les plus petits éléments. */
-	--radius-tiny: 2px;
+	/* Angles francs partout, zéro exception (décision du 2026-08-12) : même
+	   les 2 px que le mockup s'autorisait sur les plus petits éléments sautent.
+	   Le v2 garde ses 2 px. */
+	--radius-tiny: 0;
 	--radius-small: 0;
 	--radius: 0;
 	--radius-medium: 0;
 	--radius-large: 0;
 	--radius-pill: 0;
+
+	/* La seule ombre admise (décision du 2026-08-12) : franche, sans flou,
+	   façon pixel — celle du mockup. Réservée aux surfaces flottantes
+	   (dialogues, menus déroulants), les panneaux posés gardent le trait seul. */
+	--shadow-pixel: 4px 4px 0 #0E1410;
+
+	/* Tooltips : même surface qu'un en-tête de panneau, le trait et l'ombre
+	   pixel les détachent (posés dans la coquille). La flèche n'existe plus en
+	   v3 (angles francs) : la variable est là pour la parité avec le v2. */
+	--tooltip-background: #FBF7E8;
+	--tooltip-color: #0E1410;
+	--tooltip-arrow: transparent;
 
 	/* Chrome : panneaux. Pas d'ombre portée, la profondeur vient du trait. */
 	--panel-background: var(--background-secondary);
@@ -182,6 +195,11 @@ body {
 		--link-color: #5CE0FF;
 		--selection-background: #7CFF6B;
 		--selection-color: #0B0F0B;
+
+		--shadow-pixel: 4px 4px 0 #000;
+
+		--tooltip-background: #11161A;
+		--tooltip-color: #E8F0E6;
 
 		--panel-background: var(--background-secondary);
 		--panel-header-background: #11161A;

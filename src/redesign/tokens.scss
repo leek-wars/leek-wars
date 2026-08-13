@@ -38,7 +38,8 @@
 
 	/* Élément */
 	--radius: 0px; /* angles pixel, francs */
-	--radius-soft: 2px;
+	--radius-soft: 0px; /* décision du 2026-08-12 : zéro arrondi, même petit.
+	                       À reporter dans le projet Claude Design. */
 	--shadow-pixel: 4px 4px 0 #000;
 	--shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.4);
 }

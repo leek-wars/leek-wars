@@ -717,6 +717,151 @@ body:not(.v2) {
 		box-shadow: none;
 	}
 
+	/* ====== Ripple ======
+	 *
+	 * L'onde Material est le marqueur le plus voyant du framework : elle sort
+	 * du design (décision du 2026-08-12). Coupée au CSS et non par la config
+	 * Vuetify, qui est globale à l'app : le v2 garde la sienne.
+	 *
+	 * En échange, un vrai état pressé : le « pixel push » du mockup, l'élément
+	 * s'enfonce d'un pixel sous le clic. Appliqué aux boutons Vuetify et aux
+	 * barres d'action des dialogues ; les autres cliquables du site le
+	 * recevront composant par composant, avec leur état hover. */
+	.v-ripple__container {
+		display: none;
+	}
+	.v-btn:active,
+	.v-overlay__content.popup .actions > div:active {
+		transform: translate(1px, 1px);
+	}
+
+	/* ====== Dialogues ======
+	 *
+	 * Même traitement que les panneaux (décision du 2026-08-12) : la boîte se
+	 * détache par le trait et l'ombre pixel, plus par le halo flou de 50 px du
+	 * v2. Au passage, l'intérieur suivait encore le chrome sombre du v2 : titre
+	 * en --grey-13 (crème sur crème en thème clair), bouton de fermeture en
+	 * pavé --black, fonds translucides gris, barre d'actions en gris posé.
+	 * Tout repasse par les rôles du panneau. */
+	.v-overlay__content.popup {
+		border: 1px solid var(--border-strong);
+		box-shadow: var(--shadow-pixel);
+	}
+	.v-overlay__content.popup .title {
+		color: var(--panel-header-color);
+		border-bottom: 1px solid var(--border);
+	}
+	.v-overlay__content.popup .title .v-icon {
+		color: var(--panel-header-color);
+	}
+	.v-overlay__content.popup .title .option {
+		background: transparent;
+	}
+	.v-overlay__content.popup .title .option:hover {
+		background: var(--page-bar-tab-background-hover);
+	}
+	.v-overlay__content.popup .content {
+		background: var(--panel-background);
+	}
+	/* Barre d'actions : une surface et des traits, comme un pied de panneau.
+	   Les variantes .green et .red restent des aplats (action principale /
+	   destructrice), mais aux couleurs du thème plutôt qu'aux verts et rouges
+	   du v2, et avec l'encre calibrée pour le néon du mode sombre. */
+	.v-overlay__content.popup .actions > div:not(.green):not(.red) {
+		background: var(--panel-header-background);
+		color: var(--text-color);
+	}
+	.v-overlay__content.popup .actions > div:not(.green):not(.red):hover {
+		background: var(--background-row);
+		color: var(--primary);
+	}
+	.v-overlay__content.popup .actions > div:not(:last-child) {
+		border-right-color: var(--border);
+	}
+	.v-overlay__content.popup .actions > div.green {
+		color: var(--primary-text);
+	}
+	.v-overlay__content.popup .actions > div.green:hover {
+		background: var(--primary);
+		filter: brightness(1.1);
+	}
+	.v-overlay__content.popup .actions > div.red {
+		background: var(--error);
+		color: var(--primary-text);
+	}
+	.v-overlay__content.popup .actions > div.red:hover {
+		background: var(--error);
+		filter: brightness(1.1);
+	}
+
+	/* ====== Menus déroulants ======
+	 *
+	 * Vuetify les détache par l'ombre Material et arrondit ses listes. Même
+	 * traitement que les panneaux (décision du 2026-08-12) : un trait, l'ombre
+	 * pixel, la surface de panneau. Couvre les v-menu et les listes des
+	 * v-select, qui passent par le même overlay ; la surface est posée sur le
+	 * conteneur pour que les contenus maison en profitent aussi, et les
+	 * surfaces Vuetify internes deviennent transparentes pour ne pas la
+	 * repeindre. */
+	.v-menu > .v-overlay__content {
+		background: var(--panel-background);
+		border: 1px solid var(--border-strong);
+		border-radius: 0;
+		box-shadow: var(--shadow-pixel);
+	}
+	.v-menu > .v-overlay__content .v-list,
+	.v-menu > .v-overlay__content .v-sheet {
+		background: transparent;
+		color: var(--text-color);
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	/* ====== Tooltips ======
+	 *
+	 * La bulle grise à flèche de global.scss est passée aux variables
+	 * --tooltip-* ; ici on ajoute ce qui fait une surface flottante v3 : le
+	 * trait et l'ombre pixel. La flèche triangulaire disparaît : elle ne peut
+	 * pas porter le trait (deux triangles superposés sinon), et le rectangle
+	 * franc colle mieux aux angles pixel. */
+	.v-overlay[role="tooltip"] .v-overlay__content,
+	.v-tooltip__content {
+		border: 1px solid var(--border-strong);
+		box-shadow: var(--shadow-pixel);
+	}
+	.v-overlay[role="tooltip"] .v-overlay__content::before,
+	.v-tooltip__content::before {
+		display: none;
+	}
+
+	/* ====== Toasts ======
+	 *
+	 * La pilule noire translucide devenait invisible sur le fond sombre du v3.
+	 * Une surface flottante comme les autres : panneau, trait, ombre pixel.
+	 * L'animation d'apparition ne change pas. */
+	.toast {
+		background: var(--panel-background);
+		color: var(--text-color);
+		border: 1px solid var(--border-strong);
+		box-shadow: var(--shadow-pixel);
+	}
+
+	/* ====== Focus clavier ======
+	 *
+	 * Le ripple emportait le seul retour visuel du clavier sur les composants
+	 * Material : un anneau vert le remplace, uniquement en navigation clavier
+	 * (:focus-visible). Les champs texte en sont exclus, leur bordure passe
+	 * déjà au vert au focus (section Champs). */
+	:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 1px;
+	}
+	input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+	textarea:focus-visible,
+	select:focus-visible {
+		outline: none;
+	}
+
 	/* ====== Champs ======
 	 *
 	 * Le v2 posait un filet clair sur la couleur de page. Le mockup donne au
