@@ -177,6 +177,16 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   pixel au survol, 2 px enfoncé au clic). Réservée aux boutons portant un aplat
   de couleur ; jetons `--shadow-pixel-small` / `--shadow-pixel-pressed`.
 
+- **2026-08-13/14, lot 9** : `lw-input` (4e contrôle maison, label fixe
+  au-dessus — choix de Pierre — 13 usages migrés) ; barre de page à 48 px.
+- **2026-08-14, lot 10 — retours de Pierre** :
+  - Encre blanche sur les aplats de marque : `--white` n'étant pas redéfini en
+    sombre, il restait crème sur le vert néon (1,1 de contraste). 19 règles
+    passées à `--primary-text` ; cas particuliers de la pastille du marché et
+    des boutons de la banque, qui utilisaient un `#4caf50` Material en dur.
+  - Barres de progression rondes → jauges franches segmentées, `--info` pour
+    l'état complet, reflet animé sur les deux barres importantes.
+
 ## Questions ouvertes
 
 - **Avatars carrés partout ?** Le mockup les fait carrés et bordés ; pour
