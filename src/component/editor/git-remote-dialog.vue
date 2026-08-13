@@ -350,7 +350,7 @@ body.dark .remote-item {
 		cursor: pointer;
 		padding: 4px 14px;
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		border: none;
 		border-radius: var(--radius);
 		font-size: 13px;
@@ -548,7 +548,7 @@ body.dark .credential-info {
 			.pat-save {
 				padding: 4px 12px;
 				background: var(--primary);
-				color: var(--white);
+				color: var(--primary-text);
 				border-radius: var(--radius);
 				cursor: pointer;
 				font-size: 13px;

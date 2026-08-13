@@ -129,7 +129,7 @@
 }
 .demo-badge {
 	background: var(--primary);
-	color: var(--pure-white);
+	color: var(--primary-text);
 	font-size: 11px;
 	font-weight: bold;
 	padding: 2px 8px;

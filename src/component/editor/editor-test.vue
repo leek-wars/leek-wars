@@ -1439,7 +1439,7 @@
 	}
 	.item.selected {
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 	}
 	.lateral-column .add {
 		background: var(--grey-3);

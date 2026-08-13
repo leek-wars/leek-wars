@@ -2166,7 +2166,7 @@
 		}
 		.green {
 			background: var(--primary);
-			color: var(--white);
+			color: var(--primary-text);
 			padding: 0 6px;
 			border-radius: var(--radius-pill);
 			margin-left: 4px;

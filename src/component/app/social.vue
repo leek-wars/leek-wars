@@ -180,7 +180,7 @@ function readAllNotifications() {
 	}
 	.header .label {
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		border-radius: 5px;
 		margin-left: 8px;
 		margin-right: -6px;

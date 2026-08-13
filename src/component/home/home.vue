@@ -554,7 +554,7 @@
 	}
 	.config-option.selected {
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 	}
 	.config-flag {
 		height: 14px;

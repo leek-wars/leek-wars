@@ -1349,7 +1349,7 @@
 		gap: 8px;
 		padding: 12px 16px;
 		background: var(--primary);
-		color: var(--white);
+		color: var(--primary-text);
 		font-weight: 500;
 		font-size: 15px;
 		.v-icon {
