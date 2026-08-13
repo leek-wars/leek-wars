@@ -1,5 +1,11 @@
 # Instructions pour Claude Code - Leek Wars Client
 
+## Redesign Leek Wars 3.0 (#1101)
+
+Le chantier du nouveau design est en cours sur develop. **Avant de toucher au
+thème, aux styles ou aux composants Vuetify, lire `REDESIGN.md`** (specs
+actées, partis pris, chantier restant, questions ouvertes) et le tenir à jour.
+
 ## Structure du projet
 
 - **Frontend Vue.js 3** (Composition API, `<script setup>`) avec TypeScript, **Vite 7** et **Vuetify 3**
