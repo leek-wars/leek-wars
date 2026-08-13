@@ -74,6 +74,15 @@ html body.v2 {
 	--panel-header-color: #eee;
 	--panel-header-height: 36px;
 	--panel-shadow: 0px 10px 11px -11px rgba(0, 0, 0, 0.75);
+	/* L'ombre pixel n'existe que dans le v3 ; présente ici pour la parité des
+	   variables. Un composant du v2 ne doit jamais la consommer. */
+	--shadow-pixel: none;
+
+	/* Tooltips : les valeurs historiques de global.scss, au pixel près. La
+	   flèche garde son alpha de 0.9 d'origine. */
+	--tooltip-background: #333;
+	--tooltip-color: white;
+	--tooltip-arrow: rgba(51, 51, 51, 0.9);
 	/* Elevation Material niveau 2, copiee telle quelle dans 41 composants. */
 	--elevation-1: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 
