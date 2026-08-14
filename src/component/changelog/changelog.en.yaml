@@ -47,6 +47,8 @@
     - "A fight no longer freezes when the same state is applied twice in a row by the same chip on the same target (Awakening's invincibility): the two states added up into a state that doesn't exist, with no icon, and the fight rendering stopped dead."
     - "Effects from the Desert Saber, the Sun Spear and the Quantum Rifle finally show their weapon icon in the effect list under the entity, instead of an empty slot."
     - "A leek hit by the Flame Thrower burns again, and one hit by the Gazor is covered in gas: neither animation was triggering anymore."
+    - "Liberation no longer removes the Sterile state: the reduction was applied to the state's identifier, which turned into another state and vanished from the display. A state is all or nothing, only a total reduction (Exasperation) removes it."
+    - "The Sterile state icon goes from orange to red, as befits a state you suffer."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

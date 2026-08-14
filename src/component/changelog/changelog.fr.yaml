@@ -47,6 +47,8 @@
     - "L'affichage d'un combat ne se fige plus quand un même état est appliqué deux fois de suite par la même puce sur la même cible (l'invincibilité du Réveil) : les deux états s'additionnaient en un état qui n'existe pas, sans icône, et le rendu du combat s'arrêtait net."
     - "Les effets du Sabre du désert, de la Lance du soleil et du Fusil quantique s'affichent enfin avec l'icône de leur arme dans la liste d'effets sous l'entité, au lieu d'un emplacement vide."
     - "Le poireau touché par le Lance-flammes brûle de nouveau, et celui touché par le Gazeur se couvre de gaz : les deux animations ne se déclenchaient plus."
+    - "Une Libération ne retire plus l'état Stérile : la réduction s'appliquait à l'identifiant de l'état, qui devenait un autre état et disparaissait de l'affichage. Un état est tout ou rien, seule une réduction totale (Exaspération) le retire."
+    - "L'icône de l'état Stérile passe de l'orange au rouge, comme il se doit pour un état subi."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."

@@ -42,8 +42,10 @@ enum DamageType {
 abstract class FightEntity extends Entity {
 
 	static stateImages: Map<number, HTMLImageElement> = new Map()
+	// Couleur du fond de l'icône d'état, indexée par état. Vert = bénéfique, bleu =
+	// neutre, rouge = subi. Un état sans couleur ne peint pas de fond.
 	static stateColors = [
-		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue', 'orange'
+		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue', 'red'
 	]
 
 	/**

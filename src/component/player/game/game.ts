@@ -2077,6 +2077,11 @@ class Game {
 			leek.power += delta
 			break
 		}
+		// La valeur d'un effet d'état est un identifiant d'état, pas une quantité : la
+		// réduire donnait un autre état (Libération à -40 % sur Stérile : 12 → 7, l'état
+		// magnétisé, sans icône). Corrigé côté générateur, mais les combats déjà
+		// enregistrés portent la valeur mise à l'échelle.
+		if (effect.type === EffectType.ADD_STATE) { return }
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
 
