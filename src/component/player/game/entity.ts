@@ -154,6 +154,8 @@ abstract class FightEntity extends Entity {
 	public frame: number
 	public growth: number = 1.0
 	public lastDamageType: DamageType = DamageType.DEFAULT
+	/** Dernière attaque jouée = coup critique. Lu par les animations d'arme (repoussée de la lance). */
+	public lastCritical: boolean = false
 	public crashAnim: number = 0
 	public carbonizeAnim: number = 0
 	public deadAnim: number = 0

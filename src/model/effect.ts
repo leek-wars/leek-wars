@@ -123,4 +123,16 @@ class EntityEffect {
 	public modifiers!: number
 }
 
-export { Effect, EffectModifier, EffectTarget, EffectType, EffectTypeMarket, EntityEffect, State }
+/** Facteur appliqué par un coup critique (miroir de Effect.CRITICAL_FACTOR côté moteur). */
+const CRITICAL_FACTOR = 1.3
+
+/**
+ * Distance de repoussée d'un EFFECT_REPEL : value1 cases, ×1,3 arrondi en coup critique.
+ * Miroir exact de la branche TYPE_REPEL d'Attack.applyOnCell côté moteur — le client
+ * rejoue le déplacement pendant le combat, les deux doivent donner le même nombre.
+ */
+function repelDistance(value1: number, critical: boolean): number {
+	return Math.round(value1 * (critical ? CRITICAL_FACTOR : 1))
+}
+
+export { CRITICAL_FACTOR, Effect, EffectModifier, EffectTarget, EffectType, EffectTypeMarket, EntityEffect, repelDistance, State }

@@ -4,7 +4,7 @@
     - "The LeekScript console becomes the Console: run JavaScript, TypeScript and Python interactively too, with state kept between lines."
     - "#ai The Python editor becomes a real IDE: autocompletion of your functions, variables and modules with type inference, hover showing a symbol's type and where it is defined, Ctrl+click to go to definition, and import resolution across your AIs."
     - "New melee weapon, the Desert Saber (level 151, legendary): 75 to 85 damage and the target becomes Sterile for 2 turns, unable to summon. Craft it at the forge, with a scheme that drops when fighting on the desert map."
-    - "New weapon, the Sun Spear (level 201): it skewers a whole line 1 to 4 cells long and repels targets by 4 cells. Craft it at the forge with Solstice sun shards; its scheme drops as a fight reward."
+    - "New weapon, the Sun Spear (level 201): it skewers a whole line 1 to 4 cells long and repels targets by 4 cells, 5 on a critical hit. Craft it at the forge with Solstice sun shards; its scheme drops as a fight reward."
     - "4 new hats: the Beret and the Chef's toque in the shop, plus the Beach hat and the Sun crown to craft at the forge with Solstice resources."
   improved:
     - "#ai The JavaScript, TypeScript and Python API is now 100% object-oriented: no more global functions or constants, everything goes through objects (Fight, me, Weapon.pistol, System.operations, Network, Color...). The LeekScript stdlib is replaced by the language natives (Math, JSON, random...)."

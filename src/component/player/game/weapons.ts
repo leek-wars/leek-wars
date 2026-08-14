@@ -694,7 +694,7 @@ class SunSpear extends WhiteWeaponAnimation {
 			// Rejoue l'EFFECT_REPEL du serveur : cellules logiques à jour dès maintenant
 			// (le log de combat n'a pas d'action de déplacement), le visuel glisse pendant
 			// la détente puis est scellé par setCell en fin de piqué.
-			for (const move of this.game.applyWeaponRepel(caster, cell, template)) {
+			for (const move of this.game.applyWeaponRepel(caster, cell, template, caster.lastCritical)) {
 				const xy = this.game.ground.field.cellToXY(move.cell)
 				const pixels = this.game.ground.xyToXYPixels(xy.x, xy.y)
 				this.repels.push({ entity: move.entity, cell: move.cell, sx: move.entity.ox, sy: move.entity.oy, ex: pixels.x, ey: pixels.y })
