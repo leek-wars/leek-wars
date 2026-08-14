@@ -102,17 +102,28 @@ body:not(.v2) {
 		letter-spacing: 0.02em;
 	}
 
-	/* Avatar du fermier : le rond Material devient le carré bordé du mockup
-	   (`.avatar` : trait fort, surface de rangée). Appliqué à la barre, au menu
-	   du compte et au panneau social — le rond reste ailleurs tant que la
-	   question « avatars carrés partout ? » n'est pas tranchée (REDESIGN.md). */
-	.header .avatar,
-	.account-switcher .avatar,
-	.blabla-panel .avatar,
-	.chat .avatar {
+	/* Avatars : carrés PARTOUT (décision du 2026-08-14, la question ouverte est
+	   tranchée), et deux coins coupés en diagonale — en haut à gauche et en bas
+	   à droite. La coupe est en pourcentage et non en pixels : un avatar va de
+	   24 px dans la barre du haut à 120 px sur un profil, une valeur fixe serait
+	   un liseré sur l'un et une balafre sur l'autre.
+	   La diagonale coupe aussi le trait, ce qui est le propre d'un biseau : les
+	   quatre côtés droits le gardent, les deux coupes sont franches. */
+	.avatar,
+	.avatar-input {
 		border-radius: 0;
-		border: 1px solid var(--border-strong);
-		background: var(--background-row);
+		clip-path: polygon(18% 0, 100% 0, 100% 82%, 82% 100%, 0 100%, 0 18%);
+	}
+	/* Le trait ne peut pas être une `border` : la découpe l'emporterait sur les
+	   deux diagonales et laisserait des coupes nues. Il est donc peint EN
+	   DESSOUS de l'image — un fond plein, que 1 px de marge intérieure laisse
+	   dépasser tout autour. La découpe s'applique aux deux d'un coup, donc le
+	   trait suit exactement le bord coupé. */
+	.avatar {
+		border: none;
+		box-sizing: border-box;
+		padding: 1px;
+		background: var(--border-strong);
 	}
 	/* Ramené à 24 px : les 42 px du v2 débordaient du bouton de 34 px et
 	   recouvraient le pseudo. */
