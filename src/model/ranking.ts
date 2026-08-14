@@ -29,6 +29,8 @@ class RankingFarmerRow extends RankingRow {
 	public connected?: boolean
 }
 class RankingTeamRow extends RankingRow {
+	// Taux d'activité (#4804), affiché en flammes comme sur la page des équipes.
+	public activity?: number
 	public level!: number
 	public total_level!: number
 	public xp!: number

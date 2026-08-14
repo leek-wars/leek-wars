@@ -125,7 +125,9 @@ body:not(.v2) {
 		border: none;
 		box-sizing: border-box;
 		padding: 1px;
-		background: var(--border-strong);
+		/* Couleur PLEINE et non `--border-strong` (du blanc à 16 %) : sur une
+		   photo, un trait translucide de 1 px ne se voit pas. */
+		background: var(--text-color-faint);
 	}
 	/* Ramené à 24 px : les 42 px du v2 débordaient du bouton de 34 px et
 	   recouvraient le pseudo. */
