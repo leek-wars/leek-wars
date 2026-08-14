@@ -46,6 +46,23 @@ abstract class FightEntity extends Entity {
 		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue', 'orange'
 	]
 
+	/**
+	 * Icône d'un état, toujours dessinable. Le chargement est paresseux et jamais
+	 * conditionné à addState : un effet d'état dont la valeur n'a pas été enregistrée
+	 * (fusion d'effets côté serveur qui additionnait les identifiants d'état) renvoyait
+	 * `undefined`, et drawImage faisait alors tomber toute la boucle de jeu — combat figé.
+	 * Un état sans icône (2, 4...) part en 404, dont le repli évite une Image « broken »
+	 * que drawImage refuserait aussi (#11819723).
+	 */
+	static stateImage(state: number): HTMLImageElement {
+		let image = FightEntity.stateImages.get(state)
+		if (!image) {
+			image = loadDrawableImage(LeekWars.STATIC + "image/state/" + state + ".svg")
+			FightEntity.stateImages.set(state, image)
+		}
+		return image
+	}
+
 	// Infos générales
 	public game: Game
 	public farmer!: Farmer | null
@@ -1172,11 +1189,14 @@ abstract class FightEntity extends Entity {
 				}
 				// Value
 				if (effect.type == EffectType.ADD_STATE) {
-					ctx.globalAlpha = 0.85 * (1 - this.deadAnim)
-					ctx.fillStyle = FightEntity.stateColors[effect.value]
-					ctx.fillRect(x, (2 - state_size) * effect_size - 2, effect_size * state_size + 2, effect_size * state_size + 2)
+					const color = FightEntity.stateColors[effect.value]
+					if (color) {
+						ctx.globalAlpha = 0.85 * (1 - this.deadAnim)
+						ctx.fillStyle = color
+						ctx.fillRect(x, (2 - state_size) * effect_size - 2, effect_size * state_size + 2, effect_size * state_size + 2)
+					}
 					ctx.globalAlpha = (1 - this.deadAnim)
-					ctx.drawImage(FightEntity.stateImages.get(effect.value)!, x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
+					ctx.drawImage(FightEntity.stateImage(effect.value), x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
 				} else {
 					let effect_message = '' + effect.value
 					if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
@@ -1322,10 +1342,7 @@ abstract class FightEntity extends Entity {
 
 	addState(state: number) {
 		this.states.add(state)
-		// Load image, mutualisée par loadDrawableImage : les états dépourvus d'icône
-		// (2, 4...) renvoient un 404, dont le repli évite une Image « broken », que
-		// drawImage refuserait (#11819723).
-		FightEntity.stateImages.set(state, loadDrawableImage(LeekWars.STATIC + "image/state/" + state + ".svg"))
+		FightEntity.stateImage(state)
 	}
 }
 

@@ -206,6 +206,32 @@ export const WEAPONS = [
 	SunSpear, // 42
 ]
 
+// Icône affichée sous le nom de l'entité pour un effet d'arme, indexée par template.
+// À tenir à jour en même temps que WEAPONS : une arme oubliée ici s'affiche sans
+// icône dans la liste d'effets. Deux entrées ne sont pas l'image de l'arme mais celle
+// de l'effet qu'elle pose : flamme (Lance-flammes) et gaz_icon (Gazeur).
+export const WEAPON_EFFECT_IMAGES: (string | null)[] = [
+	"pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
+	"lightninger",
+	"plutonium_bazooka", // 26
+	"neutrino", // 27
+	null, // 28
+	"bazooka", // 29
+	null, // 30
+	null, // 31
+	"dark_katana", // 32
+	"enhanced_lightninger", // 33
+	"unstable_destroyer", // 34
+	"sword", // 35
+	"heavy_sword", // 36
+	"odachi", // 37
+	"excalibur", // 38
+	"scythe", // 39
+	"quantum_rifle", // 40
+	"desert_saber", // 41
+	"sun_spear", // 42
+]
+
 export const CHIP_ANIMATIONS = [
 	Bandage, // 1
 	Cure, // 2
@@ -1681,7 +1707,12 @@ class Game {
 
 		const effect = this.effects[id]
 		if (effect) {
-			effect.value += value
+			// La valeur d'un effet d'état est un identifiant d'état, pas une quantité :
+			// l'additionner donnait un état inexistant (invincible + invincible = 6).
+			// Corrigé côté générateur, mais les combats déjà enregistrés le contiennent.
+			if (effect.type !== EffectType.ADD_STATE) {
+				effect.value += value
+			}
 			const leek = this.leeks[effect.target]
 			this.updateCharacteristics(leek, effect.type, value)
 
@@ -1726,25 +1757,10 @@ class Game {
 				image = LeekWars.STATIC + "image/chip/" + CHIPS[item].name + ".png"
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
-					const template = LeekWars.items[item].params
-					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
-					"lightninger",
-					"plutonium_bazooka", // 26
-					"neutrino", // 27
-					null, // 28
-					"bazooka", // 29
-					null, // 30
-					null, // 31
-					"dark_katana", // 32
-					"enhanced_lightninger", // 33
-					"unstable_destroyer", // 34
-					"sword", // 35
-					"heavy_sword", // 36
-					"odachi", // 37
-					"excalibur", // 38
-					"scythe", // 39
-
-				][template - 1]
+					// params arrive en chaîne depuis l'API ("41") : sans Number(), les
+					// comparaisons strictes ci-dessous ne matchaient jamais.
+					const template = Number(LeekWars.items[item].params)
+					const img = WEAPON_EFFECT_IMAGES[template - 1]
 					// Le tableau s'arrête aux armes connues du client : le serveur peut
 					// être déployé avant lui et envoyer un template plus récent.
 					if (img) {

@@ -44,6 +44,9 @@
     - "A chip or a component whose every copy is equipped on your leeks now appears in the loadout editor, like weapons. Item lists there are also sorted by level (thanks to Kraspen)."
     - "The chat refreshes right away when you come back to the mobile app or to the tab: messages received while it was asleep only showed up after several seconds, the time it took to notice that the real-time connection had silently died and to re-establish it."
     - "Items bought with crystals now count in the collection, even once equipped: past purchases have been recovered."
+    - "A fight no longer freezes when the same state is applied twice in a row by the same chip on the same target (Awakening's invincibility): the two states added up into a state that doesn't exist, with no icon, and the fight rendering stopped dead."
+    - "Effects from the Desert Saber, the Sun Spear and the Quantum Rifle finally show their weapon icon in the effect list under the entity, instead of an empty slot."
+    - "A leek hit by the Flame Thrower burns again, and one hit by the Gazor is covered in gas: neither animation was triggering anymore."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

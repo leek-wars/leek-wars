@@ -44,6 +44,9 @@
     - "Un chip o un componente i cui esemplari sono tutti equipaggiati sui tuoi porri ora appare nell'editor dei loadout, come le armi. Le liste di oggetti sono anche ordinate per livello (grazie a Kraspen)."
     - "La chat si aggiorna subito quando torni sull'app mobile o sulla scheda: i messaggi ricevuti durante la sospensione comparivano solo dopo diversi secondi, il tempo di accorgersi che la connessione in tempo reale era morta in silenzio e di ristabilirla."
     - "Gli oggetti acquistati in cristalli contano ora nella collezione, anche una volta equipaggiati: gli acquisti passati sono stati recuperati."
+    - "La visualizzazione di un combattimento non si blocca più quando lo stesso stato viene applicato due volte di seguito dallo stesso chip sullo stesso bersaglio (l'invincibilità del Risveglio): i due stati si sommavano in uno stato inesistente, senza icona, e il rendering del combattimento si fermava di colpo."
+    - "Gli effetti della Sciabola del deserto, della Lancia del sole e del Fucile quantistico mostrano finalmente l'icona della loro arma nella lista degli effetti sotto l'entità, invece di uno spazio vuoto."
+    - "Il porro colpito dal Lanciafiamme brucia di nuovo, e quello colpito dal Gasatore si copre di gas: nessuna delle due animazioni si attivava più."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."
