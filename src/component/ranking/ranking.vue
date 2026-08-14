@@ -238,6 +238,7 @@
 									<v-icon v-if="order === 'leeks'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
+							<th>{{ $t('main.activity') }}</th>
 						</tr>
 						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
