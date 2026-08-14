@@ -1102,6 +1102,37 @@ body:not(.v2) {
 		}
 	}
 
+	/* ====== Barres de défilement ======
+	 *
+	 * Le v2 les fait épaisses (10 px) avec un pouce gris clair, calibré pour un
+	 * fond blanc : en thème sombre, cette barre claire est la chose la plus
+	 * lumineuse de la colonne. Le v3 les affine et les fond dans la surface —
+	 * le pouce prend le trait fort, la piste reste creuse. */
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	::-webkit-scrollbar-thumb {
+		background: var(--border-strong);
+		border-radius: 0;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--text-color-faint);
+	}
+	/* Firefox n'expose pas ces pseudo-éléments : deux propriétés standard, qui
+	   n'acceptent que « fine » et un couple pouce/piste.
+	   `& *` est nécessaire : `scrollbar-color` s'hérite, mais pas
+	   `scrollbar-width` — sans lui, seule la page serait affinée, pas le menu
+	   ni les panneaux qui défilent. */
+	&,
+	& * {
+		scrollbar-width: thin;
+		scrollbar-color: var(--border-strong) transparent;
+	}
+
 	/* ====== Icônes d'action des panneaux ======
 	 *
 	 * Leur survol posait `--grey-7`, un gris moyen hérité du v2 qui n'appartient
@@ -1264,6 +1295,15 @@ body:not(.v2) {
 	textarea:focus-visible,
 	select:focus-visible,
 	[contenteditable]:focus-visible {
+		outline: none;
+	}
+	/* `tabindex="-1"` marque un élément qu'on ne peut PAS atteindre au clavier :
+	   il ne reçoit le focus que par programme. Vuetify s'en sert sur le
+	   conteneur d'un dialogue pour y piéger le focus à l'ouverture — et le
+	   navigateur, ne sachant pas distinguer ce focus-là d'une navigation au
+	   clavier, entourait toute la boîte de vert. L'anneau n'a de sens que sur ce
+	   qu'on atteint en tabulant. */
+	[tabindex="-1"]:focus-visible {
 		outline: none;
 	}
 
