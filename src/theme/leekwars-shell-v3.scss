@@ -1102,6 +1102,36 @@ body:not(.v2) {
 		}
 	}
 
+	/* ====== Icônes d'action des panneaux ======
+	 *
+	 * Leur survol posait `--grey-7`, un gris moyen hérité du v2 qui n'appartient
+	 * à aucun rôle du thème : une pastille grise plaquée sur l'en-tête. Il passe
+	 * au vocabulaire de l'état actif du v3 — l'encre vire au vert et un liseré
+	 * vert s'allume sous la case — celui des onglets de la barre de page et des
+	 * entrées du menu. Aucun aplat, donc rien à recalibrer entre les thèmes.
+	 *
+	 * Sélecteurs longs : la règle du composant est `:deep()` et compte déjà cinq
+	 * classes, il faut passer devant sans `!important`.
+	 * Les variantes `green` et `red` gardent leur aplat : ce sont des actions
+	 * sémantiques (valider, supprimer), pas des icônes neutres. */
+	.panel > .header > .actions .button:not(.green):not(.red):hover {
+		background: none;
+		box-shadow: inset 0 -2px 0 var(--primary);
+		color: var(--primary);
+	}
+	.panel > .header > .actions .button:not(.green):not(.red):hover .v-icon {
+		color: var(--primary);
+		opacity: 1;
+	}
+	/* Les icônes en PNG ne se recolorent pas : elles gagnent en présence. */
+	.panel > .header > .actions .button:not(.green):not(.red):hover img {
+		opacity: 1;
+	}
+	/* Même retour au clic que les boutons : la case s'enfonce d'un pixel. */
+	.panel > .header > .actions .button:active {
+		transform: translate(1px, 1px);
+	}
+
 	/* ====== Rareté des objets ======
 	 *
 	 * La rareté se lit sur la barre posée sous le titre de la fiche. Elle était
