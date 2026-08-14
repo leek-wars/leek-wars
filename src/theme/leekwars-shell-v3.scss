@@ -1148,6 +1148,14 @@ body:not(.v2) {
 		scrollbar-color: var(--border-strong) transparent;
 	}
 
+	/* L'onglet actif du v2 avait un fond clair, donc son icône était forcée en
+	   #333 (global.scss). Le v3 lui met du vert et pas d'aplat : l'icône doit
+	   suivre l'encre de l'onglet au lieu de rester sombre. */
+	.page-bar .tabs .tab.active .v-icon,
+	.page-bar .tabs .tab.selected .v-icon {
+		color: inherit;
+	}
+
 	/* ====== Icône de l'onglet actif ======
 	 *
 	 * La barre des pages du marché a deux jeux d'icônes : une blanche pour les
