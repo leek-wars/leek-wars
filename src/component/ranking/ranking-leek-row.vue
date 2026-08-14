@@ -12,6 +12,12 @@
 		<td>{{ row.level }}</td>
 		<td>{{ $filters.number(row.xp) }}</td>
 		<td>
+			<v-tooltip v-if="row.farmer_connected">
+				<template #activator="{ props }">
+					<span class="online" v-bind="props"></span>
+				</template>
+				{{ $t('main.connected') }}
+			</v-tooltip>
 			<router-link :to="'/farmer/' + row.farmer_id">
 				<rich-tooltip-farmer :id="row.farmer_id" v-slot="{ props }" :bottom="true">
 					<span v-bind="props">{{ row.farmer }}</span>
@@ -52,5 +58,14 @@ defineProps<{
 	tr.inactive td, tr.inactive a {
 		color: var(--text-color-secondary);
 		font-style: italic;
+	}
+	/* Éleveur connecté (#4804), même pastille que le classement des éleveurs. */
+	.online {
+		display: inline-block;
+		width: 7px;
+		height: 7px;
+		margin-right: 6px;
+		vertical-align: middle;
+		background: var(--primary);
 	}
 </style>

@@ -2,6 +2,12 @@
 	<tr :class="{me: row.me, inactive: !row.active}">
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
+			<v-tooltip v-if="row.connected">
+				<template #activator="{ props }">
+					<span class="online" v-bind="props"></span>
+				</template>
+				{{ $t('main.connected') }}
+			</v-tooltip>
 			<router-link :to="'/farmer/' + row.id">
 				<rich-tooltip-farmer :id="row.id" v-slot="{ props }" :bottom="true">
 					<span v-bind="props">{{ row.name }}</span>
@@ -45,5 +51,16 @@ defineProps<{
 	tr.inactive td, tr.inactive a {
 		color: var(--text-color-secondary);
 		font-style: italic;
+	}
+	/* Éleveur connecté (#4804) : un carré plein devant le pseudo. Carré et non
+	   rond, comme tout le reste du design ; la couleur seule ne suffirait pas à
+	   le distinguer, d'où l'infobulle qui le nomme. */
+	.online {
+		display: inline-block;
+		width: 7px;
+		height: 7px;
+		margin-right: 6px;
+		vertical-align: middle;
+		background: var(--primary);
 	}
 </style>
