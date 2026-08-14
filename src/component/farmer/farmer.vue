@@ -1874,7 +1874,7 @@
 				padding: 8px 18px;
 				border-radius: var(--radius);
 				font-weight: 500;
-				color: var(--white);
+				color: var(--primary-text);
 				background: var(--primary);
 				white-space: nowrap;
 				&:hover { filter: brightness(1.1); }
@@ -1916,7 +1916,7 @@
 				white-space: nowrap;
 				font-weight: 500;
 				&.accept {
-					color: var(--white);
+					color: var(--primary-text);
 					background: var(--primary);
 					&:hover { filter: brightness(1.1); }
 				}

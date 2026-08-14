@@ -670,7 +670,7 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		a { text-decoration: none; display: flex; }
-		.mode-button.active { background: var(--primary); color: var(--white); }
+		.mode-button.active { background: var(--primary); color: var(--primary-text); }
 		:deep(.mode-button) {
 			height: 42px;
 			margin: 0;

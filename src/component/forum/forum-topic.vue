@@ -1235,7 +1235,7 @@
 		}
 	}
 	.vote.up.active {
-		color: var(--white);
+		color: var(--primary-text);
 		background: var(--primary);
 		.v-icon {
 			color: var(--white);

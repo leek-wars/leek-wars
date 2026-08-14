@@ -802,15 +802,15 @@
 					background: orange;
 				}
 				&.correct, &.wrong, &.missed {
-					color: var(--white);
+					color: var(--primary-text);
 					pre {
 						color: var(--black);
 					}
 					.letter {
-						color: var(--white);
+						color: var(--primary-text);
 					}
 					.v-icon {
-						color: var(--white) !important;
+						color: var(--primary-text) !important;
 					}
 				}
 				&.disabled {

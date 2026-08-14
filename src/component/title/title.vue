@@ -83,4 +83,27 @@ img {
 	padding: 0 4px;
 	font-size: 22px;
 }
+
+/* Le titre est une distinction : gagné, affiché, un peu vantard. Le v3 le
+   traite comme tel au lieu du gris de texte secondaire — police d'affichage en
+   capitales et or des podiums, avec la lueur discrète qu'on réserve à ce qui
+   est mérité (cf. REDESIGN.md, « Le halo, motif réutilisable »).
+   Écrit ici et non dans la coquille : `.title` est une classe partagée par les
+   dialogues et les en-têtes de panneau, la styler globalement les emporterait
+   tous. Le style scopé du composant ne touche que ce titre-là. */
+body:not(.v2) .title {
+	font-family: var(--font-display);
+	font-size: 13px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--rank-first);
+	text-shadow: 0 0 10px color-mix(in srgb, var(--rank-first) 40%, transparent);
+	gap: 2px;
+}
+/* Les chevrons restent en retrait : ils encadrent, ils ne crient pas. */
+body:not(.v2) .quote {
+	font-size: 16px;
+	color: color-mix(in srgb, var(--rank-first) 45%, var(--text-color));
+	text-shadow: none;
+}
 </style>
