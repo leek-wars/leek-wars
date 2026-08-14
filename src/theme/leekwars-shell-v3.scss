@@ -1148,6 +1148,17 @@ body:not(.v2) {
 		scrollbar-color: var(--border-strong) transparent;
 	}
 
+	/* ====== Icône de l'onglet actif ======
+	 *
+	 * La barre des pages du marché a deux jeux d'icônes : une blanche pour les
+	 * onglets au repos, une NOIRE pour l'onglet actif — en v2 celui-ci avait un
+	 * fond clair. Le v3 ne lui donne plus d'aplat, juste un liseré vert : sur la
+	 * barre sombre, la variante noire devient invisible. On la retourne, mais
+	 * seulement en thème sombre : sur le parchemin, elle est juste. */
+	&.dark .page-bar .tab img[src*="/icon/black/"] {
+		filter: invert(1);
+	}
+
 	/* ====== Icônes d'action des panneaux ======
 	 *
 	 * Leur survol posait `--grey-7`, un gris moyen hérité du v2 qui n'appartient
