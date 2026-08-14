@@ -1160,6 +1160,10 @@ body:not(.v2) {
 	   parchemin serait illisible. */
 	.rarity-wrapper {
 		padding: 6px 10px;
+		/* Au-dessus du halo : la lumière du trait déborde justement sur cette
+		   zone (`z-index: 1` sur la bande), et sans ça elle passait par-dessus
+		   le mot, qui devenait illisible. */
+		z-index: 2;
 	}
 	.rarity-wrapper .rarity {
 		background: none;
