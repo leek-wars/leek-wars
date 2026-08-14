@@ -62,9 +62,11 @@ body:not(.v2) {
 		border: 1px solid var(--border);
 		color: var(--header-color);
 		margin-left: 8px;
-		padding: 0 12px;
-		height: 34px;
-		line-height: 34px;
+		padding: 0 14px;
+		/* 42 px et non 34 : la barre fait 80 px de haut, des boutons à 34 y
+		   flottaient comme des pastilles. */
+		height: 42px;
+		line-height: 42px;
 		transition: border-color .12s ease, color .12s ease;
 	}
 	.header .header-button:hover {
@@ -128,8 +130,8 @@ body:not(.v2) {
 	/* Ramené à 24 px : les 42 px du v2 débordaient du bouton de 34 px et
 	   recouvraient le pseudo. */
 	.header .header-button .avatar {
-		height: 24px;
-		width: 24px;
+		height: 28px;
+		width: 28px;
 		margin: 0 0 0 8px;
 	}
 	/* Le cristal est taillé pour dépasser de la barre du v2 (17×40, marges
