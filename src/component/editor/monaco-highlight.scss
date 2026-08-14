@@ -50,6 +50,18 @@ code {
 }
 
 // ---- Thèmes sombres (fond propre pour rester lisibles quel que soit le fond du site) ----
+// Le thème sombre maison, aux couleurs du site — défaut en mode sombre (cf. monaco.ts).
+.code-theme-leek-wars-dark {
+	--ct-fg: #e8f0e6; --ct-bg: #0e1316;
+	--ct-keyword: #7cff6b; --ct-keyword-weight: bold;
+	--ct-type: #5ce0ff; --ct-type-weight: bold;
+	--ct-string: #ffb86b; --ct-number: #b79bff; --ct-comment: #7c8b76;
+	--ct-atom: #b79bff; --ct-atom-weight: bold;
+	--ct-annotation: #ffd23a; --ct-annotation-weight: bold;
+	--ct-lsconstant: #e8f0e6; --ct-lsconstant-weight: bold;
+	--ct-lsfunction: #e8f0e6; --ct-lsfunction-style: italic;
+	--ct-lsdeprecated: #6b7a66;
+}
 .code-theme-monokai {
 	--ct-fg: #f8f8f2; --ct-bg: #272822;
 	--ct-keyword: #f92672; --ct-type: #86d7ff;

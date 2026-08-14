@@ -50,6 +50,7 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { computed, nextTick, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
+	import { isDarkCodeTheme } from './code-theme'
 
 	export interface FileTab {
 		type: 'file'
@@ -95,7 +96,7 @@
 
 	const { t } = useI18n()
 
-	const isDark = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
+	const isDark = computed(() => isDarkCodeTheme(props.theme))
 
 	const menuOpened = ref(false)
 	const menuTarget = ref<[number, number]>([0, 0])

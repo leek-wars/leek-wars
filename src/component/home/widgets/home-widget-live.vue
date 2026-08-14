@@ -3,8 +3,13 @@
 		<loader v-if="!loaded" />
 		<div v-else-if="events.length" class="events">
 			<div v-for="(event, e) in events" :key="e" class="event">
-				<trophy-icon v-if="event.type === 'trophy'" :code="event.trophy" class="event-trophy" />
-				<v-icon v-else class="event-icon">{{ METRIC_ICONS[event.metric] || 'mdi-forum-outline' }}</v-icon>
+				<!-- L'avatar dit QUI, l'icône dit QUOI : les deux, l'un devant l'autre.
+					 Le trophée débloqué garde sa propre icône, en pastille sur l'avatar. -->
+				<router-link :to="'/farmer/' + event.farmer.id" class="event-avatar">
+					<avatar :farmer="(event.farmer as any)" />
+					<trophy-icon v-if="event.type === 'trophy'" :code="event.trophy" class="badge" />
+					<v-icon v-else class="badge">{{ METRIC_ICONS[event.metric] || 'mdi-forum-outline' }}</v-icon>
+				</router-link>
 				<div class="event-body">
 					<div class="text">
 						<router-link :to="'/farmer/' + event.farmer.id" class="farmer">{{ event.farmer.name }}</router-link>
@@ -39,7 +44,7 @@
 	interface LiveEvent {
 		type: 'trophy' | 'threshold' | 'topic'
 		date: number
-		farmer: { id: number, name: string }
+		farmer: { id: number, name: string, avatar_changed: number }
 		trophy?: string
 		rarity?: number
 		metric?: string
@@ -78,16 +83,33 @@
 	.event:hover {
 		background: var(--background-secondary);
 	}
-	.event-trophy {
+	// L'avatar porte son icône d'événement en pastille, coin bas droit : une seule
+	// colonne à gauche du texte, comme avant, mais qui dit aussi qui a fait quoi.
+	.event-avatar {
+		position: relative;
+		flex-shrink: 0;
+		// Même encombrement que l'icône seule d'avant : le panneau est étroit
+		// (deux lignes de texte à droite), l'avatar ne doit pas manger la place.
 		width: 28px;
 		height: 28px;
-		flex-shrink: 0;
+		:deep(.avatar) {
+			width: 28px;
+			height: 28px;
+		}
 	}
-	.event-icon {
-		font-size: 22px;
-		width: 28px;
+	.event-avatar .badge {
+		position: absolute;
+		right: -5px;
+		bottom: -5px;
+		width: 16px;
+		height: 16px;
+		font-size: 12px;
 		color: var(--text-color-secondary);
-		flex-shrink: 0;
+		// La pastille se détache de l'avatar : fond de panel et liseré, sinon
+		// l'icône se perd dans l'image quand les deux sont sombres.
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-pill);
 	}
 	.event-body {
 		min-width: 0;

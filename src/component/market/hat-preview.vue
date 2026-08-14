@@ -42,11 +42,22 @@ const previewLeeks = computed<Leek[]>(() => {
 	background: var(--pure-white);
 	// Grille 2 colonnes (2x2 pour 4 poireaux) au lieu d'un flex-wrap qui
 	// retombait en une seule colonne très haute sur les conteneurs étroits.
+	// Colonnes en `1fr` bornées à 0 : dans la carte de 280 px de l'aperçu
+	// d'objet, des colonnes `auto` prennent la largeur naturelle des images
+	// (un poireau avec une grande arme dépasse les 140 px de sa part) et la
+	// carte se met à défiler à l'horizontale.
 	display: grid;
-	grid-template-columns: repeat(2, auto);
-	justify-content: center;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	justify-items: center;
 	align-items: end;
 	gap: 10px 14px;
+}
+// L'image se met à la largeur de sa colonne quand elle est trop grande.
+// Les deux attributs width/height du svg lui donnent son ratio : `height: auto`
+// suffit à la laisser rétrécir sans se déformer ni se retrouver en boîte à lettres.
+.leek-preview :deep(svg) {
+	max-width: 100%;
+	height: auto;
 }
 .leek-entry {
 	display: flex;

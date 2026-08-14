@@ -247,6 +247,7 @@
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import GitHistory from './git-history.vue'
 	import { gitCall } from './git-log'
+	import { isDarkCodeTheme } from './code-theme'
 	import { emitter } from '@/model/vue'
 	import type { DiffTab } from './editor-tabs.vue'
 	import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -318,7 +319,7 @@
 	let refreshDebounceTimer: ReturnType<typeof setTimeout> | null = null
 	const lastFetchAt: { [repo: string]: number } = {}
 
-	const isDark = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
+	const isDark = computed(() => isDarkCodeTheme(props.theme))
 	const repoItems = computed(() => repos.value.map(r => ({ title: r.name || '/', value: r.folder })))
 	const conflictChanges = computed<GitChange[]>(() => changes.value.filter(c => c.conflict))
 	const canPull = computed(() => {

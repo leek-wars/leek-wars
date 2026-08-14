@@ -132,11 +132,17 @@ function useCloverPotion() {
 .leek-preview {
 	// Grille 2 colonnes (2x2 pour 4 poireaux) au lieu d'un flex-wrap qui
 	// retombait en une seule colonne très haute sur les conteneurs étroits.
+	// Colonnes en `1fr` bornées à 0 et images qui rétrécissent (voir
+	// `hat-preview.vue`) : sinon la carte de 280 px défile à l'horizontale.
 	display: grid;
-	grid-template-columns: repeat(2, auto);
-	justify-content: center;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	justify-items: center;
 	align-items: end;
 	gap: 10px 14px;
+	:deep(svg) {
+		max-width: 100%;
+		height: auto;
+	}
 	// Neutralise le padding 5px hérité de .item-preview .stats div
 	.leek-entry {
 		padding: 0;

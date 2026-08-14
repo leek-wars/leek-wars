@@ -213,6 +213,7 @@
 				</div>
 				<lw-radio-group v-else v-model="theme" class="themes">
 					<lw-radio label="Leek Wars" value="leek-wars" />
+					<lw-radio label="Leek Wars Dark" value="leek-wars-dark" />
 					<lw-radio label="Monokai" value="monokai" />
 					<lw-radio label="VS Code clair" value="vs" />
 					<lw-radio label="VS Code sombre" value="vs-dark" />
@@ -318,6 +319,7 @@
 	import GitMerge from './git-merge.vue'
 	import GitTerminal from './git-terminal.vue'
 	import { gitLog } from './git-log'
+	import { DARK_CODE_THEMES } from './code-theme'
 	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
@@ -352,8 +354,8 @@
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
-	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
-	const DARK_THEMES = ['monokai', 'vs-dark', 'hc-black']
+	const DEFAULT_THEME = () => LeekWars.darkMode ? "leek-wars-dark" : "leek-wars"
+	const DARK_THEMES = DARK_CODE_THEMES
 	// Thèmes proposés, séparés par luminosité (pour le mode automatique : un préféré clair, un préféré sombre).
 	const LIGHT_THEME_OPTIONS = [
 		{ value: 'leek-wars', title: 'Leek Wars' },
@@ -361,6 +363,7 @@
 		{ value: 'hc-light', title: 'High Contrast clair' },
 	]
 	const DARK_THEME_OPTIONS = [
+		{ value: 'leek-wars-dark', title: 'Leek Wars Dark' },
 		{ value: 'monokai', title: 'Monokai' },
 		{ value: 'vs-dark', title: 'VS Code sombre' },
 		{ value: 'hc-black', title: 'High Contrast sombre' },
@@ -422,7 +425,7 @@
 	const theme = ref<string>(DEFAULT_THEME())
 	const themeAuto = ref(false)
 	const lightTheme = ref('leek-wars')
-	const darkTheme = ref('monokai')
+	const darkTheme = ref('leek-wars-dark')
 	// Thème réellement appliqué : en mode auto il suit le mode sombre du site (LeekWars.darkMode, réactif),
 	// sinon c'est le thème choisi manuellement.
 	const appliedTheme = computed(() => themeAuto.value ? (LeekWars.darkMode ? darkTheme.value : lightTheme.value) : theme.value)
@@ -549,7 +552,7 @@
 		theme.value = localStorage.getItem('editor/theme') || DEFAULT_THEME()
 		themeAuto.value = localStorage.getItem('editor/theme_auto') === 'true'
 		lightTheme.value = localStorage.getItem('editor/light_theme') || 'leek-wars'
-		darkTheme.value = localStorage.getItem('editor/dark_theme') || 'monokai'
+		darkTheme.value = localStorage.getItem('editor/dark_theme') || 'leek-wars-dark'
 		autoClosing.value = localStorage.getItem('editor/auto_closing') === 'true'
 		autocomplete.value = localStorage.getItem('editor/autocomplete') === 'true'
 		popups.value = localStorage.getItem('editor/popups') === 'true'
@@ -1747,7 +1750,7 @@
 		--type-color: #0000D0;
 		color: var(--text-color);
 	}
-	.theme-monokai, .theme-vs-dark, .theme-hc-black {
+	.theme-leek-wars-dark, .theme-monokai, .theme-vs-dark, .theme-hc-black {
 		--pure-white: #000;
 		--pure-black: #fff;
 		--background: #1f1f1f;
@@ -1759,6 +1762,18 @@
 		--text-color-secondary: var(--grey-9);
 		--type-color: #0099d0;
 		color: var(--text-color);
+	}
+	// Le thème maison va plus loin que les gris génériques : la coquille de
+	// l'éditeur prend les surfaces du site (thème v3 sombre), pour qu'elle soit
+	// dans la continuité du code qu'elle entoure au lieu de flotter dessus.
+	.theme-leek-wars-dark {
+		--background: #0E1316;
+		--background-secondary: #0B0F0B;
+		--background-header: #11161A;
+		--border: rgba(255, 255, 255, 0.16);
+		--text-color: #E8F0E6;
+		--text-color-secondary: #A8B4A4;
+		--type-color: #5CE0FF;
 	}
 	.page-header {
 		flex-wrap: nowrap;

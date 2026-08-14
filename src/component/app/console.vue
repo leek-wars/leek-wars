@@ -49,6 +49,7 @@ import { emitter } from '@/model/vue'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
 import { getLanguageVersions } from '../editor/file-types'
+import { isDarkCodeTheme } from '../editor/code-theme'
 import LwCode from './code.vue'
 
 defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco, 'lw-code': LwCode } })
@@ -112,7 +113,7 @@ function defaultVersion(lang: string) {
 	return getLanguageVersions(lang)[0]?.pragma ?? ''
 }
 const languageVersion = ref<string>(localStorage.getItem('console/version/' + language.value) || defaultVersion(language.value))
-const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'monokai' : 'leek-wars'))
+const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'leek-wars-dark' : 'leek-wars'))
 const leekscript = reactive({
 	version: 4,
 	strict: false,
@@ -223,7 +224,7 @@ function focus() {
 	editorRef.value?.editor.focus()
 }
 
-const cssTheme = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(theme.value) ? 'monokai' : 'leekwars')
+const cssTheme = computed(() => isDarkCodeTheme(theme.value) ? 'monokai' : 'leekwars')
 // Les aperçus des lignes passées suivent le thème PROPRE de la console (pas celui du site,
 // qui peut être clair alors que la console est sombre, et inversement).
 const codeThemeClass = computed(() => 'code-theme-' + theme.value)

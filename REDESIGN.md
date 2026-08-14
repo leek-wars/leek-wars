@@ -187,6 +187,123 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - Barres de progression rondes → jauges franches segmentées, `--info` pour
     l'état complet, reflet animé sur les deux barres importantes.
 
+- **2026-08-14, lot 11 — les boutons dorés** (retour de Pierre : « les boutons
+  récupérer étaient en jaune avant »). La classe `notif-trophy` sert à deux
+  choses : la peau des notifications de trophée ET l'or des boutons
+  « Récupérer » (boîtes, cadeaux, coffre des récompenses) et des pastilles
+  d'or. Le lot 4 avait donné le traitement de rangée (liseré + halo) à tout ce
+  qui porte la classe, boutons compris : ils avaient perdu leur aplat et leurs
+  flèches noires devenaient invisibles sur le fond sombre.
+  - Jeton `--gold` / `--gold-text` : l'or en **aplat** (l'or en **encre**,
+    c'est `--rank-first`). Valeur `gold` du mockup, #FFD23A en sombre et
+    #B88A0E en clair, encre sombre dans les deux (5,9 et 12,9 mesurés).
+  - Les boutons (`.v-btn.notif-trophy`) reprennent l'aplat et le relief à
+    trois états des boutons d'accent (lot 8) ; les pastilles
+    (`.retrieve` de l'inventaire, `.best-label` de la banque) l'aplat seul.
+    Le halo reste aux rangées de notification, au coffre de la barre et aux
+    cartes de récompense de filleul.
+  - Effet de bord corrigé : `body.dark .v-btn:not([class*="bg-"])` (global.scss)
+    peignait **tous** les boutons du thème sombre en noir, y compris en v3 où
+    il recouvrait la surface que la coquille leur donne. Restreint à
+    `body.v2.dark` : en v3 sombre les boutons pleins prennent enfin
+    `--background-header` et les boutons texte redeviennent transparents.
+  - Au passage, `.get-all.v-size--small` dans `item-preview.vue` : classe de
+    taille de Vuetify **2**, la règle ne s'appliquait plus depuis la migration.
+    Une fois rebranchée, son `padding: 7px` a désaligné les libellés (Pierre) :
+    le bouton Vuetify 3 a une **hauteur fixe** et centre son contenu dedans, un
+    padding vertical rétrécit la boîte de contenu sous la hauteur du texte, qui
+    déborde par le bas et paraît collé en haut. Padding horizontal seulement.
+  - Vérifié sur la bêta locale (aperçu d'objet, coffre des récompenses, badge
+    « Meilleure offre » de la banque) dans les deux thèmes, plus non-régression
+    v2 (dégradé jaune, coins à 2 px, élévation Material, boutons noirs).
+  - **Barres de défilement** (demande de Pierre : « une scroll bar plus jolie
+    sur ce type de menu ») : le v2 ne peignait que le pouce, en `#bbb`, soit
+    une barre presque blanche sur la piste par défaut du navigateur — l'objet
+    le plus voyant d'un menu ou d'une fiche d'objet en thème sombre. En v3 :
+    piste en surface de champ séparée par le trait, pouce franc à
+    `color-mix(--text-color 50 %)` (premier palier qui tient 3:1 dans les deux
+    thèmes), vert du thème au survol. La barre de la **page** est incluse :
+    elle n'est pas dans `body` mais à la racine, il faut une règle posée SUR
+    `body` (`&::-webkit-scrollbar`) et pas un sélecteur descendant — ce que le
+    v2 n'avait jamais fait. Firefox n'a que `scrollbar-width`/`scrollbar-color`,
+    posés dans un `@supports not selector(::-webkit-scrollbar)` : dans Chrome
+    ces propriétés désactiveraient les pseudo-éléments.
+  - **Widget « Mes poireaux » de l'accueil** (demande de Pierre) : vraie grille
+    équilibrée au lieu d'un retour à la ligne — à quatre cartes dans un panel
+    qui en tient trois, 2 × 2 et non 3 + 1. Colonnes calculées : on prend ce
+    qui tient dans la largeur, on en déduit les rangées, puis on ramène les
+    colonnes au nécessaire pour ces rangées (4 → 2×2, 3 → 3×1, 5 → 3+2). Le
+    nombre de rangées est publié en variable CSS : la hauteur de l'image se
+    partage désormais la hauteur du panel entre les rangées.
+  - Page poireau, grille des puces (demande de Pierre) : puces plafonnées à
+    **52 px**, la grille occupe toujours toute la largeur du panel, et la
+    largeur excédentaire va dans l'**écart entre les puces** — colonnes en
+    `1fr`, cases en ratio 1:1, image centrée dedans, ce qui donne le même
+    écart à l'horizontale et à la verticale. Les unités `cqw` (et le
+    `container-type` du wrapper) ne servaient plus qu'à ça, supprimées.
+
+- **2026-08-14, lot 12 — widget « Mes poireaux » et aperçu d'objet** :
+  - Le widget n'avait aucun état visible : son survol posait
+    `--background-secondary`, qui **est** la surface du panel en v3. Cases en
+    `1fr` (colonnes et rangées) au lieu de cartes de 130 px espacées, pour que
+    le rectangle de survol couvre la part entière d'un poireau ; survol en
+    surface de rangée + liseré `--border-strong`, liseré vert au clic. Demande
+    de Pierre : discret, **sans animation sur les poireaux** (une première
+    version faisait sauter l'image au survol). v2 inchangé (`body:not(.v2)`).
+  - **Défilement horizontal de l'aperçu d'objet** (`.card` de
+    `rich-tooltip-item`, 280 px, `overflow-y: auto` — donc `overflow-x: auto`
+    par cascade) : l'aperçu des poireaux (chapeau, potion de peau) posait ses
+    images à leur taille naturelle en colonnes `auto`, et un poireau à grande
+    arme dépasse sa part. Colonnes en `minmax(0, 1fr)` et images en
+    `max-width: 100% / height: auto` (le ratio vient des attributs du svg).
+    Mesuré : 409 px de contenu pour 280 px de carte avant, 280 après, les
+    petits poireaux gardant leur taille. Les **trois** copies de la règle sont
+    à corriger ensemble (`hat-preview.vue`, `potion-preview.vue`,
+    `item-preview.scss`), elles se marchent dessus à specificité égale.
+
+- **2026-08-14, lot 13 — halo de rareté, thème de code, panel « En direct »** :
+  - Fiche d'objet : l'image de l'objet passe **devant** le halo de rareté (seule
+    l'image se relève, pas son bloc, dont le fond opaque masquerait la lumière),
+    et le mot de rareté remonte au plus près du trait (`top: 42px` → `39px`,
+    padding réduit) pour se lire dans la partie vive du halo.
+  - **Thème d'éditeur « Leek Wars Dark »** (`monaco.ts` + palette `--ct-*` de
+    `monaco-highlight.scss`), aux couleurs du thème v3 sombre : fond `#0E1316`,
+    mots-clés en vert de marque, types en `--type-color`, nombres et atomes en
+    violet, annotations en `--gold`, commentaires éteints. Encres mesurées sur
+    le fond : 14,6 / 12,1 / 11,0 / 8,1 / 12,9 / 5,2. Il **remplace Monokai comme
+    défaut sombre** (Monokai reste proposé) ; la coquille de l'éditeur prend
+    aussi les surfaces du site avec ce thème.
+  - Les aperçus de code (forum, encyclopédie, doc) étaient **cassés en sombre**
+    quand le thème d'éditeur choisi était clair : les thèmes clairs ne posent
+    pas de fond (l'aperçu épouse celui de la page), donc leur encre noire et
+    leur bleu marine se retrouvaient sur le presque-noir du site. `code-theme.ts`
+    bascule désormais sur le pendant sombre du thème choisi quand la page est
+    sombre (l'inverse est inutile : les thèmes sombres portent leur fond).
+    La liste des thèmes sombres, dupliquée dans 4 fichiers, est centralisée
+    (`DARK_CODE_THEMES` / `isDarkCodeTheme`).
+  - Panel « En direct » : chaque événement porte l'**avatar** de l'éleveur, avec
+    l'icône d'événement (trophée, épées, crâne, forum) en pastille sur son coin.
+    Demande un champ `avatar_changed` dans `live/get-events` (côté serveur) :
+    sans lui, l'`avatar` retombe sur l'image par défaut.
+
+- **2026-08-14, lot 14 — l'arbre du tournoi tient dans l'écran** : la fenêtre
+  élargie du redesign donnait au SVG (ratio fixe, largeur 100 %) une hauteur
+  supérieure à l'écran, il **débordait en bas**. `tournament-graph.vue` mesure
+  désormais sa place (largeur du conteneur en `ResizeObserver`, hauteur restante
+  sous lui) et fixe sa hauteur ; la largeur en trop passe dans le `viewBox`.
+  Pour la consommer **sans déformer** (choix de Pierre contre un
+  `preserveAspectRatio="none"` qui aplatirait poireaux et avatars), les x
+  passent par `sx()` : une carte affine par morceaux, identité (simple
+  translation) sur les **bandes** occupées par chaque tour, étirée dans les
+  espaces. Les cases restent carrées et les traits collés à leurs bords, seuls
+  les connecteurs s'allongent. La finale et le vainqueur ne passent pas par
+  `sx()` (sommet du bracket, centré) ; les demi-finales, elles, s'écartent avec
+  leur tour — d'où le `moved` de `L()`, qui limite l'étirement d'un connecteur à
+  ses premiers points. Le `viewBox` gagne 5 unités en bas : les noms de la
+  dernière rangée y étaient rognés. Bonus : le tooltip des cases sans lien
+  n'essaie plus de refaire le calcul d'échelle à la main, la case émet sa
+  position à l'écran.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser

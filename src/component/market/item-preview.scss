@@ -135,10 +135,17 @@
 		padding: 10px;
 		// Grille 2 colonnes (2x2 pour 4 poireaux) comme l'aperçu des chapeaux,
 		// sinon le flex retombait sur une seule ligne et débordait.
+		// Colonnes en `1fr` bornées à 0 et images qui rétrécissent : sinon un
+		// poireau à grande arme dépasse sa part de la carte (280 px) et l'aperçu
+		// se met à défiler à l'horizontale.
 		display: grid;
-		grid-template-columns: repeat(2, auto);
-		justify-content: center;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		justify-items: center;
 		align-items: end;
 		gap: 10px 14px;
+		svg {
+			max-width: 100%;
+			height: auto;
+		}
 	}
 }

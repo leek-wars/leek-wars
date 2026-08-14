@@ -154,6 +154,44 @@ monaco.editor.defineTheme("leek-wars", {
 	},
 })
 
+/*
+ * Thème sombre maison, aux couleurs du site (thème v3 sombre) : c'est le thème
+ * par défaut en mode sombre, à la place de Monokai — qui reste proposé.
+ * Il transpose le thème clair « leek-wars » plutôt que d'inventer une sémantique :
+ * mots-clés en gras, types en gras, chaînes chaudes, commentaires éteints. Le vert
+ * de marque prend la place du bleu marine des mots-clés, et les nombres passent au
+ * violet, le vert étant désormais pris.
+ * Toutes les encres sont mesurées sur le fond #0E1316 : 14,6 pour le vert, 12,1 le
+ * cyan, 11,0 l'orange, 8,1 le violet, 12,9 l'or, 5,2 les commentaires (le plus bas,
+ * volontairement discret mais au-dessus de 4,5:1).
+ */
+monaco.editor.defineTheme("leek-wars-dark", {
+	base: "vs-dark",
+	inherit: true,
+	rules: [
+		{ token: "comment", foreground: "7c8b76" },
+		{ token: "string", foreground: "ffb86b" },
+		{ token: "keyword", foreground: "7cff6b", fontStyle: 'bold' },
+		{ token: "type", foreground: "5ce0ff", fontStyle: 'bold' },
+		{ token: "lsconstant", foreground: "e8f0e6", fontStyle: 'bold' },
+		{ token: "lsfunction", foreground: "e8f0e6", fontStyle: 'italic' },
+		{ token: "lsfunction-deprecated", foreground: '6b7a66', fontStyle: 'italic' },
+		{ token: "atom", foreground: 'b79bff', fontStyle: 'bold' },
+		{ token: "number", foreground: 'b79bff' },
+		{ token: "annotation", foreground: 'ffd23a', fontStyle: 'bold' },
+	],
+	colors: {
+		"editor.foreground": "#E8F0E6",
+		"editor.background": "#0E1316",
+		"editor.lineHighlightBackground": "#131A1E",
+		"editor.selectionBackground": "#7CFF6B33",
+		"editorCursor.foreground": "#7CFF6B",
+		"editorLineNumber.foreground": "#6B7A66",
+		"editorLineNumber.activeForeground": "#7CFF6B",
+		"editor.hoverHighlightBackground": "#00aeff33"
+	},
+})
+
 monaco.editor.defineTheme("monokai", {
 	base: "vs-dark", // can also be vs-dark or hc-black
 	inherit: true, // can also be false to completely replace the builtin rules

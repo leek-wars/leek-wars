@@ -93,6 +93,7 @@ const currentVersionShort = computed(() => {
 
 const themes = [
 	{ value: 'leek-wars', label: 'Leek Wars' },
+	{ value: 'leek-wars-dark', label: 'Leek Wars Dark' },
 	{ value: 'monokai', label: 'Monokai' },
 	{ value: 'vs', label: 'VS Code clair' },
 	{ value: 'vs-dark', label: 'VS Code sombre' },

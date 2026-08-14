@@ -171,7 +171,7 @@ defineExpose({ goToConflict })
 }
 
 /* Dark theme adjustments */
-.theme-monokai, .theme-vs-dark, .theme-hc-black {
+.theme-leek-wars-dark, .theme-monokai, .theme-vs-dark, .theme-hc-black {
 	.merge-marker-current {
 		background: rgba(76, 175, 80, 0.3) !important;
 	}

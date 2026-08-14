@@ -20,6 +20,7 @@
 import { mixins } from '@/model/i18n'
 import { computed, nextTick, onMounted, useTemplateRef, watch } from 'vue'
 import { clearLog, gitLog } from './git-log'
+import { isDarkCodeTheme } from './code-theme'
 
 defineOptions({ name: 'GitTerminal', i18n: {}, mixins: [...mixins] })
 
@@ -32,7 +33,7 @@ const props = withDefaults(defineProps<{
 const logEl = useTemplateRef<HTMLElement>('logEl')
 
 const entries = computed(() => gitLog.entries)
-const isDark = computed<boolean>(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
+const isDark = computed<boolean>(() => isDarkCodeTheme(props.theme))
 
 function clear() { clearLog() }
 
