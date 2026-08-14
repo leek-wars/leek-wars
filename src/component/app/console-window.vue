@@ -84,6 +84,7 @@ const consoleDragx = ref(0)
 const consoleDragy = ref(0)
 const themes = [
 	{ value: 'leek-wars', label: 'Leek Wars' },
+	{ value: 'leek-wars-dark', label: 'Leek Wars Dark' },
 	{ value: 'monokai', label: 'Monokai' },
 	{ value: 'vs', label: 'VS Code clair' },
 	{ value: 'vs-dark', label: 'VS Code sombre' },

@@ -920,6 +920,54 @@ body:not(.v2) {
 		transform: translate(1px, 1px);
 	}
 
+	/* Les boutons dorés : « Récupérer » (une boîte, un cadeau, le coffre des
+	   récompenses) et les pastilles d'or. Ils portent `notif-trophy`, la classe
+	   qui sert aussi de peau aux notifications de trophée — le traitement de
+	   rangée plus haut (liseré + halo) les avait donc vidés de leur or au lot 4.
+	   Or un bouton d'action n'est pas une notification : c'est un bouton
+	   d'accent, et leurs flèches noires devenaient invisibles sur le fond
+	   sombre. Ils reprennent l'aplat doré dans la langue du v3 : couleur pleine,
+	   encre sombre, angles francs, et le relief à trois états de l'ombre pixel
+	   (que `[class*="bg-"]` au-dessus ne peut pas attraper, leur couleur ne
+	   venant pas d'une classe Vuetify). */
+	.v-btn.notif-trophy,
+	.notif-trophy.retrieve,
+	.notif-trophy.best-label {
+		border: none;
+		background: var(--gold);
+		color: var(--gold-text) !important;
+	}
+	/* Le reflet des notifications n'a rien à faire sur un bouton. */
+	.v-btn.notif-trophy::after,
+	.notif-trophy.retrieve::after,
+	.notif-trophy.best-label::after {
+		content: none;
+	}
+	.notif-trophy.retrieve,
+	.notif-trophy.best-label {
+		box-shadow: none;
+	}
+	.v-btn.notif-trophy {
+		box-shadow: var(--shadow-pixel-small);
+		transition: box-shadow .12s ease, transform .12s ease;
+	}
+	.v-btn.notif-trophy:hover {
+		box-shadow: var(--shadow-pixel);
+		transform: translate(-1px, -1px);
+	}
+	.v-btn.notif-trophy:active {
+		box-shadow: var(--shadow-pixel-pressed);
+		transform: translate(1px, 1px);
+	}
+	/* Le bouton d'une ligne de récompense du coffre (`.get`) est le seul à
+	   prendre la version BLANCHE de la flèche — ses voisins chargent déjà
+	   celle de `icon/black/`. Sur l'or il faut de l'encre sombre, donc on
+	   l'inverse. (Impossible de viser le fichier par son `src` : Vite inline
+	   les petits SVG en data-URI.) */
+	.v-btn.notif-trophy.get img {
+		filter: invert(1);
+	}
+
 	/* ====== Ripple ======
 	 *
 	 * L'onde Material est le marqueur le plus voyant du framework : elle sort
@@ -1245,6 +1293,19 @@ body:not(.v2) {
 			transparent 75%);
 		pointer-events: none;
 	}
+	/* L'objet, lui, passe DEVANT le halo : la lumière éclaire la fiche, elle ne
+	   teinte pas l'objet. Seule l'image se relève — pas le bloc qui la porte,
+	   dont le fond opaque masquerait le halo au lieu de le recevoir. */
+	.item-preview .image > img,
+	.item-preview .image > .scheme-image {
+		position: relative;
+		z-index: 2;
+	}
+	/* Le badge de charge est déjà positionné : lui donner le z-index suffit. */
+	.item-preview .image > .charge {
+		z-index: 2;
+	}
+
 	/* L'étiquette de rareté était une pastille pleine à encre blanche : sur
 	   l'or elle plafonnait à 2:1, et elle butait contre le bord de la fiche.
 	   Elle devient du texte dans sa propre couleur, en capitales de la police
@@ -1254,7 +1315,11 @@ body:not(.v2) {
 	   pure en thème sombre, nettement plus foncée en clair, où l'or pur sur le
 	   parchemin serait illisible. */
 	.rarity-wrapper {
-		padding: 6px 10px;
+		/* Remonté au plus près du trait (le `top: 42px` de base le décrochait de
+		   6 px de plus) : le mot se lit dans la partie vive du halo, là où la
+		   lumière est la plus dense, au lieu de flotter au milieu de la fiche. */
+		top: 39px;
+		padding: 2px 10px;
 		/* Au-dessus du halo : la lumière du trait déborde justement sur cette
 		   zone (`z-index: 1` sur la bande), et sans ça elle passait par-dessus
 		   le mot, qui devenait illisible. */
@@ -1512,6 +1577,61 @@ body:not(.v2) {
 	footer .footer,
 	.footer {
 		border-top: 1px solid var(--border);
+	}
+
+	/* ====== Barres de défilement ======
+	 *
+	 * Le v2 ne peint que le pouce, en #bbb : sur le sombre du v3 c'est une
+	 * barre blanche posée sur la piste par défaut du navigateur, la chose la
+	 * plus voyante d'un menu déroulant ou d'une fiche d'objet.
+	 *
+	 * En v3 : la piste est une surface de champ séparée du contenu par le
+	 * trait, le pouce un aplat franc tiré de l'encre (donc juste dans les deux
+	 * thèmes sans deux jeux de valeurs), qui passe au vert du thème au survol
+	 * comme les autres éléments qu'on manipule. Angles francs, évidemment.
+	 *
+	 * Le `&::` doublé partout n'est pas une coquetterie : la barre de la PAGE
+	 * n'est pas dans `body`, elle est à la racine, et le navigateur ne va la
+	 * chercher que sur une règle posée SUR `html` ou `body` — un sélecteur
+	 * descendant (`body ::-webkit-scrollbar`, ce que faisait le v2) ne
+	 * l'atteint jamais. */
+	&::-webkit-scrollbar,
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+	&::-webkit-scrollbar-track,
+	&::-webkit-scrollbar-corner,
+	::-webkit-scrollbar-track,
+	::-webkit-scrollbar-corner {
+		background: var(--background-input);
+		border-left: 1px solid var(--border);
+	}
+	&::-webkit-scrollbar-track:horizontal,
+	::-webkit-scrollbar-track:horizontal {
+		border-left: none;
+		border-top: 1px solid var(--border);
+	}
+	/* 50 % d'encre : c'est le premier palier qui tient le contraste de 3:1 exigé
+	   d'un élément qu'on manipule, dans les DEUX thèmes (4,7 en sombre, 3,5 en
+	   clair — mesuré contre la piste). En dessous, le pouce s'efface. */
+	&::-webkit-scrollbar-thumb,
+	::-webkit-scrollbar-thumb {
+		background: color-mix(in srgb, var(--text-color) 50%, transparent);
+		border-radius: 0;
+	}
+	&::-webkit-scrollbar-thumb:hover,
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--primary);
+	}
+	/* Firefox ne connaît pas les pseudo-éléments webkit ; il n'a que ces deux
+	   propriétés (et impose son pouce arrondi). Le `@supports` évite de les
+	   poser dans Chrome, où elles DÉSACTIVERAIENT les règles ci-dessus. */
+	@supports not selector(::-webkit-scrollbar) {
+		* {
+			scrollbar-width: thin;
+			scrollbar-color: color-mix(in srgb, var(--text-color) 50%, transparent) var(--background-input);
+		}
 	}
 }
 

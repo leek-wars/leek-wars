@@ -164,6 +164,7 @@ function click(e: Event) {
 			}
 		}
 	}
+	.theme-leek-wars-dark .count.leek img,
 	.theme-monokai .count.leek img {
 		filter: invert(1);
 	}
