@@ -91,6 +91,10 @@ abstract class FightEntity extends Entity {
 	public power = 0
 	public maxLife = 1
 	public initialMaxLife = 1
+	// Vie de base de l'entité (stats de base côté serveur), invariante pendant le
+	// combat. Distincte de initialMaxLife, qui est amputée du bonus de critique des
+	// invocations pour le calcul de la taille d'affichage (growth).
+	public baseLife = 1
 	public maxTP = 0
 	public maxMP = 0
 	public absoluteShield = 0

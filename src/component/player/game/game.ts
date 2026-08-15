@@ -2,6 +2,7 @@
 import Player from '@/component/player/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
+import { getPreSummonMultipliers, unmultiplyStats } from '@/component/player/game/colossus'
 import { playAudio } from '@/model/audio'
 import { Farmer } from '@/model/farmer'
 import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, effectRecipients, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Exasperation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
@@ -557,8 +558,15 @@ class Game {
 
 		// Add entities
 		const entities = this.data.leeks
+		const preSummonMultipliers = getPreSummonMultipliers(entities, this.data.actions)
 
-		for (const e of entities) {
+		for (const raw of entities) {
+
+			// Le snapshot d'une invocation figé APRÈS son multiplicateur de Colosse
+			// contient déjà les stats multipliées : on les ramène à la base, l'action
+			// d'effet rejouée juste après se charge de les multiplier (cf.
+			// getPreSummonMultipliers).
+			const e = raw.id in preSummonMultipliers ? unmultiplyStats(raw, preSummonMultipliers[raw.id]) : raw
 
 			const type = typeof(e.type) === 'undefined' ? EntityType.LEEK : e.type
 
@@ -587,6 +595,7 @@ class Game {
 			entity.displayLife = e.life
 			entity.maxLife = entity.life
 			entity.initialMaxLife = entity.maxLife
+			entity.baseLife = entity.maxLife
 
 			// Strength
 			entity.strength = 0
@@ -1880,7 +1889,10 @@ class Game {
 				if (leek.mp) leek.buffMP(leek.mp * factor, this.jumping)
 				// Mirror server EffectMultiplyStats.apply: additive on maxLife so erosion is preserved.
 				// First apply adds (factor-1)*lifeBase; replacement adds 1*lifeBase.
-				const lifeBase = leek.initialMaxLife
+				// lifeBase = vie de base du serveur, donc baseLife et non initialMaxLife :
+				// cette dernière est divisée par 1.2 sur une invocation critique (taille
+				// d'affichage), ce qui sous-évaluait le bonus des bulbes critiques du Colosse.
+				const lifeBase = leek.baseLife
 				const lifeDelta = leek.maxLife <= lifeBase ? lifeBase * factor : lifeBase
 				const ratio = leek.maxLife > 0 ? leek.life / leek.maxLife : 1
 				leek.winMaxLife(lifeDelta, this.jumping)
