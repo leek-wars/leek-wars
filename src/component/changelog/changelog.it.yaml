@@ -26,6 +26,8 @@
     - "#ai API JavaScript, TypeScript e Python: le funzioni di puntamento si chiamano ora su Fight (Fight.weaponCells, Fight.chipCell, Fight.weaponTargets...), e non più solo su me. Non dipendono da nessuna entità in particolare — l'arma equipaggiata è solo un valore predefinito — quindi Fight.weaponCells(cella, nemico.weapon) dice da dove il nemico può colpire quella cella. Restano richiamabili su me (grazie a GSoMan)."
     - "La forgia segnala in rosso gli ingredienti mancanti e rifiuta la fabbricazione finché non ci sono tutti."
     - "#ai Il pannello dei problemi dell'editor non si apre più all'arrivo quando non c'è nessun errore, avviso o TODO da mostrare."
+    - "Il tabellone del torneo ora sta nell'altezza dello schermo, senza sbordare in basso: la larghezza in eccesso è distribuita tra i turni, che si allontanano invece di ingrandire le caselle."
+    - "Nel tabellone del torneo, il percorso del vincitore è tracciato in oro — comprese le sue caselle, in ogni turno che ha superato — e quello dei tuoi partecipanti in verde. Le caselle prendono il taglio smussato degli avatar, i nomi sono meno troncati e le linee grigie si leggono finalmente nel tema scuro."
   fixed:
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo cliccando sulla loro freccia (grazie a hypernavet)."
     - "Chat: un simbolo $ dentro un blocco di codice non vi fa più comparire tag &lt;latex&gt; (grazie a fujiwar)."

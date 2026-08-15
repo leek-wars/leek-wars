@@ -304,6 +304,57 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   n'essaie plus de refaire le calcul d'échelle à la main, la case émet sa
   position à l'écran.
 
+- **2026-08-14, lot 15 — l'arbre du tournoi, retours de Pierre** :
+  - **Coupe en biseau des cases** (`bracket.ts`, `cutSquare`) : les `rect`
+    deviennent des `polygon` aux mêmes deux coins coupés que les avatars, à 18 %
+    du côté — la case et l'avatar de l'éleveur qu'elle porte se répondent. Les
+    **boîtes de combat restent carrées** (demande de Pierre : elles avaient reçu
+    la coupe elles aussi, c'était trop).
+    Le contenu (poireau, image) est découpé par un **`<g>` englobant** et non par
+    lui-même : `leek-image` est un `<svg>` imbriqué, un `clip-path` posé dessus
+    s'applique dans SON repère et fait tout disparaître (constaté à l'écran).
+  - **Traits en sombre** : `--background-disabled` (#2A2F2C) se perdait sur le
+    fond du panneau. Le trait passe par une variable `--bracket-line`, posée sur
+    le `<svg>` et héritée par les cases et les combats (les variables CSS
+    traversent le `scoped`), qui vaut l'encre éteinte `--text-color-faint` en
+    sombre — la même que le trait des avatars. Le clair est inchangé.
+  - **Chemins mis en valeur** : doré (`--gold`) pour le vainqueur, vert
+    (`--primary`) pour nos participants, 4 px au lieu de 3. Le participant qui
+    emprunte un trait est celui qui apparaît au tour suivant à la place
+    correspondante (matchs 2i et 2i+1 → les deux cases du match i) ; rien de joué
+    = rien de mis en valeur. L'attribution des 63 connecteurs à leur match a été
+    faite **par géométrie** (le premier point d'un trait tombe dans la boîte de
+    combat de son match) plutôt qu'à la main.
+    Le vainqueur porte en plus un **bord doré sur ses cases**, à tous les tours
+    qu'il a traversés : le graphe `provide` le vainqueur, chaque case s'y compare
+    (`sameEntry`, sur le lien, à défaut le nom) — sans quoi il aurait fallu
+    passer la comparaison en prop aux 126 cases du template.
+  - **Connecteurs décalés de 10 unités** (huitièmes → quarts, quarts → demies,
+    demies → finale, soit 14 traits) : leur segment vertical d'arrivée mourait
+    au bord d'une case, exactement sous l'étiquette du nom (12,8 unités de haut)
+    qui l'avalait en entier. La barre horizontale s'éloigne donc de la case
+    d'autant, ce qui sort le vertical de sous l'étiquette. **Épaissir le trait
+    ne marche pas** (essayé : 4 px au lieu de 3), il faut le décaler.
+    Ce décalage avait emmené le **départ** de 8 de ces traits près du coin de
+    leur boîte de combat au lieu du milieu de son bord (repéré par Pierre en
+    haut à droite) : ils repartent du milieu et prennent leur hauteur par un
+    petit décrochement une fois la boîte quittée. Vérifiable d'un coup, les 63
+    connecteurs devant partir au milieu du bord de leur boîte (`rect.fight`).
+  - **Chemins animés : essayé, retiré.** J'avais fait couler les chemins mis en
+    valeur vers le trophée (tirets `14 6` et `stroke-dashoffset` décroissant, à
+    la manière des « fourmis en marche »). **Pierre veut une ligne pleine** : la
+    couleur suffit à raconter le parcours, l'arbre n'a pas besoin de bouger.
+    À garder si l'idée revient un jour : animer le tiret repeint la zone du
+    trait, donc les poireaux et les étiquettes qui s'y trouvent, et le SVG en
+    porte plus de cent — en `linear`, 96 images lentes sur 150 (à 6× de bridage
+    CPU sur un arbre de 64) contre 7 par paliers (`steps(6)`, 5 images par
+    seconde). Et mesurer sur une machine calme : les autres onglets Chrome
+    ouverts suffisent à noyer l'écart (frames à 500 ms, animation ou pas).
+  - **Nom des participants** : taille FIXE (8 unités) au lieu de proportionnelle
+    à la case, et marge intérieure resserrée. La taille suivait la case, ce qui
+    coupait très tôt les noms des petits tours — les plus nombreux — et donnait
+    deux tailles de texte par colonne.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser

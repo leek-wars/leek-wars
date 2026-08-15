@@ -26,6 +26,8 @@
     - "#ai JavaScript, TypeScript and Python API: the targeting functions can now be called on Fight (Fight.weaponCells, Fight.chipCell, Fight.weaponTargets...), and not only on me. They do not depend on any particular entity — the equipped weapon is only a default — so Fight.weaponCells(cell, enemy.weapon) tells you where the enemy can strike that cell from. They are still callable on me (thanks to GSoMan)."
     - "The forge highlights missing ingredients in red and refuses to craft until you have them all."
     - "#ai The editor's problems panel no longer opens on arrival when there is no error, warning or TODO to show."
+    - "The tournament bracket now fits in the screen height instead of overflowing at the bottom: the extra width is shared between the rounds, which spread apart instead of the boxes getting bigger."
+    - "In the tournament bracket, the winner's path is drawn in gold — including their boxes, in every round they went through — and your participants' path in green. Boxes take the bevelled corners of avatars, names are less truncated, and the grey lines are finally readable in the dark theme."
   fixed:
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
     - "Chat: a $ symbol inside a code block no longer makes &lt;latex&gt; tags appear in it (thanks to fujiwar)."

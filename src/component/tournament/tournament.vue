@@ -1,5 +1,5 @@
 <template>
-	<div class="tournament-page page">
+	<div ref="page" class="tournament-page page">
 		<div class="page-header page-bar">
 			<h1>{{ tournament ? title : '...' }}</h1>
 			<div v-if="!LeekWars.mobile && tournament && !tournament.finished" class="tabs">
@@ -10,10 +10,10 @@
 		</div>
 		<panel class="first">
 			<template #content>
-				<div ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
+				<div :class="{zoomed: zoomed}" class="content tournament">
 
 					<loader v-if="!tournament" />
-					<tournament-graph v-else :tournament="tournament" :class="{zoomed: zoomed}" :style="{maxHeight: zoomed ? height : 'auto', minWidth: zoomed && LeekWars.mobile ? '950px' : ''}" />
+					<tournament-graph v-else :tournament="tournament" :zoomed="zoomed" :class="{zoomed: zoomed}" :style="{minWidth: zoomed && LeekWars.mobile ? '950px' : ''}" />
 
 					<pre v-if="$store.getters.admin && tournament" class="info">
 Min power: {{ $filters.number(tournament.min_power || 0) }}
@@ -65,11 +65,10 @@ const tooltipX = ref(0)
 const tooltipY = ref(0)
 const tooltipText = ref('')
 const zoomed = ref(false)
-const height = ref(0)
 const timerText = ref('')
 let timer: ReturnType<typeof setTimeout> | undefined
 const generating = ref(false)
-const sizer = useTemplateRef<HTMLElement>('sizer')
+const page = useTemplateRef<HTMLElement>('page')
 
 const actions: { icon: string; click: () => void }[] = [{ icon: 'mdi-magnify-plus-outline', click: () => zoom() }]
 
@@ -135,14 +134,14 @@ onBeforeUnmount(() => {
 	}
 })
 
+// Le graphe est mis à l'échelle dynamiquement : la case émet sa position à
+// l'écran, on la ramène ici dans le repère de la page (positionnée relative).
 function tooltipOpen(data: { x: number, y: number, content: string }) {
-	if (!tournament.value || !sizer.value) return
+	if (!page.value) return
+	const rect = page.value.getBoundingClientRect()
 	tooltip.value = true
-	const width = sizer.value.offsetWidth - 30
-	const tournamentWidth = tournament.value.size === 64 ? 1224 : 944
-	const ratio = width / tournamentWidth
-	tooltipX.value = 15 + (tournamentWidth / 2 + data.x) * ratio
-	tooltipY.value = 60 + (400 + data.y) * ratio
+	tooltipX.value = data.x - rect.left
+	tooltipY.value = data.y - rect.top
 	tooltipText.value = data.content
 }
 
@@ -163,7 +162,6 @@ function zoom() {
 		actions[0].icon = 'mdi-magnify-plus-outline'
 	} else {
 		zoomed.value = true
-		height.value = window.innerHeight - 86
 		actions[0].icon = 'mdi-magnify-minus-outline'
 	}
 }

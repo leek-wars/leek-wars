@@ -29,7 +29,7 @@ function click(e: Event) {
 
 <style lang="scss" scoped>
 	.fight {
-		stroke: var(--background-disabled);
+		stroke: var(--bracket-line);
 		stroke-width: 2;
 	}
 	.no-fight {

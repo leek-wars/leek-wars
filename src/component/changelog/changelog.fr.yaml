@@ -26,6 +26,8 @@
     - "#ai API JavaScript, TypeScript et Python : les fonctions de ciblage s'appellent maintenant sur Fight (Fight.weaponCells, Fight.chipCell, Fight.weaponTargets...), et plus seulement sur me. Elles ne dépendent d'aucune entité en particulier — l'arme équipée n'y est qu'un défaut — donc Fight.weaponCells(case, ennemi.weapon) dit d'où l'ennemi peut frapper cette case. Elles restent appelables sur me (merci à GSoMan)."
     - "La forge signale en rouge les ingrédients qui manquent et refuse la fabrication tant qu'ils ne sont pas tous réunis."
     - "#ai Le panneau des problèmes de l'éditeur ne s'ouvre plus à l'arrivée quand il n'y a ni erreur, ni avertissement, ni TODO à afficher."
+    - "L'arbre du tournoi tient maintenant dans la hauteur de l'écran, sans déborder en bas : la largeur en trop est distribuée entre les tours, qui s'écartent au lieu d'agrandir les cases."
+    - "Dans l'arbre du tournoi, le chemin du vainqueur est tracé en doré — ses cases aussi, à chaque tour qu'il a traversé — et celui de vos participants en vert. Les cases prennent la coupe en biseau des avatars, les noms sont moins tronqués, et les traits gris se lisent enfin en thème sombre."
   fixed:
     - "Documentation : pendant une recherche, les catégories se replient de nouveau en cliquant sur leur flèche (merci à hypernavet)."
     - "Chat : un symbole $ dans un bloc de code n'y fait plus apparaître de balises &lt;latex&gt; (merci à fujiwar)."
