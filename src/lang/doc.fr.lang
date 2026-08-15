@@ -28,7 +28,7 @@
 	"replaced_by": "Elle est remplacée par {0}.",
 	"const_AREA_CIRCLE_1": "Zone circulaire de 3 cases de diamètre (croix).",
 	"const_AREA_CIRCLE_2": "Zone circulaire de 5 cases de diamètre.",
-	"const_AREA_CIRCLE_3": "Zone circulaire de 7 cases de diamètre.",
+	"const_AREA_CIRCLE_3": "Zone circulaire de 7 cases de diamètre.",
 	"const_AREA_LASER_LINE": "Zone d'une laser, ligne depuis la portée minimum du laser jusqu’à sa portée maximum ou bien un obstacle.",
 	"const_AREA_POINT": "Zone constituée d'une seule case.",
 	"const_CELL_EMPTY": "Valeur de retour de getCellContent(cell) pour une case vide.",
