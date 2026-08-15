@@ -49,6 +49,7 @@
     - "A leek hit by the Flame Thrower burns again, and one hit by the Gazor is covered in gas: neither animation was triggering anymore."
     - "Liberation no longer removes the Sterile state: the reduction was applied to the state's identifier, which turned into another state and vanished from the display. A state is all or nothing, only a total reduction (Exasperation) removes it."
     - "The Sterile state icon goes from orange to red, as befits a state you suffer."
+    - "In the market, expanding an effect's raw line then selecting another item now updates that line: it kept the previous item's effect type and values (thanks to pakalatak)."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

@@ -1,6 +1,9 @@
 <template>
 	<div :class="{single, [finalTheme]: true}">
-		<code v-show="expanded" ref="codeEl"></code>
+		<!-- `:key="code"` recrée l'élément à chaque changement de code : createCodeArea refuse de
+		     reformater un élément déjà formaté, il lui faut un élément neuf. Sans ça, un composant
+		     réutilisé (effets d'une arme à l'autre dans le marché) garde le code du précédent. -->
+		<code v-show="expanded" :key="code" ref="codeEl"></code>
 		<span v-if="expandable && !single" v-ripple class="button" @click="expanded = !expanded">
 			<v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 			<span v-if="expanded" class="label">{{ $t('main.close') }}</span>

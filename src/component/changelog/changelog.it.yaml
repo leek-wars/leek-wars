@@ -49,6 +49,7 @@
     - "Il porro colpito dal Lanciafiamme brucia di nuovo, e quello colpito dal Gasatore si copre di gas: nessuna delle due animazioni si attivava più."
     - "Una Liberazione non toglie più lo stato Sterile: la riduzione si applicava all'identificatore dello stato, che diventava un altro stato e spariva dalla visualizzazione. Uno stato è tutto o niente, solo una riduzione totale (Esasperazione) lo toglie."
     - "L'icona dello stato Sterile passa dall'arancione al rosso, come si conviene a uno stato subito."
+    - "Al mercato, espandere la riga grezza di un effetto e poi selezionare un altro oggetto ora aggiorna quella riga: conservava il tipo e i valori dell'oggetto precedente (grazie a pakalatak)."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."
