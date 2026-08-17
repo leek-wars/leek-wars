@@ -1187,7 +1187,6 @@ class BuryParticle extends Particle {
 		super(game, x, y, 0, BuryParticle.LIFE)
 		this.texture = texture
 		this.scale = scale
-		// console.log("texture", game, x, y, texture, texture.texture.width, texture.texture.height)
 	}
 
 	public draw(ctx: CanvasRenderingContext2D): void {
@@ -1197,7 +1196,6 @@ class BuryParticle extends Particle {
 		const w = this.texture.texture.width
 		const h = (this.life / BuryParticle.LIFE) * this.texture.texture.height
 		// const h = this.texture.texture.height
-		// console.log("draw", this.x, this.y, w, h)
 		if (h <= 0) { return }
 		ctx.drawImage(this.texture.texture, 0, 0, w, h, - w / 2 * this.scale, - h * this.scale, w * this.scale, h * this.scale)
 	}

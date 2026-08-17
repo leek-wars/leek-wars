@@ -55,7 +55,6 @@ export class BossSquads {
 	}
 	updateSquad(data: BossSquad) {
 		this.squad = data
-		// console.log("Update squad", data)
 		const leeks = this.squad!.engaged_leeks.filter(l => (l.farmer as unknown as number) === store.state.farmer!.id).map(l => l.id)
 		localStorage.setItem('garden/boss-leeks', JSON.stringify(leeks))
 		// this.enabled = true

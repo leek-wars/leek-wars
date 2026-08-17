@@ -9,7 +9,6 @@ class Explorer {
 	public selectedFolder!: Folder
 
 	public selectAI(ai: AI) {
-		// console.log("select ai", ai)
 		if (this.selectedAI) {
 			this.selectedAI.selected = false
 			if (this.selectedFolder) {
@@ -26,7 +25,6 @@ class Explorer {
 	}
 
 	public selectFolder(folder: Folder) {
-		// console.log("select folder", folder)
 		if (this.selectedFolder) {
 			this.selectedFolder.selected = false
 		}

@@ -184,7 +184,6 @@ class FightStatistics {
 
 		for (const action of fight.data.actions) {
 			const type = action[0] as ActionType
-			// console.log(action)
 			switch (type) {
 				case ActionType.NEW_TURN: {
 					// Possible d'avoir des action new_turn deux fois de suite (bug corrigé)

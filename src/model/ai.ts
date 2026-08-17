@@ -12,6 +12,7 @@ import { i18n } from './i18n'
 import { Keyword, KeywordKind, LSClass } from './keyword'
 import { LeekWars } from './leekwars'
 import type * as monaco from 'monaco-editor'
+import { logger } from '@/utils/logger'
 
 class AI {
 	public name!: string
@@ -58,8 +59,6 @@ class AI {
 
 		if (!isLeekScript(this.path)) return
 
-		// console.log("analyze", this.path)
-
 		try {
 			this.updateIncludes()
 
@@ -76,31 +75,24 @@ class AI {
 			}
 			this.comments = comments
 
-			// console.log("Comments", comments)
-
 			this.updateFunctions()
 			this.updateClasses()
 			this.updateGlobalVars()
 		} catch (e) {
-			console.error("analyze failed", this.path, e)
+			logger.error("analyze failed", this.path, e)
 		}
 	}
 
 	public updateIncludes() {
-		// console.log("Update includes", this.path, ('' + this.code).substring(0, 100))
 		// console.time("inc")
 		this.includes = []
 		const regex = /include\s*\(\s*["'](.*?)["']\s*\)/gm
 		let m
 		while ((m = regex.exec(this.code))) {
 			const path = m[1]
-			// console.log(m)
 			const included = fileSystem.find(path, this.folder)
 			if (included) {
-				// console.log("Found included", path, this.folder, included)
 				this.includes.push(included)
-			} else {
-				// console.warn("Included not found", path, this.ai.folder, included)
 			}
 		}
 		// console.timeEnd("inc")
@@ -145,12 +137,10 @@ class AI {
 
 		while ((match = regex.exec(this.code)) != null) {
 
-			// console.log(match)
 			const line = this.code.substring(0, match.index).split("\n").length
 			const return_type = match[3] ? match[3].trim() : 'any'
 
 			const { args, types } = this.parseArguments(match[2])
-			// console.log(args, types)
 
 			let fullName = match[1] + "(" + args.join(", ") + ")"
 			let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
@@ -162,21 +152,18 @@ class AI {
 				description: "",
 				items: [] as JavadocItem[],
 			}
-			// console.log(javadoc)
 			// Add arguments from signature
 			let a = 0
 			for (const arg of args) {
 				javadoc.items.push({ type: 'param', name: arg, text: null, lstype: { name: types[a] } })
 				a++
 			}
-			// console.log(javadoc.items)
 			if (comment) {
 				const javadoc_lines = comment.split("\n")
 				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z0-9_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 				let match_javadoc
 				for (const jline of javadoc_lines) {
 					if ((match_javadoc = javadoc_regex.exec(jline))) {
-						// console.log(match_javadoc)
 						const type = match_javadoc[1]
 						let name = match_javadoc[2]
 						let text = match_javadoc[3]
@@ -194,9 +181,7 @@ class AI {
 								text = text.trim().substring(1)
 							}
 							if (args.includes(name) || args.includes(text)) {
-								// console.log('arg', name, text)
 								const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.name === name) || (text.length && i.name === text)))
-								// console.log('existing', existing)
 								// existing.name = existing.text
 								if (existing) existing.text = text
 								continue
@@ -212,7 +197,6 @@ class AI {
 						}
 					}
 				}
-				// console.log("javadoc", javadoc)
 			}
 
 			// Escape
@@ -236,7 +220,6 @@ class AI {
 				category: 4,
 				return_type: { name: return_type }
 			}
-			// console.log(fun)
 			this.functions.push(fun)
 		}
 	}
@@ -283,7 +266,6 @@ class AI {
 				)
 			}
 		}
-		// console.log("Classes", this.ai.classes)
 		// console.timeEnd('classes')
 
 		// console.time('static_fields')
@@ -295,8 +277,6 @@ class AI {
 			const name = match[3]
 			if (name === 'function' || name === 'for' || name === 'while' || name === 'if') continue
 
-			// console.log(match[1], match[2], match[3])
-
 			const is_static = !!match[1]
 			const type = match[2]
 			const line = this.code.substring(0, match.index).split("\n").length
@@ -306,21 +286,18 @@ class AI {
 			description += i18n.t('leekscript.defined_in', [this.name, line])
 
 			const comment = this.comments[match.index] || this.comments[match.index + 1]
-			// console.log("comment", comment)
 			const javadoc = {
 				name: fullName,
 				description: "",
 				items: [] as JavadocItem[],
 				lstype: { name: type }
 			}
-			// console.log(javadoc.items)
 			if (comment) {
 				const javadoc_lines = comment.split("\n")
 				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z0-9_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 				let match_javadoc
 				for (const jline of javadoc_lines) {
 					if ((match_javadoc = javadoc_regex.exec(jline))) {
-						// console.log(match_javadoc)
 						const type = match_javadoc[1]
 						const name = match_javadoc[2]
 						const text = match_javadoc[3]
@@ -334,7 +311,6 @@ class AI {
 						}
 					}
 				}
-				// console.log("javadoc", javadoc)
 			}
 
 			// Escape
@@ -381,9 +357,8 @@ class AI {
 			const name = match[3]
 			if (name === 'function' || name === 'for' || name === 'while' || name === 'if') continue
 
-			// console.log(match)
 			if (!name) {
-				console.error("No name", match)
+				logger.error("No name", match)
 			}
 			const is_static = !!match[1]
 			const return_type = match[2] ? match[2].trim() : 'any'
@@ -396,7 +371,6 @@ class AI {
 			description += i18n.t('leekscript.defined_in', [this.name, line])
 
 			const comment = this.comments[match.index] || this.comments[match.index + 1]
-			// console.log("comment", comment, this.comments, match)
 			const javadoc = {
 				name,
 				args,
@@ -409,14 +383,12 @@ class AI {
 				javadoc.items.push({ type: 'param', name: arg, text: null, lstype: { name: types[a] } })
 				a++
 			}
-			// console.log(javadoc.items)
 			if (comment) {
 				const javadoc_lines = comment.split("\n")
 				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z0-9_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 				let match_javadoc
 				for (const jline of javadoc_lines) {
 					if ((match_javadoc = javadoc_regex.exec(jline))) {
-						// console.log(match_javadoc)
 						const type = match_javadoc[1]
 						let lstype: { name: string } | undefined = undefined
 						let name = match_javadoc[2]
@@ -436,9 +408,7 @@ class AI {
 								text = text.trim().substring(1)
 							}
 							if (args.includes(name) || args.includes(text)) {
-								// console.log('arg', name, text)
 								const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.name === name) || (text.length && i.name === text)))
-								// console.log('existing', existing)
 								// existing.name = existing.text
 								if (existing) existing.text = text
 								continue
@@ -454,7 +424,6 @@ class AI {
 						}
 					}
 				}
-				// console.log("javadoc", javadoc)
 			}
 
 			// Escape
@@ -472,7 +441,7 @@ class AI {
 			}
 			if (clazz) {
 				if (!match[3]) {
-					console.error("No name", match)
+					logger.error("No name", match)
 				}
 				const method = {
 					label: match[3],
@@ -489,7 +458,6 @@ class AI {
 					clazz,
 					return_type: { name: return_type }
 				}
-				// console.log(fun)
 				if (is_static) {
 					clazz.static_methods.push(method)
 				} else {
@@ -498,7 +466,6 @@ class AI {
 			}
 		}
 
-		// console.log("classes " + this.name, this.classes)
 		// console.timeEnd('methods')
 		// console.trace()
 	}
@@ -529,14 +496,12 @@ class AI {
 	}
 
 	public isClassDefined(clazz: string): boolean {
-		// console.log("isClassDefined", clazz, this)
 
 		const visited = new Set<string>()
 
 		const aux = (ai: AI): boolean => {
 			if (visited.has(ai.path)) { return false }
 			visited.add(ai.path)
-			// console.log("aux", ai.path)
 
 			if (ai.classes[clazz]) return true
 
@@ -555,11 +520,9 @@ class AI {
 		const result = aux(this)
 		if (result) { return result }
 
-		// console.log("entrypoints", startAI.entrypoints)
 		for (const entrypoint_id of this.entrypoints) {
 			const entrypoint = fileSystem.ais[entrypoint_id]
 			if (entrypoint) {
-				// console.log("entrypoints", entrypoint.path, entrypoint.includes)
 				const result = aux(entrypoint)
 				if (result) { return result }
 			}
@@ -569,14 +532,11 @@ class AI {
 
 	public searchSymbol(symbol: string, previousToken: string | undefined): Keyword | null {
 
-		// console.log("searchSymbolInAI", symbol)
-
 		const visited = new Set<string>()
 
 		const aux = (ai: AI): Keyword | null => {
 			if (visited.has(ai.path)) { return null }
 			visited.add(ai.path)
-			// console.log("aux", ai.path)
 			if (ai.functions) {
 				for (const fun of ai.functions) {
 					if (symbol === fun.label) {
@@ -624,11 +584,9 @@ class AI {
 		const result = aux(this)
 		if (result) { return result }
 
-		// console.log("entrypoints", startAI.entrypoints)
 		for (const entrypoint_id of this.entrypoints) {
 			const entrypoint = fileSystem.ais[entrypoint_id]
 			if (entrypoint) {
-				// console.log("entrypoints", entrypoint.path, entrypoint.includes)
 				const result = aux(entrypoint)
 				if (result) { return result }
 			}

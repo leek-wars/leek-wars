@@ -211,6 +211,7 @@
 	import MetabolismBadge from '../alteration/metabolism-badge.vue'
 	import { emitter } from '@/model/emitter'
 	import { alteredClass, displayRatio } from '@/model/alteration'
+	import { logger } from '@/utils/logger'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, CHARGE
@@ -373,7 +374,7 @@
 	function withKnownTemplate<T extends { template: number }>(items: T[]): T[] {
 		return items.filter(item => {
 			if (item.template in LeekWars.items) return true
-			console.warn('[inventory] template inconnu, objet ignoré :', item.template)
+			logger.warn('[inventory] template inconnu, objet ignoré :', item.template)
 			return false
 		})
 	}
@@ -413,7 +414,7 @@
 			}
 		}
 		if (inconnus.length) {
-			console.warn(`[Inventaire] ${inconnus.length} objet(s) ignoré(s), template inconnu des`
+			logger.warn(`[Inventaire] ${inconnus.length} objet(s) ignoré(s), template inconnu des`
 				+ ` données de jeu : ${[...new Set(inconnus)].join(', ')}.`
 				+ ` Cache périmé ? indexedDB.deleteDatabase('leek-wars-data') puis recharger.`)
 		}

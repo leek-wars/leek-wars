@@ -10,6 +10,7 @@ import { i18n } from '@/model/i18n'
 import { emitter } from '@/model/emitter'
 import * as monaco from 'monaco-editor'
 import { markRaw, reactive } from 'vue'
+import { logger } from '@/utils/logger'
 
 const ERROR_UNUSED_VARIABLE = 148
 const ERROR_UNUSED_FUNCTION = 152
@@ -88,7 +89,6 @@ class Analyzer {
 		this.promise = new Promise((resolve) => {
 			const Module: { onRuntimeInitialized?: () => void; ccall?: (name: string) => void } = {
 				onRuntimeInitialized: () => {
-					// console.log("Module initialized", Module)
 					Module.ccall!('init')
 					// this.GeneratorAnalyze = Module.cwrap('analyze', 'string', ['boolean', 'string', 'string', 'boolean'])
 					// this.GeneratorComplete = Module.cwrap('complete', 'string', ['boolean', 'string', 'number'])
@@ -97,9 +97,6 @@ class Analyzer {
 					// this.GeneratorAddEntrypoint = Module.cwrap('addEntrypoint', 'void', ['boolean', 'string', 'boolean', 'string'])
 					// this.getExceptionMessage = Module.cwrap('getExceptionMessage', 'string', ['number'])
 					// this.GeneratorDelete = Module.cwrap('delete_', 'string', ['string'])
-
-					// console.log(this.GeneratorAnalyze(false, "Fight.toto"))
-					// console.log(this.GeneratorComplete(false, "Fight.getEntity().name", 18))
 
 					resolve(null)
 				}
@@ -116,7 +113,6 @@ class Analyzer {
 		for (const entrypoint in this.problems) {
 			for (const ai in this.problems[entrypoint]) {
 				const problems = this.problems[entrypoint][ai]
-				// console.log(this.problems[ai])
 				for (const problem of problems) {
 					if (problem.level === 0) { errors++ }
 					else if (problem.level === 1) { warnings++ }
@@ -151,7 +147,6 @@ class Analyzer {
 	}
 
 	public analyze(ai: AI, code: string) {
-		// console.log("🔥 Analyze", ai.path)
 		// console.time('hover')
 
 		// Seul LeekScript passe par le daemon. Les polyglot sont validés CÔTÉ CLIENT et remontés via le
@@ -315,7 +310,6 @@ class Analyzer {
 	}
 
 	public hover(ai: AI, line: number, column: number) {
-		// console.log("🔥 Hover", ai.path, line, column)
 		// console.time('hover')
 		LeekWars.socket.send([SocketMessage.EDITOR_HOVER, ai.path, line, column])
 
@@ -339,7 +333,6 @@ class Analyzer {
 		}
 
 		const requestID = this.requestID++
-		// console.log("Complete request", requestID)
 		LeekWars.socket.send([SocketMessage.EDITOR_COMPLETE, requestID, ai.path, code, line, column])
 
 		const promise = new Promise<CompletionResult | null>((resolve) => {
@@ -371,9 +364,7 @@ class Analyzer {
 	}
 
 	public completeResult(message: {type: number, id: number, data: unknown}) {
-		// console.log("complete result", message)
 		if (this.completeResolve[message.id]) {
-			// console.log("resolve complete", message)
 			// console.timeEnd('hover')
 			this.completeResolve[message.id](message.data)
 			delete this.completeResolve[message.id]
@@ -387,14 +378,14 @@ class Analyzer {
 
 		return this.promise.then(() => {
 
-			console.log("🔥 Delete", ai.path)
+			logger.debug("🔥 Delete", ai.path)
 
 			this.running = 1
 			return new Promise((resolve, reject) => setTimeout(() => {
 				try {
 					console.time("delete")
 					const result = JSON.parse(this.GeneratorDelete(ai.path))
-					console.log(result)
+					logger.debug(result)
 					for (const path in result) {
 						const problems = result[path]
 						problems.sort((a: any, b: any) => {
@@ -407,7 +398,6 @@ class Analyzer {
 					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
 					// this.setAIProblems(ai.path, problems)
 					try {
-						// console.error(this.getExceptionMessage(e))
 					} catch (e2) {
 						// nothing
 					}
@@ -427,14 +417,11 @@ class Analyzer {
 		for (const entrypoint_id of ai.entrypoints) {
 			const entrypoint = fileSystem.ais[entrypoint_id]
 			if (entrypoint) {
-				// console.log("Add entrypoint", ai.path, "==>", entrypoint.path)
 				this.GeneratorAddEntrypoint(ai.version, ai.path, entrypoint.version, entrypoint.path)
 			}
 		}
 	}
 	*/
-
-
 
 	handleProblems(entrypoint: AI, problems: unknown[][]) {
 
@@ -513,7 +500,6 @@ class Analyzer {
 	}
 
 	public setProblems(entrypoint: string, ai: AI, problems: Problem[]) {
-		// console.log("[Analyzer] set ai problems", entrypoint, ai, problems)
 		if (!(entrypoint in this.problems)) {
 			this.problems[entrypoint] = {}
 		}
@@ -728,7 +714,7 @@ class Analyzer {
 	private loadJs(url: string) {
 		return new Promise((resolve, reject) => {
 			if (document.querySelector(`head > script[ src = "${url}" ]`) !== null) {
-				console.warn(`script already loaded: ${url}`)
+				logger.warn(`script already loaded: ${url}`)
 				resolve(null)
 			}
 			const script = document.createElement("script")

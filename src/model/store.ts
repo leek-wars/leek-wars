@@ -18,6 +18,7 @@ import { Chip } from './chip'
 import { SchemeTemplate } from './scheme'
 import { Loadout } from './loadout'
 import { NotificationBuilder } from '@/model/notification-builder'
+import { logger } from '@/utils/logger'
 
 // Met à jour (ou ajoute) l'entrée d'un farmer dans chat.farmers à partir d'une version
 // fraîche reçue du serveur, en rafraîchissant les champs d'affichage volatils (#11625).
@@ -231,6 +232,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			LeekWars.arena.reset()
 			LeekWars.bossSquads.leaveSquad()
 			LeekWars.socket.disconnect()
+			// eslint-disable-next-line no-console -- intentional: clear the console on logout
 			console.clear()
 			displayWarningMessage()
 		},
@@ -263,13 +265,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		"wsconnected"(state: LeekWarsState) {
-			// console.log("store wsconnected")
 			state.wsconnected = true
 			state.wsdisconnected = false
 
 			for (const chat of Object.values(state.chat)) {
 				if (chat.opened && !chat.loaded) {
-					// console.log("wsconnected chat", chat.name, chat.opened, chat.loaded)
 					store.commit('register-chat', chat)
 					store.commit('load-chat', chat)
 				}
@@ -308,7 +308,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'reload-chat'(state: LeekWarsState, chat: Chat) {
 			if (chat.loading) return
-			// console.log("load chat", chat, chat.id)
 			state.chat[chat.id].opened = true
 			state.chat[chat.id].loading = true
 			const sequence = chatLoadSequence[chat.id] = (chatLoadSequence[chat.id] || 0) + 1
@@ -383,7 +382,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'clear-chat'(state: LeekWarsState, chatID: number) {
-			// console.log("clear chat", chatID)
 			const chat = state.chat[chatID]
 			if (chat) {
 				chat.clear()
@@ -401,7 +399,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'chat-receive'(state: LeekWarsState, data: {chat: number, type: ChatType, message: ChatMessage, new: boolean }) {
 
 			if (!state.farmer) return
-			// console.log("chat-receive message", data.chat, data.type, data.message)
 
 			const chatID = data.chat
 			const type = data.type
@@ -624,13 +621,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					LeekWars.squares.addFromNotification(notification)
 				}
 			} catch (e) {
-				console.warn("Failed to build notification", data, e)
+				logger.warn("Failed to build notification", data, e)
 			}
 		},
 
 		'chat-censor'(state: LeekWarsState, data: {chat: number, messages: number[], censorer: Farmer}) {
 			const chat = state.chat[data.chat]
-			// console.log("censor chat", chat)
 			if (chat) {
 				for (const messageID of data.messages) {
 					for (const message of chat.messages) {
@@ -646,7 +642,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'chat-delete'(state: LeekWarsState, data: {chat: number, messages: number[], censorer: Farmer}) {
 			const chat = state.chat[data.chat]
-			// console.log("delete chat", chat, data.messages)
 			if (chat) {
 				chat.deleteMessages(data.messages)
 			}
@@ -703,7 +698,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'new-conversation'(state: LeekWarsState, data: { id: number, type?: number, farmers: Farmer[], last_farmer_id: number, last_date: number | null, last_message: string | null, read: boolean }) {
-			// console.log("new-conversation", data)
 			let chat = state.chat[data.id]
 			if (!chat) {
 				const last_farmer = data.farmers.find((f) => f.id === data.last_farmer_id)
@@ -748,7 +742,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'add-inventory'(state: LeekWarsState, data: { type: ItemType, id: number, quantity: number, template: number, time: number }) {
 			if (!state.farmer) { return }
-			// console.log("add-inventory", data)
 			const quantity = data.quantity || 1
 			if (data.type === ItemType.WEAPON) {
 				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'id', data.id)
@@ -858,7 +851,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'remove-inventory'(state: LeekWarsState, data: { type: ItemType, item_template: number, quantity?: number, id?: number }) {
 			if (!state.farmer) { return }
-			// console.log("remove-inventory", data)
 			const quantity = data.quantity || 1
 			let list: { id: number, template: number, quantity: number }[] | null = null
 			if (data.type === ItemType.WEAPON) {
@@ -1077,7 +1069,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-
 		'set-title'(state: LeekWarsState, title: number[]) {
 			if (state.farmer) {
 				state.farmer.title = title
@@ -1187,7 +1178,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'add-resource'(state: LeekWarsState, data: { template: number, id: number }) {
-			// console.log("add resource", data);
 			if (state.farmer) {
 				for (const resource of state.farmer.resources) {
 					if (resource.template === data.template) {
@@ -1280,5 +1270,4 @@ function migrateLegacyCacheKeys() {
 	localStorage.setItem(MIGRATION_FLAG, '1')
 }
 queueMicrotask(migrateLegacyCacheKeys)
-
 

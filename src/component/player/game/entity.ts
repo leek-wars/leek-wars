@@ -15,6 +15,7 @@ import { Path } from './path'
 import { S } from './sound'
 import { WeaponAnimation } from './weapons'
 import { HatTemplate } from '@/model/hat'
+import { logger } from '@/utils/logger'
 
 enum EntityType {
 	LEEK = 0,
@@ -669,7 +670,7 @@ abstract class FightEntity extends Entity {
 
 	public setCell(cell: Cell) {
 		if (cell === null) {
-			console.trace("Cell is null")
+			logger.warn("Cell is null")
 		}
 		cell.setEntity(this)
 		this.cell = cell
@@ -763,7 +764,6 @@ abstract class FightEntity extends Entity {
 	}
 
 	public updateReachableCells() {
-		// console.log("update reachable cells", this.name)
 
 		this.reachableCells.clear()
 
@@ -795,7 +795,6 @@ abstract class FightEntity extends Entity {
 			}
 			grow = new_cells
 		}
-		// console.log(Array.from(this.reachableCells).map(cell => cell.id))
 
 		this.reachableCellsArea = this.game.createReachableAreaOutline(this.mp, this.cell!, this.reachableCells)
 	}
@@ -1385,8 +1384,6 @@ abstract class FightEntity extends Entity {
 		const rotation2 = 0.023
 		const f2dy = 0
 		this.game.particles.addGarbage(f2_x, this.oy - 15, f2_z - 15, f2dx, f2dy, fdz, fragment2, 1, rotation2, f_scale, 0, 70)
-
-		// console.log({ topX, topY, bottomX, bottomY, cx, cy })
 
 		const s_top = s * (1 + cy / h - 0.5)
 		this.game.particles.addLineParticle(
