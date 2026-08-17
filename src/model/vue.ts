@@ -121,7 +121,6 @@ const app = createApp({
 			LeekWars.mobile = LeekWars.isMobile()
 		})
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-			// console.log("Change dark mode", event.matches)
 			if (LeekWars.themeSetting === 'auto') {
 				LeekWars.darkMode = event.matches
 			}
@@ -140,13 +139,11 @@ const app = createApp({
 		startIntervals()
 
 		window.addEventListener('blur', () => {
-			// console.log("onblur")
 			if (secondInterval) clearInterval(secondInterval)
 			if (minuteInterval) clearInterval(minuteInterval)
 			LeekWars.clearIntervals()
 		})
 		window.addEventListener('focus', () => {
-			// console.log("onfocus")
 			emitter.emit('focus')
 			startIntervals()
 			LeekWars.startIntervals()
@@ -165,7 +162,6 @@ const app = createApp({
 
 		emitter.on('loaded', () => {
 			nextTick(() => {
-				// console.log("loaded", this.$data.savedPosition)
 				if (router.currentRoute?.value.hash) {
 					scroll_to_hash(router.currentRoute?.value.hash, router.currentRoute.value)
 				} else if (this.$data.savedPosition > 0) {

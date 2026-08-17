@@ -37,7 +37,6 @@ let scroll_request = 0
 function scroll_to_hash(hash: string, route: RouteLocationNormalized) {
 	const id = decodeURIComponent(hash).replace(/'/g, '~').substring(1)
 	const element = document.getElementById(id)
-	// console.log("scroll element", id, element, route)
 	if (!element) { return }
 	// Un nouveau saut d'ancre (le « # » d'un message, un lien du sommaire)
 	// périme le précédent, sinon les deux réalignements se disputent la page.

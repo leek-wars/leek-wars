@@ -2,6 +2,7 @@ import { defineComponent, h } from 'vue'
 import type { IconSet } from 'vuetify'
 import { mdi as mdiSvgSet } from 'vuetify/iconsets/mdi-svg'
 import { mdiIcons } from './mdi-icons'
+import { logger } from '@/utils/logger'
 
 const VSvgIcon = mdiSvgSet.component
 
@@ -19,7 +20,7 @@ const VMdiSvgIcon = defineComponent({
 			if (typeof raw === 'string') {
 				const path = mdiIcons[raw]
 				if (path) resolved = path
-				else if (import.meta.env.DEV && !raw.startsWith('M')) console.warn('[mdi] unknown icon:', raw)
+				else if (import.meta.env.DEV && !raw.startsWith('M')) logger.warn('[mdi] unknown icon:', raw)
 			}
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				return h(VSvgIcon as any, { ...attrs, tag: props.tag, icon: resolved })

@@ -2,6 +2,7 @@ import { locale as initialLocale, messages } from '@/locale'
 import type { Component, ComponentInstance } from 'vue'
 import { watch } from 'vue'
 import { createI18n } from 'vue-i18n'
+import { logger } from '@/utils/logger'
 
 // Pre-declare dynamic imports for Vite to bundle them
 const localeModules = import.meta.glob('/src/lang/locale/*.ts') as Record<string, () => Promise<{ translations: Record<string, unknown> }>>
@@ -162,7 +163,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 	if (!loadedLanguages.includes(newLocale)) {
 		const loader = localeModules[`/src/lang/locale/${newLocale}.ts`]
 		if (!loader) {
-			console.error(`Locale module not found: /src/lang/locale/${newLocale}.ts`)
+			logger.error(`Locale module not found: /src/lang/locale/${newLocale}.ts`)
 		} else {
 			pending.push(loader().then((module) => {
 				i18n.global.mergeLocaleMessage(newLocale, module.translations)

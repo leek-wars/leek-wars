@@ -163,7 +163,6 @@ class Field {
 	}
 
 	public getTargets(center: Cell, area: Area, caster_cell: Cell, max_range: number, min_range: number = 1): Entity[] {
-		// console.log("getTargets", center, area, caster_cell)
 		if (area === Area.FIRST_INLINE) {
 			const cell = this.getFirstWithEntity(caster_cell, center, max_range, min_range)
 			if (cell) {
@@ -265,7 +264,6 @@ class Field {
 	}
 
 	public getLastAvailableCell(from: Cell, target: Cell, targetEntity: FightEntity) {
-		// console.log("getLastAvailableCell", "from=" + from.id, "target=" + target.id, "static=" + targetEntity.states.has(State.STATIC))
 		const dx = Math.sign(target.x - from.x)
 		const dy = Math.sign(target.y - from.y)
 		let current = from
