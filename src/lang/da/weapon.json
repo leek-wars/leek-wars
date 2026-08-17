@@ -27,6 +27,7 @@
 	"neutrino": "Neutrino",
 	"odachi": "Odachi",
 	"pistol": "Pistol",
+	"plutonium_bazooka": "Plutonium-bazooka",
 	"quantum_rifle": "Kvanteriffel",
 	"revoked_m_laser": "Tilbagekaldt M-Laser",
 	"rhino": "Næsehorn",
@@ -37,6 +38,5 @@
 	"sword": "Sværd",
 	"taser": "Taser",
 	"unbridled_gazor": "Uhæmmet gasser",
-	"unstable_destroyer": "Ustabil Destroyer",
-	"plutonium_bazooka": "Plutonium-bazooka"
+	"unstable_destroyer": "Ustabil Destroyer"
 }

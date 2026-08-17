@@ -27,6 +27,7 @@
 	"neutrino": "Neutriino",
 	"odachi": "Odachi",
 	"pistol": "Pistooli",
+	"plutonium_bazooka": "Plutonium-bazooka",
 	"quantum_rifle": "Kvanttikivääri",
 	"revoked_m_laser": "Peruttu M-Laser",
 	"rhino": "Sarvikuono",
@@ -37,6 +38,5 @@
 	"sword": "Miekka",
 	"taser": "Taser",
 	"unbridled_gazor": "Rajoittamaton kaasuttaja",
-	"unstable_destroyer": "Epävakaa tuhoaja",
-	"plutonium_bazooka": "Plutonium-bazooka"
+	"unstable_destroyer": "Epävakaa tuhoaja"
 }

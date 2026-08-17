@@ -27,6 +27,7 @@
 	"neutrino": "ニュートリノ",
 	"odachi": "大太刀",
 	"pistol": "拳銃",
+	"plutonium_bazooka": "プルトニウムバズーカ",
 	"quantum_rifle": "量子ライフル",
 	"revoked_m_laser": "取り消されたMレーザー",
 	"rhino": "ライノ",
@@ -37,6 +38,5 @@
 	"sword": "剣",
 	"taser": "テーザー銃",
 	"unbridled_gazor": "解き放たれたガゾール",
-	"unstable_destroyer": "不安定なデストロイヤー",
-	"plutonium_bazooka": "プルトニウムバズーカ"
+	"unstable_destroyer": "不安定なデストロイヤー"
 }
