@@ -1638,7 +1638,6 @@ class BoxingGlove extends ChipAnimation {
 		}
 		// Find real end cell
 		this.cell = this.game.ground.field.getLastAvailableCell(entity_cell, this.cell, targets[0])
-		// console.log("end cell", this.cell)
 		const xy = this.game.ground.field.cellToXY(this.cell)
 		this.position = this.game.ground.xyToXYPixels(xy.x, xy.y)
 		const target_distance = Math.sqrt(Math.pow(launchPos.x - this.tsx, 2) + Math.pow(launchPos.y - this.tsy, 2))

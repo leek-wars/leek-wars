@@ -304,7 +304,6 @@ const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes,
 	async scrollBehavior(to, from, savedPosition) {
-		// console.log("scrollBehavior", to, from, savedPosition)
 		const vm = vueMain
 		if (vm) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

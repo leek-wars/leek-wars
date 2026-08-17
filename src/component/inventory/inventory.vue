@@ -174,6 +174,7 @@
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import SchemeImage from '../market/scheme-image.vue'
 	import { emitter } from '@/model/vue'
+	import { logger } from '@/utils/logger'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
@@ -277,7 +278,7 @@
 	function withKnownTemplate<T extends { template: number }>(items: T[]): T[] {
 		return items.filter(item => {
 			if (item.template in LeekWars.items) return true
-			console.warn('[inventory] template inconnu, objet ignoré :', item.template)
+			logger.warn('[inventory] template inconnu, objet ignoré :', item.template)
 			return false
 		})
 	}

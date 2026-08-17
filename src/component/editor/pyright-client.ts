@@ -28,6 +28,7 @@ const TYPESHED_FILES: Record<string, string> = Object.fromEntries(
 )
 // Worker prébuilt (IIFE webpack). ?worker -> Vite émet le chunk et fournit le constructeur.
 import PyrightWorker from '@typefox/pyright-browser/dist/pyright.worker.js?worker'
+import { logger } from '@/utils/logger'
 
 // En DEV, Vite sert le worker en module (un `import "/@vite/env"` est injecté en tête) : le worker
 // principal (type module) boote, mais les threads d'analyse de fond que Pyright spawne LUI-MÊME
@@ -111,7 +112,6 @@ function mapDiagnostics(diagnostics: Diagnostic[]): monaco.editor.IMarkerData[] 
 	}))
 }
 
-
 // --- Fichiers du joueur dans la FS du worker ---
 // Les IA .py peuvent s'importer entre elles (le generator monte les fichiers du joueur sous /ai en
 // tête de sys.path, sous-dossiers = packages). Pour que Pyright résolve ces imports (complétion,
@@ -143,7 +143,7 @@ async function loadPlayerPyFiles(out: Record<string, string>): Promise<void> {
 			out['/' + ai.path] = ai.model ? ai.model.getValue() : ((await fileSystem.load(ai)).code ?? '')
 		} catch (e) {
 			// Non monté : ses importeurs verront « import non résolu » (reportMissingImports) -> tracer.
-			console.warn('[pyright] seed impossible pour', ai.path, e)
+			logger.warn('[pyright] seed impossible pour', ai.path, e)
 		}
 	}))
 }
@@ -170,7 +170,7 @@ async function seedFile(path: string): Promise<void> {
 	try {
 		code = ai.model ? ai.model.getValue() : ((await fileSystem.load(ai)).code ?? '')
 	} catch (e) {
-		console.warn('[pyright] seed impossible pour', path, e)
+		logger.warn('[pyright] seed impossible pour', path, e)
 		return
 	}
 	// Re-vérifie APRÈS l'await : un renommage/suppression pendant le chargement rendrait ce montage
@@ -213,13 +213,13 @@ function ensure(): Promise<void> {
 		const filesAcc: Record<string, string> = {} // rempli au fil de l'eau par loadPlayerPyFiles
 		const playerFilesPromise = loadPlayerPyFiles(filesAcc) // chargement en parallèle du boot
 		const worker = await createWorker()
-		worker.onerror = (e) => { console.error('[pyright] worker error', e.message || e); teardown() }
+		worker.onerror = (e) => { logger.error('[pyright] worker error', e.message || e); teardown() }
 		// Le worker prébuilt attend un message de boot pour se câbler en serveur (mode foreground) ;
 		// les threads d'analyse de fond se ré-instancient eux-mêmes (cf BrowserWorkersHost).
 		worker.postMessage({ type: 'browser/boot', mode: 'foreground' })
 		const conn = createMessageConnection(new BrowserMessageReader(worker), new BrowserMessageWriter(worker))
 		connection = conn
-		conn.onError((e) => console.error('[pyright] connection error', e))
+		conn.onError((e) => logger.error('[pyright] connection error', e))
 		conn.onClose(() => { if (connection === conn) teardown() })
 
 		// Pyright pousse les diagnostics via cette notification.
@@ -269,7 +269,7 @@ function ensure(): Promise<void> {
 		})
 		conn.sendNotification('initialized', {})
 		conn.sendNotification('workspace/didChangeConfiguration', { settings: { python: { analysis: pySettings() } } })
-	})().catch((e) => { console.error('[pyright] init failed', e); teardown(); throw e })
+	})().catch((e) => { logger.error('[pyright] init failed', e); teardown(); throw e })
 	return ready
 }
 
@@ -436,7 +436,7 @@ export async function completePy(model: monaco.editor.ITextModel, position: mona
 			position: lspPosition(position),
 		})
 	} catch (e) {
-		console.error('[pyright] completion failed', e)
+		logger.error('[pyright] completion failed', e)
 		return null
 	}
 	if (!result) return null
@@ -498,7 +498,7 @@ export async function hoverPy(model: monaco.editor.ITextModel, position: monaco.
 	try {
 		h = await connection.sendRequest('textDocument/hover', { textDocument: { uri }, position: lspPosition(position) })
 	} catch (e) {
-		console.error('[pyright] hover failed', e)
+		logger.error('[pyright] hover failed', e)
 		return null
 	}
 	if (!h) return null
@@ -519,7 +519,7 @@ export async function definitionPy(model: monaco.editor.ITextModel, position: mo
 	try {
 		d = await connection.sendRequest('textDocument/definition', { textDocument: { uri }, position: lspPosition(position) })
 	} catch (e) {
-		console.error('[pyright] definition failed', e)
+		logger.error('[pyright] definition failed', e)
 		return null
 	}
 	const loc = Array.isArray(d) ? d[0] : d

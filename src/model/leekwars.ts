@@ -29,6 +29,7 @@ import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
 import { DATA_TYPES, loadGameData as loadGameDataRaw } from './gamedata'
 import { nextTick, reactive } from 'vue'
+import { logger } from '@/utils/logger'
 
 const DEV = window.location.port === '8080'
 const LOCAL = window.location.port === '8500' || window.location.port === '5100' || window.location.hostname === 'leekwars.local'
@@ -123,13 +124,13 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				} else if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-						console.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
+						logger.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
 					}
 					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
 				} else {
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 						const message = "[" + xhr.status + "] " + method + " " + url
-						console.error(message)
+						logger.error(message)
 						// LeekWars.toast(message, 5000)
 					}
 					reject(normalizeApiError(xhr.response))
@@ -139,10 +140,10 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				// En dev (cross-origin), une 429 sur le preflight CORS se traduit par un onerror
 				if ((LOCAL || DEV) && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
-					console.warn("[CORS/429?] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
+					logger.warn("[CORS/429?] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
 					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
 				} else {
-					console.error("[429] " + method + " " + url + " — all retries exhausted")
+					logger.error("[429] " + method + " " + url + " — all retries exhausted")
 					LeekWars.toast($t('main.too_many_requests'))
 					reject({ error: 'too_many_requests' })
 				}
@@ -588,7 +589,6 @@ const LeekWars = reactive({
 	isMobile() {
 		return /Mobi/i.test(window.navigator.userAgent)
 		/*
-		// console.log(window.innerWidth, window.innerHeight, window.screen.orientation)
 		const type = (screen.orientation || {}).type || (screen as any).mozOrientation || (screen as any).msOrientation;
 		const angle = (screen.orientation || {}).type || (screen as any).mozOrientation || (screen as any).msOrientation;
 
@@ -915,7 +915,6 @@ const LeekWars = reactive({
 	newVersionPopup: false,
 	displayMessage: (message: string | null) => {
 		if (message) {
-			// console.log("Display message", message)
 			LeekWars.message = message
 			LeekWars.messagePopup = true
 		}
@@ -938,7 +937,6 @@ const LeekWars = reactive({
 	encyclopediaLoaded: {} as {[key: string]: boolean},
 	encyclopediaPromise: {} as {[key: string]: Promise<void>},
 	loadEncyclopedia: (locale: string): Promise<void> => {
-		// console.log("load encyclopedia", locale)
 		if (!LeekWars.encyclopediaLoaded[locale]) {
 			LeekWars.encyclopediaLoaded[locale] = true
 			LeekWars.encyclopediaPromise[locale] = new Promise<void>((resolve) => {
@@ -965,7 +963,6 @@ const LeekWars = reactive({
 	},
 	countries: [] as readonly string[],
 	loadCountries: () => {
-		// console.log("load countries")
 		if (!LeekWars.countries.length) {
 			LeekWars.get<string[]>('country/get-all').then((data) => {
 				LeekWars.countries = Object.freeze(data)
@@ -1009,7 +1006,6 @@ const LeekWars = reactive({
 	},
 	completionsProvider: null as unknown,
 	unload: () => {
-		// console.log("Leek Wars unload")
 		// if (LeekWars.completionsProvider) {
 		// 	LeekWars.completionsProvider.dispose()
 		// }
@@ -1162,7 +1158,6 @@ function weaponByName(weapons: {[key: string]: WeaponTemplate}) {
 	}
 	return result
 }
-
 
 function formatDuration(timestamp: number, capital: boolean = false) {
 
@@ -1379,7 +1374,6 @@ function createCodeAreaSimple(code: string, element: HTMLElement, language?: str
 	})
 }
 
-
 function set_cursor_position(el: HTMLElement, pos: number) {
 	if (!el.firstChild) return
 	const range = document.createRange()
@@ -1430,7 +1424,6 @@ function shadeColor(color: string, amount: number) {
 }
 
 function goToRanking(type: string, order: string, id: number = 0) {
-	// console.log("goToRanking", type, order, id)
 	let url = ''
 	const active = LeekWars.rankingInactive ? '' : '-active'
 	if (type === 'leek') {
@@ -1457,7 +1450,7 @@ function goToRanking(type: string, order: string, id: number = 0) {
  * À appeler au boot de l'app, juste après le mount.
  */
 async function loadGameData() {
-	console.log('[GameData] Loading...')
+	logger.info('[GameData] Loading...')
 	const rawData = await loadGameDataRaw()
 	if (!rawData) {
 		throw new Error('[GameData] No data returned')
@@ -1499,7 +1492,7 @@ async function loadGameData() {
 	if (data.functions) LeekWars.functions = Object.freeze(data.functions)
 	if (data.chips) LeekWars.chips = Object.freeze(data.chips)
 
-	console.log(`[GameData] Applied in ${(performance.now() - t0).toFixed(1)}ms`)
+	logger.info(`[GameData] Applied in ${(performance.now() - t0).toFixed(1)}ms`)
 }
 
 if (DEV || LOCAL) { (window as unknown as Record<string, unknown>).LeekWars = LeekWars }

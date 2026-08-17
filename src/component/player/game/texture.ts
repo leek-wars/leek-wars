@@ -1,5 +1,6 @@
 import { Game } from '@/component/player/game/game'
 import { LeekWars } from '@/model/leekwars'
+import { logger } from '@/utils/logger'
 
 const SHADOW_QUALITY = 0.3
 
@@ -65,7 +66,7 @@ class Texture {
 		// compter la ressource deux fois (loadedData est comparé à numData par
 		// égalité stricte, un dépassement bloquerait le chargement pour toujours).
 		const onerror = () => {
-			console.warn("Error loading : " + this.path)
+			logger.warn("Error loading : " + this.path)
 			listeners.abort()
 			const image = this.texture
 			// Une Image en échec reste dans l'état « broken » : drawImage lèverait
@@ -534,7 +535,7 @@ function loadDrawableImage(src: string): HTMLImageElement {
 	}
 	const image = new Image()
 	const onerror = () => {
-		console.warn("Error loading : " + image.src)
+		logger.warn("Error loading : " + image.src)
 		image.src = TRANSPARENT_PIXEL
 	}
 	image.addEventListener('error', onerror, { once: true })
@@ -565,7 +566,7 @@ function buildTextureShadow(texture: Texture, quality: number) {
 		context.putImageData(newTexture, 0, 0)
 		texture.shadow = canvas
 	} catch (e) {
-		console.error("Failed to create texture!", e)
+		logger.error("Failed to create texture!", e)
 	}
 }
 

@@ -4,6 +4,7 @@ import { emitter } from '@/model/emitter'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
+import { logger } from '@/utils/logger'
 const getAnalyzer = () => import('@/component/editor/analyzer').then(m => m.analyzer)
 
 enum SocketMessage {
@@ -131,10 +132,8 @@ class Socket {
 		}
 		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
 		this.socket = new WebSocket(url, [ 'leek-wars', store.state.token! ])
-		// console.log("[socket] socket", this.socket)
 
 		this.socket.onopen = () => {
-			// console.log("[ws] onopen")
 			store.commit('invalidate-chats')
 			store.commit('wsconnected')
 			this.retry_delay = 1000
@@ -149,12 +148,11 @@ class Socket {
 			this.schedulePing()
 		}
 		this.socket.onclose = () => {
-			// console.log("[ws] onclose")
 			this.clearPing()
 			this.clearPongProbe()
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 				const message = "[WS] fermée"
-				console.error(message)
+				logger.error(message)
 				// LeekWars.toast(message, 5000)
 			}
 			store.commit('wsclose')
@@ -165,7 +163,7 @@ class Socket {
 		this.socket.onerror = (event) => {
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 				const message = "[WS] erreur"
-				console.error(message, event)
+				logger.error(message, event)
 				// LeekWars.toast(message, 5000)
 			}
 		}
@@ -176,7 +174,6 @@ class Socket {
 			const id = json[0]
 			const data = json[1]
 			const request_id = json[2]
-			// console.log("[WS] onmessage", id, data, request_id)
 
 			emitter.emit('wsmessage', {type: id, data, id: request_id})
 
@@ -248,7 +245,6 @@ class Socket {
 					break
 				}
 				case SocketMessage.CHAT_RECEIVE : {
-					// console.log("socket chat receive", data)
 					const message = data as ChatMessage
 					store.commit('chat-receive', { chat: message.chat, type: data.type, message, new: true })
 					break
@@ -331,7 +327,6 @@ class Socket {
 					break
 				}
 				case SocketMessage.ADD_RESOURCE: {
-					// console.log("add resource", data)
 					const template = data[0]
 					const id = data[1]
 					const quantity = data[2]
@@ -460,7 +455,7 @@ class Socket {
 			this.pongProbeTimeout = setTimeout(() => {
 				this.pongProbeTimeout = null
 				if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-					console.warn("[WS] probe timeout, forcing reconnect")
+					logger.warn("[WS] probe timeout, forcing reconnect")
 				}
 				this.reconnect()
 			}, PROBE_RESPONSE_TIMEOUT)
@@ -493,7 +488,7 @@ class Socket {
 	public retry() {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] retry(" + this.retry_delay + "ms)"
-			console.log(message)
+			logger.debug(message)
 		}
 		if (this.intentionallyClosed) { return }
 		if (this.retryTimeout) { clearTimeout(this.retryTimeout) }
@@ -525,7 +520,6 @@ class Socket {
 
 	public send(message: unknown) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-			// console.log("[WS] send", message)
 			this.socket.send(JSON.stringify(message))
 		} else {
 			this.queue.push(message)
@@ -537,7 +531,7 @@ class Socket {
 	public disconnect() {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] disconnect()"
-			console.log(message)
+			logger.debug(message)
 		}
 		this.intentionallyClosed = true
 		this.clearPing()

@@ -168,13 +168,11 @@ function down() {
 onMounted(() => {
 	emitter.on('console', (raw: unknown) => {
 		const data = raw as Omit<ConsoleLine, 'type'>
-		console.log("on console", data)
 		lines.value.push({ type: 'result', ...data })
 		scrollDown()
 	})
 	emitter.on('console-error', (raw: unknown) => {
 		const data = raw as Omit<ConsoleLine, 'type'>
-		console.log("on console-error", data)
 		let zigzags = ""
 		if (data.location) {
 			for (let i = 0; i < data.location[2]; ++i) zigzags += ' '
@@ -184,7 +182,6 @@ onMounted(() => {
 		scrollDown()
 	})
 	emitter.on('console-log', (data: unknown) => {
-		console.log("on console-log", data)
 		lines.value.push({ type: 'log', log: data as unknown[] })
 		scrollDown()
 	})
