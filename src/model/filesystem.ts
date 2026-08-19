@@ -211,6 +211,13 @@ class FileSystem {
 			}
 			return new Promise<AI>((resolve, reject) => {
 				LeekWars.post('ai/read', { path: ai.path }).then((data) => {
+					// Une 200 dont le corps n'est pas du JSON exploitable (réponse tronquée,
+					// page d'erreur d'un proxy) donne `xhr.response === null` : on rejette
+					// proprement au lieu de crasher sur `data.code` (unhandledrejection).
+					if (!data) {
+						reject({ error: 'invalid_response' })
+						return
+					}
 					ai.code = data.code
 					ai.mtime = data.mtime || Date.now()
 					setAICache(ai.path, ai.code, ai.mtime)
