@@ -6,10 +6,17 @@
 		<error v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
 		<template v-else>
 		<div class="page-header page-bar">
-			<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ props }" :bottom="true">
-				<h1 v-bind="props">{{ leek.name }}</h1>
+			<!-- Titre STABLE, même raison que la racine ci-dessus : le v-if/v-else entre le
+			     composant `rich-tooltip-leek` (slot d'activateur géré par Vuetify) et un `h1`
+			     nu faisait basculer la branche à chaque (re)chargement de `leek`, et le vnode
+			     du titre se retrouvait avec `el === null` -> "nextSibling of null" au patch
+			     suivant (cluster #4050-#4056, seul cluster client multi-joueurs d'août 2026,
+			     TOUJOURS sur /leek/:id, chemin `div › v-fgt › div › h1`). Le tooltip est
+			     désormais toujours monté, simplement désactivé tant que le poireau n'est pas
+			     chargé (il ne charge son contenu qu'à l'ouverture, et seulement si id > 0). -->
+			<rich-tooltip-leek :id="leek ? leek.id : 0" v-slot="{ props }" :disabled="!leek" :bottom="true">
+				<h1 v-bind="props">{{ leek ? leek.name : '...' }}</h1>
 			</rich-tooltip-leek>
-			<h1 v-else>...</h1>
 			<div class="tabs">
 				<template v-if="leek && my_leek">
 					<template v-if="leek.tournament && leek.tournament.current">
