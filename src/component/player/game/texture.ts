@@ -544,6 +544,20 @@ function loadDrawableImage(src: string): HTMLImageElement {
 	return image
 }
 
+/**
+ * Une Image dont le chargement a échoué reste dans l'état « broken » jusqu'à ce que
+ * son handler d'erreur ait basculé sur le pixel transparent. La boucle de jeu tourne
+ * à 60 fps : elle peint dans cette fenêtre, et drawImage y lève InvalidStateError,
+ * ce qui tue la requestAnimationFrame et FIGE le combat (~30 remontées par jour).
+ * `complete && naturalWidth === 0` identifie cet état ; une image encore en cours de
+ * chargement n'est pas concernée, drawImage y est un no-op inoffensif.
+ */
+function isDrawable(image: CanvasImageSource | null | undefined): boolean {
+	if (!image) return false
+	if (image instanceof HTMLImageElement) return !(image.complete && image.naturalWidth === 0)
+	return true
+}
+
 function buildTextureShadow(texture: Texture, quality: number) {
 	try {
 		if (quality == null) { quality = 1 }
@@ -569,4 +583,4 @@ function buildTextureShadow(texture: Texture, quality: number) {
 	}
 }
 
-export { T, Texture, SHADOW_QUALITY, loadDrawableImage }
+export { T, Texture, SHADOW_QUALITY, loadDrawableImage, isDrawable }

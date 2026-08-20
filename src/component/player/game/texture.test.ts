@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import type { Game } from '@/component/player/game/game'
-import { loadDrawableImage, T, Texture } from '@/component/player/game/texture'
+import { isDrawable, loadDrawableImage, T, Texture } from '@/component/player/game/texture'
 
 // texture.ts ne se sert de LeekWars que pour le préfixe des URL : on le simule
 // pour ne pas embarquer le store de l'application dans le test.
@@ -147,5 +147,42 @@ describe('loadDrawableImage', () => {
 
 	it('partage l\'image entre les effets qui utilisent la même icône', () => {
 		expect(loadDrawableImage('/image/chip/heal.png')).toBe(loadDrawableImage('/image/chip/heal.png'))
+	})
+})
+
+describe('isDrawable', () => {
+
+	// L'état « broken » n'existe pas en jsdom : on le simule, complete=true et
+	// naturalWidth=0 étant exactement ce que le navigateur expose après un échec.
+	function image({ complete, naturalWidth }: { complete: boolean, naturalWidth: number }) {
+		const img = new Image()
+		Object.defineProperty(img, 'complete', { value: complete })
+		Object.defineProperty(img, 'naturalWidth', { value: naturalWidth })
+		return img
+	}
+
+	it('refuse une image cassée', () => {
+		// La fenêtre fatale : échec réseau constaté, handler d'erreur pas encore passé
+		expect(isDrawable(image({ complete: true, naturalWidth: 0 }))).toBe(false)
+	})
+
+	it('accepte une image chargée', () => {
+		expect(isDrawable(image({ complete: true, naturalWidth: 32 }))).toBe(true)
+	})
+
+	it('accepte une image encore en chargement', () => {
+		// drawImage y est un no-op : sauter le dessin priverait l'icône de son premier
+		// affichage sans raison
+		expect(isDrawable(image({ complete: false, naturalWidth: 0 }))).toBe(true)
+	})
+
+	it('refuse une image absente', () => {
+		expect(isDrawable(null)).toBe(false)
+		expect(isDrawable(undefined)).toBe(false)
+	})
+
+	it('accepte un canvas', () => {
+		// Les textures construites (ombres, fragments) ne sont pas des HTMLImageElement
+		expect(isDrawable(document.createElement('canvas'))).toBe(true)
 	})
 })

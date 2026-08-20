@@ -2,7 +2,7 @@ import { Bubble } from '@/component/player/game/bubble'
 import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
-import { loadDrawableImage, SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
+import { isDrawable, loadDrawableImage, SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
 import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
@@ -1191,7 +1191,12 @@ abstract class FightEntity extends Entity {
 			ctx.lineWidth = 3
 			for (const e in this.effects) {
 				const effect = this.effects[e]
-				ctx.drawImage(effect.texture, x, effect_size, effect_size, effect_size)
+				// Icône absente côté serveur : l'Image reste « broken » le temps que son
+				// handler d'erreur bascule sur le pixel transparent, et drawImage lève dans
+				// cet intervalle — ce qui tuait la boucle de rendu et figeait le combat.
+				if (isDrawable(effect.texture)) {
+					ctx.drawImage(effect.texture, x, effect_size, effect_size, effect_size)
+				}
 				if (effect.modifiers & EffectModifier.IRREDUCTIBLE) {
 					ctx.strokeRect(x + 1.5, effect_size + 1.5, effect_size - 3, effect_size - 3)
 				}
@@ -1204,7 +1209,10 @@ abstract class FightEntity extends Entity {
 						ctx.fillRect(x, (2 - state_size) * effect_size - 2, effect_size * state_size + 2, effect_size * state_size + 2)
 					}
 					ctx.globalAlpha = (1 - this.deadAnim)
-					ctx.drawImage(FightEntity.stateImage(effect.value), x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
+					const stateIcon = FightEntity.stateImage(effect.value)
+					if (isDrawable(stateIcon)) {
+						ctx.drawImage(stateIcon, x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
+					}
 				} else {
 					let effect_message = '' + effect.value
 					if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
