@@ -555,6 +555,10 @@ function loadDrawableImage(src: string): HTMLImageElement {
 function isDrawable(image: CanvasImageSource | null | undefined): boolean {
 	if (!image) return false
 	if (image instanceof HTMLImageElement) return !(image.complete && image.naturalWidth === 0)
+	// Un canvas de dimension nulle (texture d'entité pas encore rendue) fait aussi
+	// lever drawImage, avec un autre message : « canvas element with a width or
+	// height of 0 ». Même conséquence, boucle de rendu tuée.
+	if (image instanceof HTMLCanvasElement) return image.width > 0 && image.height > 0
 	return true
 }
 

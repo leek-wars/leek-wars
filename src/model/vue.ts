@@ -140,6 +140,15 @@ window.addEventListener('vite:preloadError', (event) => {
 // annulation Monaco) en "masquée" côté serveur : loggée pour mesurer son volume mais
 // sans issue GitHub ni notification admin, et exclue de la vue par défaut de #admin/errors.
 // Throttle 1s indépendant des vraies erreurs pour ne pas s'auto-étouffer mutuellement.
+/**
+ * Le POST de rapport d'erreur ne doit JAMAIS produire d'erreur à son tour. Le
+ * serveur limite les rapports à 1/s par IP et répond 400 {"error":"delay"} au-delà :
+ * sans gestionnaire, ce rejet devenait un unhandledrejection... donc un nouveau
+ * rapport, qui se faisait rejeter à son tour. Une seule session a ainsi produit 216
+ * rapports en boucle. Un 429 sur error/report se traite pareil.
+ */
+function swallowReportFailure() { /* le rapport est best effort, par construction */ }
+
 let lastHiddenSent = 0
 function reportHidden(message: string, stack?: string) {
 	if (LeekWars.DEV) return
@@ -156,7 +165,7 @@ function reportHidden(message: string, stack?: string) {
 			hidden: true,
 			build_date: typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null,
 			build_commit: typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null,
-		})
+		}).error(swallowReportFailure)
 	} catch { /* best effort */ }
 }
 
@@ -528,7 +537,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// on garde le rapport complet : un nextSibling/parentNode null « nu » peut être un vrai bug de
 	// patch, un TDZ « nu » une vraie régression de bundling (cycle d'import réintroduit).
 	const hidden = (externallyInduced && interference.translation) || IS_BOT
-	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit, hidden })
+	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit, hidden }).error(swallowReportFailure)
 
 	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
 	// fait alors parentNode/nextSibling/style(null) → crash, et la session crashe en BOUCLE).

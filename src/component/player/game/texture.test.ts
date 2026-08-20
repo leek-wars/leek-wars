@@ -181,8 +181,19 @@ describe('isDrawable', () => {
 		expect(isDrawable(undefined)).toBe(false)
 	})
 
-	it('accepte un canvas', () => {
+	it('accepte un canvas dimensionné', () => {
 		// Les textures construites (ombres, fragments) ne sont pas des HTMLImageElement
-		expect(isDrawable(document.createElement('canvas'))).toBe(true)
+		expect(isDrawable(document.createElement('canvas'))).toBe(true) // 300x150 par défaut
+	})
+
+	it('refuse un canvas de dimension nulle', () => {
+		// Texture d'entité pas encore rendue : drawImage lève « canvas element with a
+		// width or height of 0 », même conséquence que l'image cassée
+		const canvas = document.createElement('canvas')
+		canvas.width = 0
+		expect(isDrawable(canvas)).toBe(false)
+		canvas.width = 32
+		canvas.height = 0
+		expect(isDrawable(canvas)).toBe(false)
 	})
 })

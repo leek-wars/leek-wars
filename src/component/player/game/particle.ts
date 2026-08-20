@@ -1,7 +1,7 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from '@/component/player/game/game'
 import { Position } from '@/component/player/game/position'
-import { T, Texture } from "@/component/player/game/texture"
+import { isDrawable, T, Texture } from "@/component/player/game/texture"
 import { Cell } from '@/model/cell'
 import { S } from './sound'
 
@@ -1036,10 +1036,14 @@ class BuryParticle extends Particle {
 	}
 
 	public draw(ctx: CanvasRenderingContext2D): void {
+		// Texture d'entité pas encore rendue : canvas 0x0, sur lequel drawImage lève et
+		// tue la boucle de rendu (rare, mais même conséquence que l'icône cassée).
+		if (!isDrawable(this.texture.texture)) { return }
 		const w = this.texture.texture.width
 		const h = (this.life / BuryParticle.LIFE) * this.texture.texture.height
 		// const h = this.texture.texture.height
 		// console.log("draw", this.x, this.y, w, h)
+		if (h <= 0) { return }
 		ctx.drawImage(this.texture.texture, 0, 0, w, h, - w / 2 * this.scale, - h * this.scale, w * this.scale, h * this.scale)
 	}
 }
