@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isBrowserExtensionCrash, isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
+import { createRepeatLimiter, isBrowserExtensionCrash, isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
 
 describe('isInitOrderCrash', () => {
 
@@ -91,5 +91,59 @@ describe('isBrowserExtensionCrash', () => {
 		expect(isBrowserExtensionCrash('Error: blocked resource chrome-extension://abc/x.js')).toBe(false)
 		expect(isBrowserExtensionCrash('(no stack)')).toBe(false)
 		expect(isBrowserExtensionCrash('')).toBe(false)
+	})
+})
+
+describe('createRepeatLimiter', () => {
+
+	it('laisse passer les rangs en puissance de 2', () => {
+		const limiter = createRepeatLimiter()
+		const passed = []
+		for (let i = 1; i <= 16; i++) {
+			if (limiter.shouldReport('boom')) passed.push(i)
+		}
+		expect(passed).toEqual([1, 2, 4, 8, 16])
+	})
+
+	it('coupe le flood d une session bloquée', () => {
+		// Le cas réel : ~1300 rapports pour un seul message répété
+		const limiter = createRepeatLimiter()
+		let reported = 0
+		for (let i = 0; i < 1300; i++) {
+			if (limiter.shouldReport("can't access dead object")) reported++
+		}
+		expect(reported).toBe(11) // 1,2,4...1024
+	})
+
+	it('compte chaque message séparément', () => {
+		const limiter = createRepeatLimiter()
+		expect(limiter.shouldReport('a')).toBe(true)
+		expect(limiter.shouldReport('b')).toBe(true)
+		expect(limiter.shouldReport('a')).toBe(true)  // 2e de 'a'
+		expect(limiter.shouldReport('a')).toBe(false) // 3e de 'a'
+		expect(limiter.shouldReport('b')).toBe(true)  // 2e de 'b'
+	})
+
+	it('regroupe les messages qui ne diffèrent qu au-delà de 120 caractères', () => {
+		// Même crash, suffixe variable (identifiants, coordonnées) : sans troncature
+		// chaque occurrence compterait pour un message neuf et rien ne serait limité
+		const limiter = createRepeatLimiter()
+		const base = 'x'.repeat(120)
+		limiter.shouldReport(base + 'un')
+		limiter.shouldReport(base + 'deux')
+		expect(limiter.shouldReport(base + 'trois')).toBe(false) // 3e du même préfixe
+	})
+
+	it('purge au-delà du plafond de messages distincts', () => {
+		const limiter = createRepeatLimiter(3)
+		limiter.shouldReport('a'); limiter.shouldReport('b')
+		limiter.shouldReport('c'); limiter.shouldReport('d') // purge ici
+		// 'a' repart de zéro après purge : on préfère ré-autoriser que fuir en mémoire
+		expect(limiter.shouldReport('a')).toBe(true)
+	})
+
+	it('tolère un message vide', () => {
+		const limiter = createRepeatLimiter()
+		expect(limiter.shouldReport('')).toBe(true)
 	})
 })

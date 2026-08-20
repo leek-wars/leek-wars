@@ -32,7 +32,7 @@ import { locale as initialLocale } from '@/locale'
 import { watch } from 'vue'
 import { aliases as mdiSvgAliases } from 'vuetify/iconsets/mdi-svg'
 import { mdiIconSet } from './icon-set'
-import { isBrowserExtensionCrash, isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
+import { createRepeatLimiter, isBrowserExtensionCrash, isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
 import { formatEmojis } from './emojis'
 import { displayWarningMessage, emitter, setVueMain } from './emitter'
 import '@/chart'
@@ -186,6 +186,8 @@ window.addEventListener('error', (event) => {
 })
 
 let lastErrorSent = 0
+// Anti-flood par message répété (cf. crash-classify)
+const repeatLimiter = createRepeatLimiter()
 
 // Instrumentation #4163 : tracer la SÉQUENCE d'erreurs (chunk/async-loader → cascade parentNode)
 // et l'écart depuis le dernier bump routerViewKey (rustine), pour distinguer un PREMIER crash
@@ -412,6 +414,11 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	if (Date.now() - lastErrorSent < 1000) {
 		droppedSinceLastReport++
 		recordEvent('dropped', message)
+		return
+	}
+	if (!repeatLimiter.shouldReport(message)) {
+		droppedSinceLastReport++
+		recordEvent('repeat', message)
 		return
 	}
 	lastErrorSent = Date.now()

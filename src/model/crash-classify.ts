@@ -62,3 +62,28 @@ export function isChunkLoadError(m: string): boolean {
 		m.includes('Loading CSS chunk') ||
 		m.includes('Unable to preload CSS')
 }
+
+/**
+ * Limiteur d'un même message répété. Une session bloquée sur une erreur qui se
+ * relance en boucle inonde #admin/errors sans rien apprendre de plus : une session
+ * Firefox coincée sur « can't access dead object » (un crash toutes les ~1000 ms,
+ * donc juste au-dessus du throttle global de 1 s) a produit à elle seule ~1300
+ * rapports. On garde les occurrences dont le rang est une puissance de 2 — 1re, 2e,
+ * 4e, 8e… — ce qui préserve le signal « ça recommence » en coupant le volume. Le
+ * compte réel reste visible via « Dropped since last report » dans le rapport.
+ *
+ * Fabrique plutôt que singleton : les tests ont besoin d'un état neuf.
+ */
+export function createRepeatLimiter(maxDistinctMessages = 200) {
+	const counts = new Map<string, number>()
+	return {
+		shouldReport(message: string): boolean {
+			const key = (message || '').slice(0, 120)
+			const count = (counts.get(key) ?? 0) + 1
+			counts.set(key, count)
+			// Garde-fou mémoire : une session très longue peut voir beaucoup de messages distincts
+			if (counts.size > maxDistinctMessages) counts.clear()
+			return (count & (count - 1)) === 0
+		}
+	}
+}
