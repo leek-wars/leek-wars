@@ -59,7 +59,6 @@ class Obstacle {
 		// Caractéristiques
 		this.geometry = geometry
 		this.info = info
-		// console.log("obstacle", info)
 		// Position
 		const pos = game.ground.field.cellToXY(cell)
 		this.x = pos.x
@@ -68,14 +67,12 @@ class Obstacle {
 	}
 
 	public updateType() {
-		// console.log("update type")
 		const obstacles = this.geometry.id === 2 ? this.game.map.options.largeObstacles : this.game.map.options.smallObstacles
 		this.info = obstacles[this.game.map.random.next() * obstacles.length | 0]!
 	}
 
 	public resize() {
 		// Create the cache texture
-		// console.log("type=", this.type)
 		// const textureType = this.size === 2 ? this.game.map.options.largeObstacles : this.game.map.options.smallObstacles
 		this.baseTexture = this.pumpkin ? T.pumpkin : this.info.texture
 
@@ -132,7 +129,6 @@ class Obstacle {
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {
-		// console.log("obstacle draw()", this.baseTexture)
 		if (this.game.tactic) {
 
 			const H = 8 * this.game.ground.scale
@@ -251,7 +247,6 @@ class Obstacle {
 		this.cell = cell
 		this.resize()
 		if (oldY !== this.y) {
-			// console.log("move obstacle", oldY, this.y)
 			this.game.moveDrawableElement(this, this.drawID!, oldY, this.y)
 			this.game.ground.resize(this.game.width, this.game.height, this.game.shadows)
 		}

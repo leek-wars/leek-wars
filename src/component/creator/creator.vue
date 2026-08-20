@@ -315,7 +315,6 @@ function addEntity(mob: MapPlayer) {
 function edited(_info: string) {
 	if (saveTimeout) clearTimeout(saveTimeout)
 	saveTimeout = setTimeout(() => {
-		console.log("save...")
 		if (!map.value) return
 
 		const g = playerRef.value!.game

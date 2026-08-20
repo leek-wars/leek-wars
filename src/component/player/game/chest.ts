@@ -89,7 +89,6 @@ class Chest extends FightEntity {
 		// Body
 		const width = this.bodyTexFront.texture.width
 		const height = this.bodyTexFront.texture.height
-		// console.log(this.growth, width, height)
 		const y = height * (this.deadAnim - 1)
 		// Rectangle source dégénéré (image pas encore chargée → width 0, ou deadAnim == 1
 		// en début de blooming → hauteur 0) : drawImage lève IndexSizeError sur Safari. On

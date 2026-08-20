@@ -216,7 +216,6 @@ describe('couverture de la table stdlib', () => {
 		// itertools.batched est du 3.12, JS n'a pas d'équivalent natif.
 		expect(enPY('arrayChunk')).not.toBeNull()
 		expect(enTS('arrayChunk')).toBeNull()
-		// console.warn existe en JS ; Python n'a pas de canal d'avertissement séparé.
 		expect(enTS('debugW')).not.toBeNull()
 		expect(enPY('debugW')).toBeNull()
 		// bitCount, lui, est désormais couvert des DEUX côtés via Math.

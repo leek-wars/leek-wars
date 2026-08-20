@@ -56,7 +56,6 @@ function formatEmojis(rawData: unknown): string {
 	// Custom smileys
 	for (const i in Emojis.custom) {
 		const smiley = Emojis.custom[i]
-		// console.log("(^|\\s|>|\\))" + escapeRegExp(i))
 		data = data.replace(new RegExp(escapeRegExp(i), "gi"), (a: string, pos: number) => {
 			const previous = data.charAt(pos - 1)
 			if (pos === 0 || previous === ')' || previous === '>' || previous === ' ' || previous === '\xa0') {

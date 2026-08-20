@@ -131,7 +131,6 @@ function methodNameFromLine(lineContent: string): string | null {
 	return name
 }
 
-
 monaco.editor.defineTheme("leek-wars", {
 	base: "vs", // can also be vs-dark or hc-black
 	inherit: true, // can also be false to completely replace the builtin rules
@@ -256,7 +255,6 @@ monaco.languages.registerHoverProvider("leekscript", {
 		if (!ai) { return classHoverFor(word, position) }
 
 		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
-		// console.log(hover)
 		// this.hover = hover
 		if (hover && hover.type) {
 			const range = new monaco.Range(
@@ -489,7 +487,6 @@ monaco.languages.registerCompletionItemProvider('python', {
 
 monaco.languages.registerDefinitionProvider("leekscript", {
 	provideDefinition: async (model, position, _token) => {
-		// console.log("provideDefinition", model.uri.path, position.lineNumber, position.column)
 
 		// Make a fresh hover request instead of using potentially stale lastHover
 		const ai = fileSystem.aiByFullPath[model.uri.path.substring(1)]
@@ -497,7 +494,6 @@ monaco.languages.registerDefinitionProvider("leekscript", {
 		const hover = await analyzer.hover(ai, position.lineNumber, position.column - 1)
 
 		if (hover?.defined) {
-			// console.log("provideDefinition defined", hover.defined)
 			const range = new monaco.Range(
 				hover.defined[1],
 				hover.defined[2] + 1,
@@ -838,8 +834,6 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 
 	provideCompletionItems: async function (model, position) {
 
-		// console.log("provideCompletionItems", model)
-
 		const path = model.uri.path.substring(1)
 		const ai = fileSystem.getAIByPath(path)
 		if (!ai) { return { suggestions: [] } }
@@ -850,7 +844,6 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 		const line = model.getLineContent(position.lineNumber)
 		const isDot = line.charAt(word.startColumn - 2) === '.'
 		const tokenBeforeDot = model.getWordAtPosition({ column: word.startColumn - 1, lineNumber: position.lineNumber })?.word || ''
-		// console.log("word", word, "isDot", isDot, "tokenBeforeDot", tokenBeforeDot)
 		const range = {
 			startLineNumber: position.lineNumber,
 			endLineNumber: position.lineNumber,
@@ -867,7 +860,6 @@ LeekWars.completionsProvider = monaco.languages.registerCompletionItemProvider("
 
 		const visited = new Set<string>()
 		const maybeAdd = (data: string | Keyword) => {
-			// console.log("keyword", data)
 			if (typeof data === 'string') {
 				if (data.toLowerCase().indexOf(word.word.toLowerCase()) === 0) {
 					suggestions.push({

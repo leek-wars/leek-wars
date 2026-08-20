@@ -1,4 +1,5 @@
 import { getMany, setMany, createStore } from 'idb-keyval'
+import { logger } from '@/utils/logger'
 
 const idbStore = createStore('leek-wars-data', 'game-data')
 const LS_PREFIX = 'gd:'
@@ -65,7 +66,7 @@ async function loadFromIdb(skipVersionCheck = false): Promise<GameDataMap | null
 		if (!skipVersionCheck) {
 			const cookieVersion = getCookieMasterVersion()
 			if (cookieVersion && meta.master_version !== cookieVersion) {
-				console.warn(`[GameData] Version mismatch: IDB=${meta.master_version}, cookie=${cookieVersion} → invalidating cache`)
+				logger.warn(`[GameData] Version mismatch: IDB=${meta.master_version}, cookie=${cookieVersion} → invalidating cache`)
 				return null
 			}
 		}
@@ -73,7 +74,7 @@ async function loadFromIdb(skipVersionCheck = false): Promise<GameDataMap | null
 		const result: GameDataMap = {}
 		for (let i = 0; i < DATA_TYPES.length; i++) {
 			if (values[i + 1] == null) {
-				console.warn(`[GameData] Missing type '${DATA_TYPES[i]}' in IndexedDB → invalidating cache`)
+				logger.warn(`[GameData] Missing type '${DATA_TYPES[i]}' in IndexedDB → invalidating cache`)
 				return null
 			}
 			result[DATA_TYPES[i]] = values[i + 1]
@@ -90,8 +91,8 @@ function saveToIdb(masterVersion: string, hashes: { [key: string]: string }, dat
 		entries.push(['data:' + type, data[type]])
 	}
 	setMany(entries, idbStore)
-		.then(() => console.log(`[GameData] Saved to IndexedDB`))
-		.catch(e => console.warn('[GameData] IndexedDB save failed:', e))
+		.then(() => logger.info(`[GameData] Saved to IndexedDB`))
+		.catch(e => logger.warn('[GameData] IndexedDB save failed:', e))
 }
 
 // --- localStorage fallback ---
@@ -113,7 +114,7 @@ function loadFromLs(skipVersionCheck = false): GameDataMap | null {
 			if (item == null) return null
 			result[type] = JSON.parse(item)
 		}
-		console.log('[GameData] Loaded from localStorage (fallback)')
+		logger.info('[GameData] Loaded from localStorage (fallback)')
 		return result
 	} catch {
 		return null
@@ -143,7 +144,7 @@ export async function loadGameData(): Promise<GameDataMap | null> {
 
 	if (inline != null) {
 		const changedTypes = Object.keys(inline.data)
-		console.log(`[GameData] Inline: ${changedTypes.length} types changed, master_version=${inline.master_version}`)
+		logger.info(`[GameData] Inline: ${changedTypes.length} types changed, master_version=${inline.master_version}`)
 
 		cacheSave(inline.master_version, inline.hashes, inline.data)
 		updateCookie(inline.master_version, inline.hashes)
@@ -158,7 +159,7 @@ export async function loadGameData(): Promise<GameDataMap | null> {
 			}
 			// Aucun cache disponible → fetch complet (laisse l'erreur remonter si fetchAll échoue,
 			// retourner inline.data partiel laisserait LeekWars.hats/etc. vides → crash render).
-			console.warn('[GameData] No cache for unchanged types, fetching all from API...')
+			logger.warn('[GameData] No cache for unchanged types, fetching all from API...')
 			const full = await fetchAll()
 			for (const type of changedTypes) {
 				full[type] = inline.data[type]
@@ -169,17 +170,17 @@ export async function loadGameData(): Promise<GameDataMap | null> {
 	}
 
 	// __DATA__ null → tout est à jour, charger depuis le cache
-	console.log('[GameData] __DATA__ null, loading from cache...')
+	logger.info('[GameData] __DATA__ null, loading from cache...')
 	const t0 = performance.now()
 	const cached = await cacheLoad()
 	const dt = (performance.now() - t0).toFixed(1)
 
 	if (cached) {
-		console.log(`[GameData] Loaded from cache in ${dt}ms, master_version=${getCookieMasterVersion()}`)
+		logger.info(`[GameData] Loaded from cache in ${dt}ms, master_version=${getCookieMasterVersion()}`)
 		return cached
 	}
 
-	console.log('[GameData] No cache → fetching from API...')
+	logger.info('[GameData] No cache → fetching from API...')
 	return await fetchAll()
 }
 
@@ -190,7 +191,7 @@ async function fetchAll(): Promise<GameDataMap> {
 	const json = await response.json()
 
 	const data = json.data
-	console.log(`[GameData] Fetched ${Object.keys(data).length} types from API, master_version=${json.master_version}`)
+	logger.info(`[GameData] Fetched ${Object.keys(data).length} types from API, master_version=${json.master_version}`)
 
 	cacheSave(json.master_version, json.hashes, data)
 	updateCookie(json.master_version, json.hashes)

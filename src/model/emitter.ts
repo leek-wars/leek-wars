@@ -76,6 +76,9 @@ const emitter = mitt<Events>()
 export let vueMain: ComponentPublicInstance | null = null
 export function setVueMain(vm: ComponentPublicInstance | null) { vueMain = vm }
 
+// Intentional player-facing message in the devtools console (scam warning + GitHub invite),
+// so it must stay a raw console.log and be visible in production.
+/* eslint-disable no-console */
 export function displayWarningMessage() {
 	const style = "color: black; font-size: 13px; font-weight: bold;"
 	const styleRed = "color: red; font-size: 14px; font-weight: bold;"
@@ -86,5 +89,6 @@ export function displayWarningMessage() {
 	console.log("%c✔️ " + i18n.t('main.console_github'), style)
 	console.log("")
 }
+/* eslint-enable no-console */
 
 export { emitter }

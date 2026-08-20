@@ -9,7 +9,6 @@ class Explorer {
 	public selectedFolder!: Folder
 
 	public selectAI(ai: AI) {
-		// console.log("select ai", ai)
 		if (this.selectedAI) {
 			this.selectedAI.selected = false
 			if (this.selectedFolder) {
@@ -26,7 +25,6 @@ class Explorer {
 	}
 
 	public selectFolder(folder: Folder) {
-		// console.log("select folder", folder)
 		if (this.selectedFolder) {
 			this.selectedFolder.selected = false
 		}
@@ -43,13 +41,11 @@ class Explorer {
 	}
 
 	public setExpanded(folder: Folder, expanded: boolean) {
-		// console.log("folder", folder.name, "expanded", expanded)
 		folder.expanded = expanded
 		localStorage.setItem('editor/folder/' + folder.id, '' + folder.expanded)
 	}
 
 	public setClosed(folder: Folder, closed: boolean) {
-		// console.log("folder", folder.name, "expanded", expanded)
 		folder.closed = closed
 		localStorage.setItem('editor/folder/closed/' + folder.id, '' + folder.closed)
 	}

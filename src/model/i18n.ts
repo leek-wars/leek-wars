@@ -2,6 +2,7 @@ import { locale as initialLocale, messages } from '@/locale'
 import type { Component, ComponentInstance } from 'vue'
 import { watch } from 'vue'
 import { createI18n } from 'vue-i18n'
+import { logger } from '@/utils/logger'
 
 // Pre-declare dynamic imports for Vite to bundle them
 const localeModules = import.meta.glob('/src/lang/locale/*.ts') as Record<string, () => Promise<{ translations: Record<string, unknown> }>>
@@ -149,17 +150,15 @@ function setI18nLanguage(lang: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function loadLanguageAsync(vue: any, newLocale: string) {
-	// console.log("loadLanguageAsync", newLocale)
 	const currentRoute = vue.$router.currentRoute.value?.matched[0]
 	if (currentRoute) {
-		// console.log("loadLanguageAsync", currentRoute)
 		loadComponentLanguage(newLocale, currentRoute.components?.default, currentRoute.instances?.default)
 	}
 	if (!loadedLanguages.includes(newLocale)) {
 		const modulePath = `/src/lang/locale/${newLocale}.ts`
 		const loader = localeModules[modulePath]
 		if (!loader) {
-			console.error(`Locale module not found: ${modulePath}`)
+			logger.error(`Locale module not found: ${modulePath}`)
 			return Promise.resolve(setI18nLanguage(newLocale))
 		}
 		return loader().then((module) => {

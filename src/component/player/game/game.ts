@@ -30,6 +30,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import { Chest } from './chest'
 import { Mob } from './mob'
 import { Turret } from './turret'
+import { logger } from '@/utils/logger'
 
 /** Anything the game loop can draw on a canvas row */
 interface Drawable {
@@ -501,7 +502,7 @@ class Game {
 	public init(fight: Fight) {
 
 		if (this.initialized) {
-			console.warn("Déjà initialisé !")
+			logger.warn("Déjà initialisé !")
 			return
 		}
 
@@ -511,7 +512,7 @@ class Game {
 
 		// Check data
 		if (this.data == null) {
-			console.warn("Fight is null...")
+			logger.warn("Fight is null...")
 			this.setError()
 			return
 		}
@@ -537,7 +538,6 @@ class Game {
 			const o = this.obstacles[i]
 			if (this.data.map.id) { // Map fixe
 				const info = OBSTACLES[o as unknown as number]
-				// console.log("add obstacle", o, info)
 				const obstacle = new Obstacle(this, info.geometry, this.ground.field.cells[parseInt(i, 10)], info!)
 				obstacle.resize()
 				this.ground.addObstacle(obstacle)
@@ -545,7 +545,6 @@ class Game {
 				const _type = o instanceof Array ? o[0] : -2
 				const size = o instanceof Array ? o[1] : o // Before the obstacle was an array [type, size]
 				if (size !== -1) {
-					// console.log({ type, size })
 					const types = size === 2 ? this.map.options.largeObstacles.length : this.map.options.smallObstacles.length
 					const realType = this.map.random.next() * types | 0
 					const info = size === 1 ? this.map.options.smallObstacles[realType] : this.map.options.largeObstacles[realType]
@@ -811,9 +810,6 @@ class Game {
 					break
 			}
 		}
-		// console.log("used chips", chipsUsed)
-		// console.log("weapons taken", weaponsTaken)
-		// console.log("weapons used", weaponsUsed)
 
 		// Load common textures
 		T.tp.load(this)
@@ -859,8 +855,6 @@ class Game {
 		for (const sound of Fish.sounds) {
 			sounds.add(sound)
 		}
-		// console.log("textures to load", textures)
-		// console.log("sounds to load", sounds)
 		for (const texture of textures) {
 			texture.load(this)
 		}
@@ -921,7 +915,6 @@ class Game {
 			}
 		}
 
-		// console.log(this.leeks)
 		for (const leek of this.leeks) {
 			this.states[leek.id] = {
 				absoluteShield: 0,
@@ -1342,7 +1335,6 @@ class Game {
 					}
 				}
 				if (chip === 89) { // boxing glove
-					// console.log("glove", cell.id, "targets=" + targets.length)
 					if (targets.length && !targets[0].states.has(State.STATIC)) {
 						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell, targets[0])
 						realCell.setEntity(targets[0])
@@ -1415,7 +1407,6 @@ class Game {
 				break
 			}
 
-			// console.log(leek.weapon, weapon_template)
 			const targets = this.ground.field.getTargets(cell, weapon_template.area, leek.cell!, weapon_template.max_range, weapon_template.min_range) as FightEntity[]
 
 			const duration = leek.useWeapon(cell, targets, result)
@@ -1498,7 +1489,6 @@ class Game {
 					const angle = Math.atan2(dy, dx)
 					const ndx = Math.cos(angle)
 					const ndy = Math.sin(angle)
-					// console.log("dx", dx, "dy", dy, "angle", angle, "ndx", ndx, "ndy", ndy)
 					entity.kill(true, killer.lastDamageType, ndx, ndy) // Animation
 				} else {
 					entity.kill(true, DamageType.DEFAULT, 0, 0) // Animation
@@ -1701,7 +1691,7 @@ class Game {
 			break
 		}
 		default: {
-			console.warn("Erreur : action inconnue", action)
+			logger.warn("Erreur : action inconnue", action)
 			this.actionDone()
 		}
 		}
@@ -1732,8 +1722,6 @@ class Game {
 	}
 
 	public addEffect(action: Action, stacked: boolean) {
-
-		// console.log("addEffect", action, stacked)
 
 		const item = action.params[1]
 		const id = action.params[2]
@@ -2165,7 +2153,6 @@ class Game {
 	}
 
 	public mousedown(_e: MouseEvent) {
-		// console.log("game mousedown")
 		if (this.creator) {
 			if (this.groundPaint) {
 				this.painting = true
@@ -2173,7 +2160,6 @@ class Game {
 				const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
 				if (obstacle) {
 					this.draggedObstacle = obstacle
-					// console.log("game dragged=", this.draggedObstacle)
 				}
 				const entity = this.leeks.find(e => e.cell === this.mouseCell)
 				if (entity) {
@@ -2254,17 +2240,14 @@ class Game {
 		}
 		if (this.creator) {
 			if (this.draggedObstacle && this.mouseCell && this.ground.field.canFit(this.draggedObstacle, this.mouseCell)) {
-				// console.log("move draggedObstacle", this.paused)
 				this.draggedObstacle.move(this.mouseCell)
 				this.player.$emit('edited', 'obstacle' + this.draggedObstacle.drawID)
 			}
 			if (this.draggedEntity && this.mouseCell && this.mouseCell.isAvailable()) {
-				// console.log("move draggedObstacle", this.paused)
 				this.draggedEntity.setCell(this.mouseCell)
 				this.player.$emit('edited', 'entity' + this.draggedEntity.drawID)
 			}
 			if (this.painting && this.groundPaint && this.mouseCell) {
-				// console.log("change cell color", this.mouseCell, this.map.options)
 				const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
 				if (this.mouseCell.color !== paint) {
 					this.mouseCell.color = paint
@@ -2281,7 +2264,6 @@ class Game {
 	public click() {
 		if (this.creator) {
 			if (this.groundPaint && this.mouseCell) {
-				// console.log("change cell color", this.mouseCell, this.map.options)
 				const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
 				if (this.mouseCell.color !== paint) {
 					this.mouseCell.color = paint
@@ -2303,7 +2285,6 @@ class Game {
 			this.draggedEntity = null
 
 			const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
-			// console.log("obstacle found", obstacle)
 			if (obstacle) {
 				this.removeObstacle(obstacle)
 				this.ground.resize(this.width, this.height, this.shadows)
@@ -2359,13 +2340,11 @@ class Game {
 	}
 
 	public addObstacle(obstacle: Obstacle) {
-		// console.log("addObstacle", obstacle.y)
 		this.ground.obstacles.push(obstacle)
 		obstacle.drawID = this.addDrawableElement(obstacle, obstacle.y)
 	}
 
 	public removeObstacle(obstacle: Obstacle) {
-		// console.log("removeObstacle", obstacle.y)
 		for (const coord of obstacle.geometry.cells) {
 			const cell = this.ground.field.next_cell(obstacle.cell, coord[0], coord[1])
 			if (cell) { cell.obstacle = null }
@@ -2390,16 +2369,14 @@ class Game {
 	}
 
 	public addDrawableElement(element: Drawable, line: number): number {
-		// console.log("add drawable element")
 		this.drawableElementCurrentId++
 		this.drawableElements[line][this.drawableElementCurrentId] = element
 		return this.drawableElementCurrentId
 	}
 
 	public moveDrawableElement(element: Drawable, id: number, line: number, newLine: number) {
-		// console.log("move drawable element")
 		if (!this.drawableElements[newLine]) {
-			console.warn("Error moving object to line " + newLine)
+			logger.warn("Error moving object to line " + newLine)
 			return
 		}
 		this.drawableElements[newLine][id] = element // Ajout de l'élément sur la nouvelle ligne
@@ -2410,10 +2387,9 @@ class Game {
 		// if (this.drawableElements[line] !== undefined) {
 		// 	if (this.drawableElements[line][id] != null) {
 				if (!this.drawableElements[line][id]) {
-					console.log("No drawable element to remove", id, line)
-					console.log(this.drawableElements)
+					logger.warn("No drawable element to remove", id, line)
+					logger.warn(this.drawableElements)
 				} else {
-				// 	console.log("remove", this.drawableElements[line][id])
 					delete this.drawableElements[line][id]
 				}
 		// 	}
@@ -2997,7 +2973,6 @@ class Game {
 
 	public drawGroundPaint() {
 		if (this.groundPaint) {
-			// console.log("drawGroundPaint", this.groundPaint)
 			const x = this.mouseX!
 			const y = this.mouseY!
 			const size = this.ground.tileSizeY
@@ -3205,7 +3180,6 @@ class Game {
 	public resourceLoaded(_res: string) { // variable utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }
-		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")
 		if (this.loadedData === this.numData && this.initialized === true) {
 			if (!this.launched) {
 				this.launch() // Start game if all resources are loaded
