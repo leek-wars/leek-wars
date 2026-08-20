@@ -27,6 +27,7 @@
 	"neutrino": "Neutrino",
 	"odachi": "Odachi",
 	"pistol": "Pistola",
+	"plutonium_bazooka": "Bazuca de plutônio",
 	"quantum_rifle": "Fuzil quântico",
 	"revoked_m_laser": "M-Laser revogado",
 	"rhino": "Rinoceronte",
@@ -36,6 +37,5 @@
 	"sun_spear": "Lança do sol",
 	"sword": "Espada",
 	"unbridled_gazor": "Gaseador desenfreado",
-	"unstable_destroyer": "Destruidor Instável",
-	"plutonium_bazooka": "Bazuca de plutônio"
+	"unstable_destroyer": "Destruidor Instável"
 }

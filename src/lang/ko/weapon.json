@@ -27,6 +27,7 @@
 	"neutrino": "중성미자",
 	"odachi": "오다치",
 	"pistol": "권총",
+	"plutonium_bazooka": "플루토늄 바주카포",
 	"quantum_rifle": "양자 소총",
 	"revoked_m_laser": "취소된 M-레이저",
 	"rhino": "라이노",
@@ -36,6 +37,5 @@
 	"sun_spear": "태양의 창",
 	"sword": "검",
 	"unbridled_gazor": "광폭화된 가저",
-	"unstable_destroyer": "불안정한 디스트로이어",
-	"plutonium_bazooka": "플루토늄 바주카포"
+	"unstable_destroyer": "불안정한 디스트로이어"
 }
