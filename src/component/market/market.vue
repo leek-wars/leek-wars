@@ -341,6 +341,9 @@ const t = useNamespacedT('market')
 		return typeof trophy === 'object' && trophy ? trophy.name : ''
 	}
 
+	// Objet affiché par défaut sur desktop, où le marché ne s'affiche jamais sans sélection.
+	const DEFAULT_ITEM = 'pistol'
+
 	const selectedItem = ref<ItemTemplate | null>(null)
 	const items = reactive<{[key: string]: ItemTemplate}>({})
 	const weapons = ref<ItemTemplate[]>([])
@@ -595,13 +598,22 @@ const t = useNamespacedT('market')
 
 	function update() {
 		const item = route.params.item as string
+		// Objet absent du catalogue : chapeau non encore révélé (public = FALSE), objet
+		// verrouillé par un trophée qu'on n'a pas, ou lien périmé — la banque, elle, lie vers
+		// /market/<nom> de ce qu'elle vend. translateName(undefined) plantait alors toute la
+		// page (erreur #11851805). Le test sur le catalogue évite de rediriger tant qu'il
+		// n'est pas chargé, le test sur DEFAULT_ITEM tout aller-retour infini.
+		if (item && item !== DEFAULT_ITEM && !items_by_name[item] && Object.keys(items_by_name).length) {
+			router.replace('/market')
+			return
+		}
 		if (item) {
 			selectedItem.value = items_by_name[item]
 			LeekWars.setTitle(translateName(selectedItem.value))
 			LeekWars.splitShowContent()
 			emitter.emit('loaded')
 		} else if (!LeekWars.mobile) {
-			router.replace('/market/pistol')
+			router.replace('/market/' + DEFAULT_ITEM)
 		} else {
 			selectedItem.value = null
 			LeekWars.setTitle(t('title'))
