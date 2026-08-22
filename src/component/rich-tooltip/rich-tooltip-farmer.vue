@@ -152,9 +152,12 @@ function open(v: boolean) {
 			if (expand_leeks.value) {
 				menu.value?.updateLocation?.()
 			}
-		}).error(() => {
+		}, () => {
 			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
 			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			// Handler de rejet du MÊME then (et non un .error() chaîné), qui ne rattrape donc
+			// pas ce que lèverait le callback de succès : une réponse mal formée doit rester
+			// un vrai crash visible, pas une requête relancée à chaque survol.
 			content_created.value = false
 		})
 	}

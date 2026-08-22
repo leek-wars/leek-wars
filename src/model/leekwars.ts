@@ -109,7 +109,10 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 			const xhr = new XMLHttpRequest()
 			currentXhr = xhr
 			xhr.open(method, url)
-			xhr.responseType = 'json'
+			// 'text' et non 'json' : le parsing manuel ci-dessous est le seul moyen de distinguer
+			// un corps VIDE (succès sans contenu) d'un corps ILLISIBLE (réponse cassée) — avec
+			// responseType 'json' les deux donnent le même `response` null.
+			xhr.responseType = 'text'
 			if (store.state.connected) {
 				xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
 			}
@@ -118,17 +121,21 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 			}
 			xhr.onload = () => {
-				if (xhr.status === 200) {
-					// responseType 'json' rend `response` null quand le corps n'est pas du JSON valide :
-					// réponse tronquée, dump PHP collé devant le JSON, page d'erreur d'un proxy. Résoudre
-					// ce null faisait planter les `.then` qui déréférencent le résultat — #11848884
-					// (`f.leeks`, rich-tooltip-farmer) et #11843514 (`data.code`, ai/read) — en
-					// unhandledrejection non rattrapée. Un corps illisible est un échec, pas un succès.
-					if (xhr.response === null) {
-						reject(normalizeApiError(null))
-					} else {
-						resolve(xhr.response)
-					}
+				// Corps vide = succès sans contenu : le Router n'écho rien quand un service renvoie
+				// null (farmer/get-godfather-info sur un login inconnu, par exemple), et ses appelants
+				// traitent ce null comme une réponse valide. Corps non vide mais illisible = réponse
+				// cassée (tronquée, dump PHP collé devant le JSON, page d'erreur d'un proxy) : c'est
+				// un échec. La résoudre faisait planter les `.then` qui déréférencent le résultat —
+				// #11848884 (`f.leeks`, rich-tooltip-farmer) et #11843514 (`data.code`, ai/read) — en
+				// unhandledrejection non rattrapée.
+				const text = xhr.responseText
+				let body: unknown = null
+				let unreadable = false
+				if (text !== '') {
+					try { body = JSON.parse(text) } catch { unreadable = true }
+				}
+				if (xhr.status === 200 && !unreadable) {
+					resolve(body as T)
 				} else if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
@@ -141,7 +148,10 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 						console.error(message)
 						// LeekWars.toast(message, 5000)
 					}
-					reject(normalizeApiError(xhr.response))
+					// L'URL voyage avec l'erreur : un corps illisible se normalise en 'unknown_error'
+					// (seul code traduit dans les 18 locales) et serait sinon indistinguable des
+					// autres dans les rapports masqués.
+					reject(normalizeApiError(unreadable ? { invalid_response: method + ' ' + url } : body))
 				}
 			}
 			xhr.onerror = () => {

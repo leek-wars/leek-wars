@@ -46,10 +46,16 @@ export function isInitOrderCrash(m: string): boolean {
 const EXTENSION_FRAME = /\b(?:(?:chrome|moz|safari-web)-extension|webkit-masked-url):\/\/\S*:\d+:\d+/i
 const PAGE_FRAME = /\bhttps?:\/\/\S*:\d+:\d+/i
 
+// « Du code à nous est dans la stack » : la règle qui rend un rapport visible, partagée par
+// toutes les familles « cause externe » pour qu'affiner la regex ne les fasse pas diverger.
+function hasPageFrame(stack: string): boolean {
+	return PAGE_FRAME.test(stack)
+}
+
 export function isBrowserExtensionCrash(stack: string): boolean {
 	// Frame de page d'abord : elle tranche dès la première frame sur un crash applicatif, alors
 	// que l'alternation d'extensions, elle, parcourt toute la stack avant d'échouer.
-	return !PAGE_FRAME.test(stack) && EXTENSION_FRAME.test(stack)
+	return !hasPageFrame(stack) && EXTENSION_FRAME.test(stack)
 }
 
 // Firefox : accès à un wrapper d'objet MORT (objet d'un compartiment détruit — document ou
@@ -61,7 +67,7 @@ export function isBrowserExtensionCrash(stack: string): boolean {
 // sur le message, et seulement tant que la stack ne cite AUCUNE frame de la page : une seule
 // suffirait à faire de ce rapport un bug applicatif, à voir.
 export function isDeadObjectCrash(m: string, stack: string): boolean {
-	return m.includes('access dead object') && !PAGE_FRAME.test(stack)
+	return m.includes('access dead object') && !hasPageFrame(stack)
 }
 
 // Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...",
