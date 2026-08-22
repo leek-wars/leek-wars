@@ -64,12 +64,16 @@ export function isDeadObjectCrash(m: string, stack: string): boolean {
 	return m.includes('access dead object') && !PAGE_FRAME.test(stack)
 }
 
-// Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
+// Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...",
+// WebKit: "Importing a module script failed." — donc Safari et TOUS les navigateurs iOS, dont
+// Chrome/CriOS ; sa formulation manquait, ces échecs remontaient en rapport visible sans stack
+// ni route exploitables au lieu d'être masqués comme les autres, erreur #11849252 / issue #4862).
 // Prédicat partagé entre le canal Vue (reportVueError) et le handler unhandledrejection,
 // pour qu'un même échec d'import() soit classé pareil quel que soit le canal d'arrivée.
 export function isChunkLoadError(m: string): boolean {
 	return m.includes('Failed to fetch dynamically imported module') ||
 		m.includes('error loading dynamically imported module') ||
+		m.includes('Importing a module script failed') ||
 		m.includes('Loading chunk') ||
 		m.includes('Loading CSS chunk') ||
 		m.includes('Unable to preload CSS')

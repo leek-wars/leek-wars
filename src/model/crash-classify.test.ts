@@ -37,6 +37,7 @@ describe('isChunkLoadError', () => {
 	it('reconnaît les échecs de chargement de chunk/CSS', () => {
 		expect(isChunkLoadError('Failed to fetch dynamically imported module: https://leekwars.com/assets/x.js')).toBe(true)
 		expect(isChunkLoadError('error loading dynamically imported module')).toBe(true)
+		expect(isChunkLoadError('Importing a module script failed.')).toBe(true)
 		expect(isChunkLoadError('Unable to preload CSS for /assets/x.css')).toBe(true)
 	})
 
