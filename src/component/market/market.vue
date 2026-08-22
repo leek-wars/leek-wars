@@ -606,10 +606,11 @@ const t = useNamespacedT('market')
 			// remonterait sinon une méthode d'Object.prototype comme si c'était un objet du jeu.
 			const template = Object.prototype.hasOwnProperty.call(items_by_name, item) ? items_by_name[item] : undefined
 			if (!template) {
-				// Catalogue pas encore chargé : ne rien faire, sa réception rappelle update().
-				// Chargé : renvoyer vers le marché, sauf pour DEFAULT_ITEM qui EST la cible de
-				// cette redirection et bouclerait.
-				if (Object.keys(items_by_name).length && item !== DEFAULT_ITEM) { router.replace('/market') }
+				// Catalogue pas encore reçu (les armes sont sa plus grosse famille, jamais vide
+				// une fois chargé) : ne rien faire, sa réception rappelle update(). Sinon replier
+				// DIRECTEMENT sur la destination finale plutôt que de repasser par /market, qui
+				// demanderait une exception pour ne pas boucler.
+				if (weapons.value.length) { router.replace(LeekWars.mobile ? '/market' : '/market/' + DEFAULT_ITEM) }
 				return
 			}
 			selectedItem.value = template

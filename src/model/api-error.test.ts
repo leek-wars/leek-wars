@@ -26,7 +26,8 @@ describe('normalizeApiError', () => {
 	})
 
 	it('rattrape les corps vides ou de type inattendu', () => {
-		// null = réponse non-JSON (502, timeout Traefik) lue en responseType 'json'.
+		// null = corps de réponse vide (502, timeout Traefik) ; un corps illisible arrive, lui,
+		// sous la forme {invalid_response} posée par request().
 		for (const body of [null, undefined, '', { error: '' }, 500, ['a']]) {
 			expect(normalizeApiError(body).error).toBe('unknown_error')
 		}

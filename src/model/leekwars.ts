@@ -121,6 +121,15 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 			}
 			xhr.onload = () => {
+				// Réessai avant toute lecture du corps : celui d'une 429 n'intéresse personne.
+				if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
+					const delay = retryDelay(retry)
+					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+						console.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
+					}
+					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
+					return
+				}
 				// Corps vide = succès sans contenu : le Router n'écho rien quand un service renvoie
 				// null (farmer/get-godfather-info sur un login inconnu, par exemple), et ses appelants
 				// traitent ce null comme une réponse valide. Corps non vide mais illisible = réponse
@@ -136,12 +145,6 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				}
 				if (xhr.status === 200 && !unreadable) {
 					resolve(body as T)
-				} else if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
-					const delay = retryDelay(retry)
-					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-						console.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
-					}
-					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
 				} else {
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 						const message = "[" + xhr.status + "] " + method + " " + url

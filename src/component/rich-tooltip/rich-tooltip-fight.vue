@@ -262,6 +262,10 @@ function open(v: boolean) {
 	if (props.id > 0 && !data.value) {
 		LeekWars.get<TooltipFight>('fight/rich-tooltip/' + props.id).then(d => {
 			data.value = d
+		}, () => {
+			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
+			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			content_created.value = false
 		})
 	}
 }
