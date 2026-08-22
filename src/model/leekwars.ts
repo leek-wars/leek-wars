@@ -119,7 +119,16 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 			}
 			xhr.onload = () => {
 				if (xhr.status === 200) {
-					resolve(xhr.response)
+					// responseType 'json' rend `response` null quand le corps n'est pas du JSON valide :
+					// réponse tronquée, dump PHP collé devant le JSON, page d'erreur d'un proxy. Résoudre
+					// ce null faisait planter les `.then` qui déréférencent le résultat — #11848884
+					// (`f.leeks`, rich-tooltip-farmer) et #11843514 (`data.code`, ai/read) — en
+					// unhandledrejection non rattrapée. Un corps illisible est un échec, pas un succès.
+					if (xhr.response === null) {
+						reject(normalizeApiError(null))
+					} else {
+						resolve(xhr.response)
+					}
 				} else if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
