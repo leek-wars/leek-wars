@@ -389,6 +389,30 @@ plus rien.
 Rappel de doctrine : un halo est une **émission de lumière**, pas une ombre
 d'élévation — c'est ce qui le rend compatible avec la règle « zéro ombre ».
 
+## Cartes de combat en thème sombre (2026-08-22)
+
+Le thème sombre s'arrêtait à la bordure du canvas : la banquise et la plage
+restaient éblouissantes au milieu d'une page noire (#4879). Désormais **toutes**
+les cartes s'assombrissent, plus seulement le Nexus, qui avait ses propres
+textures sombres (DarkNexus) et les garde.
+
+Parti pris :
+
+- **Teinte, pas voile** : un `multiply` bleuté sur le fond déjà dessiné (motif,
+  décors, détails de case, ombres) et sur les textures d'obstacles, mises en
+  cache teintées comme elles le sont déjà à l'échelle. Un aplat semi-opaque
+  aurait délavé les textures au lieu de les éteindre.
+- **Les poireaux restent en pleine lumière.** Ce sont les acteurs : le décor
+  recule, eux ressortent. Seules les traces posées au sol pendant le combat
+  (impacts, sang, douilles) suivent le fond, via `ctx.filter`.
+- **Un dosage par carte** (`nightStrength` dans `maps.ts`), pas une teinte
+  unique : la cible est une même luminosité de nuit pour toutes, ~58 mesurée au
+  centre de la grille. La plage tombe de 217 à 60 et prend la teinte pleine,
+  l'usine de 95 à 54, le cimetière — déjà nocturne — n'y touche presque pas.
+- **Mesurer, pas juger à l'œil** : une carte verte saturée (Japon) paraît encore
+  en plein jour à 57 alors qu'elle est à la même luminance qu'une carte grise.
+  Sans le chiffre, on la surassombrit jusqu'à la bouillie.
+
 ## Questions ouvertes
 
 - **Avatars carrés partout ?** Le mockup les fait carrés et bordés ; pour
