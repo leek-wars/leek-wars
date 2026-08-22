@@ -1105,7 +1105,7 @@ abstract class FightEntity extends Entity {
 		if (this.x !== this.dx || this.y !== this.dy) {
 			ctx.save()
 			ctx.globalAlpha = 0.5
-			ctx.fillStyle = this.game.map.options.reachableColor
+			ctx.fillStyle = this.game.map.reachableColor
 
 			for (const cell of this.path) {
 				const pos = this.game.ground.field.cellToXY(cell)

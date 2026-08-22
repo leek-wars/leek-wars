@@ -13,6 +13,7 @@ class Texture {
 	public buildShadow: boolean
 	public shadowQuality: number
 	private cache: {[key: number]: HTMLCanvasElement} = {}
+	private darkCache: {[key: string]: HTMLCanvasElement} = {}
 	public ctx!: CanvasRenderingContext2D
 	public loaded: boolean = false
 
@@ -127,6 +128,37 @@ class Texture {
 			const ctx = canvas.getContext('2d')!
 			ctx.drawImage(this.texture, 0, 0, width, canvas.height)
 			this.cache[width] = canvas
+			return canvas
+		} catch {
+			return this.texture
+		}
+	}
+
+	// Variante « nuit » d'une texture, teintée par un multiply. Les obstacles
+	// sont redessinés à chaque frame : comme getScaled, on les assombrit une
+	// fois pour toutes au (re)dimensionnement plutôt qu'au dessin.
+	getScaledDark(width: number, color: string) {
+		if (this.failed) {
+			return this.texture
+		}
+		const key = width + '|' + color
+		if (key in this.darkCache) {
+			return this.darkCache[key]
+		}
+		try {
+			const canvas = document.createElement('canvas')
+			canvas.width = Math.max(1, width)
+			canvas.height = Math.max(1, this.texture.height * (width / this.texture.width))
+			const ctx = canvas.getContext('2d')!
+			ctx.drawImage(this.texture, 0, 0, canvas.width, canvas.height)
+			// Le multiply teinte aussi le transparent autour du sprite : l'alpha
+			// d'origine est remis par-dessus pour redécouper la silhouette.
+			ctx.globalCompositeOperation = 'multiply'
+			ctx.fillStyle = color
+			ctx.fillRect(0, 0, canvas.width, canvas.height)
+			ctx.globalCompositeOperation = 'destination-in'
+			ctx.drawImage(this.texture, 0, 0, canvas.width, canvas.height)
+			this.darkCache[key] = canvas
 			return canvas
 		} catch {
 			return this.texture

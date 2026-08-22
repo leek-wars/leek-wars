@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Game } from '@/component/player/game/game'
 import { isDrawable, loadDrawableImage, T, Texture } from '@/component/player/game/texture'
@@ -195,5 +195,65 @@ describe('isDrawable', () => {
 		canvas.width = 32
 		canvas.height = 0
 		expect(isDrawable(canvas)).toBe(false)
+	})
+})
+
+describe('Texture.getScaledDark', () => {
+
+	// happy-dom ne fournit pas de contexte 2D : on enregistre la séquence d'appels
+	function fakeCanvas() {
+		const ops: string[] = []
+		const ctx = {
+			drawImage: () => ops.push('drawImage'),
+			fillRect: () => ops.push('fillRect'),
+			set globalCompositeOperation(value: string) { ops.push('composite:' + value) },
+			set fillStyle(value: string) { ops.push('fillStyle:' + value) },
+		}
+		vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(ctx as unknown as CanvasRenderingContext2D)
+		return ops
+	}
+
+	function loadedTexture() {
+		const texture = new Texture('/image/map/ball.png')
+		const image = new Image()
+		image.width = 150
+		image.height = 160
+		texture.texture = image
+		return texture
+	}
+
+	afterEach(() => vi.restoreAllMocks())
+
+	it('teinte le sprite puis le redécoupe à son alpha d\'origine', () => {
+		const ops = fakeCanvas()
+
+		loadedTexture().getScaledDark(30, 'rgb(57, 69, 103)')
+
+		// Sans le masque final, le multiply peindrait aussi le transparent autour
+		// du sprite : l'obstacle deviendrait un rectangle plein
+		expect(ops).toEqual(['drawImage', 'composite:multiply', 'fillStyle:rgb(57, 69, 103)', 'fillRect', 'composite:destination-in', 'drawImage'])
+	})
+
+	it('met la variante en cache par taille et par teinte', () => {
+		fakeCanvas()
+		const texture = loadedTexture()
+
+		const dark = texture.getScaledDark(30, 'rgb(57, 69, 103)')
+
+		// Les obstacles sont redessinés à chaque frame : reteinter à chaque fois
+		// coûterait un canvas par image
+		expect(texture.getScaledDark(30, 'rgb(57, 69, 103)')).toBe(dark)
+		expect(texture.getScaledDark(30, 'rgb(176, 181, 194)')).not.toBe(dark)
+		expect(texture.getScaledDark(60, 'rgb(57, 69, 103)')).not.toBe(dark)
+	})
+
+	it('rend le repli dessinable quand la texture a échoué', () => {
+		const texture = new Texture('/image/inexistant.png').load(fakeGame())
+
+		texture.texture.dispatchEvent(new Event('error'))
+
+		// Mettre à l'échelle le repli 1×1 remplirait le cache d'un canvas par
+		// largeur demandée, donc par niveau de zoom
+		expect(texture.getScaledDark(30, 'rgb(57, 69, 103)')).toBe(texture.texture)
 	})
 })

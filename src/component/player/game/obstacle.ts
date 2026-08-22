@@ -103,7 +103,7 @@ class Obstacle {
 			this.realX = ((this.x + this.nudgeX) / 2) * this.game.ground.tileSizeX + (this.game.ground.tileSizeX - this.realWidth) / 2
 			this.realY = ((this.y + this.nudgeY) / 2 + 1) * this.game.ground.tileSizeY - this.realHeight
 
-			this.texture = this.baseTexture.getScaled(this.realWidth)
+			this.texture = this.scaledTexture(this.realWidth)
 
 		} else if (this.geometry.id === 2) {
 
@@ -115,7 +115,7 @@ class Obstacle {
 			this.realX = ((this.x + 1) / 2) * this.game.ground.tileSizeX - this.realWidth / 2
 			this.realY = ((this.y + this.nudgeY) / 2 + 2) * this.game.ground.tileSizeY - this.realHeight
 
-			this.texture = this.baseTexture.getScaled(this.realWidth)
+			this.texture = this.scaledTexture(this.realWidth)
 
 		} else if (this.geometry.id === 3 || this.geometry.id === 5) {
 
@@ -127,8 +127,16 @@ class Obstacle {
 			this.realX = ((this.x + this.nudgeX + 1) / 2) * this.game.ground.tileSizeX - this.realWidth / 2
 			this.realY = ((this.y + this.nudgeY) / 2 + 2) * this.game.ground.tileSizeY - this.realHeight
 
-			this.texture = this.baseTexture.getScaled(this.realWidth)
+			this.texture = this.scaledTexture(this.realWidth)
 		}
+	}
+
+	// En mode sombre l'obstacle est redimensionné ET teinté, les deux mises en
+	// cache par la texture : rien de plus à faire au dessin.
+	private scaledTexture(width: number) {
+		return this.game.night
+			? this.baseTexture!.getScaledDark(width, this.game.map.nightColor)
+			: this.baseTexture!.getScaled(width)
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {

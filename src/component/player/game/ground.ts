@@ -251,7 +251,7 @@ class Ground {
 			// Draw checkerboard
 			if (this.game.tactic) {
 				this.textureCtx.save()
-				this.textureCtx.fillStyle = this.game.map.options.checkerboardColor
+				this.textureCtx.fillStyle = this.game.map.checkerboardColor
 
 				for (const cell of this.field.cells) {
 
@@ -294,6 +294,17 @@ class Ground {
 				for (const obstacle of this.obstacles) {
 					obstacle.drawShadow(this.textureCtx)
 				}
+			}
+
+			// Mode sombre (#4879) : un seul multiply sur tout le fond déjà dessiné
+			// (motif, décors, détails de case, ombres des obstacles). Les obstacles
+			// eux-mêmes sont teintés dans leur texture, ils sont sur l'autre canvas.
+			if (this.game.night) {
+				this.textureCtx.save()
+				this.textureCtx.globalCompositeOperation = 'multiply'
+				this.textureCtx.fillStyle = this.game.map.nightColor
+				this.textureCtx.fillRect(-this.startX, -this.startY, this.width, this.height)
+				this.textureCtx.restore()
 			}
 
 			// Black stripes
@@ -662,7 +673,7 @@ class Ground {
 	public drawGrid(ctx: CanvasRenderingContext2D) {
 
 		ctx.save()
-		ctx.strokeStyle = this.game.map.options.gridColor
+		ctx.strokeStyle = this.game.map.gridColor
 		ctx.globalAlpha = this.game.tactic ? 0.25 : 0.18
 		ctx.lineWidth = 1.3 * this.scale
 
@@ -698,6 +709,7 @@ class Ground {
 	public drawTexture(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.translate(x, y)
 			this.textureCtx.rotate(angle)
 			this.textureCtx.drawImage(image, -image.width / 2, -image.height / 2)
@@ -708,6 +720,7 @@ class Ground {
 	public drawTextureCrop(image: HTMLImageElement, x: number, y: number, angle: number, ox: number, oy: number, w: number, h: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.translate(x, y)
 			this.textureCtx.rotate(angle)
 			this.textureCtx.drawImage(image, ox, oy, w, h, -w / 2, -h / 2, w, h)
@@ -718,6 +731,7 @@ class Ground {
 	public drawTextureScale(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number, scaleX: number, scaleY: number, alpha: number = 1) {
 		if (GROUND_TEXTURE && this.textureCtx) {
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.globalAlpha = alpha
 			this.textureCtx.translate(x, y)
 			this.textureCtx.scale(scaleX, scaleY)
@@ -730,11 +744,21 @@ class Ground {
 	public drawTextureCropScale(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number, ox: number, oy: number, w: number, h: number, scaleX: number, scaleY: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.translate(x, y)
 			this.textureCtx.scale(scaleX, scaleY)
 			this.textureCtx.rotate(angle)
 			this.textureCtx.drawImage(image, ox, oy, w, h, -w / 2, -h / 2, w, h)
 			this.textureCtx.restore()
+		}
+	}
+
+	// Les impacts, le sang et les douilles sont peints sur le fond bien après
+	// sa teinte de nuit : ctx.filter les met au même niveau. Le filtre fait
+	// partie de l'état du contexte, l'appelant l'annule avec son restore().
+	private applyNightFilter(ctx: CanvasRenderingContext2D) {
+		if (this.game.night) {
+			ctx.filter = this.game.map.nightFilter
 		}
 	}
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="hud" :class="{dark: game.autoDark ? (game.map && game.map.options.dark) : game.dark}">
+	<div class="hud" :class="{dark: game.map && game.map.isDark}">
 		<div v-if="!creator" class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
@@ -60,9 +60,9 @@
 			<div v-if="!followBottom && renderEnd < game.consoleLines.length" class="load-marker bottom">…</div>
 		</div>
 		<div v-if="!creator && game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
-		<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-		<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-		<entity-details v-else-if="!LeekWars.mobile && game.currentPlayer !== null && game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+		<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.map && game.map.isDark" />
+		<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.map && game.map.isDark" />
+		<entity-details v-else-if="!LeekWars.mobile && game.currentPlayer !== null && game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.map && game.map.isDark" />
 	</div>
 </template>
 

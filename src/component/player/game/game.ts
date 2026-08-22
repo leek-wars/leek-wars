@@ -2880,7 +2880,7 @@ class Game {
 				entity.drawPath(this.ctx)
 			}
 			if (entity === this.hoverEntity || entity === this.mouseEntity || entity === this.selectedEntity) {
-				this.drawEffectArea(entity.reachableCellsArea, this.map.options.reachableColor, 2, 0.7, 0.1)
+				this.drawEffectArea(entity.reachableCellsArea, this.map.reachableColor, 2, 0.7, 0.1)
 			}
 		}
 
@@ -3251,6 +3251,12 @@ class Game {
 		return this.autoDark ? LeekWars.darkMode : this.dark
 	}
 
+	// Mode nuit : la carte est assombrie au rendu (fond, décors, obstacles).
+	// Le Nexus en est exclu, il a ses propres textures sombres (DarkNexus).
+	public get night(): boolean {
+		return this.mapType !== 0 && this.isDark()
+	}
+
 	public toggleDark() {
 		if (this.mapType == 0) {
 			if (this.isDark()) {
@@ -3260,8 +3266,13 @@ class Game {
 			}
 			this.map.create()
 			this.atmosphere = this.map.options.sound
-			this.redraw()
+		} else if (this.launched) {
+			// Fond et textures d'obstacles sont teintés au (re)dimensionnement.
+			// Avant le lancement il n'y a rien à teindre : le combat se dessinera
+			// de toute façon avec l'état du moment.
+			this.ground.resize(this.width, this.height, this.shadows)
 		}
+		this.redraw()
 	}
 }
 
