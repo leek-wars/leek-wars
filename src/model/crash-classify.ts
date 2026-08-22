@@ -52,6 +52,18 @@ export function isBrowserExtensionCrash(stack: string): boolean {
 	return !PAGE_FRAME.test(stack) && EXTENSION_FRAME.test(stack)
 }
 
+// Firefox : accès à un wrapper d'objet MORT (objet d'un compartiment détruit — document ou
+// fenêtre disparus). Arrive par window.onerror avec un Error dont la `stack` est vide, en
+// boucle d'une fois par seconde pendant des heures sur un onglet oublié (1411 rapports en deux
+// jours pour deux joueurs, erreur #11847400 / issue #4856). Aucun code de la page ne peut
+// détenir un objet mort — le site n'a pas d'iframe de même origine — donc la source est un
+// script injecté ; sans stack, isBrowserExtensionCrash ne peut pas le prouver. On classe donc
+// sur le message, et seulement tant que la stack ne cite AUCUNE frame de la page : une seule
+// suffirait à faire de ce rapport un bug applicatif, à voir.
+export function isDeadObjectCrash(m: string, stack: string): boolean {
+	return m.includes('access dead object') && !PAGE_FRAME.test(stack)
+}
+
 // Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
 // Prédicat partagé entre le canal Vue (reportVueError) et le handler unhandledrejection,
 // pour qu'un même échec d'import() soit classé pareil quel que soit le canal d'arrivée.

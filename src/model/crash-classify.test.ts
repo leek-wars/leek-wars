@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createRepeatLimiter, isBrowserExtensionCrash, isChunkLoadError, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
+import { createRepeatLimiter, isBrowserExtensionCrash, isChunkLoadError, isDeadObjectCrash, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
 
 describe('isInitOrderCrash', () => {
 
@@ -145,5 +145,24 @@ describe('createRepeatLimiter', () => {
 	it('tolère un message vide', () => {
 		const limiter = createRepeatLimiter()
 		expect(limiter.shouldReport('')).toBe(true)
+	})
+})
+
+describe('isDeadObjectCrash', () => {
+
+	// Le rapport réel de l'erreur #11847400 : Firefox n'attache aucune stack au message.
+	it('reconnaît l\'objet mort Firefox sans stack', () => {
+		expect(isDeadObjectCrash("can't access dead object", '')).toBe(true)
+	})
+
+	// Une frame de la page prouve que du code à nous est dans le coup : le rapport doit rester
+	// visible, exactement comme pour isBrowserExtensionCrash.
+	it('laisse visible un objet mort dont la stack cite la page', () => {
+		expect(isDeadObjectCrash("can't access dead object", 'f@https://leekwars.com/assets/x.js:2:9')).toBe(false)
+	})
+
+	it('ignore les messages d\'autres familles', () => {
+		expect(isDeadObjectCrash("can't access property \"leeks\", t is null", '')).toBe(false)
+		expect(isDeadObjectCrash('', '')).toBe(false)
 	})
 })
