@@ -84,6 +84,14 @@ Alias d'arguments (acceptent l'objet **ou** son id) :
 | `getAlliedTurret()` / `getEnemyTurret()` | `Entity \| null` | Tourelles. |
 | `getNextPlayer(entity?)` / `getPreviousPlayer(entity?)` | `Entity \| null` | Ordre de jeu. |
 | `listen()` | `any[][]` | Paroles prononcées (say) : liste de `[entité, message]`. |
+| `weaponCell(target, weapon?, ignoredCells?)` | `Cell \| null` | Case d'où utiliser l'arme sur `target` (entité **ou** case). |
+| `weaponCells(target, weapon?, ignoredCells?)` | `Cell[]` | Toutes les cases. |
+| `chipCell(chip, target, ignoredCells?)` / `chipCells(...)` | `Cell \| null` / `Cell[]` | Idem pour une puce. |
+| `weaponTargets(cell, weapon?)` / `chipTargets(chip, cell)` | `Entity[]` | Entités touchées. |
+
+Les six helpers de ciblage ne dépendent d'aucune entité : l'arme est celle équipée **par défaut**,
+mais `Fight.weaponCells(cell, enemy.weapon)` répond « d'où l'ennemi peut frapper cette case ». Ils
+restent accessibles depuis `me` (mêmes fonctions), où l'API les a publiés en premier.
 
 Sous-conteneurs de constantes : `Fight.Type`, `Fight.Context`, `Fight.Boss`, `Fight.Erosion`,
 `Fight.Use` (cf. [Constantes](#constantes)).
@@ -218,10 +226,11 @@ En plus de tout `Entity` :
 | `itemUses(item)` | `number` | Utilisations de l'item ce tour. |
 | `setLoadout(name, keep?)` | `boolean` | Change l'équipement courant. |
 | `summon(chip, cell, callback, name?)` | `number` | Invoque un bulbe (`callback` rejouée à chaque tour du bulbe). |
-| `weaponCell(target, weapon?, ignoredCells?)` | `Cell \| null` | Case d'où utiliser l'arme sur `target` (entité **ou** case). |
-| `weaponCells(target, weapon?, ignoredCells?)` | `Cell[]` | Toutes les cases. |
-| `chipCell(chip, target, ignoredCells?)` / `chipCells(...)` | `Cell \| null` / `Cell[]` | Idem pour une puce. |
-| `weaponTargets(cell, weapon?)` / `chipTargets(chip, cell)` | `Entity[]` | Entités touchées. |
+
+Les six helpers de ciblage (`weaponCell`, `weaponCells`, `chipCell`, `chipCells`, `weaponTargets`,
+`chipTargets`) s'appellent aussi sur `me`, où l'API les a publiés en premier — ce sont les mêmes
+fonctions. Ils sont documentés sur [`Fight`](#fight--le-combat) : ils ne calculent rien qui dépende
+de ton entité, l'arme équipée n'y est qu'un défaut.
 
 ### Sous-types d'entité
 

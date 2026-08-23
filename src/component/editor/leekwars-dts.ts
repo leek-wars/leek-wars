@@ -458,6 +458,10 @@ export const OBJECT_MEMBER_LS: Record<string, string> = {
 	'Fight.getAliveAlliesCount': 'getAliveAlliesCount', 'Fight.getDeadEnemiesCount': 'getDeadEnemiesCount',
 	'Fight.getAlliedTurret': 'getAlliedTurret', 'Fight.getEnemyTurret': 'getEnemyTurret',
 	'Fight.getNextPlayer': 'getNextPlayer', 'Fight.getPreviousPlayer': 'getPreviousPlayer', 'Fight.listen': 'listen',
+	// Ciblage : les mêmes fonctions que sur Me (le prélude les partage), donc la même doc.
+	'Fight.weaponCell': 'getCellToUseWeapon', 'Fight.weaponCells': 'getCellsToUseWeapon',
+	'Fight.chipCell': 'getCellToUseChip', 'Fight.chipCells': 'getCellsToUseChip',
+	'Fight.weaponTargets': 'getWeaponTargets', 'Fight.chipTargets': 'getChipTargets',
 	// Weapon / Chip
 	'Weapon.cost': 'getWeaponCost', 'Weapon.minRange': 'getWeaponMinRange', 'Weapon.maxRange': 'getWeaponMaxRange',
 	'Weapon.name': 'getWeaponName', 'Weapon.area': 'getWeaponArea', 'Weapon.launchType': 'getWeaponLaunchType',
@@ -905,6 +909,9 @@ declare class Me extends Entity {
 	setLoadout(name: string, changeStats?: boolean): boolean;
 	/** Invoque un bulbe : 'callback' est rejouée à chaque tour du bulbe (me désigne alors le bulbe). */
 	summon(chip: Chip | number, cell: Cell | Entity | number, callback: () => void, name?: string): Fight.Use;
+	// Les six helpers de ciblage ci-dessous sont AUSSI (et plus logiquement) sur Fight : ils calculent
+	// sur la carte sans rien devoir à l'entité courante, sinon le défaut de l'arme équipée. Ce sont les
+	// mêmes fonctions, gardées ici parce que l'API les y a publiées en premier.
 	/** Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target' (une entité OU une case). */
 	weaponCell(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
 	/** Toutes les cellules d'où utiliser l'arme sur 'target'. */
@@ -974,6 +981,22 @@ declare namespace Fight {
 	function getPreviousPlayer(entity?: Entity | number): Entity | null;
 	/** Paroles prononcées (say) par les entités : liste de [entité, message]. */
 	function listen(): any[][];
+	// Ciblage : d'où peut-on atteindre une cible, et qui serait touché. Ces six fonctions ne dépendent
+	// d'aucune entité en particulier — l'arme équipée n'y est qu'un DÉFAUT — d'où leur place ici :
+	// Fight.weaponCells(cell, enemy.weapon) dit où l'ENNEMI peut frapper. Elles restent aussi
+	// accessibles depuis me (ce sont les mêmes fonctions).
+	/** Cellule d'où utiliser l'arme (celle équipée, ou 'weapon') sur 'target' (une entité OU une case). */
+	function weaponCell(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
+	/** Toutes les cellules d'où utiliser l'arme sur 'target'. */
+	function weaponCells(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
+	/** Cellule d'où utiliser 'chip' sur 'target' (une entité OU une case). */
+	function chipCell(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
+	/** Toutes les cellules d'où utiliser 'chip' sur 'target'. */
+	function chipCells(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
+	/** Entités touchées si l'arme (celle équipée, ou 'weapon') est utilisée sur la case 'cell'. */
+	function weaponTargets(cell: Cell | Entity | number, weapon?: Weapon | number): Entity[];
+	/** Entités touchées si 'chip' est utilisée sur la case 'cell'. */
+	function chipTargets(chip: Chip | number, cell: Cell | Entity | number): Entity[];
 }
 
 declare namespace Field {

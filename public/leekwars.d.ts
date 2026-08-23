@@ -1016,6 +1016,9 @@ declare class Me extends Entity {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/summon)
 	 */
 	summon(chip: Chip | number, cell: Cell | Entity | number, callback: () => void, name?: string): Fight.Use;
+	// Les six helpers de ciblage ci-dessous sont AUSSI (et plus logiquement) sur Fight : ils calculent
+	// sur la carte sans rien devoir à l'entité courante, sinon le défaut de l'arme équipée. Ce sont les
+	// mêmes fonctions, gardées ici parce que l'API les y a publiées en premier.
 	/**
 	 * Cellule d'où utiliser l'arme (courante ou 'weapon') sur 'target' (une entité OU une case).
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellToUseWeapon)
@@ -1309,6 +1312,58 @@ declare namespace Fight {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/listen)
 	 */
 	function listen(): any[][];
+	// Ciblage : d'où peut-on atteindre une cible, et qui serait touché. Ces six fonctions ne dépendent
+	// d'aucune entité en particulier — l'arme équipée n'y est qu'un DÉFAUT — d'où leur place ici :
+	// Fight.weaponCells(cell, enemy.weapon) dit où l'ENNEMI peut frapper. Elles restent aussi
+	// accessibles depuis me (ce sont les mêmes fonctions).
+	/**
+	 * Cellule d'où utiliser l'arme (celle équipée, ou 'weapon') sur 'target' (une entité OU une case).
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellToUseWeapon)
+	 */
+	function weaponCell(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
+	/**
+	 * Toutes les cellules d'où utiliser l'arme sur 'target'.
+	 * Retourne la liste des cellules à partir desquelles votre entité pourra utiliser l'arme weapon sur l'entité entity.
+	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
+	 * @param entity L'entité cible.
+	 * @param ignoredCells (optionnel) Tableau de cellules à ignorer. Par défaut un tableau vide.
+	 * @returns Liste des cellules d'où l'arme pourra être utilisée.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellsToUseWeapon)
+	 */
+	function weaponCells(target: Cell | Entity | number, weapon?: Weapon | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
+	/**
+	 * Cellule d'où utiliser 'chip' sur 'target' (une entité OU une case).
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellToUseChip)
+	 */
+	function chipCell(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell | null;
+	/**
+	 * Toutes les cellules d'où utiliser 'chip' sur 'target'.
+	 * Retourne la liste des cellules à partir desquelles votre entité pourra utiliser la puce chip sur l'entité entity.
+	 * @param chip La puce que l'entité veut pouvoir utiliser.
+	 * @param entity L'entité cible.
+	 * @param ignoredCells (optionnel) Tableau de cellules à ignorer.
+	 * @returns Liste des cellules d'où la puce pourra être utilisée.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getCellsToUseChip)
+	 */
+	function chipCells(chip: Chip | number, target: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
+	/**
+	 * Entités touchées si l'arme (celle équipée, ou 'weapon') est utilisée sur la case 'cell'.
+	 * Renvoie les entités qui seront affectées si l'arme weapon est utilisée sur la cellule cell.
+	 * @param weapon (optionnel) L'arme à tester.
+	 * @param cell La cellule cible.
+	 * @returns Le tableau contenant toutes les entités qui seront affectées.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getWeaponTargets)
+	 */
+	function weaponTargets(cell: Cell | Entity | number, weapon?: Weapon | number): Entity[];
+	/**
+	 * Entités touchées si 'chip' est utilisée sur la case 'cell'.
+	 * Renvoie les entités qui seront affectées si la puce chip est utilisée sur la cellule cell.
+	 * @param chip La puce à tester.
+	 * @param cell La cellule cible.
+	 * @returns Le tableau contenant toutes les entités qui seront affectées.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getChipTargets)
+	 */
+	function chipTargets(chip: Chip | number, cell: Cell | Entity | number): Entity[];
 }
 
 declare namespace Field {

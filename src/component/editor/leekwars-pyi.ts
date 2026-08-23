@@ -176,6 +176,14 @@ const CLASSES: ClassSpec[] = [
 		'def getNextPlayer(self, entity: EntityLike = ...) -> Entity: ...',
 		'def getPreviousPlayer(self, entity: EntityLike = ...) -> Entity: ...',
 		'def listen(self) -> list: ...',
+		// Ciblage : les mêmes fonctions que sur Me (le prélude les partage). Leur place est ici, elles
+		// ne dépendent d'aucune entité en particulier — l'arme équipée n'est qu'un défaut.
+		'def weaponCell(self, target: EntityLike | CellLike, weapon: WeaponLike = ..., ignoredCells: list = ...) -> Cell: ...',
+		'def weaponCells(self, target: EntityLike | CellLike, weapon: WeaponLike = ..., ignoredCells: list = ...) -> list[Cell]: ...',
+		'def chipCell(self, chip: ChipLike, target: EntityLike | CellLike, ignoredCells: list = ...) -> Cell: ...',
+		'def chipCells(self, chip: ChipLike, target: EntityLike | CellLike, ignoredCells: list = ...) -> list[Cell]: ...',
+		'def weaponTargets(self, cell: CellLike, weapon: WeaponLike = ...) -> list[Entity]: ...',
+		'def chipTargets(self, chip: ChipLike, cell: CellLike) -> list[Entity]: ...',
 	] },
 	{ name: '_Field', instance: 'Field', inject: 'Field', body: [
 		'type: int',
