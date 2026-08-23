@@ -125,7 +125,11 @@ function throwCookies() {
 		padding-bottom: 20px;
 		position: relative;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		/* auto-FIT et non auto-fill : avec 4 colonnes de contenu dans 1545 px,
+		   auto-fill réservait 5 pistes de 296 px et laissait 360 px de vide à
+		   droite. auto-fit efface les pistes vides, les 4 colonnes se partagent
+		   toute la largeur. */
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 		color: var(--footer-color);
 		a, h4, .item, .v-icon {
 			color: var(--footer-color);
@@ -214,6 +218,14 @@ function throwCookies() {
 		cursor: pointer;
 		user-select: none;
 	}
+	/* Le conteneur des biscuits est vide (ses biscuits sont en position fixed),
+	   mais il comptait comme une case de la grille : une 5e colonne fantôme, qui
+	   volait un quart de la largeur aux quatre vraies. Hors flux. */
+	.cookies {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
 	.cookie {
 		position: fixed;
 		margin-top: 0;
@@ -242,6 +254,45 @@ function throwCookies() {
 		font-size: 20px;
 		&:hover {
 			color: var(--primary) !important;
+		}
+	}
+
+	/* ====== v3 : un bandeau, séparé du contenu par le trait ====== */
+	body:not(.v2) .footer {
+		border-top: 1px solid var(--border-strong);
+		margin-top: 20px;
+	}
+	/* Le gabarit central réserve 20 px de marge de chaque côté (0 en dessous de
+	   600 px et en mode application, cf. app.vue) : le pied de page les reprend
+	   pour aller d'un bord à l'autre, et cale ses colonnes sur la gauche des
+	   panneaux plutôt que sur un retrait de 45 px hérité d'une autre mise en
+	   page. Quand le menu est là, le bandeau part de son bord droit — il ne
+	   glisse pas sous une barre fixe. */
+	@media screen and (min-width: 600px) {
+		body:not(.v2) #app:not(.app) .footer {
+			margin-left: -20px;
+			margin-right: -20px;
+			padding-left: 12px;
+			padding-right: 12px;
+		}
+	}
+	/* Le survol allume le pied de page. Il le faisait avec --grey-11 et
+	   --grey-8, deux gris de l'échelle claire que le thème sombre ne redéfinit
+	   pas : sur le fond extérieur clair, survoler le pied de page le faisait
+	   DISPARAÎTRE (1,23 mesuré pour les liens, 2,36 pour les intitulés). Les
+	   encres du thème montent dans les deux thèmes. */
+	body:not(.v2) .footer:hover {
+		h4 {
+			color: var(--text-color-secondary);
+		}
+		.item, .v-icon {
+			color: var(--text-color);
+		}
+		a {
+			color: var(--text-color);
+			&:hover {
+				color: var(--primary);
+			}
 		}
 	}
 </style>

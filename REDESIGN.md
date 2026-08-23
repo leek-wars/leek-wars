@@ -397,6 +397,28 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     liseré contre rangée 3,5 à 9,6 — au-dessus des seuils de 4,5 et 3. Rendu v2
     vérifié à l'écran, inchangé.
 
+- **2026-08-24, lot 18 — le pied de page** : un bandeau qui prend toute la
+  largeur, au lieu d'une grille tassée à gauche. `auto-fill` réservait **5
+  pistes de 296 px pour 4 colonnes de contenu** et laissait 360 px de vide à
+  droite ; `auto-fit` efface les pistes vides. Le conteneur des biscuits (vide —
+  ses biscuits sont en `position: fixed`) comptait lui aussi comme une case de
+  la grille : il passe hors flux, sans quoi il volait un quart de la largeur.
+  - Le pied de page **reprend les 20 px de marge du gabarit central**
+    (`margin: 0 -20px`, au-dessus de 600 px et hors mode application, où cette
+    marge n'existe pas) pour aller d'un bord à l'autre, et cale ses colonnes sur
+    la gauche des panneaux plutôt que sur un retrait de 45 px hérité d'une autre
+    mise en page. Quand le menu est là, le bandeau part de son bord droit : les
+    marges négatives sont relatives au conteneur, il ne glisse pas sous la barre
+    fixe. Séparé du contenu par le trait (`--border-strong`), pas par un fond.
+  - **Le survol le faisait disparaître en thème clair** : il montait les liens à
+    `--grey-11` et les intitulés à `--grey-8`, deux gris de l'échelle claire que
+    le bloc sombre ne redéfinit pas — 1,23 et 2,36 mesurés sur le fond
+    extérieur clair. Ils passent aux encres du thème : 14,2 et 5,8 en clair,
+    17,1 et 9,2 en sombre (repos inchangé, 5,8 et 9,2). C'est le même défaut que
+    la ligne de version, déjà rattrapée dans `leekwars-shell-v3`.
+  - v2 inchangé, vérifié à l'écran : ni trait ni débord, retrait de 45 px
+    conservé, 4 colonnes dans le gabarit de 1100 px.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
