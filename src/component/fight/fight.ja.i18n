@@ -1,4 +1,7 @@
 {
+	"back_to_editor": "編集者に戻る",
+	"back_to_garden": "菜園に戻る",
+	"back_to_tournament": "トーナメントに戻る",
 	"battle_royale": "バトルロワイアル",
 	"date_format": "{0}",
 	"deleted_farmer": "ブリーダーが削除されました",

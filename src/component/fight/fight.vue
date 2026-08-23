@@ -6,6 +6,14 @@
 				<div class="info">{{ $filters.date(fight.date) }}</div>
 			</div>
 			<div class="tabs">
+				<!-- Retour au contexte d'ou vient le combat (#4810). Le rapport le proposait
+				     deja, mais la page du combat lui-meme etait un cul-de-sac : on ouvrait un
+				     combat depuis l'arbre d'un tournoi et il n'y avait plus aucun chemin de
+				     retour vers ce tournoi. -->
+				<router-link v-if="backLink" :to="backLink.to" class="tab">
+					<v-icon>{{ backLink.icon }}</v-icon>
+					<span>{{ backLink.label }}</span>
+				</router-link>
 				<div v-if="fight_id === 'local'" class="tab" @click="reload">
 					<v-icon>mdi-refresh</v-icon>
 					Recharger
@@ -127,7 +135,7 @@
 	import { locale } from '@/locale'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Comment } from '@/model/comment'
-	import { Fight, FightType } from '@/model/fight'
+	import { Fight, FightContext, FightType } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
@@ -164,6 +172,27 @@
 			playerRef.value.loaded = !playerRef.value.loaded
 		}
 	}
+
+	/**
+	 * Ou renvoyer le spectateur quand il a fini de regarder (#4810).
+	 *
+	 * Memes destinations et memes libelles que les boutons du rapport, pour que les deux
+	 * pages d'un meme combat repondent pareil. Le tournoi est ouvert a tous, y compris aux
+	 * visiteurs : c'est justement de la qu'on arrive sur un combat qu'on n'a pas joue. Le
+	 * potager et l'editeur demandent un compte, ils ne s'affichent donc que connecte.
+	 */
+	const backLink = computed(() => {
+		const f = fight.value
+		if (!f) return null
+		// tournament vaut -1 quand le combat n'appartient a aucun tournoi.
+		if (f.context === FightContext.TOURNAMENT && f.tournament && f.tournament > 0) {
+			return { to: '/tournament/' + f.tournament, icon: 'mdi-trophy', label: t('back_to_tournament') }
+		}
+		if (!store.state.connected) return null
+		if (f.context === FightContext.GARDEN) return { to: '/garden', icon: 'mdi-undo', label: t('back_to_garden') }
+		if (f.context === FightContext.TEST) return { to: '/editor', icon: 'mdi-undo', label: t('back_to_editor') }
+		return null
+	})
 
 	const isFlatLayout = computed(() => {
 		if (!fight.value) return false

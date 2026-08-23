@@ -1,4 +1,7 @@
 {
+	"back_to_editor": "Takaisin editoriin",
+	"back_to_garden": "Takaisin kasvitarhaan",
+	"back_to_tournament": "Paluu turnaukseen",
 	"battle_royale": "Battle Royale",
 	"date_format": "{0}",
 	"deleted_farmer": "kasvattaja poistettu",

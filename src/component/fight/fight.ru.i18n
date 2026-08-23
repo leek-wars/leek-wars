@@ -1,4 +1,7 @@
 {
+	"back_to_editor": "Вернуться к редактору",
+	"back_to_garden": "Вернуться к огороду",
+	"back_to_tournament": "Вернуться к турниру",
 	"battle_royale": "Королевская битва",
 	"date_format": "{0}",
 	"deleted_farmer": "заводчик удален",
