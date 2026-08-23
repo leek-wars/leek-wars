@@ -255,9 +255,6 @@ const arenaLabel = computed<[string, string]>(() => {
 				color: var(--text-color-secondary);
 			}
 		}
-		.fighter:hover div {
-			text-decoration: underline;
-		}
 	}
 	/* L'icône du potager est une encre noire : invisible sur la rangée sombre.
 	   Même remède que les onglets de la barre de page (leekwars-shell-v3). */
