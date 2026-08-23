@@ -78,13 +78,33 @@ defineProps<{
 		}
 	}
 
-	body.dark .tournament {
+	body.v2.dark .tournament {
 		background: var(--grey-3);
 		.win {
 			background: #3c651b;
 		}
 		.lose {
 			background: #76342f;
+		}
+	}
+
+	/* ====== v3 : mêmes jetons de résultat que les cartes de combat ======
+	   La barre des tours reste lisible d'un coup d'oeil (c'est sa seule
+	   information), mais ses aplats pastel deviennent des teintes du thème,
+	   posées sur la surface de rangée plutôt que sur un gris hors palette. */
+	body:not(.v2) {
+		.tournament {
+			background: var(--background-row);
+			border: 1px solid var(--border);
+			&:hover .foreground {
+				background: color-mix(in srgb, var(--text-color) 8%, transparent);
+			}
+			.round.win {
+				background: color-mix(in srgb, var(--result-win) 22%, var(--background-row));
+			}
+			.round.lose {
+				background: color-mix(in srgb, var(--result-defeat) 22%, var(--background-row));
+			}
 		}
 	}
 </style>

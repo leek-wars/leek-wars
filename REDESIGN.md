@@ -367,6 +367,36 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   des équipes, les deux sélecteurs de devise de la banque et les deux menus de
   statut/priorité d'un sujet du forum. 10 tests.
 
+- **2026-08-24, lot 17 — les historiques de combat** : la carte de combat
+  (`fight-history`, affichée sur les pages poireau, éleveur, équipe, groupe,
+  l'accueil et `/history`) portait encore les aplats pastel du v2 — `#b6f182` /
+  `#ffb3ae` en clair, `#3c651b` / `#76342f` en sombre, aucun jeton derrière. Elle
+  prend la langue de la **vue tableau du même historique**, qui était déjà sur
+  les jetons `--result-*` : rangée neutre (`--background-row`), trait
+  `--border-strong`, et la couleur du résultat dans un **liseré de 4 px**
+  (`box-shadow: inset`) plus une teinte légère de la rangée (14 % pour la
+  victoire et la défaite, 10 % pour l'égalité). Les deux vues d'un même
+  historique se coloraient jusqu'ici différemment.
+  - Le bouton central se détachait par un **voile blanc**
+    (`rgba(255, 255, 255, 0.3)`), invisible sur une surface claire et
+    éclaircissant sur une sombre : il prend un trait de chaque côté et un survol
+    neutre.
+  - Son icône était en `--grey-2`, un gris **jamais redéfini en sombre**
+    (#1E2A20) : une encre presque noire sur la rangée sombre. Elle passe à
+    `--text-color-secondary`, et l'icône du potager — un PNG noir — est inversée
+    en sombre, comme le fait déjà la barre de page (`leekwars-shell-v3`).
+  - Même traitement pour la **barre de tournoi** (`tournament-history`) et pour
+    les **chips de filtre** de `/history` : couleurs prises aux jetons
+    (`--result-*`, `--info`) et rayons passés par les variables — donc pilules et
+    pastilles rondes conservées en v2, angles francs en v3.
+  - **Peau v2 embarquée**, sur le patron des contrôles maison : aplats pastel,
+    valeurs sombres et couleurs de chips d'origine restent sous `body.v2`.
+  - Mesuré sur la bêta locale, 12 combats de toutes formes (solo, éleveur,
+    équipe, boss, battle royale, guerre, chasse, colosse, tournoi, défi, en
+    génération) dans les deux thèmes : noms 10,6 à 17,4 ; heure 5,7 à 7,1 ;
+    liseré contre rangée 3,5 à 9,6 — au-dessus des seuils de 4,5 et 3. Rendu v2
+    vérifié à l'écran, inchangé.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser

@@ -183,26 +183,86 @@ const arenaLabel = computed<[string, string]>(() => {
 			}
 		}
 	}
-	.win {
-		background-color: #b6f182;
+	/* ====== Peau v2 : les aplats pastel historiques, au pixel près ====== */
+	body.v2 {
+		.win {
+			background-color: #b6f182;
+		}
+		.draw {
+			background: #dcdcdc;
+		}
+		.defeat {
+			background-color: #ffb3ae;
+		}
+		.generating {
+			background: var(--pure-white);
+		}
+		&.dark {
+			.win {
+				background-color: #3c651b;
+			}
+			.draw {
+				background: var(--grey-3);
+			}
+			.defeat {
+				background-color: #76342f;
+			}
+		}
 	}
-	body.dark .win {
-		background-color: #3c651b;
+
+	/* ====== v3 : rangée neutre, liseré de résultat ======
+	   Même langue que la vue tableau du même historique (fights-history-table) :
+	   la couleur du résultat tient dans un liseré de 4 px et une teinte légère
+	   de la rangée, pas dans un aplat plein. L'aplat venait du v2 ; posé sur les
+	   surfaces sombres du thème il donnait des pastilles délavées, et sa version
+	   sombre (#3c651b, #76342f) ne descend d'aucun jeton — les deux vues d'un
+	   même historique se coloraient donc différemment. Les jetons --result-*
+	   existent dans les deux thèmes et portent déjà le tableau. */
+	body:not(.v2) {
+		.fight {
+			--result: var(--text-color-faint);
+			background: var(--background-row);
+			border: 1px solid var(--border-strong);
+			box-shadow: inset 4px 0 0 var(--result);
+		}
+		.win {
+			--result: var(--result-win);
+			background: color-mix(in srgb, var(--result-win) 14%, var(--background-row));
+		}
+		.draw {
+			--result: var(--result-draw);
+			background: color-mix(in srgb, var(--result-draw) 10%, var(--background-row));
+		}
+		.defeat {
+			--result: var(--result-defeat);
+			background: color-mix(in srgb, var(--result-defeat) 14%, var(--background-row));
+		}
+		/* En génération : liseré éteint, la barre de progression porte l'info. */
+		.generating {
+			--result: var(--text-color-faint);
+			background: var(--background-row);
+		}
+		/* Le bouton central se détache par le trait, pas par un voile blanc
+		   (invisible en clair, éclaircissant en sombre). */
+		.fight .center {
+			background: none;
+			border-left: 1px solid var(--border);
+			border-right: 1px solid var(--border);
+			&:hover {
+				background: color-mix(in srgb, var(--text-color) 10%, transparent);
+			}
+			i {
+				color: var(--text-color-secondary);
+			}
+		}
+		.fighter:hover div {
+			text-decoration: underline;
+		}
 	}
-	.draw {
-		background: #dcdcdc;
-	}
-	body.dark .draw {
-		background: var(--grey-3);
-	}
-	.defeat {
-		background-color: #ffb3ae;
-	}
-	body.dark .defeat {
-		background-color: #76342f;
-	}
-	.generating {
-		background: var(--pure-white);
+	/* L'icône du potager est une encre noire : invisible sur la rangée sombre.
+	   Même remède que les onglets de la barre de page (leekwars-shell-v3). */
+	body.dark:not(.v2) .fight .center img {
+		filter: invert(1);
 	}
 	.progress-bar {
 		position: absolute;

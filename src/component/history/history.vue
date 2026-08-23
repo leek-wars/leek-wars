@@ -434,7 +434,7 @@ watch(viewMode, () => {
 		align-items: center;
 		gap: 6px;
 		padding: 5px 13px;
-		border-radius: 15px;
+		border-radius: var(--radius-pill);
 		font-size: 13px;
 		line-height: 1;
 		white-space: nowrap;
@@ -463,7 +463,7 @@ watch(viewMode, () => {
 		flex: none;
 		width: 7px;
 		height: 7px;
-		border-radius: 50%;
+		border-radius: var(--radius-pill);
 		background: currentColor;
 		opacity: 0.35;
 	}
@@ -487,13 +487,22 @@ watch(viewMode, () => {
 		margin: 2px 4px;
 		background: var(--border);
 	}
-	body.dark .chip { --c: #7ec93f; }
-	.res-win { --c: var(--primary); }
-	.res-draw { --c: #8a8a8a; }
-	.res-defeat { --c: #d3382f; }
-	.res-generating { --c: #3f86d6; }
-	body.dark .res-win { --c: #7ec93f; }
-	body.dark .res-draw { --c: #a6a6a6; }
-	body.dark .res-defeat { --c: #e07a72; }
-	body.dark .res-generating { --c: #6ba8e6; }
+	/* La couleur d'un chip vient des jetons du thème : les mêmes que portent les
+	   cartes et le tableau de l'historique, pour que le filtre « défaites » soit
+	   du rouge des défaites. Ils existent en clair comme en sombre. */
+	.res-win { --c: var(--result-win); }
+	.res-draw { --c: var(--result-draw); }
+	.res-defeat { --c: var(--result-defeat); }
+	.res-generating { --c: var(--info); }
+
+	/* Peau v2 : les valeurs historiques, au pixel près. */
+	body.v2.dark .chip { --c: #7ec93f; }
+	body.v2 .res-win { --c: var(--primary); }
+	body.v2 .res-draw { --c: #8a8a8a; }
+	body.v2 .res-defeat { --c: #d3382f; }
+	body.v2 .res-generating { --c: #3f86d6; }
+	body.v2.dark .res-win { --c: #7ec93f; }
+	body.v2.dark .res-draw { --c: #a6a6a6; }
+	body.v2.dark .res-defeat { --c: #e07a72; }
+	body.v2.dark .res-generating { --c: #6ba8e6; }
 </style>

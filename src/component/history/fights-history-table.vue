@@ -285,6 +285,9 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 		&.draw { color: var(--result-draw); }
 	}
 	body.dark .type-cell .v-icon { color: var(--text-color); }
+	/* L'icône du potager est un PNG à l'encre noire : sur la rangée sombre elle
+	   disparaissait, seule de la colonne. Même remède que la barre de page. */
+	body.dark .type-cell img { filter: invert(1); }
 
 	.match {
 		display: flex;
@@ -310,10 +313,9 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 		.vs {
 			flex: 0 0 auto;
 			font-size: 16px;
-			color: rgba(0, 0, 0, 0.4);
+			color: var(--text-color-faint);
 		}
 	}
-	body.dark .match .vs { color: rgba(255, 255, 255, 0.5); }
 
 	.sortable-icon-header {
 		display: inline-flex;
