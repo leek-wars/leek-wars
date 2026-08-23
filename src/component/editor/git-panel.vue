@@ -10,8 +10,8 @@
 					<v-icon v-if="loading" class="spin" size="small">mdi-sync</v-icon>
 				</template>
 			</v-select>
-			<div class="action-btn" :title="$t('refresh')" @click="refreshStatus">
-				<v-icon>mdi-refresh</v-icon>
+			<div class="action-btn" :title="$t('refresh')" @click="refresh">
+				<v-icon :class="{spin: fetching || loading}">mdi-refresh</v-icon>
 			</div>
 			<div class="action-btn" :title="$t('history')" :class="{active: showHistory}" @click="showHistory = !showHistory">
 				<v-icon>mdi-history</v-icon>
@@ -89,7 +89,7 @@
 						<v-icon>{{ stagedExpanded ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</v-icon>
 						<span class="section-title">{{ $t('staged') }}</span>
 						<span class="count">{{ stagedChanges.length }}</span>
-						<v-icon :title="$t('unstage_all')" class="section-action" @click.stop="unstageAll">mdi-minus</v-icon>
+						<div class="section-action" :title="$t('unstage_all')" @click.stop="unstageAll"><v-icon>mdi-minus</v-icon></div>
 					</div>
 					<div v-if="stagedExpanded" class="file-list">
 						<div v-for="change in stagedChanges" :key="'s-' + change.file" class="file-item" :class="{ active: isActiveDiff(change, true) }" @click="showDiff(change, true)">
@@ -108,8 +108,8 @@
 						<v-icon>{{ unstagedExpanded ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</v-icon>
 						<span class="section-title">{{ $t('changes') }}</span>
 						<span class="count">{{ unstagedChanges.length }}</span>
-						<v-icon :title="$t('stage_all')" class="section-action" @click.stop="stageAll">mdi-plus</v-icon>
-						<v-icon :title="$t('discard_all')" class="section-action" @click.stop="discardAll">mdi-undo</v-icon>
+						<div class="section-action" :title="$t('stage_all')" @click.stop="stageAll"><v-icon>mdi-plus</v-icon></div>
+						<div class="section-action" :title="$t('discard_all')" @click.stop="discardAll"><v-icon>mdi-undo</v-icon></div>
 					</div>
 					<div v-if="unstagedExpanded" class="file-list">
 						<div v-for="change in unstagedChanges" :key="'u-' + change.file" class="file-item" :class="{ active: isActiveDiff(change, false) }" @click="showDiff(change, false)">
@@ -455,11 +455,14 @@
 		// simple fait d'ouvrir le sélecteur de branches déclenchait un git/fetch voué
 		// à l'échec, et donc une bannière rouge à chaque ouverture.
 		if (!hasRemote.value) { await loadBranches(); return }
+		// Le dépôt est figé à l'entrée : changer de dépôt pendant le fetch ferait
+		// sinon passer l'horodatage sur le mauvais, et sauter son prochain fetch.
+		const repo = selectedRepo.value
 		fetching.value = true
 		syncError.value = ''
 		try {
-			await gitCall('git/fetch', { folder: selectedRepo.value })
-			lastFetchAt[selectedRepo.value] = Date.now()
+			await gitCall('git/fetch', { folder: repo })
+			lastFetchAt[repo] = Date.now()
 			await Promise.all([loadBranches(), refreshStatus()])
 		} catch (e: unknown) {
 			// Le fetch alimente les branches distantes : en cas d'échec la liste
@@ -469,6 +472,19 @@
 		} finally {
 			fetching.value = false
 		}
+	}
+
+	// Bouton « Actualiser » de la barre d'outils. git/status compare HEAD aux refs
+	// distantes déjà connues localement : sans fetch préalable, les commits poussés
+	// entre-temps restent invisibles (compteur « en retard » figé à 0). L'état local
+	// est rafraîchi en premier pour que le bouton réponde tout de suite, même quand
+	// le remote est injoignable et que le fetch va mettre des secondes à échouer.
+	async function refresh() {
+		syncError.value = ''
+		syncInfo.value = ''
+		await refreshStatus()
+		emitter.emit('git-history-refresh')
+		if (hasRemote.value) await fetchRemote()
 	}
 
 	function debouncedRefresh() {
@@ -955,13 +971,19 @@
 	font-size: 11px;
 	margin-right: 4px;
 }
+// Le padding va sur un conteneur : sur un <v-icon> (width/height: 1em, box-sizing:
+// border-box) il rognait la boîte de contenu jusqu'à 0 et le SVG, dimensionné en
+// 100%, disparaissait complètement.
 .section-action {
-	font-size: 18px !important;
-	padding: 9px;
+	display: inline-flex;
+	align-items: center;
+	align-self: stretch;
+	padding: 0 5px;
 	margin-left: 2px;
 	opacity: 0.5;
 	border-radius: 4px;
 	cursor: pointer;
+	flex-shrink: 0;
 	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.2); }
 }
 .file-list {

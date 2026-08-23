@@ -51,6 +51,7 @@
     - "Liberation no longer removes the Sterile state: the reduction was applied to the state's identifier, which turned into another state and vanished from the display. A state is all or nothing, only a total reduction (Exasperation) removes it."
     - "The Sterile state icon goes from orange to red, as befits a state you suffer."
     - "In the market, expanding an effect's raw line then selecting another item now updates that line: it kept the previous item's effect type and values (thanks to pakalatak)."
+    - "Git panel: the \"Stage all\", \"Discard all\" and \"Unstage all\" buttons in the section headers are visible again, they had been shrunk to zero size. The Refresh button now also queries the remote: commits pushed in the meantime show up right away, without going through the branch picker (thanks to Tabarius)."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."

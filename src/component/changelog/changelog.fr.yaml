@@ -51,6 +51,7 @@
     - "Une Libération ne retire plus l'état Stérile : la réduction s'appliquait à l'identifiant de l'état, qui devenait un autre état et disparaissait de l'affichage. Un état est tout ou rien, seule une réduction totale (Exaspération) le retire."
     - "L'icône de l'état Stérile passe de l'orange au rouge, comme il se doit pour un état subi."
     - "Au marché, déplier la ligne brute d'un effet puis sélectionner un autre objet met enfin à jour cette ligne : elle gardait le type et les valeurs de l'objet précédent (merci à pakalatak)."
+    - "Panneau Git : les boutons « Tout indexer », « Tout annuler » et « Tout désindexer » des en-têtes de section redeviennent visibles, ils étaient réduits à une taille nulle. Le bouton Actualiser interroge aussi le dépôt distant : les commits poussés entre-temps apparaissent désormais tout de suite, sans passer par le sélecteur de branches (merci à Tabarius)."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
