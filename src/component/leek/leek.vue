@@ -1944,25 +1944,37 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		container-type: inline-size;
 		.loader {
 			margin: 20px;
 		}
 	}
-	// Taille des puces proportionnelle à la largeur du panel, plafonnée à 64px :
-	// la grille occupe toute la largeur, l'espace excédentaire part dans les
-	// espacements entre puces, pas dans leur taille. À 24 puces max (niveau 301)
-	// on reste sur 3 rangées, sans dépasser la hauteur des panels voisins.
+	// Puces plafonnées à 52 px. La grille occupe toujours toute la largeur du
+	// panel (colonnes en `1fr`), mais la largeur excédentaire ne gonfle plus
+	// les puces : elle reste dans la case, autour de l'image, ce qui écarte les
+	// puces les unes des autres. Les cases gardent un ratio 1:1, donc l'écart
+	// gagné à l'horizontale l'est aussi à la verticale — l'espacement reste
+	// régulier dans les deux sens. À 24 puces (niveau 301) on tient en
+	// 3 rangées sans dépasser la hauteur des panels voisins.
 	.panel .chips {
 		text-align: center;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(clamp(50px, 10cqw, 64px), 1fr));
-		grid-gap: clamp(4px, 1.2cqw, 10px);
+		grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+		gap: 10px;
 		margin: 10px;
 		flex: 1;
 	}
+	// Le carré de la case ne dépend pas de l'image : une puce non carrée ne
+	// déformerait pas la grille.
+	.panel .chips .chip {
+		aspect-ratio: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 	.panel .chips .chip img {
-		max-width: 64px;
+		max-width: 52px;
+		max-height: 52px;
+		object-fit: contain;
 	}
 	.chip {
 		display: inline-block;
