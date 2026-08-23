@@ -1,4 +1,13 @@
 <template lang="html">
+	<!-- Famille du composant (#4799) : c'est elle qui decide quelles alterations le prennent,
+	     elle se lit donc AVANT les stats. Memes mots et meme icone que sur la fiche d'une
+	     alteration, pour que le joueur rapproche les deux sans les comparer ligne a ligne.
+	     Hors du bloc .stats : item-preview.scss y colore les enfants directs par alternance,
+	     une ligne de plus decalait tout le zebrage. -->
+	<div v-if="component && familyKey" class="family">
+		<v-icon size="18">{{ familyIcon }}</v-icon>
+		<span>{{ $t('main.' + familyKey) }}</span>
+	</div>
 	<div v-if="component" class="stats">
 		<div v-for="(stat, s) in stats" :key="s" class="stat" :class="{[stat[0]]: true, negative: stat[1] < 0, altered: isAltered(stat[0]), broken: delta(stat[0]) < 0}">
 			<img class="icon" :src="'/image/charac/' + stat[0] + '.png'">
@@ -15,7 +24,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { mergeStats } from '@/model/alteration'
+import { COMPONENT_FAMILY_ICONS, COMPONENT_FAMILY_KEYS, mergeStats } from '@/model/alteration'
 
 defineOptions({ name: 'ComponentPreview' })
 
@@ -23,6 +32,12 @@ const props = defineProps<{
 	component?: Record<string, unknown>
 	/** Altérations portées par l'instance affichée (#622), s'il y en a. */
 	alterations?: { [carac: string]: number } | null
+	/**
+	 * Famille du composant (#4799), transmise par l'appelant : la fiche reste une vue pure,
+	 * elle ne va rien chercher dans les game data. Les pièces de récupération n'ont pas de
+	 * famille, elles ne sont pas altérables, et la ligne disparaît alors.
+	 */
+	family?: number | null
 }>()
 
 // Les stats montrées sont celles de la PIÈCE, pas celles du template : sinon un
@@ -31,6 +46,9 @@ const stats = computed(() => {
 	const base = ((props.component?.stats ?? []) as [string, number][])
 	return mergeStats(base, props.alterations)
 })
+const familyKey = computed(() => props.family ? COMPONENT_FAMILY_KEYS[props.family] : null)
+const familyIcon = computed(() => props.family ? COMPONENT_FAMILY_ICONS[props.family] : null)
+
 const isAltered = (carac: string) => !!props.alterations && !!props.alterations[carac]
 /** Delta porte par l'instance sur une carac, signe : negatif si la casse l'a creusee (#622). */
 const delta = (carac: string) => props.alterations?.[carac] ?? 0
@@ -39,6 +57,17 @@ const delta = (carac: string) => props.alterations?.[carac] ?? 0
 <style src='./item-preview.scss' lang='scss'></style>
 
 <style lang="scss" scoped>
+	.family {
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		padding: 6px 8px;
+		font-size: 13px;
+		font-weight: bold;
+		text-align: left;
+		color: var(--text-color-secondary);
+		background: var(--background-secondary);
+	}
 	.stats {
 		.stat {
 			padding: 4px 0;

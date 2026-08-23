@@ -19,7 +19,9 @@
 				<span class="charge">{{ $t('main.alteration_charge') }}</span>
 			</div>
 			<div v-for="row in rows" :key="row.family" class="stat" :class="{best: row.best}">
-				<span class="fam" :title="row.label">{{ row.label }}</span>
+				<!-- Icone de famille (#4799) : la meme que sur la fiche d'un composant, pour
+				     relier les deux fiches sans lire les libelles, souvent tronques ici. -->
+				<span class="fam" :title="row.label"><v-icon size="15">{{ row.icon }}</v-icon><span class="label">{{ row.label }}</span></span>
 				<span class="factor">×{{ row.efficiency }}</span>
 				<b class="gain" :class="'color-' + alteration.carac">+{{ row.gain }}</b>
 				<!-- Charge consommee dans la capacite du composant : elle depend du palier,
@@ -37,7 +39,7 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { ComponentFamily } from '@/model/alteration'
+	import { COMPONENT_FAMILIES } from '@/model/alteration'
 	import { LeekWars } from '@/model/leekwars'
 	import { t } from '@/model/i18n'
 
@@ -58,12 +60,6 @@
 		return null
 	})
 
-	const FAMILIES = [
-		{ id: ComponentFamily.FRUIT, key: 'fruits' },
-		{ id: ComponentFamily.PHYSICAL, key: 'physical_components' },
-		{ id: ComponentFamily.ELECTRONIC, key: 'electronic_components' },
-	]
-
 	// PT, PM, coeurs et memoire ne se fractionnent pas : le gain reste +1 et c'est la
 	// probabilite de reussite qui encaisse l'efficacite de famille.
 	const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
@@ -73,13 +69,14 @@
 		const d = data.value
 		const a = alteration.value
 		if (!d || !a) return []
-		return FAMILIES.map(f => {
+		return COMPONENT_FAMILIES.map(f => {
 			const efficiency = (d.efficiency[a.family] || {})[f.id] ?? 0
 			// Palier : 0 = championne (x1), 1 = moyenne (x0,2), 2 = quasi nulle (x0,04).
 			const tier = efficiency >= 1 ? 0 : (efficiency >= 0.2 ? 1 : 2)
 			return {
 				family: f.id,
 				label: t('main.' + f.key),
+				icon: f.icon,
 				efficiency,
 				gain: (d.gains[a.carac] || [0, 0, 0])[tier],
 				// Charge = points gagnes x poids de la carac : ce que l'alteration mange
@@ -118,9 +115,17 @@
 		font-size: 12px;
 		text-align: left;
 		.fam {
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			min-width: 0;
+			// C'est le LIBELLE qui se tronque, pas la cellule : sinon l'icone disparait
+			// avant le texte dans les langues a longs noms de famille.
+			.label {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
 		}
 		.factor {
 			color: var(--text-color-secondary);

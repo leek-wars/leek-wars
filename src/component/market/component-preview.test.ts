@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { mountComponent } from '@/test/harness'
 import ComponentPreview from '@/component/market/component-preview.vue'
+import { ComponentFamily } from '@/model/alteration'
 
 // component-preview rend les stats d'un composant. Par stat : classe {[nom]:true, negative:val<0},
 // image /image/charac/<nom>.png, et la valeur en gras. 0 n'est PAS négatif. Sans prop -> rien.
-const mountPreview = (component?: unknown, alterations?: unknown) =>
-	mountComponent(ComponentPreview, { props: { component, alterations } }, {})
+const mountPreview = (component?: unknown, alterations?: unknown, family?: number) =>
+	mountComponent(ComponentPreview, { props: { component, alterations, family } }, {})
 
 describe('component-preview.vue', () => {
 	it('sans composant : ne rend rien', () => {
@@ -53,6 +54,22 @@ describe('component-preview.vue', () => {
 		expect(w.find('.stat').classes()).not.toContain('broken')
 		expect(w.find('.bonus').text()).toBe('+5')
 		expect(w.find('b').text()).toBe('25')
+	})
+
+	// Famille du composant (#4799) : elle décide quelles altérations le prennent, donc elle
+	// se lit sur la fiche. Sans famille, la pièce n'est pas altérable : pas de ligne du tout.
+	it('famille électronique : une ligne avec son libellé', () => {
+		const w = mountPreview({ stats: [] }, null, ComponentFamily.ELECTRONIC)
+		expect(w.find('.family').text()).toContain('main.electronic_components')
+	})
+
+	it('famille fruit : le libellé suit la famille reçue', () => {
+		const w = mountPreview({ stats: [] }, null, ComponentFamily.FRUIT)
+		expect(w.find('.family').text()).toContain('main.fruits')
+	})
+
+	it('sans famille : aucune ligne de famille', () => {
+		expect(mountPreview({ stats: [] }).find('.family').exists()).toBe(false)
 	})
 
 	it('carac creusée par la casse : un seul signe moins, liseré du palier négatif', () => {

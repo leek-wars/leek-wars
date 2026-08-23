@@ -45,6 +45,31 @@ interface AlterationData {
 /** Une altération posée dans la grille, avec sa quantité. */
 interface AlterationRecipe { [alteration_id: number]: number }
 
+/**
+ * Nom et icône de chaque famille de composant (#4799). La famille décide de tout dans
+ * l'altération (quelle fiole marche sur quelle pièce), elle doit donc se lire sur la fiche
+ * d'un composant comme sur celle d'une altération, et toujours avec les MÊMES mots et la
+ * MÊME icône : c'est ce qui permet de rapprocher les deux fiches d'un coup d'œil.
+ *
+ * La forme porte la famille : pomme pour les fruits, engrenage pour les pièces physiques,
+ * puce pour l'électronique.
+ */
+const COMPONENT_FAMILY_KEYS: { [key: number]: string } = {
+	[ComponentFamily.FRUIT]: 'fruits',
+	[ComponentFamily.PHYSICAL]: 'physical_components',
+	[ComponentFamily.ELECTRONIC]: 'electronic_components',
+}
+
+const COMPONENT_FAMILY_ICONS: { [key: number]: string } = {
+	[ComponentFamily.FRUIT]: 'mdi-food-apple',
+	[ComponentFamily.PHYSICAL]: 'mdi-cog',
+	[ComponentFamily.ELECTRONIC]: 'mdi-chip',
+}
+
+/** Les trois familles dans l'ordre d'affichage, avec leur libellé et leur icône. */
+const COMPONENT_FAMILIES = [ComponentFamily.FRUIT, ComponentFamily.PHYSICAL, ComponentFamily.ELECTRONIC]
+	.map(id => ({ id, key: COMPONENT_FAMILY_KEYS[id], icon: COMPONENT_FAMILY_ICONS[id] }))
+
 const ALTERATION_FAMILY_NAMES: { [key: number]: string } = {
 	[AlterationFamily.VITAMIN]: 'vitamin',
 	[AlterationFamily.ALLOY]: 'alloy',
@@ -425,6 +450,7 @@ function alteredClass(item: { stats?: Stats | null, altered_power?: number, temp
 
 export {
 	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
+	COMPONENT_FAMILY_KEYS, COMPONENT_FAMILY_ICONS, COMPONENT_FAMILIES,
 	well, power, addedPower, rawAddedPower, displayRatio, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }
