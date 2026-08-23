@@ -47,7 +47,7 @@
 					<span v-else>{{ entity.name }}</span>
 				</v-tooltip>
 			</div>
-			<div v-if="!creator && game.showActions && (LeekWars.mobile || actionsWidth > 0)" ref="actionsRef" class="fight-actions" :class="{large: game.largeActions, scrolled: !followBottom, mobile: LeekWars.mobile}" :style="LeekWars.mobile ? undefined : {'width': game.largeActions ? actionsWidth + 'px' : '', 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : ''}" @scroll.passive="onActionsScroll" @wheel.passive="onActionsWheel">
+			<div v-if="!creator && game.showActions && (LeekWars.mobile || actionsWidth > 0)" ref="actionsRef" class="fight-actions" :class="{large: game.largeActions, scrolled: !followBottom, mobile: LeekWars.mobile, dark: game.map && game.map.isDark}" :style="LeekWars.mobile ? undefined : {'width': game.largeActions ? actionsWidth + 'px' : '', 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : ''}" @scroll.passive="onActionsScroll" @wheel.passive="onActionsWheel">
 				<div v-if="renderStart > 0" class="load-marker">…</div>
 				<template v-for="line of renderedLines">
 					<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" />
@@ -374,10 +374,39 @@
 	// horizontalement quand les entités ne tiennent pas dans la largeur de l'écran.
 	.timeline.mobile {
 		position: static;
-		justify-content: flex-start;
+		justify-content: safe center;
 		overflow-x: auto;
 		padding: 0 4px;
 		background: var(--background);
+		// Vignettes réduites : à la taille du bureau, un combat d'éleveur (8 poireaux)
+		// déborde dès 410 px de large et l'ordre de jeu ne se lit plus d'un coup d'œil.
+		// À cette taille, dix entités tiennent sur l'écran d'un téléphone courant.
+		.entity {
+			flex: 0 0 40px;
+			height: 62px;
+			&.current:before {
+				left: calc(50% - 11px);
+				top: -6px;
+				width: 22px;
+				height: 12px;
+			}
+			.image svg, .image img {
+				max-width: 30px;
+				max-height: 48px;
+			}
+			&.summon {
+				flex: 0 0 32px;
+				height: 40px;
+				&.current {
+					width: 33px;
+					height: 41px;
+				}
+				img {
+					max-width: 22px;
+					max-height: 32px;
+				}
+			}
+		}
 	}
 	.timeline .entity {
 		display: inline-flex;
@@ -573,13 +602,14 @@
 			background: #7773;
 		}
 	}
-	.hud.dark {
-		.fight-actions {
-			background-color: var(--grey-1);
-			color: var(--grey-13);
-			&:hover {
-				background-color: #222d;
-			}
+	// Carte sombre : la classe est portée par le bloc lui-même et non par le hud, parce
+	// qu'en mobile il est téléporté hors du hud (#4860). Le sélecteur descendant reste,
+	// pour les cas où le bloc est rendu sur place.
+	.hud.dark .fight-actions, .fight-actions.dark {
+		background-color: var(--grey-1);
+		color: var(--grey-13);
+		&:hover {
+			background-color: #222d;
 		}
 	}
 	.debug {
