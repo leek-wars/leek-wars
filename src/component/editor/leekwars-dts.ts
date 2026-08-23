@@ -459,7 +459,8 @@ export const OBJECT_MEMBER_LS: Record<string, string> = {
 	'Field.lineOfSight': 'lineOfSight', 'Field.onSameLine': 'isOnSameLine', 'Field.path': 'getPath',
 	// Fight
 	'Fight.me': 'getEntity', 'Fight.turn': 'getTurn', 'Fight.id': 'getFightID', 'Fight.type': 'getFightType',
-	'Fight.context': 'getFightContext', 'Fight.boss': 'getFightBoss', 'Fight.winner': 'getWinner',
+	'Fight.context': 'getFightContext', 'Fight.batched': 'isBatchFight',
+	'Fight.boss': 'getFightBoss', 'Fight.winner': 'getWinner',
 	'Fight.alliesLife': 'getAlliesLife', 'Fight.enemiesLife': 'getEnemiesLife',
 	'Fight.getNearestEnemy': 'getNearestEnemy', 'Fight.getNearestAlly': 'getNearestAlly',
 	'Fight.getFarthestEnemy': 'getFarthestEnemy', 'Fight.getFarthestAlly': 'getFarthestAlly',
@@ -962,6 +963,8 @@ declare namespace Fight {
 	const type: Fight.Type;
 	/** Contexte du combat (Fight.Context.GARDEN...). */
 	const context: Fight.Context;
+	/** Le combat fait-il partie d'un lot ? Un combat de lot a le même type et le même contexte qu'un combat lancé seul. */
+	const batched: boolean;
 	/** Boss du combat (Fight.Boss.*), s'il y en a un. */
 	const boss: Fight.Boss;
 	const winner: number;

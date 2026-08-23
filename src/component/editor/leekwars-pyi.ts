@@ -158,7 +158,7 @@ const CLASSES: ClassSpec[] = [
 		'def all(self) -> dict[str, str]: ...',
 	] },
 	{ name: '_Fight', instance: 'Fight', inject: 'Fight', body: [
-		'me: Me', 'turn: int', 'id: int', 'type: int', 'context: int', 'boss: int', 'winner: int',
+		'me: Me', 'turn: int', 'id: int', 'type: int', 'context: int', 'batched: bool', 'boss: int', 'winner: int',
 		'alliesLife: int', 'enemiesLife: int',
 		'def getNearestEnemy(self) -> Entity: ...', 'def getNearestAlly(self) -> Entity: ...',
 		'def getFarthestEnemy(self) -> Entity: ...', 'def getFarthestAlly(self) -> Entity: ...',

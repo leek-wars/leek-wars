@@ -694,6 +694,8 @@
 	"func_isAlly": "Détermine si l'entité <b>entity</b> est votre allié.",
 	"func_isAlly_arg_1": "L'id de l'entité à tester.",
 	"func_isAlly_return": "<i>vrai</i> si l'entité <b>entity</b> est votre allié ou bien vous-même, <i>faux</i> s'il s'agit d'un ennemi.",
+	"func_isBatchFight": "Détermine si le combat a été lancé dans un <b>lot</b> de combats, et non un par un. Un combat de lot a le même type et le même contexte qu'un combat lancé seul : c'est la seule façon de les distinguer. Sert par exemple à se taire (les logs coûtent des opérations) quand on mesure son IA sur une série de combats.",
+	"func_isBatchFight_return": "<i>vrai</i> si le combat fait partie d'un lot, <i>faux</i> s'il a été lancé seul.",
 	"func_isChip": "Détermine si une valeur est une constante représentant une puce.<br><br>isChip(CHIP_RAGE) = true;<br>isChip(WEAPON_PISTOL) = false.",
 	"func_isChip_arg_1": "Le nombre à déterminer.",
 	"func_isChip_return": "<i>true</i> si la valeur est une constante de puce.",

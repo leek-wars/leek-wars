@@ -9,6 +9,7 @@
     - "4 new hats: the Beret and the Chef's toque in the shop, plus the Beach hat and the Sun crown to craft at the forge with Solstice resources."
     - "5 new crafting trophies: Apprentice, Artisan, Blacksmith, Cyclops and Hephaestus, for 1, 10, 100, 1000 and 10000 items crafted at the forge."
     - "New Tetrarch trophy: win a Battle Royale, a War, a Chest Hunt and a Colossus on the same day."
+    - "#ai isBatchFight() tells whether the fight comes from a batch, to stay quiet when measuring an AI."
   improved:
     - "Private groups: the \"password accounts\" mode (credentials chosen by the supervisor, no member email) can now be set in the group settings, and demo groups enable it by default."
     - "#ai The JavaScript, TypeScript and Python API is now 100% object-oriented: no more global functions or constants, everything goes through objects (Fight, me, Weapon.pistol, System.operations, Network, Color...). The LeekScript stdlib is replaced by the language natives (Math, JSON, random...)."

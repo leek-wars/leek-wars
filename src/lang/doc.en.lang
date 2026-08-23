@@ -676,6 +676,8 @@
 	"func_isAlly": "Checks whether <b>entity</b> is your ally.",
 	"func_isAlly_arg_1": "Desired entity.",
 	"func_isAlly_return": "<i>true</i> if <b>entity</b> is an ally (or you), <i>false</i> otherwise.",
+	"func_isBatchFight": "Determines whether the fight was started as part of a <b>batch</b> of fights, rather than one at a time. A batch fight has the same type and the same context as a lone fight, so this is the only way to tell them apart. Useful for instance to stay quiet (logs cost operations) while measuring an AI over a series of fights.",
+	"func_isBatchFight_return": "<i>true</i> if the fight is part of a batch, <i>false</i> if it was started on its own.",
 	"func_isChip": "Determines whether a value is a constant representing a chip.<br><br>isChip(CHIP_RAGE) = true;<br>isChip(WEAPON_PISTOL) = false.",
 	"func_isChip_arg_1": "Value to check.",
 	"func_isChip_return": "<i>true</i> if the value is a chip constant.",

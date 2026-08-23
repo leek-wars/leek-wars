@@ -9,6 +9,7 @@
     - "4 nouveaux chapeaux : le Béret et la Toque de chef à la boutique, le Chapeau de plage et la Couronne solaire à fabriquer à la forge avec les ressources du Solstice."
     - "5 nouveaux trophées de fabrication : Apprenti, Artisan, Forgeron, Cyclope et Héphaïstos, pour 1, 10, 100, 1000 et 10000 objets fabriqués à la forge."
     - "Nouveau trophée Tétrarque : gagner un Battle Royale, une Guerre, une Chasse aux coffres et un Colosse dans la même journée."
+    - "#ai isBatchFight() dit si le combat vient d'un lot, pour se taire quand on mesure son IA."
   improved:
     - "Groupes privés : le mode « comptes à mot de passe » (identifiants choisis par le superviseur, sans e-mail des membres) se règle maintenant dans les paramètres du groupe, et les groupes de démo l'activent d'office."
     - "#ai L'API JavaScript, TypeScript et Python devient 100 % orientée objet : plus aucune fonction ni constante globale, tout passe par les objets (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript est remplacée par les natifs du langage (Math, JSON, random...)."
