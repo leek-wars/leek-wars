@@ -33,6 +33,7 @@
     - "Depuis la page d'un combat, un bouton ramène au tournoi, au potager ou à l'éditeur d'où il vient."
     - "L'apparat « Tenir une arme » propose toutes vos armes, et plus seulement celles équipées dessus."
     - "Sur mobile, l'ordre des poireaux et les actions du combat s'affichent enfin, sous le lecteur."
+    - "#ai API JavaScript, TypeScript et Python : les fonctions de ciblage s'appellent maintenant sur Fight (Fight.weaponCells, Fight.chipCell, Fight.weaponTargets...), et plus seulement sur me. Elles ne dépendent d'aucune entité en particulier — l'arme équipée n'y est qu'un défaut — donc Fight.weaponCells(case, ennemi.weapon) dit d'où l'ennemi peut frapper cette case. Elles restent appelables sur me (merci à GSoMan)."
   fixed:
     - "Documentation : pendant une recherche, les catégories se replient de nouveau en cliquant sur leur flèche (merci à hypernavet)."
     - "Chat : un symbole $ dans un bloc de code n'y fait plus apparaître de balises &lt;latex&gt; (merci à fujiwar)."
