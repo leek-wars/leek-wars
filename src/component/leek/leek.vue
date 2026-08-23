@@ -1653,8 +1653,15 @@
 		skinWeaponDialog.value = true
 		if (ownedWeaponsRequested) return
 		ownedWeaponsRequested = true
+		// L'échec est SILENCIEUX et volontaire : la fenêtre retombe sur les armes du poireau,
+		// ce qui était le comportement d'avant. Sans ce gestionnaire, un rejet non capturé
+		// part en rapport d'erreur de production — or ce cas arrive normalement dès que le
+		// client est déployé avant l'API, ce qui est la règle et non l'exception.
 		LeekWars.get('pomp/get-weapons').then(data => {
 			ownedWeapons.value = data.weapons as number[]
+		}).error(() => {
+			// Nouvel essai à la prochaine ouverture : l'API peut être déployée entre-temps.
+			ownedWeaponsRequested = false
 		})
 	}
 
