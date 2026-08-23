@@ -364,7 +364,8 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   pour que les call sites migrent sans réécrire leur contenu — sauf ceux qui
   passaient par les slots de `v-list-item` (`#prepend`, `#append`), dont la
   ligne redevient un élément ordinaire. Migrés : les deux filtres de la liste
-  des équipes et les deux sélecteurs de devise de la banque. 10 tests.
+  des équipes, les deux sélecteurs de devise de la banque et les deux menus de
+  statut/priorité d'un sujet du forum. 10 tests.
 
 ## Le halo, motif réutilisable (2026-08-14)
 
@@ -440,14 +441,13 @@ Parti pris :
   v3 ; donner au cas par cas de vrais états hover/active aux cliquables
   maison qui n'en ont pas.
 - **Contrôles Vuetify** à remplacer (sur le modèle de `lw-switch`, rendu v2
-  embarqué) : `v-select`, **7 fichiers restants** (mesuré au 2026-08-23) —
+  embarqué) : `v-select`, **6 fichiers restants** (mesuré au 2026-08-23) —
   `admin-game-animations`, `editor`, `git-panel`, `forum-category`,
-  `forum-topic-actions`, `moderation`, `title-picker`. Les deux derniers
-  rendent leurs lignes avec les slots de `v-list-item` (`#prepend`,
-  `#append`) : leur migration réécrit le contenu de la ligne, elle n'est pas
-  mécanique.
+  `moderation`, `title-picker`. Le dernier rend ses lignes avec les slots de
+  `v-list-item` (`#prepend`, `#append`) : sa migration réécrit le contenu de la
+  ligne, elle n'est pas mécanique.
   Faits : `v-switch`, `v-checkbox`, `v-radio`/`v-radio-group`, `lw-input`
-  (`v-text-field` : plus aucun usage), `lw-select` (3 fichiers migrés).
+  (`v-text-field` : plus aucun usage), `lw-select` (4 fichiers migrés).
 - **Loader** : le spinner circulaire Material, candidat à un traitement pixel.
 - **Flash au chargement en « Ancien design »** : le flash blanc du thème
   sombre est corrigé (cookie `dark` lu par le PHP, 2026-08-13), mais les

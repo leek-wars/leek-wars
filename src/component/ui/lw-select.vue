@@ -43,9 +43,14 @@ import { computed, ref } from 'vue'
 
 defineOptions({ name: 'LWSelect' })
 
-/** Item normalisé, à la forme de ceux de v-select. */
+/**
+ * Item normalisé, à la forme de ceux de v-select — `raw` y est typé `any` comme
+ * chez Vuetify, faute de quoi chaque appelant devrait caster pour lire un champ
+ * de son propre objet (`item.raw.color`), ce qui rendrait la migration coûteuse.
+ */
 interface SelectItem {
-	raw: unknown
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	raw: any
 	value: unknown
 	title: string
 	props: { title: string, value: unknown }

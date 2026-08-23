@@ -5,18 +5,19 @@
 		<span class="action pin" @click="$emit('pin')"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? t('unpin') : t('pin') }}</span>
 	</template>
 	<template v-if="canEditStatus">
-		<v-select :model-value="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="$emit('set-status', $event)">
+		<lw-select :model-value="topic.status" :items="statusItems" class="status-select" @update:model-value="$emit('set-status', $event)">
 			<template #selection="{ item }">
 				<v-icon :color="item.raw.color">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
 			</template>
+			<!-- La ligne redevient un élément ordinaire : l'icône et le libellé s'écrivent,
+			     là où v-list-item les tirait de son #prepend et de sa prop `title`. -->
 			<template #item="{ props: itemProps, item }">
-				<v-list-item v-bind="itemProps">
-					<template #prepend>
-						<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
-					</template>
-				</v-list-item>
+				<div v-bind="itemProps">
+					<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
+					<span>{{ item.title }}</span>
+				</div>
 			</template>
-		</v-select>
+		</lw-select>
 	</template>
 	<span v-else-if="topic.status !== ForumTopicStatus.OPEN && currentStatusInfo" class="status-text">
 		<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
@@ -25,18 +26,17 @@
 		<span v-if="topic.release" class="action" @click="$emit('open-release')">
 			<v-icon>mdi-tag</v-icon> {{ 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}
 		</span>
-		<v-select v-if="hasPriority" :model-value="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="$emit('set-priority', $event)">
+		<lw-select v-if="hasPriority" :model-value="topic.priority" :items="priorityItems" class="priority-select" @update:model-value="$emit('set-priority', $event)">
 			<template #selection="{ item }">
 				<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
 			</template>
 			<template #item="{ props: itemProps, item }">
-				<v-list-item v-bind="itemProps">
-					<template #prepend>
-						<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
-					</template>
-				</v-list-item>
+				<div v-bind="itemProps">
+					<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
+					<span>{{ item.title }}</span>
+				</div>
 			</template>
-		</v-select>
+		</lw-select>
 	</template>
 	<span v-if="hasPriority && topic.priority && !(store.state.farmer && store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
 		<v-icon :color="topic.priority === 1 ? '#e53935' : topic.priority === 2 ? '#fb8c00' : '#757575'" size="small">mdi-flag</v-icon>
