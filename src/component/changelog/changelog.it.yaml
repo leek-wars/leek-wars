@@ -54,6 +54,7 @@
     - "Al mercato, espandere la riga grezza di un effetto e poi selezionare un altro oggetto ora aggiorna quella riga: conservava il tipo e i valori dell'oggetto precedente (grazie a pakalatak)."
     - "Pannello Git: i pulsanti «Aggiungi tutto allo stage», «Annulla tutto» e «Rimuovi tutto dallo stage» nelle intestazioni di sezione sono di nuovo visibili, erano ridotti a dimensione zero. Il pulsante Aggiorna interroga anche il repository remoto: i commit pubblicati nel frattempo compaiono subito, senza passare dal selettore dei rami (grazie a Tabarius)."
     - "Editor: un commento attaccato a un operatore resta grigio. La sequenza di operatori, ingorda, inghiottiva l'apertura del commento: «!/**/» non era colorato affatto, mentre «! /**/» lo era (grazie a LaLongueTerre)."
+    - "Rapporto di combattimento: le frecce «<» e «>» dell'intestazione del turno tornano a spostarsi da un turno all'altro nel rapporto, invece di aprire il combattimento nel player. Il player resta raggiungibile tramite la freccia che compare a destra dell'intestazione (grazie a Tabarius)."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."

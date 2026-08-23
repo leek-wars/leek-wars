@@ -54,7 +54,8 @@
 	function onActionClick(e: MouseEvent) {
 		if (e.button !== 0 && e.button !== 1) return
 		const t = e.target as HTMLElement
-		if (t.closest('a, .ai, button, .pause')) return
+		// L'en-tête de tour a ses propres contrôles (label + chevrons) qui naviguent dans le rapport.
+		if (t.closest('a, .ai, button, .pause, .turn .black')) return
 		const target = findAction(e)
 		if (!target) return
 		const action = target.getAttribute('a')

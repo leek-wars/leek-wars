@@ -54,6 +54,7 @@
     - "Au marché, déplier la ligne brute d'un effet puis sélectionner un autre objet met enfin à jour cette ligne : elle gardait le type et les valeurs de l'objet précédent (merci à pakalatak)."
     - "Panneau Git : les boutons « Tout indexer », « Tout annuler » et « Tout désindexer » des en-têtes de section redeviennent visibles, ils étaient réduits à une taille nulle. Le bouton Actualiser interroge aussi le dépôt distant : les commits poussés entre-temps apparaissent désormais tout de suite, sans passer par le sélecteur de branches (merci à Tabarius)."
     - "Éditeur : un commentaire collé à un opérateur reste grisé. La suite d'opérateurs, gloutonne, avalait l'ouverture du commentaire : « !/**/ » n'était pas coloré du tout, alors que « ! /**/ » l'était (merci à LaLongueTerre)."
+    - "Rapport de combat : les flèches « < » et « > » de l'en-tête de tour naviguent de nouveau d'un tour à l'autre dans le rapport, au lieu d'ouvrir le combat dans le player. Le player reste accessible par la flèche qui apparaît à droite de l'en-tête (merci à Tabarius)."
 
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
