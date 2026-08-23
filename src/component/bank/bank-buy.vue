@@ -7,22 +7,21 @@
 		</div>
 		<panel class="first">
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details density="compact" variant="solo">
+			<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)">
 				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
 				</template>
-				<template #item="{ props, item }">
-					<v-list-item v-bind="props" class="currency">
-						<template #prepend>
-							<flag :code="LeekWars.currencies[item.value].flag" :clickable="false" />
-						</template>
-						<template #append>
-							<span class="symbol">{{ LeekWars.currencies[item.value].symbol }}</span>
-						</template>
-					</v-list-item>
+				<!-- La ligne est un élément ordinaire depuis lw-select : le drapeau, le code
+				     et le symbole se posent à la suite, le symbole poussé à droite. -->
+				<template #item="{ props: itemProps, item }">
+					<div v-bind="itemProps" class="currency">
+						<flag :code="LeekWars.currencies[String(item.value)].flag" :clickable="false" />
+						<span>{{ item.value }}</span>
+						<span class="symbol">{{ LeekWars.currencies[String(item.value)].symbol }}</span>
+					</div>
 				</template>
-			</v-select>
+			</lw-select>
 
 			<div v-if="firstPurchase" class="first-purchase-banner">
 				<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
@@ -259,6 +258,12 @@ watch(() => LeekWars.darkMode, () => {
 .currency {
 	display: flex;
 	align-items: center;
+}
+// Le symbole fermait la ligne via le #append de v-list-item ; sur une ligne
+// ordinaire, c'est la marge automatique qui l'y pousse.
+.currency .symbol {
+	margin-left: auto;
+	padding-left: 12px;
 }
 .flag {
 	max-width: 28px;

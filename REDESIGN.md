@@ -355,6 +355,17 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     coupait très tôt les noms des petits tours — les plus nombreux — et donnait
     deux tailles de texte par colonne.
 
+- **2026-08-23, lot 16 — `lw-select`** : 5e contrôle maison, remplaçant de
+  `v-select`. Le `v-menu` est conservé sous lui (primitive de positionnement
+  admise, principe 4), donc l'ancrage, l'overlay et le focus restent à Vuetify
+  et seul l'habillage est repris ; la surface flottante vient déjà de la
+  coquille v3, qui traite `.v-menu > .v-overlay__content`. L'objet exposé aux
+  slots garde la forme de Vuetify (`raw`, `value`, `title`, `props.title`)
+  pour que les call sites migrent sans réécrire leur contenu — sauf ceux qui
+  passaient par les slots de `v-list-item` (`#prepend`, `#append`), dont la
+  ligne redevient un élément ordinaire. Migrés : les deux filtres de la liste
+  des équipes et les deux sélecteurs de devise de la banque. 10 tests.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
@@ -429,8 +440,14 @@ Parti pris :
   v3 ; donner au cas par cas de vrais états hover/active aux cliquables
   maison qui n'en ont pas.
 - **Contrôles Vuetify** à remplacer (sur le modèle de `lw-switch`, rendu v2
-  embarqué) : `v-select` (10 fichiers), `v-text-field` (9).
-  Faits : `v-switch`, `v-checkbox`, `v-radio`/`v-radio-group`.
+  embarqué) : `v-select`, **7 fichiers restants** (mesuré au 2026-08-23) —
+  `admin-game-animations`, `editor`, `git-panel`, `forum-category`,
+  `forum-topic-actions`, `moderation`, `title-picker`. Les deux derniers
+  rendent leurs lignes avec les slots de `v-list-item` (`#prepend`,
+  `#append`) : leur migration réécrit le contenu de la ligne, elle n'est pas
+  mécanique.
+  Faits : `v-switch`, `v-checkbox`, `v-radio`/`v-radio-group`, `lw-input`
+  (`v-text-field` : plus aucun usage), `lw-select` (3 fichiers migrés).
 - **Loader** : le spinner circulaire Material, candidat à un traitement pixel.
 - **Flash au chargement en « Ancien design »** : le flash blanc du thème
   sombre est corrigé (cookie `dark` lu par le PHP, 2026-08-13), mais les

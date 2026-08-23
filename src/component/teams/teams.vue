@@ -20,8 +20,8 @@
 		<panel>
 			<div class="filters">
 				<lw-input v-model="search" :label="$t('search')" prepend-inner-icon="mdi-magnify" clearable class="filter-search" />
-				<v-select v-model="activityFilter" :items="activityOptions" :label="$t('activity')" density="compact" variant="outlined" hide-details class="filter-select" />
-				<v-select v-model="sizeFilter" :items="sizeOptions" :label="$t('team_size')" density="compact" variant="outlined" hide-details class="filter-select" />
+				<lw-select v-model="activityFilter" :items="activityOptions" :label="$t('activity')" class="filter-select" />
+				<lw-select v-model="sizeFilter" :items="sizeOptions" :label="$t('team_size')" class="filter-select" />
 				<lw-switch v-model="showClosed" :label="$t('show_closed')" class="filter-switch" />
 			</div>
 
