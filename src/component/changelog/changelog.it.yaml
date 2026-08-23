@@ -30,6 +30,7 @@
     - "Nel tabellone del torneo, il percorso del vincitore è tracciato in oro — comprese le sue caselle, in ogni turno che ha superato — e quello dei tuoi partecipanti in verde. Le caselle prendono il taglio smussato degli avatar, i nomi sono meno troncati e le linee grigie si leggono finalmente nel tema scuro."
     - "Nel tema scuro anche le mappe di combattimento si scuriscono: sfondo, decorazioni e ostacoli prendono una tinta notturna, dosata mappa per mappa — il lastrone di ghiaccio e la spiaggia, le più abbaglianti, ne prendono di più. L'impostazione Modalità scura (tasto N) del lettore ora cambia tutte le mappe, non più solo il Nexus."
     - "Dalla pagina di un combattimento, un pulsante riporta al torneo, all'orto o all'editor d'origine."
+    - "L'apparato « Impugna un'arma » propone tutte le tue armi, non solo quelle equipaggiate sul porro."
   fixed:
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo cliccando sulla loro freccia (grazie a hypernavet)."
     - "Chat: un simbolo $ dentro un blocco di codice non vi fa più comparire tag &lt;latex&gt; (grazie a fujiwar)."

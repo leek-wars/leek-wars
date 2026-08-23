@@ -30,6 +30,7 @@
     - "Dans l'arbre du tournoi, le chemin du vainqueur est tracé en doré — ses cases aussi, à chaque tour qu'il a traversé — et celui de vos participants en vert. Les cases prennent la coupe en biseau des avatars, les noms sont moins tronqués, et les traits gris se lisent enfin en thème sombre."
     - "En thème sombre, les cartes de combat s'assombrissent aussi : le fond, les décors et les obstacles passent en teinte de nuit, dosée carte par carte — la banquise et la plage, éblouissantes, en prennent le plus. Le réglage Mode sombre (touche N) du lecteur bascule maintenant toutes les cartes, et plus seulement le Nexus."
     - "Depuis la page d'un combat, un bouton ramène au tournoi, au potager ou à l'éditeur d'où il vient."
+    - "L'apparat « Tenir une arme » propose toutes vos armes, et plus seulement celles équipées dessus."
   fixed:
     - "Documentation : pendant une recherche, les catégories se replient de nouveau en cliquant sur leur flèche (merci à hypernavet)."
     - "Chat : un symbole $ dans un bloc de code n'y fait plus apparaître de balises &lt;latex&gt; (merci à fujiwar)."

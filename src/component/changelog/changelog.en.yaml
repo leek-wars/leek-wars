@@ -30,6 +30,7 @@
     - "In the tournament bracket, the winner's path is drawn in gold — including their boxes, in every round they went through — and your participants' path in green. Boxes take the bevelled corners of avatars, names are less truncated, and the grey lines are finally readable in the dark theme."
     - "In the dark theme, fight maps are dimmed too: the ground, the decor and the obstacles take a night tint, tuned map by map — the ice and the beach, the most blinding ones, take the most. The player's Dark mode setting (N key) now switches every map, not just the Nexus."
     - "A fight page now has a button back to the tournament, the Garden or the editor it came from."
+    - "The \"Hold a weapon\" pomp offers all your weapons, not just the ones equipped on that leek."
   fixed:
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
     - "Chat: a $ symbol inside a code block no longer makes &lt;latex&gt; tags appear in it (thanks to fujiwar)."

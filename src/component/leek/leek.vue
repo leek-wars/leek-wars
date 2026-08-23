@@ -564,9 +564,12 @@
 						</template>
 						<b>{{ $t('no_weapon') }}</b>
 					</v-tooltip>
-					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true" :leek="leek">
-						<div class="weapon" v-bind="props" @click="setWeapon(weapon.template)">
-							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'">
+					<!-- Toutes les armes possedees, et plus seulement celles equipees sur ce
+					     poireau (#4809) : l'apparat est un cosmetique, une arme rangee au coffre
+					     ou portee par un autre poireau a autant le droit d'etre affichee. -->
+					<rich-tooltip-item v-for="template in skinWeapons" :key="template" v-slot="{ props }" :item="LeekWars.items[template]" :bottom="true" :nodge="true" :leek="leek">
+						<div class="weapon" :class="{selected: leek.weapon === template}" v-bind="props" @click="setWeapon(template)">
+							<img :src="'/image/' + LeekWars.items[template].name.replace('_', '/') + '.png'">
 						</div>
 					</rich-tooltip-item>
 				</div>
@@ -594,7 +597,7 @@
 						<img v-else class="image" src="/image/hat/no_hat.png">
 						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.items[leek.hat.template].params].name) }}</div>
 					</div>
-					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="holdWeaponEnabled ? (skinWeaponDialog = true) : goToMarket('hold_weapon')">
+					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="holdWeaponEnabled ? openSkinWeaponDialog() : goToMarket('hold_weapon')">
 						<div class="title">
 							<v-tooltip v-if="holdWeaponEnabled">
 								<template #activator="{ props }">
@@ -1626,6 +1629,35 @@
 		}
 	}
 
+	/**
+	 * Armes proposables par l'apparat « Tenir une arme » (#4809).
+	 *
+	 * Le serveur en est la source : une arme equipee sur un AUTRE poireau n'apparait dans
+	 * aucune donnee deja chargee ici (ni `leek.weapons`, ni `farmer.weapons` qui ne porte
+	 * que le coffre). Un seul appel, a la premiere ouverture de la fenetre.
+	 *
+	 * En attendant la reponse, on montre les armes du poireau : la fenetre n'est jamais
+	 * vide, et la liste ne fait que s'allonger quand le serveur repond.
+	 */
+	const ownedWeapons = ref<number[] | null>(null)
+	let ownedWeaponsRequested = false
+
+	const skinWeapons = computed(() => {
+		const templates = ownedWeapons.value ?? orderedWeapons.value.map(w => w.template)
+		return [...new Set(templates)]
+			.filter(template => LeekWars.items[template])
+			.sort((a, b) => LeekWars.items[a].level - LeekWars.items[b].level)
+	})
+
+	function openSkinWeaponDialog() {
+		skinWeaponDialog.value = true
+		if (ownedWeaponsRequested) return
+		ownedWeaponsRequested = true
+		LeekWars.get('pomp/get-weapons').then(data => {
+			ownedWeapons.value = data.weapons as number[]
+		})
+	}
+
 	function setWeapon(w: number) {
 		skinWeaponDialog.value = false
 		if (!leek.value || !my_leek.value) return
@@ -1885,6 +1917,12 @@
 	}
 	.weapons-popup .weapon[draggable] {
 		cursor: move;
+	}
+	// Arme actuellement portee par l'apparat : avec toutes les armes de l'eleveur, la
+	// liste est trop longue pour retrouver la selection en comparant les images (#4809).
+	.weapons-popup .weapon.selected {
+		border-color: var(--primary);
+		box-shadow: inset 0 0 0 1px var(--primary);
 	}
 	.weapons-popup .weapon img {
 		max-width: calc(100% - 20px);
