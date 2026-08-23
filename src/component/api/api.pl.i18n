@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Zwraca pozycję drużyny **team_id** w rankingu **order**.",
 	"ranking_get-team-rank-active": "Zwraca pozycję drużyny **team_id** w aktywnym rankingu **order**.",
 	"ranking_get-composition-rank": "Zwraca pozycję kompozycji **composition_id** w rankingu **order**.",
+	"ranking_get-composition-rank-active": "Zwraca pozycję kompozycji **composition_id** w aktywnym rankingu **order**.",
 	"ranking_search": "Wyszukuje **query** wśród porów, hodowców i/lub drużyn zgodnie z filtrami.",
 	"service_get-all": "Zwraca listę wszystkich publicznych usług API (ta dokumentacja).",
 	"summon_get-templates": "Zwraca szablony przyzwań (bulw) w grze.",

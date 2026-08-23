@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Restituisce il rango della squadra **team_id** nella classifica **order**.",
 	"ranking_get-team-rank-active": "Restituisce il rango della squadra **team_id** nella classifica attiva **order**.",
 	"ranking_get-composition-rank": "Restituisce il rango della composizione **composition_id** nella classifica **order**.",
+	"ranking_get-composition-rank-active": "Restituisce il rango della composizione **composition_id** nella classifica attiva **order**.",
 	"ranking_search": "Cerca **query** tra porri, allevatori e/o squadre secondo i filtri.",
 	"service_get-all": "Restituisce l'elenco di tutti i servizi pubblici dell'API (questa documentazione).",
 	"summon_get-templates": "Restituisce i modelli di evocazioni (bulbi) del gioco.",

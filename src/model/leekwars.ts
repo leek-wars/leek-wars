@@ -1462,7 +1462,7 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	} else if (type === 'team') {
 		url = 'ranking/get-team-rank' + active + '/' + id + '/' + order
 	} else if (type === 'composition') {
-		url = 'ranking/get-composition-rank/' + id + '/' + order
+		url = 'ranking/get-composition-rank' + active + '/' + id + '/' + order
 	}
 	LeekWars.get(url).then(data => {
 		const page = 1 + Math.floor((data.rank - 1) / 50)

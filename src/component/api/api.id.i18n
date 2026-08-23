@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Mengembalikan posisi tim **team_id** dalam peringkat **order**.",
 	"ranking_get-team-rank-active": "Mengembalikan posisi tim **team_id** dalam peringkat aktif **order**.",
 	"ranking_get-composition-rank": "Mengembalikan posisi komposisi **composition_id** dalam peringkat **order**.",
+	"ranking_get-composition-rank-active": "Mengembalikan posisi komposisi **composition_id** dalam peringkat aktif **order**.",
 	"ranking_search": "Mencari **query** di antara daun bawang, peternak, dan/atau tim sesuai filter.",
 	"service_get-all": "Mengembalikan daftar semua layanan publik API (dokumentasi ini).",
 	"summon_get-templates": "Mengembalikan template summon (bulb) dalam permainan.",

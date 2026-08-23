@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "순위 **order**에서 팀 **team_id**의 순위를 반환합니다.",
 	"ranking_get-team-rank-active": "활성 순위 **order**에서 팀 **team_id**의 순위를 반환합니다.",
 	"ranking_get-composition-rank": "순위 **order**에서 조합 **composition_id**의 순위를 반환합니다.",
+	"ranking_get-composition-rank-active": "활성 순위 **order**에서 조합 **composition_id**의 순위를 반환합니다.",
 	"ranking_search": "필터에 따라 대파, 농부 및/또는 팀 중에서 **query**를 검색합니다.",
 	"service_get-all": "모든 공개 API 서비스 목록을 반환합니다(이 문서).",
 	"summon_get-templates": "게임의 소환수(구근) 모델을 반환합니다.",

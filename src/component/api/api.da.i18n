@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Returnerer placeringen af holdet **team_id** på ranglisten **order**.",
 	"ranking_get-team-rank-active": "Returnerer placeringen af holdet **team_id** på den aktive rangliste **order**.",
 	"ranking_get-composition-rank": "Returnerer placeringen af kompositionen **composition_id** på ranglisten **order**.",
+	"ranking_get-composition-rank-active": "Returnerer placeringen af kompositionen **composition_id** på den aktive rangliste **order**.",
 	"ranking_search": "Søger efter **query** blandt porrer, avlere og/eller hold i henhold til filtrene.",
 	"service_get-all": "Returnerer listen over alle offentlige API-tjenester (denne dokumentation).",
 	"summon_get-templates": "Returnerer spillets tilkaldelsesskabeloner (bulber).",

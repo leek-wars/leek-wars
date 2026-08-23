@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Palauttaa joukkueen **team_id** sijoituksen listalla **order**.",
 	"ranking_get-team-rank-active": "Palauttaa joukkueen **team_id** sijoituksen aktiivisella listalla **order**.",
 	"ranking_get-composition-rank": "Palauttaa kokoonpanon **composition_id** sijoituksen listalla **order**.",
+	"ranking_get-composition-rank-active": "Palauttaa kokoonpanon **composition_id** sijoituksen aktiivisella listalla **order**.",
 	"ranking_search": "Hakee **query** purjojen, viljelijöiden ja/tai joukkueiden joukosta suodattimien mukaan.",
 	"service_get-all": "Palauttaa listan kaikista julkisista API-palveluista (tämä dokumentaatio).",
 	"summon_get-templates": "Palauttaa pelin manausmallit (sipulit).",

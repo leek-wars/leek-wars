@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Returnerer rangen til laget **team_id** i rangeringen **order**.",
 	"ranking_get-team-rank-active": "Returnerer rangen til laget **team_id** i den aktive rangeringen **order**.",
 	"ranking_get-composition-rank": "Returnerer rangen til sammensetningen **composition_id** i rangeringen **order**.",
+	"ranking_get-composition-rank-active": "Returnerer rangen til sammensetningen **composition_id** i den aktive rangeringen **order**.",
 	"ranking_search": "Søker etter **query** blant purrer, bønder og/eller lag i henhold til filtrene.",
 	"service_get-all": "Returnerer listen over alle offentlige API-tjenester (denne dokumentasjonen).",
 	"summon_get-templates": "Returnerer malene for tilkallinger (løker) i spillet.",

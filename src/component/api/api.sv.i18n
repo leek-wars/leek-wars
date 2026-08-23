@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Returnerar placeringen för laget **team_id** i rankningen **order**.",
 	"ranking_get-team-rank-active": "Returnerar placeringen för laget **team_id** i den aktiva rankningen **order**.",
 	"ranking_get-composition-rank": "Returnerar placeringen för kompositionen **composition_id** i rankningen **order**.",
+	"ranking_get-composition-rank-active": "Returnerar placeringen för kompositionen **composition_id** i den aktiva rankningen **order**.",
 	"ranking_search": "Söker efter **query** bland purjolökar, odlare och/eller lag enligt filtren.",
 	"service_get-all": "Returnerar listan över alla offentliga API-tjänster (denna dokumentation).",
 	"summon_get-templates": "Returnerar mallarna för besvärjelser (lökar) i spelet.",

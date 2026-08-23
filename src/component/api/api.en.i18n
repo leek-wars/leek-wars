@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Returns the rank of team **team_id** in ranking **order**.",
 	"ranking_get-team-rank-active": "Returns the rank of team **team_id** in active ranking **order**.",
 	"ranking_get-composition-rank": "Returns the rank of composition **composition_id** in ranking **order**.",
+	"ranking_get-composition-rank-active": "Returns the rank of composition **composition_id** in active ranking **order**.",
 	"ranking_search": "Searches **query** among leeks, farmers and/or teams according to the filters.",
 	"service_get-all": "Returns the list of all public API services (this documentation).",
 	"summon_get-templates": "Returns the summon (bulb) templates of the game.",

@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Retorna a posição da equipe **team_id** no ranking **order**.",
 	"ranking_get-team-rank-active": "Retorna a posição da equipe **team_id** no ranking ativo **order**.",
 	"ranking_get-composition-rank": "Retorna a posição da composição **composition_id** no ranking **order**.",
+	"ranking_get-composition-rank-active": "Retorna a posição da composição **composition_id** no ranking ativo **order**.",
 	"ranking_search": "Pesquisa **query** entre os alhos-porós, criadores e/ou equipes de acordo com os filtros.",
 	"service_get-all": "Retorna a lista de todos os serviços públicos da API (esta documentação).",
 	"summon_get-templates": "Retorna os modelos de invocações (bulbos) do jogo.",

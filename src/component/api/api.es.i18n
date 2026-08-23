@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Devuelve el puesto del equipo **team_id** en la clasificación **order**.",
 	"ranking_get-team-rank-active": "Devuelve el puesto del equipo **team_id** en la clasificación activa **order**.",
 	"ranking_get-composition-rank": "Devuelve el puesto de la composición **composition_id** en la clasificación **order**.",
+	"ranking_get-composition-rank-active": "Devuelve el puesto de la composición **composition_id** en la clasificación activa **order**.",
 	"ranking_search": "Busca **query** entre los puerros, granjeros y/o equipos según los filtros.",
 	"service_get-all": "Devuelve la lista de todos los servicios públicos de la API (esta documentación).",
 	"summon_get-templates": "Devuelve las plantillas de invocaciones (bulbos) del juego.",

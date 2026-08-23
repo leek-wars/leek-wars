@@ -19,6 +19,7 @@
     - "I trofei Medium e Oracolo diventano trofei bonus, senza punti né habs. I trofei Distruttore di Nasu, di Fenouil e di Potiron salgono a 30, 50 e 80 punti per mantenere un totale tondo di 18 000 punti, e i punteggi trofei di tutti gli allevatori sono stati ricalcolati."
     - "Le armi fabbricabili (Sciabola del deserto, Lancia del sole) compaiono ora nella collezione e al mercato: in grigio finché non si trova il diagramma, con un pulsante Fabbrica che porta all'inventario mettendo gli ingredienti direttamente nella forgia."
   fixed:
+    - "Una composizione di squadra che non ha più abbastanza porri per essere sfidata nell'orto non appare più come attiva in classifica: vi manteneva il suo talento senza mai rimetterlo in gioco (grazie a tagadagain)."
     - "#ai Assegnare un valore a un campo tipizzato di una classe tramite una variabile non tipizzata (any) applica ora le stesse conversioni del codice tipizzato, invece di fallire in combattimento con un falso errore \"campo sconosciuto\" (grazie a Bily)."
     - "La modalità preferita in arena non cambia più da sola: il comando /br della chat iscriveva senza preferenza, e un cambio di modalità dal menu veniva dimenticato alla successiva iscrizione dall'orto."
     - "Gli ostacoli delle mappe dei boss (bastioni del castello, torii...) sono ora disegnati con la loro dimensione reale sulla mappa degli spostamenti del rapporto, senza più buchi che sembravano attraversabili (grazie a TheScout)."

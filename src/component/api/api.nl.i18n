@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Geeft de positie van het team **team_id** in de ranglijst **order** terug.",
 	"ranking_get-team-rank-active": "Geeft de positie van het team **team_id** in de actieve ranglijst **order** terug.",
 	"ranking_get-composition-rank": "Geeft de positie van de compositie **composition_id** in de ranglijst **order** terug.",
+	"ranking_get-composition-rank-active": "Geeft de positie van de compositie **composition_id** in de actieve ranglijst **order** terug.",
 	"ranking_search": "Zoekt **query** onder de preien, kwekers en/of teams volgens de filters.",
 	"service_get-all": "Geeft de lijst van alle openbare API-services terug (deze documentatie).",
 	"summon_get-templates": "Geeft de oproepingssjablonen (bollen) van het spel terug.",

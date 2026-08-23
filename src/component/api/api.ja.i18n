@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "ランキング **order** におけるチーム **team_id** の順位を返します。",
 	"ranking_get-team-rank-active": "アクティブランキング **order** におけるチーム **team_id** の順位を返します。",
 	"ranking_get-composition-rank": "ランキング **order** におけるコンポジション **composition_id** の順位を返します。",
+	"ranking_get-composition-rank-active": "アクティブランキング **order** におけるコンポジション **composition_id** の順位を返します。",
 	"ranking_search": "フィルタに応じて、リーキ、ファーマー、チームの中から **query** を検索します。",
 	"service_get-all": "APIのすべての公開サービスのリスト（このドキュメント）を返します。",
 	"summon_get-templates": "ゲームの召喚物（バルブ）テンプレートを返します。",

@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "返回队伍 **team_id** 在排行榜 **order** 中的排名。",
 	"ranking_get-team-rank-active": "返回队伍 **team_id** 在活跃排行榜 **order** 中的排名。",
 	"ranking_get-composition-rank": "返回编队 **composition_id** 在排行榜 **order** 中的排名。",
+	"ranking_get-composition-rank-active": "返回编队 **composition_id** 在活跃排行榜 **order** 中的排名。",
 	"ranking_search": "根据筛选条件，在韭葱、饲主和/或队伍中搜索 **query**。",
 	"service_get-all": "返回所有公开 API 服务的列表（本文档）。",
 	"summon_get-templates": "返回游戏的召唤物（球茎）模板。",

@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Gibt den Rang des Teams **team_id** in der Rangliste **order** zurück.",
 	"ranking_get-team-rank-active": "Gibt den Rang des Teams **team_id** in der aktiven Rangliste **order** zurück.",
 	"ranking_get-composition-rank": "Gibt den Rang der Komposition **composition_id** in der Rangliste **order** zurück.",
+	"ranking_get-composition-rank-active": "Gibt den Rang der Komposition **composition_id** in der aktiven Rangliste **order** zurück.",
 	"ranking_search": "Sucht **query** unter den Läuchen, Züchtern und/oder Teams gemäß den Filtern.",
 	"service_get-all": "Gibt die Liste aller öffentlichen API-Dienste zurück (diese Dokumentation).",
 	"summon_get-templates": "Gibt die Beschwörungsvorlagen (Knollen) des Spiels zurück.",

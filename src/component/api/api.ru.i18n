@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Возвращает ранг команды **team_id** в рейтинге **order**.",
 	"ranking_get-team-rank-active": "Возвращает ранг команды **team_id** в активном рейтинге **order**.",
 	"ranking_get-composition-rank": "Возвращает ранг состава **composition_id** в рейтинге **order**.",
+	"ranking_get-composition-rank-active": "Возвращает ранг состава **composition_id** в активном рейтинге **order**.",
 	"ranking_search": "Ищет **query** среди лук-пореев, фермеров и/или команд согласно фильтрам.",
 	"service_get-all": "Возвращает список всех публичных сервисов API (эта документация).",
 	"summon_get-templates": "Возвращает шаблоны призывов (бульб) в игре.",

@@ -236,6 +236,7 @@
 	"ranking_get-team-rank": "Renvoie le rang de l'équipe **team_id** dans le classement **order**.",
 	"ranking_get-team-rank-active": "Renvoie le rang de l'équipe **team_id** dans le classement actif **order**.",
 	"ranking_get-composition-rank": "Renvoie le rang de la composition **composition_id** dans le classement **order**.",
+	"ranking_get-composition-rank-active": "Renvoie le rang de la composition **composition_id** dans le classement actif **order**.",
 	"ranking_search": "Recherche **query** parmi les poireaux, éleveurs et/ou équipes selon les filtres.",
 	"service_get-all": "Renvoie la liste de tous les services publics de l'API (cette documentation).",
 	"summon_get-templates": "Renvoie les modèles d'invocations (bulbes) du jeu.",
