@@ -32,6 +32,7 @@
     - "In the dark theme, fight maps are dimmed too: the ground, the decor and the obstacles take a night tint, tuned map by map — the ice and the beach, the most blinding ones, take the most. The player's Dark mode setting (N key) now switches every map, not just the Nexus."
     - "A fight page now has a button back to the tournament, the Garden or the editor it came from."
     - "The \"Hold a weapon\" pomp offers all your weapons, not just the ones equipped on that leek."
+    - "On mobile, the leek order and the fight actions are finally shown, right under the player."
   fixed:
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
     - "Chat: a $ symbol inside a code block no longer makes &lt;latex&gt; tags appear in it (thanks to fujiwar)."

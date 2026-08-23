@@ -81,7 +81,7 @@
 						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
 					</div>
 				</div>
-				<hud ref="hud" :game="(game as Game)" :creator="creator" />
+				<hud ref="hud" :game="(game as Game)" :creator="creator" :mobile-panels="mobilePanels" />
 				<v-tooltip v-if="hasMarks" :open-delay="0" :close-delay="0" location="bottom" :attach="playerAttach">
 					<template #activator="{ props }">
 						<v-icon v-ripple class="clear-marks" v-bind="props" @click="game.clearMarks()">mdi-eraser</v-icon>
@@ -193,7 +193,10 @@
 								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" prepend-icon="mdi-flare" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null">
 									<lw-switch :model-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" />
 								</v-list-item>
-								<v-list-item v-if="!LeekWars.mobile" v-ripple prepend-icon="mdi-format-list-bulleted" @click="game.showActions = !game.showActions">
+								<!-- Visible aussi en mobile depuis #4860 : les actions s'y affichent
+								     désormais, il faut pouvoir les replier. Les deux réglages
+								     suivants (largeur, logs) restent réservés au bureau. -->
+								<v-list-item v-ripple prepend-icon="mdi-format-list-bulleted" @click="game.showActions = !game.showActions">
 									<lw-switch :model-value="game.showActions" :label="$t('show_actions') + ' (A)'" />
 								</v-list-item>
 								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" prepend-icon="mdi-view-split-vertical" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
@@ -273,6 +276,12 @@
 		creator?: boolean
 		map?: FightMap
 		fight?: Fight
+		/**
+		 * Conteneur posé SOUS le lecteur par la page, où le hud téléporte l'ordre des poireaux
+		 * et les actions en mobile (#4860). Le lecteur ne fait que le transmettre : sa propre
+		 * racine a une hauteur fixe, rien ne peut se poser dessous depuis l'intérieur.
+		 */
+		mobilePanels?: HTMLElement | null
 	}>()
 
 	const emit = defineEmits<{

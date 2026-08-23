@@ -24,8 +24,13 @@
 		<panel class="first">
 			<template #content>
 				<div class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
-					<player v-if="fight_id" ref="playerRef" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+					<player v-if="fight_id" ref="playerRef" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" :mobile-panels="mobilePanels" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
+				<!-- Ordre des poireaux et actions, sous le lecteur en mobile (#4860). Le conteneur
+				     est ici et non dans le lecteur, dont la racine a une hauteur fixe : rien ne
+				     peut se poser dessous depuis l'intérieur. Il est vide, c'est le hud qui y
+				     téléporte ses deux blocs, pour que leur logique reste en un seul endroit. -->
+				<div v-if="LeekWars.mobile" ref="mobilePanelsRef" class="mobile-panels"></div>
 			</template>
 		</panel>
 
@@ -155,6 +160,8 @@
 	const t = useNamespacedT('fight')
 	const route = useRoute()
 	const playerRef = useTemplateRef<{ loaded: boolean }>('playerRef')
+	// Cible du Teleport du hud (#4860) : nulle au premier rendu, le hud attend qu'elle existe.
+	const mobilePanels = useTemplateRef<HTMLElement>('mobilePanelsRef')
 
 	const fight_id = ref<string | null>(null)
 	const fight = ref<Fight | null>(null)
@@ -345,6 +352,13 @@
 	}
 	.game:fullscreen {
 		max-height: 100%;
+	}
+	// Accueille l'ordre des poireaux et les actions téléportés par le hud en mobile (#4860).
+	// Aucun décor ici : les deux blocs portent le leur, et le conteneur reste donc invisible
+	// tant que le combat charge, au lieu d'afficher une bande vide.
+	.mobile-panels {
+		display: flex;
+		flex-direction: column;
 	}
 	.fight-info {
 		margin-right: 12px;
