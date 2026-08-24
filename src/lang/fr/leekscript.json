@@ -95,6 +95,7 @@
 	"error_157": "« {0} » est marqué comme à compléter (@todo).",
 	"error_158": "La méthode « {0} » est marquée @override mais ne redéfinit aucune méthode parente.",
 	"error_159": "La méthode « {0} » réduit la visibilité ({1}) de la méthode parente ({2}).",
+	"error_160": "Un switch ne peut avoir qu'un seul « default ».",
 	"error_16": "L'IA {0} n'existe pas",
 	"error_17": "Parenthèse fermante attendue",
 	"error_18": "Crochet fermant attendu",

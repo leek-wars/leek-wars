@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" jest oznaczone jako do uzupełnienia (@todo).",
 	"error_158": "Metoda \"{0}\" jest oznaczona @override, ale nie przesłania żadnej metody nadrzędnej.",
 	"error_159": "Metoda \"{0}\" zmniejsza widoczność ({1}) metody nadrzędnej ({2}).",
+	"error_160": "Switch może mieć tylko jeden \"default\".",
 	"error_16": "AI {0} nie istnieje",
 	"error_17": "Oczekiwany nawias zamykający",
 	"error_18": "Oczekiwany nawias zamykający",

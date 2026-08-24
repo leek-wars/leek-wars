@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" är markerad som ofullständig (@todo).",
 	"error_158": "Metoden \"{0}\" är markerad med @override men åsidosätter ingen föräldermetod.",
 	"error_159": "Metoden \"{0}\" minskar synligheten ({1}) för föräldermetoden ({2}).",
+	"error_160": "En switch kan bara ha en \"default\".",
 	"error_16": "AI {0} finns inte",
 	"error_17": "Avslutningsparentes förväntas",
 	"error_18": "Stängande parentes förväntas",

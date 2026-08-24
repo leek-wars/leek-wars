@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" ist als zu vervollständigen markiert (@todo).",
 	"error_158": "Methode \"{0}\" ist mit @override markiert, überschreibt aber keine Elternmethode.",
 	"error_159": "Methode \"{0}\" verringert die Sichtbarkeit ({1}) der Elternmethode ({2}).",
+	"error_160": "Ein switch kann nur ein \"default\" haben.",
 	"error_16": "AI {0} existiert nicht",
 	"error_17": "Schließende Klammer erwartet",
 	"error_18": "Schließende Klammer erwartet",

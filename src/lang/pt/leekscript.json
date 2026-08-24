@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" está marcado como pendente de conclusão (@todo).",
 	"error_158": "O método \"{0}\" está marcado com @override mas não sobrescreve nenhum método pai.",
 	"error_159": "O método \"{0}\" reduz a visibilidade ({1}) do método pai ({2}).",
+	"error_160": "Um switch só pode ter um \"default\".",
 	"error_16": "IA {0} não existe",
 	"error_17": "Parêntese de fechamento esperado",
 	"error_18": "Colchete de fechamento esperado",

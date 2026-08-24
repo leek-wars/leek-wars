@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" on merkitty keskeneräiseksi (@todo).",
 	"error_158": "Metodi \"{0}\" on merkitty @override-merkinnällä, mutta se ei korvaa mitään yliluokan metodia.",
 	"error_159": "Metodi \"{0}\" pienentää yliluokan metodin ({2}) näkyvyyttä ({1}).",
+	"error_160": "Switchillä voi olla vain yksi \"default\".",
 	"error_16": "Tekoälyä {0} ei ole olemassa",
 	"error_17": "Odotetaan sulkevia sulkuja",
 	"error_18": "Odotettu sulkemissulku",

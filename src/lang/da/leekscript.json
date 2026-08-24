@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" er markeret som ufærdig (@todo).",
 	"error_158": "Metoden \"{0}\" er markeret med @override, men overskriver ingen forældremetode.",
 	"error_159": "Metoden \"{0}\" reducerer synligheden ({1}) af forældremetoden ({2}).",
+	"error_160": "Et switch kan kun have én \"default\".",
 	"error_16": "AI {0} eksisterer ikke",
 	"error_17": "Der forventes afsluttende parentes",
 	"error_18": "Afsluttende parentes forventes",

@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" è contrassegnato come da completare (@todo).",
 	"error_158": "Il metodo \"{0}\" è contrassegnato @override ma non sovrascrive alcun metodo padre.",
 	"error_159": "Il metodo \"{0}\" riduce la visibilità ({1}) del metodo padre ({2}).",
+	"error_160": "Uno switch può avere un solo \"default\".",
 	"error_16": "AI {0} non esiste",
 	"error_17": "Prevista la parentesi di chiusura",
 	"error_18": "Parentesi quadra di chiusura prevista",

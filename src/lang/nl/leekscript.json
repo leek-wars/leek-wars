@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" is gemarkeerd als nog te voltooien (@todo).",
 	"error_158": "Methode \"{0}\" is gemarkeerd met @override maar overschrijft geen enkele oudermethode.",
 	"error_159": "Methode \"{0}\" verlaagt de zichtbaarheid ({1}) van de oudermethode ({2}).",
+	"error_160": "Een switch kan maar één \"default\" hebben.",
 	"error_16": "AI {0} bestaat niet",
 	"error_17": "Haakje sluiten verwacht",
 	"error_18": "Sluitbeugel verwacht",

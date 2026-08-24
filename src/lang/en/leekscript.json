@@ -95,6 +95,7 @@
 	"error_157": "\"{0}\" is marked as to be completed (@todo).",
 	"error_158": "Method \"{0}\" is marked @override but does not override any parent method.",
 	"error_159": "Method \"{0}\" reduces the visibility ({1}) of the parent method ({2}).",
+	"error_160": "A switch can only have one \"default\".",
 	"error_16": "AI {0} doesn't exist",
 	"error_17": "Closing parenthesis expected",
 	"error_18": "Closing square bracket expected",
