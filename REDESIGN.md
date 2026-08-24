@@ -419,6 +419,33 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - v2 inchangé, vérifié à l'écran : ni trait ni débord, retrait de 45 px
     conservé, 4 colonnes dans le gabarit de 1100 px.
 
+- **2026-08-24, lot 19 — le potager** : les onglets de mode (Solo, Éleveur,
+  Équipe, Arènes, Boss) n'avaient jamais été repris.
+  - **L'onglet indisponible était peint en `--grey-11`**, un gris de l'échelle
+    claire que le bloc sombre ne redéfinit pas : case claire sous une encre
+    claire, **1,38 mesuré sur l'intitulé et 1,34 sur le compteur** — illisible.
+    Il prend `--background-disabled`, la surface que le thème réserve à ça, et
+    l'`opacity: 0.4` qui écrasait tout par-dessus disparaît. L'intitulé doit
+    être assombri explicitement : c'est un `h2`, qui tient sa couleur de
+    `global.scss` et n'hérite donc pas de celle de l'onglet — sans ça,
+    l'indisponible se lisait comme un onglet ouvert (11,7).
+  - **L'onglet actif prenait un aplat `--pure-white`**, qui vaut le fond de page
+    en sombre : la case courante y devenait la plus sombre de la colonne. Il
+    passe au trait et à l'encre verts, le parti pris déjà retenu pour les
+    onglets de la barre de page (« un trait vert, pas un aplat vert »).
+  - Trois états désormais distincts et mesurés, clair et sombre : indisponible
+    5,2 / 6,3 · disponible 16,6 / 16,1 · actif 7,1 / 13,7.
+  - Le **halo pulsé** du point « arène » gardait le vert du v2 écrit en dur
+    (`rgba(95, 173, 27, .6)`) alors que le point suit `--primary` : en v3 le halo
+    ne parlait plus la couleur de sa source. Il passe en `color-mix` du vert du
+    thème — valeur identique au pixel en v2. Les deux `border-radius: 50%` du
+    point passent par `--radius-pill` (ronds en v2, francs en v3).
+  - Repéré par un **audit de contraste automatisé** passé sur les pages
+    connectées (potager, inventaire, marché, trophées, banque, messages,
+    notifications, réglages, classement, forum, page poireau) dans les deux
+    thèmes : il parcourt les éléments porteurs de texte, calcule le fond effectif
+    en remontant les ancêtres et compare au seuil. Le reste de ces pages passe.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
@@ -478,6 +505,13 @@ Parti pris :
   Sans le chiffre, on la surassombrit jusqu'à la bouillie.
 
 ## Questions ouvertes
+
+- **Couleurs de caractéristiques en thème sombre** (mesuré au 2026-08-24) :
+  quatre des couleurs sémantiques du jeu passent sous le seuil de 4,5 sur le
+  fond sombre — science `#2a63ff` **3,85**, RAM `#ce00c7` **3,96**, force
+  `#c05415` **4,02**, magie `#d810d5` **4,41** (`global.scss`). Les remonter
+  touche l'identité des stats dans tout le jeu (page poireau, rapport de combat,
+  marché, infobulles) : décision de Pierre, pas un correctif de lot.
 
 - **Avatars carrés partout ?** Le mockup les fait carrés et bordés ; pour
   l'instant seuls la barre du haut, le menu du compte, le panneau social et

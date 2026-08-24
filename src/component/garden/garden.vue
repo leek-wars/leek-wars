@@ -968,6 +968,48 @@
 			background: var(--grey-11);
 			cursor: default;
 		}
+		/* ====== v3 ======
+		   L'actif prenait un aplat `--pure-white`, qui vaut le fond de page en
+		   sombre : l'onglet courant y devenait la case la plus SOMBRE de la
+		   colonne. Il passe au trait et à l'encre verts, comme les onglets de la
+		   barre de page.
+		   Le désactivé était peint en `--grey-11`, un gris de l'échelle claire
+		   que le bloc sombre ne redéfinit pas : case claire sous une encre
+		   claire, 1,34 mesuré sur le compteur et 1,38 sur l'intitulé. Il prend la
+		   surface que le thème réserve à ça, et l'opacité de 0,4 qui écrasait le
+		   tout n'a plus lieu d'être. */
+		body:not(.v2) & {
+			.tab {
+				transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+			}
+			.tab.enabled:hover {
+				background: var(--background-row);
+				border-color: var(--border-strong);
+			}
+			.tab.router-link-active {
+				background: var(--background-row);
+				border-color: var(--primary);
+				box-shadow: none;
+				h2 {
+					color: var(--primary);
+				}
+			}
+			.tab:not(.enabled) {
+				opacity: 1;
+				background: var(--background-disabled);
+				border-color: var(--border);
+				color: var(--text-color-secondary);
+				/* L'intitulé est un h2, qui porte sa propre couleur dans
+				   global.scss : sans cette ligne il resterait à pleine encre et
+				   l'onglet indisponible se lirait comme un onglet ouvert. */
+				h2 {
+					color: var(--text-color-secondary);
+				}
+				.player-count {
+					color: var(--text-color-secondary);
+				}
+			}
+		}
 		.tab h2 {
 			margin: 0;
 			margin-bottom: 5px;
@@ -1171,7 +1213,7 @@
 		position: relative;
 		width: 8px;
 		height: 8px;
-		border-radius: 50%;
+		border-radius: var(--radius-pill);
 		background: var(--primary);
 	}
 	// Halo pulsé via un pseudo-élément animé en transform/opacity (compositables
@@ -1181,8 +1223,10 @@
 		content: '';
 		position: absolute;
 		inset: 0;
-		border-radius: 50%;
-		background: rgba(95, 173, 27, 0.6);
+		border-radius: var(--radius-pill);
+		/* Le vert du v2 était écrit en dur ici alors que le point lui-même suit
+		   `--primary` : en v3 le halo ne parlait plus la couleur de sa source. */
+		background: color-mix(in srgb, var(--primary) 60%, transparent);
 		animation: arena-pulse 2s infinite;
 		pointer-events: none;
 	}
