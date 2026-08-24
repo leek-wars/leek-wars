@@ -250,10 +250,10 @@ const technologies = [
 
 const team = computed(() => [[
 	{ name: 'Pilow', id: 1, grade: 'admin', role: t('team_web_graphism') + '<br>' + t('team_leekscript_fights') },
-	{ name: 'SilentHunter', id: 11, grade: 'admin', role: t('team_admin_server') },
 	{ name: 'TheTintin', id: 38357, grade: 'moderator', role: t('main.grade_moderator') },
 	{ name: 'Ref', id: 43276, grade: 'moderator', role: t('main.grade_moderator') },
 ], [
+	{ name: 'SilentHunter', id: 11, grade: 'former admin', role: t('team_admin_server') },
 	{ name: 'Dawyde', id: 2, grade: 'former admin', role: t('former_dev') },
 	{ name: 'mistigis', id: 100, grade: 'former moderator', role: t('former_mod') },
 	{ name: 'McNalYoo', id: 273, grade: 'former moderator', role: t('former_mod') },
