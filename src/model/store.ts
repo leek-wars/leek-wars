@@ -70,6 +70,22 @@ class LeekWarsState {
 	public arenaPreference: number = -1
 }
 
+// Quantité d'un template d'item possédée par l'éleveur (habs pour l'item 148), 0 s'il n'en a pas
+function itemQuantity(state: LeekWarsState, template: number): number {
+	if (!state.farmer) return 0
+	if (template === 148) return state.farmer.habs
+	const inventories: { template: number, quantity: number }[][] = [
+		state.farmer.resources, state.farmer.components, state.farmer.potions,
+		state.farmer.chips, state.farmer.weapons, state.farmer.hats, state.farmer.pomps
+	]
+	for (const inventory of inventories) {
+		for (const resource of inventory) {
+			if (resource.template === template) return resource.quantity
+		}
+	}
+	return 0
+}
+
 function updateTitle(state: LeekWarsState) {
 	LeekWars.setTitleCounter(state.unreadNotifications + state.unreadMessages)
 }
@@ -80,52 +96,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		moderator: (state: LeekWarsState) => state.farmer && state.farmer.moderator,
 		admin: (state: LeekWarsState) => state.farmer && state.farmer.admin,
 		leek_count: (state: LeekWarsState) => state.farmer ? Object.values(state.farmer.leeks).length : 0,
+		item_quantity: (state: LeekWarsState) => (template: number): number => itemQuantity(state, template),
 		scheme_possible: (state: LeekWarsState) => (scheme: SchemeTemplate) => {
-			return scheme.items.every(item => {
-				if (item === null) return true
-				if (state.farmer) {
-					if (item[0] === 148) {
-						return state.farmer.habs >= item[1]
-					} else {
-						for (const resource of state.farmer.resources) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.components) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.potions) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.chips) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.weapons) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.hats) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.pomps) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-					}
-				}
-				return false
-			})
+			return scheme.items.every(item => item === null || itemQuantity(state, item[0]) >= item[1])
 		}
 	},
 	mutations: {
