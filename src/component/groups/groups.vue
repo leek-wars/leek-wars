@@ -10,6 +10,12 @@
 			<div class="intro">
 				<h2>{{ $t('intro') }}</h2>
 
+				<!-- Présentation du jeu : la page était muette sur ce qu'EST Leek Wars, alors
+				     qu'elle est la porte d'entrée des visiteurs venus de recherches « jeu de
+				     programmation en classe ». C'est aussi ce que reprend le pré-rendu SEO
+				     (PrerenderController::groupsSeo) : les deux doivent rester le même texte. -->
+				<p class="what-is">{{ $t('what_is') }}</p>
+
 				<span v-html="$t('intro2')"></span>
 			</div>
 
@@ -90,12 +96,12 @@
 					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_students_play') }}</div>
 					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_kit') }}</div>
 					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_no_personal_data') }}</div>
+					<div class="offer-note">{{ $t('teachers_note') }}</div>
 					<div class="spacer"></div>
 					<div class="price">{{ $t('free') }}</div>
 					<a :href="'mailto:contact@leekwars.com?subject=' + $t('teachers_subject')" target="_blank">
 						<v-btn color="primary">{{ $t('teachers_cta') }}</v-btn>
 					</a>
-					<div class="offer-note">{{ $t('teachers_note') }}</div>
 				</div>
 				<div class="offer card">
 					<div class="title">🥈 {{ $t('platinum') }}</div>
@@ -240,7 +246,7 @@
 			</div>
 
 			<h2>{{ $t('faq') }}</h2>
-			<div v-for="q in [1, 2, 3]" :key="q">
+			<div v-for="q in [1, 2, 3, 4, 5, 6]" :key="q">
 				<div class="question">{{ $t('question' + q) }}</div>
 				<div class="answer">{{ $t('answer' + q) }}</div>
 			</div>
@@ -346,6 +352,11 @@ onBeforeMount(() => {
 .intro {
 	font-size: 16px;
 	line-height: 1.5;
+	.what-is {
+		margin: 12px 0 18px;
+		max-width: 70ch;
+		color: var(--text-color-secondary);
+	}
 }
 .guest-dialog {
 	background: var(--background);
@@ -487,6 +498,8 @@ h2 {
 			width: 100%;
 			margin-top: 30px;
 		}
+		// Placée AVANT le spacer : sous le bouton, elle décalait le bloc prix/bouton vers le
+		// haut et désalignait cette carte des deux autres.
 		.offer-note {
 			font-size: 13px;
 			opacity: 0.75;

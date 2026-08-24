@@ -73,5 +73,12 @@
 	"free": "Free",
 	"teachers_cta": "Request activation",
 	"teachers_subject": "Teacher group activation request",
-	"teachers_note": "Create your demo group, then email us from your school address: we activate it for your class, free of charge."
+	"teachers_note": "Create your demo group, then email us from your school address: we activate it for your class, free of charge.",
+	"what_is": "Leek Wars is an online programming game. Every player raises a leek and writes the artificial intelligence that makes it fight: nobody plays by hand, fights run on their own, and the quality of the code decides the winner. Everything happens in a browser, with nothing to install, in Python, JavaScript, TypeScript or LeekScript, the game's own language.",
+	"question4": "Do participants need to know how to program?",
+	"answer4": "No. A tutorial guides beginners step by step, and the starter code already works: you improve it line by line. A participant who has never programmed launches their first fight within minutes.",
+	"question5": "Which languages do participants code in?",
+	"answer5": "Python, JavaScript or TypeScript, as well as LeekScript, the game's own language. The language is chosen per participant, so a mixed-ability group can work together.",
+	"question6": "What personal data is required from participants?",
+	"answer6": "None. The supervisor creates the accounts and chooses the credentials: no email address and no real name are needed. Pseudonyms are fine, and the group chat can be disabled."
 }

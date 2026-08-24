@@ -2,7 +2,7 @@
 	"title": "Groupes privés",
 	"intro": "Créez votre groupe privé Leek Wars",
 	"intro2": "Leek Wars offre la possibilité de <b>créer et gérer un groupe de joueurs</b> avec des fonctionnalités plus poussées que le jeu de base.<br>Idéal si vous êtes :",
-	"education": "Education",
+	"education": "Éducation",
 	"education_desc": "Un professeur avec des étudiants, pour un cours ou une activité.",
 	"enterprise": "Entreprise",
 	"enterprise_desc": "Une entreprise pour une activité entre collaborateurs.",
@@ -12,7 +12,7 @@
 	"private_page": "Page privée de groupe",
 	"create_members": "Création et gestion des participants",
 	"chat": "Chat de discussion privé",
-	"equipment": "Équipement et caractéristiques imposé",
+	"equipment": "Équipement et caractéristiques imposés",
 	"stats": "Statistiques détaillées des participants et API",
 	"tournaments": "Tournois privés jusqu'à 64 joueurs",
 	"br": "Battle Royales privées",
@@ -73,5 +73,12 @@
 	"free": "Gratuit",
 	"teachers_cta": "Demander l'activation",
 	"teachers_subject": "Demande d'activation d'un groupe enseignant",
-	"teachers_note": "Créez votre groupe de démo, puis écrivez-nous depuis votre adresse d'établissement : nous l'activons gratuitement pour votre classe."
+	"teachers_note": "Créez votre groupe de démo, puis écrivez-nous depuis votre adresse d'établissement : nous l'activons gratuitement pour votre classe.",
+	"what_is": "Leek Wars est un jeu de programmation en ligne. Chaque joueur élève un poireau et écrit l'intelligence artificielle qui le fait combattre : personne ne joue à la main, les combats se déroulent tout seuls, et c'est la qualité du code qui décide du vainqueur. Tout se passe dans un navigateur, sans rien à installer, en Python, JavaScript, TypeScript ou en LeekScript, le langage du jeu.",
+	"question4": "Faut-il savoir programmer pour participer ?",
+	"answer4": "Non. Un didacticiel guide les débutants pas à pas, et le code de départ fourni fonctionne déjà : on l'améliore ligne par ligne. Un participant qui n'a jamais programmé lance son premier combat en quelques minutes.",
+	"question5": "Dans quels langages les participants codent-ils ?",
+	"answer5": "En Python, JavaScript ou TypeScript, ainsi qu'en LeekScript, le langage du jeu. Le langage se choisit par participant, ce qui permet à un groupe hétérogène de travailler ensemble.",
+	"question6": "Quelles données personnelles sont demandées aux participants ?",
+	"answer6": "Aucune. C'est le superviseur qui crée les comptes et choisit les identifiants : ni adresse e-mail, ni nom réel ne sont nécessaires. Les pseudonymes sont possibles, et le chat du groupe peut être désactivé."
 }
