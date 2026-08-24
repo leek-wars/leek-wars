@@ -31,6 +31,7 @@
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/emitter'
 	import { t } from '@/model/i18n'
+	import type { ApiError } from '@/model/api-error'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
@@ -44,8 +45,8 @@
 	const building = ref(false)
 	const built = ref(false)
 
-	// État de chaque ingrédient placé dans la forge : possédé en quantité suffisante,
-	// en quantité insuffisante, ou pas du tout. La forge peut être remplie par un
+	// Manque de chaque ingrédient placé dans la forge : quantité insuffisante ('partial'),
+	// aucun exemplaire ('missing'), rien à signaler sinon. La forge peut être remplie par un
 	// schéma qu'on n'a pas les moyens de fabriquer (bouton Fabriquer du marché),
 	// il faut donc montrer ce qui manque plutôt que laisser croire au craft.
 	// Pendant l'animation de fabrication les ingrédients sont déjà retirés de l'inventaire
@@ -53,22 +54,29 @@
 	const slotStates = computed(() => forge.value.map(slot => {
 		if (!slot || building.value) return null
 		const owned = store.getters.item_quantity(slot[0])
-		return owned >= slot[1] ? 'present' : (owned > 0 ? 'partial' : 'missing')
+		return owned >= slot[1] ? null : (owned > 0 ? 'partial' : 'missing')
 	}))
 	const possible = computed(() => !!scheme.value && store.getters.scheme_possible(scheme.value))
 	const impossible = computed(() => !!result.value && !built.value && !building.value && !possible.value)
 
+	// Jeton d'invalidation des retours en vol : vider ou re-remplir la forge le périme.
+	// L'identité de l'objet schéma ne suffirait pas, le marché émet toujours le même
+	// singleton LeekWars.schemes[id].
+	let craftToken = 0
+
+	function onCraft(s: SchemeTemplate) {
+		clear()
+		scheme.value = s
+		for (let i = 0; i < s.items.length; ++i) {
+			forge.value[i] = s.items[i]
+		}
+		result.value = s.result
+	}
+
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
-		emitter.on('craft', (s: SchemeTemplate) => {
-			clear()
-			scheme.value = s
-			for (let i = 0; i < s.items.length; ++i) {
-				forge.value[i] = s.items[i]
-			}
-			result.value = s.result
-		})
+		emitter.on('craft', onCraft)
 	})
 
 	function clearIngredients() {
@@ -77,6 +85,7 @@
 		}
 	}
 	function clear() {
+		craftToken++
 		clearIngredients()
 		result.value = null
 		scheme.value = null
@@ -85,12 +94,13 @@
 	}
 
 	onBeforeUnmount(() => {
-		emitter.off('craft')
+		// off ciblé : sans le handler, mitt retirerait aussi les écouteurs des autres
+		// composants (le scrollToForge de la page inventaire)
+		emitter.off('craft', onCraft)
 	})
 
 	function craft() {
-		if (!scheme.value || building.value) return
-		if (!built.value && !possible.value) return
+		if (!scheme.value || building.value || impossible.value) return
 		if (built.value) {
 			const s = scheme.value
 			clear()
@@ -102,9 +112,12 @@
 		// même l'animation et laisserait croire à des fabrications en série. L'animation de
 		// 500 ms tourne pendant l'aller-retour ; on attend les deux avant de conclure.
 		const s = scheme.value
+		const token = craftToken
 		building.value = true
 		const animation = new Promise(resolve => setTimeout(resolve, 500))
-		LeekWars.post('item/craft', { scheme_id: s.id }).then(item => {
+		// Forme à deux arguments : une exception du handler de succès ne doit pas être
+		// prise pour un refus du serveur (le craft a alors bien eu lieu).
+		const outcome = LeekWars.post('item/craft', { scheme_id: s.id }).then(item => {
 			const template = LeekWars.items[item.template]
 			store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: s.quantity })
 			for (const ingredient of s.items) {
@@ -116,19 +129,24 @@
 					store.commit('remove-inventory', { type: it.type, item_template: ingredient[0], quantity: ingredient[1] })
 				}
 			}
-			animation.then(() => {
-				// La forge a pu être vidée ou re-remplie entre-temps (clear() a déjà remis l'état)
-				if (scheme.value !== s) return
-				building.value = false
+			return true
+		}, error => {
+			const code = (error as ApiError).error
+			// too_many_requests a déjà son toast dans la couche requête
+			if (code !== 'too_many_requests') {
+				const insufficient = code === 'not_enough_habs' || code === 'no_such_item_or_not_enough_quantity'
+				LeekWars.toast(insufficient ? t('main.error_craft_not_enough_resources') : t('main.error_x', [code]))
+			}
+			return false
+		})
+		Promise.all([outcome, animation]).then(([success]) => {
+			// La forge a pu être vidée ou re-remplie entre-temps (clear() a déjà remis l'état)
+			if (token !== craftToken) return
+			building.value = false
+			if (success) {
 				clearIngredients()
 				built.value = true
-			})
-		}).catch(() => {
-			LeekWars.toast(t('main.error_craft_not_enough_resources'))
-			animation.then(() => {
-				if (scheme.value !== s) return
-				building.value = false
-			})
+			}
 		})
 	}
 </script>
@@ -246,7 +264,7 @@
 			pointer-events: none;
 			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 			&.disabled {
-				color: #999;
+				color: var(--text-color-secondary);
 				background: var(--background-disabled);
 			}
 		}
