@@ -1,6 +1,6 @@
 {
 	"title": "Groupes privés",
-	"intro": "Crééz votre groupe privé Leek Wars",
+	"intro": "Créez votre groupe privé Leek Wars",
 	"intro2": "Leek Wars offre la possibilité de <b>créer et gérer un groupe de joueurs</b> avec des fonctionnalités plus poussées que le jeu de base.<br>Idéal si vous êtes :",
 	"education": "Education",
 	"education_desc": "Un professeur avec des étudiants, pour un cours ou une activité.",
@@ -64,5 +64,14 @@
 	"demo_form_email_used": "Cet email a déjà un compte. Connecte-toi.",
 	"demo_form_name_used": "Ce nom est déjà pris, choisis-en un autre.",
 	"demo_form_too_many": "Trop de démos créées récemment, réessaie plus tard.",
-	"demo_form_name_rejected": "Ce nom n'est pas valide, choisis-en un autre."
+	"demo_form_name_rejected": "Ce nom n'est pas valide, choisis-en un autre.",
+	"teachers": "Enseignants",
+	"offer_class_group": "Un groupe privé pour votre classe",
+	"offer_students_play": "Vos élèves jouent, codent et progressent",
+	"offer_kit": "Kit de séance prêt à l'emploi",
+	"offer_no_personal_data": "Aucune donnée personnelle demandée aux élèves",
+	"free": "Gratuit",
+	"teachers_cta": "Demander l'activation",
+	"teachers_subject": "Demande d'activation d'un groupe enseignant",
+	"teachers_note": "Créez votre groupe de démo, puis écrivez-nous depuis votre adresse d'établissement : nous l'activons gratuitement pour votre classe."
 }

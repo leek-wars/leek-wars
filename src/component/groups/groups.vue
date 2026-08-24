@@ -84,6 +84,19 @@
 
 			<h2>{{ $t('offers') }}</h2>
 			<div class="offers">
+				<div class="offer card free">
+					<div class="title">🎓 {{ $t('teachers') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_class_group') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_students_play') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_kit') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_no_personal_data') }}</div>
+					<div class="spacer"></div>
+					<div class="price">{{ $t('free') }}</div>
+					<a :href="'mailto:contact@leekwars.com?subject=' + $t('teachers_subject')" target="_blank">
+						<v-btn color="primary">{{ $t('teachers_cta') }}</v-btn>
+					</a>
+					<div class="offer-note">{{ $t('teachers_note') }}</div>
+				</div>
 				<div class="offer card">
 					<div class="title">🥈 {{ $t('platinum') }}</div>
 					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_manage') }}</div>
@@ -473,6 +486,15 @@ h2 {
 		.v-btn {
 			width: 100%;
 			margin-top: 30px;
+		}
+		.offer-note {
+			font-size: 13px;
+			opacity: 0.75;
+			margin-top: 10px;
+			line-height: 1.35;
+		}
+		&.free {
+			border-color: #5fad1b;
 		}
 	}
 }

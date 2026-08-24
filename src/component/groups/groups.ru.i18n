@@ -64,5 +64,14 @@
 	"demo_form_email_used": "У этого email уже есть аккаунт. Войди.",
 	"demo_form_name_used": "Это имя уже занято, выбери другое.",
 	"demo_form_too_many": "Слишком много демо создано недавно, попробуй позже.",
-	"demo_form_name_rejected": "Это имя недопустимо, выбери другое."
+	"demo_form_name_rejected": "Это имя недопустимо, выбери другое.",
+	"teachers": "Teachers",
+	"offer_class_group": "A private group for your class",
+	"offer_students_play": "Your students play, code and progress",
+	"offer_kit": "Ready-to-use lesson kit",
+	"offer_no_personal_data": "No personal data required from students",
+	"free": "Free",
+	"teachers_cta": "Request activation",
+	"teachers_subject": "Teacher group activation request",
+	"teachers_note": "Create your demo group, then email us from your school address: we activate it for your class, free of charge."
 }
