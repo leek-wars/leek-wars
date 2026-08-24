@@ -463,13 +463,21 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - v2 inchangé : dégradé, coins à 14 et 16 px, ombres floues conservés.
 
 - **2026-08-24, lot 21 — le loader** (le dernier objet Material de la coquille,
-  137 points d'appel, listé au chantier restant) : le disque devient un **carré**
-  et la rotation avance par **paliers de 90°**, cinq images par seconde. Le carré
-  ne quitte donc jamais son axe — même boîte qu'avant, aucune phase en losange,
-  aucun risque de débordement — et deux côtés adjacents allumés donnent un angle
-  vert qui saute d'un coin à l'autre. Vérifié aux trois tailles courantes (60,
-  40, 24 px) dans les deux thèmes. En mouvement réduit, la cadence passe à
-  2,4 s. v2 : disque Material inchangé.
+  137 points d'appel, listé au chantier restant). Première version : le disque
+  devenait un carré tournant par paliers de 90°. **Retour de Pierre : trop
+  tiède.** Version retenue, une **chenille pixel** — huit blocs occupent le
+  pourtour d'une grille 3×3, le centre reste vide, et une tête lumineuse en fait
+  le tour en 0,8 s. Chaque bloc joue la même descente d'opacité décalée d'un
+  huitième de cycle, et cette descente est jouée **en paliers** (`steps(4)`) :
+  la tête traîne deux ou trois blocs à des niveaux francs, sans dégradé continu.
+  Seule l'opacité est animée (compositable, aucun repaint), et la boîte reste
+  celle d'avant — les 137 points d'appel ne bougent pas. Le disque Material est
+  conservé comme peau v2 : les deux sont rendus, la coquille n'en montre qu'un.
+  Vérifié aux trois tailles courantes (60, 40, 24 px) dans les deux thèmes, sur
+  le CSS réellement compilé par Vite. En mouvement réduit la chenille ralentit
+  à 2,4 s au lieu de s'arrêter — un loader figé se lit comme une page bloquée.
+  - Longueur de traînée choisie en comparant `steps(3)` à `steps(8)` sur des
+    pellicules de 8 images : 3 est trop sec, 8 allume presque tout le pourtour.
 
 - **2026-08-24, lot 22 — le petit mobilier récurrent** : audit de doctrine passé
   sur le rendu (et non sur le code) — pour chaque élément visible, l'ombre
