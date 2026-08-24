@@ -2,14 +2,14 @@
 	<div class="git-panel" :class="isDark ? 'theme--dark' : 'theme--light'">
 		<!-- Sélecteur de repo + actions -->
 		<div class="git-toolbar">
-			<v-select v-model="selectedRepo" :items="repoItems" :placeholder="$t('select_repo')" density="compact" variant="solo-filled" flat hide-details class="repo-select" :theme="isDark ? 'dark' : 'light'" @update:model-value="refreshStatus">
-				<template #prepend-inner>
+			<lw-select v-model="selectedRepo" :items="repoItems" :placeholder="$t('select_repo')" class="repo-select" @update:model-value="refreshStatus">
+				<template #prepend>
 					<v-icon size="small">mdi-source-branch</v-icon>
 				</template>
-				<template #append-inner>
+				<template #append>
 					<v-icon v-if="loading" class="spin" size="small">mdi-sync</v-icon>
 				</template>
-			</v-select>
+			</lw-select>
 			<div class="action-btn" :title="$t('refresh')" @click="refresh">
 				<v-icon :class="{spin: fetching || loading}">mdi-refresh</v-icon>
 			</div>
@@ -885,7 +885,8 @@
 	padding: 4px;
 	flex-shrink: 0;
 }
-.repo-select {
+// Le champ est rendu par lw-select : classe présente, attribut de portée absent.
+:deep(.repo-select) {
 	flex: 1;
 	min-width: 0;
 }

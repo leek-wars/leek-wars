@@ -13,11 +13,11 @@
 					<div class="options">
 						<div class="option">
 							<label>Répétitions</label>
-							<v-select v-model="repetitions" :items="repetitionItems" item-title="label" item-value="value" hide-details density="compact" />
+							<lw-select v-model="repetitions" :items="repetitionItems" item-title="label" item-value="value" />
 						</div>
 						<div class="option">
 							<label>Carte</label>
-							<v-select v-model="mapType" :items="mapItems" item-title="label" item-value="value" hide-details density="compact" />
+							<lw-select v-model="mapType" :items="mapItems" item-title="label" item-value="value" />
 						</div>
 						<v-btn v-if="selected" color="primary" variant="flat" prepend-icon="mdi-restart" @click="relaunch">Relancer</v-btn>
 					</div>

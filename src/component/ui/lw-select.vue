@@ -1,15 +1,20 @@
 <template lang="html">
 	<v-menu v-model="open" :disabled="disabled" :close-on-content-click="true" location="bottom start" min-width="0">
 		<template #activator="{ props: menuProps }">
-			<div class="lw-select" :class="{disabled, open}" v-bind="menuProps" role="combobox" :aria-expanded="open" :aria-disabled="disabled" tabindex="0" @keydown="onKeydown">
+			<div class="lw-select" :class="{disabled, open}" v-bind="{ ...menuProps, ...$attrs }" role="combobox" :aria-expanded="open" :aria-disabled="disabled" tabindex="0" @keydown="onKeydown">
 				<div class="field">
 					<!-- Le libellé flotte au-dessus de la valeur quand il y en a un, comme le
 					     `label` de v-select : les appelants le passent pour titrer un filtre. -->
 					<span v-if="label" class="label">{{ label }}</span>
-					<span class="value">
-						<slot name="selection" :item="selected">{{ selected ? selected.title : '' }}</slot>
+					<span class="value" :class="{empty: !selected}">
+						<!-- `prepend` et `append` tiennent la place des `prepend-inner` /
+						     `append-inner` de v-select : une icône dans le champ (branche
+						     git) et un indicateur à sa droite (chargement). -->
+						<slot name="prepend" />
+						<slot name="selection" :item="selected">{{ selected ? selected.title : (placeholder || '') }}</slot>
 					</span>
 				</div>
+				<slot name="append" />
 				<v-icon class="arrow">mdi-menu-down</v-icon>
 			</div>
 		</template>
@@ -41,7 +46,12 @@
 // migrent sans réécrire leur contenu.
 import { computed, ref } from 'vue'
 
-defineOptions({ name: 'LWSelect' })
+// `inheritAttrs: false` + `$attrs` reporté sur le champ : la racine du composant
+// est un `v-menu`, et les attributs de l'appelant (à commencer par sa `class`)
+// s'y perdaient au lieu d'habiller la boîte. Les feuilles des appelants —
+// `.order-select`, `.filter-select`, `.status-select`… — ne s'appliquaient donc
+// pas, sans rien signaler.
+defineOptions({ name: 'LWSelect', inheritAttrs: false })
 
 /**
  * Item normalisé, à la forme de ceux de v-select — `raw` y est typé `any` comme
@@ -62,8 +72,14 @@ const props = withDefaults(defineProps<{
 	itemValue?: string
 	itemTitle?: string
 	label?: string
+	placeholder?: string
 	disabled?: boolean
 }>(), {
+	// Valeurs par défaut explicites : `undefined` est déjà ce que vaut une prop
+	// optionnelle non passée, mais la règle vue/require-default-prop veut la voir.
+	modelValue: undefined,
+	label: undefined,
+	placeholder: undefined,
 	items: () => [],
 	itemValue: 'value',
 	itemTitle: 'title',
@@ -162,10 +178,15 @@ function onKeydown(e: KeyboardEvent) {
 	.value {
 		display: flex;
 		align-items: center;
+		gap: 4px;
 		min-width: 0;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+	// Rien de sélectionné : le texte d'invite s'estompe, comme un placeholder.
+	.value.empty {
+		color: var(--text-color-secondary);
 	}
 	.arrow {
 		flex-shrink: 0;

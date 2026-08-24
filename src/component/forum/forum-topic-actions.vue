@@ -121,26 +121,14 @@ defineEmits<{
 	gap: 5px;
 	font-size: 14px;
 }
-.status-select, .priority-select {
+// Idem : la classe arrive sur le champ de lw-select, pas l'attribut de portée.
+// Les règles qui suivaient visaient les rouages de v-select (.v-field,
+// .v-select__selection) et n'ont plus d'objet depuis la migration.
+:deep(.status-select), :deep(.priority-select) {
 	display: inline-flex;
 	vertical-align: middle;
 	flex-grow: 0;
-	:deep(.v-field) {
-		font-size: 13px;
-		min-height: 28px;
-		padding: 4px 8px;
-	}
-	:deep(.v-field__input) {
-		padding: 0;
-		min-height: unset;
-		align-items: center;
-	}
-	:deep(.v-icon) {
-		opacity: 1 !important;
-	}
-	:deep(.v-select__selection) {
-		color: var(--text-color);
-	}
+	font-size: 13px;
 }
 .priority-label {
 	font-size: 13px;

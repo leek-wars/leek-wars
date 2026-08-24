@@ -3,73 +3,69 @@
 		<lw-title v-if="noun" class="preview" :title="[icon, noun, gender, adjective]" />
 		<div class="selection">
 			<div class="select-icon select">
-				<v-select v-model="icon" :items="icons" item-value="id" item-title="id" hide-details density="comfortable" variant="solo">
+				<lw-select v-model="icon" :items="icons" item-value="id" item-title="id">
 					<template #selection>
 						<trophy-icon v-if="icon" :code="LeekWars.trophies[icon - 1].code" />
 					</template>
+					<!-- La ligne redevient un élément ordinaire : ce que v-list-item tirait
+					     de #title et #append s'écrit ici, la rareté poussée à droite. -->
 					<template #item="{ props: itemProps, item }">
-						<v-list-item v-bind="itemProps">
-							<template v-if="item.raw.id" #title>
+						<div v-bind="itemProps">
+							<template v-if="item.raw.id">
 								<trophy-icon class="icon" :code="item.raw.code" />
-							</template>
-							<template v-else #title>{{ $t('main.none') }}</template>
-							<template v-if="item.raw.id" #append>
 								<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 							</template>
-						</v-list-item>
+							<template v-else>{{ $t('main.none') }}</template>
+						</div>
 					</template>
-				</v-select>
+				</lw-select>
 			</div>
 			<div class="select-words" :class="$i18n.locale">
 				<div class="select-word select">
-					<v-select v-model="noun" :items="nouns" item-value="id" item-title="t" hide-details density="comfortable" variant="solo" @change="changeNoun">
+					<lw-select v-model="noun" :items="nouns" item-value="id" item-title="t" @update:model-value="changeNoun">
 						<template #selection="{ item }">
-							{{ item.props.title }}
+							{{ item ? item.props.title : '' }}
 						</template>
 						<template #item="{ props: itemProps, item }">
-							<v-list-item v-bind="itemProps">
-								<template v-if="item.value" #prepend>
+							<div v-bind="itemProps">
+								<template v-if="item.value">
 									<trophy-icon class="icon" :code="item.raw.code" />
-								</template>
-								<template v-if="item.value" #append>
+									<span>{{ item.title }}</span>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
-								<template v-else #title>{{ $t('main.none') }}</template>
-							</v-list-item>
+								<template v-else>{{ $t('main.none') }}</template>
+							</div>
 						</template>
-					</v-select>
+					</lw-select>
 				</div>
 				<div v-if="$i18n.locale === 'fr' && ((noun && LeekWars.trophies[noun - 1].noun_translation === 3) || (adjective && (LeekWars.trophies[adjective - 1].adj_translation & 2)))" class="select select-gender">
-					<v-select v-model="gender" :items="genders" item-value="id" item-title="code" hide-details density="comfortable" variant="solo">
+					<lw-select v-model="gender" :items="genders" item-value="id" item-title="code">
 						<template #selection>
 							<v-icon v-if="gender" :class="genders[gender - 1].code">mdi-gender-{{ genders[gender - 1].code }}</v-icon>
 						</template>
 						<template #item="{ props: itemProps, item }">
-							<v-list-item v-bind="itemProps">
-								<template #title>
-									<v-icon :class="item.raw.code">mdi-gender-{{ item.raw.code }}</v-icon>
-								</template>
-							</v-list-item>
+							<div v-bind="itemProps">
+								<v-icon :class="item.raw.code">mdi-gender-{{ item.raw.code }}</v-icon>
+							</div>
 						</template>
-					</v-select>
+					</lw-select>
 				</div>
 				<div class="select-word select">
-					<v-select v-model="adjective" :items="adjectives" item-value="id" item-title="t" hide-details :eager="true" density="comfortable" variant="solo">
+					<lw-select v-model="adjective" :items="adjectives" item-value="id" item-title="t">
 						<template #selection="{ item }">
-							{{ item.props.title }}
+							{{ item ? item.props.title : '' }}
 						</template>
 						<template #item="{ props: itemProps, item }">
-							<v-list-item v-bind="itemProps">
-								<template v-if="item.value" #prepend>
+							<div v-bind="itemProps">
+								<template v-if="item.value">
 									<trophy-icon class="icon" :code="item.raw.code" />
-								</template>
-								<template v-if="item.value" #append>
+									<span>{{ item.title }}</span>
 									<div class="rarity">{{ formatRarity(item.raw.rarity) }}%</div>
 								</template>
-								<template v-else #title>{{ $t('main.none') }}</template>
-							</v-list-item>
+								<template v-else>{{ $t('main.none') }}</template>
+							</div>
 						</template>
-					</v-select>
+					</lw-select>
 				</div>
 				<v-btn v-if="noun !== 0 || icon !== 0" text icon @click="clear">
 					<v-icon>mdi-close</v-icon>
@@ -213,9 +209,13 @@ defineExpose({ getTitle })
 	color: rgb(242, 97, 255);
 }
 .rarity {
-	color: var(--grey-8);
+	// --grey-8 est un gris de l'échelle claire, que le bloc sombre ne redéfinit
+	// pas. Et la ligne étant devenue un flex, la rareté se pousse à droite
+	// elle-même, là où le #append de v-list-item la plaçait.
+	color: var(--text-color-secondary);
 	font-size: 13px;
 	padding-left: 20px;
+	margin-left: auto;
 }
 .select-word {
 	flex: 1;

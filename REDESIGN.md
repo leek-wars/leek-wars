@@ -489,6 +489,33 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     saison** (ombre de 3 px) passent au trait.
   - Après coup, l'audit ne trouve plus ni ombre floue ni rayon sur ces pages.
 
+- **2026-08-24, lot 23 — `v-select`, les six derniers** : plus aucun
+  `<v-select>` dans le code. Cinq migrations mécaniques (thèmes de l'éditeur,
+  animations de l'admin, tri du forum, motif de modération, dépôt du panneau
+  git) et `title-picker`, qui rendait ses quatre listes avec les slots de
+  `v-list-item` : chaque ligne redevient un élément ordinaire, l'icône et la
+  rareté s'y écrivent, la rareté poussée à droite par `margin-left: auto` là où
+  `#append` la plaçait.
+  - `lw-select` gagne trois choses réclamées par ces appelants : les slots
+    **`prepend` / `append`** (l'équivalent des `prepend-inner` / `append-inner`
+    de Vuetify, pour l'icône de branche et l'indicateur de chargement du panneau
+    git) et une prop **`placeholder`**, estompée tant que rien n'est choisi.
+  - **Défaut trouvé au passage** : la racine du composant étant un `v-menu`, les
+    attributs de l'appelant — à commencer par sa `class` — s'y perdaient au lieu
+    d'habiller la boîte. Les feuilles des call sites (`.filter-select`,
+    `.status-select`, `.repo-select`, `.order-select`…) ne s'appliquaient donc
+    plus **depuis le lot 16**, sans rien signaler : les deux filtres de la liste
+    des équipes avaient perdu leur `max-width: 200px`. `inheritAttrs: false` +
+    `$attrs` reporté sur le champ, et les règles concernées passent en `:deep()`
+    puisque le champ ne porte pas l'attribut de portée de l'appelant. Les règles
+    qui rhabillaient les rouages de `v-select` (`.v-field`, `.v-select__selection`,
+    `label.v-label`…) sont supprimées, elles n'avaient plus d'objet.
+  - Deux gris de l'échelle claire employés comme encre sur des lignes de liste
+    en profitent : la description d'un motif de modération et la rareté d'un
+    titre passent à `--text-color-secondary`.
+  - Build de production complet passé, et vérifié à l'écran sur le tri du forum
+    et les filtres d'équipes (la largeur maximale s'applique de nouveau).
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
@@ -569,14 +596,10 @@ Parti pris :
 - **Ripple** : les 488 `v-ripple` explicites sont neutralisés visuellement en
   v3 ; donner au cas par cas de vrais états hover/active aux cliquables
   maison qui n'en ont pas.
-- **Contrôles Vuetify** à remplacer (sur le modèle de `lw-switch`, rendu v2
-  embarqué) : `v-select`, **6 fichiers restants** (mesuré au 2026-08-23) —
-  `admin-game-animations`, `editor`, `git-panel`, `forum-category`,
-  `moderation`, `title-picker`. Le dernier rend ses lignes avec les slots de
-  `v-list-item` (`#prepend`, `#append`) : sa migration réécrit le contenu de la
-  ligne, elle n'est pas mécanique.
-  Faits : `v-switch`, `v-checkbox`, `v-radio`/`v-radio-group`, `lw-input`
-  (`v-text-field` : plus aucun usage), `lw-select` (4 fichiers migrés).
+- **Contrôles Vuetify** : **terminé** (2026-08-24). `v-switch`, `v-checkbox`,
+  `v-radio`/`v-radio-group`, `v-text-field` (`lw-input`) et `v-select`
+  (`lw-select`) n'ont plus aucun usage dans le code. Restent admis comme
+  primitives de positionnement : `v-dialog`, `v-menu`, `v-tooltip`.
 - **Flash au chargement en « Ancien design »** : le flash blanc du thème
   sombre est corrigé (cookie `dark` lu par le PHP, 2026-08-13), mais les
   joueurs en v2 voient toujours le v3 un instant — leur feuille est chargée à

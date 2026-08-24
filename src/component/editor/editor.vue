@@ -208,8 +208,8 @@
 				<lw-checkbox v-model="themeAuto" :label="$t('theme_auto')" />
 
 				<div v-if="themeAuto" class="theme-selectors">
-					<v-select v-model="lightTheme" :items="LIGHT_THEME_OPTIONS" :label="$t('light_theme')" density="compact" variant="outlined" hide-details />
-					<v-select v-model="darkTheme" :items="DARK_THEME_OPTIONS" :label="$t('dark_theme')" density="compact" variant="outlined" hide-details />
+					<lw-select v-model="lightTheme" :items="LIGHT_THEME_OPTIONS" :label="$t('light_theme')" />
+					<lw-select v-model="darkTheme" :items="DARK_THEME_OPTIONS" :label="$t('dark_theme')" />
 				</div>
 				<lw-radio-group v-else v-model="theme" class="themes">
 					<lw-radio label="Leek Wars" value="leek-wars" />

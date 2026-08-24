@@ -275,11 +275,17 @@ loadTeams()
 		border: none !important;
 	}
 }
-.filter-select {
+// Le champ est rendu par lw-select : il porte la classe mais pas l'attribut de
+// portée de ce composant, d'où le :deep(). Sans lui, la largeur maximale de ces
+// deux filtres ne s'appliquait plus depuis leur migration.
+:deep(.filter-select) {
 	max-width: 200px;
 }
 #app.app {
-	.filter-search, .filter-select {
+	.filter-search {
+		max-width: 100%;
+	}
+	:deep(.filter-select) {
 		max-width: 100%;
 	}
 }

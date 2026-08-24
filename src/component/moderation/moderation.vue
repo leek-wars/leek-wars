@@ -83,19 +83,20 @@
 						<div class="title">Motif</div>
 						<div class="reason">Motif d'origine : <b>{{ $t('warning.reason_' + selectedFault.reason_text) }}</b></div>
 						<div v-if="selectedFault.fight" class="details">Combat : <router-link :to="'/fight/' + selectedFault.fight">{{ selectedFault.fight }}</router-link></div>
-						<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" hide-details :eager="true" dense outlined>
+						<lw-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif">
 							<template #selection>
 								{{ $t('warning.reason_' + finalReason) }}
 							</template>
-							<template #item="{ item, props }">
-								<v-list-item v-bind="props" class="select-item">
-									<template #title>
-										<div class="name">{{ $t('warning.reason_' + item.value) }}</div>
-										<div v-if="$te('warning.reason_' + item.value + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + item.value + '_action') }}</div>
-									</template>
-								</v-list-item>
+							<!-- Deux lignes dans la ligne : le motif et son action. Le
+							     v-list-item les empilait dans son #title, ici c'est la ligne
+							     elle-même qui s'empile (voir .select-item). -->
+							<template #item="{ item, props: itemProps }">
+								<div v-bind="itemProps" class="select-item">
+									<div class="name">{{ $t('warning.reason_' + item.value) }}</div>
+									<div v-if="$te('warning.reason_' + item.value + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + item.value + '_action') }}</div>
+								</div>
 							</template>
-						</v-select>
+						</lw-select>
 						<div class="details">
 							<div v-if="finalReason === Warning.INCORRECT_LEEK_NAME">
 								Poireau :
@@ -367,25 +368,23 @@
 		margin-bottom: 10px;
 		padding: 10px;
 	}
-	.select {
+	// Le champ est rendu par lw-select : classe présente, attribut de portée
+	// absent. Les règles qui suivaient rhabillaient les rouages de v-select
+	// (input, legend, label.v-label) et n'ont plus d'objet.
+	:deep(.select) {
 		margin: 10px 0;
-		:deep(input) {
-			border: none;
-		}
-		:deep(legend) {
-			margin-left: 17px;
-		}
-		:deep(label.v-label) {
-			z-index: 2;
-			left: -6px;
-		}
 	}
 	.select-item {
 		max-width: 500px;
+		// La ligne d'origine était un v-list-item qui empilait ses deux textes ;
+		// une ligne de lw-select est un flex horizontal, il faut le redresser.
+		flex-direction: column;
+		align-items: flex-start;
 	}
 	.desc {
 		font-weight: normal;
-		color: var(--grey-4);
+		// --grey-4 est un gris de l'échelle claire, jamais redéfini en sombre.
+		color: var(--text-color-secondary);
 		white-space: normal;
 	}
 	.details {

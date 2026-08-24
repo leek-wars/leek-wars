@@ -142,18 +142,19 @@
 								</template>
 							</v-list>
 						</v-menu>
-						<v-select v-model="order" :items="orderItems" item-value="value" item-title="title" hide-details density="compact" variant="solo" class="order-select">
+						<lw-select v-model="order" :items="orderItems" item-value="value" item-title="title" class="order-select">
 							<template #selection="{ item }">
-								<v-icon size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+								<v-icon v-if="item" size="small">{{ item.raw.icon }}</v-icon>{{ item ? item.raw.title : '' }}
 							</template>
-							<template #item="{ props, item }">
-								<v-list-item v-bind="props">
-									<template #prepend>
-										<v-icon size="small">{{ item.raw.icon }}</v-icon>
-									</template>
-								</v-list-item>
+							<!-- La ligne redevient un élément ordinaire : l'icône et le libellé
+							     s'écrivent, là où v-list-item les tirait de son #prepend. -->
+							<template #item="{ props: itemProps, item }">
+								<div v-bind="itemProps">
+									<v-icon size="small">{{ item.raw.icon }}</v-icon>
+									<span>{{ item.title }}</span>
+								</div>
 							</template>
-						</v-select>
+						</lw-select>
 					</div>
 				</div>
 
@@ -1113,7 +1114,9 @@ body.dark .topic .seen img.seen {
 	.pagination {
 		grid-area: c;
 	}
-	.order-select {
+	// Le champ est rendu par lw-select : il porte bien la classe, mais pas
+	// l'attribut de portée de ce composant — d'où le :deep().
+	:deep(.order-select) {
 		margin-right: 8px;
 	}
 }
