@@ -471,6 +471,24 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   40, 24 px) dans les deux thèmes. En mouvement réduit, la cadence passe à
   2,4 s. v2 : disque Material inchangé.
 
+- **2026-08-24, lot 22 — le petit mobilier récurrent** : audit de doctrine passé
+  sur le rendu (et non sur le code) — pour chaque élément visible, l'ombre
+  calculée avec un flou non nul et le rayon calculé non nul. Sur potager,
+  marché, inventaire, trophées et classement, il ne restait que quatre objets,
+  mais très répétés :
+  - **Les drapeaux** (50 sur la seule page de classement) : coins arrondis et
+    ombre floue portés par l'image, plus un liseré noir à 10 % en `multiply` —
+    juste sur une page claire, invisible sur le presque-noir du v3, où un
+    drapeau sombre se fondait dans le fond. Angles francs, ombre retirée, et le
+    liseré passe au trait du thème en composition normale : c'est lui qui
+    détache le drapeau.
+  - **Le badge de talent** : disque de 34 px et pilule à 14 px, sur `--pure-white`
+    — qui vaut le fond de page en sombre, où le badge s'effaçait. Il devient une
+    pastille franche sur la surface d'en-tête, détachée par le trait.
+  - Le **menu du marché** (ombre portée sous chaque entrée) et le **bandeau de
+    saison** (ombre de 3 px) passent au trait.
+  - Après coup, l'audit ne trouve plus ni ombre floue ni rayon sur ces pages.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser

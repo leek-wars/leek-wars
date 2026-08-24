@@ -45,6 +45,12 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	user-select: none;
 }
+/* v3 : pas d'ombre floue sous un bandeau collé au panneau — le trait suffit. */
+body:not(.v2) .season-banner {
+	box-shadow: none;
+	border: 1px solid var(--border-strong);
+	border-bottom: none;
+}
 .season-emoji {
 	font-size: 28px;
 	line-height: 1;

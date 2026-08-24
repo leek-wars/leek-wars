@@ -1071,6 +1071,10 @@ const t = useNamespacedT('market')
 			background: var(--background);
 			border-radius: var(--radius);
 			box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
+			body:not(.v2) & {
+				box-shadow: none;
+				border: 1px solid var(--border);
+			}
 			padding: 8px 5px;
 			cursor: pointer;
 			// color: var(--text-color);

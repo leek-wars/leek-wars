@@ -44,6 +44,23 @@ defineProps<{
 		background: var(--pure-white);
 		box-shadow: var(--elevation-1);
 	}
+	/* v3 : le disque et la pilule deviennent une pastille franche. `--pure-white`
+	   vaut le fond de page en sombre — le badge s'y effaçait ; il prend la
+	   surface d'en-tête et se détache par le trait. */
+	body:not(.v2) {
+		.icon {
+			border-radius: 0;
+			background: var(--background-header);
+			border: 1px solid var(--border-strong);
+		}
+		.value {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+			background: var(--background-header);
+			border: 1px solid var(--border-strong);
+			border-left: none;
+		}
+	}
 	img {
 		width: 24px;
 		height: 24px;
