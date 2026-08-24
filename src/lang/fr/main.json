@@ -120,6 +120,7 @@
 	"encyclopedia": "Encyclopédie",
 	"error": "Erreur",
 	"error_chat_flood": "Vous envoyez des messages trop rapidement, patientez un instant.",
+	"error_craft_not_enough_resources": "Vous n'avez pas assez de ressources pour cette fabrication",
 	"error_muted": "Vous êtes mis en sourdine pour {0} secondes",
 	"error_x": "Erreur : {0}",
 	"estimated_value": "Valeur estimée",

@@ -117,6 +117,7 @@
 	"encyclopedia": "Ensiklopedi",
 	"error": "Kesalahan",
 	"error_chat_flood": "Anda mengirim pesan terlalu cepat, mohon tunggu sebentar.",
+	"error_craft_not_enough_resources": "Anda tidak memiliki cukup sumber daya untuk pembuatan ini",
 	"error_muted": "Anda dibisukan selama {0} detik",
 	"error_x": "Kesalahan: {0}",
 	"estimated_value": "Nilai perkiraan",

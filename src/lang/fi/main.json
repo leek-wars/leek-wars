@@ -117,6 +117,7 @@
 	"encyclopedia": "Tietosanakirja",
 	"error": "Virhe",
 	"error_chat_flood": "Lähetät viestejä liian nopeasti, odota hetki.",
+	"error_craft_not_enough_resources": "Sinulla ei ole tarpeeksi resursseja tähän valmistukseen",
 	"error_muted": "Olet mykistetty {0} sekunniksi",
 	"error_x": "Virhe: {0}",
 	"estimated_value": "Arvioitu arvo",

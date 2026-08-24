@@ -117,6 +117,7 @@
 	"encyclopedia": "Encyclopedie",
 	"error": "Fout",
 	"error_chat_flood": "Je verzendt te snel berichten, wacht even.",
+	"error_craft_not_enough_resources": "Je hebt niet genoeg bronnen voor deze fabricage",
 	"error_muted": "Je bent {0} seconden gedempt",
 	"error_x": "Fout: {0}",
 	"estimated_value": "Geschatte waarde",

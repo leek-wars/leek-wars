@@ -120,6 +120,7 @@
 	"encyclopedia": "Encyclopedia",
 	"error": "Error",
 	"error_chat_flood": "You're sending messages too fast, please wait a moment.",
+	"error_craft_not_enough_resources": "You don't have enough resources for this craft",
 	"error_muted": "You are muted for {0} seconds",
 	"error_x": "Error: {0}",
 	"estimated_value": "Estimated value",

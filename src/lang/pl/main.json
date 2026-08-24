@@ -117,6 +117,7 @@
 	"encyclopedia": "Encyklopedia",
 	"error": "Błąd",
 	"error_chat_flood": "Wysyłasz wiadomości zbyt szybko, poczekaj chwilę.",
+	"error_craft_not_enough_resources": "Masz za mało zasobów, aby to wytworzyć",
 	"error_muted": "Jesteś wyciszony na {0} sekund",
 	"error_x": "Błąd: {0}",
 	"estimated_value": "Przewidywana wartość",
