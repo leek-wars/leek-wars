@@ -20,6 +20,7 @@
     - "Le armi fabbricabili (Sciabola del deserto, Lancia del sole) compaiono ora nella collezione e al mercato: in grigio finché non si trova il diagramma, con un pulsante Fabbrica che porta all'inventario mettendo gli ingredienti direttamente nella forgia."
     - "#ai API JavaScript, TypeScript e Python: le funzioni di puntamento si chiamano ora su Fight (Fight.weaponCells, Fight.chipCell, Fight.weaponTargets...), e non più solo su me. Non dipendono da nessuna entità in particolare — l'arma equipaggiata è solo un valore predefinito — quindi Fight.weaponCells(cella, nemico.weapon) dice da dove il nemico può colpire quella cella. Restano richiamabili su me (grazie a GSoMan)."
     - "La forgia segnala in rosso gli ingredienti mancanti e rifiuta la fabbricazione finché non ci sono tutti."
+    - "#ai Il pannello dei problemi dell'editor non si apre più all'arrivo quando non c'è nessun errore, avviso o TODO da mostrare."
   fixed:
     - "Una composizione di squadra che non ha più abbastanza porri per essere sfidata nell'orto non appare più come attiva in classifica: vi manteneva il suo talento senza mai rimetterlo in gioco (grazie a tagadagain)."
     - "#ai Assegnare un valore a un campo tipizzato di una classe tramite una variabile non tipizzata (any) applica ora le stesse conversioni del codice tipizzato, invece di fallire in combattimento con un falso errore \"campo sconosciuto\" (grazie a Bily)."

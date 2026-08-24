@@ -439,7 +439,10 @@
 	const testDialog = ref(false)
 	const panelWidth = ref(200)
 	const problemsHeight = ref(200)
-	const bottomPanel = ref<'problems' | 'git' | null>('problems')
+	const bottomPanel = ref<'problems' | 'git' | null>(null)
+	// Le panneau des problèmes ne s'ouvre tout seul que s'il y a quelque chose à montrer, et une
+	// seule fois : arriver dans l'éditeur sur du code sain le laisse fermé.
+	let problemsAutoOpen = true
 	const fileMenu = ref(false)
 	const fileMenuActivator = ref<Element | undefined>(undefined)
 	const history = ref<AI[]>([])
@@ -1229,10 +1232,17 @@
 		localStorage.setItem('editor/hideHeader', '' + hideHeader.value)
 	})
 	watch(problemsCount, (count, prev) => {
-		if (count === 0 && prev > 0 && bottomPanel.value === 'problems') {
-			bottomPanel.value = null
+		if (count === 0) {
+			if (prev && bottomPanel.value === 'problems') {
+				bottomPanel.value = null
+			}
+		} else if (problemsAutoOpen && bottomPanel.value === null) {
+			// Première analyse non vide (compteurs déjà remplis en revenant sur l'éditeur : d'où
+			// le immediate) : on ouvre le panneau, et plus jamais tout seul ensuite.
+			problemsAutoOpen = false
+			bottomPanel.value = 'problems'
 		}
-	})
+	}, {immediate: true})
 	watch(enableAnalyzer, () => {
 		if (enableAnalyzer.value) {
 			analyzer.init()
@@ -1346,6 +1356,7 @@
 	}
 
 	function toggleBottomPanel(panel: 'problems' | 'git') {
+		problemsAutoOpen = false // un choix manuel prime sur l'ouverture automatique
 		// Si on clique sur 'problems' sans aucun problème : ferme le panel (ou rien si déjà fermé)
 		if (panel === 'problems' && !analyzer.error_count && !analyzer.warning_count && !analyzer.todo_count) {
 			bottomPanel.value = null
