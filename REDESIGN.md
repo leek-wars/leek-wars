@@ -446,6 +446,22 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     thèmes : il parcourt les éléments porteurs de texte, calcule le fond effectif
     en remontant les ancêtres et compare au seuil. Le reste de ces pages passe.
 
+- **2026-08-24, lot 20 — la bannière de validation de compte** : elle venait
+  d'un autre design — coins à 14 px, dégradé orange écrit en dur et animé, et
+  une **ombre floue d'élévation** (`0 6px 24px rgba(0,0,0,.35)`), exactement ce
+  que le principe 1 bannit sur une surface flottante. Elle prend le traitement
+  des autres surfaces flottantes (surface d'en-tête, trait fort, `--shadow-pixel`)
+  et garde son caractère précieux par le **motif validé sur les notifications de
+  trophée** : liseré d'or (`--rank-first`) et halo interne — une émission de
+  lumière, pas une élévation. C'est un cas où le halo a sa place : une
+  récompense méritée, pas du mobilier.
+  - Le bouton d'appel était de l'encre `#b06000` sur un aplat blanc, **4,33
+    mesuré**, sous le seuil ; il reprend l'or en aplat et le relief à trois états
+    des boutons d'accent (lot 8) — 13,4 en sombre, 5,9 en clair. Le
+    grossissement au survol (`scale(1.05)`) laisse la place au pixel push.
+  - La bulle repliée suit : aplat d'or, trait, ombre pixel, plus de `text-shadow`.
+  - v2 inchangé : dégradé, coins à 14 et 16 px, ombres floues conservés.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
