@@ -1015,7 +1015,12 @@
 	.controls .control {
 		padding: 5px 12px;
 		cursor: pointer;
-		color: var(--white);
+		// `--panel-header-color` et non `--white` : la barre est peinte en
+		// `--panel-header-background`, et ce fond n'est plus sombre en v3 clair
+		// (#FBF7E8) — l'encre blanche y devenait le fond lui-même, contraste 1,00
+		// mesuré : TOUTES les icônes du lecteur disparaissaient. Les deux jetons
+		// vont par paire, en v2 comme en v3, en clair comme en sombre.
+		color: var(--panel-header-color);
 		text-align: center;
 		min-width: 48px;
 		height: 36px;
@@ -1033,14 +1038,17 @@
 		height: 48px;
 	}
 	.controls .control:hover {
-		background: rgba(255,255,255, 0.2);
+		// Même raison : un voile blanc ne marque rien sur une barre claire. La
+		// teinte suit l'encre de la barre, donc claire sur fond sombre et
+		// sombre sur fond clair.
+		background: color-mix(in srgb, var(--panel-header-color) 14%, transparent);
 	}
 	.controls .v-menu {
 		vertical-align: top;
 	}
 	.controls .turn {
 		line-height: 36px;
-		color: var(--white);
+		color: var(--panel-header-color);
 		display: inline-block;
 		vertical-align: top;
 		padding: 0 8px;
@@ -1180,7 +1188,7 @@
 		top: 8px;
 		right: 8px;
 		background: var(--panel-header-background);
-		color: var(--white);
+		color: var(--panel-header-color);
 		cursor: pointer;
 		font-size: 24px;
 		z-index: 5;
