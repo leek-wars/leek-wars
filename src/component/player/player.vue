@@ -68,16 +68,18 @@
 			<div :style="{width: width + 'px', height: (height + (creator ? 0 : 6)) + 'px'}" class="layers">
 				<canvas :style="{width: width + 'px'}" class="bg-canvas"></canvas>
 				<canvas :style="{width: width + 'px'}" class="game-canvas" @click="canvasClick" @contextmenu="canvasRightClick" @mousemove="mousemove" @mouseup="mouseup" @mousedown="mousedown"></canvas>
-				<div v-if="!creator" class="progress-bar-wrapper">
+				<div v-if="!creator" class="progress-bar-wrapper" :class="{dragging}">
 					<div ref="progressBarTooltip" :style="{'margin-left': progressBarTooltipMargin + 'px'}" class="progress-bar-turn v-tooltip__content top">
 						<span class="content">{{ $t('fight.turn_n', [progressBarTurn]) }}</span>
 					</div>
-					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
+					<div ref="progressBar" class="progress-bar" @mousedown="progressBarDown" @touchstart="progressBarTouchStart" @mousemove="progressBarMove">
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div>
+						<!-- Un trait par tour de jeu, sous les marqueurs de mort. -->
+						<div v-for="tick in turnTicks" :key="'turn-' + tick.turn" class="turn-tick" :style="{left: tick.left + '%'}" :title="$t('fight.turn_n', [tick.turn])"></div>
 						<span v-for="(marker, idx) in game.progressBarMarkers" :key="idx">
 							<div class="marker" :style="{left: marker.left + '%', width: marker.width + '%', background: marker.background, outline: marker.outline}"></div>
 						</span>
-						<div class="circle" :style="{left: progressBarWidth + '%'}"></div>
+						<div class="circle" :style="{left: handlePosition + '%'}"></div>
 						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
 					</div>
 				</div>
@@ -533,6 +535,8 @@
 
 	onBeforeUnmount(() => {
 		destroyed = true
+		stopDragListeners()
+		if (dragFrame) cancelAnimationFrame(dragFrame)
 		game.value.pause()
 		game.value.cancelled = true
 		emitter.off('keyup', keyup)
@@ -688,29 +692,138 @@
 		router.push('/report/' + props.fightId)
 	}
 
-	function progressBarClick(e: MouseEvent) {
+	/** Position du curseur sur la barre, en pourcentage borné à [0, 100]. */
+	function barPercent(clientX: number) {
 		const bar = progressBar.value
-		if (!bar) return
-		const action = Math.round(game.value.actions.length * (e.pageX - bar.getBoundingClientRect().left) / bar.offsetWidth)
-		game.value.requestJump(action)
-		const barOffset = bar.getBoundingClientRect().left
-		progressBarPreviewMouse.value = 100 * (e.pageX - barOffset) / bar.clientWidth
+		if (!bar) return 0
+		const rect = bar.getBoundingClientRect()
+		if (!rect.width) return 0
+		return Math.min(100, Math.max(0, 100 * (clientX - rect.left) / rect.width))
 	}
 
-	function progressBarMove(e: MouseEvent) {
+	/** Envoie le combat à cette position. */
+	function seekTo(percent: number) {
+		const g = game.value
+		if (!g || !g.actions) return
+		g.requestJump(Math.round(g.actions.length * percent / 100))
+	}
+
+	/** L'infobulle « Tour n » et la barre d'aperçu suivent le curseur. */
+	function updatePreview(clientX: number) {
 		const bar = progressBar.value
 		const tooltip = progressBarTooltip.value
 		if (!bar || !tooltip) return
-		const barOffset = bar.getBoundingClientRect().left
+		const percent = barPercent(clientX)
+		const pos = percent / 100
 		let turn: number | string = 0
-		const pos = (e.pageX - barOffset) / bar.clientWidth
 		for (const i in game.value.turnPosition) {
 			if (pos >= game.value.turnPosition[i]) turn = i
 		}
 		progressBarTurn.value = turn
-		progressBarTooltipMargin.value = Math.min(Math.max((e.pageX - barOffset) - (tooltip.clientWidth / 2), 0), bar.clientWidth - tooltip.clientWidth)
-		progressBarPreviewMouse.value = 100 * (e.pageX - barOffset) / bar.clientWidth
+		const x = clientX - bar.getBoundingClientRect().left
+		progressBarTooltipMargin.value = Math.min(Math.max(x - (tooltip.clientWidth / 2), 0), bar.clientWidth - tooltip.clientWidth)
+		progressBarPreviewMouse.value = percent
 	}
+
+	function progressBarMove(e: MouseEvent) {
+		if (dragging.value) return // pendant un glissement, c'est le listener global qui pilote
+		updatePreview(e.clientX)
+	}
+
+	// ====== Poignée glissable ======
+	// Reconstruire l'état du combat à une position donnée rejoue toutes les
+	// actions depuis le début : impossible d'en lancer un par `mousemove`. La
+	// poignée est donc pilotée par la position du curseur (`dragPosition`)
+	// pendant le glissement, et le saut est limité à un par image.
+	const dragging = ref(false)
+	const dragPosition = ref(0)
+	let dragFrame = 0
+
+	const handlePosition = computed(() => dragging.value ? dragPosition.value : progressBarWidth.value)
+
+	function dragStart(clientX: number) {
+		dragging.value = true
+		dragPosition.value = barPercent(clientX)
+		updatePreview(clientX)
+		seekTo(dragPosition.value)
+	}
+
+	function dragMove(clientX: number) {
+		dragPosition.value = barPercent(clientX)
+		updatePreview(clientX)
+		if (!dragFrame) {
+			dragFrame = requestAnimationFrame(() => {
+				dragFrame = 0
+				seekTo(dragPosition.value)
+			})
+		}
+	}
+
+	function dragEnd() {
+		if (dragFrame) {
+			cancelAnimationFrame(dragFrame)
+			dragFrame = 0
+		}
+		seekTo(dragPosition.value)
+		dragging.value = false
+		stopDragListeners()
+	}
+
+	function onDragMouseMove(e: MouseEvent) { dragMove(e.clientX) }
+	function onDragMouseUp() { dragEnd() }
+	function onDragTouchMove(e: TouchEvent) {
+		if (!e.touches.length) return
+		e.preventDefault() // sinon le geste fait défiler la page au lieu de déplacer la poignée
+		dragMove(e.touches[0].clientX)
+	}
+	function onDragTouchEnd() { dragEnd() }
+
+	function stopDragListeners() {
+		window.removeEventListener('mousemove', onDragMouseMove)
+		window.removeEventListener('mouseup', onDragMouseUp)
+		window.removeEventListener('touchmove', onDragTouchMove)
+		window.removeEventListener('touchend', onDragTouchEnd)
+		window.removeEventListener('touchcancel', onDragTouchEnd)
+	}
+
+	function progressBarDown(e: MouseEvent) {
+		if (e.button !== 0) return
+		e.preventDefault() // pas de sélection de texte pendant le glissement
+		dragStart(e.clientX)
+		window.addEventListener('mousemove', onDragMouseMove)
+		window.addEventListener('mouseup', onDragMouseUp)
+	}
+
+	function progressBarTouchStart(e: TouchEvent) {
+		if (!e.touches.length) return
+		dragStart(e.touches[0].clientX)
+		window.addEventListener('touchmove', onDragTouchMove, { passive: false })
+		window.addEventListener('touchend', onDragTouchEnd)
+		window.addEventListener('touchcancel', onDragTouchEnd)
+	}
+
+	/**
+	 * Un trait par tour de jeu sur la barre. `turnPosition` donne déjà la place
+	 * relative de chaque tour dans les actions — c'est ce qui sert à l'infobulle.
+	 * Les tours dont le trait tomberait à moins de 5 px du précédent sont sautés :
+	 * sur un combat très long, tous les tracer donnerait une trame illisible.
+	 */
+	const turnTicks = computed(() => {
+		const positions = game.value ? game.value.turnPosition : null
+		if (!positions) return []
+		const minGap = 100 * 5 / Math.max(1, width.value)
+		const ticks: {turn: number, left: number}[] = []
+		let last = -Infinity
+		for (const turn of Object.keys(positions).map(Number).sort((a, b) => a - b)) {
+			const left = positions[turn] * 100
+			// Le tour 1 commence à l'origine : son trait se confondrait avec le bord.
+			if (left <= 0 || left >= 100) continue
+			if (left - last < minGap) continue
+			ticks.push({ turn, left })
+			last = left
+		}
+		return ticks
+	})
 
 	function setLocalStorageAndRedraw(key: string, value: unknown, redraw = false) {
 		localStorage.setItem('fight/' + key, '' + value)
@@ -1012,7 +1125,8 @@
 			height: 100%;
 		}
 	}
-	.progress-bar-wrapper:hover .progress-bar {
+	.progress-bar-wrapper:hover .progress-bar,
+	.progress-bar-wrapper.dragging .progress-bar {
 		height: 12px;
 		bottom: -3px;
 		.preview-bar {
@@ -1040,7 +1154,8 @@
 		z-index: 2;
 		transition: all 0.2s;
 	}
-	.progress-bar-wrapper:hover .circle {
+	.progress-bar-wrapper:hover .circle,
+	.progress-bar-wrapper.dragging .circle {
 		width: 22px;
 		height: 22px;
 	}
@@ -1051,7 +1166,8 @@
 		white-space: nowrap;
 		opacity: 1 !important;
 	}
-	.progress-bar-wrapper:hover .progress-bar-turn {
+	.progress-bar-wrapper:hover .progress-bar-turn,
+	.progress-bar-wrapper.dragging .progress-bar-turn {
 		display: inline-block;
 	}
 	.level {
@@ -1177,6 +1293,29 @@
 		padding: 4px 8px;
 		font-size: 13px;
 	}
+	// Les traits de tour : sous les marqueurs de mort et la poignée, et sombres
+	// dans les deux thèmes — la piste (--grey-13) comme le remplissage vert sont
+	// clairs de part et d'autre.
+	.progress-bar .turn-tick {
+		position: absolute;
+		top: 0;
+		width: 1px;
+		height: 100%;
+		background: var(--grey-1);
+		opacity: 0.35;
+		pointer-events: none;
+		z-index: 1;
+	}
+	// Pendant le glissement, la poignée suit le curseur : la transition de 0,2 s
+	// la ferait traîner derrière lui. La barre reste déployée tant qu'on tient la
+	// poignée, même si le curseur sort de la zone de survol.
+	.progress-bar-wrapper.dragging .circle,
+	.progress-bar-wrapper.dragging .bar {
+		transition: none;
+	}
+	.progress-bar-wrapper.dragging {
+		cursor: grabbing;
+	}
 	.progress-bar .marker {
 		width: 6px;
 		height: 6px;
@@ -1185,7 +1324,8 @@
 		z-index: 2;
 		transition: all 0.2s;
 	}
-	.progress-bar-wrapper:hover .marker {
+	.progress-bar-wrapper:hover .marker,
+	.progress-bar-wrapper.dragging .marker {
 		width: 6px;
 		height: 12px;
 	}
