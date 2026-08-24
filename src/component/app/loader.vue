@@ -44,6 +44,25 @@ const w = computed(() => Math.max(3, s.value / 14))
 		transform: rotate(360deg);
 	}
 }
+
+/* ====== v3 : un compteur pixel, pas un disque qui tourne ======
+   Le spinner circulaire est le dernier objet Material de la coquille (137
+   points d'appel). En v3 le cercle devient un carré — angles francs, principe 2
+   — et la rotation avance par PALIERS de 90°, à cinq images par seconde : le
+   carré ne quitte jamais son axe, donc il garde exactement la même boîte
+   qu'avant et ne passe jamais par une phase en losange. Deux côtés adjacents
+   sont allumés, ce qui donne un angle vert qui saute d'un coin à l'autre. */
+body:not(.v2) .sbl-circ-path {
+	border-radius: 0;
+	border-right-color: var(--primary);
+	border-bottom-color: var(--primary);
+	animation: rotate 0.8s steps(4) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+	body:not(.v2) .sbl-circ-path {
+		animation-duration: 2.4s;
+	}
+}
 .xp-progress {
 	display: inline-block;
 	height: 18px;

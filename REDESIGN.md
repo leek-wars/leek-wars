@@ -462,6 +462,15 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - La bulle repliée suit : aplat d'or, trait, ombre pixel, plus de `text-shadow`.
   - v2 inchangé : dégradé, coins à 14 et 16 px, ombres floues conservés.
 
+- **2026-08-24, lot 21 — le loader** (le dernier objet Material de la coquille,
+  137 points d'appel, listé au chantier restant) : le disque devient un **carré**
+  et la rotation avance par **paliers de 90°**, cinq images par seconde. Le carré
+  ne quitte donc jamais son axe — même boîte qu'avant, aucune phase en losange,
+  aucun risque de débordement — et deux côtés adjacents allumés donnent un angle
+  vert qui saute d'un coin à l'autre. Vérifié aux trois tailles courantes (60,
+  40, 24 px) dans les deux thèmes. En mouvement réduit, la cadence passe à
+  2,4 s. v2 : disque Material inchangé.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
@@ -550,7 +559,6 @@ Parti pris :
   ligne, elle n'est pas mécanique.
   Faits : `v-switch`, `v-checkbox`, `v-radio`/`v-radio-group`, `lw-input`
   (`v-text-field` : plus aucun usage), `lw-select` (4 fichiers migrés).
-- **Loader** : le spinner circulaire Material, candidat à un traitement pixel.
 - **Flash au chargement en « Ancien design »** : le flash blanc du thème
   sombre est corrigé (cookie `dark` lu par le PHP, 2026-08-13), mais les
   joueurs en v2 voient toujours le v3 un instant — leur feuille est chargée à
