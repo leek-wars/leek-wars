@@ -463,21 +463,33 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - v2 inchangé : dégradé, coins à 14 et 16 px, ombres floues conservés.
 
 - **2026-08-24, lot 21 — le loader** (le dernier objet Material de la coquille,
-  137 points d'appel, listé au chantier restant). Première version : le disque
-  devenait un carré tournant par paliers de 90°. **Retour de Pierre : trop
-  tiède.** Version retenue, une **chenille pixel** — huit blocs occupent le
-  pourtour d'une grille 3×3, le centre reste vide, et une tête lumineuse en fait
-  le tour en 0,8 s. Chaque bloc joue la même descente d'opacité décalée d'un
-  huitième de cycle, et cette descente est jouée **en paliers** (`steps(4)`) :
-  la tête traîne deux ou trois blocs à des niveaux francs, sans dégradé continu.
-  Seule l'opacité est animée (compositable, aucun repaint), et la boîte reste
-  celle d'avant — les 137 points d'appel ne bougent pas. Le disque Material est
-  conservé comme peau v2 : les deux sont rendus, la coquille n'en montre qu'un.
-  Vérifié aux trois tailles courantes (60, 40, 24 px) dans les deux thèmes, sur
-  le CSS réellement compilé par Vite. En mouvement réduit la chenille ralentit
-  à 2,4 s au lieu de s'arrêter — un loader figé se lit comme une page bloquée.
-  - Longueur de traînée choisie en comparant `steps(3)` à `steps(8)` sur des
-    pellicules de 8 images : 3 est trop sec, 8 allume presque tout le pourtour.
+  137 points d'appel, listé au chantier restant). Trois versions avant la bonne :
+  un carré tournant par paliers de 90° (« trop tiède »), une chenille sur un
+  anneau 3×3, puis — direction donnée par Pierre, **abstrait et technologique
+  plutôt que végétal** — une **pluie de données**. Une goutte tombe dans chacune
+  des cinq colonnes d'une grille 5×5 : tête vive, puis une traînée de deux blocs
+  qui s'éteint.
+  - **Chaque colonne part avec son propre décalage** (0, 3, 1, 4, 2 et non
+    0…4, qui donnerait une diagonale réglée au métronome) : rien n'est jamais
+    synchrone, c'est ce qui donne la lecture « flux » plutôt que « mire ». Le
+    cycle compte dix temps pour cinq rangées — la goutte traverse en cinq temps,
+    la colonne se tait les cinq suivants, et comme les colonnes sont décalées
+    l'objet n'est jamais vide.
+  - **Une seule règle d'animation pour les 25 cases** : toutes jouent la même
+    chute d'opacité et c'est leur `--t` — le temps du cycle où la goutte leur
+    passe dessus, calculé dans le script — qui les décale. La chute est jouée en
+    paliers (`steps(3)`), donc la traînée a des niveaux francs. Seule l'opacité
+    est animée : compositable, aucun repaint.
+  - La boîte reste celle d'avant : les 137 points d'appel ne bougent pas. Le
+    disque Material est conservé comme peau v2, les deux sont rendus et la
+    coquille n'en montre qu'un. En mouvement réduit la pluie ralentit à 3 s au
+    lieu de s'arrêter — un loader figé se lit comme une page bloquée.
+  - Méthode : les candidats ont été dessinés dans un banc d'essai HTML capturé en
+    ligne de commande (pellicules de toutes les images du cycle, aux trois
+    tailles courantes, dans les deux thèmes), puis l'aperçu final a été rendu
+    avec le **CSS réellement compilé par Vite** pour le composant. Écartés en
+    chemin : l'égaliseur, le balayage, la puce, le serpent, le sonar, le dé, et
+    trois poireaux.
 
 - **2026-08-24, lot 22 — le petit mobilier récurrent** : audit de doctrine passé
   sur le rendu (et non sur le code) — pour chaque élément visible, l'ombre
