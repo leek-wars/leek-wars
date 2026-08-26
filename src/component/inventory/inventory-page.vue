@@ -245,16 +245,27 @@
 	const route = useRoute()
 	const router = useRouter()
 
+	// Arrivée depuis le marché (bouton Fabriquer) : pré-remplir la forge avec le schéma,
+	// uniquement si l'éleveur le possède. Renvoie false tant que l'éleveur n'est pas chargé.
+	function applyCraftQuery(craftId: number) {
+		if (!store.state.farmer) return false
+		if (all_schemes.value.some(s => s.id === craftId)) {
+			emitter.emit('craft', LeekWars.schemes[craftId])
+		}
+		router.replace('/inventory')
+		return true
+	}
+
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
 		emitter.on('craft', scrollToForge)
 		emitter.on('clover-used', onCloverUsed)
-		// Arrivée depuis le marché (bouton Fabriquer) : pré-remplir la forge avec le schéma
 		const craftId = parseInt('' + route.query.craft, 10)
-		if (craftId && LeekWars.schemes[craftId]) {
-			emitter.emit('craft', LeekWars.schemes[craftId])
-			router.replace('/inventory')
+		if (craftId && LeekWars.schemes[craftId] && !applyCraftQuery(craftId)) {
+			const stop = watch(() => store.state.farmer, () => {
+				if (applyCraftQuery(craftId)) stop()
+			})
 		}
 	})
 
