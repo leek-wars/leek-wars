@@ -1,0 +1,15 @@
+{
+	"title": "Leek Wars +",
+	"pitch": "按月购买订阅，无需长期承诺。",
+	"learn_more": "了解更多",
+	"active_until": "有效期至 {0}。",
+	"months_one": "{0} 个月",
+	"months_other": "{0} 个月",
+	"save": "-{0}%",
+	"pay_for": "支付 {0}",
+	"bought": "感谢支持！有效期至 {0}。",
+	"not_enough_crystals": "再多几颗水晶就是你的了！",
+	"generic_error": "发生错误，请重试。",
+	"unavailable": "订阅暂时不可用。",
+	"activation_pending": "支付已受理，激活可能需要片刻。"
+}

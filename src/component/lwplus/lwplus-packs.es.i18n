@@ -1,0 +1,15 @@
+{
+	"title": "Leek Wars +",
+	"pitch": "Compra meses de suscripción sueltos, sin compromiso.",
+	"learn_more": "Saber más",
+	"active_until": "Activa hasta el {0}.",
+	"months_one": "{0} mes",
+	"months_other": "{0} meses",
+	"save": "-{0} %",
+	"pay_for": "Pagar {0}",
+	"bought": "¡Gracias! Activa hasta el {0}.",
+	"not_enough_crystals": "¡Unos cristales más y será tuyo!",
+	"generic_error": "Se ha producido un error. Inténtalo de nuevo.",
+	"unavailable": "La suscripción no está disponible por el momento.",
+	"activation_pending": "Pago aceptado. La activación puede tardar unos instantes."
+}

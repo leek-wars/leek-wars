@@ -59,6 +59,10 @@
 				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="Number(p)" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
 			</div>
 		</panel>
+
+		<!-- Mois de Leek Wars + (#3303), en euros comme en cristaux. Même composant
+		     que dans le marché : une seule grille de prix à maintenir. -->
+		<lwplus-packs />
 		<div v-if="items" class="items-header">
 			<h1 class="items-title">{{ $t('items_title') }}</h1>
 			<v-tooltip location="bottom">
@@ -138,9 +142,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { defineAsyncComponent, ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { i18n, mixins , useNamespacedT } from '@/model/i18n'
+import { i18n, locale, mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { ITEM_CATEGORY_NAME, ItemType, type ItemTemplate } from '@/model/item'
@@ -148,6 +152,10 @@ import Item from '@/component/item.vue'
 import PageTabs from '@/component/app/page-tabs.vue'
 import BankProduct from './bank-product.vue'
 import Popup from '@/component/popup.vue'
+
+// Chargé par son fichier .i18n : c'est lui qui accroche les traductions au
+// composant (voir le plugin i18n de vite.config.ts).
+const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
 
 interface Pack { id: number; crystals: number; bonus: number; prices: Record<string, number> }
 

@@ -1,0 +1,15 @@
+{
+	"title": "Leek Wars +",
+	"pitch": "Osta tilauskuukausia yksitellen, ilman sitoutumista.",
+	"learn_more": "Lue lisää",
+	"active_until": "Voimassa {0} asti.",
+	"months_one": "{0} kuukausi",
+	"months_other": "{0} kuukautta",
+	"save": "-{0} %",
+	"pay_for": "Maksa {0}",
+	"bought": "Kiitos! Voimassa {0} asti.",
+	"not_enough_crystals": "Vielä muutama kristalli ja se on sinun!",
+	"generic_error": "Tapahtui virhe. Yritä uudelleen.",
+	"unavailable": "Tilaus ei ole tällä hetkellä käytettävissä.",
+	"activation_pending": "Maksu hyväksytty. Aktivointi voi kestää hetken."
+}

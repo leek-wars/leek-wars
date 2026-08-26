@@ -1,0 +1,15 @@
+{
+	"title": "Leek Wars +",
+	"pitch": "Kaufe einzelne Abo-Monate, ohne Bindung.",
+	"learn_more": "Mehr erfahren",
+	"active_until": "Aktiv bis {0}.",
+	"months_one": "{0} Monat",
+	"months_other": "{0} Monate",
+	"save": "-{0} %",
+	"pay_for": "{0} bezahlen",
+	"bought": "Danke! Aktiv bis {0}.",
+	"not_enough_crystals": "Noch ein paar Kristalle und es gehört dir!",
+	"generic_error": "Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
+	"unavailable": "Das Abonnement ist vorübergehend nicht verfügbar.",
+	"activation_pending": "Zahlung angenommen. Die Aktivierung kann einen Moment dauern."
+}

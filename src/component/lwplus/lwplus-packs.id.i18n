@@ -1,0 +1,15 @@
+{
+	"title": "Leek Wars +",
+	"pitch": "Beli bulan langganan satuan, tanpa ikatan.",
+	"learn_more": "Pelajari lebih lanjut",
+	"active_until": "Aktif sampai {0}.",
+	"months_one": "{0} bulan",
+	"months_other": "{0} bulan",
+	"save": "-{0} %",
+	"pay_for": "Bayar {0}",
+	"bought": "Terima kasih! Aktif sampai {0}.",
+	"not_enough_crystals": "Beberapa kristal lagi dan itu milikmu!",
+	"generic_error": "Terjadi kesalahan. Silakan coba lagi.",
+	"unavailable": "Langganan sementara tidak tersedia.",
+	"activation_pending": "Pembayaran diterima. Aktivasi mungkin butuh beberapa saat."
+}

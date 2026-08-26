@@ -1,0 +1,15 @@
+{
+	"title": "Leek Wars +",
+	"pitch": "サブスクリプションを1か月単位で購入できます。契約の縛りはありません。",
+	"learn_more": "詳しく見る",
+	"active_until": "{0} まで有効です。",
+	"months_one": "{0} か月",
+	"months_other": "{0} か月",
+	"save": "-{0}%",
+	"pay_for": "{0} を支払う",
+	"bought": "ありがとうございます！{0} まで有効です。",
+	"not_enough_crystals": "あと少しのクリスタルであなたのものに！",
+	"generic_error": "エラーが発生しました。もう一度お試しください。",
+	"unavailable": "サブスクリプションは現在利用できません。",
+	"activation_pending": "支払いが受理されました。有効化に少し時間がかかる場合があります。"
+}

@@ -1,0 +1,15 @@
+{
+	"title": "Leek Wars +",
+	"pitch": "Köp enstaka prenumerationsmånader, utan bindningstid.",
+	"learn_more": "Läs mer",
+	"active_until": "Aktiv till {0}.",
+	"months_one": "{0} månad",
+	"months_other": "{0} månader",
+	"save": "-{0} %",
+	"pay_for": "Betala {0}",
+	"bought": "Tack! Aktiv till {0}.",
+	"not_enough_crystals": "Några kristaller till och den är din!",
+	"generic_error": "Ett fel uppstod. Försök igen.",
+	"unavailable": "Prenumerationen är tillfälligt otillgänglig.",
+	"activation_pending": "Betalning accepterad. Aktiveringen kan ta en stund."
+}
