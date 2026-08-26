@@ -26,6 +26,7 @@
 	"error_fight_not_team_member": "You are not a member of this team.",
 	"error_fight_not_your_leek": "This leek is not yours.",
 	"error_fight_opponent_is_your_leek": "You cannot fight your own leek.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "The targeted farmer must have at least 2 leeks.",
 	"error_fight_target_not_in_garden": "This opponent is no longer in the garden, please reload the page.",
 	"error_fight_you_need_at_least_1_leek": "You must have at least 1 leek.",

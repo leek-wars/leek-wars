@@ -13,6 +13,14 @@
 					<span v-bind="props">{{ row.name }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
+			<!-- Classement dédupliqué (#3236) : la ligne vaut pour tout le joueur,
+			     on dit combien de comptes elle représente. -->
+			<v-tooltip v-if="row.accounts && row.accounts > 1">
+				<template #activator="{ props }">
+					<span class="accounts" v-bind="props">+{{ row.accounts - 1 }}</span>
+				</template>
+				{{ $t('ranking.linked_accounts', [row.accounts]) }}
+			</v-tooltip>
 		</td>
 		<td>{{ $filters.number(row.talent) }}</td>
 		<td>{{ $filters.number(row.trophies) }}</td>
@@ -62,5 +70,13 @@ defineProps<{
 		margin-right: 6px;
 		vertical-align: middle;
 		background: var(--primary);
+	}
+	.accounts {
+		margin-left: 6px;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: normal;
+		border: 1px solid var(--border);
+		color: var(--text-color-secondary);
 	}
 </style>

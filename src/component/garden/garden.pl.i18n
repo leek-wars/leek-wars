@@ -25,6 +25,7 @@
 	"error_fight_not_team_member": "Nie należysz do tego zespołu.",
 	"error_fight_not_your_leek": "Ten por nie należy do ciebie.",
 	"error_fight_opponent_is_your_leek": "Nie możesz walczyć z własnym porem.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "Wybrany hodowca musi mieć co najmniej 2 pory.",
 	"error_fight_target_not_in_garden": "Tego przeciwnika nie ma już w ogrodzie, odśwież stronę.",
 	"error_fight_you_need_at_least_1_leek": "Musisz mieć co najmniej 1 pora.",

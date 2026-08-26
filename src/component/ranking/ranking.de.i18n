@@ -16,6 +16,8 @@
 	"fights_title": "Gesamtzahl der Kämpfe",
 	"fun": "Spaß",
 	"hide_inactives": "Inaktiv ausblenden",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "Tötet",
 	"kills_title": "Anzahl der Tötungen",
 	"leeks": "Lauch",

@@ -16,6 +16,8 @@
 	"fights_title": "战斗总次数",
 	"fun": "乐趣",
 	"hide_inactives": "隐藏不活跃",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "击杀",
 	"kills_title": "击杀数",
 	"leeks": "韭菜",

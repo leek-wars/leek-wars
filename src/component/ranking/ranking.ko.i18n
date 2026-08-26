@@ -27,6 +27,8 @@
 	"fights_title": "총 전투 수",
 	"fun": "재미",
 	"hide_inactives": "비활성 숨기기",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "처치",
 	"kills_title": "킬 수",
 	"leeks": "부추",

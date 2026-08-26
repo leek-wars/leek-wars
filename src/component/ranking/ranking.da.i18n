@@ -16,6 +16,8 @@
 	"fights_title": "Samlet antal kampe",
 	"fun": "Sjovt",
 	"hide_inactives": "Skjul inaktive",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "Dræber",
 	"kills_title": "Antal drab",
 	"leeks": "Porrer",

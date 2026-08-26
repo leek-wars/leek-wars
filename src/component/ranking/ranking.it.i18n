@@ -16,6 +16,8 @@
 	"fights_title": "Numero totale di combattimenti",
 	"fun": "Divertimento",
 	"hide_inactives": "Nascondi inattivo",
+	"all_accounts": "Tutti gli account",
+	"linked_accounts": "{0} account dichiarati dello stesso giocatore",
 	"kills": "Uccide",
 	"kills_title": "Numero di uccisioni",
 	"leeks": "Porri",

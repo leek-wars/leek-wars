@@ -27,6 +27,8 @@ class RankingFarmerRow extends RankingRow {
 	public leek_count!: number
 	// Vu il y a moins d'une minute (#4804).
 	public connected?: boolean
+	// Nombre de comptes du joueur derrière la ligne (#3236) : 1 = compte solo.
+	public accounts?: number
 }
 class RankingTeamRow extends RankingRow {
 	// Taux d'activité (#4804), affiché en flammes comme sur la page des équipes.

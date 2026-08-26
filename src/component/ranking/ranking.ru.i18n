@@ -16,6 +16,8 @@
 	"fights_title": "Общее количество боев",
 	"fun": "Веселье",
 	"hide_inactives": "Скрыть неактивное",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "Убивает",
 	"kills_title": "Количество убийств",
 	"leeks": "Лук-порей",

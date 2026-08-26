@@ -16,6 +16,8 @@
 	"fights_title": "Totaal aantal gevechten",
 	"fun": "Plezier",
 	"hide_inactives": "Verberg inactief",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "Moorden",
 	"kills_title": "Aantal moorden",
 	"leeks": "Prei",

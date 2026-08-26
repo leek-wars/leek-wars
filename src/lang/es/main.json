@@ -39,6 +39,7 @@
 	"arena_mode_war": "Guerra",
 	"arena_mode_chest_hunt": "Caza de cofres",
 	"arena_mode_colossus": "Coloso",
+	"arena_error_another_account_in_arena": "Another one of your accounts is already registered in the arena.",
 	"back": "Volver",
 	"back_to_home": "Volver al inicio",
 	"bank": "Banco",

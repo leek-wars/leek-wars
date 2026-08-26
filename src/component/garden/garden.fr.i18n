@@ -27,6 +27,7 @@
 	"error_fight_not_team_member": "Vous ne faites pas partie de cette équipe.",
 	"error_fight_not_your_leek": "Ce poireau ne vous appartient pas.",
 	"error_fight_opponent_is_your_leek": "Vous ne pouvez pas affronter votre propre poireau.",
+	"error_fight_opponent_is_your_account": "Vous ne pouvez pas affronter un autre de vos comptes.",
 	"error_fight_target_needs_at_least_2_leeks": "L'éleveur ciblé doit avoir 2 poireaux minimum.",
 	"error_fight_target_not_in_garden": "Cet adversaire n'est plus dans le Potager, rechargez la page.",
 	"error_fight_you_need_at_least_1_leek": "Vous devez avoir au moins 1 poireau.",

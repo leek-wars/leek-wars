@@ -27,6 +27,8 @@
 	"fights_title": "Totalt antall kamper",
 	"fun": "Moro",
 	"hide_inactives": "Skjul inaktive",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "Dreper",
 	"kills_title": "Antall drap",
 	"leeks": "Purre",

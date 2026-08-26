@@ -36,6 +36,7 @@
 	"error_fight_not_team_member": "Du er ikke medlem av dette laget.",
 	"error_fight_not_your_leek": "Denne purren tilhører ikke deg.",
 	"error_fight_opponent_is_your_leek": "Du kan ikke kjempe mot din egen purre.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "Den valgte oppdretteren må ha minst 2 purre.",
 	"error_fight_target_not_in_garden": "Denne motstanderen er ikke lenger i grønnsakshagen, last inn siden på nytt.",
 	"error_fight_you_need_at_least_1_leek": "Du må ha minst 1 purre.",

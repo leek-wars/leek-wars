@@ -25,6 +25,7 @@
 	"error_fight_not_team_member": "Sie gehören diesem Team nicht an.",
 	"error_fight_not_your_leek": "Dieser Lauch gehört Ihnen nicht.",
 	"error_fight_opponent_is_your_leek": "Sie können nicht gegen Ihren eigenen Lauch kämpfen.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "Der angegriffene Züchter muss mindestens 2 Lauch haben.",
 	"error_fight_target_not_in_garden": "Dieser Gegner ist nicht mehr im Gemüsegarten, bitte laden Sie die Seite neu.",
 	"error_fight_you_need_at_least_1_leek": "Sie müssen mindestens 1 Lauch haben.",

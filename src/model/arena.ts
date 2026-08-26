@@ -1,3 +1,4 @@
+import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import router from '@/router'
 import { SocketMessage } from '@/model/socket'
@@ -119,10 +120,16 @@ class Arena {
 			}
 		}
 	}
-	leave() {
+	// `reason` n'est renseigné que lorsque c'est le SERVEUR qui nous sort de la
+	// salle (un autre de nos comptes y est déjà, #3237). Sans message, le bouton
+	// d'inscription se contenterait de retomber tout seul, sans rien expliquer.
+	leave(reason?: string) {
 		LeekWars.socket.send([SocketMessage.ARENA_LEAVE])
 		this.clearStorage()
 		this.reset()
+		if (reason) {
+			LeekWars.toast(i18n.t('main.arena_error_' + reason) as string)
+		}
 	}
 	// Changement de compte : désinscrit le poireau du compte qu'on quitte côté
 	// serveur (un seul compte inscrit à la fois) mais conserve la mémoire pour

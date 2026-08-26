@@ -277,7 +277,8 @@ class Socket {
 					break
 				}
 				case SocketMessage.ARENA_LEAVE: {
-					LeekWars.arena.leave()
+					// data[0] : motif du refus, quand c'est le serveur qui nous sort.
+					LeekWars.arena.leave(data[0] as string | undefined)
 					break
 				}
 				case SocketMessage.GARDEN_QUEUE: {

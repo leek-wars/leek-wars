@@ -25,6 +25,7 @@
 	"error_fight_not_team_member": "Você não faz parte desta equipe.",
 	"error_fight_not_your_leek": "Este alho-poró não pertence a você.",
 	"error_fight_opponent_is_your_leek": "Você não pode enfrentar seu próprio alho-poró.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "O criador alvo deve ter pelo menos 2 alho-poró.",
 	"error_fight_target_not_in_garden": "Este oponente não está mais na horta, recarregue a página.",
 	"error_fight_you_need_at_least_1_leek": "Você deve ter pelo menos 1 alho-poró.",

@@ -16,6 +16,8 @@
 	"fights_title": "総戦闘数",
 	"fun": "楽しい",
 	"hide_inactives": "非アクティブを非表示",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "殺す",
 	"kills_title": "キル数",
 	"leeks": "ネギ",

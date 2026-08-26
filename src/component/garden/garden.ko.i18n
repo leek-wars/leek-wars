@@ -36,6 +36,7 @@
 	"error_fight_not_team_member": "당신은 이 팀의 구성원이 아닙니다.",
 	"error_fight_not_your_leek": "이 부추는 당신의 것이 아닙니다.",
 	"error_fight_opponent_is_your_leek": "자신의 부추와는 싸울 수 없습니다.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "대상 사육자는 최소 2개의 부추가 있어야 합니다.",
 	"error_fight_target_not_in_garden": "이 상대는 더 이상 채소밭에 없습니다. 페이지를 새로고침하세요.",
 	"error_fight_you_need_at_least_1_leek": "최소 1개의 부추가 있어야 합니다.",

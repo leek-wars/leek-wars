@@ -26,6 +26,7 @@
 	"error_fight_not_team_member": "Non fai parte di questa squadra.",
 	"error_fight_not_your_leek": "Questo porro non ti appartiene.",
 	"error_fight_opponent_is_your_leek": "Non puoi affrontare il tuo stesso porro.",
+	"error_fight_opponent_is_your_account": "Non puoi affrontare un altro dei tuoi account.",
 	"error_fight_target_needs_at_least_2_leeks": "L'allevatore preso di mira deve avere almeno 2 porri.",
 	"error_fight_target_not_in_garden": "Questo avversario non è più nell'orto, ricarica la pagina.",
 	"error_fight_you_need_at_least_1_leek": "Devi avere almeno 1 porro.",

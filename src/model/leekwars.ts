@@ -416,6 +416,9 @@ const LeekWars = reactive({
 	notifsPopups: localStorage.getItem('options/notifs-popups') !== 'false',
 	notifsOpenReport: localStorage.getItem('options/notifs-open-report') === 'true',
 	rankingInactive: localStorage.getItem('options/ranking-inactive') === 'true',
+	// Classement dédupliqué par joueur par défaut (#3236) : une ligne par personne,
+	// celle de son compte principal. L'interrupteur remet toutes les lignes.
+	rankingAllAccounts: localStorage.getItem('options/ranking-all-accounts') === 'true',
 	arena: new Arena(),
 	bossSquads: new BossSquads(),
 	squares: new Squares(),

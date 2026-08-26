@@ -25,6 +25,7 @@
 	"error_fight_not_team_member": "No formas parte de este equipo.",
 	"error_fight_not_your_leek": "Este puerro no te pertenece.",
 	"error_fight_opponent_is_your_leek": "No puedes enfrentarte a tu propio puerro.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "El criador objetivo debe tener al menos 2 puerros.",
 	"error_fight_target_not_in_garden": "Este oponente ya no está en la huerta, recarga la página.",
 	"error_fight_you_need_at_least_1_leek": "Debes tener al menos 1 puerro.",

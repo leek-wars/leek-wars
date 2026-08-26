@@ -25,6 +25,7 @@
 	"error_fight_not_team_member": "Anda bukan anggota tim ini.",
 	"error_fight_not_your_leek": "Daun bawang ini bukan milik Anda.",
 	"error_fight_opponent_is_your_leek": "Anda tidak dapat melawan daun bawang Anda sendiri.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "Peternak yang dituju harus memiliki setidaknya 2 daun bawang.",
 	"error_fight_target_not_in_garden": "Lawan ini tidak ada lagi di kebun sayur, muat ulang halaman.",
 	"error_fight_you_need_at_least_1_leek": "Anda harus memiliki setidaknya 1 daun bawang.",

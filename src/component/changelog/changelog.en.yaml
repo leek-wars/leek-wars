@@ -1,6 +1,8 @@
 250:
   title: "WIP"
   added:
+    - "A player's declared accounts no longer meet each other: not in the garden, not in the arena (Battle Royale, War, Chest Hunt, Colossus), and not in tournaments. Matchmaking no longer offers your other accounts, only one of them can register for an arena, and tournament seeding puts them in different tournaments."
+    - "The ranking now shows one row per player instead of one per account: a player who declared several accounts appears under their main account, with the number of accounts it stands for. An 'All accounts' switch brings every row back."
     - "Multi-account declaration: from Settings > My accounts, declare the other accounts you own. They follow you across all your devices without typing their password again, and show up on your profile. 3 accounts, or 10 with a subscription."
     - "The LeekScript console becomes the Console: run JavaScript, TypeScript and Python interactively too, with state kept between lines."
     - "#ai The Python editor becomes a real IDE: autocompletion of your functions, variables and modules with type inference, hover showing a symbol's type and where it is defined, Ctrl+click to go to definition, and import resolution across your AIs."

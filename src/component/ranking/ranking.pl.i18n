@@ -16,6 +16,8 @@
 	"fights_title": "Całkowita liczba walk",
 	"fun": "Zabawa",
 	"hide_inactives": "Ukryj nieaktywne",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "Zabójstwa",
 	"kills_title": "Liczba zabójstw",
 	"leeks": "Pory",

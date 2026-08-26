@@ -124,6 +124,9 @@
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="LeekWars.goToRanking('team', order, $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
 					<lw-switch v-if="!category.startsWith('boss')" v-model="activeSwitch" :label="$t('hide_inactives')" class="inactives" @change="toggleInactives" />
+					<!-- Déduplication par joueur (#3236) : seules les catégories qui
+					     classent des personnes sont concernées. -->
+					<lw-switch v-if="displayCategory === 'leek' || displayCategory === 'farmer'" v-model="allAccountsSwitch" :label="$t('all_accounts')" class="inactives" @change="toggleAllAccounts" />
 					<lw-switch v-if="category === 'team' || category === 'composition'" v-model="compositionMode" :label="$t('compositions')" class="inactives" @change="toggleCompositionMode" />
 				</div>
 				<div class="scroll-x">
@@ -425,6 +428,7 @@
 	const searchQuery = ref('')
 	const searchResults = ref<{ id: number, type: string, [key: string]: unknown }[] | null>(null)
 	const activeSwitch = ref(false)
+	const allAccountsSwitch = ref(LeekWars.rankingAllAccounts)
 	const compositionMode = ref(localStorage.getItem('ranking/team-mode') === 'composition')
 	const countryList = ref(false)
 	const displayCategory = ref('')
@@ -487,9 +491,14 @@
 		}
 	}, { immediate: true })
 
+	// Catégorie envoyée à l'API : le préfixe `all-` désactive la déduplication par
+	// joueur (#3236). Il passe par la catégorie et non par un paramètre en plus,
+	// parce que les services GET exigent un nombre exact de segments d'URL.
+	const apiCategory = computed(() => (allAccountsSwitch.value ? 'all-' : '') + category.value)
+
 	const key = computed(() => {
 		if (category.value === 'fun') return 'fun'
-		return inactive.value + '/' + category.value + '/' + order.value + '/' + page.value + '/' + country.value
+		return inactive.value + '/' + apiCategory.value + '/' + order.value + '/' + page.value + '/' + country.value
 	})
 
 	watch(key, () => {
@@ -542,7 +551,7 @@
 		} else {
 			ranking.value = null
 			const service = inactive.value ? 'get' : 'get-active'
-			LeekWars.get('ranking/' + service + '/' + category.value + '/' + order.value + '/' + page.value + '/' + country.value).then(data => {
+			LeekWars.get('ranking/' + service + '/' + apiCategory.value + '/' + order.value + '/' + page.value + '/' + country.value).then(data => {
 				const r = data.ranking as Ranking
 				if (page.value === 1) {
 					if (r.length > 0) {
@@ -619,6 +628,13 @@
 		LeekWars.rankingInactive = !activeSwitch.value
 		localStorage.setItem('options/ranking-inactive', '' + LeekWars.rankingInactive)
 		router.push(url.value + urlQuery.value)
+	}
+
+	function toggleAllAccounts() {
+		LeekWars.rankingAllAccounts = allAccountsSwitch.value
+		localStorage.setItem('options/ranking-all-accounts', '' + allAccountsSwitch.value)
+		// Pas de router.push : la clé de rechargement contient déjà apiCategory,
+		// et le préfixe `all-` n'a rien à faire dans l'URL visible.
 	}
 
 	function toggleCompositionMode() {

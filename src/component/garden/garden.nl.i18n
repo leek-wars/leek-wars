@@ -25,6 +25,7 @@
 	"error_fight_not_team_member": "Je maakt geen deel uit van dit team.",
 	"error_fight_not_your_leek": "Deze prei is niet van jou.",
 	"error_fight_opponent_is_your_leek": "Je kunt niet tegen je eigen prei vechten.",
+	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
 	"error_fight_target_needs_at_least_2_leeks": "De aangevallen fokker moet minstens 2 prei hebben.",
 	"error_fight_target_not_in_garden": "Deze tegenstander zit niet meer in de moestuin, herlaad de pagina.",
 	"error_fight_you_need_at_least_1_leek": "Je moet minstens 1 prei hebben.",

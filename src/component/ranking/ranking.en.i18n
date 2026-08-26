@@ -16,6 +16,8 @@
 	"fights_title": "Total number of fights",
 	"fun": "Fun",
 	"hide_inactives": "Hide inactive",
+	"all_accounts": "All accounts",
+	"linked_accounts": "{0} declared accounts of the same player",
 	"kills": "Kills",
 	"kills_title": "Number of kills",
 	"leeks": "Leeks",

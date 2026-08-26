@@ -1,6 +1,8 @@
 250:
   title: "WIP"
   added:
+    - "Gli account dichiarati di uno stesso giocatore non si incontrano più: né nell'orto, né nell'arena (Battle Royale, Guerra, Caccia ai forzieri, Colosso), né nei tornei. Il matchmaking non propone più i tuoi altri account, uno solo può iscriversi a un'arena, e la ripartizione dei tornei li mette in tornei diversi."
+    - "La classifica mostra ora una riga per giocatore e non per account: chi ha dichiarato più account appare sotto il suo account principale, con il numero di account che rappresenta. Un interruttore 'Tutti gli account' rimette tutte le righe."
     - "Dichiarazione dei multi-account: da Impostazioni > I miei account, dichiara gli altri account che ti appartengono. Ti seguono su tutti i dispositivi senza reinserire la password e appaiono sul tuo profilo. 3 account, 10 con un abbonamento."
     - "La console LeekScript diventa la Console: esegui anche JavaScript, TypeScript e Python in modo interattivo, con lo stato conservato tra le righe."
     - "#ai L'editor Python diventa un vero IDE: autocompletamento di funzioni, variabili e moduli con inferenza dei tipi, hover con il tipo di un simbolo e dove è definito, Ctrl+clic per andare alla definizione, e risoluzione degli import tra le tue IA."
