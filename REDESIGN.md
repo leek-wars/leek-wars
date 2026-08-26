@@ -620,6 +620,54 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     `--background-row`. v2 vérifié inchangé (42 px d'interligne, entrée de 40 px,
     fond transparent).
 
+- **2026-08-26, lot 26 — la coquille mobile** (retour de Pierre : « en mobile
+  thème clair c'est pas mal cassé »). Le mode application n'avait jamais été
+  repris : il gardait la peau du v2, ce qui ne se voyait qu'à moitié en sombre
+  et cassait franchement sur le parchemin.
+  - **Barre d'application** (`bar.vue`) : aplat vert `#4b9e06` écrit en dur,
+    encre `--white` — le piège du lot 10, jamais redéfini en sombre — et une
+    **ombre floue d'élévation**, que le principe 1 bannit. Elle prend la surface
+    d'en-tête et l'encre du thème, comme la barre de page sur grand écran, et se
+    détache par le trait. Le compteur de notifications passe du `#ff6f00` en dur
+    (qui ne tenait que sur le vert) au couple `--primary` / `--primary-text`,
+    **exactement celui du compteur du header sur grand écran**.
+  - **Panneau du menu** (`menu.vue`) : `#app.app .menu` peignait le fond avec
+    `--grey-1` (#0E1410) et le bloc éleveur avec `--grey-2` (#1E2A20). Ce sont
+    des **valeurs fixes, pas des surfaces de thème** : le menu restait presque
+    noir en clair, alors que le shell v3 avait déjà passé toutes ses encres à
+    celles d'un panneau clair — d'où l'encre sombre sur fond noir de la capture.
+    Le panneau prend `--panel-background` et le trait, comme sur grand écran ; le
+    bloc éleveur la surface d'en-tête et l'encre du thème.
+  - **Bouton burger** : le shell habille `.menu-button` en *poignée de repli*
+    (petit carré bordé posé dans le vide, pour le menu et le panneau social sur
+    grand écran). Dans la barre d'application ce n'est pas une poignée mais son
+    premier bouton : sa surface de panneau y cousait un carré plus clair à même
+    le bandeau. Transparent, sans trait, à l'encre de la barre.
+  - **Images d'action de la barre** : `garden.png`, `market.png`, `potion.png` et
+    `github_white.png` sont les PNG **blancs** du v2 — mesurés entre 245 et 255
+    de luminosité, contre 0 pour la famille `icon/black/`. Taillés pour l'aplat
+    vert, ils disparaissaient sur le parchemin : on les retourne en clair
+    seulement, l'inverse exact de ce que le shell fait pour les icônes noires en
+    sombre (lot 17).
+  - Contrastes mesurés sur la coquille : **6,7 à 17,4 en clair**, 8,4 à 15,6 en
+    sombre. v2 vérifié inchangé au pixel (vert `rgb(75,158,6)`, menu `#222`,
+    bloc éleveur `#333`, compteur orange, aucun filtre d'image).
+  - **Conséquence assumée** : la barre verte disparaît aussi en **sombre**. Le v3
+    n'a pas de bandeau de marque, et la barre de page sur grand écran n'en a pas
+    non plus — mais c'est un changement visible que Pierre n'avait pas demandé.
+
+- **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
+  aucun n'est propre au mobile, tous cassent aussi sur grand écran :
+  - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
+    dont l'extrémité claire est très lumineuse — `heatwave` finit sur `#ffdf91`,
+    `easter` sur `#ffd9a8` : **1,2 mesuré**. Le commentaire de `solstice`
+    (« orange profond→ambre : texte blanc lisible ») montre que la contrainte
+    était connue, mais deux saisons la violent. Demande un choix sur la palette.
+  - **Pourcentages « résolus » du forum** (`forum.vue`) : couleurs Material en
+    dur (`#4caf50`, `#2196f3`, `#ff9800`), **1,9 à 2,5** sur le parchemin.
+  - **Couleurs de caractéristiques** sur la page poireau : 2,1 à 4,2 en clair.
+    C'est la question déjà ouverte plus bas, mesurée cette fois côté clair.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser

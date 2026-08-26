@@ -244,6 +244,54 @@ function readNotification(notification: Notification) {
 		height: 20px;
 		line-height: 12px;
 	}
+
+	/* ====== v3 : la barre d'application est une barre de page ======
+	   Elle n'avait jamais été reprise : aplat vert du v2 écrit en dur, encre
+	   blanche et ombre floue d'élévation. En thème clair, un bandeau vif au-dessus
+	   du parchemin ; et son encre `--white`, jamais redéfinie en sombre, est le
+	   piège du lot 10. Elle prend la surface d'en-tête et l'encre du thème, comme
+	   la barre de page sur grand écran, et se détache par le trait (principe 1). */
+	body:not(.v2) {
+		.app-bar {
+			background: var(--background-header);
+			color: var(--text-color);
+			box-shadow: none;
+			border-bottom: 1.5px solid var(--border-strong);
+		}
+		/* Le shell habille `.menu-button` en poignée de repli — un petit carré bordé
+		   posé dans le vide, pour le menu et le panneau social sur grand écran. Ici
+		   ce n'est pas une poignée mais le premier bouton de la barre : sa surface
+		   de panneau y dessinait un carré plus clair, cousu à même le bandeau. */
+		.app-bar .menu-button {
+			background: transparent;
+			border: none;
+			color: inherit;
+		}
+		/* Les trois traits du bouton et les icônes suivaient `--white` : ils suivent
+		   maintenant l'encre de la barre, quel que soit le thème. */
+		.app-bar .menu-button .bar {
+			background: currentColor;
+		}
+		.action .v-icon,
+		.action-text {
+			color: inherit;
+		}
+		/* Même pastille que le compteur du header sur grand écran. Le orange en dur
+		   ne descendait d'aucun jeton et ne tenait que sur l'aplat vert. */
+		.counter {
+			background: var(--primary);
+			color: var(--primary-text);
+			border-radius: var(--radius-tiny);
+		}
+		/* Les images d'action sont les PNG BLANCS du v2 (garden, market, potion,
+		   github_white — mesurés entre 245 et 255 de luminosité), taillés pour
+		   l'aplat vert : sur le parchemin ils disparaissent. On les retourne en
+		   clair seulement, l'inverse de ce que le shell fait pour les icônes
+		   noires en thème sombre. */
+		&:not(.dark) .action img {
+			filter: invert(1);
+		}
+	}
 	.dark {
 		position: fixed;
 		top: 56px;

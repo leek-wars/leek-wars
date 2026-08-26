@@ -783,6 +783,27 @@
 	body:not(.v2) #app.app .menu .section {
 		min-height: 44px;
 	}
+
+	/* ====== v3 : le panneau du menu suit le thème ======
+	   `--grey-1` (#0E1410) et `--grey-2` (#1E2A20) sont des valeurs FIXES, pas des
+	   surfaces de thème : le menu mobile restait donc presque noir en thème clair,
+	   alors que le shell v3 avait déjà passé toutes ses encres à celles d'un panneau
+	   clair — d'où l'encre sombre sur fond noir. Le panneau prend la surface que le
+	   shell donne déjà au menu sur grand écran. */
+	body:not(.v2) #app.app .menu {
+		background: var(--panel-background);
+		border-right: 1.5px solid var(--border-strong);
+	}
+	/* Le bloc de l'éleveur était l'inverse : surface sombre et encre crème en dur,
+	   illisible dès que le panneau s'éclaircit. */
+	body:not(.v2) .menu-top {
+		background: var(--background-header);
+		color: var(--text-color);
+		border-bottom: 1px solid var(--border);
+	}
+	body:not(.v2) .menu-top a {
+		color: inherit;
+	}
 	.menu .section.about {
 		display: none;
 	}
