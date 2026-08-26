@@ -203,6 +203,21 @@
 				<lw-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" @change="updateGoogleLogin" />
 			</panel>
 
+			<!-- Abonnement LW+ (#3303). lwplus_until fait partie du bloc privé du farmer
+			     connecté : ce récap ne coûte donc aucune requête. Le détail (renouvellement
+			     ou non) et les actions vivent sur /lwplus, seul endroit qui interroge Stripe. -->
+			<panel :title="$t('lwplus')" icon="mdi-star-four-points" class="lwplus">
+				<div class="lwplus-status">
+					<v-icon v-if="lwplusActive" class="ok">mdi-check-decagram</v-icon>
+					<span>{{ lwplusActive ? $t('lwplus_active_until', [formatDate(lwplusUntil)]) : $t('lwplus_inactive') }}</span>
+				</div>
+				<router-link to="/lwplus" class="list-item card">
+					<v-icon>mdi-star-four-points</v-icon>
+					<span class="label">{{ lwplusActive ? $t('lwplus_manage') : $t('lwplus_discover') }}</span>
+					<v-icon>mdi-chevron-right</v-icon>
+				</router-link>
+			</panel>
+
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
 				<template #actions>
 					<v-tooltip :disabled="!pushHint" location="bottom">
@@ -375,6 +390,11 @@
 
 	// Créateur d'une équipe : elle sera transmise au membre le plus ancien
 	// à la suppression du compte, ou dissoute s'il est le seul membre
+	// Abonnement LW+ (#3303) : lu depuis le farmer du store, pas d'appel réseau.
+	const formatDate = LeekWars.formatDate
+	const lwplusUntil = computed(() => store.state.farmer?.lwplus_until ?? 0)
+	const lwplusActive = computed(() => lwplusUntil.value * 1000 > Date.now())
+
 	const teamOwner = computed(() => !!store.state.farmer?.team && store.state.farmer.team.member_level === TeamMemberLevel.OWNER)
 	const teamOwnerAlone = computed(() => store.state.farmer?.team?.member_count === 1)
 	const teamName = computed(() => store.state.farmer?.team?.name || '')
@@ -838,5 +858,17 @@
 		color: red;
 		font-size: 12px;
 		margin: 5px 0;
+	}
+	// Même violet que la page /lwplus, qui le définit aussi en local : couleur de
+	// marque de l'abonnement, pas une neutre du thème.
+	.lwplus-status {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 4px 12px 12px;
+		.ok {
+			color: #8e44ad;
+			font-size: 26px;
+		}
 	}
 </style>
