@@ -243,6 +243,14 @@ const sort_icon = computed(() => ({
 	date: 'mdi-calendar',
 } as {[key: string]: string})[sort_by.value])
 
+function initCategory(category: number) {
+	raw_trophies.value[category] = []
+	progressions.value[category] = 0
+	points.value[category] = 0
+	totals.value[category] = 0
+	totalPoints.value[category] = 0
+}
+
 function update() {
 	const requestedId = id.value
 	loaded.value = false
@@ -253,13 +261,7 @@ function update() {
 	title.value = null
 	all_trophies.value = []
 	if (!requestedId) return
-	(LeekWars.trophyCategories as unknown as TrophyCategory[]).forEach((c: TrophyCategory) => {
-		raw_trophies.value[c.id] = []
-		progressions.value[c.id] = 0
-		points.value[c.id] = 0
-		totals.value[c.id] = 0
-		totalPoints.value[c.id] = 0
-	})
+	(LeekWars.trophyCategories as unknown as TrophyCategory[]).forEach((c: TrophyCategory) => initCategory(c.id))
 	LeekWars.get('trophy/get-farmer-trophies/' + requestedId + '/' + locale.value).then(data => {
 		if (requestedId !== id.value) return
 		for (const tk in data.trophies) {
@@ -269,6 +271,9 @@ function update() {
 			const trophy = data.trophies[tk]
 			all_trophies.value = data.trophies
 			if (trophy.category === 0) continue
+			// Catégorie inconnue des game data (cache pas encore rafraîchi après l'ajout
+			// d'une catégorie) : sans ce garde-fou toute la page reste sur ses loaders.
+			if (!raw_trophies.value[trophy.category]) initCategory(trophy.category)
 			raw_trophies.value[trophy.category].push(trophy)
 			totals.value[trophy.category]++
 			totalPoints.value[trophy.category] += trophy.points
