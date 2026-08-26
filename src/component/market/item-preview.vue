@@ -287,10 +287,17 @@ function playSound(item: ItemTemplate, type: string) {
 </script>
 
 <style lang="scss" scoped>
-.get-all.v-size--small {
+/* `.v-size--small` était la classe de taille de Vuetify 2 : depuis la migration
+   elle ne désigne plus rien, et la règle ne s'appliquait plus (flèche à sa
+   taille naturelle, boutons collés les uns aux autres). */
+.get-all {
 	font-size: 15px;
 	font-weight: 500;
-	padding: 7px;
+	/* Padding horizontal seulement : le bouton Vuetify 3 a une hauteur fixe
+	   (28 px en `small`) et centre son contenu dedans. Un padding vertical
+	   rétrécit la boîte de contenu sous la hauteur du texte, qui déborde alors
+	   par le bas — le libellé se retrouve collé en haut du bouton. */
+	padding: 0 7px;
 	margin: 6px 4px;
 	img {
 		margin-left: 4px;
