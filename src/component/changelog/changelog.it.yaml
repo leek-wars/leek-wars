@@ -8,7 +8,7 @@
     - "Nuova arma, la Lancia del sole (livello 201): infilza un'intera linea da 1 a 4 caselle e respinge i bersagli di 4 caselle, 5 con un colpo critico. Si fabbrica alla forgia con schegge solari del Solstizio, il suo schema si ottiene come ricompensa di combattimento."
     - "4 nuovi cappelli: il Basco e il Cappello da chef nel negozio, più il Cappello da spiaggia e la Corona solare da fabbricare alla forgia con le risorse del Solstizio."
     - "5 nuovi trofei di fabbricazione: Apprendista, Artigiano, Fabbro, Ciclope ed Efesto, per 1, 10, 100, 1000 e 10000 oggetti fabbricati alla forgia."
-    - "Nuovo trofeo Tetrarca: vinci un Battle Royale, una Guerra, una Caccia ai forzieri e un Colosso nello stesso giorno."
+    - "Nuovo trofeo Tetrarca: vinci un Battle Royale, una Guerra, una Caccia ai forzieri e un Colosso nello stesso giorno, con lo stesso porro."
     - "#ai isBatchFight() dice se il combattimento viene da un lotto, per tacere quando si misura l'IA."
   improved:
     - "Gruppi privati: la modalità « account con password » (credenziali scelte dal supervisore, senza e-mail dei membri) si regola ora nelle impostazioni del gruppo, e i gruppi demo la attivano di default."
