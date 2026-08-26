@@ -548,12 +548,12 @@
 					</div>
 				</template>
 				<template #content>
-					<div :class="{dashed: draggedLeek != null && canDrop(composition)}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
+					<div :class="{dashed: draggedLeek != null && canDrop(composition)}" :data-composition="composition.id" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
 
 						<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
 						<rich-tooltip-leek v-for="leek in composition.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-							<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
+							<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)" @touchstart="leeksTouchstart(composition, leek, $event)">
 								<leek-image :leek="leek" :scale="0.6" />
 								<br>
 								<div class="name">{{ leek.name }}</div>
@@ -575,11 +575,11 @@
 			<template #title>{{ $t('unsorted_leeks') }}</template>
 
 			<template #content>
-				<div :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
+				<div :class="{dashed: draggedLeek != null}" data-composition="-1" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 					<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
 					<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
+						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)" @touchstart="leeksTouchstart(null, leek, $event)">
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
 							<div class="name">{{ leek.name }}</div>
@@ -832,6 +832,7 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Composition, Team, TeamMember, type TeamInvitation } from '@/model/team'
+	import { startTouchDrag } from '@/model/touch-drag'
 	import { useLiveHistory } from '@/model/use-live-history'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -1560,6 +1561,42 @@
 		return !composition.tournament.registered && composition.leeks.length < 6 && draggedLeekComposition.value !== composition
 	}
 
+	// Le glisser-déposer HTML5 ci-dessus n'existe pas au tactile : sur mobile on
+	// rejoue le geste au doigt (appui long pour attraper le poireau), avec les
+	// mêmes règles de dépôt.
+	function leeksTouchstart(composition: Composition | null, leek: Leek, e: TouchEvent) {
+		if (composition && composition.tournament.registered) return
+		startTouchDrag(e, {
+			drop: '.leeks[data-composition]',
+			accept: (zone) => {
+				const target = compositionOfZone(zone)
+				if (target === undefined) return false
+				return target === null ? composition !== null : canDrop(target)
+			},
+			start: () => {
+				draggedLeek.value = leek
+				draggedLeekComposition.value = composition
+				leek.dragging = true
+			},
+			end: (zone) => {
+				const target = zone ? compositionOfZone(zone) : undefined
+				if (target !== undefined && target !== composition) {
+					moveLeek(leek, composition, target)
+				}
+				leek.dragging = false
+				draggedLeek.value = null
+			}
+		})
+	}
+
+	// Zone de dépôt -> composition, null pour les poireaux non classés,
+	// undefined si ce n'est pas une zone de cette page.
+	function compositionOfZone(zone: HTMLElement): Composition | null | undefined {
+		if (!team.value) return undefined
+		const id = parseInt(zone.dataset.composition ?? '', 10)
+		return id === -1 ? null : team.value.compositionsById[id]
+	}
+
 	function selectAI(ai: {path: string}) {
 		LeekWars.put('team/set-turret-ai', {ai_path: ai.path}).then(() => {
 			team.value!.turret_ai = ai
@@ -2048,6 +2085,10 @@
 		transform: scale(1);
 		cursor: pointer;
 		width: 96px;
+		// L'appui long attrape le poireau pour le déplacer : ni menu « Enregistrer
+		// l'image » sur mobile, ni sélection de texte, ne doivent s'y superposer.
+		-webkit-touch-callout: none;
+		user-select: none;
 		.name {
 			font-size: 16px;
 			text-align: center;
@@ -2116,6 +2157,10 @@
 	}
 	.compo .leeks.dashed {
 		border: 4px dashed var(--grey-9);
+	}
+	// Zone visée par le doigt pendant un glisser tactile (cf. touch-drag.ts)
+	.compo .leeks.drop-hover {
+		border: 4px dashed var(--primary);
 	}
 	.panel :deep(.turret-wrapper) {
 		display: flex;
