@@ -25,7 +25,7 @@
 	"error_fight_not_team_member": "Et kuulu tähän joukkueeseen.",
 	"error_fight_not_your_leek": "Tämä purjo ei ole sinun.",
 	"error_fight_opponent_is_your_leek": "Et voi taistella omaa purjoasi vastaan.",
-	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
+	"error_fight_opponent_is_your_account": "Et voi taistella toista tiliäsi vastaan.",
 	"error_fight_target_needs_at_least_2_leeks": "Kohteena olevalla kasvattajalla on oltava vähintään 2 purjoa.",
 	"error_fight_target_not_in_garden": "Tämä vastustaja ei ole enää kasvitarhassa, lataa sivu uudelleen.",
 	"error_fight_you_need_at_least_1_leek": "Sinulla tulee olla vähintään 1 purjo.",

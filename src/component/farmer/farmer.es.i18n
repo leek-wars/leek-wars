@@ -133,6 +133,6 @@
 	"aposteriori_desc": "El sistema de recompensas de padrinazgo es reciente: reclama las de tus ahijados y tu padrino.",
 	"aposteriori_claim": "Reclamar",
 	"aposteriori_claimed": "¡Recompensas recibidas!",
-	"linked_accounts": "{0} accounts",
-	"linked_main": "main"
+	"linked_accounts": "{0} cuentas",
+	"linked_main": "principal"
 }

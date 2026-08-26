@@ -25,7 +25,7 @@
 	"error_fight_not_team_member": "あなたはこのチームのメンバーではありません。",
 	"error_fight_not_your_leek": "このネギはあなたのものではありません。",
 	"error_fight_opponent_is_your_leek": "自分のネギとは戦えません。",
-	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
+	"error_fight_opponent_is_your_account": "自分の別のアカウントと戦うことはできません。",
 	"error_fight_target_needs_at_least_2_leeks": "対象のブリーダーはネギが2本以上必要です。",
 	"error_fight_target_not_in_garden": "この対戦相手はもう菜園にいません。ページを再読み込みしてください。",
 	"error_fight_you_need_at_least_1_leek": "ネギが最低1本必要です。",

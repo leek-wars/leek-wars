@@ -26,7 +26,7 @@
 	"error_fight_not_team_member": "Du är inte med i det här laget.",
 	"error_fight_not_your_leek": "Den här purjolöken tillhör inte dig.",
 	"error_fight_opponent_is_your_leek": "Du kan inte möta din egen purjolök.",
-	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
+	"error_fight_opponent_is_your_account": "Du kan inte möta ett annat av dina konton.",
 	"error_fight_target_needs_at_least_2_leeks": "Den valda uppfödaren måste ha minst 2 purjolök.",
 	"error_fight_target_not_in_garden": "Den här motståndaren finns inte längre i grönsaksträdgården, ladda om sidan.",
 	"error_fight_you_need_at_least_1_leek": "Du måste ha minst 1 purjolök.",

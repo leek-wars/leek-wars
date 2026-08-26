@@ -133,6 +133,6 @@
 	"aposteriori_desc": "Belønningssystemet for fadderskab er nyt: indløs dem for dine fadderbørn og din fadder.",
 	"aposteriori_claim": "Indløs",
 	"aposteriori_claimed": "Belønninger modtaget!",
-	"linked_accounts": "{0} accounts",
-	"linked_main": "main"
+	"linked_accounts": "{0} konti",
+	"linked_main": "primær"
 }

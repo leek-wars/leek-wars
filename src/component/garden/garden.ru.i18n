@@ -25,7 +25,7 @@
 	"error_fight_not_team_member": "Вы не состоите в этой команде.",
 	"error_fight_not_your_leek": "Этот лук-порей вам не принадлежит.",
 	"error_fight_opponent_is_your_leek": "Вы не можете сражаться со своим собственным луком-пореем.",
-	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
+	"error_fight_opponent_is_your_account": "Вы не можете сражаться с другим своим аккаунтом.",
 	"error_fight_target_needs_at_least_2_leeks": "У выбранного заводчика должно быть не менее 2 луковиц.",
 	"error_fight_target_not_in_garden": "Этого соперника больше нет в огороде, перезагрузите страницу.",
 	"error_fight_you_need_at_least_1_leek": "У вас должна быть хотя бы 1 луковица.",

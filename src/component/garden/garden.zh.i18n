@@ -25,7 +25,7 @@
 	"error_fight_not_team_member": "你不是该队伍的成员。",
 	"error_fight_not_your_leek": "该韭菜不属于你。",
 	"error_fight_opponent_is_your_leek": "你不能与自己的韭菜战斗。",
-	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
+	"error_fight_opponent_is_your_account": "你不能与自己的其他账号战斗。",
 	"error_fight_target_needs_at_least_2_leeks": "目标饲养员必须至少有 2 个韭菜。",
 	"error_fight_target_not_in_garden": "该对手已不在菜园中，请刷新页面。",
 	"error_fight_you_need_at_least_1_leek": "你必须至少有 1 个韭菜。",

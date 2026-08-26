@@ -133,6 +133,6 @@
 	"aposteriori_desc": "후원 보상 시스템은 최근에 추가되었습니다: 후원 자녀와 후원자에 대한 보상을 받으세요.",
 	"aposteriori_claim": "받기",
 	"aposteriori_claimed": "보상을 받았습니다!",
-	"linked_accounts": "{0} accounts",
-	"linked_main": "main"
+	"linked_accounts": "계정 {0}개",
+	"linked_main": "대표"
 }

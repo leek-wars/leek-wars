@@ -133,6 +133,6 @@
 	"aposteriori_desc": "System nagród za patronat jest nowy: odbierz te za swoich podopiecznych i swojego patrona.",
 	"aposteriori_claim": "Odbierz",
 	"aposteriori_claimed": "Nagrody odebrane!",
-	"linked_accounts": "{0} accounts",
-	"linked_main": "main"
+	"linked_accounts": "{0} konta",
+	"linked_main": "główne"
 }

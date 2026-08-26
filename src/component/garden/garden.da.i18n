@@ -25,7 +25,7 @@
 	"error_fight_not_team_member": "Du er ikke medlem af dette hold.",
 	"error_fight_not_your_leek": "Denne porre tilhører ikke dig.",
 	"error_fight_opponent_is_your_leek": "Du kan ikke kæmpe mod din egen porre.",
-	"error_fight_opponent_is_your_account": "You can't fight another one of your own accounts.",
+	"error_fight_opponent_is_your_account": "Du kan ikke kæmpe mod en anden af dine konti.",
 	"error_fight_target_needs_at_least_2_leeks": "Den valgte opdrætter skal have mindst 2 porrer.",
 	"error_fight_target_not_in_garden": "Denne modstander er ikke længere i grøntsagshaven, genindlæs siden.",
 	"error_fight_you_need_at_least_1_leek": "Du skal have mindst 1 porre.",

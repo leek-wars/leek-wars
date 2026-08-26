@@ -126,6 +126,6 @@
 	"aposteriori_desc": "Kummipalkkiojärjestelmä on uusi: lunasta palkkiot kummilapsistasi ja kummistasi.",
 	"aposteriori_claim": "Lunasta",
 	"aposteriori_claimed": "Palkkiot vastaanotettu!",
-	"linked_accounts": "{0} accounts",
-	"linked_main": "main"
+	"linked_accounts": "{0} tiliä",
+	"linked_main": "ensisijainen"
 }

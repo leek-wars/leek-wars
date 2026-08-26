@@ -133,6 +133,6 @@
 	"aposteriori_desc": "Belöningssystemet för fadderskap är nytt: hämta dem för dina fadderbarn och din fadder.",
 	"aposteriori_claim": "Hämta",
 	"aposteriori_claimed": "Belöningar mottagna!",
-	"linked_accounts": "{0} accounts",
-	"linked_main": "main"
+	"linked_accounts": "{0} konton",
+	"linked_main": "huvudkonto"
 }
