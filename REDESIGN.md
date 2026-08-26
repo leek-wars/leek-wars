@@ -591,6 +591,35 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     au lieu de 6. Sans ce déploiement, la catégorie et la date d'ouverture
     restent vides (le widget ne casse pas).
 
+- **2026-08-26, lot 25 — l'accueil et le menu sur mobile** (retours de Pierre) :
+  - **Retour à l'accueil impossible sur mobile** : `app.vue` ne rend la barre du
+    haut que si `!LeekWars.mobile || !connected`, or c'est elle qui porte le logo
+    cliquable vers `/`. Une fois connecté sur téléphone, la page d'accueil
+    n'était plus atteignable. Le menu gagne donc une entrée **Accueil**
+    (`LeekWars.mobile` seulement, sur le patron de l'entrée Console ; sur grand
+    écran le logo suffit). Nouvelle clé globale `main.home`, insérée
+    textuellement dans les 17 `main.json` après `back_to_home` — ces fichiers ne
+    sont pas triés, et une réécriture par sérialiseur aurait reformaté le reste.
+  - Effet de bord corrigé dans la foulée : le premier poireau portait
+    `router-link-active` sur `/` — un reste de l'époque où l'accueil était sa
+    page. Avec la nouvelle entrée, **deux entrées s'allumaient en même temps**.
+  - **Titre de page sur mobile** : `global.scss` masque le `h1` de toutes les
+    pages connectées en mode application (`#app.app.connected .page .page-bar
+    h1`), le menu disant déjà où l'on est. L'accueil fait exception — c'est la
+    seule page qu'on n'atteint pas par une entrée de menu. L'override vit dans
+    le `scoped` de `home.vue` : son attribut de portée suffit à passer devant la
+    règle globale, à un cran de spécificité près, sans toucher aux autres pages.
+  - **Entrées de menu trop hautes en v3 sur mobile** : `#app.app .menu .section`
+    (menu.vue) imposait `line-height: 42px` et `background: transparent`, une
+    règle héritée du v2 qui écrasait le `line-height: normal` et le `background`
+    du shell v3. Résultat : **60 px de haut pour un libellé de 12,5**, et
+    l'entrée active privée de sa surface, réduite à son liseré. La règle est
+    désormais réservée à `body.v2` ; en v3 les marges du mockup (9/16) suffisent,
+    avec un simple `min-height: 44px` pour la cible tactile. Mesuré : entrée de
+    60 → **44 px**, liste de 716 → **540 px**, et l'entrée active retrouve
+    `--background-row`. v2 vérifié inchangé (42 px d'interligne, entrée de 40 px,
+    fond transparent).
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser

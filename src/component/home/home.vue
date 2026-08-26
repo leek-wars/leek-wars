@@ -468,6 +468,14 @@
 	.page {
 		overflow-x: clip;
 	}
+	// Sur mobile, global.scss masque le titre de TOUTES les pages connectées
+	// (`#app.app.connected .page .page-bar h1`) : le menu suffit à dire où l'on est.
+	// L'accueil fait exception — c'est la seule page qu'on atteint sans passer par une
+	// entrée de menu, et sans titre rien ne la nomme. L'attribut de portée du scoped
+	// suffit à passer devant la règle globale, à un cran de spécificité près.
+	#app.app.connected .page .page-bar h1 {
+		display: block;
+	}
 	.grid-stack {
 		background: transparent;
 		margin-left: -6px;

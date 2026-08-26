@@ -42,12 +42,23 @@
 			</div>
 
 			<div class="menu-center">
+				<!-- Seule porte de sortie vers l'accueil sur mobile : la barre du haut,
+				     qui porte le logo cliquable, n'y est pas rendue une fois connecté
+				     (app.vue). Sur grand écran le logo suffit, l'entrée est en trop. -->
+				<router-link v-if="LeekWars.mobile" v-ripple to="/" class="section" :class="{'router-link-active': isHomePage}" @click="clickItem">
+					<v-icon>mdi-home</v-icon>
+					<div class="text">{{ $t('main.home') }}</div>
+				</router-link>
+
 				<!-- Intitulés de section du v3 (« ◆ Poireaux », « ◆ Jeu »), absents du
 				     DOM en v2 pour que l'ancien design reste identique au pixel. -->
 				<h4 v-if="!LeekWars.legacyTheme && $store.state.farmer && $store.state.farmer.leeks">{{ $t('main.leeks') }}</h4>
 				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
 					<span v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" class="dida-element">
-						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': (i == 0 && isHomePage) || RegExp('/leek/' + leek.id + '(/|$)').test($route.path), bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
+						<!-- Le premier poireau n'est plus mis en avant sur « / » : l'accueil est
+						     désormais un tableau de bord et non la page de ce poireau, et deux
+						     entrées s'allumaient en même temps depuis l'ajout de l'entrée Accueil. -->
+						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': RegExp('/leek/' + leek.id + '(/|$)').test($route.path), bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
 							<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
 								<!-- En v3 les icônes PNG blanches du menu deviennent des MDI :
 								     elles suivent la couleur du texte, donc restent lisibles sur
@@ -756,12 +767,21 @@
 	#app.app .menu [tab="farmer"] {
 		display: block;
 	}
-	#app.app .menu .section {
+	// Héritée du v2, dont les entrées mobiles sont une ligne de 42 px sans surface.
+	// Elle s'appliquait aussi au v3, où elle écrasait le `line-height: normal` et le
+	// `background` du shell : 60 px de haut pour un libellé de 12,5, et l'entrée
+	// active privée de sa surface, réduite à son liseré.
+	body.v2 #app.app .menu .section {
 		line-height: 42px;
 		background: transparent;
-		&:before {
-			display: none;
-		}
+	}
+	#app.app .menu .section:before {
+		display: none;
+	}
+	// En v3 les marges du mockup (9/16) suffisent à la hauteur ; on n'impose qu'une
+	// cible tactile confortable, sous laquelle une entrée de 36 px descendrait.
+	body:not(.v2) #app.app .menu .section {
+		min-height: 44px;
 	}
 	.menu .section.about {
 		display: none;
