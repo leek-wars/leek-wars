@@ -3,12 +3,14 @@
 		<div v-if="farmer" class="talent-header">
 			<talent :id="farmer.id" :talent="farmer.talent" :max_talent="farmer.max_talent" :label="t('breeder_talent')" category="farmer" />
 			<div class="ratio">
-				<span class="win">{{ farmer.victories }}</span> /
-				<span class="draw">{{ farmer.draws }}</span> /
-				<span class="lose">{{ farmer.defeats }}</span>
+				<span class="win">{{ $filters.number(farmer.victories) }}</span> /
+				<span class="draw">{{ $filters.number(farmer.draws) }}</span> /
+				<span class="lose">{{ $filters.number(farmer.defeats) }}</span>
 			</div>
 		</div>
-		<h4 class="fights-title"><v-icon>mdi-history</v-icon> {{ t('latest_fights') }}</h4>
+		<div v-if="chartData" class="chart-wrap">
+			<Line :data="chartData" :options="chartOptions" />
+		</div>
 		<div v-if="fights.length" ref="fightsEl" class="fights">
 			<fights-history :fights="visibleFights" />
 		</div>
@@ -17,14 +19,17 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, defineAsyncComponent, ref } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, ref, watch } from 'vue'
+	import { Line } from 'vue-chartjs'
+	import type { ChartData, ChartOptions } from 'chart.js'
+	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { useNamespacedT } from '@/model/i18n'
 	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 
 	defineOptions({
 		name: 'HomeWidgetTalent',
-		components: { 'fights-history': defineAsyncComponent(() => import('@/component/history/fights-history.vue')) }
+		components: { Line, 'fights-history': defineAsyncComponent(() => import('@/component/history/fights-history.vue')) }
 	})
 
 	const t = useNamespacedT('home')
@@ -36,6 +41,69 @@
 	const fightsEl = ref<HTMLElement | null>(null)
 	const fightCount = useFitCount(fightsEl, '.fight', 12)
 	const visibleFights = computed(() => fights.value.slice(0, fightCount.value))
+
+	const chartData = ref<ChartData<'line'> | null>(null)
+	const chartOptions = ref<ChartOptions<'line'>>({})
+
+	// Historique de talent en sparkline : à la hauteur qu'on peut lui donner ici,
+	// des axes mangeraient la place de la courbe et leurs graduations tomberaient
+	// sur les gris par défaut de Chart.js, jamais repris par le thème sombre.
+	// La date et la valeur d'un point se lisent au survol.
+	function buildChart() {
+		const history = farmer.value?.talent_history
+		if (!farmer.value || !history || !history.length) {
+			chartData.value = null
+			return
+		}
+		const labels: string[] = []
+		const time = LeekWars.time
+		for (let i = 1; i <= 7; ++i) labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
+		labels.reverse()
+		labels.push(LeekWars.formatDayMonthShort(time))
+		const data = [...history, farmer.value.talent]
+		const lastIndex = data.length - 1
+		// Le vert du thème, pas celui du v2 écrit en dur : il change entre v2 et v3.
+		const style = getComputedStyle(document.body)
+		const primary = style.getPropertyValue('--primary').trim() || '#5fad1b'
+		chartData.value = {
+			labels,
+			datasets: [{
+				tension: 0.2,
+				data,
+				borderColor: primary,
+				pointBackgroundColor: primary,
+				borderWidth: 2,
+				// Teinte de remplissage par suffixe d'alpha, comme les autres courbes
+				// de talent du site : le canvas reçoit la couleur telle quelle.
+				fill: { target: 'origin', above: /^#[0-9a-f]{6}$/i.test(primary) ? primary + '30' : primary },
+				// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
+				segment: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
+				},
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			}] as any
+		}
+		chartOptions.value = {
+			responsive: true,
+			maintainAspectRatio: false,
+			// Sans marge haute, le point du jour est rogné par le bord du canvas.
+			layout: { padding: { top: 4, bottom: 2 } },
+			plugins: {
+				legend: { display: false },
+				tooltip: {
+					displayColors: false,
+					callbacks: { label: (ctx) => ctx.parsed.y === null ? '' : LeekWars.formatNumber(ctx.parsed.y) },
+				},
+			},
+			scales: { x: { display: false }, y: { display: false } },
+			elements: { point: { radius: 2, hoverRadius: 5 } },
+		}
+	}
+	// Le vert est lu sur le body : il faut relire APRÈS que la bascule de thème
+	// ait posé sa classe (app.vue le fait dans son propre watcher).
+	watch(() => [farmer.value?.talent_history, farmer.value?.talent, LeekWars.darkMode, LeekWars.legacyTheme],
+		() => nextTick(buildChart), { immediate: true })
 </script>
 
 <style lang="scss" scoped>
@@ -52,30 +120,23 @@
 		min-height: 0;
 		overflow: hidden;
 	}
+	// Les cartes gardent la hauteur qu'elles ont partout ailleurs sur le site.
+	// Les compacter faisait remonter l'heure (« il y a 2 jours », calée en bas de
+	// la carte) dans la ligne des noms : à 34 px les deux textes se chevauchent.
+	// On montre moins de combats plutôt que des combats écrasés.
 	.fights :deep(.history) {
 		padding: 0;
 	}
-	// Panel bas : lignes de combat compactes, on réduit au lieu de tronquer.
-	@container (max-height: 300px) {
-		.fights :deep(.fight) {
-			height: 34px;
-			margin: 3px 4px;
-			font-size: 13px;
-		}
-		.fights :deep(.fight .fighters) {
-			height: 34px;
-		}
-		.fights :deep(.fight .fighter) {
-			height: 26px;
-			line-height: 26px;
-		}
-		.fights :deep(.fight .center i) {
-			line-height: 34px;
-			font-size: 20px;
-			margin: 0 6px;
-		}
-		.fights :deep(.fight .center img) {
-			margin: 6px;
+	.chart-wrap {
+		flex: 0 0 auto;
+		height: clamp(70px, 30cqh, 120px);
+		position: relative;
+	}
+	// Panel trop bas pour loger la courbe ET des combats lisibles : les combats
+	// passent d'abord, ils sont le sujet du widget.
+	@container (max-height: 200px) {
+		.chart-wrap {
+			display: none;
 		}
 	}
 	.talent-header {
@@ -90,13 +151,6 @@
 		.win { color: var(--result-win-text); }
 		.draw { color: var(--result-draw); }
 		.lose { color: var(--result-defeat-text); }
-	}
-	.fights-title {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		color: var(--text-color-secondary);
-		margin-top: 4px;
 	}
 	.none {
 		color: var(--text-color-secondary);

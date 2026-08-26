@@ -147,7 +147,7 @@
 		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 4, defaultH: 5, minW: 3, minH: 3, link: '/ranking', multi: true, configurable: true },
 		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true, noScroll: true },
 		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies', noScroll: true },
-		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum' },
+		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum', noScroll: true },
 		live: { icon: 'mdi-access-point', component: markRaw(HomeWidgetLive), defaultW: 4, defaultH: 5, minW: 3, minH: 3 },
 		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 4, defaultH: 3, minW: 3, minH: 2 },
 	}
@@ -239,6 +239,9 @@
 	// canal choisi dans les params, sinon chat public de la langue.
 	function widgetTitle(widget: WidgetInstance): string {
 		const base = t('widget_' + widget.type)
+		// Le widget classement précise la catégorie affichée (« Classement — Éleveurs »),
+		// sinon deux classements côte à côte portent le même titre.
+		if (widget.type === 'classement') return base + ' — ' + t('ranking_' + categoryOf(widget))
 		if (widget.type !== 'chat') return base
 		const farmer = store.state.farmer
 		let id: number | null = null

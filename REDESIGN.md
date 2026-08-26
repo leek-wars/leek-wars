@@ -536,6 +536,61 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - Build de production complet passé, et vérifié à l'écran sur le tri du forum
     et les filtres d'équipes (la largeur maximale s'applique de nouveau).
 
+- **2026-08-26, lot 24 — les widgets de l'accueil** (retours de Pierre sur
+  talent, forum et classement) :
+  - **Widget « Talent et derniers combats »** : le titre interne « Derniers
+    combats » disparaît (l'en-tête du panel le dit déjà). Surtout, la
+    **compaction des cartes de combat est supprimée** : sous 300 px de panel
+    elles tombaient à 34 px, ce qui **faisait remonter l'heure** (« il y a
+    2 jours », calée en bas de la carte) **dans la ligne des noms**. Mesuré :
+    à 34 px l'encre du nom et celle de l'heure se croisent de **2,6 px**, à
+    42 px il reste **2,7 px** entre les deux. On montre donc moins de combats
+    plutôt que des combats écrasés — `useFitCount` s'en charge déjà.
+    Le ratio victoires/nuls/défaites passe aux **espaces de milliers**
+    (`$filters.number`), et le widget gagne l'**historique de talent** de
+    l'éleveur en sparkline (`clamp(70px, 30cqh, 120px)`, masquée sous 200 px de
+    panel : les combats passent d'abord). Pas d'axes — à cette hauteur ils
+    mangeraient la courbe et leurs graduations tombent sur les gris par défaut
+    de Chart.js, que le thème sombre ne reprend jamais ; la date et la valeur se
+    lisent au survol. La courbe **lit `--primary` sur le body** au lieu du
+    `#5fad1b` en dur des autres graphiques de talent, et se reconstruit au
+    changement de thème et de design.
+  - **Widget Forum** : la liste **remplit la hauteur du panel** (`useFitCount`,
+    widget passé en `noScroll`) au lieu de six lignes fixes — le service en
+    renvoie 20 et le client coupe. Chaque ligne gagne la **catégorie** (puce ;
+    clé `forum-category.<name>` sauf forum d'équipe, dont le nom est déjà celui
+    de l'équipe), la **date d'ouverture** et, en fin de ligne, l'**auteur de la
+    dernière réponse avec son ancienneté**. La date d'ouverture est en
+    **numérique** : la forme longue du site (« 7 novembre 2024 ») prend une
+    centaine de pixels et, sur une ligne partagée à quatre, c'est le nom de
+    l'auteur qui payait — il tombait à **5 px** faute de plancher, parce qu'il
+    est le seul élément de la ligne à accepter de rétrécir (`overflow: hidden`
+    met son minimum automatique à 0, là où la catégorie et les dates gardent
+    leur min-content). Il a désormais un `min-width`.
+  - **Widget Classement** : le titre du panel précise la catégorie
+    (« Classement — Éleveurs »), la liste prend des **intitulés de colonnes**
+    (`main.place` / `main.leek|farmer|team` / `main.talent`, aucune clé
+    nouvelle), l'**or, l'argent et le bronze passent sur le nom** en plus du
+    rang, et les noms portent le **rich-tooltip** de leur catégorie.
+    Deux pièges : la colonne de rang est passée à **46 px** — dimensionnée pour
+    l'intitulé et non pour deux chiffres, sinon « Place » débordait sur la
+    colonne des noms (les langues les plus longues, Placering, Peringkat, s'y
+    coupent) ; et la classe d'un appelant **ne se pose pas sur un
+    `rich-tooltip`**, dont la racine est un `v-menu` qui avale les attributs —
+    c'est le défaut du lot 23, elle va sur l'activateur.
+    Au passage, les couleurs de podium écrites en dur (`#f1c40f`, `#bdc3c7`,
+    `#cd7f32`) passent aux jetons `--rank-*`, et le vert de la ligne « moi » au
+    `--primary` du thème (valeur identique au pixel en v2).
+  - Vérifié à l'écran sur la bêta locale, deux thèmes, plus non-régression v2
+    (aplats pastel des cartes de combat conservés). Contrastes mesurés :
+    en clair 4,89 (or) / 5,68 (argent) / 6,81 (bronze) / 6,74 (intitulés et
+    métadonnées) / 16,6 (puce de catégorie) ; en sombre 12,9 / 11,1 / 5,5 /
+    8,7 / 16,1 — tous au-dessus du seuil de 4,5.
+  - **Demande côté serveur** : `forum/get-last-topics` renvoie désormais
+    `date`, `category_name`, `category_team`, `last_message_owner`, et 20 sujets
+    au lieu de 6. Sans ce déploiement, la catégorie et la date d'ouverture
+    restent vides (le widget ne casse pas).
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
