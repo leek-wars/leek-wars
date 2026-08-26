@@ -110,7 +110,7 @@ import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins] })
 

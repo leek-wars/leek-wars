@@ -155,7 +155,7 @@
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { store } from '@/model/store'
 	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { useRouter } from 'vue-router'
 
 	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))

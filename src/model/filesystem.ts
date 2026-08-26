@@ -3,7 +3,7 @@ import { getAICache, removeAICache, setAICache, clearAICache } from '@/model/ai-
 import { AI } from '@/model/ai'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 import { Keyword } from './keyword'
 import { reactive } from 'vue'

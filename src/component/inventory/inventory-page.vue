@@ -94,7 +94,7 @@
 	import Forge from '../forge/forge.vue'
 	import PageTabs from '@/component/app/page-tabs.vue'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 

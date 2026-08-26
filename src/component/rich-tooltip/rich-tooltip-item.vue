@@ -17,7 +17,7 @@ import ItemPreview from '@/component/market/item-preview.vue'
 import { ItemTemplate } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import type { Leek } from '@/model/leek'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 defineOptions({ name: 'RichTooltipItem' })
 

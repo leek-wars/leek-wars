@@ -89,7 +89,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: 'Documentation', i18n: {}, mixins: [...mixins] })
 

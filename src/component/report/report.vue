@@ -276,7 +276,7 @@
 	import { CHIPS } from '@/model/chips'
 	import { fileSystem } from '@/model/filesystem'
 	import router from '@/router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { computed, defineAsyncComponent, getCurrentInstance, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute } from 'vue-router'

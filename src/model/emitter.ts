@@ -1,10 +1,13 @@
 import mitt from 'mitt'
-import { ComponentPublicInstance } from 'vue'
-import { Folder, Item } from '@/component/editor/editor-item'
-import { Farmer } from './farmer'
-import { AI } from './ai'
 import { i18n } from '@/model/i18n'
-import { SchemeTemplate } from '@/model/scheme'
+// Imports de TYPE uniquement : ce module est importé par ~50 composants, il doit rester
+// une feuille du graphe. Un import de valeur y tirerait farmer/ai/editor-item et
+// recréerait des cycles (cf. model/vue.test.ts).
+import type { ComponentPublicInstance } from 'vue'
+import type { Folder, Item } from '@/component/editor/editor-item'
+import type { Farmer } from './farmer'
+import type { AI } from './ai'
+import type { SchemeTemplate } from '@/model/scheme'
 
 type Events = {
 	keydown: KeyboardEvent

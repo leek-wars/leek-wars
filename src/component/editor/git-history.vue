@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { mixins } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 interface Commit {

@@ -394,7 +394,7 @@
 	import { AI_LANGUAGES } from '@/component/editor/file-types'
 	import { RankingLeekRow, RankingFarmerRow, RankingTeamRow } from '@/model/ranking'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { getRedirectAfterLogin } from '@/router'
 	import { defineAsyncComponent, ref } from 'vue'
 	import { useI18n } from 'vue-i18n'

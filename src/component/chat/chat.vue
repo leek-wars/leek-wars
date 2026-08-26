@@ -158,7 +158,7 @@
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 

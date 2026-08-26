@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { fileSystem } from '@/model/filesystem'
 import { useNamespacedT } from '@/model/i18n'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EditorAI from './editor-ai.vue'

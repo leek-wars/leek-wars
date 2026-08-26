@@ -271,7 +271,7 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { useTheme } from 'vuetify'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const { locale: i18nLocale } = useI18n()
 	const router = useRouter()

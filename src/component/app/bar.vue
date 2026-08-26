@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'

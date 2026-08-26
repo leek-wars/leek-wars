@@ -369,7 +369,7 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 

@@ -8,7 +8,7 @@
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { mdiIcons } from '@/model/mdi-icons'
 	import { Latex } from '@/model/latex'
-	import { createSubApp } from '@/model/vue'
+	import { createSubApp } from '@/model/sub-app'
 	import { resolveCodeThemeClass } from '@/component/editor/code-theme'
 	import CodeTabs from '@/component/encyclopedia/code-tabs.vue'
 	import { findCodeBlockGroups } from '@/model/doc-language'

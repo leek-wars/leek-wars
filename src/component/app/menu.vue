@@ -259,7 +259,7 @@
 	import { store } from '@/model/store'
 	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
 	import { BOSSES } from '@/model/boss'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 

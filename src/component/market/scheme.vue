@@ -46,7 +46,7 @@ import { ItemTemplate, itemImageUrl } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { SchemeTemplate } from '@/model/scheme'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed } from 'vue'
 
 defineOptions({ name: 'Scheme', components: {

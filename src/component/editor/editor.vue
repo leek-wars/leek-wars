@@ -325,7 +325,7 @@
 	import AIElement from '@/component/app/ai.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import LeekscriptVersions from '../app/leekscript-versions.vue'
 
 	// Explorer et EditorTest sont accédés via template ref : defineAsyncComponent +

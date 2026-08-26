@@ -7,7 +7,7 @@ import { getClassDoc } from './api-class-doc'
 import { i18n } from '@/model/i18n';
 import { fileSystem } from '@/model/filesystem';
 import { analyzer } from './analyzer';
-import { emitter } from '@/model/vue';
+import { emitter } from '@/model/emitter';
 import { markRaw, watch } from 'vue';
 import { AI } from '@/model/ai.js';
 import { LeekWars } from '@/model/leekwars';

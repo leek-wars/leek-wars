@@ -247,7 +247,7 @@
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import GitHistory from './git-history.vue'
 	import { gitCall } from './git-log'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import type { DiffTab } from './editor-tabs.vue'
 	import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'

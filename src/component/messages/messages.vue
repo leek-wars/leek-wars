@@ -116,7 +116,7 @@
 	import { store } from '@/model/store'
 	import { computed, defineAsyncComponent, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { env } from '@/env'
 	import Conversation from '@/component/messages/conversation.vue'
 

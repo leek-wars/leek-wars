@@ -597,7 +597,7 @@
 	import { computed, defineAsyncComponent, reactive, ref, useTemplateRef } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))

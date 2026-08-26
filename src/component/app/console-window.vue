@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'

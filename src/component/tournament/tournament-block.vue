@@ -32,7 +32,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'

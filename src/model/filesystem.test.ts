@@ -12,7 +12,7 @@ const cache = vi.hoisted(() => ({
 vi.mock('@/model/ai-code-cache', () => cache)
 
 const emitterMock = vi.hoisted(() => ({ emit: vi.fn() }))
-vi.mock('@/model/vue', () => ({ emitter: emitterMock }))
+vi.mock('@/model/emitter', () => ({ emitter: emitterMock }))
 
 vi.mock('@/model/leekwars', () => ({ LeekWars: { post: vi.fn(), get: vi.fn(), delete: vi.fn(), toast: vi.fn(), socket: {} } }))
 vi.mock('@/model/i18n', () => ({ i18n: { t: (k: string, args?: unknown) => args === undefined ? k : `${k}|${JSON.stringify(args)}` } }))

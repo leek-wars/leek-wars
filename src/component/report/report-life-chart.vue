@@ -41,7 +41,7 @@
 <script setup lang="ts">
 	import { Fight, FightType } from '@/model/fight'
 	import { TEAM_COLORS } from '@/model/team'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { mixins } from '@/model/i18n'
 	import { Line } from 'vue-chartjs'
 	import { ChartComponentRef } from 'vue-chartjs'

@@ -258,7 +258,7 @@
 	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: 'Player', i18n: {}, mixins: [...mixins], components: { Hud, 'lw-title': LwTitle } })
 

@@ -664,7 +664,7 @@
 	import LwTitle from '@/component/title/title.vue'
 	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
 	import GodsonsManageDialog from '@/component/godsons-manage-dialog/godsons-manage-dialog.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
 	import { computed, defineAsyncComponent, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'

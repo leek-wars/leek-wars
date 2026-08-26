@@ -25,7 +25,7 @@ vi.mock('@/model/leekwars', () => leekWarsMock)
 
 const storeMock = vi.hoisted(() => ({ store: { state: { farmer: null as unknown } } }))
 vi.mock('@/model/store', () => storeMock)
-vi.mock('@/model/vue', () => ({ emitter: { on: () => undefined, off: () => undefined } }))
+vi.mock('@/model/emitter', () => ({ emitter: { on: () => undefined, off: () => undefined } }))
 
 import Inventory from '@/component/inventory/inventory.vue'
 
