@@ -224,15 +224,14 @@ async function confirmEuros() {
 </script>
 
 <style lang="scss" scoped>
-	// Violet identitaire de LW+, le même que le badge du profil et la page /lwplus,
-	// qui le définissent aussi en local : couleur de marque, pas une neutre du thème.
-	$lwplus: #8e44ad;
+	// Or du système : --gold en aplat (avec --gold-text par-dessus), --rank-first
+	// en encre. Aucune couleur en dur, les jetons s'inversent seuls en sombre.
 
 	.pitch {
 		padding: 12px;
 		color: var(--text-color-secondary);
 		a {
-			color: $lwplus;
+			color: var(--rank-first);
 			font-weight: 500;
 		}
 	}
@@ -256,7 +255,7 @@ async function confirmEuros() {
 		border: 2px solid var(--border);
 		border-radius: var(--radius);
 		&.selected {
-			border-color: $lwplus;
+			border-color: var(--gold);
 		}
 	}
 	.months {
@@ -266,26 +265,26 @@ async function confirmEuros() {
 	.save {
 		font-size: 12px;
 		font-weight: 500;
-		color: $lwplus;
+		color: var(--rank-first);
 	}
 	.buy-euro, .buy-crystals {
 		width: 100%;
 	}
 	.buy-euro {
-		background: $lwplus;
-		color: white;
+		background: var(--gold);
+		color: var(--gold-text);
 	}
 	.euro-payment {
 		padding: 0 12px 12px;
 	}
 	.pay-btn {
 		margin-top: 12px;
-		background: $lwplus;
-		color: white;
+		background: var(--gold);
+		color: var(--gold-text);
 	}
 	.message {
 		padding: 0 12px 12px;
-		color: $lwplus;
+		color: var(--rank-first);
 		font-weight: 500;
 	}
 	.error-message {

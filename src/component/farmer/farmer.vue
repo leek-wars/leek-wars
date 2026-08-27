@@ -1546,8 +1546,12 @@
 	.grade.referent {
 		background: #2196f3;
 	}
+	// Aplat d'or du système. L'encre est forcée à --gold-text : .grade impose du
+	// blanc, qui ne tient que 3,1 sur l'or clair (mesuré) là où ce 14 px en demande
+	// 4,5. Avec --gold-text on est à 5,9 en clair et 13,4 en sombre.
 	.grade.lwplus {
-		background: #8e44ad;
+		background: var(--gold);
+		color: var(--gold-text);
 	}
 	// #3237 : gris neutre volontaire — déclarer ses comptes n'est ni une
 	// distinction ni un avertissement, c'est une information.

@@ -237,16 +237,20 @@ async function resume() {
 </script>
 
 <style lang="scss" scoped>
-	// Violet identitaire de LW+, le même que le badge du profil (farmer.vue).
-	$lwplus: #8e44ad;
-	$lwplus-light: #a55fc4;
+	// LW+ prend l'or du système (jetons --gold / --gold-text en aplat,
+	// --rank-first en encre), pas une couleur en dur : ils s'inversent tout seuls
+	// en sombre. L'or plein ne sert QU'aux aplats — en fond de bandeau, seules des
+	// encres sombres y passent (mesuré 4,16 sur le stop foncé, sous le seuil), d'où
+	// le lavis clair ci-dessous qui garde l'encre normale du site.
 
 	.hero-panel :deep(.content) {
 		padding: 0;
 	}
 	.hero {
-		background: linear-gradient(135deg, $lwplus 0%, $lwplus-light 60%, #6c3483 100%);
-		color: #fff;
+		background: linear-gradient(135deg,
+			color-mix(in srgb, var(--gold) 22%, var(--background)) 0%,
+			color-mix(in srgb, var(--gold) 10%, var(--background)) 100%);
+		color: var(--text-color);
 		padding: 28px 20px 24px;
 		text-align: center;
 	}
@@ -255,21 +259,24 @@ async function resume() {
 		font-weight: 800;
 		line-height: 1;
 		letter-spacing: -1px;
-		text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+		// L'or en encre sur le lavis : 3,9 en clair et 7,9 en sombre (mesurés).
+		// Sous 4,5, mais la marque fait 46 px en 800 — c'est du gros texte, seuil 3.
 		.plus-sign {
-			color: #ffd85e;
+			color: var(--rank-first);
 		}
 	}
 	.hero .pitch {
 		margin: 12px auto 0;
 		max-width: 520px;
-		opacity: 0.92;
+		color: var(--text-color-secondary);
 	}
 	.hero .price {
 		margin-top: 18px;
+		// Le seul vrai aplat d'or de la page : c'est lui qui porte l'identité.
 		.amount {
 			display: inline-block;
-			background: rgba(0, 0, 0, 0.22);
+			background: var(--gold);
+			color: var(--gold-text);
 			padding: 6px 16px;
 			border-radius: var(--radius);
 			font-size: 24px;
@@ -279,7 +286,7 @@ async function resume() {
 			display: block;
 			margin-top: 8px;
 			font-size: 13px;
-			opacity: 0.85;
+			color: var(--text-color-secondary);
 		}
 	}
 	.benefits {
@@ -297,7 +304,7 @@ async function resume() {
 			background: var(--background-secondary);
 		}
 		.icon {
-			color: $lwplus;
+			color: var(--rank-first);
 			font-size: 30px;
 			margin-bottom: 6px;
 		}
@@ -337,13 +344,13 @@ async function resume() {
 		padding: 14px 12px;
 		font-size: 16px;
 		.ok {
-			color: $lwplus;
+			color: var(--rank-first);
 			font-size: 26px;
 		}
 	}
 	.pay-btn {
-		background: $lwplus;
-		color: #fff;
+		background: var(--gold);
+		color: var(--gold-text);
 		margin-top: 12px;
 	}
 	.canceled-notice, .not-verified, .cancel-anytime {

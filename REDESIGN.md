@@ -765,6 +765,28 @@ Parti pris :
   import dynamique.
 - **Logo** (Pierre) et **puces/apparats** (autre session) : en attente.
 
+- **2026-08-27, lot 27 — LW+ passe du violet à l'or** (demande de Pierre). Le
+  violet `#8e44ad` était écrit en dur dans quatre fichiers (`lwplus.vue`,
+  `lwplus-packs.vue`, `settings.vue`, le badge de `farmer.vue`), donc jamais
+  redéfini en sombre : il n'y tenait que **3,29** en encre, sous le seuil. LW+
+  prend les jetons d'or existants du lot 11, qui s'inversent seuls.
+  - **`--gold` / `--gold-text` en aplat**, **`--rank-first` en encre** (l'or
+    mesuré à 4,72 en clair et 13,36 en sombre, contre 3,29 au violet).
+  - **Le bandeau ne peut pas être un aplat d'or.** Mesuré : le stop foncé du
+    dégradé plein tombe à **4,16** en clair, et le « + » en réserve du fond à
+    **2,71** — sous le seuil gros texte lui-même. Le bandeau devient donc un
+    **lavis** (`color-mix` de `--gold` à 22 % puis 10 % dans `--background`) qui
+    garde l'encre normale du site : 13,1 en clair, 9,8 en sombre. L'or plein est
+    réservé à la **plaque de prix**, seul vrai aplat de la page.
+  - Le « + » de la marque prend `--rank-first` : 3,86 en clair, sous 4,5 mais
+    c'est du **46 px en 800**, donc gros texte, seuil 3.
+  - Le badge de profil garde l'aplat mais **force son encre** à `--gold-text` :
+    `.grade` impose `--white`, qui ne tient que 3,1 sur l'or clair là où son
+    14 px en demande 4,5.
+  - Reste à trancher : le badge LW+ doré côtoie le badge modérateur
+    `#ffa900`, écrit en dur et de la même famille. Deux distinctions jaunes
+    voisines sur la même ligne de profil.
+
 ## À reporter dans le projet Claude Design
 
 Décisions prises côté site qui doivent redescendre dans le mockup :

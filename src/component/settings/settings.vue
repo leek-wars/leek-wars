@@ -859,15 +859,15 @@
 		font-size: 12px;
 		margin: 5px 0;
 	}
-	// Même violet que la page /lwplus, qui le définit aussi en local : couleur de
-	// marque de l'abonnement, pas une neutre du thème.
+	// Or du système en encre (--rank-first), comme la page /lwplus et les lots de
+	// mois : le jeton s'inverse seul en sombre, un hex en dur non.
 	.lwplus-status {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		padding: 4px 12px 12px;
 		.ok {
-			color: #8e44ad;
+			color: var(--rank-first);
 			font-size: 26px;
 		}
 	}
