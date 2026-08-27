@@ -3,12 +3,11 @@
 		<loader v-if="!loaded" />
 		<div v-else-if="events.length" class="events">
 			<div v-for="(event, e) in events" :key="e" class="event">
-				<!-- L'avatar dit QUI, l'icône dit QUOI : les deux, l'un devant l'autre.
-					 Le trophée débloqué garde sa propre icône, en pastille sur l'avatar. -->
+				<!-- L'avatar dit QUI, la pastille dit QUOI (toujours une icône générique),
+					 et l'image du trophée, en bout de ligne, dit LEQUEL. -->
 				<router-link :to="'/farmer/' + event.farmer.id" class="event-avatar">
 					<avatar :farmer="(event.farmer as any)" />
-					<trophy-icon v-if="event.type === 'trophy'" :code="event.trophy" class="badge" />
-					<v-icon v-else class="badge">{{ METRIC_ICONS[event.metric] || 'mdi-forum-outline' }}</v-icon>
+					<v-icon class="badge">{{ badgeIcon(event) }}</v-icon>
 				</router-link>
 				<div class="event-body">
 					<div class="text">
@@ -20,6 +19,9 @@
 					</div>
 					<div class="date">{{ $filters.duration(event.date) }}</div>
 				</div>
+				<router-link v-if="event.type === 'trophy' && event.trophy" :to="'/trophy/' + event.trophy" class="event-trophy">
+					<trophy-icon :code="event.trophy" />
+				</router-link>
 			</div>
 		</div>
 		<div v-else class="none">{{ t('live_empty') }}</div>
@@ -39,6 +41,15 @@
 		victories: 'mdi-sword-cross',
 		bosses: 'mdi-skull-outline',
 		tournaments: 'mdi-trophy-outline',
+	}
+
+	// La pastille de l'avatar ne dit plus que la NATURE de l'événement : l'image du
+	// trophée, qui disait laquelle, est passée en bout de ligne où elle se voit.
+	// Trophée plein contre trophée en contour, qui appartient déjà aux tournois.
+	function badgeIcon(event: LiveEvent): string {
+		if (event.type === 'trophy') return 'mdi-trophy'
+		if (event.type === 'topic') return 'mdi-forum-outline'
+		return METRIC_ICONS[event.metric ?? ''] || 'mdi-forum-outline'
 	}
 
 	interface LiveEvent {
@@ -112,7 +123,20 @@
 		border-radius: var(--radius-pill);
 	}
 	.event-body {
+		flex: 1;
 		min-width: 0;
+	}
+	// L'image du trophée en bout de ligne : c'est elle qui dit LEQUEL, elle a donc
+	// la taille de l'avatar et non celle d'une pastille. Elle ne rétrécit jamais,
+	// c'est le texte (déjà tronqué à deux lignes) qui cède la place.
+	.event-trophy {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		img {
+			width: 28px;
+			height: 28px;
+		}
 	}
 	.text {
 		font-size: 14px;

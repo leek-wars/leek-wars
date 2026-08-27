@@ -285,6 +285,11 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     l'icône d'événement (trophée, épées, crâne, forum) en pastille sur son coin.
     Demande un champ `avatar_changed` dans `live/get-events` (côté serveur) :
     sans lui, l'`avatar` retombe sur l'image par défaut.
+    *Révisé le 2026-08-26 (demande de Pierre) : la pastille ne dit plus que la
+    NATURE de l'événement — `mdi-trophy` plein pour un trophée, contre le
+    contour déjà pris par les tournois — et l'image du trophée, qui disait
+    LEQUEL depuis un carré de 16 px, passe en bout de ligne à droite, à la
+    taille de l'avatar et cliquable vers `/trophy/<code>`.*
 
 - **2026-08-14, lot 14 — l'arbre du tournoi tient dans l'écran** : la fenêtre
   élargie du redesign donnait au SVG (ratio fixe, largeur 100 %) une hauteur
