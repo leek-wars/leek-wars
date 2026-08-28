@@ -69,8 +69,8 @@
 								</div>
 							</router-link>
 						</div>
-						<div v-else>
-							<div v-for="type in effectTypes" :key="type">
+						<div v-else class="chips-types">
+							<div v-for="type in effectTypes" :key="type" class="chip-type">
 								<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 								<div class="items chips">
 									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
@@ -975,6 +975,25 @@ const t = useNamespacedT('market')
 			right: 0;
 			margin: auto;
 		}
+	}
+	.chips-types {
+		// Deux colonnes de catégories dès qu'il y a la place pour deux fois
+		// 450 px, une seule en dessous. Les catégories courtes (Renvois,
+		// Poisons) laissaient sinon une grande bande vide à leur droite.
+		columns: 450px 2;
+		column-gap: 8px;
+		// Le retrait du haut est porté par le conteneur, sinon la deuxième
+		// colonne démarre 8 px plus haut que la première.
+		padding-top: 8px;
+		// `.panel h4.first` est déclaré plus bas à specificité égale : il faut
+		// passer devant lui, pas seulement après.
+		.panel & h4.first {
+			margin-top: 0;
+		}
+	}
+	.chip-type {
+		// Une catégorie ne se coupe pas entre deux colonnes.
+		break-inside: avoid;
 	}
 	.chips .chip {
 		padding: 7px;
