@@ -326,6 +326,52 @@
 			color: #e06c75 !important;
 		}
 	}
+	/* --- Peau v3 des onglets de fichier ---
+	 *
+	 * Ils étaient restés au v2 : un voile noir à 20 % pour le fond, de l'encre
+	 * #f2f2f2 en dur et `--grey-13` sur les icônes. Trois choses qui ne tiennent
+	 * que sur une barre SOMBRE — sur le parchemin, l'encre claire disparaissait.
+	 * Et l'onglet sélectionné prenait `--pure-white`, qui vaut le fond de PAGE en
+	 * thème sombre : il s'y lisait comme un trou plutôt que comme l'onglet actif.
+	 *
+	 * En v3 : surfaces du thème, encre du thème, et l'onglet actif se distingue
+	 * par la surface du panneau plus un trait vert au-dessus — le parti pris déjà
+	 * retenu pour les onglets de la barre de page. Le trait existait déjà
+	 * (`border-top: 2px solid transparent`), il ne servait qu'aux états git. */
+	body:not(.v2) {
+		.tab {
+			background: var(--background-header);
+			color: var(--text-color-secondary);
+		}
+		.tab:hover {
+			background: var(--background-row);
+			color: var(--text-color);
+		}
+		.tab.selected {
+			background: var(--background-secondary);
+			border-top-color: var(--primary);
+			color: var(--text-color);
+		}
+		.tab .v-icon {
+			color: var(--text-color-secondary);
+		}
+		.tab.selected .v-icon {
+			color: var(--text-color);
+		}
+		.unsplit {
+			background: var(--background-header);
+			.v-icon {
+				color: var(--text-color-secondary);
+			}
+			&:hover {
+				background: var(--background-row);
+				.v-icon {
+					color: var(--primary);
+				}
+			}
+		}
+	}
+
 	.menu .v-icon {
 		margin-right: 8px;
 	}

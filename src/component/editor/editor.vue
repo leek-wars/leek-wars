@@ -2,8 +2,13 @@
 	<div class="page editor" :class="'theme-' + appliedTheme">
 		<div class="page-header page-bar">
 			<div class="menu">
-				<h1>{{ $t('title') }}</h1>
-				<div class="tabs">
+				<div class="page-title">
+					<v-icon class="page-icon">mdi-code-braces</v-icon>
+					<div class="page-title-text"><h1>{{ $t('title') }}</h1></div>
+				</div>
+				<!-- Des ACTIONS, pas des onglets : conteneur `.actions`, comme sur les
+				     autres barres de page. -->
+				<div class="actions">
 					<div ref="fileButton" class="tab first action" icon="settings">
 						<v-icon>mdi-file-outline</v-icon> {{ $t('file') }}
 					</div>
