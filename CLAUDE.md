@@ -6,6 +6,14 @@ Le chantier du nouveau design est en cours sur develop. **Avant de toucher au
 thème, aux styles ou aux composants Vuetify, lire `REDESIGN.md`** (specs
 actées, partis pris, chantier restant, questions ouvertes) et le tenir à jour.
 
+## Icônes
+
+**Avant de poser une icône sur un concept du jeu (combat, tournoi, équipe,
+forum…), y compris dans une notification, lire `ICONS.md`** : un concept = un
+glyphe, la même partout. Toujours un glyphe mdi via `<v-icon>`, jamais un PNG
+(un PNG ne suit pas la couleur du thème). Après avoir utilisé un nouveau
+`mdi-*`, lancer `node scripts/generate-mdi-icons.mjs`.
+
 ## Structure du projet
 
 - **Frontend Vue.js 3** (Composition API, `<script setup>`) avec TypeScript, **Vite 7** et **Vuetify 3**

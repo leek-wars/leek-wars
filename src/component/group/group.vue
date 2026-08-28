@@ -66,12 +66,12 @@
 						{{ $t('3_members_min') }}
 					</v-tooltip>
 					<router-link v-if="group.tournament" :to="'/tournament/' + group.tournament">
-						<v-btn color="primary"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('see_tournament') }}</v-btn>
+						<v-btn color="primary"><v-icon>mdi-tournament</v-icon>&nbsp;{{ $t('see_tournament') }}</v-btn>
 					</router-link>
 					<v-tooltip v-else :disabled="group.members.length >= 4">
 						<template #activator="{ props }">
 							<span v-bind="props">
-								<v-btn :disabled="group.members.length < 4" @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_tournament') }}</v-btn>
+								<v-btn :disabled="group.members.length < 4" @click="startTournament"><v-icon>mdi-tournament</v-icon>&nbsp;{{ $t('start_tournament') }}</v-btn>
 							</span>
 						</template>
 						{{ $t('4_members_min') }}
@@ -80,7 +80,7 @@
 					<v-tooltip v-if="!group.tournament" :disabled="group.members.length >= 4">
 						<template #activator="{ props }">
 							<span v-bind="props">
-								<v-btn :disabled="group.members.length < 4" @click="startTeamTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_team_tournament') }}</v-btn>
+								<v-btn :disabled="group.members.length < 4" @click="startTeamTournament"><v-icon>mdi-tournament</v-icon>&nbsp;{{ $t('start_team_tournament') }}</v-btn>
 							</span>
 						</template>
 						{{ $t('4_members_min') }}
@@ -89,7 +89,7 @@
 			</div>
 		</panel>
 
-		<panel v-if="group && group.setting_chat" :title="$t('main.chat')" toggle="group/chat" icon="mdi-chat-outline">
+		<panel v-if="group && group.setting_chat" :title="$t('main.chat')" toggle="group/chat" icon="mdi-chat">
 			<template #actions>
 				<div v-if="!LeekWars.mobile && group && $store.state.chat[group.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[group.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
@@ -271,7 +271,7 @@
 					<fights-history :fights="group.fights" />
 				</template>
 			</panel>
-			<panel v-if="group && group.tournaments && group.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+			<panel v-if="group && group.tournaments && group.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-tournament">
 				<template #content>
 					<tournaments-history :tournaments="group.tournaments" :show-time="true" />
 				</template>
@@ -387,7 +387,7 @@
 
 		<popup v-if="group" v-model="weaponsDialog" :width="800">
 			<template #icon>
-				<img src="/image/icon/garden.png">
+				<v-icon>mdi-pistol</v-icon>
 			</template>
 			<template #title>
 				{{ $t('weapons_of', [group.name]) }}

@@ -298,7 +298,7 @@ const suggestionPrice = computed(() => {
 })
 
 LeekWars.setActions([
-	{ image: 'icon/market.png', click: () => router.push('/market') },
+	{ icon: 'mdi-store', click: () => router.push('/market') },
 	{ icon: 'mdi-treasure-chest', click: () => router.push('/inventory') },
 ])
 LeekWars.get('bank/get-packs').then(data => {
@@ -490,9 +490,9 @@ watch(() => LeekWars.currency, () => {
 		align-items: center;
 		justify-content: space-between;
 		.refresh-button {
-			// le header est posé sur le fond d'app (sombre dans les deux thèmes),
-			// comme le titre : on garde le bouton blanc en permanence.
-			color: var(--white);
+			// le header est posé sur le fond d'app, comme le titre : l'encre suit
+			// celle de la barre de page (le v3 en clair n'a plus de coquille sombre).
+			color: var(--page-bar-color);
 			opacity: 0.75;
 			&:hover {
 				opacity: 1;
@@ -513,7 +513,9 @@ watch(() => LeekWars.currency, () => {
 		gap: 6px;
 		margin: 20px 0;
 		padding: 6px 14px;
-		color: var(--white);
+		// Bouton posé sur le fond d'app, derrière un voile gris translucide :
+		// l'encre suit la barre de page plutôt qu'un blanc en dur.
+		color: var(--page-bar-color);
 		background: rgba(150, 150, 150, 0.2);
 		border-radius: var(--radius);
 		text-decoration: none;

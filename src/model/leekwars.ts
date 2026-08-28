@@ -491,30 +491,30 @@ const LeekWars = reactive({
 	leekSizes: Object.freeze(LEEK_SIZES),
 	isPublicChat: (id: number) => id in LeekWars.publicChats,
 	publicChats: {
-		1: { id: 1, name: 'Général', language: 'fr', icon: 'mdi-chat-outline' },
+		1: { id: 1, name: 'Général', language: 'fr', icon: 'mdi-chat' },
 		32506: { id: 32506, name: 'Aide', language: 'fr', icon: 'mdi-help-circle-outline' },
 		32507: { id: 32507, name: 'Programmation', language: 'fr', icon: 'mdi-code-braces' },
-		2: { id: 2, name: 'General', language: 'en', icon: 'mdi-chat-outline' },
+		2: { id: 2, name: 'General', language: 'en', icon: 'mdi-chat' },
 		32508: { id: 32508, name: 'Help', language: 'en', icon: 'mdi-help-circle-outline' },
 		32509: { id: 32509, name: 'Programming', language: 'en', icon: 'mdi-code-braces' },
-		3: { id: 3, name: 'General', language: 'es', icon: 'mdi-chat-outline' },
+		3: { id: 3, name: 'General', language: 'es', icon: 'mdi-chat' },
 		// 33187: { id: 33187, name: 'Ayuda', language: 'es', icon: 'mdi-help-circle-outline' },
 		// 33188: { id: 33188, name: 'Programación', language: 'es', icon: 'mdi-code-braces' },
-		4: { id: 4, name: 'General', language: 'de', icon: 'mdi-chat-outline' },
-		5: { id: 5, name: 'Generale', language: 'it', icon: 'mdi-chat-outline' },
-		6: { id: 6, name: 'Geral', language: 'pt', icon: 'mdi-chat-outline' },
-		7: { id: 7, name: 'Generelt', language: 'da', icon: 'mdi-chat-outline' },
-		8: { id: 8, name: 'Yleistä', language: 'fi', icon: 'mdi-chat-outline' },
-		9: { id: 9, name: 'General', language: 'nl', icon: 'mdi-chat-outline' },
-		10: { id: 10, name: 'General', language: 'no', icon: 'mdi-chat-outline' },
-		11: { id: 11, name: 'General', language: 'pl', icon: 'mdi-chat-outline' },
-		12: { id: 12, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		13: { id: 13, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		14: { id: 14, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		15: { id: 15, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		16: { id: 16, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		17: { id: 17, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		18: { id: 18, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		4: { id: 4, name: 'General', language: 'de', icon: 'mdi-chat' },
+		5: { id: 5, name: 'Generale', language: 'it', icon: 'mdi-chat' },
+		6: { id: 6, name: 'Geral', language: 'pt', icon: 'mdi-chat' },
+		7: { id: 7, name: 'Generelt', language: 'da', icon: 'mdi-chat' },
+		8: { id: 8, name: 'Yleistä', language: 'fi', icon: 'mdi-chat' },
+		9: { id: 9, name: 'General', language: 'nl', icon: 'mdi-chat' },
+		10: { id: 10, name: 'General', language: 'no', icon: 'mdi-chat' },
+		11: { id: 11, name: 'General', language: 'pl', icon: 'mdi-chat' },
+		12: { id: 12, name: 'General', language: 'sv', icon: 'mdi-chat' },
+		13: { id: 13, name: 'General', language: 'sv', icon: 'mdi-chat' },
+		14: { id: 14, name: 'General', language: 'sv', icon: 'mdi-chat' },
+		15: { id: 15, name: 'General', language: 'sv', icon: 'mdi-chat' },
+		16: { id: 16, name: 'General', language: 'sv', icon: 'mdi-chat' },
+		17: { id: 17, name: 'General', language: 'sv', icon: 'mdi-chat' },
+		18: { id: 18, name: 'General', language: 'sv', icon: 'mdi-chat' },
 	} as {[key: number]: { id: number, name: string, language: string, icon: string }},
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
@@ -920,7 +920,7 @@ const LeekWars = reactive({
 	trophyCategoriesIcons: Object.freeze([
 		'mdi-trophy-variant-outline',  // 1: general
 		'mdi-sword-cross',             // 2: fight
-		'mdi-trophy-outline',          // 3: tournament
+		'mdi-tournament',              // 3: tournament (pas de variante creuse chez MDI)
 		'mdi-emoticon-outline',        // 4: fun
 		'mdi-chat-outline',            // 5: social
 		'mdi-star-outline',            // 6: bonus

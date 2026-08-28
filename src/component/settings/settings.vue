@@ -347,8 +347,8 @@
 		{ id: 1, icon: 'mdi-star', name: 'general' },
 		{ id: 2, icon: 'mdi-gamepad-square', name: 'game' },
 		{ id: 3, icon: 'mdi-sword-cross', name: 'fight' },
-		{ id: 4, icon: 'mdi-flag', name: 'challenge' },
-		{ id: 5, icon: 'mdi-trophy', name: 'tournament' },
+		{ id: 4, icon: 'mdi-flag-outline', name: 'challenge' },
+		{ id: 5, icon: 'mdi-tournament', name: 'tournament' },
 		{ id: 6, icon: 'mdi-chat', name: 'social' },
 		{ id: 7, icon: 'mdi-message-text-outline', name: 'private' },
 		{ id: 8, icon: 'mdi-account-multiple', name: 'team' },
@@ -745,7 +745,9 @@
 		}
 	}
 	.advanced-button {
-		color: var(--white);
+		// Posé sur le fond d'app derrière un voile gris : l'encre suit la barre
+		// de page, --white supposait une coquille sombre (v2 seulement).
+		color: var(--page-bar-color);
 		background: rgba(150, 150, 150, 0.2);
 		padding: 2px 12px;
 		display: inline-block;

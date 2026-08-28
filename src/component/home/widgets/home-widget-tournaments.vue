@@ -3,7 +3,7 @@
 		<loader v-if="!loaded" />
 		<template v-else-if="winners.length">
 			<router-link v-for="w in winners" :key="w.type" v-ripple :to="w.winner.link" class="winner">
-				<v-icon class="cup">mdi-trophy</v-icon>
+				<v-icon class="cup">mdi-tournament</v-icon>
 				<div class="info">
 					<span class="type">{{ t(typeKey(w.type)) }}</span>
 					<span class="name">{{ w.winner.name }}</span>

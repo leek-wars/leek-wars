@@ -18,7 +18,7 @@
 					{{ $t('potion.restat') }}
 				</v-tooltip>
 				<div class="tab action hidden disabled">
-					<img src="/image/icon/garden.png">
+					<v-icon>mdi-sword-cross</v-icon>
 					<span>{{ garden.fights }}</span>
 					<span v-if="$store.state.farmer?.team_fights">+ {{ $store.state.farmer.team_fights }}</span>
 				</div>

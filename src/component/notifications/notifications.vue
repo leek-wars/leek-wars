@@ -66,10 +66,10 @@ LeekWars.get('notification/get-latest/500').then(data => {
 		gap: 8px;
 		margin-left: auto;
 		padding: 0 8px;
-		// La barre d'en-tête fait partie du chrome sombre de l'app (sombre dans les deux thèmes),
-		// donc on force un texte clair comme .page-bar .info / .tabs .tab, plutôt que --text-color
-		// qui deviendrait foncé et illisible en thème clair.
-		color: var(--grey-13);
+		// Le bouton vit dans la barre d'en-tête : il en prend l'encre. --grey-13
+		// (« presque blanc ») supposait une barre sombre, ce que le v3 en clair
+		// n'est plus — 1,01 mesuré, l'icône disparaissait complètement.
+		color: var(--page-bar-color);
 		.push-warning {
 			color: #ffca28;
 		}

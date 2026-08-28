@@ -125,7 +125,7 @@
 			<div class="tabs">
 				<template v-if="$store.state.connected">
 					<div class="tab" @click="showReport = true">
-						<img src="/image/icon/flag.png">
+						<v-icon>mdi-flag</v-icon>
 						<span class="report-button">{{ $t('warning.report') }}</span>
 					</div>
 					<div v-if="$store.getters.admin" class="tab" @click="toggleLoading">

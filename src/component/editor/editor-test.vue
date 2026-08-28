@@ -336,7 +336,7 @@
 
 		<popup v-model="weaponsDialog" :width="800">
 			<template #icon>
-				<img src="/image/icon/garden.png">
+				<v-icon>mdi-pistol</v-icon>
 			</template>
 			<template #title>
 				<span v-if="currentLeek">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{ MAX_WEAPONS }}]</span>
@@ -352,7 +352,7 @@
 
 		<popup v-if="currentLeek" v-model="skinPotionDialog" :width="750">
 			<template #icon>
-				<img src="/image/icon/potion.png">
+				<v-icon>mdi-bottle-tonic</v-icon>
 			</template>
 			<template #title>
 				{{ $t("select_skin") }}

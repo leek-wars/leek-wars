@@ -18,7 +18,7 @@
 				</router-link>
 				<router-link to="/market">
 					<div class="tab action" image="icon/market.png" link="/market">
-						<img src="/image/icon/market.png">
+						<v-icon>mdi-store</v-icon>
 						<span>{{ $t('main.market') }}</span>
 					</div>
 				</router-link>

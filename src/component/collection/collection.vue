@@ -261,7 +261,7 @@
 	// on expose donc les mêmes liens dans la barre d'app.
 	LeekWars.setActions([
 		{icon: 'mdi-bank', click: () => router.push('/bank?ref=collection_action')},
-		{image: 'icon/market.png', click: () => router.push('/market')},
+		{icon: 'mdi-store', click: () => router.push('/market')},
 		{icon: 'mdi-treasure-chest', click: () => router.push('/inventory')},
 	])
 

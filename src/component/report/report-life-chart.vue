@@ -4,8 +4,9 @@
 			<v-tooltip v-if="fight && fight.type === FightType.TEAM">
 				<template #activator="{ props }">
 					<div v-bind="props" class="button flat" @click="toggleTurrets">
-						<img v-if="turrets" src="/image/icon/turret.png">
-						<img v-else src="/image/icon/turret_off.png">
+						<!-- Une seule tourelle, éteinte quand elles sont masquées : MDI n'a pas
+						     de variante « off », et l'opacité dit la même chose que l'ancien PNG gris. -->
+						<v-icon :class="{off: !turrets}">mdi-tower-fire</v-icon>
 					</div>
 				</template>
 				{{ $t('toggle_turrets') }}
@@ -21,8 +22,8 @@
 			<v-tooltip>
 				<template #activator="{ props }">
 					<div v-bind="props" class="button flat" @click="toggleSmooth">
-						<img v-if="smooth" src="/image/icon/graph_angular.png">
-						<img v-else src="/image/icon/graph_smooth.png">
+						<v-icon v-if="smooth">mdi-chart-line-variant</v-icon>
+						<v-icon v-else>mdi-chart-bell-curve-cumulative</v-icon>
 					</div>
 				</template>
 				{{ $t('toggle_smooth') }}
@@ -262,6 +263,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.button .v-icon.off {
+		opacity: 0.4;
+	}
 	.chart-panel {
 		position: relative;
 	}
