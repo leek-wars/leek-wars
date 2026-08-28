@@ -17,6 +17,10 @@ Deux voies qui convergent :
   réglages : `localStorage['design']` = `v2` | `v3`, classe `body.v2`.
   **Toute variable ajoutée dans un thème doit exister dans l'autre.**
 
+Le **vocabulaire d'icônes** vit dans un document à part, `ICONS.md` (un concept
+du jeu = un glyphe, notifications comprises) : c'est de la sémantique, pas du
+thème, et ça vaut aussi pour le v2 le jour où il faudrait y toucher.
+
 ## Principes actés
 
 Décisions de Pierre — ne pas les rediscuter, les appliquer.
@@ -46,7 +50,9 @@ Décisions de Pierre — ne pas les rediscuter, les appliquer.
    (overlay, ancrage, focus), entièrement restylées : on garde la mécanique,
    pas le style.
 5. **Nouveau logo Leek Wars principal**, déclinaisons dark et light.
-   *Pierre s'en charge, plus tard. Ne pas générer de logo.*
+   *Pierre s'en charge, plus tard. Ne pas générer de logo.* Seule exception
+   accordée depuis (2026-08-28) : `leekwars_flat.svg`, le logo ACTUEL débarrassé
+   de son dégradé, à titre d'essai — pas un dessin nouveau (lot 31).
 6. **Nouveau design des puces et apparats** (assets du jeu).
    *Traité dans une autre session dédiée. Ne pas s'y attaquer ici.*
 
@@ -484,7 +490,10 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     chute d'opacité et c'est leur `--t` — le temps du cycle où la goutte leur
     passe dessus, calculé dans le script — qui les décale. La chute est jouée en
     paliers (`steps(3)`), donc la traînée a des niveaux francs. Seule l'opacité
-    est animée : compositable, aucun repaint.
+    est animée : compositable, aucun repaint. Piège du signe : un délai
+    `-0.1s * --t` allume les rangées basses **en premier** et la goutte remonte ;
+    c'est `0.1s * --t - 1s` qu'il faut — l'ordre est bon et le délai reste
+    négatif, donc aucune case n'attend son tour au premier affichage.
   - La boîte reste celle d'avant : les 137 points d'appel ne bougent pas. Le
     disque Material est conservé comme peau v2, les deux sont rendus et la
     coquille n'en montre qu'un. En mouvement réduit la pluie ralentit à 3 s au
@@ -555,11 +564,9 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     (`$filters.number`), et le widget gagne l'**historique de talent** de
     l'éleveur en sparkline (`clamp(70px, 30cqh, 120px)`, masquée sous 200 px de
     panel : les combats passent d'abord). Pas d'axes — à cette hauteur ils
-    mangeraient la courbe et leurs graduations tombent sur les gris par défaut
-    de Chart.js, que le thème sombre ne reprend jamais ; la date et la valeur se
-    lisent au survol. La courbe **lit `--primary` sur le body** au lieu du
-    `#5fad1b` en dur des autres graphiques de talent, et se reconstruit au
-    changement de thème et de design.
+    mangeraient la courbe ; la date et la valeur se lisent au survol. La courbe
+    se reconstruit au changement de thème et de design (voir **Courbes de
+    talent** plus bas, dont elle partage désormais le dataset).
   - **Widget Forum** : la liste **remplit la hauteur du panel** (`useFitCount`,
     widget passé en `noScroll`) au lieu de six lignes fixes — le service en
     renvoie 20 et le client coupe. Chaque ligne gagne la **catégorie** (puce ;
@@ -670,8 +677,7 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     était connue, mais deux saisons la violent. Demande un choix sur la palette.
   - **Pourcentages « résolus » du forum** (`forum.vue`) : couleurs Material en
     dur (`#4caf50`, `#2196f3`, `#ff9800`), **1,9 à 2,5** sur le parchemin.
-  - **Couleurs de caractéristiques** sur la page poireau : 2,1 à 4,2 en clair.
-    C'est la question déjà ouverte plus bas, mesurée cette fois côté clair.
+  - ~~**Couleurs de caractéristiques**~~ : corrigé au lot 28 (jetons `--stat-*`).
 
 ## Le halo, motif réutilisable (2026-08-14)
 
@@ -731,14 +737,44 @@ Parti pris :
   en plein jour à 57 alors qu'elle est à la même luminance qu'une carte grise.
   Sans le chiffre, on la surassombrit jusqu'à la bouillie.
 
+## Courbes de talent (2026-08-28)
+
+L'historique de talent était tracé à l'identique par cinq composants (éleveur,
+poireau, équipe, widget « Mes poireaux », widget « Talent ») qui portaient
+chacun leur copie du dataset. Il est construit une fois dans `src/chart.ts`
+(`talentDataset`, `talentScales`) — un réglage visuel se fait là, plus en cinq
+exemplaires jumeaux.
+
+Parti pris :
+
+- **Points carrés** (`pointStyle: 'rect'`), dans l'esprit pixel du v3. Chart.js
+  dessine un carré de côté `r√2` là où il dessinait un cercle de diamètre `2r` :
+  les rayons montent d'un cran (4 → 5, 3 → 4, 2 → 3 sur la sparkline, où le
+  carré disparaissait) pour garder le même poids à l'œil.
+- **Dégradé sous la courbe** au lieu de l'aplat à 19 % : la teinte est franche
+  sous le trait et s'éteint en bas de l'aire de tracé. Un `CanvasGradient` a
+  besoin des dimensions de l'aire, que Chart.js n'a pas encore mesurées au tout
+  premier passage — d'où une teinte plate de repli dans la fonction scriptable.
+- **Grille en pointillés**, tracée sous la courbe et lue à travers le dégradé.
+  C'est `scales.<axe>.border.dash` qui met les *lignes* de la grille en
+  pointillés ; `grid.tickBorderDash` ne touche que les graduations, hors de
+  l'aire. La couleur est `--border-strong` et non `--border` : mesuré sur les
+  deux fonds, `--border` tombe à **1.35** de contraste et en sombre la grille
+  n'existait pas, le fort tient **1.9** des deux côtés.
+- **Le vert du thème partout.** `#5fad1b` (le vert du v2) était écrit en dur
+  dans quatre des cinq graphiques, qui restaient donc au vert du v2 sous le v3.
+  Tous lisent maintenant `--primary` sur le body, comme le faisait déjà le
+  widget « Talent ». Corollaire : les couleurs étant lues au montage, chaque
+  page porte un `watch` sur `LeekWars.darkMode` / `legacyTheme` qui reconstruit
+  le graphique à la bascule.
+
 ## Questions ouvertes
 
-- **Couleurs de caractéristiques en thème sombre** (mesuré au 2026-08-24) :
-  quatre des couleurs sémantiques du jeu passent sous le seuil de 4,5 sur le
-  fond sombre — science `#2a63ff` **3,85**, RAM `#ce00c7` **3,96**, force
-  `#c05415` **4,02**, magie `#d810d5` **4,41** (`global.scss`). Les remonter
-  touche l'identité des stats dans tout le jeu (page poireau, rapport de combat,
-  marché, infobulles) : décision de Pierre, pas un correctif de lot.
+- ~~**Couleurs de caractéristiques en thème sombre**~~ — **tranché au lot 28**
+  (2026-08-28) : jetons `--stat-*`, une paire mesurée par thème, chaque teinte
+  gardant son H et son S. Reste en dur, hors périmètre : les couleurs de stats
+  du **canvas de combat** (`player/game/game.ts`, `entity.ts`), qui sont peintes
+  sur le décor du jeu et non sur les surfaces du site.
 
 - **Avatars carrés partout ?** Le mockup les fait carrés et bordés ; pour
   l'instant seuls la barre du haut, le menu du compte, le panneau social et
@@ -787,6 +823,427 @@ Parti pris :
     `#ffa900`, écrit en dur et de la même famille. Deux distinctions jaunes
     voisines sur la même ligne de profil.
 
+- **2026-08-28, lot 28 — du contraste et de la couleur** (demande de Pierre :
+  « je trouve ça un peu triste comparé à avant, j'aimerais plus de contraste et
+  de couleurs, plus de peps, en restant sérieux et pro »). Quatre leviers, le
+  diagnostic étant que le v3 avait perdu *trois* choses à la fois : le relief
+  (plus d'ombres), la structure (plus de bandeau de titre) et la marque (le vert
+  éteint pour tenir en encre).
+
+  - **L'échelle de surfaces était plate — creusée en clair SEULEMENT.** Mesuré :
+    fond de page contre panneau contre en-tête, **1,04 / 1,05 / 1,08** en clair
+    et **1,03** en sombre, quand le v2 séparait son fond gris de ses panneaux
+    blancs de **1,32**. Pire, trois rôles partageaient la même valeur
+    (`--pure-white`, `--background-header`, `--background-row` = #FBF7E8). Comme
+    le design a par ailleurs supprimé les ombres et les arrondis, il ne restait
+    plus qu'un trait à 28 % pour découper l'écran : d'où la nappe crème uniforme.
+    Les cinq surfaces claires sont étalées (extérieur, page, en-tête, panneau,
+    champ), le **panneau devenant la surface la plus claire** — c'est lui qui
+    doit avancer. Page contre panneau : **1,20**. C'est un contraste
+    surface/surface, aucun seuil de texte n'est en jeu, et les encres y gagnent
+    (14,5 sur la page, 17,4 sur le panneau). La **rangée passe sous le panneau**
+    en thème clair (elle était au-dessus, donc invisible sur lui).
+    **Le thème sombre est rendu à ses valeurs d'avant** (« le dark je préférais
+    avant ») : il avait reçu le même étalement — page 0A0D0C, panneau 151C1A,
+    rangée 232D29, soit 1,13 et 1,22 au lieu de 1,03 — mais le chiffre était
+    meilleur et le rendu non. Le presque-noir du v3 est un parti pris, l'éclaircir
+    le banalise. **Ne pas « réharmoniser » les deux thèmes sans le lui demander.**
+  - **Le vert de marque avait disparu du thème clair.** `--primary` est calibré
+    pour l'ENCRE : sur le parchemin il faut descendre à #146128, et ce vert-là
+    étalé en aplat est presque noir. Nouveau couple **`--primary-surface` /
+    `--primary-surface-text`** — le vert quand il PEINT (#2E9E4B) et l'encre
+    posée dessus (#0E1410), **5,42** mesuré. En aplat la contrainte s'inverse :
+    c'est l'encre qui doit tenir, et elle peut être sombre. La crème est exclue
+    sur un vert vif (#1F8A3B plafonne à 4,11 sous de la crème, #2E9E4B à 3,20) :
+    **un aplat vert vif porte une encre sombre**, ce que le néon du thème sombre
+    faisait déjà. En sombre les deux jetons valent la paire historique.
+    Migrés : les **84 déclarations de fond** ; les **193 usages en encre** ne
+    bougent pas, ce qui met le risque de régression à zéro du bon côté. En v2 les
+    deux jetons pointent sur la paire historique, donc rendu identique au pixel.
+    Le contournement du lot « lisibilité du vert » (foncer l'aplat du bouton
+    d'inscription et du lien d'évitement jusqu'à `--primary-strong` pour tenir
+    sous une encre claire) n'a plus d'objet et disparaît.
+  - **La barre de titre des panneaux : essayée en vert, REFUSÉE, revenue à
+    neutre.** Le v2 donnait à ses panneaux un bandeau sombre plein ; le v3
+    l'avait passé en crème, où il disparaissait — et la structure de la page avec
+    lui. Deux tentatives, toutes deux écartées par Pierre :
+    1. **aplat de marque plein** (vert profond, #146128 + crème à 7,06 en clair,
+       #204A2A en sombre) — « je n'aime pas trop les panels en vert » ;
+    2. **liseré vert de 2 px sous l'en-tête**, la version sobre — « je n'aime pas
+       trop le liseré vert » non plus.
+    L'en-tête garde donc sa surface neutre et son trait à 1 px, exactement comme
+    avant le lot. Le couple `--panel-title-*` créé pour l'occasion a été
+    **supprimé** plutôt que laissé en doublon de `--panel-header-*`, qu'il
+    dupliquait valeur pour valeur une fois neutre. Ce qui reste du levier : en
+    thème clair l'en-tête **se détache maintenant tout seul**, parce que
+    l'échelle creusée lui donne une surface (#F3EDD8) distincte du corps du
+    panneau (#FBF7E8) — ce qui était le vrai problème, les deux étant
+    auparavant à 1,05 l'un de l'autre.
+    **À retenir pour la suite : la marque ne passe pas par le mobilier
+    répété.** Un bandeau de panneau apparaît six à dix fois par page ; coloré, il
+    devient le motif dominant de l'écran. Le vert reste aux **actions** et aux
+    **états**, pas aux cadres.
+  - **Les couleurs de caractéristiques**, la question ouverte de ce document,
+    sont tranchées et sortent de `global.scss` en jetons `--stat-*`. Elles y
+    étaient écrites en dur avec seulement trois exceptions `.dark` : mesuré, ça
+    ne tenait d'aucun côté — **1,46** pour la vie max sur le parchemin, 1,85 pour
+    la sagesse, 1,97 pour les PT ; 3,01 pour la RAM et 2,93 pour la science sur
+    le fond sombre. Chaque teinte **garde sa teinte** (même H, même S), seule la
+    clarté bouge, jusqu'au premier palier qui tient **4,5 sur la pire surface du
+    thème** — le fond de page en clair, la surface de rangée en sombre. Une
+    couleur de stat est une couleur d'identité : ce sont les valeurs qui
+    s'inversent, pas les teintes. Exception assumée pour la science, dont le
+    #0000a2 tenait déjà 10,7 mais ne se lisait plus comme un bleu (remontée à
+    6,4). Le v2 garde ses valeurs au pixel, ses trois exceptions devenant des
+    surcharges de son bloc `.dark`.
+  - **Vérification** : audit de contraste automatisé rejoué sur inventaire,
+    trophées, classement, forum, potager, réglages, marché et notifications, dans
+    les deux thèmes, avec pour chaque échec le **calcul de ce qu'il valait avant
+    le lot**. Résultat : **aucun échec nouveau**. Les échecs qui restent étaient
+    déjà là et sont déjà listés ici (bandeau de saison 1,34, pourcentages
+    « résolus » du forum 2,0–2,6, badge modérateur 4,18, badge de grade
+    administrateur 3,39). Le thème sombre ne rapporte rien du tout sur les huit
+    pages. Build de production complet passé, 534 tests unitaires verts, et v2
+    vérifié à l'écran et au jeton : fond #f2f2f2, bandeau #2a2a2a, vert #5fad1b,
+    rayons 4 px, couleurs de stats d'origine. Après le retour du thème sombre à
+    ses valeurs d'avant, la rampe de stats sombre gagne encore : mesurée contre
+    la rangée #131A1E, elle va de **5,57 à 9,37** au lieu des 4,5 visés — le
+    palier avait été calculé contre une rangée plus claire, l'écart ne peut que
+    s'ouvrir.
+  - **Laissé de côté, à trancher** : la palette Vuetify (`model/vuetify.ts`)
+    garde `primary: #146128` en clair, parce que Vuetify choisit seul l'encre de
+    ses boutons par luminosité et poserait du blanc sur le vert vif (3,20). Ses
+    boutons restent donc en vert foncé pendant que les nôtres passent au vif.
+  - **Repéré au passage, hors lot** : dans le widget « Mes poireaux » de
+    l'accueil, le nom du poireau est **rogné à 9 px de haut** et passe sous la
+    pastille de talent. C'est de la mise en page, pas de la couleur — antérieur à
+    ce lot.
+
+- **2026-08-28, lot 29 — les icônes claires sur fond clair** (capture de Pierre :
+  l'épée du compteur de combats et le trophée de « Se désinscrire », blanches sur
+  le parchemin). Même cause partout : **le v2 posait sa coquille sur du sombre**,
+  donc une icône de coquille était claire par défaut — en dur dans le CSS ou dans
+  le fichier PNG. Le v3 en clair a éclairci ces surfaces une à une, et chaque
+  éclaircissement a effacé les icônes qu'elle portait. Deux familles.
+
+  - **L'encre écrite en dur.** `global.scss` donne `color: white` à l'icône d'un
+    onglet de barre de page : **1,17** mesuré sur presque toutes les pages du
+    site, l'onglet actif étant le seul rattrapé jusqu'ici (lot 12). En v3 l'icône
+    prend `inherit`, donc les trois états de son onglet d'un coup (secondaire au
+    repos, encre pleine au survol, vert pour l'actif) ; le v2 garde son blanc.
+    Cinq autres cliquables faisaient la même hypothèse avec `--white` ou
+    `--grey-13` — « presque blanc », un rôle que l'échelle de gris porte dans les
+    deux sens et qui ne peut donc pas s'inverser (voir le commentaire de
+    `--grey-1`) : bouton console, bouton d'actualisation et lien d'historique de
+    la banque, bouton « avancé » des réglages, bouton de notifications push
+    (**1,01** : invisible). Tous passent à `--page-bar-color`, le rôle « encre
+    posée sur le fond d'app », qui suit le thème. En v2 c'est #eee au lieu de
+    #fff — le seul écart, sous une opacité de 0,5 sur du #1e1e1e.
+  - **Les PNG blancs.** `public/image/icon/*.png` est une famille **monochrome
+    blanche** (mesurée : 252 à 255 de luminosité, saturation nulle ; seuls les
+    `xp_*` sont en couleur), taillée pour le bandeau vert du v2 : **1,14 à 1,44**
+    sur le parchemin. Elles sont **retournées en thème clair** plutôt que
+    dupliquées en version noire — ce sont des aplats sans anti-aliasing coloré,
+    `invert(1)` en donne l'exact négatif, et la règle couvre les usages futurs
+    sans nouveau fichier. C'est la recette du lot 17 en miroir (`icon/black/`
+    retourné en sombre) et celle de la barre d'application mobile du lot 26.
+    S'y ajoutent `search`, `selector` et `github_white`, hors du dossier `icon/` :
+    les deux premiers ne servent que dans une barre de page, le troisième aussi
+    mais sert ailleurs de logo sur un bouton **noir**, d'où une portée par
+    surface pour lui seul.
+  - **Dépendance au lot 28** : l'inversion est sans restriction de surface parce
+    qu'il ne reste, en thème clair, **aucune surface sombre** susceptible de
+    porter une de ces icônes — la barre de titre d'un panneau est redevenue
+    neutre, et l'aplat de marque porte lui-même une encre sombre
+    (`--primary-surface-text`). Si un bandeau sombre revenait, c'est lui qui
+    porterait l'exception.
+  - **Deux icônes hors des deux familles**, trouvées par la même sonde : la
+    grande icône des notifications trophée/bigwin, restée blanche alors que le
+    dégradé d'or qui la portait a laissé place à un lavis d'accent (**1,07**), et
+    l'anneau d'une catégorie complétée du panneau Collection, en `#f1c40f`
+    Material en dur (**1,55**). Les deux passent à l'accent de leur rangée
+    (`--notif-accent`, `--rank-first`). **Le miroir** existe aussi : la coche
+    d'un palier de parrainage débloqué est en `--black` en dur — noir sur noir en
+    thème sombre (**1,08**) — et prend le même accent.
+  - **Vérification** : sonde de contraste (encre d'une icône contre le fond
+    effectif, filtres CSS compris) rejouée sur une vingtaine de pages en thème
+    clair **et** sombre. Plus aucune icône de coquille sous 3:1 dans les deux
+    thèmes. v2 vérifié au jeton : icône d'onglet #fff, aucun filtre sur les PNG,
+    bandeau de panneau #2a2a2a.
+  - **Restent, hors famille** : le bandeau de saison (1,34, déjà listé), les
+    icônes de difficulté `icon/trophy/N.svg` (1,8 pour l'or, 2,9 pour le vert —
+    même question de palette que les pourcentages du forum), et la poignée du
+    redimensionneur de l'inventaire (1,76, discrétion voulue).
+
+- **2026-08-28, lot 30 — miniature de poireau dans le menu** (demande de
+  Pierre). En v3 les entrées de poireaux portaient toutes la même `mdi-sprout` :
+  quatre poireaux, quatre icônes identiques. Chacune devient la **tête du
+  poireau lui-même**, chapeau compris.
+  - **Mode `head` de `leek-image.vue`**, plutôt qu'un composant à part : toute
+    la géométrie (taille selon le niveau, largeur/hauteur/`crop` du chapeau,
+    décalage `leekY` quand le chapeau dépasse) y est déjà et n'a pas à être
+    dupliquée. Le mode change le `viewBox`, saute l'arme et force `offsetTop`
+    à 0 — sans quoi une arme blanche non dessinée pousserait quand même le
+    cadrage vers le bas.
+  - **Cadrage carré**, pas un simple « haut de l'image » : la taille du poireau
+    change avec le niveau, une fenêtre à ratio libre donnerait des miniatures de
+    largeurs différentes et les libellés du menu ne s'aligneraient plus.
+  - **Le cadre se cale sur le poireau, pas sur le chapeau** (retour de Pierre).
+    Le faire tenir le chapeau rétrécirait la tête d'autant : le tricorne fait
+    526×291, la corne de licorne 1,8 fois la largeur d'un poireau de niveau 1.
+    Deux poireaux voisins n'auraient plus la même taille pour la seule raison
+    qu'ils ne portent pas le même chapeau. Les chapeaux débordent donc et le
+    `viewBox` les coupe, au-delà de `HEAD_MAX = 1.2`. Mesuré sur les 51×11
+    combinaisons chapeau × niveau : **75 % ne débordent pas du tout** (le cadre
+    vaut exactement la largeur du poireau) et 92 % tiennent sous le plafond.
+  - **Ancrage en haut quand le plafond mord**, pas au centre : couper des deux
+    côtés décapitait la corne de licorne, le chapeau à plume et la toque de chef
+    (40 combinaisons sur 561, jusqu'à 24 % de la hauteur du chapeau). On
+    raccourcit les feuilles à la place — le chapeau est justement ce qui
+    distingue le poireau.
+  - **`HEAD_RATIO = 0.62`** : mesuré sur les SVG `leek_1` à `leek_11`, les
+    feuilles s'arrêtent entre 57 et 60 % de la hauteur. Le visage est bien plus
+    bas (~80 %) et n'entre donc pas dans la miniature — c'est voulu, l'entre-deux
+    est du blanc de tige qui ne montre rien.
+  - **L'entrée ne change pas de taille** (retour de Pierre : les entrées de
+    poireau étaient plus hautes que les autres). La règle ne vit pas dans les
+    styles scoped de `menu.vue` mais **ici, à côté de celles des icônes** : la
+    coquille v3 réécrit entièrement l'entrée (`height: auto`, flex, rembourrage,
+    icônes calibrées), et une règle scoped du composant (0,4,0) passe devant la
+    sienne (0,3,1) — la miniature gardait donc ses 28 px et gonflait la ligne.
+    La miniature déborde de 4 px **symétriquement** (marges négatives) : elle ne
+    compte que pour la largeur d'une icône, reste centrée sur la colonne
+    d'icônes, et se lit plus grand qu'elle. Vérifié au navigateur : les dix
+    entrées mesurent la même hauteur au pixel.
+  - **Entrées d'un cran plus grandes** (demande de Pierre) : le rembourrage
+    vertical du mockup passe de 9 à 10 px et les icônes de 18 à 20 px, soit une
+    entrée de **40 px** au lieu de 36. Les valeurs latérales du mockup (16 de
+    marge, 10 de gouttière) et le corps de 12,5 px ne bougent pas.
+  - **Menu replié aligné sur le menu déplié** (demande de Pierre) : même hauteur
+    d'entrée (40 px) et mêmes icônes (20 px) dans les deux états. Il fallait pour
+    cela rendre `height: auto` à l'entrée repliée — le composant la fige à 46 px
+    sous un sélecteur en `#app`, plus spécifique que le `height: auto` général du
+    thème. Les surcharges repliées ne servent plus qu'à annuler les marges du
+    composant, plus à redimensionner.
+  - **Miniature recentrée en menu replié** : le conteneur intermédiaire des
+    entrées de poireau est en `flex: 1` pour que l'intitulé prenne la place
+    restante ; replié il n'y a plus d'intitulé, et il collait la miniature à
+    gauche pendant que les autres entrées centraient leur icône.
+  - **Chapeaux débordants** (demande de Pierre) : `HEAD_BLEED = 1.3` dessine un
+    hors-champ autour du cadre. Rien n'y grandit — la règle CSS rend le SVG dans
+    la même proportion et résorbe le débord en marges négatives — mais le chapeau
+    s'étale au lieu d'être coupé à ras du cadre. Sur les 561 combinaisons, les
+    rognées passent de 37 à 2, et le pire rognage de 14 % à 3 % de la largeur du
+    chapeau.
+  - **v3 seulement** : les thèmes v2 et XP gardent leur PNG (`house.png`,
+    `xp_leek.png`).
+  - Vérifié au navigateur sur les 4 pires combinaisons niveau × chapeau plus
+    8 courantes, menu déplié et replié.
+
+- **2026-08-28, lot 30 — la barre du haut en bandeau pleine largeur** (demande de
+  Pierre, mockup à l'appui). Le mockup pose la barre d'un bord à l'autre, menu et
+  panneau social commençant dessous ; sur le site elle démarrait à 220 px du bord.
+  - **Cause** : le composant vit dans `.app-center`, la colonne centrale, elle-même
+    décalée de la largeur du menu. La barre héritait donc du décalage.
+  - **Corrigé dans la coquille, pas dans le template** : `header.header` passe en
+    `position: fixed` pleine largeur, `z-index: 1001` (au-dessus du panneau social,
+    qui est à 1000). Déplacer l'élément dans `app.vue` aurait emporté le v2, où la
+    barre est bornée avec le contenu et doit le rester. `header.header` et non
+    `.header` : le sélecteur nu attraperait les en-têtes de panneau et la ligne
+    d'en-tête du forum.
+  - **Elle prend une surface** (`--background-header`), ce que le v3 lui refusait
+    justement parce qu'elle n'allait pas au bord — sans aplat, le contenu défilerait
+    visiblement au travers d'une barre fixe. Et son contenu passe de `flex-end` à
+    centré : calé en bas, il laissait un vide en haut du bandeau.
+  - **Ce qui devait suivre** : jeton `--header-height` (80 px, la valeur que
+    `social.vue` connaissait déjà en dur) ; le menu descend à `top: var(--header-height)`
+    et perd ses 46 px de retrait interne, qui servaient à dégager la barre du v2 ;
+    `.app-center` gagne le même retrait en haut ; `.app-wrapper.box` (éditeur,
+    rapport de combat) passe de `100vh` à `calc(100vh - var(--header-height))`,
+    la barre n'étant plus dans le flux ; et la **poignée du panneau social**, fixée
+    à `top: 46px`, descend elle aussi — elle se retrouvait sous le bandeau.
+  - Mesuré au navigateur : barre à (0, 0, largeur de la fenêtre, 80), `.app-center`
+    à 80 px de retrait, menu et poignée à 80, page pleine hauteur à `viewport − 80`.
+    Vérifié à l'écran en visiteur ; **la vue connectée n'a pas pu être capturée**,
+    `farmer/register-fast` répondant 500 sur la stack locale.
+
+- **2026-08-28, lot 31 — logo à plat (essai)** (demande de Pierre). Le logo
+  historique (`leekwars.svg`) est rempli d'un **dégradé vertical** blanc → #b3b3b3,
+  hérité d'une barre sombre. `leekwars_flat.svg` en reprend la géométrie au point
+  près — mêmes `path`, même `viewBox` — sans `<defs>` et avec un aplat unique.
+  - **Blanc conservé** comme valeur de base : c'est `--header-logo-filter:
+    invert(1)` qui le passe en noir sur le parchemin. Un logo déjà noir aurait
+    demandé de défaire l'inversion, donc de toucher les deux thèmes.
+  - **v3 seulement** (`LeekWars.legacyTheme`), le v2 garde le dégradé.
+  - Ça ne remplace pas le **principe 5** (nouveau logo, déclinaisons dark et light,
+    Pierre s'en charge) : c'est un essai à plat sur le logo actuel, pas un logo neuf.
+
+- **2026-08-28, lot 32 — le bloc de titre de page** (demande de Pierre :
+  « pas de fond, sous-titres, icône, boutons à droite »). Le « pas de fond »
+  était déjà acquis ; manquaient l'icône, le sous-titre, et la distinction entre
+  agir et naviguer.
+  - **Motif générique dans la coquille, optionnel et rétrocompatible** : une
+    barre de page qui pose juste son `h1`, comme les 88 en place, ne voit rien de
+    ces règles. Celle qui adopte le motif enveloppe son titre dans
+    `.page-title` > `.page-icon` + `.page-title-text` > `h1` + `.page-subtitle`.
+    La barre garde ses 48 px sans sous-titre et respire (73 px mesurés) avec.
+  - **Les points médians du sous-titre sont posés par le CSS**
+    (`.page-subtitle > * + *::before`) et non écrits dans les templates : c'est
+    de la ponctuation de mise en page, elle n'a pas à traverser les 17 fichiers
+    de traduction ni à se retrouver dans le texte sélectionnable.
+  - **Agir ≠ naviguer** (arbitrage de Pierre) : les actions passent dans un
+    conteneur `.actions` et deviennent des rectangles bordés ; les ONGLETS
+    restent dans `.tabs` avec leur trait vert dessous. Un conteneur plutôt qu'une
+    classe de plus sur `.tab` : l'appelant déclare son intention une fois. Une
+    action `.green` garde l'aplat de marque (`--primary-surface`).
+  - **Icônes prises dans `ICONS.md`**, jamais inventées — c'est la règle du
+    document. D'où le partage du chantier : les pages dont le concept a déjà son
+    glyphe canonique sont faites (potager `mdi-sword-cross`, marché `mdi-store`,
+    inventaire `mdi-treasure-chest`, classement `mdi-podium`, trophées
+    `mdi-trophy`, tournoi `mdi-tournament`, équipe `mdi-shield`, groupes
+    `mdi-account-group`, forum `mdi-forum`, messages `mdi-email-outline`,
+    modération `mdi-gavel`, administration `mdi-security`, combat `mdi-sword`) ;
+    **la page poireau prend la tête du poireau** plutôt qu'un glyphe, comme le
+    menu — un poireau précis se distingue de ses frères par sa vignette.
+  - **Sous-titres : essayés, RETIRÉS** (« ça ne sert pas trop »). Le motif en a
+    porté un sur la page poireau — titre · niveau · éleveur, en réutilisant
+    `lw-title` et la clé `farmed_by`, sans clé i18n nouvelle — puis il a sauté,
+    avec ses règles et la ponctuation posée en CSS. `.page-title-text` reste :
+    c'est lui qui sépare le texte de l'icône, et il coûte une ligne. Les lignes
+    `.info` que certaines pages posaient déjà sous leur titre (date d'un combat,
+    salon courant des messages) sont **antérieures** au motif et n'en faisaient
+    pas partie : rendues telles quelles, pas supprimées.
+  - **La barre garde la hauteur qu'elle avait avec un sous-titre** (« on peut
+    quand même agrandir la barre en hauteur, c'était sympa ») : 72 px au lieu de
+    48. Réservé à la barre de TITRE — le pied de page d'une page et le champ de
+    l'encyclopédie sont aussi des `.page-bar` et n'ont pas à grandir, et
+    l'éditeur, reconnu à son `> .menu`, mesure déjà sa barre lui-même.
+  - **Deux corrections de Pierre sur la barre elle-même** : elle **n'a plus de
+    surface** — elle en avait une tant que la barre du haut n'allait pas au bord,
+    les deux bandes se répondaient ; depuis que le bandeau du haut est plein et
+    pleine largeur, une seconde bande juste dessous empilait deux surfaces claires
+    et écrasait le titre entre elles. Et le **pointillé vert gagne 12 px d'air en
+    dessous** (la gouttière des panneaux) : le premier panneau venait s'y coller,
+    et le pointillé se lisait comme le bord du panneau plutôt que comme le
+    soulignement du titre.
+  - **Reste à faire, et pourquoi** : les pages dont le concept n'a **pas** de
+    glyphe canonique — éleveur, banque, réglages, aide, notifications,
+    collection, atelier, statistiques, changelog, accueil, LW+ — plus les ~30
+    pages d'administration. `ICONS.md` demande que tout nouveau couple
+    concept → glyphe soit décidé avec Pierre, et le document est le rendu de
+    `/admin/icons` : les inventer ici les aurait figées sans décision.
+
+- **2026-08-28, lot 33 — le panneau des caractéristiques** (page poireau,
+  demande de Pierre : « le rendre plus sexy »).
+  - **Essai et retour en arrière** : le panneau a d'abord été refait en tableau —
+    pastille de couleur, nom de la caractéristique, valeur alignée à droite, une
+    ligne par stat, comme le mockup. Pierre l'a écarté (« je n'aime pas au final,
+    je veux avec les icônes ») : les douze icônes + valeurs colorées sur deux
+    colonnes sont rendues à l'identique. À garder si l'idée revient : `--stat-*`
+    permet la pastille en une règle (`background: currentColor`, la ligne portant
+    déjà `color-<c>`), `LeekWars.characteristics` donne l'ordre en une colonne là
+    où `characteristics_table` est entrelacé pour deux, et la valeur doit passer
+    en **monospace** — en police d'affichage, 2695 se lit « 2898 ».
+  - **Les zébrures étaient invisibles en v3**, pas absentes : elles peignent
+    `--background-secondary`, qui **est** la surface du panneau depuis que
+    `--panel-background` pointe dessus. Même piège qu'au lot 12 sur le widget
+    « Mes poireaux ». Elles prennent `--background-row`, faite pour ça ; le v2 a
+    bien deux valeurs distinctes et garde les siennes.
+  - **Les trois commandes du panneau sont réunies en pied de panneau**, calées à
+    droite : équipement, potions, capital. Elles étaient partagées entre des
+    icônes d'en-tête muettes et des boutons Material au milieu du contenu, et le
+    capital changeait carrément de place selon son état (icône quand il vaut 0,
+    bouton quand il y a des points). Nouveau motif `.panel-actions` /
+    `.panel-action` **posé dans la coquille** et non dans le composant — la page
+    poireau n'en est que le premier appelant. Même silhouette que les actions de
+    la barre de page ; le capital prend l'aplat de marque dès qu'il y a des points
+    à placer, c'est la seule des trois qui appelle une action.
+  - **Peau v2 embarquée** : sous `body.v2` les icônes d'en-tête et les deux boutons
+    Material centrés sont conservés au pixel près, la barre de pied n'existant
+    qu'en v3.
+  - **`mdi-flask` pour les potions**, décidé avec Pierre et **ajouté à `ICONS.md`
+    et à `admin-icons.vue`** (les deux se recopient à la main, cf. l'en-tête du
+    document). Il remplace `icon/black/potion.png`, un PNG qui porte sa couleur en
+    dur — le défaut que le lot 29 a dû rattraper ailleurs.
+  - **Repéré, hors périmètre** : `creator.vue` et `editor-test.vue` ont leur propre
+    bloc `.characteristics` avec la même zébrure sur `--background-secondary`,
+    donc invisible en v3 elle aussi.
+
+- **2026-08-28, lot 34 — l'icône d'IA** (demande de Pierre). La feuille était un
+  des **cinq PNG** de `public/image/ai/` (défaut + quatre couleurs) : coins
+  arrondis, ombre floue, engrenage en filigrane et teintes en dur — les trois
+  refus du v3 réunis dans une image, plus une inversion `body.dark` qui
+  échangeait deux PNG pour survivre au thème sombre. Elle est **redessinée en
+  CSS** dans `src/component/app/ai.vue`, donc elle suit le thème.
+  - **Silhouette en deux couches de `clip-path`** : la couche du dessous est
+    peinte du trait et découpée au pentagone (coin coupé), `::before` en retrait
+    de 2 px porte la surface et le même pentagone. C'est le seul moyen d'avoir
+    un trait d'épaisseur constante *le long de la diagonale* : une `border` ne
+    sait pas suivre un `clip-path`.
+  - **Le pli intérieur AVANCE de 1,17 px** (`--ai-inner-fold`), il ne recule
+    pas. Faux au premier jet, corrigé à l'œil de Pierre (« mets le coin coupé à
+    la même largeur que le reste ») : la boîte de `::before` est déjà en retrait
+    de 2 px de chaque côté, ce qui éloigne sa diagonale de **4** sur l'axe x−y,
+    alors qu'un trait de 2 px perpendiculaire n'en demande que **2 × √2 ≈
+    2,83**. Restent 4 − 2,83 = 1,17 px à reprendre, sans quoi la diagonale fait
+    4,83 px — plus du double des autres côtés, ce qui se voit tout de suite sur
+    une feuille sans arrondi. `::after`, le rabat (l'envers de la page), est un
+    triangle clippé de la même taille : son hypoténuse se pose exactement sur le
+    bord intérieur du trait.
+  - **Un motif de code à la place de l'engrenage** : trois lignes indentées, à
+    22 % d'opacité, en haut de la feuille. Ça dit « fichier de code » sans
+    consommer un glyphe du vocabulaire d'`ICONS.md` (l'engrenage aurait marché
+    sur les réglages), et ça laisse la zone du nom propre — un filigrane plein
+    cadre passait derrière le texte et le salissait, essayé et écarté.
+  - **`--ai-accent` et `--ai-line` séparés** : le premier est la teinte propre
+    de la feuille, le second le trait qui en dérive. Le survol ne repeint que
+    `--ai-line` (demande de Pierre) ; la pastille de version, le rabat et le
+    voile de surface gardent la teinte de l'IA au lieu de virer au vert avec le
+    contour.
+  - **Les quatre couleurs** (`ai.color`, servi par le serveur) : l'accent prend
+    la teinte sémantique du thème (`--success`, `--info`, `--error`,
+    `--text-color-secondary`) et la surface en garde un voile à 14 % en
+    `color-mix`. L'encre reste celle du thème — les PNG forçaient `--white`,
+    qui n'est pas blanc en sombre.
+  - **Peau v2 embarquée** : les PNG et l'inversion sombre restent, sous
+    `body.v2` (la règle d'inversion était sur `body.dark` seul, elle aurait
+    ressorti un PNG par-dessus la feuille dessinée).
+
+- **2026-08-28, lot 35 — la barre du haut en verre** (demande de Pierre). Depuis
+  le lot 30 la barre est fixe et le contenu défile dessous : elle prenait un
+  aplat opaque (`--background-header`) pour le masquer. Elle le laisse
+  maintenant voir, **flouté et désaturé de sa propre teinte** — même couleur,
+  simplement diluée à 55 % en `color-mix`, plus
+  `backdrop-filter: blur(18px) saturate(140%)`. Elle garde donc sa teinte en
+  clair comme en sombre. Le flou monte avec la transparence (72 % / 14 px au
+  premier jet, jugé trop couvrant) : moins la surface couvre, plus c'est lui
+  qui tient la lisibilité du texte de la barre.
+  - **Le principe 1 tient** : ce qui sépare la barre du contenu reste le trait
+    du bas (`--border-strong`), pas une ombre. Le verre n'est pas de
+    l'élévation, c'est une surface qui transmet.
+  - **L'aplat opaque reste le repli**, sous `@supports (backdrop-filter: …)` :
+    sans le filtre (Firefox si le flag est coupé, vieux WebKit), une barre
+    translucide laisserait le texte de la page défiler lisiblement au travers.
+  - **v3 seulement** (`#app:not(.app) header.header`), et pas `lw-bar` : en mode
+    application la barre du haut n'est pas rendue, c'est `lw-bar` qui tient ce
+    rôle — à traiter séparément si on veut le même effet.
+
+- **2026-08-28, lot 36 — mot-symbole réduit, icône devant** (demande de Pierre).
+  Le logo passe de 45 à **32 px** de haut et prend le **poireau du favicon**
+  devant lui, à 10 px comme dans le mockup. Ce n'est pas un logo nouveau :
+  `favicon.png` est déjà l'icône du jeu (64 px, fond transparent, vert lisible
+  sur les deux thèmes), donc le **principe 5 tient** — le logo définitif reste
+  à la charge de Pierre. La pastille ronde `icon192.png` était l'autre candidate,
+  écartée par le principe 2 (pas d'arrondis).
+  - `.logo-wrapper` passe en **flex** en v3 : les marges d'origine calaient le
+    logo dans une barre alignée en bas, celle du v3 centre son contenu.
+  - Deux réglages qui suivaient la taille d'avant : les **badges
+    d'environnement** (`line-height: 70px`, prévu pour la barre du v2, gonflait
+    la ligne flex) et la **décoration saisonnière**, posée à `left: 287px`,
+    c'est-à-dire au bout du logo d'avant — elle s'accroche maintenant à son coin.
+  - v2 et thème XP intacts (`body:not(.v2):not(.xp)`, et l'icône n'est rendue
+    que hors de ces deux thèmes).
+
 ## À reporter dans le projet Claude Design
 
 Décisions prises côté site qui doivent redescendre dans le mockup :
@@ -794,3 +1251,14 @@ Décisions prises côté site qui doivent redescendre dans le mockup :
 - `--radius-soft` : 2px → 0 (fait dans `src/redesign/tokens.scss`).
 - `--shadow-soft` (ombre floue) : bannie, à retirer des jetons et du composant
   qui l'utilise en dur (`components.scss` ~l. 995, `0 -8px 32px`).
+- **Échelle de surfaces claire creusée (lot 28)**, non reportée dans
+  `src/redesign/tokens.scss`, qui reste le miroir du mockup. Le site s'en écarte
+  désormais **en thème clair** : `--bg` / `--bg-panel` / `--bg-elev` / `--bg-row`
+  du mockup tiennent dans 1,04–1,08 de contraste, ce qui ne suffit pas à découper
+  une page sans ombre ni arrondi. Valeurs retenues côté site : page #E9E3CD,
+  en-tête #F3EDD8, panneau #FBF7E8, rangée #EFE8D0, extérieur #DED7BE — et la
+  **rangée passe sous le panneau**. Le thème **sombre reste celui du mockup**,
+  choix de Pierre : le même creusement y a été essayé puis retiré.
+- **Le vert a deux valeurs, pas une** : `--green` du mockup ne peut pas servir
+  d'encre ET d'aplat en thème clair. Le site a `--primary` (encre, #146128) et
+  `--primary-surface` (aplat, #2E9E4B, encre sombre dessus).
