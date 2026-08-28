@@ -3,6 +3,10 @@
 		<div class="header-left">
 			<router-link to="/">
 				<div class="logo-wrapper">
+					<!-- Icône devant le mot-symbole (v3, demande de Pierre) : c'est le poireau
+					     du favicon, déjà l'icône du jeu, pas un dessin nouveau — le logo
+					     définitif reste à la charge de Pierre (REDESIGN.md, principe 5). -->
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="logo-icon" src="/image/favicon.png" alt="">
 					<!-- Le logo historique est rempli d'un dégradé vertical (blanc → #b3b3b3),
 					     hérité d'une barre sombre. Le v3 en prend une version à plat, même
 					     géométrie au point près, un seul aplat : c'est un essai demandé par
@@ -116,7 +120,7 @@
 								<div class="header-button fights-button">
 									<span class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
 									<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
-									<img src="/image/icon/garden.png">
+									<v-icon>mdi-sword-cross</v-icon>
 								</div>
 							</router-link>
 						</template>
@@ -128,7 +132,7 @@
 						<div class="header-button fights-button">
 							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
 							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
-							<img src="/image/icon/garden.png">
+							<v-icon>mdi-sword-cross</v-icon>
 						</div>
 					</router-link>
 				</div>
@@ -166,6 +170,18 @@
 						</div>
 					</v-menu>
 				</div>
+				<!-- La console flottait en icône libre par-dessus la page, en haut à
+				     gauche : elle rejoint la barre, avec les autres outils. -->
+				<div class="button-wrapper">
+					<v-tooltip bottom>
+						<template #activator="{ props }">
+							<div class="console-button header-button" v-bind="props" @click="openConsole">
+								<v-icon>mdi-console</v-icon>
+							</div>
+						</template>
+						{{ $t('main.console') }}
+					</v-tooltip>
+				</div>
 				<div class="button-wrapper">
 					<router-link to="/settings">
 						<div class="settings-button header-button">
@@ -195,6 +211,7 @@
 </template>
 
 <script lang="ts" setup>
+	import { emitter } from '@/model/emitter'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { seasonDisplay } from '@/model/season'
@@ -212,6 +229,12 @@
 	const AccountSwitcher = defineAsyncComponent(() => import('@/component/app/account-switcher.vue'))
 
 	const accountMenu = ref(false)
+
+	// La fenêtre de console est montée à la racine de l'application, hors de
+	// portée de la barre : c'est elle qui écoute.
+	function openConsole() {
+		emitter.emit('open-console')
+	}
 
 	function readNotifications() {
 		if (store.state.unreadNotifications) {
@@ -231,6 +254,44 @@
 		margin-top: 15px;
 		margin-bottom: 10px;
 	}
+	// v3 : mot-symbole plus petit, précédé du poireau. Le wrapper passe en flex
+	// pour aligner l'icône, le logo et le badge d'environnement sur une même
+	// ligne ; les marges d'origine calaient le logo dans une barre alignée en bas,
+	// alors que celle du v3 centre son contenu.
+	body:not(.v2):not(.xp) {
+		.logo-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+		.logo {
+			width: auto;
+			height: 32px;
+			max-width: none;
+			max-height: none;
+			margin: 0;
+		}
+		.logo-icon {
+			height: 32px;
+			width: auto;
+			flex-shrink: 0;
+		}
+		// Les badges d'environnement sont calés pour la barre du v2, alignée en
+		// bas (`line-height: 70px`) : dans un wrapper flex ils gonflent la ligne.
+		.logo-wrapper :is(.dev-label, .beta-label, .local-label, .beta-local-label) {
+			line-height: 1;
+			margin-left: 0;
+		}
+		// La décoration saisonnière était posée à 287 px du bord, c'est-à-dire au
+		// bout du logo d'avant. Elle s'accroche maintenant à son coin, quelle que
+		// soit sa largeur.
+		.logo-wrapper .season-decoration {
+			top: -6px;
+			left: auto;
+			right: -18px;
+			font-size: 26px;
+		}
+	}
 	.avatar {
 		height: 42px;
 		width: 42px;
@@ -243,10 +304,10 @@
 		align-items: flex-end;
 		height: 80px;
 	}
-	.header .fights-button img {
-		height: 20px;
-		width: 20px;
-		margin: -4px 0;
+	// L'épée du compteur de combats : plus petite que les icônes de la barre
+	// (26 px), qui sont seules dans leur bouton — celle-ci accompagne un nombre.
+	.header .fights-button .v-icon {
+		font-size: 21px;
 		opacity: 0.8;
 	}
 	.header-left {
