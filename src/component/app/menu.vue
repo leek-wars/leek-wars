@@ -604,8 +604,8 @@
 		background: rgba(150, 150, 150, 0.2);
 	}
 	.menu-center .section.router-link-active {
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 2px 6px rgba(0, 0, 0, 0.3);
 		&:before {
 			content: "";
@@ -813,7 +813,7 @@
 
 	.progress-bar {
 		height: 3px;
-		background: var(--primary);
+		background: var(--primary-surface);
 		transition: width ease 500ms;
 		margin-top: -3px;
 	}
@@ -882,7 +882,7 @@
 		width: 8px;
 		height: 8px;
 		border-radius: 50%;
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 	// Halo pulsé via un pseudo-élément animé en transform/opacity (compositables
 	// GPU, aucun repaint). L'ancienne version animait box-shadow, ce qui forçait
@@ -971,7 +971,7 @@
 	}
 	.awards:after {
 		top: 0;
-		background: var(--primary);
+		background: var(--primary-surface);
 		display: none;
 	}
 	#app.menu-collapsed .awards {
