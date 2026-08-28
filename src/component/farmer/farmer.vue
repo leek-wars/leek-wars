@@ -351,6 +351,10 @@
 			</template>
 		</panel>
 
+		<!-- Poireaux et parrainage côte à côte quand la largeur le permet : `.container`
+		     est un flex qui replie ses panneaux en dessous de leur base. Les enfants ne
+		     sont pas réindentés, le fichier étant en cours de modification ailleurs. -->
+		<div class="container grid large">
 		<panel :title="$t('leeks')">
 			<loader v-if="!farmer" />
 			<div v-else class="leeks">
@@ -473,6 +477,7 @@
 				</div>
 			</template>
 		</panel>
+		</div>
 
 		<div class="container grid large">
 			<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')" icon="mdi-sword-cross">

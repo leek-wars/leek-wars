@@ -27,13 +27,10 @@ interface InlineData {
 	data: GameDataMap
 }
 
-// Client de développement (Vite) : la page vient de Vite et non du serveur, qui
-// est donc hors jeu pour tout ce qui passe par le HTML (cf. checkVersion).
-const DEV = window.location.port === '8080'
-
 function getApiUrl(): string {
 	const port = window.location.port
 	const LOCAL = port === '8500' || port === '5100' || window.location.hostname === 'leekwars.local' || window.location.hostname === 'leekwars-beta.local'
+	const DEV = port === '8080'
 	if (LOCAL) return window.location.origin + '/api/'
 	if (DEV) return 'https://leekwars.com/api/'
 	return 'https://' + window.location.host + '/api/'
@@ -213,26 +210,7 @@ export async function loadGameData(): Promise<GameDataMap | null> {
 		return inline.data
 	}
 
-	// __DATA__ null → tout est à jour, charger depuis le cache.
-	//
-	// Sauf en dev : la page vient de Vite, jamais du serveur. Or c'est le serveur
-	// qui pose le cookie `data_hashes` quand il sert le HTML ; ici, le seul à
-	// l'écrire est le client lui-même, juste après avoir écrit le cache. Cookie
-	// et cache ne peuvent donc plus diverger, la comparaison de version ne
-	// déclenche jamais rien et le catalogue reste FIGÉ sur son premier
-	// chargement : tout ce qui a été ajouté côté serveur depuis manque pour
-	// toujours (un composant équipé dont l'item est introuvable, et l'écran du
-	// poireau qui avertit en boucle). On demande donc la version au serveur —
-	// une requête légère — et on recharge tout si elle a bougé.
-	if (DEV) {
-		const serverVersion = await fetchMasterVersion()
-		const cachedVersion = getCookieMasterVersion()
-		if (serverVersion !== null && serverVersion !== cachedVersion) {
-			console.log(`[GameData] Dev: server version ${serverVersion} != cached ${cachedVersion} → full reload`)
-			return await fetchAll()
-		}
-	}
-
+	// __DATA__ null → tout est à jour, charger depuis le cache
 	console.log('[GameData] __DATA__ null, loading from cache...')
 	const t0 = performance.now()
 	const cached = await cacheLoad()
@@ -245,20 +223,6 @@ export async function loadGameData(): Promise<GameDataMap | null> {
 
 	console.log('[GameData] No cache → fetching from API...')
 	return await fetchAll()
-}
-
-// Version du dataset côté serveur. null si l'appel échoue : hors ligne, on garde
-// le cache — un catalogue peut-être périmé vaut mieux qu'une app qui ne démarre pas.
-async function fetchMasterVersion(): Promise<string | null> {
-	try {
-		const response = await fetch(getApiUrl() + 'data/version')
-		if (!response.ok) return null
-		const json = await response.json()
-		return json.master_version ?? null
-	} catch (e) {
-		console.warn('[GameData] Version check failed, keeping cache', e)
-		return null
-	}
 }
 
 async function fetchAll(): Promise<GameDataMap> {
