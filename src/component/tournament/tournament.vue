@@ -1,7 +1,12 @@
 <template>
 	<div ref="page" class="tournament-page page">
 		<div class="page-header page-bar">
-			<h1>{{ tournament ? title : '...' }}</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-tournament</v-icon>
+				<div class="page-title-text">
+					<h1>{{ tournament ? title : '...' }}</h1>
+				</div>
+			</div>
 			<div v-if="!LeekWars.mobile && tournament && !tournament.finished" class="tabs">
 				<div v-if="generating && ($store.getters.admin || (tournament?.group && tournament?.group == $store.state.farmer?.supervised_group))" class="tab disabled"><loader class="small-loader" :size="25" /> {{ $t('generating') }}</div>
 				<div v-else-if="!generating && tournament?.group && ($store.getters.admin || tournament?.group == $store.state.farmer?.supervised_group)" class="tab green" @click="generateTournament"><v-icon>mdi-play</v-icon> {{ $t('generate') }}</div>

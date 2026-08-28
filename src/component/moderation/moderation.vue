@@ -1,8 +1,11 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-gavel</v-icon>
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
 			</div>
 			<div class="tabs">
 				<router-link to="/moderation/thugs">

@@ -1,7 +1,9 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-forum</v-icon>
+				<div class="page-title-text">
 				<h1>{{ $t('title') }}</h1>
 				<v-menu offset-y>
 					<template #activator="{ props }">
@@ -23,11 +25,12 @@
 						</v-list-item>
 					</v-list>
 				</v-menu>
+				</div>
 			</div>
 			<div class="tabs">
 				<router-link to="/chat">
 					<div class="tab action" icon="mdi-chat" link="/chat">
-						<v-icon>mdi-chat-outline</v-icon>
+						<v-icon>mdi-chat</v-icon>
 						<span>{{ $t('main.chat') }}</span>
 					</div>
 				</router-link>
@@ -206,7 +209,7 @@
 			LeekWars.setTitle(t('title'), t('connected_farmers_subtitle', [data.farmers.length]) as string)
 		})
 		LeekWars.setActions([
-			{icon: 'mdi-chat-outline', click: () => router.push('/chat')},
+			{icon: 'mdi-chat', click: () => router.push('/chat')},
 			{icon: 'mdi-magnify', click: () => router.push('/search')}
 		])
 	}

@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-sword-cross</v-icon>
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<div v-if="garden" class="tabs">
 				<v-tooltip>
 					<template #activator="{ props }">
@@ -1214,7 +1219,7 @@
 		width: 8px;
 		height: 8px;
 		border-radius: var(--radius-pill);
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 	// Halo pulsé via un pseudo-élément animé en transform/opacity (compositables
 	// GPU, aucun repaint). L'ancienne version animait box-shadow, ce qui forçait
@@ -1226,7 +1231,7 @@
 		border-radius: var(--radius-pill);
 		/* Le vert du v2 était écrit en dur ici alors que le point lui-même suit
 		   `--primary` : en v3 le halo ne parlait plus la couleur de sa source. */
-		background: color-mix(in srgb, var(--primary) 60%, transparent);
+		background: color-mix(in srgb, var(--primary-surface) 60%, transparent);
 		animation: arena-pulse 2s infinite;
 		pointer-events: none;
 	}

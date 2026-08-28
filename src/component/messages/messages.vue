@@ -1,10 +1,13 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>{{ $t('title') }}</h1>
-				<div class="info">
-					<v-icon v-if="isPrivate">mdi-at</v-icon><v-icon v-else>mdi-pound</v-icon> {{ chat_name }}
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-email-outline</v-icon>
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+					<div class="info">
+						<v-icon v-if="isPrivate">mdi-at</v-icon><v-icon v-else>mdi-pound</v-icon> {{ chat_name }}
+					</div>
 				</div>
 			</div>
 			<div class="tabs">
@@ -148,10 +151,10 @@
 		}
 		if (store.state.farmer && store.state.farmer.team) {
 			const team_chats = [
-				{ id: store.state.farmer.team.chat, name: store.state.farmer.team.name, icon: 'mdi-chat-outline' },
+				{ id: store.state.farmer.team.chat, name: store.state.farmer.team.name, icon: 'mdi-chat' },
 			]
 			if (store.state.farmer.group) {
-				team_chats.push({ id: store.state.farmer.group.chat, name: store.state.farmer.group.name, icon: 'mdi-chat-outline' })
+				team_chats.push({ id: store.state.farmer.group.chat, name: store.state.farmer.group.name, icon: 'mdi-chat' })
 			}
 			chats.push({name: t('cat_team') as string, icon: 'mdi-account-multiple', chats: team_chats })
 		}
@@ -416,7 +419,7 @@
 			}
 		}
 		.unread {
-			background: var(--primary);
+			background: var(--primary-surface);
 			border-radius: 50%;
 			width: 10px;
 			height: 10px;
@@ -445,7 +448,7 @@
 	}
 	.unread-circle {
 		display: inline-block;
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-radius: 50%;
 		width: 10px;
 		height: 10px;

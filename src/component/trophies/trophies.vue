@@ -1,9 +1,14 @@
 <template>
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>
-				<breadcrumb :items="breadcrumb_items" :raw="true" />
-			</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-trophy</v-icon>
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<v-menu bottom offset-y :max-width="600">
 					<template #activator="{ props }">

@@ -13,10 +13,15 @@
 	<template v-else>
 		<div class="page-header page-bar">
 
-			<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
-				<h1 v-bind="props">{{ team.name }}</h1>
-			</rich-tooltip-team>
-			<h1 v-else>...</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-shield</v-icon>
+				<div class="page-title-text">
+					<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
+						<h1 v-bind="props">{{ team.name }}</h1>
+					</rich-tooltip-team>
+					<h1 v-else>...</h1>
+				</div>
+			</div>
 
 			<div v-if="team" class="tabs">
 				<router-link v-if="is_member" :to="'/forum/category-' + team.forum">
@@ -152,7 +157,7 @@
 				<v-tooltip v-if="team && team.won_tournaments > 0">
 					<template #activator="{ props }">
 						<div v-bind="props" class="tournaments">
-							<v-icon class="grey">mdi-trophy-outline</v-icon>
+							<v-icon class="grey">mdi-tournament</v-icon>
 							<span class="big">{{ $filters.number(team.won_tournaments) }}</span>
 						</div>
 					</template>
@@ -216,7 +221,7 @@
 			</div>
 		</panel>
 
-		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
+		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat">
 			<template #actions>
 				<div v-if="!LeekWars.mobile && team && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
@@ -504,7 +509,7 @@
 			</div>
 		</panel>
 
-		<panel v-if="is_member" :title="$t('compositions')">
+		<panel v-if="is_member" :title="$t('compositions')" icon="mdi-shield-sword">
 			<template v-if="captain" #actions>
 				<div class="button flat" @click="createCompoDialog = true">{{ $t('create_composition') }}</div>
 			</template>
@@ -514,7 +519,7 @@
 		<div v-if="is_member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
 
 		<div v-if="is_member && team && team.compositions" class="compos">
-			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo">
+			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo" icon="mdi-shield-sword">
 				<template #title>
 					<rich-tooltip-composition :id="composition.id" v-slot="{ props }">
 						<div v-bind="props">{{ composition.name }}</div>
@@ -529,7 +534,7 @@
 					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && captain" content-class="fluid" @update:model-value="loadTournamentRange(composition)">
 						<template #activator="{ props }">
 							<div class="button flat" v-bind="props" @click="registerTournament(composition)">
-								<v-icon>mdi-trophy</v-icon>
+								<v-icon>mdi-tournament</v-icon>
 								<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
 								<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
 							</div>
@@ -627,7 +632,7 @@
 				</template>
 			</panel>
 
-			<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+			<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-tournament">
 				<template #content>
 					<tournaments-history v-if="team" :tournaments="team.tournaments" />
 				</template>
@@ -851,6 +856,7 @@
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/emitter'
 	import { Line } from 'vue-chartjs'
+	import { talentDataset, talentScales } from '@/chart'
 	import type { ChartData, ChartOptions } from 'chart.js'
 	import Sortable from 'sortablejs'
 
@@ -1034,6 +1040,10 @@
 
 	watch(id, () => update(), { immediate: true })
 
+	// La grille du graphique est lue sur le thème : la relire à la bascule, sinon
+	// elle garde les couleurs de l'ancien et disparaît dans le fond.
+	watch(() => [LeekWars.darkMode, LeekWars.legacyTheme], () => nextTick(chart))
+
 	// Mise à jour en direct du petit historique de combats.
 	const { progress: liveProgress } = useLiveHistory({
 		type: 'team',
@@ -1088,7 +1098,7 @@
 			if (is_member.value) {
 				logsLevel.value = my_member.value!.logs_level
 				LeekWars.setActions([
-					{icon: 'mdi-chat-outline', click: () => router.push('/forum/category-' + tm.forum)},
+					{icon: 'mdi-forum', click: () => router.push('/forum/category-' + tm.forum)},
 					{icon: 'mdi-account-group', click: () => router.push('/teams')}
 				])
 			} else {
@@ -1627,28 +1637,17 @@
 		labels.reverse()
 		labels.push(LeekWars.formatDayMonthShort(time))
 		const data = [...team.value.talent_history, team.value.talent]
-		const lastIndex = data.length - 1
 		chartData.value = {
 			labels,
-			datasets: [{
-				tension: 0.2,
-				data,
-				borderColor: '#5fad1b',
-				pointBackgroundColor: '#5fad1b',
-				borderWidth: 2,
-				fill: { target: 'origin', above: '#5fad1b30' },
-				// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
-				segment: {
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
-				},
-			}]
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} as any
+			datasets: [talentDataset(data)]
+		}
 		chartOptions.value = {
 			aspectRatio: 2.5,
 			plugins: { legend: { display: false } },
-			elements: { point: { radius: 4, hoverRadius: 6 } },
+			// Un carré de rayon r mesure r√2 de côté : un cran de plus que les
+			// ronds d'avant pour garder le même poids à l'œil.
+			elements: { point: { radius: 5, hoverRadius: 7 } },
+			scales: talentScales(),
 		}
 	}
 
@@ -2043,7 +2042,7 @@
 		cursor: pointer;
 	}
 	.change_owner_popup .farmer.selected {
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 	.change_owner_popup .farmer.selected .name {
 		color: var(--white);
@@ -2386,9 +2385,18 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
 		gap: 12px;
-		/* Sans ça les panneaux d'une même ligne s'étirent à la hauteur du plus
-		   grand, et une composition de deux poireaux traîne un grand vide. */
-		align-items: start;
+		/* Toutes les compositions à la même hauteur, d'une ligne à l'autre comme
+		   au sein d'une ligne. Une composition ne tient jamais qu'une seule
+		   ligne de poireaux (six au maximum) : leurs hauteurs ne diffèrent que
+		   du chapeau et de l'arme portés, quelques pixels qui suffisent à faire
+		   des bas de panneaux en escalier. */
+		grid-auto-rows: 1fr;
+	}
+	/* Un panneau replié n'a plus que son en-tête : l'étirer laisserait une
+	   grande boîte vide. Le composant panneau ne pose pas de classe quand il est
+	   replié, on détecte donc l'absence de son contenu. */
+	body:not(.v2) .compos > .panel:not(:has(> .leeks)) {
+		align-self: start;
 	}
 	body:not(.v2) .compos > .panel {
 		margin-bottom: 0;
@@ -2401,6 +2409,12 @@
 	   n'a pas de limite à six et garde son remplissage automatique. */
 	body:not(.v2) .compos .leeks {
 		grid-template-columns: repeat(6, 1fr);
+		/* Le panneau est désormais étiré à la hauteur de sa ligne : c'est la
+		   zone des poireaux qui prend le surplus — elle est aussi la cible du
+		   glisser-déposer, autant qu'elle couvre tout le panneau — et elle
+		   centre ses poireaux dedans plutôt que de laisser le vide en bas. */
+		flex: 1;
+		align-content: center;
 		/* Une image de poireau est plus large que sa cellule : l'arme et le
 		   chapeau débordent (jusqu'à ~150 px pour une cellule de ~105). Elles
 		   sont centrées, donc le premier et le dernier poireau sortaient du

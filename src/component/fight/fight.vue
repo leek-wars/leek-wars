@@ -1,9 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<div v-if="fight">
+			<div v-if="fight" class="page-title">
+				<v-icon class="page-icon">mdi-sword</v-icon>
+				<div class="page-title-text">
 				<h1>{{ fight.title }}</h1>
 				<div class="info">{{ $filters.date(fight.date) }}</div>
+				</div>
 			</div>
 			<div class="tabs">
 				<!-- Retour au contexte d'ou vient le combat (#4810). Le rapport le proposait

@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-podium</v-icon>
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<router-link :to="getURL('leek', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'leek'}">{{ $t('leeks') }}</div></router-link>
 				<router-link :to="getURL('level-' + rankingLevel, 'talent', country, LeekWars.rankingInactive)">
@@ -705,7 +710,7 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		a { text-decoration: none; display: flex; }
-		.mode-button.active { background: var(--primary); color: var(--primary-text); }
+		.mode-button.active { background: var(--primary-surface); color: var(--primary-surface-text); }
 		:deep(.mode-button) {
 			height: 42px;
 			margin: 0;

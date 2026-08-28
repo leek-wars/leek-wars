@@ -1,14 +1,19 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('main.inventory') }}</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-treasure-chest</v-icon>
+				<div class="page-title-text">
+					<h1>{{ $t('main.inventory') }}</h1>
+				</div>
+			</div>
 			<page-tabs active="inventory" />
 		</div>
-		<div class="column">
+		<div class="column" :class="{columns}">
 			<!-- Cran plein de l'atelier : l'inventaire s'efface tout a fait. A hauteur nulle
 			     son en-tete debordait encore de quelques pixels (#622). -->
-			<inventory v-show="!workshopFull" />
-			<div class="resizer" @mousedown="resizerMousedown"><v-icon>mdi-drag-horizontal-variant</v-icon></div>
+			<inventory v-show="!workshopFull" :layout="layout" @update:layout="layout = $event" />
+			<div class="resizer" :class="{vertical: columnsLayout}" @mousedown="resizerMousedown"><v-icon>{{ columnsLayout ? 'mdi-drag-vertical-variant' : 'mdi-drag-horizontal-variant' }}</v-icon></div>
 			<panel ref="bottomPanel" class="bottom-panel" toggle="inventory/workshop" :toggle-invert="true" :states="LeekWars.mobile ? 3 : 2" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event" @update:state="panelState = $event">
 				<template #title>
 					<div class="workshop-tabs">
@@ -143,7 +148,21 @@
 		emitter.emit('workshop-mode', m)
 	})
 
+	// Disposition de la page : l'atelier SOUS l'inventaire (defaut) ou A COTE, en deux
+	// colonnes. Le reglage se fait depuis le menu des options de l'inventaire. Sur
+	// mobile la colonne est trop etroite pour couper en deux : le mode est ignore.
+	const layout = ref<'rows' | 'columns'>(localStorage.getItem('inventory/layout') === 'columns' ? 'columns' : 'rows')
+	watch(layout, l => {
+		localStorage.setItem('inventory/layout', l)
+		// La grille de l'inventaire calcule ses colonnes a partir de la largeur de son
+		// conteneur, qui vient de changer sans que la fenetre bouge : sans ce signal
+		// elle garde la grille de l'autre disposition jusqu'au prochain redimensionnement.
+		nextTick(() => emitter.emit('resize'))
+	})
+	const columnsLayout = computed(() => layout.value === 'columns' && !LeekWars.mobile)
+
 	const bottomHeight = ref(Math.max(300, parseInt(localStorage.getItem('inventory/bottom-height') || '350', 10)))
+	const bottomWidth = ref(Math.max(400, parseInt(localStorage.getItem('inventory/bottom-width') || '700', 10)))
 	// Cran d'ouverture de l'atelier. Sur mobile le bouton boucle sur trois crans
 	// (replie, mi-hauteur, plein) faute de place pour un redimensionneur ; sur desktop il
 	// reste binaire et c'est la poignee qui regle la hauteur (#622).
@@ -152,6 +171,9 @@
 		: storedPanel === 'false' ? 0
 		: Math.max(0, Math.min(2, parseInt(storedPanel, 10) || 0)))
 	const bottomExpanded = ref(panelState.value > 0)
+	// Replie, l'atelier se resume a son en-tete : il reprend toute la largeur en bas
+	// plutot que de garder sa colonne, ou il ne resterait qu'une bande vide.
+	const columns = computed(() => columnsLayout.value && bottomExpanded.value)
 	const sort = ref<Sort>(Math.min(parseInt(localStorage.getItem('workshop/sort') || '0', 10), Sort.INGREDIENT_COUNT) as Sort)
 	const filter = ref<number>(parseInt(localStorage.getItem('workshop/filter') || '0', 10))
 	const craftableOnly = ref(localStorage.getItem('workshop/craftable') === 'true')
@@ -253,6 +275,11 @@
 			return { flex: '1 1 100%' }
 		}
 		if (!bottomExpanded.value) return { flex: '0 0 auto' }
+		// En deux colonnes, c'est la largeur qui est reglee et non la hauteur. Elle
+		// est retrecissable (`0 1`) : sur une fenetre trop etroite pour la largeur
+		// choisie plus le minimum de l'inventaire, c'est l'atelier qui cede, sinon la
+		// page deborderait horizontalement.
+		if (columnsLayout.value) return { flex: '0 1 ' + bottomWidth.value + 'px' }
 		return { flex: '0 0 ' + bottomHeight.value + 'px' }
 	})
 
@@ -262,6 +289,7 @@
 		const panel = bottomPanel.value
 		if (!panel) return
 		const column = (instance!.proxy!.$el as HTMLElement).querySelector('.column') as HTMLElement
+		if (columnsLayout.value) { resizeColumns(e, panel, column); return }
 		const startY = e.clientY
 		const startHeight = panel.expanded ? bottomHeight.value : 0
 		const maxHeight = column.clientHeight - 200
@@ -286,6 +314,42 @@
 		document.documentElement.addEventListener('mousemove', mousemove, false)
 		document.documentElement.addEventListener('mouseup', mouseup, false)
 		document.body.style.cursor = 'ns-resize'
+		document.body.style.userSelect = 'none'
+		e.preventDefault()
+	}
+
+	/**
+	 * Meme poignee, en deux colonnes : c'est la LARGEUR de l'atelier (a droite) qui
+	 * suit la souris, et un glissement vers la droite le replie comme un glissement
+	 * vers le bas le fait en mode lignes.
+	 */
+	function resizeColumns(e: MouseEvent, panel: { expanded: boolean }, column: HTMLElement) {
+		const startX = e.clientX
+		const startWidth = panel.expanded ? bottomWidth.value : 0
+		const maxWidth = column.clientWidth - 300
+		const mousemove = (ev: MouseEvent) => {
+			let width = Math.max(0, Math.min(maxWidth, startWidth - (ev.clientX - startX)))
+			if (width < 300) {
+				width = 0
+				if (panel.expanded) panel.expanded = false
+			} else {
+				if (!panel.expanded) panel.expanded = true
+				width = Math.max(400, width)
+			}
+			bottomWidth.value = width || 400
+			localStorage.setItem('inventory/bottom-width', '' + bottomWidth.value)
+		}
+		const mouseup = () => {
+			document.documentElement.removeEventListener('mousemove', mousemove)
+			document.documentElement.removeEventListener('mouseup', mouseup)
+			document.body.style.cursor = ''
+			document.body.style.userSelect = ''
+			// La largeur de l'inventaire a change : sa grille se recalcule.
+			emitter.emit('resize')
+		}
+		document.documentElement.addEventListener('mousemove', mousemove, false)
+		document.documentElement.addEventListener('mouseup', mouseup, false)
+		document.body.style.cursor = 'ew-resize'
 		document.body.style.userSelect = 'none'
 		e.preventDefault()
 	}
@@ -404,6 +468,31 @@
 .column :deep(.inventory-panel) {
 	min-height: 200px;
 }
+// Disposition en deux colonnes : l'atelier passe A DROITE de l'inventaire. Le
+// panneau porte `width: 100%` (pense pour un empilement) : en ligne il faut le
+// laisser suivre sa base flex, sinon il ecrase son voisin — visible surtout
+// replie, ou sa base vaut `auto`.
+.column.columns {
+	flex-direction: row;
+}
+.column.columns :deep(.inventory-panel) {
+	min-height: 0;
+	min-width: 300px;
+	margin-bottom: 0;
+	margin-right: 12px;
+}
+.column.columns .bottom-panel {
+	width: auto;
+	min-width: 0;
+	margin-bottom: 0;
+}
+.column.columns .resizer {
+	height: auto;
+	width: 36px;
+	margin-bottom: 0;
+	margin-right: -36px;
+	cursor: ew-resize;
+}
 .resizer {
 	height: 36px;
 	margin-bottom: -36px;
@@ -426,6 +515,11 @@
 		opacity: 1;
 		color: var(--primary);
 	}
+}
+// En disposition colonnes, la poignee regle une LARGEUR meme quand l'atelier est
+// replie (il reprend alors toute la largeur en bas) : le curseur doit l'annoncer.
+.resizer.vertical {
+	cursor: ew-resize;
 }
 #app.app .resizer {
 	display: none;

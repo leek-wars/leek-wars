@@ -1,14 +1,21 @@
 <template lang="html">
 	<div ref="marketRoot" class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-store</v-icon>
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<page-tabs active="market">
 				<template #before>
 					<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="tab disabled search-box">
 						<img src="/image/search.png">
 						<input v-model="search" type="text" :placeholder="$t('main.search')" @keyup.stop>
 					</div>
-					<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
+					<!-- Élargir la page n'a de sens que dans l'ancien thème : le nouveau
+					     donne déjà toute la largeur au marché. -->
+					<div v-if="LeekWars.legacyTheme && !LeekWars.mobile" class="tab action" @click="toggleExpanded">
 						<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
 					</div>
 				</template>
@@ -468,7 +475,9 @@ const t = useNamespacedT('market')
 		return names
 	})
 
-	if (expanded.value) {
+	// Le choix mémorisé ne se réapplique qu'en v2 : sans le bouton, un `expanded`
+	// resté à true dans le localStorage élargirait la page sans moyen d'y revenir.
+	if (LeekWars.legacyTheme && expanded.value) {
 		LeekWars.large = true
 	}
 	const actions = [
@@ -853,8 +862,8 @@ const t = useNamespacedT('market')
 		padding: 6px 0;
 	}
 	.preview .leek {
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		padding: 4px 8px;
 		border-radius: var(--radius-small);
 		margin: 3px 1px;
@@ -926,12 +935,12 @@ const t = useNamespacedT('market')
 			font-weight: bold;
 		}
 		.leek-count {
-			background-color: var(--primary);
+			background-color: var(--primary-surface);
 			/* L'encre du bloc est `--grey-13`, une crème identique dans les deux
 			   thèmes : sur le vert néon du sombre elle tombait à 1,1 de contraste.
 			   `--primary-text` est justement l'encre calibrée pour un aplat de
 			   marque (sombre en thème sombre, crème en clair). */
-			color: var(--primary-text);
+			color: var(--primary-surface-text);
 		}
 		.farmer-count {
 			background-color: var(--grey-4);

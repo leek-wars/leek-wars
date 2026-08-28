@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>Administration</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-security</v-icon>
+				<div class="page-title-text">
+					<h1>Administration</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first" icon="mdi-chart-line" title="Statistiques & monitoring">
 			<template #content>
@@ -156,6 +161,20 @@
 							<h2>Game animations</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/icons">
+						<div v-ripple class="section card">
+							<v-icon>mdi-shape</v-icon>
+							<h2>Icônes</h2>
+						</div>
+					</router-link>
+					<!-- `mdi-palette-swatch` et pas `mdi-palette`, déjà pris par les Skins
+					     six cases plus haut dans la même grille (cf. ICONS.md). -->
+					<router-link to="/redesign">
+						<div v-ripple class="section card">
+							<v-icon>mdi-palette-swatch</v-icon>
+							<h2>Design system 3.0</h2>
+						</div>
+					</router-link>
 				</div>
 			</template>
 		</panel>
@@ -232,7 +251,6 @@
 		<panel class="last" icon="mdi-flask-outline" title="Outils de test">
 			<template #content>
 				<div class="admin-grid">
-					<v-btn prepend-icon="mdi-palette" to="/redesign">Design system 3.0</v-btn>
 					<v-btn prepend-icon="mdi-image" @click="square">Square notif image</v-btn>
 					<v-btn prepend-icon="mdi-star" @click="squareIcon">Square notif icon</v-btn>
 					<v-btn prepend-icon="mdi-trophy" @click="squareTrophy">Square notif trophy</v-btn>
