@@ -100,9 +100,11 @@ body:not(.v2) .sbl-circ-path {
 	background: var(--primary);
 	opacity: 0.09;
 	animation: lw-loader-rain 1s steps(3) infinite;
-	// Un dixième de cycle par temps, en négatif : la case est déjà « en retard »
-	// de son rang au démarrage, donc la goutte descend.
-	animation-delay: calc(-0.1s * var(--t));
+	// La case s'allume au temps `--t` du cycle, un dixième de seconde par temps :
+	// `--t` croît avec la rangée, donc la goutte descend. Le `- 1s` recule d'un
+	// cycle entier pour que le délai reste négatif — l'animation est déjà lancée
+	// à l'affichage, pas de case morte au démarrage.
+	animation-delay: calc(0.1s * var(--t) - 1s);
 }
 @keyframes lw-loader-rain {
 	0% { opacity: 1; }
