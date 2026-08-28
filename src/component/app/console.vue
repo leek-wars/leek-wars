@@ -49,7 +49,7 @@ import { emitter } from '@/model/emitter'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
 import { getLanguageVersions } from '../editor/file-types'
-import { isDarkCodeTheme } from '../editor/code-theme'
+import { AUTO_CODE_THEME, isDarkCodeTheme, siteCodeTheme } from '../editor/code-theme'
 import LwCode from './code.vue'
 
 defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco, 'lw-code': LwCode } })
@@ -113,7 +113,14 @@ function defaultVersion(lang: string) {
 	return getLanguageVersions(lang)[0]?.pragma ?? ''
 }
 const languageVersion = ref<string>(localStorage.getItem('console/version/' + language.value) || defaultVersion(language.value))
-const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'leek-wars-dark' : 'leek-wars'))
+// Thème de la console : un thème de coloration choisi, ou `auto` — elle suit
+// alors le clair/sombre du site, en direct.
+// Le choix a sa propre clé de stockage : `editor/theme` appartient à l'éditeur,
+// qui la donne telle quelle à Monaco et ne saurait pas quoi faire d'un `auto`.
+// Elle reste la valeur de départ, pour qu'une console déjà réglée ne change pas
+// d'aspect du jour au lendemain.
+const themeSetting = ref<string>(localStorage.getItem('console/theme') || localStorage.getItem('editor/theme') || AUTO_CODE_THEME)
+const theme = computed(() => themeSetting.value === AUTO_CODE_THEME ? siteCodeTheme() : themeSetting.value)
 const leekscript = reactive({
 	version: 4,
 	strict: false,
@@ -230,7 +237,7 @@ const cssTheme = computed(() => isDarkCodeTheme(theme.value) ? 'monokai' : 'leek
 const codeThemeClass = computed(() => 'code-theme-' + theme.value)
 
 function saveTheme() {
-	localStorage.setItem('editor/theme', theme.value)
+	localStorage.setItem('console/theme', themeSetting.value)
 }
 
 watch(() => leekscript.version, () => {
@@ -257,7 +264,7 @@ watch(languageVersion, (v) => {
 	if (v) localStorage.setItem('console/version/' + language.value, v)
 })
 
-defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language, languageVersion })
+defineExpose({ isEmpty, clear, focus, saveTheme, themeSetting, leekscript, language, languageVersion })
 </script>
 
 <style lang="scss" scoped>
