@@ -40,12 +40,74 @@ body:not(.v2) {
 
 	/* ====== Barre du haut ====== */
 
-	/* Pas de surface propre : la barre reste posée sur le fond extérieur, comme
-	   dans le v2. Lui donner un aplat en faisait une bande pleine largeur, en
-	   travers d'une interface dont tout le reste est une colonne centrée.
-	   Seul le trait du bas est gardé, pour asseoir la barre. */
-	.header {
-		border-bottom: 1px solid var(--border);
+	/* Bandeau pleine largeur (demande de Pierre, d'après le mockup) : la barre va
+	   d'un bord à l'autre, et les deux colonnes fixes — menu à gauche, panneau
+	   social à droite — commencent DESSOUS.
+	 *
+	 * Le composant vit dans `.app-center`, la colonne centrale, elle-même
+	 * décalée de la largeur du menu : la barre démarrait donc à 220 px du bord.
+	 * On la sort du flux ici plutôt que de la déplacer dans le template, ce qui
+	 * emporterait le v2 — où la barre est bornée avec le contenu, et doit le
+	 * rester. `header.header` et non `.header` : le sélecteur nu attraperait
+	 * aussi les en-têtes de panneau et la ligne d'en-tête du forum.
+	 *
+	 * `#app:not(.app)` : en mode application la barre du haut n'est pas rendue
+	 * du tout une fois connecté, c'est `lw-bar` qui tient ce rôle (lot 26).
+	 *
+	 * Elle prend une surface, ce que le v3 lui refusait justement parce qu'elle
+	 * n'allait pas au bord : maintenant qu'elle est fixe, sans aplat on verrait
+	 * le contenu défiler au travers. */
+	#app:not(.app) header.header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		/* Au-dessus du panneau social (1000) et du menu (1). */
+		z-index: 1001;
+		box-sizing: border-box;
+		height: var(--header-height);
+		padding: 0 20px;
+		/* Le contenu était calé en bas, la barre n'ayant pas de fond : l'espace
+		   au-dessus se lisait comme du fond extérieur. Sur un bandeau plein, il
+		   se lirait comme un vide. */
+		align-items: center;
+		background: var(--background-header);
+		border-bottom: 1px solid var(--border-strong);
+	}
+	/* Effet verre : la barre est fixe et le contenu défile dessous, elle le laisse
+	   donc voir — flouté et désaturé de sa propre surface — au lieu de le masquer
+	   d'un aplat. Ce qui la sépare du contenu reste le trait du bas, pas une
+	   ombre : le principe 1 tient toujours.
+	   Sous `@supports`, et l'aplat opaque au-dessus reste le repli : sans
+	   `backdrop-filter` (Firefox si le flag est coupé, vieux WebKit) une barre
+	   translucide laisserait le texte de la page défiler lisiblement au travers.
+	   La couleur reste `--background-header`, simplement diluée : la barre garde
+	   sa teinte en clair comme en sombre. Le flou monte avec la transparence —
+	   moins la surface couvre, plus c'est lui qui tient la lisibilité du texte
+	   de la barre par-dessus le contenu qui passe. */
+	@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+		#app:not(.app) header.header {
+			background: color-mix(in srgb, var(--background-header) 55%, transparent);
+			-webkit-backdrop-filter: blur(18px) saturate(140%);
+			backdrop-filter: blur(18px) saturate(140%);
+		}
+	}
+	/* Le menu commençait au ras du haut, à côté de la barre. Il passe dessous —
+	   le panneau social le faisait déjà (`top: 80px` en dur dans `social.vue`).
+	   Ses 46 px de retrait interne servaient à dégager la barre du v2 : ils
+	   n'ont plus d'objet une fois la colonne décalée. */
+	#app:not(.app) nav.menu {
+		top: var(--header-height);
+		padding-top: 0;
+	}
+	/* La colonne centrale n'a plus la barre en tête de flux. */
+	#app:not(.app) .app-center {
+		padding-top: var(--header-height);
+	}
+	/* Les pages en pleine hauteur (éditeur, rapport de combat) mesuraient 100vh
+	   sous une barre qui prenait sa place dans le flux. Elle n'y est plus. */
+	#app:not(.app) .app-wrapper.box {
+		height: calc(100vh - var(--header-height));
 	}
 
 	/* Les boutons étaient des trapèzes, dessinés par deux pseudo-éléments qui
@@ -80,14 +142,14 @@ body:not(.v2) {
 	}
 	/* Le bouton d'inscription reste l'action principale de la barre. */
 	.header .signup-button.header-button {
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-color: var(--primary);
-		color: var(--primary-text);
+		color: var(--primary-surface-text);
 	}
 	.header .signup-button.header-button:hover {
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-color: var(--primary);
-		color: var(--primary-text);
+		color: var(--primary-surface-text);
 		filter: brightness(1.08);
 	}
 
@@ -261,17 +323,37 @@ body:not(.v2) {
 	/* La barre est plus haute que dans le v2 : le mockup lui donne de l'air
 	   autour du titre. On ne touche pas à sa structure (titre + onglets sur une
 	   ligne), juste à la hauteur — 48 px au lieu de 36. */
+	/* Pas de surface (demande de Pierre) : le titre est posé sur la page, comme
+	   dans le mockup. Elle en avait une tant que la barre du haut n'allait pas au
+	   bord — les deux bandes se répondaient. Maintenant que le bandeau du haut est
+	   plein et pleine largeur, une deuxième bande juste dessous empilait deux
+	   surfaces claires et écrasait le titre entre elles. */
 	.page-header.page-bar,
 	.page-bar {
-		background: var(--background-header);
+		background: none;
 		border-bottom: 1px solid var(--border);
 		min-height: 48px;
+		/* `global.scss` réserve 12 px à droite, partagés avec le v2 : la dernière
+		   action s'arrêtait donc avant le bout du pointillé, et la barre ne se
+		   calait plus ni sur le trait qui la souligne ni sur le bord des panneaux
+		   en dessous. Neutralisé ici seulement, le v2 garde son retrait. */
+		padding-right: 0;
 	}
 	/* Recentrage vertical, sauf quand la barre contient un bloc plus haut
 	   qu'elle : l'éditeur y loge son propre menu d'outils, et centrer laissait
 	   sa barre d'onglets flotter au milieu du vide au lieu de rester en haut. */
 	.page-bar:not(:has(> .menu)) {
 		align-items: center;
+	}
+	/* La barre de TITRE garde la hauteur qu'elle avait avec un sous-titre
+	   (demande de Pierre : « on peut quand même agrandir la barre en hauteur,
+	   c'était sympa »). Le sous-titre est parti, l'air qu'il donnait reste.
+	   Réservé à la barre de titre : le pied de page d'une page (`.page-footer`)
+	   et le champ de l'encyclopédie sont aussi des `.page-bar` et n'ont pas à
+	   grandir, et l'éditeur — reconnu à son `> .menu`, comme au-dessus — mesure
+	   déjà sa barre lui-même. */
+	.page-header.page-bar:not(:has(> .menu)) {
+		min-height: 72px;
 	}
 	.page-bar .tabs .tab::before,
 	.page-bar .tabs .tab::after,
@@ -359,10 +441,182 @@ body:not(.v2) {
 	h1::after {
 		display: none;
 	}
-	/* Le pointillé vert du mockup, en border-image sur la barre de page. */
+	/* Le pointillé vert du mockup, en border-image sur la barre de page.
+	   Il lui faut de l'air en dessous : le premier panneau venait s'y coller, et
+	   le pointillé se lisait comme le bord du panneau plutôt que comme le
+	   soulignement du titre. 12 px, la gouttière des panneaux entre eux. */
 	.page-header.page-bar {
 		border-bottom: 3px solid transparent;
 		border-image: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px) 3;
+		margin-bottom: 12px;
+	}
+
+	/* --- Le bloc de titre : icône + titre ---
+	 *
+	 * Motif du mockup, optionnel et rétrocompatible : une barre de page qui pose
+	 * juste son `h1`, comme les 88 en place, ne voit rien de ces règles. Celle
+	 * qui adopte le motif enveloppe son titre :
+	 *
+	 *   <div class="page-header page-bar">
+	 *     <div class="page-title">
+	 *       <v-icon class="page-icon">mdi-…</v-icon>
+	 *       <div class="page-title-text"><h1>…</h1></div>
+	 *     </div>
+	 *     <div class="actions">…</div>   ← actions, bordées
+	 *     <div class="tabs">…</div>      ← onglets, trait vert dessous
+	 *   </div>
+	 *
+	 * Le motif a porté un SOUS-TITRE (titre du poireau, niveau, éleveur), retiré
+	 * à la demande de Pierre — « ça ne sert pas trop ». `.page-title-text` reste :
+	 * c'est lui qui sépare le texte de l'icône, et il coûte une ligne. Les lignes
+	 * `.info` que certaines pages posaient déjà sous leur titre (date d'un combat,
+	 * salon courant des messages) sont ANTÉRIEURES au motif et n'en faisaient pas
+	 * partie : elles restent telles quelles. */
+	.page-bar .page-title {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		min-width: 0;
+		flex: 1;
+	}
+	.page-bar .page-title-text {
+		min-width: 0;
+	}
+	.page-bar .page-icon {
+		flex: 0 0 auto;
+		color: var(--primary);
+		font-size: 28px;
+		width: 28px;
+		height: 28px;
+	}
+	/* Une image (tête de poireau, drapeau, avatar) plutôt qu'un glyphe. Un peu
+	   plus grande qu'un glyphe : elle porte du détail, pas une silhouette.
+	   `leek-image` rend un <svg> et reçoit la classe sur sa racine. */
+	.page-bar img.page-icon,
+	.page-bar svg.page-icon {
+		width: 32px;
+		height: 32px;
+		object-fit: contain;
+	}
+	/* Le titre perd ses marges héritées du h1 global. */
+	.page-bar .page-title h1 {
+		padding: 0;
+	}
+
+	/* --- Barre de commandes en pied de panneau ---
+	 *
+	 * Même silhouette que les actions de la barre de page : rectangle bordé,
+	 * libellé en police d'affichage, pixel push au clic. Elle réunit les
+	 * commandes d'un panneau qui étaient jusqu'ici partagées entre des icônes
+	 * d'en-tête (muettes) et des boutons Material au milieu du contenu.
+	 *
+	 * Posée dans la coquille et non dans le composant : c'est un motif, la page
+	 * poireau n'est que son premier appelant. */
+	.panel-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		/* Calées à droite (demande de Pierre) : le pied de panneau se lit comme une
+		   barre d'actions de dialogue, où l'action vit au bout de la ligne. */
+		justify-content: flex-end;
+		/* …et vraiment EN BAS du panneau, pas sous le contenu. Les panneaux d'une
+		   même rangée s'étirent à la hauteur de la plus haute (`.container` est un
+		   flex) : la barre flottait donc au milieu du vide dès que le voisin était
+		   plus grand. `.panel` étant une colonne flex et la barre son dernier
+		   enfant, `margin-top: auto` mange l'espace restant. Sans étirement la
+		   marge vaut zéro et la barre reste collée au contenu. */
+		margin-top: auto;
+		gap: 8px;
+		padding: 10px 12px;
+		border-top: 1px solid var(--border);
+	}
+	.panel-actions .panel-action {
+		font-family: var(--font-display);
+		font-size: 11px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		height: 30px;
+		padding: 0 10px;
+		border: 1px solid var(--border-strong);
+		background: var(--background-input);
+		color: var(--text-color);
+		cursor: pointer;
+		user-select: none;
+	}
+	.panel-actions .panel-action .v-icon {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+	.panel-actions .panel-action:hover {
+		border-color: var(--primary);
+		color: var(--primary);
+	}
+	.panel-actions .panel-action:active {
+		transform: translate(1px, 1px);
+	}
+	/* La commande qui appelle une action, par opposition à celles qui ouvrent
+	   un tiroir : l'aplat de marque et son encre sombre. */
+	.panel-actions .panel-action.green {
+		background: var(--primary-surface);
+		border-color: var(--primary-surface);
+		color: var(--primary-surface-text);
+	}
+	.panel-actions .panel-action.green:hover {
+		color: var(--primary-surface-text);
+		filter: brightness(1.08);
+	}
+
+	/* --- Les actions, à droite ---
+	 *
+	 * Distinctes des ONGLETS, qui restent des onglets (trait vert dessous) :
+	 * naviguer et agir ne se ressemblent pas. D'où un conteneur à part plutôt
+	 * qu'une classe de plus sur `.tab` — l'appelant déclare son intention une
+	 * fois, et le style suit. */
+	.page-bar .actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex: 0 0 auto;
+	}
+	.page-bar .actions .tab {
+		font-family: var(--font-display);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		height: 32px;
+		padding: 0 12px;
+		border: 1px solid var(--border-strong);
+		background: var(--background-input);
+		color: var(--text-color);
+		cursor: pointer;
+	}
+	.page-bar .actions .tab:not(.disabled):hover {
+		border-color: var(--primary);
+		color: var(--primary);
+	}
+	.page-bar .actions .tab:not(.disabled):active {
+		transform: translate(1px, 1px);
+	}
+	.page-bar .actions .tab.disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+	/* L'action principale d'une page garde son aplat de marque. */
+	.page-bar .actions .tab.green {
+		background: var(--primary-surface);
+		border-color: var(--primary-surface);
+		color: var(--primary-surface-text);
+	}
+	.page-bar .actions .tab.green:not(.disabled):hover {
+		color: var(--primary-surface-text);
+		filter: brightness(1.08);
 	}
 
 	/* ====== Menu de gauche ====== */
@@ -393,8 +647,10 @@ body:not(.v2) {
 
 	/* Une entrée de menu : pas de fond, un liseré à gauche qui s'allume.
 	   Le v2 empilait des aplats gris, ce qui rendait l'état actif peu lisible. */
-	/* `.nav-item` du mockup, aux valeurs exactes : 9/16 de marge, 10 de
-	   gouttiere, corps 12,5, graisse 500, lisere de 3 px. */
+	/* `.nav-item` du mockup : 16 de marge laterale, 10 de gouttiere, corps 12,5,
+	   graisse 500, lisere de 3 px. Le rembourrage vertical du mockup (9) et ses
+	   icones (18) ont ete montes d'un cran a la demande de Pierre : l'entree
+	   passe de 36 a 40 px. */
 	.menu .section {
 		background: transparent;
 		border-left: 3px solid transparent;
@@ -403,7 +659,7 @@ body:not(.v2) {
 		font-weight: 500;
 		height: auto;
 		line-height: normal;
-		padding: 9px 16px;
+		padding: 10px 16px;
 		gap: 10px;
 		display: flex;
 		align-items: center;
@@ -424,11 +680,10 @@ body:not(.v2) {
 		color: inherit;
 	}
 	/* Les icônes du v2 étaient flottées en 24 px avec leurs propres marges ;
-	   dans une entrée flex du mockup c'est la gouttière qui espace, et le
-	   corps de 12,5 appelle une icône plus petite (le mockup est à 14-18). */
+	   dans une entrée flex du mockup c'est la gouttière qui espace. */
 	.menu .section img {
-		width: 18px;
-		height: 18px;
+		width: 20px;
+		height: 20px;
 		float: none;
 		margin: 0;
 		flex: none;
@@ -437,7 +692,24 @@ body:not(.v2) {
 	.menu .section i {
 		float: none;
 		margin: 0;
-		font-size: 18px;
+		font-size: 20px;
+	}
+	/* La miniature de poireau ne compte que pour 20 px dans la ligne, comme les
+	   icônes voisines : sans ça l'entrée grandit et les poireaux ne font plus
+	   la même hauteur que le reste du menu. Elle déborde dans le rembourrage de
+	   l'entrée (10 px), ce qui lui donne de quoi se lire sans toucher aux lignes
+	   voisines. Les marges négatives sont symétriques : la miniature reste
+	   centrée sur la colonne d'icônes.
+
+	   36 = la tête à 28 px plus le hors-champ de `HEAD_BLEED` (1,3), dans lequel
+	   les chapeaux larges dépassent. La tête ne grandit donc pas avec ce
+	   nombre : les deux bougent ensemble. */
+	.menu .section .leek-head {
+		width: 36px;
+		height: 36px;
+		margin: -8px;
+		float: none;
+		flex: none;
 	}
 	/* Les entrées de poireau logent icône et texte dans un conteneur
 	   intermédiaire : il devient la ligne flex, même gouttière. */
@@ -520,21 +792,40 @@ body:not(.v2) {
 	   entrées flex. Icônes centrées un cran plus grandes, intitulés masqués,
 	   pastilles en coin d'entrée plutôt qu'en bout d'une ligne qui n'existe
 	   plus. Les sélecteurs recopient ceux du composant pour la spécificité. */
+	/* Même hauteur et mêmes icônes que le menu déplié (demande de Pierre) : une
+	   entrée ne doit pas changer de gabarit en repliant la colonne. `height`
+	   revient à `auto` parce que le composant fige les entrées repliées à 46 px
+	   (`#app.menu-collapsed`, plus spécifique que le `height: auto` général). */
 	#app.menu-collapsed .menu .section {
 		justify-content: center;
-		padding: 11px 0;
+		height: auto;
+		padding: 10px 0;
+	}
+	/* Les entrées de poireau logent leur miniature dans un conteneur
+	   intermédiaire, en `flex: 1` pour que l'intitulé prenne la place restante.
+	   Replié, il n'y a plus d'intitulé : le conteneur occupait quand même toute
+	   la largeur et collait la miniature à gauche, pendant que les autres
+	   entrées centraient leur icône. */
+	#app.menu-collapsed .menu .section div[leek] {
+		flex: none;
+		justify-content: center;
 	}
 	#app.menu-collapsed .menu h4 {
 		display: none;
 	}
+	/* Ces deux règles ne redimensionnent plus rien : elles annulent seulement les
+	   marges du composant (`margin-left: 10px`, qui décalerait une icône désormais
+	   centrée) et ses 30/34 px hérités du v2. La taille vient du menu déplié.
+	   La miniature de poireau n'a pas besoin de règle : la sienne n'est pas
+	   surchargée par le composant. */
 	#app.menu-collapsed .menu-center .section img {
-		width: 22px;
-		height: 22px;
+		width: 20px;
+		height: 20px;
 		margin: 0;
 	}
 	#app.menu-collapsed .menu-center a.section i,
 	#app.menu-collapsed .menu-center .section .v-icon {
-		font-size: 22px;
+		font-size: 20px;
 		margin: 0;
 	}
 	#app.menu-collapsed .menu .section[label]::after {
@@ -550,6 +841,15 @@ body:not(.v2) {
 	#app.menu-collapsed .soussous-dans-popoche img {
 		width: 38px;
 		height: 38px;
+	}
+
+	/* La poignée du panneau social est fixée à `top: 46px`, c'est-à-dire DANS la
+	   bande de la barre du haut : depuis que celle-ci est un bandeau plein posé
+	   par-dessus (z-index 1001), la poignée disparaissait dessous. Elle descend
+	   au ras du bandeau. Celle du menu n'a pas le problème : elle est dans le
+	   flux de la colonne, qui commence déjà sous la barre. */
+	#app:not(.app) .blabla-button {
+		top: var(--header-height);
 	}
 
 	/* Les deux poignées de repli (menu et panneau social) étaient deux carrés
@@ -614,8 +914,8 @@ body:not(.v2) {
 	}
 	/* Le compteur de non-lus devient la pastille verte pleine du mockup. */
 	.blabla-panel .panel > .header .label {
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		border-radius: 0;
 		font-family: ui-monospace, 'SF Mono', monospace;
 		font-size: 10px;
@@ -668,6 +968,31 @@ body:not(.v2) {
 	.notif-bigwin .message,
 	.notif-bigwin .title {
 		color: var(--text-color);
+	}
+	/* La grande icône (trophée, couronne) était blanche : elle se détachait du
+	   dégradé d'or ou de bleu du v2. Ces dégradés ont disparu au profit d'une
+	   teinte d'accent posée sur la surface du panneau, donc le blanc s'y efface
+	   en thème clair (1,07 mesuré). Elle prend la couleur d'accent de la
+	   rangée, la même que le liseré et le halo. */
+	.notif-trophy .large-icon,
+	.notif-bigwin .large-icon {
+		color: var(--notif-accent);
+	}
+	/* Le miroir exact, côté sombre : la coche d'un palier de parrainage débloqué
+	   est en `--black` en dur, choisi pour le dégradé d'or du v2. Sans ce
+	   dégradé, elle devient une encre noire sur une rangée noire (1,08 mesuré
+	   en sombre). Elle prend l'accent de la rangée, comme la grande icône.
+	   Sélecteur long : la règle du composant en compte six. */
+	.sponsorship .rewards .reward.notif-trophy .v-icon {
+		color: var(--notif-accent);
+	}
+	/* Même famille : l'anneau d'une catégorie complétée du panneau Collection
+	   est en `#f1c40f`, un or Material en dur qui tombe à 1,55 sur le parchemin.
+	   Il passe à l'or ENCRE du thème (--rank-first : foncé en clair, vif en
+	   sombre), celui des notifications trophée. Le v2 garde son jaune. */
+	.cat.complete .cat-icon,
+	.cat.complete .v-progress-circular {
+		color: var(--rank-first);
 	}
 	/* Le survol garde la teinte d'accent (la règle générale .notification:hover
 	   posait la surface de rangée par-dessus) et allume le halo. */
@@ -817,9 +1142,9 @@ body:not(.v2) {
 		color: var(--primary);
 	}
 	.pagination a.current {
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-color: var(--primary);
-		color: var(--primary-text);
+		color: var(--primary-surface-text);
 	}
 
 	/* La classe utilitaire `.grey` sert d'encre de libellé (« victoires »,
@@ -841,6 +1166,14 @@ body:not(.v2) {
 	.bonus-badge {
 		border-color: var(--primary);
 		color: var(--primary);
+	}
+
+	/* Le petit onglet collé à gauche d'un `h3` est un vert v2 écrit en dur
+	   (#559c18), un ton en dessous de l'aplat du titre. Depuis que l'aplat de
+	   marque a sa propre valeur (lot 28), ce vert-là ne lui répond plus : il
+	   redevient une nuance de l'aplat. Le v2 garde son #559c18 au pixel. */
+	h3::before {
+		background: color-mix(in srgb, var(--primary-surface) 86%, #000);
 	}
 
 	/* ====== Fiche d'objet (marché, inventaire, forge) ======
@@ -1030,15 +1363,15 @@ body:not(.v2) {
 		border-right-color: var(--border);
 	}
 	.v-overlay__content.popup .actions > div.green {
-		color: var(--primary-text);
+		color: var(--primary-surface-text);
 	}
 	.v-overlay__content.popup .actions > div.green:hover {
-		background: var(--primary);
+		background: var(--primary-surface);
 		filter: brightness(1.1);
 	}
 	.v-overlay__content.popup .actions > div.red {
 		background: var(--error);
-		color: var(--primary-text);
+		color: var(--primary-surface-text);
 	}
 	.v-overlay__content.popup .actions > div.red:hover {
 		background: var(--error);
@@ -1095,7 +1428,7 @@ body:not(.v2) {
 	.cat-tab .cat-progress .cat-bar,
 	.bar > .xp-bar {
 		border-radius: 0;
-		background-color: var(--primary);
+		background-color: var(--primary-surface);
 		/* Deux couches : les encoches par-dessus (tous les 8 px, dans la couleur
 		   de la piste), et dessous un dégradé qui part d'un vert éteint pour
 		   s'éclaircir jusqu'au bout — la jauge se lit comme une charge.
@@ -1196,11 +1529,17 @@ body:not(.v2) {
 		scrollbar-color: var(--border-strong) transparent;
 	}
 
-	/* L'onglet actif du v2 avait un fond clair, donc son icône était forcée en
-	   #333 (global.scss). Le v3 lui met du vert et pas d'aplat : l'icône doit
-	   suivre l'encre de l'onglet au lieu de rester sombre. */
-	.page-bar .tabs .tab.active .v-icon,
-	.page-bar .tabs .tab.selected .v-icon {
+	/* ====== Encre des icônes de la barre de page ======
+	 *
+	 * `global.scss` écrit `color: white` en dur sur l'icône d'un onglet : la
+	 * barre du v2 est un bandeau sombre, l'encre claire allait de soi. Le v3 la
+	 * pose sur le parchemin et l'icône y disparaît (1,17 mesuré) — sur presque
+	 * toutes les pages, l'onglet actif étant le seul rattrapé jusqu'ici.
+	 * L'icône suit désormais l'encre de son onglet, donc ses trois états d'un
+	 * coup : `--text-color-secondary` au repos, `--text-color` au survol,
+	 * `--primary` pour l'onglet actif. Le v2 garde son blanc en dur. */
+	.page-bar .tabs .tab .v-icon,
+	.page-bar .tabs .tab i {
 		color: inherit;
 	}
 
@@ -1213,6 +1552,44 @@ body:not(.v2) {
 	 * seulement en thème sombre : sur le parchemin, elle est juste. */
 	&.dark .page-bar .tab img[src*="/icon/black/"] {
 		filter: invert(1);
+	}
+
+	/* ====== Icônes PNG blanches posées sur une surface claire ======
+	 *
+	 * `public/image/icon/*.png` est une famille MONOCHROME BLANCHE (mesurée :
+	 * 252 à 255 de luminosité, saturation nulle, sauf les `xp_*` qui sont en
+	 * couleur), taillée pour le chrome sombre du v2. Là où le v3 en clair a
+	 * éclairci la surface, ces icônes s'effacent (1,14 à 1,44 mesuré) : la
+	 * barre du haut (l'épée du compteur de combats), les onglets et champs de
+	 * recherche de la barre de page, le titre d'un dialogue.
+	 *
+	 * On les retourne plutôt que d'en dupliquer une version noire : ce sont des
+	 * aplats sans anti-aliasing coloré, `invert(1)` en donne l'exact négatif, et
+	 * la règle vaut pour les usages futurs sans nouveau fichier. Même recette,
+	 * en miroir, que la famille `icon/black/` ci-dessus en thème sombre, et que
+	 * la barre d'application mobile (`bar.vue`).
+	 *
+	 * La règle vaut pour TOUTE la famille et sans restriction de surface : depuis
+	 * que la barre de titre d'un panneau est une surface neutre (lot 28) et que
+	 * l'aplat de marque porte lui-même une encre sombre
+	 * (`--primary-surface-text`), il ne reste plus, en thème clair, une seule
+	 * surface sombre sous laquelle une de ces icônes serait juste. Le jour où il
+	 * en réapparaît une, c'est elle qui portera l'exception, pas cette liste.
+	 *
+	 * Exclus : `icon/black/` et `icon/grey/` (déjà des encres sombres) et
+	 * `xp_*` (icônes en couleur du thème Windows XP).
+	 *
+	 * Trois PNG clairs vivent hors du dossier `icon/`. `search` et `selector`
+	 * n'apparaissent QUE dans une barre de page ; `github_white` y apparaît
+	 * aussi, mais sert ailleurs de logo sur un bouton NOIR (inscription,
+	 * vérification) où il doit rester blanc — d'où la portée par surface. */
+	&:not(.dark) {
+		img[src^="/image/icon/"][src$=".png"]:not([src*="xp_"]):not([src*="/black/"]):not([src*="/grey/"]),
+		.page-bar img[src="/image/search.png"],
+		.page-bar img[src="/image/selector.png"],
+		.page-bar img[src="/image/github_white.png"] {
+			filter: invert(1);
+		}
 	}
 
 	/* ====== Icônes d'action des panneaux ======
@@ -1239,6 +1616,22 @@ body:not(.v2) {
 	/* Les icônes en PNG ne se recolorent pas : elles gagnent en présence. */
 	.panel > .header > .actions .button:not(.green):not(.red):hover img {
 		opacity: 1;
+	}
+	/* En revanche l'ombre pixel des boutons d'accent ne les suit pas jusqu'ici :
+	 * elle suppose un aplat sous elle, et ces icônes n'en ont qu'au survol. Au
+	 * repos elle se détachait donc toute seule, en équerre noire à côté du
+	 * glyphe (le bouton supprimer d'une composition d'équipe). Le décalage d'un
+	 * pixel du survol part avec : les cases d'un en-tête sont jointives, l'une
+	 * qui se lève découvrirait sa voisine. */
+	.panel > .header > .actions .button.green,
+	.panel > .header > .actions .button.red {
+		box-shadow: none;
+	}
+	/* `:not(:active)` laisse passer l'enfoncement ci-dessous, que ce sélecteur
+	   plus spécifique annulerait sinon avec le reste. */
+	.panel > .header > .actions .button.green:hover:not(:active),
+	.panel > .header > .actions .button.red:hover:not(:active) {
+		transform: none;
 	}
 	/* Même retour au clic que les boutons : la case s'enfonce d'un pixel. */
 	.panel > .header > .actions .button:active {
@@ -1518,14 +1911,10 @@ body:not(.v2) {
 	.forgot-password {
 		color: var(--primary-strong);
 	}
-	/* Petit texte blanc sur vert : on fonce l'aplat plutôt que d'éclaircir
-	   l'encre, qui est déjà au maximum. */
-	.header .signup-button.header-button,
-	.header .signup-button.header-button:hover,
-	.skip-link {
-		background: var(--primary-strong);
-		border-color: var(--primary-strong);
-	}
+	/* Le bouton d'inscription et le lien d'évitement fonçaient leur aplat
+	   jusqu'à `--primary-strong` pour tenir sous une encre claire. Depuis le lot
+	   28, l'aplat de marque a son propre jeton et porte une encre SOMBRE : le
+	   compromis n'a plus lieu d'être, ils reprennent le vert franc (5,42). */
 	/* La ligne de version du pied de page utilisait --grey-8, trop clair sur le
 	   fond extérieur clair (2.36). Elle rejoint l'encre du pied de page. */
 	.footer h4.version {
@@ -1541,6 +1930,9 @@ body:not(.v2) {
 	   portée, soit une spécificité qu'une règle à une classe ne bat pas. */
 	.change .ai {
 		background: var(--info);
+		/* `--primary-text` et non l'encre d'aplat de marque : l'aplat est ici le
+		   bleu d'information, foncé en clair et vif en sombre — c'est l'encre
+		   historique qui suit ce sens-là, pas celle du vert (lot 28). */
 		color: var(--primary-text);
 	}
 
@@ -1622,7 +2014,7 @@ body:not(.v2) {
 	}
 	&::-webkit-scrollbar-thumb:hover,
 	::-webkit-scrollbar-thumb:hover {
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 	/* Firefox ne connaît pas les pseudo-éléments webkit ; il n'a que ces deux
 	   propriétés (et impose son pouce arrondi). Le `@supports` évite de les
