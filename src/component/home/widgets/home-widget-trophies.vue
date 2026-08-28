@@ -113,11 +113,26 @@
 </script>
 
 <style lang="scss" scoped>
+	// Taille de la série de trophées d'une section, partagée avec le script
+	// (`slice(0, 18)`) : c'est elle qui donne le nombre de colonnes de la rangée.
+	$serie: 18;
+
 	.trophies-widget {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 		height: 100%;
+	}
+	// Le widget était serré (retour de Pierre) : plus d'air entre le résumé, le
+	// récap par rareté et les sections, et entre un intitulé et sa rangée.
+	body:not(.v2) .trophies-widget {
+		gap: 14px;
+	}
+	body:not(.v2) .sections {
+		gap: 14px;
+	}
+	body:not(.v2) .section-block {
+		gap: 6px;
 	}
 	// Les sections occupent la hauteur restante ; on n'affiche que celles
 	// qui tiennent entièrement (useFitCount), overflow hidden en filet.
@@ -231,12 +246,40 @@
 	// sont trop grosses »). Le plafond passe de 40 à 26 px, et la série de 12 à
 	// 18 : à taille égale la rangée montrait moins de choses pour plus de place.
 	body:not(.v2) .trophy-row {
+		// Une colonne par trophée de la série : elles se partagent TOUTE la
+		// largeur, et la place en trop devient du blanc autour de chaque trophée
+		// plutôt qu'un vide au bout de la rangée. Avec moins de trophées que de
+		// colonnes, la rangée reste calée à gauche sans écarts géants — ce que
+		// `space-between` aurait donné.
+		display: grid;
+		grid-template-columns: repeat(#{$serie}, minmax(0, 1fr));
+		justify-items: center;
+		align-items: center;
+		gap: 6px;
 		max-height: 26px;
-		gap: 4px;
+	}
+	// Le nombre de colonnes suit la largeur du panneau. Sans ça, dix-huit
+	// colonnes fixes dans un panneau étroit écrasent les trophées : mesuré à
+	// 9 px sur une colonne de 268. On en montre donc MOINS plutôt que des
+	// trophées minuscules — le parti pris déjà retenu pour les cartes de combat
+	// de l'accueil. Ce qui dépasse tombe à la ligne suivante et le `max-height`
+	// le coupe, toujours sur un trophée entier puisque les colonnes sont pleines.
+	@container (max-width: 560px) {
+		body:not(.v2) .trophy-row {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+		}
+	}
+	@container (max-width: 380px) {
+		body:not(.v2) .trophy-row {
+			grid-template-columns: repeat(8, minmax(0, 1fr));
+		}
 	}
 	body:not(.v2) .trophy-row .trophy {
-		width: clamp(18px, calc((100cqw - 100px) / 18), 26px);
-		height: clamp(18px, calc((100cqw - 100px) / 18), 26px);
+		// La colonne donne la largeur, le plafond garde des trophées lisibles
+		// sans les regrossir (retour de Pierre sur les images trop grosses).
+		width: min(100%, 26px);
+		height: auto;
+		aspect-ratio: 1;
 	}
 	// Panel bas : résumé compact pour laisser la place aux sections.
 	@container (max-height: 260px) {
