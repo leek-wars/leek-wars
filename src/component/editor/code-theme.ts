@@ -11,6 +11,15 @@ export function isDarkCodeTheme(theme: string): boolean {
 	return DARK_CODE_THEMES.includes(theme)
 }
 
+// Valeur de réglage « suivre le site », par opposition à un thème choisi. Ce
+// n'est PAS un thème Monaco : elle se résout avant d'être donnée à l'éditeur.
+export const AUTO_CODE_THEME = 'auto'
+
+// Le thème Leek Wars du moment, celui que porte la page.
+export function siteCodeTheme(): string {
+	return LeekWars.darkMode ? 'leek-wars-dark' : 'leek-wars'
+}
+
 // Équivalent sombre de chaque thème clair. Un thème clair rendu sur le site en mode
 // sombre est illisible : les thèmes clairs ne posent pas de fond (l'aperçu épouse
 // celui de la page, cf. monaco-highlight.scss), donc leur encre — noire, bleu marine
