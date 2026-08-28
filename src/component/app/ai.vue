@@ -1,5 +1,8 @@
 <template lang="html">
 	<div draggable="true" class="ai" :class="{[ai.color || '']: true, small, locked}">
+		<!-- Motif de code du v3 (masqué en v2, où la feuille est un PNG). Trois
+		     lignes indentées : ce qui dit « fichier de code » sans glyphe. -->
+		<div class="motif" aria-hidden="true"><i></i><i></i><i></i></div>
 		<img v-if="langLogo" class="lang-logo" :src="langLogo">
 		<div class="name" :style="{ fontSize: nameSize + 'px' }">
 			{{ ai.bot ? $t('leekscript.' + ai.name) : ai.name }}
@@ -141,12 +144,131 @@ const show_lines = computed(() => {
 		&.locked {
 			filter: brightness(85%);
 		}
+		// Le motif de code n'existe que dans la feuille dessinée du v3.
+		.motif {
+			display: none;
+		}
 	}
-	body.dark .ai:not(.blue):not(.red):not(.green) {
+	body.v2.dark .ai:not(.blue):not(.red):not(.green) {
 		background-image: url("/image/ai/ai_black.png");
 		&.black {
 			background-image: url("/image/ai/ai.png");
 			color: var(--black);
+		}
+	}
+
+	/* ====== v3 : la feuille est dessinée, plus un PNG ======
+	 *
+	 * Les cinq PNG (ai.png et ses quatre couleurs) portaient leur teinte en dur,
+	 * leurs coins arrondis et une ombre floue : trois choses que le v3 refuse.
+	 * La feuille est donc redessinée en CSS, et suit le thème.
+	 *
+	 * Silhouette : deux couches de `clip-path`. La couche du dessous est peinte
+	 * du trait et découpée au pentagone (coin coupé) ; `::before`, en retrait de
+	 * 2 px, porte la surface et le même pentagone.
+	 *
+	 * Le pli de `::before` n'est pas celui du pentagone : sa boîte est déjà en
+	 * retrait de 2 px de chaque côté, ce qui éloigne sa diagonale de 4 px sur
+	 * l'axe x−y, alors qu'un trait de 2 px perpendiculaire n'en demande que
+	 * 2 × √2 ≈ 2,83. Le pli intérieur doit donc AVANCER de 4 − 2,83 = 1,17 px
+	 * pour que la diagonale ait la même épaisseur que les autres côtés (avant
+	 * cette correction elle faisait 4,83 px, deux fois trop). Même calcul pour
+	 * `::after`, le rabat (l'envers de la page), dont l'hypoténuse se pose
+	 * exactement sur le bord intérieur du trait.
+	 */
+	body:not(.v2) .ai {
+		// --ai-accent : la teinte propre de la feuille (couleur de l'IA).
+		// --ai-line : le trait, qui en dérive mais passe au vert au survol —
+		// séparés pour que le survol ne repeigne QUE le contour.
+		--ai-accent: var(--border-strong);
+		--ai-line: var(--ai-accent);
+		--ai-surface: var(--background-row);
+		--ai-fold: 22px;
+		--ai-inner-fold: calc(var(--ai-fold) - 1.17px);
+		background-image: none;
+		background-color: var(--ai-line);
+		clip-path: polygon(0 0, calc(100% - var(--ai-fold)) 0, 100% var(--ai-fold), 100% 100%, 0 100%);
+		padding: 30px 8px 18px;
+		color: var(--text-color);
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 2px;
+			background: var(--ai-surface);
+			clip-path: polygon(0 0, calc(100% - var(--ai-inner-fold)) 0, 100% var(--ai-inner-fold), 100% 100%, 0 100%);
+		}
+		&::after {
+			content: '';
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			width: var(--ai-inner-fold);
+			height: var(--ai-inner-fold);
+			background: color-mix(in srgb, var(--ai-accent) 25%, var(--ai-surface));
+			clip-path: polygon(0 0, 100% 100%, 0 100%);
+		}
+		.motif {
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			right: 26px;
+			z-index: 1;
+			i {
+				display: block;
+				height: 3px;
+				background: var(--text-color);
+				opacity: .22;
+				&:nth-child(1) { width: 60%; }
+				&:nth-child(2) { width: 100%; margin-left: 18%; }
+				&:nth-child(3) { width: 45%; margin-left: 18%; }
+			}
+		}
+		.name, .lines, .version, .lang-logo {
+			z-index: 1;
+		}
+		.version {
+			border-radius: 0;
+			border-color: var(--ai-accent);
+		}
+		.v-icon {
+			color: var(--error);
+		}
+		// Les quatre couleurs : le trait prend la teinte, la surface en garde un
+		// voile. L'encre reste celle du thème, jamais du blanc forcé.
+		&.green, &.blue, &.red, &.black {
+			color: var(--text-color);
+			background-image: none;
+			--ai-surface: color-mix(in srgb, var(--ai-accent) 14%, var(--background-secondary));
+		}
+		&.green { --ai-accent: var(--success); }
+		&.blue { --ai-accent: var(--info); }
+		&.red { --ai-accent: var(--error); }
+		&.black { --ai-accent: var(--text-color-secondary); }
+		// Le ripple étant coupé en v3, le survol est le seul retour visuel. Il ne
+		// touche que le contour : la pastille de version, le rabat et la surface
+		// gardent la teinte de la feuille (demande de Pierre).
+		&:hover {
+			--ai-line: var(--primary-strong);
+		}
+		// L'assombrissement du v2 ne dit rien sur un fond sombre : la feuille
+		// verrouillée s'efface à la place.
+		&.locked {
+			filter: none;
+			opacity: .7;
+		}
+		&.small {
+			--ai-fold: 16px;
+			padding: 22px 4px 14px;
+			.motif {
+				top: 7px;
+				left: 7px;
+				right: 20px;
+				gap: 2px;
+				i { height: 2px; }
+			}
 		}
 	}
 </style>
