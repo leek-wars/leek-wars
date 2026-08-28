@@ -179,7 +179,7 @@ body.dark .content {
 			background: #e00;
 		}
 		&.green {
-			background: var(--primary);
+			background: var(--primary-surface);
 		}
 		&.green:hover {
 			background: #73d120;

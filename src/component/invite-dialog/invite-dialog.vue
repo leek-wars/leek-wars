@@ -140,17 +140,17 @@ function nativeShare() {
 	gap: 6px;
 	padding: 10px;
 	border-radius: var(--radius);
-	color: var(--white);
+	color: var(--primary-surface-text);
 	text-decoration: none;
 	cursor: pointer;
 	font-weight: 500;
 	.v-icon {
-		color: var(--white);
+		color: var(--primary-surface-text);
 	}
 	&.x { background: var(--black); }
 	&.whatsapp { background: #25d366; }
 	&.telegram { background: #29a9eb; }
-	&.native { background: var(--primary); }
+	&.native { background: var(--primary-surface); }
 	&.copy { background: #607d8b; }
 }
 </style>

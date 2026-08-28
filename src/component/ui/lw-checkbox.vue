@@ -76,10 +76,10 @@ function onChange(e: Event) {
 		transform: rotate(45deg);
 	}
 	input:checked ~ .box {
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-color: var(--primary);
 		.check {
-			border-color: var(--primary-text);
+			border-color: var(--primary-surface-text);
 		}
 	}
 	&:hover:not(.disabled) .box {
@@ -118,7 +118,7 @@ body.v2 .lw-checkbox {
 		height: 11px;
 	}
 	input:checked ~ .box {
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-color: var(--primary);
 		.check {
 			/* Blanc littéral : --pure-white s'inverse en sombre dans le v2,

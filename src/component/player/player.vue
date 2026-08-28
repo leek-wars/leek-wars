@@ -1143,7 +1143,7 @@
 	}
 	.progress-bar .bar {
 		height: 100%;
-		background-color: var(--primary);
+		background-color: var(--primary-surface);
 		display: inline-block;
 		vertical-align: top;
 		transition: all 0.2s;
@@ -1225,11 +1225,16 @@
 		opacity: 0;
 		transform: scale(1.5);
 	}
+	// Le v3 repeint les menus déroulants avec la surface de panneau (claire en
+	// thème clair, cf. leekwars-shell-v3.scss) et cette règle-là passe devant
+	// les styles scoped : le menu ne peut plus être sombre ici. Son encre doit
+	// donc suivre le thème, sinon les icônes et les titres de section restent
+	// en clair sur clair. Le v2, lui, garde son menu sombre : le fond et
+	// l'encre claire y sont rétablis plus bas.
 	.v-menu .settings-menu {
-		background: #1E1E1E;
 		&:deep(i) {
 			// padding-right: 10px;
-			color: var(--grey-13);
+			color: var(--text-color-secondary);
 			opacity: 1;
 		}
 		input[type="text"] {
@@ -1288,18 +1293,41 @@
 		}
 	}
 	.map-menu {
-		background: #1E1E1E;
-		color: var(--grey-13);
+		color: var(--text-color);
 		padding: 10px;
 		overflow: hidden;
-		:deep(.theme--light.v-label) {
-			color: var(--grey-13);
-		}
 	}
 	.section {
-		color: var(--white);
+		color: var(--text-color-secondary);
 		padding: 4px 8px;
 		font-size: 13px;
+	}
+	// Rendu v2 : les menus du lecteur y sont restés sombres (aucune règle de
+	// coquille ne les repeint), donc l'encre claire d'origine est rétablie.
+	body.v2 {
+		.v-menu .settings-menu {
+			background: #1E1E1E;
+			&:deep(i) {
+				color: var(--grey-13);
+			}
+			// Les libellés des interrupteurs et des cases portent l'encre du thème
+			// (sombre en clair) : sur ce fond sombre, il faut l'éclaircir.
+			&:deep(.label) {
+				color: hsla(0, 0%, 100%, .7);
+			}
+		}
+		.map-menu {
+			background: #1E1E1E;
+			color: var(--grey-13);
+			// Les libellés des boutons radio portent leur propre encre (sombre) :
+			// sur ce fond sombre, il faut la reprendre.
+			:deep(.label) {
+				color: var(--grey-13);
+			}
+		}
+		.section {
+			color: var(--white);
+		}
 	}
 	// Les traits de tour : sous les marqueurs de mort et la poignée, et sombres
 	// dans les deux thèmes — la piste (--grey-13) comme le remplissage vert sont

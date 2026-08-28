@@ -252,7 +252,7 @@
 	}
 }
 .primary {
-    background-color: var(--primary) !important;
+    background-color: var(--primary-surface) !important;
     border-color: var(--primary) !important;
 }
 button {
@@ -281,7 +281,12 @@ button {
     background-color: #ca0000 !important;
     border-color: #ca0000 !important;
 }
-body.dark .v-btn:not([class*="bg-"]) {
+// Le noir des boutons du thème sombre est un parti pris du v2 : le v3 donne
+// leur surface aux boutons dans sa coquille (`--background-header` pour les
+// boutons pleins, transparent pour les boutons texte), et ce sélecteur, plus
+// spécifique, la recouvrait — noir sur tous les boutons neutres, y compris
+// ceux qui portent un aplat de couleur venu d'ailleurs que d'une classe `bg-`.
+body.v2.dark .v-btn:not([class*="bg-"]) {
 	background-color: #000;
 }
 
@@ -343,14 +348,14 @@ h1 {
 	display: inline-block;
 	height: 36px;
 	padding: 0 15px;
-	color: var(--primary-text);
+	color: var(--primary-surface-text);
 	position: relative;
-	background: var(--primary);
+	background: var(--primary-surface);
 	text-shadow: 0px 2px 3px rgba(0,0,0,0.2), 0px 1px 3px rgba(0,0,0,0.1), 0px 3px 6px rgba(0,0,0,0.1);
 	border-top-left-radius: var(--radius-small);
 }
 h1 a, h1 a:visited {
-	color: var(--primary-text);
+	color: var(--primary-surface-text);
 }
 h1::after {
 	content: "";
@@ -361,7 +366,7 @@ h1::after {
 	height: 0;
 	border-style: solid;
 	border-width: 36px 0 0 19px;
-	border-color: transparent transparent transparent var(--primary);
+	border-color: transparent transparent transparent var(--primary-surface);
 }
 h2 {
 	font-size: 25px;
@@ -370,9 +375,9 @@ h3 {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	margin-left: -15px;
-	background: var(--primary);
+	background: var(--primary-surface);
 	display: inline-block;
-	color: var(--primary-text);
+	color: var(--primary-surface-text);
 	padding: 5px 10px;
 	font-size: 18px;
 	position: relative;
@@ -396,7 +401,7 @@ h3::after {
 	height: 0;
 	border-style: solid;
 	border-width: 32px 0 0 12px;
-	border-color: transparent transparent transparent var(--primary);
+	border-color: transparent transparent transparent var(--primary-surface);
 }
 h4 {
 	font-size: 18px;
@@ -758,40 +763,39 @@ body.dark img[src$="/charac/small/frequency.png"] {
 .rounded4 {
 	border-radius: var(--radius);
 }
-.color-life { color: red; }
-.color-max-life { color: #00d5b5; }
-.color-strength { color: #833100; }
-.dark .color-strength {	color: #c05415; }
-.color-wisdom {	color: #5ebe00; }
-.color-agility { color: #0080f7; }
+/* Couleurs des caractéristiques : les valeurs vivent dans les thèmes
+   (`--stat-*`), qui les inversent chacun à sa manière — le v2 garde les siennes
+   au pixel près, le v3 en donne une paire mesurée par thème (lot 28). Les trois
+   surcharges `.dark` qui vivaient ici sont parties avec elles. */
+.color-life { color: var(--stat-life); }
+.color-max-life { color: var(--stat-max-life); }
+.color-strength { color: var(--stat-strength); }
+.color-wisdom {	color: var(--stat-wisdom); }
+.color-agility { color: var(--stat-agility); }
 .color-resistance {
-	color: #ff4a01;
+	color: var(--stat-resistance);
 }
 .color-ram {
-	color: #ce00c7;
+	color: var(--stat-ram);
 }
 .color-cores {
-	color: #878787;
+	color: var(--stat-cores);
 }
 .color-frequency {
 	color: var(--text-color);
 }
-.color-science { color: #0000a2; }
-.dark .color-science { color: #2a63ff; }
+.color-science { color: var(--stat-science); }
 .color-magic {
-	color: #b800b6;
-}
-.dark .color-magic {
-	color: #d810d5;
+	color: var(--stat-magic);
 }
 .color-tp {
-	color: #ff7f01;
+	color: var(--stat-tp);
 }
 .color-mp {
-	color: #00a900;
+	color: var(--stat-mp);
 }
 .color-poison {
-	color: #fb27ff;
+	color: var(--stat-poison);
 }
 .scroll-x {
 	overflow-x: auto;

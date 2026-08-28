@@ -163,8 +163,8 @@ function disable() {
 		}
 	}
 	.step .title {
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		font-weight: bold;
 		padding: 5px 10px;
 		display: inline-block;

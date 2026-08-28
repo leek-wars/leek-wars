@@ -1235,10 +1235,10 @@
 		}
 	}
 	.vote.up.active {
-		color: var(--primary-text);
-		background: var(--primary);
+		color: var(--primary-surface-text);
+		background: var(--primary-surface);
 		.v-icon {
-			color: var(--white);
+			color: var(--primary-surface-text);
 		}
 	}
 	.vote.down.active {
@@ -1348,12 +1348,12 @@
 		align-items: center;
 		gap: 8px;
 		padding: 12px 16px;
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		font-weight: 500;
 		font-size: 15px;
 		.v-icon {
-			color: var(--white);
+			color: var(--primary-surface-text);
 		}
 	}
 </style>

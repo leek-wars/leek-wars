@@ -763,8 +763,8 @@
 		top: -48px;
 		z-index: 10000;
 		padding: 10px 16px;
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		font-weight: 500;
 		border-radius: 0 0 var(--radius) var(--radius);
 		transition: top 0.15s ease;
@@ -783,7 +783,9 @@
 		display: none;
 		font-size: 30px;
 		opacity: 0.5;
-		color: var(--white);
+		// Posé sur le fond d'app, pas sur un aplat : --white supposait une
+		// coquille sombre (vrai en v2, faux sur le parchemin du v3, 1,34 mesuré).
+		color: var(--page-bar-color);
 		&:hover {
 			opacity: 1;
 		}

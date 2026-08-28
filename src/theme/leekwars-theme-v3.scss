@@ -45,27 +45,60 @@ body {
 	   sombre est illisible dans ce role, d'ou un jeton distinct. */
 	--primary-strong: #146128;
 
+	/* Le vert quand il PEINT une surface (lot 28).
+	 *
+	 * `--primary` est calibre pour l'ENCRE : sur le parchemin il faut descendre
+	 * a #146128 pour tenir 4.5, et ce vert-la, etale en aplat, est presque noir
+	 * — c'est lui qui rendait le theme clair terne, la marque n'apparaissant
+	 * plus nulle part a l'ecran. En aplat la contrainte s'inverse : c'est
+	 * l'encre POSEE dessus qui doit tenir, et elle peut etre sombre. D'ou un
+	 * vert franc et son encre sombre, mesures a 5.42.
+	 *
+	 * Le blanc ou la creme sont exclus sur ce vert-la : #1F8A3B plafonne a 4.11
+	 * sous de la creme, #2E9E4B a 3.20. Un aplat vert vif porte une encre
+	 * sombre, dans les deux themes — c'est deja ce que fait le neon du sombre. */
+	--primary-surface: #2E9E4B;
+	--primary-surface-text: #0E1410;
+
 	/* Encre et fonds */
 	--pure-white: #FBF7E8;
 	--pure-black: #0E1410;
 	--white: #FBF7E8;
 	--black: #0E1410;
-	--background: #F2EEDF;
-	--background-secondary: #F7F2DF;
-	--background-disabled: #DCD6C0;
-	--background-header: #FBF7E8;
-	--background-outer: #E7E1CC;
+	/* Echelle de surfaces (revue au lot 28).
+	 *
+	 * Elle etait plate : fond de page, panneau et en-tete tenaient dans
+	 * 1.04 / 1.05 / 1.08 de contraste, et trois roles (--pure-white,
+	 * --background-header, --background-row) partageaient la MEME valeur. Le v2,
+	 * lui, separait son fond gris de ses panneaux blancs de 1.32. Comme le v3 a
+	 * par ailleurs supprime les ombres et les arrondis, il ne restait plus qu'un
+	 * trait a 28 % pour decouper l'ecran entier : d'ou la nappe cremeuse
+	 * uniforme.
+	 *
+	 * Les cinq surfaces sont donc etalees, du plus fonce au plus clair :
+	 * exterieur, page, en-tete, panneau, champ — le panneau devient la surface
+	 * la plus claire de la page, c'est lui qui doit avancer. Page contre
+	 * panneau : 1.20. C'est un contraste SURFACE/SURFACE, aucun seuil de texte
+	 * n'est en jeu ; les encres, elles, y gagnent (14.5 sur la page, 17.4 sur le
+	 * panneau). */
+	--background: #E9E3CD;
+	--background-secondary: #FBF7E8;
+	--background-disabled: #D3CCB2;
+	--background-header: #F3EDD8;
+	--background-outer: #DED7BE;
 	--footer-color: #4A5847;
-	/* `bg-row` et `ink-3` du mockup : surface de survol et encre la plus pale */
-	--background-row: #FBF7E8;
-	--text-color-faint: #7A8676;
+	/* `bg-row` et `ink-3` du mockup : surface de survol et encre la plus pale.
+	   La rangee doit se distinguer du panneau qui la porte : en theme clair
+	   c'est donc un cran plus SOMBRE que lui, et non plus clair. */
+	--background-row: #EFE8D0;
+	--text-color-faint: #6E7B69;
 	/* `bg-input` du mockup : la surface d'un champ, d'une case ou d'un compteur,
 	   toujours un cran plus claire que la page en clair, plus sombre en sombre. */
 	--background-input: #FFFCF0;
-	--border: rgba(14, 20, 16, 0.12);
+	--border: rgba(14, 20, 16, 0.14);
 	/* `line-strong` du mockup : c'est ce trait qui delimite les panneaux, le
 	   design ne comptant sur aucune ombre pour les detacher du fond. */
-	--border-strong: rgba(14, 20, 16, 0.28);
+	--border-strong: rgba(14, 20, 16, 0.32);
 	--text-color: #0E1410;
 	--text-color-secondary: #4A5847;
 	--type-color: #1A7AA0;
@@ -102,12 +135,16 @@ body {
 
 	/* Chrome : panneaux. Pas d'ombre portée, la profondeur vient du trait. */
 	--panel-background: var(--background-secondary);
-	--panel-header-background: #FBF7E8;
+	--panel-header-background: #F3EDD8;
 	--panel-header-color: #0E1410;
 	--panel-header-height: 36px;
 	--panel-shadow: none;
 	--elevation-1: none;
 
+	/* Hauteur de la barre du haut. Le panneau social la connaissait deja en dur
+	   (`top: 80px`) ; depuis que la barre est un bandeau pleine largeur, le menu
+	   et la colonne centrale doivent s'en decaler aussi. */
+	--header-height: 80px;
 	/* Chrome : barre du haut. Le fond exterieur devient clair en theme clair,
 	   donc le logo blanc doit s'inverser et les pastilles s'assombrir. */
 	--header-color: #0E1410;
@@ -146,6 +183,16 @@ body {
 	/* Etat inactif : le gris du v2 (#9c9c9c) tombe a 2.6 sur le parchemin */
 	--inactive-color: #56634F;
 
+	/* L'or en APLAT — une surface peinte en or, pas de l'or comme encre : pour
+	   l'encre c'est --rank-first juste en dessous, foncé jusqu'à être lisible
+	   sur le parchemin. C'est le jeton `gold` du mockup : jaune vif en sombre,
+	   sa version foncée en clair, où le jaune vif s'éteindrait sur le
+	   parchemin. L'encre posée dessus reste sombre dans les deux thèmes
+	   (contraste mesuré 5,9 en clair, 12,9 en sombre), comme les flèches
+	   noires des boutons « Récupérer ». */
+	--gold: #B88A0E;
+	--gold-text: #0E1410;
+
 	/* Podium du classement. Le v2 utilise un or #ffa900 qui tombe a 1,8 de
 	   contraste sur le parchemin. Les teintes sombres reprennent celles du
 	   mockup (gold, argent #C0C8D0, bronze #C77A0E), les claires sont leurs
@@ -161,6 +208,38 @@ body {
 	--grade-admin: #C2382A;
 	--grade-contributor: #0F7A2A;
 	--grade-referent: #1A7AA0;
+
+	/* Couleurs des caractéristiques (lot 28).
+	 *
+	 * Elles étaient écrites en dur dans `global.scss`, avec trois exceptions
+	 * `.dark` pour les trois plus criardes : le reste traversait tel quel les
+	 * deux thèmes. Mesuré, ça ne tenait ni d'un côté ni de l'autre — 1,46 pour
+	 * la vie max sur le parchemin, 1,85 pour la sagesse, 1,97 pour les PT ;
+	 * 3,01 pour la RAM et 2,93 pour la science sur le fond sombre. C'était la
+	 * question ouverte de REDESIGN.md, mesurée des deux côtés.
+	 *
+	 * Chaque teinte garde sa TEINTE d'origine (même H, même S) : seule la
+	 * clarté bouge, jusqu'au premier palier qui tient 4,5 sur la pire surface
+	 * du thème — le fond de page en clair, la surface de rangée en sombre. Une
+	 * couleur de stat est une couleur d'identité, elle doit rester
+	 * reconnaissable d'un thème à l'autre ; ce sont les valeurs, pas les
+	 * teintes, qui s'inversent.
+	 *
+	 * La science fait exception : son #0000a2 tenait déjà 10,7 en clair, mais
+	 * un bleu presque noir ne se lit plus comme un bleu. Remontée à 6,4. */
+	--stat-life: #CE0000;
+	--stat-max-life: #007362;
+	--stat-strength: #833100;
+	--stat-wisdom: #397300;
+	--stat-agility: #0064C2;
+	--stat-resistance: #BA3500;
+	--stat-ram: #B600B0;
+	--stat-cores: #656565;
+	--stat-science: #1140C4;
+	--stat-magic: #B500B3;
+	--stat-tp: #A04F00;
+	--stat-mp: #007600;
+	--stat-poison: #B400B7;
 
 	/* Couleurs sémantiques */
 	--success: #1F8A3B;
@@ -184,7 +263,19 @@ body {
 		/* En sombre, « le vert lisible comme encre » est le neon lui-meme : le
 		   vert fonce du theme clair donnerait du vert sur noir. */
 		--primary-strong: #7CFF6B;
+		/* En sombre l'aplat de marque est deja le neon, avec son encre sombre :
+		   les deux jetons de surface valent donc les jetons historiques. */
+		--primary-surface: #7CFF6B;
+		--primary-surface-text: #0B0F0B;
 
+		/* L'echelle sombre est celle d'AVANT le lot 28, rendue telle quelle
+		   (demande de Pierre : « le dark je preferais avant »). Le lot avait
+		   etale les surfaces sombres comme les claires — page 0A0D0C, panneau
+		   151C1A, rangee 232D29 — pour passer de 1.03 a 1.13/1.22 de contraste.
+		   Le chiffre etait meilleur, le rendu non : le presque-noir du v3 est un
+		   parti pris, l'eclaircir le banalise. Le creusement de l'echelle ne vaut
+		   donc QUE pour le theme clair, ou la nappe cremeuse posait vraiment
+		   probleme. Ne pas « reharmoniser » les deux themes sans lui demander. */
 		--pure-white: #0B0F0B;
 		--pure-black: #E8F0E6;
 		--background: #0B0F0B;
@@ -227,6 +318,9 @@ body {
 
 		--inactive-color: #8A9686;
 
+		--gold: #FFD23A;
+		--gold-text: #0B0F0B;
+
 		--rank-first: #FFD23A;
 		--rank-second: #C0C8D0;
 		--rank-third: #C77A0E;
@@ -235,6 +329,20 @@ body {
 		--grade-admin: #FF5040;
 		--grade-contributor: #7CFF6B;
 		--grade-referent: #5CE0FF;
+
+		--stat-life: #FF5555;
+		--stat-max-life: #00D5B5;
+		--stat-strength: #E76E26;
+		--stat-wisdom: #5EBE00;
+		--stat-agility: #1E93FF;
+		--stat-resistance: #FF5814;
+		--stat-ram: #FF0EF7;
+		--stat-cores: #919191;
+		--stat-science: #618CFF;
+		--stat-magic: #F13EEE;
+		--stat-tp: #FF7F01;
+		--stat-mp: #00A900;
+		--stat-poison: #FB27FF;
 
 		--success: #7CFF6B;
 		--warning: #FFB23A;

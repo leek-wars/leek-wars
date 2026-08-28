@@ -1139,7 +1139,7 @@
 	border-color: #9e1f1f;
 }
 .corner-btn.fuse-btn.v-btn {
-	background-color: var(--primary) !important;
+	background-color: var(--primary-surface) !important;
 	border-color: #4a8714;
 }
 .corner-btn.fuse-btn.v-btn.v-btn--disabled {

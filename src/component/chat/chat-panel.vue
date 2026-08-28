@@ -1,5 +1,5 @@
 <template lang="html">
-	<panel v-if="chatID" class="chat-panel" :toggle="toggle" icon="mdi-chat-outline">
+	<panel v-if="chatID" class="chat-panel" :toggle="toggle" icon="mdi-chat">
 		<template #title>
 			<router-link v-ripple :to="'/chat/' + chatID" class="title">
 				<span>{{ $store.state.chat[chatID] ? $store.state.chat[chatID].name : 'Chat' }}</span>
@@ -95,7 +95,7 @@ function setChatLanguage(chat: number) {
 }
 .unread-circle {
 	display: inline-block;
-	background: var(--primary);
+	background: var(--primary-surface);
 	border-radius: 50%;
 	width: 10px;
 	height: 10px;

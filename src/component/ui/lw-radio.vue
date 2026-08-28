@@ -77,10 +77,10 @@ function onChange(e: Event) {
 		transition: background-color .1s linear;
 	}
 	input:checked ~ .box {
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-color: var(--primary);
 		.dot {
-			background: var(--primary-text);
+			background: var(--primary-surface-text);
 		}
 	}
 	&:hover:not(.disabled) .box {
@@ -123,7 +123,7 @@ body.v2 .lw-radio {
 		background: transparent;
 		border-color: var(--primary);
 		.dot {
-			background: var(--primary);
+			background: var(--primary-surface);
 		}
 	}
 	&:active:not(.disabled) .box {

@@ -491,8 +491,8 @@
 		text-align: center;
 		padding: 8px;
 		margin-bottom: 10px;
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		border-radius: 5px;
 		cursor: pointer;
 	}

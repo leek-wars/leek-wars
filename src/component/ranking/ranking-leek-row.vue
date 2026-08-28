@@ -66,6 +66,6 @@ defineProps<{
 		height: 7px;
 		margin-right: 6px;
 		vertical-align: middle;
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 </style>

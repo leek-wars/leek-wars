@@ -100,7 +100,7 @@ function clickCell(x: number, y: number) {
 		background: var(--black);
 	}
 	.cell.los {
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 	.cell.red {
 		background: red;

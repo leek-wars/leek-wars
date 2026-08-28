@@ -89,8 +89,8 @@ function start() {
 			height: 16px;
 			padding: 0 3px;
 			border-radius: var(--radius-large);
-			background: var(--primary);
-			color: var(--primary-text);
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
 			font-size: 11px;
 			font-weight: bold;
 			line-height: 16px;

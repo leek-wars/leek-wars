@@ -685,8 +685,9 @@
 	import GodsonsManageDialog from '@/component/godsons-manage-dialog/godsons-manage-dialog.vue'
 	import { emitter } from '@/model/emitter'
 	import { Line } from 'vue-chartjs'
+	import { talentDataset, talentScales } from '@/chart'
 	import type { ChartData, ChartOptions } from 'chart.js'
-	import { computed, defineAsyncComponent, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 
@@ -850,6 +851,10 @@
 
 	watch(id, () => update(), { immediate: true })
 
+	// La grille du graphique est lue sur le thème : la relire à la bascule, sinon
+	// elle garde les couleurs de l'ancien et disparaît dans le fond.
+	watch(() => [LeekWars.darkMode, LeekWars.legacyTheme], () => nextTick(chart))
+
 	// Mise à jour en direct du petit historique de combats. `update()` réutilise
 	// le store pour son propre profil (pas de refetch), donc on recharge ici
 	// directement le fight_history depuis le serveur.
@@ -964,30 +969,17 @@
 		labels.reverse()
 		labels.push(LeekWars.formatDayMonthShort(time))
 		const data = [...farmer.value.talent_history, farmer.value.talent]
-		const lastIndex = data.length - 1
 		chartData.value = {
 			labels,
-			datasets: [
-				{
-					tension: 0.2,
-					data,
-					borderColor: '#5fad1b',
-					pointBackgroundColor: '#5fad1b',
-					borderWidth: 2,
-					fill: { target: 'origin', above: '#5fad1b30' },
-					// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
-					segment: {
-						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
-					},
-				}
-			]
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} as any
+			datasets: [talentDataset(data)]
+		}
 		chartOptions.value = {
 			aspectRatio: 2.5,
 			plugins: { legend: { display: false } },
-			elements: { point: { radius: 4, hoverRadius: 6 } },
+			// Un carré de rayon r mesure r√2 de côté : un cran de plus que les
+			// ronds d'avant pour garder le même poids à l'œil.
+			elements: { point: { radius: 5, hoverRadius: 7 } },
+			scales: talentScales(),
 		}
 	}
 
@@ -1878,8 +1870,8 @@
 				padding: 8px 18px;
 				border-radius: var(--radius);
 				font-weight: 500;
-				color: var(--primary-text);
-				background: var(--primary);
+				color: var(--primary-surface-text);
+				background: var(--primary-surface);
 				white-space: nowrap;
 				&:hover { filter: brightness(1.1); }
 			}
@@ -1920,8 +1912,8 @@
 				white-space: nowrap;
 				font-weight: 500;
 				&.accept {
-					color: var(--primary-text);
-					background: var(--primary);
+					color: var(--primary-surface-text);
+					background: var(--primary-surface);
 					&:hover { filter: brightness(1.1); }
 				}
 				&.refuse {

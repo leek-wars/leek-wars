@@ -279,8 +279,8 @@ function readNotification(notification: Notification) {
 		/* Même pastille que le compteur du header sur grand écran. Le orange en dur
 		   ne descendait d'aucun jeton et ne tenait que sur l'aplat vert. */
 		.counter {
-			background: var(--primary);
-			color: var(--primary-text);
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
 			border-radius: var(--radius-tiny);
 		}
 		/* Les images d'action sont les PNG BLANCS du v2 (garden, market, potion,

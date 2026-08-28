@@ -647,8 +647,8 @@
 		display: flex;
 		align-items: center;
 		gap: 16px;
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		padding: 12px 20px;
 		border-radius: var(--radius);
 		margin-bottom: 12px;
@@ -1075,7 +1075,7 @@
 			margin-bottom: 30px;
 			&:after {
 				width: 100%;
-				background: var(--primary);
+				background: var(--primary-surface);
 				height: 2px;
 				content: "";
 				position: absolute;

@@ -34,8 +34,9 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watch } from 'vue'
+	import { computed, nextTick, ref, watch } from 'vue'
 	import { Line } from 'vue-chartjs'
+	import { talentDataset, talentScales } from '@/chart'
 	import type { ChartData, ChartOptions } from 'chart.js'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -78,29 +79,19 @@
 		labels.reverse()
 		labels.push(LeekWars.formatDayMonthShort(time))
 		const data = [...leek.value.talent_history, leek.value.talent]
-		const lastIndex = data.length - 1
 		chartData.value = {
 			labels,
-			datasets: [{
-				tension: 0.2,
-				data,
-				borderColor: '#5fad1b',
-				pointBackgroundColor: '#5fad1b',
-				borderWidth: 2,
-				fill: { target: 'origin', above: '#5fad1b30' },
-				segment: {
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
-				},
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			}] as any
+			datasets: [talentDataset(data)]
 		}
 		chartOptions.value = {
 			// Le graphique remplit la hauteur restante du panel (pas de ratio figé).
 			responsive: true,
 			maintainAspectRatio: false,
 			plugins: { legend: { display: false } },
-			elements: { point: { radius: 3, hoverRadius: 5 } },
+			// Un carré de rayon r mesure r√2 de côté : un cran de plus que les
+			// ronds d'avant pour garder le même poids à l'œil.
+			elements: { point: { radius: 4, hoverRadius: 6 } },
+			scales: talentScales(),
 		}
 	}
 
@@ -115,6 +106,9 @@
 		}).error(() => { leek.value = null; loaded.value = true })
 	}
 	watch(leekId, load, { immediate: true })
+	// La grille du graphique est lue sur le thème : la relire à la bascule, sinon
+	// elle garde les couleurs de l'ancien et disparaît dans le fond.
+	watch(() => [LeekWars.darkMode, LeekWars.legacyTheme], () => nextTick(buildChart))
 </script>
 
 <style lang="scss" scoped>
@@ -156,7 +150,7 @@
 	}
 	.xp-fill {
 		height: 100%;
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 	.xp-text {
 		font-size: 12px;

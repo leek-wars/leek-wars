@@ -131,7 +131,7 @@
 	}
 	.bar .fill {
 		height: 100%;
-		background: var(--primary);
+		background: var(--primary-surface);
 		transition: width 0.3s;
 	}
 	.fill.complete {

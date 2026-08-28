@@ -179,8 +179,8 @@ function readAllNotifications() {
 		cursor: col-resize;
 	}
 	.header .label {
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		border-radius: 5px;
 		margin-left: 8px;
 		margin-right: -6px;

@@ -88,8 +88,8 @@ function changeMode() {
 			padding: 1px 8px;
 		}
 		.btn {
-			background: var(--primary);
-			color: var(--primary-text);
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
 			padding: 1px 8px;
 			border-radius: var(--radius);
 			cursor: pointer;

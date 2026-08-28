@@ -134,8 +134,8 @@ const lastCheckedLabel = computed(() => {
 	padding: 20px 25px;
 	border-radius: var(--radius);
 	margin-bottom: 20px;
-	color: var(--white);
-	&.ok { background: var(--primary); }
+	color: var(--primary-surface-text);
+	&.ok { background: var(--primary-surface); }
 	&.partial { background: #f0ad4e; }
 	&.down { background: #d9534f; }
 }
@@ -190,7 +190,7 @@ const lastCheckedLabel = computed(() => {
 	height: 10px;
 	border-radius: 50%;
 	background: var(--grey-8);
-	.ok & { background: var(--primary); }
+	.ok & { background: var(--primary-surface); }
 	.error & { background: #d9534f; }
 }
 </style>

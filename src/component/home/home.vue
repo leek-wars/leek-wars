@@ -90,6 +90,15 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Sortie du mode édition. La disposition est déjà enregistrée à chaque
+			changement : ce bouton ne sauvegarde rien, il referme le mode — mais
+			c'est là qu'on le cherche, sous la main qui vient de déplacer un widget,
+			plutôt que dans un coin de l'en-tête. Hors de `.grid-stack` : gridstack
+			ne doit voir que ses propres enfants. -->
+		<div v-if="editMode" class="validate-bar">
+			<v-btn color="primary" size="large" prepend-icon="mdi-check" @click="toggleEdit">{{ t('validate_changes') }}</v-btn>
+		</div>
 	</div>
 </template>
 
@@ -242,6 +251,12 @@
 		// Le widget classement précise la catégorie affichée (« Classement — Éleveurs »),
 		// sinon deux classements côte à côte portent le même titre.
 		if (widget.type === 'classement') return base + ' — ' + t('ranking_' + categoryOf(widget))
+		// Le widget statistiques nomme son poireau (« Statistiques de Ail »), pour
+		// la même raison : plusieurs peuvent cohabiter sur la page.
+		if (widget.type === 'leek_stats') {
+			const leek = myLeeks.value.find(l => l.id === leekOf(widget))
+			return leek ? t('widget_leek_stats_of', { leek: leek.name }) : base
+		}
 		if (widget.type !== 'chat') return base
 		const farmer = store.state.farmer
 		let id: number | null = null
@@ -513,17 +528,22 @@
 	// En-tête fixe, seul le contenu défile. Pas d'overscroll-behavior: contain ici :
 	// il bloquerait la molette même sur un widget sans débord, et la page ne
 	// défilerait plus dès que la souris est sur un panel.
+	// `overflow-x: hidden` explicite : avec le seul `overflow-y`, l'axe X passe
+	// en `auto` et un contenu incompressible (une pastille de talent plus large
+	// que sa colonne) fait apparaître une barre de défilement horizontale dans
+	// le widget. Un widget de tableau de bord ne défile jamais en largeur.
 	.widget-panel:deep(.content) {
 		flex: 1 1 auto;
 		min-height: 0;
 		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	// Widgets sans défilement interne (noScroll) : le contenu est clippé,
 	// la molette fait toujours défiler la page. Le contenu est aussi un
 	// container CSS : les widgets adaptent leur mise en page à sa hauteur
 	// (@container, unités cq*) pour ne jamais couper le contenu.
 	.widget-panel.no-scroll:deep(.content) {
-		overflow-y: hidden;
+		overflow: hidden;
 		container-type: size;
 	}
 	.grid-stack.editing .drag-handle {
@@ -564,8 +584,8 @@
 		background: var(--background-secondary);
 	}
 	.config-option.selected {
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 	}
 	.config-flag {
 		height: 14px;
@@ -582,5 +602,28 @@
 			font-size: 48px;
 			opacity: 0.6;
 		}
+	}
+	// Bouton de sortie du mode édition, flottant au bas de la fenêtre. La barre
+	// couvre toute la largeur pour centrer le bouton, mais laisse passer les
+	// clics : seul le bouton est cliquable, on doit pouvoir déplacer un widget
+	// qui passe dessous. Le bouton est un `v-btn` d'accent et non un `.button`
+	// du site : ce dernier n'a de surface que dans un en-tête de panel, il
+	// arriverait ici sans fond. Le thème v3 lui donne l'aplat et l'ombre pixel.
+	.validate-bar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 20px;
+		z-index: 100;
+		display: flex;
+		justify-content: center;
+		pointer-events: none;
+	}
+	.validate-bar .v-btn {
+		pointer-events: auto;
+	}
+	// Le dernier widget reste atteignable sous le bouton flottant.
+	.grid-stack.editing {
+		padding-bottom: 60px;
 	}
 </style>

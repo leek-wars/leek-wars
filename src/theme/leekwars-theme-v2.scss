@@ -26,6 +26,11 @@ html body.v2 {
 	--primary-text: #fff;
 	/* Le vert quand il sert d'encre sur une surface claire. */
 	--primary-strong: #3e8a00;
+	/* Le vert quand il PEINT une surface, et l'encre posée dessus. Le v2 n'a
+	   qu'un seul vert dans les deux rôles : ces deux jetons valent donc la paire
+	   historique, et les appelants migrés au lot 28 y restent au pixel près. */
+	--primary-surface: var(--primary);
+	--primary-surface-text: var(--primary-text);
 
 	/* Encre et fonds */
 	/* Attention aux deux paires, elles ne font pas la même chose :
@@ -94,6 +99,9 @@ html body.v2 {
 	   page. Le logo est un SVG blanc charge en <img>, donc increcolorable en
 	   CSS : --header-logo-filter est la seule prise pour l'adapter a un fond
 	   clair. */
+	/* Hauteur de la barre du haut. Presente pour la parite des variables : en v2
+	   la barre reste dans le flux de la colonne centrale, personne ne la lit. */
+	--header-height: 80px;
 	--header-color: #eee;
 	--header-button-background: rgba(80, 80, 80, 0.6);
 	--header-button-background-hover: rgba(200, 200, 200, 0.4);
@@ -135,6 +143,12 @@ html body.v2 {
 	/* Etat inactif (poireau ou eleveur qui ne joue plus) */
 	--inactive-color: #9c9c9c;
 
+	/* L'or en APLAT (l'or en ENCRE, c'est --rank-first juste en dessous).
+	   Présent ici pour la parité des variables : le v2 peint ses `notif-trophy`
+	   en dur dans global.scss, en dégradé, dont voici le sommet. */
+	--gold: #ffdc3a;
+	--gold-text: #000;
+
 	/* Podium du classement : or, argent, bronze */
 	--rank-first: #ffa900;
 	--rank-second: var(--text-color-secondary);
@@ -166,6 +180,24 @@ html body.v2 {
 	--result-draw: var(--text-color-secondary);
 	--result-draw-background: rgba(170, 170, 170, 0.18);
 
+	/* Couleurs des caractéristiques : les valeurs historiques de `global.scss`,
+	   sorties en jetons au lot 28 pour que le v3 puisse en donner d'autres. Le
+	   rendu du v2 est inchangé, y compris ses trois exceptions en sombre
+	   (force, science, magie), qui deviennent des surcharges du bloc `.dark`. */
+	--stat-life: red;
+	--stat-max-life: #00d5b5;
+	--stat-strength: #833100;
+	--stat-wisdom: #5ebe00;
+	--stat-agility: #0080f7;
+	--stat-resistance: #ff4a01;
+	--stat-ram: #ce00c7;
+	--stat-cores: #878787;
+	--stat-science: #0000a2;
+	--stat-magic: #b800b6;
+	--stat-tp: #ff7f01;
+	--stat-mp: #00a900;
+	--stat-poison: #fb27ff;
+
 	&.dark {
 		--pure-white: #000;
 		--pure-black: #fff;
@@ -189,5 +221,9 @@ html body.v2 {
 		--result-defeat-text: #ffcdd2;
 		--result-defeat-background: rgba(255, 112, 104, 0.18);
 		--result-draw-background: rgba(180, 180, 180, 0.12);
+
+		--stat-strength: #c05415;
+		--stat-science: #2a63ff;
+		--stat-magic: #d810d5;
 	}
 }

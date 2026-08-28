@@ -86,7 +86,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 		background: red;
 	}
 	.service .implemented {
-		background: var(--primary);
+		background: var(--primary-surface);
 	}
 	.service .admin {
 		background: #009aff;

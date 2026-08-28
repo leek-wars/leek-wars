@@ -395,10 +395,10 @@
 			line-height: 1;
 			padding: 2px 3px;
 			border-radius: var(--radius-small);
-			color: var(--pure-white);
+			color: var(--primary-surface-text);
 			text-transform: uppercase;
 			&.weapon { background: #c0612a; }
-			&.chip { background: var(--primary); }
+			&.chip { background: var(--primary-surface); }
 		}
 		.name {
 			font-size: 11px;

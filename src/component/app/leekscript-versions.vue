@@ -101,8 +101,8 @@ const strict = defineModel<boolean>("strict", { required: true })
 		}
 	}
 	.green {
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		padding: 0 6px;
 		border-radius: var(--radius-pill);
 		margin-left: 4px;

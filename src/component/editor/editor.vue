@@ -1989,7 +1989,7 @@
 			}
 			.storage-bar-fill {
 				height: 100%;
-				background: var(--primary);
+				background: var(--primary-surface);
 				transition: width 0.3s ease;
 			}
 			.storage-bar-warn {
@@ -2180,8 +2180,8 @@
 			}
 		}
 		.green {
-			background: var(--primary);
-			color: var(--primary-text);
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
 			padding: 0 6px;
 			border-radius: var(--radius-pill);
 			margin-left: 4px;

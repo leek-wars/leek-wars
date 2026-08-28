@@ -108,7 +108,7 @@
 	}
 	// Le vert du thème, pas le vert du v2 écrit en dur (invisible en v3 sombre).
 	.row.me {
-		background: color-mix(in srgb, var(--primary) 12%, transparent);
+		background: color-mix(in srgb, var(--primary-surface) 12%, transparent);
 	}
 	// Assez large pour l'intitulé de colonne, pas seulement pour deux chiffres :
 	// « Place » y tient dans la plupart des langues, les plus longues (Placering,

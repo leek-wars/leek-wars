@@ -274,7 +274,7 @@ function onRowClick(_event: Event, { item }: { item: Fight }) {
 		}
 		.progress-bar-fill {
 			height: 100%;
-			background: var(--primary);
+			background: var(--primary-surface);
 			transition: width 0.4s ease;
 		}
 	}

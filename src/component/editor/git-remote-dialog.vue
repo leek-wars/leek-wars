@@ -349,14 +349,14 @@ body.dark .remote-item {
 	.add-btn {
 		cursor: pointer;
 		padding: 4px 14px;
-		background: var(--primary);
-		color: var(--primary-text);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		border: none;
 		border-radius: var(--radius);
 		font-size: 13px;
 		font-weight: 500;
 		&:hover { background: #73d120; }
-		&:disabled { opacity: 0.3; cursor: default; background: var(--primary); }
+		&:disabled { opacity: 0.3; cursor: default; background: var(--primary-surface); }
 	}
 }
 body.dark .add-remote .input {
@@ -547,8 +547,8 @@ body.dark .credential-info {
 			}
 			.pat-save {
 				padding: 4px 12px;
-				background: var(--primary);
-				color: var(--primary-text);
+				background: var(--primary-surface);
+				color: var(--primary-surface-text);
 				border-radius: var(--radius);
 				cursor: pointer;
 				font-size: 13px;

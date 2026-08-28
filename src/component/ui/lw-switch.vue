@@ -83,11 +83,11 @@ function onChange(e: Event) {
 		transition: transform .1s linear, background-color .1s linear;
 	}
 	input:checked ~ .track {
-		background: var(--primary);
+		background: var(--primary-surface);
 		border-color: var(--primary);
 		.thumb {
 			transform: translateX(18px);
-			background: var(--primary-text);
+			background: var(--primary-surface-text);
 		}
 	}
 	&:hover:not(.disabled) .track {
@@ -133,7 +133,7 @@ body.v2 .lw-switch {
 		background: rgba(95, 173, 27, 0.5);
 		.thumb {
 			transform: translateX(14px);
-			background: var(--primary);
+			background: var(--primary-surface);
 		}
 	}
 	&:hover:not(.disabled) .track {

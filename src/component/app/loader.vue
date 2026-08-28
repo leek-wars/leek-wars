@@ -97,7 +97,7 @@ body:not(.v2) .sbl-circ-path {
 	vertical-align: bottom;
 }
 .pixel-loader i {
-	background: var(--primary);
+	background: var(--primary-surface);
 	opacity: 0.09;
 	animation: lw-loader-rain 1s steps(3) infinite;
 	// La case s'allume au temps `--t` du cycle, un dixième de seconde par temps :

@@ -111,8 +111,8 @@ function sendMessage(message: string, id: number) {
 		animation: unread 2.5s infinite;
 	}
 	@keyframes unread {
-		0% { background:var(--primary); }
+		0% { background:var(--primary-surface); }
 		50% { background:var(--panel-header-background); }
-		100% { background:var(--primary); }
+		100% { background:var(--primary-surface); }
 	}
 </style>

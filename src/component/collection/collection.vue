@@ -316,7 +316,7 @@
 		overflow: hidden;
 		.summary-bar {
 			height: 100%;
-			background-color: var(--primary);
+			background-color: var(--primary-surface);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 9px, transparent 9px, transparent 18px);
 			border-radius: 9px;
 			transition: width 0.4s;
@@ -403,7 +403,7 @@
 		overflow: hidden;
 		.cat-bar {
 			height: 100%;
-			background-color: var(--primary);
+			background-color: var(--primary-surface);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 7px, transparent 7px, transparent 14px);
 			border-radius: 7px;
 			transition: width 0.3s;

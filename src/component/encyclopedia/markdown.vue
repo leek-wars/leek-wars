@@ -820,7 +820,7 @@
 					background: var(--background-secondary);
 				}
 				&.correct {
-					background: var(--primary);
+					background: var(--primary-surface);
 				}
 				&.wrong {
 					background: red;
@@ -829,15 +829,15 @@
 					background: orange;
 				}
 				&.correct, &.wrong, &.missed {
-					color: var(--primary-text);
+					color: var(--primary-surface-text);
 					pre {
 						color: var(--black);
 					}
 					.letter {
-						color: var(--primary-text);
+						color: var(--primary-surface-text);
 					}
 					.v-icon {
-						color: var(--primary-text) !important;
+						color: var(--primary-surface-text) !important;
 					}
 				}
 				&.disabled {
