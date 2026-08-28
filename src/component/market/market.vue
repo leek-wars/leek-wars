@@ -845,6 +845,14 @@ const t = useNamespacedT('market')
 		position: sticky;
 		top: 12px;
 		max-height: calc(100vh - 24px);
+		// La barre du haut du v3 est fixe : sans ce décalage, le panneau vient se
+		// coller sous elle et son contenu se fait rogner (le haut de l'image de
+		// l'arme passait dessous). La hauteur maximale déduit la même bande, sinon
+		// le panneau dépasse en bas d'autant.
+		body:not(.v2) & {
+			top: calc(var(--header-height) + 12px);
+			max-height: calc(100vh - var(--header-height) - 24px);
+		}
 		display: flex;
 		flex-direction: column;
 		& > * {
