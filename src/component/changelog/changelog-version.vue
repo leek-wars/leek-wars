@@ -2,16 +2,18 @@
 	<div v-if="version" class="version">
 		<img :src="'/image/mail/mail_' + version.version + '.webp'" class="image" loading="lazy" @error="($event.target as HTMLImageElement).style.display = 'none'">
 		<div class="wrapper">
-			<div v-for="(changes, s) in sections" :key="s" class="section">
-				<h4 v-if="sections.length > 1" :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
-				<div v-for="(change, c) in changes" :key="c" class="change">
-					<span v-html="'➤ ' + change.text"></span>
-					<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" :close-delay="10" offset-y location="top">
-						<template #activator="{ props }">
-							<v-icon class="screenshot" v-bind="props">mdi-tooltip-image-outline</v-icon>
-						</template>
-						<img class="image-menu" :src="'/image/changelog/' + image + '.png'">
-					</v-menu>
+			<div class="sections">
+				<div v-for="(changes, s) in sections" :key="s" class="section">
+					<h4 v-if="sections.length > 1" :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
+					<div v-for="(change, c) in changes" :key="c" class="change">
+						<span v-html="'➤ ' + change.text"></span>
+						<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" :close-delay="10" offset-y location="top">
+							<template #activator="{ props }">
+								<v-icon class="screenshot" v-bind="props">mdi-tooltip-image-outline</v-icon>
+							</template>
+							<img class="image-menu" :src="'/image/changelog/' + image + '.png'">
+						</v-menu>
+					</div>
 				</div>
 			</div>
 			<router-link v-if="version.forum_topic" :to="'/forum/category-' + version.forum_category + '/topic-' + version.forum_topic">
@@ -84,13 +86,23 @@ const sections = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+	$image-width: 1300px;
+	$column-width: 800px;
+
 	.version {
 		background: rgba(100,100,100,0.1);
+	}
+	.sections {
+		// Deux colonnes dès qu'il y a la place pour deux fois $column-width,
+		// une seule en dessous.
+		columns: $column-width 2;
+		column-gap: 40px;
 	}
 	.change {
 		padding: 0 10px;
 		line-height: 20px;
 		font-size: 15px;
+		break-inside: avoid;
 		:deep(.ai) {
 			background: #00a3cc;
 			padding: 0 4px;
@@ -129,11 +141,15 @@ const sections = computed(() => {
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 	}
 	.image {
+		display: block;
 		width: 100%;
+		max-width: $image-width;
+		margin: 0 auto;
 		vertical-align: bottom;
 	}
 	.wrapper {
-		max-width: 820px;
+		// Pas de plafond : c'est le panneau qui borne, sinon les deux colonnes
+		// de $column-width ne rentreraient jamais.
 		margin: 0 auto;
 		background: var(--background);
 		padding: 15px;
@@ -143,6 +159,7 @@ const sections = computed(() => {
 		text-transform: uppercase;
 		color: var(--text-color);
 		font-size: 19px;
+		break-after: avoid;
 	}
 	h4:not(.first) {
 		margin-top: 10px;
