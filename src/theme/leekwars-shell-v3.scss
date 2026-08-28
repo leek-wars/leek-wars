@@ -184,20 +184,6 @@ body:not(.v2) {
 	.header .header-button i {
 		color: inherit;
 	}
-	/* Les boutons qui ne portent qu'une icône sont des carrés, du côté de la
-	   barre : le rembourrage de 14 px les étirait en pastilles de 56 px de large
-	   pour un glyphe de 26. Le carré est la forme de la case dans le v3.
-	   Énumérés un à un : rien dans le gabarit ne distingue un bouton à icône
-	   seule d'un bouton à libellé, et `:has()` attraperait aussi les compteurs. */
-	.header .header-button.messages-button,
-	.header .header-button.notifications-button,
-	.header .header-button.console-button,
-	.header .header-button.settings-button,
-	.header .header-button.merge-left {
-		width: 42px;
-		padding: 0;
-		justify-content: center;
-	}
 	/* Le bouton d'inscription reste l'action principale de la barre. */
 	.header .signup-button.header-button {
 		background: var(--primary-surface);
@@ -249,48 +235,21 @@ body:not(.v2) {
 		   photo, un trait translucide de 1 px ne se voit pas. */
 		background: var(--text-color-faint);
 	}
-	/* L'avatar prend toute la hauteur utile du bouton — 40 px, les 42 moins ses
-	   deux traits — et vient en coiffer le bout : la marge négative annule le
-	   rembourrage de droite, sinon il flotterait à 14 px du bord. */
+	/* Ramené à 24 px : les 42 px du v2 débordaient du bouton de 34 px et
+	   recouvraient le pseudo. */
 	.header .header-button .avatar {
-		height: 40px;
-		width: 40px;
-		margin: 0 -14px 0 8px;
+		height: 28px;
+		width: 28px;
+		margin: 0 0 0 8px;
 	}
-	/* Compteurs : l'icône passe DEVANT son montant. Elle dit de quelle ressource
-	   il s'agit, on la lit donc avant le chiffre ; le gabarit, écrit pour le v2,
-	   la met en queue de bouton. Par `order` et non dans le gabarit, pour que le
-	   v2 continue d'être servi tel qu'il est. */
-	.header .header-button .crystal,
-	.header .header-button .hab,
-	.header .fights-button .v-icon {
-		order: -1;
-	}
-	/* C'est l'icône qui écarte le chiffre maintenant qu'elle le précède : le
-	   `padding-right` du gabarit ne sépare plus rien, il finit au bord. */
-	.header .header-button .hab,
-	.header .fights-button .v-icon {
-		margin-right: 6px;
-	}
-	/* Le cristal dépasse du compteur en haut et en bas, comme sur la barre du v2
-	   — c'est ce qui le distingue des autres pastilles, et il l'avait perdu en
-	   étant rangé dans le cadre. Le bouton fait 42 px, dont 40 entre ses traits :
-	   à 48 px le cristal sort de 3 px de chaque côté, assez pour se voir sans
-	   percer la barre. La largeur suit le rapport du fichier (33×80), sans quoi
-	   `contain` le rétrécirait pour tenir. */
+	/* Le cristal est taillé pour dépasser de la barre du v2 (17×40, marges
+	   négatives) : dans une boîte de compteur, il sortait du cadre. Rangé. */
 	.header .header-button .crystal {
-		height: 48px;
-		width: 20px;
-		margin: 0 6px 0 0;
+		height: 22px;
+		width: 14px;
+		margin: 0 0 0 2px;
 		background-size: contain;
 		background-position: center;
-	}
-	/* Le cristal (ou le hab) qui s'envole à chaque gain se cale sur l'icône, et
-	   la suit donc à gauche du bouton. */
-	.header .header-button .win,
-	.header .header-button .lose {
-		right: auto;
-		left: 14px;
 	}
 
 	/* ====== Largeur ======

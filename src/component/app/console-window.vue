@@ -32,7 +32,7 @@
 					<div class="option" v-bind="props"><v-icon>mdi-weather-night</v-icon></div>
 				</template>
 				<div class="theme-menu">
-					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && consoleRef.themeSetting === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && consoleRef.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
 				</div>
 			</v-menu>
 			<!-- <div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div> -->
@@ -45,13 +45,12 @@
 
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/emitter'
+import { emitter } from '@/model/vue'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'
 import PolyglotVersions from './polyglot-versions.vue'
 import { AI_LANGUAGES, getLanguageVersions } from '../editor/file-types'
-import { AUTO_CODE_THEME } from '../editor/code-theme'
 
 defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions, PolyglotVersions } })
 
@@ -84,8 +83,6 @@ const consoleStarty = ref(0)
 const consoleDragx = ref(0)
 const consoleDragy = ref(0)
 const themes = [
-	// En tête : c'est le réglage par défaut, et le seul qui ne nomme pas un thème.
-	{ value: AUTO_CODE_THEME, label: 'Auto (thème du site)' },
 	{ value: 'leek-wars', label: 'Leek Wars' },
 	{ value: 'leek-wars-dark', label: 'Leek Wars Dark' },
 	{ value: 'monokai', label: 'Monokai' },
@@ -137,7 +134,7 @@ function consoleMouseUp(_e: MouseEvent) {
 function setTheme(theme: string) {
 	const console = consoleRef.value
 	if (console) {
-		console.themeSetting = theme
+		console.theme = theme
 		console.saveTheme()
 	}
 }

@@ -67,7 +67,6 @@ import Console from '../app/console.vue'
 import LeekscriptVersions from '../app/leekscript-versions.vue'
 import PolyglotVersions from '../app/polyglot-versions.vue'
 import { AI_LANGUAGES, getLanguageVersions } from '../editor/file-types'
-import { AUTO_CODE_THEME } from '../editor/code-theme'
 
 defineOptions({ name: 'ConsolePage', components: { Console, LeekscriptVersions, PolyglotVersions }, mixins: [...mixins] })
 
@@ -80,7 +79,7 @@ const langMenuTarget = ref<HTMLElement | undefined>(undefined)
 const versionMenu = ref(false)
 const versionMenuTarget = ref<HTMLElement | undefined>(undefined)
 const consoleRef = useTemplateRef<InstanceType<typeof Console>>('console')
-const consoleTheme = computed(() => (consoleRef.value as unknown as { themeSetting?: string })?.themeSetting)
+const consoleTheme = computed(() => (consoleRef.value as unknown as { theme?: string })?.theme)
 const languages = AI_LANGUAGES
 const currentLanguage = computed(() => {
 	const lang = (consoleRef.value as unknown as { language?: string })?.language
@@ -93,8 +92,6 @@ const currentVersionShort = computed(() => {
 })
 
 const themes = [
-	// En tête : c'est le réglage par défaut, et le seul qui ne nomme pas un thème.
-	{ value: AUTO_CODE_THEME, label: 'Auto (thème du site)' },
 	{ value: 'leek-wars', label: 'Leek Wars' },
 	{ value: 'leek-wars-dark', label: 'Leek Wars Dark' },
 	{ value: 'monokai', label: 'Monokai' },
@@ -137,7 +134,7 @@ if (LeekWars.mobile) {
 
 function setTheme(theme: string) {
 	if (consoleRef.value) {
-		consoleRef.value.themeSetting = theme
+		consoleRef.value.theme = theme
 		consoleRef.value.saveTheme()
 	}
 }
