@@ -57,6 +57,10 @@ type Events = {
 	'console': unknown,
 	'console-error': unknown,
 	'console-log': unknown,
+	/** Ouvre la fenetre de console LeekScript. Le bouton vit dans la barre du
+	 *  haut, la fenetre appartient a l'application : l'emetteur evite de faire
+	 *  traverser un drapeau a toute la coquille. */
+	'open-console': void,
 	'editor-menu': unknown,
 	'br-started': number,
 	'reanalyze': void,
