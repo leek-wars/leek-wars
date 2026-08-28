@@ -88,15 +88,22 @@ const sections = computed(() => {
 <style lang="scss" scoped>
 	$image-width: 1300px;
 	$column-width: 800px;
+	$column-gap: 40px;
+	$wrapper-padding: 15px;
+	// Ce qu'il faut au bloc pour tenir deux colonnes, retrait interne compris.
+	$two-columns-width: $column-width * 2 + $column-gap + $wrapper-padding * 2;
 
 	.version {
 		background: rgba(100,100,100,0.1);
+		// Le bloc se mesure à la place que lui laisse le panneau, pas à la
+		// fenêtre : le menu et le panneau social prennent leur part.
+		container-type: inline-size;
 	}
 	.sections {
 		// Deux colonnes dès qu'il y a la place pour deux fois $column-width,
 		// une seule en dessous.
 		columns: $column-width 2;
-		column-gap: 40px;
+		column-gap: $column-gap;
 	}
 	.change {
 		padding: 0 10px;
@@ -148,11 +155,18 @@ const sections = computed(() => {
 		vertical-align: bottom;
 	}
 	.wrapper {
-		// Pas de plafond : c'est le panneau qui borne, sinon les deux colonnes
-		// de $column-width ne rentreraient jamais.
+		// Une seule colonne : le bloc se borne à la largeur d'une colonne au
+		// lieu de s'étaler sur tout le panneau.
+		max-width: $column-width + $wrapper-padding * 2;
 		margin: 0 auto;
 		background: var(--background);
-		padding: 15px;
+		padding: $wrapper-padding;
+	}
+	// Deux colonnes : le plafond saute, sinon elles ne rentreraient jamais.
+	@container (min-width: #{$two-columns-width}) {
+		.wrapper {
+			max-width: none;
+		}
 	}
 	h4 {
 		margin-bottom: 10px;
