@@ -8,18 +8,26 @@
 		<error v-if="notFound" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
 		<template v-else>
 		<div class="page-header page-bar">
-			<!-- Titre STABLE, même raison que la racine ci-dessus : le v-if/v-else entre le
-			     composant `rich-tooltip-leek` (slot d'activateur géré par Vuetify) et un `h1`
-			     nu faisait basculer la branche à chaque (re)chargement de `leek`, et le vnode
-			     du titre se retrouvait avec `el === null` -> "nextSibling of null" au patch
-			     suivant (cluster #4050-#4056, seul cluster client multi-joueurs d'août 2026,
-			     TOUJOURS sur /leek/:id, chemin `div › v-fgt › div › h1`). Le tooltip est
-			     désormais toujours monté, simplement désactivé tant que le poireau n'est pas
-			     chargé (il ne charge son contenu qu'à l'ouverture, et seulement si id > 0). -->
-			<rich-tooltip-leek :id="leek ? leek.id : 0" v-slot="{ props }" :disabled="!leek" :bottom="true">
-				<h1 v-bind="props">{{ leek ? leek.name : '...' }}</h1>
-			</rich-tooltip-leek>
-			<div class="tabs">
+			<div class="page-title">
+				<!-- La tête du poireau plutôt qu'un glyphe : c'est l'icône la plus
+				     parlante que cette page puisse porter. `scale` est obligatoire ;
+				     la coquille borne ensuite le svg à 32 px. -->
+				<leek-image v-if="leek" class="page-icon" :leek="leek" :scale="0.2" head />
+				<div class="page-title-text">
+					<!-- Titre STABLE, même raison que la racine ci-dessus : le v-if/v-else entre le
+					     composant `rich-tooltip-leek` (slot d'activateur géré par Vuetify) et un `h1`
+					     nu faisait basculer la branche à chaque (re)chargement de `leek`, et le vnode
+					     du titre se retrouvait avec `el === null` -> "nextSibling of null" au patch
+					     suivant (cluster #4050-#4056, seul cluster client multi-joueurs d'août 2026,
+					     TOUJOURS sur /leek/:id, chemin `div › v-fgt › div › h1`). Le tooltip est
+					     désormais toujours monté, simplement désactivé tant que le poireau n'est pas
+					     chargé (il ne charge son contenu qu'à l'ouverture, et seulement si id > 0). -->
+					<rich-tooltip-leek :id="leek ? leek.id : 0" v-slot="{ props }" :disabled="!leek" :bottom="true">
+						<h1 v-bind="props">{{ leek ? leek.name : '...' }}</h1>
+					</rich-tooltip-leek>
+				</div>
+			</div>
+			<div class="actions">
 				<template v-if="leek && my_leek">
 					<template v-if="leek.tournament && leek.tournament.current">
 						<router-link :to="'/tournament/' + leek.tournament.current">
@@ -29,7 +37,7 @@
 					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @update:model-value="loadTournamentRange">
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props" @click="registerTournament">
-								<v-icon>mdi-trophy</v-icon>
+								<v-icon>mdi-tournament</v-icon>
 								<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
 								<span v-else class="unregister">{{ $t('unregister') }}</span>
 							</div>
@@ -152,14 +160,15 @@
 				</v-tooltip>
 
 				<template v-if="leek && leek.level >= 100">
-					<div class="chart-wrap">
-						<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
-					</div>
+					<talent-chart :history="leek.talent_history" :history-long="leek.talent_history_long" :current="leek.talent" fixed-height />
 				</template>
 			</panel>
 
 			<panel :title="$t('characteristic.characteristics')">
-				<template v-if="leek && my_leek && $store.state.farmer && $store.state.farmer.equipment_enabled" #actions>
+				<!-- Les icônes d'en-tête ne servent plus qu'au v2 : en v3 les trois
+				     commandes du panneau (équipement, potions, capital) sont réunies
+				     dans une barre en pied de panneau, avec leur libellé. -->
+				<template v-if="LeekWars.legacyTheme && leek && my_leek && $store.state.farmer && $store.state.farmer.equipment_enabled" #actions>
 					<div class="button flat" @click="showLoadout = true">
 						<v-icon>mdi-package-variant-closed</v-icon>
 					</div>
@@ -175,7 +184,8 @@
 								<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>
 							</div>
 						</characteristic-tooltip>
-						<div v-if="leek && my_leek" class="center mt-3">
+						<!-- Peau v2 : les deux boutons Material centrés, au pixel près. -->
+						<div v-if="LeekWars.legacyTheme && leek && my_leek" class="center mt-3">
 							<span class="dida-element">
 								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer && $store.state.farmer.equipment_enabled" color="primary" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}" @click="showCapital = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
@@ -191,6 +201,32 @@
 								<img src="/image/icon/black/potion.png">
 								{{ $t('potions') }}
 							</v-btn>
+						</div>
+						<!-- v3 : les trois commandes réunies en pied de panneau, libellées.
+						     Le capital porte son compte et passe à l'aplat de marque dès
+						     qu'il y a des points à placer — c'est la seule des trois qui
+						     appelle une action, les deux autres ouvrent un tiroir.
+						     L'étoile suit la convention d'ICONS.md : pleine quand il y a
+						     quelque chose, en contour pour l'état vide. -->
+						<div v-else-if="leek && my_leek" class="panel-actions">
+							<div v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" class="panel-action" @click="showLoadout = true">
+								<v-icon>mdi-package-variant-closed</v-icon>{{ $t('main.loadouts') }}
+							</div>
+							<div class="panel-action" @click="potionDialog = true">
+								<v-icon>mdi-flask</v-icon>{{ $t('potions') }}
+							</div>
+							<span class="dida-element">
+								<div v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" class="panel-action" :class="{green: leek.capital > 0, bouncing: !showCapital && LeekWars.didactitial_step === 1}" @click="showCapital = true">
+									<v-icon>{{ leek.capital > 0 ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>{{ leek.capital > 0 ? $t('main.n_capital', [leek.capital]) : $t('main.capital') }}
+								</div>
+								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
+									<i18n-t tag="div" class="bubble" keypath="main.dida_2">
+										<template #life><img height=18 src="/image/charac/life.png"></template>
+										<template #strength><img height=18 src="/image/charac/strength.png"></template>
+									</i18n-t>
+									<span class="arrow"></span>
+								</span>
+							</span>
 						</div>
 					</div>
 				</template>
@@ -252,7 +288,11 @@
 						<template v-else>
 							<div class="components-grid">
 								<template v-for="(c, i) of 8" :key="i">
-									<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
+									<!-- L'item du composant peut manquer du catalogue : le client peut être
+									     plus récent que l'API (cf. loadGameData), ou un template avoir été
+									     retiré. Sans cette garde, la case passe `undefined` en prop `item`
+									     puis casse sur son `.name` — la case vide est le moindre mal. -->
+									<div v-if="leek.components[i] && LeekWars.items[leek.components[i].template]" class="component" :class="{disabled: i >= max_components}">
 										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 											<div v-bind="props">
 												<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
@@ -302,7 +342,7 @@
 					<fights-history :fights="leek.fights" :progress="liveProgress" />
 				</template>
 			</panel>
-			<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+			<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-tournament">
 				<template #content>
 					<tournaments-history :tournaments="leek.tournaments" />
 				</template>
@@ -344,7 +384,7 @@
 				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled">
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props" @click="registerAutoArena">
-							<v-icon>mdi-trophy</v-icon>
+							<v-icon>mdi-stadium</v-icon>
 							<span v-if="!leek.auto_br" class="register">{{ $t('register_to_arena') }}</span>
 							<span v-else class="unregister">{{ $t('unregister') }}</span>
 						</div>
@@ -750,7 +790,7 @@
 					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
 						<!-- :instance obligatoire, sinon l'infobulle retombe sur les stats de BASE
 						     et une piece alteree s'affiche comme une neuve (#622). -->
-						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
+						<rich-tooltip-item v-if="leek.components[i] && LeekWars.items[leek.components[i].template]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 							<div v-if="leek.components[i]" :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i]!.template && draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="componentDragStart('leek', leek.components[i]!, $event)" @dragend="leek.components[0] && componentDragEnd(leek.components[0])" @click="leek.components[i] && removeComponent(leek.components[i]!)">
 								<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 							</div>
@@ -859,8 +899,7 @@
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/emitter'
 	import { useLiveHistory } from '@/model/use-live-history'
-	import { Line } from 'vue-chartjs'
-	import type { ChartData, ChartOptions } from 'chart.js'
+	import TalentChart from '@/component/talent-chart.vue'
 
 	const CapitalDialog = defineAsyncComponent(() => import('./capital-dialog.vue'))
 	const LoadoutDialog = defineAsyncComponent(() => import('./loadout-dialog.vue'))
@@ -898,8 +937,6 @@
 	const renameError = ref<{error: string, error_params?: unknown[]} | null>(null)
 	const potionDialog = ref(false)
 	const hatDialog = ref(false)
-	const chartData = ref<ChartData<'line'> | null>(null)
-	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	const showReport = ref(false)
 	const reasons = [Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_AI_NAME]
 	const levelPopup = ref(false)
@@ -1087,10 +1124,6 @@
 		const msg = message as { leek: number, talent: number }
 		if (leek.value && msg.leek === leek.value.id) {
 			leek.value.talent += msg.talent
-			// Rafraîchit en direct le point d'aujourd'hui du graphe pendant les combats.
-			// On reconstruit chartData (nouvelle référence) : vue-chartjs compare les
-			// références des datasets et ignore une mutation en place.
-			chart()
 		}
 	}
 	const onUpdateLeekXp = (message: unknown) => {
@@ -1153,7 +1186,6 @@
 					])
 				}
 				renameName.value = leek.value.name
-				chart()
 				if (leek.value.level_seen < leek.value.level) {
 					showLevelPopup()
 				}
@@ -1275,42 +1307,6 @@
 		if (leek.value) {
 			leek.value.xp_blocked = !leek.value.xp_blocked
 			LeekWars.put('leek/set-xp-blocked', {leek_id: leek.value.id, xp_blocked: leek.value.xp_blocked})
-		}
-	}
-
-	function chart() {
-		if (!leek.value || leek.value.level < 100) return
-		const labels = []
-		const time = LeekWars.time
-		for (let i = 1; i <= 7; ++i) {
-			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
-		}
-		labels.reverse()
-		labels.push(LeekWars.formatDayMonthShort(time))
-		const data = [...leek.value.talent_history, leek.value.talent]
-		const lastIndex = data.length - 1
-		chartData.value = {
-			labels,
-			datasets: [{
-				tension: 0.2,
-				data,
-				borderColor: '#5fad1b',
-				pointBackgroundColor: '#5fad1b',
-				borderWidth: 2,
-				fill: { target: 'origin', above: '#5fad1b30' },
-				// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
-				segment: {
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
-				},
-			}]
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} as any
-		chartOptions.value = {
-			// Hauteur fixée par .chart-wrap : le graphique ne dicte pas la hauteur du panel.
-			maintainAspectRatio: false,
-			plugins: { legend: { display: false } },
-			elements: { point: { radius: 4, hoverRadius: 6 } },
 		}
 	}
 
@@ -1622,7 +1618,10 @@
 		for (let c = 0; c < 8; ++c) {
 			const component = leek.value.components[c]
 			if (component && c < max_components.value) {
-				for (const charac of LeekWars.components[LeekWars.items[component.template].params].stats) {
+				// Item hors catalogue (cf. la garde du même cas dans le template) :
+				// on ne connaît pas ses stats, il ne compte simplement pas.
+				const stats = LeekWars.components[LeekWars.items[component.template]?.params]?.stats
+				for (const charac of stats ?? []) {
 					l['total_' + charac[0]] += charac[1]
 				}
 			}
@@ -1790,6 +1789,18 @@
 			background: var(--background-secondary);
 		}
 	}
+	/* Les zébrures existaient déjà — elles étaient simplement INVISIBLES en v3 :
+	   elles peignent `--background-secondary`, qui EST la surface du panneau
+	   depuis que le thème v3 fait pointer `--panel-background` dessus. C'est le
+	   même piège que le widget « Mes poireaux » au lot 12. Elles prennent la
+	   surface de rangée, qui est faite pour ça. Le v2, lui, a bien deux valeurs
+	   distinctes et garde les siennes. */
+	body:not(.v2) .characteristics {
+		.characteristic:nth-child(4n+3),
+		.characteristic:nth-child(4n+4) {
+			background: var(--background-row);
+		}
+	}
 	body.dark .characteristic.frequency img {
 		filter: invert(1);
 	}
@@ -1851,35 +1862,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-	.chart-wrap {
-		position: relative;
-		height: 150px;
-	}
-	.talent-history {
-		margin-top: 3px;
-		// margin-left: -10px;
-		// margin-right: -4px;
-		// margin-bottom: -16px;
-		position: relative;
-		:deep(.ct-line) {
-			stroke: rgba(95, 173, 27, 0.7);
-			stroke-width: 2px;
-		}
-		:deep(.ct-point) {
-			stroke: var(--primary);
-		}
-		:deep(.ct-area) {
-			fill: rgba(95, 173, 27, 1);
-			fill-opacity: 0.2;
-		}
-		:deep(.ct-label.ct-horizontal) {
-			text-align: center;
-			display: block;
-		}
-		:deep(&:before) {
-			float: none;
-		}
 	}
 	.chart-tooltip {
 		position: absolute;
