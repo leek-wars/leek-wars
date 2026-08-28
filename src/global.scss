@@ -429,10 +429,17 @@ ul, ol {
 .center {
 	text-align: center;
 }
-.page-header.page-bar .tabs {
+/* `.actions` est le conteneur des ACTIONS d'une barre de page, distinct de
+   `.tabs` qui porte les onglets de navigation. Les deux partagent la mise en
+   forme de base — c'est le thème v3 qui les sépare visuellement, en donnant aux
+   actions un rectangle bordé et aux onglets leur trait vert. Sans cette ligne,
+   une barre migrée vers `.actions` se retrouvait sans aucun style en v2. */
+.page-header.page-bar .tabs,
+.page-header.page-bar .actions {
 	margin-left: 20px;
 }
-.page-bar .tabs .tab {
+.page-bar .tabs .tab,
+.page-bar .actions .tab {
 	display: inline-flex;
 	align-items: center;
 	padding: 0 7px;
@@ -447,7 +454,8 @@ ul, ol {
 	user-select: none;
 	gap: 6px;
 }
-.page-bar .tabs .tab:not(.disabled) {
+.page-bar .tabs .tab:not(.disabled),
+.page-bar .actions .tab:not(.disabled) {
 	cursor: pointer;
 }
 .page-bar .tabs .tab:not(.disabled):hover {

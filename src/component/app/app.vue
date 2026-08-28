@@ -8,6 +8,8 @@
 
 				<lw-menu v-if="$store.state.connected" />
 
+				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
+
 				<console-window v-if="showConsole" v-model="consoleValue" @close="consoleValue = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
@@ -670,13 +672,10 @@
 		LeekWars.dark = 0
 	}
 
-	// La console s'ouvre depuis le bouton de la barre du haut (`lw-header`), qui
-	// n'a pas la fenetre sous la main : elle est montee ici, a la racine, pour
-	// flotter au-dessus de toute la coquille.
-	emitter.on('open-console', () => {
+	function leekscriptConsole() {
 		showConsole.value = true
 		consoleValue.value = true
-	})
+	}
 
 	function clickClover() {
 		if (LeekWars.cloverFake) {
@@ -774,6 +773,28 @@
 			outline: 2px solid var(--white);
 			outline-offset: -4px;
 		}
+	}
+	.console-button.v-icon {
+		position: fixed;
+		top: 44px;
+		left: 35px;
+		z-index: 1;
+		cursor: pointer;
+		display: none;
+		font-size: 30px;
+		opacity: 0.5;
+		// Posé sur le fond d'app, pas sur un aplat : --white supposait une
+		// coquille sombre (vrai en v2, faux sur le parchemin du v3, 1,34 mesuré).
+		color: var(--page-bar-color);
+		&:hover {
+			opacity: 1;
+		}
+	}
+	#app.connected .console-button {
+		display: block;
+	}
+	#app.app .console-button {
+		display: none;
 	}
 	#app.app {
 		overflow: hidden;

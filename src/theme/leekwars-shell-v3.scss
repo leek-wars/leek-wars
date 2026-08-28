@@ -636,6 +636,10 @@ body:not(.v2) {
 		gap: 6px;
 		height: 32px;
 		padding: 0 12px;
+		/* `global.scss` donne aux `.tab` d'une barre de page 20 px de marge à
+		   droite, hérité des onglets en trapèze du v2 : ici c'est la gouttière du
+		   conteneur qui espace les boutons. */
+		margin: 0;
 		border: 1px solid var(--border-strong);
 		background: var(--background-input);
 		color: var(--text-color);
