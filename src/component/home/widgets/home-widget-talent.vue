@@ -21,6 +21,7 @@
 <script setup lang="ts">
 	import { computed, defineAsyncComponent, nextTick, ref, watch } from 'vue'
 	import { Line } from 'vue-chartjs'
+	import { talentDataset } from '@/chart'
 	import type { ChartData, ChartOptions } from 'chart.js'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -61,28 +62,9 @@
 		labels.reverse()
 		labels.push(LeekWars.formatDayMonthShort(time))
 		const data = [...history, farmer.value.talent]
-		const lastIndex = data.length - 1
-		// Le vert du thème, pas celui du v2 écrit en dur : il change entre v2 et v3.
-		const style = getComputedStyle(document.body)
-		const primary = style.getPropertyValue('--primary').trim() || '#5fad1b'
 		chartData.value = {
 			labels,
-			datasets: [{
-				tension: 0.2,
-				data,
-				borderColor: primary,
-				pointBackgroundColor: primary,
-				borderWidth: 2,
-				// Teinte de remplissage par suffixe d'alpha, comme les autres courbes
-				// de talent du site : le canvas reçoit la couleur telle quelle.
-				fill: { target: 'origin', above: /^#[0-9a-f]{6}$/i.test(primary) ? primary + '30' : primary },
-				// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
-				segment: {
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
-				},
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			}] as any
+			datasets: [talentDataset(data)]
 		}
 		chartOptions.value = {
 			responsive: true,
@@ -97,7 +79,8 @@
 				},
 			},
 			scales: { x: { display: false }, y: { display: false } },
-			elements: { point: { radius: 2, hoverRadius: 5 } },
+			// Un carré de rayon r ne mesure que r√2 de côté : à 2 il disparaissait.
+			elements: { point: { radius: 3, hoverRadius: 5 } },
 		}
 	}
 	// Le vert est lu sur le body : il faut relire APRÈS que la bascule de thème
