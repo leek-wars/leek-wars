@@ -12,5 +12,8 @@
 	"size": "Taille",
 	"size_small": "Petit",
 	"size_normal": "Normal",
-	"size_large": "Grand"
+	"size_large": "Grand",
+	"layout": "Disposition",
+	"layout_rows": "En lignes",
+	"layout_columns": "En colonnes"
 }

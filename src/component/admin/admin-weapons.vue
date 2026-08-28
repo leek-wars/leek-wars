@@ -11,7 +11,7 @@
 				<label>white <input v-model="WeaponsData[weapon.id].white" type="checkbox" @change="bump(weapon.id)"></label>
 			</div>
 			<div :key="versions[weapon.id] || 0" class="leeks">
-				<leek-image v-for="level in [1, 10, 25, 50, 100, 200, 301]" :key="level" :leek="{level, weapon: weapon.item, skin: skin(weapon.id, level)}" :scale="0.8" />
+				<leek-image v-for="level in [1, 10, 25, 50, 100, 200, 301]" :key="level" :leek="{level, weapon: weapon.item, skin: skin(weapon.id, level)}" :scale="0.8" :center="true" />
 			</div>
 		</panel>
 	</div>

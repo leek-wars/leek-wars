@@ -23,7 +23,7 @@
 	import { store } from '@/model/store'
 	import { forgeComponent, forgeCharge, forgePendingPower } from '@/model/forge-state'
 	import { efficiencyTier } from '@/model/alteration'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import type { InventoryItem } from '@/model/farmer'
 	import type { AlterationTemplate } from '@/model/alteration'
 	import AlterationIcon from '@/component/alteration/alteration-icon.vue'

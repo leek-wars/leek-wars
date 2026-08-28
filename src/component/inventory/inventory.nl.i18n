@@ -12,5 +12,8 @@
 	"size": "Grootte",
 	"size_small": "Klein",
 	"size_normal": "Normaal",
-	"size_large": "Groot"
+	"size_large": "Groot",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

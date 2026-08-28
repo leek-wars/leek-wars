@@ -86,8 +86,14 @@ class Notification {
 	public read!: boolean
 	public icon!: boolean
 	public clazz!: string
+	/** Identifiant du poireau concerné, quand la notification parle de l'un des
+	 *  nôtres : sa miniature remplace alors l'icône générique. On garde l'ID et
+	 *  pas l'objet, pour que l'affichage lise le poireau à jour dans le store —
+	 *  et pour ne pas traîner le type `Leek`, dont la profondeur fait échouer
+	 *  l'inférence du template de `squares.vue`. */
+	public leek!: number | null
 
-	constructor(data: Record<string, unknown>, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null) {
+	constructor(data: Record<string, unknown>, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null, leek: number | null = null) {
 		this.id = data.id as number
 		this.date = data.date as number
 		this.type = data.type as NotificationType
@@ -107,6 +113,7 @@ class Notification {
 		this.title = title
 		this.message = message.map(LeekWars.protect)
 		this.result = result
+		this.leek = leek
 		this.read = data.read as boolean
 
 		this.clazz = ''

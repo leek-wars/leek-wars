@@ -160,7 +160,9 @@
 				</v-tooltip>
 
 				<template v-if="leek && leek.level >= 100">
-					<talent-chart :history="leek.talent_history" :history-long="leek.talent_history_long" :current="leek.talent" fixed-height />
+					<div class="chart-wrap">
+						<talent-chart :history="leek.talent_history" :history-long="leek.talent_history_long" :current="leek.talent" fixed-height />
+					</div>
 				</template>
 			</panel>
 
@@ -371,7 +373,7 @@
 			<div class="tabs">
 				<template v-if="$store.state.connected && !my_leek">
 					<div class="tab" @click="showReport = true">
-						<img src="/image/icon/flag.png">
+						<v-icon>mdi-flag</v-icon>
 						<span class="report-button">{{ $t('report') }}</span>
 					</div>
 				</template>
@@ -415,7 +417,7 @@
 
 		<popup v-if="leek" v-model="weaponsDialog" :width="800">
 			<template #icon>
-				<img src="/image/icon/garden.png">
+				<v-icon>mdi-pistol</v-icon>
 			</template>
 			<template #title>
 				{{ $t('weapons_of', [leek.name]) }}
@@ -477,7 +479,7 @@
 
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
 			<template #icon>
-				<img src="/image/icon/potion.png">
+				<v-icon>mdi-bottle-tonic</v-icon>
 			</template>
 			<template #title>
 				{{ $t("use_a_potion", [leek.name]) }}
@@ -504,7 +506,7 @@
 
 		<popup v-if="leek && my_leek" v-model="skinPotionDialog" :width="750">
 			<template #icon>
-				<img src="/image/icon/potion.png">
+				<v-icon>mdi-bottle-tonic</v-icon>
 			</template>
 			<template #title>
 				{{ $t("select_skin") }}
@@ -592,7 +594,7 @@
 		</popup>
 
 		<popup v-model="skinWeaponDialog" :width="650">
-			<template #icon><img src="/image/icon/garden.png"></template>
+			<template #icon><v-icon>mdi-pistol</v-icon></template>
 			<template #title><span>{{ $t('select_a_weapon') }}</span></template>
 			<div v-if="leek" class="weapons-popup">
 				<div class="leek-weapons">
@@ -910,7 +912,7 @@
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
 	defineOptions({ name: 'Leek', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
+		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, TalentChart,
 	} })
 
 	useI18n() // initialize local scope for <i18n-t>
@@ -1178,11 +1180,11 @@
 				if (my_leek.value) {
 					LeekWars.setActions([
 						{icon: 'mdi-auto-fix', click: () => customize()},
-						{image: 'icon/potion.png', click: () => potion()},
+						{icon: 'mdi-bottle-tonic', click: () => potion()},
 					])
 				} else {
 					LeekWars.setActions([
-						{image: 'icon/garden.png', click: () => router.push('/garden/challenge/leek/' + id.value)}
+						{icon: 'mdi-flag-outline', click: () => router.push('/garden/challenge/leek/' + id.value)}
 					])
 				}
 				renameName.value = leek.value.name
@@ -1862,6 +1864,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+	// La hauteur du graphique appartient à cette page : le composant partagé se
+	// contente de remplir ce qu'on lui donne.
+	.chart-wrap {
+		height: 150px;
 	}
 	.chart-tooltip {
 		position: absolute;

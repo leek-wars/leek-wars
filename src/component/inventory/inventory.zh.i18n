@@ -12,5 +12,8 @@
 	"size": "大小",
 	"size_small": "小",
 	"size_normal": "中",
-	"size_large": "大"
+	"size_large": "大",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

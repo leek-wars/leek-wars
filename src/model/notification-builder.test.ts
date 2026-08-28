@@ -39,11 +39,13 @@ describe('NotificationBuilder.build - combats & poireaux', () => {
 		expect(n.title).toEqual(['Poiro', '5'])
 		expect(n.icon).toBe(true) // mdi-transfer-up
 	})
-	it('FIGHT_REPORT : lien, image, résultat', () => {
+	it('FIGHT_REPORT : lien, glyphe, résultat', () => {
 		h.leeks = { a: { id: 7, name: 'Poiro' } }
 		const n = NotificationBuilder.build({ type: NotificationType.FIGHT_REPORT, parameters: ['7', '42', 'Enemy', '1'] })
 		expect(n.link).toBe('/fight/42')
-		expect(n.image).toBe('notif/garden.png')
+		// Le glyphe du COMBAT (cf. ICONS.md), pas l'ancien PNG `notif/garden.png`.
+		expect(n.image).toBe('mdi-sword')
+		expect(n.icon).toBe(true)
 		expect(n.title).toEqual(['Poiro', 'Enemy'])
 		expect(n.result).toBe(1)
 	})

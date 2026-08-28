@@ -60,10 +60,10 @@
 						     entrées s'allumaient en même temps depuis l'ajout de l'entrée Accueil. -->
 						<router-link v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="($store.state.farmer.equipment_enabled ? leek.capital : 0) || null" :class="{'router-link-active': RegExp('/leek/' + leek.id + '(/|$)').test($route.path), bouncing: LeekWars.didactitial_step === 1 && i === 0 && !(isHomePage || $route.path === '/leek/' + leek.id)}" class="section">
 							<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
-								<!-- En v3 les icônes PNG blanches du menu deviennent des MDI :
-								     elles suivent la couleur du texte, donc restent lisibles sur
-								     les surfaces claires et passent au vert sur l'entrée active. -->
-								<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-sprout</v-icon>
+								<!-- En v3 chaque poireau se reconnaît à sa propre miniature (haut de
+								     la tête + chapeau) plutôt qu'à une icône générique. Les autres
+								     thèmes gardent leurs PNG : le v2 doit rester identique au pixel. -->
+								<leek-image v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" :leek="leek" head class="leek-head" />
 								<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_leek.png' : '/image/icon/house.png'">
 								<div class="text">{{ leek.name }}</div>
 							</div>
@@ -104,7 +104,7 @@
 
 				<span class="dida-element">
 					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click="clickItem">
-						<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-sword</v-icon>
+						<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-sword-cross</v-icon>
 						<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_garden.png' : '/image/icon/garden.png'">
 						<div class="text">{{ $t("main.garden") }}</div>
 					</router-link>

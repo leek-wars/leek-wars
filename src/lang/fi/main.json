@@ -442,5 +442,6 @@
 	"season_start_text": "On {season}kausi! Nauti +{bonus}% kokemus- ja saalisbonuksesta tietyissä taisteluissa. Hyvää metsästystä!",
 	"season_end_title": "{season}kauden loppu",
 	"season_end_text": "{season}kausi on päättynyt. Kiitos osallistumisesta, nähdään ensi kerralla!",
-	"season_close": "Selvä!"
+	"season_close": "Selvä!",
+	"period_days": "{0} pv"
 }

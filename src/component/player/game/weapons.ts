@@ -618,8 +618,8 @@ class DesertSaber extends WhiteWeaponAnimation {
 }
 
 /**
- * Lance du soleil : arme blanche qui embroche toute une ligne (1 à 3 cases), d'où la zone
- * surlignée comme celle d'un laser en plus du mouvement d'arme blanche.
+ * Lance du soleil : arme blanche qui embroche toute une ligne (max_range du template),
+ * d'où la zone surlignée comme celle d'un laser en plus du mouvement d'arme blanche.
  */
 class SunSpear extends WhiteWeaponAnimation {
 	/** Inclinaison de port, pointe levée, quand la lance n'est pas en train de piquer. */

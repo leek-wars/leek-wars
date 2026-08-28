@@ -1,6 +1,8 @@
 250:
   title: "WIP"
   added:
+    - "The talent chart can be set to 7 or 30 days, with two buttons in the top right corner. Talent history is now kept for 30 days instead of 7: days before this change stay empty on the long window."
+    - "Notifications about one of your leeks show its thumbnail next to the event icon: four arena reports in a row can finally be told apart."
     - "A player's declared accounts no longer meet each other: not in the garden, not in the arena (Battle Royale, War, Chest Hunt, Colossus), and not in tournaments. Matchmaking no longer offers your other accounts, only one of them can register for an arena, and tournament seeding puts them in different tournaments."
     - "The ranking now shows one row per player instead of one per account: a player who declared several accounts appears under their main account, with the number of accounts it stands for. An 'All accounts' switch brings every row back."
     - "Multi-account declaration: from Settings > My accounts, declare the other accounts you own. They follow you across all your devices without typing their password again, and show up on your profile. 3 accounts, or 10 with a subscription."

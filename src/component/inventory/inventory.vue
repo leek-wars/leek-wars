@@ -110,6 +110,21 @@
 						<span>{{ $t('size_large') }}</span>
 						<v-icon v-if="size === Size.LARGE">mdi-check</v-icon>
 					</v-list-item>
+					<!-- Disposition de la PAGE (inventaire + atelier) : elle appartient au
+					     parent, qui la passe en prop. Sans prop (atelier), la section
+					     n'apparait pas. -->
+					<template v-if="layout">
+						<v-divider />
+						<v-list-item class="submenu-header">{{ $t('layout') }}</v-list-item>
+						<v-list-item v-ripple @click="emit('update:layout', 'rows')">
+							<span>{{ $t('layout_rows') }}</span>
+							<v-icon v-if="layout === 'rows'">mdi-check</v-icon>
+						</v-list-item>
+						<v-list-item v-ripple @click="emit('update:layout', 'columns')">
+							<span>{{ $t('layout_columns') }}</span>
+							<v-icon v-if="layout === 'columns'">mdi-check</v-icon>
+						</v-list-item>
+					</template>
 				</v-list>
 			</v-menu>
 		</template>
@@ -193,6 +208,14 @@
 	}
 
 	defineOptions({ name: 'Inventory', i18n: {}, mixins: [...mixins] })
+
+	/**
+	 * Disposition de la page qui accueille l'inventaire ('rows' ou 'columns'), pour
+	 * offrir le reglage dans le menu des options. Le parent reste proprietaire de la
+	 * valeur : l'inventaire ne fait que l'afficher et demander le changement.
+	 */
+	defineProps<{ layout?: 'rows' | 'columns' }>()
+	const emit = defineEmits<{ 'update:layout': [value: 'rows' | 'columns'] }>()
 
 	const t = useNamespacedT('inventory')
 	const router = useRouter()
@@ -507,7 +530,7 @@
 	const actions = [
 		{icon: 'mdi-trophy-variant-outline', click: () => router.push('/collection')},
 		{icon: 'mdi-bank', click: () => router.push('/bank?ref=inventory_action')},
-		{image: 'icon/market.png', click: () => router.push('/market')},
+		{icon: 'mdi-store', click: () => router.push('/market')},
 	]
 	LeekWars.setActions(actions)
 

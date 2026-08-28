@@ -12,5 +12,8 @@
 	"size": "Размер",
 	"size_small": "Маленький",
 	"size_normal": "Обычный",
-	"size_large": "Большой"
+	"size_large": "Большой",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

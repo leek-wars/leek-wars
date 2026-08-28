@@ -91,6 +91,9 @@ class Farmer {
 	public talent!: number
 	public max_talent!: number
 	public talent_history!: number[]
+	/** Fenêtre longue du graphique de talent (30 jours). `null` les jours sans
+	 *  mesure, et absente d'un serveur antérieur au sélecteur de période. */
+	public talent_history_long?: (number | null)[]
 	public team!: Team | null
 	public total_level!: number
 	public ai_tree?: FarmerTree

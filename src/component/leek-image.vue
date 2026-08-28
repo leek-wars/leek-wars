@@ -1,15 +1,15 @@
 <template lang="html">
-	<svg xmlns="http://www.w3.org/2000/svg" :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale">
+	<svg xmlns="http://www.w3.org/2000/svg" :viewBox="viewBox" :width="svgWidth" :height="svgHeight">
 		<defs>
-			<clipPath :id="'cut' + hat" clipPathUnits="objectBoundingBox">
-				<rect :x="0" :y="hatCrop" :width="leekWidth" :height="leekHeight" />
+			<clipPath :id="clipId" clipPathUnits="objectBoundingBox">
+				<rect :x="0" :y="hatCrop" :width="leekWidth" :height="clipHeight" />
 			</clipPath>
 		</defs>
 		<g :class="{invert}">
-			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" :clip-path="'url(#cut' + hat + ')'" />
+			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" :clip-path="'url(#' + clipId + ')'" />
 			<image v-if="hasHat && hatImage" :x="hatX" :y="hatY" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" />
 
-			<g v-if="weapon || leek.fish" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
+			<g v-if="!head && (weapon || leek.fish)" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
 				<g :transform="'scale(' + weaponScale + ')'">
 					<g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
 						<g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
@@ -21,7 +21,7 @@
 				</g>
 			</g>
 		</g>
-		<!-- <circle :cx="leekWidth / 2 + weaponCX" :cy="leekY + leekHeight - weaponCY" r="5" fill="red" /> -->
+		<circle v-if="!head && center && (weapon || leek.fish)" :cx="leekWidth / 2 + weaponCX" :cy="leekY + leekHeight - weaponCY" r="5" fill="red" />
 	</svg>
 </template>
 
@@ -36,10 +36,30 @@ defineOptions({ name: 'LeekImage' })
 
 const props = defineProps<{
 	leek: Leek
-	scale: number
+	/** Facteur des attributs `width`/`height` du SVG. Sans effet quand l'appelant
+	 *  impose une taille en CSS, ce que font les trois usages de `head`. */
+	scale?: number
 	invert?: boolean
 	ai?: number
+	center?: boolean
+	/** Miniature carrée : seul le haut du poireau (feuilles + chapeau), sans arme. */
+	head?: boolean
 }>()
+
+// Part de la hauteur du poireau occupée par les feuilles. Mesurée sur les SVG
+// (leek_1 à leek_11) : elles s'arrêtent entre 57 et 60 %, le visage est plus
+// bas, vers 80 %. On coupe juste sous les pointes.
+const HEAD_RATIO = 0.62
+// Hors-champ dessiné autour du cadre, où le chapeau déborde puis se fait couper.
+// Arbitrage mesuré sur les 561 combinaisons chapeau x niveau, fenêtre centrée sur
+// la tête : plus il est grand, plus les chapeaux tiennent en entier, mais plus la
+// tête rétrécit. 1,0 : tête à 29 px sur 40, 61 % des chapeaux entiers ; 1,2 :
+// 24 px et 70 % ; 1,4 : 21 px et 90 % ; 1,6 : 18 px et 93 %. À 1,4 la tête fait
+// la taille d'une icône voisine (20 px) et neuf chapeaux sur dix passent entiers.
+const HEAD_BLEED = 1.4
+// Bout de tige gardé sous les feuilles, en part de la hauteur du poireau : sans
+// lui la tête est tranchée net. Une paire de pixels suffit à lui faire un cou.
+const HEAD_NECK = 0.06
 
 const botHats = [ null, 8, 12, 13 ]
 const randomAngle = ref(0)
@@ -150,6 +170,12 @@ const hatCrop = computed(() => {
 	return hatTemplate.value ? hatTemplate.value.crop : 0
 })
 const hasHat = computed(() => hat.value !== null)
+// En miniature, le poireau est tranché sous les feuilles : la tige n'a rien à y
+// faire, et c'est ce qui permet de centrer la tête sans la faire remonter.
+// L'identifiant distingue les deux détourages, sinon deux instances du même
+// chapeau — une entière, une en miniature — se partageraient le premier venu.
+const clipHeight = computed(() => props.head ? Math.max(0, HEAD_RATIO + HEAD_NECK - hatCrop.value) : leekHeight.value)
+const clipId = computed(() => 'cut' + hat.value + (props.head ? 'h' : ''))
 const hatOffsetY = computed(() => {
 	if (props.leek.name === 'nasu_samurai') return 0.85
 	return hatTemplate.value ? hatTemplate.value.height : 0
@@ -201,6 +227,9 @@ const weaponOffset = computed(() => {
 })
 
 const offsetTop = computed(() => {
+	// En miniature l'arme n'est pas dessinée : rien ne doit pousser le poireau
+	// vers le bas, sinon le cadrage de la tête part avec.
+	if (props.head) { return 0 }
 	return weaponData.value && weaponData.value.white ? Math.max(0,
 		weaponData.value.top - leekHeight.value - (hat.value !== null && hatTemplate.value ? hatHeight.value - hatHeight.value * hatOffsetY.value : 0) + weaponData.value.centerZ +
 		Math.abs(Math.sin(weaponRadianAngle.value)) * (weaponData.value.width + weaponData.value.x)
@@ -231,6 +260,54 @@ const height = computed(() => {
 	}
 	return h
 })
+
+// Fenêtre carrée centrée sur le haut du poireau. Carrée pour que la miniature
+// garde le même encombrement quel que soit le niveau, qui change la taille du
+// poireau : sans ça les entrées du menu ne s'alignent plus.
+//
+// Elle se cale sur le POIREAU et pas sur le chapeau. Un tricorne fait 526x291
+// et une couronne solaire dépasse d'une demi-tête : les faire tenir dans le
+// cadre rétrécirait la tête d'autant, et deux poireaux voisins n'auraient plus
+// la même taille. Ils débordent donc, et le viewBox les coupe.
+const headBox = computed(() => {
+	// Le cadre ne tient compte QUE de la tête — les feuilles, jamais le chapeau.
+	// C'est la tête qui doit faire la même taille d'un poireau à l'autre : la
+	// caler sur le chapeau la rétrécissait d'autant que celui-ci est grand, et
+	// deux poireaux voisins n'avaient plus la même taille pour la seule raison
+	// qu'ils ne portaient pas le même couvre-chef.
+	const headHeight = leekHeight.value * HEAD_RATIO
+	const size = Math.max(leekWidth.value, headHeight)
+	// Le poireau et le chapeau partagent le même axe vertical, quel que soit
+	// celui des deux qui est le plus large.
+	const centerX = Math.max(leekWidth.value, hatWidth.value) / 2
+	// Le chapeau, posé par-dessus, sort de ce cadre : la fenêtre réellement
+	// dessinée est plus grande pour lui laisser la place, et le coupe au-delà.
+	// Rien n'y grandit — l'appelant rend le SVG dans la même proportion et
+	// résorbe le hors-champ (marges négatives), si bien que la tête garde sa
+	// taille partout.
+	const box = size * HEAD_BLEED
+	// La fenêtre est CENTRÉE sur la tête, pour que la vignette s'aligne sur les
+	// icônes voisines. Ce qui pend sous les feuilles n'est pas caché par le
+	// cadrage mais coupé à la source (clipHeight) : sinon, ou bien la tige
+	// réapparaît, ou bien il faut décaler la tête vers le bas de son emplacement,
+	// et elle ne s'aligne plus.
+	const centerY = leekY.value + leekHeight.value * (HEAD_RATIO + HEAD_NECK) / 2
+	return {
+		x: centerX - box / 2,
+		y: centerY - box / 2,
+		size: box
+	}
+})
+
+const viewBox = computed(() => {
+	if (props.head) {
+		const box = headBox.value
+		return box.x + ' ' + box.y + ' ' + box.size + ' ' + box.size
+	}
+	return '0 0 ' + width.value + ' ' + height.value
+})
+const svgWidth = computed(() => (props.head ? headBox.value.size : width.value) * (props.scale ?? 1))
+const svgHeight = computed(() => (props.head ? headBox.value.size : height.value) * (props.scale ?? 1))
 
 const leekX = computed(() => Math.max(0, hatWidth.value / 2 - leekWidth.value / 2))
 const leekY = computed(() => offsetTop.value + (hat.value !== null && hatTemplate.value ? hatHeight.value - hatHeight.value * hatOffsetY.value : 0))

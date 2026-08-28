@@ -12,5 +12,8 @@
 	"size": "Storlek",
 	"size_small": "Liten",
 	"size_normal": "Normal",
-	"size_large": "Stor"
+	"size_large": "Stor",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

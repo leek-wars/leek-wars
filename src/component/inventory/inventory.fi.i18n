@@ -12,5 +12,8 @@
 	"size": "Koko",
 	"size_small": "Pieni",
 	"size_normal": "Normaali",
-	"size_large": "Suuri"
+	"size_large": "Suuri",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

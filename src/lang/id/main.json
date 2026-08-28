@@ -442,5 +442,6 @@
 	"season_start_text": "Ini musim {season}! Nikmati bonus +{bonus}% XP dan rampasan di pertarungan tertentu. Selamat berburu!",
 	"season_end_title": "Akhir musim {season}",
 	"season_end_text": "Musim {season} telah berakhir. Terima kasih telah berpartisipasi, sampai jumpa lain kali!",
-	"season_close": "Mengerti!"
+	"season_close": "Mengerti!",
+	"period_days": "{0} hr"
 }

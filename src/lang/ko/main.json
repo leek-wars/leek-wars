@@ -442,5 +442,6 @@
 	"season_start_text": "{season} 시즌입니다! 특정 전투에서 경험치와 전리품 +{bonus}% 보너스를 누리세요. 즐거운 사냥 되세요!",
 	"season_end_title": "{season} 시즌 종료",
 	"season_end_text": "{season} 시즌이 끝났습니다. 참여해 주셔서 감사합니다. 다음 시즌에 만나요!",
-	"season_close": "확인!"
+	"season_close": "확인!",
+	"period_days": "{0}일"
 }

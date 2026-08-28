@@ -3,6 +3,11 @@
 		<component :is="link ? 'router-link' : 'div'" :to="link || undefined">
 			<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
 			<img v-else :src="'/image/' + notification.image" class="image">
+			<!-- Quand la notification parle d'un de nos poireaux, sa miniature dit
+			     LEQUEL : trois rapports d'arène d'affilée portaient la même épée,
+			     sans rien pour les distinguer. Elle vient EN PLUS de l'icône de
+			     tête, qui garde le type d'événement. -->
+			<leek-image v-if="leek" :leek="leek" head class="leek-mini" />
 			<div class="content">
 				<i18n-t :keypath="'notification.title_' + notification.type" tag="div" class="title" scope="global">
 					<template #p0><b>{{ notification.title[0] }}</b></template>
@@ -42,6 +47,10 @@ const props = defineProps<{
 }>()
 
 const link = computed(() => props.notification.link ? props.notification.link : '')
+// La notification ne porte que l'identifiant : on relit le poireau dans le store
+// pour que la miniature suive un changement de chapeau ou de niveau. Absent si le
+// poireau a été supprimé depuis — la ligne retombe alors sur son icône.
+const leek = computed(() => props.notification.leek ? store.state.farmer?.leeks[props.notification.leek] ?? null : null)
 const resultIcon = computed(() => props.notification.result === null ? '' : props.notification.result === 1 ? 'mdi-check' : props.notification.result === 0 ? 'mdi-equal' : 'mdi-close')
 
 function click() {
@@ -158,5 +167,15 @@ function read() {
 		font-size: 32px;
 		color: var(--text-color);
 		opacity: 0.8;
+	}
+	// Miniature du poireau, juste après l'icône de type. Elle échappe volontairement
+	// aux règles d'opacité et d'inversion ci-dessus, qui ne visent que les PNG
+	// monochromes de l'icône de type. Marge gauche négative : l'icône de type porte
+	// déjà 10 px de rembourrage à droite, deux fois trop pour séparer deux vignettes.
+	.leek-mini {
+		height: 46px;
+		width: 46px;
+		flex: none;
+		margin-left: -10px;
 	}
 </style>

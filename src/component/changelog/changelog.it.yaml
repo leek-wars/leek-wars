@@ -1,6 +1,8 @@
 250:
   title: "WIP"
   added:
+    - "Il grafico del talento si imposta su 7 o 30 giorni, con due pulsanti in alto a destra. Lo storico del talento è ora conservato 30 giorni invece di 7: i giorni precedenti a questa modifica restano vuoti sulla finestra lunga."
+    - "Le notifiche che riguardano uno dei tuoi porri mostrano la sua miniatura accanto all'icona dell'evento: quattro rapporti d'arena di fila si distinguono finalmente tra loro."
     - "Gli account dichiarati di uno stesso giocatore non si incontrano più: né nell'orto, né nell'arena (Battle Royale, Guerra, Caccia ai forzieri, Colosso), né nei tornei. Il matchmaking non propone più i tuoi altri account, uno solo può iscriversi a un'arena, e la ripartizione dei tornei li mette in tornei diversi."
     - "La classifica mostra ora una riga per giocatore e non per account: chi ha dichiarato più account appare sotto il suo account principale, con il numero di account che rappresenta. Un interruttore 'Tutti gli account' rimette tutte le righe."
     - "Dichiarazione dei multi-account: da Impostazioni > I miei account, dichiara gli altri account che ti appartengono. Ti seguono su tutti i dispositivi senza reinserire la password e appaiono sul tuo profilo. 3 account, 10 con un abbonamento."

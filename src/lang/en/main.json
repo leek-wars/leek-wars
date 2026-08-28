@@ -445,5 +445,6 @@
 	"season_start_text": "It's the {season} season! Enjoy a +{bonus}% XP and loot bonus on certain fights. Happy hunting!",
 	"season_end_title": "End of the {season} season",
 	"season_end_text": "The {season} season is over. Thanks for taking part, see you next time!",
-	"season_close": "Got it!"
+	"season_close": "Got it!",
+	"period_days": "{0}d"
 }

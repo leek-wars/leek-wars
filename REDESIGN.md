@@ -1029,12 +1029,41 @@ Parti pris :
     entrées de poireau est en `flex: 1` pour que l'intitulé prenne la place
     restante ; replié il n'y a plus d'intitulé, et il collait la miniature à
     gauche pendant que les autres entrées centraient leur icône.
-  - **Chapeaux débordants** (demande de Pierre) : `HEAD_BLEED = 1.3` dessine un
-    hors-champ autour du cadre. Rien n'y grandit — la règle CSS rend le SVG dans
-    la même proportion et résorbe le débord en marges négatives — mais le chapeau
-    s'étale au lieu d'être coupé à ras du cadre. Sur les 561 combinaisons, les
-    rognées passent de 37 à 2, et le pire rognage de 14 % à 3 % de la largeur du
-    chapeau.
+  - **La vignette était rognée dans le menu, pas ailleurs** (retour de Pierre :
+    « dans les notifs c'est pas coupé pareil que dans le menu »). Cadrage
+    identique pourtant — même `viewBox` mesuré des deux côtés. C'est le
+    conteneur `div[leek]` qui coupait : il ne fait que la hauteur de ce que la
+    miniature *occupe* (20 px, marges négatives comprises) et héritait du
+    `overflow: hidden` que le composant pose sur tout `div` d'entrée, pour
+    l'ellipse du libellé en v2. La vignette y était réduite à un bandeau. Il
+    passe en `overflow: visible` ; l'ellipse vit de toute façon sur `.text`.
+  - **Le carré tient la TÊTE, le chapeau déborde par-dessus** (formulation de
+    Pierre : « on place la tête dans le carré puis on affiche le chapeau, donc
+    celui-ci déborde »). Le cadre ne mesure donc que les feuilles —
+    `max(leekWidth, leekHeight × HEAD_RATIO)` — et ignore et le chapeau et le
+    décalage `leekY` qu'il impose. C'est la tête qui doit faire la même taille
+    d'un poireau à l'autre : la caler sur le chapeau la rétrécissait d'autant que
+    celui-ci est grand. `HEAD_MAX` n'a plus lieu d'être, le cadre ne grandit plus
+    jamais.
+  - **La tige est coupée À LA SOURCE, pas par le cadrage.** Le carré de la tête
+    (côté = largeur du poireau) est plus haut que les feuilles : un hors-champ
+    centré découvrait la tige sous elles, et c'est le poireau entier qui
+    s'affichait. Le caler sur le bas des feuilles réglait ça mais posait la tête
+    aux deux tiers de son emplacement, donc désalignée des icônes voisines (les
+    deux retours de Pierre). Le détourage du poireau s'arrête donc à
+    `HEAD_RATIO + HEAD_NECK` — il n'y a plus rien à cacher sous les feuilles — et
+    la fenêtre peut être **centrée sur la tête**. `HEAD_NECK = 0.06` garde deux
+    pixels de tige, sans quoi la tête est tranchée net.
+  - **Identifiant de détourage distinct en miniature** (`cut<hat>h`) : deux
+    instances du même chapeau, une entière et une en miniature, se seraient
+    partagé le premier `clipPath` venu — celui du premier rendu.
+  - **`HEAD_BLEED = 1.4`** dessine le hors-champ où le chapeau déborde puis se
+    fait couper. Arbitrage mesuré sur les 561 combinaisons chapeau × niveau, à
+    fenêtre centrée : 1,0 → tête à 29 px sur 40 et 61 % des chapeaux entiers ;
+    1,2 → 24 px et 70 % ; **1,4 → 21 px et 90 %** ; 1,6 → 18 px et 93 %. À 1,4 la
+    tête fait la taille d'une icône voisine (20 px) et neuf chapeaux sur dix
+    passent entiers ; les plus hauts sur un petit poireau (corne de licorne,
+    chapeau à plume) sont écrêtés.
   - **v3 seulement** : les thèmes v2 et XP gardent leur PNG (`house.png`,
     `xp_leek.png`).
   - Vérifié au navigateur sur les 4 pires combinaisons niveau × chapeau plus

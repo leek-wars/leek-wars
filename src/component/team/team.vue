@@ -26,7 +26,7 @@
 			<div v-if="team" class="tabs">
 				<router-link v-if="is_member" :to="'/forum/category-' + team.forum">
 					<div :link="'/forum/category-' + team.forum" class="tab action" icon="question_answer">
-						<img src="/image/icon/forum.png">
+						<v-icon>mdi-forum</v-icon>
 						<span>{{ $t('forum') }}</span>
 					</div>
 				</router-link>
@@ -164,7 +164,7 @@
 					{{ $t('tournaments') }}
 				</v-tooltip>
 
-				<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
+				<talent-chart v-if="team" :history="team.talent_history" :history-long="team.talent_history_long" :current="team.talent" />
 
 				<div v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation" class="center">
 					<br>
@@ -659,7 +659,7 @@
 				<div v-if="owner" class="tab" @click="dissolveDialog = true">{{ $t('disolve_team') }}</div>
 				<div v-if="!is_member && $store.state.connected">
 					<div class="report-button tab" @click="showReport = true">
-						<img src="/image/icon/flag.png">
+						<v-icon>mdi-flag</v-icon>
 						<span>{{ $t('report') }}</span>
 					</div>
 				</div>
@@ -867,16 +867,14 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { emitter } from '@/model/emitter'
-	import { Line } from 'vue-chartjs'
-	import { talentDataset, talentScales } from '@/chart'
-	import type { ChartData, ChartOptions } from 'chart.js'
+	import TalentChart from '@/component/talent-chart.vue'
 	import Sortable from 'sortablejs'
 
 	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
 	defineOptions({ name: 'Team', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line, InviteDialog,
+		CharacteristicTooltip, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, TalentChart, InviteDialog,
 	} })
 
 	interface ColumnDef {
@@ -966,8 +964,6 @@
 	const logsLevel = ref(0)
 	const rankingsLoading = ref(false)
 	const rankingsLoaded = ref(false)
-	const chartData = ref<ChartData<'line'> | null>(null)
-	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	let savingRecruitment = false
 
 	const id = computed(() => 'id' in route.params ? parseInt(route.params.id as string, 10) : (store.state.farmer && store.state.farmer.team !== null ? store.state.farmer.team.id : null))
@@ -1052,9 +1048,6 @@
 
 	watch(id, () => update(), { immediate: true })
 
-	// La grille du graphique est lue sur le thème : la relire à la bascule, sinon
-	// elle garde les couleurs de l'ancien et disparaît dans le fond.
-	watch(() => [LeekWars.darkMode, LeekWars.legacyTheme], () => nextTick(chart))
 
 	// Mise à jour en direct du petit historique de combats.
 	const { progress: liveProgress } = useLiveHistory({
@@ -1103,7 +1096,6 @@
 			}
 
 			addRankingStyles()
-			chart()
 
 			LeekWars.setTitle(team.value.name)
 			LeekWars.setSubTitle(t('main.n_farmers', [tm.members.length]) + " • " + t('main.n_leeks', [tm.leek_count]))
@@ -1639,30 +1631,6 @@
 		LeekWars.get('tournament/range-compo/' + power).then(d => composition.tournamentRange = d)
 	}
 
-	function chart() {
-		if (!team.value || !team.value.talent_history || team.value.talent_history.length === 0) return
-		const labels = []
-		const time = LeekWars.time
-		for (let i = 1; i <= 7; ++i) {
-			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
-		}
-		labels.reverse()
-		labels.push(LeekWars.formatDayMonthShort(time))
-		const data = [...team.value.talent_history, team.value.talent]
-		chartData.value = {
-			labels,
-			datasets: [talentDataset(data)]
-		}
-		chartOptions.value = {
-			aspectRatio: 2.5,
-			plugins: { legend: { display: false } },
-			// Un carré de rayon r mesure r√2 de côté : un cran de plus que les
-			// ronds d'avant pour garder le même poids à l'œil.
-			elements: { point: { radius: 5, hoverRadius: 7 } },
-			scales: talentScales(),
-		}
-	}
-
 	function toggleLike() {
 		if (!team.value) return
 		const liked = team.value.liked
@@ -1807,9 +1775,6 @@
 		align-items: center;
 		justify-content: center;
 		margin-top: 15px;
-	}
-	.talent-history {
-		margin-top: 3px;
 	}
 	.fights, .tournaments {
 		width: 100%;

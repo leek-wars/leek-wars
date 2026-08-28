@@ -215,7 +215,7 @@
 						</tr>
 					</table>
 
-					<Line v-if="farmer && chartData && chartOptions && Object.values(farmer.leeks).length > 1" :data="chartData" :options="chartOptions" class="talent-history" />
+					<talent-chart v-if="farmer && Object.values(farmer.leeks).length > 1" :history="farmer.talent_history" :history-long="farmer.talent_history_long" :current="farmer.talent" />
 
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
@@ -307,11 +307,11 @@
 		</div>
 		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies">
 			<template #title>
-				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ $filters.number(farmer.points) }})</span>
+				<v-icon>mdi-trophy</v-icon>{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ $filters.number(farmer.points) }})</span>
 			</template>
 			<template #actions>
 				<router-link :to="'/trophies/' + id" class="button flat">
-					<img src="/image/icon/trophy.png">
+					<v-icon>mdi-trophy</v-icon>
 					<span>{{ $t('see_all_trophies') }}</span>
 				</router-link>
 				<div class="button flat" @click="trophiesModeButton">
@@ -357,7 +357,7 @@
 		<div class="container grid large">
 		<panel :title="$t('leeks')">
 			<loader v-if="!farmer" />
-			<div v-else class="leeks">
+			<div v-else ref="leeksEl" class="leeks" :style="{'--columns': leekColumns}">
 				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
 					<router-link v-ripple :to="'/leek/' + leek.id" class="leek" v-bind="props">
 						<div>
@@ -453,7 +453,7 @@
 						</div>
 					</div>
 					<h4>{{ $t('main.rewards') }}</h4>
-					<div v-if="farmer" class="rewards">
+					<div v-if="farmer" ref="rewardsEl" class="rewards" :style="{'--columns': rewardColumns}">
 						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': Number(r) <= (farmer.godsons_level ?? 0)}">
 							<div class="level">{{ $filters.number(Number(r)) }}<v-icon v-if="Number(r) <= (farmer.godsons_level ?? 0)">mdi-check</v-icon></div>
 							<trophy-icon v-if="reward.trophy" :code="reward.trophy" :light="Number(r) <= (farmer.godsons_level ?? 0)" />
@@ -519,7 +519,7 @@
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin" class="report-button tab" @click="showReport = true">
-					<img src="/image/icon/flag.png">
+					<v-icon>mdi-flag</v-icon>
 					<span>{{ $t('report') }}</span>
 				</div>
 				<template v-if="myFarmer && $store.state.farmer && $store.state.farmer.verified">
@@ -675,6 +675,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { useLiveHistory } from '@/model/use-live-history'
+	import { useBalancedColumns } from '@/model/use-balanced-columns'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Team, TeamMemberLevel } from '@/model/team'
@@ -689,10 +690,8 @@
 	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
 	import GodsonsManageDialog from '@/component/godsons-manage-dialog/godsons-manage-dialog.vue'
 	import { emitter } from '@/model/emitter'
-	import { Line } from 'vue-chartjs'
-	import { talentDataset, talentScales } from '@/chart'
-	import type { ChartData, ChartOptions } from 'chart.js'
-	import { computed, defineAsyncComponent, nextTick, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
+	import TalentChart from '@/component/talent-chart.vue'
+	import { computed, defineAsyncComponent, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 
@@ -701,7 +700,7 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
 	defineOptions({ name: 'Farmer', i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line, InviteDialog, GodsonsManageDialog,
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, TalentChart, InviteDialog, GodsonsManageDialog,
 	} })
 
 	const { locale: i18nLocale } = useI18n()
@@ -711,6 +710,8 @@
 	const avatarRef = useTemplateRef<ComponentPublicInstance>('avatar')
 	const avatarInput = useTemplateRef<HTMLInputElement>('avatarInput')
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
+	const leeksEl = ref<HTMLElement | null>(null)
+	const rewardsEl = ref<HTMLElement | null>(null)
 
 	type Trophy = (typeof LeekWars.trophies)[number]
 	const farmer = ref<Farmer | null>(null)
@@ -762,6 +763,11 @@
 		5000: { potion: 'mafia', item: 282 },
 		10000: { hat: 'gold_fedora', item: 280 },
 	}
+	// Rangées équilibrées plutôt que remplies au maximum : dix récompenses dans
+	// neuf colonnes donnaient 9 + 1, quatre poireaux dans trois donnaient 3 + 1.
+	// Les minimums et les gouttières doivent suivre ceux de la feuille de style.
+	const leekColumns = useBalancedColumns(leeksEl, computed(() => farmer.value ? Object.keys(farmer.value.leeks).length : 0), 170, 8)
+	const rewardColumns = useBalancedColumns(rewardsEl, Object.keys(rewards).length, 90, 8)
 	const gradeDialog = ref(false)
 	// Distinction spéciale (champ special, 0/1/2). Le grade modo/admin se gère ailleurs.
 	const gradeOptions = [
@@ -771,8 +777,6 @@
 	]
 	const gradeChoice = ref('none')
 	const invitationSent = ref(false)
-	const chartData = ref<ChartData<'line'> | null>(null)
-	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 
 	const id = computed<number | null>(() => route.params.id ? parseInt(route.params.id as string, 10) : (store.state.farmer ? store.state.farmer.id : null))
 	const myFarmer = computed(() => store.state.farmer && id.value === store.state.farmer.id)
@@ -856,9 +860,6 @@
 
 	watch(id, () => update(), { immediate: true })
 
-	// La grille du graphique est lue sur le thème : la relire à la bascule, sinon
-	// elle garde les couleurs de l'ancien et disparaît dans le fond.
-	watch(() => [LeekWars.darkMode, LeekWars.legacyTheme], () => nextTick(chart))
 
 	// Mise à jour en direct du petit historique de combats. `update()` réutilise
 	// le store pour son propre profil (pas de refetch), donc on recharge ici
@@ -917,11 +918,10 @@
 			])
 		} else {
 			LeekWars.setActions([
-				{image: 'icon/garden.png', click: () => router.push('/garden/challenge/farmer/' + f.id)},
+				{icon: 'mdi-flag-outline', click: () => router.push('/garden/challenge/farmer/' + f.id)},
 				{icon: 'mdi-email-outline', click: () => router.push('/chat/new/' + f.id + '/' + f.name + '/' + f.avatar_changed)}
 			])
 		}
-		chart()
 		getTrophies()
 		warnings()
 		newWebsite.value = f.website
@@ -961,30 +961,6 @@
 		} else {
 			trophiesMode.value = 'list'
 			localStorage.setItem('farmer/trophies-mode', 'list')
-		}
-	}
-
-	function chart() {
-		if (!farmer.value || !farmer.value.talent_history || farmer.value.talent_history.length === 0) return
-		const labels = []
-		const time = LeekWars.time
-		for (let i = 1; i <= 7; ++i) {
-			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
-		}
-		labels.reverse()
-		labels.push(LeekWars.formatDayMonthShort(time))
-		const data = [...farmer.value.talent_history, farmer.value.talent]
-		chartData.value = {
-			labels,
-			datasets: [talentDataset(data)]
-		}
-		chartOptions.value = {
-			aspectRatio: 2.5,
-			plugins: { legend: { display: false } },
-			// Un carré de rayon r mesure r√2 de côté : un cran de plus que les
-			// ronds d'avant pour garder le même poids à l'œil.
-			elements: { point: { radius: 5, hoverRadius: 7 } },
-			scales: talentScales(),
 		}
 	}
 
@@ -1475,9 +1451,6 @@
 		margin-left: 5px;
 		color: var(--grey-7);
 	}
-	.talent-history {
-		margin-top: 3px;
-	}
 	.stats {
 		vertical-align: top;
 		.tournaments td {
@@ -1613,9 +1586,16 @@
 			pointer-events: none;
 		}
 	}
-	#app.app .leeks {
+	// Grille à rangées équilibrées (`--columns` vient de useBalancedColumns) : les
+	// poireaux flottaient en `inline-block`, donc 3 + 1 dès que le panneau se
+	// resserrait. Le mobile avait déjà sa grille, en `auto-fill` ; la règle vaut
+	// maintenant pour les deux, le calcul suit la largeur réelle du conteneur.
+	// `align-items: end` aligne les noms sous des poireaux de hauteurs inégales
+	// (chapeaux) — c'est ce que faisait déjà la grille du mobile.
+	.leeks {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+		grid-template-columns: repeat(var(--columns, 1), minmax(0, 1fr));
+		gap: 8px;
 		align-items: flex-end;
 	}
 	.leek {
@@ -1931,7 +1911,9 @@
 			display: grid;
 			gap: 8px;
 			margin-top: 10px;
-			grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+			// Rangées équilibrées : `auto-fill` remplissait la première et laissait
+			// une ou deux récompenses seules sur la seconde.
+			grid-template-columns: repeat(var(--columns, 1), minmax(0, 1fr));
 			.reward {
 				flex: 1;
 				min-width: 0;

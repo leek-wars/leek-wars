@@ -442,5 +442,6 @@
 	"season_start_text": "Det är {season}säsong! Njut av en bonus på +{bonus}% XP och byte i vissa strider. Lycka till med jakten!",
 	"season_end_title": "Slutet på {season}säsongen",
 	"season_end_text": "{season}säsongen är slut. Tack för att du deltog, vi ses nästa gång!",
-	"season_close": "Uppfattat!"
+	"season_close": "Uppfattat!",
+	"period_days": "{0} d"
 }

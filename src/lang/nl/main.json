@@ -442,5 +442,6 @@
 	"season_start_text": "Het is {season}-seizoen! Geniet van een bonus van +{bonus}% XP en buit in bepaalde gevechten. Veel jachtplezier!",
 	"season_end_title": "Einde van het {season}-seizoen",
 	"season_end_text": "Het {season}-seizoen is voorbij. Bedankt voor je deelname, tot de volgende keer!",
-	"season_close": "Begrepen!"
+	"season_close": "Begrepen!",
+	"period_days": "{0} d"
 }

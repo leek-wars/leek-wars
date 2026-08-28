@@ -442,5 +442,6 @@
 	"season_start_text": "To sezon {season}! Korzystaj z bonusu +{bonus}% PD i łupów w niektórych walkach. Udanych łowów!",
 	"season_end_title": "Koniec sezonu {season}",
 	"season_end_text": "Sezon {season} dobiegł końca. Dzięki za udział, do zobaczenia następnym razem!",
-	"season_close": "Rozumiem!"
+	"season_close": "Rozumiem!",
+	"period_days": "{0} dni"
 }

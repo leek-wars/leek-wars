@@ -1,4 +1,3 @@
-import { InventoryItem } from './farmer'
 import mitt from 'mitt'
 import { i18n } from '@/model/i18n'
 // Imports de TYPE uniquement : ce module est importé par ~50 composants, il doit rester
@@ -6,7 +5,7 @@ import { i18n } from '@/model/i18n'
 // recréerait des cycles (cf. model/vue.test.ts).
 import type { ComponentPublicInstance } from 'vue'
 import type { Folder, Item } from '@/component/editor/editor-item'
-import type { Farmer } from './farmer'
+import type { Farmer, InventoryItem } from './farmer'
 import type { AI } from './ai'
 import type { SchemeTemplate } from '@/model/scheme'
 

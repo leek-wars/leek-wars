@@ -1,6 +1,8 @@
 250:
   title: "WIP"
   added:
+    - "Le graphique de talent se règle sur 7 ou 30 jours, avec deux boutons en haut à droite. L'historique de talent est désormais conservé 30 jours au lieu de 7 : les jours antérieurs à ce changement restent vides sur la fenêtre longue."
+    - "Les notifications qui concernent un de vos poireaux affichent sa vignette à côté de l'icône de l'événement : quatre rapports d'arène d'affilée se distinguent enfin les uns des autres."
     - "Les comptes déclarés d'un même joueur ne se rencontrent plus : ni dans le potager, ni en arène (Battle Royale, Guerre, Chasse aux coffres, Colosse), ni en tournoi. Le matchmaking ne propose plus vos autres comptes, un seul d'entre eux peut s'inscrire à une arène, et la répartition des tournois les place dans des tournois différents."
     - "Le classement affiche maintenant une ligne par joueur et non par compte : un joueur qui a déclaré plusieurs comptes apparaît sous son compte principal, avec le nombre de comptes qu'il représente. Un interrupteur « Tous les comptes » remet toutes les lignes."
     - "Déclaration des multi-comptes : depuis Réglages > Mes comptes, indiquez les autres comptes qui vous appartiennent. Ils vous suivent sur tous vos appareils sans ressaisir leur mot de passe et apparaissent sur votre profil. 3 comptes déclarables, 10 avec un abonnement."

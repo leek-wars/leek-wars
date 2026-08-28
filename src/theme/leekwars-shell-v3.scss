@@ -790,13 +790,15 @@ body:not(.v2) {
 	   voisines. Les marges négatives sont symétriques : la miniature reste
 	   centrée sur la colonne d'icônes.
 
-	   36 = la tête à 28 px plus le hors-champ de `HEAD_BLEED` (1,3), dans lequel
-	   les chapeaux larges dépassent. La tête ne grandit donc pas avec ce
-	   nombre : les deux bougent ensemble. */
+	   40 px d'encombrement pour une tête d'environ 20, le reste étant le hors-champ
+	   de `HEAD_BLEED` (leek-image.vue) où le chapeau dépasse. La tête ne grandit
+	   donc pas avec ce nombre : les deux bougent ensemble, et toucher `HEAD_BLEED`
+	   change silencieusement la taille rendue ici. 40 est aussi la hauteur de
+	   l'entrée, donc le hors-champ va au ras des voisines sans mordre dessus. */
 	.menu .section .leek-head {
-		width: 36px;
-		height: 36px;
-		margin: -8px;
+		width: 40px;
+		height: 40px;
+		margin: -10px;
 		float: none;
 		flex: none;
 	}
@@ -808,6 +810,14 @@ body:not(.v2) {
 		gap: 10px;
 		flex: 1;
 		min-width: 0;
+		/* La miniature déborde de son emplacement (marges négatives) et ce
+		   conteneur ne fait que la hauteur de ce qu'elle occupe, soit 20 px : le
+		   `overflow: hidden` que le composant pose sur tout `div` d'entrée — pour
+		   l'ellipse du libellé en v2 — la rognait en bandeau. Le chapeau et le bas
+		   des feuilles étaient coupés ici, mais pas dans les notifications, qui
+		   montrent la même vignette sans rien la rogner. L'intitulé garde sa propre
+		   ellipse, posée sur `.text` juste en dessous. */
+		overflow: visible;
 	}
 	.menu .section .text {
 		overflow: hidden;
