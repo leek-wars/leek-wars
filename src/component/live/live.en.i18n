@@ -1,0 +1,8 @@
+{
+	"event_trophy": "unlocked the \"{0}\" trophy",
+	"event_victories": "reached {0} victories",
+	"event_bosses": "reached {0} boss kills",
+	"event_tournaments": "reached {0} tournament wins",
+	"event_topic": "created the topic",
+	"empty": "No recent events."
+}

@@ -51,11 +51,5 @@
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
 	"no_leek": "No leek.",
-	"widget_live": "Direkte",
-	"live_trophy": "har låst opp trofeet «{0}»",
-	"live_victories": "når {0} seire",
-	"live_bosses": "når {0} drepte bosser",
-	"live_tournaments": "når {0} vunne turneringer",
-	"live_topic": "har opprettet emnet",
-	"live_empty": "Ingen nylige hendelser."
+	"widget_live": "Direkte"
 }

@@ -1,0 +1,8 @@
+{
+	"event_trophy": "ha sbloccato il trofeo «{0}»",
+	"event_victories": "raggiunge {0} vittorie",
+	"event_bosses": "raggiunge {0} boss uccisi",
+	"event_tournaments": "raggiunge {0} tornei vinti",
+	"event_topic": "ha creato l'argomento",
+	"empty": "Nessun evento recente."
+}

@@ -1,0 +1,8 @@
+{
+	"event_trophy": "がトロフィー「{0}」を獲得",
+	"event_victories": "が{0}勝を達成",
+	"event_bosses": "がボス{0}体撃破を達成",
+	"event_tournaments": "がトーナメント{0}勝を達成",
+	"event_topic": "がトピックを作成：",
+	"empty": "最近のイベントはありません。"
+}

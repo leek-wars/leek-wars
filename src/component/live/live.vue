@@ -13,9 +13,9 @@
 					<div class="text">
 						<router-link :to="'/farmer/' + event.farmer.id" class="farmer">{{ event.farmer.name }}</router-link>
 						<!-- Espaces explicites : le mode condense de Vue avale l'espace de tête -->
-						<template v-if="event.type === 'trophy'">{{ ' ' + t('live_trophy', [$t('trophy.' + event.trophy)]) }}</template>
-						<template v-else-if="event.type === 'threshold'">{{ ' ' + t('live_' + event.metric, [$filters.number(event.threshold)]) }}</template>
-						<template v-else-if="event.type === 'topic'">{{ ' ' + t('live_topic') + ' ' }}<router-link :to="'/forum/category-' + event.topic.category + '/topic-' + event.topic.id" class="topic">{{ event.topic.title }}</router-link></template>
+						<template v-if="event.type === 'trophy'">{{ ' ' + t('event_trophy', [$t('trophy.' + event.trophy)]) }}</template>
+						<template v-else-if="event.type === 'threshold'">{{ ' ' + t('event_' + event.metric, [$filters.number(event.threshold)]) }}</template>
+						<template v-else-if="event.type === 'topic'">{{ ' ' + t('event_topic') + ' ' }}<router-link :to="'/forum/category-' + event.topic.category + '/topic-' + event.topic.id" class="topic">{{ event.topic.title }}</router-link></template>
 					</div>
 					<div class="date">{{ $filters.duration(event.date) }}</div>
 				</div>
@@ -24,23 +24,33 @@
 				</router-link>
 			</div>
 		</div>
-		<div v-else class="none">{{ t('live_empty') }}</div>
+		<div v-else class="none">{{ t('empty') }}</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { onBeforeUnmount, ref } from 'vue'
+	import { onBeforeUnmount, ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
-	import { useNamespacedT } from '@/model/i18n'
+	import { mixins, useNamespacedT } from '@/model/i18n'
 
-	defineOptions({ name: 'HomeWidgetLive' })
+	// Le panneau vit sur l'accueil (widget « En direct ») et sur la page d'équipe
+	// (« En direct sur <équipe> ») : il porte donc son propre namespace i18n, que
+	// le mixin charge à la demande, plutôt que les clés de l'une des deux pages.
+	defineOptions({ name: 'Live', i18n: {}, mixins: [...mixins] })
 
-	const t = useNamespacedT('home')
+	const props = withDefaults(defineProps<{
+		/** Restreint la timeline aux membres de cette équipe. Sinon, tout le site. */
+		team?: number
+	}>(), {
+		team: undefined,
+	})
+
+	const t = useNamespacedT('live')
 
 	const METRIC_ICONS: Record<string, string> = {
 		victories: 'mdi-sword-cross',
-		bosses: 'mdi-skull-outline',
-		tournaments: 'mdi-trophy-outline',
+		bosses: 'mdi-crown',
+		tournaments: 'mdi-tournament',
 	}
 
 	// La pastille de l'avatar ne dit plus que la NATURE de l'événement : l'image du
@@ -67,12 +77,16 @@
 	const events = ref<LiveEvent[]>([])
 
 	function load() {
-		LeekWars.get<{ events: LiveEvent[] }>('live/get-events').then(data => {
+		const url = props.team === undefined ? 'live/get-events' : 'live/get-team-events/' + props.team
+		LeekWars.get<{ events: LiveEvent[] }>(url).then(data => {
 			events.value = data.events
 			loaded.value = true
 		}).error(() => { loaded.value = true })
 	}
 	load()
+	// L'équipe n'est connue qu'une fois la page chargée : le premier rendu passe
+	// un id indéfini, il faut donc recharger quand il arrive.
+	watch(() => props.team, () => { loaded.value = false; load() })
 	// Le rate limit dynamique est côté serveur (sélection par score selon
 	// l'activité) ; ici on rafraîchit simplement à intervalle fixe.
 	const timer = setInterval(load, 60 * 1000)

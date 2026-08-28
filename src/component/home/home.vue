@@ -121,7 +121,8 @@
 	import HomeWidgetTournaments from '@/component/home/widgets/home-widget-tournaments.vue'
 	import HomeWidgetClassement from '@/component/home/widgets/home-widget-classement.vue'
 	import HomeWidgetLeekStats from '@/component/home/widgets/home-widget-leek-stats.vue'
-	import HomeWidgetLive from '@/component/home/widgets/home-widget-live.vue'
+	// Partagé avec la page d'équipe, d'où sa place hors du dossier des widgets
+	import Live from '@/component/live/live.vue'
 
 	defineOptions({ name: 'Home', i18n: {}, mixins: [...mixins] })
 
@@ -157,7 +158,7 @@
 		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true, noScroll: true },
 		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies', noScroll: true },
 		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum', noScroll: true },
-		live: { icon: 'mdi-access-point', component: markRaw(HomeWidgetLive), defaultW: 4, defaultH: 5, minW: 3, minH: 3 },
+		live: { icon: 'mdi-access-point', component: markRaw(Live), defaultW: 4, defaultH: 5, minW: 3, minH: 3 },
 		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 4, defaultH: 3, minW: 3, minH: 2 },
 	}
 	const WIDGET_TYPES = Object.keys(widgetMeta)

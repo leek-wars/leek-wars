@@ -12,6 +12,7 @@
     - "5 nouveaux trophées de fabrication : Apprenti, Artisan, Forgeron, Cyclope et Héphaïstos, pour 1, 10, 100, 1000 et 10000 objets fabriqués à la forge."
     - "Nouveau trophée Tétrarque : gagner un Battle Royale, une Guerre, une Chasse aux coffres et un Colosse dans la même journée, avec le même poireau."
     - "#ai isBatchFight() dit si le combat vient d'un lot, pour se taire quand on mesure son IA."
+    - "La page d'une équipe a son panneau « En direct », à côté du chat : les trophées débloqués, les seuils franchis et les sujets créés par ses membres, sur les 7 derniers jours."
   improved:
     - "Groupes privés : le mode « comptes à mot de passe » (identifiants choisis par le superviseur, sans e-mail des membres) se règle maintenant dans les paramètres du groupe, et les groupes de démo l'activent d'office."
     - "#ai L'API JavaScript, TypeScript et Python devient 100 % orientée objet : plus aucune fonction ni constante globale, tout passe par les objets (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript est remplacée par les natifs du langage (Math, JSON, random...)."

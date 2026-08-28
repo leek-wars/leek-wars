@@ -1,0 +1,8 @@
+{
+	"event_trophy": "desbloqueou o troféu «{0}»",
+	"event_victories": "atinge {0} vitórias",
+	"event_bosses": "atinge {0} chefes derrotados",
+	"event_tournaments": "atinge {0} torneios ganhos",
+	"event_topic": "criou o tópico",
+	"empty": "Nenhum evento recente."
+}

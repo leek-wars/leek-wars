@@ -75,6 +75,7 @@
 	"invite_friends": "Invita amici",
 	"leeks": "Porri ({0})",
 	"level_n": "Livello {0}",
+	"live_on_team": "In diretta su {0}",
 	"log_change": "Modificare il livello di visibilità delle tracce",
 	"log_change_text": "Cambia il livello di visibilità per i tuoi alleati (membri della tua squadra) delle tue tracce in combattimento (funzione debug(), debugE() ecc.):",
 	"log_level_0": "Nascosto",

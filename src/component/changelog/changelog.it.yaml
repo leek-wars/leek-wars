@@ -12,6 +12,7 @@
     - "5 nuovi trofei di fabbricazione: Apprendista, Artigiano, Fabbro, Ciclope ed Efesto, per 1, 10, 100, 1000 e 10000 oggetti fabbricati alla forgia."
     - "Nuovo trofeo Tetrarca: vinci un Battle Royale, una Guerra, una Caccia ai forzieri e un Colosso nello stesso giorno, con lo stesso porro."
     - "#ai isBatchFight() dice se il combattimento viene da un lotto, per tacere quando si misura l'IA."
+    - "La pagina di una squadra ha il suo pannello \"In diretta\", accanto alla chat: i trofei sbloccati, le soglie raggiunte e gli argomenti creati dai suoi membri negli ultimi 7 giorni."
   improved:
     - "Gruppi privati: la modalità « account con password » (credenziali scelte dal supervisore, senza e-mail dei membri) si regola ora nelle impostazioni del gruppo, e i gruppi demo la attivano di default."
     - "#ai L'API JavaScript, TypeScript e Python diventa 100% orientata agli oggetti: niente più funzioni o costanti globali, tutto passa dagli oggetti (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript è sostituita dai nativi del linguaggio (Math, JSON, random...)."

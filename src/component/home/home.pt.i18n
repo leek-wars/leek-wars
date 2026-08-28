@@ -51,11 +51,5 @@
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
 	"no_leek": "No leek.",
-	"widget_live": "Ao vivo",
-	"live_trophy": "desbloqueou o troféu «{0}»",
-	"live_victories": "atinge {0} vitórias",
-	"live_bosses": "atinge {0} chefes derrotados",
-	"live_tournaments": "atinge {0} torneios ganhos",
-	"live_topic": "criou o tópico",
-	"live_empty": "Nenhum evento recente."
+	"widget_live": "Ao vivo"
 }

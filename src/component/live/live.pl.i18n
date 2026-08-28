@@ -1,0 +1,8 @@
+{
+	"event_trophy": "odblokował(a) trofeum „{0}”",
+	"event_victories": "osiąga {0} zwycięstw",
+	"event_bosses": "osiąga {0} pokonanych bossów",
+	"event_tournaments": "osiąga {0} wygranych turniejów",
+	"event_topic": "utworzył(a) temat",
+	"empty": "Brak ostatnich wydarzeń."
+}

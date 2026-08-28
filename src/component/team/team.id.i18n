@@ -64,6 +64,7 @@
 	"invite_friends": "Undang teman",
 	"leeks": "Daun bawang ({0})",
 	"level_n": "Tingkat {0}",
+	"live_on_team": "Langsung di {0}",
 	"log_change": "Ubah tingkat visibilitas jejak",
 	"log_change_text": "Ubah tingkat visibilitas untuk sekutu Anda (anggota tim Anda) dari jejak Anda dalam pertempuran (fungsi debug(), debugE() dll.):",
 	"log_level_0": "Tersembunyi",

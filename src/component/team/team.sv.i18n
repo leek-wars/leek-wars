@@ -64,6 +64,7 @@
 	"invite_friends": "Bjud in vänner",
 	"leeks": "Purjolök ({0})",
 	"level_n": "Nivå {0}",
+	"live_on_team": "Live hos {0}",
 	"log_change": "Ändra synlighetsnivån för spår",
 	"log_change_text": "Ändra nivån av synlighet för dina allierade (medlemmar i ditt team) av dina spår i strid (funktion debug(), debugE() etc.):",
 	"log_level_0": "Dold",

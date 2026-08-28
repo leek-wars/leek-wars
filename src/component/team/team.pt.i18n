@@ -64,6 +64,7 @@
 	"invite_friends": "Convidar amigos",
 	"leeks": "Alho-poró ({0})",
 	"level_n": "Nível {0}",
+	"live_on_team": "Ao vivo em {0}",
 	"log_change": "Alterar o nível de visibilidade dos rastros",
 	"log_change_text": "Altere o nível de visibilidade para seus aliados (membros de sua equipe) de seus rastros em combate (função debug(), debugE() etc.):",
 	"log_level_0": "Escondido",

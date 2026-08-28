@@ -51,11 +51,5 @@
 	"stat_defeats": "Losses",
 	"stat_tournaments": "Tournaments",
 	"no_leek": "No leek.",
-	"widget_live": "Na żywo",
-	"live_trophy": "odblokował(a) trofeum „{0}”",
-	"live_victories": "osiąga {0} zwycięstw",
-	"live_bosses": "osiąga {0} pokonanych bossów",
-	"live_tournaments": "osiąga {0} wygranych turniejów",
-	"live_topic": "utworzył(a) temat",
-	"live_empty": "Brak ostatnich wydarzeń."
+	"widget_live": "Na żywo"
 }

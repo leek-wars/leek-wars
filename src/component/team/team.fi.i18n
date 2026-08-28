@@ -64,6 +64,7 @@
 	"invite_friends": "Kutsu ystäviä",
 	"leeks": "Purjo ({0})",
 	"level_n": "Taso {0}",
+	"live_on_team": "Suorana joukkueessa {0}",
 	"log_change": "Muuta jälkien näkyvyystasoa",
 	"log_change_text": "Muuta liittolaisten (joukkueesi jäsenten) näkyvyyttä taistelussa (funktio debug(), debugE() jne.):",
 	"log_level_0": "Piilotettu",

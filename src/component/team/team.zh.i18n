@@ -64,6 +64,7 @@
 	"invite_friends": "邀请好友",
 	"leeks": "韭菜（{0}）",
 	"level_n": "{0} 级",
+	"live_on_team": "{0} 实时动态",
 	"log_change": "更改痕迹的可见性级别",
 	"log_change_text": "更改您的盟友（您的团队成员）在战斗中的痕迹的可见性级别（函数 debug()、debugE() 等）：",
 	"log_level_0": "隐",

@@ -81,6 +81,7 @@
 	"leeks": "Purre ({0})",
 	"level_n": "Nivå {0}",
 	"load_all": "Last inn alle",
+	"live_on_team": "Direkte hos {0}",
 	"log_change": "Endre synlighetsnivået for spor",
 	"log_change_text": "Endre synlighetsnivået for dine allierte (medlemmer av teamet ditt) av sporene dine i kamp (funksjon debug(), debugE() osv.):",
 	"log_level_0": "Skjult",

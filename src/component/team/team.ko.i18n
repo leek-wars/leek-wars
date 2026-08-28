@@ -81,6 +81,7 @@
 	"leeks": "부추({0})",
 	"level_n": "레벨 {0}",
 	"load_all": "모두 로드",
+	"live_on_team": "{0} 실시간",
 	"log_change": "추적의 가시성 수준 변경",
 	"log_change_text": "전투에서 아군(팀원)의 추적(debug(), debugE() 등 함수)에 대한 가시성 수준을 변경합니다.",
 	"log_level_0": "숨겨진",

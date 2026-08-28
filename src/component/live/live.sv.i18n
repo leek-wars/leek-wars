@@ -1,0 +1,8 @@
+{
+	"event_trophy": "har låst upp trofén \"{0}\"",
+	"event_victories": "når {0} segrar",
+	"event_bosses": "når {0} dödade bossar",
+	"event_tournaments": "når {0} vunna turneringar",
+	"event_topic": "har skapat ämnet",
+	"empty": "Inga nya händelser."
+}

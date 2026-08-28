@@ -1,0 +1,8 @@
+{
+	"event_trophy": "님이 트로피 「{0}」 획득",
+	"event_victories": "님이 승리 {0}회 달성",
+	"event_bosses": "님이 보스 {0}마리 처치 달성",
+	"event_tournaments": "님이 토너먼트 {0}회 우승 달성",
+	"event_topic": "님이 주제를 작성함:",
+	"empty": "최근 이벤트가 없습니다."
+}

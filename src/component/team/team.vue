@@ -221,16 +221,26 @@
 			</div>
 		</panel>
 
-		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat">
-			<template #actions>
-				<div v-if="!LeekWars.mobile && team && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
-					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
-				</div>
-			</template>
-			<template #content>
-				<chat v-if="team" :id="team.chat" />
-			</template>
-		</panel>
+		<!-- Le chat et la timeline de l'équipe côte à côte : ce qui se dit et ce qui
+			se fait. Hors équipe, seul « En direct » reste et prend toute la largeur.
+			Réservé aux connectés : `live/get-team-events` demande un jeton, un visiteur
+			n'aurait qu'un panneau vide. -->
+		<div v-if="team && $store.state.connected" class="container">
+			<panel v-if="is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat">
+				<template #actions>
+					<div v-if="!LeekWars.mobile && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
+						<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
+					</div>
+				</template>
+				<template #content>
+					<chat :id="team.chat" />
+				</template>
+			</panel>
+
+			<panel class="live-panel" :title="$t('live_on_team', [team.name])" toggle="team/live" icon="mdi-access-point">
+				<live :team="team.id" />
+			</panel>
+		</div>
 
 		<panel v-if="team && is_member && team.candidacies && team.candidacies.length > 0">
 			<template #title>{{ $t('candidacies') }} ({{ team.candidacies.length }})</template>
@@ -850,6 +860,8 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
+	// Le panneau « En direct » de l'accueil, restreint aux membres de l'équipe
+	import Live from '@/component/live/live.vue'
 	import { CHIPS } from '@/model/chips'
 	import { computed, defineAsyncComponent, nextTick, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
@@ -1891,6 +1903,15 @@
 	}
 	.chat {
 		height: 300px;
+	}
+	// La timeline se cale sur la hauteur du chat qu'elle accompagne et défile
+	// à l'intérieur : sans ça, une équipe active pousserait la page sur des
+	// dizaines d'événements pendant que le chat, lui, reste à 300 px.
+	.live-panel:deep(> .content) {
+		max-height: 300px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		padding: 8px;
 	}
 	.farmer, .popup.change_owner_popup .farmer {
 		display: inline-block;

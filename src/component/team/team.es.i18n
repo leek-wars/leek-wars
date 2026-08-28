@@ -64,6 +64,7 @@
 	"invite_friends": "Invitar amigos",
 	"leeks": "Puerros ({0})",
 	"level_n": "Nivel {0}",
+	"live_on_team": "En directo en {0}",
 	"log_change": "Cambiar el nivel de visibilidad de las trazas",
 	"log_change_text": "Cambia el nivel de visibilidad para tus aliados (miembros de tu equipo) de tus rastros en combate (función debug(), debugE() etc.):",
 	"log_level_0": "Oculto",

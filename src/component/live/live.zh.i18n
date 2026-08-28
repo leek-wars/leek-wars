@@ -1,0 +1,8 @@
+{
+	"event_trophy": "解锁了奖杯「{0}」",
+	"event_victories": "达到 {0} 场胜利",
+	"event_bosses": "达到击杀 {0} 个首领",
+	"event_tournaments": "达到 {0} 次锦标赛冠军",
+	"event_topic": "创建了主题",
+	"empty": "暂无最近事件。"
+}

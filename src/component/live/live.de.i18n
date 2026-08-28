@@ -1,0 +1,8 @@
+{
+	"event_trophy": "hat die Trophäe „{0}“ freigeschaltet",
+	"event_victories": "erreicht {0} Siege",
+	"event_bosses": "erreicht {0} besiegte Bosse",
+	"event_tournaments": "erreicht {0} Turniersiege",
+	"event_topic": "hat das Thema erstellt:",
+	"empty": "Keine aktuellen Ereignisse."
+}
