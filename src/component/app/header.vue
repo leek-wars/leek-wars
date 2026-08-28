@@ -3,7 +3,13 @@
 		<div class="header-left">
 			<router-link to="/">
 				<div class="logo-wrapper">
-					<img class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : '/image/leekwars.svg'">
+					<!-- Le logo historique est rempli d'un dégradé vertical (blanc → #b3b3b3),
+					     hérité d'une barre sombre. Le v3 en prend une version à plat, même
+					     géométrie au point près, un seul aplat : c'est un essai demandé par
+					     Pierre en attendant le logo définitif (cf. REDESIGN.md, principe 5).
+					     Le blanc est conservé comme valeur de base — c'est
+					     `--header-logo-filter` qui l'inverse en thème clair. -->
+					<img class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : (LeekWars.legacyTheme ? '/image/leekwars.svg' : '/image/leekwars_flat.svg')">
 					<span v-if="seasonDecoration" class="season-decoration">{{ seasonDecoration }}</span>
 					<span v-if="LeekWars.BETA_LOCAL" class="beta-local-label">Bêta locale</span>
 					<span v-else-if="LeekWars.LOCAL" class="local-label">local</span>
@@ -387,9 +393,9 @@
 		position: absolute;
 		top: -2px;
 		right: -6px;
-		background: var(--primary);
+		background: var(--primary-surface);
 		padding: 4px 5px;
-		color: var(--primary-text);
+		color: var(--primary-surface-text);
 		border-radius: 5px;
 		height: 20px;
 		line-height: 12px;
