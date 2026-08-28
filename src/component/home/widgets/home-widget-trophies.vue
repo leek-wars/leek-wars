@@ -132,7 +132,10 @@
 		gap: 14px;
 	}
 	body:not(.v2) .section-block {
-		gap: 6px;
+		// L'intitulé respire au-dessus de sa rangée (retour de Pierre) : collé, il
+		// se lisait comme une étiquette du premier trophée plutôt que comme le
+		// titre de la série.
+		gap: 10px;
 	}
 	// Les sections occupent la hauteur restante ; on n'affiche que celles
 	// qui tiennent entièrement (useFitCount), overflow hidden en filet.
