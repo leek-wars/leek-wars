@@ -321,6 +321,7 @@
 	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
+	import { refreshCodeLenses } from './monaco'
 	import { getLanguageVersion, isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
@@ -885,6 +886,7 @@
 				})
 				analyzer.updateTodos(savedAI)
 				analyzer.updateCount()
+				refreshCodeLenses()
 				setTimeout(() => aiEditor.goods = [], 2000)
 			}
 

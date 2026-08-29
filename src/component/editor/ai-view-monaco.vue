@@ -28,6 +28,7 @@ import { setLocalStorageSafe } from '@/model/storage'
 import { LeekWars } from '@/model/leekwars'
 import { farmerId } from '@/model/store'
 import './monaco'
+import { refreshCodeLenses } from './monaco'
 import { AI } from '@/model/ai'
 import { analyzer } from './analyzer'
 import { getLanguageForPath } from './file-types'
@@ -494,6 +495,9 @@ function setAnalyzerTimeout() {
 			analyzer.applyAnalyzeResult(result as Parameters<typeof analyzer.applyAnalyzeResult>[0])
 			analyzer.updateTodos(ai)
 			analyzer.updateCount()
+			// Le modèle de l'analyseur vient de changer : redemander les compteurs de références,
+			// sinon ils restent figés sur l'état d'avant la frappe (#4935).
+			refreshCodeLenses()
 		}).finally(() => {
 			// L'indicateur ne se coupe que pour l'analyse la plus récente de cet éditeur : une analyse
 			// dépassée qui se résout entre-temps ne doit pas l'éteindre alors que la courante tourne encore.
