@@ -407,6 +407,9 @@ try {
 	const tpl = document.getElementById('app-data-error') as HTMLTemplateElement | null
 	if (root && tpl) {
 		root.replaceChildren(tpl.content.cloneNode(true))
+		// Le bouton ne peut pas porter de onclick inline : la CSP de production
+		// n'autorise pas 'unsafe-inline' dans script-src.
+		root.querySelector('#app-data-error-reload')?.addEventListener('click', () => location.reload())
 	}
 	// Re-throw : indispensable pour stopper la suite (sinon app.mount('#app2') écraserait l'UI d'erreur).
 	throw e

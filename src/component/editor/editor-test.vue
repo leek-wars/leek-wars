@@ -195,7 +195,7 @@
 				</div>
 				<div v-if="currentMap" class="column map-column">
 					<div class="title name"></div>
-					<div class="map" oncontextmenu="return false;">
+					<div class="map" @contextmenu.prevent>
 						<div class="map-wrapper">
 							<div v-for="(line, l) of map" :key="l" class="line">
 								<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.cell in currentMap.data.obstacles, team1: currentMap.data.team1.indexOf(cell.cell) !== -1, team2: currentMap.data.team2.indexOf(cell.cell) !== -1}" class="cell" @mousedown="cellMouseDown($event, cell)" @mouseenter="cellMouseEnter($event, cell)" @mouseup="cellMouseUp" @dragstart="cellDragStart"></span>

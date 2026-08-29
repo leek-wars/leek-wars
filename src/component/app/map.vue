@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="map" oncontextmenu="return false;">
+	<div class="map" @contextmenu.prevent>
 		<div class="map-wrapper">
 			<div v-for="(line, l) of map" :key="l" class="line">
 				<span v-for="(cell, c) of line" :key="c" :class="{enabled: cell.enabled, obstacle: cell.obstacle, ...cell.teams, big: cell.big}" :style="{background: cell.color}" class="cell"></span>
