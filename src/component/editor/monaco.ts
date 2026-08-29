@@ -597,13 +597,10 @@ monaco.languages.registerReferenceProvider("leekscript", {
 // Les compteurs « n references » sont résolus auprès de l'analyseur, dont le modèle n'est à jour
 // qu'une fois l'analyse revenue (500 ms après la frappe, ou au save). Monaco, lui, ne re-résout que
 // si le modèle change : déplacer une fonction figeait donc son lens sur « no references » jusqu'à la
-// frappe suivante. Cet émetteur permet de redemander une résolution quand l'analyse arrive.
+// frappe suivante (#4935). Cet émetteur redemande une résolution quand l'analyse arrive.
+// Le payload est imposé par Monaco, qui type `onDidChange` en `IEvent<this>` ; il est ignoré côté
+// consommateur, mais un `Emitter<void>` ne passe pas le typage.
 const codeLensChangeEmitter = new monaco.Emitter<monaco.languages.CodeLensProvider>()
-
-/** À appeler après avoir appliqué un résultat d'analyse, pour rafraîchir les compteurs de références. */
-export function refreshCodeLenses() {
-	codeLensChangeEmitter.fire(codeLensProvider)
-}
 
 const codeLensProvider: monaco.languages.CodeLensProvider = {
 	onDidChange: codeLensChangeEmitter.event,
@@ -706,6 +703,8 @@ const codeLensProvider: monaco.languages.CodeLensProvider = {
 }
 
 monaco.languages.registerCodeLensProvider("leekscript", codeLensProvider)
+
+emitter.on('analyzer-updated', () => codeLensChangeEmitter.fire(codeLensProvider))
 
 monaco.languages.registerDocumentSymbolProvider("leekscript", {
 	provideDocumentSymbols(model) {

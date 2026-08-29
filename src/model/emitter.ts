@@ -59,6 +59,10 @@ type Events = {
 	'editor-menu': unknown,
 	'br-started': number,
 	'reanalyze': void,
+	// L'analyseur a appliqué un nouveau résultat : ce qu'il sait des symboles a changé. Émis par
+	// Analyzer lui-même (monaco.ts l'importe déjà, l'inverse ferait un cycle), écouté par monaco.ts
+	// pour rafraîchir les compteurs de références des CodeLens.
+	'analyzer-updated': void,
 	'git-file-changed': void,
 	'git-repos-changed': void,
 	'git-history-refresh': void,

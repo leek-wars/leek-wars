@@ -7,6 +7,7 @@ import { AIItem, Folder } from './editor-item'
 import { getLanguageForPath } from './file-types'
 import { Problem } from './problem'
 import { i18n } from '@/model/i18n'
+import { emitter } from '@/model/emitter'
 import * as monaco from 'monaco-editor'
 import { markRaw, reactive } from 'vue'
 
@@ -268,6 +269,11 @@ class Analyzer {
 		}
 
 		this.purgeStaleBuckets(result)
+
+		// Ce que l'analyseur sait des symboles vient de changer : les vues qui l'interrogent doivent
+		// se rafraîchir (compteurs de références des CodeLens, cf. #4935). Signalé ici, dans le
+		// propriétaire de l'état, pour qu'aucun appelant ne puisse l'oublier.
+		emitter.emit('analyzer-updated')
 	}
 
 	// Élimine les doublons : un même fichier ne doit apparaître QUE sous l'entrypoint dont l'analyse est la
