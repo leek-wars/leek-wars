@@ -38,7 +38,6 @@
     - "A fight page now has a button back to the tournament, the Garden or the editor it came from."
     - "The \"Hold a weapon\" pomp offers all your weapons, not just the ones equipped on that leek."
     - "On mobile, the leek order and the fight actions are finally shown, right under the player."
-    - "#ai JavaScript, TypeScript and Python API: the targeting functions can now be called on Fight (Fight.weaponCells, Fight.chipCell, Fight.weaponTargets...), and not only on me. They do not depend on any particular entity — the equipped weapon is only a default — so Fight.weaponCells(cell, enemy.weapon) tells you where the enemy can strike that cell from. They are still callable on me (thanks to GSoMan)."
   fixed:
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
     - "Chat: a $ symbol inside a code block no longer makes &lt;latex&gt; tags appear in it (thanks to fujiwar)."

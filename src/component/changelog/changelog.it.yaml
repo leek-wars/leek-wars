@@ -38,7 +38,6 @@
     - "Dalla pagina di un combattimento, un pulsante riporta al torneo, all'orto o all'editor d'origine."
     - "L'apparato « Impugna un'arma » propone tutte le tue armi, non solo quelle equipaggiate sul porro."
     - "Su mobile, l'ordine dei porri e le azioni del combattimento appaiono finalmente sotto il lettore."
-    - "#ai API JavaScript, TypeScript e Python: le funzioni di puntamento si chiamano ora su Fight (Fight.weaponCells, Fight.chipCell, Fight.weaponTargets...), e non più solo su me. Non dipendono da nessuna entità in particolare — l'arma equipaggiata è solo un valore predefinito — quindi Fight.weaponCells(cella, nemico.weapon) dice da dove il nemico può colpire quella cella. Restano richiamabili su me (grazie a GSoMan)."
   fixed:
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo cliccando sulla loro freccia (grazie a hypernavet)."
     - "Chat: un simbolo $ dentro un blocco di codice non vi fa più comparire tag &lt;latex&gt; (grazie a fujiwar)."
