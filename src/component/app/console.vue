@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="console" :class="'theme-' + cssTheme">
+	<div class="console" :class="'theme-' + theme">
 		<div ref="scroll" v-autostopscroll class="scroll" >
 			<div class="lines">
 				<div v-for="(line, l) in lines" :key="l" class="line">
@@ -49,7 +49,7 @@ import { emitter } from '@/model/emitter'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
 import { getLanguageVersions } from '../editor/file-types'
-import { AUTO_CODE_THEME, isDarkCodeTheme, siteCodeTheme } from '../editor/code-theme'
+import { AUTO_CODE_THEME, siteCodeTheme } from '../editor/code-theme'
 import LwCode from './code.vue'
 
 defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco, 'lw-code': LwCode } })
@@ -231,7 +231,6 @@ function focus() {
 	editorRef.value?.editor.focus()
 }
 
-const cssTheme = computed(() => isDarkCodeTheme(theme.value) ? 'monokai' : 'leekwars')
 // Les aperçus des lignes passées suivent le thème PROPRE de la console (pas celui du site,
 // qui peut être clair alors que la console est sombre, et inversement).
 const codeThemeClass = computed(() => 'code-theme-' + theme.value)
@@ -278,6 +277,9 @@ defineExpose({ isEmpty, clear, focus, saveTheme, themeSetting, leekscript, langu
 		}
 		position: relative;
 
+		// Gris génériques : la console porte les surfaces de son thème de
+		// coloration, pas celles du site — elle peut être sombre sur une page
+		// claire, et l'inverse. Ce bloc-ci sert aux thèmes vs et hc-light.
 		--pure-white: #fff;
 		--background: #f2f2f2;
 		--background-secondary: var(--grey-13);
@@ -288,7 +290,7 @@ defineExpose({ isEmpty, clear, focus, saveTheme, themeSetting, leekscript, langu
 		--text-color-secondary: var(--grey-6);
 		--type-color: #0000D0;
 	}
-	.theme-monokai {
+	.theme-leek-wars-dark, .theme-monokai, .theme-vs-dark, .theme-hc-black {
 		--pure-white: #000;
 		--background: #1f1f1f;
 		--background-secondary: #171717;
@@ -298,6 +300,36 @@ defineExpose({ isEmpty, clear, focus, saveTheme, themeSetting, leekscript, langu
 		--text-color: #f7f7f7;
 		--text-color-secondary: var(--grey-9);
 		--type-color: #0099d0;
+	}
+	// Le thème maison va plus loin que les gris génériques : la console prend
+	// les surfaces du site, pour être dans la continuité de la page au lieu de
+	// flotter dessus — même parti pris que la coquille de l'éditeur (cf.
+	// editor.vue, lot 13). Son fond est celui d'un PANNEAU
+	// (`--background-secondary` du thème), pas celui de la page : la console est
+	// une surface posée, sous un bandeau de panneau.
+	// Restreint à `body:not(.v2)` : en thème v2 les gris ci-dessus SONT déjà les
+	// surfaces du site, il n'y a rien à reprendre.
+	body:not(.v2) .theme-leek-wars {
+		--pure-white: #FBF7E8;
+		--background: #FBF7E8;
+		--background-secondary: #E9E3CD;
+		--background-disabled: #D3CCB2;
+		--background-header: #F3EDD8;
+		--border: rgba(14, 20, 16, 0.14);
+		--text-color: #0E1410;
+		--text-color-secondary: #4A5847;
+		--type-color: #1A7AA0;
+	}
+	body:not(.v2) .theme-leek-wars-dark {
+		--pure-white: #0B0F0B;
+		--background: #0E1316;
+		--background-secondary: #0B0F0B;
+		--background-disabled: #2A2F2C;
+		--background-header: #11161A;
+		--border: rgba(255, 255, 255, 0.16);
+		--text-color: #E8F0E6;
+		--text-color-secondary: #A8B4A4;
+		--type-color: #5CE0FF;
 	}
 	.scroll {
 		// position: relative;

@@ -103,6 +103,12 @@ html body.v2 {
 	   la barre reste dans le flux de la colonne centrale, personne ne la lit. */
 	--header-height: 80px;
 	--header-color: #eee;
+	/* Surface de la barre et opacite de son effet verre. Presentes pour la
+	   parite des variables : en v2 la barre n'a pas de surface a elle, elle est
+	   posee a nu sur le fond exterieur, et la coquille v3 qui lit ces deux
+	   jetons est enfermee dans `body:not(.v2)`. */
+	--header-background: transparent;
+	--header-glass: 100%;
 	--header-button-background: rgba(80, 80, 80, 0.6);
 	--header-button-background-hover: rgba(200, 200, 200, 0.4);
 	--header-logo-filter: none;

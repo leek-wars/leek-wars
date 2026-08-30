@@ -71,7 +71,7 @@ body:not(.v2) {
 		   au-dessus se lisait comme du fond extérieur. Sur un bandeau plein, il
 		   se lirait comme un vide. */
 		align-items: center;
-		background: var(--background-header);
+		background: var(--header-background);
 		border-bottom: 1px solid var(--border-strong);
 	}
 	/* Effet verre : la barre est fixe et le contenu défile dessous, elle le laisse
@@ -81,27 +81,28 @@ body:not(.v2) {
 	   Sous `@supports`, et l'aplat opaque au-dessus reste le repli : sans
 	   `backdrop-filter` (Firefox si le flag est coupé, vieux WebKit) une barre
 	   translucide laisserait le texte de la page défiler lisiblement au travers.
-	   La couleur reste `--background-header`, simplement diluée : la barre garde
-	   sa teinte en clair comme en sombre. Le flou monte avec la transparence —
+	   La couleur reste `--header-background`, la surface de coquille — celle que
+	   portent aussi le menu et le panneau social : les trois doivent se lire
+	   comme UNE surface, ce que le thème sombre faisait et pas le clair.
+	   Le taux de dilution est un jeton de thème (`--header-glass`) et non une
+	   constante, parce que ce qui remonte au travers ne coûte pas la même chose
+	   des deux côtés : les surfaces claires sont étalées, les sombres serrées.
+	   Détail dans leekwars-theme-v3.scss. Le flou monte avec la transparence —
 	   moins la surface couvre, plus c'est lui qui tient la lisibilité du texte
 	   de la barre par-dessus le contenu qui passe. */
 	@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
 		#app:not(.app) header.header {
-			background: color-mix(in srgb, var(--background-header) 55%, transparent);
+			background: color-mix(in srgb, var(--header-background) var(--header-glass), transparent);
 			-webkit-backdrop-filter: blur(18px) saturate(140%);
 			backdrop-filter: blur(18px) saturate(140%);
 		}
 	}
-	/* ====== Au-delà de 2000 px, la barre se cale sur les panneaux ======
+	/* ====== Le contenu de la barre se cale sur les panneaux ======
 	 *
 	 * Le bandeau reste plein, mais son contenu cesse de s'écarter jusqu'aux bords
-	 * (demande de Pierre) : sur un écran de 2560 px le logo se retrouvait à 2,5 cm
-	 * du bord gauche pendant que les panneaux commençaient 600 px plus loin. Le
-	 * logo tombe désormais sur leur bord gauche, les boutons sur leur bord droit.
-	 *
-	 * Les deux enfants de la barre (`.header-left`, `.header-right`) sont poussés
-	 * aux extrémités par `space-between` : c'est donc son retrait interne qui les
-	 * ramène, sans toucher au composant.
+	 * (demande de Pierre) : le logo tombe sur le bord gauche des panneaux, les
+	 * boutons sur leur bord droit, au lieu de courir jusqu'aux bords de la fenêtre
+	 * — à droite, les boutons passaient au-dessus du panneau social.
 	 *
 	 * Le contenu n'a pas de gabarit centré à viser : le v3 a justement retiré le
 	 * plafond de 1100 px du v2 (section « Largeur » plus bas), les panneaux vont
@@ -114,25 +115,60 @@ body:not(.v2) {
 	 * dur dans app.vue faute de variable partagée, et le menu ouvert vaut 220 px
 	 * ici et non les 170 px du v2 (section « Menu de gauche » plus bas) — les
 	 * sélecteurs reprennent donc ceux des marges, à l'identique. */
-	@media screen and (min-width: 2000px) {
-		#app:not(.app) header.header {
-			/* Déconnecté : ni menu ni panneau social, la barre ne bouge pas. */
-			--shell-menu: 0px;
-			--shell-social: 0px;
-			padding-left: calc(var(--shell-menu) + 20px);
-			padding-right: calc(var(--shell-social) + 20px);
-		}
-		#app.connected:not(.app):not(.menu-collapsed) header.header {
-			--shell-menu: 220px;
-		}
-		#app.menu-collapsed:not(.app) header.header {
-			--shell-menu: 64px;
-		}
+	#app:not(.app) header.header {
+		/* Déconnecté : ni menu ni panneau social, la barre ne bouge pas. */
+		--shell-menu: 0px;
+		--shell-social: 0px;
+	}
+	#app.connected:not(.app):not(.menu-collapsed) header.header {
+		--shell-menu: 220px;
+	}
+	#app.menu-collapsed:not(.app) header.header {
+		--shell-menu: 64px;
+	}
+	/* La colonne ne réserve la place du panneau social qu'au-delà de 1600 px
+	 * (app.vue) : en dessous le panneau passe par-dessus la page, et la barre doit
+	 * courir jusqu'au bord comme elle. La largeur est celle du panneau, qui est
+	 * REDIMENSIONNABLE (400 à 800 px, `--social-width` posé par social.vue) : un
+	 * 400 px en dur laissait les boutons déborder sur le panneau élargi, très
+	 * exactement le défaut qu'on corrige ici. Même repli que la marge. */
+	@media screen and (min-width: 1600px) {
 		#app.connected:not(.social-collapsed):not(.app) header.header {
-			--shell-social: 400px;
+			--shell-social: var(--social-width, 400px);
 		}
 		#app.connected.social-collapsed:not(.app) header.header {
 			--shell-social: 30px;
+		}
+	}
+	/* Deux cales, une par colonne, plutôt qu'un retrait interne : elles RÉTRÉCISSENT
+	 * quand la place manque (`flex-shrink`), là où un padding fixe aurait écrasé le
+	 * logo contre les boutons dès que la fenêtre descend sous ~1750 px. C'est ce qui
+	 * avait fait borner le calage à un palier de 2000 px, donc mal caler tous les
+	 * écrans en dessous — 1920 compris, où les boutons débordaient sur le panneau
+	 * social. Les cales cèdent d'elles-mêmes avant que le contenu ne souffre : les
+	 * deux blocs de la barre ne peuvent pas descendre sous leur `min-content`. */
+	#app:not(.app) header.header::before,
+	#app:not(.app) header.header::after {
+		content: '';
+		flex: 0 1 auto;
+	}
+	#app:not(.app) header.header::before { flex-basis: var(--shell-menu); }
+	#app:not(.app) header.header::after { flex-basis: var(--shell-social); }
+	/* `space-between` répartissait l'espace entre DEUX blocs ; avec les cales il y en
+	 * a quatre, et il les écarterait tous. C'est la marge automatique qui pousse
+	 * désormais les boutons à droite. */
+	#app:not(.app) header.header {
+		justify-content: flex-start;
+	}
+	#app:not(.app) header.header > .header-left {
+		margin-right: auto;
+	}
+	/* Sous 1200 px la barre n'est plus une flexbox (`display: block`, header.vue) :
+	   les cales n'y auraient aucun sens et resteraient des boîtes vides. */
+	@media screen and (max-width: 1199px) {
+		#app:not(.app) header.header::before,
+		#app:not(.app) header.header::after {
+			display: none;
 		}
 	}
 

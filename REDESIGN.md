@@ -768,6 +768,59 @@ Parti pris :
   page porte un `watch` sur `LeekWars.darkMode` / `legacyTheme` qui reconstruit
   le graphique à la bascule.
 
+## La coquille est UNE surface (2026-08-29)
+
+La barre du haut, le menu de gauche et le panneau social portent la même
+surface. Le thème sombre le faisait déjà, le clair non : mesuré sur un rendu,
+la barre tombait à **1.20** de contraste du menu contre **1.02** en sombre —
+elle cessait de se lire comme une surface et se confondait avec le fond
+extérieur, pendant que le menu et le panneau restaient à `#FBF7E8`.
+
+Deux causes, un jeton chacune (`leekwars-theme-v3.scss`) :
+
+- **La teinte.** La barre prenait `--background-header`, la surface des
+  *en-têtes de panneau*, un cran plus sombre que le panneau lui-même. Elle prend
+  `--header-background`, qui vaut la surface de coquille (`--panel-background`).
+  Les en-têtes de panneau, eux, gardent `--background-header` : leur bande plus
+  sombre sur le panneau est voulue.
+- **L'opacité de l'effet verre.** Elle était une constante (55 %), donc 45 % du
+  fond extérieur remontait au travers. Ça ne coûte pas la même chose des deux
+  côtés : les surfaces sombres sont serrées (le fond qui remonte est à 1.07 de
+  la coquille), les claires sont étalées depuis le lot 28 (1.34). D'où
+  `--header-glass` : **55 % en sombre — valeurs inchangées au pixel près —,
+  88 % en clair**, où la barre reste alors à 1.02 de sa surface quoi qu'il
+  défile dessous. Le flou et la désaturation restent : ce qui se perd, c'est la
+  teinte du contenu qui passait au travers, pas l'effet.
+
+Résoudre par la seule teinte était impossible : à 55 %, la couleur qu'il
+faudrait poser en clair pour retomber sur `#FBF7E8` dépasse le blanc.
+
+### Le fond remonte dans la foulée
+
+La coquille une fois réunie, la bande beige qui l'entoure prenait le dessus :
+`--background-outer` était à **1.34** de la coquille contre **1.07** en sombre.
+Tranché par Pierre le jour même (« le fond foncé un peu moins foncé ») :
+
+- `--background-outer` **#DED7BE → #E7E1CB** (1.34 → **1.22**)
+- `--background` **#E9E3CD → #EFE9D6** (1.20 → **1.13**)
+
+Les deux montent **ensemble**, d'un tiers de leur écart au panneau. Ensemble et
+pas seulement l'extérieur : seul, il serait passé au-dessus de la page et aurait
+**inversé** l'échelle (l'extérieur doit rester le plus sombre). L'échelle garde
+donc son ordre et ses proportions, elle est juste moins creuse — ce n'est pas un
+retour à la nappe crémeuse d'avant le lot 28.
+
+Les trois autres surfaces (`--background-header`, `--background-row`,
+`--background-input`) ne bougent pas : elles vivent **sur** le panneau, où
+l'étalement du lot 28 n'a jamais posé problème. Seul effet de bord accepté :
+`--background-row` (1.14) et le fond de page (1.13) deviennent jumeaux — ils ne
+se touchent nulle part, une rangée est toujours à l'intérieur d'un panneau.
+
+À noter pour la suite : sur une page connectée, le fond visible est
+**`--background-outer` seul** — c'est `body` qui le porte, `#app`,
+`.app-center` et `.app-wrapper` sont transparents. `--background` (69 usages)
+est une surface de composant, pas le fond de la page, malgré son nom.
+
 ## Questions ouvertes
 
 - ~~**Couleurs de caractéristiques en thème sombre**~~ — **tranché au lot 28**
@@ -1272,6 +1325,79 @@ Parti pris :
     c'est-à-dire au bout du logo d'avant — elle s'accroche maintenant à son coin.
   - v2 et thème XP intacts (`body:not(.v2):not(.xp)`, et l'icône n'est rendue
     que hors de ces deux thèmes).
+
+- **2026-08-29, lot 37 — la console en thème maison** (capture de Pierre : la
+  fenêtre de console en clair, une boîte grise sous un bandeau crème). La
+  console porte sa **propre** palette, celle de son thème de coloration et non
+  celle du site — c'est voulu, elle peut être en Monokai sur une page claire.
+  Mais cette palette était **le v2 écrit en dur** (#f2f2f2 / #e5e5e5 / #111),
+  quel que soit le thème choisi : en thème maison sur une page v3, la console
+  ne se raccordait à rien.
+  - **Le thème maison prend les surfaces du site**, exactement comme la coquille
+    de l'éditeur depuis le lot 13 — et enfin dans les **deux** sens : le lot 13
+    n'avait traité que `leek-wars-dark`, et la console ne connaissait même pas ce
+    thème-là (elle rangeait tous les sombres sous `.theme-monokai`, donc le
+    #1f1f1f générique là où l'éditeur peignait déjà #0E1316).
+  - **Le fond est celui d'un PANNEAU** (`--background-secondary` du thème,
+    #FBF7E8 en clair et #0E1316 en sombre), pas celui de la page : la console
+    est une surface posée sous un bandeau de panneau, en fenêtre comme en page.
+  - **Les gris génériques restent** pour vs / hc-light / vs-dark / hc-black /
+    monokai, qui ne sont pas des thèmes du site et n'ont rien à en reprendre.
+  - **Restreint à `body:not(.v2)`** : en v2 les gris génériques *sont* les
+    surfaces du site, la console y garde son aspect au pixel près.
+  - **Repéré, hors périmètre** : la coquille de l'**éditeur** a le même trou du
+    côté clair (`.editor` porte les mêmes gris v2 en dur, et son bloc
+    `.theme-leek-wars-dark` n'est pas non plus gardé par `body:not(.v2)`).
+
+- **2026-08-29, lot 38 — le widget Classement sans défilement** (capture de
+  Pierre : une barre de défilement dans le widget, la dixième ligne coupée en
+  deux). Même traitement que le widget Forum au lot 24 : le widget passe en
+  **`noScroll`**, la liste remplit la hauteur du panel et `useFitCount` coupe au
+  nombre de lignes qui tiennent. En plus du Forum, **les lignes retenues se
+  partagent toute la hauteur** (`flex: 1 1 auto`) — sinon couper laisse un blanc
+  en bas du panel, ce qui se voit d'autant plus qu'une ligne fait 31 px.
+  - Le piège : **la hauteur d'une ligne étirée ne peut pas servir à décider
+    combien il en tient**. `useFitCount` mesure la première rangée ; des rangées
+    qui remplissent le conteneur donnent toujours `hauteur / nombre affiché`,
+    donc le compte se fige et **n'augmente plus jamais** quand on agrandit le
+    widget (les widgets sont redimensionnables, gridstack). Le composable prend
+    donc un paramètre `rowHeight` optionnel : la hauteur *naturelle* d'une ligne,
+    connue de l'appelant, seule source du calcul quand les rangées s'étirent.
+    Elle est posée en `min-height` par une variable CSS écrite depuis le TS, pour
+    n'avoir qu'une seule valeur à tenir.
+  - Vérifié sur la bêta locale (deux widgets classement, h=5 et h=6) :
+    9 puis 10 lignes, `scrollHeight == clientHeight`, et le compte suit le
+    redimensionnement dans les deux sens (160 px → 1 ligne, 700 px → 10, retour
+    → 9).
+
+- **2026-08-29, lot 39 — la barre du haut débordait à droite** (capture de
+  Pierre). Le calage du contenu de la barre sur les panneaux (lot 30, deuxième
+  partie) était enfermé dans un `@media (min-width: 2000px)` : en dessous — 1920
+  compris — le logo et les boutons couraient jusqu'aux bords de la fenêtre, donc
+  les boutons passaient **au-dessus du panneau social**, 400 px à droite du bord
+  des panneaux. Le palier existait pour une raison réelle : un retrait fixe de
+  `menu + social` (jusqu'à 660 px) écrase le contenu de la barre dès que la
+  fenêtre descend sous ~1750 px.
+  - **Deux cales en pseudo-éléments** (`header::before` / `::after`,
+    `flex-basis` = largeur de la colonne) remplacent le retrait interne : elles
+    **rétrécissent** quand la place manque, et les deux blocs de la barre ne
+    peuvent pas descendre sous leur `min-content`. Le calage n'a donc plus de
+    palier — il se dégrade tout seul au lieu de s'éteindre d'un coup.
+  - Corollaire : `space-between` répartissait l'espace entre deux blocs, il y en
+    a quatre maintenant. C'est `margin-right: auto` sur `.header-left` qui pousse
+    les boutons à droite. Et sous 1200 px la barre n'est plus une flexbox
+    (`display: block`, header.vue) : les cales y sont masquées.
+  - **Le panneau social est redimensionnable** (400 à 800 px, `--social-width`,
+    cf. « Le contenu recule quand le panneau s'élargit ») : le 400 px en dur du
+    lot 30 laissait les boutons déborder dès que Pierre élargissait le panneau.
+    Les cales reprennent la variable, et les mêmes conditions que la marge de
+    `.app-center` — dont le `@media (min-width: 1600px)`, en dessous duquel la
+    colonne ne réserve rien parce que le panneau passe par-dessus la page.
+  - Mesuré sur la bêta locale à 1920 px : logo à 240 (bord gauche des panneaux),
+    boutons finissant à 1485 (bord droit, panneau social à 1520) ; idem menu
+    replié (84 / 1485), panneau social replié (240 / 1855), et sous 1600 px la
+    barre revient au bord comme la colonne (1365 pour une page à 1385). À
+    1235 px les cales ont cédé sans que rien ne se chevauche ni ne déborde.
 
 ## À reporter dans le projet Claude Design
 

@@ -77,15 +77,28 @@ body {
 	 *
 	 * Les cinq surfaces sont donc etalees, du plus fonce au plus clair :
 	 * exterieur, page, en-tete, panneau, champ — le panneau devient la surface
-	 * la plus claire de la page, c'est lui qui doit avancer. Page contre
-	 * panneau : 1.20. C'est un contraste SURFACE/SURFACE, aucun seuil de texte
-	 * n'est en jeu ; les encres, elles, y gagnent (14.5 sur la page, 17.4 sur le
-	 * panneau). */
-	--background: #E9E3CD;
+	 * la plus claire de la page, c'est lui qui doit avancer. C'est un contraste
+	 * SURFACE/SURFACE, aucun seuil de texte n'est en jeu ; les encres, elles, y
+	 * gagnent (14.5 sur la page, 17.4 sur le panneau).
+	 *
+	 * REMONTE le 2026-08-29, apres la coquille : l'etalement du lot 28 valait
+	 * pour le fond de la COLONNE CENTRALE, mais une fois la barre du haut, le
+	 * menu et le panneau social reunis en une seule surface, ces deux fonds ne
+	 * bordaient plus des panneaux isoles — ils encadraient toute la coquille, et
+	 * la bande beige autour d'elle prenait le dessus. Le sombre, lui, tient son
+	 * fond exterieur a 1.07 de la coquille.
+	 *
+	 * Les deux fonds remontent donc d'un tiers de leur ecart au panneau
+	 * (exterieur 1.34 → 1.22, page 1.20 → 1.13). C'est un rapprochement, pas un
+	 * retour a la nappe : l'echelle garde son ordre et ses proportions, elle est
+	 * seulement moins creuse. Les trois autres surfaces (en-tete, rangee, champ)
+	 * ne bougent pas — elles vivent SUR le panneau, ou l'etalement du lot 28
+	 * n'a jamais pose probleme. */
+	--background: #EFE9D6;
 	--background-secondary: #FBF7E8;
 	--background-disabled: #D3CCB2;
 	--background-header: #F3EDD8;
-	--background-outer: #DED7BE;
+	--background-outer: #E7E1CB;
 	--footer-color: #4A5847;
 	/* `bg-row` et `ink-3` du mockup : surface de survol et encre la plus pale.
 	   La rangee doit se distinguer du panneau qui la porte : en theme clair
@@ -148,6 +161,30 @@ body {
 	/* Chrome : barre du haut. Le fond exterieur devient clair en theme clair,
 	   donc le logo blanc doit s'inverser et les pastilles s'assombrir. */
 	--header-color: #0E1410;
+	/* Surface de la barre, et son taux d'opacite sous l'effet verre.
+	 *
+	 * La barre, le menu et le panneau social forment UNE coquille : les trois
+	 * doivent porter la meme surface, ce que le theme sombre faisait deja par
+	 * accident et pas le clair. Mesure : barre rendue #EAE3C8 contre un menu
+	 * #FBF7E8, soit 1.20 de contraste — la barre tombait exactement sur la
+	 * couleur du fond exterieur et cessait de se lire comme une surface. En
+	 * sombre les memes deux points valent 1.02, d'ou l'impression d'ensemble.
+	 *
+	 * Deux causes, un jeton chacune. La teinte d'abord : la barre prenait
+	 * `--background-header`, la surface des EN-TETES de panneau, un cran plus
+	 * sombre que le panneau — elle prend maintenant la surface de coquille.
+	 * L'opacite ensuite : a 55 %, 45 % du fond exterieur remonte au travers, ce
+	 * qui coute 1.20 en clair (les surfaces claires sont etalees) contre 1.02 en
+	 * sombre (elles sont serrees). Le verre ne peut donc pas porter le meme taux
+	 * des deux cotes ; en clair il monte a 88 %, ou la barre reste a 1.02 de sa
+	 * surface quoi qu'il defile dessous. Le flou et la desaturation restent : ce
+	 * qui se perd, c'est la teinte du contenu qui passait au travers, pas
+	 * l'effet.
+	 *
+	 * Resoudre par la seule teinte etait impossible : a 55 %, la couleur qu'il
+	 * faudrait poser pour retomber sur #FBF7E8 depasse le blanc. */
+	--header-background: var(--panel-background);
+	--header-glass: 88%;
 	--header-button-background: rgba(14, 20, 16, 0.08);
 	--header-button-background-hover: rgba(14, 20, 16, 0.16);
 	--header-logo-filter: invert(1);
@@ -308,6 +345,11 @@ body {
 		--panel-header-color: #E8F0E6;
 
 		--header-color: #E8F0E6;
+		/* Le sombre garde ses valeurs : c'est lui le modele. Sa barre rendue
+		   (#0B1012) est deja a 1.02 du menu, le verre a 55 % ne lui coute rien
+		   puisque le fond qui remonte au travers est a 1.07 de la coquille. */
+		--header-background: #11161A;
+		--header-glass: 55%;
 		--header-button-background: rgba(255, 255, 255, 0.08);
 		--header-button-background-hover: rgba(255, 255, 255, 0.16);
 		--header-logo-filter: none;
