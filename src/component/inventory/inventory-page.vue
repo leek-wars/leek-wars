@@ -74,7 +74,7 @@
 					</v-menu>
 				</template>
 				<template #content>
-					<div ref="bottomContent" class="bottom-content">
+					<div ref="bottomContent" class="bottom-content" :class="{vertical: columns}">
 						<div class="forge-wrapper">
 							<forge></forge>
 						</div>
@@ -467,6 +467,9 @@
 }
 .column :deep(.inventory-panel) {
 	min-height: 200px;
+	// L'ecart avec l'atelier est desormais porte par la poignee, qui l'occupe en
+	// entier : une marge en plus l'eloignerait du panneau d'en dessous.
+	margin-bottom: 0;
 }
 // Disposition en deux colonnes : l'atelier passe A DROITE de l'inventaire. Le
 // panneau porte `width: 100%` (pense pour un empilement) : en ligne il faut le
@@ -478,24 +481,28 @@
 .column.columns :deep(.inventory-panel) {
 	min-height: 0;
 	min-width: 300px;
-	margin-bottom: 0;
-	margin-right: 12px;
+	// Meme raison qu'en lignes : l'ecart est porte par la poignee, qui est ici a
+	// droite de l'inventaire.
+	margin-right: 0;
 }
 .column.columns .bottom-panel {
 	width: auto;
 	min-width: 0;
 	margin-bottom: 0;
 }
+// Meme bande, couchee : elle prend toute la hauteur entre les deux colonnes.
 .column.columns .resizer {
 	height: auto;
-	width: 36px;
-	margin-bottom: 0;
-	margin-right: -36px;
+	width: 16px;
 	cursor: ew-resize;
 }
+// La poignee EST l'ecart entre les deux panneaux (qui n'ont donc plus de marge de
+// ce cote) : la bande entiere est saisissable, sur toute la largeur en lignes comme
+// sur toute la hauteur en colonnes, et l'icone tombe DANS le trou. Avant, la bande
+// etait posee PAR-DESSUS l'atelier (marge negative) : il fallait lui couper les
+// clics pour ne pas manger son en-tete, et l'icone se retrouvait centree dessus.
 .resizer {
-	height: 36px;
-	margin-bottom: -36px;
+	height: 16px;
 	position: relative;
 	z-index: 2;
 	cursor: ns-resize;
@@ -504,16 +511,18 @@
 	justify-content: center;
 	flex-shrink: 0;
 	user-select: none;
-	pointer-events: none;
 	.v-icon {
-		pointer-events: auto;
-		font-size: 20px;
-		opacity: 1;
+		// A la taille de la bande : le glyphe, plus petit que sa boite, tient dans le
+		// trou sans mordre sur les panneaux.
+		font-size: 16px;
 		color: var(--grey-9);
 	}
-	&:hover .v-icon {
-		opacity: 1;
-		color: var(--primary);
+	// La bande entiere s'allume au survol : sans cela, rien ne dit qu'on peut
+	// l'attraper ailleurs que sur l'icone.
+	&:hover {
+		background: rgba(127, 127, 127, 0.15);
+		border-radius: var(--radius);
+		.v-icon { color: var(--primary); }
 	}
 }
 // En disposition colonnes, la poignee regle une LARGEUR meme quand l'atelier est
@@ -527,6 +536,9 @@
 #app.app .column :deep(.inventory-panel) {
 	min-height: 0;
 	flex: 1;
+	// Sur mobile il n'y a pas de poignee (elle est masquee) : le panneau reprend sa
+	// propre marge, sinon les deux panneaux se touchent.
+	margin-bottom: 12px;
 }
 #app.app .bottom-panel {
 	flex: 1;
@@ -560,6 +572,25 @@
 	overflow-y: scroll;
 	.forge-wrapper {
 		flex-basis: auto;
+	}
+}
+// En deux colonnes l'atelier est une bande haute et etroite : les trois colonnes
+// (forge, stats, catalogue) n'y tiennent plus cote a cote. On les empile comme sur
+// mobile, ce qui rend au catalogue toute la largeur du panneau. La forge et ses
+// stats gardent le haut et c'est le catalogue qui defile, sinon la piece en cours
+// sortait de l'ecran des qu'on parcourait les schemas.
+.bottom-content.vertical {
+	flex-direction: column;
+	.forge-wrapper {
+		flex-basis: auto;
+		// Retrecissable : sur un panneau court, la forge se replie sur sa propre barre
+		// de defilement plutot que de deborder du panneau.
+		flex-shrink: 1;
+	}
+	:deep(.forge-stats) {
+		width: 100%;
+		flex-shrink: 0;
+		padding: 10px;
 	}
 }
 .schemes-section {
