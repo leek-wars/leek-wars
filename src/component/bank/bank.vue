@@ -4,65 +4,71 @@
 			<h1>{{ $t('title') }}</h1>
 			<page-tabs active="bank" />
 		</div>
-		<panel class="first">
-			<div class="bank-description center" v-html="$t('description')"></div>
+		<!-- Deux colonnes dès qu'il y a la place : les lots de cristaux à gauche, les
+		     mois de Leek Wars + à droite. En dessous de ~1200px de contenu, chaque
+		     panneau reprend toute la largeur (voir .bank-columns). -->
+		<div class="container bank-columns">
+			<panel class="first crystals-panel">
+				<div class="bank-description center" v-html="$t('description')"></div>
 
-			<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)">
-				<template #selection>
-					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
-					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
-				</template>
-				<!-- La ligne est un élément ordinaire depuis lw-select : le drapeau, le code
-				     et le symbole se posent à la suite, le symbole poussé à droite. -->
-				<template #item="{ props: itemProps, item }">
-					<div v-bind="itemProps" class="currency">
-						<flag :code="LeekWars.currencies[String(item.value)].flag" :clickable="false" />
-						<span>{{ item.value }}</span>
-						<span class="symbol">{{ LeekWars.currencies[String(item.value)].symbol }}</span>
+				<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)">
+					<template #selection>
+						<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
+						{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
+					</template>
+					<!-- La ligne est un élément ordinaire depuis lw-select : le drapeau, le code
+					     et le symbole se posent à la suite, le symbole poussé à droite. -->
+					<template #item="{ props: itemProps, item }">
+						<div v-bind="itemProps" class="currency">
+							<flag :code="LeekWars.currencies[String(item.value)].flag" :clickable="false" />
+							<span>{{ item.value }}</span>
+							<span class="symbol">{{ LeekWars.currencies[String(item.value)].symbol }}</span>
+						</div>
+					</template>
+				</lw-select>
+
+				<router-link v-if="suggestion" :to="'/bank/buy/' + suggestion.pack.id" class="contextual-suggestion">
+					<div v-if="suggestion.target === 'item' && suggestion.item" class="suggestion-icon">
+						<item :item="suggestion.item" />
 					</div>
-				</template>
-			</lw-select>
-
-			<router-link v-if="suggestion" :to="'/bank/buy/' + suggestion.pack.id" class="contextual-suggestion">
-				<div v-if="suggestion.target === 'item' && suggestion.item" class="suggestion-icon">
-					<item :item="suggestion.item" />
-				</div>
-				<div v-else class="suggestion-icon fights">
-					<img src="/image/fight-pack/fight_pack_100.png" alt="fights">
-				</div>
-				<div class="suggestion-body">
-					<div class="suggestion-target">
-						<span class="target-name">{{ suggestion.target === 'fights' ? $t('suggestion_target_fights') : suggestionItemName }}</span>
-						<span class="target-price">·&nbsp;{{ $filters.number(suggestion.neededCrystals) }}&nbsp;<span class="crystal"></span></span>
+					<div v-else class="suggestion-icon fights">
+						<img src="/image/fight-pack/fight_pack_100.png" alt="fights">
 					</div>
-					<div class="suggestion-arrow">
-						<i18n-t v-if="suggestion.remainder > 0" tag="span" keypath="suggestion_with_remainder">
-							<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
-							<template #price><b>{{ suggestionPrice }}</b></template>
-							<template #remainder><b>{{ $filters.number(suggestion.remainder) }}&nbsp;<span class="crystal"></span></b></template>
-						</i18n-t>
-						<i18n-t v-else tag="span" keypath="suggestion_exact">
-							<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
-							<template #price><b>{{ suggestionPrice }}</b></template>
-						</i18n-t>
+					<div class="suggestion-body">
+						<div class="suggestion-target">
+							<span class="target-name">{{ suggestion.target === 'fights' ? $t('suggestion_target_fights') : suggestionItemName }}</span>
+							<span class="target-price">·&nbsp;{{ $filters.number(suggestion.neededCrystals) }}&nbsp;<span class="crystal"></span></span>
+						</div>
+						<div class="suggestion-arrow">
+							<i18n-t v-if="suggestion.remainder > 0" tag="span" keypath="suggestion_with_remainder">
+								<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
+								<template #price><b>{{ suggestionPrice }}</b></template>
+								<template #remainder><b>{{ $filters.number(suggestion.remainder) }}&nbsp;<span class="crystal"></span></b></template>
+							</i18n-t>
+							<i18n-t v-else tag="span" keypath="suggestion_exact">
+								<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
+								<template #price><b>{{ suggestionPrice }}</b></template>
+							</i18n-t>
+						</div>
 					</div>
+					<v-btn class="suggestion-cta" color="#1976d2" variant="flat" append-icon="mdi-arrow-right">{{ $t('suggestion_cta') }}</v-btn>
+				</router-link>
+
+				<div v-if="firstPurchase" class="first-purchase-banner">
+					<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
 				</div>
-				<v-btn class="suggestion-cta" color="#1976d2" variant="flat" append-icon="mdi-arrow-right">{{ $t('suggestion_cta') }}</v-btn>
-			</router-link>
 
-			<div v-if="firstPurchase" class="first-purchase-banner">
-				<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
-			</div>
+				<loader v-if="!packs" />
+				<div v-else class="packs">
+					<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="Number(p)" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
+				</div>
+			</panel>
 
-			<loader v-if="!packs" />
-			<div v-else class="packs">
-				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="Number(p)" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
-			</div>
-		</panel>
+			<!-- Mois de Leek Wars + (#3303), en euros comme en cristaux. Même composant
+			     que dans le marché : une seule grille de prix à maintenir. -->
+			<lwplus-packs />
+		</div>
 
-		<!-- Mois de Leek Wars + (#3303), en euros comme en cristaux. Même composant
-		     que dans le marché : une seule grille de prix à maintenir. -->
-		<lwplus-packs />
 		<div v-if="items" class="items-header">
 			<h1 class="items-title">{{ $t('items_title') }}</h1>
 			<v-tooltip location="bottom">
@@ -74,7 +80,7 @@
 				<span>{{ $t('refresh_items') }}</span>
 			</v-tooltip>
 		</div>
-		<div class="container grid">
+		<div class="items-grid">
 			<panel v-if="!items">
 				<loader />
 			</panel>
@@ -329,6 +335,35 @@ watch(() => LeekWars.currency, () => {
 </script>
 
 <style lang="scss" scoped>
+	// Côte à côte au-delà de ~1200px de contenu, empilés en dessous : pas de point
+	// de rupture sur la fenêtre, c'est la largeur réellement disponible qui tranche.
+	.bank-columns {
+		// Chacun sa hauteur naturelle : étirés, les mois de LW+ traîneraient un
+		// grand vide sous leurs trois cartes.
+		align-items: flex-start;
+		// Les cristaux demandent nettement plus de largeur que les mois de LW+ : ces
+		// deux bases décident seules du basculement, et le rapport de croissance 3/1
+		// évite que la colonne de droite s'étale sur les écrans très larges.
+		& > .crystals-panel {
+			flex: 3 1 720px;
+		}
+		& > :deep(.lwplus-packs) {
+			flex: 1 1 480px;
+		}
+	}
+	.items-grid {
+		display: grid;
+		gap: 12px;
+		margin-bottom: 12px;
+		// Plafonné à 4 colonnes : `calc(25% - 9px)` est la largeur exacte d'un quart
+		// gouttières comprises, et le `max()` reprend la main sous 1200px pour
+		// retomber à 3, 2 puis 1 colonne. Les 8 items forment ainsi deux rangées
+		// pleines sur grand écran, jamais un 5 + 3.
+		grid-template-columns: repeat(auto-fill, minmax(max(300px, calc(25% - 9px)), 1fr));
+		& > :deep(.panel) {
+			margin-bottom: 0;
+		}
+	}
 .currency {
 	display: flex;
 	align-items: center;

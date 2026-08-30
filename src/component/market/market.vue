@@ -23,9 +23,6 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<!-- Mois de Leek Wars + (#3303). Masqué pendant une recherche : ce n'est
-				     pas un item du marché, il n'a rien à faire dans des résultats filtrés. -->
-				<lwplus-packs v-if="!search" />
 				<panel v-if="$store.state.farmer?.buy_fights_enabled && filteredFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross">
 					<template #content>
 						<loader v-if="!fight_packs.length" />
@@ -235,6 +232,12 @@
 					<v-icon>mdi-chart-timeline-variant</v-icon>
 					<span class="report-button">{{ $t('item_progress') }}</span>
 				</router-link>
+				<!-- Leek Wars + (#3303) : simple lien discret en pied de page, les lots
+				     n'ont rien à faire au milieu des items du marché. -->
+				<router-link to="/lwplus" class="tab">
+					<v-icon>mdi-star-four-points</v-icon>
+					<span class="report-button">Leek Wars +</span>
+				</router-link>
 			</div>
 		</div>
 
@@ -321,7 +324,7 @@
 	import { EffectTypeMarket } from '@/model/effect'
 	import { Farmer } from '@/model/farmer'
 	import { HatTemplate } from '@/model/hat'
-	import { locale, mixins , useNamespacedT } from '@/model/i18n'
+	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { PompTemplate } from '@/model/pomp'
@@ -333,13 +336,9 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import PageTabs from '@/component/app/page-tabs.vue'
 	import { emitter } from '@/model/emitter'
-	import { computed, defineAsyncComponent, onBeforeUnmount, onUnmounted, reactive, ref, useTemplateRef, watch } from 'vue'
+	import { computed, onBeforeUnmount, onUnmounted, reactive, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
-
-	// Chargé par son fichier .i18n : c'est lui qui accroche les traductions au
-	// composant (voir le plugin i18n de vite.config.ts).
-	const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
 
 	defineOptions({ name: 'Market', i18n: {}, mixins: [...mixins] })
 
