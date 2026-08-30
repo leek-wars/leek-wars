@@ -154,7 +154,7 @@
 		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 4, defaultH: 5, minW: 3, minH: 3, multi: true, configurable: true, noScroll: true },
 		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/collection', noScroll: true },
 		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 4, defaultH: 4, minW: 3, minH: 3 },
-		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 4, defaultH: 5, minW: 3, minH: 3, link: '/ranking', multi: true, configurable: true },
+		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 4, defaultH: 5, minW: 3, minH: 3, link: '/ranking', multi: true, configurable: true, noScroll: true },
 		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true, noScroll: true },
 		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies', noScroll: true },
 		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum', noScroll: true },

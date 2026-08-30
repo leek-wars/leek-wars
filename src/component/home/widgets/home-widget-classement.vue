@@ -7,18 +7,20 @@
 				<span class="name">{{ nameColumn }}</span>
 				<span class="talent">{{ t('main.talent') }}</span>
 			</div>
-			<router-link v-for="row in rows" :key="row.id" v-ripple :to="linkFor(row)" class="row" :class="{ me: isMe(row) }">
-				<span class="rank" :class="rankClass(row.rank)">{{ row.rank }}</span>
-				<!-- La classe va sur l'activateur, pas sur le rich-tooltip : sa racine
-					est un v-menu, qui avale les attributs de l'appelant. -->
-				<span class="name">
-					<component :is="tooltipComponent" :id="row.id" v-slot="{ props }" :bottom="true">
-						<span v-bind="props" :class="rankClass(row.rank)">{{ row.name }}</span>
-					</component>
-				</span>
-				<flag v-if="row.country" :code="row.country" :clickable="false" class="flag" />
-				<span class="talent">{{ $filters.number(row.talent) }}</span>
-			</router-link>
+			<div ref="rowsEl" class="rows" :style="{ '--row-height': ROW_HEIGHT + 'px' }">
+				<router-link v-for="row in visibleRows" :key="row.id" v-ripple :to="linkFor(row)" class="row" :class="{ me: isMe(row) }">
+					<span class="rank" :class="rankClass(row.rank)">{{ row.rank }}</span>
+					<!-- La classe va sur l'activateur, pas sur le rich-tooltip : sa racine
+						est un v-menu, qui avale les attributs de l'appelant. -->
+					<span class="name">
+						<component :is="tooltipComponent" :id="row.id" v-slot="{ props }" :bottom="true">
+							<span v-bind="props" :class="rankClass(row.rank)">{{ row.name }}</span>
+						</component>
+					</span>
+					<flag v-if="row.country" :code="row.country" :clickable="false" class="flag" />
+					<span class="talent">{{ $filters.number(row.talent) }}</span>
+				</router-link>
+			</div>
 			<div v-if="!rows.length" class="none">{{ t('nobody') }}</div>
 		</template>
 	</div>
@@ -32,8 +34,15 @@
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 
 	defineOptions({ name: 'HomeWidgetClassement' })
+
+	// Hauteur naturelle d'une ligne (contenu + padding), posée en `min-height` par
+	// le style via la variable : les lignes s'étirent ensuite pour remplir le
+	// panel, mais c'est cette hauteur-là qui décide combien il en tient.
+	const ROW_HEIGHT = 31
+	const ROWS = 10
 
 	const props = defineProps<{ params?: { category?: string } }>()
 
@@ -43,6 +52,11 @@
 	const loaded = ref(false)
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rows = ref<any[]>([])
+
+	// Autant de lignes que la hauteur du panel le permet, jamais coupées.
+	const rowsEl = ref<HTMLElement | null>(null)
+	const rowCount = useFitCount(rowsEl, '.row', ROWS, 0, ROW_HEIGHT)
+	const visibleRows = computed(() => rows.value.slice(0, rowCount.value))
 
 	// La colonne des noms dit de qui parle le classement, comme sur /ranking.
 	const nameColumn = computed(() => t('main.' + category.value))
@@ -71,7 +85,7 @@
 	function load() {
 		loaded.value = false
 		LeekWars.get<{ ranking: unknown[] }>('ranking/get-active/' + category.value + '/talent/1/null').then((data) => {
-			rows.value = (data.ranking ?? []).slice(0, 10)
+			rows.value = (data.ranking ?? []).slice(0, ROWS)
 			loaded.value = true
 		}).error(() => { rows.value = []; loaded.value = true })
 	}
@@ -82,6 +96,7 @@
 	.classement-widget {
 		display: flex;
 		flex-direction: column;
+		height: 100%;
 	}
 	.head {
 		display: flex;
@@ -93,11 +108,25 @@
 		font-size: 12px;
 		text-transform: uppercase;
 		color: var(--text-color-secondary);
+		flex-shrink: 0;
 	}
+	// La liste occupe la hauteur restante ; overflow hidden en filet de sécurité,
+	// le nombre de lignes affichées est calculé pour tenir sans couper.
+	.rows {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
+	}
+	// Les lignes retenues se partagent toute la hauteur du panel : pas de blanc
+	// résiduel en bas, et le contenu reste centré dans sa ligne.
 	.row {
 		display: flex;
 		align-items: center;
 		gap: 8px;
+		flex: 1 1 auto;
+		min-height: var(--row-height);
 		padding: 6px 8px;
 		border-radius: var(--radius);
 		text-decoration: none;

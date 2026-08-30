@@ -8,8 +8,14 @@ import { nextTick, onBeforeUnmount, ref, watch, type Ref } from 'vue'
  * éléments alignés sur la première rangée. Suppose des rangées de hauteur
  * homogène ; le conteneur doit être en overflow: hidden (filet de sécurité si
  * la mesure tombe entre deux rangées).
+ *
+ * `rowHeight` : à fournir quand les rangées s'étirent pour remplir le conteneur.
+ * Leur hauteur mesurée dépend alors du nombre affiché, donc de la mesure
+ * elle-même — le compte se figerait et n'augmenterait plus jamais quand le
+ * widget grandit. On part dans ce cas de leur hauteur naturelle, connue de
+ * l'appelant (une seule colonne, pas de mesure du DOM).
  */
-export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: string, max: number, gap = 0) {
+export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: string, max: number, gap = 0, rowHeight = 0) {
 	const count = ref(max)
 	let resizeObserver: ResizeObserver | null = null
 	let mutationObserver: MutationObserver | null = null
@@ -17,6 +23,11 @@ export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: st
 	function update(chained = false) {
 		const el = container.value
 		if (!el) return
+		if (rowHeight > 0) {
+			if (el.clientHeight <= 0) return
+			setCount(Math.min(max, Math.max(1, Math.floor((el.clientHeight + gap) / (rowHeight + gap)))), chained)
+			return
+		}
 		const items = el.querySelectorAll(itemSelector)
 		if (!items.length) return
 		const firstRect = (items[0] as HTMLElement).getBoundingClientRect()
@@ -36,12 +47,14 @@ export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: st
 			pitch = firstRect.height + (parseFloat(style.marginTop) || 0) + (parseFloat(style.marginBottom) || 0) + gap
 		}
 		const rows = Math.max(1, Math.floor((el.clientHeight + gap) / pitch))
-		const fit = Math.min(max, rows * Math.max(1, perRow))
-		if (fit !== count.value) {
-			count.value = fit
-			// Une seule re-mesure après re-rendu : le nombre de colonnes peut avoir changé.
-			if (!chained) nextTick(() => update(true))
-		}
+		setCount(Math.min(max, rows * Math.max(1, perRow)), chained)
+	}
+
+	function setCount(fit: number, chained: boolean) {
+		if (fit === count.value) return
+		count.value = fit
+		// Une seule re-mesure après re-rendu : le nombre de colonnes peut avoir changé.
+		if (!chained) nextTick(() => update(true))
 	}
 
 	watch(container, el => {
