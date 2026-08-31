@@ -1528,14 +1528,14 @@ class Grapple extends ChipAnimation {
 		this.x = this.sx + x * this.ex
 		this.y = this.sy + x * this.ey
 		this.d = Math.sqrt(Math.pow(this.x - this.sx, 2) + Math.pow(this.y - this.sy, 2))
-		if (this.target && !this.target.states.has(State.STATIC) && r > 0.5) {
+		if (this.target && !this.target.unmovable && r > 0.5) {
 			this.target.ox = this.x
 			this.target.oy = this.y
 		}
 	}
 
 	public end() {
-		if (this.target && !this.target.states.has(State.STATIC)) {
+		if (this.target && !this.target.unmovable) {
 			this.target.setCell(this.cell)
 		}
 	}
@@ -1671,7 +1671,7 @@ class BoxingGlove extends ChipAnimation {
 		this.y = this.sy + x * this.ey
 		this.d = Math.sqrt(Math.pow(this.x - this.sx, 2) + Math.pow(this.y - this.sy, 2))
 
-		if (this.target && !this.target.states.has(State.STATIC)) {
+		if (this.target && !this.target.unmovable) {
 			const tr = Math.max(0, Math.min(1, r / (0.2 * (1 - this.move_start)) - this.move_start))
 			this.target.ox = this.tsx + tr * (this.position.x - this.tsx)
 			this.target.oy = this.tsy + tr * (this.position.y - this.tsy)
@@ -1731,6 +1731,65 @@ class Prism extends ChipAnimation {
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addPrism(targetPos.x, targetPos.y, 180, 80)
+	}
+}
+
+// Hémorragie (2.50, #4905) : applique l'état Insoignable (state 2). Pattern
+// ChipDebuffAnimation (auréole d'entrave + icône de la puce), plus quelques
+// giclées de sang de la cible — la plaie qui ne se referme pas.
+class Hemorrhage extends ChipDebuffAnimation {
+	static textures = [T.shackle_aureol, T.chip_hemorrhage]
+	static sounds = [S.debuff]
+	public delay = 15
+	constructor(game: Game) { super(game, T.chip_hemorrhage) }
+	public update(dt: number) {
+		super.update(dt)
+		this.delay -= dt
+		if (this.delay <= 0) {
+			this.delay = 15
+			if (this.targets) {
+				for (const target of this.targets) {
+					const angle = Math.random() * Math.PI * 2
+					target.hurt(target.ox, target.oy, 25 + Math.random() * 15, Math.cos(angle) * 3, Math.sin(angle) * 3, 2)
+				}
+			}
+		}
+	}
+}
+
+// Maturation (2.50, #1813) : buff permanent d'une invocation alliée (+vie max,
+// +puissance). Patron ChipHealAnimation — auréole et croix vertes de croissance,
+// comme Élévation.
+class Maturation extends ChipHealAnimation {
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_maturation]
+	static sounds = [S.heal]
+	constructor(game: Game) { super(game, T.chip_maturation) }
+}
+
+// Surinfection (2.50, #1813) : convertit une partie des poisons actifs de la
+// cible en dégâts immédiats. Patron des poisons existants (auréole + icône),
+// plus un éclat toxique sur la cible quand les poisons détonent.
+class Superinfection extends ChipPoisonAnimation {
+	static textures = [T.poison_aureol, T.chip_superinfection, T.halo_green]
+	static sounds = [S.poison]
+	public burst = 25
+	constructor(game: Game) { super(game, T.chip_superinfection) }
+	public update(dt: number) {
+		super.update(dt)
+		if (this.burst > 0) {
+			this.burst -= dt
+			if (this.burst <= 0 && this.targets) {
+				for (const target of this.targets) {
+					// La détonation : flash + gerbe de halos toxiques
+					target.hurt(target.ox, target.oy, 25, 0, 0, 0)
+					for (let i = 0; i < 6; ++i) {
+						const angle = Math.random() * Math.PI * 2
+						const speed = 1 + Math.random() * 1.5
+						this.game.particles.addImage(target.ox, target.oy, 20 + Math.random() * 30, Math.cos(angle) * speed, Math.sin(angle) * speed * 0.5, 1.5, 0, T.halo_green, 40)
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -1903,4 +1962,4 @@ class Thunder extends ChipAnimation {
 	}
 }
 
-export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
+export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Hemorrhage, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Maturation, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Superinfection, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }

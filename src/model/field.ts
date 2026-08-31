@@ -2,7 +2,6 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Area } from './area'
 import { Cell } from './cell'
 import { Entity } from './entity'
-import { State } from './effect'
 import { FightEntity } from '@/component/player/game/entity'
 
 class Field {
@@ -250,7 +249,7 @@ class Field {
 		const dx = Math.sign(target.x - from.x)
 		const dy = Math.sign(target.y - from.y)
 		let current = from
-		if (targetEntity && current.entity === targetEntity && targetEntity.states.has(State.STATIC)) {
+		if (targetEntity && current.entity === targetEntity && targetEntity.unmovable) {
 			return current
 		}
 		while (current !== target) {

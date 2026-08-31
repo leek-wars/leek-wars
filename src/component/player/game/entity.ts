@@ -4,7 +4,7 @@ import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { isDrawable, loadDrawableImage, SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
-import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
+import { EffectModifier, EffectType, EntityEffect, State } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
@@ -44,8 +44,10 @@ abstract class FightEntity extends Entity {
 	static stateImages: Map<number, HTMLImageElement> = new Map()
 	// Couleur du fond de l'icône d'état, indexée par état. Vert = bénéfique, bleu =
 	// neutre, rouge = subi. Un état sans couleur ne peint pas de fond.
+	// 2 = Insoignable (rouge), 9 = Enraciné (bleu, inhérent aux plantes 2.50),
+	// 12 = Stérile (rouge).
 	static stateColors = [
-		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue', 'red'
+		'green', '', 'red', 'green', '', '', '', '', '', 'blue', '', 'blue', 'red'
 	]
 
 	/**
@@ -175,6 +177,11 @@ abstract class FightEntity extends Entity {
 	public lifeColorLighter!: string
 	// States
 	public states: Set<number> = new Set()
+	// Immunisé aux déplacements forcés (poussée/attirance) : Statique ou Enraciné.
+	// L'Inversion/Rempotage ne passe pas par ici (l'Enraciné reste échangeable).
+	get unmovable(): boolean {
+		return this.states.has(State.STATIC) || this.states.has(State.ROOTED)
+	}
 	// Reachable cells
 	public reachableCells: Set<Cell> = new Set<Cell>()
 	public reachableCellsArea!: number[][]

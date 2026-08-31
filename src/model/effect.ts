@@ -62,6 +62,7 @@ enum EffectType {
 	STEAL_LIFE = 61,
 	MULTIPLY_STATS = 62,
 	DAMAGE_TO_RESISTANCE = 63,
+	SUPERINFECTION = 64,
 }
 
 enum EffectModifier {
@@ -99,6 +100,11 @@ enum State {
 	INVICIBLE = 3,
 	PACIFIST = 4,
 	STATIC = 11,
+	// Enraciné (plantes 2.50) : ni déplacement ni poussée/attirance, mais
+	// l'Inversion/Rempotage fonctionne (≠ STATIC qui bloque aussi l'inversion).
+	// Ordinal 9, confirmé dans l'enum du générateur.
+	ROOTED = 9,
+	STERILE = 12,
 }
 
 class Effect {
