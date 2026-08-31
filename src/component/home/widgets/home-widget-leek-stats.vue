@@ -2,27 +2,31 @@
 	<div class="leek-stats-widget">
 		<loader v-if="!loaded" />
 		<template v-else-if="leek">
-			<router-link :to="'/leek/' + leek.id" class="head">
-				<leek-image :leek="leek" :scale="0.6" />
+			<!-- XP et combats SOUS le bloc nom/niveau/talent, dans la colonne à côté
+			     de l'image (demande de Pierre) : l'espace libéré va au graphique. -->
+			<div class="head">
+				<router-link :to="'/leek/' + leek.id" class="head-image">
+					<leek-image :leek="leek" :scale="0.6" />
+				</router-link>
 				<div class="head-info">
-					<div class="name">{{ leek.name }}</div>
-					<div class="level">{{ t('main.level_n', [leek.level]) }}</div>
+					<router-link :to="'/leek/' + leek.id" class="identity">
+						<div class="name">{{ leek.name }}</div>
+						<div class="level">{{ t('main.level_n', [leek.level]) }}</div>
+					</router-link>
 					<div class="talent-line">
 						<talent :id="leek.id" :talent="leek.talent" :max_talent="leek.max_talent" category="leek" />
 					</div>
+					<div class="xp">
+						<div class="xp-bar"><div class="xp-fill" :style="{ width: xpPercent + '%' }"></div></div>
+						<div class="xp-text">{{ t('stat_xp') }} : {{ LeekWars.formatNumber(leek.xp) }}<template v-if="leek.up_xp"> / {{ LeekWars.formatNumber(leek.up_xp) }}</template></div>
+					</div>
+					<div class="wdl">
+						<div class="wdl-cell"><span class="v win">{{ $filters.number(leek.victories) }}</span><span class="l">{{ t('stat_victories') }}</span></div>
+						<div class="wdl-cell"><span class="v draw">{{ $filters.number(leek.draws) }}</span><span class="l">{{ t('stat_draws') }}</span></div>
+						<div class="wdl-cell"><span class="v lose">{{ $filters.number(leek.defeats) }}</span><span class="l">{{ t('stat_defeats') }}</span></div>
+						<div class="wdl-cell"><span class="v">{{ leek.tournaments ? leek.tournaments.length : 0 }}</span><span class="l">{{ t('stat_tournaments') }}</span></div>
+					</div>
 				</div>
-			</router-link>
-
-			<div class="xp">
-				<div class="xp-bar"><div class="xp-fill" :style="{ width: xpPercent + '%' }"></div></div>
-				<div class="xp-text">{{ t('stat_xp') }} : {{ LeekWars.formatNumber(leek.xp) }}<template v-if="leek.up_xp"> / {{ LeekWars.formatNumber(leek.up_xp) }}</template></div>
-			</div>
-
-			<div class="wdl">
-				<div class="wdl-cell"><span class="v win">{{ $filters.number(leek.victories) }}</span><span class="l">{{ t('stat_victories') }}</span></div>
-				<div class="wdl-cell"><span class="v draw">{{ $filters.number(leek.draws) }}</span><span class="l">{{ t('stat_draws') }}</span></div>
-				<div class="wdl-cell"><span class="v lose">{{ $filters.number(leek.defeats) }}</span><span class="l">{{ t('stat_defeats') }}</span></div>
-				<div class="wdl-cell"><span class="v">{{ leek.tournaments ? leek.tournaments.length : 0 }}</span><span class="l">{{ t('stat_tournaments') }}</span></div>
 			</div>
 
 			<div v-if="chartData" class="chart-wrap">
@@ -122,11 +126,20 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		text-decoration: none;
-		color: var(--text-color);
+	}
+	.head-image {
+		flex-shrink: 0;
 	}
 	.head-info {
 		min-width: 0;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.identity {
+		text-decoration: none;
+		color: var(--text-color);
 	}
 	.name {
 		font-weight: bold;
@@ -186,11 +199,14 @@
 		flex: 1 1 auto;
 		min-height: 0;
 		position: relative;
+		// La règle « pas de graphique sous 60 px » se mesure sur la place que LE
+		// GRAPHIQUE reçoit, pas sur la hauteur du panel : le bloc de tête varie
+		// (nom long, talent). Le wrap devient son propre conteneur et masque son
+		// canvas quand il est trop bas.
+		container-type: size;
 	}
-	// Panel trop bas pour un graphique lisible : on le masque plutôt que
-	// de l'écraser (container = contenu du panel).
-	@container (max-height: 330px) {
-		.chart-wrap {
+	@container (max-height: 59px) {
+		.chart-wrap > :deep(canvas) {
 			display: none;
 		}
 	}

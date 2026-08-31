@@ -10,6 +10,12 @@
 						<span class="name">{{ $t('trophy.' + trophy.code) }}</span>
 						<span class="rarity">{{ rarityText(trophy.rarity) }}</span>
 					</div>
+					<!-- Les 5 derniers éleveurs à l'avoir débloqué (demande de Pierre), du
+					     plus récent au plus ancien. Pas de lien par avatar : la ligne EST
+					     déjà un lien, le nom vit dans le title. -->
+					<div v-if="unlockers[trophy.id] && unlockers[trophy.id].length" class="unlockers">
+						<img v-for="f in unlockers[trophy.id]" :key="f.id" class="avatar" :src="LeekWars.getAvatar(f.id, f.avatar_changed)" :title="f.name">
+					</div>
 				</router-link>
 			</rich-tooltip-trophy>
 		</div>
@@ -49,6 +55,11 @@
 		return '< 0.01%'
 	}
 
+	// Les derniers éleveurs à avoir débloqué chaque trophée affiché. Service
+	// nouveau : sur un serveur plus ancien l'appel échoue et les lignes restent
+	// simplement sans avatars.
+	const unlockers = ref<{ [id: number]: { id: number, name: string, avatar_changed: number }[] }>({})
+
 	if (store.state.farmer) {
 		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,6 +69,11 @@
 				.sort((a, b) => a.rarity - b.rarity)
 				.slice(0, 10)
 			loaded.value = true
+			if (rarest.value.length) {
+				LeekWars.get<{ unlockers: typeof unlockers.value }>('trophy/last-unlockers/' + rarest.value.map(tr => tr.id).join(',')).then(d => {
+					unlockers.value = d.unlockers
+				}).error(() => {})
+			}
 		}).error(() => { loaded.value = true })
 	} else {
 		loaded.value = true
@@ -111,6 +127,20 @@
 	.rarity {
 		font-size: 12px;
 		color: var(--text-color-secondary);
+	}
+	// Avatars des derniers débloqueurs, poussés en bout de ligne. La classe
+	// .avatar donne le carré biseauté du thème ; object-fit au cas où l'image
+	// n'est pas carrée.
+	.unlockers {
+		margin-left: auto;
+		display: flex;
+		gap: 3px;
+		flex-shrink: 0;
+	}
+	.unlockers .avatar {
+		width: 24px;
+		height: 24px;
+		object-fit: cover;
 	}
 	.none {
 		color: var(--text-color-secondary);
