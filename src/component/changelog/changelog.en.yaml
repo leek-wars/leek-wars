@@ -16,6 +16,7 @@
     - "4 new hats: the Beret and the Chef's toque in the shop, plus the Beach hat and the Sun crown to craft at the forge with Solstice resources."
     - "5 new crafting trophies: Apprentice, Artisan, Blacksmith, Cyclops and Hephaestus, for 1, 10, 100, 1000 and 10000 items crafted at the forge."
     - "New Tetrarch trophy: win a Battle Royale, a War, a Chest Hunt and a Colossus on the same day, with the same leek."
+    - "New Grand melee trophy: take part in an arena fight with 20 leeks."
     - "#ai isBatchFight() tells whether the fight comes from a batch, to stay quiet when measuring an AI."
     - "A team page now has its own \"Live\" panel, next to the chat: trophies unlocked, milestones reached and topics created by its members over the last 7 days."
     - "Your favorite emojis: the emojis you use the most (reactions and emojis sent in messages) appear first in the chat quick reaction bar, and in a ⭐ tab at the top of the emoji panel."

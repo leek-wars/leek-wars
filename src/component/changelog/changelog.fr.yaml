@@ -16,6 +16,7 @@
     - "4 nouveaux chapeaux : le Béret et la Toque de chef à la boutique, le Chapeau de plage et la Couronne solaire à fabriquer à la forge avec les ressources du Solstice."
     - "5 nouveaux trophées de fabrication : Apprenti, Artisan, Forgeron, Cyclope et Héphaïstos, pour 1, 10, 100, 1000 et 10000 objets fabriqués à la forge."
     - "Nouveau trophée Tétrarque : gagner un Battle Royale, une Guerre, une Chasse aux coffres et un Colosse dans la même journée, avec le même poireau."
+    - "Nouveau trophée Grande mêlée : participer à un combat d'arène réunissant 20 poireaux."
     - "#ai isBatchFight() dit si le combat vient d'un lot, pour se taire quand on mesure son IA."
     - "La page d'une équipe a son panneau « En direct », à côté du chat : les trophées débloqués, les seuils franchis et les sujets créés par ses membres, sur les 7 derniers jours."
     - "Vos emojis favoris : les emojis que vous utilisez le plus (réactions posées et emojis envoyés dans les messages) apparaissent en premier dans la barre de réaction rapide du chat, et dans un onglet ⭐ en tête du panneau emoji."

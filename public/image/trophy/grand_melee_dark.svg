@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="3.90 3.90 56.20 56.20">
+<g fill="#cccccc">
+	<circle cx="32.00" cy="7.00" r="2.60"/>
+	<circle cx="39.73" cy="8.22" r="2.60"/>
+	<circle cx="46.69" cy="11.77" r="2.60"/>
+	<circle cx="52.23" cy="17.31" r="2.60"/>
+	<circle cx="55.78" cy="24.27" r="2.60"/>
+	<circle cx="57.00" cy="32.00" r="2.60"/>
+	<circle cx="55.78" cy="39.73" r="2.60"/>
+	<circle cx="52.23" cy="46.69" r="2.60"/>
+	<circle cx="46.69" cy="52.23" r="2.60"/>
+	<circle cx="39.73" cy="55.78" r="2.60"/>
+	<circle cx="32.00" cy="57.00" r="2.60"/>
+	<circle cx="24.27" cy="55.78" r="2.60"/>
+	<circle cx="17.31" cy="52.23" r="2.60"/>
+	<circle cx="11.77" cy="46.69" r="2.60"/>
+	<circle cx="8.22" cy="39.73" r="2.60"/>
+	<circle cx="7.00" cy="32.00" r="2.60"/>
+	<circle cx="8.22" cy="24.27" r="2.60"/>
+	<circle cx="11.77" cy="17.31" r="2.60"/>
+	<circle cx="17.31" cy="11.77" r="2.60"/>
+	<circle cx="24.27" cy="8.22" r="2.60"/>
+</g>
+<g stroke="#f8ac00" stroke-width="3.6" stroke-linecap="round" fill="none">
+	<path d="M 21.20 25.20 L 30.00 38.80"/>
+	<path d="M 30.00 25.20 L 21.20 38.80"/>
+	<path d="M 34.00 25.20 L 42.80 38.80"/>
+	<path d="M 42.80 25.20 L 34.00 38.80"/>
+</g>
+</svg>

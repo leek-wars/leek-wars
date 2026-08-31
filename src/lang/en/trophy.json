@@ -738,5 +738,7 @@
 	"hephaestus": "Hephaestus",
 	"hephaestus_f": "Hephaestus",
 	"tetrarch": "Tetrarch",
-	"tetrarch_f": "Tetrarch"
+	"tetrarch_f": "Tetrarch",
+	"grand_melee": "Grand melee",
+	"grand_melee_f": "Grand melee"
 }
