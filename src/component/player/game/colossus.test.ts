@@ -16,32 +16,44 @@ const COLOSSUS_EFFECT: RawAction = [302, 0, 0, 9, 9, 62, 3, -1, 16] // ADD_CHIP_
 const BULB_EFFECT: RawAction = [302, 0, 4, 10, 10, 62, 3, -1, 16] // idem sur le bulbe
 const BULB_SUMMON: RawAction = [9, 9, 10, 522, 1] // SUMMON du bulbe 10 par le colosse 9
 
+// Combat 53289203 : 21/07/2026, dans la fenêtre des snapshots multipliés
+const OLD_FIGHT = 1784600000
+// Combat 53484250 : 30/08/2026, après le correctif du snapshot (forum #12080)
+const NEW_FIGHT = 1788100000
+
 describe('getPreSummonMultipliers', () => {
 
 	it('détecte une invocation dont le snapshot précède son action d\'invocation', () => {
 		const actions = [COLOSSUS_EFFECT, BULB_EFFECT, BULB_SUMMON]
-		expect(getPreSummonMultipliers([colossus(), bulb()], actions)).toEqual({ 10: 3 })
+		expect(getPreSummonMultipliers([colossus(), bulb()], actions, OLD_FIGHT)).toEqual({ 10: 3 })
 	})
 
 	it('ignore le colosse lui-même, dont le snapshot est émis avant son effet', () => {
 		const actions = [COLOSSUS_EFFECT, BULB_SUMMON, BULB_EFFECT]
-		expect(getPreSummonMultipliers([colossus(), bulb()], actions)).toEqual({})
+		expect(getPreSummonMultipliers([colossus(), bulb()], actions, OLD_FIGHT)).toEqual({})
 	})
 
 	it('ignore les combats générés après le correctif, effet posé après l\'invocation', () => {
 		const actions = [COLOSSUS_EFFECT, BULB_SUMMON, BULB_EFFECT]
-		expect(getPreSummonMultipliers([bulb()], actions)).toEqual({})
+		expect(getPreSummonMultipliers([bulb()], actions, NEW_FIGHT)).toEqual({})
+	})
+
+	it('ignore un combat d\'après le correctif du snapshot même si l\'effet précède l\'invocation', () => {
+		// Fenêtre 15/08 → correctif d'ordre du générateur : snapshot de base mais
+		// effet toujours loggé avant l'invocation (forum #12080, combat 53484250)
+		const actions = [COLOSSUS_EFFECT, BULB_EFFECT, BULB_SUMMON]
+		expect(getPreSummonMultipliers([colossus(), bulb()], actions, NEW_FIGHT)).toEqual({})
 	})
 
 	it('ne retient que le premier facteur, les paliers suivants arrivant après l\'invocation', () => {
 		const later: RawAction = [302, 0, 182, 10, 10, 62, 4, -1, 16]
 		const actions = [BULB_EFFECT, BULB_SUMMON, later]
-		expect(getPreSummonMultipliers([bulb()], actions)).toEqual({ 10: 3 })
+		expect(getPreSummonMultipliers([bulb()], actions, OLD_FIGHT)).toEqual({ 10: 3 })
 	})
 
 	it('ignore les effets qui ne sont pas des multiplicateurs', () => {
 		const shield: RawAction = [302, 22, 60, 10, 10, 6, 250, 4]
-		expect(getPreSummonMultipliers([bulb()], [shield, BULB_SUMMON])).toEqual({})
+		expect(getPreSummonMultipliers([bulb()], [shield, BULB_SUMMON], OLD_FIGHT)).toEqual({})
 	})
 })
 

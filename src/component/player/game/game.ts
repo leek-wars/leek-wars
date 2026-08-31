@@ -558,7 +558,7 @@ class Game {
 
 		// Add entities
 		const entities = this.data.leeks
-		const preSummonMultipliers = getPreSummonMultipliers(entities, this.data.actions)
+		const preSummonMultipliers = getPreSummonMultipliers(entities, this.data.actions, fight.date)
 
 		for (const raw of entities) {
 
