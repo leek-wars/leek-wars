@@ -1369,7 +1369,7 @@ class Game {
 			}
 
 			// != null : couvre aussi undefined, pour une puce plus récente que le
-			// tableau (ex. Cactus 2.50, template 117 : invocation, pas d'animation dédiée).
+			// tableau (ex. Prototaxite 2.50, template 117 : invocation, pas d'animation dédiée).
 			if (CHIP_ANIMATIONS[chip - 1] != null && chip !== 40) {
 				const chipAnimation: ChipAnimation = new CHIP_ANIMATIONS[chip - 1]!(this)
 				// Donne au launch() de quoi filtrer les vraies cibles via le
@@ -2917,7 +2917,7 @@ class Game {
 
 		// Zones d'effet des plantes 2.50 : cellules teintées discrètes autour de
 		// chaque plante vivante (portée de tir du Piment, zone de soin du Maïs —
-		// le Cactus n'a pas de zone), sous les entités.
+		// le Prototaxite n'a pas de zone), sous les entités.
 		for (const entity of this.leeks) {
 			if (entity instanceof Bulb && entity.plant && entity.active && !entity.dead && entity.zoneRange > 0 && entity.cell) {
 				this.drawEffectArea(entity.plantArea(), entity.zoneColor, 2, 0.25, 0.06)

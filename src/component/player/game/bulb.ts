@@ -4,10 +4,10 @@ import { CHIPS } from '@/model/chips'
 import { LeekWars } from '@/model/leekwars'
 import { SHADOW_QUALITY, T, Texture } from './texture'
 
-// Invocation Cactus (#1544, 2.50 — ex-Menhir, devenu « un truc vivant mais statique »).
+// Invocation Prototaxite (#1544, 2.50 — ex-Menhir, devenu « un truc vivant mais statique »).
 // 13 = id du template d'invocation côté serveur (SummonTemplateRegistry), après les
 // bulbes 1-8/11-12 et les plantes 9-10.
-export const CACTUS_SUMMON_TEMPLATE = 13
+export const PROTOTAXITES_SUMMON_TEMPLATE = 13
 
 class Bulb extends FightEntity {
 
@@ -17,9 +17,9 @@ class Bulb extends FightEntity {
 	declare public bulbName: string
 	public heightAnim!: number
 
-	// Plantes 2.50 (Piment, Maïs, Cactus) : entités enracinées, un seul visuel
+	// Plantes 2.50 (Piment, Maïs, Prototaxite) : entités enracinées, un seul visuel
 	// (back = front), animation = rebond de scale (squash & stretch périodique),
-	// et zone d'effet teintée affichée autour (sauf le Cactus).
+	// et zone d'effet teintée affichée autour (sauf le Prototaxite).
 	public plant: boolean = false
 	public bounceX: number = 1
 	public bounceY: number = 1
@@ -71,9 +71,9 @@ class Bulb extends FightEntity {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/chilli_pepper_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/chilli_pepper_back.png', true, SHADOW_QUALITY)
 			this.setPlant('#f26304') // portée de tir
-		} else if (skin === CACTUS_SUMMON_TEMPLATE) { // Cactus (2.50) — pas de zone
-			this.bodyTexFront = T.get(this.game, 'image/bulb/cactus_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = T.get(this.game, 'image/bulb/cactus_back.png', true, SHADOW_QUALITY)
+		} else if (skin === PROTOTAXITES_SUMMON_TEMPLATE) { // Prototaxite (2.50) — pas de zone
+			this.bodyTexFront = T.get(this.game, 'image/bulb/prototaxites_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/prototaxites_back.png', true, SHADOW_QUALITY)
 			this.setPlant('')
 		} else if (skin === 11) {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/tactician_bulb_front.png', true, SHADOW_QUALITY)
@@ -100,7 +100,7 @@ class Bulb extends FightEntity {
 		}
 	}
 
-	// Marque l'entité comme plante 2.50. zoneColor vide = pas de zone (Cactus) ;
+	// Marque l'entité comme plante 2.50. zoneColor vide = pas de zone (Prototaxite) ;
 	// sinon la portée de la zone est déduite des puces de la plante dans les
 	// données serveur (portée de tir du Piment, zone de soin du Maïs).
 	private setPlant(zoneColor: string) {
