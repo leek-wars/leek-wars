@@ -600,6 +600,8 @@
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: center;
+		// De l'air entre la forge et la colonne des stats (demande de Pierre).
+		gap: 0 30px;
 		flex-shrink: 1;
 		min-height: 0;
 		// C'est la rangee qui se replie sur une barre de defilement quand le

@@ -76,7 +76,11 @@ function itemQuantity(state: LeekWarsState, template: number): number {
 	if (template === 148) return state.farmer.habs
 	const inventories: { template: number, quantity: number }[][] = [
 		state.farmer.resources, state.farmer.components, state.farmer.potions,
-		state.farmer.chips, state.farmer.weapons, state.farmer.hats, state.farmer.pomps
+		state.farmer.chips, state.farmer.weapons, state.farmer.hats, state.farmer.pomps,
+		// Les alterations manquaient : une alteration posee dans la forge passait
+		// pour introuvable (quantite 0) et sa case se peignait en « missing »
+		// rouge grise alors que la tentative etait possible.
+		state.farmer.alterations ?? []
 	]
 	for (const inventory of inventories) {
 		for (const resource of inventory) {
