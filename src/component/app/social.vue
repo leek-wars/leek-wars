@@ -215,6 +215,13 @@ function readAllNotifications() {
 		display: flex;
 		flex-direction: column;
 		gap: 2px;
+		// Les rangées gardent leur hauteur : dans une colonne flex bornée en
+		// hauteur, les enfants se COMPRESSENT (flex-shrink) avant que le
+		// défilement n'existe — trente notifications de trophée s'écrasaient en
+		// bandes de 8 px au lieu de faire défiler la liste.
+		> * {
+			flex-shrink: 0;
+		}
 	}
 
 	.blabla-panel > .content > div {
