@@ -20,6 +20,11 @@
     - "#ai isBatchFight() dice se il combattimento viene da un lotto, per tacere quando si misura l'IA."
     - "La pagina di una squadra ha il suo pannello \"In diretta\", accanto alla chat: i trofei sbloccati, le soglie raggiunte e gli argomenti creati dai suoi membri negli ultimi 7 giorni."
     - "I tuoi emoji preferiti: gli emoji che usi di più (reazioni e emoji inviati nei messaggi) appaiono per primi nella barra di reazione rapida della chat, e in una scheda ⭐ in cima al pannello emoji."
+    - "Tre piante da evocare: il Peperoncino (livello 113), una torretta che sputa danni, il Mais (livello 88), una fontana che cura la squadra intorno a sé, e il Cactus (livello 42), un ostacolo ben vivo da 300 a 1300 PV. Nascono Radicate — nuovo stato: l'entità non può né muoversi né essere spinta, ma l'Inversione la rinvasa — e mostrano la loro zona d'effetto intorno a sé. Tutte e tre si fabbricano alla forgia, i loro schemi si trovano in combattimento."
+    - "Nuovo chip Emorragia (livello 102): il bersaglio diventa Incurabile per 2 turni — cure, furto di vita e rigenerazione bloccati — per 10 PT a portata da 1 a 2. Si fabbrica alla forgia."
+    - "Nuovo chip Maturazione (livello 205): +100 di vita massima e +5 di potenza, permanenti e irriducibili, su un'evocazione alleata. Cumulabile, in vendita al mercato."
+    - "Nuovo chip Superinfezione (livello 230): converte metà dei veleni che rodono il bersaglio in danni immediati. Si fabbrica alla forgia."
+    - "26 trofei per l'officina delle alterazioni: i contatori (Iniziato, Alteratore, Industriale, Riciclatore), le famiglie, gli indicatori di riempimento allineati ai colori dei livelli (Bozza, Rifinito, Orafo, Perfezione), la fortuna, la rottura, la collezione e il metabolismo — più un trofeo nascosto. 707 punti in palio."
   improved:
     - "Gruppi privati: la modalità « account con password » (credenziali scelte dal supervisore, senza e-mail dei membri) si regola ora nelle impostazioni del gruppo, e i gruppi demo la attivano di default."
     - "#ai L'API JavaScript, TypeScript e Python diventa 100% orientata agli oggetti: niente più funzioni o costanti globali, tutto passa dagli oggetti (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript è sostituita dai nativi del linguaggio (Math, JSON, random...)."
