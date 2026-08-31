@@ -139,6 +139,7 @@
 	"type_5": "Schützt vor <b>{0} %</b> bis <b>{1} %</b> Schaden",
 	"type_50_fixed": "Gewährt <b>{0}</b> MP für jeden ausgeführten Zug",
 	"type_51_fixed": "Schiebt zurück in Richtung der Zielzelle",
+	"type_52_fixed": "Gibt <b>{0}</b> Macht",
 	"type_53_fixed": "Nachwachsen von <b>{0}</b> Zellen",
 	"type_54_fixed": "Gibt <b>{0} %</b> Schild",
 	"type_55_fixed": "Gewährt <b>{0}</b> Agilität für jeden toten Verbündeten (nicht beschwören)",

@@ -139,6 +139,7 @@
 	"type_5": "Beskytter fra <b>{0}%</b> til <b>{1}%</b> skader",
 	"type_50_fixed": "Giver <b>{0}</b> MP for hvert træk",
 	"type_51_fixed": "Skubber tilbage mod målcellen",
+	"type_52_fixed": "Giver <b>{0}</b> kraft",
 	"type_53_fixed": "Skubber <b>{0}</b> felter tilbage",
 	"type_54_fixed": "Giver <b>{0}%</b> skjold",
 	"type_55_fixed": "Giver <b>{0}</b> agility for hver død allieret (undtagen fremmaning)",

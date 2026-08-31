@@ -139,6 +139,7 @@
 	"type_5": "Protegge da <b>{0}%</b> a <b>{1}%</b> danni",
 	"type_50_fixed": "Concede <b>{0}</b> PM per ogni spostamento subito",
 	"type_51_fixed": "Spinge indietro verso la cella bersaglio",
+	"type_52_fixed": "Dà <b>{0}</b> di potenza",
 	"type_53_fixed": "Respinge di <b>{0}</b> celle",
 	"type_54_fixed": "Fornisce uno scudo del <b>{0}%</b>",
 	"type_55_fixed": "Concede <b>{0}</b> agilità per ogni alleato morto (non evocato)",

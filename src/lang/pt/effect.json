@@ -139,6 +139,7 @@
 	"type_5": "Protege de <b>{0}%</b> a <b>{1}%</b> de dano",
 	"type_50_fixed": "Concede <b>{0}</b> MP para cada movimento realizado",
 	"type_51_fixed": "Empurra de volta para a célula-alvo",
+	"type_52_fixed": "Dá <b>{0}</b> de potência",
 	"type_53_fixed": "Empurra <b>{0}</b> células",
 	"type_54_fixed": "Dá <b>{0}%</b> escudo",
 	"type_55_fixed": "Concede <b>{0}</b> agilidade para cada aliado morto (sem convocação)",

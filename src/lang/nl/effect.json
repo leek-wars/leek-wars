@@ -139,6 +139,7 @@
 	"type_5": "Beschermt tegen <b>{0}%</b> tot <b>{1}%</b> schade",
 	"type_50_fixed": "Verleent <b>{0}</b> MP voor elke genomen beweging",
 	"type_51_fixed": "Duwt terug naar de doelcel",
+	"type_52_fixed": "Geeft <b>{0}</b> kracht",
 	"type_53_fixed": "Hergroei van <b>{0}</b> cellen",
 	"type_54_fixed": "Geeft <b>{0}%</b> schild",
 	"type_55_fixed": "Verleent <b>{0}</b> behendigheid voor elke dode (niet-oproepbare) bondgenoot",

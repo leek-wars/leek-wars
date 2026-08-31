@@ -139,6 +139,7 @@
 	"type_5": "Protege del <b>{0}%</b> al <b>{1}%</b> de daño",
 	"type_50_fixed": "Da <b>{0}</b> PM por cada desplazamiento sufrido",
 	"type_51_fixed": "Empuja hacia la celda objetivo",
+	"type_52_fixed": "Da <b>{0}</b> de potencia",
 	"type_53_fixed": "Empuja <b>{0}</b> celdas",
 	"type_54_fixed": "Da <b>{0}%</b> de escudo",
 	"type_55_fixed": "Da <b>{0}</b> de agilidad por cada aliado (excepto invocación) muerto",

@@ -48,7 +48,7 @@
 							<img :src="selected.icon">
 							<div>
 								<div class="entry-title">{{ selected.label }} <span class="entry-id">{{ selected.kind }} #{{ selected.id }}</span></div>
-								<div class="entry-sub">Niveau {{ selected.level }} · {{ loopMode ? 'boucle infinie' : repetitions + ' lancers' }} · {{ targetDescription }}</div>
+								<div class="entry-sub">Niveau {{ selected.level }} · {{ loopMode ? 'boucle infinie' : (selected.summonTemplate ? '1 lancer' : repetitions + ' lancers') }} · {{ targetDescription }}</div>
 							</div>
 						</div>
 					</div>
@@ -75,7 +75,9 @@
 	defineOptions({ name: 'AdminGameAnimations', i18n: {}, mixins: [...mixins], components: { Player, Breadcrumb } })
 
 	type Kind = 'weapon' | 'chip'
-	interface AnimEntry { kind: Kind, id: number, name: string, label: string, icon: string, level: number }
+	// summonTemplate : id de SummonTemplate pour les puces d'invocation (elles n'ont
+	// pas d'entrée CHIP_ANIMATIONS, leur spectacle = l'entité qui apparaît).
+	interface AnimEntry { kind: Kind, id: number, name: string, label: string, icon: string, level: number, summonTemplate?: number }
 
 	const router = useRouter()
 	if (!store.getters.admin) router.replace('/')
@@ -163,11 +165,13 @@
 		const chips: AnimEntry[] = []
 		for (const chipIdStr in LeekWars.chipTemplates) {
 			const id = parseInt(chipIdStr, 10)
-			if (!CHIP_ANIMATIONS[id - 1]) continue
 			const tpl = LeekWars.chipTemplates[id]
-			const data = LeekWars.chips[tpl.item] as { name: string, level?: number } | undefined
+			const data = LeekWars.chips[tpl.item] as { name: string, level?: number, effects?: { id: number, value1: number }[] } | undefined
 			if (!data) continue
-			chips.push({ kind: 'chip', id, name: data.name, label: trans('chip.' + data.name, data.name), icon: '/image/chip/' + data.name + '.png', level: data.level ?? 0 })
+			// Invocations : pas d'animation dédiée, on pose l'entité sur la scène.
+			const summonEffect = data.effects?.find(e => e.id === EffectType.SUMMON)
+			if (!CHIP_ANIMATIONS[id - 1] && !summonEffect) continue
+			chips.push({ kind: 'chip', id, name: data.name, label: trans('chip.' + data.name, data.name), icon: '/image/chip/' + data.name + '.png', level: data.level ?? 0, summonTemplate: summonEffect?.value1 })
 		}
 		chips.sort((a, b) => b.id - a.id) // puces récentes (id élevé) en premier
 
@@ -187,6 +191,7 @@
 	const targetDescription = computed(() => {
 		if (!selected.value) return ''
 		if (selected.value.kind === 'weapon') return 'sur les 4 poireaux à tour de rôle'
+		if (selected.value.summonTemplate) return 'une invocation posée devant, sans ennemi'
 		const emptyCell = needsEmptyCell(selected.value.id)
 		return emptyCell ? 'sur case vide' : 'sur soi-même puis les 4 poireaux à tour de rôle'
 	})
@@ -214,6 +219,12 @@
 	// LIFE_LOST à leurs dégâts de base (sang + décompte comme un vrai log) : trop
 	// faible pour tuer en 100 lancers, et la boucle infinie repart à vie pleine.
 	function buildFight(entry: AnimEntry, casts: number): Fight {
+		// Invocation : scène dédiée — le lanceur seul (pas d'ennemi), UN lancer, et
+		// pas de END_FIGHT : le combat reste en vie et l'entité invoquée vit sa vie
+		// (rebond de scale, zone d'effet des plantes) au lieu d'un écran de rapport.
+		if (entry.kind === 'chip' && entry.summonTemplate) {
+			return buildSummonFight(entry)
+		}
 		const distance = sceneDistance(entry)
 		const cells = SCENE_SLOTS.map((s) => CASTER_CELL + distance * s.diagonal)
 		// Ids 0-based et denses : le moteur itère this.leeks via for...of (un id
@@ -285,6 +296,58 @@
 			team1_name: 'A', team2_name: 'B',
 			tournament: 0, type: FightType.SOLO, winner: 1, year: 2026,
 			data: { actions, map, leeks, team1, team2, ops: {} },
+			comments: [], result: 'win', queue: 0, trophies: [],
+			chests: 0, size: 0, rareloot: 0, levelups: 0,
+		} as unknown as Fight
+	}
+
+	// Scène d'invocation : le lanceur (id 0) seul en équipe 1 — l'entité invoquée
+	// (id 1, summon: true, skin = id de SummonTemplate) rejoint la même équipe, le
+	// tableau this.teams reste donc dense (hud.vue itère game.teams en v-for).
+	function buildSummonFight(entry: AnimEntry): Fight {
+		const summonCell = CASTER_CELL - 3 * 17 // trois pas en diagonale, bien visible
+		const template = LeekWars.summonTemplates[entry.summonTemplate!] as { name: string } | undefined
+		const caster = {
+			id: 0, type: 0, name: 'Poireau 1', team: 1,
+			level: 100, life: 2500,
+			strength: 300, wisdom: 300, agility: 200, resistance: 100,
+			science: 200, magic: 200, frequency: 100,
+			tp: 100, mp: 6,
+			cellPos: CASTER_CELL, orientation: -1,
+			skin: 1, hat: null, metal: true, face: 2,
+			chips: [], weapons: [],
+		}
+		const summon = {
+			id: 1, type: 1, name: template?.name ?? 'puny_bulb', team: 1,
+			level: entry.level || 100, life: 600,
+			strength: 100, wisdom: 100, agility: 0, resistance: 0,
+			science: 0, magic: 0, frequency: 100,
+			tp: 0, mp: 0,
+			cellPos: null, orientation: -1,
+			summon: true, skin: entry.summonTemplate,
+			chips: [], weapons: [],
+		}
+		const actions: (number | number[])[][] = [
+			[ActionType.START_FIGHT],
+			[ActionType.NEW_TURN, 1],
+			[ActionType.LEEK_TURN, 0],
+			[ActionType.USE_CHIP, entry.id, summonCell, 0],
+			[ActionType.SUMMON, 0, 1, summonCell, 1],
+			[ActionType.END_TURN, 0, 100, 6],
+			// pas de END_FIGHT : la scène reste vivante, la boucle infinie peut
+			// quand même repartir (currentAction atteint la fin des actions).
+		]
+		const map = { id: 0, type: mapType.value - 1, width: 18, height: 18, obstacles: {}, pattern: [], players: {} }
+		return {
+			title: 'Test invocation', context: 0, date: 0,
+			farmers1: { 1: { id: 1, name: 'Pilow' } },
+			farmers2: { 1: { id: 1, name: 'Pilow' } },
+			id: 0, farmer1: 1, farmer2: 1,
+			leeks1: [], leeks2: [], team1: null, team2: null,
+			report: {}, status: 1,
+			team1_name: 'A', team2_name: 'B',
+			tournament: 0, type: FightType.SOLO, winner: 1, year: 2026,
+			data: { actions, map, leeks: [caster, summon], team1: [0], team2: [], ops: {} },
 			comments: [], result: 'win', queue: 0, trophies: [],
 			chests: 0, size: 0, rareloot: 0, levelups: 0,
 		} as unknown as Fight

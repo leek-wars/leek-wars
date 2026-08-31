@@ -139,6 +139,7 @@
 	"type_5": "Suojaa <b>{0} %</b> - <b>{1} %</b> vaurioilta",
 	"type_50_fixed": "Myönnetään <b>{0}</b> MP jokaisesta tehdystä siirrosta",
 	"type_51_fixed": "Työntää takaisin kohdesolua kohti",
+	"type_52_fixed": "Antaa <b>{0}</b> voimaa",
 	"type_53_fixed": "Työntää taaksepäin <b>{0}</b> solua",
 	"type_54_fixed": "Antaa <b>{0}%</b> suojan",
 	"type_55_fixed": "Antaa <b>{0}</b> ketteryyden jokaiselle kuolleelle liittolaiselle (ei kutsua)",

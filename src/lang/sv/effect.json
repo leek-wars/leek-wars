@@ -139,6 +139,7 @@
 	"type_5": "Skyddar från <b>{0}%</b> till <b>{1}%</b> skador",
 	"type_50_fixed": "Beviljer <b>{0}</b> MP för varje drag som tas",
 	"type_51_fixed": "Trycker tillbaka mot målcellen",
+	"type_52_fixed": "Ger <b>{0}</b> kraft",
 	"type_53_fixed": "Återväxt av <b>{0}</b> celler",
 	"type_54_fixed": "Ger <b>{0}%</b> sköld",
 	"type_55_fixed": "Ger <b>{0}</b> smidighet för varje död (icke-kallad) allierad",

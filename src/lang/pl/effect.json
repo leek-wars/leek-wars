@@ -139,6 +139,7 @@
 	"type_5": "Chroni od <b>{0}%</b> do <b>{1}%</b> obrażeń",
 	"type_50_fixed": "Daje <b>{0}</b> MP za każdy wykonany ruch",
 	"type_51_fixed": "Odpycha w kierunku komórki docelowej",
+	"type_52_fixed": "Daje <b>{0}</b> mocy",
 	"type_53_fixed": "Ponowny wzrost <b>{0}</b> komórek",
 	"type_54_fixed": "Daje <b>{0}%</b> tarczę",
 	"type_55_fixed": "Zapewnia <b>{0}</b> zwinność za każdego martwego (nie przywołanego) sojusznika",

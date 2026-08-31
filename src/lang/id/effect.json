@@ -139,6 +139,7 @@
 	"type_5": "Melindungi dari <b>{0}%</b> hingga <b>{1}%</b> kerusakan",
 	"type_50_fixed": "Memberikan <b>{0}</b> MP untuk setiap gerakan yang dilakukan",
 	"type_51_fixed": "Mendorong kembali ke sel target",
+	"type_52_fixed": "Memberi <b>{0}</b> daya",
 	"type_53_fixed": "Pertumbuhan kembali <b>{0}</b> sel",
 	"type_54_fixed": "Memberi <b>{0}%</b> perisai",
 	"type_55_fixed": "Memberikan <b>{0}</b> ketangkasan untuk setiap sekutu yang mati (non-pemanggilan)",
