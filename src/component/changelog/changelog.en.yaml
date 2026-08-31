@@ -18,6 +18,7 @@
     - "New Tetrarch trophy: win a Battle Royale, a War, a Chest Hunt and a Colossus on the same day, with the same leek."
     - "New Grand melee trophy: take part in an arena fight with 20 leeks."
     - "#ai isBatchFight() tells whether the fight comes from a batch, to stay quiet when measuring an AI."
+    - "#ai getStats(entity) returns all the stats of an entity in a single map indexed by the STAT_* constants."
     - "A team page now has its own \"Live\" panel, next to the chat: trophies unlocked, milestones reached and topics created by its members over the last 7 days."
     - "Your favorite emojis: the emojis you use the most (reactions and emojis sent in messages) appear first in the chat quick reaction bar, and in a ⭐ tab at the top of the emoji panel."
     - "Three plants to summon: the Chilli Pepper (level 179), a turret that spits damage, the Corn (level 63), a fountain that heals the team around it, and the Prototaxites (level 152), a giant column from the Devonian — neither plant nor tree — with 300 to 1300 HP. They are born Rooted — a new state: the entity can neither move nor be pushed, but Inversion repots it — and they display their area of effect around them. All three are crafted at the forge, their schematics are found in combat."

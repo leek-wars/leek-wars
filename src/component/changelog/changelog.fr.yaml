@@ -18,6 +18,7 @@
     - "Nouveau trophée Tétrarque : gagner un Battle Royale, une Guerre, une Chasse aux coffres et un Colosse dans la même journée, avec le même poireau."
     - "Nouveau trophée Grande mêlée : participer à un combat d'arène réunissant 20 poireaux."
     - "#ai isBatchFight() dit si le combat vient d'un lot, pour se taire quand on mesure son IA."
+    - "#ai getStats(entity) renvoie toutes les statistiques d'une entité en une seule map indexée par les constantes STAT_*."
     - "La page d'une équipe a son panneau « En direct », à côté du chat : les trophées débloqués, les seuils franchis et les sujets créés par ses membres, sur les 7 derniers jours."
     - "Vos emojis favoris : les emojis que vous utilisez le plus (réactions posées et emojis envoyés dans les messages) apparaissent en premier dans la barre de réaction rapide du chat, et dans un onglet ⭐ en tête du panneau emoji."
     - "Trois plantes à invoquer : le Piment (niveau 179), une tourelle qui crache des dégâts, le Maïs (niveau 63), une fontaine qui soigne l'équipe autour d'elle, et le Prototaxite (niveau 152), colonne géante venue du Dévonien — ni plante ni arbre — de 300 à 1300 PV. Elles naissent Enracinées — nouvel état : l'entité ne peut ni se déplacer ni être poussée, mais l'Inversion la rempote — et affichent leur zone d'effet autour d'elles. Les trois se fabriquent à la forge, leurs schémas se trouvent en combat."
