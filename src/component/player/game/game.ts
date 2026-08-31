@@ -5,7 +5,7 @@ import { Bulb } from '@/component/player/game/bulb'
 import { getPreSummonMultipliers, unmultiplyStats } from '@/component/player/game/colossus'
 import { playAudio } from '@/model/audio'
 import { Farmer } from '@/model/farmer'
-import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, effectRecipients, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Exasperation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
+import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, effectRecipients, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Exasperation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Hemorrhage, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground, GroundTexture, OBSTACLES } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
@@ -323,8 +323,8 @@ export const CHIP_ANIMATIONS = [
 	Transmutation, // 87
 	Grapple, // 88
 	BoxingGlove, // 89
-	null, // 90
-	null, // 91
+	null, // 90 corn (Maïs, invocation 2.50 — passe par ActionType.SUMMON)
+	null, // 91 chilli_pepper (Piment, invocation 2.50 — passe par ActionType.SUMMON)
 	null, // 92 bulb
 	null, // 93 bulb
 	Serum, // 94
@@ -334,9 +334,9 @@ export const CHIP_ANIMATIONS = [
 	Bramble, // 98
 	Dome, // 99
 	Manumission, // 100
-	null,
-	null,
-	null,
+	Hemorrhage, // 101
+	null, // 102
+	null, // 103
 	Prism, // 104
 	Shuriken, // 105
 	Kemuridama, // 106
@@ -1336,14 +1336,14 @@ class Game {
 					cell.setEntity(caster)
 				}
 				if (chip === 88) { // grapple
-					if (targets.length && !targets[0].states.has(State.STATIC)) {
+					if (targets.length && !targets[0].unmovable) {
 						const realCell = this.ground.field.computeAttractCell(caster.cell!, targets[0].cell!, cell)
 						realCell.setEntity(targets[0])
 					}
 				}
 				if (chip === 89) { // boxing glove
 					// console.log("glove", cell.id, "targets=" + targets.length)
-					if (targets.length && !targets[0].states.has(State.STATIC)) {
+					if (targets.length && !targets[0].unmovable) {
 						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell, targets[0])
 						realCell.setEntity(targets[0])
 					}
@@ -1366,7 +1366,9 @@ class Game {
 				break
 			}
 
-			if (CHIP_ANIMATIONS[chip - 1] !== null && chip !== 40) {
+			// != null : couvre aussi undefined, pour une puce plus récente que le
+			// tableau (ex. Menhir 2.50 — TODO id menhir — tant que son slot n'existe pas).
+			if (CHIP_ANIMATIONS[chip - 1] != null && chip !== 40) {
 				const chipAnimation: ChipAnimation = new CHIP_ANIMATIONS[chip - 1]!(this)
 				// Donne au launch() de quoi filtrer les vraies cibles via le
 				// bitmask Effect.targets (issue #3127 — l'inférence par
@@ -2460,7 +2462,7 @@ class Game {
 		const moves = [] as {entity: FightEntity, cell: Cell}[]
 		for (const entity of entities) {
 			if (entity === caster || entity.dead) { continue }
-			if (entity.states.has(State.STATIC)) { continue } // slideEntity ignore les statiques
+			if (entity.unmovable) { continue } // slideEntity ignore les statiques et enracinés
 			const destination = this.ground.field.computeRepelCell(caster.cell, entity.cell!, distance)
 			if (destination === entity.cell) { continue }
 			destination.setEntity(entity) // cellule logique à jour, sans toucher au visuel
@@ -2641,6 +2643,43 @@ class Game {
 				for (let j = -2; j <= 2; ++j) {
 					add_cell(i, j)
 				}
+			}
+		}
+		return this.createEffectAreaCells(cells, lines, convert)
+	}
+
+	// Zone en losange de rayon arbitraire (distance de Manhattan), même rendu que
+	// createEffectAreaOutline mais générique : sert aux zones d'effet persistantes
+	// des plantes 2.50 (portée de tir du Piment, zone de soin du Maïs).
+	public createPlantAreaOutline(cell: Cell, radius: number) {
+
+		const cells = [] as Cell[]
+		const lines = [] as number[][]
+		const convert = {} as {[key: number]: [number, number]}
+		const l = 2 * radius + 1
+		for (let i = 0; i < l; ++i) {
+			lines.push(Array.from({length: l}, () => 0))
+		}
+		const c = radius
+
+		const add_cell = (x: number, y: number) => {
+			const n = this.ground.field.next_cell(cell, x, y)
+			lines[c + x][c + y] = ~lines[c + x][c + y] + 16
+			if (n && !n.obstacle) {
+				if (x < c) { lines[c + x + 1][c + y] ^= 1 }
+				if (y < c) { lines[c + x][c + y + 1] ^= 2 }
+				if (x > -c) { lines[c + x - 1][c + y] ^= 4 }
+				if (y > -c) { lines[c + x][c + y - 1] ^= 8 }
+			}
+			if (n === null || n.obstacle) { return }
+			cells.push(n)
+			convert[n.id] = [c + x, c + y]
+		}
+
+		for (let x = -radius; x <= radius; ++x) {
+			const dy = radius - Math.abs(x)
+			for (let y = -dy; y <= dy; ++y) {
+				add_cell(x, y)
 			}
 		}
 		return this.createEffectAreaCells(cells, lines, convert)
@@ -2873,6 +2912,15 @@ class Game {
 
 		// Draw ground particles
 		this.particles.drawGround(this.ctx)
+
+		// Zones d'effet des plantes 2.50 : cellules teintées discrètes autour de
+		// chaque plante vivante (portée de tir du Piment, zone de soin du Maïs —
+		// le Menhir n'a pas de zone), sous les entités.
+		for (const entity of this.leeks) {
+			if (entity instanceof Bulb && entity.plant && entity.active && !entity.dead && entity.zoneRange > 0 && entity.cell) {
+				this.drawEffectArea(entity.plantArea(), entity.zoneColor, 2, 0.25, 0.06)
+			}
+		}
 
 		// Draw leeks paths
 		for (const entity of this.leeks) {
