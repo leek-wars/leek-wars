@@ -1,6 +1,9 @@
 250:
   title: "WIP"
   added:
+    - "Component alterations: 36 new items — vitamins, alloys, electronic parts — to apply on your components in the workshop to push their characteristics beyond their original values. Each alteration has its affinities, pushing a component ever further costs more and more, and pushing it too far can break it. Recycling an altered component gives back part of its alterations and of its recipe resources."
+    - "A new home page you compose yourself: a grid of widgets to move and resize freely — leeks, ranking, trophies, collection, forum, tournaments, remarkable players... Each widget is configurable, some can exist multiple times, and your layout follows you from one device to another."
+    - "Leek Wars +: a support subscription at €3 per month, no commitment, paid in euros or month by month with crystals. It brings a few comforts — 100 fights per day instead of 50, priority generation queue, doubled API rate limit, up to 10 declared accounts, 100 crystals offered every month and a profile badge — without selling anything stronger in combat."
     - "The talent chart can be set to 7 or 30 days, with two buttons in the top right corner. Talent history is now kept for 30 days instead of 7: days before this change stay empty on the long window."
     - "Notifications about one of your leeks show its thumbnail next to the event icon: four arena reports in a row can finally be told apart."
     - "A player's declared accounts no longer meet each other: not in the garden, not in the arena (Battle Royale, War, Chest Hunt, Colossus), and not in tournaments. Matchmaking no longer offers your other accounts, only one of them can register for an arena, and tournament seeding puts them in different tournaments."

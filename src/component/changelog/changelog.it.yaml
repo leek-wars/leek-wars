@@ -1,6 +1,9 @@
 250:
   title: "WIP"
   added:
+    - "Le alterazioni dei componenti: 36 nuovi oggetti — vitamine, leghe, parti elettroniche — da applicare ai tuoi componenti nell'officina per spingere le loro caratteristiche oltre i valori originali. Ogni alterazione ha le sue affinità, spingere un componente sempre più in là costa sempre di più, e spingerlo troppo può romperlo. Riciclare un componente alterato restituisce una parte delle sue alterazioni e delle risorse della sua ricetta."
+    - "Una nuova pagina iniziale da comporre da soli: una griglia di widget da spostare e ridimensionare liberamente — porri, classifica, trofei, collezione, forum, tornei, giocatori notevoli... Ogni widget è configurabile, alcuni possono esistere in più copie, e la tua disposizione ti segue da un dispositivo all'altro."
+    - "Leek Wars +: un abbonamento di supporto a 3 € al mese, senza impegno, in euro o mese per mese con i cristalli. Porta qualche comodità — 100 combattimenti al giorno invece di 50, la coda di generazione prioritaria, il limite dell'API raddoppiato, fino a 10 account dichiarati, 100 cristalli offerti ogni mese e un badge sul profilo — senza vendere nulla di più forte in combattimento."
     - "Il grafico del talento si imposta su 7 o 30 giorni, con due pulsanti in alto a destra. Lo storico del talento è ora conservato 30 giorni invece di 7: i giorni precedenti a questa modifica restano vuoti sulla finestra lunga."
     - "Le notifiche che riguardano uno dei tuoi porri mostrano la sua miniatura accanto all'icona dell'evento: quattro rapporti d'arena di fila si distinguono finalmente tra loro."
     - "Gli account dichiarati di uno stesso giocatore non si incontrano più: né nell'orto, né nell'arena (Battle Royale, Guerra, Caccia ai forzieri, Colosso), né nei tornei. Il matchmaking non propone più i tuoi altri account, uno solo può iscriversi a un'arena, e la ripartizione dei tornei li mette in tornei diversi."
