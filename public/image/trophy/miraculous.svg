@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 56 56">
+<g fill="#444444">
+	<g transform="rotate(45 32 30)"><circle cx="27.4" cy="18.4" r="5.6"/>
+	<circle cx="36.6" cy="18.4" r="5.6"/>
+	<path d="M32 30.5 L23.6 16.5 L40.4 16.5 Z"/></g>
+	<g transform="rotate(135 32 30)"><circle cx="27.4" cy="18.4" r="5.6"/>
+	<circle cx="36.6" cy="18.4" r="5.6"/>
+	<path d="M32 30.5 L23.6 16.5 L40.4 16.5 Z"/></g>
+	<g transform="rotate(225 32 30)"><circle cx="27.4" cy="18.4" r="5.6"/>
+	<circle cx="36.6" cy="18.4" r="5.6"/>
+	<path d="M32 30.5 L23.6 16.5 L40.4 16.5 Z"/></g>
+	<g transform="rotate(315 32 30)"><circle cx="27.4" cy="18.4" r="5.6"/>
+	<circle cx="36.6" cy="18.4" r="5.6"/>
+	<path d="M32 30.5 L23.6 16.5 L40.4 16.5 Z"/></g>
+</g>
+<path d="M32 33 Q32 46 39.5 53" fill="none" stroke="#444444" stroke-width="3.2" stroke-linecap="round"/>
+<circle cx="32" cy="30" r="4.2" fill="#f8ac00"/>
+<g stroke="#f8ac00" stroke-width="2.6" stroke-linecap="round">
+	<path d="M32 11 L32 5.5"/>
+	<path d="M51 30 L56.5 30"/>
+	<path d="M13 30 L7.5 30"/>
+	<path d="M13.5 47 L9.5 51"/>
+	<path d="M50.5 47 L54.5 51"/>
+</g>
+</svg>
