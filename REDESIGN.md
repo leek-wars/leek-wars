@@ -1478,7 +1478,17 @@ est une surface de composant, pas le fond de la page, malgré son nom.
     par la **pluie de données du lot 21** recopiée en CSS statique (délais
     négatifs par `nth-child`, mêmes décalages de colonnes 0,3,1,4,2). Sans
     logo, le loader seul (demande de Pierre).
-  - Vérifié : build de prod complet et 581 tests verts.
+  - **Suite du même jour (soirée)** : forge — les altérations comptent dans
+    `item_quantity` (une posée passait pour « missing » rouge grisé), 30 px
+    entre la forge et les stats, `.panel-actions` à rembourrage uniforme ;
+    widget « Statistiques du poireau » — XP et combats sous le bloc
+    nom/niveau/talent, graphique masqué sous 60 px (le wrap est son propre
+    conteneur de requête) ; widget « Trophées les plus rares » — avatars des
+    5 derniers débloqueurs par ligne (nouveau service serveur
+    `trophy/last-unlockers` + index `(trophy, time DESC)`, dégrade sans
+    avatars si le serveur ne l'a pas).
+  - Vérifié : build de prod complet et 581 tests verts. Déployé sur la beta
+    (client via private/develop, API beta via origin/develop) le 2026-08-31.
 
 ## À reporter dans le projet Claude Design
 
