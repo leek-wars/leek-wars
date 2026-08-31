@@ -1020,5 +1020,8 @@
 	"func_getStat": "Restituisce il valore della statistica <b>stat</b> dell'entità <b>entity</b>. Usa le costanti STAT_* per specificare la statistica (es. STAT_STRENGTH, STAT_LIFE, ecc.).",
 	"func_getStat_arg_1": "L'id dell'entità di cui verrà restituita la statistica.",
 	"func_getStat_arg_2": "La statistica da restituire (costante STAT_*).",
-	"func_getStat_return": "Il valore della statistica <b>stat</b> dell'entità <b>entity</b>."
+	"func_getStat_return": "Il valore della statistica <b>stat</b> dell'entità <b>entity</b>.",
+	"func_getStats": "Restituisce tutte le statistiche dell'entità <b>entity</b>, come una map le cui chiavi sono le costanti STAT_* e i cui valori sono i valori attuali delle statistiche. Equivale a chiamare getStat per ogni statistica.",
+	"func_getStats_arg_1": "L'id dell'entità di cui verranno restituite le statistiche.",
+	"func_getStats_return": "La map delle statistiche dell'entità <b>entity</b>, o null se l'entità non esiste."
 }

@@ -1011,5 +1011,8 @@
 	"func_getStat_arg_1": "The id of the entity whose stat will be returned.",
 	"func_getStat_arg_2": "The stat to return (STAT_* constant).",
 	"func_getStat_return": "The value of the stat <b>stat</b> for the entity <b>entity</b>.",
+	"func_getStats": "Devuelve todas las estadísticas de la entidad <b>entity</b>, en forma de un map cuyas claves son las constantes STAT_* y cuyos valores son los valores actuales de las estadísticas. Equivale a llamar a getStat para cada estadística.",
+	"func_getStats_arg_1": "El id de la entidad cuyas estadísticas serán devueltas.",
+	"func_getStats_return": "El map de las estadísticas de la entidad <b>entity</b>, o null si la entidad no existe.",
 	"func_summon_arg_4": "Nombre personalizado del bulbo (opcional). Por defecto, se usa el nombre del tipo de bulbo."
 }

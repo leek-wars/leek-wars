@@ -419,7 +419,7 @@ export const OBJECT_MEMBER_LS: Record<string, string> = {
 	'Entity.side': 'getSide', 'Entity.leekID': 'getLeekID', 'Entity.teamID': 'getTeamID', 'Entity.teamName': 'getTeamName',
 	'Entity.compositionName': 'getCompositionName', 'Entity.farmerID': 'getFarmerID', 'Entity.farmerName': 'getFarmerName',
 	'Entity.farmerCountry': 'getFarmerCountry', 'Entity.aiID': 'getAIID', 'Entity.aiName': 'getAIName',
-	'Entity.isAlly': 'isAlly', 'Entity.isEnemy': 'isEnemy', 'Entity.stat': 'getStat', 'Entity.distance': 'getCellDistance',
+	'Entity.isAlly': 'isAlly', 'Entity.isEnemy': 'isEnemy', 'Entity.stat': 'getStat', 'Entity.stats': 'getStats', 'Entity.distance': 'getCellDistance',
 	// me (actions)
 	'Me.useWeapon': 'useWeapon', 'Me.useWeaponOnCell': 'useWeaponOnCell', 'Me.useChip': 'useChip',
 	'Me.useChipOnCell': 'useChipOnCell', 'Me.setWeapon': 'setWeapon', 'Me.say': 'say', 'Me.lama': 'lama',

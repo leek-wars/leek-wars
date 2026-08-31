@@ -1011,5 +1011,8 @@
 	"func_getStat_arg_1": "O id da entidade cuja estatística será retornada.",
 	"func_getStat_arg_2": "A estatística a retornar (constante STAT_*).",
 	"func_getStat_return": "O valor da estatística <b>stat</b> para a entidade <b>entity</b>.",
+	"func_getStats": "Retorna todas as estatísticas da entidade <b>entity</b>, como um map cujas chaves são as constantes STAT_* e cujos valores são os valores atuais das estatísticas. Equivale a chamar getStat para cada estatística.",
+	"func_getStats_arg_1": "O id da entidade cujas estatísticas serão retornadas.",
+	"func_getStats_return": "O map das estatísticas da entidade <b>entity</b>, ou null se a entidade não existir.",
 	"func_summon_arg_4": "Nome personalizado para o bulbo (opcional). Por padrão, é usado o nome do tipo de bulbo."
 }

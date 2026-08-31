@@ -1014,5 +1014,8 @@
 	"func_getStat_arg_1": "Identyfikator encji, której statystyka zostanie zwrócona.",
 	"func_getStat_arg_2": "Statystyka do zwrócenia (stała STAT_*).",
 	"func_getStat_return": "Wartość statystyki <b>stat</b> encji <b>entity</b>.",
+	"func_getStats": "Zwraca wszystkie statystyki encji <b>entity</b> jako mapę, której kluczami są stałe STAT_*, a wartościami aktualne wartości statystyk. Odpowiada wywołaniu getStat dla każdej statystyki.",
+	"func_getStats_arg_1": "Identyfikator encji, której statystyki zostaną zwrócone.",
+	"func_getStats_return": "Mapa statystyk encji <b>entity</b>, lub null, jeśli encja nie istnieje.",
 	"func_summon_arg_4": "Niestandardowa nazwa żarówki (opcjonalnie). Domyślnie używana jest nazwa typu żarówki."
 }

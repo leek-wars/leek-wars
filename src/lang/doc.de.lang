@@ -1011,5 +1011,8 @@
 	"func_getStat_arg_1": "Die ID der Entität, deren Statistik zurückgegeben wird.",
 	"func_getStat_arg_2": "Die zurückzugebende Statistik (STAT_*-Konstante).",
 	"func_getStat_return": "Der Wert der Statistik <b>stat</b> der Entität <b>entity</b>.",
+	"func_getStats": "Gibt alle Statistiken der Entität <b>entity</b> zurück, als Map, deren Schlüssel die STAT_*-Konstanten und deren Werte die aktuellen Werte der Statistiken sind. Entspricht einem Aufruf von getStat für jede Statistik.",
+	"func_getStats_arg_1": "Die ID der Entität, deren Statistiken zurückgegeben werden.",
+	"func_getStats_return": "Die Map der Statistiken der Entität <b>entity</b>, oder null, wenn die Entität nicht existiert.",
 	"func_summon_arg_4": "Der benutzerdefinierte Name der Bulbe (optional). Standardmäßig wird der Name des Bulbentyps verwendet."
 }
