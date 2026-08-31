@@ -27,12 +27,14 @@
 								<span>{{ account.talent }}</span>
 							</div>
 						</div>
-						<v-btn v-if="!isMain(account)" size="small" variant="text" :title="t('set_main')" :disabled="busy" @click="setMain(account)">
-							<v-icon>mdi-star-outline</v-icon>
-						</v-btn>
-						<v-btn size="small" variant="text" color="error" :title="t('unlink')" :disabled="busy" @click="askUnlink(account)">
-							<v-icon>mdi-link-variant-off</v-icon>
-						</v-btn>
+						<div class="actions">
+							<div v-if="!isMain(account)" v-ripple class="account-action" :class="{disabled: busy}" :title="t('set_main')" @click="setMain(account)">
+								<v-icon>mdi-star-outline</v-icon>
+							</div>
+							<div v-ripple class="account-action red" :class="{disabled: busy}" :title="t('unlink')" @click="askUnlink(account)">
+								<v-icon>mdi-link-variant-off</v-icon>
+							</div>
+						</div>
 					</div>
 
 					<!-- Déclarer un compte, uniquement parmi ceux connectés dans le switcher :
@@ -202,6 +204,45 @@
 	.infos {
 		flex: 1;
 		min-width: 0;
+		// Centrage vertical explicite du bloc nom + talent face à l'avatar.
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 2px;
+	}
+	.actions {
+		display: flex;
+		align-items: center;
+	}
+	// Les v-btn small mettaient une icône de 16 px au centre d'une large boîte
+	// Material : icônes minuscules et très écartées (retour de Pierre). Des
+	// carrés cliquables francs, icône pleine taille, collés l'un à l'autre.
+	.account-action {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		cursor: pointer;
+		color: var(--text-color-secondary);
+		.v-icon {
+			font-size: 22px;
+		}
+		&:hover {
+			background: var(--background-row, rgba(0, 0, 0, 0.06));
+			color: var(--text-color);
+		}
+		&.red {
+			color: var(--error, #c0392b);
+		}
+		&.disabled {
+			opacity: 0.4;
+			cursor: default;
+			pointer-events: none;
+		}
+	}
+	body.dark .account-action.red {
+		color: var(--error, #e57373);
 	}
 	.name-line {
 		display: flex;

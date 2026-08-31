@@ -105,12 +105,19 @@
 			padding: 4px 7px;
 			font-size: 13px;
 			& + .row { margin-top: 2px; }
-			// Carac montee par le joueur : liseré vert a gauche, franc (pas de coin arrondi).
-			&.altered { box-shadow: inset 3px 0 0 var(--primary); }
+			// Carac montee par le joueur : liseré vert a gauche, franc (pas de coin
+			// arrondi), et la ligne entiere legerement teintee (demande de Pierre).
+			&.altered {
+				box-shadow: inset 3px 0 0 var(--primary);
+				background: color-mix(in srgb, var(--primary) 9%, transparent);
+			}
 			// Carac creusee par la casse : meme repere, dans le ton du palier negatif (#622).
 			&.broken { box-shadow: inset 3px 0 0 #7d5a5a; }
 		}
 		.ic { width: 17px; height: 17px; }
+	// Icones de carac eclaircies en sombre, la recette du HUD de combat
+	// (entity-details) : la science bleu nuit disparaissait sur le panneau.
+	body.dark & .ic { filter: brightness(180%); }
 		.value {
 			margin-left: auto;
 			font-variant-numeric: tabular-nums;

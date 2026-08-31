@@ -45,6 +45,21 @@ code {
 	--ct-lsconstant: #000000; --ct-lsconstant-weight: bold;
 	--ct-lsfunction: #000000; --ct-lsfunction-style: italic;
 }
+// Le thème clair maison aux couleurs du site v3 (cf. monaco.ts) ; pas de fond,
+// un aperçu clair épouse la page. Encres mesurées ≥ 4,5 sur le fond de page
+// #EFE9D6, la pire surface claire où vit un aperçu. Le v2 garde la peau
+// historique ci-dessus (fond blanc côté éditeur, bleu marine).
+body:not(.v2) .code-theme-leek-wars {
+	--ct-fg: #0e1410;
+	--ct-keyword: #146128;
+	--ct-type: #16688a;
+	--ct-string: #9c4508; --ct-number: #5f35b5; --ct-comment: #5c6854;
+	--ct-atom: #5f35b5;
+	--ct-annotation: #8a6200;
+	--ct-lsconstant: #0e1410;
+	--ct-lsfunction: #0e1410;
+	--ct-lsdeprecated: #6e7b69;
+}
 .code-theme-vs {
 	--ct-fg: #000000;
 	--ct-keyword: #0000ff; --ct-type: #008080;

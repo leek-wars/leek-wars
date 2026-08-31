@@ -1903,6 +1903,15 @@
 	}
 	.members-table {
 		white-space: nowrap;
+		// La v-data-table pose sa « surface » Vuetify, qui ne descend d'aucun
+		// jeton du thème (palette doublée dans vuetify.ts, sans surface) : en v3
+		// sombre le tableau posait un rectangle étranger sur le panneau. Il
+		// devient transparent et laisse le panneau porter le fond, l'encre suit
+		// le thème.
+		&.v-table {
+			background: transparent;
+			color: var(--text-color);
+		}
 		.date-cell {
 			font-size: 12px;
 		}

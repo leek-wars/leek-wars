@@ -219,6 +219,7 @@
 	import type * as Monaco from 'monaco-editor'
 	import '@/component/editor/monaco-csp'
 	import { colorDecoratorOptions } from '@/component/editor/monaco-color-decorators'
+	import { defineLeekWarsThemes } from '@/component/editor/monaco-themes'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 	import { docLanguage } from '@/model/doc-language'
@@ -601,6 +602,10 @@ ${ret}
 			loadMonaco().then((monaco) => {
 				const container = monacoContainer.value
 				if (!container) { return }
+				// L'éditeur suit le thème du site (retour de Pierre) : thèmes
+				// maison, définis ici aussi — cette page importe monaco sans
+				// passer par monaco.ts.
+				defineLeekWarsThemes(monaco)
 				editor.value = markRaw(monaco.editor.create(container, {
 					value: page.value ? page.value.content : "",
 					language: "markdown",
@@ -608,7 +613,7 @@ ${ret}
 					wordWrap: "on",
 					fontSize: 14,
 					lineHeight: 22,
-					theme: "vs",
+					theme: LeekWars.darkMode ? 'leek-wars-dark' : 'leek-wars',
 					tabSize: 4,
 					insertSpaces: false,
 					lineNumbers: "on",
@@ -824,6 +829,7 @@ ${ret}
 
 		loadMonaco().then((monaco) => {
 			if (selectedHistoryIndex.value !== expectedIndex) return
+			defineLeekWarsThemes(monaco)
 			diffEditor.value = markRaw(monacoLifecycle!.createDiffEditor(container, {
 				automaticLayout: true,
 				readOnly: true,
@@ -837,7 +843,7 @@ ${ret}
 				renderOverviewRuler: false,
 				wordWrap: 'on',
 				hideUnchangedRegions: { enabled: true },
-				theme: LeekWars.darkMode ? 'vs-dark' : 'vs',
+				theme: LeekWars.darkMode ? 'leek-wars-dark' : 'leek-wars',
 				...colorDecoratorOptions,
 			}))
 			diffEditor.value.setModel({
@@ -1147,7 +1153,10 @@ h1 {
 	display: inline-flex;
 	gap: 6px;
 	align-items: center;
-	height: 100%;
+	// La hauteur d'un .tab de barre de page : `100%` d'un conteneur en hauteur
+	// auto ne vaut rien, le drapeau flottait au-dessus de la ligne des onglets.
+	height: 36px;
+	vertical-align: top;
 	.flag {
 		vertical-align: top;
 		height: 20px;

@@ -224,6 +224,27 @@ const arenaLabel = computed<[string, string]>(() => {
 			background: var(--background-row);
 			border: 1px solid var(--border-strong);
 			box-shadow: inset 4px 0 0 var(--result);
+			/* Cartes plus hautes en v3 (demande de Pierre, 2026-08-31) : 52 px
+			   au lieu de 42, le v2 garde sa hauteur au pixel. Les noms gagnent
+			   du rembourrage pour rester au centre optique, l'heure garde son
+			   coin bas. */
+			height: 52px;
+			.center {
+				flex-basis: 52px;
+				height: 52px;
+				img {
+					margin: 15px 6px;
+				}
+				i {
+					line-height: 52px;
+				}
+			}
+			.fighters {
+				height: 52px;
+			}
+			.fighter {
+				padding: 9px 0;
+			}
 		}
 		.win {
 			--result: var(--result-win);

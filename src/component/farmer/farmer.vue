@@ -103,7 +103,9 @@
 						</div>
 						<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'">
 							<div class="info">
-								<img class="flag" src="/image/forum.png"><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
+								<!-- Glyphes mdi et non des PNG (règle ICONS.md) : un PNG sombre
+							     disparaissait sur le thème sombre, le glyphe suit l'encre. -->
+							<v-icon>mdi-forum</v-icon><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
 							</div>
 						</router-link>
 						<div class="info country">
@@ -114,12 +116,12 @@
 							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
 						<div v-if="safeWebsite" class="info website">
-							<img src="/image/website.png"><a :href="safeWebsite" target="_blank" rel="noopener"><span class="text label">{{ safeWebsite }}</span></a>
+							<v-icon>mdi-web</v-icon><a :href="safeWebsite" target="_blank" rel="noopener"><span class="text label">{{ safeWebsite }}</span></a>
 							<span v-if="myFarmer" class="edit" @click="websiteDialog = true"></span>
 						</div>
 						<div v-else-if="myFarmer" class="add add-website" @click="websiteDialog = true">{{ $t('add_website') }}</div>
 						<div v-if="farmer.github" class="info github">
-							<img src="/image/github.png"><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">github.com/{{ farmer.github }}</span></a>
+							<v-icon>mdi-github</v-icon><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">github.com/{{ farmer.github }}</span></a>
 							<span v-if="myFarmer" class="edit" @click="githubDialog = true"></span>
 						</div>
 						<div v-else-if="myFarmer" class="add add-github" @click="githubDialog = true">{{ $t('add_github') }}</div>
@@ -1396,6 +1398,9 @@
 	}
 	.infos .info img, .infos .info .flag {
 		width: 20px;
+	}
+	.infos .info .v-icon {
+		font-size: 20px;
 	}
 	.infos .info .label {
 		line-height: 22px;

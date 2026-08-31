@@ -61,17 +61,43 @@
 		<script>var __STARPASS_CODE__=null;</script>
 		<script>var __FARMER__=null;</script>
 		<script>var __DATA__=null;</script>
+		<script>
+		// Le thème est déjà connu avant Vue (cookie `dark` posé par app.vue, celui
+		// que lit le PHP en prod) : la page de pré-chargement le suit au lieu de
+		// flasher un gris unique. Repli : la préférence système.
+		(function(){var m=document.cookie.match(/(?:^|; )dark=(\d)/);var d=m?m[1]==='1':(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.className='dark'})();
+		</script>
 		<style>
-			body{background:#333}.app-loading{color:#fff;text-align:center;height:100vh;display:flex;align-items:center;justify-content:center}.app-loading img{width: 88px;margin-left: 1px;margin-top: 1px;position: absolute;}
-			.lds-ring{display:inline-block;position:relative;width:120px;height:120px}.lds-ring div{box-sizing:border-box;display:block;position:absolute;width:110px;height:110px;margin:6px;border:6px solid #fff;border-radius:50%;animation:lds-ring 1.2s cubic-bezier(.5,0,.5,1) infinite;border-color:#fff transparent transparent}.lds-ring div:nth-child(1){animation-delay:-.45s}.lds-ring div:nth-child(2){animation-delay:-.3s}.lds-ring div:nth-child(3){animation-delay:-.15s}@keyframes lds-ring{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-			.app-error{max-width:400px;padding:20px}.app-error p{margin:0 0 16px}.app-error button{background:#5fad1b;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-size:14px}
+			/* Surfaces du thème v3 (fond extérieur + encre), en clair et en sombre. */
+			:root{--lw-bg:#E7E1CB;--lw-loader:#2E9E4B}
+			html.dark{--lw-bg:#07090A;--lw-loader:#7CFF6B}
+			body{background:var(--lw-bg)}
+			.app-loading{text-align:center;height:100vh;display:flex;flex-direction:column;gap:28px;align-items:center;justify-content:center}
+			/* La « pluie de données » du site (loader.vue, v3) : une goutte par colonne
+			   d'une grille 5×5, tête vive puis traînée en paliers. Les délais négatifs
+			   recopient les décalages de colonne (0,3,1,4,2) du composant. */
+			.pixel-loader{display:inline-grid;width:60px;height:60px;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:11%}
+			.pixel-loader i{background:var(--lw-loader);opacity:.09;animation:lw-rain 1s steps(3) infinite}
+			.pixel-loader i:nth-child(1){animation-delay:-1s}
+			.pixel-loader i:nth-child(3),.pixel-loader i:nth-child(6){animation-delay:-.9s}
+			.pixel-loader i:nth-child(5),.pixel-loader i:nth-child(8),.pixel-loader i:nth-child(11){animation-delay:-.8s}
+			.pixel-loader i:nth-child(2),.pixel-loader i:nth-child(10),.pixel-loader i:nth-child(13),.pixel-loader i:nth-child(16){animation-delay:-.7s}
+			.pixel-loader i:nth-child(4),.pixel-loader i:nth-child(7),.pixel-loader i:nth-child(15),.pixel-loader i:nth-child(18),.pixel-loader i:nth-child(21){animation-delay:-.6s}
+			.pixel-loader i:nth-child(9),.pixel-loader i:nth-child(12),.pixel-loader i:nth-child(20),.pixel-loader i:nth-child(23){animation-delay:-.5s}
+			.pixel-loader i:nth-child(14),.pixel-loader i:nth-child(17),.pixel-loader i:nth-child(25){animation-delay:-.4s}
+			.pixel-loader i:nth-child(19),.pixel-loader i:nth-child(22){animation-delay:-.3s}
+			.pixel-loader i:nth-child(24){animation-delay:-.2s}
+			@keyframes lw-rain{0%{opacity:1}30%{opacity:.09}100%{opacity:.09}}
+			@media (prefers-reduced-motion:reduce){.pixel-loader i{animation-duration:3s}}
+			.app-error{max-width:400px;padding:20px;color:#0E1410}html.dark .app-error{color:#E8F0E6}
+			.app-error p{margin:0 0 16px}.app-error button{background:#2E9E4B;color:#0E1410;border:none;padding:10px 20px;cursor:pointer;font-size:14px}
 		</style>
 	</head>
 	<body>
 		<div id="app2">
 			<div class="app-loading">
-				<img src="/image/icon192.webp">
-				<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+				<!-- Le loader pixel seul, sans logo (demande de Pierre, 2026-08-31). -->
+				<div class="pixel-loader"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 				<noscript>You must enable JavaScript to run Leek Wars website.</noscript>
 			</div>
 			<!-- Contenu pré-rendu côté serveur pour les crawlers (encyclopédie). Remplacé par le SPA au montage. -->

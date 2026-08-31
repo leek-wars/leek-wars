@@ -75,13 +75,19 @@
 				</template>
 				<template #content>
 					<div ref="bottomContent" class="bottom-content" :class="{vertical: columns}">
-						<div class="forge-wrapper">
-							<forge></forge>
+						<!-- .forge-row est en `display: contents` en trois colonnes (il
+						     n'existe pas pour la mise en page) et devient une rangee en mode
+						     vertical : l'item et ses stats cote a cote quand la largeur le
+						     permet, les stats retombent dessous sinon (flex-wrap). -->
+						<div class="forge-row">
+							<div class="forge-wrapper">
+								<forge></forge>
+							</div>
+							<!-- Colonne des stats a jour de la piece en cours, entre la forge et la
+							     palette/historique (3 colonnes). Presente dans les TROIS onglets, et
+							     meme sans piece : sinon la forge se decale d'un onglet a l'autre (#622). -->
+							<forge-stats />
 						</div>
-						<!-- Colonne des stats a jour de la piece en cours, entre la forge et la
-						     palette/historique (3 colonnes). Presente dans les TROIS onglets, et
-						     meme sans piece : sinon la forge se decale d'un onglet a l'autre (#622). -->
-						<forge-stats />
 						<div class="schemes-section">
 							<!-- Fabriquer : le catalogue de schemas, puis l'historique des crafts. -->
 							<template v-if="tab === 'craft'">
@@ -551,6 +557,11 @@
 	flex: 1;
 	min-height: 0;
 	padding: 0;
+	// Transparent pour la mise en page en trois colonnes : la forge et les stats
+	// restent des enfants directs du flex. Le groupe ne prend corps qu'en vertical.
+	.forge-row {
+		display: contents;
+	}
 	.forge-wrapper {
 		flex-basis: 350px;
 		flex-shrink: 0;
@@ -581,15 +592,30 @@
 // sortait de l'ecran des qu'on parcourait les schemas.
 .bottom-content.vertical {
 	flex-direction: column;
-	.forge-wrapper {
-		flex-basis: auto;
-		// Retrecissable : sur un panneau court, la forge se replie sur sa propre barre
-		// de defilement plutot que de deborder du panneau.
+	// L'item et ses stats cote a cote si la bande est assez large (demande de
+	// Pierre) : la rangee prend corps et enveloppe les deux ; en dessous, le
+	// flex-wrap fait retomber les stats sous la forge.
+	.forge-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
 		flex-shrink: 1;
+		min-height: 0;
+		// C'est la rangee qui se replie sur une barre de defilement quand le
+		// panneau est court (role tenu avant par .forge-wrapper).
+		overflow-y: auto;
+	}
+	.forge-wrapper {
+		flex: 0 1 auto;
+		// Le defilement est porte par la rangee : deux barres imbriquees sinon.
+		overflow-y: visible;
 	}
 	:deep(.forge-stats) {
-		width: 100%;
-		flex-shrink: 0;
+		width: auto;
+		min-width: 220px;
+		max-width: 340px;
+		flex: 0 1 auto;
 		padding: 10px;
 	}
 }

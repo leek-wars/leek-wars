@@ -679,6 +679,23 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     dur (`#4caf50`, `#2196f3`, `#ff9800`), **1,9 à 2,5** sur le parchemin.
   - ~~**Couleurs de caractéristiques**~~ : corrigé au lot 28 (jetons `--stat-*`).
 
+## Survol discret, actif en vert (doctrine, 2026-08-31)
+
+Décision de Pierre (« le hover est en vert, il faudrait que le hover soit plus
+discret mais le active en vert, comme ailleurs ») : **le vert de marque dit
+« tu es ici » ou « c'est l'action principale », jamais « tu pourrais cliquer
+là ».**
+
+- **Survol** : changement de surface (`--background-row`) et/ou d'encre
+  (`--text-color`), trait qui passe au plus au fort (`--border-strong`).
+- **Actif** (page courante, onglet ouvert, page de pagination) : le vert —
+  trait, encre ou aplat selon l'objet.
+- Harmonisé le 2026-08-31 : boutons de la barre du haut (le survol vert
+  devient discret, l'actif `router-link-active` prend le vert), actions de
+  panneau (`.panel-action`), actions de barre de page (`.actions .tab`),
+  pagination. Les onglets (`.tab` trait vert dessous) et le menu étaient déjà
+  conformes. Les `.green` (action principale) gardent leur aplat.
+
 ## Le halo, motif réutilisable (2026-08-14)
 
 Validé par Pierre sur la rareté des objets (« ultra stylé »), **à réutiliser
@@ -1345,9 +1362,10 @@ est une surface de composant, pas le fond de la page, malgré son nom.
     monokai, qui ne sont pas des thèmes du site et n'ont rien à en reprendre.
   - **Restreint à `body:not(.v2)`** : en v2 les gris génériques *sont* les
     surfaces du site, la console y garde son aspect au pixel près.
-  - **Repéré, hors périmètre** : la coquille de l'**éditeur** a le même trou du
+  - ~~**Repéré, hors périmètre** : la coquille de l'**éditeur** a le même trou du
     côté clair (`.editor` porte les mêmes gris v2 en dur, et son bloc
-    `.theme-leek-wars-dark` n'est pas non plus gardé par `body:not(.v2)`).
+    `.theme-leek-wars-dark` n'est pas non plus gardé par `body:not(.v2)`).~~
+    **Corrigé au lot 40.**
 
 - **2026-08-29, lot 38 — le widget Classement sans défilement** (capture de
   Pierre : une barre de défilement dans le widget, la dixième ligne coupée en
@@ -1398,6 +1416,69 @@ est une surface de composant, pas le fond de la page, malgré son nom.
     replié (84 / 1485), panneau social replié (240 / 1855), et sous 1600 px la
     barre revient au bord comme la colonne (1365 pour une page à 1385). À
     1235 px les cales ont cédé sans que rien ne se chevauche ni ne déborde.
+
+- **2026-08-31, lot 40 — rafale de retours de Pierre** (une douzaine de points,
+  tous à sa demande) :
+  - **Page combat** : le glissement du redimensionneur du panneau social met à
+    jour `--social-width` mais n'émettait jamais `resize` (seul le repli le
+    faisait) — le lecteur ne suivait pas. `social.vue` émet à chaque pas de
+    glissement, en `nextTick` pour que la variable soit posée avant la mesure.
+  - **Avatars/emblèmes cassés** (fichiers absents en local) : écouteur `error`
+    global en capture dans `vue.ts` — toute `<img>` sur `/avatar/<id>.png` ou
+    `/emblem/<id>.png` qui 404 bascule sur son placeholder. Un seul point de
+    code pour tous les usages, y compris les `getAvatar()` directs.
+  - **Thème d'éditeur « Leek Wars » clair** aux couleurs du v3 (le pendant du
+    lot 13) : fond panneau #FBF7E8, mots-clés `#146128`, types `#16688A`,
+    chaînes `#9C4508`, violet `#5F35B5`, or `#8A6200`, commentaires `#5C6854` —
+    mesurés ≥ 4,5 sur le fond de page #EFE9D6 (pire surface d'un aperçu
+    transparent). **La peau v2 (fond blanc, bleu marine) reste servie en v2** :
+    la définition Monaco est rejouée à la bascule de design (watch), l'override
+    CSS des aperçus est sous `body:not(.v2)`. Les deux thèmes maison sortent
+    dans `monaco-themes.ts`, partagé avec l'**éditeur de l'encyclopédie** (qui
+    importe monaco sans monaco.ts et restait sur vs/vs-dark → il suit maintenant
+    le thème du site, diff d'historique compris). Coquille de l'éditeur : bloc
+    `body:not(.v2) .theme-leek-wars` aux surfaces claires du site (le trou
+    relevé au lot 37), et le bloc sombre gagne le même garde-fou v2.
+  - **Réglages** : interrupteurs AVANT le libellé (prop `label` de `lw-switch`,
+    ligne entière cliquable), colonne aérée (gap 10 px), icône de page
+    `mdi-cog` (nouveau couple concept → glyphe, ajouté à `ICONS.md` et
+    `admin-icons.vue` ; le bouton réglages de la barre passe du contour au
+    plein).
+  - **Survol discret / actif vert** : doctrine actée et harmonisée, voir la
+    section dédiée. Barre du haut : l'actif passe par `router-link-active`
+    PLUS une classe `header-active` posée à la main pour les sous-pages qui
+    vivent dans un autre record de route (/market/:item, /bank, /garden).
+  - **Panneau « Mes comptes »** : les v-btn small (icône 16 px au centre d'une
+    grande boîte Material) deviennent des carrés cliquables de 36 px, icône
+    22 px, collés ; bloc nom + talent centré verticalement face à l'avatar.
+  - **Statistiques** : `font-variant-numeric: tabular-nums` sur les valeurs —
+    les compteurs animés changeaient la largeur des cartes à chaque tick et
+    toute la grille tremblait. Inter porte des chiffres tabulaires.
+  - **Fiche d'invocation du marché** : 7 px entre l'icône de caractéristique et
+    la valeur (2 px avant), en enfant direct — la marge s'additionnait sur les
+    deux niveaux de span.
+  - **Profil éleveur** : les PNG forum/site web/GitHub passent en glyphes mdi
+    (`mdi-forum`, `mdi-web`, `mdi-github`) qui suivent l'encre — les PNG
+    sombres disparaissaient en thème sombre.
+  - **Sélecteur d'emoji** : survol sur `--background-row` (était `--grey-11`,
+    gris clair jamais redéfini en sombre — carré presque blanc).
+  - **Cartes d'historique de combat plus hautes en v3** : 52 px au lieu de 42
+    (v2 inchangé au pixel), rembourrage des noms recalé, `useFitCount` suit
+    tout seul (il mesure la première rangée).
+  - **Tableau des membres d'équipe** : la v-data-table posait la « surface »
+    Vuetify (aucun jeton derrière) — transparent, le panneau porte le fond.
+  - **Forge, bouton Altérer** : l'icône forçait `--white` sur l'aplat de marque
+    (le piège du lot 10) → `--primary-surface-text`.
+  - **Encyclopédie** : le sélecteur de langue d'édition prenait `height: 100%`
+    d'un conteneur en hauteur auto (rien) et flottait au-dessus de la ligne —
+    calé à 36 px comme un `.tab`.
+  - **Écran de pré-chargement (avant Vue)** : suit le thème (cookie `dark`
+    déjà posé par app.vue, repli `prefers-color-scheme`), fond
+    `--background-outer` des deux thèmes, et le spinner circulaire est remplacé
+    par la **pluie de données du lot 21** recopiée en CSS statique (délais
+    négatifs par `nth-child`, mêmes décalages de colonnes 0,3,1,4,2). Sans
+    logo, le loader seul (demande de Pierre).
+  - Vérifié : build de prod complet et 581 tests verts.
 
 ## À reporter dans le projet Claude Design
 

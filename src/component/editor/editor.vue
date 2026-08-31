@@ -1779,10 +1779,23 @@
 		--type-color: #0099d0;
 		color: var(--text-color);
 	}
-	// Le thème maison va plus loin que les gris génériques : la coquille de
-	// l'éditeur prend les surfaces du site (thème v3 sombre), pour qu'elle soit
-	// dans la continuité du code qu'elle entoure au lieu de flotter dessus.
-	.theme-leek-wars-dark {
+	// Les thèmes maison vont plus loin que les gris génériques : la coquille de
+	// l'éditeur prend les surfaces du site (thème v3), pour qu'elle soit dans la
+	// continuité du code qu'elle entoure au lieu de flotter dessus — même parti
+	// pris que la console (console.vue, lot 37). Restreint à `body:not(.v2)` :
+	// en v2 les gris génériques SONT les surfaces du site.
+	body:not(.v2) .theme-leek-wars {
+		--pure-white: #FBF7E8;
+		--background: #FBF7E8;
+		--background-secondary: #E9E3CD;
+		--background-disabled: #D3CCB2;
+		--background-header: #F3EDD8;
+		--border: rgba(14, 20, 16, 0.14);
+		--text-color: #0E1410;
+		--text-color-secondary: #4A5847;
+		--type-color: #16688A;
+	}
+	body:not(.v2) .theme-leek-wars-dark {
 		--background: #0E1316;
 		--background-secondary: #0B0F0B;
 		--background-header: #11161A;

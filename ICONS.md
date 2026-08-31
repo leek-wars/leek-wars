@@ -70,6 +70,7 @@ recopiées d'ici à la main — modifier l'un, c'est modifier l'autre.
 | **Commentaire** | `mdi-message` | La bulle pleine et muette, distincte du salon (`mdi-chat`) et du forum (`mdi-forum`). Commentaire de combat, de tournoi. |
 | **Modération** | `mdi-gavel` | |
 | **Administration** | `mdi-security` | |
+| **Réglages** | `mdi-cog` | Décidé le 2026-08-31 (Pierre : « un icône ici serait cool », titre de la page). Plein, conformément à la règle ; le panneau « Options diverses » de la page garde son `mdi-cog-outline` d'en-tête pour ne pas doubler le glyphe du titre au même écran. |
 
 ### Résultats de combat
 

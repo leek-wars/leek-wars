@@ -16,6 +16,7 @@ import { applyFormatFixups } from './format-fixups';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
 import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, type ApiMember } from './leekwars-dts'
+import { defineLeekWarsThemes } from './monaco-themes'
 import { buildLeekwarsPyi } from './leekwars-pyi'
 import { escapeMarkdownText } from './markdown-safe'
 import { pyComplete, pyDefinition, pyHover, pyResolveCompletion, pySetStub } from './pyright';
@@ -133,65 +134,10 @@ function methodNameFromLine(lineContent: string): string | null {
 }
 
 
-monaco.editor.defineTheme("leek-wars", {
-	base: "vs", // can also be vs-dark or hc-black
-	inherit: true, // can also be false to completely replace the builtin rules
-	rules: [
-		{ token: "comment", foreground: "999999" },
-		{ token: "string", foreground: "ff781e" },
-		{ token: "keyword", foreground: "00007f", fontStyle: 'bold' },
-		{ token: "type", foreground: "0000D0", fontStyle: 'bold' },
-		{ token: "lsconstant", fontStyle: 'bold' },
-		{ token: "lsfunction", fontStyle: 'italic' },
-		{ token: "lsfunction-deprecated", foreground: '777777', fontStyle: 'italic' },
-		{ token: "atom", foreground: '0086bc', fontStyle: 'bold' },
-		{ token: "number", foreground: '007f00' },
-		{ token: "annotation", foreground: 'aa5500', fontStyle: 'bold' },
-	],
-	colors: {
-		"editor.foreground": "#000000",
-		"editor.background": "#ffffff",
-		"editor.hoverHighlightBackground": "#00aeff33"
-	},
-})
-
-/*
- * Thème sombre maison, aux couleurs du site (thème v3 sombre) : c'est le thème
- * par défaut en mode sombre, à la place de Monokai — qui reste proposé.
- * Il transpose le thème clair « leek-wars » plutôt que d'inventer une sémantique :
- * mots-clés en gras, types en gras, chaînes chaudes, commentaires éteints. Le vert
- * de marque prend la place du bleu marine des mots-clés, et les nombres passent au
- * violet, le vert étant désormais pris.
- * Toutes les encres sont mesurées sur le fond #0E1316 : 14,6 pour le vert, 12,1 le
- * cyan, 11,0 l'orange, 8,1 le violet, 12,9 l'or, 5,2 les commentaires (le plus bas,
- * volontairement discret mais au-dessus de 4,5:1).
- */
-monaco.editor.defineTheme("leek-wars-dark", {
-	base: "vs-dark",
-	inherit: true,
-	rules: [
-		{ token: "comment", foreground: "7c8b76" },
-		{ token: "string", foreground: "ffb86b" },
-		{ token: "keyword", foreground: "7cff6b", fontStyle: 'bold' },
-		{ token: "type", foreground: "5ce0ff", fontStyle: 'bold' },
-		{ token: "lsconstant", foreground: "e8f0e6", fontStyle: 'bold' },
-		{ token: "lsfunction", foreground: "e8f0e6", fontStyle: 'italic' },
-		{ token: "lsfunction-deprecated", foreground: '6b7a66', fontStyle: 'italic' },
-		{ token: "atom", foreground: 'b79bff', fontStyle: 'bold' },
-		{ token: "number", foreground: 'b79bff' },
-		{ token: "annotation", foreground: 'ffd23a', fontStyle: 'bold' },
-	],
-	colors: {
-		"editor.foreground": "#E8F0E6",
-		"editor.background": "#0E1316",
-		"editor.lineHighlightBackground": "#131A1E",
-		"editor.selectionBackground": "#7CFF6B33",
-		"editorCursor.foreground": "#7CFF6B",
-		"editorLineNumber.foreground": "#6B7A66",
-		"editorLineNumber.activeForeground": "#7CFF6B",
-		"editor.hoverHighlightBackground": "#00aeff33"
-	},
-})
+// Les deux thèmes maison (« Leek Wars » clair et « Leek Wars Dark ») vivent
+// dans monaco-themes.ts, partagé avec l'encyclopédie qui importe monaco sans
+// toute l'infra de l'éditeur.
+defineLeekWarsThemes(monaco)
 
 monaco.editor.defineTheme("monokai", {
 	base: "vs-dark", // can also be vs-dark or hc-black

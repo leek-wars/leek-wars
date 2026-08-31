@@ -362,6 +362,11 @@
 			display: block;
 			color: var(--text-color-secondary);
 			text-align: right;
+			// Chiffres à chasse fixe : les compteurs s'animent, et en chasse
+			// proportionnelle chaque tick changeait la largeur de la carte —
+			// toute la grille tremblait (retour de Pierre). Inter porte des
+			// chiffres tabulaires, pas besoin de changer de police.
+			font-variant-numeric: tabular-nums;
 			&.today {
 				color: #00c0e5;
 			}

@@ -1,7 +1,8 @@
 <template>
-	<div class="forge">
+	<div class="forge" :class="{ 'reserve-preview': !!component }">
 		<!-- HAUT : ce que la tentative APPORTE -- dosage, nouvelles stats, taux de reussite.
-		     Rien tant qu'aucune alteration n'est posee : la grille reste seule et centree. -->
+		     Rien tant qu'aucune alteration n'est posee : la grille reste seule et centree,
+		     mais des qu'une piece est posee l'espace des cartes est reserve (cf. styles). -->
 		<div class="forge-top">
 			<div v-if="component && plan && alterationCount > 0" class="preview">
 				<div class="row dose-row">
@@ -121,7 +122,10 @@
 			<!-- Alterer : coin BAS droit de la grille, sous la main du joueur. -->
 			<v-btn v-if="component && alterationCount > 0" class="corner-btn fuse-btn" icon variant="flat"
 				size="small" :loading="altering" :disabled="!plan || !plan.fits" @click="alter">
-				<v-icon color="white">mdi-flask</v-icon>
+				<!-- Pas de blanc force sur l'aplat de marque : l'encre du jeton suit
+				     le theme (sombre sur le vert vif, cf. lot 28), le blanc n'y tenait
+				     pas (retour de Pierre sur le contraste). -->
+				<v-icon class="fuse-icon">mdi-flask</v-icon>
 				<v-tooltip activator="parent" location="bottom">{{ $t('main.alteration_fuse') }}</v-tooltip>
 			</v-btn>
 		</div>
@@ -1141,6 +1145,9 @@
 .corner-btn.fuse-btn.v-btn {
 	background-color: var(--primary-surface) !important;
 	border-color: #4a8714;
+	.fuse-icon {
+		color: var(--primary-surface-text);
+	}
 }
 .corner-btn.fuse-btn.v-btn.v-btn--disabled {
 	background-color: var(--background-disabled) !important;
@@ -1179,6 +1186,19 @@
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
+	}
+	// Des qu'une piece est posee, l'espace des cartes du haut (dosage, gains) et
+	// du bas (risque, cout) est RESERVE : leur apparition a la premiere
+	// alteration posee decalait toute la forge (retour de Pierre). 66 px >=
+	// hauteur deterministe des cartes (deux lignes a hauteur minimale + filet +
+	// padding), et chaque carte reste collee a la grille dans sa reserve.
+	&.reserve-preview .forge-top {
+		min-height: 66px;
+		justify-content: flex-end;
+	}
+	&.reserve-preview .forge-bottom {
+		min-height: 66px;
+		justify-content: flex-start;
 	}
 	.grid {
 		width: 240px;

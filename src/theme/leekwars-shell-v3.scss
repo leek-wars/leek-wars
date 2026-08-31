@@ -211,8 +211,19 @@ body:not(.v2) {
 		line-height: 42px;
 		transition: border-color .12s ease, color .12s ease;
 	}
+	/* Survol DISCRET, vert réservé à l'actif (doctrine actée le 2026-08-31,
+	   cf. REDESIGN.md « Survol discret, actif en vert ») : surface de rangée et
+	   trait fort, pas de liseré vert. */
 	.header .header-button:hover {
-		background: var(--header-button-background);
+		background: var(--background-row);
+		border-color: var(--border-strong);
+		color: var(--header-color);
+	}
+	/* L'actif (la page où l'on est) prend le vert que le survol a rendu.
+	   `.header-active` est posé à la main par header.vue quand la sous-page
+	   appartient à un autre record de route (/market/:item, /bank, /garden). */
+	.header a.router-link-active .header-button,
+	.header a.header-active .header-button {
 		border-color: var(--primary);
 		color: var(--primary);
 	}
@@ -648,7 +659,9 @@ body:not(.v2) {
 		   marge vaut zéro et la barre reste collée au contenu. */
 		margin-top: auto;
 		gap: 8px;
-		padding: 10px 12px;
+		/* Même écart partout : le 10/12 donnait plus d'air au-dessus des boutons
+		   qu'à leur droite (repéré par Pierre). */
+		padding: 10px;
 		border-top: 1px solid var(--border);
 	}
 	.panel-actions .panel-action {
@@ -672,9 +685,11 @@ body:not(.v2) {
 		width: 16px;
 		height: 16px;
 	}
+	/* Survol discret (doctrine du 2026-08-31) : une action n'a pas d'état
+	   actif, le vert n'y a donc pas sa place — il reste aux `.green`. */
 	.panel-actions .panel-action:hover {
-		border-color: var(--primary);
-		color: var(--primary);
+		background: var(--background-row);
+		border-color: var(--border-strong);
 	}
 	.panel-actions .panel-action:active {
 		transform: translate(1px, 1px);
@@ -722,9 +737,10 @@ body:not(.v2) {
 		color: var(--text-color);
 		cursor: pointer;
 	}
+	/* Survol discret (doctrine du 2026-08-31), comme les actions de panneau. */
 	.page-bar .actions .tab:not(.disabled):hover {
-		border-color: var(--primary);
-		color: var(--primary);
+		background: var(--background-row);
+		border-color: var(--border-strong);
 	}
 	.page-bar .actions .tab:not(.disabled):active {
 		transform: translate(1px, 1px);
@@ -1271,10 +1287,12 @@ body:not(.v2) {
 		font-family: var(--font-display);
 		font-size: 13px;
 	}
+	/* Survol discret (doctrine du 2026-08-31) : le vert reste à la page
+	   courante, en aplat juste en dessous. */
 	.pagination a:hover {
-		background: var(--background-header);
-		border-color: var(--primary);
-		color: var(--primary);
+		background: var(--background-row);
+		border-color: var(--border-strong);
+		color: var(--text-color);
 	}
 	.pagination a.current {
 		background: var(--primary-surface);

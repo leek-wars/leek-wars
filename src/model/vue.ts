@@ -96,6 +96,18 @@ const app = createApp({
 		window.addEventListener('mouseup', (event) => {
 			emitter.emit('mouseup', event)
 		})
+		// Avatars et emblèmes cassés (fichier absent, courant en local) : remplacés
+		// par leur placeholder au lieu de l'icône d'image cassée du navigateur.
+		// En capture : l'événement error d'une ressource ne bulle pas, un écouteur
+		// global est le seul moyen de couvrir tous les <img> d'un coup.
+		window.addEventListener('error', (event) => {
+			const target = event.target
+			if (!(target instanceof HTMLImageElement)) { return }
+			const match = /\/(avatar|emblem)\/\d+\.png/.exec(target.src)
+			if (match) {
+				target.src = match[1] === 'avatar' ? '/image/no_avatar.png' : '/image/no_emblem.png'
+			}
+		}, true)
 		LeekWars.mobile = LeekWars.isMobile()
 		window.addEventListener('resize', () => {
 			emitter.emit('resize')

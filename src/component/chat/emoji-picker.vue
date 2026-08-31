@@ -129,6 +129,9 @@ function pick(emoji: string) {
 		padding: 4px;
 	}
 	.emoji:hover {
-		background: var(--grey-11);
+		// Le survol officiel du design : la surface de rangée, qui suit le
+		// thème. --grey-11 est un gris de l'échelle claire jamais redéfini en
+		// sombre — le survol y posait un carré presque blanc.
+		background: var(--background-row);
 	}
 </style>

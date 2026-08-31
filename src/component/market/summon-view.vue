@@ -88,11 +88,15 @@ const CHIPS = CHIPSImport
 	.summon .characteristics {
 		text-align: left;
 	}
-	.summon .characteristic span {
+	// Enfant direct seulement : la valeur est un span DANS un span, la marge
+	// s'additionnait sur les deux niveaux.
+	.summon .characteristic > span {
 		display: inline-block;
 		margin-top: 2px;
 		vertical-align: top;
-		margin-left: 2px;
+		// 7 px comme le panneau de la page poireau : à 2 px la valeur collait
+		// à son icône.
+		margin-left: 7px;
 		font-weight: bold;
 	}
 	.summon .characteristic img {

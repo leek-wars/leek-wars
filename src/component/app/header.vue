@@ -94,7 +94,7 @@
 					</div>
 				</div> -->
 				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
-					<router-link to="/bank?ref=header">
+					<router-link to="/bank?ref=header" :class="{'header-active': $route.path.startsWith('/bank')}">
 						<div v-if="$store.state.farmer" class="header-button">
 							<span class="farmer-crystals text">{{ $filters.number(Math.round($store.state.farmer.animated_crystals)) }}</span>
 							<span class="crystal text"></span>
@@ -104,7 +104,10 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<router-link to="/market">
+					<!-- `header-active` à la main : /market et /market/:item sont deux
+					     records de route distincts, router-link-active ne suit donc pas
+					     les sous-pages (idem banque et potager). -->
+					<router-link to="/market" :class="{'header-active': $route.path.startsWith('/market')}">
 						<div v-if="$store.state.farmer" class="header-button">
 							<span class="farmer-habs text">{{ $filters.number(Math.round($store.state.farmer.animated_habs)) }}</span>
 							<span class="hab text"></span>
@@ -116,7 +119,7 @@
 				<div class="button-wrapper">
 					<v-tooltip v-if="$store.state.farmer?.bought_fights || $store.state.farmer?.team_fights" bottom>
 						<template #activator="{ props }">
-							<router-link to="/garden" v-bind="props">
+							<router-link to="/garden" v-bind="props" :class="{'header-active': $route.path.startsWith('/garden')}">
 								<div class="header-button fights-button">
 									<span class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
 									<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
@@ -128,7 +131,7 @@
 						{{ $t('main.paid_fights') }} : {{ $filters.number(Math.min($store.state.farmer.fights, $store.state.farmer.bought_fights)) }}<template v-if="$store.state.farmer.team_fights"><br>
 						{{ $t('main.team') }} : {{ $filters.number($store.state.farmer.team_fights) }}</template>
 					</v-tooltip>
-					<router-link v-else to="/garden">
+					<router-link v-else to="/garden" :class="{'header-active': $route.path.startsWith('/garden')}">
 						<div class="header-button fights-button">
 							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
 							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
@@ -185,7 +188,9 @@
 				<div class="button-wrapper">
 					<router-link to="/settings">
 						<div class="settings-button header-button">
-							<v-icon>mdi-cog-outline</v-icon>
+							<!-- mdi-cog plein : le glyphe canonique des réglages (ICONS.md,
+							     décidé le 2026-08-31), le contour est réservé aux états vides. -->
+							<v-icon>mdi-cog</v-icon>
 						</div>
 					</router-link>
 				</div>

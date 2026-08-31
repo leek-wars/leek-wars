@@ -205,6 +205,7 @@
 				{ concept: 'Éditeur', icon: 'mdi-code-braces', note: '' },
 				{ concept: 'Modération', icon: 'mdi-gavel', note: '' },
 				{ concept: 'Administration', icon: 'mdi-security', note: '' },
+				{ concept: 'Réglages', icon: 'mdi-cog', note: 'Titre de la page réglages' },
 			],
 		},
 	]

@@ -100,8 +100,14 @@ function resizerMousedown(e: MouseEvent) {
 	const startWidth = panelWidth.value
 	const startX = e.clientX
 	const mousemove = (ev: MouseEvent) => {
-		panelWidth.value = Math.max(400, Math.min(800, startWidth + startX - ev.clientX))
-		localStorage.setItem('main/social-width', '' + panelWidth.value)
+		const width = Math.max(400, Math.min(800, startWidth + startX - ev.clientX))
+		if (width === panelWidth.value) { return }
+		panelWidth.value = width
+		localStorage.setItem('main/social-width', '' + width)
+		// Comme le toggle : les pages qui mesurent leur place (lecteur de combat,
+		// inventaire…) doivent suivre le glissement, pas seulement le repli. Le
+		// nextTick laisse le watch ci-dessus poser --social-width avant la mesure.
+		nextTick(() => emitter.emit('resize'))
 	}
 	const mouseup = (_ev: MouseEvent) => {
 		document.documentElement!.removeEventListener('mousemove', mousemove)

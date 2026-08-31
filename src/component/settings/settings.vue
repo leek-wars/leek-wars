@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<v-icon class="page-icon">mdi-cog</v-icon>
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" icon="mdi-power" @click="logout">
 					<v-icon>mdi-power</v-icon>
@@ -107,42 +112,18 @@
 							</lw-radio-group>
 						</div>
 					</div>
-					<div id="sfw-button" class="setting">
-						<div>{{ $t('activate_discrete_mode') }}</div>
-						<div><lw-switch v-model="sfwMode" /></div>
-					</div>
-					<div id="notifs-popups-button" class="setting">
-						<div>{{ $t('notifs_popups') }}</div>
-						<div><lw-switch v-model="notifsPopups" /></div>
-					</div>
-					<div id="notifs-results-button" class="setting">
-						<div>{{ $t('notifs_results') }}</div>
-						<div><lw-switch v-model="notifsResults" /></div>
-					</div>
-					<div id="notifs-open-report-button" class="setting">
-						<div>{{ $t('notifs_open_report') }}</div>
-						<div><lw-switch v-model="notifsOpenReport" /></div>
-					</div>
-					<div v-if="LeekWars.mobile" class="setting">
-						<div>{{ $t('chat_first') }}</div>
-						<div><lw-switch v-model="chatFirst" /></div>
-					</div>
-					<div class="setting">
-						<div>{{ $t('home_dashboard') }}</div>
-						<div><lw-switch v-model="homeDashboard" /></div>
-					</div>
-					<div v-if="!LeekWars.mobile" class="setting">
-						<div>{{ $t('leek_theme') }}</div>
-						<div><lw-switch v-model="LeekWars.leekTheme" /></div>
-					</div>
-					<div class="setting">
-						<div>{{ $t('legacy_theme') }}</div>
-						<div><lw-switch v-model="LeekWars.legacyTheme" /></div>
-					</div>
-					<div class="setting">
-						<div>{{ $t('modern_theme') }}</div>
-						<div><lw-switch v-model="modernTheme" /></div>
-					</div>
+					<!-- Interrupteur AVANT le libellé (demande de Pierre, 2026-08-31) : la
+					     prop label de lw-switch fait ça toute seule, et la ligne entière
+					     reste cliquable. -->
+					<lw-switch id="sfw-button" v-model="sfwMode" class="setting" :label="$t('activate_discrete_mode')" />
+					<lw-switch id="notifs-popups-button" v-model="notifsPopups" class="setting" :label="$t('notifs_popups')" />
+					<lw-switch id="notifs-results-button" v-model="notifsResults" class="setting" :label="$t('notifs_results')" />
+					<lw-switch id="notifs-open-report-button" v-model="notifsOpenReport" class="setting" :label="$t('notifs_open_report')" />
+					<lw-switch v-if="LeekWars.mobile" v-model="chatFirst" class="setting" :label="$t('chat_first')" />
+					<lw-switch v-model="homeDashboard" class="setting" :label="$t('home_dashboard')" />
+					<lw-switch v-if="!LeekWars.mobile" v-model="LeekWars.leekTheme" class="setting" :label="$t('leek_theme')" />
+					<lw-switch v-model="LeekWars.legacyTheme" class="setting" :label="$t('legacy_theme')" />
+					<lw-switch v-model="modernTheme" class="setting" :label="$t('modern_theme')" />
 				</div>
 			</panel>
 
@@ -690,10 +671,16 @@
 	.misc-settings {
 		width: 100%;
 		font-size: 15px;
+		// Une colonne de lignes aérées, contrôle à gauche (demande de Pierre) :
+		// plus de libellé à un bord et d'interrupteur à l'autre.
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
 		.setting {
 			display: flex;
-			justify-content: space-between;
 			align-items: center;
+			gap: 10px;
 		}
 		.flex {
 			gap: 8px;
@@ -810,7 +797,8 @@
 			vertical-align: top;
 		}
 	}
-	.lw-switch {
+	// Les lignes d'« Options diverses » (.setting) sont calées à gauche, sans retrait.
+	.lw-switch:not(.setting) {
 		margin-left: 8px;
 	}
 	.account {

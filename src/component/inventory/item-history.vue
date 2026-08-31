@@ -5,23 +5,33 @@
 		<div v-else-if="!entries.length" class="empty">{{ $t('main.history_empty') }}</div>
 		<div v-else class="entries">
 			<div v-for="entry in entries" :key="entry.id" class="entry">
-				<!-- Une seule ligne : vignette, nom, contenu de l'action, puis la date a droite (#622). -->
+				<!-- Une seule ligne : issue, vignette (le nom de la piece est dans son
+				     title), dosage et metabolisme, recette, resultat, la date a droite
+				     (ordre de Pierre, 2026-08-31). -->
 				<div class="line" :class="lineClass(entry)">
-					<img v-if="entry.template" class="thumb" :src="thumbUrl(entry.template)" :alt="itemName(entry.template)">
-					<span class="name">{{ itemName(entry.template) }}</span>
+					<!-- Une seule icone d'issue, EN TOUT PREMIER : reussite, echec ou casse.
+					     Elle remplace la croix posee au milieu des gains et le coeur brise de
+					     la casse, qui se lisaient mal et faisaient deux marqueurs pour une
+					     seule information (#622). -->
+					<v-icon v-if="entry.action === ALTER && entry.details" class="outcome" :class="outcome(entry)" size="17">{{ OUTCOME_ICONS[outcome(entry)] }}</v-icon>
+					<img v-if="entry.template" class="thumb" :src="thumbUrl(entry.template)" :alt="itemName(entry.template)" :title="itemName(entry.template)">
 
 					<!-- Craft : ce qui a ete fabrique. -->
 					<span v-if="entry.action === CRAFT && entry.details" class="detail">
 						{{ $t('main.history_crafted', [entry.details.quantity || 1]) }}
 					</span>
 
-					<!-- Alteration : issue, recette consommee, gains, dosage, metabolisme, casse. -->
+					<!-- Alteration : dosage, metabolisme, recette consommee, gains, casse. -->
 					<template v-else-if="entry.action === ALTER && entry.details">
-						<!-- Une seule icone d'issue, en tete de ligne : reussite, echec ou casse.
-						     Elle remplace la croix posee au milieu des gains et le coeur brise de
-						     la casse, qui se lisaient mal et faisaient deux marqueurs pour une
-						     seule information (#622). -->
-						<v-icon class="outcome" :class="outcome(entry)" size="17">{{ OUTCOME_ICONS[outcome(entry)] }}</v-icon>
+						<span class="dose" :title="$t('main.alteration_dose')">{{ entry.details.dose }}</span>
+						<!-- Metabolisme en %, du rouge (0, dosage hors sujet) au vert (100, le pic
+						     exact) : c'est la mesure que le joueur suit pour trouver le dosage
+						     optimal, un chiffre nu ne disait pas s'il chauffait (#622). -->
+						<span v-if="entry.details.metabolism !== undefined" class="metabolism"
+							:style="{ color: metabolismColor(entry.details.metabolism) }"
+							:title="$t('main.alteration_metabolism')">
+							{{ Math.round(entry.details.metabolism) }} %
+						</span>
 						<!-- Les alterations reellement consommees, en vignettes : c'est la recette
 						     que le joueur cherche a retrouver pour la rejouer (#622). -->
 						<span v-for="(count, id) in entry.details.recipe" :key="'u' + id" class="rendered-item alteration used" :title="alterationName(Number(id))">
@@ -36,15 +46,6 @@
 								+{{ r.points }}
 							</span>
 						</template>
-						<span class="dose" :title="$t('main.alteration_dose')">{{ entry.details.dose }}</span>
-						<!-- Metabolisme en %, du rouge (0, dosage hors sujet) au vert (100, le pic
-						     exact) : c'est la mesure que le joueur suit pour trouver le dosage
-						     optimal, un chiffre nu ne disait pas s'il chauffait (#622). -->
-						<span v-if="entry.details.metabolism !== undefined" class="metabolism"
-							:style="{ color: metabolismColor(entry.details.metabolism) }"
-							:title="$t('main.alteration_metabolism')">
-							{{ Math.round(entry.details.metabolism) }} %
-						</span>
 						<!-- Casse : elle se repartit unite par unite sur plusieurs caracs, on les
 						     liste donc toutes. L'icone d'issue en tete de ligne porte deja le fait
 						     qu'il y a eu casse (#622). -->
@@ -259,9 +260,8 @@
 		// Les images d'items ne sont pas toujours carrees : contain evite l'ecrasement.
 		object-fit: contain;
 	}
-	// Nom reduit : la ligne doit surtout montrer les vignettes des alterations
-	// consommees et le resultat, le nom de la piece n'est qu'un reperage (#622).
-	.name { font-weight: bold; white-space: nowrap; font-size: 12px; }
+	// Le nom de la piece n'est plus ecrit sur la ligne : il vit dans le title de
+	// la vignette (demande de Pierre) — la ligne montre la recette et le resultat.
 	.date {
 		margin-left: auto;
 		padding-left: 6px;
@@ -282,10 +282,11 @@
 	}
 	.roll.ok { color: #2e7d32; font-weight: bold; }
 	// Icone d'issue, en tete de ligne : le seul marqueur de reussite / echec / casse.
+	// L'echec passe au rouge (demande de Pierre) ; la casse garde son icone propre.
 	.outcome {
 		flex-shrink: 0;
 		&.success { color: #2e7d32; }
-		&.fail { color: var(--text-color-secondary); }
+		&.fail { color: #c62828; }
 		&.broken { color: #c62828; }
 	}
 	.ci { width: 15px; height: 15px; }
