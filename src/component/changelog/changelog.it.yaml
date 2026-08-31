@@ -60,6 +60,7 @@
     - "Pannello Git: i pulsanti «Aggiungi tutto allo stage», «Annulla tutto» e «Rimuovi tutto dallo stage» nelle intestazioni di sezione sono di nuovo visibili, erano ridotti a dimensione zero. Il pulsante Aggiorna interroga anche il repository remoto: i commit pubblicati nel frattempo compaiono subito, senza passare dal selettore dei rami (grazie a Tabarius)."
     - "Editor: un commento attaccato a un operatore resta grigio. La sequenza di operatori, ingorda, inghiottiva l'apertura del commento: «!/**/» non era colorato affatto, mentre «! /**/» lo era (grazie a LaLongueTerre)."
     - "Rapporto di combattimento: le frecce «<» e «>» dell'intestazione del turno tornano a spostarsi da un turno all'altro nel rapporto, invece di aprire il combattimento nel player. Il player resta raggiungibile tramite la freccia che compare a destra dell'intestazione (grazie a Tabarius)."
+    - "Il tasto X in combattimento non rigenera più gli ostacoli della mappa: questa scorciatoia di test confondeva la visualizzazione, gli ostacoli visibili non corrispondevano più ai veri ostacoli del combattimento. Ora è riservato agli admin (grazie a LaLongueTerre)."
 
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."

@@ -514,7 +514,7 @@
 		else if (k === 70) { toggleFullscreen(); e.preventDefault() }
 		else if (k === 86) { game.value.sound = !game.value.sound; e.preventDefault() }
 		else if (k === 77) { game.value.clearMarks(); e.preventDefault() }
-		else if (k === 88 && !game.value.creator) {
+		else if (k === 88 && !game.value.creator && store.state.farmer && store.state.farmer.admin) {
 			game.value.map.seed = Math.random() * 10000000 | 0
 			game.value.mapLoaded()
 			e.preventDefault()
