@@ -56,6 +56,7 @@
 	"changelog": "Cronologia delle modifiche",
 	"chat": "Chat",
 	"chat_placeholder": "Inserisci il tuo messaggio...",
+	"emoji_favorites": "Preferiti",
 	"chat_the_mdy_at_hm": "%1$s/%2$s/%3$s a %4$s:%5$s",
 	"chat_too_long": "Messaggio troppo lungo, limitare le discussioni a 1000 caratteri",
 	"chest_hunt": "Caccia ai forzieri",

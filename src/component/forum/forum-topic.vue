@@ -325,6 +325,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { ForumCategory, ForumMessage, ForumTopic, ForumTopicStatus } from '@/model/forum'
 	import { i18n, mixins, useNamespacedT, t as globalT } from '@/model/i18n'
+	import { trackEmojiUsage } from '@/model/emoji-usage'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import EmojiPicker from '../chat/emoji-picker.vue'
@@ -775,6 +776,7 @@
 	}
 
 	function addEmoji(message: ForumMessage, emoji: string, textarea: HTMLTextAreaElement) {
+		trackEmojiUsage(emoji)
 		const index = textarea.selectionStart
 		message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
 	}
@@ -782,6 +784,7 @@
 	function addEmojiNewMessage(emoji: string) {
 		const textarea = responseTextarea.value
 		if (!textarea) return
+		trackEmojiUsage(emoji)
 		const index = textarea.selectionStart
 		const text = newMessage.value || ''
 		newMessage.value = text.slice(0, index) + emoji + text.slice(index)

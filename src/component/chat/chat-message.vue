@@ -49,6 +49,7 @@
 <script setup lang="ts">
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import { Chat, ChatMessage, ChatType } from '@/model/chat'
+import { trackEmojiUsage } from '@/model/emoji-usage'
 import { formatEmojisText } from '@/model/emojis'
 import { LeekWars } from '@/model/leekwars'
 import { computed, watch } from 'vue'
@@ -93,6 +94,7 @@ function toggleReaction(emoji: string) {
 		LeekWars.post('message-reaction/add', { reaction: emoji, message_id: props.message.id })
 		// eslint-disable-next-line vue/no-mutating-props
 		props.message.my_reaction = emoji
+		trackEmojiUsage(emoji)
 	}
 }
 </script>

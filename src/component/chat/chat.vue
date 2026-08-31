@@ -134,7 +134,7 @@
 
 		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" :open-on-click="false" persistent no-click-animation content-class="emojis-dialog">
 			<v-card class="emojis" tabindex="-1" @keydown.esc="menuEmoji = false">
-				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
+				<span v-for="(emoji, e) in emojis" :key="emoji" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)" v-html="emojisHtml[e]"></span>
 				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)" v-html="formatEmojisText(menuMessage.my_reaction)"></span>
 				<emoji-picker :close-on-selected="true" @pick="toggleReaction"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
 			</v-card>
@@ -146,6 +146,7 @@
 	import type { Chat as ChatModel, ChatMessage, ChatWindow } from '@/model/chat'
 	import { ChatType } from '@/model/chat'
 	import { formatChatMessage } from '@/model/chat-format'
+	import { favoriteEmojis, trackEmojiUsage, unescapeEmoji } from '@/model/emoji-usage'
 	import { formatEmojisText } from '@/model/emojis'
 	import type { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
@@ -176,7 +177,24 @@
 	const messages = useTemplateRef<HTMLElement>('messages')
 	const instance = getCurrentInstance()
 
-	const emojis = ['❤️', '👍', '👋', '😂', '👏', '😢', '😮', '😱']
+	// Barre de réaction rapide (issue #4269) : les emojis favoris du joueur (les
+	// plus utilisés, réactions et messages confondus) d'abord, complétés par les
+	// emojis par défaut historiques jusqu'à 8. Sans historique d'usage, la barre
+	// est identique à l'ancienne.
+	const DEFAULT_REACTIONS = ['❤️', '👍', '👋', '😂', '👏', '😢', '😮', '😱']
+	const emojis = computed(() => {
+		// Forme brute (celle qui est postée en réaction), les favoris étant
+		// stockés en forme canonique (`&lt;3`).
+		const list = favoriteEmojis.value.slice(0, DEFAULT_REACTIONS.length).map(unescapeEmoji)
+		for (const emoji of DEFAULT_REACTIONS) {
+			if (list.length >= DEFAULT_REACTIONS.length) { break }
+			if (!list.includes(emoji)) { list.push(emoji) }
+		}
+		return list
+	})
+	// Précalculé : les smileys custom favoris (":)", "(lama)"…) se rendent en
+	// <img>, les emojis unicode passent par le même chemin que le reste du chat.
+	const emojisHtml = computed(() => emojis.value.map(e => formatEmojisText(e)))
 
 	const isScrollBottom = ref(true)
 	let userScroll = false
@@ -523,6 +541,7 @@
 		} else {
 			LeekWars.post('message-reaction/add', { reaction: emoji, message_id: menuMessage.value.id })
 			menuMessage.value.my_reaction = emoji
+			trackEmojiUsage(emoji)
 		}
 	}
 
@@ -705,7 +724,14 @@
 		.emoji.selected {
 			border: 1px solid var(--grey-6);
 			background: var(--grey-13);
-			border-radius: 50%;
+			// Rond en v2, angles francs en v3 (REDESIGN, principe 2).
+			border-radius: var(--radius-pill);
+		}
+		// Smileys custom favoris (images) : la règle globale img.emoji les fixe à
+		// 16px, trop petit à côté des emojis unicode de 22px de la barre.
+		.emoji :deep(img.emoji) {
+			width: 24px;
+			height: 24px;
 		}
 		.more {
 			font-size: 23px;

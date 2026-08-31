@@ -53,6 +53,7 @@
 	"changelog": "変更履歴",
 	"chat": "チャット",
 	"chat_placeholder": "メッセージを入力してください...",
+	"emoji_favorites": "お気に入り",
 	"chat_the_mdy_at_hm": "%4$s:%5$sの%1$s/%2$s/%3$s",
 	"chat_too_long": "メッセージが長すぎます。ディスカッションは 1000 文字以内にしてください",
 	"chest_hunt": "宝箱ハント",

@@ -7,7 +7,7 @@
 		</template>
 		<v-card>
 			<v-tabs :key="categories.length" v-model="activeTab" class="tabs" grow :show-arrows="false">
-				<v-tab v-for="(category, c) in categories" :key="c" :value="'tab-' + c" class="tab">
+				<v-tab v-for="(category, c) in categories" :key="c" :value="'tab-' + c" class="tab" :title="category.favorites ? $t('main.emoji_favorites') : undefined">
 					<span v-html="formatEmojisText(category.icon)"></span>
 				</v-tab>
 			</v-tabs>
@@ -15,7 +15,7 @@
 				<v-tabs-window-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
 					<div class="grid">
 						<template v-for="(emoji, e) in category.emojis" :key="e">
-							<img v-if="c == 0 && e < 30" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
+							<img v-if="Emojis.custom[emoji]" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
 							<div v-else :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
 						</template>
 					</div>
@@ -26,8 +26,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { favoriteEmojis } from '@/model/emoji-usage'
 import { Emojis, formatEmojisText } from '@/model/emojis'
+
+interface EmojiCategory {
+	icon: string
+	emojis: string[]
+	favorites?: boolean
+}
 
 const props = defineProps<{
 	closeOnSelected?: boolean
@@ -38,9 +45,22 @@ const emit = defineEmits<{
 }>()
 
 const width = 352
-const categories = Emojis.categories
 const shown = ref(false)
 const activeTab = ref('tab-0')
+
+// Onglet « Favoris » (issue #4269) : les emojis les plus utilisés du joueur, en
+// tête du panneau. Figé à l'ouverture du menu (et pas un computed sur l'usage) :
+// picorer plusieurs emojis d'affilée ne doit pas réordonner la grille sous le
+// curseur. Sans historique d'usage, le panneau reste identique à l'ancien.
+const favoriteCategory = ref<EmojiCategory | null>(null)
+watch(shown, (open) => {
+	if (open) {
+		const favorites = favoriteEmojis.value.slice(0, 30)
+		favoriteCategory.value = favorites.length ? { icon: '⭐', emojis: favorites, favorites: true } : null
+		activeTab.value = 'tab-0'
+	}
+})
+const categories = computed<EmojiCategory[]>(() => favoriteCategory.value ? [favoriteCategory.value, ...Emojis.categories] : Emojis.categories)
 
 function pick(emoji: string) {
 	emit('pick', emoji.replace('&lt;', '<'))

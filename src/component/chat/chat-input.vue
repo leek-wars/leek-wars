@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { Commands } from '@/model/commands'
+import { trackEmojiUsage } from '@/model/emoji-usage'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
@@ -171,6 +172,7 @@ function keyUp(e: KeyboardEvent) {
 }
 
 function addEmoji(emoji: string) {
+	trackEmojiUsage(emoji)
 	const input = inputRef.value!
 	input.focus()
 	const sel = window.getSelection()
