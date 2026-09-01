@@ -64,7 +64,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { ActionType } from '@/model/action'
-	import { EffectType } from '@/model/effect'
+	import { EffectTarget, EffectType } from '@/model/effect'
 	import { CHIP_ANIMATIONS, WEAPONS } from '@/component/player/game/game'
 	import type { Game } from '@/component/player/game/game'
 	import Player from '@/component/player/player.vue'
@@ -77,7 +77,10 @@
 	type Kind = 'weapon' | 'chip'
 	// summonTemplate : id de SummonTemplate pour les puces d'invocation (elles n'ont
 	// pas d'entrée CHIP_ANIMATIONS, leur spectacle = l'entité qui apparaît).
-	interface AnimEntry { kind: Kind, id: number, name: string, label: string, icon: string, level: number, summonTemplate?: number }
+	// onSummon : puce dont tous les effets ne ciblent que les invocations
+	// (Maturation…) — la scène pose une invocation devant le lanceur et la vise,
+	// sinon recipientsOf() filtre tous les poireaux et l'animation est invisible.
+	interface AnimEntry { kind: Kind, id: number, name: string, label: string, icon: string, level: number, summonTemplate?: number, onSummon?: boolean }
 
 	const router = useRouter()
 	if (!store.getters.admin) router.replace('/')
@@ -166,12 +169,16 @@
 		for (const chipIdStr in LeekWars.chipTemplates) {
 			const id = parseInt(chipIdStr, 10)
 			const tpl = LeekWars.chipTemplates[id]
-			const data = LeekWars.chips[tpl.item] as { name: string, level?: number, effects?: { id: number, value1: number }[] } | undefined
+			const data = LeekWars.chips[tpl.item] as { name: string, level?: number, effects?: { id: number, value1: number, targets?: number }[] } | undefined
 			if (!data) continue
 			// Invocations : pas d'animation dédiée, on pose l'entité sur la scène.
 			const summonEffect = data.effects?.find(e => e.id === EffectType.SUMMON)
 			if (!CHIP_ANIMATIONS[id - 1] && !summonEffect) continue
-			chips.push({ kind: 'chip', id, name: data.name, label: trans('chip.' + data.name, data.name), icon: '/image/chip/' + data.name + '.png', level: data.level ?? 0, summonTemplate: summonEffect?.value1 })
+			// Puce réservée aux invocations : chaque effet a un masque de cibles
+			// posé avec le bit SUMMONS sans le bit NON_SUMMONS.
+			const onSummon = !summonEffect && (data.effects?.length ?? 0) > 0 && data.effects!.every(e =>
+				e.targets !== undefined && (e.targets & EffectTarget.SUMMONS) !== 0 && (e.targets & EffectTarget.NON_SUMMONS) === 0)
+			chips.push({ kind: 'chip', id, name: data.name, label: trans('chip.' + data.name, data.name), icon: '/image/chip/' + data.name + '.png', level: data.level ?? 0, summonTemplate: summonEffect?.value1, onSummon })
 		}
 		chips.sort((a, b) => b.id - a.id) // puces récentes (id élevé) en premier
 
@@ -192,6 +199,7 @@
 		if (!selected.value) return ''
 		if (selected.value.kind === 'weapon') return 'sur les 4 poireaux à tour de rôle'
 		if (selected.value.summonTemplate) return 'une invocation posée devant, sans ennemi'
+		if (selected.value.onSummon) return 'sur une invocation posée devant'
 		const emptyCell = needsEmptyCell(selected.value.id)
 		return emptyCell ? 'sur case vide' : 'sur soi-même puis les 4 poireaux à tour de rôle'
 	})
@@ -224,6 +232,9 @@
 		// (rebond de scale, zone d'effet des plantes) au lieu d'un écran de rapport.
 		if (entry.kind === 'chip' && entry.summonTemplate) {
 			return buildSummonFight(entry)
+		}
+		if (entry.kind === 'chip' && entry.onSummon) {
+			return buildCastOnSummonFight(entry, casts)
 		}
 		const distance = sceneDistance(entry)
 		const cells = SCENE_SLOTS.map((s) => CASTER_CELL + distance * s.diagonal)
@@ -340,6 +351,60 @@
 		const map = { id: 0, type: mapType.value - 1, width: 18, height: 18, obstacles: {}, pattern: [], players: {} }
 		return {
 			title: 'Test invocation', context: 0, date: 0,
+			farmers1: { 1: { id: 1, name: 'Pilow' } },
+			farmers2: { 1: { id: 1, name: 'Pilow' } },
+			id: 0, farmer1: 1, farmer2: 1,
+			leeks1: [], leeks2: [], team1: null, team2: null,
+			report: {}, status: 1,
+			team1_name: 'A', team2_name: 'B',
+			tournament: 0, type: FightType.SOLO, winner: 1, year: 2026,
+			data: { actions, map, leeks: [caster, summon], team1: [0], team2: [], ops: {} },
+			comments: [], result: 'win', queue: 0, trophies: [],
+			chests: 0, size: 0, rareloot: 0, levelups: 0,
+		} as unknown as Fight
+	}
+
+	// Scène « lancer sur invocation » (Maturation…) : le lanceur invoque un bulbe
+	// chétif devant lui au tour 1, puis lance la puce dessus à chaque tour.
+	function buildCastOnSummonFight(entry: AnimEntry, casts: number): Fight {
+		const summonCell = CASTER_CELL - 3 * 17
+		const caster = {
+			id: 0, type: 0, name: 'Poireau 1', team: 1,
+			level: 100, life: 2500,
+			strength: 300, wisdom: 300, agility: 200, resistance: 100,
+			science: 200, magic: 200, frequency: 100,
+			tp: 100, mp: 6,
+			cellPos: CASTER_CELL, orientation: -1,
+			skin: 1, hat: null, metal: true, face: 2,
+			chips: [], weapons: [],
+		}
+		const summon = {
+			id: 1, type: 1, name: 'puny_bulb', team: 1,
+			level: 100, life: 600,
+			strength: 100, wisdom: 100, agility: 0, resistance: 0,
+			science: 0, magic: 0, frequency: 100,
+			tp: 0, mp: 0,
+			cellPos: null, orientation: -1,
+			summon: true, skin: 1,
+			chips: [], weapons: [],
+		}
+		const actions: (number | number[])[][] = [
+			[ActionType.START_FIGHT],
+			[ActionType.NEW_TURN, 1],
+			[ActionType.LEEK_TURN, 0],
+			[ActionType.SUMMON, 0, 1, summonCell, 1],
+			[ActionType.END_TURN, 0, 100, 6],
+		]
+		for (let k = 0; k < casts; k++) {
+			actions.push([ActionType.NEW_TURN, k + 2])
+			actions.push([ActionType.LEEK_TURN, 0])
+			actions.push([ActionType.USE_CHIP, entry.id, summonCell, 0])
+			actions.push([ActionType.END_TURN, 0, 100, 6])
+		}
+		// pas de END_FIGHT : la scène reste vivante (cf. buildSummonFight).
+		const map = { id: 0, type: mapType.value - 1, width: 18, height: 18, obstacles: {}, pattern: [], players: {} }
+		return {
+			title: 'Test sur invocation', context: 0, date: 0,
 			farmers1: { 1: { id: 1, name: 'Pilow' } },
 			farmers2: { 1: { id: 1, name: 'Pilow' } },
 			id: 0, farmer1: 1, farmer2: 1,

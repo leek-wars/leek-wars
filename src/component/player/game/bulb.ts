@@ -1,6 +1,5 @@
 import { EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
-import { CHIPS } from '@/model/chips'
 import { LeekWars } from '@/model/leekwars'
 import { SHADOW_QUALITY, T, Texture } from './texture'
 
@@ -12,15 +11,19 @@ export const PROTOTAXITES_SUMMON_TEMPLATE = 13
 class Bulb extends FightEntity {
 
 	public static SCALE: number = 0.30
+	// Les plantes sont plus imposantes qu'un bulbe : enracinées, ce sont des
+	// pièces de terrain plus que des familiers.
+	public static PLANT_SCALE: number = 0.45
 
 	public skin!: number
 	declare public bulbName: string
 	public heightAnim!: number
 
 	// Plantes 2.50 (Piment, Maïs, Prototaxite) : entités enracinées, un seul visuel
-	// (back = front), animation = rebond de scale (squash & stretch périodique),
+	// (back = front), immobiles (pas de respiration ni de rebond périodique),
 	// et zone d'effet teintée affichée autour (sauf le Prototaxite).
 	public plant: boolean = false
+	public spriteScale: number = Bulb.SCALE
 	public bounceX: number = 1
 	public bounceY: number = 1
 	public zoneColor: string = ''
@@ -88,36 +91,25 @@ class Bulb extends FightEntity {
 			this.bodyTexBack = T.get(this.game, 'image/bulb/puny_bulb_back.png', true, SHADOW_QUALITY)
 		}
 		if (this.bodyTexFront.loaded) {
-			this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE + 10
-			this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
+			this.baseHeight = this.bodyTexFront.texture.height * this.spriteScale + 10
+			this.baseWidth = this.bodyTexFront.texture.width * this.spriteScale
 			this.updateGrowth()
 		} else {
 			this.bodyTexFront.texture.addEventListener('load', () => {
-				this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE + 10
-				this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
+				this.baseHeight = this.bodyTexFront.texture.height * this.spriteScale + 10
+				this.baseWidth = this.bodyTexFront.texture.width * this.spriteScale
 				this.updateGrowth()
 			}, { once: true })
 		}
 	}
 
 	// Marque l'entité comme plante 2.50. zoneColor vide = pas de zone (Prototaxite) ;
-	// sinon la portée de la zone est déduite des puces de la plante dans les
-	// données serveur (portée de tir du Piment, zone de soin du Maïs).
+	// sinon la zone affichée est fixée à 3 cases de rayon.
 	private setPlant(zoneColor: string) {
 		this.plant = true
+		this.spriteScale = Bulb.PLANT_SCALE
 		this.zoneColor = zoneColor
-		this.zoneRange = 0
-		if (zoneColor) {
-			const template = LeekWars.summonTemplates[this.skin]
-			if (template && template.chips) {
-				for (const item of template.chips) {
-					const chip = CHIPS[item]
-					if (chip && chip.max_range > this.zoneRange) {
-						this.zoneRange = chip.max_range
-					}
-				}
-			}
-		}
+		this.zoneRange = zoneColor ? 3 : 0
 	}
 
 	// Zone d'effet autour de la plante, recalculée quand elle change de cellule
@@ -132,17 +124,18 @@ class Bulb extends FightEntity {
 
 	public update(dt: number) {
 		super.update(dt)
-		if (this.plant && !this.dead) {
-			// Rebond de scale : petit squash & stretch périodique, pas de sprite-sheet.
-			const b = Math.max(0, Math.sin(this.frame / 12))
-			this.bounceY = 1 + 0.08 * b
-			this.bounceX = 1 - 0.05 * b
+		// Pas d'animation permanente (une plante est immobile), mais bounceX/Y
+		// restent pilotables ponctuellement (impulsion de croissance de
+		// Maturation) : l'impulsion se résorbe d'elle-même.
+		if (!this.dead) {
+			this.bounceX += (1 - this.bounceX) * Math.min(1, 0.1 * dt)
+			this.bounceY += (1 - this.bounceY) * Math.min(1, 0.1 * dt)
 		}
 	}
 
 	public frameTexture(_includeHat: boolean): Texture {
 		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
-		return texture.getScaledTexture(texture.texture.width * Bulb.SCALE)
+		return texture.getScaledTexture(texture.texture.width * this.spriteScale)
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {
@@ -180,7 +173,9 @@ class Bulb extends FightEntity {
 		if (this.flash > 0 && (Math.random() > 0.5 || this.flash < 2)) {
 			ctx.globalCompositeOperation = 'lighter'
 		}
-		ctx.scale(this.direction * Bulb.SCALE * this.growth * this.bounceX, this.oscillation * Bulb.SCALE * this.growth * this.bounceY)
+		// Une plante ne respire pas : oscillation figée à 1.
+		const oscillation = this.plant ? 1 : this.oscillation
+		ctx.scale(this.direction * this.spriteScale * this.growth * this.bounceX, oscillation * this.spriteScale * this.growth * this.bounceY)
 		// Body
 		const width = this.bodyTexFront.texture.width
 		const height = this.bodyTexFront.texture.height

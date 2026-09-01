@@ -153,9 +153,91 @@ function recipientMatches(effect: Effect, launcher: FightEntity, target: FightEn
 	return false
 }
 
+// Copies teintées de textures existantes (canvas créé une seule fois par couple
+// texture/couleur) : terre brune des plantes, entaille rouge d'Hémorragie…
+// Pas de nouveau PNG, pas d'allocation par frame.
+const tintCache = new Map<Texture, Map<string, Texture>>()
+function tintedTexture(source: Texture, color: string, alpha: number): Texture {
+	// Sprite pas encore chargée : repli sur l'originale, sans mettre en cache.
+	if (!source.texture.width) { return source }
+	let byColor = tintCache.get(source)
+	if (!byColor) { byColor = new Map(); tintCache.set(source, byColor) }
+	const key = color + '/' + alpha
+	let tinted = byColor.get(key)
+	if (!tinted) {
+		const canvas = document.createElement('canvas')
+		canvas.width = source.texture.width
+		canvas.height = source.texture.height
+		const ctx = canvas.getContext('2d')!
+		ctx.drawImage(source.texture, 0, 0)
+		ctx.globalCompositeOperation = 'source-atop'
+		ctx.globalAlpha = alpha
+		ctx.fillStyle = color
+		ctx.fillRect(0, 0, canvas.width, canvas.height)
+		tinted = new Texture('')
+		tinted.texture = canvas
+		byColor.set(key, tinted)
+	}
+	return tinted
+}
+
+// Halo rond en dégradé radial (bulle de poison, lueur), créé une seule fois
+// par couple couleur/taille.
+const glowTextures = new Map<string, Texture>()
+function glowTexture(color: string, size: number): Texture {
+	const key = color + '/' + size
+	let glow = glowTextures.get(key)
+	if (!glow) {
+		const canvas = document.createElement('canvas')
+		canvas.width = size
+		canvas.height = size
+		const ctx = canvas.getContext('2d')!
+		const r = size / 2
+		const gradient = ctx.createRadialGradient(r, r, 0, r, r, r)
+		gradient.addColorStop(0, color)
+		gradient.addColorStop(0.55, color + 'aa')
+		gradient.addColorStop(1, color + '00')
+		ctx.fillStyle = gradient
+		ctx.fillRect(0, 0, size, size)
+		glow = new Texture('')
+		glow.texture = canvas
+		glowTextures.set(key, glow)
+	}
+	return glow
+}
+
+// Petite pastille de couleur unie (goutte), créée une seule fois par couleur.
+const dropTextures = new Map<string, Texture>()
+function dropTexture(color: string): Texture {
+	let drop = dropTextures.get(color)
+	if (!drop) {
+		const canvas = document.createElement('canvas')
+		canvas.width = 6
+		canvas.height = 6
+		const ctx = canvas.getContext('2d')!
+		ctx.fillStyle = color
+		ctx.beginPath()
+		ctx.arc(3, 3, 3, 0, Math.PI * 2)
+		ctx.fill()
+		drop = new Texture('')
+		drop.texture = canvas
+		dropTextures.set(color, drop)
+	}
+	return drop
+}
+
+// Couleur de goutte assortie au sang de l'entité (sève pâle des poireaux,
+// variantes des mobs) pour que les gouttes se fondent avec les giclées du moteur.
+function bloodColor(target: FightEntity): string {
+	if (target.bloodTex === T.blood_orange) { return '#e8862a' }
+	if (target.bloodTex === T.blood_purple) { return '#9b4dbb' }
+	if (target.bloodTex === T.blood_white) { return '#e8e8e8' }
+	return '#c9e6bc'
+}
+
 class Summon extends ChipAnimation {
-	static textures = [T.summon_leaf]
-	static sounds = [S.bulb]
+	static textures = [T.summon_leaf, T.explosion_rock, T.explosion_rock2]
+	static sounds = [S.bulb, S.bury]
 
 	public summon!: FightEntity
 	public summoned: boolean = false
@@ -184,7 +266,21 @@ class Summon extends ChipAnimation {
 
 		if (this.duration < 40 && !this.summoned) {
 
-			S.bulb.play(this.game)
+			const plant = (this.summon as { plant?: boolean }).plant === true
+			if (plant) {
+				// Une plante se plante : bruit de terre (pas le cri des bulbes) et
+				// motte de terre qui saute à l'apparition.
+				S.bury.play(this.game)
+				const pos = this.position
+				for (let i = 0; i < 9; ++i) {
+					const angle = Math.random() * Math.PI * 2
+					const dist = Math.random() * 1.6
+					const texture = tintedTexture(Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2, '#6b4a2b', 0.65)
+					this.game.particles.addGarbage(pos.x, pos.y, 4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 2 + Math.random() * 2.5, texture, 1, Math.random() * 0.2 - 0.1, 0.25 + Math.random() * 0.3, Math.random() * Math.PI, 60)
+				}
+			} else {
+				S.bulb.play(this.game)
+			}
 			this.summon.active = true
 			this.summon.blooming = true
 			this.summon.deadAnim = 1
@@ -1734,23 +1830,60 @@ class Prism extends ChipAnimation {
 	}
 }
 
-// Hémorragie (2.50, #4905) : applique l'état Insoignable (state 2). Pattern
-// ChipDebuffAnimation (auréole d'entrave + icône de la puce), plus quelques
-// giclées de sang de la cible — la plaie qui ne se referme pas.
-class Hemorrhage extends ChipDebuffAnimation {
-	static textures = [T.shackle_aureol, T.chip_hemorrhage]
-	static sounds = [S.debuff]
-	public delay = 15
-	constructor(game: Game) { super(game, T.chip_hemorrhage) }
+// Hémorragie (2.50, #4905) : applique l'état Insoignable (state 2). L'entaille :
+// un arc pourpre bref en travers de la cible, une grosse giclée à l'impact avec
+// des gouttes qui retombent (gravité), puis un suintement résiduel — la plaie
+// qui ne se referme pas.
+class Hemorrhage extends ChipAnimation {
+	static textures = [T.chip_hemorrhage, T.slash, T.leek_blood]
+	static sounds = [S.leek_slice]
+	static DURATION = 70
+	static SLASH_TIME = 8
+	public slashed = false
+	public ooze = 0
+	constructor(game: Game) { super(game, S.leek_slice, Hemorrhage.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.createChipImage(this.targets, T.chip_hemorrhage)
+	}
 	public update(dt: number) {
 		super.update(dt)
-		this.delay -= dt
-		if (this.delay <= 0) {
-			this.delay = 15
-			if (this.targets) {
+		if (!this.targets) { return }
+		const elapsed = Hemorrhage.DURATION - this.duration
+		if (!this.slashed && elapsed >= Hemorrhage.SLASH_TIME) {
+			this.slashed = true
+			const slash = tintedTexture(T.slash, '#d01030', 0.9)
+			for (const target of this.targets) {
+				// L'entaille en diagonale à travers le corps. Vie 42 : l'enveloppe
+				// d'alpha des ImageParticle (fade-in 30, fade-out 20) plafonne
+				// l'opacité très bas sur les vies courtes.
+				const angle = (Math.random() > 0.5 ? 1 : -1) * (Math.PI / 10 + Math.random() * Math.PI / 12)
+				this.game.particles.addImage(target.ox, target.oy, target.height * 0.62, 0, 0, 0, angle, slash, 42, 1, 0, false, 0.9)
+				// La giclée principale
+				target.hurt(target.ox, target.oy, target.height * 0.5, Math.random() * 2 - 1, Math.random() - 0.5, 2)
+				// Gouttes projetées qui retombent en pluie
+				const drop = dropTexture(bloodColor(target))
+				for (let i = 0; i < 7; ++i) {
+					const a = Math.random() * Math.PI * 2
+					const d = 0.4 + Math.random() * 1.2
+					this.game.particles.addGarbage(target.ox, target.oy, target.height * 0.5, Math.cos(a) * d, Math.sin(a) * d * 0.5, 1 + Math.random() * 2, drop, 1, 0, 1 + Math.random() * 0.8, 0, 45)
+				}
+			}
+		}
+		// Suintement : la plaie continue de goutter jusqu'à la fin
+		if (this.slashed) {
+			this.ooze -= dt
+			if (this.ooze <= 0) {
+				this.ooze = 6
 				for (const target of this.targets) {
-					const angle = Math.random() * Math.PI * 2
-					target.hurt(target.ox, target.oy, 25 + Math.random() * 15, Math.cos(angle) * 3, Math.sin(angle) * 3, 2)
+					const drop = dropTexture(bloodColor(target))
+					const ox = Math.random() * 16 - 8
+					this.game.particles.addGarbage(target.ox + ox, target.oy, target.height * (0.3 + Math.random() * 0.3), Math.random() * 0.4 - 0.2, 0, 0.2, drop, 1, 0, 0.6 + Math.random() * 0.4, 0, 40)
+					// De temps en temps une vraie giclée qui tache le sol
+					if (Math.random() > 0.72) {
+						target.hurt(target.ox, target.oy, target.height * 0.45, Math.random() * 2 - 1, Math.random() - 0.5, 1)
+					}
 				}
 			}
 		}
@@ -1758,34 +1891,116 @@ class Hemorrhage extends ChipDebuffAnimation {
 }
 
 // Maturation (2.50, #1813) : buff permanent d'une invocation alliée (+vie max,
-// +puissance). Patron ChipHealAnimation — auréole et croix vertes de croissance,
-// comme Élévation.
-class Maturation extends ChipHealAnimation {
+// +puissance). Une poussée de croissance : spirale montante de particules
+// vertes et dorées autour de l'invocation, impulsion de squash & stretch au
+// sommet, éclat doré final.
+class Maturation extends ChipAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_maturation]
 	static sounds = [S.heal]
-	constructor(game: Game) { super(game, T.chip_maturation) }
+	static DURATION = 65
+	static PULSE_TIME = 38
+	public pulsed = false
+	public spiral = 0
+	constructor(game: Game) { super(game, S.heal, Maturation.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.createChipImage(this.targets, T.chip_maturation)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.targets) { return }
+		const elapsed = Maturation.DURATION - this.duration
+		// La spirale montante : deux brins (vert tendre et doré) tracés par des
+		// lueurs à vie courte, du sol jusqu'au sommet de l'invocation.
+		if (elapsed <= Maturation.PULSE_TIME) {
+			this.spiral -= dt
+			if (this.spiral <= 0) {
+				this.spiral = 1
+				for (const target of this.targets) {
+					const progress = elapsed / Maturation.PULSE_TIME
+					const angle = progress * Math.PI * 3.5
+					const radius = 34 - progress * 12
+					const z = progress * (target.height + 20)
+					for (const [side, color] of [[0, '#9cf07a'], [Math.PI, '#ffd24a']] as [number, string][]) {
+						const glow = glowTexture(color, 22)
+						const x = target.ox + Math.cos(angle + side) * radius
+						const y = target.oy + Math.sin(angle + side) * radius * 0.5
+						this.game.particles.addImage(x, y, z, 0, 0, 0.35, 0, glow, 32, 1, 0, false, 1.0 + Math.random() * 0.4)
+					}
+				}
+			}
+		}
+		// L'impulsion de croissance + l'éclat doré final
+		if (!this.pulsed && elapsed >= Maturation.PULSE_TIME) {
+			this.pulsed = true
+			const gold = glowTexture('#ffd75e', 22)
+			const cross = tintedTexture(T.heal_cross, '#e8b830', 0.75)
+			for (const target of this.targets) {
+				const bulb = target as { bounceX?: number, bounceY?: number }
+				if (bulb.bounceY !== undefined) {
+					bulb.bounceY = 1.35
+					bulb.bounceX = 0.82
+				}
+				for (let i = 0; i < 8; ++i) {
+					const angle = (i / 8) * Math.PI * 2
+					this.game.particles.addImage(target.ox, target.oy, target.height * 0.6, Math.cos(angle) * 1.6, Math.sin(angle) * 0.8, 0.6, 0, gold, 34, 1, 0, false, 1.5)
+				}
+				for (let i = 0; i < 5; ++i) {
+					const dx = Math.random() * 50 - 25
+					this.game.particles.addImage(target.ox + dx, target.oy + Math.random() * 20 - 10, 10 + Math.random() * 20, 0, 0, 1.4, 0, cross, 45)
+				}
+			}
+		}
+	}
 }
 
 // Surinfection (2.50, #1813) : convertit une partie des poisons actifs de la
-// cible en dégâts immédiats. Patron des poisons existants (auréole + icône),
-// plus un éclat toxique sur la cible quand les poisons détonent.
+// cible en dégâts immédiats. La conversion se lit en deux temps : des bulles
+// violettes (les poisons qu'on active) convergent depuis le pourtour de la
+// cible, puis détonent en gerbe toxique avec le flash.
 class Superinfection extends ChipPoisonAnimation {
 	static textures = [T.poison_aureol, T.chip_superinfection, T.halo_green]
 	static sounds = [S.poison]
-	public burst = 25
+	static BURST = 28
+	public burst = Superinfection.BURST
 	constructor(game: Game) { super(game, T.chip_superinfection) }
+	public launch(launchPos: Cell, position: Cell, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.targets = recipients
+		// Les poisons convergent : bulles violettes depuis le pourtour, réglées
+		// pour se résorber dans la cible au moment de la détonation.
+		const bubble = glowTexture('#c93ef0', 22)
+		for (const target of recipients) {
+			for (let i = 0; i < 11; ++i) {
+				const angle = Math.random() * Math.PI * 2
+				const dist = 45 + Math.random() * 35
+				const life = Superinfection.BURST + Math.random() * 6
+				const x = target.ox + Math.cos(angle) * dist
+				const y = target.oy + Math.sin(angle) * dist * 0.5
+				const z = 5 + Math.random() * 40
+				this.game.particles.addImage(x, y, z, -Math.cos(angle) * dist / life, -Math.sin(angle) * dist * 0.5 / life, 0.2, 0, bubble, life, 1, 0, false, 1.2 + Math.random() * 0.9)
+			}
+		}
+	}
 	public update(dt: number) {
 		super.update(dt)
 		if (this.burst > 0) {
 			this.burst -= dt
 			if (this.burst <= 0 && this.targets) {
+				const flash = glowTexture('#e577ff', 22)
 				for (const target of this.targets) {
-					// La détonation : flash + gerbe de halos toxiques
+					// La détonation : flash + gerbe de halos toxiques + anneau violet
 					target.hurt(target.ox, target.oy, 25, 0, 0, 0)
-					for (let i = 0; i < 6; ++i) {
+					for (let i = 0; i < 7; ++i) {
 						const angle = Math.random() * Math.PI * 2
 						const speed = 1 + Math.random() * 1.5
 						this.game.particles.addImage(target.ox, target.oy, 20 + Math.random() * 30, Math.cos(angle) * speed, Math.sin(angle) * speed * 0.5, 1.5, 0, T.halo_green, 40)
+					}
+					for (let i = 0; i < 8; ++i) {
+						const angle = (i / 8) * Math.PI * 2
+						this.game.particles.addImage(target.ox, target.oy, 25, Math.cos(angle) * 2.2, Math.sin(angle) * 1.1, 0.4, 0, flash, 32, 1, 0, false, 1.2)
 					}
 				}
 			}
