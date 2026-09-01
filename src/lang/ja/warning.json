@@ -28,6 +28,8 @@
 	"reason_17_action": "チームのエンブレムは消去されます。",
 	"reason_18": "間違ったウェブサイト",
 	"reason_18_action": "ウェブサイトは削除されます。",
+	"reason_19": "GitHub が不正",
+	"reason_19_action": "GitHub アカウントは消去され、禁止単語リストに追加されます。",
 	"reason_1_action": "エレヴール名は「Farmer{'@'}<id>」に置き換えられ、問題のある名前が禁止単語リストに追加されます。",
 	"reason_2": "ネギの名前が間違っている",
 	"reason_2_action": "ネギの名前は「Leek{'@'}<id>」に置き換えられ、問題のある名前が禁止単語リストに追加されます。",
@@ -51,7 +53,5 @@
 	"severity_s": "重大度 {0}",
 	"thank_you_for_reporting": "ご報告ありがとうございます",
 	"unmute": "発言権を返す",
-	"unmute_popup": "{farmer} に発言権を返してもよろしいですか？",
-	"reason_19": "GitHub が不正",
-	"reason_19_action": "GitHub アカウントは消去され、禁止単語リストに追加されます。"
+	"unmute_popup": "{farmer} に発言権を返してもよろしいですか？"
 }
