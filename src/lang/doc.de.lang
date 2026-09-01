@@ -54,6 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "Der Effekt ist kumulativ.",
 	"const_EFFECT_NOVA_DAMAGE": "Entfernt maximale Lebenspunkte. Verstärkt durch die Wissenschaft.",
 	"const_EFFECT_POISON": "Entfernt Trefferpunkte von einer Entität. Durch Magie verstärkt. Reduziert die maximalen Trefferpunkte um 10 % der Menge der entfernten Trefferpunkte.",
+	"const_EFFECT_SUPERINFECTION": "Wandelt einen Teil der aktiven Gifte des Ziels in sofortigen Schaden um: Jedes Gift verursacht sofort 50% seines verbleibenden Schadens (65% bei kritischem Treffer) und sein Wert pro Runde wird entsprechend verringert. Der gesamte Giftschaden bleibt erhalten, er wird nur vorgezogen. Unendliche Gifte werden ignoriert.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Gewährt einem Wesen absoluten Schild und reduziert die Menge der durch Schaden entfernten Trefferpunkte (EFFECT_DAMAGE) um einen festen Betrag. Nicht verstärkbar.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Gewährt einer Entität Agilität. Nicht verstärkbar.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Gewährt einem Wesen Magie. Nicht verstärkbar.",

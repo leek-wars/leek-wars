@@ -62,6 +62,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "L'effet est cumulable.",
 	"const_EFFECT_NOVA_DAMAGE": "Retire des points de vie max. Amplifié par la science.",
 	"const_EFFECT_POISON": "Retire des points de vie à une entité. Amplifié par la magie. Réduit le maximum de points de vie de 10% du montant de points de vie retiré.",
+	"const_EFFECT_SUPERINFECTION": "Convertit une partie des poisons actifs de la cible en dégâts immédiats : chaque poison inflige tout de suite 50% de ses dégâts restants (65% en critique) et sa valeur par tour est réduite d'autant. Le total de poison subi est conservé, seulement avancé. Les poisons infinis sont ignorés.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Procure du bouclier absolu à une entité, permettant de réduire la quantité de points de vie retirée par les dégâts (EFFECT_DAMAGE) d'un montant fixe. Non amplifiable.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Procure de l'agilité à une entité. Non amplifiable.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Procure de la magie à une entité. Non amplifiable.",

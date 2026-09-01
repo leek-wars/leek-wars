@@ -54,6 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "Vaikutus on kumulatiivinen.",
 	"const_EFFECT_NOVA_DAMAGE": "Poistaa maksimielämän pisteet. Tieteen vahvistama.",
 	"const_EFFECT_POISON": "Poistaa osumapisteet entiteetistä. Vahvistettu taikuudella. Vähentää enimmäisosumapisteitä 10 % poistettujen osumapisteiden määrästä.",
+	"const_EFFECT_SUPERINFECTION": "Muuttaa osan kohteen aktiivisista myrkyistä välittömäksi vahingoksi: jokainen myrkky aiheuttaa heti 50% jäljellä olevasta vahingostaan (65% kriittisellä osumalla) ja sen arvo vuoroa kohden pienenee vastaavasti. Myrkkyvahingon kokonaismäärä säilyy, se vain aikaistuu. Loputtomat myrkyt ohitetaan.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Antaa entiteetille absoluuttisen suojan vähentäen vaurion (EFFECT_DAMAGE) poistamien osumapisteiden määrää kiinteällä määrällä. Ei vahvistettavissa.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Antaa taholle ketteryyttä. Ei vahvistettavissa.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Antaa taikuutta entiteetille. Ei vahvistettavissa.",

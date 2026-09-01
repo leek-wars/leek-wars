@@ -59,6 +59,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "效果是累积的。",
 	"const_EFFECT_NOVA_DAMAGE": "删除最大生命值。被科学放大。",
 	"const_EFFECT_POISON": "移除实体的生命值。被魔法放大了。将最大生命值减少 10% 的生命值移除量。",
+	"const_EFFECT_SUPERINFECTION": "将目标身上一部分生效中的毒转化为即时伤害：每个毒立即造成其剩余伤害的50%（暴击时为65%），其每回合数值相应减少。毒伤害总量不变，只是被提前。无限持续的毒会被忽略。",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "为一个实体提供绝对护盾，将因伤害 (EFFECT_DAMAGE) 移除的生命值减少固定数量。不可放大。",
 	"const_EFFECT_RAW_BUFF_AGILITY": "赋予实体敏捷性。不可放大。",
 	"const_EFFECT_RAW_BUFF_MAGIC": "赋予实体魔法。不可放大。",

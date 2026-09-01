@@ -59,6 +59,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "効果は累積します。",
 	"const_EFFECT_NOVA_DAMAGE": "最大ライフポイントを削除します。科学によって増幅されます。",
 	"const_EFFECT_POISON": "エンティティからヒット ポイントを削除します。魔法で増幅。最大ヒット ポイントを、削除したヒット ポイントの 10% だけ減らします。",
+	"const_EFFECT_SUPERINFECTION": "対象にかかっている毒の一部を即時ダメージに変換します。各毒は残りダメージの50%（クリティカル時は65%）を直ちに与え、その分だけターンごとの値が減少します。毒ダメージの合計は変わらず、前倒しされるだけです。無限の毒は無視されます。",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "エンティティに絶対シールドを付与し、ダメージ (EFFECT_DAMAGE) によって失われるヒット ポイントの量を一定量減少させます。増幅できません。",
 	"const_EFFECT_RAW_BUFF_AGILITY": "エンティティに敏捷性を付与します。増幅できません。",
 	"const_EFFECT_RAW_BUFF_MAGIC": "エンティティに魔法を付与します。増幅できません。",

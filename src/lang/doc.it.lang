@@ -54,6 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "L'effetto è cumulativo.",
 	"const_EFFECT_NOVA_DAMAGE": "Rimuove i punti vita massimi. Amplificato dalla scienza.",
 	"const_EFFECT_POISON": "Rimuove i punti ferita da un'entità. Amplificato dalla magia. Riduce i punti ferita massimi del 10% della quantità di punti ferita rimossi.",
+	"const_EFFECT_SUPERINFECTION": "Converte parte dei veleni attivi del bersaglio in danni immediati: ogni veleno infligge subito il 50% dei suoi danni rimanenti (65% in caso di critico) e il suo valore per turno viene ridotto di conseguenza. Il totale dei danni da veleno è conservato, solo anticipato. I veleni infiniti sono ignorati.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Fornisce uno scudo assoluto a un'entità, riducendo la quantità di punti ferita rimossi dal danno (EFFECT_DAMAGE) di un importo fisso. Non amplificabile.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Concede agilità a un'entità. Non amplificabile.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Conferisce magia a un'entità. Non amplificabile.",

@@ -24,7 +24,10 @@ type WeaponLike = Weapon | number;
 /** @deprecated Écrire `Chip | number`. */
 type ChipLike = Chip | number;
 
-/** Un effet actif ou lancé sur une entité (Effect.DAMAGE, Effect.HEAL...). */
+/**
+ * Un effet actif ou lancé sur une entité (Effect.DAMAGE, Effect.HEAL...).
+ * Un effet appliqué à une entité (dégâts, soin, bouclier, séquelle…), avec son lanceur et sa durée.
+ */
 declare class Effect {
 	/** Tableau brut [type, value, caster, turns, critical, item, target, modifiers]. */
 	readonly raw: any[];
@@ -47,7 +50,10 @@ declare class Effect {
 	static getAll(): Effect.Type[];
 }
 
-/** Un message d'équipe reçu (cf Network.getMessages). */
+/**
+ * Un message d'équipe reçu (cf Network.getMessages).
+ * Un message reçu via Network : son auteur, son type et ses paramètres.
+ */
 declare class Message {
 	/** Tableau brut [auteur, type, params]. */
 	readonly raw: any[];
@@ -75,6 +81,7 @@ declare class Message {
 
 /** Une caractéristique déclarée par une arme/puce (ou un effet passif) : ce que l'item peut faire
  *  quand il touche (dégâts, poison, téléport, inversion...). Potentiel, fourchette de valeurs.
+ * Une caractéristique d'une arme ou d'une puce : type d'effet, valeurs min/max, durée et cibles.
  *  À distinguer d'Effect (un effet actif sur une entité). */
 declare class Feature {
 	/** Tableau brut [type, minValue, maxValue, turns, targets, modifiers]. */
@@ -89,6 +96,7 @@ declare class Feature {
 	readonly modifiers: Effect.Modifier;
 }
 
+/** Une cellule du terrain : coordonnées, contenu et voisinage. */
 declare class Cell {
 	readonly id: number;
 	/**
@@ -189,6 +197,7 @@ declare class Cell {
  *  zone, caractéristiques...). Permet d'écrire du code générique sur un équipement quelconque
  *  (`function best(item: Item) { return item.cost }`). Porte aussi les constantes partagées
  *  (Item.LaunchType, Item.Area). Weapon et Chip redéclarent ces membres pour garder CHACUN sa
+ * Un objet du jeu (arme ou puce) : base commune de Weapon et Chip.
  *  documentation propre (getWeaponCost vs getChipCost), pas parce qu'ils diffèrent. */
 declare class Item {
 	readonly id: number;
@@ -220,6 +229,7 @@ declare class Item {
 	static get(id: number): Weapon | Chip | null;
 }
 
+/** Une arme : coût, portée, zone d'effet et effets qu'elle applique. */
 declare class Weapon extends Item {
 	/**
 	 * Renvoie le coût en PT de l'arme weapon.
@@ -321,6 +331,7 @@ declare class Weapon extends Item {
 	static isWeapon(value: any): boolean;
 }
 
+/** Une puce : coût, portée, temps de rechargement et effets qu'elle applique. */
 declare class Chip extends Item {
 	/**
 	 * Renvoie le coût en PT de la puce chip.
@@ -472,13 +483,22 @@ declare class Chip extends Item {
 // n'est PAS propagé aux sous-classes, ce qui évite le conflit TS entre Entity.Type et
 // Chest/Bulb/Mob.Type. 'x instanceof Bulb', l'assignabilité à Entity et les propriétés héritées
 // fonctionnent identiquement (le runtime, lui, fait un vrai class extends).
-/** Un poireau. */
+/**
+ * Un poireau.
+ * Un poireau : une entité contrôlée par un joueur.
+ */
 declare class Leek {}
 interface Leek extends Entity {}
-/** Une tourelle d'équipe. */
+/**
+ * Une tourelle d'équipe.
+ * Une tourelle : une entité fixe qui défend une base.
+ */
 declare class Turret {}
 interface Turret extends Entity {}
-/** Un bulbe invoqué. */
+/**
+ * Un bulbe invoqué.
+ * Un bulbe : une entité invoquée pendant le combat par une puce d’invocation.
+ */
 declare class Bulb {
 	/**
 	 * Sous-type de bulbe (Bulb.Type.PUNY...).
@@ -489,7 +509,10 @@ declare class Bulb {
 	readonly type: Bulb.Type;
 }
 interface Bulb extends Entity {}
-/** Un coffre (chasse aux coffres). */
+/**
+ * Un coffre (chasse aux coffres).
+ * Un coffre : une entité neutre qui peut être ouverte pour obtenir une récompense.
+ */
 declare class Chest {
 	/**
 	 * Sous-type de coffre (Chest.Type.WOOD...).
@@ -498,7 +521,10 @@ declare class Chest {
 	readonly type: Chest.Type;
 }
 interface Chest extends Entity {}
-/** Un monstre / boss. */
+/**
+ * Un monstre / boss.
+ * Un monstre : une entité hostile contrôlée par le jeu.
+ */
 declare class Mob {
 	/**
 	 * Sous-type de monstre (Mob.Type.GRAAL...).
@@ -510,6 +536,7 @@ declare class Mob {
 }
 interface Mob extends Entity {}
 
+/** Une entité du combat (poireau, tourelle, bulbe, monstre…) : caractéristiques, position, effets et actions. */
 declare class Entity {
 	readonly id: number;
 	/**
@@ -803,6 +830,8 @@ declare class Entity {
 	/**
 	 * Valeur d'une caractéristique par sa constante (Entity.Stat.STRENGTH...).
 	 * Renvoie la valeur de la statistique stat de l'entité entity. Utilisez les constantes STAT_* pour spécifier la statistique (ex : STAT_STRENGTH, STAT_LIFE, etc.).
+	 * @param entity (optionnel) L'id de l'entité dont la statistique sera retournée.
+	 * @param stat La statistique à retourner (constante STAT_*).
 	 * @returns La valeur de la statistique stat de l'entité entity.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getStat)
 	 */
@@ -820,6 +849,7 @@ declare class Entity {
 	static get(id: number): Entity | null;
 }
 
+/** Votre propre entité : tout ce que propose Entity, plus les actions que vous pouvez effectuer ce tour. */
 declare class Me extends Entity {
 	/**
 	 * Se rapproche de 'target' en dépensant au plus 'mp' PM (défaut : tous).
@@ -938,8 +968,10 @@ declare class Me extends Entity {
 	// Les canUse* renvoient un BOOLÉEN (moteur : Type.BOOL), pas un code Fight.Use : ce sont des
 	// prédicats « est-ce possible », pas des tentatives. Seules les actions réelles (useWeapon,
 	// useChip, resurrect, summon) renvoient un Fight.Use.
+	// Même forme que weaponCell/weaponTargets : la cible d'abord, l'arme optionnelle ensuite (l'arme
+	// équipée par défaut). L'ordre historique arme-en-premier reste accepté quand l'arme est un OBJET.
 	/**
-	 * Peut-on utiliser l'arme courante sur 'target' — ou 'weapon' sur 'target' (2 arguments).
+	 * Peut-on utiliser l'arme (celle équipée, ou 'weapon') sur 'target'.
 	 * Détermine si votre entité peut tirer sur l'entité d'id entity avec l'arme weapon.
 	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
 	 * @param entity L'id de l'entité sur lequel vous voulez tirer.
@@ -948,13 +980,15 @@ declare class Me extends Entity {
 	 */
 	canUseWeapon(target: Entity | number, weapon?: Weapon | number): boolean;
 	/**
-	 * Ordre historique (celui des fonctions LeekScript) : l'arme d'abord. Accepté tant que l'arme est un
-	 * OBJET Weapon — avec deux ids bruts, c'est l'ordre (target, weapon) ci-dessus qui s'applique.
+	 * Détermine si votre entité peut tirer sur l'entité d'id entity avec l'arme weapon.
+	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
+	 * @param entity L'id de l'entité sur lequel vous voulez tirer.
+	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeapon)
 	 */
 	canUseWeapon(weapon: Weapon, target: Entity | number): boolean;
 	/**
-	 * Peut-on utiliser l'arme courante sur la case 'cell' — ou 'weapon' sur 'cell' (2 arguments).
+	 * Peut-on utiliser l'arme (celle équipée, ou 'weapon') sur la case 'cell'.
 	 * Détermine si votre entité peut tirer sur la cellule cell avec l'arme weapon.
 	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
 	 * @param cell Le numéro de la cellule sur laquelle vous voulez tirer.
@@ -963,8 +997,10 @@ declare class Me extends Entity {
 	 */
 	canUseWeaponOnCell(cell: Cell | Entity | number, weapon?: Weapon | number): boolean;
 	/**
-	 * Ordre historique (celui des fonctions LeekScript) : l'arme d'abord. Accepté tant que l'arme est un
-	 * OBJET Weapon — avec deux ids bruts, c'est l'ordre (cell, weapon) ci-dessus qui s'applique.
+	 * Détermine si votre entité peut tirer sur la cellule cell avec l'arme weapon.
+	 * @param weapon (optionnel) L'arme à tester. Par défaut votre arme actuellement équipée.
+	 * @param cell Le numéro de la cellule sur laquelle vous voulez tirer.
+	 * @returns true si votre entité peut tirer, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/canUseWeaponOnCell)
 	 */
 	canUseWeaponOnCell(weapon: Weapon, cell: Cell | Entity | number): boolean;
@@ -998,13 +1034,14 @@ declare class Me extends Entity {
 	 */
 	itemUses(item: Item | number): number;
 	/**
-	 * Change l'équipement courant (nom du loadout).
-	 * Applique un loadout pour ce combat uniquement, sans modifier l'équipement persistant du poireau. À utiliser uniquement dans beforeFight(). Si le nom n'existe pas ou si setLoadout est appelé en dehors de beforeFight(), la fonction renvoie false et un avertissement est ajouté au rapport.
+	 * Change l'équipement courant (nom du loadout). 'changeStats' (défaut true) applique aussi sa répartition de capital.
+	 * Applique un loadout pour ce combat uniquement, sans modifier l'équipement persistant du poireau. À utiliser uniquement dans beforeFight(). Si le nom n'existe pas ou si setLoadout est appelé en dehors de beforeFight(), la fonction renvoie false et un avertissement est ajouté au rapport. Une potion de restat n'est consommée que si la répartition du loadout impose de réduire une caractéristique ; sans potion, ou si le loadout demande plus de capital que le poireau n'en a, seul l'équipement est appliqué.
 	 * @param name Le nom exact du loadout à appliquer (sensible à la casse).
+	 * @param changeStats (optionnel) Appliquer aussi la répartition de capital du loadout (true par défaut). À false, seuls les armes, puces et composants changent, les caractéristiques restent celles du poireau.
 	 * @returns true si le loadout a été appliqué, false sinon.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/setLoadout)
 	 */
-	setLoadout(name: string, keep?: boolean): boolean;
+	setLoadout(name: string, changeStats?: boolean): boolean;
 	/**
 	 * Invoque un bulbe : 'callback' est rejouée à chaque tour du bulbe (me désigne alors le bulbe).
 	 * Invoque une entité déterminée par la puce chip sur la cellule cell ayant pour IA la fonction ai. Un nom personnalisé peut être donné avec le paramètre optionnel name.
@@ -1071,6 +1108,7 @@ declare class Me extends Entity {
 
 // Stockage persistant de l'IA. Reste un `declare const` (et pas un namespace) : `delete` est un mot
 // réservé, donc `function delete(...)` serait une erreur de syntaxe dans un namespace.
+/** Registres persistants : stockage clé/valeur conservé d'un combat à l'autre. */
 declare const Registers: {
 	/**
 	 * Valeur du registre 'key', ou null s'il n'existe pas. Les registres ne stockent que du texte.
@@ -1104,6 +1142,7 @@ declare const Registers: {
 	all(): Record<string, string>;
 };
 
+/** Le combat en cours : tour, entités en jeu, obstacles et état général de la bataille. */
 declare namespace Fight {
 	/**
 	 * L'IA courante (votre entité).
@@ -1139,6 +1178,13 @@ declare namespace Fight {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFightContext)
 	 */
 	const context: Fight.Context;
+	/**
+	 * Le combat fait-il partie d'un lot ? Un combat de lot a le même type et le même contexte qu'un combat lancé seul.
+	 * Détermine si le combat a été lancé dans un lot de combats, et non un par un. Un combat de lot a le même type et le même contexte qu'un combat lancé seul : c'est la seule façon de les distinguer. Sert par exemple à se taire (les logs coûtent des opérations) quand on mesure son IA sur une série de combats.
+	 * @returns vrai si le combat fait partie d'un lot, faux s'il a été lancé seul.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/isBatchFight)
+	 */
+	const batched: boolean;
 	/**
 	 * Boss du combat (Fight.Boss.*), s'il y en a un.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getFightBoss)
@@ -1366,6 +1412,7 @@ declare namespace Fight {
 	function chipTargets(chip: Chip | number, cell: Cell | Entity | number): Entity[];
 }
 
+/** Le terrain : cellules, coordonnées, distances, lignes de vue et recherche de chemin. */
 declare namespace Field {
 	/**
 	 * Renvoie le type de terrain sur lequel se déroule le combat (usine, désert, forêt etc.), parmi les constantes MAP_NEXUS, MAP_FACTORY, MAP_DESERT, MAP_FOREST, MAP_GLACIER et MAP_BEACH.
@@ -1452,6 +1499,7 @@ declare namespace Field {
 	function path(from: Cell | Entity | number, to: Cell | Entity | number, ignoredCells?: (Cell | Entity | number)[]): Cell[];
 }
 
+/** Communication entre les poireaux de votre équipe : envoyer et recevoir des messages pendant le combat. */
 declare const Network: {
 	/**
 	 * Envoie un message typé (Message.Type.*) à une entité alliée.
@@ -1481,6 +1529,7 @@ declare const Network: {
 	getMessages(entity?: Entity | number): Message[];
 };
 
+/** Journalisation et affichage de debug sur le terrain : messages, marqueurs et cellules colorées, visibles dans le rapport de combat. */
 declare const Debug: {
 	/**
 	 * Écrit dans le journal de combat, éventuellement en couleur (cf Color). console.log existe aussi.
@@ -1528,6 +1577,7 @@ declare const Debug: {
 	pause(): void;
 };
 
+/** Informations d'exécution : opérations consommées, budget restant et temps de votre IA. */
 declare namespace System {
 	/**
 	 * Opérations consommées ce tour (à comparer à maxOperations pour borner une recherche).
@@ -1568,6 +1618,7 @@ declare namespace System {
 	const timestamp: number;
 }
 
+/** Constantes et utilitaires de couleur, utilisés pour les marqueurs et dessins de debug. */
 declare namespace Color {
 	/**
 	 * Compose une couleur depuis ses composantes 0-255.
@@ -1600,6 +1651,34 @@ declare namespace Color {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getBlue)
 	 */
 	function blue(color: Color.Value): number;
+}
+
+interface Math {
+	/** Vrai si les deux entiers ont exactement les mêmes chiffres, dans un ordre quelconque. */
+	isPermutation(a: number, b: number): boolean;
+	/** Convertit des radians en degrés. */
+	toDegrees(radians: number): number;
+	/** Convertit des degrés en radians. */
+	toRadians(degrees: number): number;
+	/** Entier aléatoire dans [a, b) — borne haute EXCLUE, comme en LeekScript. */
+	randInt(a: number, b: number): number;
+	/** Réel aléatoire dans [a, b). */
+	randReal(a: number, b: number): number;
+	isInfinite(x: number): boolean;
+	/** Nombre de bits à 1. Opère sur 64 bits, contrairement aux opérateurs bitwise de JS. */
+	bitCount(x: number): number;
+	bitLength(x: number): number;
+	testBit(x: number, bit: number): boolean;
+	setBit(x: number, bit: number, value?: boolean): number;
+	bitReverse(x: number): number;
+	byteReverse(x: number): number;
+	rotateLeft(x: number, count: number): number;
+	rotateRight(x: number, count: number): number;
+	leadingZeros(x: number): number;
+	trailingZeros(x: number): number;
+	/** Représentation binaire brute du réel, en entier 64 bits. */
+	realBits(x: number): number;
+	bitsToReal(bits: number): number;
 }
 
 
@@ -1718,6 +1797,8 @@ declare namespace Effect {
 	const LIFE_DAMAGE: Effect.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MOVED_TO_MP) */
 	const MOVED_TO_MP: Effect.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_MULTIPLY_STATS) */
+	const MULTIPLY_STATS: Effect.Type;
 	/**
 	 * Retire des points de vie max. Amplifié par la science.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_NOVA_DAMAGE)
@@ -1831,6 +1912,11 @@ declare namespace Effect {
 	 */
 	const SUMMON: Effect.Type;
 	/**
+	 * Convertit une partie des poisons actifs de la cible en dégâts immédiats : chaque poison inflige tout de suite 50% de ses dégâts restants (65% en critique) et sa valeur par tour est réduite d'autant. Le total de poison subi est conservé, seulement avancé. Les poisons infinis sont ignorés.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_SUPERINFECTION)
+	 */
+	const SUPERINFECTION: Effect.Type;
+	/**
 	 * Change la position du lanceur.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/EFFECT_TELEPORT)
 	 */
@@ -1893,14 +1979,18 @@ declare namespace Effect {
 }
 
 declare namespace State {
-	/** Constante de la famille State.Type (INVINCIBLE, PACIFIST, STATIC...). */
+	/** Constante de la famille State.Type (INVINCIBLE, PACIFIST, ROOTED...). */
 	type Type = number;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_INVINCIBLE) */
 	const INVINCIBLE: State.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_PACIFIST) */
 	const PACIFIST: State.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_ROOTED) */
+	const ROOTED: State.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_STATIC) */
 	const STATIC: State.Type;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_STERILE) */
+	const STERILE: State.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_UNHEALABLE) */
 	const UNHEALABLE: State.Type;
 }
@@ -2399,6 +2489,8 @@ declare namespace Weapon {
 	const broadsword: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_DARK_KATANA) */
 	const darkKatana: Weapon;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_DESERT_SABER) */
+	const desertSaber: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_DESTROYER) */
 	const destroyer: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_DOUBLE_GUN) */
@@ -2451,10 +2543,10 @@ declare namespace Weapon {
 	const rifle: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_SHOTGUN) */
 	const shotgun: Weapon;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_SUN_SPEAR) */
+	const sunSpear: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_SWORD) */
 	const sword: Weapon;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_TASER) */
-	const taser: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_UNBRIDLED_GAZOR) */
 	const unbridledGazor: Weapon;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/WEAPON_UNSTABLE_DESTROYER) */
@@ -2504,8 +2596,12 @@ declare namespace Chip {
 	const burning: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_CARAPACE) */
 	const carapace: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_CHILLI_PEPPER) */
+	const chilliPepper: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_COLLAR) */
 	const collar: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_CORN) */
+	const corn: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_COVETOUSNESS) */
 	const covetousness: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_COVID) */
@@ -2552,6 +2648,8 @@ declare namespace Chip {
 	const healerBulb: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_HELMET) */
 	const helmet: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_HEMORRHAGE) */
+	const hemorrhage: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_ICE) */
 	const ice: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_ICEBERG) */
@@ -2580,6 +2678,8 @@ declare namespace Chip {
 	const loam: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_MANUMISSION) */
 	const manumission: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_MATURATION) */
+	const maturation: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_METALLIC_BULB) */
 	const metallicBulb: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_METEORITE) */
@@ -2602,6 +2702,8 @@ declare namespace Chip {
 	const prism: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PROTEIN) */
 	const protein: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PROTOTAXITE) */
+	const prototaxite: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PUNISHMENT) */
 	const punishment: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PUNY_BULB) */
@@ -2652,6 +2754,8 @@ declare namespace Chip {
 	const steroid: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_STRETCHING) */
 	const stretching: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_SUPERINFECTION) */
+	const superinfection: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_TACTICIAN_BULB) */
 	const tacticianBulb: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_TELEPORTATION) */
