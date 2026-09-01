@@ -24,7 +24,7 @@
 	"mp_desc": "Cases pouvant être parcourues pendant un tour",
 	"operations": "Nombre d'opérations",
 	"ram": "Mémoire vive",
-	"ram_desc": "Une unité de mémoire RAM donne 1 emplacement de puce et un million de variables utilisables par l'IA",
+	"ram_desc": "Une unité de mémoire RAM donne 1 emplacement de puce et 8 millions d'unités de mémoire (64 bits) utilisables par l'IA (plafond mémoire : 50 unités)",
 	"resistance": "Résistance",
 	"resistance_desc": "La résistance augmente les boucliers",
 	"science": "Science",

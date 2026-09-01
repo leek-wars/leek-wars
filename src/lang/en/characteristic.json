@@ -24,7 +24,7 @@
 	"mp_desc": "How many cells you can move across during a turn",
 	"operations": "Number of operations",
 	"ram": "RAM",
-	"ram_desc": "One unit of RAM provides 1 chip slot and a million variables usable by the AI",
+	"ram_desc": "One unit of RAM provides 1 chip slot and 8 million memory units (64-bit) usable by the AI (memory cap: 50 units)",
 	"resistance": "Resistance",
 	"resistance_desc": "Resistance increases shields",
 	"science": "Science",
