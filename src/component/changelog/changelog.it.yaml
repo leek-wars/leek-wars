@@ -18,6 +18,7 @@
     - "Nuovo trofeo Tetrarca: vinci un Battle Royale, una Guerra, una Caccia ai forzieri e un Colosso nello stesso giorno, con lo stesso porro."
     - "Nuovo trofeo Grande mischia: partecipa a un combattimento nell'arena con 20 porri."
     - "#ai isBatchFight() dice se il combattimento viene da un lotto, per tacere quando si misura l'IA."
+    - "#ai getStats(entità) restituisce tutte le statistiche di un'entità in una sola mappa indicizzata dalle costanti STAT_*."
     - "La pagina di una squadra ha il suo pannello \"In diretta\", accanto alla chat: i trofei sbloccati, le soglie raggiunte e gli argomenti creati dai suoi membri negli ultimi 7 giorni."
     - "I tuoi emoji preferiti: gli emoji che usi di più (reazioni e emoji inviati nei messaggi) appaiono per primi nella barra di reazione rapida della chat, e in una scheda ⭐ in cima al pannello emoji."
     - "Tre piante da evocare: il Peperoncino (livello 179), una torretta che sputa danni, il Mais (livello 63), una fontana che cura la squadra intorno a sé, e il Prototassite (livello 152), colonna gigante venuta dal Devoniano — né pianta né albero — da 300 a 1300 PV. Nascono Radicate — nuovo stato: l'entità non può né muoversi né essere spinta, ma l'Inversione la rinvasa — e mostrano la loro zona d'effetto intorno a sé. Tutte e tre si fabbricano alla forgia, i loro schemi si trovano in combattimento."
