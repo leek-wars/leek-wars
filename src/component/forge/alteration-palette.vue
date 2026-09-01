@@ -81,6 +81,10 @@
 		if (INDIVISIBLE.indexOf(a.carac) !== -1 && efficiency < 1) return true
 		const points = (data.gains[a.carac] || [0, 0, 0])[efficiencyTier(efficiency)]
 		const power = points * (data.weights[a.carac] || 0)
+		// forgePendingPower = delta de charge projete de la recette posee ; l'alteration
+		// candidate, elle, est comptee a sa puissance brute, un majorant de son cout reel
+		// (reboucher un deficit coute moins) : le test est prudent, il peut griser une
+		// alteration qui rentrerait de justesse, jamais l'inverse.
 		return forgeCharge.value + forgePendingPower.value + power <= capacity
 	}
 

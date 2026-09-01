@@ -706,9 +706,12 @@
 			: null
 	}, { immediate: true })
 
-	// Puissance de la recette en cours : la colonne des caracteristiques s'en sert pour
-	// annoncer la charge qu'on va atteindre (#622).
-	watch(() => plan.value?.power ?? 0, power => { forgePendingPower.value = power }, { immediate: true })
+	// Ce que la recette en cours AJOUTE a la charge, projete par planAttempt (et non sa
+	// puissance brute) : reboucher un deficit creuse par la casse ne rend que
+	// DEFICIT_REFUND de sa puissance, l'addition lineaire annoncait 136 pour 103
+	// reellement livres (remontee d'un coeur perdu, #622).
+	watch(() => plan.value ? Math.round(plan.value.ratioAfter * plan.value.capacity) - Math.round(plan.value.ratioBefore * plan.value.capacity) : 0,
+		delta => { forgePendingPower.value = delta }, { immediate: true })
 	// Charge deja investie : la palette s'en sert pour griser ce qui ne rentre plus (#622).
 	watch(() => plan.value ? plan.value.ratioBefore * plan.value.capacity : 0,
 		charge => { forgeCharge.value = charge }, { immediate: true })

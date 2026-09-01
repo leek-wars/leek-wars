@@ -102,6 +102,7 @@
     - "Il tasto X in combattimento non rigenera più gli ostacoli della mappa: questa scorciatoia di test confondeva la visualizzazione, gli ostacoli visibili non corrispondevano più ai veri ostacoli del combattimento. Ora è riservato agli admin (grazie a LaLongueTerre)."
     - "Le composizioni di squadra si gestiscono finalmente con il dito: il trascinamento dei porri funzionava solo con il mouse, e una pressione prolungata apriva il menu « Salva immagine » del browser. Una pressione prolungata ora afferra il porro, la pagina scorre da sola verso le composizioni più in basso, e rilasciando lo si deposita."
 
+    - "Officina: la carica annunciata dalla colonna delle caratteristiche durante la composizione di una ricetta è ora la carica realmente raggiunta. Sommava la potenza grezza delle alterazioni, mentre risollevare una caratteristica scavata dalla rottura costa solo un quarto della sua potenza: prometteva 136 per 103 consegnati risollevando un cuore perso (grazie a Pilow)."
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."
   added:

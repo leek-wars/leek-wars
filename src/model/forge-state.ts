@@ -21,9 +21,10 @@ const forgeComponent = ref<{
 } | null>(null)
 
 /**
- * Puissance de la recette en cours de composition, publiée par la forge pour que la
- * colonne des caractéristiques annonce la charge qu'on va ATTEINDRE, et pas seulement
- * celle qu'on a (#622).
+ * Ce que la recette en cours AJOUTE à la charge, tel que planAttempt le projette (et
+ * non sa puissance brute : reboucher un déficit ne rend que DEFICIT_REFUND). Publié par
+ * la forge pour que la colonne des caractéristiques annonce la charge qu'on va
+ * ATTEINDRE, et pas seulement celle qu'on a (#622).
  */
 const forgePendingPower = ref(0)
 
