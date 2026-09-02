@@ -24,6 +24,8 @@
     - "#ai Le panneau des problèmes de l'éditeur ne s'ouvre plus à l'arrivée quand il n'y a ni erreur, ni avertissement, ni TODO à afficher."
   fixed:
     - "Documentation : pendant une recherche, les catégories se replient de nouveau en cliquant sur leur flèche (merci à hypernavet)."
+    - "Les potions de restat offertes lors de la mise à jour des composants sont maintenant prises en compte par les loadouts, à l'application depuis la page du poireau comme par setLoadout() en début de combat : elles n'étaient pas comptées, et un joueur qui n'avait plus que celles-là se voyait refuser le restat (merci à Nyaleph et Smartiz)."
+    - "#ai Accéder à un champ statique privé ou protégé depuis l'extérieur de sa classe (A.champ) est maintenant signalé à la compilation, comme pour les champs d'instance : erreur en mode strict, avertissement sinon. Avant, l'écriture passait sans bruit et la lecture n'échouait qu'en combat (merci à Amal)."
     - "Une composition d'équipe qui n'a plus assez de poireaux pour être défiée dans le potager n'apparaît plus comme active au classement : elle y gardait son talent sans jamais le remettre en jeu (merci à tagadagain)."
     - "#ai Assigner une valeur à un champ typé d'une classe à travers une variable non typée (any) applique maintenant les mêmes conversions que du code typé, au lieu d'échouer en combat avec une fausse erreur « champ inconnu » (merci à Bily)."
     - "Le mode préféré en arène ne change plus tout seul : la commande /br du chat inscrivait sans préférence, et un changement de mode depuis le menu était oublié à l'inscription suivante depuis le potager."

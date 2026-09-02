@@ -24,6 +24,8 @@
     - "#ai Il pannello dei problemi dell'editor non si apre più all'arrivo quando non c'è nessun errore, avviso o TODO da mostrare."
   fixed:
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo cliccando sulla loro freccia (grazie a hypernavet)."
+    - "Le pozioni di restat regalate con l'aggiornamento dei componenti sono ora considerate dai loadout, sia applicandoli dalla pagina del porro sia con setLoadout() a inizio combattimento: non venivano contate, e a un giocatore rimasto solo con quelle veniva rifiutato il restat (grazie a Nyaleph e Smartiz)."
+    - "#ai Accedere a un campo statico privato o protetto dall'esterno della sua classe (A.campo) è ora segnalato in compilazione, come per i campi d'istanza: errore in modalità strict, avviso altrimenti. Prima la scrittura passava in silenzio e la lettura falliva solo in combattimento (grazie ad Amal)."
     - "Una composizione di squadra che non ha più abbastanza porri per essere sfidata nell'orto non appare più come attiva in classifica: vi manteneva il suo talento senza mai rimetterlo in gioco (grazie a tagadagain)."
     - "#ai Assegnare un valore a un campo tipizzato di una classe tramite una variabile non tipizzata (any) applica ora le stesse conversioni del codice tipizzato, invece di fallire in combattimento con un falso errore \"campo sconosciuto\" (grazie a Bily)."
     - "La modalità preferita in arena non cambia più da sola: il comando /br della chat iscriveva senza preferenza, e un cambio di modalità dal menu veniva dimenticato alla successiva iscrizione dall'orto."

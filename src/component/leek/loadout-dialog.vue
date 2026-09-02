@@ -443,8 +443,11 @@
 			restatPotionCount(): number {
 				const farmer = store.state.farmer as Farmer | null
 				if (!farmer || !farmer.potions) return 0
-				const p = farmer.potions.find((p: Potion) => p.template === 49)
-				return p ? p.quantity : 0
+				// 49 = potion achetée, 58 = potion offerte en compensation : le serveur
+				// consomme les deux (#4952)
+				return farmer.potions
+					.filter((p: Potion) => p.template === 49 || p.template === 58)
+					.reduce((total: number, p: Potion) => total + p.quantity, 0)
 			},
 			// Source de vérité : les listes `owned_*` retournées par `loadout/get-all`
 			// (DISTINCT item.template côté serveur, exemplaires équipés compris) :

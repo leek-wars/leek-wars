@@ -24,6 +24,8 @@
     - "#ai The editor's problems panel no longer opens on arrival when there is no error, warning or TODO to show."
   fixed:
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
+    - "Restat potions given away with the components update are now taken into account by loadouts, both when applying from the leek page and through setLoadout() at the start of a fight: they were not counted, and a player left with only those was refused the restat (thanks to Nyaleph and Smartiz)."
+    - "#ai Accessing a private or protected static field from outside its class (A.field) is now reported at compile time, like instance fields: an error in strict mode, a warning otherwise. Before, writes went through silently and reads only failed in fight (thanks to Amal)."
     - "A team composition that no longer has enough leeks to be challenged in the garden no longer shows as active in the ranking: it kept its talent there without ever putting it back at stake (thanks to tagadagain)."
     - "#ai Assigning a value to a typed class field through an untyped (any) variable now applies the same conversions as typed code, instead of failing in fights with a bogus \"unknown field\" error (thanks to Bily)."
     - "The preferred arena mode no longer changes on its own: the /br chat command registered you with no preference, and a mode change from the menu was forgotten on the next registration from the garden."
