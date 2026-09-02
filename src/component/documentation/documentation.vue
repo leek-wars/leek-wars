@@ -40,10 +40,10 @@
 								<h2 v-ripple @click="toggleCategory(c)">
 									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
 									<div class="spacer"></div>
-									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+									<v-icon v-if="isCategoryOpen(c)">mdi-chevron-up</v-icon>
 									<v-icon v-else>mdi-chevron-down</v-icon>
 								</h2>
-								<div v-if="query.length || categoryState[c]">
+								<div v-if="isCategoryOpen(c)">
 									<div v-for="(item, i) in (category as LSFunction[])" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
 										<template v-if="objectPathOf(item.name)">{{ objectPathOf(item.name) }}</template>
 									<template v-else>{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i as number]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i as number]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i as number]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
@@ -315,6 +315,7 @@
 		if (items) items.scrollTop = 0
 		lazy_start.value = 0
 		lazy_end.value = 10
+		if (!query.value.length) searchCollapsed.value = {}
 		if (!props.popup && query.value.length && 'item' in route.params) {
 			router.push('/help/documentation')
 		}
@@ -338,7 +339,21 @@
 		localStorage.setItem('documentation/large', '' + LeekWars.large)
 	}
 
+	// Pendant une recherche, toutes les catégories s'ouvrent pour montrer les résultats, mais
+	// elles restaient impossibles à replier (#4661). L'état replié d'une recherche est distinct
+	// de la préférence hors recherche (categoryState, persistée) et repart ouvert à chaque
+	// nouvelle recherche.
+	const searchCollapsed = ref<Record<string | number, boolean>>({})
+
+	function isCategoryOpen(c: number | string) {
+		return query.value.length ? !searchCollapsed.value[c] : categoryState.value[c]
+	}
+
 	function toggleCategory(c: number | string) {
+		if (query.value.length) {
+			searchCollapsed.value[c] = !searchCollapsed.value[c]
+			return
+		}
 		categoryState.value[c] = !categoryState.value[c]
 		localStorage.setItem('documentation/category-' + c, '' + categoryState.value[c])
 	}

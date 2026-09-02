@@ -23,6 +23,7 @@
     - "The forge highlights missing ingredients in red and refuses to craft until you have them all."
     - "#ai The editor's problems panel no longer opens on arrival when there is no error, warning or TODO to show."
   fixed:
+    - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
     - "A team composition that no longer has enough leeks to be challenged in the garden no longer shows as active in the ranking: it kept its talent there without ever putting it back at stake (thanks to tagadagain)."
     - "#ai Assigning a value to a typed class field through an untyped (any) variable now applies the same conversions as typed code, instead of failing in fights with a bogus \"unknown field\" error (thanks to Bily)."
     - "The preferred arena mode no longer changes on its own: the /br chat command registered you with no preference, and a mode change from the menu was forgotten on the next registration from the garden."
