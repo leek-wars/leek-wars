@@ -41,8 +41,7 @@
 									<span>{{ c }}</span>
 									<span v-if="query.length">({{ category.length }})</span>
 									<div class="spacer"></div>
-									<v-icon v-if="isCategoryOpen(c)">mdi-chevron-up</v-icon>
-									<v-icon v-else>mdi-chevron-down</v-icon>
+									<v-icon>{{ isCategoryOpen(c) ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 								</h2>
 								<div v-if="isCategoryOpen(c)">
 									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.module + '/' + item.function)">
@@ -111,7 +110,7 @@ import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/emitter'
-import { useCategoryState } from '@/component/documentation/category-state'
+import { useCategoryState } from '@/model/category-state'
 
 defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins] })
 
@@ -146,9 +145,8 @@ interface ApiService {
 }
 
 const services = ref<ApiService[]>([])
-const categories = ref<Record<string, ApiService[]>>({})
 const query = ref('')
-const { loadCategoryState, isCategoryOpen, toggleCategory } = useCategoryState('api-doc/category-', query)
+const { isCategoryOpen, toggleCategory } = useCategoryState('api-doc/category-', query)
 const search = useTemplateRef<HTMLElement>('search')
 const elements = useTemplateRef<HTMLElement>('elements')
 
@@ -232,10 +230,7 @@ LeekWars.get<ApiService[]>('service/get-all').then(servicesData => {
 	services.value = servicesData
 	for (const service of servicesData) {
 		if (service.example) service.example = JSON.parse(service.example)
-		if (!(service.module in categories.value)) categories.value[service.module] = []
-		categories.value[service.module].push(service)
 	}
-	loadCategoryState(Object.keys(categories.value))
 	LeekWars.setTitle('API')
 	update()
 })

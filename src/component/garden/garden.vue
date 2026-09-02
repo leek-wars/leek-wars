@@ -7,7 +7,7 @@
 					<template #activator="{ props }">
 						<div v-bind="props" class="tab action hidden disabled">
 							<img class="restat-potion" src="/image/potion/restat.png">
-							<span>{{ restatPotions }}</span>
+							<span>{{ restatPotionCount }}</span>
 						</div>
 					</template>
 					{{ $t('potion.restat') }}
@@ -447,7 +447,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
-	import { isRestatPotion } from '@/model/potion'
+	import { countRestatPotions } from '@/model/leekwars'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
@@ -529,11 +529,7 @@
 	const bossEnabled = computed(() => true)
 	const liveArenaCount = computed(() => store.state.arenaCount || 0)
 	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
-	const restatPotions = computed(() => {
-		const potions = store.state.farmer?.potions || []
-		return potions.filter(p => isRestatPotion(LeekWars.potions[p.template]))
-			.reduce((sum, p) => sum + p.quantity, 0)
-	})
+	const restatPotionCount = computed(() => countRestatPotions(store.state.farmer?.potions || []))
 
 	// La forme du corps d'erreur est déjà normalisée par LeekWars.request().
 	function batchErrorToast(error: ApiError) {

@@ -21,7 +21,7 @@ import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
-import { PotionEffect, PotionTemplate } from './potion'
+import { isRestatPotion, Potion, PotionEffect, PotionTemplate } from './potion'
 import { ITEMS } from './items'
 import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
@@ -1170,6 +1170,17 @@ function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
 	return result
 }
 
+/** Potions de restat d'un inventaire, dans l'ordre où le serveur les consomme (offertes avant achetées). */
+function restatPotionsOf(potions: Potion[]): Potion[] {
+	return potions
+		.filter(p => p.quantity > 0 && isRestatPotion(POTIONS[p.template]))
+		.sort((a, b) => b.template - a.template)
+}
+
+function countRestatPotions(potions: Potion[]): number {
+	return restatPotionsOf(potions).reduce((total, p) => total + p.quantity, 0)
+}
+
 function potionByName(potions: {[key: string]: PotionTemplate}) {
 	const result: { [key: string]: PotionTemplate } = {}
 	for (const w in potions) {
@@ -1529,4 +1540,4 @@ async function loadGameData() {
 
 if (DEV || LOCAL) { (window as unknown as Record<string, unknown>).LeekWars = LeekWars }
 
-export { LeekWars, Language, loadGameData }
+export { LeekWars, Language, loadGameData, restatPotionsOf, countRestatPotions }

@@ -40,8 +40,7 @@
 								<h2 v-ripple @click="toggleCategory(c)">
 									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
 									<div class="spacer"></div>
-									<v-icon v-if="isCategoryOpen(c)">mdi-chevron-up</v-icon>
-									<v-icon v-else>mdi-chevron-down</v-icon>
+									<v-icon>{{ isCategoryOpen(c) ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 								</h2>
 								<div v-if="isCategoryOpen(c)">
 									<div v-for="(item, i) in (category as LSFunction[])" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
@@ -89,7 +88,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
-	import { useCategoryState } from './category-state'
+	import { useCategoryState } from '@/model/category-state'
 	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: 'Documentation', i18n: {}, mixins: [...mixins] })
@@ -105,7 +104,7 @@
 	const query = ref('')
 	const lazy_start = ref(0)
 	const lazy_end = ref(10)
-	const { loadCategoryState, isCategoryOpen, toggleCategory } = useCategoryState('documentation/category-', query)
+	const { isCategoryOpen, toggleCategory } = useCategoryState('documentation/category-', query)
 	const icons = {
 		1: 'mdi-numeric',
 		2: 'mdi-format-text',
@@ -172,7 +171,6 @@
 
 		LeekWars.loadEncyclopedia(locale)
 
-		loadCategoryState(Object.keys(FUNCTION_CATEGORIES))
 		let id = 0
 		for (const item of FUNCTIONS as LSFunction[]) {
 			if (item.replacement) {

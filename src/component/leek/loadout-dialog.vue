@@ -290,7 +290,7 @@
 
 <script lang="ts">
 	import { defineComponent, PropType } from 'vue'
-	import { LeekWars } from '@/model/leekwars'
+	import { LeekWars, restatPotionsOf } from '@/model/leekwars'
 	import { Leek, MAX_COMPONENTS } from '@/model/leek'
 	import { Loadout, LoadoutComponent, LoadoutStats } from '@/model/loadout'
 	import { capitalToStatBonus, statBonusToCapital, baseStatFor, totalCapitalForLevel } from '@/model/capital'
@@ -301,7 +301,7 @@
 	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
 	import Sortable from 'sortablejs'
 	import { Farmer } from '@/model/farmer'
-	import { isRestatPotion, Potion } from '@/model/potion'
+	import { Potion } from '@/model/potion'
 	import { Weapon } from '@/model/weapon'
 	import { Chip } from '@/model/chip'
 	import { Component } from '@/model/component'
@@ -441,18 +441,10 @@
 				return out
 			},
 			restatPotionCount(): number {
-				const farmer = store.state.farmer as Farmer | null
-				if (!farmer || !farmer.potions) return 0
 				return this.restatPotions.reduce((total: number, p: Potion) => total + p.quantity, 0)
 			},
-			// Achetées (49) et offertes en compensation (58), le serveur consomme les deux (#4952) ;
-			// triées dans son ordre de consommation : les offertes d'abord.
 			restatPotions(): Potion[] {
-				const farmer = store.state.farmer as Farmer | null
-				if (!farmer || !farmer.potions) return []
-				return farmer.potions
-					.filter((p: Potion) => p.quantity > 0 && isRestatPotion(LeekWars.potions[p.template]))
-					.sort((a: Potion, b: Potion) => b.template - a.template || a.id - b.id)
+				return restatPotionsOf((store.state.farmer as Farmer | null)?.potions ?? [])
 			},
 			// Source de vérité : les listes `owned_*` retournées par `loadout/get-all`
 			// (DISTINCT item.template côté serveur, exemplaires équipés compris) :
@@ -946,13 +938,11 @@
 				store.commit('update-capital', { leek: this.leek.id, capital: newCapital })
 			},
 			decrementRestatPotion() {
-				const farmer = store.state.farmer as Farmer | null
 				const p = this.restatPotions[0]
-				if (!farmer || !p) return
-				p.quantity = Math.max(0, p.quantity - 1)
-				if (p.quantity === 0) {
-					const i = farmer.potions.indexOf(p)
-					if (i !== -1) farmer.potions.splice(i, 1)
+				if (!p) return
+				if (--p.quantity === 0) {
+					const potions = (store.state.farmer as Farmer).potions
+					potions.splice(potions.indexOf(p), 1)
 				}
 			},
 			remove(loadout: Loadout) {
