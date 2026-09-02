@@ -10,13 +10,17 @@ const FIXUPS: Array<[RegExp, string]> = [
 	[/\. \./g, '..'],
 	// La flèche `->` est découpée en `- >`
 	[/- >/g, '->'],
-	// Les mots-clés logiques et de cast sont pris pour des noms de fonction quand une
-	// parenthèse suit : `a and (b)` devient `a and(b)`, illisible et signalé par les
-	// joueurs. `in` n'est pas concerné, js-beautify le connaît comme opérateur.
+	// Les mots-clés logiques, de cast et `new` sont pris pour des noms de fonction quand
+	// une parenthèse suit : `a and (b)` devient `a and(b)`, illisible et signalé par les
+	// joueurs. Tous sont des mots-clés du lexer, donc jamais des identifiants. `in` n'est
+	// pas concerné, js-beautify le connaît comme opérateur.
 	[/\b(and|or|xor|not|instanceof|as|new)\(/g, '$1 ('],
 ]
 
-// Chaînes (avec échappements) et commentaires : capturés pour être laissés intacts.
+// Chaînes (avec échappements, sur plusieurs lignes comme les accepte le lexer) et
+// commentaires : capturés pour être laissés intacts. Une chaîne non fermée n'est pas
+// reconnue et se fait donc retoucher comme du code — le fichier ne compile de toute
+// façon pas tant que le guillemet manque.
 const STRINGS_AND_COMMENTS = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\/[^\n]*|\/\*[\s\S]*?\*\/)/g
 
 /**

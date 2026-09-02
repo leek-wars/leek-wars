@@ -16,10 +16,13 @@ describe('applyFormatFixups', () => {
 		expect(applyFormatFixups('var x = anor(2)')).toBe('var x = anor(2)')
 	})
 
+	// Entrées = sorties réelles de js-beautify pour `10 \= 2`, `1..10`, `x -> x * 2`
+	// et `new (getClass())()`, relevées en exécutant le beautifier.
 	it('répare les opérateurs découpés par js-beautify', () => {
-		expect(applyFormatFixups('var x = 10 \\ = 2')).toBe('var x = 10  \\= 2')
-		expect(applyFormatFixups('for (var i in 1 . . 10)')).toBe('for (var i in 1 .. 10)')
+		expect(applyFormatFixups('var x = 10\\ = 2')).toBe('var x = 10 \\= 2')
+		expect(applyFormatFixups('var r = 1. .10')).toBe('var r = 1..10')
 		expect(applyFormatFixups('var f = x - > x * 2')).toBe('var f = x -> x * 2')
+		expect(applyFormatFixups('var y = new(getClass())()')).toBe('var y = new (getClass())()')
 	})
 
 	it('laisse les chaînes et les commentaires intacts', () => {

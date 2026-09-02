@@ -26,7 +26,7 @@
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo cliccando sulla loro freccia (grazie a hypernavet)."
     - "#ai Una sottoclasse il cui genitore ha un costruttore privato non si istanzia più in silenzio: la chiamata implicita al costruttore del genitore viene ora segnalata, come già lo era l'istanziazione diretta del genitore (grazie a nytope)."
     - "#ai setContains() e mapContainsKey() costano ora 1 operazione invece di 2, come l'operatore in che esegue esattamente la stessa ricerca (grazie a CutiestCutie)."
-    - "#ai La formattazione automatica dell'editor (Ctrl+Maiusc+F) non attacca più le parole chiave and, or, xor, not, instanceof e as alla parentesi che le segue (grazie a Casanova)."
+    - "#ai La formattazione automatica dell'editor (Ctrl+Maiusc+F) non attacca più le parole chiave and, or, xor, not, instanceof, as e new alla parentesi che le segue (grazie a Casanova)."
     - "Le pozioni di restat regalate con l'aggiornamento dei componenti sono ora considerate dai loadout, sia applicandoli dalla pagina del porro sia con setLoadout() a inizio combattimento: non venivano contate, e a un giocatore rimasto solo con quelle veniva rifiutato il restat (grazie a Nyaleph e Smartiz)."
     - "#ai Accedere a un campo statico privato o protetto dall'esterno della sua classe (A.campo) è ora segnalato in compilazione, come per i campi d'istanza: errore in modalità strict, avviso altrimenti. Prima la scrittura passava in silenzio e la lettura falliva solo in combattimento (grazie ad Amal)."
     - "Una composizione di squadra che non ha più abbastanza porri per essere sfidata nell'orto non appare più come attiva in classifica: vi manteneva il suo talento senza mai rimetterlo in gioco (grazie a tagadagain)."
