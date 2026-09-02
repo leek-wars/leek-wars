@@ -12,6 +12,7 @@ import { markRaw, watch } from 'vue';
 import { AI } from '@/model/ai.js';
 import { LeekWars } from '@/model/leekwars';
 import { getKeywords } from './keywords';
+import { applyFormatFixups } from './format-fixups';
 import { Keyword, KeywordKind } from '@/model/keyword';
 import { getLanguageForPath } from './file-types';
 import { buildLeekwarsDeclarations, buildConstantPathMap, buildMemberToLs, buildObjectApiModel, buildConstantMembersByPath, type ApiMember } from './leekwars-dts'
@@ -834,13 +835,7 @@ async function formatLeekScript(code:string): Promise<string> {
 			const fLit = lit[0].replace(/\./, ' .').replace(/p/, ' p')
 			formatted = formatted.replace(fLit, lit[0])
 		}
-		// js-beautify doesn't recognize the \= operator and will split it as: \ =
-		formatted = formatted.replace(/\\ =/g, ' \\=')
-		// js-beautify doesn't recognize the .. operator and will split it as: \ =
-		formatted = formatted.replace(/\. \./g, '..')
-		// js-beautify doesn't recognize the -> arrow operator and will split it as: - >
-		formatted = formatted.replace(/- >/g, '->')
-		formattedCode = formatted;
+		formattedCode = applyFormatFixups(formatted);
 	})
 	return formattedCode;
 

@@ -24,6 +24,9 @@
     - "#ai Le panneau des problèmes de l'éditeur ne s'ouvre plus à l'arrivée quand il n'y a ni erreur, ni avertissement, ni TODO à afficher."
   fixed:
     - "Documentation : pendant une recherche, les catégories se replient de nouveau en cliquant sur leur flèche (merci à hypernavet)."
+    - "#ai Une classe fille dont le parent a un constructeur privé ne s'instancie plus en silence : l'appel implicite au constructeur du parent est signalé, comme l'était déjà l'instanciation directe du parent (merci à nytope)."
+    - "#ai setContains() et mapContainsKey() coûtent maintenant 1 opération au lieu de 2, comme l'opérateur in qui fait exactement la même recherche (merci à CutiestCutie)."
+    - "#ai Le formatage automatique de l'éditeur (Ctrl+Maj+F) ne colle plus les mots-clés and, or, xor, not, instanceof et as à la parenthèse qui les suit (merci à Casanova)."
     - "Les potions de restat offertes lors de la mise à jour des composants sont maintenant prises en compte par les loadouts, à l'application depuis la page du poireau comme par setLoadout() en début de combat : elles n'étaient pas comptées, et un joueur qui n'avait plus que celles-là se voyait refuser le restat (merci à Nyaleph et Smartiz)."
     - "#ai Accéder à un champ statique privé ou protégé depuis l'extérieur de sa classe (A.champ) est maintenant signalé à la compilation, comme pour les champs d'instance : erreur en mode strict, avertissement sinon. Avant, l'écriture passait sans bruit et la lecture n'échouait qu'en combat (merci à Amal)."
     - "Une composition d'équipe qui n'a plus assez de poireaux pour être défiée dans le potager n'apparaît plus comme active au classement : elle y gardait son talent sans jamais le remettre en jeu (merci à tagadagain)."
