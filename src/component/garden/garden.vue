@@ -447,7 +447,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
-	import { PotionEffect } from '@/model/potion'
+	import { isRestatPotion } from '@/model/potion'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
@@ -529,10 +529,9 @@
 	const bossEnabled = computed(() => true)
 	const liveArenaCount = computed(() => store.state.arenaCount || 0)
 	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
-	// Toute potion avec un effet RESTAT (49 classique, 58 admin)
 	const restatPotions = computed(() => {
 		const potions = store.state.farmer?.potions || []
-		return potions.filter(p => LeekWars.potions[p.template]?.effects?.some(e => e.type === PotionEffect.RESTAT))
+		return potions.filter(p => isRestatPotion(LeekWars.potions[p.template]))
 			.reduce((sum, p) => sum + p.quantity, 0)
 	})
 

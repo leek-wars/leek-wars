@@ -89,6 +89,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
+	import { useCategoryState } from './category-state'
 	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: 'Documentation', i18n: {}, mixins: [...mixins] })
@@ -104,7 +105,7 @@
 	const query = ref('')
 	const lazy_start = ref(0)
 	const lazy_end = ref(10)
-	const categoryState = ref<Record<string | number, boolean>>({})
+	const { loadCategoryState, isCategoryOpen, toggleCategory } = useCategoryState('documentation/category-', query)
 	const icons = {
 		1: 'mdi-numeric',
 		2: 'mdi-format-text',
@@ -171,9 +172,7 @@
 
 		LeekWars.loadEncyclopedia(locale)
 
-		for (const category in FUNCTION_CATEGORIES) {
-			categoryState.value[category] = localStorage.getItem('documentation/category-' + category) === 'true'
-		}
+		loadCategoryState(Object.keys(FUNCTION_CATEGORIES))
 		let id = 0
 		for (const item of FUNCTIONS as LSFunction[]) {
 			if (item.replacement) {
@@ -315,7 +314,6 @@
 		if (items) items.scrollTop = 0
 		lazy_start.value = 0
 		lazy_end.value = 10
-		if (!query.value.length) searchCollapsed.value = {}
 		if (!props.popup && query.value.length && 'item' in route.params) {
 			router.push('/help/documentation')
 		}
@@ -337,25 +335,6 @@
 	function toggleLarge() {
 		LeekWars.large = !LeekWars.large
 		localStorage.setItem('documentation/large', '' + LeekWars.large)
-	}
-
-	// Pendant une recherche, toutes les catégories s'ouvrent pour montrer les résultats, mais
-	// elles restaient impossibles à replier (#4661). L'état replié d'une recherche est distinct
-	// de la préférence hors recherche (categoryState, persistée) et repart ouvert à chaque
-	// nouvelle recherche.
-	const searchCollapsed = ref<Record<string | number, boolean>>({})
-
-	function isCategoryOpen(c: number | string) {
-		return query.value.length ? !searchCollapsed.value[c] : categoryState.value[c]
-	}
-
-	function toggleCategory(c: number | string) {
-		if (query.value.length) {
-			searchCollapsed.value[c] = !searchCollapsed.value[c]
-			return
-		}
-		categoryState.value[c] = !categoryState.value[c]
-		localStorage.setItem('documentation/category-' + c, '' + categoryState.value[c])
 	}
 
 	defineExpose({ focus })

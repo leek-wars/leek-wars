@@ -41,10 +41,10 @@
 									<span>{{ c }}</span>
 									<span v-if="query.length">({{ category.length }})</span>
 									<div class="spacer"></div>
-									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+									<v-icon v-if="isCategoryOpen(c)">mdi-chevron-up</v-icon>
 									<v-icon v-else>mdi-chevron-down</v-icon>
 								</h2>
-								<div v-if="query.length || categoryState[c]">
+								<div v-if="isCategoryOpen(c)">
 									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.module + '/' + item.function)">
 										<span class="method chip" :class="item.method">{{ item.method }}</span>
 										{{ item.function }}
@@ -111,6 +111,7 @@ import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { emitter } from '@/model/emitter'
+import { useCategoryState } from '@/component/documentation/category-state'
 
 defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins] })
 
@@ -147,7 +148,7 @@ interface ApiService {
 const services = ref<ApiService[]>([])
 const categories = ref<Record<string, ApiService[]>>({})
 const query = ref('')
-const categoryState = ref<{[key: string]: boolean}>({})
+const { loadCategoryState, isCategoryOpen, toggleCategory } = useCategoryState('api-doc/category-', query)
 const search = useTemplateRef<HTMLElement>('search')
 const elements = useTemplateRef<HTMLElement>('elements')
 
@@ -234,9 +235,7 @@ LeekWars.get<ApiService[]>('service/get-all').then(servicesData => {
 		if (!(service.module in categories.value)) categories.value[service.module] = []
 		categories.value[service.module].push(service)
 	}
-	for (const category in categories.value) {
-		categoryState.value[category] = localStorage.getItem('api-doc/category-' + category) === 'true'
-	}
+	loadCategoryState(Object.keys(categories.value))
 	LeekWars.setTitle('API')
 	update()
 })
@@ -267,11 +266,6 @@ function selectItem(item: string) {
 			}
 		}, 100)
 	})
-}
-
-function toggleCategory(c: string) {
-	categoryState.value[c] = !categoryState.value[c]
-	localStorage.setItem('api-doc/category-' + c, '' + categoryState.value[c])
 }
 
 function scroll() {}

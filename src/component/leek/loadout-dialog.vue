@@ -270,8 +270,8 @@
 			<img src="/image/potion/restat.png" width="64" height="64">
 			<div class="restat-message">
 				<p>{{ $t('main.loadout_restat_message') }}</p>
-				<p v-if="restatPotionCount !== null" class="restat-count">{{ $t('main.loadout_restat_you_have', [restatPotionCount]) }}</p>
-				<p v-else-if="restatPotionCount === 0" class="restat-none">{{ $t('main.loadout_no_restat_potion') }}</p>
+				<p v-if="restatPotionCount > 0" class="restat-count">{{ $t('main.loadout_restat_you_have', [restatPotionCount]) }}</p>
+				<p v-else class="restat-none">{{ $t('main.loadout_no_restat_potion') }}</p>
 			</div>
 		</div>
 		<template #actions>
@@ -301,7 +301,7 @@
 	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
 	import Sortable from 'sortablejs'
 	import { Farmer } from '@/model/farmer'
-	import { Potion } from '@/model/potion'
+	import { isRestatPotion, Potion } from '@/model/potion'
 	import { Weapon } from '@/model/weapon'
 	import { Chip } from '@/model/chip'
 	import { Component } from '@/model/component'
@@ -443,11 +443,16 @@
 			restatPotionCount(): number {
 				const farmer = store.state.farmer as Farmer | null
 				if (!farmer || !farmer.potions) return 0
-				// 49 = potion achetée, 58 = potion offerte en compensation : le serveur
-				// consomme les deux (#4952)
+				return this.restatPotions.reduce((total: number, p: Potion) => total + p.quantity, 0)
+			},
+			// Achetées (49) et offertes en compensation (58), le serveur consomme les deux (#4952) ;
+			// triées dans son ordre de consommation : les offertes d'abord.
+			restatPotions(): Potion[] {
+				const farmer = store.state.farmer as Farmer | null
+				if (!farmer || !farmer.potions) return []
 				return farmer.potions
-					.filter((p: Potion) => p.template === 49 || p.template === 58)
-					.reduce((total: number, p: Potion) => total + p.quantity, 0)
+					.filter((p: Potion) => p.quantity > 0 && isRestatPotion(LeekWars.potions[p.template]))
+					.sort((a: Potion, b: Potion) => b.template - a.template || a.id - b.id)
 			},
 			// Source de vérité : les listes `owned_*` retournées par `loadout/get-all`
 			// (DISTINCT item.template côté serveur, exemplaires équipés compris) :
@@ -942,14 +947,12 @@
 			},
 			decrementRestatPotion() {
 				const farmer = store.state.farmer as Farmer | null
-				if (!farmer || !farmer.potions) return
-				const p = farmer.potions.find((p: Potion) => p.template === 49)
-				if (p) {
-					p.quantity = Math.max(0, p.quantity - 1)
-					if (p.quantity === 0) {
-						const i = farmer.potions.indexOf(p)
-						if (i !== -1) farmer.potions.splice(i, 1)
-					}
+				const p = this.restatPotions[0]
+				if (!farmer || !p) return
+				p.quantity = Math.max(0, p.quantity - 1)
+				if (p.quantity === 0) {
+					const i = farmer.potions.indexOf(p)
+					if (i !== -1) farmer.potions.splice(i, 1)
 				}
 			},
 			remove(loadout: Loadout) {
