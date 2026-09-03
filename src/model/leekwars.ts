@@ -1172,8 +1172,10 @@ function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
 
 /** Potions de restat d'un inventaire, dans l'ordre où le serveur les consomme (offertes avant achetées). */
 function restatPotionsOf(potions: Potion[]): Potion[] {
+	// `LeekWars.potions` et pas `POTIONS` : loadGameData() remplace la propriété de
+	// LeekWars, l'objet importé de data.ts reste vide, donc tout lookup y échoue.
 	return potions
-		.filter(p => p.quantity > 0 && isRestatPotion(POTIONS[p.template]))
+		.filter(p => p.quantity > 0 && isRestatPotion(LeekWars.potions[p.template]))
 		.sort((a, b) => b.template - a.template)
 }
 
