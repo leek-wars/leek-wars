@@ -86,8 +86,15 @@ function computeBounds() {
 	if (props.pin) {
 		// Sens impose : on garde la direction demandee et on laisse l'infobulle
 		// defiler dans la place disponible, plutot que de la retourner sur la grille.
+		//
+		// La hauteur maximale vaut EXACTEMENT la place restante, sans plancher : Vuetify
+		// mesure la carte une fois plafonnee par ce max-height et retourne l'infobulle des
+		// qu'elle deborde encore. Un plancher de 200 px la renvoyait donc vers le haut des
+		// que la palette approchait du bas de l'ecran, et elle recouvrait la barre
+		// d'onglets et la forge (retour de Pierre). Sous 120 px il ne reste plus rien a
+		// montrer : on laisse alors Vuetify retourner plutot qu'afficher un timbre-poste.
 		openBottom.value = preferBottom
-		maxHeight.value = Math.max(200, prefSpace)
+		maxHeight.value = Math.max(120, prefSpace)
 		return
 	}
 	if (prefSpace >= 300 || prefSpace >= altSpace) {
