@@ -722,6 +722,28 @@ body:not(.v2) {
 		filter: brightness(1.08);
 	}
 
+	/* ====== Aplats primaires de Vuetify ======
+	 *
+	 * `--v-theme-primary` vaut le vert d'ENCRE (#146128 en clair, cf. vuetify.ts) et
+	 * Vuetify s'en sert AUSSI pour ses aplats : `.bg-primary`, donc tout `v-btn`
+	 * `color="primary"` en variante pleine. Le site portait ainsi deux verts pleins —
+	 * l'aplat de marque sur l'inscription et sur la forge, ce vert foncé sur les boutons
+	 * Vuetify, « Jouer ! » juste à côté d'« Inscription » (retour de Pierre).
+	 *
+	 * Les APLATS rejoignent donc le couple de marque, comme les 84 déclarations de fond
+	 * déjà migrées en SCSS. L'ENCRE ne bouge pas : `.text-primary`, les icônes et les
+	 * variantes `text`/`outlined` gardent `--primary`, calibré pour être lisible sur le
+	 * parchemin — c'est tout l'intérêt d'avoir deux jetons plutôt qu'un.
+	 *
+	 * !important, contrairement au reste du fichier : les utilitaires de couleur de
+	 * Vuetify sont eux-mêmes !important, rien d'autre ne les bat. Le thème XP passe
+	 * devant malgré tout, ses règles vivant sous `#app.xp`.
+	 */
+	.bg-primary {
+		background-color: var(--primary-surface) !important;
+		color: var(--primary-surface-text) !important;
+	}
+
 	/* --- Les actions, à droite ---
 	 *
 	 * Distinctes des ONGLETS, qui restent des onglets (trait vert dessous) :
