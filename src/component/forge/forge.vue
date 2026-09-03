@@ -314,6 +314,7 @@
 		emitter.on('craft', onCraft)
 		emitter.on('alter', onAlter)
 		emitter.on('add-alteration', addAlteration)
+		emitter.on('replay-recipe', onReplayRecipe)
 		emitter.on('workshop-mode', onWorkshopMode)
 	})
 
@@ -743,6 +744,47 @@
 		})
 	}
 
+	/**
+	 * Repose la recette d'une tentative de l'historique, donnee par ids d'alteration
+	 * (demande de Pierre) : l'historique est ce qu'on relit pour retrouver un dosage, et
+	 * le rejouer se faisait jusqu'ici alteration par alteration.
+	 *
+	 * Meme discipline que « Recommencer » : on ne repose que ce qui reste en stock, et
+	 * jamais plus que la grille n'accepte. Une case par alteration, avec sa quantite,
+	 * comme le fait la pose au clic.
+	 */
+	function onReplayRecipe(payload: { recipe: AlterationRecipe, item: number | null }) {
+		const { recipe } = payload
+		// Forge vide : on y repose la piece de la tentative, pour que le clic suffise
+		// (demande de Pierre). Elle peut avoir disparu depuis — recyclee, vendue, ou
+		// detachee sous un autre id — auquel cas il n'y a rien a poser.
+		if (!component.value && payload.item !== null) {
+			const stored = store.state.farmer?.components?.find(c => c.id === payload.item)
+			if (stored) component.value = stored as InventoryItem
+		}
+		if (!component.value) {
+			LeekWars.toast(t('main.alteration_needs_component'))
+			return
+		}
+		const data = LeekWars.alterations
+		if (!data) return
+		// Rejouer porte sur une seule piece : un empilement de destruction se defait.
+		componentCount.value = 1
+		clearIngredients()
+		let posed = 0
+		for (const id in recipe) {
+			const alteration = data.alterations[id]
+			if (!alteration) continue
+			const free = forge.value.indexOf(null)
+			if (free === -1) break
+			const owned = store.state.farmer?.alterations?.find(a => a.template === alteration.template)
+			const quantity = Math.min(recipe[id], owned ? owned.quantity : 0, maxItems.value - posed)
+			if (quantity <= 0) continue
+			forge.value[free] = [alteration.template, quantity]
+			posed += quantity
+		}
+	}
+
 	/** Retire une alteration posee : un clic enleve un exemplaire. */
 	function removeAlteration(index: number) {
 		const slot = forge.value[index]
@@ -865,6 +907,7 @@
 		emitter.off('craft', onCraft)
 		emitter.off('alter', onAlter)
 		emitter.off('add-alteration', addAlteration)
+		emitter.off('replay-recipe', onReplayRecipe)
 		emitter.off('workshop-mode', onWorkshopMode)
 	})
 

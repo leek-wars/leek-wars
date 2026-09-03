@@ -8,7 +8,12 @@
 				<!-- Une seule ligne : issue, vignette (le nom de la piece est dans son
 				     title), dosage et metabolisme, recette, resultat, la date a droite
 				     (ordre de Pierre, 2026-08-31). -->
-				<div class="line" :class="lineClass(entry)">
+				<!-- Un clic repose la recette de la tentative dans la forge (demande de
+				     Pierre) : l'historique est ce qu'on relit pour retrouver un dosage, et
+				     le rejouer se faisait jusqu'ici altération par altération. -->
+				<div class="line" :class="[lineClass(entry), { replayable: canReplay(entry) }]"
+					:title="canReplay(entry) ? $t('main.alteration_repeat') : undefined"
+					@click="replay(entry)">
 					<!-- Une seule icone d'issue, EN TOUT PREMIER : reussite, echec ou casse.
 					     Elle remplace la croix posee au milieu des gains et le coeur brise de
 					     la casse, qui se lisaient mal et faisaient deux marqueurs pour une
@@ -140,6 +145,24 @@
 	}
 
 	/**
+	 * Une tentative dont on peut rejouer la recette : elle en porte une, non vide. Les
+	 * crafts et les destructions n'en ont pas.
+	 */
+	function canReplay(entry: Entry): boolean {
+		return entry.action === ALTER && !!entry.details?.recipe && Object.keys(entry.details.recipe).length > 0
+	}
+
+	/**
+	 * Rejoue cette tentative dans la forge (demande de Pierre) : sa recette, et la piece
+	 * sur laquelle elle avait eu lieu si la forge est vide. La forge s'occupe du reste,
+	 * elle seule sait ce qui y est pose et ce qui reste en stock.
+	 */
+	function replay(entry: Entry) {
+		if (!canReplay(entry)) return
+		emitter.emit('replay-recipe', { recipe: entry.details.recipe, item: entry.item })
+	}
+
+	/**
 	 * Couleur du metabolisme, du rouge (0 %) au vert (100 %) en passant par l'orange :
 	 * la teinte HSL va de 0 a 120 degres. La clarte suit le theme, sinon le rouge sombre
 	 * devient illisible sur fond noir.
@@ -253,6 +276,13 @@
 	// Teinte discrete selon l'issue d'une tentative (#622).
 	.line.ok { background: rgba(94, 173, 27, 0.12); }
 	.line.fail { background: rgba(198, 40, 40, 0.10); }
+	// Ligne rejouable : le survol l'annonce par un simple assombrissement, sans liseré —
+	// la teinte d'issue de la ligne (verte ou rouge) doit rester lisible dessous.
+	.line.replayable {
+		cursor: pointer;
+		&:hover { box-shadow: inset 0 0 0 999px rgba(0, 0, 0, 0.04); }
+	}
+	body.dark .line.replayable:hover { box-shadow: inset 0 0 0 999px rgba(255, 255, 255, 0.06); }
 	.thumb {
 		width: 28px;
 		height: 28px;

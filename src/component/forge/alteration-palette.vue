@@ -7,7 +7,9 @@
 				     famille de composant, la charge consommee et le dosage, ce qu'une seule
 				     ligne de texte ne pouvait pas porter (#622). -->
 				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true" :bottom="true" :pin="true">
-					<div v-ripple class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a)}" v-bind="props" @click="pick(a)">
+					<!-- Pas d'onde au clic sur une alteration qui ne rentre plus : le geste
+					     n'aboutit pas, il ne doit pas faire mine de repondre (demande de Pierre). -->
+					<div v-ripple="fits(a)" class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a)}" v-bind="props" @click="pick(a)">
 						<alteration-icon :template="a.template" title="" />
 						<span v-if="owned(a.template) > 0" class="owned">{{ owned(a.template) }}</span>
 					</div>
@@ -90,6 +92,10 @@
 
 	/** Pose l'alteration dans la forge : la forge verifie qu'un composant est present. */
 	function pick(a: AlterationTemplate) {
+		// Une alteration qui ne rentre plus dans le puits est grisee ET inerte : la poser
+		// n'aboutissait a rien, sinon a une fusion refusee (retour de Pierre). Le liseré
+		// rouge dit deja pourquoi, on n'ajoute pas de message.
+		if (!fits(a)) return
 		emitter.emit('add-alteration', { id: a.template, template: a.template, quantity: owned(a.template) } as InventoryItem)
 	}
 </script>
@@ -162,6 +168,9 @@
 		&.over {
 			opacity: 0.4;
 			border-color: #c62828;
+			// Le clic ne fait rien : le curseur ne doit pas promettre le contraire.
+			cursor: default;
+			&:hover { border-color: #c62828; }
 		}
 	}
 	// Quantite possedee en bas a droite ; le numero de dosage est en haut a gauche,

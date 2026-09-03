@@ -84,6 +84,11 @@ type Events = {
 	'alter': InventoryItem,
 	/** Une alteration part de l'inventaire vers la forge (#622). */
 	'add-alteration': InventoryItem,
+	/** Une tentative de l'historique est rejouee : sa recette est reposee telle quelle
+	 *  dans la forge (#622). `recipe` est au format journalise par le serveur,
+	 *  [id d'alteration => quantite] ; `item` est la piece sur laquelle la tentative
+	 *  avait eu lieu, que la forge repose si elle est vide. */
+	'replay-recipe': { recipe: { [id: number]: number }, item: number | null },
 	/** L'onglet actif de l'atelier a change (#622). */
 	'workshop-mode': string,
 	/** Une action d'atelier vient d'avoir lieu (1 craft, 2 alteration, 3 destruction) :
