@@ -34,13 +34,23 @@ function getApiUrl(): string {
 
 // --- Cache abstraction : IndexedDB avec fallback localStorage ---
 
-let idbFailed = false
+// Safari et TOUS les navigateurs iOS (Chrome/CriOS, l'app Google, les WebView in-app) peuvent
+// n'avoir AUCUN `indexedDB` : WebView sans stockage, mode Lockdown, navigation privée d'anciennes
+// versions. Sur JSC, lire la variable nue lève une ReferenceError au lieu de valoir `undefined`,
+// d'où la sonde par `typeof`. Sans elle, le premier `cacheSave()` du boot jetait cette
+// ReferenceError de façon SYNCHRONE — idb-keyval n'ouvre la base qu'au premier usage du store,
+// donc AVANT que le `.catch()` de saveToIdb soit attaché — et l'app démarrait sur l'écran
+// « données indisponibles » au lieu de retomber sur localStorage.
+const HAS_IDB = (() => {
+	try { return typeof indexedDB !== 'undefined' && indexedDB !== null } catch { return false }
+})()
+
+let idbFailed = !HAS_IDB
 
 async function cacheLoad(skipVersionCheck = false): Promise<GameDataMap | null> {
 	if (!idbFailed) {
 		const result = await loadFromIdb(skipVersionCheck)
 		if (result) return result
-		idbFailed = true
 	}
 	return loadFromLs(skipVersionCheck)
 }
@@ -79,7 +89,13 @@ async function loadFromIdb(skipVersionCheck = false): Promise<GameDataMap | null
 			result[DATA_TYPES[i]] = values[i + 1]
 		}
 		return result
-	} catch {
+	} catch (e) {
+		// Base illisible (quota, base corrompue, IndexedDB absent) : on n'y retouche plus de la
+		// session. Un cache simplement VIDE, lui, ne condamne pas IndexedDB — sinon une première
+		// visite basculait tout le monde sur localStorage, dont les 5 Mo ne tiennent pas le
+		// catalogue, et le client refetchait tout à chaque chargement.
+		idbFailed = true
+		console.warn('[GameData] IndexedDB read failed, falling back to localStorage:', e)
 		return null
 	}
 }
@@ -89,9 +105,21 @@ function saveToIdb(masterVersion: string, hashes: { [key: string]: string }, dat
 	for (const type of Object.keys(data)) {
 		entries.push(['data:' + type, data[type]])
 	}
-	setMany(entries, idbStore)
-		.then(() => console.log(`[GameData] Saved to IndexedDB`))
-		.catch(e => console.warn('[GameData] IndexedDB save failed:', e))
+	const fallback = (e: unknown) => {
+		idbFailed = true
+		console.warn('[GameData] IndexedDB save failed, falling back to localStorage:', e)
+		saveToLs(masterVersion, hashes, data)
+	}
+	// try/catch ET .catch() : idb-keyval ouvre la base au premier usage du store, donc un
+	// environnement sans IndexedDB throw ICI, synchroniquement, avant qu'aucune promesse
+	// n'existe — le .catch() seul ne le verrait jamais.
+	try {
+		setMany(entries, idbStore)
+			.then(() => console.log(`[GameData] Saved to IndexedDB`))
+			.catch(fallback)
+	} catch (e) {
+		fallback(e)
+	}
 }
 
 // --- localStorage fallback ---
