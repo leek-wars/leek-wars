@@ -25,7 +25,7 @@ const DATA: AlterationData = {
 	},
 	weights: {
 		life: 1, strength: 2, agility: 2, wisdom: 2, resistance: 2, science: 2, magic: 2,
-		frequency: 2, tp: 100, mp: 125, cores: 40, ram: 60,
+		frequency: 2, tp: 80, mp: 100, cores: 40, ram: 60,
 	},
 	gains: {
 		life: [50, 10, 2], strength: [12, 3, 1], agility: [12, 3, 1], wisdom: [12, 3, 1],
@@ -42,7 +42,7 @@ const HYLOCEREUS: [string, number][] = [['life', 600], ['wisdom', 40], ['magic',
 describe('puits', () => {
 	it('vaut 0,2 × la puissance des stats de base, arrondi à l\'entier', () => {
 		expect(well(760)).toBe(152) // hylocereus (0,2 × 760)
-		expect(well(600)).toBe(120) // poire (0,2 × 600)
+		expect(well(560)).toBe(112) // poire (0,2 × 560)
 		expect(well(100)).toBe(20)  // pomme (0,2 × 100)
 		expect(well(1)).toBe(0)     // rgb : puits nul, non altérable
 	})
@@ -151,30 +151,30 @@ describe('pièce creusée par la casse', () => {
 		// Le cas signalé sur la carte mère avancée : science et fréquence creusées à leur
 		// plancher (-20 chacune, poids 2) puis toute la vie que le budget permet. Le budget
 		// est exactement plein, donc la jauge doit dire 100 % ; la puissance BRUTE, elle, ne
-		// vaut que 56 sur 116 parce qu'elle compte les déficits au tarif plein, et afficher ce
-		// 48 % laisserait croire qu'il reste de la marge alors que plus rien ne rentre.
+		// vaut que 52 sur 112 parce qu'elle compte les déficits au tarif plein, et afficher ce
+		// 46 % laisserait croire qu'il reste de la marge alors que plus rien ne rentre.
 		const motherboard: [string, number][] = [['life', 100], ['science', 20], ['frequency', 20],
 			['cores', 3], ['ram', 3], ['tp', 1]]
-		const full = { life: 136, science: -20, frequency: -20 }
+		const full = { life: 132, science: -20, frequency: -20 }
 		const weights = DATA.weights
-		expect(well(power(motherboard, weights))).toBe(116)
-		expect(addedPower(full, weights)).toBe(116)
-		expect(rawAddedPower(full, weights)).toBe(56)
+		expect(well(power(motherboard, weights))).toBe(112)
+		expect(addedPower(full, weights)).toBe(112)
+		expect(rawAddedPower(full, weights)).toBe(52)
 		// La jauge, le liseré et le tri de l'inventaire lisent tous cette même valeur.
-		expect(displayRatio(full, 116, weights)).toBeCloseTo(1, 6)
-		expect(alteredClass({ stats: full, template: 381 }, 116, weights)).toBe('altered-5')
+		expect(displayRatio(full, 112, weights)).toBeCloseTo(1, 6)
+		expect(alteredClass({ stats: full, template: 381 }, 112, weights)).toBe('altered-5')
 	})
 
 	it('un échec à charge pleine casse à coup sûr, même sur une pièce creusée', () => {
 		// Le miroir doit annoncer le même risque que le serveur : une carte mère pleine dont
-		// la casse a creusé science et fréquence garde 216 points de vie à perdre. Le plancher
-		// se lit sur la charge NETTE (136), pas sur la somme des déficits (-80), sinon la
+		// la casse a creusé science et fréquence garde 212 points de vie à perdre. Le plancher
+		// se lit sur la charge NETTE (132), pas sur la somme des déficits (-80), sinon la
 		// pièce passe pour increvable et l'acharnement devient gratuit (#622).
 		const motherboard: [string, number][] = [['life', 100], ['science', 20], ['frequency', 20],
 			['cores', 3], ['ram', 3], ['tp', 1]]
-		const full = { life: 136, science: -20, frequency: -20 }
+		const full = { life: 132, science: -20, frequency: -20 }
 		const plan = planAttempt(DATA, motherboard, full, 106, ComponentFamily.ELECTRONIC, { 13: 1 })
-		expect(plan.capacity).toBe(116)
+		expect(plan.capacity).toBe(112)
 		expect(plan.breakProbability).toBeCloseTo(1, 6)
 	})
 
