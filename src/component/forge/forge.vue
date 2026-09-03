@@ -587,7 +587,12 @@
 		if (!component.value || fusing.value) return out
 		// Rien ne coule vers une piece qui ne peut pas prendre : le flux promet une
 		// alteration en cours, il serait mensonger sur une tentative impossible (#622).
-		if (previewProbability.value <= 0) return out
+		//
+		// Tant que le serveur calcule, on ne SAIT pas : la proba locale n'est qu'un
+		// plafond, le gate du metabolisme peut la ramener a zero. Le flux couperait alors
+		// juste apres avoir demarre, en promettant une tentative deja perdue (retour de
+		// Pierre). On attend donc la reponse, pendant que le loader dit l'attente.
+		if (loadingPreview.value || previewProbability.value <= 0) return out
 		forge.value.forEach((slot, i) => {
 			// Meme garde que cellVars : une recette peut deborder de la grille.
 			const center = CELL_CENTERS[i]
