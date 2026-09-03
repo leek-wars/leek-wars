@@ -35,4 +35,26 @@ const forgePendingPower = ref(0)
  */
 const forgeCharge = ref(0)
 
-export { forgeComponent, forgePendingPower, forgeCharge }
+/**
+ * Tentative en cours (dosage, gains vises, chances, casse, cout), publiee par la forge
+ * pour que la colonne des caracteristiques l'affiche SOUS les stats de la piece :
+ * l'aperçu et les stats qu'il vise se lisent alors d'un seul regard, et la forge ne
+ * grandit plus quand on pose des altérations (demande de Pierre).
+ *
+ * `null` tant qu'aucune altération n'est posée : il n'y a alors rien à annoncer.
+ */
+const forgePreview = ref<{
+	/** Somme des numéros publiés des altérations posées. */
+	dose: number
+	/** Gains visés par caractéristique, tels que planAttempt les projette. */
+	rolls: { [carac: string]: { points: number } }
+	/** Chance de réussite, celle du serveur dès qu'elle est connue. */
+	probability: number
+	/** Vrai tant que le serveur calcule la vraie probabilité (gate du métabolisme). */
+	loading: boolean
+	/** Risque de casse de la tentative entière. */
+	breakRisk: number
+	habsCost: number
+} | null>(null)
+
+export { forgeComponent, forgePendingPower, forgeCharge, forgePreview }

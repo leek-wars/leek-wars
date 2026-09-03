@@ -2,10 +2,10 @@
 	<!-- Toujours rendue, dans les trois onglets et meme sans piece posee : la colonne
 	     garde sa place, sinon la forge se decale d'un onglet a l'autre (#622). -->
 	<div class="forge-stats">
-		<!-- Sans piece, la colonne garde sa largeur mais ne montre RIEN : un titre suivi
-		     d'un rectangle vide donnait l'impression d'un panneau casse (#622). -->
+		<!-- Sans piece, la colonne garde sa largeur mais ne montre RIEN : un rectangle vide
+		     donnait l'impression d'un panneau casse (#622). Pas de titre non plus : les
+		     icones de carac disent deja ce que la carte contient (demande de Pierre). -->
 		<template v-if="stats.length">
-		<div class="title">{{ $t('characteristic.characteristics') }}</div>
 		<div class="card">
 			<div v-for="[carac, value] in stats" :key="carac" class="row" :class="{ altered: isAltered(carac), broken: delta(carac) < 0 }">
 				<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
@@ -152,12 +152,6 @@
 	#app.app .forge-stats {
 		width: 100%;
 		padding: 10px;
-	}
-	.title {
-		font-size: 13px;
-		font-weight: bold;
-		color: var(--text-color-secondary);
-		margin-bottom: 6px;
 	}
 	.card {
 		// Pas de marge horizontale : le liseré des caracs alterees doit toucher le bord

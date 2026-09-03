@@ -14,7 +14,7 @@
 			     son en-tete debordait encore de quelques pixels (#622). -->
 			<inventory v-show="!workshopFull" :layout="layout" @update:layout="layout = $event" />
 			<div class="resizer" :class="{vertical: columnsLayout}" @mousedown="resizerMousedown"><v-icon>{{ columnsLayout ? 'mdi-drag-vertical-variant' : 'mdi-drag-horizontal-variant' }}</v-icon></div>
-			<panel ref="bottomPanel" class="bottom-panel" toggle="inventory/workshop" :toggle-invert="true" :states="LeekWars.mobile ? 3 : 2" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event" @update:state="panelState = $event">
+			<panel ref="bottomPanel" class="bottom-panel" :class="{ expanded: bottomExpanded }" toggle="inventory/workshop" :toggle-invert="true" :states="LeekWars.mobile ? 3 : 2" :style="bottomPanelStyle" @update:expanded="bottomExpanded = $event" @update:state="panelState = $event">
 				<template #title>
 					<div class="workshop-tabs">
 						<div v-for="t in TABS" :key="t.mode" v-ripple class="workshop-tab" :class="{active: tab === t.mode}" @click.stop="tab = t.mode">
@@ -88,7 +88,10 @@
 							     meme sans piece : sinon la forge se decale d'un onglet a l'autre (#622). -->
 							<forge-stats />
 						</div>
-						<div class="schemes-section">
+						<!-- Ameliorer : la palette et l'historique ne partagent plus le meme
+					     defilement (demande de Pierre), la section laisse donc l'historique
+					     defiler pour lui-meme. -->
+					<div class="schemes-section" :class="{ 'alter-split': tab === 'alter' }">
 							<!-- Fabriquer : le catalogue de schemas, puis l'historique des crafts. -->
 							<template v-if="tab === 'craft'">
 								<loader v-if="!$store.state.farmer" />
@@ -548,22 +551,37 @@
 }
 #app.app .bottom-panel {
 	flex: 1;
+	// Sur mobile la hauteur suit les crans (auto / 50 % / plein) : un plancher de 350 px
+	// ferait deborder le cran intermediaire sur les petits ecrans.
+	min-height: 0;
 }
 .bottom-panel {
 	min-height: 0;
+}
+// Plancher de l'atelier OUVERT : en dessous, la forge (~290 px avec ses marges) ne tient
+// plus dans le panneau, quoi qu'on fasse de la poignee (demande de Pierre). Le plancher
+// ne vaut que deplie : replie, le panneau doit pouvoir se reduire a son en-tete.
+.bottom-panel.expanded {
+	min-height: 350px;
 }
 .bottom-content {
 	display: flex;
 	flex: 1;
 	min-height: 0;
 	padding: 0;
+	// Un ecart unique entre les colonnes de l'atelier (demande de Pierre) : c'est lui qui
+	// les separe, plus les marges internes de chacune.
+	gap: 15px;
 	// Transparent pour la mise en page en trois colonnes : la forge et les stats
 	// restent des enfants directs du flex. Le groupe ne prend corps qu'en vertical.
 	.forge-row {
 		display: contents;
 	}
 	.forge-wrapper {
-		flex-basis: 350px;
+		// La colonne fait la largeur de la forge (260 px) plus les 4 px dont debordent ses
+		// boutons d'angle, de chaque cote : plus rien a droite, l'ecart avec les caracs
+		// est porte par le gap (demande de Pierre).
+		flex-basis: 268px;
 		flex-shrink: 0;
 		display: flex;
 		// Centre le bloc forge COMPACT verticalement (safe : bascule en haut plutot que
@@ -571,11 +589,32 @@
 		// de vide ; sur desktop il flotte au milieu du panneau (#622).
 		align-items: safe center;
 		justify-content: center;
-		// Barre de defilement toujours reservee (scroll et non auto) : sinon son
-		// apparition quand la forge grandit (lignes de gains, alterations posees)
-		// decale le contenu et fait sauter la mise en page (cf. .schemes-section, #622).
 		min-height: 0;
-		overflow-y: scroll;
+		// auto et non scroll : la forge ne change plus de taille (ses cartes sont passees
+		// dans la colonne des caracs) et le panneau ne descend plus sous 350 px, donc la
+		// barre ne sert plus que de filet — une piste toujours reservee ne serait que 15 px
+		// de vide a droite de la forge.
+		overflow-y: auto;
+		// clip et non hidden : une boite qui defile en Y devient aussi scrollable en X, et
+		// les boutons d'angle suffiraient a y faire apparaitre une barre horizontale.
+		overflow-x: clip;
+	}
+	// Panneau court : la colonne des caracs porte maintenant les stats ET la tentative,
+	// elle depasse donc facilement. Elle defile pour elle-meme, comme la forge a sa
+	// gauche, plutot que de se faire rogner par le bas (retour de Pierre).
+	// auto et non scroll : cette colonne ne change plus de hauteur (la carte de tentative
+	// a sa place reservee), une barre inutile ne se justifie pas ici.
+	&:not(.vertical) :deep(.forge-stats) {
+		min-height: 0;
+		overflow-y: auto;
+		// Un peu plus large quand la page l'est : a 200 px fixes, « Points de vie » et
+		// « Risque de casse » se coupent en deux lignes alors qu'il reste de la place a
+		// cote (retour de Pierre). Plafonnee a 250 px : au-dela ce ne serait plus que du
+		// vide entre le libelle et le chiffre, et c'est autant de moins pour la palette
+		// et l'historique.
+		width: clamp(200px, 20%, 250px);
+		// Plus de marge a droite : l'ecart entre colonnes est porte par le gap.
+		padding: 10px 0;
 	}
 }
 #app.app .bottom-content {
@@ -583,6 +622,13 @@
 	overflow-y: scroll;
 	.forge-wrapper {
 		flex-basis: auto;
+	}
+	// Mobile : tout est empile et c'est la page qui defile. Sans ce retour a la valeur
+	// initiale, la colonne des caracs deviendrait retrecissable et defilerait DANS une
+	// page qui defile deja.
+	:deep(.forge-stats) {
+		min-height: auto;
+		overflow-y: visible;
 	}
 }
 // En deux colonnes l'atelier est une bande haute et etroite : les trois colonnes
@@ -614,10 +660,15 @@
 		overflow-y: visible;
 	}
 	:deep(.forge-stats) {
-		width: auto;
-		min-width: 220px;
-		max-width: 340px;
-		flex: 0 1 auto;
+		// Largeur FIGEE et non `auto` entre deux bornes : la rangee est centree, donc
+		// tout elargissement de la colonne decale la forge d'autant. Le panneau grandit
+		// des qu'une piece porte des alterations (dosage, risque et cout s'ajoutent, et
+		// le cout se compte en dizaines de milliers), et la forge sautait alors
+		// lateralement entre une piece vide et une piece chargee (retour de Pierre).
+		// 260 px : la borne haute de ce que demandent ces lignes, sans la marge morte
+		// qu'aurait laissee un max-width a 340.
+		width: 260px;
+		flex: 0 0 auto;
 		padding: 10px;
 	}
 }
@@ -640,15 +691,106 @@
 .schemes-list {
 	padding: 0;
 }
-// Ameliorer et Detruire : l'historique ne defile PAS pour lui-meme, c'est
-// .schemes-section qui defile. Sinon on obtient deux barres imbriquees, et la piste
-// vide de celle du dessus laisse un ecart avant le bord du panneau (#622).
+// Detruire : l'historique ne defile PAS pour lui-meme, c'est .schemes-section qui
+// defile. Sinon on obtient deux barres imbriquees, et la piste vide de celle du dessus
+// laisse un ecart avant le bord du panneau (#622).
 .schemes-section :deep(.item-history) {
 	height: auto;
 	overflow-y: visible;
 }
 #app.app .schemes-section {
 	overflow-y: visible;
+}
+
+// --- Ameliorer : palette et historique separes (demande de Pierre) ---
+//
+// Les deux etaient dans le meme defilement : descendre dans l'historique emportait la
+// palette hors de l'ecran alors qu'on clique dedans en permanence. La section ne defile
+// donc plus, c'est l'historique SEUL qui defile, et la palette reste toujours visible.
+.schemes-section.alter-split {
+	overflow-y: hidden;
+}
+.alter-pane {
+	display: flex;
+	flex: 1;
+	min-height: 0;
+}
+// Mode « en ligne » (atelier sous l'inventaire) : la palette et l'historique sont des
+// colonnes a part entiere, au MEME niveau que la forge et les caracteristiques (demande
+// de Pierre). Leurs deux enveloppes (.schemes-section et .alter-pane) deviennent
+// transparentes pour la mise en page : les quatre colonnes appartiennent alors au meme
+// flex, et se partagent donc le meme `gap`.
+// 360 px = deux colonnes de caracs dans la grille dynamique de la palette.
+.bottom-content:not(.vertical) {
+	.schemes-section.alter-split {
+		display: contents;
+	}
+	.alter-pane {
+		display: contents;
+		// La palette VISE 360 px sans jamais grandir au-dela (elle n'a rien a gagner a
+		// s'etaler, l'historique si), mais elle cede du terrain proportionnellement des que
+		// la place manque : sa grille dynamique retombe alors a une colonne de caracs plutot
+		// que de reduire l'historique a un filet (retour de Pierre).
+		:deep(.alteration-palette) {
+			flex: 0 1 360px;
+			min-width: 0;
+			// Deux colonnes des 264 px au lieu de 338 : dans cette colonne etroite, deux
+			// colonnes de vignettes plus petites valent mieux qu'une seule a taille pleine
+			// (demande de Pierre). A 360 px, la largeur visee, les vignettes restent pleines.
+			--palette-column: 120px;
+			// Plus de filet : ce sont maintenant quatre colonnes separees par le gap, et
+			// les deux premieres n'en portent pas.
+			border-bottom: none;
+			// Filet de securite : la palette n'est pas censee defiler, mais sur un panneau
+			// tres court mieux vaut une barre que des caracs inaccessibles.
+			overflow-y: auto;
+		}
+		:deep(.item-history) {
+			// Base reelle et non 0 : c'est elle qui fait que le manque de place se partage
+			// entre les deux colonnes au lieu d'etre encaisse par l'historique seul (une base
+			// nulle ne retrecit jamais, elle laissait la palette a ses 360 px).
+			flex: 1 1 340px;
+			min-width: 0;
+			// auto et non 100% : la hauteur vient de l'etirement du flex, et il n'y a plus
+			// d'enveloppe pour resoudre un pourcentage.
+			height: auto;
+			// scroll et non auto : sinon l'apparition de la barre au chargement des entrees
+			// decale toute la liste vers la gauche (meme raison qu'ailleurs sur la page).
+			overflow-y: scroll;
+		}
+	}
+}
+// Mode deux colonnes : la bande est trop etroite pour deux colonnes, on empile comme
+// avant, mais la palette reste en haut et seul l'historique defile.
+.bottom-content.vertical .alter-pane {
+	flex-direction: column;
+	:deep(.alteration-palette) { flex: 0 0 auto; }
+	:deep(.item-history) {
+		flex: 1;
+		min-height: 0;
+		height: auto;
+		overflow-y: scroll;
+	}
+}
+// Mobile : c'est la page entiere qui defile, l'historique reste donc dans le flux et
+// s'allonge autant qu'il veut (une zone qui defile dans une page qui defile piege le
+// doigt). Les enveloppes reprennent leur boite : la mise en page en colonnes n'a pas
+// cours ici, tout est empile.
+#app.app .schemes-section.alter-split {
+	display: flex;
+}
+#app.app .alter-pane {
+	display: flex;
+	flex-direction: column;
+	:deep(.alteration-palette) {
+		flex: 0 0 auto;
+		border-bottom: 1px solid var(--border);
+		overflow-y: visible;
+	}
+	:deep(.item-history) {
+		height: auto;
+		overflow-y: visible;
+	}
 }
 .menu-actions {
 	.v-icon {
