@@ -51,14 +51,21 @@ body {
 	 * a #146128 pour tenir 4.5, et ce vert-la, etale en aplat, est presque noir
 	 * — c'est lui qui rendait le theme clair terne, la marque n'apparaissant
 	 * plus nulle part a l'ecran. En aplat la contrainte s'inverse : c'est
-	 * l'encre POSEE dessus qui doit tenir, et elle peut etre sombre. D'ou un
-	 * vert franc et son encre sombre, mesures a 5.42.
+	 * l'encre POSEE dessus qui doit tenir.
 	 *
-	 * Le blanc ou la creme sont exclus sur ce vert-la : #1F8A3B plafonne a 4.11
-	 * sous de la creme, #2E9E4B a 3.20. Un aplat vert vif porte une encre
-	 * sombre, dans les deux themes — c'est deja ce que fait le neon du sombre. */
-	--primary-surface: #2E9E4B;
-	--primary-surface-text: #0E1410;
+	 * Elle est BLANCHE (2026-09-03, decision de Pierre). Le lot 28 avait choisi
+	 * un vert vif (#2E9E4B) sous une encre presque noire : 5,42 sur le papier,
+	 * mais a l'usage le contraste se lit mal, les deux valeurs etant moyennes.
+	 * Du blanc demande un vert plus fonce — #2E9E4B ne monte qu'a 3,44 sous du
+	 * blanc, #1F8A3B a 4,41, encore sous le seuil. #1D8437 tient 4,76 tout en
+	 * restant un vert franc, loin du #146128 (7,58 mais quasi noir) qui avait
+	 * justement pousse a creer ce jeton.
+	 *
+	 * En SOMBRE rien ne change : l'aplat y est le neon, qui ne peut porter que
+	 * de l'encre sombre. Les deux themes ne se ressemblent pas sur ce point,
+	 * c'est la luminosite de l'aplat qui commande. */
+	--primary-surface: #1D8437;
+	--primary-surface-text: #FFFFFF;
 
 	/* Encre et fonds */
 	--pure-white: #FBF7E8;
