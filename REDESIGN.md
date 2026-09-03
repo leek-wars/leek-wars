@@ -716,6 +716,28 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   hauteur pendant que Chart.js prenait la largeur du parent. L'anneau est boxé à
   250 px au plus et centré (`.donut`), la légende garde toute la largeur, et
   les enfants passent en `flex: none` en colonne.
+- **2026-09-03 — les « squares »** (les notifications qui surgissent en bas à
+  droite, `squares.vue` ; demande de Pierre : « plus beau et plus fin, et qui ne
+  commencent pas tout en bas de l'écran pour ne pas masquer un champ texte »).
+  Jamais repris depuis le v2 : carte Material à ombre floue, icône de 60 px,
+  badge rond de résultat en absolu (positionné par rapport au CONTENEUR, pas à
+  la carte — quirk v2 laissé tel quel), et une pile qui partait du bord bas, sur
+  le champ d'envoi du panneau social ou d'un chat. En v3, dans le `scoped` du
+  composant sous `body:not(.v2)` : panneau au trait + ombre pixel, **liseré de
+  3 px à gauche qui dit la nature** (vert par défaut ; or + halo pour un
+  trophée et bleu pour un bigwin, les rangées de notification du shell
+  s'appliquent déjà à `.notif-trophy`/`.notif-bigwin` mais leur teinte est
+  posée sur du transparent — refaite en `color-mix` sur `--panel-background`,
+  une carte flottante doit être opaque ; couleur du résultat pour un combat,
+  classes `win`/`defeat` posées seulement si l'option « résultats dans les
+  notifications » est active, comme le glyphe), glyphe de 22 px dans l'accent,
+  image ou avatar de 32 px (carré bordé), titre 13/500 et message 12,5 en encre
+  secondaire, **deux lignes au plus** chacun, 280 px de large (moins sur un
+  écran étroit), résultat en glyphe coloré en bout de ligne, pile à **88 px du
+  bas** (une barre de saisie) et 16 px du bord droit. Hauteur d'une carte :
+  60 → 53 px (70 avec un titre sur deux lignes). Maquetté à chaud sur la beta
+  en mobile (notifications de test poussées par `$store.commit('notification')`
+  avec le `setTimeout` de 5 s neutralisé le temps de la capture).
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
