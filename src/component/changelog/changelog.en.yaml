@@ -103,6 +103,7 @@
     - "The X key in a fight no longer regenerates the map obstacles: this testing shortcut scrambled the display, the visible obstacles no longer matched the real obstacles of the fight. It is now restricted to admins (thanks to LaLongueTerre)."
     - "Team compositions can finally be managed with a finger: dragging leeks around only worked with a mouse, and a long press opened the browser's “Save image” menu. A long press now grabs the leek, the page scrolls on its own towards the compositions further down, and releasing drops it."
     - "Workshop: the charge announced by the characteristics column while composing a recipe is now the charge actually reached. It summed the raw power of the alterations, whereas raising back a characteristic dug by breakage only costs a quarter of its power: it promised 136 for 103 delivered when restoring a lost core (thanks to Pilow)."
+    - "The Stashed trophy no longer unlocks on a cell that is perfectly reachable on foot. A map's unreachable areas were identified before turrets cleared the obstacles around them, and a flaw in the computation sometimes split a single connected area in two: an ordinary teleport was enough to earn the trophy. Unlocks obtained this way have been removed; habs already collected are kept."
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
   added:
