@@ -463,8 +463,14 @@
 						container.className = 'aliases-display'
 						container.textContent = i18n.t('encyclopedia.aliases', [aliases.join(', ')]) as string
 						const h1 = mdEl.querySelector('h1')
-						if (h1 && h1.nextSibling) {
-							h1.parentNode!.insertBefore(container, h1.nextSibling)
+						// La page parent est déclarée par une citation (« > Titre ») placée juste
+						// après le titre et masquée par la règle `h1:first-child + blockquote` :
+						// insérer l'encart d'alias entre les deux romprait cette adjacence et
+						// ferait réapparaître le nom du parent. On passe donc après la citation.
+						const next = h1 && h1.matches(':first-child') ? h1.nextElementSibling : null
+						const anchor = next && next.tagName === 'BLOCKQUOTE' ? next : h1
+						if (anchor) {
+							anchor.parentNode!.insertBefore(container, anchor.nextSibling)
 						} else {
 							mdEl.prepend(container)
 						}
