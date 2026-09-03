@@ -49,6 +49,7 @@
     - "A fight page now has a button back to the tournament, the Garden or the editor it came from."
     - "The \"Hold a weapon\" pomp offers all your weapons, not just the ones equipped on that leek."
     - "On mobile, the leek order and the fight actions are finally shown, right under the player."
+    - "The Swordsman trophy now also requires winning without any offensive chip — damage, poison, return, summon — on top of only striking with melee weapons, like the Ninja trophy."
   fixed:
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
     - "Chat: a $ symbol inside a code block no longer makes &lt;latex&gt; tags appear in it (thanks to fujiwar)."

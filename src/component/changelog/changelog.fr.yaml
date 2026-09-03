@@ -49,6 +49,7 @@
     - "Depuis la page d'un combat, un bouton ramène au tournoi, au potager ou à l'éditeur d'où il vient."
     - "L'apparat « Tenir une arme » propose toutes vos armes, et plus seulement celles équipées dessus."
     - "Sur mobile, l'ordre des poireaux et les actions du combat s'affichent enfin, sous le lecteur."
+    - "Le trophée Épéiste demande maintenant de gagner sans aucune puce offensive — dégâts, poison, renvoi, invocation — en plus de ne frapper qu'avec des armes de corps à corps, comme le trophée Ninja."
   fixed:
     - "Documentation : pendant une recherche, les catégories se replient de nouveau en cliquant sur leur flèche (merci à hypernavet)."
     - "Chat : un symbole $ dans un bloc de code n'y fait plus apparaître de balises &lt;latex&gt; (merci à fujiwar)."
