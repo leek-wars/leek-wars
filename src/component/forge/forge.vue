@@ -105,8 +105,11 @@
 				     au-dessus vient recouvrir les cases (demande de Pierre). -->
 				<v-tooltip activator="parent" location="bottom">{{ $t('main.alteration_repeat') }}</v-tooltip>
 			</v-btn>
-			<!-- Recyclage : coin BAS gauche, tant qu'aucune alteration n'est posee. -->
-			<v-btn v-if="component && alterationCount === 0" class="corner-btn recycle" icon variant="flat"
+			<!-- Recyclage : coin BAS gauche, tant qu'aucune alteration n'est posee, et
+			     SEULEMENT dans l'onglet Detruire (demande de Pierre) : sur Ameliorer, une
+			     piece posee avant sa premiere alteration pouvait partir au recyclage par
+			     erreur, alors que le joueur venait justement de la choisir pour la monter. -->
+			<v-btn v-if="component && alterationCount === 0 && mode === 'destroy'" class="corner-btn recycle" icon variant="flat"
 				size="small" :loading="destroying" @click="destroy">
 				<v-icon color="white">mdi-recycle</v-icon>
 				<v-tooltip activator="parent" location="bottom">{{ $t('main.destroy') }}</v-tooltip>
