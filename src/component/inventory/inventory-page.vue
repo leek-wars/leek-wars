@@ -497,6 +497,14 @@
 .column.columns .bottom-panel {
 	width: auto;
 	min-width: 0;
+	// `.panel` (le composant) n'a pas de min-height : en ligne (flex-direction: row
+	// sur `.column.columns`), l'atelier restait donc a la hauteur naturelle de son
+	// CONTENU (forge + caracs + palette + historique empiles) au lieu de se laisser
+	// borner a la hauteur de la colonne — l'historique se retrouvait hors ecran, sans
+	// aucune barre de defilement pour l'atteindre (retour de Pierre). Meme piege
+	// flexbox que partout ailleurs dans ce fichier : min-height:0 doit etre pose a
+	// CHAQUE etage de la chaine, .bottom-content (l'etage suivant) l'a deja.
+	min-height: 0;
 	margin-bottom: 0;
 }
 // Meme bande, couchee : elle prend toute la hauteur entre les deux colonnes.
