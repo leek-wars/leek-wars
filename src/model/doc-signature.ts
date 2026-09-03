@@ -1,6 +1,6 @@
-import { buildObjectApiModel, OBJECT_MEMBER_LS, type ApiMember } from '@/component/editor/leekwars-dts'
+import { buildObjectApiModel, constantObjectForm, OBJECT_MEMBER_LS, type ApiMember } from '@/component/editor/leekwars-dts'
 import type { DocLanguage } from '@/model/doc-language'
-import { stdlibEquivalent } from '@/model/doc-stdlib'
+import { stdlibConstant, stdlibEquivalent } from '@/model/doc-stdlib'
 
 /**
  * Signature d'une fonction rendue dans le langage que le lecteur a choisi.
@@ -154,6 +154,40 @@ export function objectSignatureOf(flatName: string, returnTypeCode?: number, lan
 		typescript: declared.detail,
 		python: refineNumber(python, returnTypeCode),
 	}
+}
+
+/** Forme d'une CONSTANTE dans le langage lu. */
+export interface ConstantDisplay {
+	/** Chemin à afficher : `Chip.adrenaline`, `Effect.DAMAGE`, `Entity.Stat.STRENGTH`, `Math.PI`. */
+	path: string
+	/**
+	 * Classe de l'INSTANCE pour une constante d'item (`Chip`, `Weapon`), null pour une catégorie.
+	 * `Chip.adrenaline` n'est pas le nombre 123 en JS/TS/Python mais un objet `Chip` : son id vit
+	 * dans `.id`. La fiche doit le dire, sinon elle annonce une valeur que le langage ne rend pas.
+	 */
+	instanceOf: string | null
+	/** Vrai pour un équivalent de la bibliothèque standard du langage hôte (`Math.PI`). */
+	stdlib?: boolean
+}
+
+/**
+ * Forme objet d'une constante dans le langage lu, ou null si elle n'y existe pas — auquel cas la
+ * fiche retombe sur le nom plat LeekScript et son badge, comme pour les fonctions.
+ *
+ * Le routage est celui du d.ts et du runtime (`constantObjectForm`), pas une table de plus :
+ * `CHIP_ADRENALINE` ne s'écrit `Chip.adrenaline` dans la doc que parce que c'est ce que le prélude
+ * polyglot attache réellement.
+ */
+export function constantDisplay(constant: { name: string, deprecated?: boolean }, language: DocLanguage): ConstantDisplay | null {
+	if (language === 'leekscript') return null
+	const stdlib = stdlibConstant(constant.name, language)
+	if (stdlib) return { path: stdlib, instanceOf: null, stdlib: true }
+	// Une constante dépréciée n'est PAS émise dans l'API objet (#4621) : lui inventer un chemin
+	// objet enverrait le lecteur écrire un nom que le runtime ne définit pas.
+	if (constant.deprecated) return null
+	const form = constantObjectForm(constant.name)
+	if (!form) return null
+	return { path: form.path, instanceOf: form.isInstance ? form.container : null }
 }
 
 /**

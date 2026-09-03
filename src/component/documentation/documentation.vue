@@ -44,7 +44,7 @@
 								</h2>
 								<div v-if="isCategoryOpen(c)">
 									<div v-for="(item, i) in (category as LSFunction[])" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
-										<template v-if="objectPathOf(item.name)">{{ objectPathOf(item.name) }}</template>
+										<template v-if="objectPathOf(item)">{{ objectPathOf(item) }}</template>
 									<template v-else>{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i as number]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i as number]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i as number]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
 										<span v-if="item.return_type != 0">
 											<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
@@ -72,7 +72,7 @@
 	import { locale } from '@/locale'
 	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 	import { docLanguage } from '@/model/doc-language'
-	import { displaySignature, objectSignatureOf } from '@/model/doc-signature'
+	import { constantDisplay, displaySignature, objectSignatureOf } from '@/model/doc-signature'
 	import type { Constant } from '@/model/constant'
 	import type { LSFunction } from '@/model/function'
 	import { FUNCTIONS } from '@/model/functions'
@@ -150,15 +150,16 @@
 			cats[item.category].push(item)
 		}
 		if (docLanguage.value === 'leekscript') return cats
-		// Une catégorie dont AUCUNE fonction n'existe dans le langage lu n'a rien à y faire :
+		// Une catégorie dont AUCUN symbole n'existe dans le langage lu n'a rien à y faire :
 		// les intervalles n'ont pas de type équivalent en JS ni en Python, afficher leurs 16
 		// entrées à un lecteur qui ne peut en utiliser aucune est du bruit.
-		// Règle sur la catégorie ENTIÈRE, pas sur chaque fonction : une fonction isolée sans
+		// Règle sur la catégorie ENTIÈRE, pas sur chaque symbole : une fonction isolée sans
 		// équivalent reste affichée avec son badge LeekScript, ce qui est une information.
 		const retenues: {[key: number]: (LSFunction | Constant)[]} = {}
 		for (const [categorie, items] of Object.entries(cats)) {
 			const utile = items.some(item => 'return_type' in item
-				&& displaySignature(item.name, (item as LSFunction).return_type, docLanguage.value) !== null)
+				? displaySignature(item.name, (item as LSFunction).return_type, docLanguage.value) !== null
+				: constantDisplay(item, docLanguage.value) !== null)
 			if (utile) retenues[Number(categorie)] = items
 		}
 		return retenues
@@ -261,10 +262,10 @@
 	watch(() => route.params, update)
 
 	/**
-	 * Chemin objet à afficher dans la liste de gauche (`Entity.life`), ou null en LeekScript
-	 * et pour les fonctions sans équivalent objet — la liste retombe alors sur la signature
-	 * plate. Sans ça la colonne annoncerait `getLife` à un lecteur en Python, à qui la fiche
-	 * de droite affiche `entity.life`.
+	 * Chemin objet à afficher dans la liste de gauche (`Entity.life`, `Chip.adrenaline`), ou
+	 * null en LeekScript et pour les symboles sans équivalent objet — la liste retombe alors
+	 * sur la signature plate. Sans ça la colonne annoncerait `getLife` à un lecteur en Python,
+	 * à qui la fiche de droite affiche `entity.life`.
 	 */
 	/**
 	 * La barre d'application mobile (lw-bar) porte déjà le sélecteur de langage, mais elle
@@ -274,9 +275,10 @@
 	 */
 	const inAppBar = computed(() => LeekWars.mobile && store.state.connected)
 
-	function objectPathOf(name: string): string | null {
+	function objectPathOf(item: LSFunction | Constant): string | null {
 		if (docLanguage.value === 'leekscript') return null
-		return objectSignatureOf(name, undefined, docLanguage.value)?.path ?? null
+		if ('return_type' in item) return objectSignatureOf(item.name, undefined, docLanguage.value)?.path ?? null
+		return constantDisplay(item, docLanguage.value)?.path ?? null
 	}
 
 	function navigate(item: string) {

@@ -1,7 +1,9 @@
 <template lang="html">
 	<div v-if="constant" class="doc-constant lw" :class="{item: is_weapon || is_chip, deprecated: constant.deprecated}">
 		<h2 v-if="!is_chip && !is_weapon">
-			{{ constant.name }}
+			<img v-if="!display && docLanguage !== 'leekscript'" src="/image/language/leekscript.svg"
+				class="leekscript-only" title="LeekScript" alt="LeekScript">
+			{{ display ? display.path : constant.name }}
 		</h2>
 
 		<div v-if="constant.deprecated" v-dochash class="deprecated-message">
@@ -13,7 +15,7 @@
 			<v-icon class="book">mdi-book-open-page-variant</v-icon>
 		</router-link>
 
-		<item-preview v-if="(is_chip || is_weapon) && LeekWars.items[constant.value]" :item="LeekWars.items[constant.value]" />
+		<item-preview v-if="(is_chip || is_weapon) && LeekWars.items[constant.value]" :item="LeekWars.items[constant.value]" :constant-name="display?.path" />
 
 		<div v-if="new_constant">
 			<markdown v-if="LeekWars.encyclopedia[$i18n.locale] && Object.keys(LeekWars.encyclopedia[$i18n.locale]).length" :content="new_constant.description" :pages="{}" mode="encyclopedia" />
@@ -34,7 +36,17 @@
 			<div v-if="$te('doc.const_' + constant.name)" v-dochash v-code class="content" v-html="$t('doc.const_' + constant.name)"></div>
 		</div>
 		<h4>{{ $t('doc.value') }}</h4>
-		<ul>
+		<ul v-if="display">
+			<!-- Constante d'ITEM : en JS/TS/Python c'est une INSTANCE (`Chip.adrenaline` est un objet
+			     Chip), pas le nombre 16 — l'id est dans `.id`. Deux lignes plutôt qu'un `= 16` faux. -->
+			<template v-if="display.instanceOf">
+				<li>{{ display.path }} <span class="argument">{{ display.instanceOf }}</span></li>
+				<li>{{ display.path }}.id <span class="argument">{{ value_type }}</span> = {{ constant.value }}</li>
+			</template>
+			<li v-else>{{ display.path }}
+			<span class="argument">{{ value_type }}</span> = {{ constant.value }}</li>
+		</ul>
+		<ul v-else>
 			<li>{{ constant.name }}
 			<span class="argument">{{ $t('doc.arg_type_' + constant.type) }}</span> = {{ constant.value }}</li>
 		</ul>
@@ -61,6 +73,9 @@ import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import { CHIPS as CHIPS_TYPED } from '@/model/chips'
 import { CONSTANT_BY_ID } from '@/model/constant_by_id'
 import { locale } from '@/locale'
+import { docLanguage } from '@/model/doc-language'
+import { constantDisplay } from '@/model/doc-signature'
+import { useI18n } from 'vue-i18n'
 import Markdown from '../encyclopedia/markdown.vue'
 import { ChipTemplate } from '@/model/chip'
 import { WeaponTemplate } from '@/model/weapon'
@@ -86,6 +101,32 @@ watch(() => props.constant, () => {
 		new_constant.value = functions[props.constant.name]
 	})
 }, { immediate: true })
+
+/**
+ * Nom de la constante dans le langage lu : `Chip.adrenaline`, `Effect.DAMAGE`, `Math.PI`. Null en
+ * LeekScript et pour celles que l'API objet n'expose pas (SORT_*, TYPE_*, constantes dépréciées) —
+ * la fiche garde alors le nom plat et le marque LeekScript, comme les fonctions sans équivalent.
+ */
+const display = computed(() => constantDisplay(props.constant, docLanguage.value))
+
+/**
+ * Type de la valeur dans le langage lu. Les constantes portent leur valeur littérale : un entier
+ * s'annonce `int` en Python et `number` en TS/JS. Pour une valeur non numérique — le registre
+ * déclare parfois un type surprenant (EFFECT_ABSOLUTE_VULNERABILITY est typé « liste ») — on
+ * retombe sur le libellé LeekScript traduit plutôt que d'inventer.
+ */
+const { t } = useI18n()
+const value_type = computed(() => {
+	const type = props.constant.type
+	const value = props.constant.value
+	// L'id d'un item est toujours un entier ; sinon on croit le type déclaré (6 entier, 7 réel) ou,
+	// à défaut, la valeur elle-même.
+	const integer = !!display.value?.instanceOf || type === 6
+	if (!integer && type !== 7 && !/^-?\d+(\.\d+)?$/.test(value)) return t('doc.arg_type_' + type)
+	if (docLanguage.value !== 'python') return 'number'
+	if (integer) return 'int'
+	return type === 7 || value.includes('.') ? 'float' : 'int'
+})
 
 const value_int = computed(() => parseInt(props.constant.value, 10))
 const is_weapon = computed(() => props.constant.name.startsWith('WEAPON_'))
@@ -157,6 +198,14 @@ const weapons = computed(() => {
 		margin-bottom: 10px;
 		font-size: 17px;
 		// color: #333;
+	}
+	// Constante absente de l'API objet (SORT_*, TYPE_*, dépréciées) : on garde le nom plat et on
+	// marque qu'il est LeekScript uniquement. Même logo que les fonctions, rien à traduire.
+	.leekscript-only {
+		width: 16px;
+		height: 16px;
+		margin-right: 4px;
+		vertical-align: -3px;
 	}
 	h4 {
 		font-weight: 500;

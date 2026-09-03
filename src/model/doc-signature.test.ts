@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { displaySignature, flatNameForObjectPath, flatToObjectPath, objectSignatureOf, receiverFor, typescriptTypeToPython } from '@/model/doc-signature'
+import { constantDisplay, displaySignature, flatNameForObjectPath, flatToObjectPath, objectSignatureOf, receiverFor, typescriptTypeToPython } from '@/model/doc-signature'
 
 describe('typescriptTypeToPython', () => {
 	it('translittère les types de base', () => {
@@ -252,6 +252,53 @@ describe('displaySignature', () => {
 	it('ne renvoie rien en LeekScript ni sans équivalent', () => {
 		expect(displaySignature('getLife', 6, 'leekscript')).toBeNull()
 		expect(displaySignature('intervalMin', undefined, 'python')).toBeNull()
+	})
+})
+
+describe('constantDisplay', () => {
+	it('range les constantes d’item en instances camelCase', () => {
+		// C'est ce que le prélude attache : Chip.adrenaline est un OBJET Chip, pas le nombre 16.
+		const chip = constantDisplay({ name: 'CHIP_ADRENALINE' }, 'typescript')!
+		expect(chip.path).toBe('Chip.adrenaline')
+		expect(chip.instanceOf).toBe('Chip')
+		expect(constantDisplay({ name: 'WEAPON_MACHINE_GUN' }, 'python')!.path).toBe('Weapon.machineGun')
+	})
+
+	it('garde les catégories en MAJUSCULES, sous leur conteneur', () => {
+		expect(constantDisplay({ name: 'EFFECT_DAMAGE' }, 'typescript')!.path).toBe('Effect.DAMAGE')
+		expect(constantDisplay({ name: 'STATE_PACIFIST' }, 'python')!.path).toBe('State.PACIFIST')
+		expect(constantDisplay({ name: 'MAX_TURNS' }, 'typescript')!.path).toBe('Fight.MAX_TURNS')
+		// Une catégorie n'est pas une instance : sa valeur reste le nombre affiché par la fiche.
+		expect(constantDisplay({ name: 'EFFECT_DAMAGE' }, 'typescript')!.instanceOf).toBeNull()
+	})
+
+	it('passe par le sous-conteneur quand la famille en a un', () => {
+		expect(constantDisplay({ name: 'FIGHT_TYPE_SOLO' }, 'typescript')!.path).toBe('Fight.Type.SOLO')
+		expect(constantDisplay({ name: 'STAT_STRENGTH' }, 'python')!.path).toBe('Entity.Stat.STRENGTH')
+		expect(constantDisplay({ name: 'EFFECT_MODIFIER_STACKABLE' }, 'typescript')!.path).toBe('Effect.Modifier.STACKABLE')
+		// EFFECT_MODIFIER_ et EFFECT_TARGET_ passent AVANT EFFECT_ : sinon on obtiendrait
+		// Effect.MODIFIER_STACKABLE, qui n'existe pas.
+		expect(constantDisplay({ name: 'EFFECT_TARGET_ALLIES' }, 'python')!.path).toBe('Effect.Target.ALLIES')
+	})
+
+	it('renvoie la stdlib du langage hôte pour les constantes sans famille', () => {
+		expect(constantDisplay({ name: 'PI' }, 'typescript')!.path).toBe('Math.PI')
+		expect(constantDisplay({ name: 'PI' }, 'python')!.path).toBe('math.pi')
+		expect(constantDisplay({ name: 'Infinity' }, 'python')!.path).toBe('math.inf')
+	})
+
+	it('n’invente rien quand la constante n’existe pas dans l’API objet', () => {
+		// SORT_* et TYPE_* ne sont exposés par aucun des trois runtimes polyglot : la fiche garde
+		// le nom plat et son badge LeekScript.
+		expect(constantDisplay({ name: 'SORT_ASC' }, 'typescript')).toBeNull()
+		expect(constantDisplay({ name: 'TYPE_ARRAY' }, 'python')).toBeNull()
+		// Une constante dépréciée n'est pas émise dans l'API objet (#4621).
+		expect(constantDisplay({ name: 'EFFECT_BUFF_FORCE', deprecated: true }, 'typescript')).toBeNull()
+	})
+
+	it('n’affiche aucune forme objet en LeekScript', () => {
+		expect(constantDisplay({ name: 'CHIP_ADRENALINE' }, 'leekscript')).toBeNull()
+		expect(constantDisplay({ name: 'PI' }, 'leekscript')).toBeNull()
 	})
 })
 

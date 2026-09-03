@@ -152,6 +152,23 @@ export function routeConstant(name: string): RoutedConstant | null {
 	return { container: rule.container, sub: rule.sub, member: rule.item ? camelCase(raw) : raw, isInstance: !!rule.item }
 }
 
+// Forme objet COMPLÈTE d'une constante : le routage ci-dessus, validé (identifiant JS) et assemblé en
+// chemin — `CHIP_ADRENALINE` -> `Chip.adrenaline`, `FIGHT_TYPE_SOLO` -> `Fight.Type.SOLO`. Null quand
+// la constante n'existe pas dans l'API objet (sans famille, ou nom non représentable). Utilisée par le
+// survol de l'éditeur ET par la documentation : le chemin AFFICHÉ au lecteur est exactement celui que
+// le d.ts déclare, sans seconde composition ailleurs.
+export interface ConstantObjectForm extends RoutedConstant { path: string }
+export function constantObjectForm(name: string): ConstantObjectForm | null {
+	const safe = safeName(name)
+	if (!safe) return null
+	const routed = routeConstant(safe)
+	if (!routed) return null
+	const member = safeName(routed.member)
+	if (!member) return null
+	const path = routed.sub ? `${routed.container}.${routed.sub}.${member}` : `${routed.container}.${member}`
+	return { ...routed, member, path }
+}
+
 export function buildLeekwarsDeclarations(functions: readonly LSFunction[], constants: readonly Constant[], doc?: DocLookup, classDoc?: ClassDocLookup): string {
 	const out: string[] = [
 		'// Auto-généré depuis les game data Leek Wars (API de combat). Ne pas éditer à la main.',
@@ -389,12 +406,9 @@ export function buildConstantPathMap(constants: readonly Constant[]): Map<string
 		const name = safeName(c.name)
 		if (!name || seen.has(name)) continue
 		seen.add(name)
-		const routed = routeConstant(name)
-		if (!routed) continue // constante plate : la notation objet == son nom, matché directement
-		const member = safeName(routed.member)
-		if (!member) continue
-		const path = routed.sub ? `${routed.container}.${routed.sub}.${member}` : `${routed.container}.${member}`
-		if (!map.has(path)) map.set(path, name)
+		const form = constantObjectForm(name)
+		if (!form) continue // constante plate : la notation objet == son nom, matché directement
+		if (!map.has(form.path)) map.set(form.path, name)
 	}
 	return map
 }

@@ -232,6 +232,35 @@ const ROWS: Row[] = [
 	['include', 'import', "import { x } from './fichier.js'", 'import', 'from fichier import x'],
 ]
 
+/**
+ * Constantes LeekScript SANS famille objet (cf `routeConstant`) qui existent quand même dans la
+ * stdlib du langage hôte. `[nom LeekScript, chemin TS, chemin Python]`.
+ *
+ * Volontairement court : seules les correspondances EXACTES y sont. `SORT_ASC` et les `TYPE_*`
+ * n'ont pas de constante équivalente — on trie avec un comparateur en JS, on compare des `type`
+ * en Python — donc leur fiche garde la forme LeekScript et son badge, ce qui est exact.
+ */
+const CONST_ROWS: [string, string | null, string | null][] = [
+	['PI', 'Math.PI', 'math.pi'],
+	['E', 'Math.E', 'math.e'],
+	['Infinity', 'Infinity', 'math.inf'],
+	['NaN', 'NaN', 'math.nan'],
+]
+
+const CONST_BY_NAME: { [flat: string]: { typescript?: string, python?: string } } = {}
+for (const [flat, ts, py] of CONST_ROWS) {
+	CONST_BY_NAME[flat] = { typescript: ts ?? undefined, python: py ?? undefined }
+}
+
+/** Équivalent stdlib d'une CONSTANTE LeekScript dans le langage demandé, ou null. */
+export function stdlibConstant(name: string, language: DocLanguage): string | null {
+	const entry = CONST_BY_NAME[name]
+	if (!entry) return null
+	if (language === 'python') return entry.python ?? null
+	if (language === 'typescript' || language === 'javascript') return entry.typescript ?? null
+	return null
+}
+
 const BY_NAME: { [flat: string]: StdlibEquivalent } = {}
 for (const [flat, tsPath, tsSignature, pyPath, pySignature] of ROWS) {
 	const entry: StdlibEquivalent = {}
