@@ -80,7 +80,12 @@ function computeBounds() {
 	const padding = 16
 	const spaceBelow = vh - rect.bottom - padding
 	const spaceAbove = rect.top - padding
-	const preferBottom = props.bottom !== false
+	// Prop BOOLEENNE : absente, Vue la caste a `false` et non a `undefined`. Un
+	// `props.bottom !== false` valait donc toujours false, et tout appelant qui ne
+	// precisait rien preferait le HAUT — y compris les infobulles epinglees, dont le
+	// `pin` ne faisait que figer ce mauvais sens (retour de Pierre). Le sens par defaut
+	// reste le haut, comme dans tout le site ; qui veut le bas le demande.
+	const preferBottom = props.bottom
 	const prefSpace = preferBottom ? spaceBelow : spaceAbove
 	const altSpace = preferBottom ? spaceAbove : spaceBelow
 	if (props.pin) {

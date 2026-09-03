@@ -92,7 +92,9 @@
 			<v-btn v-if="component && lastForge && alterationCount === 0" class="corner-btn redo" icon variant="flat"
 				size="small" @click="repeat">
 				<v-icon color="primary">mdi-restore</v-icon>
-				<v-tooltip activator="parent" location="top">{{ $t('main.alteration_repeat') }}</v-tooltip>
+				<!-- Vers le bas : le bouton est au coin BAS de la grille, une infobulle
+				     au-dessus vient recouvrir les cases (demande de Pierre). -->
+				<v-tooltip activator="parent" location="bottom">{{ $t('main.alteration_repeat') }}</v-tooltip>
 			</v-btn>
 			<!-- Recyclage : coin BAS gauche, tant qu'aucune alteration n'est posee. -->
 			<v-btn v-if="component && alterationCount === 0" class="corner-btn recycle" icon variant="flat"

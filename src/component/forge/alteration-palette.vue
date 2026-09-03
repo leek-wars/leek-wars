@@ -6,7 +6,7 @@
 				<!-- Infobulle riche plutot que l'attribut title : elle donne les gains par
 				     famille de composant, la charge consommee et le dosage, ce qu'une seule
 				     ligne de texte ne pouvait pas porter (#622). -->
-				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true" :pin="true">
+				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true" :bottom="true" :pin="true">
 					<div v-ripple class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a)}" v-bind="props" @click="pick(a)">
 						<alteration-icon :template="a.template" title="" />
 						<span v-if="owned(a.template) > 0" class="owned">{{ owned(a.template) }}</span>
