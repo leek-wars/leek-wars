@@ -46,7 +46,11 @@
 				     qui porte le logo cliquable, n'y est pas rendue une fois connecté
 				     (app.vue). Sur grand écran le logo suffit, l'entrée est en trop. -->
 				<router-link v-if="LeekWars.mobile" v-ripple to="/" class="section" :class="{'router-link-active': isHomePage}" @click="clickItem">
-					<v-icon>mdi-home</v-icon>
+					<!-- En v3 les entrées portent des icônes colorées (SVG générés par
+					     scripts/generate-menu-icons.mjs, voir ICONS.md) ; le v2 et le thème
+					     XP gardent leurs glyphes et PNG pour rester identiques au pixel. -->
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/home.svg">
+					<v-icon v-else>mdi-home</v-icon>
 					<div class="text">{{ $t('main.home') }}</div>
 				</router-link>
 
@@ -81,7 +85,8 @@
 						</span>
 					</span>
 					<router-link v-if="new_leek_condition" v-ripple to="/new-leek" class="section">
-						<v-icon>mdi-plus</v-icon>
+						<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/add-leek.svg">
+						<v-icon v-else>mdi-plus</v-icon>
 						<div class="text">{{ $t('main.add_leek') }}</div>
 					</router-link>
 				</span>
@@ -93,6 +98,7 @@
 				<span class="dida-element">
 					<router-link v-ripple to="/editor" class="section" :class="{'router-link-active': $route.path.startsWith('/editor'), bouncing: LeekWars.didactitial_step === 4 && !$route.path.startsWith('/editor')}" @click="clickItem">
 						<img v-if="LeekWars.xpTheme" src="/image/icon/xp_editor.png">
+						<img v-else-if="!LeekWars.legacyTheme" class="menu-icon" src="/image/menu/editor.svg">
 						<v-icon v-else>mdi-code-braces</v-icon>
 						<div class="text">{{ $t("main.editor") }}</div>
 					</router-link>
@@ -104,7 +110,7 @@
 
 				<span class="dida-element">
 					<router-link v-ripple to="/garden" class="section" :class="{'router-link-active': $route.path.startsWith('/garden'), bouncing: LeekWars.didactitial_step === 2 && !$route.path.startsWith('/garden')}" :label="$store.state.farmer ? ($store.state.farmer.fights + ($store.state.farmer.team_fights ? '+' + $store.state.farmer.team_fights : '')) : null" @click="clickItem">
-						<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-sword-cross</v-icon>
+						<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/garden.svg">
 						<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_garden.png' : '/image/icon/garden.png'">
 						<div class="text">{{ $t("main.garden") }}</div>
 					</router-link>
@@ -115,71 +121,78 @@
 				</span>
 
 				<router-link v-ripple to="/market" class="section" :class="{'router-link-active': $route.path.startsWith('/market')}" @click="clickItem">
-					<v-icon v-if="!LeekWars.legacyTheme">mdi-store</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/market.svg">
+					<v-icon v-else-if="LeekWars.xpTheme">mdi-store</v-icon>
 					<img v-else src="/image/icon/market.png">
 					<div class="text">{{ $t("main.market") }}</div>
 				</router-link>
 
 				<router-link v-ripple to="/inventory" class="section" :class="{'router-link-active': $route.path.startsWith('/inventory')}" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_inventory.png">
+					<img v-else-if="!LeekWars.legacyTheme" class="menu-icon" src="/image/menu/inventory.svg">
 					<v-icon v-else>mdi-treasure-chest</v-icon>
 					<div class="text">{{ $t("main.inventory") }}</div>
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" :class="{'router-link-active': $route.path.startsWith('/team')}" @click="clickItem">
-					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-shield</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/team.svg">
 					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
 				<router-link v-else-if="$store.state.farmer && $store.state.farmer.total_level >= 5" v-ripple to="/teams" class="section" :class="{'router-link-active': $route.path.startsWith('/teams')}" @click="clickItem">
-					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-shield</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/team.svg">
 					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_team.png' : '/image/icon/team.png'">
 					<div class="text">{{ $t('main.teams') }}</div>
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.trophies" v-ripple to="/trophies" class="section" :class="{'router-link-active': $route.path.startsWith('/trophies') || $route.path.startsWith('/trophy')}" @click="clickItem">
-					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-trophy</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/trophies.svg">
 					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_trophies.png' : '/image/icon/trophy.png'">
 					<div class="text">{{ $t("main.trophies") }}</div>
 				</router-link>
 
 				<router-link v-ripple :to="rankingURL" class="section" :class="{'router-link-active': $route.path.startsWith('/ranking')}" @click="clickItem">
-					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-podium</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/ranking.svg">
 					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_ranking.png' : '/image/icon/ranking.png'">
 					<div class="text">{{ $t("main.ranking") }}</div>
 				</router-link>
 
 				<router-link v-ripple to="/help" class="section" :class="{'router-link-active': $route.path.startsWith('/help') || $route.path.startsWith('/encyclopedia')}" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_help.png">
+					<img v-else-if="!LeekWars.legacyTheme" class="menu-icon" src="/image/menu/help.svg">
 					<v-icon v-else>mdi-help-circle-outline</v-icon>
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
 				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" :class="{'router-link-active': $route.path.startsWith('/forum')}" @click="clickItem">
-					<v-icon v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme">mdi-forum</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/forum.svg">
 					<img v-else :src="LeekWars.xpTheme ? '/image/icon/xp_forum.png' : '/image/icon/forum.png'">
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>
 
 				<router-link v-if="LeekWars.mobile" v-ripple to="/console" class="section" @click="clickItem">
-					<v-icon>mdi-console</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/console.svg">
+					<v-icon v-else>mdi-console</v-icon>
 					<div class="text">{{ $t("main.console") }}</div>
 				</router-link>
 
 				<router-link v-if="$store.state.farmer && $store.state.farmer.group" v-ripple :to="'/group/' + $store.state.farmer.group.id" class="section" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_team.png">
+					<img v-else-if="!LeekWars.legacyTheme" class="menu-icon" src="/image/menu/group.svg">
 					<v-icon v-else>mdi-account-group</v-icon>
 					<div class="text">{{ $store.state.farmer.group.name }}</div>
 				</router-link>
 
 				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer?.reportings || null" to="/moderation" class="section" :class="{'router-link-active': $route.path.startsWith('/moderation')}" tab="moderation" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_moderation.png">
+					<img v-else-if="!LeekWars.legacyTheme" class="menu-icon" src="/image/menu/moderation.svg">
 					<v-icon v-else>mdi-gavel</v-icon>
 					<div class="text">{{ $t('main.moderation') }}</div>
 				</router-link>
 
 				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer?.errors || null" to="/admin" class="section" :class="{'router-link-active': $route.path.startsWith('/admin')}" tab="admin" @click="clickItem">
 					<img v-if="LeekWars.xpTheme" src="/image/icon/xp_admin.png">
+					<img v-else-if="!LeekWars.legacyTheme" class="menu-icon" src="/image/menu/admin.svg">
 					<v-icon v-else>mdi-security</v-icon>
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>
@@ -187,12 +200,14 @@
 				<div v-if="LeekWars.arena.enabled || LeekWars.bossSquads.squad" class="separator"></div>
 
 				<span v-if="LeekWars.arena.enabled" v-ripple :label="LeekWars.arena.progress" class="section" @click="arenaDialog = !arenaDialog">
-					<v-icon>mdi-sword-cross</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/arena.svg">
+					<v-icon v-else>mdi-sword-cross</v-icon>
 					<div class="text">{{ $t('main.arena') }}</div>
 					<div class="progress-bar" :style="{width: (LeekWars.arena.progress / 20 * 100) + '%'}"></div>
 				</span>
 				<span v-if="LeekWars.bossSquads.squad" v-ripple :label="LeekWars.bossSquads.squad.engaged_leeks.length" class="section boss" @click="goToBoss">
-					<v-icon>mdi-crown</v-icon>
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="menu-icon" src="/image/menu/boss.svg">
+					<v-icon v-else>mdi-crown</v-icon>
 					<div class="text">{{ $t('entity.' + BOSSES[LeekWars.bossSquads.squad.boss].name) }}</div>
 					<div class="progress-bar" :style="{width: (100 * LeekWars.bossSquads.squad.engaged_leeks.length / 8) + '%'}"></div>
 				</span>
@@ -642,6 +657,17 @@
 		width: 24px;
 		float: left;
 		margin: 8px;
+	}
+	/* Icônes colorées du v3 (`public/image/menu/*.svg`) : leur viewBox inclut le
+	   contour noir (1 unité de chaque côté, 26 pour un glyphe de 24), donc 22 px
+	   pour que le glyphe fasse les 20 px des autres icônes ; la marge négative
+	   rend les 2 px à la ligne, qui garde la hauteur des entrées de poireau.
+	   Assez spécifique pour passer devant les 20 px du shell, déplié et replié. */
+	.menu-center .section img.menu-icon,
+	#app.menu-collapsed .menu-center .section img.menu-icon {
+		width: 22px;
+		height: 22px;
+		margin: -1px 0;
 	}
 	.menu-center .section i {
 		float: left;

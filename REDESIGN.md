@@ -668,6 +668,28 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     n'a pas de bandeau de marque, et la barre de page sur grand écran n'en a pas
     non plus — mais c'est un changement visible que Pierre n'avait pas demandé.
 
+- **2026-09-03 — icônes colorées du menu** (idée de Pierre : « prendre les
+  icônes actuelles, rajouter un peu de bordures noires — signe distinctif des
+  assets LW — de la couleur dans la palette, en SVG »). Les glyphes mdi du menu
+  v3 deviennent des **assets** : `public/image/menu/<entrée>.svg`, générés par
+  `scripts/generate-menu-icons.mjs` (le path mdi découpé en sous-tracés — tous
+  absolus chez mdi, un `M` chacun — dessinés du plus grand au plus petit, chacun
+  avec son aplat et un trait noir **sous** l'aplat via `paint-order: stroke`,
+  qui fait la silhouette et la séparation entre pièces ; les vrais trous, anses
+  de la coupe, refusionnés dans la pièce parente en `evenodd` ; maison et
+  blason coupés par une zone polygonale pour une 2e couleur). Décisions prises
+  sur la planche d'essai `docs/specs/menu-icons/planche.html` (autonome,
+  réglages aussi par l'URL) : **multicolore** (« un peu plus multicolores »),
+  **aplat pur** — ni ombre ni reflet —, contour de 2 unités, et **les mêmes
+  couleurs vives dans les deux thèmes** : une lecture adoucie pour le clair a
+  été essayée (encres fondues à 30 % dans le parchemin) et Pierre a préféré
+  garder la version normale pour les deux — comme une puce ou une arme, l'icône
+  est une image, le contour noir porte le contraste. Dans `menu.vue`, l'`<img>`
+  n'est rendu qu'en v3 (`!legacyTheme && !xpTheme`), le v2 et le thème XP
+  gardent glyphes et PNG ; 22 px pour un viewBox qui inclut le contour. L'entrée
+  active garde son liseré et son intitulé verts, l'icône ne change plus de
+  couleur. Non couvert : la barre d'application mobile (`bar.vue`), les
+  onglets de barre de page et les notifications restent sur les glyphes mdi.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

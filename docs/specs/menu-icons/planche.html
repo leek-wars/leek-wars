@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Leek Wars 3.0 — planche d'essai : icônes colorées du menu</title>
+<style>
+@font-face { font-family: "Pixelify Sans"; src: url("../../../public/fonts/pixelify-latin.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; src: url("../../../public/fonts/inter-latin.woff2") format("woff2"); }
+
+:root {
+	--bg: #0B0F0B; --panel: #0E1316; --elev: #11161A; --row: #131A1E;
+	--line: rgba(255,255,255,.08); --line-strong: rgba(255,255,255,.16);
+	--ink: #E8F0E6; --ink-2: #A8B4A4; --ink-3: #6B7A66; --green: #7CFF6B; --pixel: #000;
+}
+html.light {
+	--bg: #EFE9D6; --panel: #FBF7E8; --elev: #F3EDD8; --row: #EFE8D0;
+	--line: rgba(14,20,16,.14); --line-strong: rgba(14,20,16,.32);
+	--ink: #0E1410; --ink-2: #4A5847; --ink-3: #6E7B69; --green: #146128; --pixel: #0E1410;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 Inter, system-ui, sans-serif; padding: 24px 32px 80px; }
+h1 { font: 26px "Pixelify Sans", monospace; margin: 0 0 4px; }
+h2 { font: 14px "Pixelify Sans", monospace; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); margin: 40px 0 12px; }
+h2::before { content: "◆ "; color: var(--green); }
+p.lead { color: var(--ink-2); margin: 0 0 20px; max-width: 900px; }
+button { font: inherit; background: var(--elev); color: var(--ink); border: 1px solid var(--line-strong); padding: 4px 10px; cursor: pointer; }
+button:hover { background: var(--row); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px 28px; align-items: center; background: var(--panel); border: 1px solid var(--line-strong); padding: 12px 16px; box-shadow: 4px 4px 0 var(--pixel); position: sticky; top: 8px; z-index: 5; }
+.controls label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.controls .group { display: inline-flex; align-items: center; gap: 10px; }
+.controls .group > b { font: 12px "Pixelify Sans", monospace; text-transform: uppercase; color: var(--ink-2); margin-right: 4px; }
+.controls input[type=range] { width: 110px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line-strong); padding: 14px 10px 10px; text-align: center; }
+.card .big { width: 96px; height: 96px; margin: 0 auto 10px; display: block; cursor: pointer; }
+.card .big [data-sub], .card .big [data-zone] { cursor: pointer; }
+.card .big [data-sub]:hover, .card .big [data-zone]:hover { filter: brightness(1.25); }
+.card .name { font-weight: 600; }
+.card .glyph { color: var(--ink-3); font-size: 11px; }
+.card .parts { display: flex; justify-content: center; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+.card .sw { width: 16px; height: 16px; border: 1px solid var(--pixel); cursor: pointer; font-size: 9px; line-height: 14px; color: #000; background-image: linear-gradient(45deg, transparent 45%, #f00 45%, #f00 55%, transparent 55%); }
+.card .sw[data-c]:not([data-c=none]) { background-image: none; }
+.card .sw.zone { outline: 1px dashed var(--ink-2); outline-offset: 1px; }
+
+.sizes { display: flex; flex-wrap: wrap; gap: 28px 40px; align-items: flex-end; background: var(--panel); border: 1px solid var(--line-strong); padding: 16px; }
+.sizes .row { display: flex; align-items: center; gap: 10px; }
+.sizes .row b { font: 11px "Pixelify Sans", monospace; color: var(--ink-2); width: 46px; }
+.sizes svg { display: block; }
+
+.menus { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+.menu-wrap { border: 1px solid var(--line-strong); box-shadow: 4px 4px 0 var(--pixel); }
+.menu-wrap .caption { font: 11px "Pixelify Sans", monospace; text-transform: uppercase; padding: 6px 12px; border-bottom: 1px solid var(--line-strong); background: var(--elev); color: var(--ink-2); }
+.menu { width: 230px; padding: 8px 0 12px; }
+.menu-wrap { --mbg: #0E1316; --mrow: #131A1E; --mink: #E8F0E6; --mink2: #A8B4A4; --mgreen: #7CFF6B; --mline: rgba(255,255,255,.16); }
+.menu-wrap.light { --mbg: #FBF7E8; --mrow: #EFE8D0; --mink: #0E1410; --mink2: #4A5847; --mgreen: #146128; --mline: rgba(14,20,16,.32); }
+.menu-wrap.light .caption { background: #F3EDD8; color: #4A5847; border-color: rgba(14,20,16,.32); }
+.menu-wrap { background: var(--mbg); border-color: var(--mline); }
+.menu h4 { margin: 8px 16px 2px; font: 13px "Pixelify Sans", monospace; text-transform: uppercase; color: var(--mink2); }
+.menu h4::before { content: "◆ "; color: var(--mgreen); }
+.menu .section { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 16px; color: var(--mink); font: 13px Inter, sans-serif; border-left: 3px solid transparent; }
+.menu .section:hover { background: var(--mrow); }
+.menu .section.active { background: var(--mrow); border-left-color: var(--mgreen); color: var(--mgreen); }
+.menu .section svg { width: 20px; height: 20px; flex: none; }
+.menu .section .label { flex: 1; }
+.menu .section .badge { font: 11px Inter, sans-serif; color: var(--mink2); }
+.menu .sep { height: 1px; background: var(--mline); margin: 6px 0; }
+.menu .mono { color: var(--mink); }
+.menu .section.active .mono { color: var(--mgreen); }
+
+pre.export { background: var(--elev); border: 1px solid var(--line-strong); padding: 12px; overflow: auto; font-size: 11px; max-height: 300px; white-space: pre-wrap; word-break: break-all; }
+.note { color: var(--ink-2); font-size: 13px; }
+#measure { position: absolute; width: 0; height: 0; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<h1>Icônes colorées du menu — planche d'essai</h1>
+<p class="lead">Glyphes mdi actuels du menu v3, redessinés en SVG : un <b>contour noir</b> comme les assets du jeu (armes, puces, composants), et les <b>couleurs de la palette</b> du design system. En mode <b>multicolore</b>, chaque glyphe est découpé en ses sous-tracés (la coupe et ses anses, le toit et le corps de la boutique, les deux épées…) et chaque partie prend sa couleur, séparée des voisines par un trait noir. <b>Cliquer sur une partie</b> de l'icône en grand (ou sur sa pastille en dessous) fait tourner sa couleur ; les changements se répercutent partout sur la planche.</p>
+
+<div class="controls">
+	<span class="group"><b>Thème</b>
+		<label><input type="radio" name="theme" value="dark" checked> sombre</label>
+		<label><input type="radio" name="theme" value="light"> clair</label>
+	</span>
+	<span class="group"><b>Couleurs</b>
+		<label><input type="radio" name="multi" value="1" checked> multicolore</label>
+		<label><input type="radio" name="multi" value="0"> une seule</label>
+	</span>
+	<span class="group"><b>Traitement</b>
+		<label><input type="radio" name="style" value="flat" checked> A · aplat</label>
+		<label><input type="radio" name="style" value="shade"> B · + ombre</label>
+		<label><input type="radio" name="style" value="shine"> C · + ombre + reflet</label>
+	</span>
+	<span class="group"><b>Contour</b>
+		<input type="range" id="stroke" min="1" max="3.5" step="0.25" value="2"> <span id="strokeVal">2</span> u
+	</span>
+	<span class="group"><b>Palette</b>
+		<span style="color:var(--ink-3)">sombre = vive ·</span> <b>clair :</b>
+		<label><input type="radio" name="light" value="vivid"> vive</label>
+		<label><input type="radio" name="light" value="ink"> encres</label>
+		<label><input type="radio" name="light" value="soft" checked> adoucie</label>
+		<label><input type="radio" name="light" value="pastel"> pastel</label>
+	</span>
+	<span class="group"><button id="reset">Couleurs par défaut</button> <button id="exportAll">Tout exporter</button></span>
+</div>
+
+<h2>Les entrées du menu, en grand</h2>
+<div class="grid" id="grid"></div>
+
+<h2>Aux tailles réelles</h2>
+<p class="note">Le menu affiche ses icônes à <b>20 px</b> (replié comme déplié, lot 30). 16 px = une pastille de notification, 24 px = une action de barre de page.</p>
+<div class="sizes" id="sizes"></div>
+
+<h2>Dans le menu</h2>
+<p class="note">À gauche le menu tel qu'il est aujourd'hui (glyphes à l'encre), puis le même avec les icônes colorées, dans les deux thèmes. L'entrée active porte le liseré vert (doctrine « survol discret, actif en vert »). Les têtes de poireau sont un carré de substitution.</p>
+<div class="menus" id="menus"></div>
+
+<h2>Palette</h2>
+<div class="sizes" id="palette"></div>
+<p class="note"><b>Deux versions</b> : en sombre, toujours les couleurs vives du design system (colonne 1). En clair, au choix : <b>vive</b> (les mêmes, le contour noir portant le contraste), <b>encres</b> (les valeurs du thème clair, celles qui tiennent 4,5:1 comme texte), <b>adoucie</b> (les encres fondues à 30 % dans le parchemin du fond, <code>#EFE9D6</code>) ou <b>pastel</b> (les vives fondues à 45 % dans le parchemin). Crème et nuit sont deux neutres fixes pour les détails (le « ? », l'écran de la console) ; « vide » laisse la partie transparente. À l'intégration, un seul SVG par icône suffit : les aplats pointent des variables <code>--ic-*</code> que chaque thème définit (voir l'export).</p>
+
+<h2>Export</h2>
+<p class="note">Cliquer sur une carte (hors des parties) affiche et copie le SVG autonome de l'icône ; « Tout exporter » sort l'attribution des couleurs et les SVG de toutes les entrées.</p>
+<pre class="export" id="export">Cliquer sur une carte…</pre>
+<svg id="measure" xmlns="http://www.w3.org/2000/svg"></svg>
+
+<script>
+const PATHS = {"mdiHome":"M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z","mdiLeek":"M10 2V5.55L12 7.55L14 5.55V2H10M6.34 4L3.87 6.5L15 17.62V12.67L6.34 4M17.66 4L13.06 8.61L15.54 11.09L20.13 6.5L17.66 4M9 13.74V20A2 2 0 0 0 11 22H13A2 2 0 0 0 15 20V19.74L13 17.74V20H11V15.74L9 13.74Z","mdiPlus":"M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z","mdiCodeBraces":"M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z","mdiSwordCross":"M6.2,2.44L18.1,14.34L20.22,12.22L21.63,13.63L19.16,16.1L22.34,19.28C22.73,19.67 22.73,20.3 22.34,20.69L21.63,21.4C21.24,21.79 20.61,21.79 20.22,21.4L17,18.23L14.56,20.7L13.15,19.29L15.27,17.17L3.37,5.27V2.44H6.2M15.89,10L20.63,5.26V2.44H17.8L13.06,7.18L15.89,10M10.94,15L8.11,12.13L5.9,14.34L3.78,12.22L2.37,13.63L4.84,16.1L1.66,19.29C1.27,19.68 1.27,20.31 1.66,20.7L2.37,21.41C2.76,21.8 3.39,21.8 3.78,21.41L7,18.23L9.44,20.7L10.85,19.29L8.73,17.17L10.94,15Z","mdiStore":"M12,18H6V14H12M21,14V12L20,7H4L3,12V14H4V20H14V14H18V20H20V14M20,4H4V6H20V4Z","mdiTreasureChest":"M5,4H19A3,3 0 0,1 22,7V11H15V10H9V11H2V7A3,3 0 0,1 5,4M11,11H13V13H11V11M2,12H9V13L11,15H13L15,13V12H22V20H2V12Z","mdiShield":"M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z","mdiTrophy":"M18 2C17.1 2 16 3 16 4H8C8 3 6.9 2 6 2H2V11C2 12 3 13 4 13H6.2C6.6 15 7.9 16.7 11 17V19.08C8 19.54 8 22 8 22H16C16 22 16 19.54 13 19.08V17C16.1 16.7 17.4 15 17.8 13H20C21 13 22 12 22 11V2H18M6 11H4V4H6V11M20 11H18V4H20V11Z","mdiPodium":"M12,7.09L14.45,8.58L13.8,5.77L16,3.89L13.11,3.64L12,1L10.87,3.64L8,3.89L10.18,5.77L9.5,8.58L12,7.09M4,13.09L6.45,14.58L5.8,11.77L8,9.89L5.11,9.64L4,7L2.87,9.64L0,9.89L2.18,11.77L1.5,14.58L4,13.09M20,10.09L22.45,11.58L21.8,8.77L24,6.89L21.11,6.64L20,4L18.87,6.64L16,6.89L18.18,8.77L17.5,11.58L20,10.09M15,23H9V10H15V23M7,23H1V17H7V23M23,23H17V13H23V23Z","mdiHelpCircleOutline":"M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z","mdiHelpCircle":"M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z","mdiForum":"M17,12V3A1,1 0 0,0 16,2H3A1,1 0 0,0 2,3V17L6,13H16A1,1 0 0,0 17,12M21,6H19V15H6V17A1,1 0 0,0 7,18H18L22,22V7A1,1 0 0,0 21,6Z","mdiConsole":"M20,19V7H4V19H20M20,3A2,2 0 0,1 22,5V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V5C2,3.89 2.9,3 4,3H20M13,17V15H18V17H13M9.58,13L5.57,9H8.4L11.7,12.3C12.09,12.69 12.09,13.33 11.7,13.72L8.42,17H5.59L9.58,13Z","mdiAccountGroup":"M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z","mdiGavel":"M2.3,20.28L11.9,10.68L10.5,9.26L9.78,9.97C9.39,10.36 8.76,10.36 8.37,9.97L7.66,9.26C7.27,8.87 7.27,8.24 7.66,7.85L13.32,2.19C13.71,1.8 14.34,1.8 14.73,2.19L15.44,2.9C15.83,3.29 15.83,3.92 15.44,4.31L14.73,5L16.15,6.43C16.54,6.04 17.17,6.04 17.56,6.43C17.95,6.82 17.95,7.46 17.56,7.85L18.97,9.26L19.68,8.55C20.07,8.16 20.71,8.16 21.1,8.55L21.8,9.26C22.19,9.65 22.19,10.29 21.8,10.68L16.15,16.33C15.76,16.72 15.12,16.72 14.73,16.33L14.03,15.63C13.63,15.24 13.63,14.6 14.03,14.21L14.73,13.5L13.32,12.09L3.71,21.7C3.32,22.09 2.69,22.09 2.3,21.7C1.91,21.31 1.91,20.67 2.3,20.28M20,19A2,2 0 0,1 22,21V22H12V21A2,2 0 0,1 14,19H20Z","mdiSecurity":"M12,12H19C18.47,16.11 15.72,19.78 12,20.92V12H5V6.3L12,3.19M12,1L3,5V11C3,16.55 6.84,21.73 12,23C17.16,21.73 21,16.55 21,11V5L12,1Z","mdiCrown":"M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5M19 19C19 19.6 18.6 20 18 20H6C5.4 20 5 19.6 5 19V18H19V19Z","mdiCog":"M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z","mdiStadium":"M7 5L3 7V3L7 5M18 3V7L22 5L18 3M11 2V6L15 4L11 2M5 10C6.4 10.5 8.8 11 12 11S17.6 10.5 19 10C19 9.8 16.2 9 12 9S5 9.9 5 10M15 17H9V21.9C4.9 21.5 2 20.4 2 19V10C2 8.3 6.5 7 12 7S22 8.3 22 10V19C22 20.3 19.1 21.5 15 21.9V17Z","mdiTournament":"M2,2V4H7V8H2V10H7C8.11,10 9,9.11 9,8V7H14V17H9V16C9,14.89 8.11,14 7,14H2V16H7V20H2V22H7C8.11,22 9,21.11 9,20V19H14C15.11,19 16,18.11 16,17V13H22V11H16V7C16,5.89 15.11,5 14,5H9V4C9,2.89 8.11,2 7,2H2Z","mdiChat":"M12,3C17.5,3 22,6.58 22,11C22,15.42 17.5,19 12,19C10.76,19 9.57,18.82 8.47,18.5C5.55,21 2,21 2,21C4.33,18.67 4.7,17.1 4.75,16.5C3.05,15.07 2,13.13 2,11C2,6.58 6.5,3 12,3Z"};
+
+const PALETTE = {
+	green:   { name: 'vert',    dark: '#7CFF6B', light: '#1F8A3B' },
+	lime:    { name: 'lime',    dark: '#D4FF3A', light: '#6FA31C' },
+	cyan:    { name: 'cyan',    dark: '#5CE0FF', light: '#1A7AA0' },
+	magenta: { name: 'magenta', dark: '#FF3D7F', light: '#C32265' },
+	amber:   { name: 'ambre',   dark: '#FFB23A', light: '#C77A0E' },
+	red:     { name: 'rouge',   dark: '#FF5040', light: '#C2382A' },
+	gold:    { name: 'or',      dark: '#FFD23A', light: '#B88A0E' },
+	ink:     { name: 'encre 2', dark: '#A8B4A4', light: '#4A5847' },
+	cream:   { name: 'crème',   dark: '#FBF7E8', light: '#FBF7E8' },
+	dark:    { name: 'nuit',    dark: '#1B2226', light: '#1B2226' },
+	none:    { name: 'vide',    dark: null,      light: null },
+};
+const CYCLE = Object.keys(PALETTE);
+
+// Une entrée du menu = un glyphe + une couleur par sous-tracé (dans l'ordre du path mdi),
+// plus d'éventuelles « zones » : un glyphe d'un seul tenant (maison, blason) est coupé par
+// un polygone pour recevoir une seconde couleur. L'ordre est celui du menu.
+const ENTRIES = [
+	{ id: 'home',       label: 'Accueil (mobile)',  glyph: 'mdiHome',              colors: ['amber'], zones: [{ poly: '-2,-2 26,-2 26,12.2 -2,12.2', color: 'red' }], section: 'top' },
+	{ id: 'leek',       label: 'Poireau',           glyph: 'mdiLeek',              colors: ['lime', 'green', 'green', 'cream'], section: 'leeks', note: 'concept générique — dans le menu, chaque poireau garde sa vignette' },
+	{ id: 'add',        label: 'Ajouter un poireau', glyph: 'mdiPlus',             colors: ['ink'], section: 'leeks' },
+	{ id: 'editor',     label: 'Éditeur',           glyph: 'mdiCodeBraces',        colors: ['cyan', 'lime'], section: 'game' },
+	{ id: 'garden',     label: 'Potager',           glyph: 'mdiSwordCross',        colors: ['red', 'gold', 'gold'], section: 'game', badge: '12' },
+	{ id: 'market',     label: 'Marché',            glyph: 'mdiStore',             colors: ['dark', 'amber', 'red'], section: 'game' },
+	{ id: 'inventory',  label: 'Inventaire',        glyph: 'mdiTreasureChest',     colors: ['gold', 'dark', 'amber'], section: 'game' },
+	{ id: 'team',       label: 'Équipe',            glyph: 'mdiShield',            colors: ['magenta'], zones: [{ poly: '12,-2 26,-2 26,26 12,26', color: 'cyan' }], section: 'game' },
+	{ id: 'trophies',   label: 'Trophées',          glyph: 'mdiTrophy',            colors: ['gold', 'none', 'none'], section: 'game' },
+	{ id: 'ranking',    label: 'Classement',        glyph: 'mdiPodium',            colors: ['gold', 'amber', 'ink', 'lime', 'lime', 'lime'], section: 'game' },
+	{ id: 'help',       label: 'Aide',              glyph: 'mdiHelpCircle',        colors: ['cream', 'cream', 'cyan'], section: 'game' },
+	{ id: 'helpo',      label: 'Aide (contour actuel)', glyph: 'mdiHelpCircleOutline', colors: ['cream', 'cyan', 'none', 'cream'], section: null, note: 'le glyphe en place aujourd\'hui, pour comparer' },
+	{ id: 'forum',      label: 'Forum',             glyph: 'mdiForum',             colors: ['green', 'cyan'], section: 'game' },
+	{ id: 'console',    label: 'Console (mobile)',  glyph: 'mdiConsole',           colors: ['dark', 'ink', 'green', 'green'], section: null },
+	{ id: 'group',      label: 'Groupe',            glyph: 'mdiAccountGroup',      colors: ['magenta', 'cyan', 'amber', 'magenta', 'cyan', 'amber'], section: 'game' },
+	{ id: 'moderation', label: 'Modération',        glyph: 'mdiGavel',             colors: ['amber', 'ink'], section: 'game' },
+	{ id: 'admin',      label: 'Admin',             glyph: 'mdiSecurity',          colors: ['cream', 'red'], section: 'game', badge: '3' },
+	{ id: 'arena',      label: 'Arène',             glyph: 'mdiStadium',           colors: ['red', 'red', 'gold', 'green', 'lime'], section: 'live' },
+	{ id: 'boss',       label: 'Boss',              glyph: 'mdiCrown',             colors: ['gold', 'amber'], section: 'live' },
+	{ id: 'settings',   label: 'Réglages',          glyph: 'mdiCog',               colors: ['dark', 'ink'], section: null, note: 'hors menu, pour voir la famille complète' },
+	{ id: 'tournament', label: 'Tournoi',           glyph: 'mdiTournament',        colors: ['cyan'], zones: [{ poly: '15,-2 26,-2 26,26 15,26', color: 'gold' }], section: null, note: 'hors menu' },
+	{ id: 'chat',       label: 'Chat',              glyph: 'mdiChat',              colors: ['green'], section: null, note: 'hors menu' },
+];
+
+const state = { theme: 'dark', style: 'flat', stroke: 2, light: 'soft', multi: true };
+let sub = {}, zoneColors = {};
+function resetColors() {
+	sub = Object.fromEntries(ENTRIES.map(e => [e.id, e.colors.slice()]));
+	zoneColors = Object.fromEntries(ENTRIES.map(e => [e.id, (e.zones || []).map(z => z.color)]));
+}
+resetColors();
+let uid = 0;
+
+// Découpe du path mdi en sous-tracés (tous en coordonnées absolues chez mdi) et ordre de
+// dessin : du plus grand au plus petit, pour qu'un détail (porte, cadenas, écran, « ? »)
+// passe au-dessus de la pièce qui le porte. Mesuré une fois par glyphe via getBBox.
+const analysis = {};
+function analyze(glyph) {
+	if (analysis[glyph]) return analysis[glyph];
+	const subs = PATHS[glyph].split(/(?=M)/);
+	const m = document.getElementById('measure');
+	const areas = subs.map(d => {
+		const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		p.setAttribute('d', d); m.appendChild(p);
+		const b = p.getBBox(); m.removeChild(p);
+		return b.width * b.height;
+	});
+	const order = subs.map((_, i) => i).sort((a, b) => areas[b] - areas[a]);
+	return analysis[glyph] = { subs, order };
+}
+
+const PARCHMENT = '#EFE9D6';
+function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function rgb2hex(r) { return '#' + r.map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join(''); }
+function mix(a, b, t) { const A = hex2rgb(a), B = hex2rgb(b); return rgb2hex(A.map((v, i) => v + (B[i] - v) * t)); }
+// Les quatre lectures possibles d'une couleur en thème clair. Les neutres fixes ne bougent pas.
+const LIGHT = {
+	vivid:  p => p.dark,
+	ink:    p => p.light,
+	soft:   p => p.light === p.dark ? p.light : mix(p.light, PARCHMENT, 0.30),
+	pastel: p => p.light === p.dark ? p.light : mix(p.dark, PARCHMENT, 0.45),
+};
+function col(key, theme) {
+	const p = PALETTE[key];
+	if (!p.dark) return null;
+	if (theme === 'vars') return `var(--ic-${key}, ${p.dark})`;
+	return theme === 'dark' ? p.dark : LIGHT[state.light](p);
+}
+
+// Le bloc CSS à poser dans les deux thèmes pour que la version « variables » d'un SVG
+// prenne la bonne palette : sombre = vive, clair = la lecture choisie sur la planche.
+function cssVars() {
+	const keys = Object.keys(PALETTE).filter(k => PALETTE[k].dark);
+	const block = (sel, f) => `${sel} {\n` + keys.map(k => `\t--ic-${k}: ${f(PALETTE[k])};`).join('\n') + '\n}';
+	return `/* variables d'icônes — sombre = vive, clair = ${state.light} */\n` + block('body.dark', p => p.dark) + '\n' + block('body:not(.dark)', p => LIGHT[state.light](p));
+}
+
+function iconSVG(entry, { size = 24, theme = state.theme, standalone = false, interactive = false } = {}) {
+	const d = PATHS[entry.glyph];
+	const { subs, order } = analyze(entry.glyph);
+	const w = state.stroke;
+	const id = 'i' + (uid++);
+	const line = `stroke="#000" stroke-linejoin="round" stroke-linecap="round"`;
+	let inner = '';
+	if (state.multi) {
+		// Chaque partie : son aplat, et un trait noir SOUS l'aplat (paint-order) qui ne dépasse
+		// donc qu'à l'extérieur de la partie — sur la silhouette, et sur la pièce voisine, ce qui
+		// trace la séparation. Une partie « vide » n'est pas dessinée : le trait de sa voisine
+		// lui fait un liseré.
+		// Les parties « vides » sont de vrais trous : elles rejoignent le tracé de la plus grande
+		// pièce, rendue en evenodd, sinon l'aplat nonzero de la pièce les recouvrirait (les anses
+		// de la coupe). Le trait de la pièce, sous son aplat, fait alors le liseré du trou.
+		const holes = order.filter(i => sub[entry.id][i] === 'none');
+		for (const i of order) {
+			const k = sub[entry.id][i];
+			if (k === 'none') continue;
+			let dd = subs[i], rule = '';
+			if (i === order[0] && holes.length) { dd += holes.map(h => subs[h]).join(''); rule = ' fill-rule="evenodd"'; }
+			inner += `<path d="${dd}"${rule} fill="${col(k, theme)}" ${line} stroke-width="${w}" paint-order="stroke"${interactive ? ` data-sub="${i}"` : ''}/>`;
+		}
+		if (entry.zones) {
+			inner += `<clipPath id="${id}z"><path d="${d}"/></clipPath><g clip-path="url(#${id}z)">`;
+			entry.zones.forEach((z, j) => {
+				const k = zoneColors[entry.id][j];
+				if (k === 'none') return;
+				inner += `<polygon points="${z.poly}" fill="${col(k, theme)}" ${line} stroke-width="${w / 2}"${interactive ? ` data-zone="${j}"` : ''}/>`;
+			});
+			inner += `</g>`;
+		}
+	} else {
+		const k = sub[entry.id][order[0]];
+		inner += `<path d="${d}" fill="#000" ${line} stroke-width="${w}"/>`;
+		inner += `<path d="${d}" fill="${col(k === 'none' ? 'ink' : k, theme)}"${interactive ? ` data-sub="${order[0]}"` : ''}/>`;
+	}
+	if (state.style !== 'flat') {
+		inner += `<clipPath id="${id}c"><path d="${d}"/></clipPath><g clip-path="url(#${id}c)" pointer-events="none">`;
+		inner += `<polygon points="-2,14.5 26,11.5 26,26 -2,26" fill="#000" opacity=".28"/>`;
+		if (state.style === 'shine') inner += `<polygon points="-2,3 26,0 26,2.2 -2,5.2" fill="#fff" opacity=".5"/>`;
+		inner += `</g>`;
+	}
+	const attrs = standalone ? ' xmlns="http://www.w3.org/2000/svg"' : '';
+	return `<svg${attrs} viewBox="0 0 24 24" width="${size}" height="${size}" style="overflow:visible" aria-label="${entry.label}">${inner}</svg>`;
+}
+
+function monoSVG(entry, size = 20) {
+	return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" class="mono"><path d="${PATHS[entry.glyph]}" fill="currentColor"/></svg>`;
+}
+
+function swatch(key, theme) { const c = col(key, theme); return c ? `background:${c}` : ''; }
+
+function renderGrid() {
+	const g = document.getElementById('grid');
+	g.innerHTML = ENTRIES.map(e => {
+		const { subs } = analyze(e.glyph);
+		const parts = state.multi
+			? subs.map((_, i) => `<span class="sw" data-id="${e.id}" data-sub="${i}" data-c="${sub[e.id][i]}" style="${swatch(sub[e.id][i], state.theme)}" title="partie ${i + 1} · ${PALETTE[sub[e.id][i]].name}">${i + 1}</span>`).join('')
+			  + (e.zones || []).map((z, j) => `<span class="sw zone" data-id="${e.id}" data-zone="${j}" data-c="${zoneColors[e.id][j]}" style="${swatch(zoneColors[e.id][j], state.theme)}" title="zone ${j + 1} · ${PALETTE[zoneColors[e.id][j]].name}">z</span>`).join('')
+			: `<span class="sw" data-id="${e.id}" data-sub="${analyze(e.glyph).order[0]}" data-c="${sub[e.id][analyze(e.glyph).order[0]]}" style="${swatch(sub[e.id][analyze(e.glyph).order[0]], state.theme)}"></span>`;
+		return `
+		<div class="card" data-id="${e.id}" title="${e.note || ''}">
+			<div class="big">${iconSVG(e, { size: 96, interactive: true })}</div>
+			<div class="name">${e.label}</div>
+			<div class="glyph">${e.glyph.replace(/^mdi/, 'mdi-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}</div>
+			<div class="parts">${parts}</div>
+		</div>`;
+	}).join('');
+}
+
+function renderSizes() {
+	const s = document.getElementById('sizes');
+	s.innerHTML = [16, 20, 24, 32, 48].map(sz => `
+		<div class="row"><b>${sz} px</b>${ENTRIES.filter(e => e.section).map(e => iconSVG(e, { size: sz })).join('')}</div>`).join('');
+}
+
+function menuHTML(theme, colored, active = 'garden') {
+	const inSection = sec => ENTRIES.filter(e => e.section === sec);
+	const item = e => `<a class="section ${e.id === active ? 'active' : ''}">${colored ? iconSVG(e, { size: 20, theme }) : monoSVG(e)}<span class="label">${e.label.replace(/ \(.*\)$/, '')}</span>${e.badge ? `<span class="badge">${e.badge}</span>` : ''}</a>`;
+	const leekHead = `<span style="width:20px;height:20px;background:linear-gradient(#5fad1b,#3c7a10);border:1px solid #000;flex:none"></span>`;
+	return `<div class="menu-wrap ${theme}"><div class="caption">${colored ? 'coloré' : 'actuel'} · ${theme === 'dark' ? 'sombre' : 'clair'}</div><div class="menu">
+		<h4>Poireaux</h4>
+		<a class="section">${leekHead}<span class="label">Klaude</span><span class="badge">12</span></a>
+		<a class="section">${leekHead}<span class="label">Poirot</span></a>
+		${item(inSection('leeks')[1])}
+		<div class="sep"></div>
+		<h4>Jeu</h4>
+		${inSection('game').map(item).join('')}
+		<div class="sep"></div>
+		${inSection('live').map(item).join('')}
+	</div></div>`;
+}
+
+function renderMenus() {
+	document.getElementById('menus').innerHTML = menuHTML('dark', false) + menuHTML('dark', true) + menuHTML('light', true) + menuHTML('light', false);
+}
+
+function renderPalette() {
+	const p = document.getElementById('palette');
+	const box = (c, on) => `<span style="display:inline-block;width:26px;height:26px;background:${c};border:1px solid #000;${on ? 'outline:2px solid var(--ink);outline-offset:1px;' : ''}" title="${c}"></span>`;
+	const head = `<div class="row" style="font:11px 'Pixelify Sans',monospace;color:var(--ink-2);gap:6px"><span style="width:90px"></span><span style="width:26px;text-align:center">S</span><span style="width:26px;text-align:center">V</span><span style="width:26px;text-align:center">E</span><span style="width:26px;text-align:center">A</span><span style="width:26px;text-align:center">P</span></div>`;
+	p.innerHTML = head + Object.entries(PALETTE).filter(([k]) => k !== 'none').map(([k, v]) => `<div class="row" style="gap:6px"><span style="width:90px">${v.name}</span>${box(v.dark)}${['vivid', 'ink', 'soft', 'pastel'].map(l => box(LIGHT[l](v), state.light === l)).join('')}</div>`).join('')
+		+ `<div class="note" style="flex-basis:100%">S = sombre (vive) · clair : V vive, E encres, A adoucie, P pastel — la colonne entourée est celle du réglage en cours.</div>`;
+}
+
+function renderAll() {
+	document.documentElement.classList.toggle('light', state.theme === 'light');
+	renderGrid(); renderSizes(); renderMenus(); renderPalette();
+}
+
+function cycle(list, i) { list[i] = CYCLE[(CYCLE.indexOf(list[i]) + 1) % CYCLE.length]; }
+
+document.querySelectorAll('input[name=theme]').forEach(i => i.addEventListener('change', () => { state.theme = i.value; renderAll(); }));
+document.querySelectorAll('input[name=style]').forEach(i => i.addEventListener('change', () => { state.style = i.value; renderAll(); }));
+document.querySelectorAll('input[name=light]').forEach(i => i.addEventListener('change', () => { state.light = i.value; renderAll(); }));
+document.querySelectorAll('input[name=multi]').forEach(i => i.addEventListener('change', () => { state.multi = i.value === '1'; renderAll(); }));
+document.getElementById('stroke').addEventListener('input', ev => { state.stroke = +ev.target.value; document.getElementById('strokeVal').textContent = state.stroke; renderAll(); });
+document.getElementById('reset').addEventListener('click', () => { resetColors(); renderAll(); });
+document.getElementById('exportAll').addEventListener('click', () => {
+	const out = cssVars() + '\n\n' + ENTRIES.map(e => `// ${e.label} — ${e.glyph} — parties : ${sub[e.id].join(', ')}${e.zones ? ' — zones : ' + zoneColors[e.id].join(', ') : ''}\n${iconSVG(e, { size: 24, standalone: true, theme: 'vars' })}`).join('\n\n');
+	document.getElementById('export').textContent = out;
+	if (navigator.clipboard) navigator.clipboard.writeText(out).catch(() => {});
+});
+document.getElementById('grid').addEventListener('click', ev => {
+	const card = ev.target.closest('.card'); if (!card) return;
+	const e = ENTRIES.find(x => x.id === card.dataset.id);
+	const part = ev.target.closest('[data-sub], [data-zone]');
+	if (part) {
+		if (part.dataset.sub !== undefined) cycle(sub[e.id], +part.dataset.sub);
+		else cycle(zoneColors[e.id], +part.dataset.zone);
+		renderAll();
+		return;
+	}
+	const svg = `/* un seul fichier, couleurs par variables (repli = sombre) */\n${iconSVG(e, { size: 24, standalone: true, theme: 'vars' })}\n\n/* version sombre figée */\n${iconSVG(e, { size: 24, standalone: true, theme: 'dark' })}\n\n/* version claire figée (${state.light}) */\n${iconSVG(e, { size: 24, standalone: true, theme: 'light' })}\n\n${cssVars()}`;
+	document.getElementById('export').textContent = svg;
+	if (navigator.clipboard) navigator.clipboard.writeText(svg).catch(() => {});
+});
+
+// Réglages passés dans l'URL, pour capturer la planche en ligne de commande :
+// ?theme=light&style=flat&stroke=2.5&light=soft&multi=0
+const q = new URLSearchParams(location.search);
+if (q.get('theme')) { state.theme = q.get('theme'); document.querySelector(`input[name=theme][value=${state.theme}]`).checked = true; }
+if (q.get('style')) { state.style = q.get('style'); document.querySelector(`input[name=style][value=${state.style}]`).checked = true; }
+if (q.get('light')) { state.light = q.get('light'); document.querySelector(`input[name=light][value=${state.light}]`).checked = true; }
+if (q.get('stroke')) { state.stroke = +q.get('stroke'); document.getElementById('stroke').value = state.stroke; document.getElementById('strokeVal').textContent = state.stroke; }
+if (q.get('multi') === '0') { state.multi = false; document.querySelector('input[name=multi][value="0"]').checked = true; }
+renderAll();
+</script>
+</body>
+</html>

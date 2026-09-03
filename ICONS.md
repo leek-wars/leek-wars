@@ -38,6 +38,14 @@ recopiées d'ici à la main — modifier l'un, c'est modifier l'autre.
 - **v2 et thème XP** gardent leurs PNG (`public/image/icon/`, `icon/xp_*`) : la
   bascule « Ancien design » doit rester fidèle. La convention ne vaut que pour
   le v3.
+- **Exception : le menu v3 porte des assets, pas des encres** (Pierre,
+  2026-09-03). Ses entrées montrent `public/image/menu/<entrée>.svg` : le
+  **même glyphe mdi** que le tableau ci-dessous (le vocabulaire ne change pas),
+  redessiné en image colorée à contour noir comme une arme ou une puce, généré
+  par `scripts/generate-menu-icons.mjs` — c'est là qu'on change une couleur ou
+  qu'on ajoute une entrée, jamais à la main dans le SVG. Identique dans les deux
+  thèmes, comme tout asset du jeu. Partout ailleurs (barres de page, onglets,
+  boutons, notifications) le concept reste un `<v-icon>` monochrome.
 
 ## Le tableau
 
