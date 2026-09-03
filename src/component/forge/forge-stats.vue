@@ -146,6 +146,14 @@
 		// marge interne. Un padding ici doublait l'ecart a droite de la grille par rapport
 		// a celui de gauche (#622).
 		padding: 10px 10px 10px 0;
+		// Meme axe que la forge, centree elle aussi dans sa colonne (demande de Pierre).
+		// Le centrage ne bouge pas quand on pose une alteration : la carte de la tentative
+		// est toujours rendue, seulement masquee, donc le bloc garde sa hauteur.
+		display: flex;
+		flex-direction: column;
+		// `safe` : sur un panneau trop court, le bloc se cale en haut au lieu de deborder
+		// des deux cotes — un debordement centre rend le haut inatteignable au defilement.
+		justify-content: safe center;
 	}
 	// Sur mobile les trois colonnes s'empilent : la carte n'a plus la forge a sa gauche
 	// pour porter l'ecart, elle collait donc au bord de l'ecran (#622).
