@@ -320,19 +320,32 @@
 		&.broken { color: #c62828; }
 	}
 	.ci { width: 15px; height: 15px; }
-	// Dosage : petit jeton discret.
+	// Dosage : petit jeton discret. Largeur fixe et chiffres tabulaires : sur une
+	// colonne d'historique, "5" et "127" n'ont pas la meme largeur naturelle, et le
+	// jeton comme le pourcentage juste a cote sautillaient d'une ligne a l'autre
+	// (demande de Pierre). 3 caracteres couvrent le dosage max (8 alterations a 58
+	// grand maximum, cf. les chiffres romains de la palette).
 	.dose {
+		flex: 0 0 auto;
+		min-width: 3ch;
 		font-size: 12px;
+		font-variant-numeric: tabular-nums;
+		text-align: center;
 		color: var(--text-color-secondary);
 		background: var(--background-secondary);
 		border-radius: var(--radius);
 		padding: 0 5px;
 	}
 	// Metabolisme mesure a cette tentative : information de reglage, donc discret.
+	// Meme largeur fixe que le dosage, alignee a droite : c'est le % qui doit tomber
+	// au meme endroit d'une ligne a l'autre, pas le chiffre qui le precede.
 	.metabolism {
+		flex: 0 0 auto;
+		min-width: 4ch;
 		font-size: 12px;
 		color: var(--text-color-secondary);
 		font-variant-numeric: tabular-nums;
+		text-align: right;
 	}
 	.broken { color: #c62828; display: inline-flex; align-items: center; gap: 1px; font-size: 12px; }
 	.rendered-item {
