@@ -507,6 +507,14 @@
 	min-height: 0;
 	margin-bottom: 0;
 }
+// Plancher de l'atelier OUVERT, en largeur cette fois : meme raison qu'en lignes
+// (min-height: 350px plus haut) — en dessous, la forge et sa colonne de caracteristiques
+// ne tiennent plus cote a cote (demande de Pierre). Comme en lignes, replie il doit
+// pouvoir se reduire a son en-tete : le plancher ne vaut que `.expanded`, et sa
+// specificite (4 classes) bat le `min-width: 0` du bloc juste au-dessus.
+.column.columns .bottom-panel.expanded {
+	min-width: 555px;
+}
 // Meme bande, couchee : elle prend toute la hauteur entre les deux colonnes.
 .column.columns .resizer {
 	height: auto;
