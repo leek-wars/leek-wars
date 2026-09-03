@@ -323,11 +323,17 @@
 	// Dosage : petit jeton discret. Largeur fixe et chiffres tabulaires : sur une
 	// colonne d'historique, "5" et "127" n'ont pas la meme largeur naturelle, et le
 	// jeton comme le pourcentage juste a cote sautillaient d'une ligne a l'autre
-	// (demande de Pierre). 3 caracteres couvrent le dosage max (8 alterations a 58
-	// grand maximum, cf. les chiffres romains de la palette).
+	// (demande de Pierre).
+	//
+	// En PIXELS et non en `ch` : le site est en `box-sizing: border-box`, donc un
+	// `min-width` en ch compte le padding DANS ces caracteres — a 3ch (~20px) moins
+	// les 10px de padding, il ne restait la place que pour UN chiffre, si bien que
+	// le plancher ne s'appliquait quasiment jamais et chaque largeur de dosage
+	// continuait a suivre son nombre de chiffres. 32px loge confortablement le
+	// dosage max (3 chiffres, 8 alterations a 58 grand maximum) plus son padding.
 	.dose {
 		flex: 0 0 auto;
-		min-width: 3ch;
+		min-width: 34px;
 		font-size: 12px;
 		font-variant-numeric: tabular-nums;
 		text-align: center;
@@ -337,11 +343,12 @@
 		padding: 0 5px;
 	}
 	// Metabolisme mesure a cette tentative : information de reglage, donc discret.
-	// Meme largeur fixe que le dosage, alignee a droite : c'est le % qui doit tomber
-	// au meme endroit d'une ligne a l'autre, pas le chiffre qui le precede.
+	// Meme largeur fixe que le dosage (en px, meme raison), alignee a droite : c'est
+	// le % qui doit tomber au meme endroit d'une ligne a l'autre, pas le chiffre qui
+	// le precede. 42px loge "100 %", la valeur la plus large possible.
 	.metabolism {
 		flex: 0 0 auto;
-		min-width: 4ch;
+		min-width: 42px;
 		font-size: 12px;
 		color: var(--text-color-secondary);
 		font-variant-numeric: tabular-nums;
