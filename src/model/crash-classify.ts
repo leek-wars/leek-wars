@@ -3,10 +3,12 @@
 // composants et ne peut donc pas être chargé dans un test. Ils pilotent le diagnostic et la
 // récupération dans reportVueError — leur donner un test évite qu'un motif disparaisse en silence.
 
-// Corruption de l'arbre de vnodes de Vue (el/anchor/instance devenus null pendant le patch,
-// cause probable moteur de traduction/extension qui mute le DOM). Une seule définition,
-// partagée par le diagnostic ET la récupération par hard reload, pour éviter que les deux
-// listes de motifs divergent.
+// Corruption de l'arbre de vnodes de Vue : un el/anchor/instance vaut null au moment du patch,
+// Vue déréférence, et la session crashe ensuite en boucle. Deux origines connues — un vnode que
+// Vue n'a jamais pu monter (cas résolu de l'été 2026 : une liaison de <script setup> masquant un
+// composant, cf. component-tag-shadowing.test.ts) et un moteur de traduction qui mute le DOM sous
+// Vue. Une seule définition, partagée par le diagnostic ET la récupération par hard reload, pour
+// éviter que les deux listes de motifs divergent.
 export function isDomCorruptionCrash(m: string): boolean {
 	return m.includes('parentNode') || m.includes('nextSibling') ||
 		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'") ||

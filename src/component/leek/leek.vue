@@ -14,14 +14,11 @@
 				     la coquille borne ensuite le svg à 32 px. -->
 				<leek-image v-if="leek" class="page-icon" :leek="leek" :scale="0.2" head />
 				<div class="page-title-text">
-					<!-- Titre STABLE, même raison que la racine ci-dessus : le v-if/v-else entre le
-					     composant `rich-tooltip-leek` (slot d'activateur géré par Vuetify) et un `h1`
-					     nu faisait basculer la branche à chaque (re)chargement de `leek`, et le vnode
-					     du titre se retrouvait avec `el === null` -> "nextSibling of null" au patch
-					     suivant (cluster #4050-#4056, seul cluster client multi-joueurs d'août 2026,
-					     TOUJOURS sur /leek/:id, chemin `div › v-fgt › div › h1`). Le tooltip est
-					     désormais toujours monté, simplement désactivé tant que le poireau n'est pas
-					     chargé (il ne charge son contenu qu'à l'ouverture, et seulement si id > 0). -->
+					<!-- Tooltip toujours monté, simplement désactivé tant que le poireau n'est pas
+					     chargé : il ne charge son contenu qu'à l'ouverture, et seulement si id > 0.
+					     (Posé en croyant que le v-if/v-else du titre causait les crashs
+					     « nextSibling of null » ; la vraie cause était ailleurs, cf. la racine —
+					     mais un seul nœud plutôt que deux branches reste plus simple ici.) -->
 					<rich-tooltip-leek :id="leek ? leek.id : 0" v-slot="{ props }" :disabled="!leek" :bottom="true">
 						<h1 v-bind="props">{{ leek ? leek.name : '...' }}</h1>
 					</rich-tooltip-leek>

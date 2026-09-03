@@ -224,6 +224,14 @@ function findNullElVnodePath(instance: unknown): string | null {
 				}
 			}
 		}
+		// Un `type` qui n'est ni une chaîne, ni un symbole, ni un objet/fonction n'est PAS
+		// un vnode montable : Vue tombe dans un `switch` sans branche et ne monte rien, en
+		// silence. C'est la signature d'une balise masquée par une liaison de <script setup>
+		// (cf. component-tag-shadowing.test.ts) — on la nomme, elle se diagnostique seule.
+		const t = typeof vn.type
+		if (t !== 'string' && t !== 'symbol' && t !== 'object' && t !== 'function') {
+			return [label(vn) + '(type=' + t + ' INVALIDE)']
+		}
 		// Un vnode élément/composant monté doit porter un `el`. On ignore les
 		// Fragment/Text/Comment (type = symbol) qui peuvent légitimement avoir un
 		// el null/anchor.
@@ -302,10 +310,13 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// Famille corruption-DOM : évaluée une seule fois, sert au diagnostic Null-el path,
 	// aux signaux d'interférence externe et à la récupération par hard-reload.
 	const isCorruption = isDomCorruptionCrash(message)
-	// Familles dont la cause probable est externe (moteur de traduction / extension) :
-	// corruption-DOM (patch sur un el null) ET ordre d'init/TDZ (import statique en TDZ alors
-	// qu'aucun cycle d'import inter-chunks n'existe → impossible sans réévaluation externe du
-	// contexte page).
+	// Familles qui PEUVENT être induites de l'extérieur, donc à qui on attache le diagnostic
+	// d'interférence : corruption-DOM (patch sur un el null) ET ordre d'init/TDZ (import statique
+	// en TDZ alors qu'aucun cycle d'import inter-chunks n'existe → impossible sans réévaluation
+	// externe du contexte page). « Peuvent », pas « sont » : le gros cluster corruption-DOM de
+	// l'été 2026 était un bug à nous (une liaison de <script setup> masquant le composant <error>
+	// sur leek/team/trophy). D'où le masquage conditionné plus bas au SEUL marqueur de traduction,
+	// jamais à l'appartenance à la famille.
 	const externallyInduced = isCorruption || isInitOrderCrash(message)
 
 	// Familles connues non actionnables : loggées en masqué (volume mesuré, ni issue GitHub ni
