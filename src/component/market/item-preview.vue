@@ -123,6 +123,12 @@ const props = withDefaults(defineProps<{
 	constantName?: string
 	/** Instance affichee, quand elle porte des donnees propres (alterations, #622). */
 	instance?: InventoryItem | null
+	/**
+	 * Identifiant a afficher pour l'arme ou la puce, quand ce n'est pas la constante plate
+	 * LeekScript : la page de documentation y passe la forme du langage lu (`Chip.adrenaline`).
+	 * Non renseigne ailleurs -> `CHIP_ADRENALINE`, comme avant.
+	 */
+	constantName?: string
 }>(), {
 	showUse: false,
 	craftCost: 0,
@@ -130,6 +136,7 @@ const props = withDefaults(defineProps<{
 	leek: undefined,
 	constantName: undefined,
 	instance: null,
+	constantName: undefined,
 })
 
 const emit = defineEmits<{
