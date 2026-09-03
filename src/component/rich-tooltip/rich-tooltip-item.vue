@@ -26,6 +26,14 @@ const props = withDefaults(defineProps<{
 	item: ItemTemplate
 	quantity?: number
 	bottom?: boolean
+	/**
+	 * Fige le sens d'ouverture au lieu de le retourner quand la place manque.
+	 *
+	 * Sur une grille dense comme la palette d'alterations (#622), un retour vers le
+	 * haut fait recouvrir par l'infobulle les cases que le joueur est en train de
+	 * comparer. Mieux vaut ouvrir vers le bas et laisser l'infobulle defiler.
+	 */
+	pin?: boolean
 	instant?: boolean
 	nodge?: boolean
 	inventory?: boolean
@@ -75,6 +83,13 @@ function computeBounds() {
 	const preferBottom = props.bottom !== false
 	const prefSpace = preferBottom ? spaceBelow : spaceAbove
 	const altSpace = preferBottom ? spaceAbove : spaceBelow
+	if (props.pin) {
+		// Sens impose : on garde la direction demandee et on laisse l'infobulle
+		// defiler dans la place disponible, plutot que de la retourner sur la grille.
+		openBottom.value = preferBottom
+		maxHeight.value = Math.max(200, prefSpace)
+		return
+	}
 	if (prefSpace >= 300 || prefSpace >= altSpace) {
 		openBottom.value = preferBottom
 		maxHeight.value = Math.max(200, prefSpace)

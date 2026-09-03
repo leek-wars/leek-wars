@@ -6,7 +6,7 @@
 				<!-- Infobulle riche plutot que l'attribut title : elle donne les gains par
 				     famille de composant, la charge consommee et le dosage, ce qu'une seule
 				     ligne de texte ne pouvait pas porter (#622). -->
-				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true">
+				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true" :pin="true">
 					<div v-ripple class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a)}" v-bind="props" @click="pick(a)">
 						<alteration-icon :template="a.template" title="" />
 						<span v-if="owned(a.template) > 0" class="owned">{{ owned(a.template) }}</span>
@@ -95,19 +95,28 @@
 </script>
 
 <style lang="scss" scoped>
-	// Grille 3x4 : 3 colonnes, 4 lignes pour les 10 caracs. Chaque carte est une carac
-	// en ligne : son icone suivie de ses 3 familles. A 3 colonnes plutot que 4, chaque
-	// case gagne en largeur et les vignettes deviennent lisibles (#622).
+	// Grille dynamique : chaque carte est une carac en ligne (son icone suivie de ses 3
+	// familles), et on en met autant par ligne que la largeur le permet (demande de
+	// Pierre). 165 px est la largeur ou une carac est a sa taille naturelle : 18 px
+	// d'icone + 5 de gouttiere + 3 vignettes de 44 px separees de 3 px. En dessous les
+	// colonnes se partagent la place et les vignettes retrecissent ; au-dessus, une
+	// colonne de plus apparait.
+	//
+	// auto-fit et non un nombre fixe de colonnes avec des points de rupture : la palette
+	// n'occupe pas toute la fenetre, sa largeur depend du panneau (atelier sous
+	// l'inventaire ou a cote) — une media query sur la fenetre se tromperait.
+	// min(165px, 100%) : sur un conteneur plus etroit que 165 px, une colonne fixe
+	// deborderait au lieu de retrecir.
+	// La largeur minimale d'une colonne est reglable de l'exterieur : dans une colonne
+	// etroite (atelier en ligne), on prefere deux colonnes de vignettes plus petites a
+	// une seule a taille pleine (demande de Pierre).
 	.alteration-palette {
+		--palette-column: 165px;
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(auto-fit, minmax(min(var(--palette-column), 100%), 1fr));
 		gap: 6px 8px;
 		padding: 8px;
 		border-bottom: 1px solid var(--border);
-	}
-	// Sous ~520px (mobile), 3 colonnes deviennent minuscules : on retombe a 2.
-	@media (max-width: 520px) {
-		.alteration-palette { grid-template-columns: repeat(2, 1fr); }
 	}
 	.palette-row {
 		display: flex;
@@ -138,7 +147,8 @@
 		padding: 3px;
 		border: 1px solid var(--border);
 		border-radius: var(--radius);
-		background: var(--background);
+		// Pas d'aplat sous la vignette : le fond du panneau suffit, la case est deja
+		// dessinee par son filet (demande de Pierre).
 		cursor: pointer;
 		display: flex;
 		align-items: center;

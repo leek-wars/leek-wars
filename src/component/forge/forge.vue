@@ -1,32 +1,8 @@
 <template>
-	<div class="forge" :class="{ 'reserve-preview': !!component }">
-		<!-- HAUT : ce que la tentative APPORTE -- dosage, nouvelles stats, taux de reussite.
-		     Rien tant qu'aucune alteration n'est posee : la grille reste seule et centree,
-		     mais des qu'une piece est posee l'espace des cartes est reserve (cf. styles). -->
-		<div class="forge-top">
-			<div v-if="component && plan && alterationCount > 0" class="preview">
-				<div class="row dose-row">
-					<span>{{ $t('main.alteration_dose') }}</span>
-					<b class="chance">{{ dose }}</b>
-				</div>
-				<div class="row gains">
-					<!-- Les gains sont tronques par une ellipse plutot que renvoyes a la ligne :
-					     une recette peut viser six caracs, et un retour a la ligne ferait grandir
-					     la carte, donc bouger la forge centree entre les deux blocs (#622). -->
-					<div class="gains-list">
-						<template v-for="(roll, carac) in plan.rolls" :key="carac">
-							<img class="ic" :src="'/image/charac/small/' + carac + '.png'">
-							<span class="gain" :class="'color-' + carac">+{{ roll.points }}</span>
-						</template>
-					</div>
-					<!-- Loader tant que le serveur calcule la vraie proba (gate inclus). -->
-					<b class="chance">
-						<v-progress-circular v-if="loadingPreview" :size="13" :width="2" indeterminate color="primary" />
-						<template v-else>{{ percent(previewProbability) }}</template>
-					</b>
-				</div>
-			</div>
-		</div>
+	<div class="forge">
+		<!-- Dosage, gains, risque et cout ne sont plus ici mais sous les stats de la piece,
+		     dans la colonne des caracteristiques (forge-stats) : la forge garde ainsi la
+		     meme hauteur qu'on pose ou non des alterations (demande de Pierre). -->
 		<div ref="gridEl" class="grid">
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, partial: slotStates[i] === 'partial', missing: slotStates[i] === 'missing', removable: !!item && !!component, fusing: fusing && !!item}" :style="cellVars(i)" @click="component && removeAlteration(i)">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
@@ -40,7 +16,7 @@
 				</rich-tooltip-item>
 			</div>
 			<div v-if="component" class="cell cell8 active component removable" :class="[outcome ? 'outcome-' + outcome : '', { shattering }]" @click="clear">
-				<!-- Anneau de charge : contour arrondi qui suit le carre central et se
+				<!-- Anneau de charge : contour carre qui suit la vignette du composant et se
 				     remplit dans le sens horaire (#622). Deux traces : la charge actuelle,
 				     puis en plus clair ce que la tentative ajouterait. -->
 				<!-- Charge negative comprise (casse) : l'arc se remplit en valeur absolue,
@@ -130,23 +106,6 @@
 			</v-btn>
 		</div>
 
-		<!-- BAS : bonus + %, casse, cout (la forge reste centree entre haut et bas). -->
-		<div class="forge-bottom">
-			<div v-if="component && plan && alterationCount > 0" class="preview">
-			<!-- Toujours affichee, meme a 0 : une ligne qui disparait deplace la forge, et
-			     « aucun risque » est une information en soi (#622). -->
-			<div class="row risk">
-				<v-icon size="16">mdi-alert</v-icon>
-				<span>{{ $t('main.alteration_break_risk') }}</span>
-				<b class="chance">{{ percent(previewBreak) }}</b>
-			</div>
-			<div class="row cost">
-				<span>{{ $t('main.alteration_cost') }}</span>
-				<b class="chance">{{ $filters.number(plan.habsCost) }}<span class="hab"></span></b>
-			</div>
-			</div>
-		</div>
-
 		<!-- Confirmation avant de recycler une piece qui porte de la charge (#622). -->
 		<popup v-model="confirmDestroy" :width="460" icon="mdi-recycle">
 			<template #title>{{ $t('main.destroy_confirm_title') }}</template>
@@ -183,8 +142,8 @@
 	import { t } from '@/model/i18n'
 	import type { ApiError } from '@/model/api-error'
 	import { emitter } from '@/model/emitter'
-	import { forgeComponent, forgePendingPower, forgeCharge } from '@/model/forge-state'
-	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+	import { forgeComponent, forgePendingPower, forgeCharge, forgePreview } from '@/model/forge-state'
+	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Popup from '@/component/popup.vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
@@ -377,14 +336,14 @@
 	 */
 	const lastForge = ref<(ForgeSlot | null)[] | null>(null)
 
-	// Perimetre du rect arrondi (92x92, r=20) pour la jauge annulaire :
-	// 4 cotes droits + 4 quarts de cercle = 4*(92-2*20) + 2*PI*20.
-	// Rectangle arrondi parcouru en HORAIRE depuis le milieu du haut (12h), pour que la
-	// jauge parte pile en haut. Un <rect> commence son trace a rx du coin gauche, d'ou
-	// le depart decale et le glitch au coin ; un <path> explicite fixe le point de
-	// depart exactement ou on veut.
-	const RING_PATH = 'M50 4 H76 A20 20 0 0 1 96 24 V76 A20 20 0 0 1 76 96 H24 A20 20 0 0 1 4 76 V24 A20 20 0 0 1 24 4 Z'
-	const ringLength = 4 * (92 - 40) + 2 * Math.PI * 20
+	// Jauge annulaire : carre de 92x92, a angles vifs, parcouru en HORAIRE depuis le
+	// milieu du haut (12h) pour que le remplissage parte pile en haut. Un <rect>
+	// commence son trace au coin et pas au milieu d'un cote, d'ou le depart decale et
+	// le glitch dans l'angle ; un <path> explicite fixe le point de depart ou on veut.
+	// Perimetre = 4 x 92, sans quart de cercle a retrancher depuis que les coins sont
+	// carres : la jauge suit la vignette du composant, qui est carree elle aussi.
+	const RING_PATH = 'M50 4 H96 V96 H4 V4 Z'
+	const ringLength = 4 * 92
 	// Palier de rarete de la charge, pour colorer l'anneau (#622).
 	// Meme regle que la jauge de l'inventaire (cf. displayRatio) : le budget au-dessus de
 	// zero, parce que c'est lui qui dit s'il reste de la place, et le brut en dessous, parce
@@ -456,25 +415,6 @@
 		return t('main.alteration_charge') + ' ' + LeekWars.formatNumber(Math.round(p.ratioAfter * p.capacity))
 			+ ' / ' + LeekWars.formatNumber(Math.round(p.capacity))
 	})
-
-	/**
-	 * Pourcentage d'une chance, avec TOUJOURS deux chiffres significatifs (#622).
-	 *
-	 * Une chance minuscule n'est pas une chance nulle : le metabolisme peut laisser
-	 * passer une tentative a 0,004 %, et l'afficher « 0 % » la faisait passer pour
-	 * interdite. Deux chiffres et non un seul, parce que « 0,1 % » ne dit pas si l'on
-	 * est a 0,12 ou a 0,19 : sur ces ordres de grandeur c'est un facteur deux sur le
-	 * nombre de tentatives a prevoir. Zero, lui, est un vrai mur (gate du metabolisme ou
-	 * plafond souple depasse) : il s'annonce en toutes lettres.
-	 */
-	function percent(p: number): string {
-		if (p <= 0) return t('main.alteration_impossible')
-		const v = p * 100
-		// 9,95 et non 10 : au-dela, une decimale afficherait « 10.0 % ».
-		if (v >= 9.95) return Math.round(v) + ' %'
-		const digits = Math.min(10, Math.max(0, Math.ceil(-Math.log10(v))) + 1)
-		return v.toFixed(digits) + ' %'
-	}
 
 	/**
 	 * Lance la tentative. Les alterations et les Habs sont consommes dans tous les
@@ -716,10 +656,21 @@
 	watch(() => plan.value ? plan.value.ratioBefore * plan.value.capacity : 0,
 		charge => { forgeCharge.value = charge }, { immediate: true })
 
+	// Aperçu de la tentative, publie pour la colonne des caracteristiques, qui l'affiche
+	// sous les stats de la piece (demande de Pierre).
+	watchEffect(() => {
+		const p = plan.value
+		forgePreview.value = (component.value && p && alterationCount.value > 0)
+			? { dose: dose.value, rolls: p.rolls, probability: previewProbability.value,
+				loading: loadingPreview.value, breakRisk: previewBreak.value, habsCost: p.habsCost }
+			: null
+	})
+
 	onBeforeUnmount(() => {
 		forgeComponent.value = null
 		forgePendingPower.value = 0
 		forgeCharge.value = 0
+		forgePreview.value = null
 	})
 
 	/** Pose une alteration autour du composant, ou incremente sa pile. */
@@ -980,16 +931,20 @@
 	.fill {
 		fill: none;
 		stroke-width: 6;
-		stroke-linecap: round;
+		// Bouts francs et angles vifs : la jauge est carree comme la vignette qu'elle
+		// entoure, un bout arrondi trahissait encore l'ancien anneau.
+		stroke-linecap: butt;
 		// L'arc capte le survol (le reste du SVG reste transparent aux clics) pour
 		// afficher le tooltip charge / capacite (#622).
 		pointer-events: stroke;
 		cursor: help;
 		// Remplissage visiblement anime quand on pose ou retire une alteration (#622).
 		transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-		// Un rect arrondi commence deja son trace en haut et tourne dans le sens
-		// horaire : pas de rotation a appliquer, contrairement a un cercle (sinon le
-		// depart se decale sur un coin et l'arc semble detache).
+		// Le trace part deja du milieu du haut et tourne dans le sens horaire : pas de
+		// rotation a appliquer, contrairement a un cercle (sinon le depart se decale
+		// sur un coin et l'arc semble detache).
+		// Angles vifs : la jauge est carree comme la vignette qu'elle entoure.
+		stroke-linejoin: miter;
 	}
 	// Charge negative : meme depart en haut, mais l'arc tourne dans le sens ANTI-horaire,
 	// pour qu'un trou se lise comme l'exact inverse d'un gain (#622). Le miroir est pose
@@ -1043,91 +998,6 @@
 	border-radius: var(--radius);
 	pointer-events: none;
 }
-// Gains sous la forge : une petite carte a lignes tramees plutot qu'une liste nue,
-// avec la probabilite alignee a droite en chiffres tabulaires (#622).
-.preview {
-	width: 100%;
-	padding: 4px;
-	border-radius: var(--radius-medium);
-	background: var(--background-secondary);
-	.row {
-		display: flex;
-		align-items: center;
-		gap: 7px;
-		padding: 2px 7px;
-		font-size: 13px;
-		border-radius: var(--radius);
-		// Hauteur commune aux quatre lignes : les icones de carac (17 px) et l'icone
-		// d'alerte (16 px) ne font pas la meme hauteur naturelle, et la moindre
-		// difference entre le bloc du haut et celui du bas decale la forge, qui est
-		// centree entre les deux (#622).
-		// 22 et non 21 : l'icone de carac alignee au milieu produit une boite en ligne de
-		// 17,1 px, la hauteur minimale absorbe ce dixieme pour que les deux cartes tombent
-		// exactement a la meme hauteur.
-		min-height: 22px;
-		& + .row { margin-top: 2px; }
-	}
-	// Liste des gains : une seule ligne, tronquee a l'ellipse. C'est ce qui garantit que
-	// la carte du haut garde exactement la hauteur de celle du bas, quelle que soit la
-	// recette, et donc que la forge ne bouge pas (#622).
-	.gains-list {
-		flex: 1 1 auto;
-		min-width: 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		.ic { vertical-align: middle; }
-		.gain { margin: 0 7px 0 3px; }
-	}
-	.gains .chance { flex: 0 0 auto; padding-left: 4px; }
-	// Le dosage se detache du bloc de jets, en miroir EXACT du cout en bas : meme hauteur,
-	// meme marge, meme filet. C'est ce qui donne aux deux cartes la meme hauteur au pixel
-	// et fige la forge, centree entre elles (#622).
-	.dose-row, .cost {
-		// 28 px : la hauteur naturelle de la ligne de cout, imposee par l'icone Habs (20 px)
-		// et le filet. La ligne de dosage, en texte seul, s'y aligne.
-		min-height: 28px;
-	}
-	.dose-row {
-		border-bottom: 1px solid var(--border);
-		border-radius: 0;
-		margin-bottom: 3px;
-		padding-bottom: 5px;
-	}
-	// Bat `.row + .row` (plus specifique) qui ramenait la marge du cout a 2 px et cassait
-	// la symetrie avec celle du dosage.
-	.row + .row.cost { margin-top: 3px; }
-	.ic { width: 17px; height: 17px; }
-	.chance {
-		margin-left: auto;
-		font-variant-numeric: tabular-nums;
-		font-weight: bold;
-	}
-	.risk {
-		color: #c62828;
-		background: rgba(198, 40, 40, 0.10);
-	}
-	// Le cout se detache du bloc de jets : c'est une depense, pas un gain.
-	.cost {
-		color: var(--text-color-secondary);
-		border-top: 1px solid var(--border);
-		border-radius: 0;
-		margin-top: 3px;
-		padding-top: 5px;
-	}
-}
-
-.dose {
-	text-align: center;
-	padding-top: 6px;
-	font-size: 15px;
-	b { font-size: 19px; }
-	.count {
-		display: block;
-		font-size: 12px;
-		color: var(--text-color-secondary);
-	}
-}
 .cell.removable { cursor: pointer; }
 // Les 4 boutons d'angle : meme pastille ronde, fond plein et fine bordure, pour
 // qu'ils se detachent de la grille et se ressemblent (#622). La couleur porte sur
@@ -1173,36 +1043,17 @@
 
 .forge {
 	display: flex;
-	// Bloc COMPACT : le dosage (haut) et les infos de tentative (bas) collent a la grille
-	// (gap 8px), et c'est tout le bloc qui est centre verticalement par .forge-wrapper.
-	// Sans ca, sur mobile, un flex 1 poussait l'info aux extremes et laissait de grands
-	// vides autour de la grille (#622).
+	// La grille seule, centree verticalement par .forge-wrapper : les cartes de la
+	// tentative sont passees sous les stats, la forge ne change donc plus de hauteur.
 	flex-direction: column;
 	align-items: center;
-	gap: 8px;
 	width: 260px;
 	height: auto;
 	flex-shrink: 0;
-	padding: 10px;
-	.forge-top, .forge-bottom {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-	}
-	// Des qu'une piece est posee, l'espace des cartes du haut (dosage, gains) et
-	// du bas (risque, cout) est RESERVE : leur apparition a la premiere
-	// alteration posee decalait toute la forge (retour de Pierre). 66 px >=
-	// hauteur deterministe des cartes (deux lignes a hauteur minimale + filet +
-	// padding), et chaque carte reste collee a la grille dans sa reserve.
-	&.reserve-preview .forge-top {
-		min-height: 66px;
-		justify-content: flex-end;
-	}
-	&.reserve-preview .forge-bottom {
-		min-height: 66px;
-		justify-content: flex-start;
-	}
+	// Plus d'air en haut et en bas qu'a la marge normale de 10 px : la grille ne colle
+	// plus a la barre d'onglets, et les boutons d'angle (qui debordent de 4 px) ne
+	// touchent plus le bord du panneau (demande de Pierre).
+	padding: 24px 10px;
 	.grid {
 		width: 240px;
 		height: 240px;
@@ -1534,14 +1385,5 @@
 	text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 1px #000;
 	pointer-events: none;
 	z-index: 2;
-}
-
-// Icone habs a cote du cout : petite, calee sur le texte (#622).
-.cost .hab {
-	width: 14px;
-	height: 14px;
-	background-size: 14px;
-	margin-left: 3px;
-	vertical-align: -2px;
 }
 </style>
