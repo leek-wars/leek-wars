@@ -34,7 +34,12 @@
 				<div class="spacer"></div>
 				<lw-switch v-model="chartDisplaySummons" :label="$t('display_summons')" />
 			</div>
-			<Line v-if="chartData" ref="lifeChart" :data="chartData" :options="chartOptions ?? undefined" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
+			<!-- La boîte donne sa taille au graphique (maintainAspectRatio: false) : le
+			     ratio 2,66 d'avant, mais avec un plancher de hauteur — sur un téléphone
+			     le ratio seul donnait 150 px pour douze tours et huit courbes. -->
+			<div class="chart-box">
+				<Line v-if="chartData" ref="lifeChart" :data="chartData" :options="chartOptions ?? undefined" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
+			</div>
 		</div>
 	</panel>
 </template>
@@ -184,7 +189,7 @@
 					chartFocus(nearest)
 				}
 			},
-			aspectRatio: 2.66,
+			maintainAspectRatio: false,
 			elements: { point: { pointStyle: false } },
 			scales: {
 				x: {
@@ -268,6 +273,14 @@
 	}
 	.chart-panel {
 		position: relative;
+	}
+	/* Hauteur = largeur / 2,66 comme avant (aspect-ratio), mais jamais moins de
+	   260 px (demande de Pierre, capture mobile). Chart.js remplit la boîte. */
+	.chart-box {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 2.66;
+		min-height: 260px;
 	}
 	.damage-options {
 		display: flex;

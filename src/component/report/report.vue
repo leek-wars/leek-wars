@@ -175,7 +175,11 @@
 				</div>
 				<div class="damages">
 					<div class="damage-chart">
-						<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
+						<!-- Chart.js prend la largeur de son parent : sans cette boîte, en
+						     colonne (mobile) l'anneau faisait toute la largeur de l'écran. -->
+						<div class="donut">
+							<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
+						</div>
 						<div v-if="legends" class="legend">
 							<div v-for="(damage, d) in damageChartDamage.datasets[0].data" :key="d">
 								<span :style="{color: legends[d]}">{{ damageChartDamage.labels[d] }}</span> <div class="value">{{ $filters.number(damage) }}</div>
@@ -978,7 +982,17 @@
 	@media screen and (max-width: 800px) {
 		.damages {
 			flex-direction: column;
+			/* En colonne, la base de 270 px des enfants devenait une HAUTEUR. */
+			& > * {
+				flex: none;
+			}
 		}
+	}
+	/* L'anneau : 250 px au plus (la colonne de 270 px moins ses marges sur grand
+	   écran), centré ; la légende dessous garde toute la largeur. */
+	.donut {
+		max-width: 250px;
+		margin: 0 auto;
 	}
 	.damage-chart {
 		text-align: center;

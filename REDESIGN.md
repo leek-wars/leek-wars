@@ -705,6 +705,17 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   calé à 56 px sous la barre d'application ; accueil inchangé à 72 px avec son
   pointillé. Le mode application se décide à l'**user-agent** (`/Mobi/`), pas
   à la largeur : un viewport étroit ne suffit pas à le tester.
+- **2026-09-03 — les graphiques du rapport de combat sur mobile** (retour de
+  Pierre, capture) : la courbe de vie suivait un ratio fixe de 2,66 sans
+  plancher (**143 px** de haut sur un téléphone pour douze tours et huit
+  courbes) ; elle passe en `maintainAspectRatio: false` dans une boîte
+  `aspect-ratio: 2.66` + `min-height: 260px` — même hauteur qu'avant sur grand
+  écran, jamais moins de 260 px. L'anneau de répartition faisait **360 px**, toute
+  la largeur : `.damages > * { flex: 270px 0 0 }` dimensionne la colonne de
+  l'anneau sur grand écran, et en colonne (≤ 800 px) cette base devenait une
+  hauteur pendant que Chart.js prenait la largeur du parent. L'anneau est boxé à
+  250 px au plus et centré (`.donut`), la légende garde toute la largeur, et
+  les enfants passent en `flex: none` en colonne.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
