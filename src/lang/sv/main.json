@@ -75,6 +75,7 @@
 	"history": "Historik",
 	"alteration_break_risk": "Brottrisk",
 	"alteration_broken": "Brott: {0} poäng förlorade",
+	"alteration_clear": "Rensa förändringar",
 	"alteration_cost": "Kostnad",
 	"alteration_failed": "Misslyckades",
 	"alteration_impossible": "Omöjligt",

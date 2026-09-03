@@ -75,6 +75,7 @@
 	"history": "履歴",
 	"alteration_break_risk": "破損リスク",
 	"alteration_broken": "破損：{0}ポイント消失",
+	"alteration_clear": "変質をクリア",
 	"alteration_cost": "コスト",
 	"alteration_failed": "失敗",
 	"alteration_impossible": "不可能",

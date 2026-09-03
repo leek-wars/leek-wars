@@ -75,6 +75,7 @@
 	"history": "历史记录",
 	"alteration_break_risk": "破损风险",
 	"alteration_broken": "破损：损失 {0} 点",
+	"alteration_clear": "清除改造",
 	"alteration_cost": "花费",
 	"alteration_failed": "失败",
 	"alteration_impossible": "不可能",

@@ -87,6 +87,15 @@
 				<v-icon>mdi-close</v-icon>
 				<v-tooltip activator="parent" location="top">{{ $t('main.clear') }}</v-tooltip>
 			</v-btn>
+			<!-- Vider les alterations SANS reposer le composant (demande de Pierre) : c'est
+			     le geste courant entre deux essais de dosage, alors que la croix d'en face
+			     emporte aussi la piece, qu'il faut ensuite retrouver dans l'inventaire.
+			     Coin HAUT gauche, en miroir de la croix. -->
+			<v-btn v-if="component && alterationCount > 0" class="corner-btn sweep" icon variant="flat"
+				size="small" @click="clearIngredients">
+				<v-icon>mdi-broom</v-icon>
+				<v-tooltip activator="parent" location="top">{{ $t('main.alteration_clear') }}</v-tooltip>
+			</v-btn>
 			<!-- Recommencer : repose la derniere recette d'alteration (#622). Coin BAS droit,
 			     la ou se trouve Fusionner : les deux ne coexistent jamais. -->
 			<v-btn v-if="component && lastForge && alterationCount === 0" class="corner-btn redo" icon variant="flat"
@@ -1091,6 +1100,9 @@
 .redo { right: -4px; bottom: -4px; }
 // Effacer : coin HAUT droit, aligne sur les autres (etait a -5px, decale).
 .clear { right: -4px; top: -4px; }
+// Vider les alterations : coin HAUT gauche, en miroir de la croix — les deux nettoient,
+// l'une la recette seule, l'autre la forge entiere.
+.sweep { left: -4px; top: -4px; }
 // Recyclage : coin BAS gauche.
 .recycle { left: -4px; bottom: -4px; }
 // Alterer : coin BAS droit, la ou tombe naturellement la main droite.

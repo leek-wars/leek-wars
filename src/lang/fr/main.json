@@ -78,6 +78,7 @@
 	"history": "Historique",
 	"alteration_break_risk": "Risque de casse",
 	"alteration_broken": "Casse : {0} points perdus",
+	"alteration_clear": "Vider les altérations",
 	"alteration_cost": "Coût",
 	"alteration_failed": "Raté",
 	"alteration_impossible": "Impossible",

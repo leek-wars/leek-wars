@@ -75,6 +75,7 @@
 	"history": "Historik",
 	"alteration_break_risk": "Brudrisiko",
 	"alteration_broken": "Brud: {0} point tabt",
+	"alteration_clear": "Ryd ændringer",
 	"alteration_cost": "Pris",
 	"alteration_failed": "Mislykkedes",
 	"alteration_impossible": "Umuligt",

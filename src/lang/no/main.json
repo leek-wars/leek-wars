@@ -75,6 +75,7 @@
 	"history": "Historikk",
 	"alteration_break_risk": "Bruddrisiko",
 	"alteration_broken": "Brudd: {0} poeng tapt",
+	"alteration_clear": "Fjern endringer",
 	"alteration_cost": "Pris",
 	"alteration_failed": "Mislyktes",
 	"alteration_impossible": "Umulig",

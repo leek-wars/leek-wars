@@ -75,6 +75,7 @@
 	"history": "기록",
 	"alteration_break_risk": "파손 위험",
 	"alteration_broken": "파손: {0}포인트 손실",
+	"alteration_clear": "변질 지우기",
 	"alteration_cost": "비용",
 	"alteration_failed": "실패",
 	"alteration_impossible": "불가능",

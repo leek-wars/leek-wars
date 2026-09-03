@@ -75,6 +75,7 @@
 	"history": "Historia",
 	"alteration_break_risk": "Rikkoutumisriski",
 	"alteration_broken": "Rikkoutuminen: {0} pistettä menetetty",
+	"alteration_clear": "Tyhjennä muutokset",
 	"alteration_cost": "Hinta",
 	"alteration_failed": "Epäonnistui",
 	"alteration_impossible": "Mahdotonta",

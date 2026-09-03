@@ -75,6 +75,7 @@
 	"history": "История",
 	"alteration_break_risk": "Риск поломки",
 	"alteration_broken": "Поломка: потеряно {0} очк.",
+	"alteration_clear": "Убрать изменения",
 	"alteration_cost": "Стоимость",
 	"alteration_failed": "Неудача",
 	"alteration_impossible": "Невозможно",

@@ -75,6 +75,7 @@
 	"history": "Verlauf",
 	"alteration_break_risk": "Bruchrisiko",
 	"alteration_broken": "Bruch: {0} Punkte verloren",
+	"alteration_clear": "Veränderungen entfernen",
 	"alteration_cost": "Kosten",
 	"alteration_failed": "Fehlgeschlagen",
 	"alteration_impossible": "Unmöglich",
