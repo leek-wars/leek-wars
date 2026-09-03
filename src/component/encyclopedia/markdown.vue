@@ -94,6 +94,14 @@
 
 			nextTick(() => {
 				const mdEl = md.value!
+				// Dans l'encyclopédie, la page parent est déclarée par une citation
+				// « > Titre » placée juste après le titre : elle sert de métadonnée et ne
+				// doit pas s'afficher. On la marque ici, en premier, pour la masquer via
+				// `blockquote.parent-page`. Un marqueur explicite plutôt qu'une adjacence
+				// CSS : celle-ci ne survivait pas à l'encart d'alias inséré plus bas, et
+				// escamotait aussi les citations légitimes des messages du forum.
+				const parentQuote = props.mode === 'encyclopedia' ? mdEl.querySelector(':scope > h1:first-child + blockquote') : null
+				parentQuote?.classList.add('parent-page')
 				// Rendu LaTeX inline ($...$) — fait avant la transformation des blocs
 				// de code pour que le contenu des <code>/<pre> reste intact.
 				renderMath(mdEl)
@@ -462,15 +470,10 @@
 						const container = document.createElement('div')
 						container.className = 'aliases-display'
 						container.textContent = i18n.t('encyclopedia.aliases', [aliases.join(', ')]) as string
-						const h1 = mdEl.querySelector('h1')
-						// La page parent est déclarée par une citation (« > Titre ») placée juste
-						// après le titre et masquée par la règle `h1:first-child + blockquote` :
-						// insérer l'encart d'alias entre les deux romprait cette adjacence et
-						// ferait réapparaître le nom du parent. On passe donc après la citation.
-						const next = h1 && h1.matches(':first-child') ? h1.nextElementSibling : null
-						const anchor = next && next.tagName === 'BLOCKQUOTE' ? next : h1
+						// Sous le titre, mais après la citation masquée qui déclare la page parent.
+						const anchor = parentQuote ?? mdEl.querySelector('h1')
 						if (anchor) {
-							anchor.parentNode!.insertBefore(container, anchor.nextSibling)
+							anchor.after(container)
 						} else {
 							mdEl.prepend(container)
 						}
@@ -666,7 +669,8 @@
 			display: none;
 		}
 	}
-	.md :deep(h1:first-child + blockquote) {
+	// Citation déclarant la page parent d'une page d'encyclopédie : métadonnée, pas du contenu.
+	.md :deep(blockquote.parent-page) {
 		display: none;
 	}
 	.md :deep(h2) {
