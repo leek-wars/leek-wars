@@ -64,8 +64,13 @@
 				<v-icon v-if="result && built">mdi-refresh</v-icon>
 			</div>
 			<!-- Flux de particules vers le composant, au-dessus des cases pour rester
-			     visible sur tout le trajet (#622). -->
-			<div v-if="particles.length" class="particles">
+			     visible sur tout le trajet (#622).
+			     Les particules sont montees des qu'une alteration est posee, mais le flux
+			     ne s'ALLUME qu'une fois la tentative connue possible : elles demarrent en
+			     cours de vol (delai negatif), donc les faire apparaitre d'un coup se voyait
+			     comme un a-coup. C'est l'opacite de la couche qui ouvre et coupe le flux,
+			     en fondu (retour de Pierre). -->
+			<div v-if="particles.length" class="particles" :class="{ flowing }">
 				<span v-for="p in particles" :key="p.key" class="particle" :class="'color-' + p.carac"
 					:style="{ left: p.left + '%', top: p.top + '%',
 						width: p.size + 'px', height: p.size + 'px',
@@ -579,20 +584,24 @@
 		const x = Math.sin(seed * 127.1) * 43758.5453
 		return x - Math.floor(x)
 	}
+	/**
+	 * Le flux coule-t-il ? Rien ne coule vers une piece qui ne peut pas prendre : il
+	 * promet une alteration en cours, il serait mensonger sur une tentative impossible
+	 * (#622). Et tant que le serveur calcule, on ne SAIT pas : la proba locale n'est qu'un
+	 * plafond que le gate du metabolisme peut ramener a zero.
+	 *
+	 * Les particules restent montees dans les deux cas, c'est l'opacite de leur couche qui
+	 * suit ce booleen : elles volent deja quand le flux s'allume (leur delai d'animation
+	 * est negatif), donc les monter d'un coup se voyait comme un a-coup (retour de Pierre).
+	 */
+	const flowing = computed(() => !loadingPreview.value && previewProbability.value > 0)
+
 	const particles = computed(() => {
 		const out: { key: string, carac: string, left: number, top: number, size: number,
 			sx: number, sy: number, q1x: number, q1y: number, mx: number, my: number,
 			q3x: number, q3y: number, dx: number, dy: number,
 			duration: number, delay: number }[] = []
 		if (!component.value || fusing.value) return out
-		// Rien ne coule vers une piece qui ne peut pas prendre : le flux promet une
-		// alteration en cours, il serait mensonger sur une tentative impossible (#622).
-		//
-		// Tant que le serveur calcule, on ne SAIT pas : la proba locale n'est qu'un
-		// plafond, le gate du metabolisme peut la ramener a zero. Le flux couperait alors
-		// juste apres avoir demarre, en promettant une tentative deja perdue (retour de
-		// Pierre). On attend donc la reponse, pendant que le loader dit l'attente.
-		if (loadingPreview.value || previewProbability.value <= 0) return out
 		forge.value.forEach((slot, i) => {
 			// Meme garde que cellVars : une recette peut deborder de la grille.
 			const center = CELL_CENTERS[i]
@@ -1240,6 +1249,11 @@
 	inset: 0;
 	pointer-events: none;
 	z-index: 3;
+	// Le flux s'ouvre et se coupe en fondu, il n'apparait pas d'un bloc : les particules
+	// sont deja en vol quand la couche s'allume (retour de Pierre).
+	opacity: 0;
+	transition: opacity 0.35s ease;
+	&.flowing { opacity: 1; }
 }
 // Particules teintees par la carac, du centre de leur case vers le composant.
 // left/top viennent du style inline ; --dx/--dy portent le trajet restant.
