@@ -492,6 +492,15 @@
 	#app.app.connected .page .page-bar h1 {
 		display: block;
 	}
+	// Et sa barre garde la hauteur et le pointillé du v3 : la coquille efface la
+	// barre de page en mode application (les autres pages n'y ont plus que leur
+	// icône, le h1 étant masqué), l'accueil est la seule à y garder un titre.
+	body:not(.v2) #app.app.connected .page .page-header.page-bar {
+		min-height: 72px;
+		border-bottom: 3px solid transparent;
+		border-image: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px) 3;
+		margin-bottom: 12px;
+	}
 	.grid-stack {
 		background: transparent;
 		margin-left: -6px;

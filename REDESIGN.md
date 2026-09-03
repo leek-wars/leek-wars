@@ -690,6 +690,21 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   active garde son liseré et son intitulé verts, l'icône ne change plus de
   couleur. Non couvert : la barre d'application mobile (`bar.vue`), les
   onglets de barre de page et les notifications restent sur les glyphes mdi.
+- **2026-09-03 — la barre de page vide sur mobile** (retour de Pierre, capture
+  de l'inventaire : « enlever la barre en haut de la page avec le pointillé +
+  icône »). En mode application, `global.scss` masque le `h1` de la barre de
+  page et la barre d'application porte déjà le nom de la page et ses actions ;
+  restaient l'icône de page, la hauteur minimale de 72 px du lot titre et le
+  pointillé vert — **72 px de vide en tête de chaque page**. Le shell v3 efface
+  les trois sous `#app.app` (icône masquée, `min-height: 0`, pointillé et marge
+  retirés) ; les onglets qu'une page garderait dans sa barre restent visibles.
+  **L'accueil fait exception**, comme pour le `h1` (lot 25) : seule page qui
+  montre son titre sur mobile, il remet hauteur et pointillé dans son `scoped`,
+  sous `body:not(.v2)` puisque le pointillé n'existe qu'en v3. Vérifié sur la
+  beta (UA mobile émulé, règles injectées) : inventaire 72 → 0 px, contenu
+  calé à 56 px sous la barre d'application ; accueil inchangé à 72 px avec son
+  pointillé. Le mode application se décide à l'**user-agent** (`/Mobi/`), pas
+  à la largeur : un viewport étroit ne suffit pas à le tester.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
