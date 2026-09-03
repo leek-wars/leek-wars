@@ -1,8 +1,8 @@
 <template>
-	<!-- Racine STABLE unique (.page toujours montée) : v-if/v-else à la racine = Fragment dont
-	     l'el peut devenir null pendant le patch -> "parentNode of null" (#4163, cf leek.vue). -->
+	<!-- `notFound` et surtout pas `error` : un `const error` de <script setup> masquerait le
+	     composant <error> ci-dessous et casserait la page (cf. leek.vue). -->
 	<div class="page">
-	<error v-if="error" :title="$t('not_found')">
+	<error v-if="notFound" :title="$t('not_found')">
 		<template #message><i18n-t keypath="not_found_id" tag="span"><template #id><b>{{ id }}</b></template></i18n-t></template>
 		<template #button>
 			<router-link to="/teams">
@@ -905,7 +905,7 @@
 	const columnsConfigListEl = useTemplateRef<HTMLElement>('columnsConfigListEl')
 
 	const team = ref<Team | null>(null)
-	const error = ref(false)
+	const notFound = ref(false)
 	const captain = ref(false)
 	const owner = ref(false)
 	const showReport = ref(false)
@@ -1051,7 +1051,7 @@
 				request = 'team/get-connected/' + id.value
 			}
 		}
-		error.value = false
+		notFound.value = false
 		rankingsLoading.value = false
 		rankingsLoaded.value = false
 		LeekWars.get<Team>(request).then(tm => {
@@ -1098,7 +1098,7 @@
 			}
 			emitter.emit('loaded')
 		}).error(() => {
-			error.value = true
+			notFound.value = true
 		})
 	}
 

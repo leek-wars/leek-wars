@@ -1,9 +1,11 @@
 <template lang="html">
-	<!-- Racine STABLE unique (.page toujours montée) : un v-if/v-else à la racine crée un
-	     Fragment dont l'el peut devenir null pendant le patch/unmount -> "parentNode of null"
-	     (#4163, surtout sur un mob où `error` bascule). L'erreur 404 rend DANS .page. -->
+	<!-- Le drapeau 404 s'appelle `notFound` et SURTOUT PAS `error` : dans un <script setup>,
+	     une balise est résolue d'abord contre les liaisons du script, donc un `const error`
+	     masquerait le composant <error>. Le vnode aurait alors un booléen pour type, ne
+	     serait jamais monté, et la bascule suivante de cette branche crasherait la session en
+	     « nextSibling of null ». Garde-fou : component-tag-shadowing.test.ts. -->
 	<div class="page">
-		<error v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
+		<error v-if="notFound" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
 		<template v-else>
 		<div class="page-header page-bar">
 			<!-- Titre STABLE, même raison que la racine ci-dessus : le v-if/v-else entre le
@@ -875,7 +877,7 @@
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
 
 	const leek = ref<Leek | null>(null)
-	const error = ref(false)
+	const notFound = ref(false)
 	const weaponsDialog = ref(false)
 	const draggedWeapon = ref<Weapon | null>(null)
 	const draggedWeaponLocation = ref<string | null>(null)
@@ -1123,7 +1125,7 @@
 		// affiché et on swappe atomiquement quand la réponse arrive.
 		tournamentRange.value = null
 		tournamentRangeLoading.value = false
-		error.value = false
+		notFound.value = false
 		const reqId = id.value
 		const method = my_leek.value ? 'leek/get-private/' + id.value : 'leek/get/' + id.value
 		request = LeekWars.get<Leek>(method)
@@ -1159,7 +1161,7 @@
 		}).error(() => {
 			if (reqId !== id.value) return
 			leek.value = null
-			error.value = true
+			notFound.value = true
 		})
 	}
 

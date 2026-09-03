@@ -1,8 +1,8 @@
 <template>
-	<!-- Racine STABLE unique (.page toujours montée) : un v-if/v-else à la racine crée un Fragment
-	     dont l'el peut devenir null pendant le patch/unmount -> "parentNode of null" (#4163, cf leek.vue). -->
+	<!-- `notFound` et surtout pas `error` : un `const error` de <script setup> masquerait le
+	     composant <error> ci-dessous et casserait la page (cf. leek.vue). -->
 	<div class="page">
-		<error v-if="error" :title="$t('trophy')" :message="$t('main.page_not_found')" />
+		<error v-if="notFound" :title="$t('trophy')" :message="$t('main.page_not_found')" />
 		<template v-else>
 		<div class="page-bar page-header">
 			<h1>
@@ -222,7 +222,7 @@ const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 
 const code = ref<string | null>(null)
 const trophy = ref<TrophyTemplate | null>(null)
-const error = ref(false)
+const notFound = ref(false)
 const deleteDialog = ref(false)
 const deleteFarmer = ref<TrophyFarmer | null>(null)
 
@@ -248,14 +248,14 @@ function schemeLabel(item: ItemTemplate) {
 
 function update() {
 	code.value = route.params.code as string
-	error.value = false
+	notFound.value = false
 	trophy.value = null
 	LeekWars.get('trophy-template/get/' + code.value + '/' + locale.value)
 		.then(tr => {
 			trophy.value = tr
 			LeekWars.setTitle(t('trophy') + ' « ' + t('trophy.' + code.value) + ' »')
 		})
-		.catch(() => { error.value = true })
+		.catch(() => { notFound.value = true })
 }
 
 watch(() => route.params, update, { immediate: true })
