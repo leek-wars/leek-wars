@@ -329,11 +329,13 @@
 	// `min-width` en ch compte le padding DANS ces caracteres — a 3ch (~20px) moins
 	// les 10px de padding, il ne restait la place que pour UN chiffre, si bien que
 	// le plancher ne s'appliquait quasiment jamais et chaque largeur de dosage
-	// continuait a suivre son nombre de chiffres. 32px loge confortablement le
-	// dosage max (3 chiffres, 8 alterations a 58 grand maximum) plus son padding.
+	// continuait a suivre son nombre de chiffres. 32px mesure exactement (rendu
+	// hors-ligne, police Inter) la largeur du jeton au dosage max du jeu (3
+	// chiffres, 8 alterations a 58 au plus) — au plus juste, sans marge inutile
+	// pour les dosages courts (retour de Pierre, 34px « faisait un peu large »).
 	.dose {
 		flex: 0 0 auto;
-		min-width: 34px;
+		min-width: 32px;
 		font-size: 12px;
 		font-variant-numeric: tabular-nums;
 		text-align: center;
@@ -345,10 +347,11 @@
 	// Metabolisme mesure a cette tentative : information de reglage, donc discret.
 	// Meme largeur fixe que le dosage (en px, meme raison), alignee a droite : c'est
 	// le % qui doit tomber au meme endroit d'une ligne a l'autre, pas le chiffre qui
-	// le precede. 42px loge "100 %", la valeur la plus large possible.
+	// le precede. 36px mesure (meme rendu hors-ligne) la largeur de "100 %", la
+	// valeur la plus large possible.
 	.metabolism {
 		flex: 0 0 auto;
-		min-width: 42px;
+		min-width: 36px;
 		font-size: 12px;
 		color: var(--text-color-secondary);
 		font-variant-numeric: tabular-nums;
