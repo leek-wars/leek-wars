@@ -667,7 +667,11 @@
 	align-items: center;
 	vertical-align: bottom;
 	font-size: 15px;
-	color: var(--grey-13);
+	// La valeur totale vit dans le slot `#actions` du panneau : elle prend
+	// l'encre de l'en-tête. --grey-13 (« presque blanc ») supposait un en-tête
+	// sombre dans les deux thèmes, ce que le v3 en clair n'est plus — crème sur
+	// crème, le montant disparaissait et il ne restait que l'icône des habs.
+	color: var(--panel-header-color);
 	margin: 0 10px;
 	.hab {
 		margin-left: 5px;
