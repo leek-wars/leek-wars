@@ -738,6 +738,21 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   60 → 53 px (70 avec un titre sur deux lignes). Maquetté à chaud sur la beta
   en mobile (notifications de test poussées par `$store.commit('notification')`
   avec le `setTimeout` de 5 s neutralisé le temps de la capture).
+- **2026-09-04, retours de Pierre sur la beta** :
+  - **Valeur totale de l'inventaire** (`inventory.vue`) : encore un `--grey-13`
+    posé sur l'en-tête d'un panneau — crème sur crème, **1,0 mesuré**, il ne
+    restait que l'icône des habs. Passée à `--panel-header-color` comme les
+    autres habitants du slot `#actions` (15,9 en clair, 15,6 en sombre,
+    inchangé en v2 où le jeton vaut le même `#eee`). Le motif est le même que
+    `.views-counter` et `.level-talent .level` traités dans `shell-v3.scss` :
+    tout ce qu'un composant glisse dans `#actions` doit prendre l'encre de
+    l'en-tête, jamais une encre claire fixe.
+  - **Icône centrale des cartes de combat** (`fight-history.vue`) : centrée par
+    une `line-height` et des marges calées sur la rangée de 42 px du v2, elle
+    sortait 5 px trop haut (mesuré sur le sablier d'un combat en cours) — un
+    `<v-icon>` est une boîte inline-flex d'1 em, posée sur la ligne de base
+    puis remontée par sa marge basse, et la rangée fait 52 px en v3. Centrage
+    par le flex du conteneur, comme la vue tableau du même historique.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
