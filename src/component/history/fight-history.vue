@@ -120,17 +120,23 @@ const arenaLabel = computed<[string, string]>(() => {
 			}
 			flex: 42px 0 0;
 			height: 42px;
+			/* L'icône est centrée par le flex, pas par une line-height et des
+			   marges calées à la main : un `<v-icon>` est une boîte inline-flex
+			   d'une hauteur de 1em, donc posée sur la ligne de base du bloc et
+			   remontée par sa marge basse — elle se retrouvait ~5 px au-dessus
+			   du centre de la rangée (visible sur le sablier des combats en
+			   cours). La vue tableau du même historique centre déjà ainsi. */
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			img {
 				width: 22px;
 				height: 22px;
-				margin: 10px 6px;
 				opacity: 0.8;
 			}
 			i {
 				color: var(--grey-2);
-				line-height: 42px;
 				font-size: 26px;
-				margin: 8px;
 				&.timersand {
 					animation: rotate 2s linear infinite;
 				}
@@ -232,12 +238,6 @@ const arenaLabel = computed<[string, string]>(() => {
 			.center {
 				flex-basis: 52px;
 				height: 52px;
-				img {
-					margin: 15px 6px;
-				}
-				i {
-					line-height: 52px;
-				}
 			}
 			.fighters {
 				height: 52px;
