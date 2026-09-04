@@ -35,6 +35,8 @@
 	"error_1009": "Loadout \"{0}\": nenhuma arma esquecida disponível, todas as candidatas já estão equipadas em outros alhos-porós do criador.",
 	"error_1010": "Loadout \"{0}\": nenhuma poção de restat disponível, as características não foram alteradas.",
 	"error_1011": "Loadout \"{0}\": requer mais capital do que o alho-poró tem, as características não foram alteradas.",
+	"error_1012": "A função {0}() não foi chamada: os hooks exigem uma IA que defina turn().",
+	"error_1013": "A função {0}() não foi chamada: o código na raiz do arquivo executa ações de combate, impossíveis antes do combate. Mova-o para turn().",
 	"error_101": "Interrupção da IA: muitas operações consumidas.",
 	"error_103": "IA interrompida: muita RAM consumida.",
 	"error_104": "Apenas um separador numérico consecutivo é permitido.",

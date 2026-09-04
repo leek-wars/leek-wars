@@ -35,6 +35,8 @@
 	"error_1009": "Loadout \"{0}\": geen vergeten wapen beschikbaar, alle kandidaten zijn al uitgerust op andere preien van de fokker.",
 	"error_1010": "Loadout \"{0}\": geen restat-drankje beschikbaar, de kenmerken zijn niet gewijzigd.",
 	"error_1011": "Loadout \"{0}\": vereist meer kapitaal dan de prei heeft, de kenmerken zijn niet gewijzigd.",
+	"error_1012": "De functie {0}() is niet aangeroepen: hooks vereisen een AI die turn() definieert.",
+	"error_1013": "De functie {0}() is niet aangeroepen: de code op het hoogste niveau van het bestand voert gevechtsacties uit, die vóór het gevecht niet mogelijk zijn. Verplaats hem naar turn().",
 	"error_101": "AI Interrupt: te veel bewerkingen verbruikt.",
 	"error_103": "Onderbroken AI: te veel RAM verbruikt.",
 	"error_104": "Er is slechts één opeenvolgend numeriek scheidingsteken toegestaan.",

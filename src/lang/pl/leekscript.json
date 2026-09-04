@@ -35,6 +35,8 @@
 	"error_1009": "Loadout \"{0}\": brak dostępnej zapomnianej broni, wszyscy kandydaci są już wyposażeni na innych porach hodowcy.",
 	"error_1010": "Loadout \"{0}\": brak dostępnej mikstury restat, cechy nie zostały zmienione.",
 	"error_1011": "Loadout \"{0}\": wymaga więcej kapitału, niż ma por, cechy nie zostały zmienione.",
+	"error_1012": "Funkcja {0}() nie została wywołana: haki wymagają SI, która definiuje turn().",
+	"error_1013": "Funkcja {0}() nie została wywołana: kod na najwyższym poziomie pliku wykonuje akcje bojowe, niemożliwe przed walką. Przenieś go do turn().",
 	"error_101": "Przerwanie AI: zużyto zbyt wiele operacji.",
 	"error_103": "Przerwana sztuczna inteligencja: zużyto zbyt dużo pamięci RAM.",
 	"error_104": "Dozwolony jest tylko jeden kolejny separator liczbowy.",

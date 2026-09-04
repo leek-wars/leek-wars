@@ -35,6 +35,8 @@
 	"error_1009": "Loadout \"{0}\": keine vergessene Waffe verfügbar, alle Kandidaten sind bereits auf anderen Lauchen des Züchters ausgerüstet.",
 	"error_1010": "Loadout \"{0}\": kein Restat-Trank verfügbar, die Eigenschaften wurden nicht geändert.",
 	"error_1011": "Loadout \"{0}\": erfordert mehr Kapital, als der Lauch besitzt, die Eigenschaften wurden nicht geändert.",
+	"error_1012": "Die Funktion {0}() wurde nicht aufgerufen: Hooks erfordern eine KI, die turn() definiert.",
+	"error_1013": "Die Funktion {0}() wurde nicht aufgerufen: Der Code auf oberster Ebene der Datei führt Kampfaktionen aus, die vor dem Kampf nicht möglich sind. Verschiebe ihn in turn().",
 	"error_101": "AI Interrupt: Zu viele Operationen verbraucht.",
 	"error_103": "Unterbrochene KI: zu viel RAM verbraucht.",
 	"error_104": "Es ist nur ein fortlaufendes numerisches Trennzeichen erlaubt.",

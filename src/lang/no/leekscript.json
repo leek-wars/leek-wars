@@ -35,6 +35,8 @@
 	"error_1009": "Loadout \"{0}\": ingen glemt våpen tilgjengelig, alle kandidater er allerede utstyrt på oppdretterens andre purrer.",
 	"error_1010": "Loadout \"{0}\": ingen restat-eliksir tilgjengelig, egenskapene ble ikke endret.",
 	"error_1011": "Loadout \"{0}\": krever mer kapital enn purren har, egenskapene ble ikke endret.",
+	"error_1012": "Funksjonen {0}() ble ikke kalt: hooks krever en AI som definerer turn().",
+	"error_1013": "Funksjonen {0}() ble ikke kalt: koden på filens øverste nivå utfører kamphandlinger, som ikke er mulig før kampen. Flytt den inn i turn().",
 	"error_101": "AI-avbrudd: For mange operasjoner forbrukes.",
 	"error_103": "Avbrutt AI: for mye RAM forbrukes.",
 	"error_104": "Bare én påfølgende numerisk skilletegn er tillatt.",

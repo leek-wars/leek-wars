@@ -35,6 +35,8 @@
 	"error_1009": "Loadout \"{0}\": tidak ada senjata terlupakan yang tersedia — semua kandidat sudah dilengkapi pada daun bawang lain milik peternak.",
 	"error_1010": "Loadout \"{0}\": tidak ada potion restat yang tersedia, karakteristik tidak diubah.",
 	"error_1011": "Loadout \"{0}\": membutuhkan lebih banyak modal daripada yang dimiliki bawang perai, karakteristik tidak diubah.",
+	"error_1012": "Fungsi {0}() tidak dipanggil: hook memerlukan AI yang mendefinisikan turn().",
+	"error_1013": "Fungsi {0}() tidak dipanggil: kode di tingkat teratas file melakukan aksi pertarungan, yang tidak mungkin sebelum pertarungan. Pindahkan ke dalam turn().",
 	"error_101": "Interupsi AI: Terlalu banyak operasi yang dikonsumsi.",
 	"error_103": "AI yang terputus: terlalu banyak RAM yang dikonsumsi.",
 	"error_104": "Hanya satu pemisah angka berurutan yang diperbolehkan.",

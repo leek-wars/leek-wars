@@ -35,6 +35,8 @@
 	"error_1009": "Loadout \"{0}\": intet glemt våben tilgængeligt, alle kandidater er allerede udstyret på andre porrer hos avleren.",
 	"error_1010": "Loadout \"{0}\": ingen restat-eliksir tilgængelig, egenskaberne blev ikke ændret.",
 	"error_1011": "Loadout \"{0}\": kræver mere kapital end porren har, egenskaberne blev ikke ændret.",
+	"error_1012": "Funktionen {0}() blev ikke kaldt: hooks kræver en AI, der definerer turn().",
+	"error_1013": "Funktionen {0}() blev ikke kaldt: koden på filens øverste niveau udfører kamphandlinger, som ikke er mulige før kampen. Flyt den ind i turn().",
 	"error_101": "AI-afbrydelse: Der forbruges for mange operationer.",
 	"error_103": "Afbrudt AI: for meget RAM forbrugt.",
 	"error_104": "Kun én på hinanden følgende numerisk separator er tilladt.",
