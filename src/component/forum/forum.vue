@@ -71,10 +71,10 @@
 					<div class="num-topics">{{ $t('topics') }}</div>
 					<div class="num-messages">{{ $t('messages') }}</div>
 				</div>
-				<router-link v-for="category in categories" :key="category.id" v-ripple :to="'/forum/category-' + category.id" class="category">
+				<router-link v-for="category in categories" :key="category.id" v-ripple :to="'/forum/category-' + category.id" class="category" :class="{unread: !category.seen}">
 					<div class="seen">
-						<img v-if="category.seen" class="seen" src="/image/forum_seen.png">
-						<img v-else src="/image/forum_unseen.png">
+						<v-icon v-if="category.seen" class="dot">mdi-circle-outline</v-icon>
+						<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-circle</v-icon>
 					</div>
 					<div class="text">
 						<template v-if="category.type == 'normal'">
@@ -312,17 +312,27 @@
 		background-color: var(--pure-white);
 		box-shadow: var(--elevation-1);
 	}
+	// Marqueur lu / non lu : une pastille a l'encre du theme, pas le poireau en
+	// PNG qui portait sa couleur en dur (cf. ICONS.md) et qu'il fallait
+	// rattraper au filtre en sombre.
 	.category > .seen {
-		width: 55px;
-		padding-top: 10px;
-		padding-bottom: 8px;
-		padding-right: 5px;
+		width: 34px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px 4px;
 	}
-	.category .seen img {
-		height: 40px;
+	.category .dot {
+		font-size: 14px;
+		color: var(--text-color-secondary);
+		opacity: 0.45;
 	}
-	body.dark .category .seen img.seen {
-		filter: invert(0.85);
+	.category .dot.unread {
+		color: var(--primary);
+		opacity: 1;
+	}
+	.category.unread .title {
+		font-weight: bold;
 	}
 	.category .text {
 		flex: 1;

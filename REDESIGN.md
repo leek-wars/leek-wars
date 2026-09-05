@@ -753,6 +753,28 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     `<v-icon>` est une boîte inline-flex d'1 em, posée sur la ligne de base
     puis remontée par sa marge basse, et la rangée fait 52 px en v3. Centrage
     par le flex du conteneur, comme la vue tableau du même historique.
+- **2026-09-05, retours de Pierre sur la beta** :
+  - **Dialogue « IA et composants » de la page poireau** (`leek.vue`,
+    `explorer.vue`) : l'explorateur d'IA était figé à 460 px pendant que la
+    grille de composants allongeait le popup, et c'est le popup entier qui
+    défilait. Le dialogue tient maintenant dans la hauteur de la fenêtre
+    (`max-height` calculé sur la chaîne Vuetify — l'overlay borne à
+    `calc(100% - 48px)` bien avant le `max-height` que `popup.vue` pose sur sa
+    zone de contenu, et un `100%` ne s'y résout pas), et **chaque colonne
+    défile pour elle-même**. Le défilement d'ensemble ne revient que sous les
+    hauteurs minimales des deux colonnes (petit écran) ou en dessous de 800 px
+    de large, où elles s'empilent.
+  - **Pastilles de quantité** (`leek.vue`, armes/puces/composants/chapeaux) :
+    `#0a0` en dur sous une encre crème (`--grey-13`), **2,8 mesuré** et un vert
+    étranger au v3. Passées à `--primary-surface` / `--primary-surface-text`.
+  - **Marqueur lu / non lu du forum** (`forum.vue`, `forum-category.vue`,
+    `home-widget-forum.vue`) : les PNG `forum_seen` / `forum_unseen` (un
+    poireau vert de 40 px, rattrapé en sombre par un `filter: invert(0.85)`)
+    deviennent une **pastille à l'encre du thème** — `mdi-circle` en
+    `--primary` pour le non-lu, `mdi-circle-outline` discret pour le lu — et le
+    titre passe en gras sur une ligne non lue, comme le faisait déjà le widget
+    forum de l'accueil. Colonne ramenée de 55/50 px à 34 px. Les deux PNG ne
+    sont plus référencés nulle part ; ils restent dans `public/image/`.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

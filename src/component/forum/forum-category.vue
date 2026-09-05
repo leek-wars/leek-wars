@@ -180,10 +180,10 @@
 
 				<div class="topics" :class="{loading}">
 					<div v-if="loading" class="loading-overlay"><loader /></div>
-					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
+					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned, unread: !topic.seen}" class="topic">
 						<div class="seen">
-							<img v-if="topic.seen" class="seen" src="/image/forum_seen.png">
-							<img v-else src="/image/forum_unseen.png">
+							<v-icon v-if="topic.seen" class="dot">mdi-circle-outline</v-icon>
+							<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-circle</v-icon>
 						</div>
 						<div>
 							<span v-ripple class="title">
@@ -825,17 +825,27 @@ i.attr {
 	background-color: var(--pure-white);
 	box-shadow: var(--elevation-1);
 }
+// Marqueur lu / non lu : une pastille a l'encre du theme, pas le poireau en PNG
+// qui portait sa couleur en dur (cf. ICONS.md) et qu'il fallait rattraper au
+// filtre en sombre.
 .topic > .seen {
-	flex: 0 0 50px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-right: 5px;
+	flex: 0 0 34px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px 4px;
 }
-.topic .seen img {
-	height: 40px;
+.topic .dot {
+	font-size: 14px;
+	color: var(--text-color-secondary);
+	opacity: 0.45;
 }
-body.dark .topic .seen img.seen {
-	filter: invert(0.85);
+.topic .dot.unread {
+	color: var(--primary);
+	opacity: 1;
+}
+.topic.unread .title > a {
+	font-weight: bold;
 }
 .topic .flag {
 	height: 13px;

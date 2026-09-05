@@ -4,7 +4,8 @@
 		<template v-else-if="topics.length">
 			<div ref="topicsEl" class="topics">
 				<router-link v-for="topic in visibleTopics" :key="topic.id" v-ripple :to="'/forum/category-' + topic.category + '/topic-' + topic.id" class="topic" :class="{ unread: !topic.seen }">
-					<img :src="topic.seen ? '/image/forum_seen.png' : '/image/forum_unseen.png'" class="seen-icon">
+					<v-icon v-if="topic.seen" class="seen-icon">mdi-circle-outline</v-icon>
+					<v-icon v-else :title="t('main.unread_messages')" class="seen-icon unread">mdi-circle</v-icon>
 					<div class="topic-main">
 						<div class="title-line">
 							<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" class="attr resolved">mdi-check-circle</v-icon>
@@ -129,10 +130,18 @@
 	.topic:hover {
 		background: var(--background-secondary);
 	}
+	// Pastille lu / non lu a l'encre du theme, comme sur le forum.
 	.seen-icon {
 		width: 18px;
 		height: 18px;
+		font-size: 12px;
 		flex-shrink: 0;
+		color: var(--text-color-secondary);
+		opacity: 0.45;
+		&.unread {
+			color: var(--primary);
+			opacity: 1;
+		}
 	}
 	.topic-main {
 		min-width: 0;
