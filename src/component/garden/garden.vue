@@ -110,7 +110,7 @@
 			</div>
 
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<panel class="garden-right first last">
+				<panel class="garden-right first">
 					<loader v-if="!garden || !$store.state.farmer" />
 
 					<div v-else-if="category === 'challenge'">
@@ -228,9 +228,6 @@
 									<img src="/image/notgood.png">
 									<h4>{{ $t(leekErrors[selectedLeek.id]) }}</h4>
 								</div>
-								<div v-if="$store.getters.admin && leekOpponents[selectedLeek.id] && leekOpponents[selectedLeek.id].length" class="solo-batch">
-									<v-btn color="primary" :loading="batchLoading" @click="batchSoloAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
-								</div>
 							</div>
 							<garden-no-fights v-else-if="!garden.fights" :canbuy="true" @bought="reload" />
 						</div>
@@ -252,9 +249,6 @@
 								<div v-if="farmerOpponents && !farmerOpponents.length" class="no-opponent">
 									<img src="/image/notgood.png">
 									<h4>{{ $t('no_opponent_of_your_size') }}</h4>
-								</div>
-								<div v-if="$store.getters.admin && farmerOpponents && farmerOpponents.length" class="solo-batch">
-									<v-btn color="primary" :loading="batchLoading" @click="batchFarmerAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
 								</div>
 							</div>
 							<garden-no-fights v-else :canbuy="true" @bought="reload" />
@@ -432,7 +426,6 @@
 										</div>
 										<div class="attack-buttons">
 											<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
-											<v-btn v-if="$store.getters.admin" color="primary" :loading="batchLoading" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="batchAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
 										</div>
 									</div>
 								</div>
@@ -440,6 +433,11 @@
 						</div>
 					</div>
 				</panel>
+				<garden-batch v-if="batchLauncher || batchLoading || batchFights.length" :ids="batchFights" :launching="batchLoading" @close="closeBatch">
+					<template #launch>
+						<garden-fast-fight v-if="batchLauncher" :loading="batchLoading" :disabled="batchLauncher.disabled" :disabled-reason="batchLauncher.reason" @launch="batchLauncher.launch" />
+					</template>
+				</garden-batch>
 			</div>
 		</div>
 	</div>
@@ -457,8 +455,10 @@
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Composition } from '@/model/team'
+	import GardenBatch from './garden-batch.vue'
 	import GardenCompo from './garden-compo.vue'
 	import GardenFarmer from './garden-farmer.vue'
+	import GardenFastFight from './garden-fast-fight.vue'
 	import GardenLeek from './garden-leek.vue'
 	import { BOSSES } from '@/model/boss'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -527,6 +527,57 @@
 	const arenaPreference = ref(parseInt(localStorage.getItem('arena/preference') || '-1', 10))
 	const wantsColossus = ref(false)
 	const batchLoading = ref(false)
+	// Dernier lot Fast Garden : ses combats (grille + résumé sous le potager) et sa clé
+	// de configuration, qui dit si une relance s'y cumule ou en ouvre un nouveau.
+	const batchFights = ref<number[]>([])
+	const batchKey = ref('')
+	const BATCH_STORAGE = 'garden/batch'
+	// 100 = le quota journalier d'un abonné LW+ : une journée entière de relances tient
+	// dans un lot. Au-delà, `garden/get-batch` chargerait des rapports pour rien.
+	const BATCH_MAX = 100
+	// Un lot de la veille n'intéresse plus personne, et ses combats ont quitté la table
+	// courante en fin d'année : on ne restaure que du frais.
+	const BATCH_TTL = 24 * 3600 * 1000
+
+	function storeBatch() {
+		if (!batchFights.value.length) {
+			localStorage.removeItem(BATCH_STORAGE)
+			return
+		}
+		localStorage.setItem(BATCH_STORAGE, JSON.stringify({
+			farmer: store.state.farmer?.id, date: Date.now(),
+			key: batchKey.value, fights: batchFights.value,
+		}))
+	}
+
+	function closeBatch() {
+		batchFights.value = []
+		batchKey.value = ''
+		storeBatch()
+	}
+
+	/**
+	 * Restaure le lot au retour sur la page. Lié à l'éleveur : le bandeau de comptes
+	 * permet de changer de compte sans recharger, et `garden/get-batch` ne rend que les
+	 * combats dont je suis le lanceur — un lot d'un autre compte n'afficherait rien.
+	 */
+	let batchRestored = false
+	function restoreBatch() {
+		if (batchRestored || !store.state.farmer) { return }
+		batchRestored = true
+		try {
+			const raw = JSON.parse(localStorage.getItem(BATCH_STORAGE) || 'null')
+			if (!raw || !Array.isArray(raw.fights) || !raw.fights.length) { return }
+			if (raw.farmer !== store.state.farmer.id || Date.now() - (raw.date || 0) > BATCH_TTL) {
+				localStorage.removeItem(BATCH_STORAGE)
+				return
+			}
+			batchFights.value = raw.fights.filter((id: unknown) => typeof id === 'number').slice(0, BATCH_MAX)
+			batchKey.value = typeof raw.key === 'string' ? raw.key : ''
+		} catch {
+			localStorage.removeItem(BATCH_STORAGE)
+		}
+	}
 
 	const farmerEnabled = computed(() => !!(garden.value && garden.value.farmer_enabled))
 	const teamEnabled = computed(() => !!(garden.value && garden.value.team_enabled))
@@ -540,41 +591,113 @@
 	function batchErrorToast(error: ApiError) {
 		LeekWars.toast(t(error.error))
 	}
-	function batchSoloAttack() {
+	/**
+	 * Fast Garden : on ne navigue PLUS vers le premier combat du lot (l'ancien x10
+	 * admin le faisait). Le lot s'affiche sur place, dans son panneau sous le potager,
+	 * et se remplit au fur et à mesure des générations.
+	 *
+	 * Relancer CUMULE, mais seulement à l'identique : même poireau en solo, même compo
+	 * en équipe, même boss avec la même escouade. Un résumé qui mélangerait deux
+	 * poireaux ou deux compos ne voudrait rien dire — dans ce cas le lot repart de zéro.
+	 */
+	function batchLaunched(fights: number[], key: string, counter: 'update-fights' | 'update-team-fights' = 'update-fights') {
+		// Décrément local pour l'affichage immédiat ; le reload() qui suit remet les
+		// compteurs faisant foi (le lot peut s'être arrêté avant d'atteindre `count`).
+		store.commit(counter, -fights.length)
+
+		const previous = key === batchKey.value ? batchFights.value : []
+		batchKey.value = key
+		// Les nouveaux en tête : le serveur trie par id décroissant de toute façon, mais
+		// c'est aussi la queue qu'on rabote quand le lot dépasse le plafond.
+		batchFights.value = [...fights, ...previous.filter(id => !fights.includes(id))].slice(0, BATCH_MAX)
+		storeBatch()
+
+		reload()
+		nextTick(() => {
+			document.querySelector('.fast-garden')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+		})
+	}
+	function batchSoloAttack(count: number) {
 		if (!selectedLeek.value) return
+		const leek_id = selectedLeek.value.id
 		batchLoading.value = true
-		LeekWars.post('garden/start-solo-fight-batch', {leek_id: selectedLeek.value.id}).then(data => {
-			store.commit('update-fights', -data.fights.length)
-			router.push('/fight/' + data.fights[0])
+		LeekWars.post<{fights: number[]}>('garden/start-solo-fight-batch', {leek_id, count}).then(data => {
+			batchLaunched(data.fights, 'solo:' + leek_id)
 		}).error(batchErrorToast).finally(() => {
 			batchLoading.value = false
 		})
 	}
-	function batchFarmerAttack() {
+	function batchFarmerAttack(count: number) {
 		batchLoading.value = true
-		LeekWars.post('garden/start-farmer-fight-batch', {count: 10}).then(data => {
-			store.commit('update-fights', -data.fights.length)
-			router.push('/fight/' + data.fights[0])
+		LeekWars.post<{fights: number[]}>('garden/start-farmer-fight-batch', {count}).then(data => {
+			// Le potager éleveur n'a qu'une configuration : tous ses lots se cumulent.
+			batchLaunched(data.fights, 'farmer')
 		}).error(batchErrorToast).finally(() => {
 			batchLoading.value = false
 		})
 	}
-	function batchAttack() {
+	function batchTeamAttack(count: number) {
+		if (!selectedComposition.value) return
+		const composition_id = selectedComposition.value.id
+		batchLoading.value = true
+		LeekWars.post<{fights: number[]}>('garden/start-team-fight-batch', {composition_id, count}).then(data => {
+			batchLaunched(data.fights, 'team:' + composition_id, 'update-team-fights')
+		}).error(batchErrorToast).finally(() => {
+			batchLoading.value = false
+		})
+	}
+	function batchAttack(count: number) {
 		const currentSquad = LeekWars.bossSquads.squad
 		if (!currentSquad || !selectedBoss.value) return
 		const participants = currentSquad.engaged_leeks
 			.filter((l: Leek) => (l.farmer as unknown as number) === store.state.farmer!.id)
 			.map((l: Leek) => l.id)
 		if (participants.length === 0) return
+		// L'escouade est identifiée par les poireaux engagés (de TOUS les farmers), pas
+		// par son id : attaquer la quitte, relancer en reforme forcément une autre.
+		const boss_id = selectedBoss.value.id
+		const key = 'boss:' + boss_id + ':' + currentSquad.engaged_leeks.map((l: Leek) => l.id).sort((a, b) => a - b).join(',')
 		batchLoading.value = true
-		LeekWars.post('garden/start-boss-fight-batch', {boss_id: selectedBoss.value.id, participants}).then(data => {
-			store.commit('update-fights', -data.fights.length)
+		LeekWars.post<{fights: number[]}>('garden/start-boss-fight-batch', {boss_id, participants, count}).then(data => {
 			LeekWars.bossSquads.leaveSquad()
-			router.push('/fight/' + data.fights[0])
+			batchLaunched(data.fights, key)
 		}).error(batchErrorToast).finally(() => {
 			batchLoading.value = false
 		})
 	}
+	/**
+	 * Le lanceur qui correspond au potager affiché, pour le bouton de relance du panneau
+	 * du lot. Il rend exactement ce que rend le bouton du potager au même instant : si
+	 * rien n'est sélectionné (pas de poireau, plus de combats, pas d'escouade), il n'y a
+	 * rien à relancer et le bouton disparaît plutôt que de mentir.
+	 */
+	const batchLauncher = computed(() => {
+		if (category.value === 'solo') {
+			if (!selectedLeek.value || !garden.value?.fights) { return null }
+			const opponents = leekOpponents[selectedLeek.value.id]
+			return { launch: batchSoloAttack, disabled: !opponents || !opponents.length, reason: '' }
+		}
+		if (category.value === 'farmer') {
+			if (!garden.value?.fights) { return null }
+			return { launch: batchFarmerAttack, disabled: !farmerOpponents.value || !farmerOpponents.value.length, reason: '' }
+		}
+		if (category.value === 'team') {
+			if (!selectedComposition.value || selectedComposition.value.fights <= 0) { return null }
+			const opponents = teamOpponents[selectedComposition.value.id]
+			return { launch: batchTeamAttack, disabled: !opponents || !opponents.length, reason: '' }
+		}
+		if (category.value === 'boss') {
+			const currentSquad = LeekWars.bossSquads.squad
+			if (!currentSquad || !selectedBoss.value) { return null }
+			return {
+				launch: batchAttack,
+				disabled: currentSquad.engaged_leeks.length === 0 || currentSquad.master !== store.state.farmer!.id,
+				reason: t('fast_fight_boss_master_only') as string,
+			}
+		}
+		return null
+	})
+
 	function modeLabel(preference: number): string {
 		return t(ARENA_MODE_LABELS[preference] || 'arena_no_preference') as string
 	}
@@ -658,6 +781,7 @@
 
 	function update() {
 		if (!store.state.farmer) { return }
+		restoreBatch()
 		const params = route.params
 		category.value = params.category as string
 		if (!category.value) {
@@ -1351,11 +1475,6 @@
 	justify-content: space-between;
 	margin-top: 20px;
 	align-items: center;
-}
-.solo-batch {
-	display: flex;
-	justify-content: center;
-	margin-top: 16px;
 }
 .attack-buttons {
 	display: flex;
