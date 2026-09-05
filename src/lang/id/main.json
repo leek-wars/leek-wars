@@ -54,6 +54,7 @@
 	"chat": "Chat",
 	"chat_placeholder": "Masukkan pesan Anda...",
 	"emoji_favorites": "Favorit",
+	"emoji_no_result": "Tidak ada emoji",
 	"chat_the_mdy_at_hm": "%1$s/%2$s/%3$s di %4$s:%5$s",
 	"chat_too_long": "Pesan terlalu panjang, harap batasi diskusi Anda hingga 1000 karakter",
 	"chest_hunt": "Perburuan peti",

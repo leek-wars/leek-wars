@@ -26,6 +26,7 @@
     - "Notifications about one of your leeks show its thumbnail next to the event icon: four arena reports in a row can finally be told apart."
     - "A team page now has its own \"Live\" panel, next to the chat: trophies unlocked, milestones reached and topics created by its members over the last 7 days."
     - "Your favorite emojis: the emojis you use the most (reactions and emojis sent in messages) appear first in the chat quick reaction bar, and in a ⭐ tab at the top of the emoji panel."
+    - "Search in the emoji panel: type \"cat\", \"pizza\" or \"france\" to find an emoji among the 1746, in your own language."
   improved:
     - "The emoji panel moves to Unicode 16: 556 emojis added (🤣 🥰 🦁 🦈 🥑 🍾 🥊 🧩 🏍️ 🛸 🔥 🧯 🟩 🏴‍☠️...), duplicates removed, and categories reorganized along the 9 official groups — smileys, people, animals and nature, food, travel, activities, objects, symbols, flags."
     - "Private groups: the \"password accounts\" mode (credentials chosen by the supervisor, no member email) can now be set in the group settings, and demo groups enable it by default."

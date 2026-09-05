@@ -54,6 +54,7 @@
 	"chat": "채팅",
 	"chat_placeholder": "메시지를 입력하세요...",
 	"emoji_favorites": "즐겨찾기",
+	"emoji_no_result": "이모지 없음",
 	"chat_the_mdy_at_hm": "%1$s/%2$s/%3$s %4$s:%5$s",
 	"chat_too_long": "메시지가 너무 깁니다. 토론 내용을 1000자로 제한하십시오.",
 	"chest_hunt": "보물 사냥",

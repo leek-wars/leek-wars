@@ -26,6 +26,7 @@
     - "Les notifications qui concernent un de vos poireaux affichent sa vignette à côté de l'icône de l'événement : quatre rapports d'arène d'affilée se distinguent enfin les uns des autres."
     - "La page d'une équipe a son panneau « En direct », à côté du chat : les trophées débloqués, les seuils franchis et les sujets créés par ses membres, sur les 7 derniers jours."
     - "Vos emojis favoris : les emojis que vous utilisez le plus (réactions posées et emojis envoyés dans les messages) apparaissent en premier dans la barre de réaction rapide du chat, et dans un onglet ⭐ en tête du panneau emoji."
+    - "Recherche dans le panneau emoji : tapez « chat », « pizza » ou « france » pour retrouver un emoji parmi les 1746, dans votre langue."
   improved:
     - "Le panneau emoji passe à Unicode 16 : 556 emojis ajoutés (🤣 🥰 🦁 🦈 🥑 🍾 🥊 🧩 🏍️ 🛸 🔥 🧯 🟩 🏴‍☠️...), doublons retirés, et catégories réorganisées suivant les 9 groupes officiels — smileys, personnes, animaux et nature, nourriture, voyages, activités, objets, symboles, drapeaux."
     - "Groupes privés : le mode « comptes à mot de passe » (identifiants choisis par le superviseur, sans e-mail des membres) se règle maintenant dans les paramètres du groupe, et les groupes de démo l'activent d'office."

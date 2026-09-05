@@ -54,6 +54,7 @@
 	"chat": "Chat",
 	"chat_placeholder": "Gib deine Nachricht ein...",
 	"emoji_favorites": "Favoriten",
+	"emoji_no_result": "Kein Emoji",
 	"chat_the_mdy_at_hm": "Die %1$s/%2$s/%3$s um %4$s:%5$s",
 	"chat_too_long": "Nachricht zu lang, bitte beschränke deine Nachrichten auf 1000 Zeichen",
 	"chest_hunt": "Truhenjagd",

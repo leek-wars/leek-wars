@@ -57,6 +57,7 @@
 	"chat": "Chat",
 	"chat_placeholder": "Enter your message...",
 	"emoji_favorites": "Favorites",
+	"emoji_no_result": "No emoji",
 	"chat_the_mdy_at_hm": "The %2$s/%1$s/%3$s at %4$s:%5$s",
 	"chat_too_long": "Message too long, please keep your messages under 1000 characters.",
 	"chest_hunt": "Chest Hunt",

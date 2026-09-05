@@ -54,6 +54,7 @@
 	"chat": "Keskustelu",
 	"chat_placeholder": "Kirjoita viestisi...",
 	"emoji_favorites": "Suosikit",
+	"emoji_no_result": "Ei emojeita",
 	"chat_the_mdy_at_hm": "%1$s/%2$s/%3$s klo %4$s:%5$s",
 	"chat_too_long": "Viesti on liian pitkä, rajoita keskustelusi 1000 merkkiin",
 	"chest_hunt": "Aarrejahtaus",

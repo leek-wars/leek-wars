@@ -54,6 +54,7 @@
 	"chat": "Czat",
 	"chat_placeholder": "Wpisz swoją wiadomość...",
 	"emoji_favorites": "Ulubione",
+	"emoji_no_result": "Brak emoji",
 	"chat_the_mdy_at_hm": "%1$s/%2$s/%3$s na %4$s:%5$s",
 	"chat_too_long": "Wiadomość jest za długa, ogranicz długość dyskusji do 1000 znaków",
 	"chest_hunt": "Polowanie na skrzynie",

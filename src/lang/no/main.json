@@ -54,6 +54,7 @@
 	"chat": "Chat",
 	"chat_placeholder": "Skriv inn meldingen din...",
 	"emoji_favorites": "Favoritter",
+	"emoji_no_result": "Ingen emoji",
 	"chat_the_mdy_at_hm": "%1$s/%2$s/%3$s ved %4$s:%5$s",
 	"chat_too_long": "Meldingen er for lang. Begrens diskusjonene dine til 1000 tegn",
 	"chest_hunt": "Kistejakt",

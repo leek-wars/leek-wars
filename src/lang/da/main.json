@@ -54,6 +54,7 @@
 	"chat": "Chat",
 	"chat_placeholder": "Indtast din besked...",
 	"emoji_favorites": "Favoritter",
+	"emoji_no_result": "Ingen emoji",
 	"chat_the_mdy_at_hm": "%1$s.%2$s.%3$s kl. %4$s:%5$s",
 	"chat_too_long": "Beskeden er for lang. Begræns venligst dine diskussioner til 1000 tegn",
 	"chest_hunt": "Skattejagt",

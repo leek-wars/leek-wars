@@ -54,6 +54,7 @@
 	"chat": "聊天",
 	"chat_placeholder": "输入您的信息...",
 	"emoji_favorites": "收藏",
+	"emoji_no_result": "没有表情符号",
 	"chat_the_mdy_at_hm": "位于 %4$s 的 %1$s/%2$s/%3$s：%5$s",
 	"chat_too_long": "消息太长，请将您的讨论限制在 1000 个字符以内",
 	"chest_hunt": "宝箱狩猎",
