@@ -35,12 +35,18 @@
 
 	const t = useNamespacedT('home')
 
+	// Six combats : c'est tout ce que le serveur met dans le store
+	// (`FarmerController` : `getFarmerHistory($farmer, 6)`). En demander douze
+	// laissait croire à un widget qui grandit avec sa hauteur, alors qu'il n'a
+	// jamais eu plus de six lignes à montrer.
+	const FIGHTS = 6
+
 	const farmer = computed(() => store.state.farmer)
-	const fights = computed(() => (store.state.farmer?.fight_history ?? []).slice(0, 12))
+	const fights = computed(() => (store.state.farmer?.fight_history ?? []).slice(0, FIGHTS))
 	// Autant de combats que la hauteur du panel le permet, jamais coupés.
 	// On mesure .fight (et pas son wrapper) : ses marges font partie du pas.
 	const fightsEl = ref<HTMLElement | null>(null)
-	const fightCount = useFitCount(fightsEl, '.fight', 12)
+	const fightCount = useFitCount(fightsEl, '.fight', FIGHTS)
 	const visibleFights = computed(() => fights.value.slice(0, fightCount.value))
 
 	const chartData = ref<ChartData<'line'> | null>(null)

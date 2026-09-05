@@ -16,7 +16,7 @@
 			     icônes et leurs clés existantes — la page des trophées compte déjà
 			     de cette façon. Les paliers vides sautent. -->
 			<div v-if="anyTrophies" class="rarities">
-				<v-tooltip v-for="r in rarityCounts" :key="r.difficulty">
+				<v-tooltip v-for="r in rarities" :key="r.difficulty">
 					<template #activator="{ props }">
 						<span class="rarity-count" v-bind="props">
 							<img :src="'/image/icon/trophy/' + r.difficulty + '.svg'" alt="">
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -54,6 +54,22 @@
 
 	defineOptions({ name: 'HomeWidgetTrophies' })
 
+	// Taille des trois séries, la même que celle du serveur (HomeController).
+	const SERIE = 18
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	type Trophy = any
+	interface TrophiesData {
+		count: number, total: number, points: number,
+		rarities: { difficulty: number, count: number }[],
+		best: Trophy[], rarest: Trophy[], latest: Trophy[]
+	}
+
+	// Charge utile envoyée par la requête groupée de l'accueil (`home/get`).
+	// `undefined` : elle est en vol. `null` : elle n'a rien pour ce widget, qui
+	// reprend alors son propre appel. Cf. home.vue.
+	const props = defineProps<{ data?: TrophiesData | null }>()
+
 	const t = useNamespacedT('home')
 	const { locale } = useI18n()
 
@@ -62,14 +78,10 @@
 	const count = ref(0)
 	const total = ref(0)
 	const points = ref(0)
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const best = ref<any[]>([])
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const rarest = ref<any[]>([])
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const latest = ref<any[]>([])
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const unlocked = ref<any[]>([])
+	const rarities = ref<{ difficulty: number, count: number }[]>([])
+	const best = ref<Trophy[]>([])
+	const rarest = ref<Trophy[]>([])
+	const latest = ref<Trophy[]>([])
 
 	const sections = computed(() => [
 		{ key: 'best_trophies', icon: 'mdi-trophy-outline', list: best.value },
@@ -78,38 +90,54 @@
 	].filter(s => s.list.length))
 	const anyTrophies = computed(() => best.value.length > 0)
 
-	// Nombre de trophées débloqués par palier de rareté, paliers vides exclus.
-	// `unlocked` est déjà filtré des trophées de catégorie 0, comme les points.
-	const rarityCounts = computed(() => {
-		const counts = [0, 0, 0, 0, 0, 0]
-		for (const trophy of unlocked.value) counts[trophy.difficulty]++
-		return counts.map((count, difficulty) => ({ difficulty, count })).filter(r => r.count > 0)
-	})
-
 	// Autant de sections que la hauteur du panel le permet, jamais coupées.
 	const sectionsEl = ref<HTMLElement | null>(null)
 	const sectionCount = useFitCount(sectionsEl, '.section-block', 3, 8)
 	const visibleSections = computed(() => sections.value.slice(0, sectionCount.value))
 
-	if (store.state.farmer) {
-		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
-			count.value = data.count
-			total.value = data.total
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const all: any[] = Object.values(data.trophies)
-			let pts = 0
-			for (const trophy of all) {
-				if (trophy.unlocked && trophy.category !== 0) pts += trophy.points
-			}
-			points.value = pts
-			const list = all.filter(tr => tr.unlocked && tr.category !== 0)
-			unlocked.value = list
-			best.value = [...list].sort((a, b) => b.points - a.points).slice(0, 18)
-			rarest.value = [...list].sort((a, b) => a.rarity - b.rarity).slice(0, 18)
-			latest.value = [...list].sort((a, b) => b.date - a.date).slice(0, 18)
-			loaded.value = true
-		})
+	function apply(data: TrophiesData) {
+		count.value = data.count
+		total.value = data.total
+		points.value = data.points
+		rarities.value = data.rarities
+		best.value = data.best
+		rarest.value = data.rarest
+		latest.value = data.latest
+		loaded.value = true
 	}
+
+	// Repli : le service complet, qui renvoie les ~450 trophées du jeu, et les
+	// trois séries taillées ici. Les trophées BONUS restent dehors, comme dans le
+	// décompte du serveur et dans les points de l'éleveur en base — le filtre
+	// d'avant portait sur `category !== 0`, une catégorie qui n'existe pas.
+	function load() {
+		if (!store.state.farmer) { loaded.value = true; return }
+		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
+			const all: Trophy[] = Object.values(data.trophies)
+			const list = all.filter(tr => tr.unlocked && !tr.bonus)
+			const counts = [0, 0, 0, 0, 0, 0]
+			let pts = 0
+			for (const trophy of list) {
+				pts += trophy.points
+				counts[trophy.difficulty]++
+			}
+			apply({
+				count: data.count,
+				total: data.total,
+				points: pts,
+				rarities: counts.map((n, difficulty) => ({ difficulty, count: n })).filter(r => r.count > 0),
+				best: [...list].sort((a, b) => b.points - a.points).slice(0, SERIE),
+				rarest: [...list].sort((a, b) => a.rarity - b.rarity).slice(0, SERIE),
+				latest: [...list].sort((a, b) => b.date - a.date).slice(0, SERIE),
+			})
+		}).error(() => { loaded.value = true })
+	}
+
+	watch(() => props.data, (data) => {
+		if (data === undefined) return
+		if (data === null) load()
+		else apply(data)
+	}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

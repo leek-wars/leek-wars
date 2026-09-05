@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from 'vue'
+	import { ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { useNamespacedT } from '@/model/i18n'
 
@@ -28,6 +28,10 @@
 
 	interface Reason { type: string, value: number, rank: number }
 	interface Player { id: number, name: string, avatar_changed: number, country: string | null, reason: Reason }
+
+	// Charge utile de la requête groupée de l'accueil (cf. home.vue) : `undefined`
+	// tant qu'elle est en vol, `null` si ce widget n'en a rien tiré.
+	const props = defineProps<{ data?: { players: Player[] } | null }>()
 
 	const loaded = ref(false)
 	const players = ref<Player[]>([])
@@ -42,10 +46,19 @@
 		}
 	}
 
-	LeekWars.get<{ players: Player[] }>('farmer/get-remarkable').then((data) => {
+	function load() {
+		LeekWars.get<{ players: Player[] }>('farmer/get-remarkable').then((data) => {
+			players.value = data.players ?? []
+			loaded.value = true
+		}).error(() => { loaded.value = true })
+	}
+
+	watch(() => props.data, (data) => {
+		if (data === undefined) return
+		if (data === null) { load(); return }
 		players.value = data.players ?? []
 		loaded.value = true
-	}).error(() => { loaded.value = true })
+	}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

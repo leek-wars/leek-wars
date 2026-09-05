@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -34,13 +34,22 @@
 
 	defineOptions({ name: 'HomeWidgetRareTrophies' })
 
+	const RARE_TROPHIES = 10
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	type Trophy = any
+	type Unlockers = { [id: number]: { id: number, name: string, avatar_changed: number }[] }
+
+	// Charge utile de la requête groupée de l'accueil (cf. home.vue) : `undefined`
+	// tant qu'elle est en vol, `null` si ce widget n'en a rien tiré.
+	const props = defineProps<{ data?: { trophies: Trophy[], unlockers: Unlockers } | null }>()
+
 	const t = useNamespacedT('home')
 	const { locale } = useI18n()
 
 	const farmerId = computed(() => store.state.farmer?.id ?? 0)
 	const loaded = ref(false)
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const rarest = ref<any[]>([])
+	const rarest = ref<Trophy[]>([])
 
 	// Autant de lignes que la hauteur du panel le permet, jamais coupées.
 	const linesEl = ref<HTMLElement | null>(null)
@@ -58,26 +67,34 @@
 	// Les derniers éleveurs à avoir débloqué chaque trophée affiché. Service
 	// nouveau : sur un serveur plus ancien l'appel échoue et les lignes restent
 	// simplement sans avatars.
-	const unlockers = ref<{ [id: number]: { id: number, name: string, avatar_changed: number }[] }>({})
+	const unlockers = ref<Unlockers>({})
 
-	if (store.state.farmer) {
+	// Repli quand la requête groupée n'a rien pour ce widget : les deux appels
+	// d'origine, le service complet puis les débloqueurs.
+	function load() {
+		if (!store.state.farmer) { loaded.value = true; return }
 		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const all: any[] = Object.values(data.trophies)
+			const all: Trophy[] = Object.values(data.trophies)
 			rarest.value = all
-				.filter(tr => tr.unlocked && tr.category !== 0)
+				.filter(tr => tr.unlocked && !tr.bonus)
 				.sort((a, b) => a.rarity - b.rarity)
-				.slice(0, 10)
+				.slice(0, RARE_TROPHIES)
 			loaded.value = true
 			if (rarest.value.length) {
-				LeekWars.get<{ unlockers: typeof unlockers.value }>('trophy/last-unlockers/' + rarest.value.map(tr => tr.id).join(',')).then(d => {
+				LeekWars.get<{ unlockers: Unlockers }>('trophy/last-unlockers/' + rarest.value.map(tr => tr.id).join(',')).then(d => {
 					unlockers.value = d.unlockers
 				}).error(() => {})
 			}
 		}).error(() => { loaded.value = true })
-	} else {
-		loaded.value = true
 	}
+
+	watch(() => props.data, (data) => {
+		if (data === undefined) return
+		if (data === null) { load(); return }
+		rarest.value = data.trophies
+		unlockers.value = data.unlockers ?? {}
+		loaded.value = true
+	}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

@@ -44,14 +44,18 @@
 	const ROW_HEIGHT = 31
 	const ROWS = 10
 
-	const props = defineProps<{ params?: { category?: string } }>()
+	interface Row { id: number, rank: number, name: string, talent: number, country: string | null }
+
+	// `data` : charge utile de la requête groupée de l'accueil (cf. home.vue).
+	// `undefined` tant qu'elle est en vol, `null` si ce widget n'en a rien tiré —
+	// c'est alors, et alors seulement, qu'il refait son propre appel.
+	const props = defineProps<{ params?: { category?: string }, data?: { ranking: Row[] } | null }>()
 
 	const t = useNamespacedT('home')
 
 	const category = computed(() => props.params?.category || 'leek')
 	const loaded = ref(false)
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const rows = ref<any[]>([])
+	const rows = ref<Row[]>([])
 
 	// Autant de lignes que la hauteur du panel le permet, jamais coupées.
 	const rowsEl = ref<HTMLElement | null>(null)
@@ -74,22 +78,33 @@
 	function rankClass(rank: number): string {
 		return rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : ''
 	}
+	// Sa propre ligne, surlignée : son éleveur, un de ses poireaux — et son équipe,
+	// oubliée jusque-là, alors que c'est le seul classement des trois où l'on ne
+	// peut pas se reconnaître à son nom.
 	function isMe(row: { id: number }): boolean {
 		const farmer = store.state.farmer
 		if (!farmer) return false
 		if (category.value === 'farmer') return row.id === farmer.id
 		if (category.value === 'leek') return row.id in farmer.leeks
-		return false
+		return !!farmer.team && row.id === farmer.team.id
 	}
 
 	function load() {
 		loaded.value = false
-		LeekWars.get<{ ranking: unknown[] }>('ranking/get-active/' + category.value + '/talent/1/null').then((data) => {
+		LeekWars.get<{ ranking: Row[] }>('ranking/get-active/' + category.value + '/talent/1/null').then((data) => {
 			rows.value = (data.ranking ?? []).slice(0, ROWS)
 			loaded.value = true
 		}).error(() => { rows.value = []; loaded.value = true })
 	}
-	watch(category, load, { immediate: true })
+
+	// Le changement de catégorie est traité par l'accueil, qui redemande ce seul
+	// widget : pas de watcher sur `category` ici, il doublerait la requête.
+	watch(() => props.data, (data) => {
+		if (data === undefined) { loaded.value = false; return }
+		if (data === null) { load(); return }
+		rows.value = (data.ranking ?? []).slice(0, ROWS)
+		loaded.value = true
+	}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

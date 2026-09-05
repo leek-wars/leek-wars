@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { useNamespacedT } from '@/model/i18n'
@@ -67,6 +67,10 @@
 		views: number, seen: boolean, pinned: boolean, closed: boolean, status: number,
 		author: { id: number, name: string }, last_message_owner_name: string | null
 	}
+	// Charge utile de la requête groupée de l'accueil (cf. home.vue) : `undefined`
+	// tant qu'elle est en vol, `null` si ce widget n'en a rien tiré.
+	const props = defineProps<{ data?: { topics: Topic[] } | null }>()
+
 	const loaded = ref(false)
 	const topics = ref<Topic[]>([])
 
@@ -82,10 +86,19 @@
 		return topic.category_team > 0 ? topic.category_name : t('forum-category.' + topic.category_name)
 	}
 
-	LeekWars.get<{ topics: Topic[] }>('forum/get-last-topics').then((data) => {
+	function load() {
+		LeekWars.get<{ topics: Topic[] }>('forum/get-last-topics').then((data) => {
+			topics.value = data.topics ?? []
+			loaded.value = true
+		}).error(() => { loaded.value = true })
+	}
+
+	watch(() => props.data, (data) => {
+		if (data === undefined) return
+		if (data === null) { load(); return }
 		topics.value = data.topics ?? []
 		loaded.value = true
-	}).error(() => { loaded.value = true })
+	}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

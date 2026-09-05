@@ -24,13 +24,17 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS } from '@/model/item'
 
 	defineOptions({ name: 'HomeWidgetCollection' })
+
+	// Charge utile de la requête groupée de l'accueil (cf. home.vue) : `undefined`
+	// tant qu'elle est en vol, `null` si ce widget n'en a rien tiré.
+	const props = defineProps<{ data?: { templates: number[], celebrated: number[] } | null }>()
 
 	const icons = ITEM_TYPE_ICONS
 
@@ -78,21 +82,36 @@
 		return t ? Math.floor(o / t * 100) : 0
 	}
 
-	// Source de vérité serveur (items possédés un jour), avec repli sur l'inventaire local.
-	LeekWars.get<{ templates: number[] }>('item/get-collection').then((res) => {
-		owned.value = new Set(res.templates)
-		loaded.value = true
-	}).error(() => {
+	// Dernier recours : l'inventaire du store, qui ne dit que ce qu'on possède
+	// ENCORE. Il couvre les huit catégories comptées ci-dessus — sans les
+	// ressources, les composants et les schémas, la barre tombait de plusieurs
+	// dizaines de points au moindre incident réseau.
+	function fallbackToStore() {
 		const f = store.state.farmer
 		if (f) {
 			const set = new Set<number>()
-			for (const list of [f.weapons, f.chips, f.hats, f.pomps, f.potions]) {
+			for (const list of [f.weapons, f.chips, f.hats, f.pomps, f.potions, f.resources, f.components, f.schemes]) {
 				for (const it of (list ?? [])) set.add((it as { template: number }).template)
 			}
 			owned.value = set
 		}
 		loaded.value = true
-	})
+	}
+
+	// Source de vérité serveur (items possédés un jour), avec repli sur l'inventaire local.
+	function load() {
+		LeekWars.get<{ templates: number[] }>('item/get-collection').then((res) => {
+			owned.value = new Set(res.templates)
+			loaded.value = true
+		}).error(fallbackToStore)
+	}
+
+	watch(() => props.data, (data) => {
+		if (data === undefined) return
+		if (data === null) { load(); return }
+		owned.value = new Set(data.templates)
+		loaded.value = true
+	}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

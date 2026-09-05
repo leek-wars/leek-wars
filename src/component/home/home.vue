@@ -163,6 +163,12 @@
 	}
 	const WIDGET_TYPES = Object.keys(widgetMeta)
 
+	// Widgets servis par la requête groupée `POST home/get` (#4262). Les autres
+	// n'ont rien à y faire : `leeks` et `talent` lisent le store, `chat` vit sur
+	// le websocket, `live` garde son propre rafraîchissement toutes les 60 s et
+	// sert aussi la page d'équipe.
+	const AGGREGATED = new Set(['trophies', 'rare_trophies', 'collection', 'ranking', 'classement', 'leek_stats', 'forum', 'tournaments'])
+
 	// Disposition par défaut (grille 12 colonnes) si l'éleveur n'a jamais personnalisé.
 	const DEFAULT_LAYOUT: WidgetInstance[] = [
 		{ id: 'leeks', type: 'leeks', x: 0, y: 0, w: 6, h: 4, params: {} },
@@ -238,11 +244,65 @@
 	}
 	refreshAvailable()
 
+	// Charge utile de chaque widget, par id. Trois états, et le widget les
+	// distingue : `undefined` = la requête groupée est en vol, il patiente ;
+	// `null` = le serveur n'a rien pour lui (widget en erreur, requête tombée,
+	// serveur antérieur à `home/get`), il refait son propre appel comme avant ;
+	// un objet = sa charge utile. Le repli compte : le serveur part en prod avant
+	// le client, et l'inverse arrive aussi.
+	const widgetData = ref<Record<string, unknown>>({})
+	// Numéro de la requête qui a demandé chaque widget : une réponse qui arrive
+	// après un changement de compte ou une reconfiguration ne remplit plus une
+	// case qui ne l'attend plus.
+	const widgetRequest: Record<string, number> = {}
+	let requestCount = 0
+
 	function widgetProps(widget: WidgetInstance): Record<string, unknown> {
-		return widgetMeta[widget.type].configurable ? { params: widget.params } : {}
+		const props: Record<string, unknown> = {}
+		if (widgetMeta[widget.type].configurable) props.params = widget.params
+		if (AGGREGATED.has(widget.type)) props.data = widgetData.value[widget.id]
+		return props
 	}
 
 	const { locale } = useI18n()
+
+	// Une seule requête pour toute la page, au lieu d'une par widget : les onze
+	// appels du montage dépassaient le rate-limit de 5 req/s et revenaient en 429,
+	// rejoués avec backoff — l'accueil se remplissait par vagues.
+	function fetchWidgets(list: WidgetInstance[]) {
+		const wanted = list.filter(w => AGGREGATED.has(w.type))
+		if (!wanted.length || !store.state.farmer) return
+		const request = ++requestCount
+		const pending = { ...widgetData.value }
+		for (const w of wanted) {
+			pending[w.id] = undefined
+			widgetRequest[w.id] = request
+		}
+		widgetData.value = pending
+		const asked = wanted.map(w => w.id)
+		const payload = wanted.map(w => ({ id: w.id, type: w.type, params: w.params }))
+		LeekWars.post<{ widgets: Record<string, { ok: boolean, data?: unknown, error?: string }> }>('home/get', { widgets: payload, lang: locale.value })
+			.then(response => resolveWidgets(asked, request, id => {
+				const entry = response.widgets ? response.widgets[id] : null
+				return entry && entry.ok ? entry.data : null
+			}))
+			.error(() => resolveWidgets(asked, request, () => null))
+	}
+
+	function resolveWidgets(ids: string[], request: number, value: (id: string) => unknown) {
+		const result = { ...widgetData.value }
+		let changed = false
+		for (const id of ids) {
+			if (widgetRequest[id] !== request) continue
+			result[id] = value(id)
+			changed = true
+		}
+		if (changed) widgetData.value = result
+	}
+
+	// Dès la construction du composant : la requête part avant le premier rendu,
+	// pas au montage de la grille.
+	fetchWidgets(widgets.value)
 
 	// Titre du panel : le widget chat précise son canal (« Chat — Général »),
 	// avec la même résolution que le widget lui-même : chat de groupe imposé,
@@ -280,8 +340,13 @@
 	function categoryOf(widget: WidgetInstance): string {
 		return (widget.params.category as string) || 'leek'
 	}
+	// Le poireau du widget, validé contre ceux de l'éleveur : un poireau vendu, ou
+	// la disposition d'un autre compte, laissait un id inconnu dans les paramètres
+	// et le widget s'affichait « aucun poireau » au lieu de retomber sur le premier.
 	function leekOf(widget: WidgetInstance): number | undefined {
-		return (widget.params.leek as number | undefined) ?? myLeeks.value[0]?.id
+		const chosen = widget.params.leek as number | undefined
+		if (chosen && myLeeks.value.some(l => l.id === chosen)) return chosen
+		return myLeeks.value[0]?.id
 	}
 
 	// Mode large activé sur cette page uniquement (restauré en quittant).
@@ -422,8 +487,11 @@
 		if (!def.multi && widgets.value.some(w => w.type === type)) return
 		const id = genId(type)
 		const pos = firstFreePosition(def.defaultW, def.defaultH)
-		widgets.value.push({ id, type, x: pos.x, y: pos.y, w: def.defaultW, h: def.defaultH, params: {} })
+		const widget: WidgetInstance = { id, type, x: pos.x, y: pos.y, w: def.defaultW, h: def.defaultH, params: {} }
+		widgets.value.push(widget)
 		refreshAvailable()
+		// Le nouveau venu tout seul : les autres ont déjà leur contenu.
+		fetchWidgets([widget])
 		nextTick(() => {
 			const el = gridEl.value?.querySelector(`[gs-id="${id}"]`) as HTMLElement | null
 			if (el && grid) {
@@ -438,6 +506,12 @@
 		const el = gridEl.value?.querySelector(`[gs-id="${id}"]`) as HTMLElement | null
 		if (el && grid) grid.removeWidget(el, false)
 		widgets.value = widgets.value.filter(w => w.id !== id)
+		delete widgetRequest[id]
+		if (id in widgetData.value) {
+			const rest = { ...widgetData.value }
+			delete rest[id]
+			widgetData.value = rest
+		}
 		refreshAvailable()
 		persistNow()
 	}
@@ -445,6 +519,9 @@
 	function setParam(widget: WidgetInstance, key: string, value: unknown) {
 		widget.params = { ...widget.params, [key]: value }
 		persistNow()
+		// Seul ce widget change de contenu (autre canal, autre classement, autre
+		// poireau) : on ne redemande que lui.
+		fetchWidgets([widget])
 	}
 
 	// Changement de compte : recharge la disposition et reconstruit la grille.
@@ -454,6 +531,9 @@
 		dropPendingSave()
 		widgets.value = parseLayout(store.state.farmer?.home_layout)
 		refreshAvailable()
+		// Le contenu appartenait à l'ancien compte : on repart de zéro.
+		widgetData.value = {}
+		fetchWidgets(widgets.value)
 		editMode.value = false
 		if (grid) {
 			grid.destroy(false)

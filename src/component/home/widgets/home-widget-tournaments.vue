@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from 'vue'
+	import { ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { useNamespacedT } from '@/model/i18n'
 
@@ -24,6 +24,11 @@
 	const t = useNamespacedT('home')
 
 	interface Winner { tournament: number, type: number, date: number, winner: { name: string, link: string, farmer_id?: number, avatar_changed?: number } }
+
+	// Charge utile de la requête groupée de l'accueil (cf. home.vue) : `undefined`
+	// tant qu'elle est en vol, `null` si ce widget n'en a rien tiré.
+	const props = defineProps<{ data?: { winners: Winner[] } | null }>()
+
 	const loaded = ref(false)
 	const winners = ref<Winner[]>([])
 
@@ -31,10 +36,19 @@
 		return type === 1 ? 'tournament_leek' : type === 2 ? 'tournament_team' : 'tournament_farmer'
 	}
 
-	LeekWars.get<{ winners: Winner[] }>('tournament/get-recent-winners').then((data) => {
+	function load() {
+		LeekWars.get<{ winners: Winner[] }>('tournament/get-recent-winners').then((data) => {
+			winners.value = data.winners ?? []
+			loaded.value = true
+		}).error(() => { loaded.value = true })
+	}
+
+	watch(() => props.data, (data) => {
+		if (data === undefined) return
+		if (data === null) { load(); return }
 		winners.value = data.winners ?? []
 		loaded.value = true
-	}).error(() => { loaded.value = true })
+	}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

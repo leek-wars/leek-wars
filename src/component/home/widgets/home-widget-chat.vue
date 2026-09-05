@@ -40,8 +40,11 @@
 		if (!farmer?.public_chat_enabled) return null
 		const chosen = props.params?.chat
 		if (chosen && LeekWars.isPublicChat(chosen)) return chosen
+		// `?.` comme dans le titre du panneau (home.vue) : une locale sans canal
+		// public — ou pas encore chargée — rendait « chat indisponible » plutôt que
+		// de faire planter le widget.
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return (LeekWars.languages as any)[locale.value].chat
+		return (LeekWars.languages as any)[locale.value]?.chat ?? null
 	})
 </script>
 

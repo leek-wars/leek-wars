@@ -88,9 +88,21 @@
 	// un id indéfini, il faut donc recharger quand il arrive.
 	watch(() => props.team, () => { loaded.value = false; load() })
 	// Le rate limit dynamique est côté serveur (sélection par score selon
-	// l'activité) ; ici on rafraîchit simplement à intervalle fixe.
-	const timer = setInterval(load, 60 * 1000)
-	onBeforeUnmount(() => clearInterval(timer))
+	// l'activité) ; ici on rafraîchit simplement à intervalle fixe — mais seulement
+	// quand l'onglet est visible. Un onglet d'accueil laissé ouvert pour la journée
+	// tirait une requête par minute pour un panneau que personne ne regardait, et
+	// c'est une requête qui n'a pas d'index (trophy.time, forum_topic.date). Au
+	// retour sur l'onglet, on rattrape tout de suite : la timeline serait sinon
+	// vieille d'une minute au moment précis où on la regarde.
+	const timer = setInterval(() => { if (!document.hidden) load() }, 60 * 1000)
+	function onVisibility() {
+		if (!document.hidden) load()
+	}
+	document.addEventListener('visibilitychange', onVisibility)
+	onBeforeUnmount(() => {
+		clearInterval(timer)
+		document.removeEventListener('visibilitychange', onVisibility)
+	})
 </script>
 
 <style lang="scss" scoped>

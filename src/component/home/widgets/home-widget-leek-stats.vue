@@ -24,7 +24,7 @@
 						<div class="wdl-cell"><span class="v win">{{ $filters.number(leek.victories) }}</span><span class="l">{{ t('stat_victories') }}</span></div>
 						<div class="wdl-cell"><span class="v draw">{{ $filters.number(leek.draws) }}</span><span class="l">{{ t('stat_draws') }}</span></div>
 						<div class="wdl-cell"><span class="v lose">{{ $filters.number(leek.defeats) }}</span><span class="l">{{ t('stat_defeats') }}</span></div>
-						<div class="wdl-cell"><span class="v">{{ leek.tournaments ? leek.tournaments.length : 0 }}</span><span class="l">{{ t('stat_tournaments') }}</span></div>
+						<div class="wdl-cell"><span class="v">{{ $filters.number(leek.tournaments) }}</span><span class="l">{{ t('stat_tournaments') }}</span></div>
 					</div>
 				</div>
 			</div>
@@ -48,22 +48,36 @@
 
 	defineOptions({ name: 'HomeWidgetLeekStats', components: { Line } })
 
-	const props = defineProps<{ params?: { leek?: number } }>()
-
-	const t = useNamespacedT('home')
-
 	interface LeekStats {
 		id: number, name: string, level: number, xp: number, up_xp: number, down_xp: number,
 		talent: number, max_talent: number, talent_history: number[], victories: number,
-		draws: number, defeats: number, tournaments: unknown[]
+		draws: number, defeats: number,
+		/** Nombre de tournois disputés — et non la longueur de l'historique, que le
+		 *  serveur plafonne à six. */
+		tournaments: number,
+		skin?: number, metal?: boolean, face?: number, weapon?: number | null, hat?: unknown
 	}
+
+	// `data` : charge utile de la requête groupée de l'accueil (cf. home.vue).
+	// `undefined` tant qu'elle est en vol, `null` si ce widget n'en a rien tiré.
+	const props = defineProps<{ params?: { leek?: number }, data?: { leek: LeekStats } | null }>()
+
+	const t = useNamespacedT('home')
 
 	const loaded = ref(false)
 	const leek = ref<LeekStats | null>(null)
 	const chartData = ref<ChartData<'line'> | null>(null)
 	const chartOptions = ref<ChartOptions<'line'>>({})
 
-	const leekId = computed(() => props.params?.leek || Object.values(store.state.farmer?.leeks ?? {})[0]?.id)
+	// Le poireau choisi, validé contre ceux de l'éleveur : un poireau vendu, ou la
+	// disposition rapportée d'un autre compte, affichait « aucun poireau » au lieu
+	// de retomber sur le premier. Même règle que le titre du panneau (home.vue).
+	const leekId = computed(() => {
+		const mine = Object.values(store.state.farmer?.leeks ?? {})
+		const chosen = props.params?.leek
+		if (chosen && mine.some(l => l.id === chosen)) return chosen
+		return mine[0]?.id
+	})
 
 	const xpPercent = computed(() => {
 		if (!leek.value) return 0
@@ -99,17 +113,31 @@
 		}
 	}
 
+	// Repli : la fiche complète du poireau (six combats, historique des tournois,
+	// registres…) pour les douze champs affichés ici. Son compteur de tournois
+	// vaut la longueur de l'historique, plafonnée à six — la requête groupée, elle,
+	// donne le nombre réel.
 	function load() {
 		const id = leekId.value
 		if (!id) { loaded.value = true; return }
 		loaded.value = false
-		LeekWars.get<LeekStats>('leek/get/' + id).then((data) => {
-			leek.value = data
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		LeekWars.get<any>('leek/get/' + id).then((data) => {
+			leek.value = { ...data, tournaments: data.tournaments ? data.tournaments.length : 0 }
 			buildChart()
 			loaded.value = true
 		}).error(() => { leek.value = null; loaded.value = true })
 	}
-	watch(leekId, load, { immediate: true })
+
+	// Le changement de poireau est traité par l'accueil, qui redemande ce seul
+	// widget : pas de watcher sur `leekId` ici, il doublerait la requête.
+	watch(() => props.data, (data) => {
+		if (data === undefined) { loaded.value = false; return }
+		if (data === null) { load(); return }
+		leek.value = data.leek
+		buildChart()
+		loaded.value = true
+	}, { immediate: true })
 	// La grille du graphique est lue sur le thème : la relire à la bascule, sinon
 	// elle garde les couleurs de l'ancien et disparaît dans le fond.
 	watch(() => [LeekWars.darkMode, LeekWars.legacyTheme], () => nextTick(buildChart))
