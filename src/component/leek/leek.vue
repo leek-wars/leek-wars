@@ -802,7 +802,7 @@
 				</div>
 				<div class="flex">
 					<explorer class="explorer" @select="selectAI($event)" />
-					<div>
+					<div class="components-column">
 						<div class="title">
 							<v-icon>mdi-sd</v-icon>
 							{{ $t('all_my_components') }} ({{ farmer_components.length }})
@@ -2032,10 +2032,22 @@
 	.ai-popup {
 		display: flex;
 		flex-direction: column;
+		// Le popup lui-meme ne defile pas : il tient dans la hauteur laissee
+		// par la fenetre, et ce sont les deux listes qui defilent chacune de
+		// leur cote. Le defilement d'ensemble ne revient que si l'ecran est
+		// trop petit pour les hauteurs minimales des deux colonnes.
+		//
+		// Le compte vient de la chaine Vuetify, un `max-height: 100%` ne
+		// resolvant pas ici (la zone de contenu n'a pas de hauteur propre) :
+		// 24 px de marge de l'overlay, 48 px de son `max-height`, 40 px de
+		// barre de titre et 30 px de padding du contenu, plus 4 px de marge
+		// pour ne pas rallumer la barre de defilement pour un pixel.
+		max-height: calc(100vh - 146px);
 		.leek-ai-components {
 			width: 360px;
 			margin-bottom: 30px;
 			align-self: center;
+			flex: none;
 			.component {
 				border: 3px solid transparent;
 				cursor: pointer;
@@ -2048,9 +2060,18 @@
 		}
 		.flex {
 			gap: 20px;
+			// La rangee prend toute la hauteur restante : c'est elle qui donne
+			// leur hauteur aux deux zones de defilement.
+			flex: 1;
+			min-height: 0;
 			& > * {
 				flex: 1;
 			}
+		}
+		.components-column {
+			display: flex;
+			flex-direction: column;
+			min-height: 0;
 		}
 		.leek-ai, .farmer-ais {
 			min-height: 80px;
@@ -2079,6 +2100,15 @@
 			grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
 			gap: 6px;
 			justify-items: center;
+			// La grille defile pour elle-meme au lieu d'allonger le popup.
+			flex: 1;
+			align-content: start;
+			overflow-y: auto;
+			// Sans ca, `overflow-y` force `overflow-x` a auto et la barre
+			// verticale, en rognant la largeur, fait apparaitre une barre
+			// horizontale sous la grille.
+			overflow-x: hidden;
+			margin-bottom: 10px;
 			.component {
 				cursor: move;
 				width: 60px;
@@ -2137,18 +2167,29 @@
 	// Le popup d'IA fait 1050 px : bien avant le mobile, l'explorateur d'IA et la
 	// grille de composants deviennent deux colonnes trop etroites. On les empile.
 	@media (max-width: 800px) {
+		// Empile, on revient au defilement d'ensemble : deux zones de defilement
+		// l'une au-dessus de l'autre sur une colonne etroite sont impraticables.
+		.ai-popup {
+			max-height: none;
+		}
 		.ai-popup .flex {
 			flex-direction: column;
+			flex: none;
 		}
 		// En colonne, `flex: 1` se partagerait la HAUTEUR et ecraserait les deux blocs :
 		// on les laisse prendre leur hauteur naturelle.
 		.ai-popup .flex > * {
 			flex: none;
 		}
-		// L'explorateur est fige a 460 px : empile, il repousse les composants hors de
-		// l'ecran avant meme qu'on les voie.
+		// Empile, l'explorateur repousserait les composants hors de l'ecran avant
+		// meme qu'on les voie.
 		.ai-popup .explorer {
+			min-height: 0;
 			height: 260px;
+		}
+		.ai-popup .farmer-components {
+			flex: none;
+			overflow-y: visible;
 		}
 	}
 	#app.app .farmer-potions .potions-grid {
@@ -2319,9 +2360,11 @@
 		height: 20px;
 		content: attr(quantity);
 		text-align: center;
-		color: var(--grey-13);
+		// Le vert du theme, pas un #0a0 en dur : il jurait avec le v3 et son
+		// encre creme dessus ne tenait pas 3 de contraste.
+		color: var(--primary-surface-text);
 		border-radius: var(--radius-pill);
-		background-color: #0a0;
+		background-color: var(--primary-surface);
 		font-weight: bold;
 		padding-left: 4px;
 		padding-right: 4px;
@@ -2407,8 +2450,12 @@
 	.empty {
 		color: var(--grey-8);
 	}
+	// L'explorateur s'etire sur toute la hauteur de la rangee, qui vaut la
+	// hauteur disponible a l'ecran : il etait fige a 460 px avec du vide sous
+	// lui. Le minimum n'est la que pour les tres petits ecrans, ou il rend la
+	// main au defilement d'ensemble du popup.
 	.explorer {
-		height: 460px;
+		min-height: 260px;
 	}
 	.weapon-count, .chip-count, .register-count {
 		padding-left: 5px;
