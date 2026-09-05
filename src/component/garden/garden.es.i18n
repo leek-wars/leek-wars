@@ -92,6 +92,5 @@
 	"lwplus_required": "La Huerta rápida está reservada a los suscriptores LW+.",
 	"no_fight_created": "No se pudo lanzar ninguna pelea.",
 	"fast_batch_launching": "Lanzando las peleas…",
-	"fast_garden_title": "Huerta rápida",
-	"fast_garden_hint": "Lanza varias peleas de una vez y sigue aquí sus resultados."
+	"fast_garden_title": "Huerta rápida"
 }

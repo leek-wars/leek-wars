@@ -13,7 +13,6 @@
 			</div>
 		</template>
 		<template #content>
-			<div v-if="!ids.length && !launching" class="batch-hint">{{ t('fast_garden_hint') }}</div>
 			<!-- Le bouton de lancement vit ICI et nulle part ailleurs. Il est fourni par le
 			     potager, seul à savoir quel poireau / quelle compo / quel boss est
 			     sélectionné ; le panneau n'affiche que le lot. -->
@@ -210,21 +209,18 @@
 </script>
 
 <style lang="scss" scoped>
-	.batch-hint {
-		padding: 14px 15px 0;
-		color: var(--text-color-secondary);
-		text-align: center;
-	}
 	.launch-row {
 		display: flex;
 		justify-content: center;
-		padding: 14px 10px 4px;
+		// Même respiration au-dessus et en dessous : le bouton est seul dans le panneau
+		// tant qu'aucun lot n'est parti, il ne doit pas coller au bord.
+		padding: 14px 10px;
 	}
 	.batch-body {
 		display: flex;
 		align-items: center;
 		gap: 10px;
-		padding: 8px 10px 0;
+		padding: 0 10px;
 	}
 	.batch-loader {
 		flex: 0 0 auto;

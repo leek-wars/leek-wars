@@ -92,6 +92,5 @@
 	"lwplus_required": "快速菜园仅限 LW+ 订阅者使用。",
 	"no_fight_created": "没有战斗能够开始。",
 	"fast_batch_launching": "正在开始战斗…",
-	"fast_garden_title": "快速菜园",
-	"fast_garden_hint": "一次开始多场战斗，并在这里查看结果。"
+	"fast_garden_title": "快速菜园"
 }

@@ -92,6 +92,5 @@
 	"lwplus_required": "Szybki Ogród jest zarezerwowany dla subskrybentów LW+.",
 	"no_fight_created": "Nie udało się rozpocząć żadnej walki.",
 	"fast_batch_launching": "Uruchamianie walk…",
-	"fast_garden_title": "Szybki Ogród",
-	"fast_garden_hint": "Uruchom kilka walk naraz i śledź ich wyniki tutaj."
+	"fast_garden_title": "Szybki Ogród"
 }

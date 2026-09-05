@@ -92,6 +92,5 @@
 	"lwplus_required": "高速菜園はLW+会員限定です。",
 	"no_fight_created": "戦闘を開始できませんでした。",
 	"fast_batch_launching": "戦闘を開始しています…",
-	"fast_garden_title": "高速菜園",
-	"fast_garden_hint": "複数の戦闘をまとめて開始し、結果をここで確認できます。"
+	"fast_garden_title": "高速菜園"
 }

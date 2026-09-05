@@ -27,7 +27,7 @@ const PLAIN_ERROR_KEYS = [
 const FAST_GARDEN_KEYS = [
 	'fast_fight_n', 'fast_fight_choose', 'fast_fight_lwplus_only', 'fast_fight_discover',
 	'fast_fight_unavailable', 'fast_fight_boss_master_only',
-	'fast_garden_title', 'fast_garden_hint',
+	'fast_garden_title',
 	'fast_batch_title', 'fast_batch_progress', 'fast_batch_done', 'fast_batch_launching', 'fast_batch_results',
 	'fast_batch_levelups', 'fast_batch_trophies', 'fast_batch_rareloot', 'fast_batch_chests',
 	'fast_batch_avg_duration', 'fast_batch_avg_generation',

@@ -82,6 +82,5 @@
 	"lwplus_required": "Nopea Kasvitarha on varattu LW+-tilaajille.",
 	"no_fight_created": "Yhtään taistelua ei voitu aloittaa.",
 	"fast_batch_launching": "Käynnistetään taisteluja…",
-	"fast_garden_title": "Nopea kasvitarha",
-	"fast_garden_hint": "Käynnistä useita taisteluja kerralla ja seuraa tuloksia täällä."
+	"fast_garden_title": "Nopea kasvitarha"
 }

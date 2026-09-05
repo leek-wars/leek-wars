@@ -95,6 +95,5 @@
 	"lwplus_required": "Le Potager rapide est réservé aux abonnés LW+.",
 	"no_fight_created": "Aucun combat n'a pu être lancé.",
 	"fast_batch_launching": "Lancement des combats…",
-	"fast_garden_title": "Potager rapide",
-	"fast_garden_hint": "Lancez plusieurs combats d'un coup, et suivez leur résultat ici."
+	"fast_garden_title": "Potager rapide"
 }

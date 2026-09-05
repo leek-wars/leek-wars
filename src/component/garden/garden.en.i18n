@@ -95,6 +95,5 @@
 	"lwplus_required": "Fast Garden is reserved for LW+ subscribers.",
 	"no_fight_created": "No fight could be started.",
 	"fast_batch_launching": "Starting fights…",
-	"fast_garden_title": "Fast Garden",
-	"fast_garden_hint": "Start several fights at once, and follow their results here."
+	"fast_garden_title": "Fast Garden"
 }

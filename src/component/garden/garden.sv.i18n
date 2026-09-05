@@ -92,6 +92,5 @@
 	"lwplus_required": "Den snabba Grönsaksträdgården är förbehållen LW+-prenumeranter.",
 	"no_fight_created": "Ingen kamp kunde startas.",
 	"fast_batch_launching": "Startar kamper…",
-	"fast_garden_title": "Snabb grönsaksträdgård",
-	"fast_garden_hint": "Starta flera kamper på en gång och följ deras resultat här."
+	"fast_garden_title": "Snabb grönsaksträdgård"
 }
