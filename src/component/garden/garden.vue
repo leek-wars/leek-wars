@@ -1057,6 +1057,20 @@
 
 
 <style lang="scss" scoped>
+/* La page est longue — adversaires puis lot de combats — et les onglets de
+   catégorie partaient avec le scroll. Ils restent en haut.
+   `align-self` est indispensable : le conteneur étire ses colonnes sur toute sa
+   hauteur, et un élément sticky qui remplit son bloc conteneur n'a nulle part où
+   coller. En v3 la barre du haut est fixe (`--header-height`), d'où le décalage,
+   comme le panneau de prévisualisation du marché. */
+.column3 {
+	position: sticky;
+	align-self: flex-start;
+	top: 12px;
+	body:not(.v2) & {
+		top: calc(var(--header-height) + 12px);
+	}
+}
 	.tabs .tab img.restat-potion {
 		width: 32px;
 		margin: -4px 0;
