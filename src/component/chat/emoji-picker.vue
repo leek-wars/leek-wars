@@ -99,6 +99,10 @@ function pick(emoji: string) {
 	.tabs :deep(.v-tab) {
 		min-width: 20px !important;
 		width: 20px;
+		// Les 10 onglets (⭐ + les 9 groupes d'Unicode) doivent tenir dans les
+		// 352px du panneau, qui n'affiche pas de flèches de défilement : les 3px
+		// de marge par défaut de chaque côté les poussaient à 380px.
+		margin: 0;
 	}
 	.content {
 		overflow: auto;

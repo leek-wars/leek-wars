@@ -12,7 +12,7 @@ vi.mock('@/model/leekwars', () => ({
 	},
 }))
 
-import { formatEmojis, formatEmojisText, applyEmojis } from '@/model/emojis'
+import { Emojis, formatEmojis, formatEmojisText, applyEmojis } from '@/model/emojis'
 
 beforeEach(() => { h.nativeEmojis = false })
 
@@ -23,6 +23,48 @@ function render(html: string): HTMLElement {
 	applyEmojis(root)
 	return root
 }
+
+// Garde-fous sur le catalogue lui-même (`emoji-list.ts`, généré par
+// scripts/generate-emojis.mjs) : une régénération ratée ne doit pas passer.
+describe('catalogue du panneau emoji', () => {
+	const all = Emojis.categories.flatMap(c => c.emojis)
+
+	it('a les 9 groupes d\'Unicode', () => expect(Emojis.categories).toHaveLength(9))
+
+	it('ne contient aucun doublon', () => {
+		const seen = new Set<string>()
+		const duplicates = all.filter(e => seen.size === seen.add(e).size)
+		expect(duplicates).toEqual([])
+	})
+
+	it('ouvre la première catégorie par les smileys maison', () => {
+		expect(Emojis.categories[0].emojis.slice(0, Object.keys(Emojis.custom).length)).toEqual(Object.keys(Emojis.custom))
+	})
+
+	it('n\'a que des smileys maison en ASCII (le reste est de l\'unicode)', () => {
+		const ascii = all.filter(e => [...e].every(c => c.charCodeAt(0) < 128))
+		expect(ascii).toEqual(Object.keys(Emojis.custom))
+	})
+
+	it('ne propose pas les indicateurs régionaux seuls (🇦, 🇧… s\'affichent en lettres)', () => {
+		expect(all.filter(e => /^[\u{1F1E6}-\u{1F1FF}]$/u.test(e))).toEqual([])
+	})
+
+	it('porte les U+FE0F des séquences qui en ont besoin', () => {
+		for (const emoji of ['❤️', '☀️', '✈️', '⚠️', '➡️', '✔️', '♠️']) { expect(all).toContain(emoji) }
+		for (const bare of ['❤', '☀', '✈', '⚠', '➡', '✔', '♠']) { expect(all).not.toContain(bare) }
+	})
+
+	it('garde les emojis historiques et ajoute les récents', () => {
+		// Un emoji retiré du catalogue disparaît du panneau des joueurs qui s'en servaient.
+		for (const emoji of ['😀', '🐶', '🍏', '⚽', '🚗', '⌚', '💯', '🇫🇷', '🕵️‍♂️', '👨‍🌾', '👨‍👩‍👧‍👦']) {
+			expect(all).toContain(emoji)
+		}
+		for (const emoji of ['🤣', '🥰', '🦁', '🥑', '🧩', '🛸', '🧯', '🟩', '🏴‍☠️', '🫟']) {
+			expect(all).toContain(emoji)
+		}
+	})
+})
 
 describe('formatEmojis - entrées non-textuelles', () => {
 	it('chaîne vide → vide', () => expect(formatEmojis('')).toBe(''))
