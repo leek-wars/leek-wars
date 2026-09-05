@@ -49,6 +49,19 @@ function escapeRegExp(str: string) {
 	return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
 }
 
+// Un maillon de séquence emoji : un drapeau (deux indicateurs régionaux), un
+// keycap (1️⃣), ou un pictogramme suivi de sa variante (U+FE0F ou une teinte de
+// peau) et de ses balises (les drapeaux régionaux, 🏴󠁧󠁢󠁥󠁮󠁧󠁿).
+const EMOJI_PART = '(?:\\p{RI}\\p{RI}|[0-9#*]\\uFE0F?\\u20E3|\\p{Extended_Pictographic}(?:\\uFE0F|\\p{Emoji_Modifier})?[\\u{E0020}-\\u{E007F}]*)'
+// La séquence entière, maillons ZWJ compris (👨‍👩‍👧, 🏳️‍🌈, 🐦‍🔥), pour l'envelopper
+// d'un SEUL <span>. L'ancienne version prenait les caractères un par un : chaque
+// maillon partait dans son propre span, ce qui cassait la ligature (👨‍👩‍👧
+// s'affichait en trois personnes) et laissait le U+FE0F hors du span, donc ❤️
+// retombait en rendu texte. Elle enveloppait aussi tout U+2000 à U+3300, c'est-
+// à-dire les tirets cadratins, les guillemets et les points de suspension d'un
+// message ordinaire, qui se retrouvaient peints avec la police d'emojis.
+const EMOJI_REGEX = new RegExp(EMOJI_PART + '(?:\\u200D' + EMOJI_PART + ')*', 'gu')
+
 function formatEmojis(rawData: unknown): string {
 	if (!rawData || typeof(rawData) !== 'string') { return String(rawData ?? '') }
 	let data: string = rawData
@@ -68,8 +81,7 @@ function formatEmojis(rawData: unknown): string {
 		return data // nothing more to do
 	} else {
 		// Parse emojis
-		const emoji_regex = /(\u00a9|[1-9]\u20E3|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
-		return data.replace(emoji_regex, "<span class='emoji emoji-font'>$&</span>")
+		return data.replace(EMOJI_REGEX, "<span class='emoji emoji-font'>$&</span>")
 	}
 }
 

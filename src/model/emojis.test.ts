@@ -55,6 +55,13 @@ describe('catalogue du panneau emoji', () => {
 		for (const bare of ['❤', '☀', '✈', '⚠', '➡', '✔', '♠']) { expect(all).not.toContain(bare) }
 	})
 
+	it('a chacun de ses emojis reconnu comme une seule séquence', () => {
+		// Le panneau et le rendu du chat doivent s'accorder : un emoji proposé au
+		// clic mais découpé à l'affichage sortirait en morceaux.
+		const casses = all.filter(e => !Emojis.custom[e] && formatEmojis(e) !== `<span class='emoji emoji-font'>${e}</span>`)
+		expect(casses).toEqual([])
+	})
+
 	it('garde les emojis historiques et ajoute les récents', () => {
 		// Un emoji retiré du catalogue disparaît du panneau des joueurs qui s'en servaient.
 		for (const emoji of ['😀', '🐶', '🍏', '⚽', '🚗', '⌚', '💯', '🇫🇷', '🕵️‍♂️', '👨‍🌾', '👨‍👩‍👧‍👦']) {
@@ -105,6 +112,44 @@ describe('formatEmojis - emojis unicode', () => {
 	it('laisse l\'emoji intact quand nativeEmojis=true', () => {
 		h.nativeEmojis = true
 		expect(formatEmojis('😀')).toBe('😀')
+	})
+
+	// Une séquence coupée en plusieurs <span> perd sa ligature : la famille
+	// s'affiche en trois personnes, le drapeau arc-en-ciel en drapeau blanc
+	// suivi d'un arc-en-ciel, et un U+FE0F laissé dehors fait retomber son
+	// caractère en rendu texte (noir et blanc).
+	const wrapped = (emoji: string) => `<span class='emoji emoji-font'>${emoji}</span>`
+	it.each([
+		['famille (ZWJ)', '👨‍👩‍👧'],
+		['drapeau arc-en-ciel (ZWJ + VS16)', '🏳️‍🌈'],
+		['drapeau pirate (ZWJ)', '🏴‍☠️'],
+		['phénix (ZWJ)', '🐦‍🔥'],
+		['coeur (VS16)', '❤️'],
+		['drapeau national (indicateurs régionaux)', '🇫🇷'],
+		['drapeau à balises', '🏴󠁧󠁢󠁥󠁮󠁧󠁿'],
+		['keycap', '1️⃣'],
+		['teinte de peau', '👍🏽'],
+		['famille de quatre', '🧑‍🧑‍🧒‍🧒'],
+	])('enveloppe %s dans un seul span', (_name, emoji) => {
+		expect(formatEmojis(emoji)).toBe(wrapped(emoji))
+	})
+
+	it('sépare deux emojis collés', () => {
+		expect(formatEmojis('😀😂')).toBe(wrapped('😀') + wrapped('😂'))
+	})
+
+	it('ne touche pas à la ponctuation typographique', () => {
+		// L'ancienne regex prenait tout U+2000-U+3300 : le tiret cadratin, les
+		// guillemets et les points de suspension d'un message ordinaire
+		// finissaient peints avec la police d'emojis.
+		const texte = 'salut — « oui » … et 3 → 4'
+		expect(formatEmojis(texte)).toBe(texte)
+	})
+
+	it('garde les symboles qui sont de vrais emojis', () => {
+		for (const emoji of ['©', '®', '™', '⚠️', '➡️', '✔️', '♠️', 'Ⓜ️']) {
+			expect(formatEmojis(emoji)).toBe(wrapped(emoji))
+		}
 	})
 })
 
