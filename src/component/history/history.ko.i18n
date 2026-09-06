@@ -1,5 +1,8 @@
 {
 	"1week": "일주",
+	"custom_date": "사용자 지정",
+	"date_from": "시작",
+	"date_to": "종료",
 	"24h": "24시간",
 	"2days": "2일",
 	"battle_royale": "배틀 로얄",
