@@ -77,7 +77,11 @@ export class BossSquads {
 		localStorage.removeItem('garden/boss-squad')
 		router.isReady().then(() => {
 			if (router.currentRoute.value.path.startsWith("/garden/boss") && router.currentRoute.value.path !== "/garden/boss") {
-				router.push('/garden/boss')
+				// replace et pas push : on corrige une URL d'escouade qui n'existe plus (typiquement
+				// un retour arrière depuis le combat, l'escouade ayant été dissoute par l'attaque).
+				// Un push depuis une entrée qui n'est pas la dernière efface tout l'historique en
+				// avant : plus de bouton « suivant », et le retour rebouclait sur cette redirection.
+				router.replace('/garden/boss')
 			}
 		})
 	}
