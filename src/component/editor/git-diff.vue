@@ -6,6 +6,7 @@
 import * as monaco from 'monaco-editor'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { getLanguageForPath } from './file-types'
+import { disposeEditor } from './monaco-dispose'
 import { colorDecoratorOptions } from './monaco-color-decorators'
 
 defineOptions({ name: 'GitDiff', i18n: {} })
@@ -52,9 +53,7 @@ onBeforeUnmount(() => {
 
 function dispose() {
 	if (diffEditor) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		diffEditor.setModel(null as any)
-		diffEditor.dispose()
+		disposeEditor(diffEditor)
 		diffEditor = null
 	}
 	originalModel?.dispose()

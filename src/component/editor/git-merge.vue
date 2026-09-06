@@ -6,6 +6,7 @@
 import * as monaco from 'monaco-editor'
 import { markRaw, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { getLanguageForPath } from './file-types'
+import { disposeEditor } from './monaco-dispose'
 import { buildConflictDecorations, parseConflicts, registerConflictCodeLens, type MergeConflict } from './merge-conflicts'
 import { colorDecoratorOptions } from './monaco-color-decorators'
 
@@ -51,7 +52,7 @@ function dispose() {
 	lenses = null
 	decorations = null
 	if (editor) {
-		editor.dispose()
+		disposeEditor(editor)
 		editor = null
 	}
 	model?.dispose()
