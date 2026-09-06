@@ -770,11 +770,17 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - **Marqueur lu / non lu du forum** (`forum.vue`, `forum-category.vue`,
     `home-widget-forum.vue`) : les PNG `forum_seen` / `forum_unseen` (un
     poireau vert de 40 px, rattrapé en sombre par un `filter: invert(0.85)`)
-    deviennent une **pastille à l'encre du thème** — `mdi-circle` en
-    `--primary` pour le non-lu, `mdi-circle-outline` discret pour le lu — et le
-    titre passe en gras sur une ligne non lue, comme le faisait déjà le widget
-    forum de l'accueil. Colonne ramenée de 55/50 px à 34 px. Les deux PNG ne
-    sont plus référencés nulle part ; ils restent dans `public/image/`.
+    deviennent le **losange des intitulés de section du menu** (« ◆ POIREAUX »,
+    `leekwars-shell-v3.scss`), à l'encre du thème : `mdi-rhombus` en
+    `--primary` pour le non-lu, `mdi-rhombus-outline` discret pour le lu,
+    20 px, centré dans sa colonne. Le titre passe en gras sur une ligne non
+    lue, comme le faisait déjà le widget forum de l'accueil. Colonne ramenée de
+    55/50 px à 34 px. Les deux PNG ne sont plus référencés nulle part ; ils
+    restent dans `public/image/`.
+    Première proposition refusée par Pierre : une **pastille ronde**
+    (`mdi-circle`). Le principe 2 ne parle pas que des `border-radius` — il vaut
+    aussi pour la **forme d'un glyphe**. Un marqueur d'état se prend dans la
+    géométrie du thème (losange, carré, chevron mono), jamais dans un rond.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

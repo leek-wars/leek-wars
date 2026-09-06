@@ -73,8 +73,8 @@
 				</div>
 				<router-link v-for="category in categories" :key="category.id" v-ripple :to="'/forum/category-' + category.id" class="category" :class="{unread: !category.seen}">
 					<div class="seen">
-						<v-icon v-if="category.seen" class="dot">mdi-circle-outline</v-icon>
-						<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-circle</v-icon>
+						<v-icon v-if="category.seen" class="dot">mdi-rhombus-outline</v-icon>
+						<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-rhombus</v-icon>
 					</div>
 					<div class="text">
 						<template v-if="category.type == 'normal'">
@@ -312,9 +312,10 @@
 		background-color: var(--pure-white);
 		box-shadow: var(--elevation-1);
 	}
-	// Marqueur lu / non lu : une pastille a l'encre du theme, pas le poireau en
-	// PNG qui portait sa couleur en dur (cf. ICONS.md) et qu'il fallait
-	// rattraper au filtre en sombre.
+	// Marqueur lu / non lu : le losange des intitules de section du menu v3
+	// (« ◆ POIREAUX », cf. leekwars-shell-v3.scss), a l'encre du theme. Ni le
+	// poireau en PNG qui portait sa couleur en dur (cf. ICONS.md), ni une
+	// pastille ronde — le v3 n'a pas d'arrondis (principe 2).
 	.category > .seen {
 		width: 34px;
 		display: flex;
@@ -323,7 +324,7 @@
 		padding: 10px 4px;
 	}
 	.category .dot {
-		font-size: 14px;
+		font-size: 20px;
 		color: var(--text-color-secondary);
 		opacity: 0.45;
 	}

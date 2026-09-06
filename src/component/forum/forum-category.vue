@@ -182,8 +182,8 @@
 					<div v-if="loading" class="loading-overlay"><loader /></div>
 					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned, unread: !topic.seen}" class="topic">
 						<div class="seen">
-							<v-icon v-if="topic.seen" class="dot">mdi-circle-outline</v-icon>
-							<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-circle</v-icon>
+							<v-icon v-if="topic.seen" class="dot">mdi-rhombus-outline</v-icon>
+							<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-rhombus</v-icon>
 						</div>
 						<div>
 							<span v-ripple class="title">
@@ -825,9 +825,10 @@ i.attr {
 	background-color: var(--pure-white);
 	box-shadow: var(--elevation-1);
 }
-// Marqueur lu / non lu : une pastille a l'encre du theme, pas le poireau en PNG
-// qui portait sa couleur en dur (cf. ICONS.md) et qu'il fallait rattraper au
-// filtre en sombre.
+// Marqueur lu / non lu : le losange des intitules de section du menu v3
+// (« ◆ POIREAUX », cf. leekwars-shell-v3.scss), a l'encre du theme. Ni le
+// poireau en PNG qui portait sa couleur en dur (cf. ICONS.md), ni une pastille
+// ronde — le v3 n'a pas d'arrondis (principe 2).
 .topic > .seen {
 	flex: 0 0 34px;
 	display: flex;
@@ -836,7 +837,7 @@ i.attr {
 	padding: 8px 4px;
 }
 .topic .dot {
-	font-size: 14px;
+	font-size: 20px;
 	color: var(--text-color-secondary);
 	opacity: 0.45;
 }
