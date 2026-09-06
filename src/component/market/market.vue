@@ -922,6 +922,30 @@ const t = useNamespacedT('market')
 		background: var(--pure-white);
 		box-shadow: var(--elevation-1);
 	}
+	// Etats officiels du v3 (doctrine « survol discret, actif en vert »), les
+	// memes que les cartes du widget « Mes poireaux » de l'accueil : surface de
+	// rangee et trait renforce au survol, liseré vert sur l'item choisi. Les
+	// etats du v2 ci-dessus ne valent rien ici — `--pure-white` EST la surface
+	// du panneau en v3, donc l'item choisi ne se distinguait pas, et
+	// l'elevation est une ombre floue (principe 1). Le liseré est deja la au
+	// repos, la vignette ne bouge pas d'un pixel.
+	body:not(.v2) {
+		.items .item {
+			transition: background-color .12s ease, border-color .12s ease;
+			&:hover {
+				background: var(--background-row);
+				border-color: var(--border-strong);
+			}
+			&:active {
+				border-color: var(--primary);
+			}
+		}
+		.items .item.router-link-active {
+			background: var(--background-row);
+			border-color: var(--primary);
+			box-shadow: none;
+		}
+	}
 	.buy-label {
 		display: inline-block;
 	}
@@ -1116,6 +1140,13 @@ const t = useNamespacedT('market')
 			body:not(.v2) & {
 				box-shadow: none;
 				border: 1px solid var(--border);
+				transition: background-color .12s ease, border-color .12s ease;
+				// Meme survol discret que les vignettes d'items : `--pure-white`
+				// ci-dessous EST la surface du panneau en v3, invisible.
+				&:hover {
+					background: var(--background-row);
+					border-color: var(--border-strong);
+				}
 			}
 			padding: 8px 5px;
 			cursor: pointer;

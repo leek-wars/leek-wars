@@ -790,6 +790,14 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     `--border-strong` au survol, `--primary` sur le liseré au clic, transition
     de 0,12 s. Le liseré est déjà là au repos, la rangée ne bouge pas d'un
     pixel. Sous `body:not(.v2)`, le v2 garde son ombre.
+  - **Marché, item choisi** (`market.vue`, même demande) : la vignette
+    sélectionnée (`.router-link-active`) portait le même couple perdant —
+    `--pure-white` et `--elevation-1` — et la grille n'avait aucun survol. Elle
+    prend les mêmes états : survol sur `--background-row` / `--border-strong`,
+    **liseré `--primary` sur l'item choisi**, ce qui est exactement ce que fait
+    déjà le menu de la coquille pour sa page courante. Le survol des raccourcis
+    de section (`.menu .item`, « Combats », « Armes »…) passe du même
+    `--pure-white` invisible à la surface de rangée.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
