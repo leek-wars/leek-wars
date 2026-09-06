@@ -570,7 +570,12 @@
 		gap: 6px;
 		margin: 5px 0;
 		img {
+			// Une quarantaine d'icônes de trophée ne sont pas carrées (blitzkrieg va jusqu'à
+			// 1:2,4) : sans hauteur, la ligne s'étirait à 94px. object-fit pour ne pas les
+			// déformer, comme trophies.vue.
 			width: 36px;
+			height: 36px;
+			object-fit: contain;
 		}
 	}
 	#app.app .details-wrapper {
