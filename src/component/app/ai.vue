@@ -183,6 +183,7 @@ const show_lines = computed(() => {
 		--ai-accent: var(--border-strong);
 		--ai-line: var(--ai-accent);
 		--ai-surface: var(--background-row);
+		--ai-lift: transparent;
 		--ai-fold: 22px;
 		--ai-inner-fold: calc(var(--ai-fold) - 1.17px);
 		background-image: none;
@@ -194,7 +195,10 @@ const show_lines = computed(() => {
 			content: '';
 			position: absolute;
 			inset: 2px;
-			background: var(--ai-surface);
+			// `--ai-lift` : un voile d'encre pose PAR-DESSUS la surface, quelle
+			// que soit sa teinte — c'est le survol, et il marche aussi bien sur
+			// une feuille neutre que sur une colorée.
+			background: linear-gradient(var(--ai-lift), var(--ai-lift)), var(--ai-surface);
 			clip-path: polygon(0 0, calc(100% - var(--ai-inner-fold)) 0, 100% var(--ai-inner-fold), 100% 100%, 0 100%);
 		}
 		&::after {
@@ -247,10 +251,16 @@ const show_lines = computed(() => {
 		&.blue { --ai-accent: var(--info); }
 		&.red { --ai-accent: var(--error); }
 		&.black { --ai-accent: var(--text-color-secondary); }
-		// Le ripple étant coupé en v3, le survol est le seul retour visuel. Il ne
-		// touche que le contour : la pastille de version, le rabat et la surface
-		// gardent la teinte de la feuille (demande de Pierre).
+		// Doctrine « survol discret, actif en vert » : le vert dit « c'est
+		// celui-là », jamais « tu pourrais cliquer ici ». Le survol se contente
+		// donc d'un voile d'encre sur la surface — visible dans les deux thèmes
+		// (l'encre est claire en sombre, sombre en clair) et sans toucher à la
+		// teinte de la feuille, à sa pastille de version ni à son rabat — et
+		// c'est le clic qui allume le contour en vert.
 		&:hover {
+			--ai-lift: color-mix(in srgb, var(--text-color) 8%, transparent);
+		}
+		&:active {
 			--ai-line: var(--primary-strong);
 		}
 		// L'assombrissement du v2 ne dit rien sur un fond sombre : la feuille
