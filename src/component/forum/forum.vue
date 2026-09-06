@@ -312,6 +312,26 @@
 		background-color: var(--pure-white);
 		box-shadow: var(--elevation-1);
 	}
+	// Etats officiels du v3 (doctrine « survol discret, actif en vert »), les
+	// memes que les cartes du widget « Mes poireaux » de l'accueil : le survol
+	// pose la surface de rangee et renforce le trait, le clic allume le liseré
+	// vert. Le survol du v2 ci-dessus ne vaut rien ici — son ombre est une
+	// ombre floue (principe 1), et son `--pure-white` EST la surface du
+	// panneau en v3, donc invisible. Le liseré est deja la au repos, la rangee
+	// ne bouge pas d'un pixel quand il change de couleur.
+	body:not(.v2) {
+		.category:not(.header) {
+			transition: background-color .12s ease, border-color .12s ease;
+		}
+		.category:not(.header):hover {
+			background-color: var(--background-row);
+			border-color: var(--border-strong);
+			box-shadow: none;
+		}
+		.category:not(.header):active {
+			border-color: var(--primary);
+		}
+	}
 	// Marqueur lu / non lu : le losange des intitules de section du menu v3
 	// (« ◆ POIREAUX », cf. leekwars-shell-v3.scss), a l'encre du theme. Ni le
 	// poireau en PNG qui portait sa couleur en dur (cf. ICONS.md), ni une

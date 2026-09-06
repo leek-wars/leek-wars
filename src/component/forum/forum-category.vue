@@ -825,6 +825,24 @@ i.attr {
 	background-color: var(--pure-white);
 	box-shadow: var(--elevation-1);
 }
+// Memes etats que les categories et que les cartes du widget « Mes poireaux »
+// (doctrine « survol discret, actif en vert ») : surface de rangee et trait
+// renforce au survol, liseré vert au clic. Le survol du v2 ci-dessus pose une
+// ombre floue (principe 1) et un `--pure-white` qui EST la surface du panneau
+// en v3.
+body:not(.v2) {
+	.topic:not(.header) {
+		transition: background-color .12s ease, border-color .12s ease;
+	}
+	.topic:not(.header):hover {
+		background-color: var(--background-row);
+		border-color: var(--border-strong);
+		box-shadow: none;
+	}
+	.topic:not(.header):active {
+		border-color: var(--primary);
+	}
+}
 // Marqueur lu / non lu : le losange des intitules de section du menu v3
 // (« ◆ POIREAUX », cf. leekwars-shell-v3.scss), a l'encre du theme. Ni le
 // poireau en PNG qui portait sa couleur en dur (cf. ICONS.md), ni une pastille

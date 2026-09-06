@@ -781,6 +781,15 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     (`mdi-circle`). Le principe 2 ne parle pas que des `border-radius` — il vaut
     aussi pour la **forme d'un glyphe**. Un marqueur d'état se prend dans la
     géométrie du thème (losange, carré, chevron mono), jamais dans un rond.
+  - **Rangées du forum, survol et clic** (`forum.vue`, `forum-category.vue`,
+    demande de Pierre : « le style hover / active officiel, comme sur le widget
+    Mes poireaux ») : les catégories et les sujets gardaient le survol du v2 —
+    `--pure-white`, qui EST la surface du panneau en v3 (survol invisible), et
+    une `--elevation-1`, ombre floue interdite par le principe 1. Ils prennent
+    les états des cartes du widget « Mes poireaux » : `--background-row` et
+    `--border-strong` au survol, `--primary` sur le liseré au clic, transition
+    de 0,12 s. Le liseré est déjà là au repos, la rangée ne bouge pas d'un
+    pixel. Sous `body:not(.v2)`, le v2 garde son ombre.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
