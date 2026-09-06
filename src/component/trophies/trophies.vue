@@ -82,7 +82,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="closet">
+					<div ref="closet" class="closet">
 						<div>
 							<h4><v-icon>mdi-trophy-outline</v-icon> {{ $t('best_trophies') }}</h4>
 							<div class="trophies">
@@ -162,7 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { mixins, useNamespacedT } from '@/model/i18n'
@@ -231,9 +231,44 @@ const sorted_trophies = computed(() => {
 	return result
 })
 
-const best_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.points - a.points).slice(0, 7))
-const rarest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => a.rarity - b.rarity).slice(0, 7))
-const latest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.date - a.date).slice(0, 7))
+// Nombre de trophées mis en avant par colonne : autant qu'il en tient, jusqu'à
+// 10. La mesure porte sur la COLONNE (`flex: 1`, donc un tiers de la vitrine
+// quoi qu'elle contienne) et non sur la rangée d'icônes, dont la largeur
+// dépendrait du compte qu'on cherche à calculer — le compte se mordrait la
+// queue et ne remonterait jamais quand la fenêtre s'élargit.
+const MAX_HIGHLIGHTED = 10
+const TROPHY_SIZE = 43
+const TROPHIES_PADDING = 20
+const closet = ref<HTMLElement | null>(null)
+const highlight_count = ref(7)
+let closet_observer: ResizeObserver | null = null
+
+function updateHighlightCount() {
+	const column = closet.value?.firstElementChild as HTMLElement | undefined
+	if (!column) return
+	const inner = column.clientWidth - TROPHIES_PADDING
+	if (inner <= 0) return
+	highlight_count.value = Math.min(MAX_HIGHLIGHTED, Math.max(3, Math.floor(inner / TROPHY_SIZE)))
+}
+
+// La vitrine n'existe qu'une fois les trophées chargés : on s'accroche au ref
+// plutôt qu'à onMounted, qui passerait avant elle.
+watch(closet, el => {
+	if (closet_observer) { closet_observer.disconnect(); closet_observer = null }
+	if (el) {
+		closet_observer = new ResizeObserver(() => updateHighlightCount())
+		closet_observer.observe(el)
+		nextTick(() => updateHighlightCount())
+	}
+}, { immediate: true })
+
+onBeforeUnmount(() => {
+	if (closet_observer) { closet_observer.disconnect(); closet_observer = null }
+})
+
+const best_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.points - a.points).slice(0, highlight_count.value))
+const rarest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => a.rarity - b.rarity).slice(0, highlight_count.value))
+const latest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.date - a.date).slice(0, highlight_count.value))
 
 const breadcrumb_items = computed(() => [
 	{ name: farmer.value ? farmer.value.name : '...', link: '/farmer/' + id.value },
@@ -400,6 +435,15 @@ watch(sort_by, () => {
 		.closet {
 			display: flex;
 			justify-content: space-between;
+			gap: 8px;
+			// Colonnes de largeur egale : c'est sur elle que se mesure le
+			// nombre de trophees affiches, et elle ne doit donc pas dependre
+			// de ce qu'elles contiennent. `min-width: 0` pour qu'une rangee
+			// d'icones ne puisse pas imposer un plancher.
+			> div {
+				flex: 1;
+				min-width: 0;
+			}
 		}
 		.trophies {
 			display: flex;
