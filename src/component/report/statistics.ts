@@ -562,9 +562,7 @@ class FightStatistics {
 					const entity = entities[action[2]]
 					entity.resurrection++
 					entity.life = action[4]
-					// La résurrection redéfinit la vie max (divisée par deux) : sans la
-					// reprendre, le pourcentage de vie du graphe reste calculé sur l'ancien
-					// max et une entité full life s'affiche à ~50%.
+					// La résurrection divise la vie max : sans la reprendre, le graphe en pourcentage affiche une entité full life à ~50%
 					if (action.length > 5) {
 						entity.max_life = action[5]
 					}

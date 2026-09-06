@@ -63,27 +63,27 @@ export class BossSquads {
 		// this.progress = LeekWars.objectSize(this.leeks)
 		// LeekWars.setTitleTag('BR ' + this.progress + '/10')
 	}
-	joined(squad: BossSquad) {
-		this.squad = squad
-		const route = '/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id
+	// Recalage d'URL depuis un message du websocket ; la garde de préfixe évite de dérouter un
+	// joueur parti ailleurs. `push` pour ce qui suit une intention du joueur, `replace` pour
+	// corriger une URL devenue inatteignable — un push depuis une entrée qui n'est plus la
+	// dernière effacerait tout l'historique « en avant ».
+	private navigate(target: string, mode: 'push' | 'replace', from: string = '/garden/boss') {
 		router.isReady().then(() => {
-			const currentPath = router.currentRoute.value.path
-			if (currentPath.startsWith("/garden/boss") && currentPath !== route) {
-				router.push(route)
+			const path = router.currentRoute.value.path
+			if (path.startsWith(from) && path !== target) {
+				if (mode === 'replace') { router.replace(target) } else { router.push(target) }
 			}
 		})
 	}
+	joined(squad: BossSquad) {
+		this.squad = squad
+		this.navigate('/garden/boss/' + BOSSES[squad.boss].name + '/' + squad.id, 'push')
+	}
 	noSuchSquad() {
 		localStorage.removeItem('garden/boss-squad')
-		router.isReady().then(() => {
-			if (router.currentRoute.value.path.startsWith("/garden/boss") && router.currentRoute.value.path !== "/garden/boss") {
-				// replace et pas push : on corrige une URL d'escouade qui n'existe plus (typiquement
-				// un retour arrière depuis le combat, l'escouade ayant été dissoute par l'attaque).
-				// Un push depuis une entrée qui n'est pas la dernière efface tout l'historique en
-				// avant : plus de bouton « suivant », et le retour rebouclait sur cette redirection.
-				router.replace('/garden/boss')
-			}
-		})
+		// Typiquement un retour arrière depuis le combat, l'attaque ayant dissous l'escouade :
+		// en `push` la flèche « suivant » mourait et le retour rebouclait sur la redirection.
+		this.navigate('/garden/boss', 'replace')
 	}
 	addLeek(leek: Leek) {
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_ADD_LEEK, leek.id])
@@ -95,11 +95,7 @@ export class BossSquads {
 		LeekWars.socket.send([SocketMessage.GARDEN_BOSS_LEAVE_SQUAD])
 	}
 	left() {
-		router.isReady().then(() => {
-			if (router.currentRoute.value.path.startsWith("/garden/boss")) {
-				router.push('/garden/boss/')
-			}
-		})
+		this.navigate('/garden/boss/', 'push')
 		this.squad = null
 		localStorage.removeItem('garden/boss-squad')
 		// LeekWars.setTitleTag(null)
@@ -113,11 +109,7 @@ export class BossSquads {
 		if (hasEngagedLeeks) {
 			store.commit('update-fights', -1)
 		}
-		router.isReady().then(() => {
-			if (router.currentRoute.value.path.startsWith("/garden/")) {
-				router.push('/fight/' + data[0])
-			}
-		})
+		this.navigate('/fight/' + data[0], 'push', '/garden/')
 		this.squad = null
 		// 	LeekWars.setTitleTag(null)
 		localStorage.removeItem('garden/boss-squad')
