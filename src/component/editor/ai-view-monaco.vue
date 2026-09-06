@@ -376,6 +376,15 @@ onBeforeUnmount(() => {
 	scrollListener?.dispose()
 	conflictLenses?.dispose()
 	if (editor) {
+		// Détacher le modèle AVANT de détruire : une opération de navigation de symboles en vol
+		// (« Peek references » du CodeLens, « Aller à la définition ») garde une référence sur cet
+		// éditeur pendant que l'analyseur répond, et Monaco n'annule son jeton que sur changement de
+		// modèle, de contenu ou de curseur — jamais sur la destruction de l'éditeur
+		// (EditorStateCancellationTokenSource). Quand la réponse arrive après coup, il ouvre le widget
+		// peek sur un éditeur détruit et jette « InstantiationService has been disposed », puis
+		// « this._splitView is undefined » sur le widget à moitié construit (#5026, #5008, #5027).
+		// setModel(null) émet onDidChangeModel, ce qui annule l'opération avant qu'elle ne revienne.
+		editor.setModel(null)
 		editor.dispose()
 	}
 })
