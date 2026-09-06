@@ -1140,24 +1140,29 @@ body:not(.v2) {
 		box-shadow: inset 0 0 14px color-mix(in srgb, var(--notif-accent) 22%, transparent);
 		transition: box-shadow .2s ease, background-color .2s ease;
 	}
-	/* La rangée de trophée est PEINTE, pas teintée (demande de Pierre,
-	   2026-09-06 : « un truc plus jaune/doré, pas transparent »). `--gold` est
-	   le jeton d'aplat doré du thème — celui des boutons « Récupérer » — et
-	   mélangé à la surface du panneau il donne une rangée franchement dorée et
-	   opaque dans les deux thèmes. Pas l'or pur : les vignettes de trophée du
-	   thème sombre sont des dessins CLAIRS, qui s'effaceraient sur un aplat
-	   d'or vif, et l'encre de la rangée est celle du thème, pas l'encre sombre
-	   des boutons. L'accent (liseré, grande icône, reflet) reste `--rank-first`,
-	   l'or ENCRE, calibré pour être lisible dans les deux thèmes. */
+	/* La rangée de trophée est un APLAT d'or PLEIN (demande de Pierre,
+	   2026-09-06 : « revenir à avant avec la couleur dorée pleine »). C'est la
+	   paire `--gold` / `--gold-text` du thème, celle des boutons « Récupérer » :
+	   couleur pleine, encre sombre, contraste mesuré 5,9 en clair et 12,9 en
+	   sombre. Autrement dit le dégradé d'or du v2 traduit en v3 — angles
+	   francs, une seule couleur — plutôt que la teinte transparente qui la
+	   laissait délavée. Les vignettes sont toujours les SVG du thème CLAIR
+	   (`notification-builder` ; l'inversion en thème sombre épargne justement
+	   ces rangées) : des dessins sombres, qui tiennent sur l'or. */
 	.notif-trophy {
-		--notif-accent: var(--rank-first);
-		background: color-mix(in srgb, var(--gold) 38%, var(--panel-background));
-		color: var(--text-color) !important;
+		/* L'accent — la grande coupe, le liseré — devient l'encre sombre : sur
+		   l'or, l'or encre ne se voit plus. Même choix que les flèches noires
+		   des boutons « Récupérer ». */
+		--notif-accent: var(--gold-text);
+		background: var(--gold);
+		border: none;
+		box-shadow: none;
+		color: var(--gold-text) !important;
 	}
 	.notif-trophy a,
 	.notif-trophy .message,
 	.notif-trophy .date {
-		color: var(--text-color) !important;
+		color: var(--gold-text) !important;
 	}
 	.notif-bigwin {
 		--notif-accent: var(--info);
@@ -1200,6 +1205,13 @@ body:not(.v2) {
 		background: color-mix(in srgb, var(--notif-accent) 16%, transparent);
 		box-shadow: inset 0 0 22px color-mix(in srgb, var(--notif-accent) 34%, transparent);
 	}
+	/* Sur l'aplat d'or, le halo n'a rien à éclairer et la teinte d'accent
+	   effacerait la couleur : le survol se contente d'assombrir l'or d'un cran
+	   vers son encre. */
+	.notification.notif-trophy:hover {
+		background: color-mix(in srgb, var(--gold) 88%, var(--gold-text));
+		box-shadow: none;
+	}
 	/* Le reflet : une bande claire inclinée, hors cadre à gauche, qui traverse
 	   la rangée une fois à chaque survol. `overflow: hidden` la clippe, et au
 	   repos comme en fin de course elle est hors champ. */
@@ -1217,6 +1229,14 @@ body:not(.v2) {
 			transparent 100%);
 		pointer-events: none;
 	}
+	/* Sur l'or, le reflet doit être une lumière, pas l'encre sombre de
+	   l'accent : une bande blanche, comme sur un objet brillant. */
+	.notif-trophy::after {
+		background: linear-gradient(105deg,
+			transparent 0%,
+			rgba(255, 255, 255, 0.45) 50%,
+			transparent 100%);
+	}
 	.notification.notif-trophy:hover::after,
 	.notification.notif-bigwin:hover::after {
 		animation: lw-notif-shine .7s ease;
@@ -1225,6 +1245,10 @@ body:not(.v2) {
 	.notification.unread.notif-trophy,
 	.notification.unread.notif-bigwin {
 		background: color-mix(in srgb, var(--notif-accent) 14%, transparent);
+	}
+	/* La rangée de trophée est déjà peinte : lue ou non, elle reste en or. */
+	.notification.unread.notif-trophy {
+		background: var(--gold);
 	}
 	/* Non-lu : la teinte du vert v2 (#5ac200 à 20 %) passe au vert du thème,
 	   et le survol reprend la surface de rangée (le v2 posait du blanc pur et

@@ -808,19 +808,44 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     par-dessus la teinte de la feuille — il marche sur les quatre couleurs
     comme sur la feuille neutre), et c'est le clic qui allume le contour.
   - **Notification de trophée** (`leekwars-shell-v3.scss`, « un truc plus
-    jaune/doré, pas transparent ») : la rangée était une teinte de 10 %
-    mélangée à du **transparent**, donc à peine dorée. Elle est peinte —
-    `--gold` à 38 % dans la surface du panneau, opaque, franchement dorée dans
-    les deux thèmes. Pas l'or pur des boutons « Récupérer » : les vignettes de
-    trophée du thème sombre sont des dessins clairs, qui s'effaceraient sur un
-    aplat d'or vif. L'accent (liseré, grande icône, reflet) reste
-    `--rank-first`, l'or ENCRE.
+    jaune/doré, pas transparent », puis « revenir à avant avec la couleur dorée
+    pleine ») : la rangée était une teinte de 10 % mélangée à du
+    **transparent**, donc délavée. Elle est un **aplat d'or plein** :
+    `--gold` / `--gold-text`, la paire des boutons « Récupérer » (5,9 de
+    contraste en clair, 12,9 en sombre) — le dégradé d'or du v2 traduit en v3,
+    une seule couleur et des angles francs. Plus de liseré ni de halo, qui
+    n'ont rien à dire sur un aplat ; l'accent (grande coupe) passe à l'encre
+    sombre, comme les flèches des boutons dorés, et le reflet de survol devient
+    une bande blanche. Craignait-on pour les vignettes ? Non : les
+    notifications servent toujours le SVG du thème CLAIR (`notification-builder`,
+    l'inversion en sombre épargne ces rangées), donc des dessins sombres qui
+    tiennent sur l'or.
+    Étape intermédiaire écartée : `--gold` à 38 % dans la surface du panneau,
+    opaque mais trop discret pour lui.
   - **Trophées mis en avant** (`trophies.vue`, demande de Pierre) : les trois
     vitrines (meilleurs, plus rares, derniers) étaient figées à 7 trophées.
     Elles en montrent autant qu'il en tient, **jusqu'à 10**, mesuré sur la
     largeur de la colonne. Les colonnes passent en `flex: 1` pour ça : la
     mesure ne doit pas porter sur la rangée d'icônes, dont la largeur dépend du
     compte cherché — il se figerait au premier rendu et ne remonterait jamais.
+- **2026-09-06 — anneaux du widget Collection de l'accueil**
+  (`home-widget-collection.vue`, retour de Pierre : « pas trop dans le thème
+  avec les barres arrondies ») : les huit catégories étaient des
+  `v-progress-circular`, des **anneaux**, contre le principe 2 — qui vaut aussi
+  pour la forme (cf. la pastille ronde refusée pour le marqueur du forum). Elles
+  deviennent une **jauge carrée** : deux `<path>` SVG sur le contour d'un carré,
+  départ au milieu du côté haut, remplissage horaire, `stroke-dasharray` sur un
+  périmètre de 176 unités, angles vifs (`crispEdges`, joints miter, bouts
+  francs). Vuetify sort du widget au passage.
+  - Le fond de la jauge est `--border-strong` et **pas**
+    `--background-secondary` : en sombre ce jeton EST la surface du panneau
+    (#0E1316), la part manquante disparaissait — l'anneau de Vuetify ne s'en
+    apercevait pas, il peignait son fond avec un `currentColor` atténué.
+  - **Or en dur retiré** : les trois `#f1c40f` (barre, jauge et icône d'une
+    catégorie complétée) passent à `--rank-first`, ce que demandait déjà l'audit
+    d'icônes du lot 28 pour cet anneau précis (**1,55** en thème clair).
+    Reste le même `#f1c40f` dans `home-widget-tournaments.vue`.
+  - Vérifié sur la bêta locale dans les deux thèmes.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
