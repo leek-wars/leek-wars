@@ -801,6 +801,26 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     possession rentrent au passage **dans** le carré de la vignette (ils
     étaient à `-5px`, donc à cheval sur la voisine : l'item sélectionné se
     retrouvait avec les chiffres de ses deux voisins collés à son liseré).
+  - **Carte d'IA, survol et clic** (`ai.vue`, même demande) : le survol
+    repeignait le contour en vert, ce que la doctrine réserve à l'actif. Il
+    pose désormais un **voile d'encre sur la surface** (`--ai-lift`, 8 % de
+    `--text-color`, donc clair en sombre et sombre en clair, appliqué
+    par-dessus la teinte de la feuille — il marche sur les quatre couleurs
+    comme sur la feuille neutre), et c'est le clic qui allume le contour.
+  - **Notification de trophée** (`leekwars-shell-v3.scss`, « un truc plus
+    jaune/doré, pas transparent ») : la rangée était une teinte de 10 %
+    mélangée à du **transparent**, donc à peine dorée. Elle est peinte —
+    `--gold` à 38 % dans la surface du panneau, opaque, franchement dorée dans
+    les deux thèmes. Pas l'or pur des boutons « Récupérer » : les vignettes de
+    trophée du thème sombre sont des dessins clairs, qui s'effaceraient sur un
+    aplat d'or vif. L'accent (liseré, grande icône, reflet) reste
+    `--rank-first`, l'or ENCRE.
+  - **Trophées mis en avant** (`trophies.vue`, demande de Pierre) : les trois
+    vitrines (meilleurs, plus rares, derniers) étaient figées à 7 trophées.
+    Elles en montrent autant qu'il en tient, **jusqu'à 10**, mesuré sur la
+    largeur de la colonne. Les colonnes passent en `flex: 1` pour ça : la
+    mesure ne doit pas porter sur la rangée d'icônes, dont la largeur dépend du
+    compte cherché — il se figerait au premier rendu et ne remonterait jamais.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
