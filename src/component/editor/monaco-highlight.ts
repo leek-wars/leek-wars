@@ -19,6 +19,26 @@ import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api.js'
 import { conf as jsConf, language as jsLang } from 'monaco-editor/esm/vs/basic-languages/javascript/javascript.js'
 // @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
 import { conf as tsConf, language as tsLang } from 'monaco-editor/esm/vs/basic-languages/typescript/typescript.js'
+// Langages « invités » : pas éditables sur le site, mais fréquents dans les extraits
+// collés sur le forum et dans le chat (requêtes SQL, lignes de shell, morceaux du serveur
+// PHP ou du générateur Java, bouts de page ou de configuration). Grammaires Monarch seules,
+// sans language service : quelques kilo-octets chacune sur un chunk déjà chargé pour Monaco.
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as sqlConf, language as sqlLang } from 'monaco-editor/esm/vs/basic-languages/sql/sql.js'
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as shellConf, language as shellLang } from 'monaco-editor/esm/vs/basic-languages/shell/shell.js'
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as htmlConf, language as htmlLang } from 'monaco-editor/esm/vs/basic-languages/html/html.js'
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as cssConf, language as cssLang } from 'monaco-editor/esm/vs/basic-languages/css/css.js'
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as xmlConf, language as xmlLang } from 'monaco-editor/esm/vs/basic-languages/xml/xml.js'
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as javaConf, language as javaLang } from 'monaco-editor/esm/vs/basic-languages/java/java.js'
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as phpConf, language as phpLang } from 'monaco-editor/esm/vs/basic-languages/php/php.js'
+// @ts-expect-error pas de déclaration de types pour les grammaires Monarch basic-languages
+import { conf as yamlConf, language as yamlLang } from 'monaco-editor/esm/vs/basic-languages/yaml/yaml.js'
 import { config as jsonConfig, tokens as jsonTokens } from './json-monarch'
 import { registerLeekScriptLanguage, type LeekScriptData } from './monaco-leekscript-language'
 import { registerPythonLanguage } from './monaco-python-language'
@@ -40,6 +60,15 @@ ensure('json', ['.json'], jsonConfig, jsonTokens)
 // rester hors du graphe/cycle d'import du boot). Les listes de constantes/fonctions sont
 // injectées au runtime par leekwars.ts via setLeekScriptData() avant la première coloration.
 registerLeekScriptLanguage(languages)
+// Langages invités (coloration seule, cf. commentaire des imports).
+ensure('sql', ['.sql'], sqlConf, sqlLang)
+ensure('shell', ['.sh', '.bash', '.zsh'], shellConf, shellLang)
+ensure('html', ['.html', '.htm'], htmlConf, htmlLang)
+ensure('css', ['.css'], cssConf, cssLang)
+ensure('xml', ['.xml'], xmlConf, xmlLang)
+ensure('java', ['.java'], javaConf, javaLang)
+ensure('php', ['.php'], phpConf, phpLang)
+ensure('yaml', ['.yaml', '.yml'], yamlConf, yamlLang)
 
 // Fournit au tokenizer LeekScript les noms de constantes/fonctions (game data). Appelé par
 // leekwars.ts (qui possède ces données) juste avant highlightToHtml : évite tout import

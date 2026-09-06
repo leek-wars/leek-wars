@@ -25,6 +25,13 @@ code {
 	.t-lsconstant { color: var(--ct-lsconstant, inherit); font-weight: var(--ct-lsconstant-weight, normal); }
 	.t-lsfunction { color: var(--ct-lsfunction, inherit); font-style: var(--ct-lsfunction-style, normal); }
 	.t-lsfunction-deprecated { color: var(--ct-lsdeprecated, #777777); font-style: italic; }
+	// Types de tokens apportés par les grammaires invitées (SQL, shell, HTML/XML, PHP, YAML).
+	// On les rattache aux variables existantes plutôt que d'ajouter des couleurs aux 6 thèmes :
+	// balises et méta-balises se lisent comme des mots-clés, fonctions natives et noms
+	// d'attributs comme des types. `variable` ($HOME, $var) reste en couleur par défaut, comme
+	// dans les thèmes clairs de Monaco.
+	.t-tag, .t-metatag { color: var(--ct-keyword); font-weight: var(--ct-keyword-weight, normal); }
+	.t-predefined, .t-attribute { color: var(--ct-type); font-weight: var(--ct-type-weight, normal); }
 }
 
 // ---- Thèmes clairs ----

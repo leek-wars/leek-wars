@@ -1364,6 +1364,16 @@ const CODE_LANGUAGE_IDS: {[key: string]: string} = {
 	ts: 'typescript', typescript: 'typescript',
 	py: 'python', python: 'python',
 	json: 'json',
+	// Langages « invités » : colorés dans les aperçus (forum, chat, encyclopédie) mais pas
+	// éditables sur le site. Grammaires enregistrées dans monaco-highlight.ts.
+	sql: 'sql', mysql: 'sql', psql: 'sql', postgres: 'sql', postgresql: 'sql',
+	sh: 'shell', bash: 'shell', zsh: 'shell', shell: 'shell', console: 'shell', terminal: 'shell',
+	html: 'html', htm: 'html',
+	css: 'css',
+	xml: 'xml', svg: 'xml',
+	java: 'java',
+	php: 'php',
+	yaml: 'yaml', yml: 'yaml',
 }
 // Retourne l'id de langage Monaco pour un jeton de langage, ou undefined si inconnu.
 function codeLanguageMode(language: string | undefined | null): string | undefined {
