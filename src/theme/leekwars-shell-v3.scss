@@ -1639,7 +1639,14 @@ body:not(.v2) {
 	 * que les conteneurs de barre d'XP. */
 	.collection-summary .summary-progress,
 	.cat-tab .cat-progress,
-	.bar:has(> .xp-bar) {
+	.bar:has(> .xp-bar),
+	.global-bar,
+	.category-bar,
+	/* La carte de la liste imbrique sa règle d'un cran de plus que la page d'un
+	   trophée : les deux sélecteurs sont nommés, sinon la plus profonde des deux
+	   garde ses couleurs du v2. */
+	.trophy-bar,
+	.trophy .trophy-bar {
 		border-radius: 0;
 		background: var(--background-input);
 		border: 1px solid var(--border-strong);
@@ -1651,7 +1658,11 @@ body:not(.v2) {
 	   règle ne passe jamais devant. */
 	.collection-summary .summary-progress .summary-bar,
 	.cat-tab .cat-progress .cat-bar,
-	.bar > .xp-bar {
+	.bar > .xp-bar,
+	.global-bar > .bar,
+	.category-bar > .bar,
+	.trophy-bar > .bar,
+	.trophy .trophy-bar > .bar {
 		border-radius: 0;
 		background-color: var(--primary-surface);
 		/* Deux couches : les encoches par-dessus (tous les 8 px, dans la couleur
@@ -1672,10 +1683,16 @@ body:not(.v2) {
 		   composant, donc l'animation s'adapte à n'importe quel taux. */
 		animation: lw-bar-fill .6s ease-out;
 	}
-	/* L'état « complet » passait par un bleu Material en dur. */
+	/* L'état « complet » passait par un bleu Material en dur. Sur la page
+	   Trophées : la barre globale quand tout est débloqué (`.blue`, un
+	   #008fbb), et la jauge d'un trophée décroché (`.full`, un gris qui disait
+	   « c'est fini » — le v3 a déjà une couleur pour ça). */
 	.collection-summary .summary-progress .summary-bar.complete,
 	.cat-tab .cat-progress .cat-bar.complete,
-	.bar > .xp-bar.blue {
+	.bar > .xp-bar.blue,
+	.global-bar > .bar.blue,
+	.trophy-bar.full > .bar,
+	.trophy .trophy-bar.full > .bar {
 		background-color: var(--info);
 		background-image:
 			repeating-linear-gradient(90deg, transparent 0 6px, var(--background-input) 6px 8px),
@@ -1687,17 +1704,43 @@ body:not(.v2) {
 		   attirer l'œil en permanence. Elle démarre après le remplissage. */
 		animation: lw-bar-fill .6s ease-out, lw-bar-complete 2.4s ease-in-out .6s infinite;
 	}
-	/* Les deux barres qui méritent le coup d'œil — la collection dans son
-	   ensemble et l'XP vers le niveau suivant — reçoivent un reflet qui les
-	   traverse lentement. Les barres de catégorie restent sages, sinon la page
-	   entière scintille. */
+	/* Les rayures diagonales du v2 (`.striked::after`, global.scss) doublent
+	   les encoches et brouillent la jauge : on les coupe sur les barres de la
+	   page Trophées, seules à porter cette classe. La barre globale n'est pas
+	   dans la liste — son `::after` est repris plus bas par le reflet, qui le
+	   redéfinit entièrement. */
+	.category-bar > .bar::after,
+	.trophy-bar > .bar::after,
+	.trophy .trophy-bar > .bar::after {
+		content: none;
+	}
+	/* Une page de trophées porte une jauge par carte, et il y en a des
+	   centaines : ni remplissage animé à l'arrivée, ni respiration sur celles
+	   qui sont pleines, sinon c'est la page entière qui bouge. Les deux grandes
+	   barres, elles, gardent l'animation. */
+	.trophy-bar > .bar,
+	.trophy-bar.full > .bar,
+	.trophy .trophy-bar > .bar,
+	.trophy .trophy-bar.full > .bar {
+		animation: none;
+	}
+	/* Les trois barres qui méritent le coup d'œil — la collection dans son
+	   ensemble, l'XP vers le niveau suivant et le total des trophées en tête de
+	   page — reçoivent un reflet qui les traverse lentement. Les barres de
+	   catégorie restent sages, sinon la page entière scintille. */
 	.collection-summary .summary-progress .summary-bar,
 	.bar > .xp-bar {
 		position: relative;
 		overflow: hidden;
 	}
+	/* Pas de `position: relative` ici : le remplissage de la barre globale est
+	   posé en absolu par son composant, le lui retirer le décollerait. */
+	.global-bar > .bar {
+		overflow: hidden;
+	}
 	.collection-summary .summary-progress .summary-bar::after,
-	.bar > .xp-bar::after {
+	.bar > .xp-bar::after,
+	.global-bar > .bar::after {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -1718,7 +1761,11 @@ body:not(.v2) {
 		.cat-tab .cat-progress .cat-bar.complete,
 		.bar > .xp-bar.blue,
 		.collection-summary .summary-progress .summary-bar::after,
-		.bar > .xp-bar::after {
+		.bar > .xp-bar::after,
+		.global-bar > .bar,
+		.global-bar > .bar.blue,
+		.global-bar > .bar::after,
+		.category-bar > .bar {
 			animation: none;
 		}
 	}

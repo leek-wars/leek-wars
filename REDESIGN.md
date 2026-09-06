@@ -822,6 +822,21 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     tiennent sur l'or.
     Étape intermédiaire écartée : `--gold` à 38 % dans la surface du panneau,
     opaque mais trop discret pour lui.
+  - **Barres de la page Trophées** (`leekwars-shell-v3.scss`, demande de
+    Pierre) : la barre globale, celle de chaque catégorie et la petite jauge de
+    chaque trophée étaient restées sur le `#30bb00` rond du v2, avec les
+    rayures diagonales de `.striked`. Elles rejoignent la **jauge segmentée**
+    du v3, déjà en place sur la collection et l'XP : piste creuse, cadre au
+    trait fort, remplissage en blocs. Le `.blue` de la barre globale (tout
+    débloqué) et le `.full` d'un trophée décroché — un gris qui disait « c'est
+    fini » — prennent l'état complet en `--info`. Sans animation sur les
+    petites jauges : il y en a une par carte, la page entière bougerait ; le
+    reflet ne va qu'à la barre de tête de page.
+    Deux pièges de spécificité, les mêmes que pour les barres déjà traitées :
+    les rayures de `.striked` vivent dans `global.scss` et se coupent au
+    `::after`, et la carte de la liste imbrique sa règle d'un cran de plus
+    (`.trophy .trophy-bar .bar`) que la page d'un trophée — les deux
+    sélecteurs sont nommés, sinon la plus profonde garde ses couleurs du v2.
   - **Trophées mis en avant** (`trophies.vue`, demande de Pierre) : les trois
     vitrines (meilleurs, plus rares, derniers) étaient figées à 7 trophées.
     Elles en montrent autant qu'il en tient, **jusqu'à 10**, mesuré sur la
