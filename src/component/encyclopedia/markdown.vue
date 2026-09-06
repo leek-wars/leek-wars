@@ -52,6 +52,23 @@
 		breaks: true,
 		linkify: true,
 	})
+
+	// CommonMark consomme le texte de la ligne d'ouverture d'une fence comme nom de langage,
+	// même quand ce n'en est pas un : ```class C { faisait disparaître la ligne du code affiché.
+	// Le chat ne retire cette première ligne que si c'est un langage connu (splitCodeLanguage,
+	// model/directives.ts) ; on applique la même règle ici. Rapport forum 12091.
+	const defaultFence = markdownInstance.renderer.rules.fence!
+	markdownInstance.renderer.rules.fence = (tokens, idx, options, env, self) => {
+		const token = tokens[idx]
+		// info vide ou blanche = fence normale, rien à restaurer (sinon on ajouterait une
+		// première ligne vide au code).
+		const info = token.info.trim()
+		if (info && !LeekWars.codeLanguageMode(info)) {
+			token.content = info + '\n' + token.content
+			token.info = ''
+		}
+		return defaultFence(tokens, idx, options, env, self)
+	}
 	const html = ref('')
 	let summary: { children: SummaryNode[] } = { children: [] }
 	let components: MountedComponent[] = []
