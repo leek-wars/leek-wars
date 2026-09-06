@@ -797,7 +797,10 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     **liseré `--primary` sur l'item choisi**, ce qui est exactement ce que fait
     déjà le menu de la coquille pour sa page courante. Le survol des raccourcis
     de section (`.menu .item`, « Combats », « Armes »…) passe du même
-    `--pure-white` invisible à la surface de rangée.
+    `--pure-white` invisible à la surface de rangée. Les compteurs de
+    possession rentrent au passage **dans** le carré de la vignette (ils
+    étaient à `-5px`, donc à cheval sur la voisine : l'item sélectionné se
+    retrouvait avec les chiffres de ses deux voisins collés à son liseré).
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

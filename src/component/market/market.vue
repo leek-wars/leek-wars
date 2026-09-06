@@ -951,8 +951,11 @@ const t = useNamespacedT('market')
 	}
 	.items .item .counts {
 		position: absolute;
-		bottom: -5px;
-		right: -5px;
+		// Dans le carre de l'item, pas a cheval dessus : a -5 px les compteurs
+		// debordaient sur la vignette voisine, et l'item selectionne se
+		// retrouvait avec les chiffres de ses deux voisins colles a son liseré.
+		bottom: 0;
+		right: 0;
 		display: flex;
 		border-radius: var(--radius-pill);
 		overflow: hidden;
