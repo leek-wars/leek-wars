@@ -31,7 +31,7 @@ import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
 
 import { vuetify } from './vuetify'
-import { code, dochash, splitCodeLanguage } from './directives'
+import { code, dochash, markupChatCodeLatex, splitCodeLanguage } from './directives'
 import { installGlobalErrorHandlers, recordEvent, recordNavigation, reportVueError } from './error-report'
 import { createSubApp } from './sub-app'
 import { formatEmojis } from './emojis'
@@ -323,17 +323,7 @@ app.directive('latex', {
 
 app.directive('chat-code-latex', {
 	mounted: (el: HTMLElement) => {
-		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string, content: string) => {
-			// Skip if the captured content already contains HTML tags (e.g. linkified URL)
-			if (/<\w/.test(content)) return str
-			return "<latex>" + str.replace(/`/g, "") + "</latex>"
-		})
-		el.innerHTML = el.innerHTML.replace(/```(.*?)```/g, (str: string, code: string) => {
-			return "<code>" + code + "</code>"
-		})
-		el.innerHTML = el.innerHTML.replace(/`(.*?)`/g, (str: string, code: string) => {
-			return "<code>" + code + "</code>"
-		})
+		el.innerHTML = markupChatCodeLatex(el.innerHTML)
 		el.querySelectorAll('code').forEach((c: Element) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
