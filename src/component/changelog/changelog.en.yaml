@@ -24,7 +24,7 @@
     - "#ai The editor's problems panel no longer opens on arrival when there is no error, warning or TODO to show."
   fixed:
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
-    - "Chat: a $ symbol inside a code block no longer makes <latex> tags appear in it (thanks to fujiwar)."
+    - "Chat: a $ symbol inside a code block no longer makes &lt;latex&gt; tags appear in it (thanks to fujiwar)."
     - "#ai Python: math.cbrt() and math.exp2() are now available, and the documentation of min(), max(), log(), log2(), log10() and sqrt() describes Python's actual behaviour (thanks to GSoMan)."
     - "#ai A subclass whose parent has a private constructor is no longer instantiated silently: the implicit call to the parent constructor is now reported, as directly instantiating the parent already was (thanks to nytope)."
     - "#ai setContains() and mapContainsKey() now cost 1 operation instead of 2, like the in operator which performs exactly the same lookup (thanks to CutiestCutie)."

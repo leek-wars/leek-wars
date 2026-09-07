@@ -31,7 +31,8 @@ import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
 
 import { vuetify } from './vuetify'
-import { code, dochash, markupChatCodeLatex, splitCodeLanguage } from './directives'
+import { code, dochash, splitCodeLanguage } from './directives'
+import { markupChatCodeLatex } from './chat-format'
 import { installGlobalErrorHandlers, recordEvent, recordNavigation, reportVueError } from './error-report'
 import { createSubApp } from './sub-app'
 import { formatEmojis } from './emojis'
@@ -323,7 +324,10 @@ app.directive('latex', {
 
 app.directive('chat-code-latex', {
 	mounted: (el: HTMLElement) => {
-		el.innerHTML = markupChatCodeLatex(el.innerHTML)
+		// La plupart des messages n'ont ni code ni LaTeX : pas de réécriture du DOM pour rien.
+		const html = el.innerHTML
+		const marked = markupChatCodeLatex(html)
+		if (marked !== html) { el.innerHTML = marked }
 		el.querySelectorAll('code').forEach((c: Element) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {

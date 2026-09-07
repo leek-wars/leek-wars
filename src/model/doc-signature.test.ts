@@ -121,6 +121,13 @@ describe('équivalents de bibliothèque standard', () => {
 		expect(objectSignatureOf('round', undefined, 'typescript')!.path).toBe('Math.round')
 	})
 
+	it('signale que math lève ValueError hors domaine, et les formes multiples de min/max (#5031)', () => {
+		for (const name of ['log', 'log2', 'log10', 'sqrt']) {
+			expect(objectSignatureOf(name, undefined, 'python')!.python, name).toContain('ValueError')
+		}
+		expect(objectSignatureOf('min', undefined, 'python')!.python).toBe('min(a, b, ...) | min(iterable)')
+	})
+
 	it('couvre toute la trigonométrie et les logarithmes', () => {
 		for (const name of ['sqrt', 'cos', 'sin', 'tan', 'log', 'log2', 'log10', 'exp', 'pow', 'floor', 'ceil', 'round']) {
 			expect(objectSignatureOf(name, undefined, 'typescript'), name).not.toBeNull()

@@ -24,7 +24,7 @@
     - "#ai Il pannello dei problemi dell'editor non si apre più all'arrivo quando non c'è nessun errore, avviso o TODO da mostrare."
   fixed:
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo cliccando sulla loro freccia (grazie a hypernavet)."
-    - "Chat: un simbolo $ dentro un blocco di codice non vi fa più comparire tag <latex> (grazie a fujiwar)."
+    - "Chat: un simbolo $ dentro un blocco di codice non vi fa più comparire tag &lt;latex&gt; (grazie a fujiwar)."
     - "#ai Python: math.cbrt() e math.exp2() sono ora disponibili, e la documentazione di min(), max(), log(), log2(), log10() e sqrt() descrive il comportamento reale di Python (grazie a GSoMan)."
     - "#ai Una sottoclasse il cui genitore ha un costruttore privato non si istanzia più in silenzio: la chiamata implicita al costruttore del genitore viene ora segnalata, come già lo era l'istanziazione diretta del genitore (grazie a nytope)."
     - "#ai setContains() e mapContainsKey() costano ora 1 operazione invece di 2, come l'operatore in che esegue esattamente la stessa ricerca (grazie a CutiestCutie)."
