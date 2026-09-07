@@ -1015,6 +1015,19 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     url(talent.svg) }` change la source d'un élément remplacé, partout et
     d'un coup ; le v2 garde son PNG, et `talent.test.ts` (qui vérifie le
     `src`) reste vrai.
+- **2026-09-07 — l'accueil sur téléphone passe par la barre d'application**
+  (`home.vue` ; capture de Pierre : « la page d'accueil doit avoir un titre et
+  mettre les actions dans la barre en mobile ») : l'accueil ne donnait ni
+  titre ni actions à `lw-bar` (`setTitle` / `setActions`), d'où une barre
+  d'application vide au-dessus de sa propre barre de page, seule page dans ce
+  cas — home.vue forçait même l'affichage de son `h1` que global.scss masque
+  partout ailleurs en mode application. Désormais : titre « Accueil » dans la
+  barre, actions **+** et **crayon** (coche en mode édition, mise à jour par
+  un `watch`) à côté des actions fixes, et la barre de page disparaît
+  entière sur mobile. Le « + » de la barre n'a pas de menu à ancrer : il
+  ouvre la même liste de widgets dans un `popup`. Vérifié en émulation
+  (UA mobile, 360 px) : titre, deux actions, dialogue à 9 widgets, bascule
+  crayon / coche.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

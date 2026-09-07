@@ -726,8 +726,8 @@ body:not(.v2) {
 	   hauteur minimale de 72 px et le pointillé — une bande vide en tête de
 	   chaque page (retour de Pierre, capture de l'inventaire). Tout s'efface ;
 	   les onglets qu'une page garderait dans sa barre restent visibles.
-	   L'accueil, seule page qui montre son titre sur mobile, remet hauteur et
-	   pointillé dans home.vue. */
+	   (L'accueil, longtemps seule page à y garder son titre, passe lui aussi
+	   par la barre d'application depuis le 2026-09-07.) */
 	#app.app .page-header.page-bar {
 		min-height: 0;
 		border-bottom: 0;

@@ -24,6 +24,19 @@
 			</div>
 		</div>
 
+		<!-- Mobile : le « + » de la barre d'application n'a pas de menu à ancrer,
+		     il ouvre la même liste dans un dialogue. -->
+		<popup v-model="addPopup" :width="420">
+			<template #icon><v-icon>mdi-plus</v-icon></template>
+			<template #title>{{ t('add_widget') }}</template>
+			<div class="widget-config">
+				<div v-for="w in availableToAdd" :key="w.type" v-ripple class="config-option" @click="addWidget(w.type); addPopup = false">
+					<v-icon>{{ w.icon }}</v-icon> {{ t('widget_' + w.type) }}
+				</div>
+				<div v-if="!availableToAdd.length" class="config-title">{{ t('all_widgets_added') }}</div>
+			</div>
+		</popup>
+
 		<div v-if="!widgets.length" class="empty card">
 			<v-icon>mdi-view-dashboard-outline</v-icon>
 			<span>{{ editMode ? t('empty_edit') : t('empty') }}</span>
@@ -542,9 +555,25 @@
 		nextTick(initGrid)
 	})
 
+	// Barre d'application (mobile) : elle porte le titre de la page et ses actions,
+	// comme sur toutes les autres pages ; l'accueil ne lui donnait ni l'un ni
+	// l'autre et affichait sa propre barre de page à la place (retour de Pierre,
+	// 2026-09-07 : « la page d'accueil doit avoir un titre et mettre les actions
+	// dans la barre en mobile »). Le crayon devient une coche en mode édition.
+	const addPopup = ref(false)
+	function updateBarActions() {
+		LeekWars.setActions([
+			{ icon: 'mdi-plus', click: () => { addPopup.value = true } },
+			{ icon: editMode.value ? 'mdi-check' : 'mdi-pencil', click: toggleEdit },
+		])
+	}
+	watch(editMode, updateBarActions)
+
 	onMounted(() => {
 		previousLarge.value = LeekWars.large
 		LeekWars.large = true
+		LeekWars.setTitle(t('title'))
+		updateBarActions()
 		window.addEventListener('pagehide', flushOnPageHide)
 		nextTick(initGrid)
 	})
@@ -564,22 +593,12 @@
 	.page {
 		overflow-x: clip;
 	}
-	// Sur mobile, global.scss masque le titre de TOUTES les pages connectées
-	// (`#app.app.connected .page .page-bar h1`) : le menu suffit à dire où l'on est.
-	// L'accueil fait exception — c'est la seule page qu'on atteint sans passer par une
-	// entrée de menu, et sans titre rien ne la nomme. L'attribut de portée du scoped
-	// suffit à passer devant la règle globale, à un cran de spécificité près.
-	#app.app.connected .page .page-bar h1 {
-		display: block;
-	}
-	// Et sa barre garde la hauteur et le pointillé du v3 : la coquille efface la
-	// barre de page en mode application (les autres pages n'y ont plus que leur
-	// icône, le h1 étant masqué), l'accueil est la seule à y garder un titre.
-	body:not(.v2) #app.app.connected .page .page-header.page-bar {
-		min-height: 72px;
-		border-bottom: 3px solid transparent;
-		border-image: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px) 3;
-		margin-bottom: 12px;
+	// Sur mobile, le titre et les deux actions vivent dans la barre d'application
+	// (`setTitle` / `setActions` au montage) : la barre de page n'a plus rien à
+	// montrer, elle disparaît entière. Avant, l'accueil était la seule page à y
+	// garder un titre et ses onglets, sous une barre d'application vide.
+	#app.app.connected .page .page-header.page-bar {
+		display: none;
 	}
 	.grid-stack {
 		background: transparent;
