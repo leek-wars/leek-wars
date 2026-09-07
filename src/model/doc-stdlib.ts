@@ -53,18 +53,20 @@ const ROWS: Row[] = [
 	['exp', 'Math.exp', 'Math.exp(x: number): number', 'math.exp', 'math.exp(x: float) -> float'],
 	['floor', 'Math.floor', 'Math.floor(x: number): number', 'math.floor', 'math.floor(x: float) -> int'],
 	['hypot', 'Math.hypot', 'Math.hypot(x: number, y: number): number', 'math.hypot', 'math.hypot(x: float, y: float) -> float'],
-	['log', 'Math.log', 'Math.log(x: number): number', 'math.log', 'math.log(x: float) -> float'],
-	['log2', 'Math.log2', 'Math.log2(x: number): number', 'math.log2', 'math.log2(x: float) -> float'],
-	['log10', 'Math.log10', 'Math.log10(x: number): number', 'math.log10', 'math.log10(x: float) -> float'],
-	['max', 'Math.max', 'Math.max(a: number, b: number): number', 'max', 'max(a, b)'],
-	['min', 'Math.min', 'Math.min(a: number, b: number): number', 'min', 'min(a, b)'],
+	// Hors domaine, `math` LÈVE (ValueError) là où LeekScript renvoie NaN : la doc le dit (#5031).
+	['log', 'Math.log', 'Math.log(x: number): number', 'math.log', 'math.log(x: float) -> float — ValueError si x <= 0, pas NaN'],
+	['log2', 'Math.log2', 'Math.log2(x: number): number', 'math.log2', 'math.log2(x: float) -> float — ValueError si x <= 0, pas NaN'],
+	['log10', 'Math.log10', 'Math.log10(x: number): number', 'math.log10', 'math.log10(x: float) -> float — ValueError si x <= 0, pas NaN'],
+	// min/max natifs : autant d'arguments que voulu, ou UN itérable, sur tout type comparable.
+	['max', 'Math.max', 'Math.max(a: number, b: number): number', 'max', 'max(a, b, ...) ou max(iterable)'],
+	['min', 'Math.min', 'Math.min(a: number, b: number): number', 'min', 'min(a, b, ...) ou min(iterable)'],
 	['pow', 'Math.pow', 'Math.pow(base: number, exp: number): number', 'pow', 'pow(base, exp)'],
 	// `round` Python fait de l'arrondi bancaire (2.5 -> 2), contrairement à Math.round et au
 	// round de LeekScript : c'est un piège signalé dans ia-py/TRANSLATION.md.
 	['round', 'Math.round', 'Math.round(x: number): number', 'round', 'round(x) -> int — arrondi BANCAIRE : round(2.5) vaut 2, LeekScript et JS donnent 3'],
 	['signum', 'Math.sign', 'Math.sign(x: number): number', 'Math.signum', 'Math.signum(x: float) -> int'],
 	['sin', 'Math.sin', 'Math.sin(x: number): number', 'math.sin', 'math.sin(x: float) -> float'],
-	['sqrt', 'Math.sqrt', 'Math.sqrt(x: number): number', 'math.sqrt', 'math.sqrt(x: float) -> float'],
+	['sqrt', 'Math.sqrt', 'Math.sqrt(x: number): number', 'math.sqrt', 'math.sqrt(x: float) -> float — ValueError si x < 0, pas NaN'],
 	['tan', 'Math.tan', 'Math.tan(x: number): number', 'math.tan', 'math.tan(x: float) -> float'],
 	['toDegrees', 'Math.toDegrees', 'Math.toDegrees(radians: number): number', 'math.degrees', 'math.degrees(radians: float) -> float'],
 	['toRadians', 'Math.toRadians', 'Math.toRadians(degrees: number): number', 'math.radians', 'math.radians(degrees: float) -> float'],

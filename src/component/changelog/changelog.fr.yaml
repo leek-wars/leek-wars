@@ -25,6 +25,7 @@
   fixed:
     - "Documentation : pendant une recherche, les catégories se replient de nouveau en cliquant sur leur flèche (merci à hypernavet)."
     - "Chat : un symbole $ dans un bloc de code n'y fait plus apparaître de balises <latex> (merci à fujiwar)."
+    - "#ai Python : math.cbrt() et math.exp2() sont maintenant disponibles, et la documentation de min(), max(), log(), log2(), log10() et sqrt() décrit le comportement réel de Python (merci à GSoMan)."
     - "#ai Une classe fille dont le parent a un constructeur privé ne s'instancie plus en silence : l'appel implicite au constructeur du parent est signalé, comme l'était déjà l'instanciation directe du parent (merci à nytope)."
     - "#ai setContains() et mapContainsKey() coûtent maintenant 1 opération au lieu de 2, comme l'opérateur in qui fait exactement la même recherche (merci à CutiestCutie)."
     - "#ai Le formatage automatique de l'éditeur (Ctrl+Maj+F) ne colle plus les mots-clés and, or, xor, not, instanceof, as et new à la parenthèse qui les suit (merci à Casanova)."

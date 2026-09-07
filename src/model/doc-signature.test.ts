@@ -241,7 +241,7 @@ describe('displaySignature', () => {
 		// le titre de page ; une seule des deux avait été corrigée.
 		expect(displaySignature('mapKeys', undefined, 'python')).toBe('list(m.keys()) -> list')
 		expect(displaySignature('abs', undefined, 'typescript')).toBe('Math.abs(x: number): number')
-		expect(displaySignature('sqrt', undefined, 'python')).toBe('math.sqrt(x: float) -> float')
+		expect(displaySignature('cos', undefined, 'python')).toBe('math.cos(x: float) -> float')
 	})
 
 	it('compose le receveur pour l’API de jeu', () => {
