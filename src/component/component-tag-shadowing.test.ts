@@ -63,7 +63,8 @@ function shadowedTags(file: string): string[] {
 }
 
 describe('balises de template masquées par une liaison de <script setup>', () => {
-	it('aucune balise ne résout vers un ref / let / reactive', () => {
+	// Scan de tous les .vue du dépôt : ~2,5 s en local, 5,3 s sur un runner CI chargé (07/09/2026).
+	it('aucune balise ne résout vers un ref / let / reactive', { timeout: 30_000 }, () => {
 		const shadowed = vueFiles(SRC).flatMap(shadowedTags)
 		expect(shadowed).toEqual([])
 	})
