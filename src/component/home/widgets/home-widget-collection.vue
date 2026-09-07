@@ -10,11 +10,20 @@
 				<div class="bar"><div class="fill" :class="{ complete: totalOwned === totalCount && totalCount > 0 }" :style="{ width: percent(totalOwned, totalCount) + '%' }"></div></div>
 			</div>
 			<div ref="catsEl" class="cats">
-				<div class="cats-grid">
+				<!-- Une vraie grille qui remplit le widget : autant de colonnes et de
+				     rangées que la place le permet, cellules étirées, filets entre
+				     elles. Le nom de la catégorie n'apparaît que si la cellule a la
+				     hauteur pour lui (retour de Pierre, 2026-09-07). -->
+				<div class="cats-grid" :style="{ gridTemplateColumns: `repeat(${layout.cols}, 1fr)`, gridTemplateRows: `repeat(${layout.rows}, 1fr)` }">
 					<div v-for="c in visibleStats" :key="c.type" class="cat" :class="{ complete: c.owned === c.total }">
-						<v-progress-circular :model-value="percent(c.owned, c.total)" :size="54" :width="4" class="ring">
+						<div class="gauge">
+							<svg class="gauge-svg" viewBox="0 0 48 48" shape-rendering="crispEdges" aria-hidden="true">
+								<path class="track" :d="GAUGE_PATH" />
+								<path class="fill" :d="GAUGE_PATH" :stroke-dasharray="dash(c.owned, c.total)" />
+							</svg>
 							<v-icon class="cat-icon">{{ icons[c.type] }}</v-icon>
-						</v-progress-circular>
+						</div>
+						<span v-if="layout.names" class="cat-name">{{ $t('main.' + ITEM_TYPE_NAME[c.type]) }}</span>
 						<span class="cat-count">{{ c.owned }}/{{ c.total }}</span>
 					</div>
 				</div>
@@ -24,11 +33,10 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watch } from 'vue'
+	import { computed, onBeforeUnmount, ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { useFitCount } from '@/component/home/widgets/use-fit-count'
-	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS } from '@/model/item'
+	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME } from '@/model/item'
 
 	defineOptions({ name: 'HomeWidgetCollection' })
 
@@ -73,13 +81,67 @@
 	const totalCount = computed(() => stats.value.reduce((s, c) => s + c.total, 0))
 	const totalOwned = computed(() => stats.value.reduce((s, c) => s + c.owned, 0))
 
-	// Autant de catégories que l'espace du panel le permet, jamais coupées.
+	// Grille calculée d'après la place : on ne mesure pas les cellules (elles
+	// s'étirent, leur taille dépendrait du compte, qui dépend de la mesure) mais
+	// le conteneur, et on en déduit combien de colonnes et de rangées y tiennent
+	// au-dessus d'un minimum par cellule. Toutes les catégories tiennent : on
+	// prend le moins de rangées possible puis on équilibre les colonnes (8
+	// catégories sur 6 colonnes possibles = 4 × 2, pas 6 + 2). Sinon on montre
+	// ce qui tient, jamais une cellule coupée.
 	const catsEl = ref<HTMLElement | null>(null)
-	const catCount = useFitCount(catsEl, '.cat', 8, 12)
-	const visibleStats = computed(() => stats.value.slice(0, catCount.value))
+	const catsSize = ref({ w: 0, h: 0 })
+	const GRID_GAP = 1
+	const MIN_CELL_W = 76
+	const MIN_CELL_H = 76
+	// En dessous, le nom ferait déborder la cellule ou se couperait.
+	const NAME_CELL_W = 88
+	const NAME_CELL_H = 104
+	let resizeObserver: ResizeObserver | null = null
+
+	watch(catsEl, (el) => {
+		if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null }
+		if (!el) return
+		resizeObserver = new ResizeObserver(() => {
+			catsSize.value = { w: el.clientWidth, h: el.clientHeight }
+		})
+		resizeObserver.observe(el)
+		catsSize.value = { w: el.clientWidth, h: el.clientHeight }
+	}, { immediate: true })
+	onBeforeUnmount(() => { if (resizeObserver) resizeObserver.disconnect() })
+
+	const layout = computed(() => {
+		const n = stats.value.length
+		const { w, h } = catsSize.value
+		if (!n || w <= 0 || h <= 0) return { cols: Math.max(1, n), rows: 1, count: n, names: false }
+		const maxCols = Math.max(1, Math.floor((w + GRID_GAP) / (MIN_CELL_W + GRID_GAP)))
+		const maxRows = Math.max(1, Math.floor((h + GRID_GAP) / (MIN_CELL_H + GRID_GAP)))
+		let cols: number, rows: number, count = n
+		if (maxCols * maxRows >= n) {
+			rows = Math.ceil(n / maxCols)
+			cols = Math.ceil(n / rows)
+		} else {
+			rows = maxRows
+			cols = maxCols
+			count = rows * cols
+		}
+		const cellW = (w - GRID_GAP * (cols - 1)) / cols
+		const cellH = (h - GRID_GAP * (rows - 1)) / rows
+		return { cols, rows, count, names: cellW >= NAME_CELL_W && cellH >= NAME_CELL_H }
+	})
+	const visibleStats = computed(() => stats.value.slice(0, layout.value.count))
 
 	function percent(o: number, t: number): number {
 		return t ? Math.floor(o / t * 100) : 0
+	}
+
+	// Jauge carrée (principe « pas d'arrondis ») : le contour du carré part du
+	// milieu du côté haut et se remplit dans le sens horaire, comme le faisait
+	// l'anneau. Périmètre du tracé, en unités du viewBox : 22 + 44 × 3 + 22.
+	const GAUGE_PATH = 'M24 2 H46 V46 H2 V2 Z'
+	const GAUGE_LENGTH = 176
+
+	function dash(o: number, t: number): string {
+		return `${percent(o, t) / 100 * GAUGE_LENGTH} ${GAUGE_LENGTH}`
 	}
 
 	// Dernier recours : l'inventaire du store, qui ne dit que ce qu'on possède
@@ -118,11 +180,13 @@
 	.collection-widget {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		// La barre et la grille sont deux objets : 12 px les collaient (retour de
+		// Pierre), 20 les sépare.
+		gap: 20px;
 		height: 100%;
 	}
-	// Les catégories occupent la hauteur restante ; on n'affiche que les
-	// rangées complètes (useFitCount), overflow hidden en filet.
+	// Les catégories occupent la hauteur restante ; la grille calcule ce qui y
+	// tient, overflow hidden en filet.
 	.cats {
 		flex: 1 1 auto;
 		min-height: 0;
@@ -154,43 +218,81 @@
 		transition: width 0.3s;
 	}
 	.fill.complete {
-		background: #f1c40f;
+		background: var(--rank-first);
 	}
+	// Les filets entre les cellules sont le fond qui passe dans les gouttières
+	// d'1 px (même recette que la bande de chiffres du Potager rapide).
 	.cats-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-		gap: 12px;
-		justify-items: center;
+		height: 100%;
+		gap: 1px;
+		background: var(--border);
+		border: 1px solid var(--border);
 	}
 	.cat {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: center;
 		gap: 4px;
+		min-width: 0;
+		min-height: 0;
+		padding: 6px 4px;
+		background: var(--panel-background);
 	}
-	// Anneau de progression : primaire en cours, doré une fois complété.
-	.cat:deep(.v-progress-circular) {
-		color: var(--primary);
+	.cat-name {
+		max-width: 100%;
+		font-size: 12px;
+		color: var(--text-color);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
-	.cat.complete:deep(.v-progress-circular) {
-		color: #f1c40f;
+	.gauge {
+		position: relative;
+		width: 54px;
+		height: 54px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	// Jauge de progression : primaire en cours, dorée une fois complétée.
+	.gauge-svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		fill: none;
+		stroke-width: 4;
+	}
+	// `--background-secondary` est la surface même du panneau en thème sombre :
+	// le fond de la jauge s'y perdrait, on prend le trait fort.
+	.gauge-svg .track {
+		stroke: var(--border-strong);
+	}
+	.gauge-svg .fill {
+		stroke: var(--primary);
+		transition: stroke-dasharray 0.3s;
+	}
+	.cat.complete .gauge-svg .fill {
+		stroke: var(--rank-first);
 	}
 	.cat-icon {
 		color: var(--text-color-secondary);
 		font-size: 22px;
 	}
 	.cat.complete .cat-icon {
-		color: #f1c40f;
+		color: var(--rank-first);
 	}
 	.cat-count {
 		font-size: 12px;
 		color: var(--text-color-secondary);
 	}
-	// Panel bas : anneaux réduits, on diminue au lieu de tronquer.
+	// Panel bas : jauges réduites, on diminue au lieu de tronquer.
 	@container (max-height: 260px) {
-		.cat :deep(.v-progress-circular) {
-			width: 44px !important;
-			height: 44px !important;
+		.gauge {
+			width: 44px;
+			height: 44px;
 		}
 		.cat-icon {
 			font-size: 18px;

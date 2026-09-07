@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56">
+  <!-- Talent : le triskèle, redessiné à plat dans la langue des icônes du menu v3
+       (aplats de la palette, trait noir dessous). Trois bras qui s'enroulent depuis
+       le centre, chacun terminé par un point détaché — la silhouette du PNG
+       historique, sans son dégradé arc-en-ciel : une couleur franche par bras. -->
+  <defs>
+    <path id="arm" d="M28 28 C 19 23, 20 6, 35 5" fill="none" stroke-linecap="round"/>
+  </defs>
+  <!-- Le trait noir, dessous. -->
+  <g stroke="#000" stroke-width="7.5">
+    <use href="#arm"/>
+    <use href="#arm" transform="rotate(120 28 28)"/>
+    <use href="#arm" transform="rotate(240 28 28)"/>
+  </g>
+  <g fill="#000">
+    <circle cx="45" cy="11" r="6.5"/>
+    <circle cx="45" cy="11" r="6.5" transform="rotate(120 28 28)"/>
+    <circle cx="45" cy="11" r="6.5" transform="rotate(240 28 28)"/>
+  </g>
+  <!-- Les aplats. -->
+  <g stroke-width="4.5">
+    <use href="#arm" stroke="#FF5040"/>
+    <use href="#arm" stroke="#7CFF6B" transform="rotate(120 28 28)"/>
+    <use href="#arm" stroke="#5CE0FF" transform="rotate(240 28 28)"/>
+  </g>
+  <circle cx="45" cy="11" r="5" fill="#FF5040"/>
+  <circle cx="45" cy="11" r="5" fill="#7CFF6B" transform="rotate(120 28 28)"/>
+  <circle cx="45" cy="11" r="5" fill="#5CE0FF" transform="rotate(240 28 28)"/>
+</svg>

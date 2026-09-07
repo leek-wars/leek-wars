@@ -14,7 +14,7 @@
 					</router-link>
 					<div class="info">
 						<span class="name">
-							<img :src="farmer.connected ? '/image/connected.png' : '/image/disconnected.png'">
+							<lw-status :online="!!farmer.connected" :title="$t(farmer.connected ? 'main.connected' : 'main.disconnected')" />
 							<router-link :to="'/farmer/' + farmer.id" :class="farmer.color" class="text">{{ farmer.name }}</router-link>
 							<router-link v-if="farmer.team" :to="'/team/' + farmer.team.id">
 								<emblem :team="farmer.team" :title="farmer.team.name" />

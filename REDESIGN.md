@@ -861,6 +861,160 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     d'icônes du lot 28 pour cet anneau précis (**1,55** en thème clair).
     Reste le même `#f1c40f` dans `home-widget-tournaments.vue`.
   - Vérifié sur la bêta locale dans les deux thèmes.
+- **2026-09-07 — panneau du Potager rapide** (`garden-batch.vue`,
+  `garden-fast-fight.vue`, retour de Pierre « plus pro, colle au thème ») :
+  - **Les tuiles de chiffres étaient invisibles en v3** : elles prenaient
+    `--background-secondary`, qui est aussi `--panel-background` — une tuile de
+    la couleur du panneau. Elles deviennent une **bande de cases à filets**
+    (`gap: 1px` sur un fond `--border`), en flex et non en grille : une rangée
+    incomplète s'élargit pour se remplir, là où la grille laissait le fond à nu.
+    Intitulés en petites capitales de la police d'affichage (11 px, `0.06em`),
+    la typo des `.panel-action` ; valeurs en chiffres tabulaires.
+  - **Barre d'état en tête** : loader ramené à 28 px dans la ligne (il en
+    faisait 150, avec ses 30 px de padding de page), libellé « X / Y terminés »
+    ou « Tous les combats sont terminés » (coche `--primary`), et une **jauge
+    déterminée** (`--background-input`, trait fort, remplissage
+    `--primary-surface`). Le lanceur passe à droite de cette barre ; sans lot il
+    reste seul et centré.
+  - Choisir un nombre dans le menu du lanceur **ne lance plus** : le menu règle
+    le bouton, le bouton lance (demande de Pierre).
+  - Vérifié sur la bêta locale dans les deux thèmes v3 et en v2 (loader rond,
+    filets, aplats pastel des cartes conservés).
+  - Paddings autour du lanceur : le bouton d'accent porte l'ombre pixel (3 px
+    à droite et en bas, hors de sa boîte), l'œil voyait 7 et 9 px contre 10
+    au-dessus. Le conteneur du lanceur rend ces 3 px en v3 seulement.
+- **2026-09-07 — notification de trophée, or vif et survol qui brille**
+  (`leekwars-shell-v3.scss`, jetons `--gold-bright` dans les trois thèmes ;
+  retour de Pierre en thème clair : « un jaune doré plus pétant comme avant
+  dans l'ancien design + le hover fait un effet de lumière comme si ça
+  brillait ») : l'aplat du 2026-09-06 prenait `--gold`, dont la version claire
+  est un or assombri (#B88A0E) calibré comme surface sur le parchemin — sur
+  une notification, une moutarde terne. La rangée prend **`--gold-bright`
+  (#FFD23A), le même or vif dans les deux thèmes**, encre `--gold-text`
+  inchangée (12,9). Le jeton est à part : `--gold` reste l'or de surface des
+  boutons « Récupérer » et des pastilles LW+, qui ne changent pas.
+  - **Survol** : l'ancien survol assombrissait l'or vers son encre, ce qui se
+    lisait comme une extinction. Il **s'éclaircit vers le blanc** (82 / 18),
+    allume un **halo blanc interne** et un **débordement d'or** hors de la
+    rangée (`z-index: 1`, sinon la rangée suivante le couvre) ; le reflet qui
+    balaie passe de 45 à 70 % de blanc. Cas prévu par la doctrine du halo :
+    un trophée est précieux, pas du mobilier.
+  - **Grande coupe gravée** (« comme si c'était gravé dans la notif ») : elle
+    était l'encre à demi-opacité, un gris posé sur l'or. Elle passe dans un or
+    à peine plus sombre que la surface (`--gold-bright` 84 / `--gold-text`,
+    après un premier réglage à 62 jugé trop marqué : « plus subtil donc plus
+    jaune »), opaque, avec un fil de lumière blanc en bas à droite (45 %) et
+    un fil d'ombre en haut à gauche (20 %) — deux `drop-shadow` d'un pixel
+    sans flou (l'icône est un SVG, `text-shadow` ne le touche pas). C'est le
+    relief qui dessine le creux, pas la teinte. Sélecteur à trois classes pour
+    battre l'`opacity: 0.5` du composant.
+- **2026-09-07 — widget Collection de l'accueil en grille**
+  (`home-widget-collection.vue`, retour de Pierre : « que les catégories
+  prennent toute la place, comme une grille ; afficher le nom des catégories
+  si on a de la place ; le padding entre la barre et les catégories est pas
+  assez grand ») :
+  - Les catégories étaient des vignettes centrées dans une grille
+    `auto-fill`, qui laissait le bas du widget vide (6 + 2 sur deux rangées).
+    Elles sont désormais **des cellules étirées à filets** (fond `--border`
+    dans des gouttières d'1 px, la recette de la bande de chiffres du Potager
+    rapide), sur une grille **calculée d'après le conteneur** et non mesurée
+    sur les cellules : les cellules s'étirant, leur taille dépendrait du
+    compte, qui dépend de la mesure (le piège documenté dans `useFitCount`,
+    que le widget n'utilise plus). Colonnes et rangées maximales au-dessus
+    d'un minimum de 76 px par cellule ; si tout tient, le moins de rangées
+    possible puis des colonnes équilibrées (8 sur 6 possibles = **4 × 2**) ;
+    sinon ce qui tient, jamais une cellule coupée.
+  - **Nom de la catégorie** (`main.<ITEM_TYPE_NAME>`, les clés de la page
+    Collection) dès que la cellule fait au moins 88 × 104 px, ellipsé sinon
+    débordant : présent en 8 × 6 (cellules 128 × 165), absent en 6 × 4
+    (93 × 86), où la requête de conteneur réduit déjà les jauges à 44 px.
+  - Écart barre / grille **12 → 20 px**.
+  - Vérifié sur la bêta locale en 6 × 4 et 8 × 6 (thème sombre ; les filets
+    sont ceux déjà validés en clair sur le Potager rapide).
+- **2026-09-07 — la page de connexion sur téléphone** (capture de Pierre,
+  « pas mal de souci d'UI sur mobile ») ; reproduit à 360 et 412 px en
+  émulation Chromium (`emulate` viewport, contexte isolé donc déconnecté) :
+  - **Barre déconnectée** (`leekwars-shell-v3.scss`, bloc « La barre
+    déconnectée sur téléphone ») : tant qu'on n'est pas connecté c'est la
+    barre du bureau qui s'affiche, pas `lw-bar`. Le mot-symbole à 32 px et le
+    badge d'environnement débordaient de la ligne, la rangée de cinq boutons
+    dépassait de **80 px** (454 pour 372 disponibles) et l'inscription était
+    coupée. Sous 600 px : logo et icône à 28 px, badge en 11 px, bouton
+    « Aide » masqué (déjà réduit à son icône, l'aide est au pied de page),
+    retrait de la barre 10 px sur les quatre côtés, les deux boutons à
+    libellé se partagent la largeur (2 × 115 sur 360). La barre passe en
+    colonne flex centrée : `display: block` (header.vue, < 1200) tassait les
+    deux lignes en haut. Elle monte à **130 px** (`--header-height` posé sur
+    `#app:not(.connected)`, lu aussi par `.app-center` qui réserve la place
+    sous la barre fixe) : 20 + 34 + 14 + 42 + 20, après un premier essai à
+    24 px de logo sans respiration (« le logo peut être plus gros, mettre du
+    padding en haut et en bas »), 96 px (« encore trop serré ») et 110 px
+    (« encore plus »). Les
+    boutons de la barre prennent 6 px entre icône et libellé.
+  - **Bouton Inscription vert sur vert** : il mène à « / », donc sur
+    l'accueil déconnecté il est `router-link-active`, et la règle d'actif
+    (encre `--primary`) passait devant son aplat `--primary-surface`. Une
+    règle d'actif dédiée lui garde l'encre sombre — à toute largeur, le
+    bureau avait le même défaut.
+  - **Drapeau de langue invisible** (un carré vide dans la barre, à toute
+    largeur en v3) : le bouton gardait ses 28 px de rembourrage dans un
+    emplacement de 60 px qui rétrécit avec la fenêtre, il restait 2 px à
+    l'image. Il rejoint la liste des boutons carrés de 42 px (avec le bouton
+    de thème, premier de la rangée), drapeau à 26 px.
+  - **Boutons OAuth** (`login.vue`) : calés en haut à gauche avec 60 px de
+    vide sous le trait. La règle mobile (`align-self: center; margin-top: 0`)
+    était écrite AVANT la règle de base de même spécificité, qui gagnait
+    donc. Déplacée après ; le séparateur passe à `100 %` plafonné à 300 px.
+  - Reste à faire, hors capture : un passage général des pages déconnectées
+    (accueil, inscription, aide, forum) et connectées en 360 px.
+- **2026-09-07 — le lecteur de combat part du bord** (`leekwars-shell-v3.scss`,
+  retour de Pierre : « réduire l'écart entre le combat et le menu, sur la page
+  home c'est plus près ») : la page `/fight` est la seule en `LeekWars.flex`,
+  un conteneur ajusté au contenu (le joueur se dimensionne d'après la hauteur
+  de la fenêtre) que `margin: 0 auto` centrait dans la colonne — 11 px de
+  décalage de chaque côté à 1100 px, mesurés, là où toutes les autres pages
+  partent du bord. Le conteneur reste ajusté mais part du bord (`margin-left:
+  0`). Puis (« de l'autre côté aussi y'a un gros écart ») : le lecteur se
+  taillait `40 + 24` px de moins que la colonne, en dur dans `fight.vue` —
+  les 40 du retrait de `.app-center` et les 24 du voile de 12 px de
+  `.page-wrapper`, que le v3 a supprimé. Il retirait donc 24 px pour rien.
+  Le retrait est désormais **mesuré** (rembourrages de `.app-center` et de
+  `.page-wrapper`, traits du panneau) : 64 en v2 comme avant, 42 en v3, et le
+  canvas fait 823 px dans une colonne de 825.
+- **2026-09-07 — témoin de présence `lw-status`** (`src/component/ui/`,
+  enregistré globalement ; retour de Pierre : « remplacer ce rond d'activité
+  page farmer par un nouvel élément dans le thème ») : les PNG
+  `connected.png` / `disconnected.png` étaient des ronds qui ne suivaient ni
+  le thème ni la marque. Le composant rend un `span` : en v2 le rond aux
+  couleurs exactes des PNG (#9bec00 / #cacaca), en v3 une **LED carrée de
+  8 px** — allumée, l'aplat de marque et un halo de 6 px (une émission de
+  lumière, ce qu'un témoin est) ; éteinte, une case creuse au trait fort.
+  Posé sur la page éleveur et dans l'infobulle éleveur. Les PNG restent dans
+  `team.vue`, `group.vue`, `forum-topic.vue` et trois pages admin, à migrer
+  (chacune dimensionne l'`img` dans son propre style).
+- **2026-09-07 — le talent, composant et icône** (`talent.vue`,
+  `public/image/talent.svg`, `leekwars-shell-v3.scss` ; Pierre : « pour le
+  composant talent et son icône, j'aimerais moderniser ») :
+  - **Composant** : la pastille du v2 (un disque qui chevauche une pilule,
+    deux boîtes et une marge négative) était traduite trait pour trait. En v3
+    c'est **une boîte**, celle des compteurs de la barre (« topstat ») :
+    surface d'en-tête, trait fort, icône de 20 px, chiffre à 16 px en
+    semi-gras tabulaire ; le trait passe au vert au survol, le badge menant
+    au classement. Hauteur 28 px au lieu de 34.
+  - **Icône** : le triskèle arc-en-ciel (`talent.png`, 56 px, dégradé flou)
+    est **redessiné à plat** dans la langue des icônes du menu v3 : aplats de
+    la palette (`red`, `green`, `cyan`, une couleur franche par bras), trait
+    noir dessous, trois bras qui s'enroulent depuis le centre et un point
+    détaché au bout de chacun — la silhouette du PNG, pas un dessin nouveau.
+    Trois tracés essayés à 200 px : bras trop courts et épais, puis trop
+    courts, puis la spirale longue retenue (bras 4,5 / trait 7,5 dans un
+    viewBox de 56).
+  - **Substitution par la coquille** : le PNG est écrit en dur dans onze
+    gabarits (composant, rapports, infobulles, Potager rapide). Plutôt que
+    onze `:src` conditionnels, `img[src="/image/talent.png"] { content:
+    url(talent.svg) }` change la source d'un élément remplacé, partout et
+    d'un coup ; le v2 garde son PNG, et `talent.test.ts` (qui vérifie le
+    `src`) reste vrai.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

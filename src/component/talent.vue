@@ -44,21 +44,49 @@ defineProps<{
 		background: var(--pure-white);
 		box-shadow: var(--elevation-1);
 	}
-	/* v3 : le disque et la pilule deviennent une pastille franche. `--pure-white`
-	   vaut le fond de page en sombre — le badge s'y effaçait ; il prend la
-	   surface d'en-tête et se détache par le trait. */
+	/* v3 : UNE boîte, comme les compteurs de la barre du haut (« topstat » du
+	   mockup) — le disque chevauchant une pilule était la silhouette du v2
+	   traduite trait pour trait, deux boîtes accolées avec un chevauchement
+	   négatif (Pierre, 2026-09-07 : « moderniser le composant talent »). L'icône
+	   est un asset, pas une encre : elle garde ses couleurs ; c'est la coquille
+	   qui substitue le SVG à plat au PNG (`img[src="/image/talent.png"]`).
+	   Cliquable (il mène au classement) : le trait passe au vert de marque au
+	   survol, comme les autres commandes. */
 	body:not(.v2) {
-		.icon {
-			border-radius: 0;
+		span.talent {
+			gap: 6px;
+			padding: 3px 10px 3px 6px;
 			background: var(--background-header);
 			border: 1px solid var(--border-strong);
+			transition: border-color .12s ease;
+			&:hover {
+				border-color: var(--primary);
+			}
+		}
+		.icon {
+			width: auto;
+			height: auto;
+			padding: 0;
+			border: none;
+			border-radius: 0;
+			background: none;
+			box-shadow: none;
+			display: flex;
 		}
 		.value {
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-			background: var(--background-header);
-			border: 1px solid var(--border-strong);
-			border-left: none;
+			margin: 0;
+			padding: 0;
+			border: none;
+			border-radius: 0;
+			background: none;
+			box-shadow: none;
+			font-size: 16px;
+			font-weight: 600;
+			font-variant-numeric: tabular-nums;
+		}
+		img {
+			width: 20px;
+			height: 20px;
 		}
 	}
 	img {

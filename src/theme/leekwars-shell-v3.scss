@@ -205,6 +205,10 @@ body:not(.v2) {
 		color: var(--header-color);
 		margin-left: 8px;
 		padding: 0 14px;
+		/* L'icône touchait le libellé (« Connexion », « Inscription » ;
+		   retour de Pierre, 2026-09-07). Le gabarit ne met rien entre les
+		   deux : c'est la boîte flex qui espace. */
+		gap: 6px;
 		/* 42 px et non 34 : la barre fait 80 px de haut, des boutons à 34 y
 		   flottaient comme des pastilles. */
 		height: 42px;
@@ -240,10 +244,26 @@ body:not(.v2) {
 	.header .header-button.notifications-button,
 	.header .header-button.console-button,
 	.header .header-button.settings-button,
-	.header .header-button.merge-left {
+	.header .header-button.merge-left,
+	/* Déconnecté : le bouton de thème (premier de la rangée) et celui de la
+	   langue. Ce dernier gardait ses 28 px de rembourrage dans un emplacement
+	   de 60 px qui rétrécit avec la fenêtre : sur mobile il ne restait que
+	   2 px au drapeau, qui s'effaçait — un carré vide dans la barre. */
+	.header .header-signin .button-wrapper:first-child .header-button,
+	.header .header-signin .language-button .header-button {
 		width: 42px;
 		padding: 0;
 		justify-content: center;
+	}
+	/* Leurs emplacements ne s'étirent pas (header.vue les fait tous grandir) :
+	   entre 600 et 1200 px le carré de 42 flottait seul dans un emplacement
+	   de 156 px. */
+	.header .header-signin .button-wrapper:first-child,
+	.header .header-signin .language-button {
+		flex: 0 0 auto;
+	}
+	.header .header-signin .language-button .header-button .flag {
+		width: 26px;
 	}
 	/* Le bouton d'inscription reste l'action principale de la barre. */
 	.header .signup-button.header-button {
@@ -256,6 +276,114 @@ body:not(.v2) {
 		border-color: var(--primary);
 		color: var(--primary-surface-text);
 		filter: brightness(1.08);
+	}
+	/* Il mène à « / », donc sur l'accueil déconnecté il est ACTIF : la règle
+	   d'actif (encre verte) passait devant son aplat vert — vert sur vert,
+	   illisible (capture de Pierre, 2026-09-07). L'aplat garde son encre
+	   sombre ; l'actif ne change rien à un bouton d'action. */
+	.header a.router-link-active .signup-button.header-button,
+	.header a.header-active .signup-button.header-button {
+		color: var(--primary-surface-text);
+		border-color: var(--primary);
+	}
+	/* ====== La barre déconnectée sur téléphone ======
+	 *
+	 * Tant qu'on n'est pas connecté, c'est cette barre — et non `lw-bar` — qui
+	 * s'affiche sur téléphone. Capture de Pierre du 2026-09-07 : le mot-symbole
+	 * à 32 px et le badge d'environnement débordaient de la ligne, et la rangée
+	 * de cinq boutons dépassait de 80 px, l'inscription coupée au bord.
+	 * Le logo et son icône descendent à 24 px, le badge se fait discret, le
+	 * bouton « Aide » (déjà réduit à son icône) disparaît — l'aide est dans le
+	 * pied de page — et les deux boutons à libellé se partagent la largeur qui
+	 * reste. Sur 360 px : 2 carrés de 42 + 2 boutons d'environ 110. */
+	@media screen and (max-width: 599px) {
+		/* Même spécificité que `#app:not(.app) header.header` plus haut, et
+		   après lui ; vaut aussi en mode application. */
+		/* La barre grandit à 130 px (le jeton est lu aussi par `.app-center`, qui
+		   réserve la place sous la barre fixe) : 20 px de respiration en haut et
+		   en bas, logo à 34 px, 14 px d'écart, une ligne de boutons de 42
+		   (retours de Pierre : « le logo peut être plus gros, mettre du padding
+		   en haut et en bas », « encore trop serré » à 96, « encore plus » à 110). */
+		#app:not(.connected) {
+			--header-height: 130px;
+		}
+		#app:not(.connected) header.header {
+			padding: 20px 10px;
+			/* header.vue passe la barre en `display: block` sous 1200 px : les deux
+			   lignes (logo, boutons) se tassaient en haut, du vide dessous. En
+			   colonne flex elles se centrent. */
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: stretch;
+			gap: 14px;
+		}
+		/* Les 4 + 5 px sous la rangée de boutons calaient la barre du v2. */
+		#app:not(.connected) .header .buttons,
+		#app:not(.connected) .header .header-signin {
+			padding-bottom: 0;
+		}
+		/* header.vue rend 20 px de chaque côté au logo sous 600 px, pour la
+		   barre du v2 qui n'avait pas de retrait : ici la barre en a déjà. */
+		#app:not(.connected) .header .logo-wrapper {
+			padding: 0;
+			gap: 8px;
+		}
+		#app .header .logo-wrapper .logo,
+		#app .header .logo-wrapper .logo-icon {
+			height: 34px;
+		}
+		/* À 34 px le mot-symbole fait 251 px : avec l'icône et le badge, la
+		   ligne est pleine sur 360 px, et « Bêta locale » débordait. Le
+		   mot-symbole est le seul à pouvoir céder : il se rétrécit en gardant
+		   ses proportions, calé à gauche dans sa boîte. */
+		#app .header .logo-wrapper .logo {
+			flex: 0 1 auto;
+			min-width: 0;
+			object-fit: contain;
+			object-position: left center;
+		}
+		#app .header .logo-wrapper :is(.dev-label, .beta-label, .local-label, .beta-local-label) {
+			flex-shrink: 0;
+		}
+		#app .header .logo-wrapper :is(.dev-label, .beta-label, .local-label, .beta-local-label) {
+			font-size: 11px;
+			padding: 3px 5px;
+		}
+		.header .header-signin .help-button {
+			display: none;
+		}
+		.header .header-signin .button-wrapper {
+			flex: 1 1 0;
+			min-width: 0;
+		}
+		.header .header-signin .button-wrapper:first-child,
+		.header .header-signin .language-button {
+			flex: 0 0 auto;
+		}
+		.header .header-signin .header-button {
+			margin-left: 6px;
+			padding: 0 8px;
+			font-size: 15px;
+		}
+		.header .header-signin .button-wrapper:first-child .header-button,
+		.header .header-signin .language-button .header-button {
+			padding: 0;
+		}
+	}
+
+	/* ====== L'icône de talent ======
+	 *
+	 * Le triskèle arc-en-ciel (`talent.png`, 56 px, dégradé et flou) est posé
+	 * en dur dans onze gabarits : le composant talent, les rapports de combat,
+	 * les infobulles, le Potager rapide. Plutôt que onze `:src` conditionnels,
+	 * la coquille substitue l'image : `content` sur un élément remplacé change
+	 * sa source, dans tous les navigateurs actuels. Le SVG (`talent.svg`) est
+	 * le même triskèle à plat, dans la langue des icônes du menu — aplats de la
+	 * palette, trait noir dessous, une couleur franche par bras. Le v2 garde son
+	 * PNG (Pierre, 2026-09-07 : « moderniser le composant talent et son icône »). */
+	img[src="/image/talent.png"] {
+		content: url("/image/talent.svg");
 	}
 
 	/* Compteurs de la barre du haut : le mockup en fait des « topstat », des
@@ -352,6 +480,17 @@ body:not(.v2) {
 	 * redeviendra utile le jour où on voudra borner une page en particulier. */
 	.app-wrapper {
 		max-width: none;
+	}
+	/* Le lecteur de combat (`LeekWars.flex`, fight.vue) garde un conteneur
+	   ajusté à son contenu : le joueur se dimensionne d'après la hauteur de la
+	   fenêtre, pas la largeur. Mais `margin: 0 auto` le centrait dans la
+	   colonne, et la page se retrouvait décalée d'une dizaine de pixels par
+	   rapport à toutes les autres, qui partent du bord (retour de Pierre,
+	   2026-09-07 : « réduire l'écart entre le combat et le menu, sur la page
+	   home c'est plus près »). Il part du bord comme elles ; l'espace qui reste
+	   va à droite. */
+	.app-wrapper.flex {
+		margin-left: 0;
 	}
 	/* Le pied de page suit, sinon il reste centré sur 1100 px sous un contenu
 	   qui va au bord. */
@@ -1141,20 +1280,23 @@ body:not(.v2) {
 		transition: box-shadow .2s ease, background-color .2s ease;
 	}
 	/* La rangée de trophée est un APLAT d'or PLEIN (demande de Pierre,
-	   2026-09-06 : « revenir à avant avec la couleur dorée pleine »). C'est la
-	   paire `--gold` / `--gold-text` du thème, celle des boutons « Récupérer » :
-	   couleur pleine, encre sombre, contraste mesuré 5,9 en clair et 12,9 en
-	   sombre. Autrement dit le dégradé d'or du v2 traduit en v3 — angles
-	   francs, une seule couleur — plutôt que la teinte transparente qui la
-	   laissait délavée. Les vignettes sont toujours les SVG du thème CLAIR
-	   (`notification-builder` ; l'inversion en thème sombre épargne justement
-	   ces rangées) : des dessins sombres, qui tiennent sur l'or. */
+	   2026-09-06 : « revenir à avant avec la couleur dorée pleine »), et de
+	   l'or VIF dans les deux thèmes (2026-09-07 : « un jaune doré plus pétant
+	   comme avant dans l'ancien design ») — `--gold-bright`, et non `--gold`,
+	   dont la version claire est un or assombri pour tenir comme surface sur
+	   le parchemin : sur une notification il rendait une moutarde terne. Encre
+	   `--gold-text` (contraste 12,9). Autrement dit le dégradé d'or du v2
+	   traduit en v3 — angles francs, une seule couleur — plutôt que la teinte
+	   transparente qui la laissait délavée. Les vignettes sont toujours les SVG
+	   du thème CLAIR (`notification-builder` ; l'inversion en thème sombre
+	   épargne justement ces rangées) : des dessins sombres, qui tiennent sur
+	   l'or. */
 	.notif-trophy {
 		/* L'accent — la grande coupe, le liseré — devient l'encre sombre : sur
 		   l'or, l'or encre ne se voit plus. Même choix que les flèches noires
 		   des boutons « Récupérer ». */
 		--notif-accent: var(--gold-text);
-		background: var(--gold);
+		background: var(--gold-bright);
 		border: none;
 		box-shadow: none;
 		color: var(--gold-text) !important;
@@ -1182,6 +1324,24 @@ body:not(.v2) {
 	.notif-bigwin .large-icon {
 		color: var(--notif-accent);
 	}
+	/* Sur l'or, la grande coupe est GRAVÉE dans la rangée (Pierre, 2026-09-07 :
+	   « comme si c'était gravé dans la notif ») plutôt que posée dessus en gris
+	   à demi-opacité. La recette du creux : l'icône dans un or plus sombre que
+	   la surface, un fil de lumière qui la borde en bas à droite (l'arête
+	   éclairée du creux, la lumière venant d'en haut à gauche) et un fil
+	   d'ombre en haut à gauche. Deux copies décalées d'un pixel, sans flou, dans
+	   la langue du v3. `drop-shadow` et non `text-shadow` : l'icône est un SVG.
+	   Sélecteur à trois classes pour passer devant l'`opacity: 0.5` du
+	   composant, qui aplatirait le relief. */
+	.notification.notif-trophy .large-icon {
+		/* Subtil (Pierre : « plus subtil donc plus jaune ») : à peine plus
+		   sombre que l'or de la rangée, ce sont les deux fils qui dessinent le
+		   creux, pas la teinte. */
+		color: color-mix(in srgb, var(--gold-bright) 84%, var(--gold-text));
+		opacity: 1;
+		filter: drop-shadow(1px 1px 0 rgba(255, 255, 255, 0.45))
+			drop-shadow(-1px -1px 0 rgba(0, 0, 0, 0.2));
+	}
 	/* Le miroir exact, côté sombre : la coche d'un palier de parrainage débloqué
 	   est en `--black` en dur, choisi pour le dégradé d'or du v2. Sans ce
 	   dégradé, elle devient une encre noire sur une rangée noire (1,08 mesuré
@@ -1205,12 +1365,18 @@ body:not(.v2) {
 		background: color-mix(in srgb, var(--notif-accent) 16%, transparent);
 		box-shadow: inset 0 0 22px color-mix(in srgb, var(--notif-accent) 34%, transparent);
 	}
-	/* Sur l'aplat d'or, le halo n'a rien à éclairer et la teinte d'accent
-	   effacerait la couleur : le survol se contente d'assombrir l'or d'un cran
-	   vers son encre. */
+	/* Sur l'aplat d'or, le survol doit BRILLER (Pierre, 2026-09-07 : « un
+	   effet de lumière comme si ça brillait ») — l'assombrir d'un cran vers
+	   son encre, comme avant, se lisait comme une extinction. L'or s'éclaircit
+	   vers le blanc, un halo blanc s'allume sur ses bords (une émission de
+	   lumière, admise sur ce qui est précieux) et l'or déborde de la rangée ;
+	   le reflet balaie par-dessus. `z-index` : le débordement passerait sous
+	   la rangée suivante, qui a son propre fond. */
 	.notification.notif-trophy:hover {
-		background: color-mix(in srgb, var(--gold) 88%, var(--gold-text));
-		box-shadow: none;
+		background: color-mix(in srgb, var(--gold-bright) 82%, white);
+		box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.6),
+			0 0 14px color-mix(in srgb, var(--gold-bright) 55%, transparent);
+		z-index: 1;
 	}
 	/* Le reflet : une bande claire inclinée, hors cadre à gauche, qui traverse
 	   la rangée une fois à chaque survol. `overflow: hidden` la clippe, et au
@@ -1234,7 +1400,7 @@ body:not(.v2) {
 	.notif-trophy::after {
 		background: linear-gradient(105deg,
 			transparent 0%,
-			rgba(255, 255, 255, 0.45) 50%,
+			rgba(255, 255, 255, 0.7) 50%,
 			transparent 100%);
 	}
 	.notification.notif-trophy:hover::after,
@@ -1248,7 +1414,7 @@ body:not(.v2) {
 	}
 	/* La rangée de trophée est déjà peinte : lue ou non, elle reste en or. */
 	.notification.unread.notif-trophy {
-		background: var(--gold);
+		background: var(--gold-bright);
 	}
 	/* Non-lu : la teinte du vert v2 (#5ac200 à 20 %) passe au vert du thème,
 	   et le survol reprend la surface de rangée (le v2 posait du blanc pur et

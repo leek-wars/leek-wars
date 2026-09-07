@@ -82,11 +82,13 @@
 	// Admin inclus : c'est lui qui teste la fonctionnalité, et c'était déjà son bouton x10.
 	const allowed = computed(() => !!(store.state.farmer?.lwplus || store.state.farmer?.admin))
 
+	// Choisir un nombre ne lance RIEN : le menu règle le bouton, c'est le bouton qui
+	// lance. Un lancement immédiat au choix surprenait (on voulait juste changer
+	// de réglage) et rendait les lots involontaires.
 	function choose(option: number) {
 		count.value = option
 		localStorage.setItem('garden/fast_count', String(option))
 		menu.value = false
-		if (!props.disabled && !props.loading) launch(option)
 	}
 
 	function launch(n: number) {

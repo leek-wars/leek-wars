@@ -55,7 +55,7 @@
 						</v-list-item>
 					</v-list>
 				</v-menu>
-				<div class="button-wrapper">
+				<div class="button-wrapper help-button">
 					<router-link to="/help">
 						<div class="header-button">
 							<v-icon>mdi-help-circle-outline</v-icon>

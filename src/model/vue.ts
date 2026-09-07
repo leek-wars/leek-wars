@@ -22,6 +22,7 @@ import LWCheckbox from '@/component/ui/lw-checkbox.vue'
 import LWInput from '@/component/ui/lw-input.vue'
 import LWRadio from '@/component/ui/lw-radio.vue'
 import LWRadioGroup from '@/component/ui/lw-radio-group.vue'
+import LWStatus from '@/component/ui/lw-status.vue'
 import LWSelect from '@/component/ui/lw-select.vue'
 import LWSwitch from '@/component/ui/lw-switch.vue'
 import { env } from '@/env'
@@ -311,6 +312,7 @@ app.component('lw-checkbox', LWCheckbox)
 app.component('lw-input', LWInput)
 app.component('lw-radio', LWRadio)
 app.component('lw-radio-group', LWRadioGroup)
+app.component('lw-status', LWStatus)
 app.component('lw-select', LWSelect)
 
 app.directive('autostopscroll', {

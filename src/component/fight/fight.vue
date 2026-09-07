@@ -236,6 +236,18 @@
 		fight_id.value = id as string
 	}, { immediate: true })
 
+	function horizontalInset(el: Element | null): number {
+		if (!el) return 0
+		const style = getComputedStyle(el)
+		return (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0)
+	}
+
+	function horizontalBorders(el: Element | null): number {
+		if (!el) return 0
+		const style = getComputedStyle(el)
+		return (parseFloat(style.borderLeftWidth) || 0) + (parseFloat(style.borderRightWidth) || 0)
+	}
+
 	function reload() {
 		fight_id.value = null
 		nextTick(() => {
@@ -247,7 +259,12 @@
 		LeekWars.lightBar = window.innerWidth / window.innerHeight > 1
 
 		const reference = document.querySelector('.app-center') as HTMLElement
-		const offset = 40 + 24
+		// Ce que la colonne retire au lecteur : le retrait de `.app-center` (20 px de
+		// chaque côté), celui de `.page-wrapper` (12 px de chaque côté en v2, zéro en
+		// v3) et le trait du panneau (v3). C'était `40 + 24` en dur : en v3, où le
+		// voile de 12 px n'existe plus, le lecteur restait 24 px plus étroit que la
+		// colonne et laissait une bande vide (retour de Pierre, 2026-09-07).
+		const offset = horizontalInset(reference) + horizontalInset(document.querySelector('.page-wrapper')) + horizontalBorders(reference.querySelector('.panel.first'))
 		const controls = 36
 		const padding_bottom = LeekWars.mobile ? 5 : 105
 		if (reference) {

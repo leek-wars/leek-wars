@@ -160,19 +160,6 @@ function oauthStart(provider: 'github' | 'google') {
 		width: 1px;
 		height: 300px;
 	}
-	@media screen and (max-width: 599px) {
-		.container {
-			flex-direction: column;
-		}
-		.divider {
-			width: 300px;
-			height: 1px;
-		}
-		.oauth-buttons {
-			align-self: center;
-			margin-top: 0;
-		}
-	}
 	.oauth-buttons {
 		display: flex;
 		flex-direction: column;
@@ -180,6 +167,23 @@ function oauthStart(provider: 'github' | 'google') {
 		gap: 20px;
 		align-self: flex-start;
 		margin-top: 60px;
+	}
+	// Après la règle de base : à spécificité égale c'est la dernière qui gagne,
+	// et la règle mobile passait avant — les boutons OAuth restaient calés en
+	// haut à gauche avec 60 px de vide (retour de Pierre, 2026-09-07).
+	@media screen and (max-width: 599px) {
+		.container {
+			flex-direction: column;
+		}
+		.divider {
+			width: 100%;
+			max-width: 300px;
+			height: 1px;
+		}
+		.oauth-buttons {
+			align-self: stretch;
+			margin-top: 0;
+		}
 	}
 	.v-btn.gh-button, .v-btn.google-button {
 		height: 40px;

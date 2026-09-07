@@ -236,6 +236,12 @@ body {
 	   noires des boutons « Récupérer ». */
 	--gold: #B88A0E;
 	--gold-text: #0E1410;
+	/* L'or VIF, le même dans les deux thèmes : celui des notifications de
+	   trophée (demande de Pierre, 2026-09-07 : « un jaune doré plus pétant
+	   comme avant »). Contrairement à `--gold`, il n'est pas calibré comme
+	   surface sur le parchemin mais comme un objet brillant posé dessus ; son
+	   encre reste `--gold-text` (contraste 12,9). */
+	--gold-bright: #FFD23A;
 
 	/* Podium du classement. Le v2 utilise un or #ffa900 qui tombe a 1,8 de
 	   contraste sur le parchemin. Les teintes sombres reprennent celles du
@@ -369,6 +375,7 @@ body {
 
 		--gold: #FFD23A;
 		--gold-text: #0B0F0B;
+		--gold-bright: #FFD23A;
 
 		--rank-first: #FFD23A;
 		--rank-second: #C0C8D0;

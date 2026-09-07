@@ -10,8 +10,8 @@
 				</rich-tooltip-farmer>
 				<h1 v-else>...</h1>
 				<div class="info state">
-					<span v-if="displayConnected"><img src="/image/connected.png">{{ $t('connected') }}</span>
-					<span v-else><img src="/image/disconnected.png">{{ $t('disconnected') }}</span>
+					<span v-if="displayConnected"><lw-status :online="true" />{{ $t('connected') }}</span>
+					<span v-else><lw-status :online="false" />{{ $t('disconnected') }}</span>
 				</div>
 			</div>
 			<div v-if="farmer" class="tabs">
