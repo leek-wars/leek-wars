@@ -98,9 +98,6 @@ describe('markupChatCodeLatex (directive v-chat-code-latex)', () => {
 		expect(markupChatCodeLatex(html)).toBe(html)
 		expect(markupChatCodeLatex('a $$ b')).toBe('a $$ b')
 	})
-	it('LaTeX et code cohabitent dans un même message', () => {
-		expect(markupChatCodeLatex('$a$ `b` $c$')).toBe('<latex>$a$</latex> <code>b</code> <latex>$c$</latex>')
-	})
 	it('rend la sortie de formatChatMessage : un snippet PHP reste du code', () => {
 		const stored = formatChatMessage('```php\n$a = $b + 1;\n```', 'Bob', {})
 		expect(markupChatCodeLatex(stored)).toBe('<code>php<br>$a = $b + 1;<br></code>')

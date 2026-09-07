@@ -76,10 +76,8 @@ export function formatChatMessage(
 	// the v-chat-code-latex directive still renders them as code.
 	result = result.replace(CODE_MARK_RE, (_, i) => {
 		const span = codeSpans[+i]
-		if (span.startsWith('```')) {
-			return '```' + escapeCode(codeSpanInner(span)).replace(/\n/g, '<br>') + '```'
-		}
-		return '`' + escapeCode(codeSpanInner(span)) + '`'
+		const inner = escapeCode(codeSpanInner(span))
+		return span.startsWith('```') ? '```' + inner.replace(/\n/g, '<br>') + '```' : '`' + inner + '`'
 	})
 	return result
 }
@@ -110,8 +108,7 @@ export function formatChatPreview(content: string, authorName: string): string {
 	result = result.replace(CODE_MARK_RE, (_, i) => {
 		const span = codeSpans[+i]
 		const delim = span.startsWith('```') ? '```' : '`'
-		const inner = span.startsWith('```') ? span.slice(3, -3) : span.slice(1, -1)
-		return delim + escapeCode(inner).replace(/\n/g, ' ') + delim
+		return delim + escapeCode(codeSpanInner(span)).replace(/\n/g, ' ') + delim
 	})
 	return result
 }
