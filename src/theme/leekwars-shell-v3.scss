@@ -652,9 +652,15 @@ body:not(.v2) {
 		border-bottom-color: var(--text-color);
 		color: var(--text-color);
 	}
-	/* L'onglet actif : un trait vert dessous, pas un aplat vert.
+	/* Pressé (`:active`, le bouton de la souris enfoncé) : le trait et l'encre
+	   passent au vert — l'onglet annonce ce qu'il va devenir. */
+	.page-bar .tabs .tab:not(.disabled):active {
+		border-bottom-color: var(--primary);
+		color: var(--primary);
+	}
+	/* L'onglet courant : un trait vert dessous, pas un aplat vert.
 	   Deux classes coexistent dans le code, `selected` et `active`. Le survol
-	   de l'actif ne le repasse pas à l'encre : il reste vert. */
+	   du courant ne le repasse pas à l'encre : il reste vert. */
 	.page-bar .tabs .tab.selected,
 	.page-bar .tabs .tab.active,
 	.page-bar .tabs .tab.selected:hover,
