@@ -7,13 +7,15 @@
 					     du favicon, déjà l'icône du jeu, pas un dessin nouveau — le logo
 					     définitif reste à la charge de Pierre (REDESIGN.md, principe 5). -->
 					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="logo-icon" src="/image/favicon.png" alt="">
+					<img v-if="LeekWars.legacyTheme || LeekWars.xpTheme" class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : '/image/leekwars.svg'">
 					<!-- Le logo historique est rempli d'un dégradé vertical (blanc → #b3b3b3),
 					     hérité d'une barre sombre. Le v3 en prend une version à plat, même
 					     géométrie au point près, un seul aplat : c'est un essai demandé par
 					     Pierre en attendant le logo définitif (cf. REDESIGN.md, principe 5).
-					     Le blanc est conservé comme valeur de base — c'est
-					     `--header-logo-filter` qui l'inverse en thème clair. -->
-					<img class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : (LeekWars.legacyTheme ? '/image/leekwars.svg' : '/image/leekwars_flat.svg')">
+					     Le SVG sert de MASQUE et la boîte est peinte en `--text-color` :
+					     le mot-symbole est de la couleur du texte, pas d'un noir ou d'un
+					     blanc pur (demande de Pierre, 2026-09-08). -->
+					<span v-else class="logo logo-mask" role="img" aria-label="Leek Wars"></span>
 					<span v-if="seasonDecoration" class="season-decoration">{{ seasonDecoration }}</span>
 					<span v-if="LeekWars.BETA_LOCAL" class="beta-local-label">Bêta locale</span>
 					<span v-else-if="LeekWars.LOCAL" class="local-label">local</span>
@@ -275,6 +277,16 @@
 			max-width: none;
 			max-height: none;
 			margin: 0;
+		}
+		// Le mot-symbole peint en couleur de texte : la boîte prend la largeur du
+		// SVG par son ratio (175.283 × 23.778) et le masque, calé à gauche et
+		// contenu, garde ses proportions si la boîte se resserre (mobile).
+		.logo-mask {
+			display: block;
+			aspect-ratio: 175.283 / 23.778;
+			background-color: var(--text-color);
+			mask: url('/image/leekwars_flat.svg') left center / contain no-repeat;
+			-webkit-mask: url('/image/leekwars_flat.svg') left center / contain no-repeat;
 		}
 		.logo-icon {
 			height: 32px;

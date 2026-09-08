@@ -336,7 +336,8 @@ body:not(.v2) {
 		/* À 34 px le mot-symbole fait 251 px : avec l'icône et le badge, la
 		   ligne est pleine sur 360 px, et « Bêta locale » débordait. Le
 		   mot-symbole est le seul à pouvoir céder : il se rétrécit en gardant
-		   ses proportions, calé à gauche dans sa boîte. */
+		   ses proportions, calé à gauche dans sa boîte (le masque du mot-symbole
+		   est déjà `contain` / `left center` dans header.vue). */
 		#app .header .logo-wrapper .logo {
 			flex: 0 1 auto;
 			min-width: 0;

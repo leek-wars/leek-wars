@@ -252,13 +252,21 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le sélecteur de langue est posé À CÔTÉ du titre, pas dessous : le bloc
+	// de titre passe en ligne flex centrée. Sans ça le h1 (inline-block) et le
+	// sélecteur (inline-flex) se calaient sur la ligne de base, et le drapeau
+	// flottait au-dessus du milieu du mot (retour de Pierre, 2026-09-08).
+	.page-title-text {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
 	.forum-language {
 		display: inline-flex;
 		padding: 0 4px;
 		border-radius: var(--radius-tiny);
 		cursor: pointer;
 		align-items: center;
-		height: 100%;
 		gap: 6px;
 		img.flag {
 			vertical-align: top;

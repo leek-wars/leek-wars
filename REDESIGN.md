@@ -1028,6 +1028,25 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   ouvre la même liste de widgets dans un `popup`. Vérifié en émulation
   (UA mobile, 360 px) : titre, deux actions, dialogue à 9 widgets, bascule
   crayon / coche.
+- **2026-09-08 — deux retours d'interface 2.50** (capture de Pierre, forum en
+  bêta locale) :
+  - **Le mot-symbole en couleur de texte** (`header.vue`, Pierre : « le logo
+    peut être de la couleur du texte au lieu de noir ? »). Le v3 rendait
+    `leekwars_flat.svg` (blanc) par un `<img>` inversé en `filter` sur le
+    parchemin : un noir pur, alors que tout le texte est `--text-color`
+    (`#0E1410` / `#E8F0E6`). Le SVG sert maintenant de **masque** (`mask`,
+    `contain`, calé à gauche) sur un `<span role="img">` peint en
+    `--text-color` : la même encre que le titre, dans les deux thèmes, et le
+    rétrécissement mobile (`flex: 0 1 auto`) marche pareil puisque le masque
+    est contenu. `--header-logo-filter` disparaît du thème v3 (le v2 garde le
+    sien pour son `<img>`). Toujours pas un logo nouveau — principe 5 intact.
+  - **Le drapeau du forum aligné sur le titre** (`forum.vue`, Pierre : « le
+    drapeau n'est pas aligné à côté de forum »). Le sélecteur de langue vit
+    dans `.page-title-text` à côté du `h1` ; l'un est `inline-block` (36 px),
+    l'autre `inline-flex` en `height: 100%` d'un bloc sans hauteur : calés sur
+    la ligne de base, le drapeau flottait au-dessus du milieu du mot. Le bloc
+    passe en **ligne flex centrée** (écart 10 px), vérifié : centres du `h1`
+    et du drapeau à la même ordonnée.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
