@@ -493,6 +493,7 @@ class T {
 	public static chip_rampart = new Texture(LeekWars.STATIC + 'image/chip/glyph/rampart.png')
 	public static chip_carapace = new Texture(LeekWars.STATIC + 'image/chip/glyph/carapace.png')
 	public static chip_dome = new Texture(LeekWars.STATIC + 'image/chip/glyph/dome.png')
+	public static chip_divine_protection = new Texture(LeekWars.STATIC + 'image/chip/glyph/divine_protection.png')
 
 	// Heal
 	public static chip_bandage = new Texture(LeekWars.STATIC + 'image/chip/glyph/bandage.png')

@@ -278,6 +278,26 @@ class Summon extends ChipAnimation {
 					const texture = tintedTexture(Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2, '#6b4a2b', 0.65)
 					this.game.particles.addGarbage(pos.x, pos.y, 4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 2 + Math.random() * 2.5, texture, 1, Math.random() * 0.2 - 0.1, 0.25 + Math.random() * 0.3, Math.random() * Math.PI, 60)
 				}
+				// …et une gerbe de feuilles qui jaillit avec la motte : les sept
+				// feuilles du lancer, émises 30 frames plus tôt, sont déjà pâles et
+				// dispersées quand la plante sort de terre, si bien qu'on ne voyait
+				// que des cailloux. Feuilles balistiques (elles retombent avec la
+				// terre) plus quelques feuilles qui flottent et montent lentement.
+				// Dosage : à 12 feuilles de 0,6 à 1,1 plus 6 flottantes, le nuage
+				// cachait la plante pendant toute sa sortie de terre (planche du
+				// 08/09). Sept petites feuilles balistiques et quatre flottantes
+				// suffisent, avec les sept du lancer : la plante reste lisible.
+				const leaf = tintedTexture(T.summon_leaf, '#7ccf3a', 0.35)
+				for (let i = 0; i < 7; ++i) {
+					const angle = Math.random() * Math.PI * 2
+					const dist = 0.6 + Math.random() * 1.4
+					this.game.particles.addGarbage(pos.x, pos.y, 6, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3, leaf, Math.random() > 0.5 ? 1 : -1, 0, 0.45 + Math.random() * 0.25, 0, 70)
+				}
+				for (let i = 0; i < 4; ++i) {
+					const angle = Math.random() * Math.PI * 2
+					const drift = 0.2 + Math.random() * 0.25
+					this.game.particles.addImage(pos.x + Math.cos(angle) * 12, pos.y + Math.sin(angle) * 6, 4, Math.cos(angle) * drift, Math.sin(angle) * drift * 0.5, 0.35 + Math.random() * 0.3, 0, leaf, 60, 1, (Math.random() - 0.5) * 0.08, false, 0.5 + Math.random() * 0.2, Math.random() > 0.5 ? 1 : -1)
+				}
 			} else {
 				S.bulb.play(this.game)
 			}
@@ -612,10 +632,20 @@ class Dome extends ChipShieldAnimation {
 	static textures = [T.shield_aureol, T.chip_dome]
 	constructor(game: Game) { super(game, T.chip_dome, Area.CIRCLE3) }
 }
-export class DivineProtection extends ChipShieldAnimation {
+// Protection divine (113) : bouclier sur TOUS les alliés (zone ALLIES), où
+// qu'ils soient. La zone n'a pas de centre, donc pas de losange au sol (le
+// CIRCLE3 orange d'avant mentait) ; à la place, l'auréole de bouclier et le
+// glyphe de la puce au-dessus de chaque protégé.
+export class DivineProtection extends ChipAnimation {
 	static sounds = [S.shield]
-	static textures = [T.shield_aureol, T.chip_dome]
-	constructor(game: Game) { super(game, T.chip_dome, Area.CIRCLE3) }
+	static textures = [T.shield_aureol, T.chip_divine_protection]
+	constructor(game: Game) { super(game, S.shield, 60, DamageType.DEFAULT) }
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.createChipAureol(recipients, T.shield_aureol)
+		this.createChipImage(recipients, T.chip_divine_protection)
+	}
 }
 
 class Ice extends ChipAnimation {
@@ -1891,16 +1921,31 @@ class Hemorrhage extends ChipAnimation {
 }
 
 // Maturation (2.50, #1813) : buff permanent d'une invocation alliée (+vie max,
-// +puissance). Une poussée de croissance : spirale montante de particules
-// vertes et dorées autour de l'invocation, impulsion de squash & stretch au
-// sommet, éclat doré final.
+// +puissance). Une poussée de croissance : hélice de sève verte et dorée qui
+// monte en se resserrant autour de l'invocation, impulsion de squash & stretch
+// au sommet, couronne dorée et gerbe de feuilles.
 class Maturation extends ChipAnimation {
-	static textures = [T.cure_aureol, T.heal_cross, T.chip_maturation]
+	static textures = [T.summon_leaf, T.chip_maturation]
 	static sounds = [S.heal]
 	static DURATION = 65
 	static PULSE_TIME = 38
+	// Une émission tous les 2 pas et non à chaque frame. Émises frame par frame,
+	// les lueurs se recouvrent (leur diamètre valait la moitié de celui de
+	// l'hélice) et la spirale devient un nuage informe ; espacées, l'œil relie
+	// les points et lit l'hélice. Tous les 3 pas (retour de Pierre du 08/09),
+	// les perles étaient trop éparses : 2 pas en donne dix-neuf au lieu de treize,
+	// encore distinctes avec des lueurs de 13 px.
+	static SPIRAL_STEP = 2
+	// L'enveloppe d'alpha des ImageParticle plafonne l'opacité à vie² / 2400
+	// (cf. ImageParticle.draw) : sous ~49 frames de vie, une particule n'est
+	// JAMAIS pleinement opaque. Les lueurs de l'hélice vivaient 32 frames, donc
+	// plafonnaient à 43 % : d'où la impression de brouillard. Elles vivent
+	// maintenant assez longtemps pour être franches, et la traînée entière reste
+	// à l'écran jusqu'à la poussée, ce qui dessine l'hélice au lieu de la suggérer.
+	static GLOW_LIFE = 50
 	public pulsed = false
 	public spiral = 0
+	public step = 0
 	constructor(game: Game) { super(game, S.heal, Maturation.DURATION, DamageType.DEFAULT) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, position, targets, targetCell, launcher)
@@ -1911,44 +1956,76 @@ class Maturation extends ChipAnimation {
 		super.update(dt)
 		if (!this.targets) { return }
 		const elapsed = Maturation.DURATION - this.duration
-		// La spirale montante : deux brins (vert tendre et doré) tracés par des
-		// lueurs à vie courte, du sol jusqu'au sommet de l'invocation.
+		// L'hélice montante : UN seul brin, dont les perles alternent sève verte
+		// et sève dorée, du sol jusqu'au-dessus de l'invocation.
 		if (elapsed <= Maturation.PULSE_TIME) {
 			this.spiral -= dt
 			if (this.spiral <= 0) {
-				this.spiral = 1
+				this.spiral = Maturation.SPIRAL_STEP
+				const progress = Math.min(1, elapsed / Maturation.PULSE_TIME)
+				// Deux tours pleins, et un rayon qui se resserre en montant :
+				// l'hélice visse la pousse dans la plante au lieu de l'entourer.
+				const angle = progress * Math.PI * 4
+				const radius = 24 - progress * 12
+				// Un seul brin se suit à l'œil ; deux brins opposés (la version
+				// d'avant) se recouvrent, et on retombe sur le nuage qu'on cherche
+				// à éviter. La couleur alterne d'une perle à l'autre, ce qui garde
+				// le vert ET le doré.
+				const color = this.step % 2 === 0 ? '#7ee04a' : '#ffc93a'
+				const glow = glowTexture(color, 13)
 				for (const target of this.targets) {
-					const progress = elapsed / Maturation.PULSE_TIME
-					const angle = progress * Math.PI * 3.5
-					const radius = 34 - progress * 12
-					const z = progress * (target.height + 20)
-					for (const [side, color] of [[0, '#9cf07a'], [Math.PI, '#ffd24a']] as [number, string][]) {
-						const glow = glowTexture(color, 22)
-						const x = target.ox + Math.cos(angle + side) * radius
-						const y = target.oy + Math.sin(angle + side) * radius * 0.5
-						this.game.particles.addImage(x, y, z, 0, 0, 0.35, 0, glow, 32, 1, 0, false, 1.0 + Math.random() * 0.4)
+					// PLUS HAUTE QUE LARGE, sinon ce ne sont que des anneaux
+					// empilés : un bulbe chétif mesure 48 de haut pour une hélice
+					// qui faisait 76 de diamètre, et l'œil n'y lisait aucune
+					// montée. On monte donc bien au-dessus de la plante.
+					const z = progress * (target.height * 1.25 + 30)
+					const x = target.ox + Math.cos(angle) * radius
+					const y = target.oy + Math.sin(angle) * radius * 0.5
+					this.game.particles.addImage(x, y, z, 0, 0, 0.04, 0, glow, Maturation.GLOW_LIFE, 1, 0, false, 1)
+					// Des feuilles qui PARTENT DU PIED du bulbe (retour de Pierre du
+					// 08/09 : posées à mi-hauteur en face de la perle, elles
+					// flottaient sans origine). Elles naissent au ras du sol, au
+					// pourtour de la base, et montent le long de la plante en
+					// s'écartant un peu : la sève monte des racines.
+					if (this.step % 3 === 1) {
+						const leaf = tintedTexture(T.summon_leaf, '#8fd94b', 0.5)
+						// Petites (0,32) et en s'écartant franchement : à 0,45 et
+						// serrées sur l'axe, elles recouvraient un bulbe chétif et
+						// cachaient l'hélice.
+						const side = Math.random() * Math.PI * 2
+						const foot = 10 + Math.random() * 8
+						const lx = target.ox + Math.cos(side) * foot
+						const ly = target.oy + Math.sin(side) * foot * 0.5
+						this.game.particles.addImage(lx, ly, 2, Math.cos(side) * 0.22, Math.sin(side) * 0.11, 0.55 + Math.random() * 0.3, 0, leaf, 55, 1, (Math.random() - 0.5) * 0.08, false, 0.32, Math.cos(side) < 0 ? -1 : 1)
 					}
 				}
+				this.step++
 			}
 		}
-		// L'impulsion de croissance + l'éclat doré final
+		// L'impulsion de croissance, la couronne dorée et la gerbe de feuilles
 		if (!this.pulsed && elapsed >= Maturation.PULSE_TIME) {
 			this.pulsed = true
-			const gold = glowTexture('#ffd75e', 22)
-			const cross = tintedTexture(T.heal_cross, '#e8b830', 0.75)
+			const gold = glowTexture('#ffd75e', 16)
+			const leaf = tintedTexture(T.summon_leaf, '#a8e85a', 0.45)
 			for (const target of this.targets) {
 				const bulb = target as { bounceX?: number, bounceY?: number }
 				if (bulb.bounceY !== undefined) {
 					bulb.bounceY = 1.35
 					bulb.bounceX = 0.82
 				}
-				for (let i = 0; i < 8; ++i) {
-					const angle = (i / 8) * Math.PI * 2
-					this.game.particles.addImage(target.ox, target.oy, target.height * 0.6, Math.cos(angle) * 1.6, Math.sin(angle) * 0.8, 0.6, 0, gold, 34, 1, 0, false, 1.5)
+				// Couronne qui s'ouvre à mi-hauteur : douze points nets valent
+				// mieux qu'un halo, ils dessinent l'anneau en s'écartant.
+				for (let i = 0; i < 12; ++i) {
+					const angle = (i / 12) * Math.PI * 2
+					this.game.particles.addImage(target.ox, target.oy, target.height * 0.55, Math.cos(angle) * 1.5, Math.sin(angle) * 0.75, 0.25, 0, gold, 50, 1, 0, false, 0.9)
 				}
-				for (let i = 0; i < 5; ++i) {
-					const dx = Math.random() * 50 - 25
-					this.game.particles.addImage(target.ox + dx, target.oy + Math.random() * 20 - 10, 10 + Math.random() * 20, 0, 0, 1.4, 0, cross, 45)
+				// Gerbe de feuilles plutôt que les croix de soin d'avant :
+				// Maturation fait grandir, elle ne soigne pas. Elle jaillit du
+				// pied de la plante (z ≈ 0), pas de sa mi-hauteur, et monte vite.
+				for (let i = 0; i < 8; ++i) {
+					const angle = Math.random() * Math.PI * 2
+					const speed = 0.5 + Math.random() * 0.6
+					this.game.particles.addImage(target.ox + Math.cos(angle) * 4, target.oy + Math.sin(angle) * 2, 2, Math.cos(angle) * speed, Math.sin(angle) * speed * 0.5, 1.5 + Math.random() * 0.7, 0, leaf, 60, 1, (Math.random() - 0.5) * 0.1, false, 0.3 + Math.random() * 0.2, Math.cos(angle) < 0 ? -1 : 1)
 				}
 			}
 		}
@@ -1993,10 +2070,14 @@ class Superinfection extends ChipPoisonAnimation {
 				for (const target of this.targets) {
 					// La détonation : flash + gerbe de halos toxiques + anneau violet
 					target.hurt(target.ox, target.oy, 25, 0, 0, 0)
-					for (let i = 0; i < 7; ++i) {
-						const angle = Math.random() * Math.PI * 2
-						const speed = 1 + Math.random() * 1.5
-						this.game.particles.addImage(target.ox, target.oy, 20 + Math.random() * 30, Math.cos(angle) * speed, Math.sin(angle) * speed * 0.5, 1.5, 0, T.halo_green, 40)
+					// Les traits verts sont des traînées verticales (halo_green) :
+					// ils montent droit, chacun depuis son point du pourtour, sans
+					// dérive latérale — un trait vertical qui glisse de côté se
+					// lit comme un bug d'affichage.
+					for (let i = 0; i < 8; ++i) {
+						const x = target.ox + (Math.random() - 0.5) * 60
+						const y = target.oy + (Math.random() - 0.5) * 20
+						this.game.particles.addImage(x, y, Math.random() * 15, 0, 0, 1.6 + Math.random() * 0.8, 0, T.halo_green, 40)
 					}
 					for (let i = 0; i < 8; ++i) {
 						const angle = (i / 8) * Math.PI * 2

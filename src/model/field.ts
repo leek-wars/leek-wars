@@ -170,6 +170,26 @@ class Field {
 				return [cell.entity!]
 			}
 		}
+		// Zones « tous les alliés » / « tous les ennemis » (Protection divine,
+		// Apocalypse) : la cellule visée n'y est pour rien, la zone est l'ensemble
+		// des entités vivantes du camp, où qu'elles soient sur la carte — comme
+		// AreaAllies / AreaEnemies du générateur (qui ignore aussi les cristaux
+		// alliés). Sans ce cas, getAreaCells rendait une zone vide et la puce
+		// n'avait aucune cible côté client : pas de glyphe, pas d'auréole.
+		if (area === Area.ALLIES || area === Area.ENEMIES) {
+			const caster = caster_cell.entity
+			if (!caster) { return [] }
+			const allies = area === Area.ALLIES
+			const entities: Entity[] = []
+			for (const cell of this.cells) {
+				const entity = cell.entity
+				if (!entity || (entity as { dead?: boolean }).dead) { continue }
+				const sameTeam = entity.team === caster.team
+				if (sameTeam && entity.name.includes('crystal')) { continue }
+				if (sameTeam === allies) { entities.push(entity) }
+			}
+			return entities
+		}
 		const entities: Entity[] = []
 		for (const cell of this.getAreaCells(center, area)) {
 			if (cell.entity) {

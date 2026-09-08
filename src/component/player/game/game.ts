@@ -2920,7 +2920,7 @@ class Game {
 		// le Prototaxite n'a pas de zone), sous les entités.
 		for (const entity of this.leeks) {
 			if (entity instanceof Bulb && entity.plant && entity.active && !entity.dead && entity.zoneRange > 0 && entity.cell) {
-				this.drawEffectArea(entity.plantArea(), entity.zoneColor, 2, 0.25, 0.06)
+				this.drawEffectArea(entity.plantArea(), entity.zoneColor, 2, 0.45, 0.12)
 			}
 		}
 

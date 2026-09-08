@@ -69,11 +69,11 @@ class Bulb extends FightEntity {
 		} else if (skin === 9) { // Maïs (plante 2.50) — un seul visuel, back = front
 			this.bodyTexFront = T.get(this.game, 'image/bulb/corn_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/corn_back.png', true, SHADOW_QUALITY)
-			this.setPlant('green') // zone de soin
+			this.setPlant('#2fe34a') // zone de soin
 		} else if (skin === 10) { // Piment (plante 2.50)
 			this.bodyTexFront = T.get(this.game, 'image/bulb/chilli_pepper_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/chilli_pepper_back.png', true, SHADOW_QUALITY)
-			this.setPlant('#f26304') // portée de tir
+			this.setPlant('#ff4d0a') // portée de tir
 		} else if (skin === PROTOTAXITES_SUMMON_TEMPLATE) { // Prototaxite (2.50) — pas de zone
 			this.bodyTexFront = T.get(this.game, 'image/bulb/prototaxites_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/prototaxites_back.png', true, SHADOW_QUALITY)
@@ -104,7 +104,9 @@ class Bulb extends FightEntity {
 	}
 
 	// Marque l'entité comme plante 2.50. zoneColor vide = pas de zone (Prototaxite) ;
-	// sinon la zone affichée est fixée à 3 cases de rayon.
+	// sinon la zone affichée est fixée à 3 cases de rayon. Couleurs franches
+	// (vert vif, orange rouge) : le `green` CSS (#008000) et l'orange d'avant
+	// s'éteignaient sous la faible opacité du losange au sol.
 	private setPlant(zoneColor: string) {
 		this.plant = true
 		this.spriteScale = Bulb.PLANT_SCALE
