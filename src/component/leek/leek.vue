@@ -476,7 +476,7 @@
 
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
 			<template #icon>
-				<v-icon>mdi-bottle-tonic</v-icon>
+				<v-icon>mdi-flask</v-icon>
 			</template>
 			<template #title>
 				{{ $t("use_a_potion", [leek.name]) }}
@@ -503,7 +503,7 @@
 
 		<popup v-if="leek && my_leek" v-model="skinPotionDialog" :width="750">
 			<template #icon>
-				<v-icon>mdi-bottle-tonic</v-icon>
+				<v-icon>mdi-flask</v-icon>
 			</template>
 			<template #title>
 				{{ $t("select_skin") }}
@@ -1177,7 +1177,7 @@
 				if (my_leek.value) {
 					LeekWars.setActions([
 						{icon: 'mdi-auto-fix', click: () => customize()},
-						{icon: 'mdi-bottle-tonic', click: () => potion()},
+						{icon: 'mdi-flask', click: () => potion()},
 					])
 				} else {
 					LeekWars.setActions([
@@ -2155,20 +2155,24 @@
 			img {
 				width: 100%;
 			}
+			// Même plaque de quantité que les armes, puces et chapeaux (règle plus
+			// bas) : l'aplat de marque et son encre, au coin. Elle était grise et
+			// collée au bord (retour de Pierre, 2026-09-08 : « pas dans le bon
+			// thème »). Toujours affichée, même à 1 : une potion se consomme.
 			&::after {
 				position: absolute;
-				bottom: 0;
-				right: 0;
+				bottom: -5px;
+				right: -5px;
 				padding-top: 1px;
-				height: 19px;
+				height: 20px;
 				padding-left: 4px;
 				padding-right: 4px;
 				content: attr(quantity);
 				text-align: center;
-				color: var(--grey-13);
+				color: var(--primary-surface-text);
 				border-radius: var(--radius-pill);
 				font-weight: bold;
-				background-color: var(--text-color-secondary);
+				background-color: var(--primary-surface);
 			}
 		}
 	}

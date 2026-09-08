@@ -284,7 +284,10 @@
 		// `space-between` aurait donné.
 		display: grid;
 		grid-template-columns: repeat(#{$serie}, minmax(0, 1fr));
-		justify-items: center;
+		// `stretch`, pas `center` : centré, l'élément de grille se réduit à son
+		// contenu et l'icône n'a plus de largeur de référence (voir le lien,
+		// plus bas). C'est le lien qui centre l'icône dans la colonne.
+		justify-items: stretch;
 		align-items: center;
 		gap: 6px;
 		max-height: 26px;
@@ -304,6 +307,16 @@
 		body:not(.v2) .trophy-row {
 			grid-template-columns: repeat(8, minmax(0, 1fr));
 		}
+	}
+	// Le lien qui enveloppe l'icône remplit sa colonne. Inline, il prenait la
+	// largeur de son contenu, et le `100%` de l'icône devenait cyclique donc
+	// `auto` : les SVG dessinés sur 24 unités restaient à 24 px quand les
+	// autres montaient à 26, et se décalaient de 4 px dans leur colonne
+	// (retour de Pierre, 2026-09-08 : « les images ne sont pas bien disposées »).
+	body:not(.v2) .trophy-row a {
+		display: flex;
+		justify-content: center;
+		width: 100%;
 	}
 	body:not(.v2) .trophy-row .trophy {
 		// La colonne donne la largeur, le plafond garde des trophées lisibles

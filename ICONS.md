@@ -61,14 +61,13 @@ recopiées d'ici à la main — modifier l'un, c'est modifier l'autre.
 | **Défi** | `mdi-flag-outline` | Le drapeau qu'on plante pour provoquer. Contour **par exception** : le drapeau plein dit déjà « signalement », et cette paire-là est en place partout dans le code (onglets, historique, tooltips, notifications). |
 | **Signalement / avertissement** | `mdi-flag` | Le drapeau qu'on lève sur quelqu'un : bouton « Signaler », dialogue de signalement, avertissement reçu. |
 | **Arme** | `mdi-pistol` | Le dialogue de choix d'armes, déjà le glyphe des Armes côté admin. |
-| **Potion** | `mdi-bottle-tonic` | Potions de soin et potions de skin. |
 | **Arène** (Battle Royale, évènements de groupe) | `mdi-stadium` | Déjà le glyphe de la catégorie de trophées « arène ». |
 | **Boss** | `mdi-crown` | La couronne, déjà en place dans l'historique de combats, la tooltip de combat et le menu — les boss de Leek Wars sont des rois. |
 | **Équipe** | `mdi-shield` | Le blason — les équipes ont un emblème, la métaphore tient. |
 | **Composition** | `mdi-shield-sword` | Le blason **et** l'épée : l'escouade de l'équipe qui va au combat. Se lit comme un dérivé de l'équipe, ce qu'elle est. |
 | **Groupes privés** | `mdi-account-group` | Des gens, pas un blason : c'est ce qui le sépare de l'équipe. |
 | **Marché** | `mdi-store` | |
-| **Potion** | `mdi-flask` | La fiole. Décidée le 2026-08-28 en remplacement du PNG noir `icon/black/potion.png` du bouton « Potions » de la page poireau — un PNG qui porte sa couleur en dur, exactement le défaut du lot 29. `mdi-flask-outline` reste libre pour un éventuel état vide. |
+| **Potion** | `mdi-flask` | La fiole. Décidée le 2026-08-28 en remplacement du PNG noir `icon/black/potion.png` du bouton « Potions » de la page poireau — un PNG qui porte sa couleur en dur, exactement le défaut du lot 29. `mdi-flask-outline` reste libre pour un éventuel état vide. Le tableau portait une seconde ligne « Potion » en `mdi-bottle-tonic`, et les dialogues de potion et de skin, le marché et la page admin des icônes la suivaient : alignés sur la fiole le 2026-09-08 (Pierre : « l'icône potion est pas la même »). |
 | **Inventaire** | `mdi-treasure-chest` | |
 | **Éditeur** | `mdi-code-braces` | |
 | **Forum** | `mdi-forum` | Les deux bulles. |

@@ -352,7 +352,7 @@
 
 		<popup v-if="currentLeek" v-model="skinPotionDialog" :width="750">
 			<template #icon>
-				<v-icon>mdi-bottle-tonic</v-icon>
+				<v-icon>mdi-flask</v-icon>
 			</template>
 			<template #title>
 				{{ $t("select_skin") }}

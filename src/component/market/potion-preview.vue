@@ -38,7 +38,7 @@
 			</div>
 		</div>
 		<div v-if="isClover && showUse && inventoryItem" class="use-section">
-			<v-btn prepend-icon="mdi-bottle-tonic-plus-outline" @click="useCloverPotion">
+			<v-btn prepend-icon="mdi-flask" @click="useCloverPotion">
 				{{ $t('potion.clover_use') }}
 			</v-btn>
 		</div>

@@ -1127,6 +1127,22 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       minimum (cinq par rangée dans le panneau), drapeau 18 px, nom en 12 px,
       l'étiquette « bêta » dans la case en police d'affichage. Mêmes états
       que les onglets ; la langue courante en trait et encre verts.
+    - **Widget trophées de l'accueil** (« les images ne sont pas bien
+      disposées ») : la grille centrait ses éléments (`justify-items:
+      center`), donc chaque élément se réduisait à son contenu et le `100%`
+      de l'icône devenait cyclique → `auto` : les SVG dessinés sur 24 unités
+      restaient à 24 px quand les autres montaient à 26, décalés de 4 px
+      dans leur colonne (mesuré sur le compte de Pierre : `imperator`,
+      `turing_completeness`). Éléments étirés à la colonne, le lien centre
+      l'icône : 26 px partout, colonnes régulières.
+    - **Dialogue « Utiliser une potion »** (`leek.vue`, « les marqueurs de
+      quantités ne sont pas dans le bon thème + l'icône potion n'est pas la
+      même ») : la plaque de quantité grise collée au bord prend celle des
+      armes, puces et chapeaux (aplat de marque au coin). ICONS.md portait
+      DEUX lignes « Potion » (`mdi-bottle-tonic` et `mdi-flask`) : la
+      première est retirée, et ses six usages (dialogues de potion et de
+      skin, action mobile, marché, aperçu du trèfle, page admin des icônes)
+      passent à la fiole.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

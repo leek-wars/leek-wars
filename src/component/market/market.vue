@@ -82,7 +82,7 @@
 						</div>
 					</template>
 				</panel>
-				<panel v-if="filteredPotions.length || !search" :title="$t('potions') + ' [' + filteredPotions.length + ']'" icon="mdi-bottle-tonic-plus-outline">
+				<panel v-if="filteredPotions.length || !search" :title="$t('potions') + ' [' + filteredPotions.length + ']'" icon="mdi-flask">
 					<template #content>
 						<loader v-if="!potions.length" />
 						<div v-else class="items potions">
@@ -213,7 +213,7 @@
 							<v-icon>mdi-chip</v-icon> {{ $t('chips') }}
 						</div>
 						<div v-ripple class="item" @click="scroll(3)">
-							<v-icon>mdi-bottle-tonic-plus-outline</v-icon> {{ $t('potions') }}
+							<v-icon>mdi-flask</v-icon> {{ $t('potions') }}
 						</div>
 						<div v-ripple class="item" @click="scroll(4)">
 							<v-icon>mdi-hat-fedora</v-icon> {{ $t('hats') }}

@@ -171,7 +171,7 @@
 				{ concept: 'Défi', icon: 'mdi-flag-outline', note: "Le drapeau qu'on plante pour provoquer. Contour par exception : le plein dit déjà « signalement »." },
 				{ concept: 'Signalement', icon: 'mdi-flag', note: "Le drapeau qu'on lève sur quelqu'un. Sert aussi à l'avertissement reçu." },
 				{ concept: 'Arme', icon: 'mdi-pistol', note: "Le dialogue de choix d'armes." },
-				{ concept: 'Potion', icon: 'mdi-bottle-tonic', note: "Potions de soin et de skin." },
+				{ concept: 'Potion', icon: 'mdi-flask', note: "La fiole d'ICONS.md (2026-08-28) : dialogues de potion et de skin, bouton Potions, marché." },
 				{ concept: 'Arène (BR, évènements de groupe)', icon: 'mdi-stadium', note: "Déjà le glyphe de la catégorie de trophées « arène »." },
 				{ concept: 'Boss', icon: 'mdi-crown', note: "Les boss de Leek Wars sont des rois. Déjà en place dans l'historique, la tooltip de combat et le menu." },
 				{ concept: 'Tournoi', icon: 'mdi-tournament', note: "L'arbre à branches — l'objet lui-même." },
