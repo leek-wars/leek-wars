@@ -241,9 +241,30 @@ class Summon extends ChipAnimation {
 
 	public summon!: FightEntity
 	public summoned: boolean = false
+	// Plantes : la terre se soulève AVANT que la plante ne sorte (Pierre,
+	// 08/09/2026 : « les cailloux un peu plus tôt »). Première motte à
+	// duration 54 (16 frames après le lancer), la principale à l'apparition (40).
+	static PLANT_HEAVE_TIME = 54
+	public heaved: boolean = false
 
 	constructor(game: Game) {
 		super(game, null, 70, DamageType.DEFAULT)
+	}
+
+	private isPlant(): boolean {
+		return (this.summon as { plant?: boolean } | undefined)?.plant === true
+	}
+
+	// Motte de terre : fragments de roche teintés brun projetés du sol, que des
+	// cailloux, pas de feuilles.
+	private throwClods(count: number, minDz: number, maxDz: number) {
+		const pos = this.position
+		for (let i = 0; i < count; ++i) {
+			const angle = Math.random() * Math.PI * 2
+			const dist = 0.3 + Math.random() * 1.6
+			const texture = tintedTexture(Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2, '#6b4a2b', 0.65)
+			this.game.particles.addGarbage(pos.x, pos.y, 4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, minDz + Math.random() * (maxDz - minDz), texture, 1, Math.random() * 0.2 - 0.1, 0.25 + Math.random() * 0.4, Math.random() * Math.PI, 60)
+		}
 	}
 
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
@@ -252,7 +273,7 @@ class Summon extends ChipAnimation {
 		// Une plante (Piment, Maïs, Prototaxite) sort de terre : rien que la
 		// motte à l'apparition, aucune feuille (Pierre, 08/09/2026). Les feuilles
 		// du lancer sont réservées aux bulbes.
-		if ((this.summon as { plant?: boolean } | undefined)?.plant === true) { return }
+		if (this.isPlant()) { return }
 
 		const s = 2.0
 		const life = 70
@@ -269,23 +290,19 @@ class Summon extends ChipAnimation {
 	public update(dt: number) {
 		super.update(dt)
 
+		const plant = this.isPlant()
+		// Une plante se plante : la terre se soulève d'abord (bruit de terre, pas
+		// le cri des bulbes), puis la plante jaillit dans la motte principale.
+		if (plant && !this.heaved && this.duration < Summon.PLANT_HEAVE_TIME) {
+			this.heaved = true
+			S.bury.play(this.game)
+			this.throwClods(7, 1.5, 2.5)
+		}
+
 		if (this.duration < 40 && !this.summoned) {
 
-			const plant = (this.summon as { plant?: boolean }).plant === true
 			if (plant) {
-				// Une plante se plante : bruit de terre (pas le cri des bulbes) et
-				// motte de terre qui saute à l'apparition — que des cailloux, pas
-				// de feuilles (Pierre, 08/09/2026). Motte un peu plus fournie qu'au
-				// départ (14 fragments, dont quelques gros) puisqu'elle porte seule
-				// l'apparition.
-				S.bury.play(this.game)
-				const pos = this.position
-				for (let i = 0; i < 14; ++i) {
-					const angle = Math.random() * Math.PI * 2
-					const dist = 0.3 + Math.random() * 1.6
-					const texture = tintedTexture(Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2, '#6b4a2b', 0.65)
-					this.game.particles.addGarbage(pos.x, pos.y, 4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 2 + Math.random() * 3, texture, 1, Math.random() * 0.2 - 0.1, 0.25 + Math.random() * 0.4, Math.random() * Math.PI, 60)
-				}
+				this.throwClods(10, 2, 3.5)
 			} else {
 				S.bulb.play(this.game)
 			}
