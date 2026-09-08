@@ -183,8 +183,7 @@
 								<div class="owner-info">
 									<div class="owner-name" :class="teamOwner.color">
 										{{ teamOwner.name }}
-										<img v-if="teamOwner.connected" class="owner-status" src="/image/connected.png">
-										<img v-else class="owner-status" src="/image/disconnected.png">
+										<lw-status :online="teamOwner.connected" class="owner-status" />
 									</div>
 									<div class="owner-label">{{ $t('owner') }}</div>
 								</div>
@@ -282,9 +281,7 @@
 						</div>
 						<div class="sort-config">
 							<span class="sort-label">{{ $t('default_sort') }}</span>
-							<select v-model="columnsSortKey" class="sort-select" @change="saveColumnsConfig">
-								<option v-for="col in visibleConfigColumns" :key="col.key" :value="col.key">{{ columnLabel(col) }}</option>
-							</select>
+							<lw-select v-model="columnsSortKey" :items="visibleConfigColumns.map(col => ({ value: col.key, title: columnLabel(col) }))" class="sort-select" @update:model-value="saveColumnsConfig" />
 							<v-icon class="sort-order" @click="toggleSortOrder">{{ columnsSortOrder === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending' }}</v-icon>
 						</div>
 					</div>
@@ -311,8 +308,7 @@
 								<div v-bind="props">
 									<avatar :farmer="member" />
 									<div class="name">
-										<img v-if="member.connected" class="status" src="/image/connected.png">
-										<img v-else class="status" src="/image/disconnected.png">
+										<lw-status :online="member.connected" class="status" />
 										<v-tooltip v-if="member.grade == 'owner'">
 											<template #activator="{ props }">
 												<span v-bind="props">★</span>
@@ -341,10 +337,7 @@
 						</template>
 						<template v-if="owner && editMembers">
 							<i v-if="member.grade == 'owner'" class="grade">{{ $t('owner') }}</i>
-							<select v-else v-model="member.grade" class="level" @change="changeLevel(member)">
-								<option value="captain">{{ $t('captain') }}</option>
-								<option value="member">{{ $t('member') }}</option>
-							</select>
+							<lw-select v-else v-model="member.grade" :items="[{ value: 'captain', title: $t('captain') }, { value: 'member', title: $t('member') }]" class="level" @update:model-value="changeLevel(member)" />
 							<br>
 							<v-btn v-if="$store.state.farmer && member.id !== $store.state.farmer.id" class="ban" size="small" @click="banMemberStart(member)">
 								<v-icon>mdi-hand-pointing-right</v-icon>
@@ -367,8 +360,7 @@
 							<rich-tooltip-farmer :id="item.id" v-slot="{ props }">
 								<span v-bind="props" class="member-info">
 									<avatar :farmer="item" class="table-avatar" />
-									<img v-if="item.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="item.connected" class="status" />
 									<span :class="item.color">{{ item.name }}</span>
 								</span>
 							</rich-tooltip-farmer>
@@ -1757,7 +1749,7 @@
 		background: var(--pure-white);
 		border: 1px solid var(--border);
 		position: relative;
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 	}
 	.xp-bar {
 		height: 10px;
@@ -1765,7 +1757,7 @@
 		display: inline-block;
 		vertical-align: top;
 		position: absolute;
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 	}
 	.xp-bar.blue {
 		background: #008fbb;

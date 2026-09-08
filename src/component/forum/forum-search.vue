@@ -20,32 +20,21 @@
 				</div>
 				<div>
 					<div class="label">{{ $t('category') }}</div>
-					<select v-model="options.category" class="search-category" @change="search">
-						<option value="-1">{{ $t('all_categories') }}</option>
-						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $t('forum-category.' + c.name) }}</option>
-					</select>
+					<lw-select v-model="options.category" :items="categoryItems" class="search-category" @update:model-value="search" />
 				</div>
 				<div>
 					<div class="label">{{ $t('sort_by') }}</div>
-					<select v-model="options.order" @change="search">
-						<option value="pertinence">{{ $t('sort_pertinence') }}</option>
-						<option value="date">{{ $t('sort_date') }}</option>
-						<option value="votes">{{ $t('sort_votes') }}</option>
-					</select>
+					<lw-select v-model="options.order" :items="orderItems" @update:model-value="search" />
 				</div>
 				<div>
 					<div class="label">{{ $t('resolved') }}</div>
-					<select v-model="options.resolved" @change="search">
-						<option value="all">{{ $t('resolved_all') }}</option>
-						<option value="yes">{{ $t('resolved_yes') }}</option>
-						<option value="no">{{ $t('resolved_no') }}</option>
-					</select>
+					<lw-select v-model="options.resolved" :items="resolvedItems" @update:model-value="search" />
 				</div>
 			</div>
 
 			<div class="center">
 				<v-btn color="primary" class="search-button" @click="searchButton">
-					<img src="/image/search.png"><span>{{ $t('search') }}</span>
+					<v-icon>mdi-magnify</v-icon><span>{{ $t('search') }}</span>
 				</v-btn>
 			</div>
 
@@ -117,7 +106,7 @@
 	defineOptions({ name: 'ForumSearch', i18n: {}, mixins: [...mixins] })
 
 	useI18n() // initialize local scope for <i18n-t>
-	const t = useNamespacedT('search')
+	const t = useNamespacedT('forum-search')
 	const route = useRoute()
 	const router = useRouter()
 
@@ -156,6 +145,22 @@
 	const pages = ref(0)
 	const results = ref<{ id: number, pos: number, fname?: string, date: number, cid?: number, cname?: string, [key: string]: unknown }[] | null>(null)
 	const categories = ref<{ id: number, name: string, type: string }[]>([])
+	// Les trois listes en lw-select (les <select> natifs étaient les derniers
+	// contrôles du navigateur nu, audit du 2026-09-08).
+	const categoryItems = computed(() => [
+		{ value: -1, title: t('all_categories') },
+		...categories.value.map(c => ({ value: c.id, title: c.type == 'team' ? c.name : i18n.t('forum-category.' + c.name) })),
+	])
+	const orderItems = computed(() => [
+		{ value: 'pertinence', title: t('sort_pertinence') },
+		{ value: 'date', title: t('sort_date') },
+		{ value: 'votes', title: t('sort_votes') },
+	])
+	const resolvedItems = computed(() => [
+		{ value: 'all', title: t('resolved_all') },
+		{ value: 'yes', title: t('resolved_yes') },
+		{ value: 'no', title: t('resolved_no') },
+	])
 	const searchStarted = ref(false)
 	const count = ref(0)
 	const floor = Math.floor
@@ -282,11 +287,6 @@
 	}
 	.query:focus {
 		border: 1px solid var(--primary);
-	}
-	select {
-		height: 36px;
-		width: 100%;
-		font-size: 16px;
 	}
 	h2 {
 		margin-top: 20px;

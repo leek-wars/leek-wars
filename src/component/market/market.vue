@@ -10,7 +10,7 @@
 			<page-tabs active="market">
 				<template #before>
 					<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="tab disabled search-box">
-						<img src="/image/search.png">
+						<v-icon class="search-icon">mdi-magnify</v-icon>
 						<input v-model="search" type="text" :placeholder="$t('main.search')" @keyup.stop>
 					</div>
 					<!-- Élargir la page n'a de sens que dans l'ancien thème : le nouveau

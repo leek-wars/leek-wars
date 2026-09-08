@@ -189,6 +189,10 @@ const lastCheckedLabel = computed(() => {
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
+	// v3 : une LED carrée, comme lw-status (principe 2, audit du 2026-09-08).
+	body:not(.v2) & {
+		border-radius: 0;
+	}
 	background: var(--grey-8);
 	.ok & { background: var(--primary-surface); }
 	.error & { background: #d9534f; }

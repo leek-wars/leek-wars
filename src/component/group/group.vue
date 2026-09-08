@@ -34,8 +34,7 @@
 					<!-- <div class="flex name" v-bind="props" v-ripple>
 						<avatar :farmer="item" />
 						<span>{{ item.name }}</span>
-						<img v-if="item.connected" class="status" src="/image/connected.png">
-						<img v-else class="status" src="/image/disconnected.png">
+						<lw-status :online="item.connected" class="status" />
 					</div> -->
 					<router-link :to="'/farmer/' + group.owner.id">
 						<div v-ripple class="card member" v-bind="props">
@@ -43,8 +42,7 @@
 							<div class="info">
 								<div class="name">
 									<b>{{ group.owner.name }}</b>
-									<img v-if="group.owner.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="group.owner.connected" class="status" />
 								</div>
 								<div class="level">{{ $t('main.level_n', [group.owner.total_level]) }}</div>
 							</div>
@@ -136,8 +134,7 @@
 									<div v-ripple class="flex name" v-bind="props">
 										<avatar :farmer="item" />
 										<span>{{ item.name }}</span>
-										<img v-if="item.connected" class="status" src="/image/connected.png">
-										<img v-else class="status" src="/image/disconnected.png">
+										<lw-status :online="item.connected" class="status" />
 									</div>
 								</rich-tooltip-farmer>
 							</router-link>

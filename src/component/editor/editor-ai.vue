@@ -13,7 +13,7 @@
 				<v-tooltip v-if="leeks.length">
 					<template #activator="{ props }">
 						<span v-if="leeks" v-bind="props" class="count leek">
-							<img src="/image/icon/black/leek.png">
+							<v-icon>mdi-leek</v-icon>
 							{{ leeks.length }}
 						</span>
 					</template>
@@ -140,7 +140,7 @@ function click(e: Event) {
 		flex: none;
 	}
 	.count {
-		border-radius: 10px;
+		border-radius: var(--radius-pill);
 		padding: 1px 6px;
 		font-size: 12px;
 		margin-left: 6px;

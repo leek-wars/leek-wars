@@ -3,7 +3,7 @@
 		<template #activator="{ props }">
 			<div v-ripple class="tab doc-language-selector" :title="currentLabel" v-bind="props">
 				<img :src="currentLogo" class="doc-language-logo" :alt="currentLabel">
-				<img width="10" src="/image/selector.png" class="doc-language-caret">
+				<v-icon class="doc-language-caret">mdi-menu-down</v-icon>
 			</div>
 		</template>
 		<v-list :dense="true">
@@ -65,8 +65,10 @@
 		width: 22px !important;
 		height: 22px;
 	}
+	// Le chevron est un glyphe (mdi-menu-down) et non plus le PNG `selector.png`
+	// (audit du 2026-09-08) : il suit la couleur du thème.
 	.doc-language-caret {
-		width: 10px !important;
+		font-size: 18px;
 		opacity: 0.7;
 		margin-left: 2px;
 	}

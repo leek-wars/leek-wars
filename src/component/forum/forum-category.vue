@@ -9,7 +9,7 @@
 					<template #activator="{ props }">
 						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
-							<img width="10" src="/image/selector.png">
+							<v-icon class="caret">mdi-menu-down</v-icon>
 						</div>
 					</template>
 					<v-list>
@@ -33,7 +33,7 @@
 					<span>{{ $t('create_new_topic') }}</span>
 				</div>
 				<div class="tab disabled search-box">
-					<img src="/image/search.png" @click="search">
+					<v-icon class="search-icon" @click="search">mdi-magnify</v-icon>
 					<input v-model="query" type="text" @keyup.enter="search">
 				</div>
 			</div>

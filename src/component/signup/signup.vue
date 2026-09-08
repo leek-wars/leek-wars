@@ -124,7 +124,7 @@
 					<div class="center">
 						<v-btn v-if="fastRegister" size="large" color="primary" type="submit">{{ $t('play_button') }}</v-btn>
 						<v-btn v-else-if="signupMethod === 1" size="large" color="primary" type="submit">{{ $t('signup') }}</v-btn>
-						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_white.png"> {{ $t('signup_gh') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <v-icon>mdi-github</v-icon> {{ $t('signup_gh') }}</v-btn>
 						<v-btn v-else type="submit" class="google-button"> <img src="/image/google.svg"> {{ $t('signup_google') }}</v-btn>
 					</div>
 				</form>

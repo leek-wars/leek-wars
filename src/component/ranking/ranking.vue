@@ -61,7 +61,7 @@
 				<router-link to="/ranking/fun"><div class="tab" :class="{active: category === 'fun'}">{{ $t('fun') }}</div></router-link>
 				<router-link to="/statistics"><div class="tab">{{ $t('statistics') }}</div></router-link>
 				<div class="tab action" icon="search" @click="openSearch">
-					<img src="/image/search.png">
+					<v-icon class="search-icon">mdi-magnify</v-icon>
 				</div>
 			</div>
 		</div>

@@ -22,7 +22,7 @@
 						<talent :id="composition.id" :talent="composition.talent" :max_talent="composition.max_talent" category="team" />
 						<ranking-badge v-if="composition && composition.ranking && composition.ranking <= 1000 && composition.in_garden" :id="composition.id" :ranking="composition.ranking" category="team" />
 						<span class="level">
-							• {{ composition.leeks.length }} <img src="/image/icon/black/leek.png">
+							• {{ composition.leeks.length }} <v-icon>mdi-leek</v-icon>
 							• {{ $t('main.level_n', [composition.total_level]) }}
 						</span>
 						<v-btn class="expand" variant="text" size="x-small" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_leeks = !expand_leeks" />

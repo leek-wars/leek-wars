@@ -51,7 +51,7 @@
 							</i18n-t>
 						</div>
 					</div>
-					<v-btn class="suggestion-cta" color="#1976d2" variant="flat" append-icon="mdi-arrow-right">{{ $t('suggestion_cta') }}</v-btn>
+					<v-btn class="suggestion-cta" color="primary" variant="flat" append-icon="mdi-arrow-right">{{ $t('suggestion_cta') }}</v-btn>
 				</router-link>
 
 				<div v-if="firstPurchase" class="first-purchase-banner">

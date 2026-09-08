@@ -584,7 +584,7 @@
 
 		<popup v-if="farmer" v-model="githubDialog" :width="500" :title="$t('add_github')">
 			<template #icon>
-				<img src="/image/github_white.png">
+				<v-icon>mdi-github</v-icon>
 			</template>
 			<div class="github-dialog">
 				<input v-model="newGitHub" type="text" class="input">
@@ -1500,7 +1500,7 @@
 		text-align: left;
 	}
 	.grade {
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 		color: var(--white);
 		display: inline-block;
 		padding: 3px 6px;
@@ -1955,7 +1955,7 @@
 			background: var(--pure-white);
 			border: 1px solid var(--border);
 			position: relative;
-			border-radius: 5px;
+			border-radius: var(--radius-medium);
 			text-align: left;
 		}
 		.xp-bar {
@@ -1964,7 +1964,7 @@
 			display: inline-block;
 			vertical-align: top;
 			position: absolute;
-			border-radius: 5px;
+			border-radius: var(--radius-medium);
 			transition: all ease 0.3s;
 		}
 		.xp-bar.blue {

@@ -23,7 +23,7 @@
 				</router-link>
 				<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener">
 					<div class="tab action">
-						<img src="/image/github_white.png">
+						<v-icon>mdi-github</v-icon>
 						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>
 					</div>
 				</a>
@@ -266,7 +266,7 @@ const githubStars = ref<number | null>(null)
 
 onBeforeMount(() => {
 	LeekWars.setTitle(t('title'))
-	LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
+	LeekWars.setActions([{icon: 'mdi-github', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
 })
 
 onMounted(() => {

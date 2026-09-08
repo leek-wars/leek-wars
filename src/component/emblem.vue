@@ -23,7 +23,7 @@ const url = computed(() => {
 
 <style lang="scss" scoped>
 	img {
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 		background: var(--pure-white);
 		box-shadow: var(--elevation-1);
 		object-fit: cover;

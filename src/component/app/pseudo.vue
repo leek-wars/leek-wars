@@ -22,7 +22,7 @@ defineProps<{
 		color: var(--text-color);
 		font-weight: 500;
 		cursor: pointer;
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 		padding: 0 2px;
 		background: var(--background);
 		&:before {

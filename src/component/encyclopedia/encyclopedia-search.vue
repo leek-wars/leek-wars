@@ -15,7 +15,7 @@
 
 				<div class="center">
 					<v-btn color="primary" class="search-button" @click="searchButton">
-						<img src="/image/search.png"><span>{{ $t('search') }}</span>
+						<v-icon>mdi-magnify</v-icon><span>{{ $t('search') }}</span>
 					</v-btn>
 				</div>
 			</div>

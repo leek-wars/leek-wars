@@ -17,7 +17,7 @@
 					<template #activator="{ props }">
 						<div class="page-language info" v-bind="props">
 							<flag :code="LeekWars.languages[page.language].country" :clickable="false" />
-							<img width="10" src="/image/selector.png">
+							<v-icon class="caret">mdi-menu-down</v-icon>
 						</div>
 					</template>
 					<v-list :dense="true">

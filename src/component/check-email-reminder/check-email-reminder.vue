@@ -13,7 +13,7 @@
 			<div class="separator"><span>{{ t('or') }}</span></div>
 			<div class="oauth-buttons">
 				<div v-ripple class="action oauth gh" :class="{ disabled: oauthLoading }" @click="useProvider('github')">
-					<img src="/image/github_white.png" alt="GitHub"> {{ t('use_github') }}
+					<v-icon>mdi-github</v-icon> {{ t('use_github') }}
 				</div>
 				<div v-ripple class="action oauth google" :class="{ disabled: oauthLoading }" @click="useProvider('google')">
 					<img src="/image/google.svg" alt="Google"> {{ t('use_google') }}

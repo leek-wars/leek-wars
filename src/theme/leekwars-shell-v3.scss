@@ -2383,6 +2383,54 @@ body:not(.v2) {
 		color: var(--text-color-secondary);
 	}
 
+	/* ====== Vieux restes relevés à l'audit des 58 pages (2026-09-08) ======
+	 *
+	 * Pierre : « le thème commence à être vraiment chouette, tu peux faire une
+	 * passe sur toutes les pages pour trouver des vieux trucs à update ? ».
+	 * Chaque page connectée capturée, plus une sonde DOM (arrondis, ombres,
+	 * contrôles Material, PNG d'icônes). Ce qui se corrige dans la coquille est
+	 * ici ; le reste est dans les composants (REDESIGN.md, lot du 2026-09-08). */
+
+	/* `.card` (global.scss) : l'ombre d'élévation Material, trois couches
+	   floues, sur une quinzaine de pages — périodes de l'historique, récompenses
+	   de parrainage, packs de la banque, articles du dev-blog, cartes de
+	   l'encyclopédie, lignes des réglages, tuiles des statistiques, offres des
+	   groupes, résultats de recherche, messages du forum, tableau des équipes.
+	   Principe 1 : la profondeur par le trait. Les champs qui portent la classe
+	   (recherche d'adversaire, recherche du forum, réponse) gardent le fond des
+	   champs. */
+	.card {
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
+		border-radius: 0;
+		box-shadow: none;
+	}
+	input.card,
+	textarea.card {
+		background: var(--background-input);
+	}
+	/* Le groupe de boutons Vuetify (vue grille / tableau de l'historique, pages
+	   admin) : coins de 4 px, ombre, et l'actif en aplat gris. Même silhouette
+	   que les boutons neutres ; l'actif prend le vert en trait dessous, comme
+	   un onglet. */
+	.v-btn-group {
+		border-radius: 0;
+		box-shadow: none;
+		border: 1px solid var(--border-strong);
+		background: var(--background-header);
+	}
+	.v-btn-group .v-btn,
+	.v-btn-group .v-btn .v-btn__overlay {
+		border-radius: 0;
+	}
+	.v-btn-group .v-btn--active {
+		color: var(--primary);
+		box-shadow: inset 0 -2px 0 var(--primary);
+	}
+	.v-btn-group .v-btn--active .v-btn__overlay {
+		opacity: 0;
+	}
+
 	/* ====== Encyclopédie : couleurs écrites dans le contenu ======
 	 *
 	 * 331 des 9392 articles contiennent une couleur en dur dans leur HTML :

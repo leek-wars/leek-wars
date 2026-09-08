@@ -586,7 +586,7 @@
 		margin-top: -11px;
 		content: attr(label);
 		color: var(--white);
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 		padding: 2px 4px;
 		line-height: normal;
 		z-index: 2;
@@ -909,6 +909,11 @@
 		height: 8px;
 		border-radius: 50%;
 		background: var(--primary-surface);
+	}
+	// v3 : le témoin et son halo pulsé sont carrés (principe 2, audit du 2026-09-08).
+	body:not(.v2) .arena-dot,
+	body:not(.v2) .arena-dot::after {
+		border-radius: 0;
 	}
 	// Halo pulsé via un pseudo-élément animé en transform/opacity (compositables
 	// GPU, aucun repaint). L'ancienne version animait box-shadow, ce qui forçait

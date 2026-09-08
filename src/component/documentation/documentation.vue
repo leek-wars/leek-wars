@@ -22,7 +22,7 @@
 				</router-link>
 				<doc-language-selector v-if="!inAppBar" />
 				<div class="tab disabled search" icon="search" link="/search">
-					<img class="search-icon" src="/image/search.png">
+					<v-icon class="search-icon">mdi-magnify</v-icon>
 					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
 				<div v-if="!popup" class="tab action" icon="search" link="/search" @click="toggleLarge">

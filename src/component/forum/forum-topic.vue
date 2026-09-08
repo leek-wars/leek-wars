@@ -53,8 +53,7 @@
 							<div class="info">
 								<div class="pseudo">
 									{{ message.writer.name }}
-									<img v-if="message.writer.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="message.writer.connected" class="status" />
 								</div>
 								<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
 								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
@@ -968,7 +967,7 @@
 		margin-right: 10px;
 	}
 	.grade {
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 		color: var(--white);
 		display: inline-block;
 		padding: 2px 4px;
@@ -1180,7 +1179,7 @@
 	.release-badge {
 		background: #28a745;
 		color: var(--white);
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 		font-size: 13px;
 		font-weight: 500;
 		padding: 2px 6px;

@@ -327,6 +327,10 @@ loadTeams()
 	border-radius: 50%;
 	background: var(--border);
 	border: 1.5px solid var(--pure-white);
+	// v3 : une LED carrée, comme lw-status (principe 2, audit du 2026-09-08).
+	body:not(.v2) & {
+		border-radius: 0;
+	}
 	&.online {
 		background: #95d85a;
 	}

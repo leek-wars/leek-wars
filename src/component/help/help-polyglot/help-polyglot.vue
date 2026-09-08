@@ -1,8 +1,20 @@
 <template lang="html">
 	<div class="page">
-		<div class="content">
-			<markdown :content="content" mode="encyclopedia" />
+		<!-- Barre de page comme toutes les autres pages d'aide : la page était la
+		     seule sans titre ni panneau, un bloc de texte posé nu (audit du 2026-09-08). -->
+		<div class="page-header page-bar">
+			<div class="page-title">
+				<page-icon name="help" fallback="mdi-help-circle" />
+				<div class="page-title-text">
+					<h1>{{ locale === 'fr' ? 'IA en JavaScript, Python et TypeScript' : 'AI in JavaScript, Python and TypeScript' }}</h1>
+				</div>
+			</div>
 		</div>
+		<panel class="first">
+			<div class="content">
+				<markdown :content="content" mode="encyclopedia" />
+			</div>
+		</panel>
 	</div>
 </template>
 
@@ -228,5 +240,10 @@ const content = computed(() => (locale.value === 'fr' ? FR : EN))
 	padding: 20px 30px;
 	max-width: 900px;
 	margin: 0 auto;
+	// v3 : le texte est dans un panneau, plus besoin de sa propre feuille.
+	body:not(.v2) & {
+		background: none;
+		padding: 10px 20px;
+	}
 }
 </style>

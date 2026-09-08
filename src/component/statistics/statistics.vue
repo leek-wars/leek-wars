@@ -311,6 +311,21 @@
 	#app.app h2 {
 		font-size: 22px;
 	}
+	// v3 : le titre de section en police d'affichage, encadré du pointillé
+	// vert de la barre de page — les deux dégradés flous étaient un reste du
+	// v2 (audit du 2026-09-08).
+	body:not(.v2) h2 {
+		font-family: var(--font-display);
+		font-size: 16px;
+		font-weight: normal;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+	body:not(.v2) h2:before,
+	body:not(.v2) h2:after {
+		height: 3px;
+		background: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px);
+	}
 	.stats {
 		padding-top: 10px;
 		padding-bottom: 20px;

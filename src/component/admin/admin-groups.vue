@@ -29,8 +29,7 @@
 								<div v-ripple class="flex name">
 									<avatar :farmer="item.supervisor" />
 									<span>{{ item.supervisor.name }}</span>
-									<img v-if="item.supervisor.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="item.supervisor.connected" class="status" />
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>

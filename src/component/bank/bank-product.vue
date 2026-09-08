@@ -11,7 +11,7 @@
 			</i18n-t>
 			<span v-if="product.bonus" class="bonus-badge">{{ firstPurchase ? product.bonus * 2 : product.bonus }} <span class="crystal"></span> {{ $t('offered') }}</span>
 		</div>
-		<v-btn :variant="preview ? 'outlined' : 'flat'" color="#1976d2" class="buy-button" :to="preview ? undefined : '/bank/buy/' + index" :disabled="preview" prepend-icon="mdi-cart-outline">
+		<v-btn :variant="preview ? 'outlined' : 'flat'" color="primary" class="buy-button" :to="preview ? undefined : '/bank/buy/' + index" :disabled="preview" prepend-icon="mdi-cart-outline">
 			<span v-if="LeekWars.currencies[LeekWars.currency].prefix"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ format(product.prices[LeekWars.currency]) }}</span>
 			<span v-else>{{ format(product.prices[LeekWars.currency]) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
 		</v-btn>

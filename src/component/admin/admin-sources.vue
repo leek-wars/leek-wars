@@ -24,8 +24,7 @@
 							<b class="date">{{ d }} ({{ day.length }})</b>
 							<div v-for="farmer of day" :key="farmer.id" class="card farmer" :class="{deleted: farmer.deleted, connected: farmer.connected && !farmer.deleted}">
 								<div class="date">
-									<img v-if="farmer.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="farmer.connected" class="status" />
 									{{ $filters.time(farmer.register_time) }}
 								</div>
 								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">

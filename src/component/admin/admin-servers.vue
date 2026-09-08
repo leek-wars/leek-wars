@@ -15,7 +15,7 @@
 						<img src="/image/admin/server.png">
 						<br>
 						<div class="name">
-							{{ node.name }}<img class="status" src="/image/connected.png">
+							{{ node.name }}<lw-status :online="true" class="status" />
 						</div>
 						<div class="total-wrapper">Fights : {{ $filters.number(node.generated) }}</div>
 						<div v-if="node.metrics" class="metrics">
@@ -45,7 +45,7 @@
 						<div class="threads">
 							<div v-for="(runner, r) in node.runners" :key="r" class="thread">
 								<div class="th-name">
-									<img class="status" src="/image/connected.png">&nbsp;<b>{{ runner.name }}</b>
+									<lw-status :online="true" class="status" />&nbsp;<b>{{ runner.name }}</b>
 								</div>
 								<span class="green">✔ <span class="generated">{{ $filters.number(runner.generated) }}</span></span>&nbsp;&nbsp;
 								<span v-if="runner.errors > 0" class="red">✘ <span class="error">{{ $filters.number(runner.errors) }}</span></span>

@@ -20,7 +20,7 @@
 						<ranking-badge v-if="team && team.ranking <= 1000" :id="team.id" :ranking="team.ranking" category="team" />
 						<span class="level">
 							• {{ $t('main.n_farmers', [team.farmers.length]) }}
-							• {{ team.leek_count }} <img src="/image/icon/black/leek.png">
+							• {{ team.leek_count }} <v-icon>mdi-leek</v-icon>
 							• {{ $t('main.level_n', [team.level]) }}</span>
 						<v-btn class="expand" variant="text" size="x-small" :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand = !expand" />
 					</div>

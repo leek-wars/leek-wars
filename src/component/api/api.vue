@@ -20,7 +20,7 @@
 					</div>
 				</router-link> -->
 				<div class="tab disabled search" icon="search" link="/search">
-					<img class="search-icon" src="/image/search.png">
+					<v-icon class="search-icon">mdi-magnify</v-icon>
 					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
 				<div v-if="services.length" class="tab action openapi-tab" title="OpenAPI" @click="downloadOpenApi">

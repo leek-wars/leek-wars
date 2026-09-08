@@ -77,6 +77,9 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 						color: var(--primary-surface-text);
 						background: var(--primary-surface);
 						border-radius: 50%;
+						body:not(.v2) & {
+							border-radius: 0;
+						}
 						padding: 2px;
 						font-size: 11px;
 						width: 15px;
@@ -105,6 +108,13 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				color: var(--grey-1);
 				width: 50px;
 				height: 50px;
+				// v3 : la pastille ronde et son ombre floue étaient un reste du v2
+				// (audit du 2026-09-08) — un carré bordé, à plat.
+				body:not(.v2) & {
+					border-radius: 0;
+					box-shadow: none;
+					border: 1px solid var(--border-strong);
+				}
 			}
 			.items {
 				font-size: 14px;

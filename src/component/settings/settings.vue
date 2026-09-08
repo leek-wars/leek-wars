@@ -83,7 +83,7 @@
 					</table>
 					<div class="center">
 						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit" :disabled="submittingVerify" :loading="submittingVerify">{{ $t('verify') }}</v-btn>
-						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/github_white.png"> {{ $t('verify_gh') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button" :disabled="submittingVerify" :loading="submittingVerify"> <v-icon>mdi-github</v-icon> {{ $t('verify_gh') }}</v-btn>
 						<v-btn v-else type="submit" class="google-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/google.svg"> {{ $t('verify_google') }}</v-btn>
 					</div>
 				</form>

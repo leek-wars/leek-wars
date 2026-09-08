@@ -44,10 +44,10 @@
 	</span>
 	<span v-if="topic.acknowledged && !topic.private_issue && !(store.state.farmer && store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ t('status_acknowledged') }}</span>
 	<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
-		<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
+		<v-icon>mdi-github</v-icon><span>#{{ topic.issue }}</span>
 	</a>
 	<a v-if="topic.private_issue && store.state.farmer && store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="issue-badge private-issue" target="_blank" rel="noopener">
-		<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
+		<v-icon>mdi-github</v-icon><span>#{{ topic.private_issue }}</span>
 	</a>
 	<span v-if="store.state.farmer && store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="$emit('create-issue')"><v-icon :class="{ 'mdi-spin': creatingIssue }">{{ creatingIssue ? 'mdi-loading' : 'mdi-source-branch' }}</v-icon> {{ t('create_issue') }}</span>
 </template>

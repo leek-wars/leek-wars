@@ -35,7 +35,7 @@
 					</div>
 				</router-link>
 				<div class="tab action disabled" icon="search" link="/search">
-					<img class="search-icon" src="/image/search.png" @click="search">
+					<v-icon class="search-icon" @click="search">mdi-magnify</v-icon>
 					<input v-model="searchQuery" type="text" class="search-input" @keyup.enter="search">
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 						<template #activator="{ props }">
 							<div class="forum-language" v-bind="props">
 								<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
-								<img width="10" src="/image/selector.png">
+								<v-icon class="caret">mdi-menu-down</v-icon>
 							</div>
 						</template>
 						<v-list :dense="true" class="mobile-forum-languages">

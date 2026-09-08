@@ -1047,6 +1047,52 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     la ligne de base, le drapeau flottait au-dessus du milieu du mot. Le bloc
     passe en **ligne flex centrée** (écart 10 px), vérifié : centres du `h1`
     et du drapeau à la même ordonnée.
+- **2026-09-08 — audit des 58 pages : les vieux restes** (Pierre : « le thème
+  commence à être vraiment chouette, tu peux faire une passe sur toutes les
+  pages pour trouver des vieux trucs à update ? »). Méthode : chaque route
+  capturée connectée en 1280 px (Playwright headless, cf. la recette locale),
+  plus une sonde DOM par page — arrondis en dur, `box-shadow` floues,
+  contrôles Vuetify, PNG d'icônes de moins de 40 px. Corrigé :
+  - **`.card` de global.scss** (`leekwars-shell-v3.scss`) : l'ombre
+    d'élévation Material à trois couches survivait sur une quinzaine de
+    pages (périodes de l'historique, récompenses de parrainage, packs de la
+    banque, dev-blog, cartes de l'encyclopédie et de l'aide, lignes des
+    réglages, tuiles des statistiques, offres des groupes, recherche du
+    forum, messages du forum, kit de presse). Trait `--border`, angles
+    francs, plus d'ombre ; les champs qui portent la classe gardent le fond
+    des champs.
+  - **`v-btn-group`** (vue grille / tableau de l'historique, admin) : coins
+    de 4 px et aplat gris de l'actif → bordé, l'actif en trait vert dessous.
+  - **Titres de section des statistiques** : les deux dégradés flous du v2 →
+    police d'affichage et le pointillé vert de la barre de page.
+  - **Arrondis en dur** passés par les jetons (0 en v3, inchangé en v2) :
+    badge de grade (profil, forum), barres d'XP (profil, équipe), emblème
+    d'équipe, compteur de poireaux de l'éditeur, pseudo dans les messages,
+    infobulle du menu. Témoins ronds → carrés en v3 : point de statut des
+    équipes qui recrutent, page Statut, témoin d'arène du menu, pastilles
+    des chapitres du tutoriel (qui perdent aussi leur ombre floue).
+  - **PNG d'icônes → glyphes mdi** (ICONS.md) : `search.png` (forum, marché,
+    classement, documentation, API, recherche du forum et de l'encyclopédie)
+    → `mdi-magnify` ; `selector.png` (sélecteurs de langue du forum, de
+    l'encyclopédie, de la doc) → `mdi-menu-down` ; `github_white.png`
+    (à propos, kit de presse, profil, sujets liés à une issue, inscription,
+    vérification d'e-mail) → `mdi-github` ; `icon/black/leek.png` (potager,
+    infobulles, éditeur) → `mdi-leek` ; `connected.png` / `disconnected.png`
+    (équipe, groupe, sujets du forum, admin) → `lw-status`.
+  - **Derniers `<select>` natifs** (recherche du forum : catégorie, tri,
+    résolu ; page équipe : tri par défaut des colonnes, grade d'un membre)
+    → `lw-select`. Au passage, `useNamespacedT('search')` de la recherche
+    visait le mauvais espace de noms : `forum-search`.
+  - **Banque** : les boutons d'achat en bleu Material écrit en dur
+    (`#1976d2`) → `primary`, avec l'ombre pixel des boutons d'accent.
+  - **Guide « IA en JavaScript, Python et TypeScript »** : seule page d'aide
+    sans barre de page ni panneau, un bloc de texte posé nu → motif
+    `page-title` + `panel`.
+  - Relevé mais **laissé** : la `v-data-table` des équipes qui recrutent
+    (pied de page « Éléments par page », tri Material) ; le violet des
+    cristaux dans la banque (`#7b1fa2`, c'est la couleur de l'objet) ; les
+    boutons sociaux de la page À propos aux couleurs de marque ; la bannière
+    de statut orange (sémantique).
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
