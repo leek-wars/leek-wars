@@ -1,4 +1,5 @@
 {
+	"already_bought": "Già acquistato",
 	"already_have": "Possiedi già questo oggetto",
 	"are_you_sure_you_want_to_buy": "Sei sicuro di voler acquistare {item}?",
 	"are_you_sure_you_want_to_sell": "Sei sicuro di voler vendere {item}?",

@@ -13,5 +13,12 @@
 	"editing_by_x": "Atualmente a ser editado por {0}",
 	"redirected_from": "Redirecionado de {0}",
 	"aliases": "Também conhecido como: {0}",
+	"history": "Histórico",
+	"initial": "criação",
+	"child_pages": "Páginas filhas",
+	"referencing_translations": "Traduções vinculadas",
+	"linked_from": "Páginas que apontam para cá",
+	"n_references": "referência | referência | referências",
+	"views": "visualizações",
 	"quiz_locked": "Termine primeiro o capítulo {0} para responder a este questionário."
 }

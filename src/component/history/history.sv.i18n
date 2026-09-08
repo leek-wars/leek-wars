@@ -25,6 +25,8 @@
 	"chest_hunt": "Kistjakt",
 	"n_chests": "{0} kistor",
 	"colossus": "Koloss",
+	"view_grid": "Rutnätsvy",
+	"view_table": "Tabellvy",
 	"loot": "Stridsbyte",
 	"chests": "Kistor",
 	"rare_loot": "Sällsynta resurser",

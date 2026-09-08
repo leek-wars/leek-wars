@@ -1,6 +1,9 @@
 {
 	"against": "~에 맞서",
 	"arena_countdown": "{0}초 후 시작...",
+	"arena_countdown_invite": "{0}초 후 시작, 서두르세요!",
+	"arena_invite_ready": "전투 준비 완료, 함께하세요! | {count}명의 플레이어가 전투 준비를 마쳤습니다, 함께하세요!",
+	"arena_invite_join": "전투 시작까지 1명 더 필요합니다! | 전투 시작까지 {count}명 더 필요합니다!",
 	"arena_mode_br": "배틀 로얄",
 	"arena_mode_chest_hunt": "보물 사냥",
 	"arena_mode_colossus": "콜로서스",

@@ -24,6 +24,8 @@
 	"chest_hunt": "宝箱狩猎",
 	"chests": "宝箱",
 	"colossus": "巨像",
+	"view_grid": "网格视图",
+	"view_table": "表格视图",
 	"loot": "战利品",
 	"n_chests": "{0} 个宝箱",
 	"rare_loot": "稀有资源",

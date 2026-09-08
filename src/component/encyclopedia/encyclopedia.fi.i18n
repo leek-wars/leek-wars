@@ -13,5 +13,12 @@
 	"editing_by_x": "Tällä hetkellä muokkaa {0}",
 	"redirected_from": "Uudelleenohjattu kohteesta {0}",
 	"aliases": "Tunnetaan myös nimellä: {0}",
+	"history": "Historia",
+	"initial": "luonti",
+	"child_pages": "Alasivut",
+	"referencing_translations": "Linkitetyt käännökset",
+	"linked_from": "Tänne linkittävät sivut",
+	"n_references": "viittaus | viittaus | viittausta",
+	"views": "katselukertaa",
 	"quiz_locked": "Suorita ensin luku {0} vastataksesi tähän tietovisaan."
 }

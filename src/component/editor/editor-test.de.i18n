@@ -51,6 +51,9 @@
 	"test_maps": "Karten",
 	"test_advanced": "Vorauszahlung",
 	"templates": "Modelle",
+	"max_turns": "Maximale Runden",
+	"max_turns_desc": "Maximale Anzahl an Runden des Kampfes (Standard 64)",
+	"max_turns_placeholder": "Ganze Zahl zwischen 1 und 64. Standard = 64",
 	"free": "Frei",
 	"select_chips": "Chips auswählen",
 	"select_weapons": "Waffen auswählen"

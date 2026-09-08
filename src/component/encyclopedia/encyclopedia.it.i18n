@@ -15,5 +15,10 @@
 	"aliases": "Conosciuto anche come: {0}",
 	"history": "Cronologia",
 	"initial": "creazione",
+	"child_pages": "Pagine figlie",
+	"referencing_translations": "Traduzioni collegate",
+	"linked_from": "Pagine che rimandano qui",
+	"n_references": "riferimento | riferimento | riferimenti",
+	"views": "visualizzazioni",
 	"quiz_locked": "Completa prima il capitolo {0} per rispondere a questo quiz."
 }

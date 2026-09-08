@@ -51,6 +51,9 @@
 	"test_maps": "Kartat",
 	"test_advanced": "Edistynyt",
 	"templates": "Mallit",
+	"max_turns": "Vuoroja enintään",
+	"max_turns_desc": "Taistelun vuorojen enimmäismäärä (oletus 64)",
+	"max_turns_placeholder": "Kokonaisluku väliltä 1–64. Oletus = 64",
 	"free": "Vapaa",
 	"select_chips": "Luotien valitseminen",
 	"select_weapons": "Valitse aseet"

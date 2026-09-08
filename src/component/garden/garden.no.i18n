@@ -1,6 +1,9 @@
 {
 	"against": "imot",
 	"arena_countdown": "Starter om {0}s...",
+	"arena_countdown_invite": "Starter om {0}s, skynd deg!",
+	"arena_invite_ready": "Klare til kamp, bli med dem! | {count} spillere er klare til kamp, bli med dem!",
+	"arena_invite_join": "1 spiller til for å starte kampen! | {count} spillere til for å starte kampen!",
 	"arena_mode_br": "Battle Royale",
 	"arena_mode_chest_hunt": "Skattejakt",
 	"arena_mode_colossus": "Koloss",

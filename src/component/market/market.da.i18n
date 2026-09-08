@@ -1,4 +1,5 @@
 {
+	"already_bought": "Allerede købt",
 	"already_have": "Du ejer allerede denne vare",
 	"are_you_sure_you_want_to_buy": "Er du sikker på, at du vil købe {item}?",
 	"are_you_sure_you_want_to_sell": "Er du sikker på, at du vil sælge {item}?",

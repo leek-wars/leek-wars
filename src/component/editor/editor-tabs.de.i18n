@@ -2,5 +2,6 @@
 	"close": "Schließen",
 	"close_others": "Schließen Sie andere",
 	"confirm_close": "Sie haben ungespeicherte Änderungen an dieser KI. Möchten Sie die Registerkarte wirklich schließen und sie verwerfen?",
-	"split": "Den Editor teilen"
+	"split": "Den Editor teilen",
+	"open_file": "Datei öffnen"
 }

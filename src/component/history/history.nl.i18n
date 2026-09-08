@@ -24,6 +24,8 @@
 	"war": "Oorlog",
 	"chest_hunt": "Schattenjacht",
 	"colossus": "Kolos",
+	"view_grid": "Rasterweergave",
+	"view_table": "Tabelweergave",
 	"chests": "Kisten",
 	"n_chests": "{0} kisten",
 	"loot": "Gevechtsbuit",
