@@ -1108,6 +1108,12 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       `--border`, survol de ligne, pied de page bordé en police d'affichage,
       angles francs sur son champ et ses boutons. Vaut pour les équipes qui
       recrutent, l'historique en tableau, les groupes et l'admin.
+    - **Onglets de barre de page** (coquille, `.page-bar .tabs .tab`) : « un
+      hover qui fait apparaître une barre blanche en bas, active qui la passe
+      en vert avec le texte ». Le survol ne changeait que l'encre ; il pose
+      maintenant le trait dessous à `--text-color`, l'actif garde trait et
+      encre verts, y compris survolé. Mesuré : survol = encre du texte,
+      actif = `--primary`, dans les deux thèmes.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

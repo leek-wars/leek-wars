@@ -644,14 +644,21 @@ body:not(.v2) {
 		margin-left: 0;
 		padding: 0 14px;
 	}
+	/* Survol : le trait apparaît dessous, à l'encre du texte (Pierre,
+	   2026-09-08 : « un hover qui fait apparaître une barre blanche en bas,
+	   active qui la passe en vert avec le texte »). */
 	.page-bar .tabs .tab:not(.disabled):hover {
 		background-color: transparent;
+		border-bottom-color: var(--text-color);
 		color: var(--text-color);
 	}
 	/* L'onglet actif : un trait vert dessous, pas un aplat vert.
-	   Deux classes coexistent dans le code, `selected` et `active`. */
+	   Deux classes coexistent dans le code, `selected` et `active`. Le survol
+	   de l'actif ne le repasse pas à l'encre : il reste vert. */
 	.page-bar .tabs .tab.selected,
-	.page-bar .tabs .tab.active {
+	.page-bar .tabs .tab.active,
+	.page-bar .tabs .tab.selected:hover,
+	.page-bar .tabs .tab.active:hover {
 		background-color: transparent;
 		border-bottom-color: var(--primary);
 		color: var(--primary);
