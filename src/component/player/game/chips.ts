@@ -249,6 +249,11 @@ class Summon extends ChipAnimation {
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
 
+		// Une plante (Piment, Maïs, Prototaxite) sort de terre : rien que la
+		// motte à l'apparition, aucune feuille (Pierre, 08/09/2026). Les feuilles
+		// du lancer sont réservées aux bulbes.
+		if ((this.summon as { plant?: boolean } | undefined)?.plant === true) { return }
+
 		const s = 2.0
 		const life = 70
 		const y = targetPos.y - 2
@@ -269,34 +274,17 @@ class Summon extends ChipAnimation {
 			const plant = (this.summon as { plant?: boolean }).plant === true
 			if (plant) {
 				// Une plante se plante : bruit de terre (pas le cri des bulbes) et
-				// motte de terre qui saute à l'apparition.
+				// motte de terre qui saute à l'apparition — que des cailloux, pas
+				// de feuilles (Pierre, 08/09/2026). Motte un peu plus fournie qu'au
+				// départ (14 fragments, dont quelques gros) puisqu'elle porte seule
+				// l'apparition.
 				S.bury.play(this.game)
 				const pos = this.position
-				for (let i = 0; i < 9; ++i) {
+				for (let i = 0; i < 14; ++i) {
 					const angle = Math.random() * Math.PI * 2
-					const dist = Math.random() * 1.6
+					const dist = 0.3 + Math.random() * 1.6
 					const texture = tintedTexture(Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2, '#6b4a2b', 0.65)
-					this.game.particles.addGarbage(pos.x, pos.y, 4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 2 + Math.random() * 2.5, texture, 1, Math.random() * 0.2 - 0.1, 0.25 + Math.random() * 0.3, Math.random() * Math.PI, 60)
-				}
-				// …et une gerbe de feuilles qui jaillit avec la motte : les sept
-				// feuilles du lancer, émises 30 frames plus tôt, sont déjà pâles et
-				// dispersées quand la plante sort de terre, si bien qu'on ne voyait
-				// que des cailloux. Feuilles balistiques (elles retombent avec la
-				// terre) plus quelques feuilles qui flottent et montent lentement.
-				// Dosage : à 12 feuilles de 0,6 à 1,1 plus 6 flottantes, le nuage
-				// cachait la plante pendant toute sa sortie de terre (planche du
-				// 08/09). Sept petites feuilles balistiques et quatre flottantes
-				// suffisent, avec les sept du lancer : la plante reste lisible.
-				const leaf = tintedTexture(T.summon_leaf, '#7ccf3a', 0.35)
-				for (let i = 0; i < 7; ++i) {
-					const angle = Math.random() * Math.PI * 2
-					const dist = 0.6 + Math.random() * 1.4
-					this.game.particles.addGarbage(pos.x, pos.y, 6, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3, leaf, Math.random() > 0.5 ? 1 : -1, 0, 0.45 + Math.random() * 0.25, 0, 70)
-				}
-				for (let i = 0; i < 4; ++i) {
-					const angle = Math.random() * Math.PI * 2
-					const drift = 0.2 + Math.random() * 0.25
-					this.game.particles.addImage(pos.x + Math.cos(angle) * 12, pos.y + Math.sin(angle) * 6, 4, Math.cos(angle) * drift, Math.sin(angle) * drift * 0.5, 0.35 + Math.random() * 0.3, 0, leaf, 60, 1, (Math.random() - 0.5) * 0.08, false, 0.5 + Math.random() * 0.2, Math.random() > 0.5 ? 1 : -1)
+					this.game.particles.addGarbage(pos.x, pos.y, 4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 2 + Math.random() * 3, texture, 1, Math.random() * 0.2 - 0.1, 0.25 + Math.random() * 0.4, Math.random() * Math.PI, 60)
 				}
 			} else {
 				S.bulb.play(this.game)
