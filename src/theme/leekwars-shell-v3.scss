@@ -2430,6 +2430,50 @@ body:not(.v2) {
 	.v-btn-group .v-btn--active .v-btn__overlay {
 		opacity: 0;
 	}
+	/* `v-data-table` (équipes qui recrutent, historique en tableau, groupes,
+	   pages admin) : Vuetify la pose sur SA surface — le gris de sa palette —
+	   avec l'ombre `elevation-1` et un pied de page Material. Pierre (2026-09-08) :
+	   « le fond gris ne me plaît pas trop ». Elle prend la surface du panneau,
+	   l'en-tête des tableaux du site (capitales, police d'affichage, encre
+	   pâle), le survol de ligne et un pied de page bordé. `!important` contre
+	   les classes d'élévation de Vuetify, qui le posent aussi. */
+	.v-table {
+		background: transparent;
+		color: var(--text-color);
+		border-radius: 0;
+		box-shadow: none !important;
+	}
+	.v-table .v-table__wrapper > table > thead > tr > th {
+		font-family: var(--font-display);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--text-color-secondary);
+		border-bottom: 1px solid var(--border-strong);
+	}
+	.v-table .v-table__wrapper > table > tbody > tr > td {
+		border-bottom: 1px solid var(--border);
+	}
+	.v-table .v-table__wrapper > table > tbody > tr:hover > td {
+		background: var(--background-row);
+	}
+	.v-data-table-footer {
+		border-top: 1px solid var(--border);
+		font-family: var(--font-display);
+		font-size: 11px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--text-color-secondary);
+	}
+	.v-data-table-footer .v-field,
+	.v-data-table-footer .v-field__outline__start,
+	.v-data-table-footer .v-field__outline__end {
+		border-radius: 0;
+	}
+	.v-data-table-footer .v-btn {
+		border-radius: 0;
+	}
 
 	/* ====== Encyclopédie : couleurs écrites dans le contenu ======
 	 *

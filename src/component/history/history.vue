@@ -344,6 +344,32 @@ watch(viewMode, () => {
 		background: var(--background-header);
 		font-weight: bold;
 	}
+	// v3 : le sélecteur de période au style des actions du thème (retour de
+	// Pierre, 2026-09-08) — bordé, police d'affichage, survol discret sur la
+	// surface de ligne, pixel push au clic, et l'actif en aplat vert comme la
+	// page courante de la pagination (doctrine du 2026-08-31).
+	body:not(.v2) .period {
+		font-family: var(--font-display);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		padding: 9px 10px;
+		border: 1px solid var(--border-strong);
+		background: var(--background-input);
+		color: var(--text-color);
+	}
+	body:not(.v2) .period:hover {
+		background: var(--background-row);
+	}
+	body:not(.v2) .period:active {
+		transform: translate(1px, 1px);
+	}
+	body:not(.v2) .period.selected {
+		background: var(--primary-surface);
+		border-color: var(--primary);
+		color: var(--primary-surface-text);
+		font-weight: normal;
+	}
 	.header-row {
 		display: flex;
 		align-items: center;

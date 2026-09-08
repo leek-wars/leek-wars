@@ -1088,11 +1088,26 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - **Guide « IA en JavaScript, Python et TypeScript »** : seule page d'aide
     sans barre de page ni panneau, un bloc de texte posé nu → motif
     `page-title` + `panel`.
-  - Relevé mais **laissé** : la `v-data-table` des équipes qui recrutent
-    (pied de page « Éléments par page », tri Material) ; le violet des
-    cristaux dans la banque (`#7b1fa2`, c'est la couleur de l'objet) ; les
-    boutons sociaux de la page À propos aux couleurs de marque ; la bannière
-    de statut orange (sémantique).
+  - Relevé mais **laissé** : le violet des cristaux dans la banque
+    (`#7b1fa2`, c'est la couleur de l'objet) ; les boutons sociaux de la page
+    À propos aux couleurs de marque ; la bannière de statut orange
+    (sémantique).
+  - **Retours de Pierre, même jour** (« Merci ! ») :
+    - **Période de l'historique** (`history.vue`) : « avec le style
+      hover/active du thème ». Les quatre choix étaient des `.card` grises
+      dont l'actif passait en gras : ils deviennent des actions du thème —
+      bordées, police d'affichage, survol sur `--background-row`, pixel push,
+      l'actif en aplat vert comme la page courante de la pagination.
+    - **Page Statut en sombre** (`status.vue`) : « le thème est cassé aussi » —
+      les cartes de service lisaient `--grey-lighter`, variable inexistante,
+      donc son repli `#f5f5f5` : blanc sous l'encre claire. `--background-secondary`
+      + trait.
+    - **`v-data-table`** (coquille) : « le fond gris ne me plaît pas trop ».
+      Vuetify la posait sur SA surface avec l'ombre `elevation-1` : fond
+      transparent, en-tête aux capitales des tableaux du site, filets
+      `--border`, survol de ligne, pied de page bordé en police d'affichage,
+      angles francs sur son champ et ses boutons. Vaut pour les équipes qui
+      recrutent, l'historique en tableau, les groupes et l'admin.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

@@ -163,7 +163,10 @@ const lastCheckedLabel = computed(() => {
 	gap: 12px;
 	padding: 14px 16px;
 	border-radius: var(--radius);
-	background: var(--grey-lighter, #f5f5f5);
+	// `--grey-lighter` n'existe pas : le repli #f5f5f5 peignait les cartes en
+	// blanc sous une encre claire en thème sombre (retour de Pierre, 2026-09-08).
+	background: var(--background-secondary);
+	border: 1px solid var(--border);
 	border-left: 4px solid transparent;
 	&.ok { border-left-color: var(--primary); }
 	&.error { border-left-color: #d9534f; }
