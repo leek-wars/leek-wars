@@ -112,12 +112,13 @@
 	}
 
 	// Stats a jour de la piece posee dans la forge : stats de base du component_template
-	// fusionnees avec les alterations deja portees par l'instance (#622). forgeComponent.family
-	// EST l'id de component_template (params), la cle de LeekWars.components.
+	// fusionnees avec les alterations deja portees par l'instance (#622).
+	// forgeComponent.component est l'id de component_template (params), la cle de
+	// LeekWars.components — le champ s'appelait `family`, ce qu'il n'a jamais ete.
 	const stats = computed<[string, number][]>(() => {
 		const c = forgeComponent.value
 		if (!c) return []
-		const base = (LeekWars.components[c.family]?.stats ?? []) as [string, number][]
+		const base = (LeekWars.components[c.component]?.stats ?? []) as [string, number][]
 		return mergeStats(base, c.stats) as [string, number][]
 	})
 	// Une carac que le joueur a lui-meme montee : il doit la reperer d'un coup d'oeil.

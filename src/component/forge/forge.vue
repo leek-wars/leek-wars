@@ -155,7 +155,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
 	import { InventoryItem } from '@/model/farmer'
-	import { planAttempt, alterationTier, alteredClass, type AlterationRecipe } from '@/model/alteration'
+	import { planAttempt, alterationTier, alteredClass, componentFamily, isIndivisibleWrongFamily, type AlterationRecipe } from '@/model/alteration'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { t } from '@/model/i18n'
@@ -506,8 +506,31 @@
 		}).error(error => {
 			fusing.value = false
 			altering.value = false
-			LeekWars.toast(error.error)
+			const message = forgeErrorMessage(error)
+			if (message) LeekWars.toast(message)
 		})
+	}
+
+	/**
+	 * Libelle d'une erreur de forge (alteration, recyclage, fabrication) : chaque code du
+	 * serveur a sa traduction, le code brut ne sort qu'en dernier recours. Null pour
+	 * too_many_requests, deja signale par la couche requete.
+	 */
+	function forgeErrorMessage(error: ApiError): string | null {
+		const code = error?.error
+		switch (code) {
+			case 'too_many_requests': return null
+			case 'duplicate_exception_stat': return t('main.error_duplicate_exception_stat', [t('characteristic.' + (error as { carac?: string }).carac)])
+			case 'well_overflow': return t('main.error_well_overflow')
+			case 'component_changed': return t('main.error_component_changed')
+			case 'item_changed': return t('main.error_item_changed')
+			case 'indivisible_wrong_family': return t('main.alteration_wrong_family')
+			case 'not_enough_alterations': return t('main.alteration_not_enough')
+			case 'too_many_alterations': return t('main.alteration_too_many', [maxItems.value])
+			case 'not_enough_habs': return t('market.error_not_enough_habs')
+			case 'craft_failed': return t('main.error_craft_failed')
+			default: return t('main.error_x', [code])
+		}
 	}
 
 	/** Nombre d'alterations posees, quantites comprises. */
@@ -671,7 +694,7 @@
 		const template = c ? c.template : result.value
 		const tpl = template ? LeekWars.items[template] : null
 		forgeComponent.value = (tpl && tpl.type === ItemType.COMPONENT)
-			? { family: Number(tpl.params), level: Number(tpl.level), template: template as number, stats: c?.stats ?? null }
+			? { component: Number(tpl.params), level: Number(tpl.level), template: template as number, stats: c?.stats ?? null }
 			: null
 	}, { immediate: true })
 
@@ -706,6 +729,16 @@
 	function addAlteration(item: InventoryItem) {
 		if (!component.value) {
 			LeekWars.toast(t('main.alteration_needs_component'))
+			return
+		}
+		// Une indivisible (PT, PM, coeurs, memoire) hors de sa famille ne peut rien poser :
+		// l'API refuse la recette entiere. La palette la grise deja, mais elle peut aussi
+		// arriver par l'inventaire, donc le refus est ici, sur le seul chemin d'ajout (#622).
+		const data = LeekWars.alterations
+		const comp = forgeComponent.value
+		const alteration = data && Object.values(data.alterations).find(a => a.template === item.template)
+		if (data && comp && alteration && isIndivisibleWrongFamily(data, alteration, componentFamily(data, comp.component))) {
+			LeekWars.toast(t('main.alteration_wrong_family'))
 			return
 		}
 		// Alterer porte sur une seule piece : un empilement de destruction se defait.
@@ -869,7 +902,8 @@
 			}, SHATTER_DURATION)
 		}).error(error => {
 			destroying.value = false
-			LeekWars.toast(error.error)
+			const message = forgeErrorMessage(error)
+			if (message) LeekWars.toast(message)
 		})
 	}
 
@@ -966,11 +1000,9 @@
 			return true
 		}, error => {
 			const code = (error as ApiError).error
-			// too_many_requests a déjà son toast dans la couche requête
-			if (code !== 'too_many_requests') {
-				const insufficient = code === 'not_enough_habs' || code === 'no_such_item_or_not_enough_quantity'
-				LeekWars.toast(insufficient ? t('main.error_craft_not_enough_resources') : t('main.error_x', [code]))
-			}
+			const insufficient = code === 'not_enough_habs' || code === 'no_such_item_or_not_enough_quantity'
+			const message = insufficient ? t('main.error_craft_not_enough_resources') : forgeErrorMessage(error as ApiError)
+			if (message) LeekWars.toast(message)
 			return false
 		})
 		Promise.all([outcome, animation]).then(([success]) => {

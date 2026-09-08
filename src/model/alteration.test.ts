@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { AlterationFamily, ComponentFamily, addedPower, alterationTier, alteredClass, displayRatio, planAttempt, power, rawAddedPower, well } from './alteration'
+import { AlterationFamily, ComponentFamily, addedPower, alterationTier, alteredClass, displayRatio, isIndivisibleWrongFamily, planAttempt, power, rawAddedPower, well, wrongFamilyIndivisible } from './alteration'
 import type { AlterationData } from './alteration'
 
 /**
@@ -275,5 +275,34 @@ describe('paliers de couleur', () => {
 
 	it('évite le vert clair, illisible sur les composants déjà verts', () => {
 		expect(alterationTier(0.2)?.color).toBe('#008800')
+	})
+})
+
+describe('indivisible hors de sa famille', () => {
+	// Miroir de Alteration::wrongFamilyIndivisible. La forge doit refuser AVANT l'envoi :
+	// l'API rejette la recette entière, et le joueur ne doit pas découvrir la règle par une
+	// erreur. C'est ce qui ferme la cale de dosage — inerte, l'altération comptait dans le
+	// dosage sans rien consommer, donc calait le métabolisme sur son pic à volonté (#622).
+	const vitamineVie = DATA.alterations[1]     // vie, vitamine
+	const vitaminePM = DATA.alterations[10]     // PM, vitamine — indivisible
+
+	it('refuse une indivisible posée hors de sa famille', () => {
+		expect(isIndivisibleWrongFamily(DATA, vitaminePM, ComponentFamily.ELECTRONIC)).toBe(true)
+		expect(isIndivisibleWrongFamily(DATA, vitaminePM, ComponentFamily.PHYSICAL)).toBe(true)
+	})
+
+	it('laisse passer la même altération sur sa famille', () => {
+		expect(isIndivisibleWrongFamily(DATA, vitaminePM, ComponentFamily.FRUIT)).toBe(false)
+	})
+
+	it('ne vise QUE les indivisibles : une divisible hors famille reste jouable', () => {
+		// C'est elle qui fait les petits gains, donc le réglage fin du dosage reste possible.
+		expect(isIndivisibleWrongFamily(DATA, vitamineVie, ComponentFamily.ELECTRONIC)).toBe(false)
+	})
+
+	it('trouve la fautive dans une recette mélangée, et ignore les quantités nulles', () => {
+		expect(wrongFamilyIndivisible(DATA, { 1: 3 }, ComponentFamily.ELECTRONIC)).toBeNull()
+		expect(wrongFamilyIndivisible(DATA, { 1: 3, 10: 1 }, ComponentFamily.ELECTRONIC)).toBe(10)
+		expect(wrongFamilyIndivisible(DATA, { 10: 0 }, ComponentFamily.ELECTRONIC)).toBeNull()
 	})
 })

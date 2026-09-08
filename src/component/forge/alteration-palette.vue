@@ -9,7 +9,7 @@
 				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true" :bottom="true" :pin="true">
 					<!-- Pas d'onde au clic sur une alteration qui ne rentre plus : le geste
 					     n'aboutit pas, il ne doit pas faire mine de repondre (demande de Pierre). -->
-					<div v-ripple="fits(a)" class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a)}" v-bind="props" @click="pick(a)">
+					<div v-ripple="fits(a)" class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a) && !forbidden(a), forbidden: forbidden(a)}" v-bind="props" @click="pick(a)">
 						<alteration-icon :template="a.template" title="" />
 						<span v-if="owned(a.template) > 0" class="owned">{{ owned(a.template) }}</span>
 					</div>
@@ -24,7 +24,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { forgeComponent, forgeCharge, forgePendingPower } from '@/model/forge-state'
-	import { efficiencyTier } from '@/model/alteration'
+	import { componentFamily, efficiencyTier, isIndivisibleWrongFamily } from '@/model/alteration'
 	import { emitter } from '@/model/emitter'
 	import type { InventoryItem } from '@/model/farmer'
 	import type { AlterationTemplate } from '@/model/alteration'
@@ -61,6 +61,20 @@
 	}
 
 	/**
+	 * L'alteration est-elle INTERDITE sur cette piece ?
+	 *
+	 * Une indivisible (PT, PM, coeurs, memoire) hors de sa famille de composant ne peut rien
+	 * poser : l'API refuse la recette entiere. On l'interdit donc des la palette, avec son
+	 * propre motif — le liseré « ne rentre pas dans le puits » dirait autre chose (#622).
+	 */
+	function forbidden(a: AlterationTemplate): boolean {
+		const data = LeekWars.alterations
+		const comp = forgeComponent.value
+		if (!data || !comp) return false
+		return isIndivisibleWrongFamily(data, a, componentFamily(data, comp.component))
+	}
+
+	/**
 	 * L'alteration rentre-t-elle encore dans la capacite de la piece posee, compte tenu de
 	 * ce qui est deja dans la forge ?
 	 *
@@ -69,18 +83,17 @@
 	 * passe au-dela est perdu d'avance. A 130 %, une piece a 160/200 ne grisait rien en
 	 * dessous de 100 de charge alors que la vraie marge etait de 40 (#622).
 	 *
-	 * Une indivisible mal ciblee est INERTE : elle ne consomme rien, donc elle rentre
-	 * toujours (elle ne sert qu'a ajuster le dosage).
+	 * Une indivisible hors de sa famille ne rentre JAMAIS : elle est interdite sur cette
+	 * piece (cf. forbidden), et c'est ce motif-la qui est affiche.
 	 */
-	const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
 	function fits(a: AlterationTemplate): boolean {
 		const data = LeekWars.alterations
 		const comp = forgeComponent.value
 		if (!data || !comp) return true
+		if (forbidden(a)) return false
 		const capacity = LeekWars.componentCapacity(comp.template)
 		if (capacity <= 0) return true
-		const efficiency = (data.efficiency[a.family] || {})[comp.family] || 0
-		if (INDIVISIBLE.indexOf(a.carac) !== -1 && efficiency < 1) return true
+		const efficiency = (data.efficiency[a.family] || {})[componentFamily(data, comp.component)] || 0
 		const points = (data.gains[a.carac] || [0, 0, 0])[efficiencyTier(efficiency)]
 		const power = points * (data.weights[a.carac] || 0)
 		// forgePendingPower = delta de charge projete de la recette posee ; l'alteration
@@ -171,6 +184,16 @@
 			// Le clic ne fait rien : le curseur ne doit pas promettre le contraire.
 			cursor: default;
 			&:hover { border-color: #c62828; }
+		}
+		// Interdite sur cette famille de composant, et pas seulement « trop grosse » : le
+		// rouge dirait un dépassement de puits. Gris et désaturée, elle se lit comme « sans
+		// objet ici » ; l'infobulle donne déjà les gains par famille, donc le pourquoi (#622).
+		&.forbidden {
+			opacity: 0.3;
+			filter: grayscale(1);
+			border-color: var(--border);
+			cursor: not-allowed;
+			&:hover { border-color: var(--border); }
 		}
 	}
 	// Quantite possedee en bas a droite ; le numero de dosage est en haut a gauche,

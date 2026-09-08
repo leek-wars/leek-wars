@@ -286,6 +286,45 @@ function efficiencyTier(efficiency: number): number {
 const INDIVISIBLE = ['tp', 'mp', 'cores', 'ram']
 
 /**
+ * Famille d'un composant (fruit, physique, électronique) depuis son id de component_template.
+ *
+ * Miroir de `AlterationRegistry::getComponentFamily`. À utiliser partout où une efficacité
+ * est calculée : lire l'id du composant comme si c'était une famille donne une efficacité
+ * de 0, donc les plus petits gains et, pour une indivisible, un refus systématique (#622).
+ */
+function componentFamily(data: AlterationData, component: number): ComponentFamily {
+	return data.component_families[component] ?? 0
+}
+
+/**
+ * Une altération indivisible (PT, PM, cœurs, mémoire) est-elle posée hors de sa famille ?
+ *
+ * Miroir de `Alteration::wrongFamilyIndivisible` côté serveur. Une telle altération ne peut
+ * rien poser (l'efficacité ne s'applique pas au gain : on ne pose pas +0,2 PM), et la
+ * recette qui en contient une est REFUSÉE par l'API. La forge doit donc l'interdire avant
+ * l'envoi, sinon le joueur découvre la règle par une erreur.
+ *
+ * Elle était auparavant laissée inerte, mais elle comptait quand même dans le dosage sans
+ * consommer de capacité : elle servait donc à caler le dosage sur le pic du métabolisme à
+ * volonté, ce qui neutralisait le verrou (#622).
+ */
+function isIndivisibleWrongFamily(data: AlterationData, alteration: AlterationTemplate, componentFamily: number): boolean {
+	if (INDIVISIBLE.indexOf(alteration.carac) === -1) return false
+	return ((data.efficiency[alteration.family] || {})[componentFamily] || 0) < 1
+}
+
+/** Première altération de la recette refusée par la règle ci-dessus, ou null. */
+function wrongFamilyIndivisible(data: AlterationData, recipe: AlterationRecipe, componentFamily: number): number | null {
+	for (const id in recipe) {
+		if (recipe[id] <= 0) continue
+		const alteration = data.alterations[id]
+		if (!alteration) continue
+		if (isIndivisibleWrongFamily(data, alteration, componentFamily)) return parseInt(id, 10)
+	}
+	return null
+}
+
+/**
  * Prévisualise une tentative : un jet par caractéristique visée, tous vers la même
  * destination (celle où la recette atterrit si tout passe).
  */
@@ -323,7 +362,9 @@ function planAttempt(data: AlterationData, base: Stats | StatList, added: Stats,
 
 		// Une altération indivisible posée sur la mauvaise famille est INERTE : aucune
 		// chance de réussir, donc elle ne consomme pas de capacité et n'entre pas dans les
-		// jets. Elle ne sert plus qu'à ajuster le dosage (#622).
+		// jets. La recette qui en contient une est refusée en amont (cf.
+		// wrongFamilyIndivisible) ; ce cas ne subsiste que pour que la fonction reste
+		// définie sur n'importe quelle recette, comme côté serveur (#622).
 		if (INDIVISIBLE.indexOf(carac) !== -1 && efficiency < 1) continue
 
 		recipePower += gainPower * quantity
@@ -452,5 +493,6 @@ export {
 	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
 	COMPONENT_FAMILY_KEYS, COMPONENT_FAMILY_ICONS, COMPONENT_FAMILIES,
 	well, power, addedPower, rawAddedPower, displayRatio, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
+	componentFamily, isIndivisibleWrongFamily, wrongFamilyIndivisible,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }

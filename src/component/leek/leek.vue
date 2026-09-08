@@ -1563,7 +1563,15 @@
 				store.commit('remove-inventory', { ...c, item_template: c.template, quantity: 1, type: ItemType.COMPONENT })
 				refreshTotalCharacteristics()
 			}
-		}).error(err => LeekWars.toast(err.error as string))
+		}).error(err => {
+			// Une stat d'exception par poireau (#622) : le serveur refuse une piece alteree
+			// qui creerait une carac deja creee par une autre piece du poireau.
+			if (err.error === 'duplicate_exception_stat') {
+				LeekWars.toast(t('main.error_duplicate_exception_stat', [t('characteristic.' + (err as { carac?: string }).carac)]))
+			} else {
+				LeekWars.toast(t('main.error_x', [err.error]))
+			}
+		})
 	}
 
 	function moveComponent(c: Component, index: number | undefined) {
