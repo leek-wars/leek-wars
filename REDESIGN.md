@@ -1116,6 +1116,10 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       courant), trait et encre passent au vert ; l'onglet courant garde
       trait et encre verts, y compris survolé. Mesuré : survol = encre du
       texte, courant = `--primary`, dans les deux thèmes.
+    - **Composant talent** (`talent.vue`, « pareil pour le composant
+      talent ») : son survol passait le trait au vert, contre la doctrine du
+      2026-08-31. Même jeu que les onglets : trait à l'encre du texte au
+      survol, trait et chiffre verts sous le clic.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

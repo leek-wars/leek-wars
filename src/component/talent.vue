@@ -50,17 +50,22 @@ defineProps<{
 	   négatif (Pierre, 2026-09-07 : « moderniser le composant talent »). L'icône
 	   est un asset, pas une encre : elle garde ses couleurs ; c'est la coquille
 	   qui substitue le SVG à plat au PNG (`img[src="/image/talent.png"]`).
-	   Cliquable (il mène au classement) : le trait passe au vert de marque au
-	   survol, comme les autres commandes. */
+	   Cliquable (il mène au classement) : même jeu que les onglets de barre de
+	   page (Pierre, 2026-09-08) — au survol le trait passe à l'encre du texte,
+	   pressé (`:active`) trait et chiffre passent au vert. */
 	body:not(.v2) {
 		span.talent {
 			gap: 6px;
 			padding: 3px 10px 3px 6px;
 			background: var(--background-header);
 			border: 1px solid var(--border-strong);
-			transition: border-color .12s ease;
+			transition: border-color .12s ease, color .12s ease;
 			&:hover {
+				border-color: var(--text-color);
+			}
+			&:active {
 				border-color: var(--primary);
+				color: var(--primary);
 			}
 		}
 		.icon {
