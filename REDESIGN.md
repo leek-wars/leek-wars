@@ -1120,6 +1120,13 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       talent ») : son survol passait le trait au vert, contre la doctrine du
       2026-08-31. Même jeu que les onglets : trait à l'encre du texte au
       survol, trait et chiffre verts sous le clic.
+    - **Langues des réglages** (`settings.vue`, « mettre les langues en
+      grille plus propre », puis « réduire un peu la grille ») : des
+      `inline-block` de largeurs inégales, centrés, avec une pastille « bêta »
+      qui débordait du coin. Grille CSS `auto-fill` de cases de 84 px
+      minimum (cinq par rangée dans le panneau), drapeau 18 px, nom en 12 px,
+      l'étiquette « bêta » dans la case en police d'affichage. Mêmes états
+      que les onglets ; la langue courante en trait et encre verts.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

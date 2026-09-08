@@ -668,6 +668,64 @@
 		background: var(--pure-white);
 		box-shadow: var(--elevation-1);
 	}
+	// v3 : une grille régulière (Pierre, 2026-09-08 : « mettre les langues en
+	// grille plus propre ») — cases de même taille, drapeau, nom et l'étiquette
+	// « bêta » DANS la case, plus de pastille qui déborde du coin. Même jeu
+	// d'états que les onglets : trait à l'encre au survol, vert pressé, et la
+	// langue courante en trait et encre verts.
+	body:not(.v2) .languages :deep(.content) {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+		gap: 6px;
+		padding: 8px;
+	}
+	body:not(.v2) .languages .language {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		margin: 0;
+		padding: 7px 4px 6px;
+		min-height: 66px;
+		border: 1px solid var(--border-strong);
+		border-radius: 0;
+		background: var(--background-input);
+		font-size: 12px;
+		transition: border-color .12s ease, color .12s ease;
+		br {
+			display: none;
+		}
+		.flag {
+			height: 18px;
+			margin: 0;
+		}
+		.beta {
+			position: static;
+			padding: 0 4px;
+			font-family: var(--font-display);
+			font-size: 8px;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			color: var(--text-color-secondary);
+			background: none;
+			border: 1px solid var(--border);
+			border-radius: 0;
+		}
+		&:hover {
+			border-color: var(--text-color);
+		}
+		&:active {
+			border-color: var(--primary);
+			color: var(--primary);
+		}
+	}
+	body:not(.v2) .languages .language.selected {
+		background: var(--background-header);
+		border-color: var(--primary);
+		color: var(--primary);
+		box-shadow: none;
+	}
 	.misc-settings {
 		width: 100%;
 		font-size: 15px;
