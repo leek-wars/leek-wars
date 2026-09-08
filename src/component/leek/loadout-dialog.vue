@@ -70,7 +70,7 @@
 							</div>
 							<div class="preview-col preview-col-components">
 								<template v-for="c in loadout.components" :key="'comp' + c.index">
-								<div v-if="LeekWars.items[c.template]" class="preview-slot">
+								<div v-if="LeekWars.items[c.template]" class="preview-slot" :class="componentClass(c)" :title="componentTitle(c)">
 										<item :item="LeekWars.items[c.template]" />
 									</div>
 								</template>
@@ -204,18 +204,21 @@
 							<v-btn :class="{'invisible-btn': editing.components.length === 0}" size="x-small" variant="text" icon @click="editing.components = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="components-grid">
-							<div v-for="i in MAX_COMPONENTS" :key="i" class="component-slot" @click="clearComponentSlot(i - 1)">
+							<div v-for="i in MAX_COMPONENTS" :key="i" class="component-slot" :class="componentClass(componentAtSlot(i - 1))" :title="componentTitle(componentAtSlot(i - 1))" @click="clearComponentSlot(i - 1)">
 								<template v-if="componentAtSlot(i - 1)">
-									<item v-if="LeekWars.items[componentAtSlot(i - 1)!]" :item="LeekWars.items[componentAtSlot(i - 1)!]" />
+									<item v-if="LeekWars.items[componentAtSlot(i - 1)!.template]" :item="LeekWars.items[componentAtSlot(i - 1)!.template]" />
 									<v-icon class="remove-icon" size="12">mdi-close</v-icon>
 								</template>
 								<div v-else class="slot-empty">{{ i }}</div>
 							</div>
 						</div>
+						<!-- Une entrée par pièce de base possédée ET par variante altérée (#622) : le
+						     joueur choisit la pièce, l'ensemble mémorise ses stats et le serveur sert
+						     l'instance la plus proche à l'application. -->
 						<div class="available-items">
-							<div v-for="c in allComponents" :key="c.template" class="item-slot"
-								:class="{selected: isComponentSelected(c.template)}"
-								@click="addComponent(c.template)">
+							<div v-for="c in allComponents" :key="componentKey(c)" class="item-slot"
+								:class="[{selected: isComponentSelected(c)}, componentClass(c)]" :title="componentTitle(c)"
+								@click="addComponent(c)">
 								<item v-if="LeekWars.items[c.template]" :item="LeekWars.items[c.template]" />
 							</div>
 						</div>
@@ -292,7 +295,8 @@
 	import { defineComponent, PropType } from 'vue'
 	import { LeekWars, restatPotionsOf } from '@/model/leekwars'
 	import { Leek, MAX_COMPONENTS } from '@/model/leek'
-	import { Loadout, LoadoutComponent, LoadoutStats } from '@/model/loadout'
+	import { Loadout, LoadoutComponent, LoadoutStats, ComponentStats, componentStatsKey, sameComponentChoice, loadoutComponentStat } from '@/model/loadout'
+	import { alteredClass } from '@/model/alteration'
 	import { capitalToStatBonus, statBonusToCapital, baseStatFor, totalCapitalForLevel } from '@/model/capital'
 	import { store } from '@/model/store'
 	import { formatEmojisText } from '@/model/emojis'
@@ -320,11 +324,16 @@
 			const item = LeekWars.items[c.template]
 			const comp = item && LeekWars.components[item.params]
 			if (!comp) continue
-			for (const [stat, value] of comp.stats) {
-				if (stat === 'ram') ram += value
-			}
+			ram += loadoutComponentStat(comp.stats, c.stats, 'ram')
 		}
 		return ram
+	}
+
+	/** Un choix de composant dans l'éditeur : un template, et les stats de la pièce (null = base). */
+	interface ComponentChoice {
+		template: number
+		stats: ComponentStats | null
+		altered_power?: number
 	}
 
 	interface EditingLoadout {
@@ -397,6 +406,7 @@
 				ownedWeaponTemplates: [] as number[],
 				ownedChipTemplates: [] as number[],
 				ownedComponentTemplates: [] as number[],
+				ownedComponentInstances: [] as ComponentChoice[],
 				originalEditingSnapshot: '',
 				confirmCloseDialogOpen: false,
 			}
@@ -452,7 +462,23 @@
 			// sont équipés sur des poireaux (#4792).
 			allWeapons() { return ownedItemList(this.ownedWeaponTemplates, store.state.farmer?.weapons ?? []) },
 			allChips() { return ownedItemList(this.ownedChipTemplates, store.state.farmer?.chips ?? []) },
-			allComponents() { return ownedItemList(this.ownedComponentTemplates, store.state.farmer?.components ?? []) },
+			allComponents(): ComponentChoice[] {
+				// Une pièce de base par template possédé, puis chaque variante altérée
+				// possédée (équipée ou non), triées par template puis par puissance ajoutée.
+				const choices: ComponentChoice[] = ownedItemList(this.ownedComponentTemplates, store.state.farmer?.components ?? [])
+					.map((c) => ({ template: c.template, stats: null }))
+				const byTemplate: { [tpl: number]: ComponentChoice[] } = {}
+				for (const inst of this.ownedComponentInstances) {
+					(byTemplate[inst.template] ??= []).push(inst)
+				}
+				const out: ComponentChoice[] = []
+				for (const base of choices) {
+					out.push(base)
+					const variants = (byTemplate[base.template] ?? []).slice().sort((a, b) => (a.altered_power ?? 0) - (b.altered_power ?? 0))
+					for (const v of variants) out.push(v)
+				}
+				return out
+			},
 			hasAnyForgotten(): boolean {
 				return this.allWeapons.some((w) => this.isForgottenTemplate(w.template))
 			},
@@ -462,9 +488,9 @@
 				const leek = this.leek
 				const leekWeapons = (leek.weapons || []).map((w: Weapon) => w.template).sort((a: number, b: number) => a - b)
 				const leekChips = (leek.chips || []).map((c: Chip) => c.template).sort((a: number, b: number) => a - b)
-				const leekComps: { [idx: number]: number } = {}
+				const leekComps: { [idx: number]: Component } = {}
 				const lComps: (Component | null)[] = leek.components || []
-				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i]!.template
+				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i]!
 				const leekCompKeys = Object.keys(leekComps)
 				for (const loadout of this.loadouts) {
 					// Pour les armes : on sépare oubliée (sticky : OK si l'oubliée actuelle ∈ alternatives,
@@ -474,8 +500,8 @@
 					const ldWeapons = [...loadout.weapons].sort((a, b) => a - b)
 					const ldForgotten = [...(loadout.forgotten_weapons || [])]
 					const ldChips = [...loadout.chips].sort((a, b) => a - b)
-					const ldComps: { [idx: number]: number } = {}
-					for (const c of loadout.components) ldComps[c.index] = c.template
+					const ldComps: { [idx: number]: LoadoutComponent } = {}
+					for (const c of loadout.components) ldComps[c.index] = c
 					let itemsDiffer = false
 					if (leekFixedWeapons.length !== ldWeapons.length) itemsDiffer = true
 					else for (let i = 0; i < leekFixedWeapons.length; i++) if (leekFixedWeapons[i] !== ldWeapons[i]) { itemsDiffer = true; break }
@@ -493,7 +519,14 @@
 					if (!itemsDiffer) {
 						const ldCompKeys = Object.keys(ldComps)
 						if (leekCompKeys.length !== ldCompKeys.length) itemsDiffer = true
-						else for (const k of leekCompKeys) if (leekComps[+k] !== ldComps[+k]) { itemsDiffer = true; break }
+						else for (const k of leekCompKeys) {
+							const equipped = leekComps[+k], wanted = ldComps[+k]
+							if (!wanted || equipped.template !== wanted.template) { itemsDiffer = true; break }
+							// L'ensemble désigne une pièce altérée précise : la pièce en place doit
+							// porter les mêmes stats. Une pièce de base demandée accepte ce qui est
+							// équipé (le serveur sert la plus proche, pas forcément vierge) (#622).
+							if (componentStatsKey(wanted.stats) && componentStatsKey(wanted.stats) !== componentStatsKey(equipped.stats)) { itemsDiffer = true; break }
+						}
 					}
 					const statsDiffer = this.statsDifferFromLeek(loadout)
 					const requiresRestat = statsDiffer && this.statsRequireRestatFromLeek(loadout)
@@ -596,6 +629,7 @@
 					this.ownedWeaponTemplates = Array.isArray(data.owned_weapons) ? data.owned_weapons : []
 					this.ownedChipTemplates = Array.isArray(data.owned_chips) ? data.owned_chips : []
 					this.ownedComponentTemplates = Array.isArray(data.owned_components) ? data.owned_components : []
+					this.ownedComponentInstances = Array.isArray(data.owned_component_instances) ? data.owned_component_instances : []
 					this.loading = false
 				}).error(() => { this.loading = false })
 			},
@@ -692,7 +726,7 @@
 				this.editing.forgottenWeapons = allWeapons.filter((tpl: number) => this.isForgottenTemplate(tpl))
 				this.editing.chips = this.leek.chips.map((c: Chip) => c.template)
 				this.editing.components = this.leek.components
-					.map((c: Component | null, i: number) => c ? { index: i, template: c.template } : null)
+					.map((c: Component | null, i: number): LoadoutComponent | null => c ? { index: i, template: c.template, stats: c.stats ?? null } : null)
 					.filter((c): c is LoadoutComponent => c !== null)
 				// Import des stats depuis l'allocation actuelle du leek
 				const stats: LoadoutStats = {}
@@ -720,11 +754,23 @@
 					const item = LeekWars.items[c.template]
 					const comp = item && LeekWars.components[item.params]
 					if (!comp) continue
-					for (const [s, v] of comp.stats) {
-						if (s === stat) total += v
-					}
+					total += loadoutComponentStat(comp.stats, c.stats, stat)
 				}
 				return total
+			},
+			componentKey(c: { template: number, stats?: ComponentStats | null }): string {
+				return c.template + '|' + componentStatsKey(c.stats)
+			},
+			/** Liseré de palier d'une pièce altérée, comme dans l'inventaire ; rien pour une pièce de base. */
+			componentClass(c: { template: number, stats?: ComponentStats | null, altered_power?: number } | null): string {
+				if (!c || !c.stats) return ''
+				return alteredClass(c, LeekWars.componentCapacity(c.template), LeekWars.alterations?.weights)
+			},
+			/** Le delta d'une pièce altérée en clair (« +150 vie, +1 PT »), pour distinguer deux variantes. */
+			componentTitle(c: { template: number, stats?: ComponentStats | null } | null): string | undefined {
+				if (!c || !c.stats) return undefined
+				return Object.entries(c.stats).filter(([, v]) => v)
+					.map(([k, v]) => (v > 0 ? '+' : '') + v + ' ' + this.$t('characteristic.' + k)).join(', ')
 			},
 			isForgottenTemplate(tpl: number): boolean {
 				const item = LeekWars.items[tpl]
@@ -748,21 +794,26 @@
 				if (i === -1) this.editing.chips.push(tpl)
 				else this.editing.chips.splice(i, 1)
 			},
-			componentAtSlot(idx: number): number | null {
+			componentAtSlot(idx: number): LoadoutComponent | null {
 				if (!this.editing) return null
-				const c = this.editing.components.find(c => c.index === idx)
-				return c ? c.template : null
+				return this.editing.components.find(c => c.index === idx) ?? null
 			},
-			isComponentSelected(tpl: number) {
-				return this.editing?.components.some(c => c.template === tpl) ?? false
+			isComponentSelected(choice: ComponentChoice) {
+				return this.editing?.components.some(c => sameComponentChoice(c, choice)) ?? false
 			},
-			addComponent(tpl: number) {
+			addComponent(choice: ComponentChoice) {
 				if (!this.editing) return
-				const existing = this.editing.components.findIndex(c => c.template === tpl)
-				if (existing !== -1) { this.editing.components.splice(existing, 1); return }
+				// Un template ne s'équipe qu'une fois : choisir une autre variante du même
+				// template remplace la pièce en place, re-choisir la même la retire.
+				const existing = this.editing.components.findIndex(c => c.template === choice.template)
+				if (existing !== -1) {
+					if (sameComponentChoice(this.editing.components[existing], choice)) this.editing.components.splice(existing, 1)
+					else this.editing.components[existing].stats = choice.stats
+					return
+				}
 				for (let i = 0; i < MAX_COMPONENTS; i++) {
 					if (!this.editing.components.some(c => c.index === i)) {
-						this.editing.components.push({ index: i, template: tpl })
+						this.editing.components.push({ index: i, template: choice.template, stats: choice.stats })
 						return
 					}
 				}
