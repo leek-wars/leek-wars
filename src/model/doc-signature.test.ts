@@ -126,6 +126,8 @@ describe('équivalents de bibliothèque standard', () => {
 			expect(objectSignatureOf(name, undefined, 'python')!.python, name).toContain('ValueError')
 		}
 		expect(objectSignatureOf('min', undefined, 'python')!.python).toBe('min(a, b, ...) | min(iterable)')
+		// Math.min est variadique en JS aussi : deux paramètres nommés auraient été un mensonge.
+		expect(objectSignatureOf('max', undefined, 'typescript')!.typescript).toBe('Math.max(...values: number[]): number')
 	})
 
 	it('couvre toute la trigonométrie et les logarithmes', () => {

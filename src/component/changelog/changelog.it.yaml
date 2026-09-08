@@ -26,6 +26,8 @@
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo cliccando sulla loro freccia (grazie a hypernavet)."
     - "Chat: un simbolo $ dentro un blocco di codice non vi fa più comparire tag &lt;latex&gt; (grazie a fujiwar)."
     - "#ai Python: math.cbrt() e math.exp2() sono ora disponibili, e la documentazione di min(), max(), log(), log2(), log10() e sqrt() descrive il comportamento reale di Python (grazie a GSoMan)."
+    - "#ai Documentazione: una pagina dell'enciclopedia può avere una sezione « Python » o « TypeScript » che descrive cosa fa la funzione in modo diverso in quel linguaggio; la scheda la mostra quando si legge in quel linguaggio e la nasconde altrimenti. Le pagine di log(), log2(), log10(), sqrt(), min(), max(), string() e substring() ne hanno una (grazie a GSoMan)."
+    - "#ai API JavaScript, TypeScript e Python: convertire un oggetto dell'API in testo (str(cell), String(cell), un debug…) restituisce ora il suo tipo e il suo id, come Cell(42) o Leek(3), invece di una rappresentazione illeggibile (grazie a GSoMan)."
     - "#ai Una sottoclasse il cui genitore ha un costruttore privato non si istanzia più in silenzio: la chiamata implicita al costruttore del genitore viene ora segnalata, come già lo era l'istanziazione diretta del genitore (grazie a nytope)."
     - "#ai setContains() e mapContainsKey() costano ora 1 operazione invece di 2, come l'operatore in che esegue esattamente la stessa ricerca (grazie a CutiestCutie)."
     - "#ai La formattazione automatica dell'editor (Ctrl+Maiusc+F) non attacca più le parole chiave and, or, xor, not, instanceof, as e new alla parentesi che le segue (grazie a Casanova)."

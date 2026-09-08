@@ -57,9 +57,10 @@ const ROWS: Row[] = [
 	['log', 'Math.log', 'Math.log(x: number): number', 'math.log', 'math.log(x: float) -> float — ValueError si x <= 0, pas NaN'],
 	['log2', 'Math.log2', 'Math.log2(x: number): number', 'math.log2', 'math.log2(x: float) -> float — ValueError si x <= 0, pas NaN'],
 	['log10', 'Math.log10', 'Math.log10(x: number): number', 'math.log10', 'math.log10(x: float) -> float — ValueError si x <= 0, pas NaN'],
-	// min/max natifs : autant d'arguments que voulu, ou UN itérable, sur tout type comparable.
-	['max', 'Math.max', 'Math.max(a: number, b: number): number', 'max', 'max(a, b, ...) | max(iterable)'],
-	['min', 'Math.min', 'Math.min(a: number, b: number): number', 'min', 'min(a, b, ...) | min(iterable)'],
+	// min/max natifs : autant d'arguments que voulu (et UN itérable, sur tout type comparable, en
+	// Python). Le détail vit dans la section `#### Python` de la page d'encyclopédie.
+	['max', 'Math.max', 'Math.max(...values: number[]): number', 'max', 'max(a, b, ...) | max(iterable)'],
+	['min', 'Math.min', 'Math.min(...values: number[]): number', 'min', 'min(a, b, ...) | min(iterable)'],
 	['pow', 'Math.pow', 'Math.pow(base: number, exp: number): number', 'pow', 'pow(base, exp)'],
 	// `round` Python fait de l'arrondi bancaire (2.5 -> 2), contrairement à Math.round et au
 	// round de LeekScript : c'est un piège signalé dans ia-py/TRANSLATION.md.

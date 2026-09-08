@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { docLanguage, findCodeBlockGroups, matchesDocLanguage, normalizeDocLanguage, SELECTABLE_DOC_LANGUAGES, setDocLanguage, toSelectableDocLanguage } from '@/model/doc-language'
+import { docLanguage, findCodeBlockGroups, matchesDocLanguage, normalizeDocLanguage, SELECTABLE_DOC_LANGUAGES, setDocLanguage, splitLanguageSections, toSelectableDocLanguage } from '@/model/doc-language'
 
 function render(html: string): Element {
 	const root = document.createElement('div')
@@ -41,6 +41,28 @@ describe('matchesDocLanguage', () => {
 	it('ne confond pas LeekScript et Python', () => {
 		expect(matchesDocLanguage('leekscript', 'python')).toBe(false)
 		expect(matchesDocLanguage('python', 'leekscript')).toBe(false)
+	})
+})
+
+describe('splitLanguageSections', () => {
+	// Ce que le serveur range dans `secondary` pour la page log10 après ajout d'une section Python.
+	const SECTIONS = { Exemples: '`log10(10) // 1`', Python: 'lève `ValueError`', 'Voir aussi': '[[log]]' }
+
+	it('remonte la section du langage lu et la retire des détails', () => {
+		const { notes, others } = splitLanguageSections(SECTIONS, 'python')
+		expect(notes).toEqual([{ title: 'Python', content: 'lève `ValueError`' }])
+		expect(Object.keys(others)).toEqual(['Exemples', 'Voir aussi'])
+	})
+	it('tait les sections des autres langages, même dans les détails', () => {
+		// Un lecteur en LeekScript n'a rien à faire du comportement de Python (#12096).
+		const { notes, others } = splitLanguageSections(SECTIONS, 'leekscript')
+		expect(notes).toEqual([])
+		expect(Object.keys(others)).toEqual(['Exemples', 'Voir aussi'])
+	})
+	it('montre une section TypeScript à un lecteur JavaScript, et réciproquement', () => {
+		expect(splitLanguageSections({ TypeScript: 'x' }, 'javascript').notes).toHaveLength(1)
+		expect(splitLanguageSections({ JavaScript: 'x' }, 'typescript').notes).toHaveLength(1)
+		expect(splitLanguageSections({ TypeScript: 'x' }, 'python').notes).toHaveLength(0)
 	})
 })
 

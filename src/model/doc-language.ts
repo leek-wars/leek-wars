@@ -101,6 +101,27 @@ export function matchesDocLanguage(blockLanguage: string | undefined | null, sel
 		|| (normalized === 'typescript' && selected === 'javascript')
 }
 
+/**
+ * Sections d'une page d'encyclopédie titrées d'un LANGAGE (`#### Python`, `#### TypeScript`) :
+ * elles décrivent ce que la fonction fait différemment dans ce langage — `math.log10()` lève
+ * `ValueError` là où la section « Retour » annonce le `NaN` de LeekScript, `min()` prend un
+ * itérable… Le nom d'un langage s'écrit pareil dans les 17 langues, donc pas de table de titres
+ * à maintenir côté serveur, contrairement aux sections Paramètres/Retour.
+ *
+ * La fiche montre la section du langage LU et tait celles des autres : un lecteur en LeekScript
+ * n'a pas à voir le comportement de Python, et inversement. `others` garde les sections restantes
+ * (Exemples, Voir aussi) pour le bloc « Détails ».
+ */
+export function splitLanguageSections(sections: Record<string, string>, selected: DocLanguage): { notes: { title: string, content: string }[], others: Record<string, string> } {
+	const notes: { title: string, content: string }[] = []
+	const others: Record<string, string> = {}
+	for (const [title, content] of Object.entries(sections)) {
+		if (!normalizeDocLanguage(title.trim())) others[title] = content
+		else if (matchesDocLanguage(title.trim(), selected)) notes.push({ title, content })
+	}
+	return { notes, others }
+}
+
 /** Un exemple d'un groupe multi-langage : le langage de la fence et son code. */
 export interface CodeBlock { language: DocLanguage, code: string }
 

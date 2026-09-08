@@ -26,6 +26,8 @@
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow (thanks to hypernavet)."
     - "Chat: a $ symbol inside a code block no longer makes &lt;latex&gt; tags appear in it (thanks to fujiwar)."
     - "#ai Python: math.cbrt() and math.exp2() are now available, and the documentation of min(), max(), log(), log2(), log10() and sqrt() describes Python's actual behaviour (thanks to GSoMan)."
+    - "#ai Documentation: an encyclopedia page can carry a “Python” or “TypeScript” section describing what the function does differently in that language; the doc card shows it when you read in that language and hides it otherwise. The pages of log(), log2(), log10(), sqrt(), min(), max(), string() and substring() have one (thanks to GSoMan)."
+    - "#ai JavaScript, TypeScript and Python API: converting an API object to text (str(cell), String(cell), a debug…) now gives its type and id, like Cell(42) or Leek(3), instead of an unreadable representation (thanks to GSoMan)."
     - "#ai A subclass whose parent has a private constructor is no longer instantiated silently: the implicit call to the parent constructor is now reported, as directly instantiating the parent already was (thanks to nytope)."
     - "#ai setContains() and mapContainsKey() now cost 1 operation instead of 2, like the in operator which performs exactly the same lookup (thanks to CutiestCutie)."
     - "#ai The editor's auto-formatting (Ctrl+Shift+F) no longer glues the keywords and, or, xor, not, instanceof, as and new to the parenthesis that follows them (thanks to Casanova)."
