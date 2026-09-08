@@ -2075,14 +2075,16 @@ class Superinfection extends ChipPoisonAnimation {
 				for (const target of this.targets) {
 					// La détonation : flash + gerbe de halos toxiques + anneau violet
 					target.hurt(target.ox, target.oy, 25, 0, 0, 0)
-					// Les traits verts sont des traînées verticales (halo_green) :
-					// ils montent droit, chacun depuis son point du pourtour, sans
-					// dérive latérale — un trait vertical qui glisse de côté se
-					// lit comme un bug d'affichage.
+					// Les traînées verticales (halo_green teinté violet : en vert,
+					// elles évoquaient un soin — Pierre, 08/09/2026) montent droit,
+					// chacune depuis son point du pourtour, sans dérive latérale —
+					// un trait vertical qui glisse de côté se lit comme un bug
+					// d'affichage.
+					const streak = tintedTexture(T.halo_green, '#c93ef0', 0.85)
 					for (let i = 0; i < 8; ++i) {
 						const x = target.ox + (Math.random() - 0.5) * 60
 						const y = target.oy + (Math.random() - 0.5) * 20
-						this.game.particles.addImage(x, y, Math.random() * 15, 0, 0, 1.6 + Math.random() * 0.8, 0, T.halo_green, 40)
+						this.game.particles.addImage(x, y, Math.random() * 15, 0, 0, 1.6 + Math.random() * 0.8, 0, streak, 40)
 					}
 					for (let i = 0; i < 8; ++i) {
 						const angle = (i / 8) * Math.PI * 2
