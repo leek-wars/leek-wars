@@ -1844,20 +1844,12 @@ body:not(.v2) {
 	.trophy-bar > .bar,
 	.trophy .trophy-bar > .bar {
 		border-radius: 0;
+		/* Un aplat, rien d'autre (Pierre, 2026-09-07 : sans les encoches, le
+		   dégradé, l'arête de tête ni le halo — « la couleur de base est verte,
+		   et quand la barre est remplie, on passe en jaune »). */
 		background-color: var(--primary-surface);
-		/* Deux couches : les encoches par-dessus (tous les 8 px, dans la couleur
-		   de la piste), et dessous un dégradé qui part d'un vert éteint pour
-		   s'éclaircir jusqu'au bout — la jauge se lit comme une charge.
-		   L'arête de tête, elle, marque l'arrêt exact de la progression : 3 px
-		   de vert éclairci (et non de blanc, qui trancherait trop sur le vert
-		   foncé du thème clair) et un halo, la même émission de lumière que les
-		   notifications de trophée. */
-		background-image:
-			repeating-linear-gradient(90deg, transparent 0 6px, var(--background-input) 6px 8px),
-			linear-gradient(90deg, color-mix(in srgb, var(--primary) 50%, var(--background-input)), var(--primary));
-		box-shadow:
-			inset -3px 0 0 color-mix(in srgb, var(--primary) 55%, #fff),
-			0 0 7px color-mix(in srgb, var(--primary) 65%, transparent);
+		background-image: none;
+		box-shadow: none;
 		/* Le remplissage monte de zéro à son niveau à l'arrivée sur la page.
 		   Pas de `to` : la valeur d'arrivée est la largeur déjà posée par le
 		   composant, donc l'animation s'adapte à n'importe quel taux. */
@@ -1866,33 +1858,22 @@ body:not(.v2) {
 	/* L'état « complet » passait par un bleu Material en dur. Sur la page
 	   Trophées : la barre globale quand tout est débloqué (`.blue`, un
 	   #008fbb), et la jauge d'un trophée décroché (`.full`, un gris qui disait
-	   « c'est fini » — le v3 a déjà une couleur pour ça). */
+	   « c'est fini »). Il est JAUNE (Pierre, 2026-09-07) : l'or vif des
+	   notifications de trophée, le même dans les deux thèmes — une barre
+	   pleine est une chose méritée, pas une information. */
 	.collection-summary .summary-progress .summary-bar.complete,
 	.cat-tab .cat-progress .cat-bar.complete,
 	.bar > .xp-bar.blue,
 	.global-bar > .bar.blue,
 	.trophy-bar.full > .bar,
 	.trophy .trophy-bar.full > .bar {
-		background-color: var(--info);
-		background-image:
-			repeating-linear-gradient(90deg, transparent 0 6px, var(--background-input) 6px 8px),
-			linear-gradient(90deg, color-mix(in srgb, var(--info) 50%, var(--background-input)), var(--info));
-		box-shadow:
-			inset -3px 0 0 color-mix(in srgb, var(--info) 55%, #fff),
-			0 0 7px color-mix(in srgb, var(--info) 65%, transparent);
-		/* Une catégorie terminée respire : petite récompense, lente pour ne pas
-		   attirer l'œil en permanence. Elle démarre après le remplissage. */
-		animation: lw-bar-fill .6s ease-out, lw-bar-complete 2.4s ease-in-out .6s infinite;
-	}
-	/* Les rayures diagonales du v2 (`.striked::after`, global.scss) doublent
-	   les encoches et brouillent la jauge : on les coupe sur les barres de la
-	   page Trophées, seules à porter cette classe. La barre globale n'est pas
-	   dans la liste — son `::after` est repris plus bas par le reflet, qui le
-	   redéfinit entièrement. */
-	.category-bar > .bar::after,
-	.trophy-bar > .bar::after,
-	.trophy .trophy-bar > .bar::after {
-		content: none;
+		background-color: var(--gold-bright);
+		background-image: none;
+		box-shadow: none;
+		/* Pas de respiration perpétuelle (Pierre, 2026-09-07 : « on enlève
+		   l'animation qui se répète, on la met une seule fois ») : le seul
+		   mouvement est le remplissage à l'arrivée. */
+		animation: lw-bar-fill .6s ease-out;
 	}
 	/* Une page de trophées porte une jauge par carte, et il y en a des
 	   centaines : ni remplissage animé à l'arrivée, ni respiration sur celles
@@ -1904,31 +1885,56 @@ body:not(.v2) {
 	.trophy .trophy-bar.full > .bar {
 		animation: none;
 	}
-	/* Les trois barres qui méritent le coup d'œil — la collection dans son
-	   ensemble, l'XP vers le niveau suivant et le total des trophées en tête de
-	   page — reçoivent un reflet qui les traverse lentement. Les barres de
-	   catégorie restent sages, sinon la page entière scintille. */
-	.collection-summary .summary-progress .summary-bar,
-	.bar > .xp-bar {
-		position: relative;
-		overflow: hidden;
+	/* Les rayures obliques du v2 (`.striked::after`, global.scss), que le v3
+	   avait coupées sur les barres de trophées et remplacées par un reflet
+	   sur les grandes : Pierre les veut (2026-09-07, « je voudrais quand même
+	   les barres obliques qu'on avait avant »). Elles reviennent sur TOUS les
+	   remplissages, y compris ceux qui ne portent pas la classe (la barre de
+	   collection, les catégories du panneau Collection), et le reflet s'en
+	   va — les deux se disputaient le même `::after`. Même dessin qu'en v2 :
+	   bandes à 45° de blanc à 20 %, pas de 50 px ; en v3 les arrondis valent
+	   zéro. Pas de `position: relative` sur la barre globale : son remplissage
+	   est posé en absolu par son composant.
+	   En SOMBRE, le blanc à 20 % se perd sur le néon (Pierre, 2026-09-08 : « on
+	   ne voit pas assez les hachures ») : la bande y est en encre sombre, plus
+	   appuyée, comme l'encre que portent déjà le néon et l'or. */
+	&.dark {
+		--lw-bar-stripe: rgba(0, 0, 0, .22);
 	}
-	/* Pas de `position: relative` ici : le remplissage de la barre globale est
-	   posé en absolu par son composant, le lui retirer le décollerait. */
-	.global-bar > .bar {
+	.collection-summary .summary-progress .summary-bar,
+	.cat-tab .cat-progress .cat-bar,
+	.bar > .xp-bar,
+	.category-bar > .bar,
+	.trophy-bar > .bar,
+	.trophy .trophy-bar > .bar {
+		position: relative;
+	}
+	.collection-summary .summary-progress .summary-bar,
+	.cat-tab .cat-progress .cat-bar,
+	.bar > .xp-bar,
+	.global-bar > .bar,
+	.category-bar > .bar,
+	.trophy-bar > .bar,
+	.trophy .trophy-bar > .bar {
 		overflow: hidden;
 	}
 	.collection-summary .summary-progress .summary-bar::after,
+	.cat-tab .cat-progress .cat-bar::after,
 	.bar > .xp-bar::after,
-	.global-bar > .bar::after {
+	.global-bar > .bar::after,
+	.category-bar > .bar::after,
+	.trophy-bar > .bar::after,
+	.trophy .trophy-bar > .bar::after {
 		content: "";
 		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: -40%;
-		width: 30%;
-		background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
-		animation: lw-bar-sheen 3.2s ease-in-out infinite;
+		inset: 0;
+		z-index: 1;
+		border-radius: 0;
+		background-image: linear-gradient(-45deg, var(--lw-bar-stripe, rgba(255, 255, 255, .2)) 25%, transparent 25%, transparent 50%, var(--lw-bar-stripe, rgba(255, 255, 255, .2)) 50%, var(--lw-bar-stripe, rgba(255, 255, 255, .2)) 75%, transparent 75%, transparent);
+		background-size: 50px 50px;
+		/* Une règle plus loin met les pseudo-éléments en `no-repeat` : sans ceci
+		   la tuile de 50 px ne couvrait que le début de la barre. */
+		background-repeat: repeat;
 		pointer-events: none;
 	}
 	/* Une animation perpétuelle est exactement ce que ce réglage système
@@ -1940,11 +1946,8 @@ body:not(.v2) {
 		.collection-summary .summary-progress .summary-bar.complete,
 		.cat-tab .cat-progress .cat-bar.complete,
 		.bar > .xp-bar.blue,
-		.collection-summary .summary-progress .summary-bar::after,
-		.bar > .xp-bar::after,
 		.global-bar > .bar,
 		.global-bar > .bar.blue,
-		.global-bar > .bar::after,
 		.category-bar > .bar {
 			animation: none;
 		}
@@ -2203,10 +2206,19 @@ body:not(.v2) {
 	 * trait et l'ombre pixel. La flèche triangulaire disparaît : elle ne peut
 	 * pas porter le trait (deux triangles superposés sinon), et le rectangle
 	 * franc colle mieux aux angles pixel. */
+	/* Plus léger que les autres surfaces flottantes (Pierre, 2026-09-07 : « un
+	   peu épais et grossier ») : une infobulle est passagère et petite, le
+	   trait fort et l'ombre pixel de 4 px d'un dialogue l'écrasaient. Le trait
+	   passe au trait ordinaire, l'ombre à 2 px et translucide — toujours sans
+	   flou, toujours un décalage franc, mais qui ne pèse plus. Le texte se
+	   resserre d'un cran : 13 px, rembourrage de 6 × 10. */
 	.v-overlay[role="tooltip"] .v-overlay__content,
 	.v-tooltip__content {
-		border: 1px solid var(--border-strong);
-		box-shadow: var(--shadow-pixel);
+		border: 1px solid var(--border);
+		box-shadow: 2px 2px 0 color-mix(in srgb, var(--pure-black) 35%, transparent);
+		font-size: 13px !important;
+		line-height: 18px;
+		padding: 6px 10px;
 	}
 	.v-overlay[role="tooltip"] .v-overlay__content::before,
 	.v-tooltip__content::before {
@@ -2584,26 +2596,10 @@ body:not(.v2) {
 }
 
 /* Respiration d'une jauge terminée. */
-@keyframes lw-bar-complete {
-	0%, 100% {
-		filter: brightness(1);
-	}
-	50% {
-		filter: brightness(1.3);
-	}
-}
 
 /* Reflet des barres de progression importantes (section « Barres de
    progression »). La bande part hors cadre à gauche, traverse, et l'attente se
    fait en fin de course : d'où le palier à 60 %. */
-@keyframes lw-bar-sheen {
-	0% {
-		transform: translateX(0);
-	}
-	60%, 100% {
-		transform: translateX(500%);
-	}
-}
 
 @keyframes lw-notif-shine {
 	from {

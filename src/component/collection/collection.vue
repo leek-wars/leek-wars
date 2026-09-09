@@ -454,6 +454,17 @@
 		background: linear-gradient(0deg, #ffb029, #ffdc3a);
 		border: 1px solid #ffb430;
 		box-shadow: 0 2px 9px rgba(150, 100, 0, 0.45);
+		// v3 : la pastille était arrondie et dégradée, avec une ombre floue —
+		// trois choses que le thème bannit (Pierre, 2026-09-07 : « la pastille
+		// "terminé" est arrondie, il ne faut pas »). Angles francs, l'or vif à
+		// plat avec son encre, et l'ombre pixel des surfaces flottantes.
+		body:not(.v2) & {
+			border-radius: 0;
+			background: var(--gold-bright);
+			border: 1px solid var(--gold-text);
+			color: var(--gold-text);
+			box-shadow: var(--shadow-pixel-small);
+		}
 		animation: celebrate-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
 		&::after {
 			content: '';

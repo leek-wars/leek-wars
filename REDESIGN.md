@@ -861,6 +861,18 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     d'icônes du lot 28 pour cet anneau précis (**1,55** en thème clair).
     Reste le même `#f1c40f` dans `home-widget-tournaments.vue`.
   - Vérifié sur la bêta locale dans les deux thèmes.
+- **2026-09-06 — widget « Joueurs remarquables » de l'accueil**
+  (`home-widget-ranking.vue`, `home.vue`, retour de Pierre) : c'était le dernier
+  widget de liste à faire **défiler son panel** au lieu de s'adapter — il rendait
+  les dix joueurs de l'API quelle que soit la hauteur. Il passe à `noScroll` et
+  à `useFitCount` comme les autres (`.player`, max 10) : autant de joueurs que
+  la hauteur en laisse tenir **entiers**, aucune rangée coupée.
+  - La raison (« 857 messages au forum ») passe en **une seule ligne**
+    ellipsée : sur un panel étroit elle repassait à la ligne, les rangées
+    n'avaient plus la même hauteur et `useFitCount`, qui les suppose homogènes,
+    en laissait dépasser une (mesuré : 46 px pour les deux premières, 61 pour
+    les suivantes, 5 rangées rendues dans 232 px).
+  - Restent sans `noScroll` : `live` et `tournaments`.
 - **2026-09-07 — panneau du Potager rapide** (`garden-batch.vue`,
   `garden-fast-fight.vue`, retour de Pierre « plus pro, colle au thème ») :
   - **Les tuiles de chiffres étaient invisibles en v3** : elles prenaient
@@ -1028,6 +1040,53 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   ouvre la même liste de widgets dans un `popup`. Vérifié en émulation
   (UA mobile, 360 px) : titre, deux actions, dialogue à 9 widgets, bascule
   crayon / coche.
+- **2026-09-07 — infobulles plus légères** (`leekwars-shell-v3.scss`, Pierre :
+  « un peu épais et grossier ») : elles portaient le trait fort et l'ombre
+  pixel de 4 px des dialogues. Une infobulle est passagère et petite : trait
+  ordinaire (`--border`), ombre de **2 px translucide** (`--pure-black` à
+  35 %, toujours sans flou), 13 px sur 18, rembourrage 6 × 10. Nuance à la
+  doctrine des surfaces flottantes : même langage (trait + décalage franc),
+  poids proportionné à l'objet.
+- **2026-09-07 — barres de progression : un aplat, jaune quand c'est plein**
+  (`leekwars-shell-v3.scss`, Pierre : « la couleur de base est verte, et quand
+  la barre est remplie, on passe en jaune ; sinon je préfère sans les styles
+  suivants » — les encoches en `repeating-linear-gradient`, le dégradé de
+  charge, l'arête de tête et le halo en `box-shadow`) : les remplissages sont
+  un **aplat `--primary-surface`**, sans image ni ombre ; l'état complet
+  (`.complete`, `.blue`, `.full`) passe du bleu `--info` à **`--gold-bright`**,
+  l'or vif des notifications de trophée, dans les deux thèmes.
+  - Puis, même jour : **les rayures obliques du v2 reviennent** (« je
+    voudrais quand même les barres obliques qu'on avait avant ») sur TOUS les
+    remplissages, y compris ceux sans la classe `striked` (barre de
+    collection, catégories) — même dessin, bandes à 45° de blanc à 20 %, pas
+    de 50 px, en `::after`. Le **reflet** des trois grandes barres s'en va,
+    il se disputait le même `::after`. Et **plus d'animation qui se répète**
+    (« on la met une seule fois ») : la respiration des barres pleines
+    disparaît, seul reste le remplissage à l'arrivée.
+- **2026-09-07 — pastille « Terminé » de la Collection** (`collection.vue`,
+  Pierre : « arrondie, il ne faut pas ») : rayon 15 px, dégradé d'or et ombre
+  floue, trois choses bannies. En v3 : angles francs, `--gold-bright` à plat
+  avec son encre, ombre pixel petite.
+- **2026-09-07 — cartes du dialogue Équipements** (`loadout-dialog.vue`,
+  `loadout-list.vue`, Pierre : « les fonds des cartes sont étranges ») : un
+  gris fixe `#f5f5f5` sur le parchemin, la surface d'en-tête en sombre. Les
+  cartes (et les éléments « ignorés ») prennent la surface de rangée et un
+  trait, comme toute rangée d'un panneau v3 ; la carte saisie au glisser
+  prend la surface d'en-tête. Vérifié en clair avec trois équipements.
+- **2026-09-07 — l'icône de titre de page en couleur** (`page-icon.vue`,
+  composant global ; Pierre : « celui en couleur au lieu de juste vert ») :
+  le bloc de titre posait un glyphe mdi en `--primary`. En v3 il montre
+  l'asset coloré du menu (`public/image/menu/<name>.svg`, à contour noir),
+  le glyphe mdi restant le repli du v2 et du thème XP — le vocabulaire
+  d'ICONS.md ne change pas, seule la peinture. Quinze pages basculées
+  (`<page-icon name="ranking" fallback="mdi-podium" />`) ; quatre assets
+  ajoutés au générateur pour les pages sans entrée de menu : `settings`
+  (engrenage), `messages` (enveloppe), `tournament`, `fight` (épée). La page
+  poireau garde sa tête de poireau.
+  - Piège relevé au passage sur les rayures des barres : un `::after` hérite
+    ailleurs d'un `background-repeat: no-repeat`, la tuile de 50 px ne
+    couvrait que le début de la barre (capture de Pierre) ; `repeat`
+    explicite.
 - **2026-09-08 — deux retours d'interface 2.50** (capture de Pierre, forum en
   bêta locale) :
   - **Le mot-symbole en couleur de texte** (`header.vue`, Pierre : « le logo
