@@ -12,7 +12,11 @@ import { ref } from 'vue'
  * de la famille du composant visé, via la matrice d'efficacité.
  */
 const forgeComponent = ref<{
-	family: number
+	// Id du COMPOSANT (component_template, ex. 47 pour la carte mère Pro), et non sa
+	// famille : le champ s'appelait `family` mais portait déjà cet id, ce qui donnait une
+	// efficacité toujours nulle à qui le lisait comme une famille. Pour la famille, passer
+	// par `alterations.component_families[component]` (#622).
+	component: number
 	level: number
 	// item_template du composant + alterations deja posees, pour que la colonne de stats
 	// (voisine de la forge) affiche ses caracteristiques a jour (#622).

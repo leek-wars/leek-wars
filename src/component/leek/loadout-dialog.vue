@@ -1014,6 +1014,19 @@
 	padding: 8px 10px; border-radius: var(--radius-medium); background: #f5f5f5;
 }
 body.dark .loadout-card { background: var(--panel-header-background); }
+/* v3 : la carte était un gris fixe (#f5f5f5) posé sur le parchemin, et en
+   sombre la surface d'en-tête — deux fonds qui ne sont pas ceux du thème
+   (Pierre, 2026-09-07 : « les fonds des cartes sont étranges »). Elle prend la
+   surface de rangée et un trait, comme toute rangée d'un panneau v3. */
+body:not(.v2) .loadout-card,
+body:not(.v2) .skipped-item {
+	background: var(--background-row);
+	border: 1px solid var(--border);
+	border-radius: 0;
+}
+body:not(.v2) .sortable-chosen {
+	background: var(--background-header);
+}
 .loadout-header { display: flex; align-items: center; gap: 10px; }
 .drag-handle { cursor: grab; color: var(--grey-8); flex-shrink: 0; }
 .drag-handle:active { cursor: grabbing; }

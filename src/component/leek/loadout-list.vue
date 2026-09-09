@@ -128,6 +128,13 @@ function remove(loadout: Loadout) {
 	border-radius: var(--radius-medium);
 	background: #f5f5f5;
 }
+/* v3 : surface de rangée et trait, plus un gris fixe sur le parchemin (même
+   correction que le dialogue des équipements). */
+body:not(.v2) .loadout-card {
+	background: var(--background-row);
+	border: 1px solid var(--border);
+	border-radius: 0;
+}
 .loadout-icon {
 	width: 32px;
 	flex-shrink: 0;
