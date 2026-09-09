@@ -7,7 +7,7 @@
 		</div>
 		<panel class="first">
 
-			<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)">
+			<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" class="currency-select">
 				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
@@ -273,12 +273,9 @@ watch(() => LeekWars.darkMode, () => {
 .first {
 	padding: 25px 0;
 }
-.v-select {
-	display: inline-block;
-	:deep(input) {
-		border: none;
-		width: 10px;
-	}
+// Même règle que bank.vue : le champ lw-select reste à la taille de son contenu.
+:deep(.currency-select) {
+	display: inline-flex;
 }
 .container {
 	padding: 10px 0px;

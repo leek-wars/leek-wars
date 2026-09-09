@@ -11,7 +11,7 @@
 			<panel class="first crystals-panel">
 				<div class="bank-description center" v-html="$t('description')"></div>
 
-				<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)">
+				<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" class="currency-select">
 					<template #selection>
 						<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 						{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
@@ -364,6 +364,12 @@ watch(() => LeekWars.currency, () => {
 			margin-bottom: 0;
 		}
 	}
+// Le champ est rendu par lw-select hors de la portée de ce composant, d'où le :deep().
+// En flex bloc il prendrait toute la largeur du panneau : on le laisse à la taille de
+// son contenu (drapeau, code, symbole), comme l'ancien v-select en inline-block.
+:deep(.currency-select) {
+	display: inline-flex;
+}
 .currency {
 	display: flex;
 	align-items: center;
@@ -378,17 +384,6 @@ watch(() => LeekWars.currency, () => {
 	max-width: 28px;
 	max-height: 28px;
 	margin-right: 8px;
-}
-.v-select {
-	margin-left: 10px;
-	display: inline-block;
-	:deep(input) {
-		border: none;
-		width: 10px;
-	}
-}
-#app.app .v-select {
-	margin-left: 0;
 }
 	.bank-description {
 		padding: 20px;
