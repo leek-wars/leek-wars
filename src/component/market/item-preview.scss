@@ -17,6 +17,13 @@
 	.name {
 		font-size: 17px;
 		white-space: nowrap;
+		// Un nom trop long (composants électroniques) débordait de la fiche et
+		// ajoutait une barre de défilement horizontale : il est coupé.
+		// `min-width: 0` est indispensable, sinon la largeur minimale
+		// automatique du flex empêche le titre de rétrécir.
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.rarity {
 		color: white;
@@ -28,6 +35,7 @@
 	.level {
 		font-size: 15px;
 		white-space: nowrap;
+		flex-shrink: 0;
 	}
 	.image {
 		max-height: 140px;
