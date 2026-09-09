@@ -302,6 +302,18 @@
 	const history = ref<HistoryEntry[] | null>(null)
 	const selectedHistoryIndex = ref<number | null>(null)
 	const diffEditor = ref<Monaco.editor.IStandaloneDiffEditor | null>(null)
+	// Les deux éditeurs suivent le cycle de vie commun de l'éditeur de code (création du diff et
+	// destruction : modèle détaché, fabrique des survols de Monaco ré-armée, #5036). Chargé avec
+	// Monaco par loadMonaco(), donc toujours présent quand un éditeur existe ; en import dynamique,
+	// car une arête statique vers Monaco ferait précharger son chunk sur la route de l'encyclopédie.
+	let monacoLifecycle: typeof import('@/component/editor/monaco-dispose') | null = null
+
+	function loadMonaco() {
+		return Promise.all([import('monaco-editor'), import('@/component/editor/monaco-dispose')]).then(([monaco, lifecycle]) => {
+			monacoLifecycle = lifecycle
+			return monaco
+		})
+	}
 	const referencedBy = ref<ReferencedBy | null>(null)
 	let destroyed = false
 	let loadedPending = false
@@ -404,11 +416,7 @@
 		window.removeEventListener('beforeunload', boundBeforeUnload)
 
 		destroyDiffEditor()
-		if (editor.value) {
-			editor.value.getModel()?.dispose()
-			editor.value.dispose()
-			editor.value = null
-		}
+		destroyEditor()
 		if (edition.value) {
 			editEnd()
 		}
@@ -591,7 +599,7 @@ ${ret}
 			return
 		}
 		nextTick(() => {
-			import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+			loadMonaco().then((monaco) => {
 				const container = monacoContainer.value
 				if (!container) { return }
 				editor.value = markRaw(monaco.editor.create(container, {
@@ -665,13 +673,17 @@ ${ret}
 		LeekWars.large = false
 		LeekWars.box = false
 		LeekWars.footer = true
-		if (editor.value) {
-			editor.value.getModel()?.dispose()
-			editor.value.dispose()
-			editor.value = null
-		}
+		destroyEditor()
 		if (page.value) page.value.locker = null
 		releasePage()
+	}
+
+	function destroyEditor() {
+		if (!editor.value) return
+		const model = editor.value.getModel()
+		monacoLifecycle!.disposeEditor(editor.value)
+		model?.dispose()
+		editor.value = null
 	}
 
 	function setPageLanguage(lang: string) {
@@ -811,9 +823,9 @@ ${ret}
 		const oldContent = index < history.value.length - 1 ? history.value[index + 1].content : ''
 		const expectedIndex = selectedHistoryIndex.value
 
-		import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+		loadMonaco().then((monaco) => {
 			if (selectedHistoryIndex.value !== expectedIndex) return
-			diffEditor.value = markRaw(monaco.editor.createDiffEditor(container, {
+			diffEditor.value = markRaw(monacoLifecycle!.createDiffEditor(container, {
 				automaticLayout: true,
 				readOnly: true,
 				renderSideBySide: false,
@@ -837,19 +849,12 @@ ${ret}
 	}
 
 	function destroyDiffEditor() {
-		if (diffEditor.value) {
-			const editor = diffEditor.value
-			const model = editor.getModel()
-			diffEditor.value = null
-			// Même chemin de destruction que l'éditeur de code : un diff détruit par `dispose()`
-			// seul laisse la fabrique globale des survols de Monaco sur un service mort (#5036).
-			// Import dynamique pour ne pas embarquer Monaco dans le chunk de l'encyclopédie.
-			import('../editor/monaco-dispose').then(({ disposeEditor }) => {
-				disposeEditor(editor)
-				model?.original.dispose()
-				model?.modified.dispose()
-			})
-		}
+		if (!diffEditor.value) return
+		const model = diffEditor.value.getModel()
+		monacoLifecycle!.disposeEditor(diffEditor.value)
+		model?.original.dispose()
+		model?.modified.dispose()
+		diffEditor.value = null
 	}
 
 

@@ -564,6 +564,14 @@ export default defineConfig({
 		}
 	},
 	optimizeDeps: {
-		include: ['vue', 'vue-router', 'vuetify'],
+		include: [
+			'vue', 'vue-router', 'vuetify',
+			// Internes Monaco importés par monaco-dispose.ts : pré-bundlés d'emblée, sinon Vite les
+			// découvre à la première destruction d'éditeur et recharge la page en plein usage.
+			'monaco-editor/esm/vs/base/browser/ui/hover/hoverDelegateFactory.js',
+			'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js',
+			'monaco-editor/esm/vs/platform/instantiation/common/instantiation.js',
+			'monaco-editor/esm/vs/platform/hover/browser/hover.js',
+		],
 	}
 })
