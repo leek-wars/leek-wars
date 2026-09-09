@@ -1287,6 +1287,17 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     cellules passent en `padding: 10px 0` et le marqueur lu / non lu en
     `padding: 10px 30px`, largeur automatique — c'est lui qui donne l'air à
     gauche de la rangée.
+  - **Poignée du panneau social** (coquille, « il faudrait un moyen de
+    replier le panneau de droite comme le menu de gauche ») : la poignée
+    existait (`.blabla-button`, `toggleSocial`) mais restait invisible,
+    fixée à `right: 0` sans z-index sous le panneau (1000) qui occupe le
+    même coin. Elle vient au bord gauche du panneau
+    (`right: var(--social-width)`), par-dessus, et revient au bord de
+    l'écran une fois le panneau replié. Vérifié à 1920 px : repli, retour.
+  - **Barres des widgets Collection et Statistiques** (« les barres de
+    progression n'ont pas de hachures ici ») : elles portaient leurs propres
+    classes ; elles reprennent le vocabulaire des jauges (`global-bar > bar`,
+    `bar > xp-bar`) et attrapent cadre, or et rayures.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

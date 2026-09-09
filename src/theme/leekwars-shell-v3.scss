@@ -1218,6 +1218,17 @@ body:not(.v2) {
 	   flux de la colonne, qui commence déjà sous la barre. */
 	#app:not(.app) .blabla-button {
 		top: var(--header-height);
+		/* …et elle restait invisible : fixée à `right: 0` sans z-index, sous le
+		   panneau (1000) qui occupe le même coin (Pierre, 2026-09-09 : « il
+		   faudrait un moyen de replier le panneau de droite comme le menu de
+		   gauche »). Elle vient au bord GAUCHE du panneau, comme celle du menu au
+		   bord de sa colonne, et par-dessus. Repliée, le panneau n'est plus là :
+		   elle revient au bord de l'écran. */
+		right: var(--social-width, 400px);
+		z-index: 1001;
+	}
+	#app:not(.app).social-collapsed .blabla-button {
+		right: 0;
 	}
 
 	/* Les deux poignées de repli (menu et panneau social) étaient deux carrés
