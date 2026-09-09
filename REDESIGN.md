@@ -1143,6 +1143,35 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       première est retirée, et ses six usages (dialogues de potion et de
       skin, action mobile, marché, aperçu du trèfle, page admin des icônes)
       passent à la fiole.
+- **2026-09-09 — mobile : l'arène dans la barre d'application, et un gel
+  de l'accueil** (Pierre : « sur mobile on va déplacer le petit bandeau
+  d'arène en haut dans la barre principale de l'App, une icône arène, avec
+  un compteur x/20 mais pas en couleur accentuée car c'est différent d'une
+  notif »).
+  - **Bandeau d'arène** : `mobile-br.vue` — un onglet vertical fixé au bord
+    droit de l'écran, tourné de 90°, aux couleurs du v2 — est supprimé. La
+    barre (`bar.vue`) porte à la place une action `mdi-stadium` (le glyphe
+    d'ICONS.md) avec le compteur « x/20 » en pastille. Pas l'aplat vert des
+    compteurs de messages et de notifications : surface de rangée bordée à
+    l'encre du thème (v3), noir translucide sur l'aplat vert (v2). Clic :
+    `/garden/arena`, comme le bandeau.
+  - **Gel de l'accueil mobile** trouvé en vérifiant : sur le compte de
+    Pierre à 400 px, le fil principal ne rendait plus la main (sonde
+    `evaluate` bloquée, pile en boucle dans le rendu du widget trophées).
+    `useFitCount` mesurait le pas d'une rangée entre deux sections quand
+    il y en avait deux, mais l'ESTIMAIT (hauteur + marges + gap paramétré,
+    8 px) quand il n'en restait qu'une — or le v3 pose 14 px : deux
+    sections tenaient selon l'estimation, une seule selon la mesure, et le
+    `MutationObserver` relançait le calcul à chaque rendu. Deux filets dans
+    le composable : le pas mesuré entre deux rangées est gardé pour les
+    mesures à une rangée, et un compte qui répond a → b → a dans les 250 ms
+    est figé au plus petit. Vérifié : sonde à 1 ms, une section rendue.
+  - **Widget « Joueurs remarquables »** (« il ne faudrait pas de scroll
+    mais adapter le nombre de joueurs à la taille du panel ») : le passage à
+    `noScroll` + `useFitCount` est dans l'arbre de travail comme WIP d'une
+    autre session (`home-widget-ranking.vue`, `home.vue`), non commité —
+    mesuré fonctionnel à 400 px (6 joueurs dans 310 px, sans débord). À
+    commettre par cette session-là.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

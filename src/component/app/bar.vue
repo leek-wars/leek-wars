@@ -13,6 +13,14 @@
 		</div>
 		<div v-if="!LeekWars.lightBar || LeekWars.menuExpanded" class="actions-wrapper">
 			<div class="static-actions">
+				<!-- L'arène en cours : le petit bandeau vertical qui flottait sur le bord
+				     droit (`mobile-br`) monte dans la barre (demande de Pierre, 2026-09-09).
+				     Le compteur n'est PAS en couleur d'accent : ce n'est pas une
+				     notification, c'est un état. -->
+				<div v-if="LeekWars.arena.enabled" v-ripple class="action header-button mobile arena-button" :title="$t('main.arena')" @click="$router.push('/garden/arena'); LeekWars.closeMenu()">
+					<v-icon>mdi-stadium</v-icon>
+					<span class="counter arena-counter">{{ LeekWars.arena.progress }}/{{ Arena.MAX_PLAYERS }}</span>
+				</div>
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" v-ripple class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.closeMenu()">
 					<v-icon>mdi-message-outline</v-icon>
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
@@ -54,6 +62,7 @@
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { emitter } from '@/model/emitter'
+import { Arena } from '@/model/arena'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
@@ -244,6 +253,14 @@ function readNotification(notification: Notification) {
 		height: 20px;
 		line-height: 12px;
 	}
+	// « x/20 » de l'arène : un état, pas une alerte — surface sombre neutre sur
+	// l'aplat vert du v2, jamais l'orange des compteurs.
+	.arena-counter {
+		background: rgba(0, 0, 0, 0.35);
+		font-size: 11px;
+		font-weight: 500;
+		white-space: nowrap;
+	}
 
 	/* ====== v3 : la barre d'application est une barre de page ======
 	   Elle n'avait jamais été reprise : aplat vert du v2 écrit en dur, encre
@@ -282,6 +299,14 @@ function readNotification(notification: Notification) {
 			background: var(--primary-surface);
 			color: var(--primary-surface-text);
 			border-radius: var(--radius-tiny);
+		}
+		/* Le compteur d'arène reste en surface de rangée bordée, à l'encre du
+		   thème : le vert plein est réservé aux notifications. */
+		.arena-counter {
+			background: var(--background-row);
+			color: var(--text-color);
+			border: 1px solid var(--border-strong);
+			line-height: 10px;
 		}
 		/* Les images d'action sont les PNG BLANCS du v2 (garden, market, potion,
 		   github_white — mesurés entre 245 et 255 de luminosité), taillés pour

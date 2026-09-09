@@ -19,6 +19,17 @@ export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: st
 	const count = ref(max)
 	let resizeObserver: ResizeObserver | null = null
 	let mutationObserver: MutationObserver | null = null
+	// Pas de rangée mesuré entre DEUX rangées réelles, gardé pour les mesures où
+	// une seule est rendue : l'estimation « hauteur + marges + gap » diffère du
+	// vrai pas dès que le gap CSS n'est pas celui passé en paramètre (le widget
+	// trophées passe 8, le v3 pose 14), et le compte oscillait alors entre 1 et 2
+	// à chaque mutation — une boucle de rendu qui gelait l'accueil mobile de
+	// Pierre (2026-09-09). Deuxième filet : deux comptes qui se répondent
+	// (a → b → a) dans la foulée sont figés au plus petit — dans la foulée
+	// seulement, un vrai va-et-vient de redimensionnement doit suivre.
+	let knownPitch = 0
+	let previous = 0
+	let changedAt = 0
 
 	function update(chained = false) {
 		const el = container.value
@@ -42,7 +53,11 @@ export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: st
 			if (Math.abs(top - firstRect.top) < 1) perRow++
 			else { pitch = top - firstRect.top; break }
 		}
-		if (pitch <= 0) {
+		if (pitch > 0) {
+			knownPitch = pitch
+		} else if (knownPitch > 0) {
+			pitch = knownPitch
+		} else {
 			const style = getComputedStyle(items[0] as HTMLElement)
 			pitch = firstRect.height + (parseFloat(style.marginTop) || 0) + (parseFloat(style.marginBottom) || 0) + gap
 		}
@@ -52,7 +67,19 @@ export function useFitCount(container: Ref<HTMLElement | null>, itemSelector: st
 
 	function setCount(fit: number, chained: boolean) {
 		if (fit === count.value) return
+		// Oscillation a → b → a : on retient le plus petit des deux, celui qui tient
+		// à coup sûr, et on ne relance pas la mesure.
+		const now = performance.now()
+		if (fit === previous && now - changedAt < 250) {
+			const settled = Math.min(fit, count.value)
+			previous = count.value
+			count.value = settled
+			changedAt = now
+			return
+		}
+		previous = count.value
 		count.value = fit
+		changedAt = now
 		// Une seule re-mesure après re-rendu : le nombre de colonnes peut avoir changé.
 		if (!chained) nextTick(() => update(true))
 	}
