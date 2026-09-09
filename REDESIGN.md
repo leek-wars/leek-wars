@@ -1294,6 +1294,18 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     même coin. Elle vient au bord gauche du panneau
     (`right: var(--social-width)`), par-dessus, et revient au bord de
     l'écran une fois le panneau replié. Vérifié à 1920 px : repli, retour.
+    - Puis (« le bouton pour refermer doit être placé au-dessus du panel et
+      pas à gauche ») : la poignée vit DANS le bandeau du haut, au coin
+      droit, centrée sur sa hauteur, et la barre lui réserve 30 px.
+  - **Barre du haut pleine largeur sous 2200 px** (« la barre du haut doit
+    prendre toute la largeur si l'écran est plus petit qu'une certaine
+    largeur ») : les cales qui calaient le logo sur le menu et les boutons
+    sur le panneau social ne jouent plus qu'à partir de 2200 px ; en dessous
+    la barre court d'un bord à l'autre, moins les 30 px de la poignée.
+    Mesuré : à 1920 le logo est à 20 px du bord, à 2400 il tombe sur la
+    colonne (240 px) et les boutons sur le bord du panneau.
+  - **Barre de page** (valeurs de Pierre) : 60 px de haut au lieu de 72, et
+    20 px entre le pointillé et les panneaux au lieu de 12.
   - **Barres des widgets Collection et Statistiques** (« les barres de
     progression n'ont pas de hachures ici ») : elles portaient leurs propres
     classes ; elles reprennent le vocabulaire des jauges (`global-bar > bar`,

@@ -120,24 +120,27 @@ body:not(.v2) {
 		--shell-menu: 0px;
 		--shell-social: 0px;
 	}
-	#app.connected:not(.app):not(.menu-collapsed) header.header {
-		--shell-menu: 220px;
+	/* La largeur du panneau social est celle du panneau, REDIMENSIONNABLE (400 à
+	 * 800 px, `--social-width` posé par social.vue) : un 400 px en dur laissait
+	 * les boutons déborder sur le panneau élargi. Même repli que la marge. */
+	/* Pierre, 2026-09-09 : « la barre du haut doit prendre toute la largeur si
+	   l'écran est plus petit qu'une certaine largeur ». Sous 2200 px la barre
+	   court donc d'un bord à l'autre — pas de cale à gauche, et à droite juste
+	   les 30 px de la poignée du panneau social, qui vit dans le bandeau
+	   (voir `.blabla-button`). Au-delà, elle se cale sur les colonnes. */
+	#app.connected:not(.app) header.header {
+		--shell-menu: 0px;
+		--shell-social: 30px;
 	}
-	#app.menu-collapsed:not(.app) header.header {
-		--shell-menu: 64px;
-	}
-	/* La colonne ne réserve la place du panneau social qu'au-delà de 1600 px
-	 * (app.vue) : en dessous le panneau passe par-dessus la page, et la barre doit
-	 * courir jusqu'au bord comme elle. La largeur est celle du panneau, qui est
-	 * REDIMENSIONNABLE (400 à 800 px, `--social-width` posé par social.vue) : un
-	 * 400 px en dur laissait les boutons déborder sur le panneau élargi, très
-	 * exactement le défaut qu'on corrige ici. Même repli que la marge. */
-	@media screen and (min-width: 1600px) {
+	@media screen and (min-width: 2200px) {
+		#app.connected:not(.app):not(.menu-collapsed) header.header {
+			--shell-menu: 220px;
+		}
+		#app.menu-collapsed:not(.app) header.header {
+			--shell-menu: 64px;
+		}
 		#app.connected:not(.social-collapsed):not(.app) header.header {
 			--shell-social: var(--social-width, 400px);
-		}
-		#app.connected.social-collapsed:not(.app) header.header {
-			--shell-social: 30px;
 		}
 	}
 	/* Deux cales, une par colonne, plutôt qu'un retrait interne : elles RÉTRÉCISSENT
@@ -651,7 +654,8 @@ body:not(.v2) {
 	   grandir, et l'éditeur — reconnu à son `> .menu`, comme au-dessus — mesure
 	   déjà sa barre lui-même. */
 	.page-header.page-bar:not(:has(> .menu)) {
-		min-height: 72px;
+		/* 60 px (Pierre, 2026-09-09), après les 72 hérités du sous-titre. */
+		min-height: 60px;
 	}
 	.page-bar .tabs .tab::before,
 	.page-bar .tabs .tab::after,
@@ -759,7 +763,9 @@ body:not(.v2) {
 	.page-header.page-bar {
 		border-bottom: 3px solid transparent;
 		border-image: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px) 3;
-		margin-bottom: 12px;
+		/* 20 px et non 12 (Pierre, 2026-09-09) : plus d'air entre le pointillé et
+		   les panneaux. */
+		margin-bottom: 20px;
 	}
 	/* Mode application (mobile) : la barre d'application porte déjà le nom de la
 	   page et ses actions, et global.scss y masque le h1. Restaient l'icône, la
@@ -1217,18 +1223,16 @@ body:not(.v2) {
 	   au ras du bandeau. Celle du menu n'a pas le problème : elle est dans le
 	   flux de la colonne, qui commence déjà sous la barre. */
 	#app:not(.app) .blabla-button {
-		top: var(--header-height);
 		/* …et elle restait invisible : fixée à `right: 0` sans z-index, sous le
 		   panneau (1000) qui occupe le même coin (Pierre, 2026-09-09 : « il
 		   faudrait un moyen de replier le panneau de droite comme le menu de
-		   gauche »). Elle vient au bord GAUCHE du panneau, comme celle du menu au
-		   bord de sa colonne, et par-dessus. Repliée, le panneau n'est plus là :
-		   elle revient au bord de l'écran. */
-		right: var(--social-width, 400px);
-		z-index: 1001;
-	}
-	#app:not(.app).social-collapsed .blabla-button {
+		   gauche »), puis posée au bord gauche du panneau — « le bouton pour
+		   refermer doit être placé au-dessus du panel et pas à gauche ». Elle
+		   vit donc DANS le bandeau, au coin droit, centrée sur sa hauteur, au
+		   ras du panneau qu'elle replie ; la barre lui réserve ses 30 px. */
+		top: calc((var(--header-height) - 30px) / 2);
 		right: 0;
+		z-index: 1002;
 	}
 
 	/* Les deux poignées de repli (menu et panneau social) étaient deux carrés
