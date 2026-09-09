@@ -2102,17 +2102,16 @@ class Superinfection extends ChipPoisonAnimation {
 
 // Piquant (118) : la morsure du Piment. Dégâts purs, courts et secs : trois
 // éclats de piqûre rouge orangé jaillissent de la cible, comme sur l'icône,
-// et la cible flambe brièvement.
+// et la cible flambe brièvement. Pas de glyphe : les attaques n'en ont pas.
 class Piquant extends ChipAnimation {
 	// T.fire : burnAnim() dessine des flammes, la texture doit être préchargée
 	// (sinon drawImage lève et fige tout le combat).
-	static textures = [T.chip_piquant, T.fire]
+	static textures = [T.fire]
 	static sounds = [S.fire]
 	constructor(game: Game) { super(game, S.fire, 40, DamageType.FIRE) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, position, targets, targetCell, launcher)
 		this.targets = this.recipientsOf(launcher, targets)
-		this.createChipImage(this.targets, T.chip_piquant)
 		const sting = glowTexture('#ff7a30', 18)
 		for (const target of this.targets) {
 			target.burnAnim(25)
@@ -2129,36 +2128,63 @@ class Piquant extends ChipAnimation {
 	}
 }
 
-// Capsaïcine (119) : ça brûle fort, et ça continue de brûler. Un embrasement
-// franc sur la cible, puis des braises rouges qui montent pendant tout le
-// reste de l'animation : la séquelle s'annonce avant même le tour suivant.
+// Capsaïcine (119) : le Piment explose de capsaïcine sur toute sa zone
+// (retour de Pierre du 09/09 : même construction que Pop-corn). Lancée par le
+// Piment sur lui-même : une gerbe de particules rouges jaillit de son sommet
+// dans tous les sens et retombe sur la zone, puis chaque ennemi touché
+// s'embrase, et des braises montent de lui : la séquelle s'annonce. Pas de
+// glyphe, c'est une attaque.
 class Capsaicin extends ChipAnimation {
-	static textures = [T.chip_capsaicin, T.fire]
+	static textures = [T.fire]
 	static sounds = [S.fire]
-	static DURATION = 80
+	static DURATION = 85
+	static SHOWER = 22
 	static BLAZE = 30
+	public burnt = false
 	constructor(game: Game) { super(game, S.fire, Capsaicin.DURATION, DamageType.FIRE) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, position, targets, targetCell, launcher)
 		this.targets = this.recipientsOf(launcher, targets)
-		this.createChipImage(this.targets, T.chip_capsaicin)
-		for (const target of this.targets) {
-			target.burnAnim(Capsaicin.DURATION + 20)
-		}
+		this.game.setEffectArea(targetCell, Area.CIRCLE3, '#ff3a1a', 70)
 	}
 	public update(dt: number) {
 		super.update(dt)
-		if (!this.targets) { return }
 		const elapsed = Capsaicin.DURATION - this.duration
+		const pepper = this.launcher
+		// La gerbe : gouttes de capsaïcine rouges et quelques éclats plus clairs,
+		// balistiques, qui sautent haut et retombent jusqu'aux bords de la zone.
+		if (pepper && elapsed < Capsaicin.SHOWER) {
+			const drop = glowTexture('#ff3c1c', 14)
+			const spark = glowTexture('#ffb060', 10)
+			for (let i = 0; i < 4; ++i) {
+				const angle = Math.random() * Math.PI * 2
+				const dist = 0.8 + Math.random() * 2.4
+				const texture = i === 3 ? spark : drop
+				this.game.particles.addGarbage(pepper.ox, pepper.oy, pepper.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, texture, 1, 0, 0.8 + Math.random() * 0.7, 0, 70)
+			}
+			// Et le Piment lui-même crache un peu de feu
+			if (Math.random() > 0.5) {
+				this.game.particles.addFire(pepper.ox + Math.random() * 10 - 5, pepper.oy + Math.random() * 6 - 3, pepper.height * 0.8, Math.random() * Math.PI * 2, false)
+			}
+		}
+		if (!this.targets) { return }
+		// L'embrasement de chaque ennemi quand la pluie l'atteint…
+		if (!this.burnt && elapsed >= Capsaicin.SHOWER) {
+			this.burnt = true
+			for (const target of this.targets) {
+				target.burnAnim(Capsaicin.DURATION - Capsaicin.SHOWER + 20)
+			}
+		}
+		if (elapsed < Capsaicin.SHOWER) { return }
 		const ember = glowTexture('#ff4a1a', 9)
 		for (const target of this.targets) {
-			if (elapsed < Capsaicin.BLAZE) {
-				// L'embrasement : de vraies flammes sur la cible
+			if (elapsed < Capsaicin.SHOWER + Capsaicin.BLAZE) {
+				// …de vraies flammes sur la cible…
 				if (Math.random() > 0.3) {
 					this.game.particles.addFire(target.ox + Math.random() * 30 - 15, target.oy + Math.random() * 16 - 8, 10 + Math.random() * 30, Math.random() * Math.PI * 2, false)
 				}
 			} else if (Math.random() > 0.55) {
-				// Les braises : petits points rouges qui montent en dérivant
+				// …puis des braises qui montent en dérivant : ça continue de brûler.
 				const x = target.ox + (Math.random() - 0.5) * 40
 				const y = target.oy + (Math.random() - 0.5) * 14
 				this.game.particles.addImage(x, y, 5 + Math.random() * 20, (Math.random() - 0.5) * 0.3, 0, 0.9 + Math.random() * 0.6, 0, ember, 45, 1, 0, false, 0.6 + Math.random() * 0.6)
@@ -2167,41 +2193,59 @@ class Capsaicin extends ChipAnimation {
 	}
 }
 
-// Sucre (120) : une bouchée de maïs doux. Le soin du Maïs, en petit : auréole
-// de soin, glyphe, et des cristaux de sucre pâles qui montent et scintillent
-// autour de l'allié.
+// Sucre (120) : une bouchée de maïs doux. Le Maïs éjecte un morceau de sucre
+// de son sommet, qui décrit une cloche jusqu'à l'allié et rebondit à ses pieds
+// (retour de Pierre du 09/09) ; à l'arrivée, auréole de soin, glyphe et
+// quelques cristaux qui scintillent.
 class Sugar extends ChipAnimation {
-	static textures = [T.cure_aureol, T.chip_sugar]
+	static textures = [T.cure_aureol, T.chip_sugar, T.sugar_cube]
 	static sounds = [S.heal]
-	static DURATION = 45
+	// Vol du morceau de sucre, en frames. La gravité des Garbage vaut 0,3 par
+	// frame : dz est choisi pour que le morceau retombe exactement sur la cible.
+	static FLIGHT = 28
+	static DURATION = Sugar.FLIGHT + 40
+	public landed = false
 	constructor(game: Game) { super(game, S.heal, Sugar.DURATION, DamageType.DEFAULT) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		super.launch(launchPos, position, targets, targetCell, launcher)
 		this.targets = this.recipientsOf(launcher, targets)
-		this.createChipAureol(this.targets, T.cure_aureol)
-		this.createChipImage(this.targets, T.chip_sugar)
+		if (!launcher) { this.land(); return }
+		const flight = Sugar.FLIGHT
+		const z0 = launcher.height * 0.95
+		for (const target of this.targets) {
+			const dx = (target.ox - launcher.ox) / flight
+			const dy = (target.oy - launcher.oy) / flight
+			const dz = (0.15 * flight * flight - z0) / flight
+			this.game.particles.addGarbage(launcher.ox, launcher.oy, z0, dx, dy, dz, T.sugar_cube, Math.random() > 0.5 ? 1 : -1, 0, 1.3, 0, flight + 30)
+		}
 	}
 	public update(dt: number) {
 		super.update(dt)
-		if (!this.targets || this.duration < 15) { return }
+		if (!this.landed && Sugar.DURATION - this.duration >= Sugar.FLIGHT) { this.land() }
+		if (!this.landed || !this.targets || this.duration < 12) { return }
 		const crystal = glowTexture('#f4ffe8', 12)
 		for (const target of this.targets) {
-			for (let i = 0; i < 2; ++i) {
-				if (Math.random() > 0.35) {
-					const x = target.ox + (Math.random() - 0.5) * 50
-					const y = target.oy + (Math.random() - 0.5) * 16
-					this.game.particles.addImage(x, y, Math.random() * 12, 0, 0, 0.8 + Math.random() * 0.7, 0, crystal, 50, 1, 0, false, 0.8 + Math.random())
-				}
+			if (Math.random() > 0.5) {
+				const x = target.ox + (Math.random() - 0.5) * 50
+				const y = target.oy + (Math.random() - 0.5) * 16
+				this.game.particles.addImage(x, y, Math.random() * 12, 0, 0, 0.8 + Math.random() * 0.7, 0, crystal, 50, 1, 0, false, 0.8 + Math.random())
 			}
 		}
+	}
+	private land() {
+		this.landed = true
+		if (!this.targets) { return }
+		this.createChipAureol(this.targets, T.cure_aureol)
+		this.createChipImage(this.targets, T.chip_sugar)
 	}
 }
 
 // Pop-corn (121) : l'épi éclate et arrose tout le monde. Lancée par le Maïs
-// sur lui-même : une fontaine de grains éclatés jaillit de son sommet et
-// retombe en pluie sur la zone, puis chaque allié touché reçoit son soin.
+// sur lui-même : une fontaine de grains éclatés (sprite popcorn) jaillit de
+// son sommet et retombe en pluie sur la zone, puis chaque allié touché reçoit
+// son soin.
 class Popcorn extends ChipAnimation {
-	static textures = [T.cure_aureol, T.heal_cross, T.chip_popcorn]
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_popcorn, T.popcorn]
 	static sounds = [S.heal]
 	static DURATION = 75
 	static SHOWER = 22
@@ -2221,11 +2265,10 @@ class Popcorn extends ChipAnimation {
 		// La fontaine de grains : balistiques, ils sautent haut et retombent
 		// jusqu'aux bords de la zone.
 		if (corn && elapsed < Popcorn.SHOWER) {
-			const kernel = glowTexture('#fff1b8', 11)
 			for (let i = 0; i < 3; ++i) {
 				const angle = Math.random() * Math.PI * 2
 				const dist = 0.8 + Math.random() * 2.2
-				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, kernel, 1, 0, 0.7 + Math.random() * 0.6, 0, 70)
+				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, T.popcorn, Math.random() > 0.5 ? 1 : -1, 0, 0.6 + Math.random() * 0.5, 0, 70)
 			}
 		}
 		// Le soin sur chaque allié quand la pluie les atteint

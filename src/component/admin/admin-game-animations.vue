@@ -145,6 +145,15 @@
 	// Distance des cibles : au plus près de 5 cases tout en restant dans la plage
 	// de portée de l'arme, pour que les coups touchent (contact, repel...).
 	function sceneDistance(entry: AnimEntry): number {
+		if (entry.kind === 'chip') {
+			// Puce de zone lancée sur soi (Pop-corn, Capsaïcine : portée 0, zone
+			// CIRCLE3) : les cibles doivent être DANS la zone, sinon l'animation
+			// n'a personne à toucher. À 2 cases elles tiennent dans un rayon 3.
+			const tpl = LeekWars.chipTemplates[entry.id]
+			const data = tpl ? LeekWars.chips[tpl.item] as { max_range?: number, area?: number } | undefined : undefined
+			if (data && data.max_range === 0 && data.area !== undefined && data.area !== 1) { return 2 }
+			return DEFAULT_DISTANCE
+		}
 		if (entry.kind !== 'weapon') { return DEFAULT_DISTANCE }
 		const tpl = LeekWars.weapons[entry.id]
 		if (!tpl) { return DEFAULT_DISTANCE }
