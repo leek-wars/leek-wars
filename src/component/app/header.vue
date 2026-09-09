@@ -95,6 +95,17 @@
 						<v-icon>mdi-weather-night</v-icon>
 					</div>
 				</div> -->
+				<!-- Encart LW+ (#3303) : le « + » 3D doré, qui ne tourne qu'au survol du
+				     bouton, et le temps restant de l'abonnement en abrégé (« 15 j »,
+				     « 3 mois », « 2 ans »). Mène à la page d'abonnement. Absent sans LW+. -->
+				<div v-if="$store.state.farmer.lwplus && lwplusRemaining" class="button-wrapper">
+					<router-link to="/lwplus" :class="{'header-active': $route.path.startsWith('/lwplus')}">
+						<div class="header-button lwplus-button" @mouseenter="lwplusLogo?.spin()">
+							<lwplus-logo ref="lwplusLogo" variant="plus" alt="LW+" :period="0" class="lwplus-icon" />
+							<span class="text">{{ lwplusRemaining }}</span>
+						</div>
+					</router-link>
+				</div>
 				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
 					<router-link to="/bank?ref=header" :class="{'header-active': $route.path.startsWith('/bank')}">
 						<div v-if="$store.state.farmer" class="header-button">
@@ -222,9 +233,24 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { seasonDisplay } from '@/model/season'
+	import { i18n } from '@/model/i18n'
 	import { computed, defineAsyncComponent, ref } from 'vue'
+	import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
 
 	defineOptions({ name: 'LwHeader' })
+
+	// Temps restant de LW+ en une unité, arrondi vers le haut : jours sous un mois,
+	// mois sous un an, années ensuite. Les libellés abrégés viennent de main.n_*.
+	const lwplusLogo = ref<InstanceType<typeof LwplusLogo> | null>(null)
+	const lwplusRemaining = computed(() => {
+		const until = store.state.farmer?.lwplus_until ?? 0
+		const seconds = until - LeekWars.time
+		if (seconds <= 0) { return '' }
+		const days = Math.max(1, Math.ceil(seconds / 86400))
+		if (days < 30) { return i18n.tc('main.n_day', days) }
+		if (days < 365) { return i18n.tc('main.n_month', Math.max(1, Math.round(days / 30))) }
+		return i18n.tc('main.n_year', Math.max(1, Math.round(days / 365)))
+	})
 
 	// Décoration saisonnière greffée sur le logo (#4383), seulement en saison active.
 	const seasonDecoration = computed(() => {
@@ -412,6 +438,20 @@
 	.header .header-button .crystal {
 		vertical-align: bottom;
 		margin-bottom: -13px;
+	}
+	// L'or en encre pour la marque, le temps restant dans la couleur du compteur.
+	.header .lwplus-button {
+		padding: 0 10px 0 6px;
+		gap: 4px;
+		// Le rendu a une marge de cadrage : 32 px d'image pour un signe d'environ 25 px.
+		.lwplus-icon {
+			width: 32px;
+			height: 32px;
+			margin: -3px;
+		}
+		.text {
+			padding-right: 0;
+		}
 	}
 	.signup-button {
 		padding-right: 20px;

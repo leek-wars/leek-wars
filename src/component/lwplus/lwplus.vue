@@ -6,7 +6,8 @@
 
 		<panel class="first hero-panel">
 			<div class="hero">
-				<div class="mark">LW<span class="plus-sign">+</span></div>
+				<!-- Le « + » fait un tour au survol et toutes les 10 s, cf. lwplus-logo.vue -->
+				<lwplus-logo class="mark" />
 				<div class="pitch">{{ $t('pitch') }}</div>
 				<div class="price">
 					<span class="amount">{{ $t('price_per_month', [priceEur]) }}</span>
@@ -32,8 +33,15 @@
 			<loader />
 		</panel>
 
+		<!-- Lots de mois d'abord, abonnement ensuite (ordre voulu par Pierre, 09/09/2026),
+		     côte à côte quand la largeur le permet, l'un sous l'autre sinon. -->
+		<div v-else class="offers">
+		<!-- Mois à l'unité (euros ou cristaux), même composant que dans la banque.
+		     `compact` : la page porte déjà le logo, le comparatif et l'état. -->
+		<lwplus-packs compact @bought="refreshStatus" />
+
 		<!-- Abonnement en cours : état et gestion -->
-		<panel v-else-if="active" :title="$t('your_subscription')">
+		<panel v-if="active" :title="$t('your_subscription')">
 			<div class="status">
 				<v-icon class="ok">mdi-check-decagram</v-icon>
 				<span v-if="cancelAtPeriodEnd">{{ $t('active_until', [formatDate(until)]) }}</span>
@@ -66,15 +74,19 @@
 				<div class="cancel-anytime">{{ $t('cancel_anytime') }}</div>
 			</template>
 		</panel>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, defineAsyncComponent } from 'vue'
 import { loadStripe, type Stripe, type StripeElements } from '@stripe/stripe-js'
 import { LeekWars } from '@/model/leekwars'
-import { mixins, useNamespacedT } from '@/model/i18n'
+import { locale, mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
+import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
+
+const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
 
 defineOptions({ name: 'lwplus', i18n: {}, mixins: [...mixins] })
 
@@ -88,7 +100,8 @@ const benefits = [
 	{ key: 'fights', icon: 'mdi-sword-cross' },
 	{ key: 'queue', icon: 'mdi-fast-forward' },
 	{ key: 'ratelimit', icon: 'mdi-speedometer' },
-	{ key: 'accounts', icon: 'mdi-account-multiple' },
+	// Potager rapide plutôt que les 10 comptes (Pierre, 09/09/2026), comme dans la banque.
+	{ key: 'fastgarden', icon: 'mdi-lightning-bolt' },
 	{ key: 'badge', icon: 'mdi-shield-star' },
 	{ key: 'crystals', icon: 'mdi-diamond-stone' },
 ]
@@ -243,10 +256,18 @@ async function resume() {
 	// encres sombres y passent (mesuré 4,16 sur le stop foncé, sous le seuil), d'où
 	// le lavis clair ci-dessous qui garde l'encre normale du site.
 
+	// Deux colonnes dès qu'il y a la place (demande de Pierre, 09/09/2026) : le
+	// hero à gauche, le comparatif à droite ; l'un sous l'autre sinon.
 	.hero-panel :deep(.content) {
 		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
 	}
 	.hero {
+		flex: 2 1 380px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		background: linear-gradient(135deg,
 			color-mix(in srgb, var(--gold) 22%, var(--background)) 0%,
 			color-mix(in srgb, var(--gold) 10%, var(--background)) 100%);
@@ -255,14 +276,22 @@ async function resume() {
 		text-align: center;
 	}
 	.mark {
-		font-size: 46px;
-		font-weight: 800;
-		line-height: 1;
-		letter-spacing: -1px;
-		// L'or en encre sur le lavis : 3,9 en clair et 7,9 en sombre (mesurés).
-		// Sous 4,5, mais la marque fait 46 px en 800 — c'est du gros texte, seuil 3.
-		.plus-sign {
-			color: var(--rank-first);
+		margin: -8px auto -4px;
+		width: 420px;
+		max-width: 100%;
+	}
+	.offers {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: 0 12px;
+		& > :deep(.lwplus-packs) {
+			flex: 1 1 460px;
+			min-width: 0;
+		}
+		& > .panel {
+			flex: 1 1 360px;
+			min-width: 0;
 		}
 	}
 	.hero .pitch {
@@ -290,6 +319,7 @@ async function resume() {
 		}
 	}
 	.benefits {
+		flex: 3 1 480px;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 1px;
@@ -299,6 +329,12 @@ async function resume() {
 		background: var(--panel-background);
 		padding: 16px 12px;
 		text-align: center;
+		// En deux colonnes, les cases sont plus hautes que leur contenu : centré.
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		// L'icône est un flex item : sans ça elle se cale à gauche, hors du texte centré.
+		align-items: center;
 		transition: background 120ms ease;
 		&:hover {
 			background: var(--background-secondary);
@@ -329,7 +365,7 @@ async function resume() {
 			grid-template-columns: repeat(2, 1fr);
 		}
 		.mark {
-			font-size: 38px;
+			width: 300px;
 		}
 	}
 	@media screen and (max-width: 380px) {
