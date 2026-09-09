@@ -16,11 +16,14 @@
  */
 
 body {
-	/* Police d'affichage. Le mockup demande Press Start 2P, qui n'a que du
-	   latin ; Pixelify Sans a le meme esprit pixel et couvre le cyrillique.
-	   Roboto ferme la chaine pour le japonais, le coreen et le chinois, qui
-	   n'ont pas d'equivalent pixel : le navigateur y retombe glyphe par glyphe. */
-	--font-display: "Pixelify Sans", "Roboto", sans-serif;
+	/* Police d'affichage : Press Start 2P, celle du mockup, essayée le
+	   2026-09-09 à la place de Pixelify Sans dont les chiffres se lisaient mal
+	   (Pierre). Elle couvre latin, cyrillique et grec ; ses faces portent un
+	   `size-adjust: 70%` (global.scss) qui lui donne la hauteur de capitale de
+	   Pixelify, donc les corps ne changent pas. Roboto ferme la chaine pour le
+	   japonais, le coreen et le chinois, qui n'ont pas d'equivalent pixel : le
+	   navigateur y retombe glyphe par glyphe. */
+	--font-display: "Press Start 2P", "Roboto", sans-serif;
 
 	/* Police de corps : l'Inter du mockup (--f-body). Roboto reste en repli
 	   pour les glyphes hors sous-ensembles, puis la chaîne système. */

@@ -1250,6 +1250,28 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     48 px de haut, l'avatar remplit le bouton) ; un seul écart de 8 px. Le
     parti pris monospace des « topstat » du mockup cède à l'uniformité
     demandée.
+  - **Talent dans le widget « Mes poireaux »** (« le composant de talent a
+    un style overridé ») : le widget allégeait la pastille et le nombre par
+    des `:deep`, taillés pour le disque et la pilule du v2 — en v3 ils
+    déformaient la boîte unique. Réservés au v2 ; en v3 le talent est le même
+    partout.
+  - **Police d'affichage : essai de Press Start 2P** (« les chiffres ne sont
+    pas très lisibles » avec Pixelify Sans). Planche comparative de douze
+    polices pixel libres aux corps du site ; retenues pour le cyrillique :
+    Tiny5, Press Start 2P, Handjet, DotGothic16. Pierre choisit Press Start
+    2P, celle du mockup. **Correction d'une erreur de ce document** : elle
+    couvre latin, latin étendu, cyrillique ET grec, pas « latin seul ».
+    Auto-hébergée en cinq sous-ensembles woff2 (`public/fonts/press-start-2p-*`)
+    avec **`size-adjust: 70%`** dans les `@font-face` : sa capitale vaut tout
+    le cadratin, celle de Pixelify 0,7, et ce descripteur lui rend la même
+    hauteur à corps égal — **tous les corps posés avec le facteur 1,43
+    restent valables**, rien à retoucher. Les faces Pixelify restent
+    déclarées (rien n'est téléchargé tant qu'aucune règle ne les demande),
+    pour revenir en arrière d'un jeton. Le japonais, le coréen et le chinois
+    retombent sur Roboto comme avant. À surveiller : les capitales accentuées
+    de Press Start 2P (É, È) sont dessinées comme des minuscules pour loger
+    l'accent dans 8 px — « MES TROPHéES », « éLEVé PAR » — ce qui se voit
+    sur les titres en capitales.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
