@@ -9,10 +9,6 @@ interface InstantiationService {
 	createInstance(ctor: unknown, ...args: unknown[]): unknown
 }
 
-type HoverDelegateFactory = Parameters<typeof setHoverDelegateFactory>[0]
-
-let globalHoverDelegateFactory: HoverDelegateFactory | null = null
-
 /**
  * Ré-arme la fabrique globale des survols de Monaco sur le service d'instanciation global.
  *
@@ -27,11 +23,8 @@ let globalHoverDelegateFactory: HoverDelegateFactory | null = null
  * toute destruction (disposeEditor) en filet de sécurité.
  */
 function rearmHoverDelegateFactory() {
-	if (!globalHoverDelegateFactory) {
-		const instantiationService = StandaloneServices.get<InstantiationService>(IInstantiationService)
-		globalHoverDelegateFactory = (placement, instantHover) => instantiationService.createInstance(WorkbenchHoverDelegate, placement, { instantHover }, {})
-	}
-	setHoverDelegateFactory(globalHoverDelegateFactory)
+	const instantiationService = StandaloneServices.get<InstantiationService>(IInstantiationService)
+	setHoverDelegateFactory((placement, instantHover) => instantiationService.createInstance(WorkbenchHoverDelegate, placement, { instantHover }, {}))
 }
 
 /** Crée un éditeur de diff sans laisser la fabrique des survols sur son service enfant. */

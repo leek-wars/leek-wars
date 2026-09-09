@@ -302,10 +302,9 @@
 	const history = ref<HistoryEntry[] | null>(null)
 	const selectedHistoryIndex = ref<number | null>(null)
 	const diffEditor = ref<Monaco.editor.IStandaloneDiffEditor | null>(null)
-	// Les deux éditeurs suivent le cycle de vie commun de l'éditeur de code (création du diff et
-	// destruction : modèle détaché, fabrique des survols de Monaco ré-armée, #5036). Chargé avec
-	// Monaco par loadMonaco(), donc toujours présent quand un éditeur existe ; en import dynamique,
-	// car une arête statique vers Monaco ferait précharger son chunk sur la route de l'encyclopédie.
+	// Cycle de vie commun des éditeurs Monaco (voir monaco-dispose.ts). Chargé avec Monaco par
+	// loadMonaco(), donc présent dès qu'un éditeur existe ; en import dynamique, car une arête
+	// statique vers Monaco ferait précharger son chunk sur la route de l'encyclopédie.
 	let monacoLifecycle: typeof import('@/component/editor/monaco-dispose') | null = null
 
 	function loadMonaco() {
