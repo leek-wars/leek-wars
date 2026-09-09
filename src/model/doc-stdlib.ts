@@ -135,7 +135,9 @@ const ROWS: Row[] = [
 	['bitLength', 'Math.bitLength', 'Math.bitLength(x: number): number', 'x.bit_length()', 'x.bit_length() -> int'],
 	['testBit', 'Math.testBit', 'Math.testBit(x: number, bit: number): boolean', 'Math.testBit', 'Math.testBit(x: int, bit: int) -> bool'],
 	// randInt est [a, b) en LeekScript, comme randrange : randint de Python serait FAUX (inclusif).
-	['randInt', 'Math.randInt', 'Math.randInt(a: number, b: number): number — borne haute exclue', 'random.randrange', 'random.randrange(a, b) -> int — borne haute exclue, comme LeekScript'],
+	// randrange(stop) tire dans [0, stop) ; randrange(start, stop[, step]) dans [start, stop) par pas.
+	// random.randint(a, b) existe aussi, mais INCLUT b : ce n'est pas randInt.
+	['randInt', 'Math.randInt', 'Math.randInt(a: number, b: number): number — borne haute exclue', 'random.randrange', 'random.randrange(stop) | random.randrange(start, stop, step=1) -> int — stop exclu, comme LeekScript ; random.randint(a, b) inclut b'],
 	['randReal', 'Math.randReal', 'Math.randReal(a: number, b: number): number', 'random.uniform', 'random.uniform(a, b) -> float'],
 
 	// Exposées sous `Math` par le prélude polyglot depuis qu'on a comblé le trou : elles n'ont
