@@ -2,14 +2,14 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-forum</v-icon>
+				<page-icon name="forum" fallback="mdi-forum" />
 				<div class="page-title-text">
 				<h1>{{ $t('title') }}</h1>
 				<v-menu offset-y>
 					<template #activator="{ props }">
 						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
-							<img width="10" src="/image/selector.png">
+							<v-icon class="caret">mdi-menu-down</v-icon>
 						</div>
 					</template>
 					<v-list :dense="true" class="mobile-forum-languages">

@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-email-outline</v-icon>
+				<page-icon name="messages" fallback="mdi-email-outline" />
 				<div class="page-title-text">
 					<h1>{{ $t('title') }}</h1>
 					<div class="info">

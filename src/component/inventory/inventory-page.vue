@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-treasure-chest</v-icon>
+				<page-icon name="inventory" fallback="mdi-treasure-chest" />
 				<div class="page-title-text">
 					<h1>{{ $t('main.inventory') }}</h1>
 				</div>

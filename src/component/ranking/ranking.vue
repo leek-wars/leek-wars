@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-podium</v-icon>
+				<page-icon name="ranking" fallback="mdi-podium" />
 				<div class="page-title-text">
 					<h1>{{ $t('title') }}</h1>
 				</div>

@@ -14,7 +14,7 @@
 		<div class="page-header page-bar">
 
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-shield</v-icon>
+				<page-icon name="team" fallback="mdi-shield" />
 				<div class="page-title-text">
 					<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
 						<h1 v-bind="props">{{ team.name }}</h1>

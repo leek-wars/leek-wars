@@ -59,6 +59,13 @@ const ICONS = {
 	'admin':      { glyph: 'mdiSecurity',      parts: ['cream', 'red'] },
 	'arena':      { glyph: 'mdiStadium',       parts: ['red', 'red', 'gold', 'green', 'lime'] },
 	'boss':       { glyph: 'mdiCrown',         parts: ['gold', 'amber'] },
+	// Icônes de titre de page qui n'ont pas d'entrée de menu (barre de page en
+	// couleur, demande de Pierre du 2026-09-07 : « celui en couleur au lieu de
+	// juste vert »).
+	'settings':   { glyph: 'mdiCog',           parts: [null, 'ink'] },
+	'messages':   { glyph: 'mdiEmailOutline',  parts: ['cyan', null, null] },
+	'tournament': { glyph: 'mdiTournament',    parts: ['lime'] },
+	'fight':      { glyph: 'mdiSword',         parts: ['red', 'ink'] },
 }
 
 // Boîte englobante approchée d'un sous-tracé : tous les points de contrôle (pour les

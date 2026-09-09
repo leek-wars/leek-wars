@@ -2,7 +2,7 @@
 	<div ref="marketRoot" class="page">
 		<div class="page-header page-bar">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-store</v-icon>
+				<page-icon name="market" fallback="mdi-store" />
 				<div class="page-title-text">
 					<h1>{{ $t('title') }}</h1>
 				</div>

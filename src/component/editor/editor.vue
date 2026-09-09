@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<div class="menu">
 				<div class="page-title">
-					<v-icon class="page-icon">mdi-code-braces</v-icon>
+					<page-icon name="editor" fallback="mdi-code-braces" />
 					<div class="page-title-text"><h1>{{ $t('title') }}</h1></div>
 				</div>
 				<!-- Des ACTIONS, pas des onglets : conteneur `.actions`, comme sur les

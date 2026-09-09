@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-security</v-icon>
+				<page-icon name="admin" fallback="mdi-security" />
 				<div class="page-title-text">
 					<h1>Administration</h1>
 				</div>

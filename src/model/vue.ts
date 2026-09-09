@@ -8,6 +8,7 @@ import Code from '@/component/app/code.vue'
 import Error from '@/component/app/error.vue'
 import LWLoader from '@/component/app/loader.vue'
 import Panel from '@/component/app/panel.vue'
+import PageIcon from '@/component/app/page-icon.vue'
 import Avatar from '@/component/avatar.vue'
 import Flag from '@/component/flag.vue'
 import '@/component/editor/monaco-highlight.scss'
@@ -304,6 +305,7 @@ app.component('notification', NotificationElement)
 app.component('lw-code', Code)
 app.component('error', Error)
 app.component('panel', Panel)
+app.component('page-icon', PageIcon)
 app.component('popup', Popup)
 app.component('loader', LWLoader)
 app.component('flag', Flag)

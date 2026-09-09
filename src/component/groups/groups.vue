@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="page-bar page-header">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-account-group</v-icon>
+				<page-icon name="group" fallback="mdi-account-group" />
 				<div class="page-title-text">
 					<h1>
 						<breadcrumb :items="breadcrumb_items" :raw="true" />

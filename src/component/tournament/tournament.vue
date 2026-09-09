@@ -2,7 +2,7 @@
 	<div ref="page" class="tournament-page page">
 		<div class="page-header page-bar">
 			<div class="page-title">
-				<v-icon class="page-icon">mdi-tournament</v-icon>
+				<page-icon name="tournament" fallback="mdi-tournament" />
 				<div class="page-title-text">
 					<h1>{{ tournament ? title : '...' }}</h1>
 				</div>

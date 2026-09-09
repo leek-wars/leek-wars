@@ -2,7 +2,7 @@
 	<div class="page">
 		<div class="page-header page-bar">
 			<div v-if="fight" class="page-title">
-				<v-icon class="page-icon">mdi-sword</v-icon>
+				<page-icon name="fight" fallback="mdi-sword" />
 				<div class="page-title-text">
 				<h1>{{ fight.title }}</h1>
 				<div class="info">{{ $filters.date(fight.date) }}</div>
