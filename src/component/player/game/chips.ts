@@ -2096,6 +2096,149 @@ class Superinfection extends ChipPoisonAnimation {
 	}
 }
 
+// Puces des plantes 2.50 (Éveil, release/250/eveil_plantes_puces.md). Le Piment
+// et le Maïs se réveillent quand une entité entre dans leur zone et répondent
+// avec ces quatre puces, que seules les plantes portent.
+
+// Piquant (118) : la morsure du Piment. Dégâts purs, courts et secs : trois
+// éclats de piqûre rouge orangé jaillissent de la cible, comme sur l'icône,
+// et la cible flambe brièvement.
+class Piquant extends ChipAnimation {
+	// T.fire : burnAnim() dessine des flammes, la texture doit être préchargée
+	// (sinon drawImage lève et fige tout le combat).
+	static textures = [T.chip_piquant, T.fire]
+	static sounds = [S.fire]
+	constructor(game: Game) { super(game, S.fire, 40, DamageType.FIRE) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.createChipImage(this.targets, T.chip_piquant)
+		const sting = glowTexture('#ff7a30', 18)
+		for (const target of this.targets) {
+			target.burnAnim(25)
+			// Trois éclats principaux bien séparés, plus quelques étincelles.
+			// Vie 40 : sous ~49 frames l'enveloppe d'alpha des ImageParticle
+			// plafonne l'opacité, on compense par la taille.
+			for (let i = 0; i < 12; ++i) {
+				const angle = (i / 12) * Math.PI * 2 + Math.random() * 0.3
+				const speed = i % 4 === 0 ? 2.6 : 1.3 + Math.random() * 0.9
+				const scale = i % 4 === 0 ? 1.6 : 0.9
+				this.game.particles.addImage(target.ox, target.oy, target.height * 0.6, Math.cos(angle) * speed, Math.sin(angle) * speed * 0.5, 0.6 + Math.random() * 0.6, 0, sting, 40, 1, 0, false, scale)
+			}
+		}
+	}
+}
+
+// Capsaïcine (119) : ça brûle fort, et ça continue de brûler. Un embrasement
+// franc sur la cible, puis des braises rouges qui montent pendant tout le
+// reste de l'animation : la séquelle s'annonce avant même le tour suivant.
+class Capsaicin extends ChipAnimation {
+	static textures = [T.chip_capsaicin, T.fire]
+	static sounds = [S.fire]
+	static DURATION = 80
+	static BLAZE = 30
+	constructor(game: Game) { super(game, S.fire, Capsaicin.DURATION, DamageType.FIRE) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.createChipImage(this.targets, T.chip_capsaicin)
+		for (const target of this.targets) {
+			target.burnAnim(Capsaicin.DURATION + 20)
+		}
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.targets) { return }
+		const elapsed = Capsaicin.DURATION - this.duration
+		const ember = glowTexture('#ff4a1a', 9)
+		for (const target of this.targets) {
+			if (elapsed < Capsaicin.BLAZE) {
+				// L'embrasement : de vraies flammes sur la cible
+				if (Math.random() > 0.3) {
+					this.game.particles.addFire(target.ox + Math.random() * 30 - 15, target.oy + Math.random() * 16 - 8, 10 + Math.random() * 30, Math.random() * Math.PI * 2, false)
+				}
+			} else if (Math.random() > 0.55) {
+				// Les braises : petits points rouges qui montent en dérivant
+				const x = target.ox + (Math.random() - 0.5) * 40
+				const y = target.oy + (Math.random() - 0.5) * 14
+				this.game.particles.addImage(x, y, 5 + Math.random() * 20, (Math.random() - 0.5) * 0.3, 0, 0.9 + Math.random() * 0.6, 0, ember, 45, 1, 0, false, 0.6 + Math.random() * 0.6)
+			}
+		}
+	}
+}
+
+// Sucre (120) : une bouchée de maïs doux. Le soin du Maïs, en petit : auréole
+// de soin, glyphe, et des cristaux de sucre pâles qui montent et scintillent
+// autour de l'allié.
+class Sugar extends ChipAnimation {
+	static textures = [T.cure_aureol, T.chip_sugar]
+	static sounds = [S.heal]
+	static DURATION = 45
+	constructor(game: Game) { super(game, S.heal, Sugar.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.createChipAureol(this.targets, T.cure_aureol)
+		this.createChipImage(this.targets, T.chip_sugar)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.targets || this.duration < 15) { return }
+		const crystal = glowTexture('#f4ffe8', 12)
+		for (const target of this.targets) {
+			for (let i = 0; i < 2; ++i) {
+				if (Math.random() > 0.35) {
+					const x = target.ox + (Math.random() - 0.5) * 50
+					const y = target.oy + (Math.random() - 0.5) * 16
+					this.game.particles.addImage(x, y, Math.random() * 12, 0, 0, 0.8 + Math.random() * 0.7, 0, crystal, 50, 1, 0, false, 0.8 + Math.random())
+				}
+			}
+		}
+	}
+}
+
+// Pop-corn (121) : l'épi éclate et arrose tout le monde. Lancée par le Maïs
+// sur lui-même : une fontaine de grains éclatés jaillit de son sommet et
+// retombe en pluie sur la zone, puis chaque allié touché reçoit son soin.
+class Popcorn extends ChipAnimation {
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_popcorn]
+	static sounds = [S.heal]
+	static DURATION = 75
+	static SHOWER = 22
+	public healed = false
+	constructor(game: Game) { super(game, S.heal, Popcorn.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.game.setEffectArea(targetCell, Area.CIRCLE3, '#ffd75e', 70)
+		// Le glyphe au-dessus du Maïs lui-même, pas au-dessus des soignés.
+		if (launcher) { this.createChipImage([launcher], T.chip_popcorn) }
+	}
+	public update(dt: number) {
+		super.update(dt)
+		const elapsed = Popcorn.DURATION - this.duration
+		const corn = this.launcher
+		// La fontaine de grains : balistiques, ils sautent haut et retombent
+		// jusqu'aux bords de la zone.
+		if (corn && elapsed < Popcorn.SHOWER) {
+			const kernel = glowTexture('#fff1b8', 11)
+			for (let i = 0; i < 3; ++i) {
+				const angle = Math.random() * Math.PI * 2
+				const dist = 0.8 + Math.random() * 2.2
+				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, kernel, 1, 0, 0.7 + Math.random() * 0.6, 0, 70)
+			}
+		}
+		// Le soin sur chaque allié quand la pluie les atteint
+		if (!this.healed && elapsed >= Popcorn.SHOWER && this.targets) {
+			this.healed = true
+			this.createChipAureol(this.targets, T.cure_aureol)
+			for (const target of this.targets) {
+				for (let i = 0; i < 3; ++i) { this.createChipHealEntity(target) }
+			}
+		}
+	}
+}
+
 // Chips boss (#3627). Patterns inspirés des chips existantes :
 // Kemuridama → Teleportation + smoke ; Shuriken → projectile rotation + impact ;
 // FireBall → projectile + dégâts feu ; Trebuchet → Meteorite ; Thunder → Lightning grande zone.
@@ -2265,4 +2408,4 @@ class Thunder extends ChipAnimation {
 	}
 }
 
-export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Hemorrhage, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Maturation, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Superinfection, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
+export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Hemorrhage, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Maturation, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Superinfection, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry, Piquant, Capsaicin, Sugar, Popcorn }

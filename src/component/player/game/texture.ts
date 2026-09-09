@@ -462,6 +462,11 @@ class T {
 	public static chip_hemorrhage = new Texture(LeekWars.STATIC + 'image/chip/glyph/hemorrhage.png')
 	public static chip_maturation = new Texture(LeekWars.STATIC + 'image/chip/glyph/maturation.png')
 	public static chip_superinfection = new Texture(LeekWars.STATIC + 'image/chip/glyph/superinfection.png')
+	// Puces des plantes 2.50 (Éveil) : Piment = piquant / capsaicin, Maïs = sugar / popcorn
+	public static chip_piquant = new Texture(LeekWars.STATIC + 'image/chip/glyph/piquant.png')
+	public static chip_capsaicin = new Texture(LeekWars.STATIC + 'image/chip/glyph/capsaicin.png')
+	public static chip_sugar = new Texture(LeekWars.STATIC + 'image/chip/glyph/sugar.png')
+	public static chip_popcorn = new Texture(LeekWars.STATIC + 'image/chip/glyph/popcorn.png')
 	public static chip_kemuridama = new Texture(LeekWars.STATIC + 'image/chip/kemuridama.png')
 	public static chip_shuriken = new Texture(LeekWars.STATIC + 'image/chip/shuriken.png')
 	public static shuriken_star = new Texture(LeekWars.STATIC + 'image/chip/shuriken_star.png')
