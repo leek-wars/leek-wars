@@ -264,7 +264,11 @@
 		margin: 8px 0;
 	}
 	// La pastille du talent se cale sur la hauteur du nombre qu'elle précède.
-	.leek .talent-ranking :deep(.talent .icon) {
+	// v2 seulement : en v3 le talent est UNE boîte, la même partout (Pierre,
+	// 2026-09-09 : « le composant de talent a un style overridé, tu peux mettre
+	// le même que ailleurs ? ») — ces retouches, taillées pour le disque et la
+	// pilule du v2, la déformaient.
+	body.v2 .leek .talent-ranking :deep(.talent .icon) {
 		width: 24px;
 		height: 24px;
 		padding: 4px;
@@ -273,7 +277,7 @@
 			height: 16px;
 		}
 	}
-	.leek .talent-ranking :deep(.talent .value) {
+	body.v2 .leek .talent-ranking :deep(.talent .value) {
 		font-size: 14px;
 		padding: 3px 8px 3px 12px;
 		margin-left: -6px;
