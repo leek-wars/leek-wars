@@ -1272,6 +1272,13 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     de Press Start 2P (É, È) sont dessinées comme des minuscules pour loger
     l'accent dans 8 px — « MES TROPHéES », « éLEVé PAR » — ce qui se voit
     sur les titres en capitales.
+    - **Puis Tiny5**, le même jour (« j'aime moins cette police finalement,
+      on peut tester la Tiny5 ? ») : hauteur de capitale mesurée à 63 px pour
+      100 de corps contre 64 pour Pixelify, donc ni `size-adjust` ni corps à
+      retoucher ; latin, latin étendu, cyrillique, grec ; de vraies capitales
+      accentuées. Cinq sous-ensembles woff2 (`public/fonts/tiny5-*`). Les
+      trois polices restent déclarées, le choix tient au jeton
+      `--font-display` de `leekwars-theme-v3.scss`.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
