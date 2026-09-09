@@ -838,11 +838,17 @@ ${ret}
 
 	function destroyDiffEditor() {
 		if (diffEditor.value) {
-			const model = diffEditor.value.getModel()
-			diffEditor.value.dispose()
-			model?.original.dispose()
-			model?.modified.dispose()
+			const editor = diffEditor.value
+			const model = editor.getModel()
 			diffEditor.value = null
+			// Même chemin de destruction que l'éditeur de code : un diff détruit par `dispose()`
+			// seul laisse la fabrique globale des survols de Monaco sur un service mort (#5036).
+			// Import dynamique pour ne pas embarquer Monaco dans le chunk de l'encyclopédie.
+			import('../editor/monaco-dispose').then(({ disposeEditor }) => {
+				disposeEditor(editor)
+				model?.original.dispose()
+				model?.modified.dispose()
+			})
 		}
 	}
 
