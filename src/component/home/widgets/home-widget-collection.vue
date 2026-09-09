@@ -7,7 +7,10 @@
 					<span class="count">{{ totalOwned }} / {{ totalCount }}</span>
 					<span class="pct">{{ percent(totalOwned, totalCount) }}%</span>
 				</div>
-				<div class="bar"><div class="fill" :class="{ complete: totalOwned === totalCount && totalCount > 0 }" :style="{ width: percent(totalOwned, totalCount) + '%' }"></div></div>
+				<!-- Le vocabulaire des barres de la page Trophées (`.global-bar > .bar`,
+				     `.blue` = complète) : la coquille v3 y pose cadre, aplat, or et
+				     rayures ; ici la barre n'en avait aucun (Pierre, 2026-09-09). -->
+				<div class="global-bar"><div class="bar" :class="{ blue: totalOwned === totalCount && totalCount > 0 }" :style="{ width: percent(totalOwned, totalCount) + '%' }"></div></div>
 			</div>
 			<div ref="catsEl" class="cats">
 				<!-- Une vraie grille qui remplit le widget : autant de colonnes et de
@@ -206,18 +209,20 @@
 		color: var(--primary);
 		font-weight: bold;
 	}
-	.bar {
+	.global-bar {
 		background: var(--background-secondary);
 		border-radius: var(--radius);
 		height: 10px;
 		overflow: hidden;
 	}
-	.bar .fill {
+	.global-bar > .bar {
 		height: 100%;
+		// `relative` : les rayures du v3 sont un `::after` posé en absolu.
+		position: relative;
 		background: var(--primary-surface);
 		transition: width 0.3s;
 	}
-	.fill.complete {
+	.global-bar > .bar.blue {
 		background: var(--rank-first);
 	}
 	// Les filets entre les cellules sont le fond qui passe dans les gouttières

@@ -17,7 +17,9 @@
 						<talent :id="leek.id" :talent="leek.talent" :max_talent="leek.max_talent" category="leek" />
 					</div>
 					<div class="xp">
-						<div class="xp-bar"><div class="xp-fill" :style="{ width: xpPercent + '%' }"></div></div>
+						<!-- Le vocabulaire de la barre d'XP de la page poireau (`.bar > .xp-bar`) :
+						     la coquille v3 y pose cadre, aplat et rayures (Pierre, 2026-09-09). -->
+						<div class="bar"><div class="xp-bar" :style="{ width: xpPercent + '%' }"></div></div>
 						<div class="xp-text">{{ t('stat_xp') }} : {{ LeekWars.formatNumber(leek.xp) }}<template v-if="leek.up_xp"> / {{ LeekWars.formatNumber(leek.up_xp) }}</template></div>
 					</div>
 					<div class="wdl">
@@ -183,13 +185,13 @@
 	.talent-line {
 		margin-top: 2px;
 	}
-	.xp-bar {
+	.bar {
 		background: var(--background-secondary);
 		border-radius: var(--radius);
 		height: 8px;
 		overflow: hidden;
 	}
-	.xp-fill {
+	.bar > .xp-bar {
 		height: 100%;
 		background: var(--primary-surface);
 	}
