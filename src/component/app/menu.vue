@@ -830,6 +830,101 @@
 	body:not(.v2) .menu-top a {
 		color: inherit;
 	}
+	/* Le bloc de l'éleveur (mobile), retravaillé (Pierre, 2026-09-09 : « cette
+	   partie sur mobile est pas très belle ») : l'avatar biseauté, le nom en
+	   police d'affichage, et les deux montants en « topstat » comme sur la barre
+	   du grand écran — deux boîtes bordées de même largeur, icône devant,
+	   chiffres en monospace. Fini les icônes à marges négatives et le chiffre
+	   qui flotte au milieu de la ligne. */
+	body:not(.v2) #app.app .menu .top {
+		height: auto;
+	}
+	/* Grille à deux lignes : avatar et nom sur la première, les montants sur
+	   toute la largeur de la seconde — le tiroir ne fait que 250 px, deux boîtes
+	   côte à côte à droite de l'avatar coupaient un montant à dix chiffres.
+	   `.right` s'efface (`display: contents`) pour que ses deux lignes soient
+	   des éléments de la grille. */
+	body:not(.v2) .menu-top .section {
+		display: grid;
+		grid-template-columns: 44px minmax(0, 1fr);
+		column-gap: 10px;
+		row-gap: 8px;
+		align-items: center;
+		padding: 10px 12px;
+		min-height: 0;
+	}
+	body:not(.v2) .menu-top .farmer-avatar {
+		margin: 0;
+		width: 44px;
+		height: 44px;
+		display: block;
+	}
+	body:not(.v2) .menu .menu-top .right {
+		display: contents;
+	}
+	body:not(.v2) .menu .menu-top .farmer-name-row {
+		min-width: 0;
+	}
+	body:not(.v2) .menu .menu-top .text.farmer-name {
+		padding: 0;
+		line-height: 1.2;
+		font-family: var(--font-display);
+		font-size: 15px;
+		letter-spacing: 0.02em;
+	}
+	body:not(.v2) .menu .menu-top .account-switcher-btn {
+		opacity: 1;
+		color: var(--text-color-secondary);
+	}
+	body:not(.v2) #app.app .menu .menu-top .moneys {
+		grid-column: 1 / -1;
+		margin: 0;
+		gap: 6px;
+		font-size: 12.5px;
+	}
+	body:not(.v2) .menu-top .moneys > * {
+		flex: 1 1 auto;
+		min-width: 0;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		height: 30px;
+		padding: 0 8px;
+		border: 1px solid var(--border);
+		background: var(--header-button-background);
+		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	/* Les habs, à dix chiffres, prennent la place ; les cristaux se contentent
+	   de la leur. */
+	body:not(.v2) .menu-top .moneys > .crystals {
+		flex: 0 0 auto;
+	}
+	body:not(.v2) .menu-top .moneys .farmer-habs,
+	body:not(.v2) .menu-top .moneys .farmer-crystals {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	body:not(.v2) .menu-top .moneys .hab {
+		width: 18px;
+		height: 18px;
+		margin: 0;
+		flex: 0 0 auto;
+		background-size: contain;
+	}
+	/* Le cristal dépasse de la boîte en haut et en bas, comme sur la barre du
+	   grand écran : c'est sa signature. */
+	body:not(.v2) .menu-top .moneys .crystal {
+		width: 14px;
+		height: 36px;
+		margin: 0;
+		flex: 0 0 auto;
+		background-size: contain;
+		background-position: center;
+	}
 	.menu .section.about {
 		display: none;
 	}

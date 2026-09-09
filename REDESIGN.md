@@ -1230,7 +1230,18 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     `noScroll` + `useFitCount` est dans l'arbre de travail comme WIP d'une
     autre session (`home-widget-ranking.vue`, `home.vue`), non commité —
     mesuré fonctionnel à 400 px (6 joueurs dans 310 px, sans débord). À
-    commettre par cette session-là.
+    commettre par cette session-là. *Commité le 09/09 avec le reste du WIP
+    des autres sessions, à la demande de Pierre (« tu commit tout en
+    beta »).*
+  - **Bloc de l'éleveur du tiroir mobile** (`menu.vue`, « cette partie sur
+    mobile est pas très belle ») : un avatar de 60 px, le nom en corps de
+    texte, et les deux montants en ligne avec un cristal à marges négatives
+    qui flottait. Grille à deux lignes : avatar biseauté de 44 px et nom en
+    police d'affichage sur la première, les deux montants en « topstat » sur
+    toute la largeur de la seconde — boîtes bordées, icône devant, chiffres
+    en monospace, le cristal qui dépasse comme sur grand écran. Les habs
+    prennent la place (dix chiffres), les cristaux la leur ; côte à côte à
+    droite de l'avatar, le tiroir de 250 px coupait le montant.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
