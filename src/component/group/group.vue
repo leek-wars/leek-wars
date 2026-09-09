@@ -25,6 +25,10 @@
 			</router-link>
 		</div>
 
+		<!-- Superviseur et chat côte à côte quand la largeur le permet (Pierre,
+		     2026-09-09 : « mettre deux colonnes ici si y'a de la place ») : le
+		     conteneur replie en une colonne sous 800 px environ, comme partout. -->
+		<div class="container large">
 		<panel class="first">
 			<loader v-if="!group" />
 			<div v-else>
@@ -97,6 +101,7 @@
 				<chat :id="group.chat" />
 			</template>
 		</panel>
+		</div>
 
 
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
