@@ -1,8 +1,8 @@
 <template>
 	<div class="remarkable-widget">
 		<loader v-if="!loaded" />
-		<template v-else>
-			<router-link v-for="p in players" :key="p.id" v-ripple :to="'/farmer/' + p.id" class="player">
+		<div v-else ref="listEl" class="players">
+			<router-link v-for="p in visiblePlayers" :key="p.id" v-ripple :to="'/farmer/' + p.id" class="player">
 				<img :src="LeekWars.getAvatar(p.id, p.avatar_changed)" class="avatar" loading="lazy">
 				<div class="info">
 					<div class="name-line">
@@ -13,14 +13,15 @@
 				</div>
 			</router-link>
 			<div v-if="!players.length" class="none">{{ t('nobody') }}</div>
-		</template>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { ref, watch } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { useNamespacedT } from '@/model/i18n'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 
 	defineOptions({ name: 'HomeWidgetRanking' })
 
@@ -35,6 +36,12 @@
 
 	const loaded = ref(false)
 	const players = ref<Player[]>([])
+
+	// Autant de joueurs que la hauteur du panel en laisse tenir entiers, jamais
+	// plus que les dix servis par l'API (`getRemarkablePlayers`).
+	const listEl = ref<HTMLElement | null>(null)
+	const playerCount = useFitCount(listEl, '.player', 10)
+	const visiblePlayers = computed(() => players.value.slice(0, playerCount.value))
 
 	function reasonText(r: Reason): string {
 		switch (r.type) {
@@ -65,6 +72,16 @@
 	.remarkable-widget {
 		display: flex;
 		flex-direction: column;
+		height: 100%;
+	}
+	// La liste occupe toute la hauteur ; on n'affiche que les rangées entières
+	// (useFitCount), overflow hidden en filet.
+	.players {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
 	}
 	.player {
 		display: flex;
@@ -104,9 +121,15 @@
 		height: 13px;
 		flex-shrink: 0;
 	}
+	// Une seule ligne : sur un panel étroit, la raison passait sur deux lignes et
+	// les rangées n'avaient plus la même hauteur — useFitCount les suppose
+	// homogènes et en laissait dépasser une.
 	.reason {
 		font-size: 12px;
 		color: var(--text-color-secondary);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.none {
 		color: var(--text-color-secondary);
