@@ -1,6 +1,6 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Boulder, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, FlyingSpinningProjectile, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Boulder, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, FlyingSpinningProjectile, Garbage, SpinningGarbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Path } from './path'
 import { Position } from '@/component/player/game/position'
 import { T, Texture } from '@/component/player/game/texture'
@@ -104,6 +104,10 @@ class Particles {
 	}
 	public addCartridge(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {
 		this.add(new Cartridge(this.game, x, y, z, dx, dy, dz, texture))
+	}
+	// Débris balistique qui tourne sur lui-même (rotation en radians par frame)
+	public addSpinningGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1, angle: number = 0, life: number = Particle.GARBAGE_LIFE) {
+		this.add(new SpinningGarbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale, angle, life))
 	}
 	public addGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1, angle: number = 0, life: number = Particle.GARBAGE_LIFE) {
 		this.add(new Garbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale, angle, life))

@@ -2216,7 +2216,8 @@ class Sugar extends ChipAnimation {
 			const dx = (target.ox - launcher.ox) / flight
 			const dy = (target.oy - launcher.oy) / flight
 			const dz = (0.15 * flight * flight - z0) / flight
-			this.game.particles.addGarbage(launcher.ox, launcher.oy, z0, dx, dy, dz, T.sugar_cube, Math.random() > 0.5 ? 1 : -1, 0, 1.3, 0, flight + 30)
+			// Gros morceau qui tourne sur lui-même en vol (retour de Pierre du 09/09)
+			this.game.particles.addSpinningGarbage(launcher.ox, launcher.oy, z0, dx, dy, dz, T.sugar_cube, 1, 0.07 + Math.random() * 0.04, 2.0, Math.random() * Math.PI * 2, flight + 30)
 		}
 	}
 	public update(dt: number) {
@@ -2268,7 +2269,7 @@ class Popcorn extends ChipAnimation {
 			for (let i = 0; i < 3; ++i) {
 				const angle = Math.random() * Math.PI * 2
 				const dist = 0.8 + Math.random() * 2.2
-				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, T.popcorn, Math.random() > 0.5 ? 1 : -1, 0, 0.6 + Math.random() * 0.5, 0, 70)
+				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, T.popcorn, Math.random() > 0.5 ? 1 : -1, 0, 0.4 + Math.random() * 0.3, 0, 70)
 			}
 		}
 		// Le soin sur chaque allié quand la pluie les atteint

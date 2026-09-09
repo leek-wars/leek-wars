@@ -668,6 +668,18 @@ class Garbage extends FallingParticle {
 	}
 }
 
+// Débris balistique qui tourne sur lui-même (Garbage ignore l'angle au dessin :
+// rotation commentée exprès pour les cailloux). Sert au morceau de sucre du Maïs.
+class SpinningGarbage extends Garbage {
+	public draw(ctx: CanvasRenderingContext2D) {
+		ctx.globalAlpha = this.life / 5
+		ctx.rotate(this.angle)
+		ctx.scale(this.orientation, 1)
+		ctx.drawImage(this.texture, 0, 0, this.texture.width, this.texture.height, -this.texture.width * this.scale / 2, -this.texture.height * this.scale / 2, this.texture.width * this.scale, this.texture.height * this.scale)
+		ctx.globalAlpha = 1
+	}
+}
+
 class ImageParticle extends Particle {
 	public totalLife: number
 	public alpha: number
@@ -1123,4 +1135,4 @@ class PrismParticle extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, FlyingSpinningProjectile, Boulder, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }
+export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, FlyingSpinningProjectile, Boulder, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, SpinningGarbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }
