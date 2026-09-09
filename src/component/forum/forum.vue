@@ -351,6 +351,16 @@
 		justify-content: center;
 		padding: 10px 4px;
 	}
+	// v3 (valeurs de Pierre, 2026-09-09) : les cellules perdent leur marge
+	// horizontale, c'est le marqueur lu / non lu, élargi, qui décale le texte —
+	// la rangée respire à gauche sans que les colonnes de chiffres bougent.
+	body:not(.v2) .category > div {
+		padding: 10px 0;
+	}
+	body:not(.v2) .category > .seen {
+		width: auto;
+		padding: 10px 30px;
+	}
 	.category .dot {
 		font-size: 20px;
 		color: var(--text-color-secondary);

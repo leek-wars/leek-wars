@@ -1278,7 +1278,15 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       retoucher ; latin, latin étendu, cyrillique, grec ; de vraies capitales
       accentuées. Cinq sous-ensembles woff2 (`public/fonts/tiny5-*`). Les
       trois polices restent déclarées, le choix tient au jeton
-      `--font-display` de `leekwars-theme-v3.scss`.
+      `--font-display` de `leekwars-theme-v3.scss`. Pierre : « ah elle est
+      stylée ! » — **Tiny5 est la police d'affichage**.
+  - **Page de groupe** (« mettre deux colonnes ici si y'a de la place ») :
+    le panneau du superviseur et le chat entrent dans un `container large`,
+    côte à côte dès que deux fois 400 px tiennent, l'un sous l'autre sinon.
+  - **Rangées du forum** (`forum.vue`, valeurs de Pierre) : en v3 les
+    cellules passent en `padding: 10px 0` et le marqueur lu / non lu en
+    `padding: 10px 30px`, largeur automatique — c'est lui qui donne l'air à
+    gauche de la rangée.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
