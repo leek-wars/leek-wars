@@ -1242,6 +1242,14 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     en monospace, le cristal qui dépasse comme sur grand écran. Les habs
     prennent la place (dix chiffres), les cristaux la leur ; côte à côte à
     droite de l'avatar, le tiroir de 250 px coupait le montant.
+  - **Barre du haut, grand écran** (coquille, « uniformiser les polices,
+    tailles ») : mesuré avant — compteurs en monospace 12,5 px, nom en Inter
+    17 px, icônes de 20, 21, 26 px, écarts de 6 px. Après : une seule
+    écriture pour les trois compteurs et le nom, Inter 14 px demi-gras à
+    chiffres tabulaires ; toutes les icônes à 22 px (le cristal garde ses
+    48 px de haut, l'avatar remplit le bouton) ; un seul écart de 8 px. Le
+    parti pris monospace des « topstat » du mockup cède à l'uniformité
+    demandée.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé

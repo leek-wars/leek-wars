@@ -388,16 +388,42 @@ body:not(.v2) {
 	}
 
 	/* Compteurs de la barre du haut : le mockup en fait des « topstat », des
-	   boîtes bordées, pas des boutons. Chiffres en monospace et non dans la
-	   police pixel : c'est ce que fait le mockup (`.topstat` est en `--f-mono`),
-	   et un montant à onze chiffres doit rester lisible d'un coup d'œil. */
+	   boîtes bordées, pas des boutons. Ils étaient en monospace de 12,5 px à
+	   côté d'un nom d'éleveur en Inter 17 px, d'icônes de 20, 21 et 26 px et
+	   d'écarts de 6 px (Pierre, 2026-09-09 : « uniformiser les polices,
+	   tailles »). Une seule écriture pour tout ce que la barre dit — les trois
+	   compteurs et le nom : Inter 14 px demi-gras, chiffres tabulaires pour
+	   qu'un montant ne tremble pas quand il change. Une seule taille d'icône,
+	   22 px, et un seul écart, 8 px. Le cristal garde sa hauteur de 48 px, sa
+	   signature ; l'avatar remplit le bouton. */
+	.header .header-farmer .header-button {
+		font-family: var(--font-body);
+		font-size: 14px;
+		font-weight: 600;
+		letter-spacing: 0;
+		font-variant-numeric: tabular-nums;
+		gap: 8px;
+	}
 	.header .header-button .farmer-habs,
 	.header .header-button .farmer-crystals,
-	.header .header-button .farmer-fights {
-		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
-		font-size: 12.5px;
-		font-weight: 600;
-		letter-spacing: 0.02em;
+	.header .header-button .farmer-fights,
+	.header .header-farmer .header-button .text {
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		letter-spacing: inherit;
+	}
+	.header .header-farmer .header-button .v-icon {
+		font-size: 22px;
+		width: 22px;
+		height: 22px;
+		opacity: 1;
+	}
+	.header .header-button .hab {
+		width: 22px;
+		height: 22px;
+		background-size: contain;
+		background-position: center;
 	}
 
 	/* Avatars : carrés PARTOUT (décision du 2026-08-14, la question ouverte est
@@ -446,7 +472,7 @@ body:not(.v2) {
 	   `padding-right` du gabarit ne sépare plus rien, il finit au bord. */
 	.header .header-button .hab,
 	.header .fights-button .v-icon {
-		margin-right: 6px;
+		margin-right: 0;
 	}
 	/* Le cristal dépasse du compteur en haut et en bas, comme sur la barre du v2
 	   — c'est ce qui le distingue des autres pastilles, et il l'avait perdu en
@@ -457,7 +483,7 @@ body:not(.v2) {
 	.header .header-button .crystal {
 		height: 48px;
 		width: 20px;
-		margin: 0 6px 0 0;
+		margin: 0;
 		background-size: contain;
 		background-position: center;
 	}
