@@ -100,7 +100,7 @@
 				     « 3 mois », « 2 ans »). Mène à la page d'abonnement. Absent sans LW+. -->
 				<div v-if="$store.state.farmer.lwplus && lwplusRemaining" class="button-wrapper">
 					<router-link to="/lwplus" :class="{'header-active': $route.path.startsWith('/lwplus')}">
-						<div class="header-button lwplus-button" @pointerenter="spinPlus">
+						<div class="header-button lwplus-button" @pointerenter="spinPlus" @pointerleave="lwplusLogo?.rest()">
 							<lwplus-logo ref="lwplusLogo" variant="plus" alt="LW+" class="lwplus-icon" />
 							<span class="text">{{ lwplusRemaining }}</span>
 						</div>
@@ -243,10 +243,10 @@
 	// mois sous un an, années ensuite. Les libellés abrégés viennent de main.n_*.
 	const lwplusLogo = ref<InstanceType<typeof LwplusLogo> | null>(null)
 
-	// Souris seulement : sur un écran tactile, l'appui déclenche le survol et le
-	// tour n'a pas lieu d'être (même règle que dans lwplus-logo.vue).
+	// Le survol du BOUTON fait tourner le « + », pas seulement le survol de
+	// l'image, qui est petite. Le composant filtre lui-même le tactile.
 	function spinPlus(event: PointerEvent) {
-		if (!event.pointerType || event.pointerType === 'mouse') { lwplusLogo.value?.spin() }
+		lwplusLogo.value?.spin(event)
 	}
 	const lwplusRemaining = computed(() => {
 		const until = store.state.farmer?.lwplus_until ?? 0

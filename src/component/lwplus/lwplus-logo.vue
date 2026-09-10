@@ -1,99 +1,64 @@
 <template>
-	<img class="lwplus-logo" :src="src" :alt="alt" :width="size.w" :height="size.h" draggable="false" @pointerenter="onPointerEnter" @error="onError">
+	<img
+		class="lwplus-logo"
+		:src="src"
+		:alt="alt"
+		:width="size.w"
+		:height="size.h"
+		draggable="false"
+		@pointerenter="onPointerEnter"
+		@pointerleave="rest"
+		@error="rest">
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 // Logo LW+ : rendu 3D doré pré-calculé (Blender, scripts/generate-lwplus-logo.py).
-// Au repos c'est une image FIXE : le WebP animé jouerait son tour tout seul au
-// premier affichage, et Pierre n'en veut nulle part (10/09). Le tour ne part
-// qu'au survol à la souris, en échangeant la source contre le WebP animé, qui
-// joue UN tour (1 s) puis s'arrête sur son image de fin — laquelle est aussi
-// l'image de départ, donc identique à la fixe : pas de saut à l'échange.
 //
-// Un navigateur ne redémarre pas une image animée déjà en cache (changer le
-// fragment de l'URL ne suffit pas, vérifié sur Chrome) : le fichier est donc
-// chargé une fois en Blob et chaque tour reçoit une URL d'objet neuve, que le
-// navigateur traite comme une image nouvelle, sans requête réseau.
+// Au repos c'est une image FIXE, et le WebP animé (qui tourne en boucle) n'est
+// mis en source que pendant le survol À LA SOURIS. Deux images, un échange de
+// `src` : rien d'autre.
 //
-// Tout ce mécanisme est un CONFORT : si le Blob n'arrive pas, n'est pas une
-// image, ou si son URL ne s'affiche pas (WebView de l'appli Android, portail de
-// la beta qui répond du HTML sur un asset…), on retombe sur le fichier et
-// l'image reste à l'écran. Elle ne doit jamais casser pour une animation.
+// Les deux versions précédentes essayaient de rejouer UN tour à chaque survol,
+// avec un WebP en boucle unique relancé par une URL d'objet. Ça ne tient pas :
+// un navigateur ne rejoue pas de façon fiable une animation déjà terminée
+// (vérifié, l'image restait sur son image de fin), et l'URL d'objet ne s'affiche
+// pas dans la WebView de l'appli Android — l'image y cassait au premier appui.
+// La boucle infinie montrée pendant le survol donne le même effet à l'œil, sans
+// rien de tout ça.
+//
+// La dernière image de l'animation est identique à la première, donc l'échange
+// ne saute ni à l'entrée ni à la sortie.
 const props = withDefaults(defineProps<{
 	variant?: 'lwplus' | 'plus'
 	alt?: string
 }>(), { variant: 'lwplus', alt: 'LW+' })
 
 const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
-const base = computed(() => '/image/lwplus/' + props.variant + '_still.webp')
+const still = computed(() => '/image/lwplus/' + props.variant + '_still.webp')
 const animated = computed(() => '/image/lwplus/' + props.variant + '.webp')
 const size = computed(() => props.variant === 'lwplus' ? { w: 800, h: 400 } : { w: 400, h: 400 })
-const src = ref(base.value)
-const SPIN_DURATION = 1000
+const src = ref(still.value)
 
-let spinningUntil = 0
-let blob: Blob | null = null
-let objectUrl = ''
-
-function releaseObjectUrl() {
-	if (objectUrl) {
-		URL.revokeObjectURL(objectUrl)
-		objectUrl = ''
-	}
+// Souris seulement : sur un écran tactile l'appui déclenche quand même le
+// survol, et il n'y a pas de sortie pour revenir à l'image fixe.
+function spin(event?: PointerEvent) {
+	if (reduced) { return }
+	if (event && event.pointerType && event.pointerType !== 'mouse') { return }
+	src.value = animated.value
 }
 
-// Souris seulement : sur un écran tactile un appui déclenche quand même le
-// survol, et l'URL d'objet ne s'affiche pas dans la WebView de l'appli — l'image
-// cassait au premier appui (signalé par Pierre depuis la beta, 10/09). Sans
-// survol, pas de tour : le fichier suffit.
-function isHoverPointer(event: PointerEvent) {
-	return !event.pointerType || event.pointerType === 'mouse'
+// Sert aussi de filet sur `error` : si l'animé ne s'affiche pas, on garde la fixe.
+function rest() {
+	src.value = still.value
 }
 
 function onPointerEnter(event: PointerEvent) {
-	if (isHoverPointer(event)) { spin() }
+	spin(event)
 }
 
-function spin() {
-	if (reduced || !blob) { return }
-	const now = Date.now()
-	if (now < spinningUntil) { return }
-	spinningUntil = now + SPIN_DURATION
-	const previous = objectUrl
-	objectUrl = URL.createObjectURL(blob)
-	src.value = objectUrl
-	// L'ancienne URL n'est libérée qu'une fois la nouvelle affichée
-	if (previous) { setTimeout(() => URL.revokeObjectURL(previous), 500) }
-}
-
-// L'URL d'objet n'a pas pu s'afficher : on revient au fichier et on renonce aux
-// tours suivants, plutôt que de laisser une image cassée à l'écran.
-function onError() {
-	if (!src.value.startsWith('blob:')) { return }
-	blob = null
-	releaseObjectUrl()
-	src.value = base.value
-}
-
-defineExpose({ spin })
-
-onMounted(async () => {
-	if (reduced) { return }
-	try {
-		const response = await fetch(animated.value)
-		if (!response.ok) { return }
-		const loaded = await response.blob()
-		// Un portail d'authentification répond 200 avec du HTML : ce Blob-là
-		// donnerait une image cassée au premier survol.
-		if (!loaded.type.startsWith('image/')) { return }
-		blob = loaded
-	} catch (_e) {
-		// Sans Blob, l'image reste celle du fichier et ne tourne qu'au chargement
-	}
-})
-onUnmounted(releaseObjectUrl)
+defineExpose({ spin, rest })
 </script>
 
 <style lang="scss" scoped>

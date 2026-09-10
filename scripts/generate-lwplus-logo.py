@@ -1,12 +1,13 @@
 """Logo LW+ doré en 3D : génère public/image/lwplus/*.webp (#3303).
 
 Usage : blender -b --python scripts/generate-lwplus-logo.py -- <variant> <dossier> [still|anim] [hauteur] [contour]
-Puis :  img2webp -loop 1 -d 33 -lossy -q 80 -m 4 <dossier>/frames_<variant>/f_*.png -o <variant>.webp
+Puis :  img2webp -loop 0 -d 33 -lossy -q 80 -m 4 <dossier>/frames_<variant>/f_*.png -o <variant>.webp
         cwebp -q 82 -alpha_q 100 -m 6 <dossier>/frames_<variant>/f_0001.png -o <variant>_still.webp
 
-Le `_still` est l'image affichée au repos : le WebP animé jouerait son tour tout
-seul au premier affichage. Sa dernière image est identique à la première, donc
-l'échange au survol ne saute pas.
+Le `_still` est l'image affichée au repos ; l'animé, en boucle INFINIE
+(`-loop 0`), n'est montré que pendant le survol. Une boucle unique ne se rejoue
+pas de façon fiable au survol suivant : le navigateur garde l'image de fin.
+La dernière image est identique à la première, donc l'échange ne saute pas.
 
 Assets livrés : `anim 400 6` pour les deux variantes.
 variant : lwplus | plus
