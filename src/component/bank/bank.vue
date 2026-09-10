@@ -64,9 +64,17 @@
 				</div>
 			</panel>
 
-			<!-- Mois de Leek Wars + (#3303), en euros comme en cristaux. Même composant
-			     que dans le marché : une seule grille de prix à maintenir. -->
-			<lwplus-packs />
+			<!-- Colonne Leek Wars + (#3303) : les mois à l'unité, puis la chronologie
+			     de fidélité. Les deux panneaux s'empilent dans la même colonne pour ne
+			     pas casser le basculement en deux colonnes ci-dessous. -->
+			<div class="lwplus-column">
+				<!-- Mois en euros comme en cristaux. Même composant que dans le marché :
+				     une seule grille de prix à maintenir. -->
+				<lwplus-packs />
+				<!-- Ce que le temps d'abonnement cumulé débloque. Même composant que
+				     sur /lwplus. -->
+				<lwplus-timeline />
+			</div>
 		</div>
 
 		<div v-if="items" class="items-header">
@@ -162,6 +170,7 @@ import Popup from '@/component/popup.vue'
 // Chargé par son fichier .i18n : c'est lui qui accroche les traductions au
 // composant (voir le plugin i18n de vite.config.ts).
 const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
+const LwplusTimeline = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-timeline.${locale}.i18n`))
 
 interface Pack { id: number; crystals: number; bonus: number; prices: Record<string, number> }
 
@@ -347,8 +356,11 @@ watch(() => LeekWars.currency, () => {
 		& > .crystals-panel {
 			flex: 3 1 720px;
 		}
-		& > :deep(.lwplus-packs) {
+		& > .lwplus-column {
 			flex: 1 1 480px;
+			// `min-width: 0` : sans lui, un enfant flex refuse de descendre sous la
+			// largeur de son contenu et la colonne des cristaux se fait écraser.
+			min-width: 0;
 		}
 	}
 	.items-grid {

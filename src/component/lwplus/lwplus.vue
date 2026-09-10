@@ -76,6 +76,11 @@
 		</panel>
 		</div>
 
+		<!-- Chronologie de fidélité : ce que le temps cumulé d'abonnement débloque.
+		     Sous l'offre, pas au-dessus — c'est un argument de durée, il se lit après
+		     le prix. Affichée aussi aux non-abonnés, entièrement verrouillée. -->
+		<lwplus-timeline v-if="!loading" />
+
 		<lwplus-thanks v-model="thanksDialog" :price="$t('price_per_month', [priceEur])" :until="until" />
 	</div>
 </template>
@@ -90,6 +95,7 @@ import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
 
 const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
 const LwplusThanks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-thanks.${locale}.i18n`))
+const LwplusTimeline = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-timeline.${locale}.i18n`))
 
 defineOptions({ name: 'lwplus', i18n: {}, mixins: [...mixins] })
 
