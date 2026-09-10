@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="signup-page">
 		<div v-if="godfather_info" class="godfather-invite-banner">
 			<avatar :farmer="(godfather_info as any)" class="godfather-avatar" />
 			<div class="godfather-text">
@@ -577,6 +577,15 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le v3 ouvre toutes les pages en pleine largeur (cf. « Largeur » dans
+	// leekwars-shell-v3.scss) : la coquille (menu + panneau social) encadre le
+	// contenu. Mais l'inscription est vue déconnecté, sans menu ni panneau
+	// social : sur un écran large, le formulaire et les textes s'étiraient d'un
+	// bord à l'autre. Cette page-là se borne donc elle-même et se centre.
+	.signup-page {
+		max-width: 1400px;
+		margin: 0 auto;
+	}
 	.groups-teaser {
 		padding: 5px;
 		.teaser-intro {

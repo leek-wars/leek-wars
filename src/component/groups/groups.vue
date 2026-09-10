@@ -211,42 +211,37 @@
 				</div>
 			</div>
 
+			<!-- Les quatre témoignages sont des enfants directs de la grille : les
+			     trois derniers étaient empilés dans un div intermédiaire séparé par
+			     des <br>, ce qui n'occupait que deux colonnes et laissait le reste
+			     de la largeur vide. -->
 			<div class="testimonies">
-
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
-					<div class="card small">
+					<div class="card">
 						« {{ $t('testimony_esiea') }} »
 					</div>
 					<img src="/image/partner/esiea.png">
 				</div>
 
-				<div>
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
 						« {{ $t('testimony_xplor') }} »
 					</div>
 					<img src="/image/partner/xplor.svg">
 				</div>
-				<br>
 
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
 						« {{ $t('testimony_n_hitec') }} »
 					</div>
 					<img src="/image/partner/n-hitec.png">
 				</div>
-				<br>
 
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
 						« {{ $t('testimony_norauto') }} »
 					</div>
 					<img src="/image/partner/norauto.png">
-				</div>
 				</div>
 			</div>
 
@@ -347,6 +342,13 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+// Page de présentation, faite de texte courant : en pleine largeur du v3 (cf.
+// « Largeur » dans leekwars-shell-v3.scss) les lignes devenaient illisibles sur
+// un grand écran. Comme l'inscription, elle se borne et se centre.
+.page {
+	max-width: 1400px;
+	margin: 0 auto;
+}
 .panel {
 	padding: 15px;
 }
@@ -416,9 +418,13 @@ h2 {
 	margin-bottom: 10px;
 	// color: var(--primary);
 }
+// `auto-fit` et non `auto-fill` : la grille tient 4 colonnes sur la largeur de
+// la page, mais il n'y a que 3 tuiles — `auto-fill` gardait la 4e colonne vide
+// et tassait les tuiles à gauche. `auto-fit` réduit les colonnes au nombre de
+// tuiles, qui se partagent alors toute la largeur.
 .targets {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	gap: 30px;
 	margin-top: 15px;
 	margin-bottom: 30px;
@@ -427,8 +433,21 @@ h2 {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
+		// Les 4 poireaux totalisent un peu plus que la largeur de la tuile (274 px
+		// de svg pour 270 px utiles) : en flux inline, le dernier passait à la
+		// ligne. La rangée passe en flex sans retour, et les svg se laissent
+		// comprimer des quelques pourcents qui manquent — ils gardent leur
+		// proportion (preserveAspectRatio), et la tuile reste bonne jusqu'à sa
+		// largeur minimale de 250 px.
 		.image {
 			margin-bottom: 10px;
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: flex-end;
+			justify-content: center;
+			> * {
+				min-width: 0;
+			}
 		}
 		.title {
 			font-size: 20px;
@@ -553,9 +572,17 @@ h2 {
 		flex-wrap: wrap;
 	}
 }
+// 300 px de colonne minimale : sur la largeur bornée de la page (1400 px, soit
+// 1338 px utiles dans le panneau), les quatre témoignages tiennent sur une seule
+// rangée et occupent toute la largeur — à 320 px il n'en rentrait que trois, et
+// le quatrième repartait seul sur une rangée aux deux tiers vide. La grille
+// retombe ensuite à 3, 2 et 1 colonne à mesure que la fenêtre rétrécit.
+// `align-items: start` évite que les trois courts s'étirent sur la hauteur du
+// long (celui de l'ESIEA) : chaque logo reste collé sous son propre encadré.
 .testimonies {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	align-items: start;
 	margin-top: 40px;
 	margin-bottom: 10px;
 	gap: 25px;
