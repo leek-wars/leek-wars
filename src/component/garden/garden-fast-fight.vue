@@ -13,7 +13,10 @@
 						:disabled="allowed && disabled"
 						@click="allowed ? launch(count) : router.push('/lwplus')">
 						<v-icon>{{ allowed ? 'mdi-sword-cross' : 'mdi-lock' }}</v-icon>&nbsp;{{ t('fast_fight_n', [count]) }}
-						<span class="plus-badge">LW+</span>
+						<!-- Le « + » doré marque la fonctionnalité LW+. Image statique et
+						     légère (2,6 ko) : le rendu animé sert au hero et à l'en-tête,
+						     il serait trop lourd sur une page vue par tout le monde. -->
+						<img class="plus-badge" src="/image/lwplus/plus_badge.webp" alt="LW+" width="128" height="128">
 					</v-btn>
 					<v-menu v-model="menu" location="bottom end" :disabled="!allowed || disabled || loading">
 						<template #activator="{ props: menuProps }">
@@ -119,14 +122,11 @@
 		border-left: 1px solid rgba(0, 0, 0, 0.2);
 	}
 	.plus-badge {
+		width: 22px;
+		height: 22px;
 		margin-left: 6px;
-		padding: 0 5px;
-		border-radius: var(--radius-tiny);
-		background: var(--gold);
-		color: var(--gold-text);
-		font-size: 11px;
-		font-weight: bold;
-		line-height: 16px;
+		margin-right: -2px;
+		vertical-align: middle;
 	}
 	.count-menu {
 		background: var(--background);
@@ -156,6 +156,12 @@
 	.split.locked .main {
 		opacity: 0.75;
 		filter: saturate(0.5);
+		// Un enfant ne peut pas annuler le filtre du parent, il le compose : on
+		// resature le badge d'autant pour que le « + » reste doré. C'est lui qui
+		// dit pourquoi le bouton est verrouillé.
+		.plus-badge {
+			filter: saturate(2);
+		}
 	}
 	.upsell {
 		display: flex;
