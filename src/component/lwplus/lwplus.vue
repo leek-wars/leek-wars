@@ -7,7 +7,7 @@
 		<panel class="first hero-panel">
 			<div class="hero">
 				<!-- Le « + » fait un tour au survol et toutes les 10 s, cf. lwplus-logo.vue -->
-				<lwplus-logo class="mark" />
+				<lwplus-logo class="mark" :period="0" />
 				<div class="pitch">{{ $t('pitch') }}</div>
 				<div class="price">
 					<span class="amount">{{ $t('price_per_month', [priceEur]) }}</span>
@@ -304,12 +304,16 @@ async function resume() {
 		// Le seul vrai aplat d'or de la page : c'est lui qui porte l'identité.
 		.amount {
 			display: inline-block;
-			background: var(--gold);
+			// `--gold-bright` et pas `--gold` : en clair, `--gold` est un or
+			// assombri calibré comme SURFACE de panneau ; en pastille sous une
+			// encre noire il vire au moutarde terne (retour de Pierre, 10/09).
+			background: var(--gold-bright);
 			color: var(--gold-text);
-			padding: 6px 16px;
+			padding: 8px 20px;
 			border-radius: var(--radius);
-			font-size: 24px;
+			font-size: 26px;
 			font-weight: 700;
+			box-shadow: 0 2px 10px color-mix(in srgb, var(--gold-bright) 35%, transparent);
 		}
 		.notice {
 			display: block;
@@ -357,7 +361,6 @@ async function resume() {
 		.free-value {
 			font-size: 12px;
 			color: var(--text-color-secondary);
-			opacity: 0.7;
 		}
 	}
 	@media screen and (max-width: 700px) {
@@ -385,8 +388,9 @@ async function resume() {
 		}
 	}
 	.pay-btn {
-		background: var(--gold);
+		background: var(--gold-bright);
 		color: var(--gold-text);
+		font-weight: 600;
 		margin-top: 12px;
 	}
 	.canceled-notice, .not-verified, .cancel-anytime {

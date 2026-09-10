@@ -1,6 +1,6 @@
 <template>
 	<div class="lwplus-packs">
-	<panel :title="$t('title')" icon="mdi-star-four-points">
+	<panel :title="compact ? $t('months_title') : $t('title')" icon="mdi-star-four-points">
 		<div v-if="!compact" class="pitch">
 			<!-- Le « + » seul, signe court de LW+ ; un tour au survol et toutes les 10 s -->
 			<lwplus-logo variant="plus" alt="" class="plus-mark" />
@@ -43,7 +43,7 @@
 		<div v-if="euroPack" class="euro-payment">
 			<loader v-if="stripeLoading" />
 			<div id="lwplus-packs-payment-element"></div>
-			<v-btn v-if="stripeReady" color="primary" size="large" :loading="paying" block class="pay-btn" @click="confirmEuros">
+			<v-btn v-if="stripeReady" color="primary" variant="flat" size="large" :loading="paying" block class="pay-btn" @click="confirmEuros">
 				<template #prepend><v-icon>mdi-lock</v-icon></template>
 				{{ $t('pay_for', [monthsLabel(euroPack.months)]) }}
 			</v-btn>
@@ -381,7 +381,10 @@ async function confirmEuros() {
 		right: 8px;
 		padding: 1px 8px;
 		border-radius: 10px;
-		background: var(--gold);
+		// `--gold-bright` et pas `--gold` : en thème clair `--gold` est un or
+		// assombri calibré comme surface de panneau, il vire au moutarde terne
+		// sous une encre noire (retour de Pierre, 10/09).
+		background: var(--gold-bright);
 		color: var(--gold-text);
 		font-size: 12px;
 		font-weight: 600;
@@ -397,10 +400,9 @@ async function confirmEuros() {
 	.euro-payment {
 		padding: 0 16px 16px;
 	}
+	// Vert comme les boutons d'achat : c'est la fin du même geste.
 	.pay-btn {
 		margin-top: 12px;
-		background: var(--gold);
-		color: var(--gold-text);
 	}
 	.message {
 		padding: 0 16px 16px;
