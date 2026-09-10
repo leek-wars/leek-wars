@@ -175,12 +175,14 @@ class Bulb extends FightEntity {
 		ctx.save()
 		ctx.globalAlpha = SHADOW_ALPHA
 		ctx.scale(1, -SHADOW_SCALE)
-		// Un bulbe FLOTTE : son ombre reste au sol pendant que son corps est décalé,
-		// d'où ce translate qui défait celui de startDraw. Une plante, elle, est dans
-		// le sol : son ombre doit partir du même point que son pied. Défaire le z dans
-		// un repère déjà retourné et écrasé l'éloignerait de z + z × SHADOW_SCALE, ce
-		// qui se voyait franchement sous le Prototaxite.
-		if (!this.plant) { ctx.translate(0, - this.z) }
+		// L'ombre est projetée SUR LE SOL : elle doit rester au niveau de la case,
+		// quel que soit le décalage vertical du corps. Ce repère est déjà retourné et
+		// écrasé par SHADOW_SCALE, donc un `translate(0, -z)` ne rattrape que
+		// -z × SHADOW_SCALE de l'écran, soit la moitié du décalage : il faut diviser
+		// par SHADOW_SCALE pour l'annuler exactement. Le bulbe garde la version
+		// historique (à moitié rattrapée), qui fait justement flotter son ombre sous
+		// lui ; une plante enfoncée de 11 px, elle, avait son ombre 11 px trop bas.
+		ctx.translate(0, - this.z / (this.plant ? SHADOW_SCALE : 1))
 		ctx.rotate(-Math.PI / 4)
 		this.drawBody(ctx, texture.shadow!)
 		ctx.restore()
