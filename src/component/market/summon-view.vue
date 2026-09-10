@@ -5,7 +5,7 @@
 			<div class="summon-image">
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
 			</div>
-			<div>
+			<div class="stats">
 				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="{ level: summon.level ?? 1 }" :test="true">
 					<div class="characteristic" v-bind="props">
 						<img :src="'/image/charac/' + c + '.png'" v-bind="props">
@@ -63,13 +63,22 @@ const CHIPS = CHIPSImport
 		background: var(--background-secondary);
 		display: block;
 	}
+	// Trois colonnes de même largeur : l'image, puis les deux colonnes de
+	// caractéristiques. Sans base fixe (`flex: 1 1 0`), sinon l'image garde ses
+	// 90 px et les stats prennent tout le reste.
 	.characteristics {
 		display: flex;
 		align-items: center;
 	}
+	.characteristics .stats {
+		flex: 2 1 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+	// L'ordre de characteristics_table est déjà entrelacé pour une lecture en
+	// deux colonnes ligne par ligne (vie | magie, force | fréquence...).
 	.characteristic {
-		display: inline-block;
-		width: 50%;
+		width: auto;
 		padding: 2px 0;
 	}
 	.summon h4 {
@@ -78,7 +87,7 @@ const CHIPS = CHIPSImport
 		font-size: 15px;
 	}
 	.summon-image {
-		flex: 1 0 90px;
+		flex: 1 1 0;
 		text-align: center;
 		max-height: 120px;
 	}
@@ -111,6 +120,7 @@ const CHIPS = CHIPSImport
 	.summon .chips {
 		display: flex;
 		flex-wrap: wrap;
+		justify-content: center;
 		gap: 6px;
 		padding: 3px;
 	}
