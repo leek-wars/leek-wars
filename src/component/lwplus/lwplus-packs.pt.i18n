@@ -20,6 +20,11 @@
 	"pay_for": "Pagar {0}",
 	"bought": "Obrigado! Ativa até {0}.",
 	"not_enough_crystals": "Mais alguns cristais e será seu!",
+	"confirm_title": "Confirmar a compra",
+	"confirm_question": "Comprar {0} de Leek Wars +?",
+	"confirm_cost": "Custo",
+	"confirm_after": "Saldo após a compra",
+	"confirm_buy": "Comprar",
 	"generic_error": "Ocorreu um erro. Tente novamente.",
 	"unavailable": "A subscrição está temporariamente indisponível.",
 	"activation_pending": "Pagamento aceite. A ativação pode demorar alguns instantes."

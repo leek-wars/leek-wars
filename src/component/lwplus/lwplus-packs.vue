@@ -32,7 +32,7 @@
 					<span v-else>{{ price(pack) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
 				</v-btn>
 
-				<v-btn class="buy-crystals" color="primary" variant="tonal" :disabled="busy || !enough(pack)" :loading="buying === pack.id" @click="payCrystals(pack)">
+				<v-btn class="buy-crystals" color="primary" variant="tonal" :disabled="busy || !enough(pack)" :loading="buying === pack.id" @click="askCrystals(pack)">
 					{{ $filters.number(pack.crystals) }}&nbsp;<span class="crystal"></span>
 				</v-btn>
 			</div>
@@ -64,16 +64,39 @@
 			</div>
 		</div>
 	</panel>
+
+	<!-- Les cristaux partent sans retour possible : on confirme, comme au marché. -->
+	<popup v-model="crystalsDialog" :width="520">
+		<template #icon><v-icon>mdi-star-four-points</v-icon></template>
+		<template #title><span>{{ $t('confirm_title') }}</span></template>
+		<div v-if="confirmPack" class="confirm">
+			<div>{{ $t('confirm_question', [monthsLabel(confirmPack.months)]) }}</div>
+			<div class="line">
+				<b>{{ $t('confirm_cost') }}</b> : {{ $filters.number(confirmPack.crystals) }}&nbsp;<span class="crystal"></span>
+			</div>
+			<div class="line">
+				<b>{{ $t('confirm_after') }}</b> : {{ $filters.number(($store.state.farmer?.crystals ?? 0) - confirmPack.crystals) }}&nbsp;<span class="crystal"></span>
+			</div>
+		</div>
+		<template #actions>
+			<div v-ripple @click="crystalsDialog = false">{{ $t('main.cancel') }}</div>
+			<div v-ripple class="green" @click="confirmCrystals">{{ $t('confirm_buy') }}</div>
+		</template>
+	</popup>
+
+	<lwplus-thanks v-model="thanksDialog" :months-label="thanksMonths" :crystals="thanksCrystals" :price="thanksPrice" :until="thanksUntil" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, defineAsyncComponent } from 'vue'
 import { loadStripe, type Stripe, type StripeElements } from '@stripe/stripe-js'
 import { LeekWars } from '@/model/leekwars'
-import { mixins, useNamespacedT } from '@/model/i18n'
+import { locale, mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
 import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
+
+const LwplusThanks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-thanks.${locale}.i18n`))
 
 defineOptions({ name: 'LwplusPacks', i18n: {}, mixins: [...mixins] })
 
@@ -108,6 +131,34 @@ const paying = ref(false)
 const message = ref('')
 const error = ref('')
 const until = ref(store.state.farmer?.lwplus_until ?? 0)
+
+// Confirmation avant de dépenser des cristaux, puis remerciement après l'achat.
+const crystalsDialog = ref(false)
+const confirmPack = ref<MonthPack | null>(null)
+const thanksDialog = ref(false)
+const thanksMonths = ref<string | undefined>(undefined)
+const thanksCrystals = ref<number | undefined>(undefined)
+const thanksPrice = ref<string | undefined>(undefined)
+const thanksUntil = ref(0)
+
+function askCrystals(pack: MonthPack) {
+	if (busy.value) { return }
+	confirmPack.value = pack
+	crystalsDialog.value = true
+}
+
+function confirmCrystals() {
+	crystalsDialog.value = false
+	if (confirmPack.value) { payCrystals(confirmPack.value) }
+}
+
+function showThanks(months: string, until: number, crystals?: number, priceText?: string) {
+	thanksMonths.value = months
+	thanksCrystals.value = crystals
+	thanksPrice.value = priceText
+	thanksUntil.value = until
+	thanksDialog.value = true
+}
 
 const euroPack = ref<MonthPack | null>(null)
 const stripeLoading = ref(false)
@@ -151,6 +202,12 @@ function discount(pack: MonthPack) {
 	return Math.round((1 - pack.prices.EUR / full) * 100)
 }
 
+// Même composition que le bouton d'achat : symbole avant ou après selon la devise.
+function priceLabel(pack: MonthPack) {
+	const currency = LeekWars.currencies[LeekWars.currency]
+	return currency.prefix ? `${currency.symbol}${price(pack)}` : `${price(pack)} ${currency.symbol}`
+}
+
 function enough(pack: MonthPack) {
 	return (store.state.farmer?.crystals ?? 0) >= pack.crystals
 }
@@ -188,6 +245,7 @@ async function payCrystals(pack: MonthPack) {
 		store.commit('update-crystals', -pack.crystals)
 		applyUntil(data.lwplus_until)
 		message.value = t('bought', [formatDate(data.lwplus_until)])
+		showThanks(monthsLabel(pack.months), data.lwplus_until, pack.crystals)
 		emit('bought')
 	} catch (err) {
 		const code = (err as { error?: string } | null)?.error
@@ -270,10 +328,12 @@ async function confirmEuros() {
 	// Le paiement est passé chez Stripe ; c'est execute-stripe-payment (ou le webhook,
 	// en filet) qui accorde les mois. On confirme tout de suite pour ne pas faire
 	// attendre le joueur, l'octroi est idempotent des deux côtés.
+	const paidPack = euroPack.value
 	try {
 		const data = await LeekWars.post('bank/execute-stripe-payment', { payment_intent_id: paymentIntentId })
 		applyUntil(data.lwplus_until)
 		message.value = t('bought', [formatDate(data.lwplus_until)])
+		if (paidPack) { showThanks(monthsLabel(paidPack.months), data.lwplus_until, undefined, priceLabel(paidPack)) }
 		euroPack.value = null
 		emit('bought')
 	} catch (_err) {
@@ -330,6 +390,12 @@ async function confirmEuros() {
 	@media screen and (max-width: 420px) {
 		.benefits {
 			grid-template-columns: 1fr;
+		}
+	}
+	.confirm {
+		padding: 16px;
+		.line {
+			margin-top: 8px;
 		}
 	}
 	.active-panel .status {

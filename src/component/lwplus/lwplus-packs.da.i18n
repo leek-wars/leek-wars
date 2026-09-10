@@ -20,6 +20,11 @@
 	"pay_for": "Betal {0}",
 	"bought": "Tak! Aktivt indtil {0}.",
 	"not_enough_crystals": "Nogle få krystaller mere, og den er din!",
+	"confirm_title": "Bekræft købet",
+	"confirm_question": "Køb {0} af Leek Wars +?",
+	"confirm_cost": "Pris",
+	"confirm_after": "Saldo efter købet",
+	"confirm_buy": "Køb",
 	"generic_error": "Der opstod en fejl. Prøv igen.",
 	"unavailable": "Abonnementet er midlertidigt utilgængeligt.",
 	"activation_pending": "Betaling accepteret. Aktiveringen kan tage et øjeblik."

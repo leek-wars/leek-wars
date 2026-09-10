@@ -20,6 +20,11 @@
 	"pay_for": "{0} betalen",
 	"bought": "Bedankt! Actief tot {0}.",
 	"not_enough_crystals": "Nog een paar kristallen en het is van jou!",
+	"confirm_title": "Aankoop bevestigen",
+	"confirm_question": "{0} Leek Wars + kopen?",
+	"confirm_cost": "Kosten",
+	"confirm_after": "Saldo na aankoop",
+	"confirm_buy": "Kopen",
 	"generic_error": "Er is een fout opgetreden. Probeer het opnieuw.",
 	"unavailable": "Het abonnement is tijdelijk niet beschikbaar.",
 	"activation_pending": "Betaling geaccepteerd. Activering kan even duren."

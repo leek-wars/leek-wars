@@ -20,6 +20,11 @@
 	"pay_for": "支付 {0}",
 	"bought": "感谢支持！有效期至 {0}。",
 	"not_enough_crystals": "再多几颗水晶就是你的了！",
+	"confirm_title": "确认购买",
+	"confirm_question": "购买 {0} 的 Leek Wars +？",
+	"confirm_cost": "费用",
+	"confirm_after": "购买后余额",
+	"confirm_buy": "购买",
 	"generic_error": "发生错误，请重试。",
 	"unavailable": "订阅暂时不可用。",
 	"activation_pending": "支付已受理，激活可能需要片刻。"

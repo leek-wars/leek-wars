@@ -20,6 +20,11 @@
 	"pay_for": "Bayar {0}",
 	"bought": "Terima kasih! Aktif sampai {0}.",
 	"not_enough_crystals": "Beberapa kristal lagi dan itu milikmu!",
+	"confirm_title": "Konfirmasi pembelian",
+	"confirm_question": "Beli {0} Leek Wars +?",
+	"confirm_cost": "Biaya",
+	"confirm_after": "Saldo setelah pembelian",
+	"confirm_buy": "Beli",
 	"generic_error": "Terjadi kesalahan. Silakan coba lagi.",
 	"unavailable": "Langganan sementara tidak tersedia.",
 	"activation_pending": "Pembayaran diterima. Aktivasi mungkin butuh beberapa saat."

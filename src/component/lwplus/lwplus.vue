@@ -75,6 +75,8 @@
 			</template>
 		</panel>
 		</div>
+
+		<lwplus-thanks v-model="thanksDialog" :price="$t('price_per_month', [priceEur])" :until="until" />
 	</div>
 </template>
 
@@ -87,6 +89,7 @@ import { store } from '@/model/store'
 import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
 
 const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
+const LwplusThanks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-thanks.${locale}.i18n`))
 
 defineOptions({ name: 'lwplus', i18n: {}, mixins: [...mixins] })
 
@@ -114,6 +117,10 @@ const cancelAtPeriodEnd = ref(false)
 const updating = ref(false)
 const paying = ref(false)
 const error = ref('')
+
+// Remerciement après la souscription récurrente. Les mois à l'unité ont le leur,
+// porté par le panneau des lots.
+const thanksDialog = ref(false)
 
 const stripeLoading = ref(false)
 const stripeReady = ref(false)
@@ -215,7 +222,7 @@ async function subscribe() {
 	// le temps de nous l'envoyer avant de dire au joueur que ce n'est pas actif.
 	for (let i = 0; i < 5; i++) {
 		const data = await refreshStatus()
-		if (data.active) { paying.value = false; return }
+		if (data.active) { paying.value = false; thanksDialog.value = true; return }
 		await new Promise(resolve => setTimeout(resolve, 1500))
 	}
 	paying.value = false

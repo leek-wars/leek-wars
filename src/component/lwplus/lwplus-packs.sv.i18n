@@ -20,6 +20,11 @@
 	"pay_for": "Betala {0}",
 	"bought": "Tack! Aktiv till {0}.",
 	"not_enough_crystals": "Några kristaller till och den är din!",
+	"confirm_title": "Bekräfta köpet",
+	"confirm_question": "Köpa {0} av Leek Wars +?",
+	"confirm_cost": "Pris",
+	"confirm_after": "Saldo efter köpet",
+	"confirm_buy": "Köp",
 	"generic_error": "Ett fel uppstod. Försök igen.",
 	"unavailable": "Prenumerationen är tillfälligt otillgänglig.",
 	"activation_pending": "Betalning accepterad. Aktiveringen kan ta en stund."

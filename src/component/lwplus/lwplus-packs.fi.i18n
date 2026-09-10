@@ -20,6 +20,11 @@
 	"pay_for": "Maksa {0}",
 	"bought": "Kiitos! Voimassa {0} asti.",
 	"not_enough_crystals": "Vielä muutama kristalli ja se on sinun!",
+	"confirm_title": "Vahvista osto",
+	"confirm_question": "Ostetaanko {0} Leek Wars +?",
+	"confirm_cost": "Hinta",
+	"confirm_after": "Saldo oston jälkeen",
+	"confirm_buy": "Osta",
 	"generic_error": "Tapahtui virhe. Yritä uudelleen.",
 	"unavailable": "Tilaus ei ole tällä hetkellä käytettävissä.",
 	"activation_pending": "Maksu hyväksytty. Aktivointi voi kestää hetken."

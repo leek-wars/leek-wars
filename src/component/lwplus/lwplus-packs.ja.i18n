@@ -20,6 +20,11 @@
 	"pay_for": "{0} を支払う",
 	"bought": "ありがとうございます！{0} まで有効です。",
 	"not_enough_crystals": "あと少しのクリスタルであなたのものに！",
+	"confirm_title": "購入の確認",
+	"confirm_question": "Leek Wars + を{0}分購入しますか？",
+	"confirm_cost": "費用",
+	"confirm_after": "購入後の残高",
+	"confirm_buy": "購入する",
 	"generic_error": "エラーが発生しました。もう一度お試しください。",
 	"unavailable": "サブスクリプションは現在利用できません。",
 	"activation_pending": "支払いが受理されました。有効化に少し時間がかかる場合があります。"

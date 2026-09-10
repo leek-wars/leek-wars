@@ -20,6 +20,11 @@
 	"pay_for": "{0} 결제",
 	"bought": "감사합니다! {0}까지 이용할 수 있습니다.",
 	"not_enough_crystals": "크리스탈이 조금만 더 있으면 당신 것입니다!",
+	"confirm_title": "구매 확인",
+	"confirm_question": "Leek Wars + {0}을(를) 구매할까요?",
+	"confirm_cost": "비용",
+	"confirm_after": "구매 후 잔액",
+	"confirm_buy": "구매",
 	"generic_error": "오류가 발생했습니다. 다시 시도해 주세요.",
 	"unavailable": "구독을 일시적으로 이용할 수 없습니다.",
 	"activation_pending": "결제가 승인되었습니다. 활성화에 잠시 걸릴 수 있습니다."
