@@ -12,23 +12,28 @@
 		</div>
 		<panel class="first">
 
-			<div class="intro">
-				<h2>{{ $t('intro') }}</h2>
+			<!-- Le texte et le bouton de démo se partagent la largeur : le texte se
+			     termine par « Idéal si vous êtes : », qui annonce les trois tuiles
+			     juste en dessous — le bouton ne peut pas s'intercaler entre les deux. -->
+			<div class="intro-row">
+				<div class="intro">
+					<h2>{{ $t('intro') }}</h2>
 
-				<!-- Présentation du jeu : la page était muette sur ce qu'EST Leek Wars, alors
-				     qu'elle est la porte d'entrée des visiteurs venus de recherches « jeu de
-				     programmation en classe ». C'est aussi ce que reprend le pré-rendu SEO
-				     (PrerenderController::groupsSeo) : les deux doivent rester le même texte. -->
-				<p class="what-is">{{ $t('what_is') }}</p>
+					<!-- Présentation du jeu : la page était muette sur ce qu'EST Leek Wars, alors
+					     qu'elle est la porte d'entrée des visiteurs venus de recherches « jeu de
+					     programmation en classe ». C'est aussi ce que reprend le pré-rendu SEO
+					     (PrerenderController::groupsSeo) : les deux doivent rester le même texte. -->
+					<p class="what-is">{{ $t('what_is') }}</p>
 
-				<span v-html="$t('intro2')"></span>
-			</div>
+					<span v-html="$t('intro2')"></span>
+				</div>
 
-			<div class="demo-cta">
-				<v-btn size="x-large" color="primary" :loading="creating" @click="tryDemo">
-					<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ myGroupId ? $t('access_my_demo') : $t('try_demo') }}
-				</v-btn>
-				<div class="demo-cta-sub">{{ $t('demo_cta_sub') }}</div>
+				<div class="demo-cta">
+					<v-btn size="x-large" color="primary" :loading="creating" @click="tryDemo">
+						<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ myGroupId ? $t('access_my_demo') : $t('try_demo') }}
+					</v-btn>
+					<div class="demo-cta-sub">{{ $t('demo_cta_sub') }}</div>
+				</div>
 			</div>
 
 			<v-dialog v-model="guestForm" :max-width="440">
@@ -356,6 +361,24 @@ onBeforeMount(() => {
 	padding: 0;
 }
 
+// Le texte tenait dans la moitié gauche du panneau et laissait la droite vide,
+// pendant que le bouton de démo occupait seul une bande sous lui. Les deux se
+// partagent maintenant la largeur : le texte prend ce dont il a besoin (borné à
+// 70 ch, la longueur de ligne lisible), le bouton se centre dans la place qui
+// reste. En dessous de 900 px, il repasse sous le texte comme avant.
+.intro-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 20px;
+	.intro {
+		flex: 1 1 420px;
+	}
+	.demo-cta {
+		flex: 1 1 300px;
+		margin: 0;
+	}
+}
 .intro {
 	font-size: 16px;
 	line-height: 1.5;
