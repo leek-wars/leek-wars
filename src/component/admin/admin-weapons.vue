@@ -101,7 +101,7 @@ function copy(id: number) {
 			width: 62px;
 			padding: 2px 5px;
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			background: var(--background);
 			color: var(--text-color);
 		}

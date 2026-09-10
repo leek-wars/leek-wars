@@ -121,7 +121,7 @@
 		min-width: 24px;
 		text-align: center;
 		padding: 1px 8px;
-		border-radius: 10px;
+		border-radius: var(--radius-large);
 		font-size: 12px;
 		font-weight: bold;
 		color: var(--white);

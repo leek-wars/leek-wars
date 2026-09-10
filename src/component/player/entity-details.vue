@@ -211,7 +211,7 @@
 	padding: 4px 5px;
 	background-color: var(--white);
 	box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-	border-top-left-radius: 5px;
+	border-top-left-radius: var(--radius);
 	display: flex;
 	align-items: center;
 	&.dark {
@@ -353,8 +353,8 @@
 	color: var(--white);
 	font-weight: bold;
 	background: rgba(0,0,0,0.5);
-	border-top-right-radius: 7px;
-	border-bottom-left-radius: 10px;
+	border-top-right-radius: var(--radius-medium);
+	border-bottom-left-radius: var(--radius-large);
 	font-size: 12px;
 }
 .effects .effect:before {
@@ -366,8 +366,8 @@
 	color: var(--white);
 	font-weight: bold;
 	background: rgba(0,0,0,0.5);
-	border-bottom-left-radius: 7px;
-	border-top-right-radius: 10px;
+	border-bottom-left-radius: var(--radius-medium);
+	border-top-right-radius: var(--radius-large);
 	font-size: 12px;
 }
 </style>

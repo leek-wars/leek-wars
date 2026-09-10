@@ -1787,7 +1787,7 @@
 				font-size: 17px;
 				vertical-align: top;
 				display: inline-block;
-				margin-top: 3px;
+				margin-top: 4px;
 				font-weight: bold;
 			}
 		}
@@ -1828,7 +1828,7 @@
 		background: var(--pure-white);
 		border: 1px solid var(--border);
 		position: relative;
-		border-radius: 5px;
+		border-radius: var(--radius);
 	}
 	.xp-bar {
 		height: 10px;
@@ -1836,7 +1836,7 @@
 		display: inline-block;
 		vertical-align: top;
 		position: absolute;
-		border-radius: 5px;
+		border-radius: var(--radius);
 		transition: all ease 0.3s;
 	}
 	.xp-bar.blue {
@@ -1846,6 +1846,14 @@
 		font-size: 18px;
 		margin-left: 5px;
 		color: var(--text-color-secondary);
+	}
+	/* Le gain du jour est une glose, pas un score : il criait plus fort que le
+	   talent lui-même — 18 px de gris à côté d'un compteur qui n'en fait plus
+	   que 14 depuis que le composant talent a été resserré (Pierre, 2026-09-10 :
+	   « le (+789) est trop gros ici »). Même corps que le chiffre qu'il commente,
+	   la couleur secondaire suffit à le mettre en retrait. */
+	body:not(.v2) .talent-more {
+		font-size: 14px;
 	}
 	.fights {
 		margin-top: 10px;
@@ -1991,14 +1999,22 @@
 		height: 60px;
 		vertical-align: bottom;
 	}
+	// Colonnes à la largeur exacte d'une puce, et non `minmax(60px, 1fr)` : en
+	// `1fr` les colonnes s'élargissent pour remplir la ligne et chaque puce se
+	// centre dans la sienne, donc l'écart horizontal valait le `gap` PLUS le
+	// reste de la division — toujours plus que l'écart vertical, qui vaut le gap
+	// tout court (Pierre, 2026-09-10 : « on peut faire un écartement égal
+	// vertical et horizontal entre les puces ? »). À largeur fixe, les deux
+	// valent 8 px ; `justify-content` partage le résidu en marges de part et
+	// d'autre de la grille au lieu de le glisser entre les puces.
 	.chips-dialog .leek-chips, .chips-dialog .farmer-chips {
 		min-height: 80px;
 		border: 3px solid transparent;
 		padding: 5px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-		gap: 6px;
-		justify-items: center;
+		grid-template-columns: repeat(auto-fill, 60px);
+		gap: 8px;
+		justify-content: center;
 	}
 	.leek-ai-components {
 		flex: 1;

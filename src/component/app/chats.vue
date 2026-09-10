@@ -66,13 +66,21 @@ function sendMessage(message: string, id: number) {
 		width: 300px;
 		background: var(--background);
 		margin-right: 15px;
-		border-top-left-radius: 7px;
-		border-top-right-radius: 7px;
+		// Jetons plutôt que des 7 px en dur : nuls en v3 (angles francs), 6 px en
+		// v2. Les rayons composés échappaient à la conversion générale du même
+		// jour, qui ne visait que `border-radius`.
+		border-top-left-radius: var(--radius-medium);
+		border-top-right-radius: var(--radius-medium);
 		box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12);
 		pointer-events: all;
 		.header {
 			background: var(--panel-header-background);
-			color: var(--white);
+			// Le piège du lot 10, encore : l'en-tête d'un chat flottant écrivait en
+			// `--white` sur `--panel-header-background`, qui est une surface CLAIRE
+			// en v3 — titre et croix presque invisibles (Pierre, 2026-09-10 : « le
+			// panel de chat flottant a un souci de style »). Le jeton d'encre
+			// d'en-tête vaut #eee en v2 : l'ancien design ne bouge pas.
+			color: var(--panel-header-color);
 			border-top-left-radius: var(--radius-medium);
 			border-top-right-radius: var(--radius-medium);
 			display: flex;

@@ -1,29 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
   <!-- Talent : le triskèle, redessiné à plat dans la langue des icônes du menu v3
        (aplats de la palette, trait noir dessous). Trois bras qui s'enroulent depuis
-       le centre, chacun terminé par un point détaché — la silhouette du PNG
-       historique, sans son dégradé arc-en-ciel : une couleur franche par bras. -->
+       le centre : la silhouette du PNG historique, sans son dégradé arc-en-ciel —
+       une couleur franche par bras.
+
+       La grille est celle de la TAILLE D'AFFICHAGE, 20, et pas celle du PNG, 56.
+       L'icône se porte à 20 px (Pierre, 2026-09-10 : « belle mais pixelisée avec sa
+       bordure noire ») : sur une grille de 56, le contour de 1,5 unité ne pesait plus
+       que 0,53 px une fois réduit, et l'antialiasing le rendait en frange grise —
+       d'où l'aspect crénelé. Ici 1 unité = 1 px : le contour fait exactement 1 px de
+       chaque côté, comme les 2 unités de `generate-menu-icons.mjs` sur la grille mdi
+       de 24. Les bras sont épaissis en conséquence, et les trois points détachés du
+       PNG rejoignent la pointe des bras : à cette taille il n'y a pas la place de les
+       en séparer sans les réduire en bouillie. -->
   <defs>
-    <path id="arm" d="M28 28 C 19 23, 20 6, 35 5" fill="none" stroke-linecap="round"/>
+    <path id="arm" d="M10 10 C 7.2 8.2, 7.6 3.6, 12.4 3.2" fill="none" stroke-linecap="round"/>
   </defs>
   <!-- Le trait noir, dessous. -->
-  <g stroke="#000" stroke-width="7.5">
+  <g stroke="#000" stroke-width="5">
     <use href="#arm"/>
-    <use href="#arm" transform="rotate(120 28 28)"/>
-    <use href="#arm" transform="rotate(240 28 28)"/>
-  </g>
-  <g fill="#000">
-    <circle cx="45" cy="11" r="6.5"/>
-    <circle cx="45" cy="11" r="6.5" transform="rotate(120 28 28)"/>
-    <circle cx="45" cy="11" r="6.5" transform="rotate(240 28 28)"/>
+    <use href="#arm" transform="rotate(120 10 10)"/>
+    <use href="#arm" transform="rotate(240 10 10)"/>
   </g>
   <!-- Les aplats. -->
-  <g stroke-width="4.5">
+  <g stroke-width="3">
     <use href="#arm" stroke="#FF5040"/>
-    <use href="#arm" stroke="#7CFF6B" transform="rotate(120 28 28)"/>
-    <use href="#arm" stroke="#5CE0FF" transform="rotate(240 28 28)"/>
+    <use href="#arm" stroke="#7CFF6B" transform="rotate(120 10 10)"/>
+    <use href="#arm" stroke="#5CE0FF" transform="rotate(240 10 10)"/>
   </g>
-  <circle cx="45" cy="11" r="5" fill="#FF5040"/>
-  <circle cx="45" cy="11" r="5" fill="#7CFF6B" transform="rotate(120 28 28)"/>
-  <circle cx="45" cy="11" r="5" fill="#5CE0FF" transform="rotate(240 28 28)"/>
 </svg>

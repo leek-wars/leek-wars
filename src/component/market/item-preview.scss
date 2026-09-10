@@ -30,7 +30,7 @@
 		font-size: 13px;
 		font-weight: 500;
 		padding: 4px 6px;
-		border-radius: 5px;
+		border-radius: var(--radius);
 	}
 	.level {
 		font-size: 15px;
@@ -97,7 +97,7 @@
 		display: inline-block;
 		vertical-align: middle;
 		margin-left: 8px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 	}
 	.ennemies {
 		background-color: red;

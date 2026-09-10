@@ -466,7 +466,7 @@
 			min-width: 0;
 			max-width: 420px;
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 6px 10px;
 			background: var(--background);
 			color: var(--text-color);
@@ -493,7 +493,7 @@
 		margin-bottom: 10px;
 		background: var(--primary-surface);
 		color: var(--primary-surface-text);
-		border-radius: 5px;
+		border-radius: var(--radius);
 		cursor: pointer;
 	}
 	.new-errors:hover {

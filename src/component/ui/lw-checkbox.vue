@@ -108,7 +108,7 @@ body.v2 .lw-checkbox {
 		width: 18px;
 		height: 18px;
 		border: 2px solid rgba(0, 0, 0, 0.54);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		background: transparent;
 	}
 	.check {

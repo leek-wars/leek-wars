@@ -207,7 +207,7 @@ function click(e: Event) {
 		vertical-align: top;
 	}
 	.count {
-		border-radius: 10px;
+		border-radius: var(--radius-large);
 		color: var(--grey-2);
 		padding: 1px 4px;
 		font-size: 12px;

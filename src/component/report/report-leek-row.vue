@@ -123,18 +123,18 @@
 		height: 14px;
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 	}
 	.bar span {
 		height: 12px;
 		vertical-align: top;
 		&:first-child {
-			border-top-left-radius: 7px;
-			border-bottom-left-radius: 7px;
+			border-top-left-radius: var(--radius-medium);
+			border-bottom-left-radius: var(--radius-medium);
 		}
 		&:last-child {
-			border-top-right-radius: 7px;
-			border-bottom-right-radius: 7px;
+			border-top-right-radius: var(--radius-medium);
+			border-bottom-right-radius: var(--radius-medium);
 		}
 	}
 	.gain {

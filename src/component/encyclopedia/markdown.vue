@@ -880,7 +880,7 @@
 	.md :deep(.quiz-locked) {
 		margin-top: 15px;
 		padding: 12px 15px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: var(--background-secondary);
 		color: var(--text-color-secondary);
 		font-weight: 500;

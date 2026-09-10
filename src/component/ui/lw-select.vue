@@ -239,7 +239,7 @@ function onKeydown(e: KeyboardEvent) {
    cadre posé sur une surface claire, coins arrondis, et pas de pixel push. */
 body.v2 .lw-select {
 	border: none;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	background: var(--background-secondary);
 	padding: 6px 8px;
 	&.open:not(.disabled) {

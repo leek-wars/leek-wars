@@ -144,6 +144,12 @@ pleine, distincte du salon), `mdi-at` (mention), `mdi-gift-outline` (don d'objet
 `mdi-hand-coin-outline` (don d'habs), `mdi-thumb-up` / `mdi-thumb-down` (votes du
 forum), `mdi-flag` (avertissement), `mdi-flag-outline` (défi).
 
+Même chose pour les **actions d'interface**, qui ne sont pas des concepts du jeu :
+`mdi-tray-arrow-down` = **récupérer une récompense** (panneau du coffre, bouton de
+ligne et « Tout récupérer », 2026-09-10). Il remplace les deux PNG
+`icon/arrow-down-right-bold.svg` et `icon/black/arrow-down-right-bold.svg`, dont la
+version noire n'existait que pour tenir sur l'aplat doré.
+
 ## Appliqué le 2026-08-28
 
 La convention est en place dans le code. Ce qui a bougé :

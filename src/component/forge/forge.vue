@@ -1422,7 +1422,7 @@
 	content: '';
 	position: absolute;
 	inset: -12px;
-	border-radius: 28px;
+	border-radius: var(--radius-pill);
 	pointer-events: none;
 	opacity: 0;
 	z-index: 0;

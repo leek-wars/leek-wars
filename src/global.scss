@@ -1125,7 +1125,7 @@ body {
 	background: #00aae2;
 	color: white;
 	padding: 0px 4px;
-	border-radius: 5px;
+	border-radius: var(--radius);
 	font-size: 15px;
 	display: inline-block;
 	margin-left: 4px;
@@ -1335,7 +1335,7 @@ a.green-link {
 	max-width: 370px;
 	.bubble {
 		max-width: 370px;
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 		background: var(--pure-white);
 		padding: 18px;
 		box-shadow: rgba(0, 0, 0, 0.7) 0px 10px 30px;

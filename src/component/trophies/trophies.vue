@@ -523,7 +523,7 @@ watch(sort_by, () => {
 			width: 0;
 			background: #30bb00;
 			position: absolute;
-			border-radius: 5px;
+			border-radius: var(--radius);
 		}
 	}
 	.bar {

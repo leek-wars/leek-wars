@@ -122,7 +122,12 @@
 					<lw-switch v-if="LeekWars.mobile" v-model="chatFirst" class="setting" :label="$t('chat_first')" />
 					<lw-switch v-model="homeDashboard" class="setting" :label="$t('home_dashboard')" />
 					<lw-switch v-if="!LeekWars.mobile" v-model="LeekWars.leekTheme" class="setting" :label="$t('leek_theme')" />
-					<lw-switch v-model="LeekWars.legacyTheme" class="setting" :label="$t('legacy_theme')" />
+					<!-- « Ancien design » masqué le 2026-09-10 à la demande de Pierre : la
+					     bascule reviendra, mais pas dans cette màj. Le réglage lui-même
+					     est intact (clé `design` du localStorage, `LeekWars.legacyTheme`),
+					     seule la case disparaît de la page — un joueur déjà en v2 y
+					     reste, et une ligne suffit à la remettre. -->
+					<lw-switch v-if="false" v-model="LeekWars.legacyTheme" class="setting" :label="$t('legacy_theme')" />
 					<lw-switch v-model="modernTheme" class="setting" :label="$t('modern_theme')" />
 				</div>
 			</panel>

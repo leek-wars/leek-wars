@@ -1134,12 +1134,21 @@ const t = useNamespacedT('market')
 		input { flex: 1; }
 	}
 	.menu {
+		// 140 px et pas 100 : à 100, « Chapeaux » et « Apparats » ne tenaient pas
+		// sur une ligne à côté de leur glyphe et se cassaient sous lui (Pierre,
+		// 2026-09-10 : « les catégories sont trop petites et de pas accepter de
+		// line-break »). Les cases sont plus larges, l'intitulé insécable.
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
 		grid-gap: 8px;
 		user-select: none;
 		flex: 0 0 auto;
 		.item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			white-space: nowrap;
 			background: var(--background);
 			border-radius: var(--radius);
 			box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
@@ -1154,7 +1163,7 @@ const t = useNamespacedT('market')
 					border-color: var(--border-strong);
 				}
 			}
-			padding: 8px 5px;
+			padding: 10px 8px;
 			cursor: pointer;
 			// color: var(--text-color);
 			&:hover {

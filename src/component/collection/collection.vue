@@ -312,13 +312,13 @@
 	.summary-progress {
 		height: 18px;
 		background: var(--background-disabled);
-		border-radius: 9px;
+		border-radius: var(--radius-large);
 		overflow: hidden;
 		.summary-bar {
 			height: 100%;
 			background-color: var(--primary-surface);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 9px, transparent 9px, transparent 18px);
-			border-radius: 9px;
+			border-radius: var(--radius-large);
 			transition: width 0.4s;
 			&.complete {
 				background-color: #2196f3;
@@ -399,13 +399,13 @@
 	.cat-progress {
 		height: 13px;
 		background: var(--background-disabled);
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 		overflow: hidden;
 		.cat-bar {
 			height: 100%;
 			background-color: var(--primary-surface);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 7px, transparent 7px, transparent 14px);
-			border-radius: 7px;
+			border-radius: var(--radius-medium);
 			transition: width 0.3s;
 			&.complete {
 				background-color: #2196f3;
@@ -445,7 +445,7 @@
 		position: relative;
 		overflow: hidden;
 		padding: 4px 14px;
-		border-radius: 15px;
+		border-radius: var(--radius-pill);
 		font-size: 18px;
 		font-weight: 800;
 		letter-spacing: 0.6px;

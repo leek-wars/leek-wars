@@ -185,7 +185,7 @@ function submit() {
 		gap: 18px;
 		width: min(720px, calc(100vw - 24px));
 		padding: 16px 18px 16px 22px;
-		border-radius: 14px;
+		border-radius: var(--radius-pill);
 		color: var(--white);
 		background: linear-gradient(115deg, #2a7a05, var(--primary), #8bc34a, var(--primary), #2a7a05);
 		background-size: 300% 300%;
@@ -366,7 +366,7 @@ function submit() {
 		font-weight: bold;
 		font-size: 16px;
 		padding: 12px 22px;
-		border-radius: 9px;
+		border-radius: var(--radius-large);
 		text-decoration: none;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 		transition: transform 0.15s ease;
@@ -398,7 +398,7 @@ function submit() {
 		align-items: center;
 		gap: 10px;
 		padding: 10px 16px 10px 12px;
-		border-radius: 16px;
+		border-radius: var(--radius-pill);
 		cursor: pointer;
 		color: var(--white);
 		background: linear-gradient(135deg, #2a7a05, var(--primary), #8bc34a);

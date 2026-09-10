@@ -47,7 +47,9 @@
 					</template>
 				</panel>
 
-				<chat-panel v-if="env.SOCIAL && socialEverOpened" toggle="social/chat" chat="social" :height="300" />
+				<!-- Pas de hauteur : le chat est le dernier bloc de la colonne et prend
+				     la place restante (cf. `leekwars-shell-v3.scss`). -->
+				<chat-panel v-if="env.SOCIAL && socialEverOpened" toggle="social/chat" chat="social" />
 			</div>
 		</div>
 	</div>
@@ -187,7 +189,7 @@ function readAllNotifications() {
 	.header .label {
 		background: var(--primary-surface);
 		color: var(--primary-surface-text);
-		border-radius: 5px;
+		border-radius: var(--radius);
 		margin-left: 8px;
 		margin-right: -6px;
 		margin-bottom: 2px;

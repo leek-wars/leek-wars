@@ -143,7 +143,7 @@ defineEmits<{
 .issue-badge {
 	background: #0366d6;
 	color: var(--white);
-	border-radius: 5px;
+	border-radius: var(--radius);
 	font-size: 13px;
 	font-weight: 500;
 	padding: 0 6px;

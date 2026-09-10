@@ -117,7 +117,7 @@ body.v2 .lw-switch {
 		width: 34px;
 		height: 14px;
 		border: none;
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 		background: rgba(0, 0, 0, 0.38);
 	}
 	.thumb {

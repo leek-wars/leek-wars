@@ -138,12 +138,20 @@ function click(square: Square) {
 		border-radius: 0;
 		background: var(--panel-background);
 		border: 1px solid var(--border-strong);
-		border-left: 3px solid var(--notif-accent, var(--primary));
 		box-shadow: var(--shadow-pixel);
 		color: var(--text-color);
 		align-items: center;
 		gap: 10px;
 		padding: 8px 12px 8px 10px;
+	}
+	/* Le liseré ne dit plus « notification », il dit ce que la notification a de
+	   particulier : un résultat de combat quand l'option est active, et c'est
+	   tout. Il était vert par défaut sur toutes les autres — commentaire,
+	   message privé — sans rien signaler (Pierre, 2026-09-10 : « pas de bordure
+	   verte sur les notifs normales »). */
+	body:not(.v2) .square.win,
+	body:not(.v2) .square.defeat {
+		border-left: 3px solid var(--notif-accent);
 	}
 	body:not(.v2) .square.win {
 		--notif-accent: var(--result-win);
@@ -151,13 +159,45 @@ function click(square: Square) {
 	body:not(.v2) .square.defeat {
 		--notif-accent: var(--result-defeat);
 	}
-	/* Le halo des trophées et bigwins (shell), mais sur une surface OPAQUE : la
-	   teinte du shell est posée sur du transparent, ce qui laisserait voir la
-	   page à travers une carte flottante. */
+	/* Trophée et victoire de tournoi portent l'APLAT PLEIN de la rangée de
+	   notification correspondante (Pierre, 2026-09-10 : « il faut que le square
+	   soit doré comme la notif », « pour les victoires tournoi, j'aimerais le
+	   même style que le trophées mais en bleu »). C'était une teinte à 10 % sur
+	   la surface du panneau, et pour l'or elle était même calculée à partir de
+	   `--gold-text` — l'encre sombre héritée du shell — ce qui donnait une carte
+	   grise là où la notification est dorée.
+	   L'encre borde l'aplat, comme la poignée du coffre. */
+	body:not(.v2) .square.notif-trophy {
+		--notif-accent: var(--gold-text);
+		background: var(--gold-bright);
+	}
+	/* Le bleu est `--info`, celui du liseré des bigwins : foncé en thème clair,
+	   vif en sombre. `--pure-white` s'inverse avec le thème (#FBF7E8 en clair,
+	   #0B0F0B en sombre), donc l'encre reste claire sur le bleu foncé et sombre
+	   sur le bleu vif — sans jeton supplémentaire. */
+	body:not(.v2) .square.notif-bigwin {
+		--notif-accent: var(--pure-white);
+		background: var(--info);
+	}
 	body:not(.v2) .square.notif-trophy,
 	body:not(.v2) .square.notif-bigwin {
-		background: color-mix(in srgb, var(--notif-accent) 10%, var(--panel-background));
-		box-shadow: inset 0 0 14px color-mix(in srgb, var(--notif-accent) 22%, transparent), var(--shadow-pixel);
+		border-color: var(--notif-accent);
+		color: var(--notif-accent);
+	}
+	/* Le shell peint le titre et le message d'un bigwin en `--text-color`, pensé
+	   pour la rangée du panneau social, qui n'a qu'un liseré bleu sur la surface
+	   du thème. Sur l'aplat plein, ce titre tombait à 1,33 de contraste (mesuré
+	   en sombre : encre claire sur le bleu vif). Les deux lignes prennent donc
+	   l'encre de l'aplat.
+	   Elle est PLEINE sur les deux, sans le retrait d'opacité habituel de la
+	   seconde ligne : `--info` en thème clair est un bleu de milieu d'échelle,
+	   et le retrait faisait tomber le message à 3,4 (mesuré) là où le titre
+	   tient à 4,5. La hiérarchie se lit au corps et à la graisse.
+	   Le trophée n'a pas besoin de ces règles : le shell peint déjà ses textes
+	   en `--gold-text !important` (13,4 mesuré). */
+	body:not(.v2) .square.notif-bigwin .title,
+	body:not(.v2) .square.notif-bigwin .message {
+		color: var(--notif-accent);
 	}
 	body:not(.v2) .square .image {
 		width: 24px;

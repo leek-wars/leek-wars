@@ -820,7 +820,7 @@
 		gap: 6px;
 		margin: 0 auto 12px;
 		padding: 5px 12px;
-		border-radius: 14px;
+		border-radius: var(--radius-pill);
 		color: var(--white);
 		font-weight: bold;
 		font-size: 13px;

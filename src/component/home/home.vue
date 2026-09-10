@@ -141,7 +141,18 @@
 
 	const t = useNamespacedT('home')
 
-	const COLUMNS = 12
+	// Grille sous-divisée : une cellule vaut une DEMI-colonne visuelle. 24 colonnes
+	// de 39 px rendent exactement comme les 12 colonnes de 78 px d'avant (toutes les
+	// tailles ci-dessous ont été doublées d'autant, et les marges sont posées sur
+	// l'item, pas par cellule) — mais l'aimantation tombe deux fois plus fin, on peut
+	// caler un widget sur une demi-colonne ou lui donner une demi-hauteur.
+	// Changer ces deux nombres suffit : les dispositions déjà enregistrées portent
+	// l'échelle dans laquelle elles ont été écrites et sont converties au chargement.
+	const COLUMNS = 24
+	const CELL_HEIGHT = 39
+	// Échelle des dispositions enregistrées avant la sous-division (#4262).
+	const LEGACY_COLUMNS = 12
+	const LEGACY_CELL_HEIGHT = 78
 	const RANKING_CATEGORIES = ['leek', 'farmer', 'team']
 
 	interface WidgetInstance { id: string, type: string, x: number, y: number, w: number, h: number, params: Record<string, unknown> }
@@ -159,20 +170,24 @@
 		noScroll?: boolean     // contenu clippé sans défilement interne : la molette va à la page
 	}
 
+	// Tailles en cellules de la grille sous-divisée : 24 = pleine largeur,
+	// 12 = une moitié, 8 = un tiers. Les valeurs par défaut restent sur des
+	// nombres pairs — un widget ajouté tombe sur une colonne franche, c'est
+	// au joueur d'aller chercher le demi-cran s'il le veut.
 	const widgetMeta: Record<string, WidgetDefinition> = {
-		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), defaultW: 6, defaultH: 4, minW: 3, minH: 3, link: '/farmer', noScroll: true },
-		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), defaultW: 6, defaultH: 4, minW: 4, minH: 3, link: '/farmer', noScroll: true },
-		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 4, defaultH: 3, minW: 3, minH: 2, link: '/trophies', noScroll: true },
+		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), defaultW: 12, defaultH: 8, minW: 6, minH: 6, link: '/farmer', noScroll: true },
+		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), defaultW: 12, defaultH: 8, minW: 8, minH: 6, link: '/farmer', noScroll: true },
+		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 8, defaultH: 6, minW: 6, minH: 4, link: '/trophies', noScroll: true },
 		// noScroll : le panel ne défile jamais, la zone de messages du chat gère son propre défilement.
-		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 4, defaultH: 5, minW: 3, minH: 3, multi: true, configurable: true, noScroll: true },
-		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/collection', noScroll: true },
-		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 4, defaultH: 4, minW: 3, minH: 3, noScroll: true },
-		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 4, defaultH: 5, minW: 3, minH: 3, link: '/ranking', multi: true, configurable: true, noScroll: true },
-		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 4, defaultH: 6, minW: 3, minH: 4, multi: true, configurable: true, noScroll: true },
-		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 4, defaultH: 4, minW: 3, minH: 2, link: '/trophies', noScroll: true },
-		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 4, defaultH: 4, minW: 3, minH: 3, link: '/forum', noScroll: true },
-		live: { icon: 'mdi-access-point', component: markRaw(Live), defaultW: 4, defaultH: 5, minW: 3, minH: 3 },
-		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 4, defaultH: 3, minW: 3, minH: 2 },
+		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 8, defaultH: 10, minW: 6, minH: 6, multi: true, configurable: true, noScroll: true },
+		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 8, defaultH: 8, minW: 6, minH: 6, link: '/collection', noScroll: true },
+		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 8, defaultH: 8, minW: 6, minH: 6, noScroll: true },
+		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 8, defaultH: 10, minW: 6, minH: 6, link: '/ranking', multi: true, configurable: true, noScroll: true },
+		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 8, defaultH: 12, minW: 6, minH: 8, multi: true, configurable: true, noScroll: true },
+		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 8, defaultH: 8, minW: 6, minH: 4, link: '/trophies', noScroll: true },
+		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 8, defaultH: 8, minW: 6, minH: 6, link: '/forum', noScroll: true },
+		live: { icon: 'mdi-access-point', component: markRaw(Live), defaultW: 8, defaultH: 10, minW: 6, minH: 6 },
+		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 8, defaultH: 6, minW: 6, minH: 4 },
 	}
 	const WIDGET_TYPES = Object.keys(widgetMeta)
 
@@ -182,12 +197,12 @@
 	// sert aussi la page d'équipe.
 	const AGGREGATED = new Set(['trophies', 'rare_trophies', 'collection', 'ranking', 'classement', 'leek_stats', 'forum', 'tournaments'])
 
-	// Disposition par défaut (grille 12 colonnes) si l'éleveur n'a jamais personnalisé.
+	// Disposition par défaut (grille 24 colonnes) si l'éleveur n'a jamais personnalisé.
 	const DEFAULT_LAYOUT: WidgetInstance[] = [
-		{ id: 'leeks', type: 'leeks', x: 0, y: 0, w: 6, h: 4, params: {} },
-		{ id: 'talent', type: 'talent', x: 6, y: 0, w: 6, h: 4, params: {} },
-		{ id: 'trophies', type: 'trophies', x: 0, y: 4, w: 4, h: 3, params: {} },
-		{ id: 'chat', type: 'chat', x: 4, y: 4, w: 8, h: 5, params: {} },
+		{ id: 'leeks', type: 'leeks', x: 0, y: 0, w: 12, h: 8, params: {} },
+		{ id: 'talent', type: 'talent', x: 12, y: 0, w: 12, h: 8, params: {} },
+		{ id: 'trophies', type: 'trophies', x: 0, y: 8, w: 8, h: 6, params: {} },
+		{ id: 'chat', type: 'chat', x: 8, y: 8, w: 16, h: 10, params: {} },
 	]
 	const cloneDefault = () => DEFAULT_LAYOUT.map(w => ({ ...w, params: { ...w.params } }))
 
@@ -195,11 +210,20 @@
 		if (!raw) return cloneDefault()
 		try {
 			const parsed = JSON.parse(raw)
-			if (!Array.isArray(parsed)) return cloneDefault()
+			// Deux enveloppes : le tableau nu (écrit avant la sous-division, donc en
+			// 12 colonnes de 78 px) et l'objet qui porte son échelle. On convertit
+			// vers l'échelle courante plutôt que de migrer la base : la disposition
+			// vit dans une colonne texte, et un joueur peut revenir d'un vieil onglet.
+			const list = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.widgets) ? parsed.widgets : null)
+			if (!list) return cloneDefault()
+			const savedColumns = Array.isArray(parsed) ? LEGACY_COLUMNS : parsed.columns
+			const savedCellHeight = Array.isArray(parsed) ? LEGACY_CELL_HEIGHT : parsed.cellHeight
+			const scaleX = typeof savedColumns === 'number' && savedColumns > 0 ? COLUMNS / savedColumns : 1
+			const scaleY = typeof savedCellHeight === 'number' && savedCellHeight > 0 ? savedCellHeight / CELL_HEIGHT : 1
 			const seenIds = new Set<string>()
 			const result: WidgetInstance[] = []
 			let fallbackY = 0
-			for (const w of parsed) {
+			for (const w of list) {
 				if (!w || typeof w.type !== 'string' || !WIDGET_TYPES.includes(w.type)) continue
 				// id : présent (nouveau format) sinon = type (ancien format, widgets uniques).
 				const id = typeof w.id === 'string' && w.id ? w.id : w.type
@@ -207,9 +231,10 @@
 				seenIds.add(id)
 				const def = widgetMeta[w.type]
 				const params = (w.params && typeof w.params === 'object') ? w.params : {}
-				// Ancien format {type, size} -> conversion en {x,y,w,h}.
+				// Ancien format {type, size} -> conversion en {x,y,w,h}. Aucune
+				// échelle à appliquer ici : les tailles viennent de la grille actuelle.
 				if (typeof w.w !== 'number' || typeof w.h !== 'number') {
-					const legacyW = w.size === 2 ? 12 : 6
+					const legacyW = w.size === 2 ? COLUMNS : COLUMNS / 2
 					result.push({ id, type: w.type, x: 0, y: fallbackY, w: legacyW, h: def.defaultH, params })
 					fallbackY += def.defaultH
 					continue
@@ -217,10 +242,10 @@
 				result.push({
 					id,
 					type: w.type,
-					x: typeof w.x === 'number' ? w.x : 0,
-					y: typeof w.y === 'number' ? w.y : fallbackY,
-					w: Math.min(COLUMNS, Math.max(def.minW, w.w)),
-					h: Math.max(def.minH, w.h),
+					x: typeof w.x === 'number' ? Math.round(w.x * scaleX) : 0,
+					y: typeof w.y === 'number' ? Math.round(w.y * scaleY) : fallbackY,
+					w: Math.min(COLUMNS, Math.max(def.minW, Math.round(w.w * scaleX))),
+					h: Math.max(def.minH, Math.round(w.h * scaleY)),
 					params
 				})
 				fallbackY += 1
@@ -377,7 +402,11 @@
 			const inst = byId.get(String(n.id))
 			return { id: String(n.id), type: inst?.type, x: n.x ?? 0, y: n.y ?? 0, w: n.w ?? 1, h: n.h ?? 1, params: inst?.params ?? {} }
 		})
-		return JSON.stringify(layout)
+		// L'échelle voyage avec la disposition : sans elle, changer la finesse de la
+		// grille écraserait les dispositions existantes. `grid.save()` rend toujours
+		// la plus grande disposition connue, jamais celle d'un affichage 1 colonne
+		// sur mobile — ces coordonnées sont bien en COLUMNS colonnes.
+		return JSON.stringify({ columns: COLUMNS, cellHeight: CELL_HEIGHT, widgets: layout })
 	}
 
 	function flushSave() {
@@ -428,17 +457,27 @@
 		if (!gridEl.value) return
 		grid = GridStack.init({
 			column: COLUMNS,
-			cellHeight: 78,
+			cellHeight: CELL_HEIGHT,
 			margin: 6,
 			float: false,
 			staticGrid: true,
 			// Poignées de drag : l'icône dédiée ET la barre de titre du panel.
 			handle: '.drag-handle, .widget-panel > .header > h2',
+			// Par défaut gridstack ne pose que le coin sud-est : il fallait viser un
+			// carré de 26 px pour élargir un widget. On ouvre les trois bords utiles
+			// — droite (largeur), bas (hauteur), gauche (largeur vers l'arrière) — le
+			// coin restant le seul à changer les deux à la fois. Pas de bord nord :
+			// la doc de gridstack le déconseille (effets de bord sur la gravité).
+			resizable: { handles: 'e, se, s, w' },
 			minRow: 1,
 			// Pas d'animation à l'arrivée sur la page (les panels « voleraient »
 			// en place) ; réactivée après le premier rendu pour le drag & drop.
 			animate: false,
-			columnOpts: { breakpointForWindow: true, breakpoints: [{ w: 768, c: 1 }] }
+			// `columnMax` est OBLIGATOIRE ici : hors de tout point de rupture (donc sur
+			// desktop), gridstack ne garde pas `column`, il retombe sur `columnMax`,
+			// dont le défaut est 12. Sans cette ligne la grille s'affichait en 12
+			// colonnes malgré `column: 24`, et les widgets se rangeaient en pile.
+			columnOpts: { breakpointForWindow: true, columnMax: COLUMNS, breakpoints: [{ w: 768, c: 1 }] }
 		}, gridEl.value)
 		if (!grid) return
 		for (const w of widgets.value) {
@@ -654,6 +693,131 @@
 	.widget-panel.no-scroll:deep(.content) {
 		overflow: hidden;
 		container-type: size;
+	}
+	// Poignée de redimensionnement : gridstack la dessine avec une image SVG en
+	// data-URI tracée en `#666` fixe, de 10 px — terne sur le parchemin, presque
+	// invisible en thème sombre (Pierre, 2026-09-10 : « l'icône pour resize un
+	// widget de la page d'accueil peut être plus grand, visible et beau »).
+	// On la redessine : un carré de 20 px au coin du widget, deux traits
+	// diagonaux à l'encre du thème (le motif universel de la poignée), qui
+	// passent au vert quand la souris est sur le widget.
+	.grid-stack.editing :deep(.ui-resizable-se) {
+		box-sizing: border-box;
+		width: 26px;
+		height: 26px;
+		padding: 0;
+		// La poignée se cale sur le coin de l'ITEM gridstack, qui déborde du
+		// panneau de la marge de 6 px que gridstack pose autour de chaque item :
+		// elle tombait donc dans la gouttière, hors de la carte (Pierre,
+		// 2026-09-10 : « l'icône est en dehors, il faudrait qu'elle soit à
+		// l'intérieur », puis « plus grande et colle le bord du panel »).
+		// 6 px de marge + 1 px de bordure de panneau : elle touche le bord
+		// intérieur, en bas à droite.
+		right: 7px;
+		bottom: 7px;
+		opacity: 1;
+		color: var(--text-color-secondary);
+		transition: color .12s ease, background-color .12s ease;
+		border: 0;
+		background: none;
+		// LA cause des trois dessins ratés : gridstack pose `transform:
+		// rotate(-45deg)` sur cette poignée (son image est une double flèche
+		// VERTICALE, qu'il redresse en diagonale par cette rotation). Tout ce
+		// qu'on dessinait dedans tournait donc de 45° de plus — d'où les traits
+		// verticaux que Pierre voyait (« l'icône resize sur la page home est
+		// étrange », puis « encore pire »). On annule la rotation et on dessine
+		// la diagonale nous-mêmes.
+		transform: none;
+	}
+	// Le grip en biais : deux traits parallèles à la diagonale, tournés de 45°
+	// autour de leur extrémité droite pour se caler dans le coin.
+	.grid-stack.editing :deep(.ui-resizable-se)::before,
+	.grid-stack.editing :deep(.ui-resizable-se)::after {
+		content: '';
+		position: absolute;
+		// Le CARRÉ, lui, touche le bord (c'est la cible de survol) ; les traits
+		// sont rentrés de 8 px pour ne pas mourir sur le cadre du panneau
+		// (Pierre, 2026-09-10 : « le fond doit être collé […] mais l'icône doit
+		// quand même être un peu plus à l'intérieur »).
+		right: 8px;
+		height: 2px;
+		background: currentColor;
+		transform-origin: 100% 50%;
+		transform: rotate(-45deg);
+	}
+	.grid-stack.editing :deep(.ui-resizable-se)::before {
+		bottom: 19px;
+		width: 17px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-se)::after {
+		bottom: 12px;
+		width: 10px;
+	}
+	// Deux crans de survol : la poignée sort de l'ombre dès que la souris entre
+	// dans le widget, et s'allume vraiment quand on la vise — un aplat vert pâle
+	// sous le grip, comme les autres cibles cliquables du thème.
+	.grid-stack.editing .grid-stack-item:hover :deep(.ui-resizable-se) {
+		color: var(--text-color);
+	}
+	.grid-stack.editing :deep(.ui-resizable-se):hover {
+		color: var(--primary);
+		background: color-mix(in srgb, var(--primary) 16%, transparent);
+	}
+	// Poignées de bord (est, ouest, sud). Gridstack ne leur donne aucun dessin :
+	// juste une bande de 10 px avec le bon curseur. On les élargit un peu et on
+	// les révèle au survol par une barre verte posée sur le bord du panneau —
+	// sans quoi rien n'indique qu'on peut tirer un côté, alors que c'est le geste
+	// naturel pour changer une largeur (le coin reste le seul à faire les deux).
+	// Les bandes s'arrêtent avant le coin sud-est pour ne pas lui disputer la place.
+	.grid-stack.editing :deep(.ui-resizable-e) {
+		width: 14px;
+		top: 20px;
+		bottom: 36px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-w) {
+		width: 14px;
+		top: 20px;
+		bottom: 20px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-s) {
+		height: 14px;
+		left: 30px;
+		right: 36px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-e)::after,
+	.grid-stack.editing :deep(.ui-resizable-w)::after,
+	.grid-stack.editing :deep(.ui-resizable-s)::after {
+		content: '';
+		position: absolute;
+		border-radius: 3px;
+		background: var(--primary);
+		opacity: 0;
+		transition: opacity .12s ease;
+	}
+	// 1 px vers l'intérieur : la barre se pose sur la bordure du panneau, pas
+	// dans la gouttière que gridstack laisse autour de l'item.
+	.grid-stack.editing :deep(.ui-resizable-e)::after,
+	.grid-stack.editing :deep(.ui-resizable-w)::after {
+		top: 0;
+		bottom: 0;
+		width: 3px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-e)::after {
+		right: 1px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-w)::after {
+		left: 1px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-s)::after {
+		left: 0;
+		right: 0;
+		bottom: 1px;
+		height: 3px;
+	}
+	.grid-stack.editing :deep(.ui-resizable-e):hover::after,
+	.grid-stack.editing :deep(.ui-resizable-w):hover::after,
+	.grid-stack.editing :deep(.ui-resizable-s):hover::after {
+		opacity: 1;
 	}
 	.grid-stack.editing .drag-handle {
 		cursor: grab;

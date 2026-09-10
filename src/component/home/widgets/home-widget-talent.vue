@@ -76,7 +76,8 @@
 			responsive: true,
 			maintainAspectRatio: false,
 			// Sans marge haute, le point du jour est rogné par le bord du canvas.
-			layout: { padding: { top: 4, bottom: 2 } },
+			// 2 px suffisent pour un point de rayon 3.
+			layout: { padding: { top: 2, bottom: 2 } },
 			plugins: {
 				legend: { display: false },
 				tooltip: {
@@ -99,7 +100,10 @@
 	.talent-widget {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		// 6 px : l'air au-dessus de la courbe se voyait surtout entre l'en-tête et
+		// elle (Pierre, 2026-09-10 : « réduire un peu l'espace en haut du
+		// graphique »).
+		gap: 6px;
 		height: 100%;
 	}
 	// La liste occupe la hauteur restante ; overflow hidden en filet de sécurité,
@@ -108,6 +112,13 @@
 		flex: 1 1 auto;
 		min-height: 0;
 		overflow: hidden;
+		// Les combats se collent au bas du panneau : quand le serveur n'en a que
+		// six à donner et que la place en tiendrait plus, le reste d'espace passe
+		// à la courbe au-dessus plutôt que de faire un blanc sous la liste
+		// (« c'est dommage de n'avoir que 4 combats et d'avoir du vide en bas »).
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
 	}
 	// Les cartes gardent la hauteur qu'elles ont partout ailleurs sur le site.
 	// Les compacter faisait remonter l'heure (« il y a 2 jours », calée en bas de
@@ -116,9 +127,20 @@
 	.fights :deep(.history) {
 		padding: 0;
 	}
+	// La courbe prend une plus grande part de la hauteur du panneau (40 % au lieu
+	// de 30, plafond 200 px au lieu de 120) : elle pousse d'autant les combats
+	// vers le bas, ce que la liste seule ne pouvait pas faire — le serveur ne
+	// donne que six combats.
+	//
+	// Elle reste à taille FIXE (`flex: 0 0 auto`), et c'est important : la liste
+	// est le seul élément flexible de la colonne, donc sa hauteur ne dépend pas
+	// de son contenu. La rendre flexible elle aussi mettrait `useFitCount` en
+	// boucle — plus de place, un combat de plus, donc moins de place… — le
+	// scénario que son garde-fou anti-oscillation existe justement pour rattraper
+	// (le gel de l'accueil mobile du 2026-09-09).
 	.chart-wrap {
 		flex: 0 0 auto;
-		height: clamp(70px, 30cqh, 120px);
+		height: clamp(70px, 40cqh, 200px);
 		position: relative;
 	}
 	// Panel trop bas pour loger la courbe ET des combats lisibles : les combats

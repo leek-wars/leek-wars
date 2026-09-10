@@ -237,7 +237,7 @@
 		left: calc(50% - 250px);
 		width: 500px;
 		background: var(--background-secondary);
-		border-radius: 5px;
+		border-radius: var(--radius);
 		box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
 		z-index: 10;
 		max-height: 395px;
@@ -251,8 +251,8 @@
 		flex: 36px 0 0;
 		border: none;
 		border-bottom: 1px solid var(--border);
-		border-top-left-radius: 5px;
-		border-top-right-radius: 5px;
+		border-top-left-radius: var(--radius);
+		border-top-right-radius: var(--radius);
 	}
 	.results {
 		overflow-y: auto;

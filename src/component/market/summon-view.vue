@@ -78,9 +78,23 @@ const CHIPS = CHIPSImport
 	}
 	// L'ordre de characteristics_table est déjà entrelacé pour une lecture en
 	// deux colonnes ligne par ligne (vie | magie, force | fréquence...).
-	.characteristic {
+	// Rangées resserrées (Pierre, 2026-09-10 : « on peut quand même resserrer les
+	// caracs en hauteur ») : le pas était de 31 px pour une icône de 20, soit six
+	// lignes sur 186 px. L'icône descend à 18 px, la hauteur de ligne est bornée
+	// et le rembourrage disparaît — la valeur reste alignée sur son icône.
+	// En flex : l'icône était `vertical-align: bottom` dans une boîte de ligne, et
+	// le jambage sous la ligne de base ajoutait une dizaine de pixels par rangée
+	// que ni le rembourrage ni la hauteur de ligne ne pouvaient reprendre.
+	// Sélecteur en trois classes : une règle d'ailleurs (invisible au CSSOM, mais
+	// bien appliquée) pose 5 px de rembourrage sur chaque `.characteristic`, ce
+	// qui faisait le plus gros du pas de 31 px.
+	.summon .characteristics .characteristic {
 		width: auto;
-		padding: 2px 0;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		line-height: 1.1;
 	}
 	.summon h4 {
 		padding: 8px;
@@ -98,20 +112,15 @@ const CHIPS = CHIPSImport
 	.summon .characteristics {
 		text-align: left;
 	}
-	// Enfant direct seulement : la valeur est un span DANS un span, la marge
-	// s'additionnait sur les deux niveaux.
+	// L'écart à l'icône vient maintenant du `gap` de la rangée (7 px, comme le
+	// panneau de la page poireau), plus des marges à additionner.
 	.summon .characteristic > span {
-		display: inline-block;
-		margin-top: 2px;
-		vertical-align: top;
-		// 7 px comme le panneau de la page poireau : à 2 px la valeur collait
-		// à son icône.
-		margin-left: 7px;
 		font-weight: bold;
 	}
 	.summon .characteristic img {
-		width: 20px;
-		vertical-align: bottom;
+		width: 18px;
+		display: block;
+		flex: none;
 	}
 	// L'activateur de l'infobulle est un <span> inline : sur une image de 50 px il
 	// ne mesurait que la hauteur de ligne (19 px) et son bas tombait 7 px SOUS

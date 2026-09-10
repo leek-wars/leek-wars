@@ -235,12 +235,18 @@ const arenaLabel = computed<[string, string]>(() => {
 			   du rembourrage pour rester au centre optique, l'heure garde son
 			   coin bas. */
 			height: 52px;
+			/* `height: 100%` et pas 52 px : la carte est en `border-box`, ses
+			   52 px comprennent donc ses deux bordures et ne laissent que 50 px
+			   de contenu. Les enfants calés à 52 dépassaient d'un pixel en bas
+			   (Pierre, 2026-09-10 : « la partie centrale dépassait vers le bas,
+			   52 px vs 50 »). En pourcentage, ils suivent la carte quelle que
+			   soit sa hauteur. */
 			.center {
 				flex-basis: 52px;
-				height: 52px;
+				height: 100%;
 			}
 			.fighters {
-				height: 52px;
+				height: 100%;
 			}
 			.fighter {
 				padding: 9px 0;

@@ -132,7 +132,7 @@ const show_lines = computed(() => {
 		}
 		.version {
 			font-size: 10px;
-			border-radius: 5px;
+			border-radius: var(--radius);
 			padding: 1px 3px;
 			font-weight: 500;
 			position: absolute;

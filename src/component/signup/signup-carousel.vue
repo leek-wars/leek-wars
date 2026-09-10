@@ -104,7 +104,7 @@
 			max-height: calc(100vh - 100px);
 			box-shadow: 0px 0px 80px black;
 			cursor: zoom-out;
-			border-radius: 10px;
+			border-radius: var(--radius-large);
 			border: 6px solid var(--white);
 		}
 	}

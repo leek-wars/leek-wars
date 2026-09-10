@@ -26,7 +26,7 @@
 		</div>
 		<season-banner />
 		<div class="container last">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
+			<div class="column3 categories">
 				<panel class="garden-left first last">
 					<template #content>
 						<template v-if="category === 'challenge'">
@@ -109,7 +109,7 @@
 				</panel>
 			</div>
 
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
+			<div class="column9">
 				<panel class="garden-right first">
 					<loader v-if="!garden || !$store.state.farmer" />
 
@@ -293,19 +293,18 @@
 										<garden-leek :leek="leek" />
 									</router-link>
 								</div>
-								<br>
 								<div class="arena-preferences">
 									<h4>{{ $t('arena_preference') }}</h4>
-									<lw-radio-group v-model="arenaPreference" inline>
-										<lw-radio :label="$t('arena_no_preference')" :value="-1" />
-										<lw-radio :label="$t('arena_mode_br')" :value="0" />
-										<lw-radio :label="$t('arena_mode_war')" :value="1" />
-										<lw-radio :label="$t('arena_mode_chest_hunt')" :value="2" />
-										<lw-radio :label="$t('arena_mode_colossus')" :value="3" />
-									</lw-radio-group>
+									<div class="modes">
+										<div v-for="mode of ARENA_PREFERENCES" :key="mode" v-ripple :class="{selected: arenaPreference === mode}" class="mode" @click="arenaPreference = mode">
+											<v-icon>{{ modeIcon(mode) }}</v-icon>
+											<span>{{ modeLabel(mode) }}</span>
+										</div>
+									</div>
 								</div>
-								<br>
-								<v-btn v-if="garden.fights" color="primary" :disabled="!arenaEnabled" @click="arenaRegister">{{ $t('main.select') }}</v-btn>
+								<div v-if="garden.fights" class="arena-register">
+									<v-btn color="primary" size="large" :disabled="!arenaEnabled" @click="arenaRegister"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('main.select') }}</v-btn>
+								</div>
 								<garden-no-fights v-else :canbuy="true" @bought="reload" />
 								<div v-if="garden.fights && liveArenaCount > 0" class="arena-live">
 									<div class="arena-live-count">
@@ -702,6 +701,8 @@
 		return t(ARENA_MODE_LABELS[preference] || 'arena_no_preference') as string
 	}
 	const modeIcon = arenaModeIcon
+	// -1 = peu importe, puis les quatre modes dans l'ordre de `ARENA_MODE_LABELS`.
+	const ARENA_PREFERENCES = [-1, ...ARENA_MODE_LABELS.map((_, i) => i)]
 
 	if (store.state.wsconnected) {
 		updateWS()
@@ -717,7 +718,6 @@
 		request = LeekWars.get('garden/get')
 		request.then(handleGardenData)
 
-		emitter.on('back', back)
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 		emitter.on('garden-queue', (data: unknown) => queue.value = data as number)
 
@@ -731,14 +731,9 @@
 		window.addEventListener('pageshow', onPageShow)
 	})
 
-	function back() {
-		if (category.value === 'challenge') {
-			router.back()
-		} else {
-			router.push('/garden')
-		}
-		localStorage.removeItem('garden/category')
-	}
+	/* Plus de retour vers une liste de catégories : sur mobile la page ne se
+	   dédoublait plus qu'ici (`splitBack`), et le bouton de la barre
+	   d'application redevient le menu, comme sur les pages sans split. */
 
 	function handleGardenData(r: unknown) {
 		garden.value = (r as { garden: GardenData }).garden
@@ -769,7 +764,6 @@
 	}
 
 	onBeforeUnmount(() => {
-		emitter.off('back', back)
 		if (request) { request.abort() }
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 		emitter.off('wsconnected', updateWS)
@@ -785,14 +779,15 @@
 		const params = route.params
 		category.value = params.category as string
 		if (!category.value) {
-			const savedCategory = localStorage.getItem('garden/category')
-			if (savedCategory || !LeekWars.mobile) {
-				let defaultCategory = savedCategory || 'solo'
-				if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
-				if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !store.state.farmer.br_enabled) { defaultCategory = 'solo' }
-				replaceNextTick('/garden/' + defaultCategory)
-				return
-			}
+			// Le mobile restait sur la liste des catégories tant qu'aucune n'avait été
+			// visitée (l'ancienne vue en deux écrans). Les catégories sont maintenant un
+			// menu en tête de page : il y a toujours une catégorie ouverte dessous, sur
+			// mobile comme ailleurs.
+			let defaultCategory = localStorage.getItem('garden/category') || 'solo'
+			if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
+			if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !store.state.farmer.br_enabled) { defaultCategory = 'solo' }
+			replaceNextTick('/garden/' + defaultCategory)
+			return
 		}
 		if ((category.value === 'solo' || category.value === 'arena') && (!params.item || !store.state.farmer?.leeks || !(parseInt(params.item as string, 10) in store.state.farmer.leeks))) {
 			const key = category.value === 'arena' ? 'arena-leek' : 'garden/leek'
@@ -826,7 +821,6 @@
 			}
 			const category_underscore = category.value.replace('-', '_')
 			LeekWars.setTitle(t('garden_' + category_underscore), t('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + t('n_fights', store.state.farmer.team_fights) : ''))
-			LeekWars.splitShowContent()
 
 			if (category.value === 'solo') {
 				loadLeek(store.state.farmer.leeks[item])
@@ -848,10 +842,6 @@
 					LeekWars.bossSquads.listen()
 				}
 			}
-		} else {
-			localStorage.removeItem("garden/category")
-			LeekWars.setTitle(t('title'))
-			LeekWars.splitShowList()
 		}
 	}
 
@@ -1159,6 +1149,86 @@
 			font-size: 20px;
 		}
 	}
+	/* ====== Mobile : les catégories deviennent un menu en tête de page ======
+	 *
+	 * La page se dédoublait (`splitBack`) : un premier écran ne montrait que les
+	 * cinq grosses cases de catégorie, le potager lui-même n'arrivait qu'au clic,
+	 * et le bouton de la barre d'application servait de retour. Un écran entier
+	 * pour cinq liens, et un mode de navigation propre à cette page.
+	 *
+	 * Les catégories sont maintenant une barre d'onglets au-dessus du potager
+	 * (demande de Pierre, 2026-09-10). Mêmes liens, même composant : seule la
+	 * mise en forme change ici, la colonne de gauche du bureau n'y touche pas.
+	 */
+	#app.app {
+		.categories {
+			/* La colonne prend toute la largeur (sans quoi `flex: 3` la met côte à
+			   côte avec le potager) et perd son collage en haut d'écran : la barre
+			   défile avec la page, la barre d'application est déjà fixe. */
+			flex: 1 0 100%;
+			position: static;
+		}
+		.garden-left {
+			/* `:not(.tab)` : le potager de défi met un onglet unique à la place de
+			   la liste, directement sous le panneau — il n'a pas à devenir une
+			   barre. */
+			> div:not(.tab) {
+				padding: 6px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+			.tab {
+				margin: 0;
+				padding: 7px 6px;
+				/* Toutes les catégories à la même largeur (« il faut que chaque
+				   catégorie fasse la même largeur ») : base 0, elles se
+				   partagent la ligne à parts égales quelle que soit la longueur
+				   de l'intitulé. `fit-content` en largeur minimale garde le
+				   garde-fou des langues à mots longs — un intitulé qui ne tient
+				   pas dans sa part pousse la barre à se replier sur deux lignes
+				   plutôt qu'à se faire couper. */
+				flex: 1 1 0;
+				min-width: fit-content;
+				text-align: center;
+			}
+			/* Le nombre de participants (4 contre 4, 10-20…) reste sous
+			   l'intitulé, en petit : c'est ce qui distingue les catégories les
+			   unes des autres (Pierre, 2026-09-10 : « tu peux quand même
+			   remettre les infos sur le nombre de joueurs »). Tout est mis à
+			   l'échelle de la barre — la carte du bureau écrivait les compteurs
+			   en 20 px. */
+			.tab h2 {
+				font-size: 15px;
+				margin: 0 0 1px;
+			}
+			.tab .player-count {
+				font-size: 11px;
+				padding: 0;
+			}
+			.tab .player {
+				height: 11px;
+				margin-bottom: 3px;
+			}
+			.tab .sword {
+				height: 11px;
+				margin: 0 4px 3px;
+			}
+			/* La file d'attente n'est pas un onglet : elle passe sous la barre. */
+			.queue {
+				flex: 1 0 100%;
+				padding: 6px;
+				display: flex;
+				align-items: baseline;
+				justify-content: center;
+				gap: 8px;
+				.count {
+					padding: 0;
+					font-size: 15px;
+				}
+			}
+		}
+	}
 	.sword {
 		height: 20px;
 		margin: 0 10px;
@@ -1316,6 +1386,65 @@
 	}
 	.leek-count {
 		font-size: 22px;
+	}
+	/* ====== Préférence de mode d'arène ======
+	 *
+	 * C'étaient cinq cases à cocher alignées à gauche sous les poireaux, avec le
+	 * bouton d'inscription posé à droite sur la même ligne : rien ne disait que
+	 * les deux allaient ensemble, et les modes n'avaient pas d'image (demande de
+	 * Pierre, 2026-09-10 : « améliorer cette UI »).
+	 *
+	 * Le choix devient une rangée de pastilles centrées, chacune avec le glyphe
+	 * du mode — les mêmes que la pastille de préférence affichée sur les
+	 * poireaux en attente (`.arena-pref`) — et l'inscription passe dessous, au
+	 * centre. Le sélectionné suit la doctrine du vert. */
+	.arena-preferences {
+		/* Pas de largeur maximale : à 620 px les cinq pastilles passaient sur
+		   deux lignes alors que la colonne en offre le double (« ça fait 2
+		   lignes c'est dommage »). Elles tiennent sur une ligne dès 740 px de
+		   colonne, et se replient d'elles-mêmes en dessous. */
+		margin: 20px auto 0;
+		h4 {
+			text-align: center;
+			margin-bottom: 10px;
+			color: var(--text-color-secondary);
+		}
+		.modes {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 8px;
+		}
+		.mode {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			padding: 7px 10px;
+			white-space: nowrap;
+			border: 1px solid var(--border);
+			border-radius: var(--radius-tiny);
+			color: var(--text-color-secondary);
+			font-weight: 500;
+			cursor: pointer;
+			user-select: none;
+			transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+			.v-icon {
+				font-size: 18px;
+			}
+			&:hover {
+				background: var(--background-row);
+				border-color: var(--border-strong);
+				color: var(--text-color);
+			}
+			&.selected {
+				background: color-mix(in srgb, var(--primary) 12%, transparent);
+				border-color: var(--primary);
+				color: var(--primary);
+			}
+		}
+	}
+	.arena-register {
+		margin-top: 16px;
 	}
 	.arena-waiting,
 	.arena-live-count {

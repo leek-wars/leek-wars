@@ -111,7 +111,7 @@ const closed = complete
 .bubble {
 	background: var(--pure-white);
 	padding: 20px 30px;
-	border-radius: 7px;
+	border-radius: var(--radius-medium);
 	position: relative;
 	margin-bottom: 100px;
 	width: 530px;

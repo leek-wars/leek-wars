@@ -108,6 +108,17 @@ const delta = (carac: string) => props.alterations?.[carac] ?? 0
 			}
 		}
 	}
+	// v3 : ni liseré ni halo, le fond uni suffit.
+	//
+	// Le liseré de 3 px à gauche est parti à la demande de Pierre (2026-09-10),
+	// remplacé par une lueur façon halo de rareté ; essayée centrée, puis venant
+	// de la droite, puis réduite à un accent de bord — et finalement abandonnée
+	// (« pour le halo laisse tomber on l'enlève »). Reste le fond opaque, qui
+	// porte le signe sur toute la largeur de la ligne. Le v2 garde son liseré.
+	body:not(.v2) .stats .stat.altered,
+	body:not(.v2) .stats .stat.broken {
+		box-shadow: none;
+	}
 	body.dark {
 		.stats .stat.negative {
 			background: rgb(83, 14, 14);

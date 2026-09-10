@@ -115,7 +115,7 @@
 		align-items: center;
 		gap: 3px;
 		padding: 2px 8px;
-		border-radius: 12px;
+		border-radius: var(--radius-pill);
 		font-size: 12px;
 		color: var(--white);
 		&.chat {

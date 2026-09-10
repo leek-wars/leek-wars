@@ -323,7 +323,7 @@ function deleteTrophy() {
 		display: inline-block;
 		margin: 0 10px;
 		padding: 2px 5px;
-		border-radius: 5px;
+		border-radius: var(--radius);
 		font-size: 16px;
 		margin-top: 2px;
 		color: var(--text-color-secondary);
@@ -353,7 +353,7 @@ function deleteTrophy() {
 		align-items: center;
 		padding: 3px 9px;
 		margin: 10px 0;
-		border-radius: 5px;
+		border-radius: var(--radius);
 		margin-right: 10px;
 		white-space: nowrap;
 		i {

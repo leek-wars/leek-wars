@@ -441,4 +441,56 @@
 	.delimiter {
 		margin: 35px;
 	}
+
+	/* ====== Mobile : trois compteurs par ligne ======
+	 *
+	 * Les cartes sont des `inline-block` à `min-width: 128px` : sur un téléphone
+	 * il n'en tenait que deux par ligne, et la page des statistiques faisait une
+	 * dizaine d'écrans de haut (demande de Pierre, 2026-09-10).
+	 *
+	 * La section passe en flex pour que le tiers de largeur soit calculable
+	 * (l'espace blanc entre deux `inline-block` compte comme un caractère et
+	 * fausse tout calcul en pourcentage). Les graphiques et les séparateurs, qui
+	 * flottaient dans la colonne, prennent une ligne entière : à cette largeur
+	 * un camembert de 180 px flanqué de cartes de 120 ne tient de toute façon
+	 * pas. */
+	#app.app .category {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: stretch;
+		gap: 6px;
+	}
+	#app.app .statistic {
+		margin: 0;
+		min-width: 0;
+		flex: 1 1 calc(33.333% - 4px);
+		max-width: calc(33.333% - 4px);
+		padding: 4px 6px;
+		.label {
+			font-size: 11.5px;
+			margin-bottom: 2px;
+			.v-icon,
+			.stat-lang-logo {
+				font-size: 13px;
+				width: 13px;
+				height: 13px;
+			}
+		}
+		.value {
+			font-size: 15px;
+		}
+		.type {
+			font-size: 11px;
+		}
+	}
+	#app.app .chart-wrap {
+		flex: 1 0 100%;
+		float: none;
+		margin-top: 6px;
+	}
+	#app.app .delimiter {
+		flex: 1 0 100%;
+		margin: 6px 0;
+	}
 </style>

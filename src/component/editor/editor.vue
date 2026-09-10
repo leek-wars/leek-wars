@@ -2038,6 +2038,17 @@
 			}
 		}
 	}
+	/* v3 : le bleu du survol (#0086bc, écrit en dur) est une couleur du v2 qui
+	   n'appartient à aucune palette du thème — une barre bleu vif en plein
+	   milieu de l'éditeur (Pierre, 2026-09-10 : « séparateur dans l'éditeur en
+	   bleu à changer »). La poignée s'allume dans le vert de marque, comme tout
+	   ce qui se manipule, et le glyphe suit. Le v2 garde son bleu. */
+	body:not(.v2) .resizer:hover {
+		background: color-mix(in srgb, var(--primary) 22%, transparent);
+		.v-icon {
+			color: var(--primary);
+		}
+	}
 	.explorer-resizer {
 		width: 10px;
 		cursor: ew-resize;

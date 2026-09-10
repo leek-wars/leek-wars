@@ -34,7 +34,11 @@
 			</div>
 		</template>
 		<template #content>
-			<chat :id="chatID" :style="{height: height + 'px'}" />
+			<!-- Sans `height`, le chat n'impose rien et se laisse étirer par son
+			     conteneur : c'est ce que fait le panneau social, où il occupe la
+			     hauteur restante de la colonne. Le forum, lui, le pose dans le
+			     flux d'une page et lui donne ses 400 px. -->
+			<chat :id="chatID" :style="height ? {height: height + 'px'} : undefined" />
 		</template>
 	</panel>
 </template>
@@ -52,7 +56,8 @@ defineOptions({ name: 'ChatPanel' })
 const props = defineProps<{
 	toggle: string
 	chat: string
-	height: number
+	/** Hauteur fixe en pixels. Omise, le chat prend celle que lui donne son conteneur. */
+	height?: number
 }>()
 
 const { locale } = useI18n()
@@ -117,14 +122,24 @@ function setChatLanguage(chat: number) {
 .language .name {
 	padding-left: 8px;
 }
+// Le compteur d'éleveurs connectés était trois éléments inline : la parenthèse,
+// le nombre et un glyphe remonté de 3 px à la main. Chacun se calait sur la ligne
+// de base de la police d'affichage du titre, qui n'est pas celle du glyphe —
+// « GÉNÉRAL », « (2 » et l'icône finissaient sur trois hauteurs différentes
+// (Pierre, 2026-09-10 : « les textes ici ne sont pas alignés »). Tout est aligné
+// au centre, dans une seule ligne flex.
 .farmer-count {
-	.v-icon.icon {
-		margin-right: 0;
-		font-size: 19px;
-		margin-bottom: 3px;
-	}
+	display: inline-flex;
+	align-items: center;
 	.count {
+		display: inline-flex;
+		align-items: center;
+		gap: 3px;
 		font-size: 15px;
+	}
+	.v-icon.icon {
+		margin: 0;
+		font-size: 19px;
 	}
 }
 .header .title {

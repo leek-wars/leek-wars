@@ -483,8 +483,8 @@
 	.life-bar .wrapper {
 		display: inline-block;
 		background: #fffa;
-		border-bottom-left-radius: 12px;
-		border-bottom-right-radius: 12px;
+		border-bottom-left-radius: var(--radius-pill);
+		border-bottom-right-radius: var(--radius-pill);
 		padding-top: 3px;
 		padding-left: 4px;
 		padding-bottom: 0px;
@@ -504,10 +504,10 @@
 		margin-right: 0px;
 	}
 	.life-bar .wrapper :first-of-type {
-		border-bottom-left-radius: 10px;
+		border-bottom-left-radius: var(--radius-large);
 	}
 	.life-bar .wrapper :last-of-type {
-		border-bottom-right-radius: 10px;
+		border-bottom-right-radius: var(--radius-large);
 	}
 	.fight-actions {
 		text-align: left;
@@ -517,7 +517,7 @@
 		overscroll-behavior: contain;
 		position: absolute;
 		background: var(--white);
-		border-top-right-radius: 5px;
+		border-top-right-radius: var(--radius);
 		box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 		left: 0;
 		bottom: 5px;

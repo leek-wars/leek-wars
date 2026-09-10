@@ -275,7 +275,7 @@
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
 						<div>{{ $filters.number($store.state.farmer.rewards.reduce((s: number, r: Reward) => s + r.habs, 0)) }} <span class="hab"></span></div>
 					</div>
-					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+					<v-btn class="get-all" :class="{ 'notif-trophy': LeekWars.legacyTheme }" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <v-icon>mdi-tray-arrow-down</v-icon></v-btn>
 				</div>
 				<div v-autostopscroll class="soussous-list">
 					<template v-for="reward in $store.state.farmer.rewards" :key="reward.trophy">
@@ -286,7 +286,7 @@
 							<div class="spacer"></div>
 							<div>{{ $filters.number(reward.habs) }} <span class="hab"></span></div>
 						</router-link>
-						<v-btn class="get notif-trophy" @click.stop="retrieve(reward)"><img src="/image/icon/arrow-down-right-bold.svg"></v-btn>
+						<v-btn class="get" :class="{ 'notif-trophy': LeekWars.legacyTheme }" @click.stop="retrieve(reward)"><v-icon>mdi-tray-arrow-down</v-icon></v-btn>
 					</div>
 					</template>
 				</div>
@@ -1108,6 +1108,34 @@
 		img {
 			margin-left: 8px;
 		}
+		.v-icon {
+			margin-left: 8px;
+		}
+	}
+	/* v3 : les deux boutons de récupération portaient `notif-trophy`, la peau
+	   d'une RANGÉE de notification appliquée à des boutons — un aplat d'or par
+	   ligne, soit soixante-cinq carrés moutarde dans une liste de récompenses
+	   (Pierre, 2026-09-10 : « les boutons jaunes sont pas très beaux »). L'or
+	   reste ce qui identifie le coffre et ses notifications ; les boutons
+	   parlent la langue du thème : vert pour l'action principale, trait discret
+	   pour les récupérations ligne à ligne, qui s'allume au survol.
+	   La classe reste posée en v2 (`legacyTheme`), où le doré est d'origine. */
+	body:not(.v2) .soussous-panel {
+		.get-all {
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
+			border: 1px solid var(--primary);
+		}
+		.get {
+			background: var(--background-secondary);
+			color: var(--text-color-secondary);
+			border: 1px solid var(--border-strong);
+			&:hover {
+				background: var(--background-row);
+				border-color: var(--primary);
+				color: var(--primary);
+			}
+		}
 	}
 	.soussous-panel {
 		max-width: calc(100vw - 24px);
@@ -1117,9 +1145,13 @@
 			justify-content: space-between;
 			padding: 12px 10px;
 			background: var(--panel-header-background);
-			color: var(--white);
+			// L'encre de l'en-tête, et pas `--white` : le v2 gardait tous ses
+			// en-têtes de panneau sombres, le v3 en fait une surface claire en
+			// thème clair — le titre et le montant y disparaissaient. Le jeton
+			// vaut #eee en v2, donc rien ne bouge pour l'ancien design.
+			color: var(--panel-header-color);
 			h4 {
-				color: var(--white);
+				color: var(--panel-header-color);
 				margin-bottom: 5px;
 			}
 		}

@@ -24,7 +24,9 @@
 						<avatar :farmer="entity" />
 					</div>
 					<div v-if="type === 'leek'" class="image">
-						<leek-image :leek="entity" :scale="0.8" />
+						<!-- Le portrait à 0,8 mange 200 px de haut sur un téléphone, où
+						     l'écran entier tenait déjà dans l'en-tête de la page. -->
+						<leek-image :leek="entity" :scale="LeekWars.mobile ? 0.45 : 0.8" />
 					</div>
 					<div v-if="type === 'team'" class="image">
 						<emblem :team="entity" />
@@ -384,6 +386,46 @@ watch(viewMode, () => {
 	.view-toggle {
 		flex: none;
 	}
+	/* Le portrait commençait au ras des boutons de période : le bloc du haut
+	   n'a pas de marge et l'image n'a que son rembourrage de 10 px, mangé par
+	   le hors-champ du dessin (Pierre, 2026-09-10 : « plus de padding entre le
+	   leek et les boutons »). */
+	.periods {
+		margin-bottom: 16px;
+	}
+	/* Le sélecteur de vue est un `v-btn-toggle` Vuetify laissé tel quel : deux
+	   boutons « elevated » à fond BLANC PUR posés sur le parchemin, ombre
+	   comprise. Il reprend le vocabulaire du v3 : un cadre, pas de fond, et
+	   l'actif en aplat vert pâle sur encre verte, comme l'entrée de menu
+	   courante et les pastilles de mode d'arène. */
+	body:not(.v2) .view-toggle {
+		height: 30px;
+		border: 1px solid var(--border-strong);
+		background: transparent;
+		:deep(.v-btn) {
+			background: transparent;
+			box-shadow: none;
+			border-radius: 0;
+			min-width: 36px;
+			color: var(--text-color-secondary);
+			/* Vuetify peint survol et état actif dans un calque posé par-dessus
+			   le fond ; sans ça il grise l'aplat vert. */
+			.v-btn__overlay {
+				display: none;
+			}
+			&:hover {
+				background: var(--background-row);
+				color: var(--text-color);
+			}
+			&.v-btn--active {
+				background: color-mix(in srgb, var(--primary) 12%, transparent);
+				color: var(--primary);
+			}
+		}
+		:deep(.v-btn + .v-btn) {
+			border-left: 1px solid var(--border-strong);
+		}
+	}
 	.opponent-search {
 		height: 32px;
 		padding: 0 10px;
@@ -520,6 +562,85 @@ watch(viewMode, () => {
 	.res-draw { --c: var(--result-draw); }
 	.res-defeat { --c: var(--result-defeat); }
 	.res-generating { --c: var(--info); }
+
+	/* ====== Mobile : la page tenait entièrement au-dessus de la liste ======
+	 *
+	 * Mesuré à 412 px avant cette passe (demande de Pierre, 2026-09-10 : « la
+	 * page historique sur mobile est pas très optimisée ») : 894 px d'en-tête
+	 * pour un écran de 915, donc pas un seul combat visible à l'arrivée.
+	 * Périodes 76, portrait et bilan 229, barre de recherche 42, filtres 380.
+	 *
+	 * Rien n'est masqué — tous les filtres restent atteignables — mais chaque
+	 * bloc reprend la place qu'il vaut sur un téléphone. */
+	#app.app {
+		/* Quatre périodes de 150 px de large : deux par ligne. Elles se
+		   partagent la ligne à parts égales, comme les catégories du potager. */
+		.periods {
+			display: flex;
+			gap: 4px;
+			padding: 0 8px;
+		}
+		.period {
+			width: auto;
+			flex: 1 1 0;
+			min-width: 0;
+			margin: 0;
+			padding: 8px 2px;
+			font-size: 11px;
+		}
+		.image {
+			padding: 0;
+		}
+		.stats table {
+			margin: 6px auto;
+		}
+		.stats td {
+			padding: 0 10px;
+		}
+		/* Le champ de recherche passait à 200 px entre le compteur et le
+		   sélecteur de vue : trois éléments serrés sur une ligne de 412. Il
+		   prend sa propre ligne, pleine largeur. */
+		.header-row {
+			flex-wrap: wrap;
+			padding: 0 8px;
+		}
+		.opponent-search {
+			order: 3;
+			flex: 1 0 100%;
+			margin: 8px 0 0;
+		}
+		/* L'intitulé de filtre réservait 130 px à droite d'une ligne de 412 : il
+		   ne restait pas de quoi poser trois pastilles, et chaque famille
+		   s'étalait sur trois ou quatre lignes. Il passe au-dessus de ses
+		   pastilles, et celles-ci se resserrent d'un cran. */
+		.history-options {
+			margin: 12px 8px;
+			gap: 10px;
+		}
+		.filter-row {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 4px;
+		}
+		.filter-label {
+			flex: none;
+			text-align: left;
+			padding-top: 0;
+			font-size: 11px;
+		}
+		.chips {
+			gap: 5px;
+		}
+		.chip {
+			padding: 4px 9px;
+			font-size: 12px;
+			gap: 5px;
+		}
+		.chip.all {
+			padding-left: 11px;
+			padding-right: 11px;
+		}
+	}
 
 	/* Peau v2 : les valeurs historiques, au pixel près. */
 	body.v2.dark .chip { --c: #7ec93f; }

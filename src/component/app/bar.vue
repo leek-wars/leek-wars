@@ -249,7 +249,7 @@ function readNotification(notification: Notification) {
 		padding: 4px 3px;
 		background: #ff6f00;
 		color: var(--white);
-		border-radius: 5px;
+		border-radius: var(--radius);
 		height: 20px;
 		line-height: 12px;
 	}

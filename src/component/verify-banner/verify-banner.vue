@@ -62,7 +62,7 @@ function reopen() {
 		gap: 18px;
 		width: min(740px, calc(100vw - 24px));
 		padding: 16px 18px 16px 22px;
-		border-radius: 14px;
+		border-radius: var(--radius-pill);
 		color: var(--white);
 		background: linear-gradient(115deg, #b06000, #e89318, #ffc14d, #e89318, #b06000);
 		background-size: 300% 300%;
@@ -130,7 +130,7 @@ function reopen() {
 		font-weight: bold;
 		font-size: 16px;
 		padding: 12px 22px;
-		border-radius: 9px;
+		border-radius: var(--radius-large);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 		transition: transform 0.15s ease;
 		cursor: pointer;
@@ -157,7 +157,7 @@ function reopen() {
 		align-items: center;
 		gap: 10px;
 		padding: 10px 16px 10px 12px;
-		border-radius: 16px;
+		border-radius: var(--radius-pill);
 		cursor: pointer;
 		color: var(--white);
 		background: linear-gradient(135deg, #b06000, #e89318);

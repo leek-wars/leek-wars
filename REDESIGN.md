@@ -1297,6 +1297,16 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     - Puis (« le bouton pour refermer doit être placé au-dessus du panel et
       pas à gauche ») : la poignée vit DANS le bandeau du haut, au coin
       droit, centrée sur sa hauteur, et la barre lui réserve 30 px.
+    - **2026-09-10** (« quand le panneau de droite est replié, réduire
+      l'espace sur la droite ») : `app.vue` gardait `margin-right: 30px` sur
+      `.app-center` quand le panneau est replié — la place de la poignée du
+      temps où elle était collée au bord de la page. Depuis qu'elle vit dans
+      le bandeau, ces 30 px ne réservaient qu'un couloir vide. Mesuré à
+      1920 px avant : contenu de 240 à 1855 pour une zone qui finit à 1905,
+      soit 50 px à droite contre 20 à gauche entre le menu et le contenu.
+      La marge passe à 0 en v3 (`leekwars-shell-v3.scss`), il ne reste que
+      les 20 px de retrait de `.app-center` : contenu jusqu'à 1885,
+      symétrique. Le v2 garde ses 30 px.
   - **Barre du haut pleine largeur sous 2200 px** (« la barre du haut doit
     prendre toute la largeur si l'écran est plus petit qu'une certaine
     largeur ») : les cales qui calaient le logo sur le menu et les boutons
@@ -1310,6 +1320,270 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     progression n'ont pas de hachures ici ») : elles portaient leurs propres
     classes ; elles reprennent le vocabulaire des jauges (`global-bar > bar`,
     `bar > xp-bar`) et attrapent cadre, or et rayures.
+- **2026-09-10 — retours d'interface 2.50 (au fil de l'eau)** :
+  - **Espace à droite, panneau social replié** : voir le sous-item daté sous
+    « Poignée du panneau social » plus haut. Marge de 30 px ramenée à 0.
+  - **Entrée active du menu** (« pas de bordure à gauche mais peut-être un peu
+    de couleur en fond ou/et une bordure en bas ? ») : le liseré vert de gauche
+    disparaît, ainsi que sa doublure transparente, qui décalait le contenu de
+    toutes les entrées et donc le centrage des icônes du menu replié. L'actif
+    devient un aplat de `--primary` à 12 % (encre verte à 6,8:1 sur le
+    parchemin teinté, 11,1:1 en sombre — mesuré). Un trait vert en pied
+    d'entrée, essayé dans la foulée, a été retiré tout de suite : « c'est pas
+    mal mais sans bordure c'est mieux ». L'aplat est le même que celui des
+    pastilles de mode d'arène ci-dessous.
+  - **Potager sur mobile : plus de split** (« mettre les 4 catégories dans un
+    menu en haut de la page », « et donc ne plus avoir de split sur le potager,
+    ce qui règle pas mal de problèmes ») : la page était la dernière à se
+    dédoubler par `LeekWars.splitBack` — un écran entier pour cinq liens, et le
+    bouton de la barre d'application détourné en retour. Les catégories
+    deviennent une barre d'onglets au-dessus du potager (`#app.app`, colonne à
+    100 %, sticky retiré), le potager est toujours ouvert dessous, et
+    `splitShowContent` / `splitShowList` / le handler `back` disparaissent de
+    `garden.vue`. Sur mobile, `/garden` sans catégorie redirige comme sur le
+    bureau (dernière visitée, sinon solo). Les compteurs de participants
+    (4 ⚔ 4, 10-20…) restent, en 11 px sous l'intitulé : « tu peux quand même
+    remettre les infos sur le nombre de joueurs ». Vérifié à 412 px : les cinq
+    onglets tiennent sur une ligne.
+  - **Statistiques sur mobile : trois par ligne** (« réduire la taille pour
+    qu'on puisse avoir 3 colonnes ») : les cartes sont des `inline-block` à
+    `min-width: 128px`, deux par ligne sur un téléphone. La section passe en
+    flex (un tiers de largeur n'est pas calculable entre deux `inline-block` :
+    l'espace blanc compte comme un caractère), les cartes à
+    `calc(33.333% - 4px)`, corps réduits d'un cran, et les camemberts comme les
+    séparateurs prennent une ligne entière.
+  - **Panneau des récompenses** (« problème de style ici ») : son en-tête
+    écrivait en `--white` sur `--panel-header-background` — le piège du lot 10,
+    encore : titre et montant invisibles sur l'en-tête clair du v3. Ils passent
+    à `--panel-header-color` (#eee en v2, donc l'ancien design ne bouge pas).
+  - **Coffre des récompenses en or** (« on peut mettre l'icône coffre en doré
+    comme avant (comme les notif-trophy) ») : le bloc portait déjà la classe
+    `notif-trophy`, mais la surface neutre qu'on lui donnait plus bas dans la
+    feuille (même spécificité, règle postérieure) écrasait l'or. Il reprend
+    l'aplat `--gold-bright`, le survol se lit par un cadre `--gold-text`, et
+    l'inversion du SVG en thème sombre part avec : chest.svg est une encre
+    sombre, ce que l'or demande, comme les vignettes des rangées de trophée.
+  - **Préférence de mode d'arène** (« améliorer cette UI ») : cinq cases à
+    cocher alignées à gauche avec le bouton d'inscription posé à leur droite →
+    une rangée de pastilles centrées portant le glyphe du mode (les mêmes que
+    la pastille `.arena-pref` des poireaux en attente), sélection en vert, et
+    l'inscription en dessous, au centre.
+  - **Pastilles de mode d'arène sur une ligne** (« ça fait 2 lignes c'est
+    dommage ») : c'était le `max-width: 620px` que j'avais posé sur le bloc,
+    alors que la colonne en offre 985. Retiré ; la rangée mesure 682 px et se
+    replie d'elle-même sur une colonne plus étroite.
+  - **Onglets du potager mobile à largeur égale** (« il faut que chaque
+    catégorie fasse la même largeur ») : `flex: 1 1 0` au lieu de `1 0 auto`,
+    la base ne dépend plus de la longueur de l'intitulé. 75 px chacun à 412 px.
+    `min-width: fit-content` reste comme garde-fou pour les langues à mots
+    longs : un intitulé trop large replie la barre plutôt que d'être coupé.
+  - **Historique sur mobile** (« la page historique sur mobile est pas très
+    optimisée ») : mesuré à 412 px, **894 px d'en-tête pour un écran de 915** —
+    pas un combat visible à l'arrivée. Périodes 76 (quatre boutons de 150 px
+    fixes, donc deux lignes), portrait et bilan 229, barre de recherche 42,
+    filtres 380 (l'intitulé de famille réservait 130 px À DROITE d'une ligne de
+    412, ne laissant pas la place de trois pastilles). Après : périodes à
+    parts égales sur une ligne, portrait à 0,45, recherche sur sa propre ligne,
+    intitulés de filtre au-dessus de leurs pastilles, pastilles resserrées d'un
+    cran — **647 px**, rien de masqué. Au passage, une `.page-bar` qui ne
+    contient que le titre disparaît sur mobile : `global.scss` masque le `h1`
+    (le titre vit dans la barre d'application) et il ne restait qu'une bande
+    vide de 48 px soulignée. Les barres qui portent des onglets ou des actions
+    ne bougent pas (vérifié sur potager, marché, trophées, page de poireau).
+  - **Notifications flottantes (`squares`)**, trois retours d'affilée :
+    - **Trophée** (« il faut que le square soit doré comme la notif ») : la
+      carte prenait une teinte à 10 % calculée sur `--notif-accent`, qui pour
+      un trophée vaut `--gold-text` — l'ENCRE sombre héritée du shell. D'où une
+      carte grise là où la notification est dorée. Elle porte maintenant
+      l'aplat plein `--gold-bright`, l'encre borde la carte (13,4 mesuré).
+    - **Victoire en tournoi** (« le même style que les trophées mais en
+      bleu ») : aplat `--info`, encre `--pure-white`, qui s'inverse avec le
+      thème — claire sur le bleu foncé du thème clair (4,5), sombre sur le bleu
+      vif du sombre (12,5). Il faut surcharger `.title` et `.message` : le
+      shell les peint en `--text-color` pour la rangée du panneau social, ce
+      qui donnait 1,33 sur l'aplat. Pas de retrait d'opacité sur la seconde
+      ligne, qui tombait sinon à 3,4 en clair.
+    - **Liseré** (« pas de bordure verte sur les notifs normales ») : le trait
+      vert de 3 px était le défaut de toutes les cartes — commentaire, message
+      privé — sans rien signaler. Il ne reste que sur les résultats de combat,
+      dans la couleur du résultat, quand l'option est active.
+  - **Boutons de récupération des récompenses** (« les boutons jaunes sont pas
+    très beaux ») : ils portaient `notif-trophy`, la peau d'une RANGÉE de
+    notification appliquée à des boutons — soixante-cinq carrés moutarde dans
+    la liste. « Tout récupérer » devient le bouton primaire vert, les boutons
+    de ligne un trait discret qui s'allume au survol, et les deux PNG de flèche
+    laissent place à `mdi-tray-arrow-down` (ajouté à `ICONS.md`). La classe
+    reste posée quand `legacyTheme` est actif : le v2 garde son doré.
+  - **Chasse aux arrondis** (« tu peux regarder partout dans le code pour voir
+    si y'a pas d'arrondis ? ») : les jetons `--radius-*` valent tous 0 en v3,
+    mais **121 `border-radius` étaient écrits en dur** et passaient donc à
+    travers. Les 47 valeurs en pixels sont converties en jetons (2 → tiny,
+    3 → small, 4/5 → radius, 6/7 → medium, 8/9/10 → large, 12 à 999 → pill),
+    dans 43 fichiers : badges de version du forum, bulles de chat, bannières,
+    encarts de l'éditeur, listes d'admin, aperçu du marché… Le v2 garde des
+    arrondis (ses jetons vont de 2 à 20 px) et bouge au plus de quelques
+    pixels ; à surveiller sur les bannières récentes, qui passent de 14/16 px à
+    20. Les `50%` sont laissés : ce sont des formes rondes assumées (points,
+    curseurs, spinners) que le v3 traite déjà au cas par cas — sauf le disque
+    d'or de la page LW+, passé au jeton. Vérifié ensuite en balayant le DOM
+    rendu de huit pages : plus un seul rayon non nul en v3.
+  - **Badge « Meilleure offre » de la banque** (« ce badge avec ce jaune est
+    pas très beau en thème clair ») : il est traité comme un bouton doré par le
+    shell, donc peint en `--gold` — l'or ASSOMBRI, calibré pour tenir comme
+    surface sous une encre claire sur le parchemin, qui sur une étiquette de
+    12 px rend un moutarde terne. Il passe à l'or VIF des notifications de
+    trophée et du coffre, même encre sombre : un seul jaune dans la famille
+    « or ». Au passage, la règle qui inversait la flèche du bouton `.get` est
+    supprimée — ce bouton n'est plus doré et n'a plus de PNG.
+  - **Historique, sélecteur de vue et portrait** (« plus de padding entre le
+    leek et les boutons », « fond blanc sur les deux icônes grille/liste à
+    enlever et faire bien dans le nouveau thème ») : le `v-btn-toggle` était
+    resté en Vuetify brut — deux boutons `elevated` à fond blanc pur et ombre,
+    posés sur le parchemin. Il prend le vocabulaire du v3 : un cadre, pas de
+    fond, l'actif en aplat vert pâle et encre verte, comme l'entrée de menu
+    courante. Et 16 px sous les boutons de période, qui touchaient le portrait.
+  - **Séparateur de l'éditeur** (« séparateur dans l'éditeur en bleu à
+    changer ») : `.resizer:hover` s'allumait en `#0086bc`, un bleu du v2 écrit
+    en dur qui n'appartient à aucune palette du thème. Il passe au vert de
+    marque à 22 %, glyphe compris. Le v2 garde son bleu.
+  - **Cartes de poireau de la page éleveur** (« au hover/active des leeks faire
+    le même style que sur le widget poireaux de la page d'accueil ») : le
+    survol posait `--pure-white` et une ombre Material — or `--pure-white` est
+    le parchemin en clair et du NOIR en sombre, donc un survol qui ne veut rien
+    dire d'un thème à l'autre. Elles reprennent les états du widget : surface
+    de rangée et trait fort au survol, liseré vert au clic, liseré réservé
+    transparent au repos pour que rien ne bouge.
+  - **Traits sous les titres dans les dialogues** (« je ne veux pas de bordures
+    sous les titres "apparence" etc. ici, et sous le titre du poireau ») : la
+    règle qui souligne la barre de titre d'un dialogue visait
+    `.popup .title` — donc aussi tous les `.title` du CONTENU. Dans
+    « Personnaliser le poireau », les quatre libellés de carte et le titre du
+    poireau héritaient chacun d'un trait et de l'encre d'en-tête. Le sélecteur
+    passe en enfant direct (`> .title`), la barre de titre étant posée à la
+    racine de la boîte par `popup.vue`. Vérifié : seule la barre garde son
+    trait.
+  - **Panneau social : des panneaux comme les autres** (« avoir une bordure sur
+    les panels notifications, messages sur le blabla comme sur les autres
+    panels ») : ils portaient un simple trait de séparation, hérité du parti
+    pris « le panneau est une colonne, pas une pile de cartes ». Ils reprennent
+    le cadre complet et les 12 px d'écart de `social.vue` — sans marge, deux
+    cadres voisins feraient un trait double. L'étirement du dernier bloc est
+    conditionné à `:has(> :not(.header))`, c'est-à-dire à un panneau déplié :
+    replié, il ne reste que son en-tête, et un grand cadre vide au bas de la
+    colonne se voit maintenant qu'il y a une bordure.
+  - **Chat du panneau social étiré** (« comme le chat panel va jusqu'en bas, tu
+    peux l'étirer ? ») : le panneau prenait bien la hauteur restante, mais son
+    contenu gardait les 300 px que `social.vue` lui passait en style inline —
+    d'où le vide sous le champ de saisie. `height` devient optionnel sur
+    `chat-panel.vue` (le forum garde ses 400 px), et le panneau du chat devient
+    une colonne flex dont le chat prend la place. **Non vérifié en local** :
+    `env.SOCIAL` est désactivé sur la bêta locale, le panneau ne s'y monte pas.
+  - **Catégories du marché** (« les catégories sont trop petites et de pas
+    accepter de line-break ») : la grille était en `minmax(100px, 1fr)`, où
+    « Chapeaux » et « Apparats » ne tenaient pas à côté de leur glyphe et se
+    cassaient sous lui. 140 px, intitulé insécable, glyphe et texte centrés
+    ensemble, et un peu plus de rembourrage.
+  - **Widget « Talent et derniers combats »** (« c'est dommage de n'avoir que
+    4 combats et d'avoir du vide en bas ») : la courbe était bornée à 120 px
+    (30 % de la hauteur), elle monte à 200 (40 %), et la liste colle ses cartes
+    au bas du panneau — le serveur ne donne que six combats, le reste d'espace
+    va donc à la courbe plutôt qu'à un blanc. La courbe reste à taille FIXE :
+    la liste doit rester le seul élément flexible de la colonne, sans quoi sa
+    hauteur dépendrait de son contenu et `useFitCount` boucherait (le gel de
+    l'accueil mobile du 2026-09-09). Gap du widget à 6 px et marge haute du
+    canvas à 2 px pour l'air au-dessus de la courbe.
+  - **Poignée de redimensionnement des widgets** (« l'icône pour resize un
+    widget de la page d'accueil peut être plus grand, visible et beau ») :
+    gridstack la dessine avec un SVG en data-URI tracé en `#666` fixe, de
+    10 px — terne sur le parchemin, invisible en sombre. Redessinée à l'encre
+    du thème, verte quand la souris est sur le widget. Le DESSIN a demandé
+    quatre essais (« l'icône resize sur la page home est étrange ») : deux
+    angles droits emboîtés se lisaient comme un double chevron « ≫ » vers la
+    droite, un dégradé répété taillé au masque rendait des traits verticaux, un
+    masque SVG ne rendait rien de net. **La cause était la même à chaque fois** :
+    gridstack pose `transform: rotate(-45deg)` sur cette poignée — son image est
+    une double flèche VERTICALE qu'il redresse en diagonale par cette rotation —
+    donc tout ce qu'on dessinait dedans tournait de 45° de plus et retombait à
+    la verticale. En annulant la rotation, deux pseudo-éléments de 17 et 9 px
+    tournés de 45° autour de leur extrémité droite donnent le grip en biais
+    classique. Vérifié à l'écran. Elle se calait sur le coin de l'ITEM gridstack, qui
+    déborde du panneau de la marge de 6 px posée autour de chaque item : elle
+    tombait donc dans la gouttière, hors de la carte (« l'icône est en dehors »)
+    — 10 px de retrait la ramènent à 4 px du bord intérieur. Deux crans de
+    survol (« un effet d'hover serait pas mal ») : encre pleine quand la souris
+    entre dans le widget, vert et aplat vert pâle quand elle vise la poignée.
+  - **Caractéristiques d'une invocation** (« on peut quand même resserrer les
+    caracs en hauteur ») : 31 px de pas pour une icône de 20. Les rangées
+    passent en flex (l'icône en `vertical-align: bottom` traînait le jambage de
+    sa boîte de ligne), l'icône à 18 px, et un rembourrage de 5 px venu
+    d'ailleurs est neutralisé par un sélecteur à trois classes. **18 px de pas,
+    le bloc passe de 186 à 114 px.**
+  - **Chat flottant** (« le panel de chat flottant a un souci de style ») :
+    encore `--white` sur `--panel-header-background`, titre et croix presque
+    invisibles en thème clair ; l'encre d'en-tête reprend le jeton. Ses coins
+    en `border-top-*-radius: 7px` passent aux jetons — les rayons composés
+    avaient échappé à la conversion du matin, qui ne visait que `border-radius`
+    (six autres fichiers corrigés dans la foulée).
+  - **En-tête du panneau de chat** (« les textes ici ne sont pas alignés ») :
+    le compteur d'éleveurs était trois éléments inline calés sur la ligne de
+    base de la police d'affichage, plus un glyphe remonté de 3 px à la main —
+    trois hauteurs différentes. Une seule ligne flex centrée. Vérifié : nom,
+    compteur et glyphe sur le même axe au pixel.
+  - **Option « Ancien design » masquée** (demande de Pierre, « on va le faire
+    mais plus tard ») : `v-if="false"` sur la case des réglages. Le réglage
+    lui-même est intact (clé `design`, `LeekWars.legacyTheme`) : un joueur déjà
+    en v2 y reste, et une ligne suffit à la remettre.
+  - **Cartes de poireau de la page éleveur, suite** (« peut un peu espacer les
+    infos ici ») : nom, titre, talent et niveau se touchaient sous le poireau.
+    La colonne porte l'écart (`gap: 6px`) au lieu de quatre jeux de marges qui
+    s'additionnaient, et les marges du v2 sont neutralisées en v3 pour ne pas
+    compter deux fois.
+  - **Dialogue des puces d'un poireau** (« on peut faire un écartement égal
+    vertical et horizontal entre les puces ? ») : la grille était en
+    `minmax(60px, 1fr)`, donc les colonnes s'élargissaient pour remplir la
+    ligne et chaque puce se centrait dans la sienne — l'écart horizontal valait
+    le `gap` PLUS le reste de la division, l'écart vertical le `gap` tout court.
+    Colonnes à 60 px fixes, `gap: 8px` dans les deux sens, et
+    `justify-content: center` pour que le résidu passe en marges de la grille
+    plutôt qu'entre les puces. Les mêmes grilles existent pour les composants,
+    les chapeaux et les potions : pas touchées, à voir avec Pierre.
+  - **Lignes de stats altérées d'un composant** : le liseré interne de 3 px à
+    gauche est parti (« on peut remplacer les bordures à gauche par une lueur
+    rouge ou verte ? comme pour la rareté »), et la lueur qui devait le
+    remplacer a été essayée centrée, puis venant de la droite, puis réduite à un
+    accent de bord — avant d'être **abandonnée** (« pour le halo laisse tomber
+    on l'enlève »). État final en v3 : `box-shadow: none`, il ne reste que le
+    fond opaque, qui porte le signe sur toute la largeur de la ligne (il est
+    opaque exprès, #622). Le v2 garde son liseré.
+  - **Dialogue des puces d'un poireau** (« on peut faire un écartement égal
+    vertical et horizontal entre les puces ? ») : la grille était en
+    `minmax(60px, 1fr)`, donc les colonnes s'élargissaient pour remplir la
+    ligne et chaque puce se centrait dans la sienne — l'écart horizontal valait
+    le `gap` PLUS le reste de la division, l'écart vertical le `gap` tout court.
+    Colonnes à 60 px fixes, `gap: 8px` dans les deux sens, et
+    `justify-content: center` pour que le résidu passe en marges de la grille
+    plutôt qu'entre les puces. Les mêmes grilles existent pour les composants,
+    les chapeaux et les potions : pas touchées, à voir avec Pierre.
+  - **Lignes de stats altérées d'un composant** (« on peut remplacer les
+    bordures à gauche par une lueur rouge ou verte ? comme pour la rareté ») :
+    le liseré interne de 3 px devient une lueur dans le vert de victoire ou le
+    rouge de défaite, la recette de halo des rangées de notification. Elle vient
+    de la DROITE (« je voudrais qu'ils viennent de la droite »), du côté où la
+    ligne écrit son delta : `inset -16px 0 16px -10px`, l'étalement négatif
+    concentrant la lumière sur le bord au lieu de la répandre sur la ligne. Le
+    fond opaque, qui porte le signe sur toute la largeur, ne bouge pas — il est
+    opaque exprès (#622). **Non vérifié à l'écran** : il faut un composant
+    altéré, le compte local n'en a aucun et les routes marché des composants
+    retombent sur le pistolet sur la bêta locale.
+  - **Infobulle riche de poireau** (flot de « Invalid prop: type check failed
+    for prop "item" ») : `rich-tooltip-leek.vue` lisait
+    `LeekWars.items[template]` deux fois par vignette dans le rendu, sans
+    vérifier que l'objet existe — prop `item` à `undefined`, puis `.name` lu
+    sur `undefined` pour l'image. Les trois listes passent par des `computed`
+    qui apparient chaque équipement à son template et écartent ce que le client
+    ne connaît pas. **Cause racine non reproduite** : aucun des équipements du
+    poireau cité (192) ne manque dans le jeu de données local ; l'hypothèse
+    reste un objet non public ou plus récent que les données du client.
 - **2026-09-10 — le trait des avatars fait le tour, coupes comprises** (Pierre,
   capture du profil : « sur les avatars farmer : soit on fait la bordure
   coupée, soit on l'enlève »). Le trait s'arrêtait aux deux biseaux, ce que le

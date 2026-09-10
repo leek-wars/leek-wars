@@ -114,7 +114,7 @@ function jumpProblem(path: string, problem: Problem) {
 			align-items: center;
 			gap: 3px;
 			padding: 2px 8px;
-			border-radius: 10px;
+			border-radius: var(--radius-large);
 			font-size: 13px;
 			font-weight: 500;
 			cursor: pointer;
@@ -144,7 +144,7 @@ function jumpProblem(path: string, problem: Problem) {
 		.count {
 			padding: 1px 6px;
 			margin-left: 5px;
-			border-radius: 10px;
+			border-radius: var(--radius-large);
 			font-size: 13px;
 			border-width: 1px;
 			border-style: solid;

@@ -183,7 +183,7 @@
 			top: 6px;
 			right: 6px;
 			padding: 1px 7px;
-			border-radius: 10px;
+			border-radius: var(--radius-large);
 			font-size: 12px;
 			background: var(--background-secondary);
 			color: var(--text-color-secondary);

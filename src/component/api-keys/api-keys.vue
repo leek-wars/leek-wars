@@ -359,7 +359,7 @@
 		}
 	}
 	.role-chip {
-		border-radius: 10px;
+		border-radius: var(--radius-large);
 		padding: 1px 8px;
 		font-size: 11px;
 		font-weight: 500;

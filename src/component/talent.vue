@@ -52,11 +52,18 @@ defineProps<{
 	   qui substitue le SVG à plat au PNG (`img[src="/image/talent.png"]`).
 	   Cliquable (il mène au classement) : même jeu que les onglets de barre de
 	   page (Pierre, 2026-09-08) — au survol le trait passe à l'encre du texte,
-	   pressé (`:active`) trait et chiffre passent au vert. */
+	   pressé (`:active`) trait et chiffre passent au vert.
+
+	   Compact (Pierre, 2026-09-10 : « réduire le texte et la hauteur ») : le
+	   chiffre passe de 16 à 14 px, l'écriture des compteurs de la barre du haut,
+	   et la boîte de 28 à 24 px de haut. C'est l'icône qui donne la hauteur —
+	   `line-height` calé sur ses 20 px pour qu'un chiffre ne la dépasse pas, et
+	   1 px de marge intérieure de part et d'autre. L'icône, elle, garde ses
+	   20 px : son contour est dessiné pour cette taille (`talent.svg`). */
 	body:not(.v2) {
 		span.talent {
-			gap: 6px;
-			padding: 3px 10px 3px 6px;
+			gap: 5px;
+			padding: 1px 8px 1px 5px;
 			background: var(--background-header);
 			border: 1px solid var(--border-strong);
 			transition: border-color .12s ease, color .12s ease;
@@ -85,7 +92,8 @@ defineProps<{
 			border-radius: 0;
 			background: none;
 			box-shadow: none;
-			font-size: 16px;
+			font-size: 14px;
+			line-height: 20px;
 			font-weight: 600;
 			font-variant-numeric: tabular-nums;
 		}
@@ -107,7 +115,7 @@ defineProps<{
 		padding-left: 14px;
 		font-weight: 500;
 		box-shadow: var(--elevation-1);
-		border-top-right-radius: 14px;
-		border-bottom-right-radius: 14px;
+		border-top-right-radius: var(--radius-pill);
+		border-bottom-right-radius: var(--radius-pill);
 	}
 </style>

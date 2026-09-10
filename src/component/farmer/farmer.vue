@@ -1467,6 +1467,11 @@
 		margin-left: 5px;
 		color: var(--grey-7);
 	}
+	/* Même resserrement que sur la page du poireau : le gain du jour est une
+	   glose du talent, pas un second score (Pierre, 2026-09-10). */
+	body:not(.v2) .talent-more {
+		font-size: 14px;
+	}
 	.stats {
 		vertical-align: top;
 		.tournaments td {
@@ -1674,6 +1679,28 @@
 		.leek {
 			border: 1px solid transparent;
 			transition: background-color .12s ease, border-color .12s ease;
+		}
+		// Nom, titre, talent et niveau se touchaient sous le poireau (Pierre,
+		// 2026-09-10 : « peut un peu espacer les infos ici »). Les écarts sont
+		// portés par la colonne elle-même : une seule valeur à régler, et rien
+		// à additionner entre les marges de quatre blocs différents.
+		.leek > div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+		}
+		.leek .name {
+			line-height: 1.2;
+			max-width: 100%;
+		}
+		// Les marges du v2 feraient double emploi avec le `gap`.
+		.leek .talent-ranking {
+			margin: 0;
+			gap: 6px;
+		}
+		.leek img {
+			margin-bottom: 0;
 		}
 		.leek:hover {
 			background: var(--background-row);

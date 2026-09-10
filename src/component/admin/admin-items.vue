@@ -468,7 +468,7 @@
 .rarity-badge {
 	display: inline-block;
 	padding: 1px 8px;
-	border-radius: 10px;
+	border-radius: var(--radius-large);
 	font-size: 11px;
 	font-weight: 600;
 	color: var(--white);

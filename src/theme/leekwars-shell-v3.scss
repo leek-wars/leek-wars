@@ -655,6 +655,13 @@ body:not(.v2) {
 		   en dessous. Neutralisé ici seulement, le v2 garde son retrait. */
 		padding-right: 0;
 	}
+	/* Sauf le pied de page (Pierre, 2026-09-10 : « on peut enlever la bordure
+	   ici ? »). Le trait de la barre de titre SÉPARE : il pose le titre au-dessus
+	   du contenu. Sous les actions du bas, il ne sépare plus rien — c'est le
+	   dernier élément de la page — et ne fait que souligner un vide. */
+	.page-footer.page-bar {
+		border-bottom: none;
+	}
 	/* Recentrage vertical, sauf quand la barre contient un bloc plus haut
 	   qu'elle : l'éditeur y loge son propre menu d'outils, et centrer laissait
 	   sa barre d'onglets flotter au milieu du vide au lieu de rester en haut. */
@@ -671,6 +678,15 @@ body:not(.v2) {
 	.page-header.page-bar:not(:has(> .menu)) {
 		/* 60 px (Pierre, 2026-09-09), après les 72 hérités du sous-titre. */
 		min-height: 60px;
+	}
+	/* Sur mobile, le titre de page vit dans la barre d'application et
+	   `global.scss` masque le `h1` de la barre de page. Quand la barre ne
+	   contient que ce titre — l'historique d'un poireau, par exemple — il ne
+	   reste qu'une bande vide de 48 px soulignée d'un trait, en haut de la
+	   page. Elle disparaît avec son contenu ; celles qui portent des onglets
+	   ou des actions ne bougent pas. */
+	#app.app.connected .page > .page-bar:not(:has(> *:not(h1))) {
+		display: none;
 	}
 	.page-bar .tabs .tab::before,
 	.page-bar .tabs .tab::after,
@@ -1024,15 +1040,20 @@ body:not(.v2) {
 		padding: 12px 0;
 	}
 
-	/* Une entrée de menu : pas de fond, un liseré à gauche qui s'allume.
+	/* Une entrée de menu : pas de fond, l'état actif se marque par un aplat
+	   vert pâle souligné d'un trait vert.
 	   Le v2 empilait des aplats gris, ce qui rendait l'état actif peu lisible. */
 	/* `.nav-item` du mockup : 16 de marge laterale, 10 de gouttiere, corps 12,5,
-	   graisse 500, lisere de 3 px. Le rembourrage vertical du mockup (9) et ses
+	   graisse 500. Le rembourrage vertical du mockup (9) et ses
 	   icones (18) ont ete montes d'un cran a la demande de Pierre : l'entree
 	   passe de 36 a 40 px. */
+	/* Le liseré de gauche du mockup (3 px) a été retiré à la demande de Pierre
+	   (2026-09-10, « pas de bordure à gauche »). Sa doublure transparente part
+	   avec lui : elle ne servait qu'à réserver sa place, et elle décalait de
+	   3 px le contenu de toutes les entrées — donc le centrage des icônes une
+	   fois le menu replié. */
 	.menu .section {
 		background: transparent;
-		border-left: 3px solid transparent;
 		color: var(--text-color-secondary);
 		font-size: 12.5px;
 		font-weight: 500;
@@ -1048,10 +1069,14 @@ body:not(.v2) {
 		background: var(--background-row);
 		color: var(--text-color);
 	}
+	/* Actif : un aplat vert très pâle, et rien d'autre. Le trait vert en pied
+	   d'entrée essayé le même jour a été retiré tout de suite (« c'est pas mal
+	   mais sans bordure c'est mieux ») : l'aplat suffit à dire « tu es ici »,
+	   la doctrine du vert est respectée, et l'entrée reste une surface franche.
+	   L'aplat reste sous les 15 % pour que l'encre verte garde son contraste. */
 	.menu .section.router-link-active,
 	.menu .section.active {
-		background: var(--background-row);
-		border-left-color: var(--primary);
+		background: color-mix(in srgb, var(--primary) 12%, transparent);
 		color: var(--primary);
 	}
 	.menu .section .v-icon,
@@ -1124,8 +1149,8 @@ body:not(.v2) {
 		margin-top: 0;
 	}
 	/* Le v2 prolongeait l'entrée active par un triangle vert débordant sur la
-	   droite, pour la faire pointer vers la page. Le liseré de gauche joue ce
-	   rôle maintenant, et le triangle dépassait du menu. */
+	   droite, pour la faire pointer vers la page. L'aplat et le trait de pied
+	   jouent ce rôle maintenant, et le triangle dépassait du menu. */
 	.menu-center .section.router-link-active::before,
 	#app.menu-collapsed .menu-center .section.router-link-active::before {
 		display: none;
@@ -1286,10 +1311,19 @@ body:not(.v2) {
 		display: flex;
 		flex-direction: column;
 	}
+	/* Ses blocs sont des panneaux comme les autres (Pierre, 2026-09-10 :
+	   « avoir une bordure sur les panels notifications, messages sur le blabla
+	   comme sur les autres panels ») : ils portaient un simple trait de
+	   séparation, hérité de l'idée « le panneau est une colonne, pas une pile
+	   de cartes ». Ils reprennent le cadre complet du thème et l'espacement qui
+	   va avec — sans marge, deux cadres voisins feraient un trait double. */
 	.blabla-panel .panel {
+		/* 12 px : l'espacement que `social.vue` donne déjà à ses blocs. */
+		margin-bottom: 12px;
+		border: 1px solid var(--border-strong);
+	}
+	.blabla-panel > .content > .panel:last-child {
 		margin-bottom: 0;
-		border: none;
-		border-bottom: 1px solid var(--border-strong);
 	}
 	/* En-tête de section du panneau social, façon `.aside-head` du mockup :
 	   capitales espacées et corps réduit, sur la surface haute. */
@@ -1324,7 +1358,25 @@ body:not(.v2) {
 	.blabla-panel .conversation:hover {
 		background: var(--background-row);
 	}
-	.blabla-panel > .content > .panel:last-child {
+	/* `:has(> :not(.header))` = le panneau a du contenu, donc il est déplié.
+	   Replié, il ne reste que son en-tête, et l'étirer laisserait un grand
+	   cadre vide au bas de la colonne — invisible tant que ces panneaux
+	   n'avaient pas de bordure, voyant depuis. */
+	.blabla-panel > .content > .panel:last-child:has(> :not(.header)) {
+		flex: 1;
+		min-height: 0;
+	}
+	/* Le panneau du chat était étiré sur toute la hauteur restante, mais son
+	   contenu gardait les 300 px que `social.vue` lui passait en style inline :
+	   d'où le grand vide sous le champ de saisie (Pierre, 2026-09-10 : « comme
+	   le chat panel va jusqu'en bas, tu peux l'étirer ? »). La hauteur n'est
+	   plus imposée côté social, et le chat prend la place du panneau. `chat.vue`
+	   sait déjà répartir sa liste et sa barre de saisie en colonne flex. */
+	.blabla-panel .panel.chat-panel {
+		display: flex;
+		flex-direction: column;
+	}
+	.blabla-panel .panel.chat-panel > .chat {
 		flex: 1;
 		min-height: 0;
 	}
@@ -1725,10 +1777,21 @@ body:not(.v2) {
 	   (que `[class*="bg-"]` au-dessus ne peut pas attraper, leur couleur ne
 	   venant pas d'une classe Vuetify). */
 	.v-btn.notif-trophy,
-	.notif-trophy.retrieve,
-	.notif-trophy.best-label {
+	.notif-trophy.retrieve {
 		border: none;
 		background: var(--gold);
+		color: var(--gold-text) !important;
+	}
+	/* La pastille « Meilleure offre » de la banque n'est pas un bouton : c'est
+	   une étiquette de 12 px posée sur le bord d'une carte. L'or de surface
+	   (`--gold`, l'or ASSOMBRI pour tenir sous une encre claire sur le
+	   parchemin) y rendait un moutarde terne — Pierre, 2026-09-10 : « ce badge
+	   avec ce jaune est pas très beau en thème clair ». Elle prend l'or VIF des
+	   notifications de trophée et du coffre, avec la même encre sombre : la
+	   famille « or » du site n'a plus qu'un seul jaune. */
+	.notif-trophy.best-label {
+		border: none;
+		background: var(--gold-bright);
 		color: var(--gold-text) !important;
 	}
 	/* Le reflet des notifications n'a rien à faire sur un bouton. */
@@ -1753,14 +1816,8 @@ body:not(.v2) {
 		box-shadow: var(--shadow-pixel-pressed);
 		transform: translate(1px, 1px);
 	}
-	/* Le bouton d'une ligne de récompense du coffre (`.get`) est le seul à
-	   prendre la version BLANCHE de la flèche — ses voisins chargent déjà
-	   celle de `icon/black/`. Sur l'or il faut de l'encre sombre, donc on
-	   l'inverse. (Impossible de viser le fichier par son `src` : Vite inline
-	   les petits SVG en data-URI.) */
-	.v-btn.notif-trophy.get img {
-		filter: invert(1);
-	}
+	/* (Les boutons du coffre des récompenses ne sont plus dorés en v3 et ne
+	   portent plus de PNG de flèche : voir `menu.vue`, 2026-09-10.) */
 
 	/* ====== Ripple ======
 	 *
@@ -1792,17 +1849,24 @@ body:not(.v2) {
 		border: 1px solid var(--border-strong);
 		box-shadow: var(--shadow-pixel);
 	}
-	.v-overlay__content.popup .title {
+	/* `>` : la barre de titre du dialogue est un enfant DIRECT de la boîte
+	   (cf. `popup.vue`). Sans lui, la règle attrapait tous les `.title` du
+	   contenu — les libellés « Apparence », « Chapeau », « Arme », « Titre » du
+	   dialogue de personnalisation, et le titre du poireau juste au-dessus, qui
+	   héritaient chacun d'un trait sous eux (Pierre, 2026-09-10 : « je ne veux
+	   pas de bordures sous les titres "apparence" etc. ici, et sous le titre du
+	   poireau »). Ils reprennent du même coup leur propre encre. */
+	.v-overlay__content.popup > .title {
 		color: var(--panel-header-color);
 		border-bottom: 1px solid var(--border);
 	}
-	.v-overlay__content.popup .title .v-icon {
+	.v-overlay__content.popup > .title .v-icon {
 		color: var(--panel-header-color);
 	}
-	.v-overlay__content.popup .title .option {
+	.v-overlay__content.popup > .title .option {
 		background: transparent;
 	}
-	.v-overlay__content.popup .title .option:hover {
+	.v-overlay__content.popup > .title .option:hover {
 		background: var(--page-bar-tab-background-hover);
 	}
 	.v-overlay__content.popup .content {
@@ -2340,24 +2404,27 @@ body:not(.v2) {
 	/* ====== Coffre des récompenses ====== */
 
 	/* Il flottait sous le menu, sans surface ni alignement. On le pose comme une
-	   entrée de menu : même largeur utile, un trait, et le doré réservé à
-	   l'icône plutôt qu'à tout le bloc. */
+	   entrée de menu : même largeur utile, un cadre, et le même aplat d'or que
+	   les notifications de trophée — le bloc porte déjà la classe
+	   `notif-trophy`, mais la surface neutre qu'on lui donnait ici l'écrasait
+	   (même spécificité, règle plus bas dans la feuille). Pierre, 2026-09-10 :
+	   « on peut mettre l'icône coffre en doré comme avant (comme les
+	   notif-trophy) ». D'où aussi la disparition de l'inversion en thème
+	   sombre : chest.svg est une encre sombre, et c'est exactement ce que
+	   demande l'or, comme les vignettes des rangées de trophée. */
 	.soussous-dans-popoche {
 		margin: 12px 8px;
 		padding: 8px;
-		border: 1px solid var(--border);
-		background: var(--background-secondary);
+		border: 1px solid var(--gold-bright);
+		background: var(--gold-bright);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
+	/* Le survol se lit sur l'or par un cadre sombre : `--warning`, un orange,
+	   s'y confondait. */
 	.soussous-dans-popoche:hover {
-		border-color: var(--warning);
-	}
-	/* chest.svg est une encre sombre : posé sur la surface du panneau en mode
-	   sombre il disparaissait. Même recette que les éclairs de global.scss. */
-	&.dark .soussous-dans-popoche img {
-		filter: invert(1);
+		border-color: var(--gold-text);
 	}
 
 	/* ====== Décor ====== */
@@ -2391,6 +2458,17 @@ body:not(.v2) {
 			.chats {
 				padding-right: var(--social-width, 400px);
 			}
+		}
+		/* Panneau replié : app.vue garde 30 px de marge, l'ancienne place de la
+		   poignée quand elle était collée au bord de la page sur toute la
+		   hauteur. En v3 la poignée vit dans le bandeau du haut (cf.
+		   `.blabla-button` plus haut), et ces 30 px ne réservaient plus qu'un
+		   couloir vide : mesuré à 1920 px, 50 px entre le contenu et le bord
+		   à droite contre 20 px entre le menu et le contenu à gauche.
+		   Remise à zéro, il ne reste que les 20 px de retrait de `.app-center`,
+		   comme de l'autre côté. */
+		#app.connected.social-collapsed:not(.app) .app-center {
+			margin-right: 0;
 		}
 	}
 
