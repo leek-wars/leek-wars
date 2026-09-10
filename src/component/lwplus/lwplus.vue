@@ -275,12 +275,33 @@ async function resume() {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		background: linear-gradient(135deg,
-			color-mix(in srgb, var(--gold) 22%, var(--background)) 0%,
-			color-mix(in srgb, var(--gold) 10%, var(--background)) 100%);
+		position: relative;
+		overflow: hidden;
+		background: var(--panel-background);
 		color: var(--text-color);
 		padding: 28px 20px 24px;
 		text-align: center;
+		// Halo doré plutôt qu'un aplat jaune (retour de Pierre, 10/09) : même
+		// recette que la lumière de rareté d'une fiche d'item — une ellipse
+		// accrochée en haut, qui s'étire vers le bas et s'éteint sur les côtés.
+		// C'est le débordement qui se lit comme un halo, pas un fond teinté.
+		&::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 300px;
+			background: radial-gradient(ellipse 60% 100% at 50% 0%,
+				color-mix(in srgb, var(--gold-bright) 30%, transparent),
+				color-mix(in srgb, var(--gold-bright) 9%, transparent) 45%,
+				transparent 75%);
+			pointer-events: none;
+		}
+		// Le contenu passe DEVANT la lumière, il n'est pas teinté par elle.
+		& > * {
+			position: relative;
+		}
 	}
 	.mark {
 		margin: -8px auto -4px;

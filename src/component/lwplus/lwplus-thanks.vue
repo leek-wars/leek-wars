@@ -72,21 +72,21 @@ const formatDate = LeekWars.formatDate
 		display: flex;
 		justify-content: center;
 		padding: 14px 20px 8px;
-		background: linear-gradient(135deg,
-			color-mix(in srgb, var(--gold) 26%, var(--background)) 0%,
-			color-mix(in srgb, var(--gold) 10%, var(--background)) 100%);
-		// Halo doré derrière le logo, pour que le bandeau ne soit pas un aplat mort.
+		background: var(--panel-background);
+		// Même halo que le hero de /lwplus et que la lumière de rareté d'un item :
+		// une ellipse accrochée en haut, pas un aplat jaune.
 		&::before {
 			content: '';
 			position: absolute;
-			left: 50%;
-			top: 50%;
-			width: 420px;
-			height: 420px;
-			transform: translate(-50%, -55%);
-			background: radial-gradient(circle,
-				color-mix(in srgb, var(--gold-bright) 30%, transparent) 0%,
-				transparent 62%);
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: radial-gradient(ellipse 60% 120% at 50% 0%,
+				color-mix(in srgb, var(--gold-bright) 32%, transparent),
+				color-mix(in srgb, var(--gold-bright) 10%, transparent) 45%,
+				transparent 78%);
+			pointer-events: none;
 		}
 	}
 	.banner-logo {
