@@ -34,7 +34,7 @@
 						<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-bind="props" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
 							<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.displayLife / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
 							<div class="image">
-								<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
+								<img v-if="entity.summon" :src="'/' + summonImage(entity.bulbName)">
 								<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
 								<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.name + '.png'">
 								<img v-else-if="(entity instanceof Mob)" :src="'/image/mob/' + entity.name + '.png'">
@@ -78,6 +78,7 @@
 	import ActionLeek from '@/component/report/action-leek.vue'
 	import { ActionComponents as ActionComponentsTyped } from '@/model/action-components'
 	import { LeekWars } from '@/model/leekwars'
+	import { summonImage } from '@/model/summon'
 	import { Chest } from './game/chest'
 	import { Mob } from './game/mob'
 	import { Game } from './game/game'

@@ -1,6 +1,7 @@
 import { EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { LeekWars } from '@/model/leekwars'
+import { summonImage } from '@/model/summon'
 import { SHADOW_QUALITY, T, Texture } from './texture'
 
 // Invocation Prototaxite (#1544, 2.50 — ex-Menhir, devenu « un truc vivant mais statique »).
@@ -67,16 +68,16 @@ class Bulb extends FightEntity {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 9) { // Maïs (plante 2.50) — un seul visuel, back = front
-			this.bodyTexFront = T.get(this.game, 'image/bulb/corn_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = T.get(this.game, 'image/bulb/corn_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, summonImage('corn'), true, SHADOW_QUALITY)
+			this.bodyTexBack = this.bodyTexFront
 			this.setPlant('#2fe34a') // zone de soin
 		} else if (skin === 10) { // Piment (plante 2.50)
-			this.bodyTexFront = T.get(this.game, 'image/bulb/chilli_pepper_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = T.get(this.game, 'image/bulb/chilli_pepper_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, summonImage('chilli_pepper'), true, SHADOW_QUALITY)
+			this.bodyTexBack = this.bodyTexFront
 			this.setPlant('#ff4d0a') // portée de tir
 		} else if (skin === PROTOTAXITES_SUMMON_TEMPLATE) { // Prototaxite (2.50) — pas de zone
-			this.bodyTexFront = T.get(this.game, 'image/bulb/prototaxites_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = T.get(this.game, 'image/bulb/prototaxites_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, summonImage('prototaxites'), true, SHADOW_QUALITY)
+			this.bodyTexBack = this.bodyTexFront
 			this.setPlant('')
 		} else if (skin === 11) {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/tactician_bulb_front.png', true, SHADOW_QUALITY)

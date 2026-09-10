@@ -3,7 +3,7 @@
 		<h4>{{ $t('characteristic.characteristics') }}</h4>
 		<div class="characteristics">
 			<div class="summon-image">
-				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
+				<img :src="'/' + summonImage(summon.name)" width="width">
 			</div>
 			<div class="stats">
 				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="{ level: summon.level ?? 1 }" :test="true">
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { CHIPS as CHIPSImport } from '@/model/chips'
 import { LeekWars } from '@/model/leekwars'
+import { summonImage } from '@/model/summon'
 import { defineAsyncComponent } from 'vue'
 import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 

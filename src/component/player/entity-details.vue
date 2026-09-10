@@ -89,7 +89,7 @@
 		</div>
 		<div :class="{dead: entity.dead, dark}" class="details">
 			<div class="entity-image">
-				<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
+				<img v-if="entity.summon" :src="'/' + summonImage(entity.bulbName)">
 				<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="0.15" />
 				<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.name + '.png'">
 				<img v-else-if="(entity instanceof Mob)" :src="'/image/mob/' + entity.name + '.png'">
@@ -169,6 +169,7 @@
 
 <script setup lang="ts">
 	import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
+	import { summonImage } from '@/model/summon'
 	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
