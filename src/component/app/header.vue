@@ -100,7 +100,7 @@
 				     « 3 mois », « 2 ans »). Mène à la page d'abonnement. Absent sans LW+. -->
 				<div v-if="$store.state.farmer.lwplus && lwplusRemaining" class="button-wrapper">
 					<router-link to="/lwplus" :class="{'header-active': $route.path.startsWith('/lwplus')}">
-						<div class="header-button lwplus-button" @mouseenter="lwplusLogo?.spin()">
+						<div class="header-button lwplus-button" @pointerenter="spinPlus">
 							<lwplus-logo ref="lwplusLogo" variant="plus" alt="LW+" class="lwplus-icon" />
 							<span class="text">{{ lwplusRemaining }}</span>
 						</div>
@@ -242,6 +242,12 @@
 	// Temps restant de LW+ en une unité, arrondi vers le haut : jours sous un mois,
 	// mois sous un an, années ensuite. Les libellés abrégés viennent de main.n_*.
 	const lwplusLogo = ref<InstanceType<typeof LwplusLogo> | null>(null)
+
+	// Souris seulement : sur un écran tactile, l'appui déclenche le survol et le
+	// tour n'a pas lieu d'être (même règle que dans lwplus-logo.vue).
+	function spinPlus(event: PointerEvent) {
+		if (!event.pointerType || event.pointerType === 'mouse') { lwplusLogo.value?.spin() }
+	}
 	const lwplusRemaining = computed(() => {
 		const until = store.state.farmer?.lwplus_until ?? 0
 		const seconds = until - LeekWars.time
