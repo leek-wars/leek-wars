@@ -6,10 +6,11 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 // Logo LW+ : rendu 3D doré pré-calculé (Blender, scripts/generate-lwplus-logo.py).
-// Le WebP joue UN tour du « + » (1 s) puis s'arrête sur son image de fin, qui est
-// aussi l'image de départ. On relance le tour au survol, et nulle part tout seul
-// (décision de Pierre, 10/09) : le tour de trop finit par agacer sur une page
-// qu'on garde ouverte.
+// Au repos c'est une image FIXE : le WebP animé jouerait son tour tout seul au
+// premier affichage, et Pierre n'en veut nulle part (10/09). Le tour ne part
+// qu'au survol à la souris, en échangeant la source contre le WebP animé, qui
+// joue UN tour (1 s) puis s'arrête sur son image de fin — laquelle est aussi
+// l'image de départ, donc identique à la fixe : pas de saut à l'échange.
 //
 // Un navigateur ne redémarre pas une image animée déjà en cache (changer le
 // fragment de l'URL ne suffit pas, vérifié sur Chrome) : le fichier est donc
@@ -26,7 +27,8 @@ const props = withDefaults(defineProps<{
 }>(), { variant: 'lwplus', alt: 'LW+' })
 
 const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
-const base = computed(() => '/image/lwplus/' + props.variant + (reduced ? '_poster.png' : '.webp'))
+const base = computed(() => '/image/lwplus/' + props.variant + '_still.webp')
+const animated = computed(() => '/image/lwplus/' + props.variant + '.webp')
 const size = computed(() => props.variant === 'lwplus' ? { w: 800, h: 400 } : { w: 400, h: 400 })
 const src = ref(base.value)
 const SPIN_DURATION = 1000
@@ -80,7 +82,7 @@ defineExpose({ spin })
 onMounted(async () => {
 	if (reduced) { return }
 	try {
-		const response = await fetch(base.value)
+		const response = await fetch(animated.value)
 		if (!response.ok) { return }
 		const loaded = await response.blob()
 		// Un portail d'authentification répond 200 avec du HTML : ce Blob-là
