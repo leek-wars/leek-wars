@@ -279,7 +279,7 @@ async function resume() {
 		overflow: hidden;
 		background: var(--panel-background);
 		color: var(--text-color);
-		padding: 28px 20px 24px;
+		padding: 34px 24px 30px;
 		text-align: center;
 		// Halo doré plutôt qu'un aplat jaune (retour de Pierre, 10/09) : même
 		// recette que la lumière de rareté d'une fiche d'item — une ellipse
@@ -304,8 +304,8 @@ async function resume() {
 		}
 	}
 	.mark {
-		margin: -8px auto -4px;
-		width: 420px;
+		margin: -10px auto 0;
+		width: 460px;
 		max-width: 100%;
 	}
 	.offers {
@@ -330,23 +330,29 @@ async function resume() {
 	.hero .price {
 		margin-top: 18px;
 		// Le seul vrai aplat d'or de la page : c'est lui qui porte l'identité.
+		// Pilule d'or : `--gold-bright` et pas `--gold`, qui en clair est un or
+		// assombri calibré comme SURFACE de panneau et vire au moutarde terne
+		// sous une encre noire (retour de Pierre, 10/09). Le dégradé descend
+		// vers `--gold` pour donner du relief sans sortir des jetons.
 		.amount {
 			display: inline-block;
-			// `--gold-bright` et pas `--gold` : en clair, `--gold` est un or
-			// assombri calibré comme SURFACE de panneau ; en pastille sous une
-			// encre noire il vire au moutarde terne (retour de Pierre, 10/09).
-			background: var(--gold-bright);
+			background: linear-gradient(160deg,
+				color-mix(in srgb, var(--gold-bright) 88%, white) 0%,
+				var(--gold-bright) 45%,
+				color-mix(in srgb, var(--gold-bright) 82%, var(--gold)) 100%);
 			color: var(--gold-text);
-			padding: 8px 20px;
-			border-radius: var(--radius);
-			font-size: 26px;
+			padding: 10px 26px;
+			border-radius: 999px;
+			font-size: 27px;
 			font-weight: 700;
-			box-shadow: 0 2px 10px color-mix(in srgb, var(--gold-bright) 35%, transparent);
+			letter-spacing: 0.01em;
+			box-shadow: 0 3px 16px color-mix(in srgb, var(--gold-bright) 40%, transparent);
 		}
 		.notice {
 			display: block;
-			margin-top: 8px;
-			font-size: 13px;
+			margin-top: 10px;
+			font-size: 12px;
+			letter-spacing: 0.04em;
 			color: var(--text-color-secondary);
 		}
 	}
@@ -359,7 +365,7 @@ async function resume() {
 	}
 	.benefit {
 		background: var(--panel-background);
-		padding: 16px 12px;
+		padding: 20px 12px;
 		text-align: center;
 		// En deux colonnes, les cases sont plus hautes que leur contenu : centré.
 		display: flex;
@@ -370,25 +376,39 @@ async function resume() {
 		transition: background 120ms ease;
 		&:hover {
 			background: var(--background-secondary);
+			// Le disque s'allume au survol : la case entière répond, pas juste le fond.
+			.icon {
+				background: color-mix(in srgb, var(--gold-bright) 22%, transparent);
+				border-color: color-mix(in srgb, var(--gold-bright) 45%, transparent);
+			}
 		}
+		// L'icône posée sur un disque d'or translucide : décoratif, l'information
+		// reste portée par le texte en dessous.
 		.icon {
 			color: var(--rank-first);
-			font-size: 30px;
-			margin-bottom: 6px;
+			font-size: 26px;
+			width: 48px;
+			height: 48px;
+			margin-bottom: 10px;
+			border-radius: 50%;
+			background: color-mix(in srgb, var(--gold-bright) 12%, transparent);
+			border: 1px solid color-mix(in srgb, var(--gold-bright) 26%, transparent);
+			transition: background 120ms ease, border-color 120ms ease;
 		}
 		.label {
 			font-size: 13px;
 			color: var(--text-color-secondary);
 		}
 		.plus-value {
-			font-size: 19px;
+			font-size: 20px;
 			font-weight: 700;
 			color: var(--text-color);
-			margin: 2px 0;
+			margin: 3px 0 1px;
 		}
 		.free-value {
 			font-size: 12px;
 			color: var(--text-color-secondary);
+			opacity: 0.85;
 		}
 	}
 	@media screen and (max-width: 700px) {

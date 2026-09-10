@@ -21,7 +21,8 @@
 
 		<loader v-if="loading" />
 		<div v-else class="packs">
-			<div v-for="pack in packs" :key="pack.id" class="pack" :class="{selected: euroPack?.id === pack.id}">
+			<div v-for="pack in packs" :key="pack.id" class="pack" :class="{selected: euroPack?.id === pack.id, best: pack.id === bestPack?.id}">
+				<div v-if="pack.id === bestPack?.id" class="best-label">{{ $t('best_value') }}</div>
 				<!-- La remise est en absolu : les trois cartes gardent la même hauteur
 				     et leurs boutons restent alignés, avec ou sans remise. -->
 				<div v-if="discount(pack)" class="save">{{ $t('save', [discount(pack)]) }}</div>
@@ -207,6 +208,11 @@ function priceLabel(pack: MonthPack) {
 	const currency = LeekWars.currencies[LeekWars.currency]
 	return currency.prefix ? `${currency.symbol}${price(pack)}` : `${price(pack)} ${currency.symbol}`
 }
+
+// Le lot le plus avantageux au mois, mis en avant comme dans les packs de
+// cristaux. Calculé, pas codé en dur : les prix vivent côté serveur.
+const bestPack = computed(() => packs.value.reduce<MonthPack | null>(
+	(best, pack) => (!best || discount(pack) > discount(best) ? pack : best), null))
 
 function enough(pack: MonthPack) {
 	return (store.state.farmer?.crystals ?? 0) >= pack.crystals
@@ -430,9 +436,40 @@ async function confirmEuros() {
 		padding: 18px 14px 14px;
 		border: 2px solid var(--border);
 		border-radius: var(--radius);
-		&.selected {
-			border-color: var(--gold);
+		background: var(--panel-background);
+		transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+		&:hover {
+			transform: translateY(-2px);
+			border-color: color-mix(in srgb, var(--gold-bright) 45%, var(--border));
 		}
+		// Le meilleur rapport au mois porte le liseré d'or et une lueur : c'est la
+		// même mise en avant que les packs de cristaux de la banque.
+		&.best {
+			border-color: color-mix(in srgb, var(--gold-bright) 70%, var(--border));
+			box-shadow: 0 0 18px color-mix(in srgb, var(--gold-bright) 18%, transparent);
+		}
+		&.selected {
+			border-color: var(--gold-bright);
+		}
+	}
+	// Étiquette à cheval sur le bord haut, comme la pastille de remise en face.
+	.best-label {
+		position: absolute;
+		top: -10px;
+		left: 8px;
+		padding: 1px 8px;
+		border-radius: 10px;
+		background: var(--gold-bright);
+		color: var(--gold-text);
+		font-size: 11px;
+		font-weight: 600;
+		line-height: 18px;
+		white-space: nowrap;
+		// La pastille de remise occupe le coin droit du même bord : on borne
+		// l'étiquette pour qu'elle ne passe jamais dessous sur une carte étroite.
+		max-width: calc(100% - 74px);
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.months {
 		font-size: 18px;
