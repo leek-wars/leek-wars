@@ -342,7 +342,7 @@ async function resume() {
 				color-mix(in srgb, var(--gold-bright) 82%, var(--gold)) 100%);
 			color: var(--gold-text);
 			padding: 10px 26px;
-			border-radius: 999px;
+			border-radius: var(--radius-pill);
 			font-size: 27px;
 			font-weight: 700;
 			letter-spacing: 0.01em;
@@ -382,15 +382,19 @@ async function resume() {
 				border-color: color-mix(in srgb, var(--gold-bright) 45%, transparent);
 			}
 		}
-		// L'icône posée sur un disque d'or translucide : décoratif, l'information
-		// reste portée par le texte en dessous.
+		// L'icône posée sur un aplat d'or translucide : décoratif, l'information
+		// reste portée par le texte en dessous. La boîte est large devant le
+		// glyphe (26 px dans 60 px) pour qu'il respire au lieu de toucher le
+		// trait — le cadre serré ne plaisait pas (Pierre, 10/09).
 		.icon {
 			color: var(--rank-first);
 			font-size: 26px;
-			width: 48px;
-			height: 48px;
-			margin-bottom: 10px;
-			border-radius: 50%;
+			width: 60px;
+			height: 60px;
+			margin-bottom: 12px;
+			// Jeton et pas `50%` : le v3 ne veut aucun arrondi (il vaut 0), le v2
+			// garde ses 20 px, soit un galet sur 60 px de côté.
+			border-radius: var(--radius-pill);
 			background: color-mix(in srgb, var(--gold-bright) 12%, transparent);
 			border: 1px solid color-mix(in srgb, var(--gold-bright) 26%, transparent);
 			transition: background 120ms ease, border-color 120ms ease;
