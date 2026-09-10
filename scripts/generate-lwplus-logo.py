@@ -19,7 +19,9 @@ variant = argv[0]
 out_dir = argv[1]
 mode = argv[2] if len(argv) > 2 else 'still'
 size = int(argv[3]) if len(argv) > 3 else 512
-OUTLINE = float(argv[4]) if len(argv) > 4 else 5.0
+# Contour noir Freestyle, désactivé par défaut (jugé « pas ouf » le 10/09) :
+# passer une épaisseur en 5e argument pour le rallumer.
+OUTLINE = float(argv[4]) if len(argv) > 4 else 0.0
 os.makedirs(out_dir, exist_ok=True)
 
 S = 4.254          # épaisseur de trait du logo
@@ -107,7 +109,28 @@ if len(polys) > 1:
 mat = bpy.data.materials.new('Gold')
 mat.use_nodes = True
 bsdf = mat.node_tree.nodes['Principled BSDF']
-bsdf.inputs['Base Color'].default_value = (1.0, 0.74, 0.27, 1)
+# Dégradé vertical dans le métal : orange en haut, or en bas. Le haut du signe
+# se perdait sur le parchemin clair (retour de Pierre, 10/09). En coordonnées
+# OBJET, donc stable pendant la rotation. L'axe vertical du glyphe est Y local
+# (la courbe est tracée dans XY puis dressée de 90° sur X).
+nt_m = mat.node_tree
+tex = nt_m.nodes.new('ShaderNodeTexCoord')
+sep_m = nt_m.nodes.new('ShaderNodeSeparateXYZ')
+nt_m.links.new(tex.outputs['Object'], sep_m.inputs['Vector'])
+map_m = nt_m.nodes.new('ShaderNodeMath')
+map_m.operation = 'MULTIPLY_ADD'
+map_m.inputs[1].default_value = 0.62
+map_m.inputs[2].default_value = 0.5
+nt_m.links.new(sep_m.outputs['Y'], map_m.inputs[0])
+ramp_m = nt_m.nodes.new('ShaderNodeValToRGB')
+cm = ramp_m.color_ramp
+cm.elements[0].position = 0.0
+cm.elements[0].color = (1.0, 0.82, 0.34, 1)
+e = cm.elements.new(0.55); e.color = (1.0, 0.70, 0.22, 1)
+cm.elements[-1].position = 1.0
+cm.elements[-1].color = (1.0, 0.44, 0.08, 1)
+nt_m.links.new(map_m.outputs['Value'], ramp_m.inputs['Fac'])
+nt_m.links.new(ramp_m.outputs['Color'], bsdf.inputs['Base Color'])
 bsdf.inputs['Metallic'].default_value = 1.0
 bsdf.inputs['Roughness'].default_value = 0.2
 bsdf.inputs['Coat Weight'].default_value = 0.3
@@ -120,7 +143,7 @@ scene.world = world
 world.use_nodes = True
 nt = world.node_tree
 bg = nt.nodes['Background']
-bg.inputs['Strength'].default_value = 1.0
+bg.inputs['Strength'].default_value = 1.15
 # Environnement « bijouterie » : ciel clair et froid en haut, bande chaude et
 # brillante à l'horizon, sol ambre sombre. C'est ce que l'or reflète.
 texco = nt.nodes.new('ShaderNodeTexCoord')
@@ -131,11 +154,11 @@ cr = ramp.color_ramp
 cr.elements[0].position = 0.0
 cr.elements[0].color = (0.22, 0.05, 0.00, 1)
 e = cr.elements.new(0.40); e.color = (0.85, 0.30, 0.04, 1)
-e = cr.elements.new(0.50); e.color = (1.35, 1.02, 0.55, 1)
-e = cr.elements.new(0.58); e.color = (1.05, 0.92, 0.75, 1)
-e = cr.elements.new(0.80); e.color = (0.6, 0.62, 0.7, 1)
+e = cr.elements.new(0.48); e.color = (1.30, 0.95, 0.45, 1)
+e = cr.elements.new(0.56); e.color = (1.00, 0.52, 0.10, 1)
+e = cr.elements.new(0.78); e.color = (0.85, 0.34, 0.05, 1)
 cr.elements[-1].position = 1.0
-cr.elements[-1].color = (0.3, 0.33, 0.42, 1)
+cr.elements[-1].color = (0.55, 0.20, 0.03, 1)
 norm = nt.nodes.new('ShaderNodeMath')
 norm.operation = 'MULTIPLY_ADD'
 norm.inputs[1].default_value = 0.5
@@ -160,7 +183,7 @@ def light(name, kind, loc, energy, color=(1, 1, 1), size_=2.0):
     tgt.up_axis = 'UP_Y'
     return lo
 
-light('Key', 'AREA', (-4, -6, 6), 1500, (1.0, 0.95, 0.85), 3.0)
+light('Key', 'AREA', (-4, -6, 6), 850, (1.0, 0.84, 0.52), 3.0)
 light('Rim', 'AREA', (5, 5, 3), 900, (1.0, 0.65, 0.35), 2.0)
 light('Fill', 'AREA', (5, -6, -1), 380, (1.0, 0.45, 0.12), 4.0)
 
@@ -188,34 +211,35 @@ scene.render.image_settings.file_format = 'PNG'
 scene.render.image_settings.color_mode = 'RGBA'
 scene.eevee.taa_render_samples = 64
 
-# Contour noir Freestyle : le signe doit se détacher sur les fonds clairs comme
-# sombres. Épaisseur ABSOLUE (en pixels de rendu) pour ne pas dépendre de la
-# résolution. Silhouette + bords + plis vifs seulement : sans un angle de pli
-# élevé, le biseau des arêtes se ferait souligner tout du long.
-scene.render.use_freestyle = True
-scene.render.line_thickness_mode = 'ABSOLUTE'
-scene.render.line_thickness = 1.0
-view_layer = scene.view_layers[0]
-view_layer.use_freestyle = True
-fs = view_layer.freestyle_settings
-fs.crease_angle = math.radians(80)
-# Un jeu de lignes VIDE (linestyle à None) préexiste sur la couche de vue et
-# ferait planter le rendu (parameter_editor : 'NoneType' has no use_chaining).
-# On repart de zéro, et le style créé avec le jeu de lignes reçoit un faux
-# utilisateur, sinon il est purgé à l'enregistrement du .blend.
-while fs.linesets:
-    fs.linesets.remove(fs.linesets[0])
-lineset = fs.linesets.new('Outline')
-lineset.select_silhouette = True
-lineset.select_border = True
-lineset.select_crease = True
-lineset.select_edge_mark = False
-lineset.select_material_boundary = False
-linestyle = lineset.linestyle
-linestyle.use_fake_user = True
-linestyle.color = (0, 0, 0)
-linestyle.thickness = OUTLINE
-linestyle.thickness_position = 'INSIDE'
+if OUTLINE > 0:
+    # Contour noir Freestyle : le signe doit se détacher sur les fonds clairs comme
+    # sombres. Épaisseur ABSOLUE (en pixels de rendu) pour ne pas dépendre de la
+    # résolution. Silhouette + bords + plis vifs seulement : sans un angle de pli
+    # élevé, le biseau des arêtes se ferait souligner tout du long.
+    scene.render.use_freestyle = True
+    scene.render.line_thickness_mode = 'ABSOLUTE'
+    scene.render.line_thickness = 1.0
+    view_layer = scene.view_layers[0]
+    view_layer.use_freestyle = True
+    fs = view_layer.freestyle_settings
+    fs.crease_angle = math.radians(80)
+    # Un jeu de lignes VIDE (linestyle à None) préexiste sur la couche de vue et
+    # ferait planter le rendu (parameter_editor : 'NoneType' has no use_chaining).
+    # On repart de zéro, et le style créé avec le jeu de lignes reçoit un faux
+    # utilisateur, sinon il est purgé à l'enregistrement du .blend.
+    while fs.linesets:
+        fs.linesets.remove(fs.linesets[0])
+    lineset = fs.linesets.new('Outline')
+    lineset.select_silhouette = True
+    lineset.select_border = True
+    lineset.select_crease = True
+    lineset.select_edge_mark = False
+    lineset.select_material_boundary = False
+    linestyle = lineset.linestyle
+    linestyle.use_fake_user = True
+    linestyle.color = (0, 0, 0)
+    linestyle.thickness = OUTLINE
+    linestyle.thickness_position = 'INSIDE'
 scene.view_settings.view_transform = 'Standard'
 scene.view_settings.look = 'None'
 
