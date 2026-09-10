@@ -58,7 +58,7 @@
 					<template #content>
 						<loader v-if="!chips.length" />
 						<div v-else-if="chipMode === 'level' || search" class="items chips">
-							<router-link v-for="chip in filteredChips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
+							<router-link v-for="chip in filteredChips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level, 'craft-locked': craftLocked.has(chip.id)}">
 								<img :src="'/image/chip/' + chip.name + '.png'" loading="lazy">
 								<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
 									<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
@@ -70,7 +70,7 @@
 							<div v-for="type in effectTypes" :key="type" class="chip-type">
 								<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 								<div class="items chips">
-									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
+									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level, 'craft-locked': craftLocked.has(chip.id)}">
 										<img :src="'/image/chip/' + chip.name + '.png'" loading="lazy">
 										<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
 											<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
@@ -499,12 +499,15 @@ const t = useNamespacedT('market')
 				const chip = CHIPS[item.id]
 				chips.value.push(chip)
 				items_by_name[CHIPS[item.id].name] = item
-				for (const effect of chip.effects) {
-					if (chipsByType.value[effect.type] === undefined) {
-						chipsByType.value[effect.type] = []
+				// `chip.type` et pas `chip.effects[0].type` : le serveur peut forcer la
+				// catégorie d'une puce que son premier effet range au mauvais endroit
+				// (Maturation, un +vie max mais une amélioration).
+				const type = chip.type ?? chip.effects[0]?.type
+				if (type !== undefined) {
+					if (chipsByType.value[type] === undefined) {
+						chipsByType.value[type] = []
 					}
-					chipsByType.value[effect.type].push(chip)
-					break
+					chipsByType.value[type].push(chip)
 				}
 			} else if (item.type === ItemType.POTION) {
 				const potion = LeekWars.potions[item.id]

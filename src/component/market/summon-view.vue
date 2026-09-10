@@ -103,9 +103,23 @@ const CHIPS = CHIPSImport
 		width: 20px;
 		vertical-align: bottom;
 	}
+	// L'activateur de l'infobulle est un <span> inline : sur une image de 50 px il
+	// ne mesurait que la hauteur de ligne (19 px) et son bas tombait 7 px SOUS
+	// l'image. L'infobulle s'ancrait donc à ce bas fantôme, et le trou entre
+	// l'icône et la carte la refermait dès qu'on y passait la souris. En flex,
+	// le span épouse l'image.
+	.summon .chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		padding: 3px;
+	}
+	// display:block, et l'écart par `gap` plutôt que par une marge : l'image
+	// reste inline sinon, et le <span> activateur garde sous elle l'espace du
+	// jambage de la ligne. C'est à ce bas fantôme que l'infobulle s'ancrait.
 	.summon .chips .chip {
+		display: block;
 		width: 50px;
 		height: 50px;
-		margin: 3px;
 	}
 </style>
