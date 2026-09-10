@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
-// Logo LW+ : rendu 3D doré pré-calculé (Blender, script /tmp/lwplus/build.py).
+// Logo LW+ : rendu 3D doré pré-calculé (Blender, scripts/generate-lwplus-logo.py).
 // Le WebP joue UN tour du « + » (1 s) puis s'arrête sur son image de fin, qui
 // est aussi l'image de départ. On relance le tour au survol et toutes les
 // `period` ms (0 = jamais tout seul, seulement au survol ou via `spin()` exposé,
