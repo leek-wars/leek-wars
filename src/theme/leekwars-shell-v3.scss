@@ -434,25 +434,40 @@ body:not(.v2) {
 	   à droite. La coupe est en pourcentage et non en pixels : un avatar va de
 	   24 px dans la barre du haut à 120 px sur un profil, une valeur fixe serait
 	   un liseré sur l'un et une balafre sur l'autre.
-	   La diagonale coupe aussi le trait, ce qui est le propre d'un biseau : les
-	   quatre côtés droits le gardent, les deux coupes sont franches. */
+	   Le trait fait le tour COMPLET, coupes comprises (demande de Pierre du
+	   2026-09-10 : un biseau dont le trait s'arrête au coin se lit comme un
+	   accident, pas comme un parti pris). */
 	.avatar,
 	.avatar-input {
 		border-radius: 0;
 		clip-path: polygon(18% 0, 100% 0, 100% 82%, 82% 100%, 0 100%, 0 18%);
 	}
-	/* Le trait ne peut pas être une `border` : la découpe l'emporterait sur les
-	   deux diagonales et laisserait des coupes nues. Il est donc peint EN
-	   DESSOUS de l'image — un fond plein, que 1 px de marge intérieure laisse
-	   dépasser tout autour. La découpe s'applique aux deux d'un coup, donc le
-	   trait suit exactement le bord coupé. */
+	/* Le trait ne peut être ni une `border` ni un fond que déborde une marge
+	   intérieure : dans les deux cas la découpe emporte l'image ET le trait sur
+	   la même diagonale, et les deux coupes restent nues. Il faut deux couches —
+	   l'enveloppe porte le cadre, découpé au bord ; l'image, dedans, est
+	   découpée un pixel plus bas. D'où le `<span>` de `avatar.vue`.
+	   Le second polygone n'est pas le premier « moins 1 px » : une diagonale
+	   rentre de 1 px perpendiculairement, donc de √2 px sur chaque axe, dont 1
+	   est déjà pris par le côté droit voisin — reste 0,41 px sur le pourcentage.
+	   Les avatars sont carrés, la coupe est donc bien à 45°. */
 	.avatar {
 		border: none;
 		box-sizing: border-box;
-		padding: 1px;
+		padding: 0;
 		/* Couleur PLEINE et non `--border-strong` (du blanc à 16 %) : sur une
 		   photo, un trait translucide de 1 px ne se voit pas. */
 		background: var(--text-color-faint);
+	}
+	.avatar > img {
+		clip-path: polygon(
+			calc(18% + 0.41px) 1px,
+			calc(100% - 1px) 1px,
+			calc(100% - 1px) calc(82% - 0.41px),
+			calc(82% - 0.41px) calc(100% - 1px),
+			1px calc(100% - 1px),
+			1px calc(18% + 0.41px)
+		);
 	}
 	/* L'avatar prend toute la hauteur utile du bouton — 40 px, les 42 moins ses
 	   deux traits — et vient en coiffer le bout : la marge négative annule le

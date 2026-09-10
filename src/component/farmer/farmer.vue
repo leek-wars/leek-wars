@@ -1099,7 +1099,10 @@
 			return
 		}
 
-		LeekWars.fileToImage(file, avatarRef.value?.$el as Element)
+		// `$el` est l'enveloppe de l'avatar, pas l'image : c'est bien le <img>
+		// qu'il faut repeindre pour l'aperçu avant l'envoi.
+		const avatarImage = (avatarRef.value?.$el as HTMLElement | undefined)?.querySelector('img')
+		if (avatarImage) { LeekWars.fileToImage(file, avatarImage) }
 
 		const formdata = new FormData()
 		formdata.append('avatar', file)

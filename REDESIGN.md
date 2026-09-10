@@ -1310,6 +1310,32 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     progression n'ont pas de hachures ici ») : elles portaient leurs propres
     classes ; elles reprennent le vocabulaire des jauges (`global-bar > bar`,
     `bar > xp-bar`) et attrapent cadre, or et rayures.
+- **2026-09-10 — le trait des avatars fait le tour, coupes comprises** (Pierre,
+  capture du profil : « sur les avatars farmer : soit on fait la bordure
+  coupée, soit on l'enlève »). Le trait s'arrêtait aux deux biseaux, ce que le
+  commentaire du thème présentait comme le propre d'un biseau ; à l'écran il se
+  lit comme un accident. Il fait maintenant le tour complet.
+  - **Pourquoi il fallait deux couches** : le trait était un fond plein que
+    1 px de marge intérieure laissait dépasser sous l'image. Sur les côtés
+    droits, ça marche ; sur une diagonale, le `clip-path` coupe le fond ET
+    l'image sur la MÊME ligne, donc rien ne dépasse. Aucune propriété d'un
+    `<img>` seul n'y échappe : `border`, `outline` et `border-image` sont
+    peints sous le contenu remplacé, et `box-shadow` comme un filtre passent
+    avant la découpe.
+  - **Ce qui a été fait** : `avatar.vue` rend un `<span class="avatar">` qui
+    enveloppe l'image. L'enveloppe porte le cadre et le polygone extérieur,
+    l'image un polygone rentré de 1 px. Le second n'est pas le premier « moins
+    1 px » : une diagonale rentre de √2 px sur chaque axe, dont 1 déjà pris par
+    le côté droit voisin, d'où le `calc(18% + 0.41px)`. Les avatars sont
+    carrés, la coupe est donc à 45°.
+  - **Effets de bord** : l'enveloppe prend `overflow: hidden` (c'est elle qui
+    porte l'arrondi du v2, sinon l'image déborde des coins) et
+    `aspect-ratio: 1` (une dizaine d'appelants ne posent qu'une largeur et
+    laissaient l'image donner la hauteur) ; l'aperçu d'avatar avant envoi
+    (`farmer.vue`) vise le `<img>` dans `$el` et non `$el`.
+  - Vérifié : profil, barre du haut, entrée de chat, liste d'équipes, deux
+    thèmes, **v2 intact** (avatars ronds) ; 14 pages balayées à la sonde (aucun
+    avatar écrasé ni non carré), 732 tests verts.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
