@@ -73,15 +73,15 @@ class Bulb extends FightEntity {
 		} else if (skin === 9) { // Maïs (plante 2.50) — un seul visuel, back = front
 			this.bodyTexFront = T.get(this.game, summonImage('corn'), true, SHADOW_QUALITY)
 			this.bodyTexBack = this.bodyTexFront
-			this.setPlant('#2fe34a') // zone de soin
+			this.setPlant('#2fe34a', 8) // zone de soin
 		} else if (skin === 10) { // Piment (plante 2.50)
 			this.bodyTexFront = T.get(this.game, summonImage('chilli_pepper'), true, SHADOW_QUALITY)
 			this.bodyTexBack = this.bodyTexFront
-			this.setPlant('#ff4d0a') // portée de tir
+			this.setPlant('#ff4d0a', 8) // portée de tir
 		} else if (skin === PROTOTAXITES_SUMMON_TEMPLATE) { // Prototaxite (2.50) — pas de zone
 			this.bodyTexFront = T.get(this.game, summonImage('prototaxites'), true, SHADOW_QUALITY)
 			this.bodyTexBack = this.bodyTexFront
-			this.setPlant('')
+			this.setPlant('', 16)
 		} else if (skin === 11) {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/tactician_bulb_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/tactician_bulb_back.png', true, SHADOW_QUALITY)
@@ -111,17 +111,16 @@ class Bulb extends FightEntity {
 	// sinon la zone affichée est fixée à 3 cases de rayon. Couleurs franches
 	// (vert vif, orange rouge) : le `green` CSS (#008000) et l'orange d'avant
 	// s'éteignaient sous la faible opacité du losange au sol.
-	private setPlant(zoneColor: string) {
+	// `sink` : de combien la plante s'enfonce dans sa case, en pixels. Un z NÉGATIF
+	// descend le sprite à l'écran — le poireau lui-même vit à -5, un sprite posé à 0
+	// a l'air de flotter au-dessus du losange. Plus la plante est haute, plus il faut
+	// l'enfoncer pour qu'elle ait l'air enracinée : le Prototaxite, colonne de 97 px,
+	// est le plus concerné (retours de Pierre du 10/09).
+	private setPlant(zoneColor: string, sink: number = 8) {
 		this.plant = true
 		this.spriteScale = Bulb.PLANT_SCALE
-		// Une plante est PLANTÉE : elle ne flotte pas comme un bulbe. Le `baseZ = -6`
-		// du bulbe décale le corps de 6 px et l'ombre de 6 + 6 × SHADOW_SCALE dans
-		// l'autre sens (cf. drawShadow, qui défait le translate de startDraw dans un
-		// repère retourné et écrasé) : sur un sprite haut comme le Prototaxite, les
-		// deux se décrochent visiblement. À plat, le pied de l'ombre rejoint celui
-		// de la plante.
-		this.baseZ = 0
-		this.z = 0
+		this.baseZ = -sink
+		this.z = -sink
 		this.zoneColor = zoneColor
 		this.zoneRange = zoneColor ? 3 : 0
 	}
@@ -175,7 +174,12 @@ class Bulb extends FightEntity {
 		ctx.save()
 		ctx.globalAlpha = SHADOW_ALPHA
 		ctx.scale(1, -SHADOW_SCALE)
-		ctx.translate(0, - this.z)
+		// Un bulbe FLOTTE : son ombre reste au sol pendant que son corps est décalé,
+		// d'où ce translate qui défait celui de startDraw. Une plante, elle, est dans
+		// le sol : son ombre doit partir du même point que son pied. Défaire le z dans
+		// un repère déjà retourné et écrasé l'éloignerait de z + z × SHADOW_SCALE, ce
+		// qui se voyait franchement sous le Prototaxite.
+		if (!this.plant) { ctx.translate(0, - this.z) }
 		ctx.rotate(-Math.PI / 4)
 		this.drawBody(ctx, texture.shadow!)
 		ctx.restore()
