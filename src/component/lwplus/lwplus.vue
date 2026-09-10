@@ -330,23 +330,14 @@ async function resume() {
 	.hero .price {
 		margin-top: 18px;
 		// Le seul vrai aplat d'or de la page : c'est lui qui porte l'identité.
-		// Pilule d'or : `--gold-bright` et pas `--gold`, qui en clair est un or
-		// assombri calibré comme SURFACE de panneau et vire au moutarde terne
-		// sous une encre noire (retour de Pierre, 10/09). Le dégradé descend
-		// vers `--gold` pour donner du relief sans sortir des jetons.
+		// L'or en ENCRE (`--rank-first`), pas en aplat : la pastille pleine faisait
+		// trop de masse jaune pour un prix (retour de Pierre, 10/09).
 		.amount {
 			display: inline-block;
-			background: linear-gradient(160deg,
-				color-mix(in srgb, var(--gold-bright) 88%, white) 0%,
-				var(--gold-bright) 45%,
-				color-mix(in srgb, var(--gold-bright) 82%, var(--gold)) 100%);
-			color: var(--gold-text);
-			padding: 10px 26px;
-			border-radius: var(--radius-pill);
-			font-size: 27px;
+			color: var(--rank-first);
+			font-size: 30px;
 			font-weight: 700;
 			letter-spacing: 0.01em;
-			box-shadow: 0 3px 16px color-mix(in srgb, var(--gold-bright) 40%, transparent);
 		}
 		.notice {
 			display: block;
@@ -392,6 +383,13 @@ async function resume() {
 			width: 60px;
 			height: 60px;
 			margin-bottom: 12px;
+			// Vuetify étire le <svg> à 100 % de la boîte : `font-size` n'agit pas
+			// sur lui, et le glyphe touchait le trait quelle que soit la taille du
+			// cadre. C'est le SVG qu'il faut borner.
+			:deep(svg) {
+				width: 28px;
+				height: 28px;
+			}
 			// Jeton et pas `50%` : le v3 ne veut aucun arrondi (il vaut 0), le v2
 			// garde ses 20 px, soit un galet sur 60 px de côté.
 			border-radius: var(--radius-pill);

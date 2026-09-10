@@ -143,8 +143,11 @@
 						<div v-if="farmer.referent" class="grade referent">{{ $t('referent') }}</div>
 						<div v-else-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
 						<!-- #3303 : orthogonal aux autres grades, donc pas de v-else-if.
-						     Pas de clé i18n, « LW+ » est un nom de marque. -->
-						<div v-if="farmer.lwplus" class="grade lwplus">LW+</div>
+						     Le « + » doré au lieu du texte, et il mène à la page LW+. Pas de
+						     clé i18n, « LW+ » est un nom de marque. -->
+						<router-link v-if="farmer.lwplus" to="/lwplus" class="grade lwplus">
+							<img src="/image/lwplus/plus_badge.webp" alt="LW+" width="128" height="128">
+						</router-link>
 						<!-- #3237 : comptes déclarés du joueur. C'est la contrepartie visible
 						     de la déclaration — l'afficher est tout l'objet du dispositif. -->
 						<v-menu v-if="farmer.linked_accounts && farmer.linked_accounts.length > 1" location="bottom">
@@ -1521,12 +1524,17 @@
 	.grade.referent {
 		background: #2196f3;
 	}
-	// Aplat d'or du système. L'encre est forcée à --gold-text : .grade impose du
-	// blanc, qui ne tient que 3,1 sur l'or clair (mesuré) là où ce 14 px en demande
-	// 4,5. Avec --gold-text on est à 5,9 en clair et 13,4 en sombre.
+	// Le « + » doré en relief remplace la pastille de texte : plus de fond, l'image
+	// EST le badge. Elle mène à la page d'abonnement, d'où le curseur de lien.
 	.grade.lwplus {
-		background: var(--gold);
-		color: var(--gold-text);
+		background: none;
+		padding: 0;
+		line-height: 0;
+		vertical-align: middle;
+		img {
+			width: 26px;
+			height: 26px;
+		}
 	}
 	// #3237 : gris neutre volontaire — déclarer ses comptes n'est ni une
 	// distinction ni un avertissement, c'est une information.
