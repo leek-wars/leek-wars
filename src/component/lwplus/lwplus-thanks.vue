@@ -1,9 +1,15 @@
 <template>
-	<popup :model-value="modelValue" :width="460" @update:model-value="$emit('update:modelValue', $event)">
+	<popup :model-value="modelValue" :width="460" full @update:model-value="$emit('update:modelValue', $event)">
 		<template #icon>
 			<img class="thanks-mark" src="/image/lwplus/plus_badge.webp" alt="LW+" width="128" height="128">
 		</template>
 		<template #title><span>{{ $t('title') }}</span></template>
+
+		<!-- Bandeau : le logo 3D sur le lavis d'or de la page de vente. Il fait son
+		     tour tout seul au montage, le popup ne crée son contenu qu'à l'ouverture. -->
+		<div class="banner">
+			<lwplus-logo class="banner-logo" variant="lwplus" alt="LW+" :period="0" />
+		</div>
 
 		<div class="thanks">
 			<div class="intro">
@@ -32,6 +38,7 @@
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
 import { mixins } from '@/model/i18n'
+import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
 
 // Remerciement après un achat LW+ (#3303), commun aux trois chemins : mois payés
 // en cristaux, mois payés en euros, abonnement récurrent. Purement présentatif —
@@ -58,6 +65,34 @@ const formatDate = LeekWars.formatDate
 	.thanks-mark {
 		width: 26px;
 		height: 26px;
+	}
+	.banner {
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		justify-content: center;
+		padding: 14px 20px 8px;
+		background: linear-gradient(135deg,
+			color-mix(in srgb, var(--gold) 26%, var(--background)) 0%,
+			color-mix(in srgb, var(--gold) 10%, var(--background)) 100%);
+		// Halo doré derrière le logo, pour que le bandeau ne soit pas un aplat mort.
+		&::before {
+			content: '';
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 420px;
+			height: 420px;
+			transform: translate(-50%, -55%);
+			background: radial-gradient(circle,
+				color-mix(in srgb, var(--gold-bright) 30%, transparent) 0%,
+				transparent 62%);
+		}
+	}
+	.banner-logo {
+		position: relative;
+		width: 280px;
+		max-width: 78%;
 	}
 	.thanks {
 		padding: 16px;
