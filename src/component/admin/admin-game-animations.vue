@@ -64,7 +64,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { ActionType } from '@/model/action'
-	import { EffectTarget, EffectType } from '@/model/effect'
+	import { EffectTarget, EffectType, State } from '@/model/effect'
 	import { CHIP_ANIMATIONS, WEAPONS } from '@/component/player/game/game'
 	import type { Game } from '@/component/player/game/game'
 	import Player from '@/component/player/player.vue'
@@ -81,6 +81,21 @@
 	// (Maturation…) — la scène pose une invocation devant le lanceur et la vise,
 	// sinon recipientsOf() filtre tous les poireaux et l'animation est invisible.
 	interface AnimEntry { kind: Kind, id: number, name: string, label: string, icon: string, level: number, summonTemplate?: number, onSummon?: boolean }
+
+	// Entité de la scène telle que le player l'attend dans `data.leeks`. `cellPos`
+	// est nul pour une entité posée par une action SUMMON, `summon` la marque comme
+	// invocation (type 1 = Bulb côté rendu).
+	interface SceneEntity {
+		id: number, type: number, name: string, team: number,
+		level: number, life: number,
+		strength: number, wisdom: number, agility: number, resistance: number,
+		science: number, magic: number, frequency: number,
+		tp: number, mp: number,
+		cellPos: number | null, orientation: number,
+		skin: number, hat: number | null, metal: boolean, face: number,
+		chips: number[], weapons: number[],
+		summon?: boolean,
+	}
 
 	const router = useRouter()
 	if (!store.getters.admin) router.replace('/')
@@ -137,6 +152,30 @@
 		const data = tpl ? LeekWars.chips[tpl.item] as { effects?: { id: number }[] } | undefined : undefined
 		const effects = data?.effects ?? []
 		return effects.some(e => e.id === EffectType.TELEPORT || e.id === EffectType.SUMMON)
+	}
+
+	// Puce d'une plante (Piquant, Capsaïcine, Sucre, Pop-corn) : c'est la PLANTE qui
+	// la lance, pas un poireau. Le lien vient des game data — le template
+	// d'invocation enraciné (State.ROOTED, la définition du moteur) qui porte cette
+	// puce dans ses `chips` — et pas d'une liste d'ids en dur. L'état écarte les
+	// bulbes, dont les puces (Bandage, Protéine…) se lancent bien depuis un poireau.
+	function plantTemplateOf(entry: AnimEntry): number | undefined {
+		if (entry.kind !== 'chip') { return undefined }
+		const tpl = LeekWars.chipTemplates[entry.id]
+		if (!tpl) { return undefined }
+		for (const idStr in LeekWars.summonTemplates) {
+			const template = LeekWars.summonTemplates[idStr]
+			if (!template.states || !template.states.includes(State.ROOTED)) { continue }
+			if (template.chips && template.chips.includes(tpl.item)) { return parseInt(idStr, 10) }
+		}
+		return undefined
+	}
+
+	// Portée maximale d'une puce, 0 pour les zones lancées sur soi.
+	function chipMaxRange(chipId: number): number | undefined {
+		const tpl = LeekWars.chipTemplates[chipId]
+		const data = tpl ? LeekWars.chips[tpl.item] as { max_range?: number } | undefined : undefined
+		return data?.max_range
 	}
 
 	const loopMode = computed(() => repetitions.value === -1)
@@ -210,7 +249,16 @@
 		if (selected.value.summonTemplate) return 'une invocation posée devant, sans ennemi'
 		if (selected.value.onSummon) return 'sur une invocation posée devant'
 		const emptyCell = needsEmptyCell(selected.value.id)
-		return emptyCell ? 'sur case vide' : 'sur soi-même puis les 4 poireaux à tour de rôle'
+		if (emptyCell) { return 'sur case vide' }
+		const plant = plantTemplateOf(selected.value)
+		if (plant !== undefined) {
+			const name = LeekWars.summonTemplates[plant]?.name ?? 'la plante'
+			const label = trans('entity.' + name, name)
+			return chipMaxRange(selected.value.id) === 0
+				? 'lancée par le ' + label + ' sur lui-même (zone)'
+				: 'lancée par le ' + label + ', sur lui-même puis les 4 poireaux'
+		}
+		return 'sur soi-même puis les 4 poireaux à tour de rôle'
 	})
 
 	const playerKey = computed(() => `${selected.value?.kind}-${selected.value?.id}-${castCount.value}-${mapType.value}-${runId.value}`)
@@ -250,19 +298,39 @@
 		// Ids 0-based et denses : le moteur itère this.leeks via for...of (un id
 		// manquant à l'index 0 ferait planter launch() sur entity.cell).
 		const scene = [{ cell: CASTER_CELL, team: 1 }, ...SCENE_SLOTS.map((s, i) => ({ cell: cells[i], team: s.team }))]
-		const leeks = scene.map((s, i) => ({
+		const leeks: SceneEntity[] = scene.map((s, i) => ({
 			id: i, type: 0, name: 'Poireau ' + (i + 1),
 			team: s.team,
 			level: 100, life: 2500,
 			strength: 300, wisdom: 300, agility: 200, resistance: 100,
 			science: 200, magic: 200, frequency: 100,
 			tp: 100, mp: 6,
-			cellPos: s.cell,
+			cellPos: s.cell as number | null,
 			orientation: -1,
 			skin: (i % 18) + 1, hat: null, metal: true, face: 2,
 			chips: [], weapons: [],
 		}))
 		const casterId = 0
+		// Puce de plante : le lanceur central devient la plante. Elle ne peut pas être
+		// posée d'emblée — game.ts n'active un Bulb qu'à l'action SUMMON (la branche
+		// Leek est la seule à faire `active`/`drawID` depuis `cellPos`) — donc un allié
+		// la plante au tour 1 et elle joue tous les tours suivants.
+		const plantTemplate = plantTemplateOf(entry)
+		const PLANTER_ID = 3 // SCENE_SLOTS[2], le premier allié
+		if (plantTemplate !== undefined) {
+			const template = LeekWars.summonTemplates[plantTemplate]
+			const chars = template?.characteristics as unknown as Record<string, [number, number]> | undefined
+			leeks[casterId] = {
+				...leeks[casterId],
+				type: 1, name: template?.name ?? 'plante', summon: true,
+				skin: plantTemplate, cellPos: null,
+				level: entry.level || 100,
+				life: chars?.life?.[1] ?? 900,
+				strength: chars?.strength?.[1] ?? 0, wisdom: chars?.wisdom?.[1] ?? 0,
+				agility: 0, resistance: 0, science: 0, magic: chars?.magic?.[1] ?? 0,
+				tp: 100, mp: 0,
+			}
+		}
 		const emptyCell = entry.kind === 'chip' && needsEmptyCell(entry.id)
 		const chipTargets = [CASTER_CELL, ...TARGET_ORDER.map((slot) => cells[slot])]
 		// Arme à repoussée (lance du soleil) : le client rejoue le déplacement de la
@@ -273,8 +341,15 @@
 		const damage = weaponTemplate?.effects.find((e) => e.id === EffectType.DAMAGE)
 
 		const actions: (number | number[])[][] = [[ActionType.START_FIGHT]]
+		let turn = 1
+		if (plantTemplate !== undefined) {
+			actions.push([ActionType.NEW_TURN, turn++])
+			actions.push([ActionType.LEEK_TURN, PLANTER_ID])
+			actions.push([ActionType.SUMMON, PLANTER_ID, casterId, CASTER_CELL, 1])
+			actions.push([ActionType.END_TURN, PLANTER_ID, 100, 6])
+		}
 		for (let k = 0; k < casts; k++) {
-			actions.push([ActionType.NEW_TURN, k + 1])
+			actions.push([ActionType.NEW_TURN, turn++])
 			actions.push([ActionType.LEEK_TURN, casterId])
 			if (entry.kind === 'weapon') {
 				const slot = TARGET_ORDER[k % TARGET_ORDER.length]
@@ -293,7 +368,12 @@
 					actions.push([ActionType.MOVE_TO, 1 + slot, CASTER_CELL + (distance + repel.value1) * SCENE_SLOTS[slot].diagonal, path])
 				}
 			} else {
-				const cell = emptyCell ? EMPTY_CELLS[k % EMPTY_CELLS.length] : chipTargets[k % chipTargets.length]
+				// Portée 0 (Capsaïcine, Pop-corn) : la puce ne peut viser que la case du
+				// lanceur, sa zone est centrée sur lui — viser une cible déplacerait le
+				// cercle sur une case que le moteur refuserait en vrai combat.
+				const selfOnly = entry.kind === 'chip' && chipMaxRange(entry.id) === 0
+				const cell = emptyCell ? EMPTY_CELLS[k % EMPTY_CELLS.length]
+					: (selfOnly ? CASTER_CELL : chipTargets[k % chipTargets.length])
 				actions.push([ActionType.USE_CHIP, entry.id, cell, 0])
 			}
 			actions.push([ActionType.END_TURN, casterId, 100, 6])

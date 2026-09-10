@@ -3,6 +3,8 @@ class SummonTemplate {
 	public name!: string
 	public characteristics!: Record<string, number>
 	public chips!: number[]
+	/** États permanents de l'invocation : `[State.ROOTED]` pour les plantes, vide pour un bulbe. */
+	public states!: number[]
 }
 
 // v2.50 — les plantes (Maïs, Piment, Prototaxite) ont leur propre dossier `image/plant/` et un
