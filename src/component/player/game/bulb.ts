@@ -81,7 +81,7 @@ class Bulb extends FightEntity {
 		} else if (skin === PROTOTAXITES_SUMMON_TEMPLATE) { // Prototaxite (2.50) — pas de zone
 			this.bodyTexFront = T.get(this.game, summonImage('prototaxites'), true, SHADOW_QUALITY)
 			this.bodyTexBack = this.bodyTexFront
-			this.setPlant('', 16)
+			this.setPlant('', 11)
 		} else if (skin === 11) {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/tactician_bulb_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/tactician_bulb_back.png', true, SHADOW_QUALITY)
@@ -115,7 +115,8 @@ class Bulb extends FightEntity {
 	// descend le sprite à l'écran — le poireau lui-même vit à -5, un sprite posé à 0
 	// a l'air de flotter au-dessus du losange. Plus la plante est haute, plus il faut
 	// l'enfoncer pour qu'elle ait l'air enracinée : le Prototaxite, colonne de 97 px,
-	// est le plus concerné (retours de Pierre du 10/09).
+	// est le plus concerné (retours de Pierre du 10/09 : 8 px pour le Maïs et le
+	// Piment, 11 pour le Prototaxite — 16 le mettait trop bas).
 	private setPlant(zoneColor: string, sink: number = 8) {
 		this.plant = true
 		this.spriteScale = Bulb.PLANT_SCALE
