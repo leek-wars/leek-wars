@@ -83,21 +83,6 @@
 				</div>
 			</div>
 
-			<div class="screenshots">
-				<a href="/image/groups/members.png" target="_blank">
-					<img src="/image/groups/members.png">
-					<div>{{ $t('create_members') }}</div>
-				</a>
-				<a href="/image/groups/equipment.png" target="_blank">
-					<img src="/image/groups/equipment.png">
-					<div>{{ $t('equipment') }}</div>
-				</a>
-				<a href="/image/feature/tournament.webp" target="_blank">
-					<img src="/image/feature/tournament.webp">
-					<div>{{ $t('tournaments') }}</div>
-				</a>
-			</div>
-
 			<h2>{{ $t('offers') }}</h2>
 			<div class="offers">
 				<div class="offer card free">
@@ -141,6 +126,24 @@
 				</div>
 			</div>
 			<!-- <div class="small">¹ Un jour de support offert, 49€ par jour supplémentaire</div> -->
+
+			<!-- Les captures viennent après les offres : le visiteur arrive pour
+			     créer un groupe, il voit d'abord ce que ça coûte, puis à quoi ça
+			     ressemble. -->
+			<div class="screenshots">
+				<a href="/image/groups/members.png" target="_blank">
+					<img src="/image/groups/members.png">
+					<div>{{ $t('create_members') }}</div>
+				</a>
+				<a href="/image/groups/equipment.png" target="_blank">
+					<img src="/image/groups/equipment.png">
+					<div>{{ $t('equipment') }}</div>
+				</a>
+				<a href="/image/feature/tournament.webp" target="_blank">
+					<img src="/image/feature/tournament.webp">
+					<div>{{ $t('tournaments') }}</div>
+				</a>
+			</div>
 
 			<h2>{{ $t('features') }}</h2>
 			<div class="features">
