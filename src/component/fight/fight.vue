@@ -422,7 +422,10 @@
 		vertical-align: top;
 		margin-right: 2px;
 	}
-	.fight-info .farmer img {
+	// L'avatar est une enveloppe autour de l'image (cadre biseauté du thème v3) :
+	// dimensionner l'<img> ne contraint plus rien, c'est l'enveloppe qui porte la
+	// taille. L'emblème d'équipe, lui, est resté une image seule.
+	.fight-info .farmer .avatar, .fight-info .farmer .emblem {
 		width: 75px;
 		height: 75px;
 	}
@@ -446,7 +449,7 @@
 			.name {
 				font-size: 11px;
 			}
-			img {
+			.avatar, .emblem {
 				width: 50px;
 				height: 50px;
 			}

@@ -31,7 +31,7 @@
 					<h4 class="section">{{ t(s.key) }}</h4>
 					<div class="trophy-row">
 						<rich-tooltip-trophy v-for="trophy in s.list" :key="trophy.code" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true">
-							<router-link :to="'/trophies/' + farmerId" v-bind="props">
+							<router-link :to="'/trophy/' + trophy.code" v-bind="props">
 								<trophy-icon :code="trophy.code" class="trophy" />
 							</router-link>
 						</rich-tooltip-trophy>
@@ -73,7 +73,6 @@
 	const t = useNamespacedT('home')
 	const { locale } = useI18n()
 
-	const farmerId = computed(() => store.state.farmer?.id ?? 0)
 	const loaded = ref(false)
 	const count = ref(0)
 	const total = ref(0)

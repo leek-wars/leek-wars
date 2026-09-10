@@ -63,6 +63,10 @@ const description = computed(() => {
 		max-width: 44px;
 		max-height: 44px;
 	}
+	.result .avatar {
+		width: 44px;
+		height: 44px;
+	}
 	.result .name {
 		margin: 3px 0;
 	}

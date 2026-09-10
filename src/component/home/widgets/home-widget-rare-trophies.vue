@@ -3,7 +3,7 @@
 		<loader v-if="!loaded" />
 		<div v-else-if="rarest.length" ref="linesEl" class="lines">
 			<rich-tooltip-trophy v-for="trophy in visibleRarest" :key="trophy.code" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true">
-				<router-link :to="'/trophies/' + farmerId" class="trophy-line" v-bind="props">
+				<router-link :to="'/trophy/' + trophy.code" class="trophy-line" v-bind="props">
 					<trophy-icon :code="trophy.code" class="trophy" />
 					<div class="info">
 						<!-- L'API ne renvoie plus de nom traduit, seulement le code -->
@@ -47,7 +47,6 @@
 	const t = useNamespacedT('home')
 	const { locale } = useI18n()
 
-	const farmerId = computed(() => store.state.farmer?.id ?? 0)
 	const loaded = ref(false)
 	const rarest = ref<Trophy[]>([])
 

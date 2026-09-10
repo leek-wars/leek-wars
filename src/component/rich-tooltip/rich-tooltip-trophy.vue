@@ -1,5 +1,8 @@
 <template>
-	<v-menu v-model="value" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" :open-on-hover="!locked" offset-y>
+	<!-- min-width à 0 : sans ça Vuetify pose un min-width égal à la largeur de
+	     l'activateur, et l'infobulle s'étire à la largeur de la ligne qui l'ouvre
+	     (widgets de l'accueil) au lieu de garder ses 280 px. -->
+	<v-menu v-model="value" :close-on-content-click="false" :width="280" :min-width="0" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" :open-on-hover="!locked" offset-y>
 		<template #activator="{ props: activatorProps }">
 			<span v-bind="activatorProps">
 				<slot :props="activatorProps"></slot>

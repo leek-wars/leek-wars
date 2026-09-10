@@ -205,6 +205,10 @@ function setParent(event: boolean) {
 			font-size: 18px;
 		}
 		.avatar {
+			// L'avatar est une enveloppe autour de l'image : la taille se pose sur
+			// elle, dimensionner l'<img> seul ne contraint plus rien.
+			width: 17px;
+			height: 17px;
 			margin-left: 5px;
 			margin-top: 3px;
 		}

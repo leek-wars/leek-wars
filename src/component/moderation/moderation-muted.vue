@@ -96,7 +96,7 @@
 		margin: 3px;
 		display: flex;
 		align-items: center;
-		img {
+		.avatar {
 			margin-right: 5px;
 			width: 25px;
 			height: 25px;
