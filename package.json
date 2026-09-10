@@ -82,7 +82,7 @@
 		"typescript-eslint": "^8.56.0",
 		"vite": "^7.3.2",
 		"vite-plugin-vuetify": "^2.0.0",
-		"vitest": "^4.1.9",
+		"vitest": "^4.1.11",
 		"vscode-jsonrpc": "^9.0.1",
 		"vscode-languageserver-protocol": "^3.18.2",
 		"vue-tsc": "^3.2.1"
