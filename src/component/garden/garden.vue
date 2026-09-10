@@ -1187,8 +1187,11 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
+		// 150 → 180 : le potager a gagné de la place, les cartes flottaient au
+		// milieu de marges vides (Pierre, 10/09). Vaut pour ses poireaux comme
+		// pour les adversaires, les deux passent par ce conteneur.
 		& > * {
-			max-width: 150px;
+			max-width: 180px;
 			width: 100%;
 		}
 	}
@@ -1202,7 +1205,7 @@
 		}
 	}
 	#app.app .opponents > * {
-		max-width: 120px;
+		max-width: 140px;
 	}
 	.leek:not(.disabled), .composition, .composition-wrapper, .opponents .farmer, .squad:not(.disabled) {
 		cursor: pointer;

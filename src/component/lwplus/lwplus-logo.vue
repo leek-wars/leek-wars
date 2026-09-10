@@ -7,9 +7,9 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 // Logo LW+ : rendu 3D doré pré-calculé (Blender, scripts/generate-lwplus-logo.py).
 // Le WebP joue UN tour du « + » (1 s) puis s'arrête sur son image de fin, qui
-// est aussi l'image de départ. On relance le tour au survol et toutes les
-// `period` ms (0 = jamais tout seul, seulement au survol ou via `spin()` exposé,
-// pour l'encart de l'en-tête). Un navigateur ne redémarre pas une image animée déjà en cache
+// est aussi l'image de départ. On relance le tour au
+// survol, et nulle part tout seul (décision de Pierre, 10/09) : le tour de trop
+// finit par agacer sur une page qu'on garde ouverte. Un navigateur ne redémarre pas une image animée déjà en cache
 // (changer le fragment de l'URL ne suffit pas, vérifié sur Chrome) : le fichier
 // est donc chargé une fois en Blob et chaque tour reçoit une URL d'objet neuve,
 // que le navigateur traite comme une image nouvelle, sans requête réseau.
@@ -17,8 +17,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 const props = withDefaults(defineProps<{
 	variant?: 'lwplus' | 'plus'
 	alt?: string
-	period?: number
-}>(), { variant: 'lwplus', alt: 'LW+', period: 10000 })
+}>(), { variant: 'lwplus', alt: 'LW+' })
 
 const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 const base = computed(() => '/image/lwplus/' + props.variant + (reduced ? '_poster.png' : '.webp'))
@@ -26,7 +25,6 @@ const size = computed(() => props.variant === 'lwplus' ? { w: 800, h: 400 } : { 
 const src = ref(base.value)
 const SPIN_DURATION = 1000
 
-let timer = 0
 let spinningUntil = 0
 let blob: Blob | null = null
 let objectUrl = ''
@@ -47,7 +45,6 @@ defineExpose({ spin })
 
 onMounted(async () => {
 	if (reduced) { return }
-	if (props.period > 0) { timer = window.setInterval(spin, props.period) }
 	try {
 		blob = await (await fetch(base.value)).blob()
 	} catch (_e) {
@@ -55,7 +52,6 @@ onMounted(async () => {
 	}
 })
 onUnmounted(() => {
-	if (timer) { clearInterval(timer) }
 	if (objectUrl) { URL.revokeObjectURL(objectUrl) }
 })
 </script>

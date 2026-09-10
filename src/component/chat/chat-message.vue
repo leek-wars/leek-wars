@@ -14,6 +14,10 @@
 				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ props }">
 					<span :class="message.farmer.color" v-bind="props">{{ message.farmer.name }}</span>
 				</rich-tooltip-farmer>
+				<!-- #3303 : le « + » doré des abonnés. Image statique et légère
+				     (2,6 ko) — le rendu animé serait hors de propos à 15 px, et le
+				     chat en affiche autant qu'il y a de messages. -->
+				<img v-if="message.farmer.lwplus" class="lwplus-badge" src="/image/lwplus/plus_badge.webp" alt="LW+" width="128" height="128">
 			</router-link>
 			<div v-else class="author"><span class="bot">Leek Wars 🤖</span></div>
 
@@ -165,6 +169,14 @@ function toggleReaction(emoji: string) {
 		padding-right: 60px;
 		color: var(--text-color-secondary);
 	}
+	// Le badge suit la ligne du pseudo sans l'écarter : hauteur de la casse,
+	// aligné sur la base du texte.
+	.lwplus-badge {
+		width: 15px;
+		height: 15px;
+		margin-left: 3px;
+		vertical-align: -2px;
+	}
 	.right {
 		font-size: 13px;
 		position: absolute;
@@ -190,7 +202,7 @@ function toggleReaction(emoji: string) {
 		background: var(--pure-white);
 		padding: 2px 6px;
 		cursor: pointer;
-		border-radius: 10px;
+		border-radius: var(--radius-large);
 		display: flex;
 		align-items: center;
 		font-size: 22px;

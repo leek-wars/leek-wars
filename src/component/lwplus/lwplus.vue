@@ -7,7 +7,7 @@
 		<panel class="first hero-panel">
 			<div class="hero">
 				<!-- Le « + » fait un tour au survol et toutes les 10 s, cf. lwplus-logo.vue -->
-				<lwplus-logo class="mark" :period="0" />
+				<lwplus-logo class="mark" />
 				<div class="pitch">{{ $t('pitch') }}</div>
 				<div class="price">
 					<span class="amount">{{ $t('price_per_month', [priceEur]) }}</span>

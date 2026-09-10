@@ -1532,8 +1532,10 @@
 		line-height: 0;
 		vertical-align: middle;
 		img {
-			width: 26px;
-			height: 26px;
+			// Le « + » seul, pas le logo entier (Pierre, 10/09) : à côté d'une
+			// pastille de grade, il tient sa hauteur sans allonger la ligne.
+			width: 22px;
+			height: 22px;
 		}
 	}
 	// #3237 : gris neutre volontaire — déclarer ses comptes n'est ni une
@@ -1644,6 +1646,26 @@
 	.leek:hover {
 		background: var(--pure-white);
 		box-shadow: var(--elevation-1);
+	}
+	// v3 : les mêmes états que les cartes du widget « Mes poireaux » de
+	// l'accueil (Pierre, 2026-09-10), au lieu de l'aplat blanc et de l'ombre
+	// Material du v2 — `--pure-white` est le parchemin en clair et du noir en
+	// sombre, donc un survol qui ne se lit pas d'un thème à l'autre.
+	// Le liseré est posé transparent dès le repos : la carte ne bouge pas d'un
+	// pixel quand il s'allume.
+	body:not(.v2) {
+		.leek {
+			border: 1px solid transparent;
+			transition: background-color .12s ease, border-color .12s ease;
+		}
+		.leek:hover {
+			background: var(--background-row);
+			border-color: var(--border-strong);
+			box-shadow: none;
+		}
+		.leek:active {
+			border-color: var(--primary);
+		}
 	}
 	.trophies-mode-button {
 		padding: 8px 10px;

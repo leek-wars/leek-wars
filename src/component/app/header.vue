@@ -101,7 +101,7 @@
 				<div v-if="$store.state.farmer.lwplus && lwplusRemaining" class="button-wrapper">
 					<router-link to="/lwplus" :class="{'header-active': $route.path.startsWith('/lwplus')}">
 						<div class="header-button lwplus-button" @mouseenter="lwplusLogo?.spin()">
-							<lwplus-logo ref="lwplusLogo" variant="plus" alt="LW+" :period="0" class="lwplus-icon" />
+							<lwplus-logo ref="lwplusLogo" variant="plus" alt="LW+" class="lwplus-icon" />
 							<span class="text">{{ lwplusRemaining }}</span>
 						</div>
 					</router-link>
@@ -514,7 +514,7 @@
 		background: var(--primary-surface);
 		padding: 4px 5px;
 		color: var(--primary-surface-text);
-		border-radius: 5px;
+		border-radius: var(--radius);
 		height: 20px;
 		line-height: 12px;
 	}
