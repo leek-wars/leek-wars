@@ -80,6 +80,8 @@
 	"const_ENTITY_LEEK": "Viittaa Leek-tyyppiseen entiteettiin.",
 	"const_ENTITY_PLANT": "Viittaa Kasvi-tyyppiseen entiteettiin.",
 	"const_ENTITY_TURRET": "Viittaa Turret-tyyppiseen entiteettiin.",
+	"const_STATE_ROOTED": "Represents the Rooted state: the entity can no longer move, be pushed or pulled, but Inversion and Repotting still move it.",
+	"const_STATE_UNHEALABLE": "Represents the Unhealable state: the entity can no longer be healed — heals, life steal and regeneration have no effect on it.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Haastetyyppinen taistelutausta.",
 	"const_FIGHT_CONTEXT_GARDEN": "Konteksti taistelu kasvimaassa.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Taistelun konteksti Battle Royalessa.",

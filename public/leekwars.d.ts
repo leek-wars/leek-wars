@@ -1999,13 +1999,19 @@ declare namespace State {
 	const INVINCIBLE: State.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_PACIFIST) */
 	const PACIFIST: State.Type;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_ROOTED) */
+	/**
+	 * Désigne l'état Enraciné : l'entité ne peut plus se déplacer, ni être poussée ou attirée, mais l'Inversion et le Rempotage la déplacent toujours.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/STATE_ROOTED)
+	 */
 	const ROOTED: State.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_STATIC) */
 	const STATIC: State.Type;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_STERILE) */
 	const STERILE: State.Type;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/STATE_UNHEALABLE) */
+	/**
+	 * Désigne l'état Insoignable : l'entité ne peut plus être soignée — soins, vol de vie et régénération n'ont aucun effet sur elle.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/STATE_UNHEALABLE)
+	 */
 	const UNHEALABLE: State.Type;
 }
 
@@ -2735,10 +2741,14 @@ declare namespace Chip {
 	const mutation: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PEBBLE) */
 	const pebble: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PIQUANT) */
+	const piquant: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PLAGUE) */
 	const plague: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PLASMA) */
 	const plasma: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_POPCORN) */
+	const popcorn: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PRECIPITATION) */
 	const precipitation: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PRISM) */
@@ -2747,10 +2757,6 @@ declare namespace Chip {
 	const protein: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PROTOTAXITE) */
 	const prototaxite: Chip;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PIQUANT) */
-	const piquant: Chip;
-	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_POPCORN) */
-	const popcorn: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PUNISHMENT) */
 	const punishment: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PUNY_BULB) */

@@ -80,6 +80,8 @@
 	"const_ENTITY_LEEK": "Refere-se a uma entidade do tipo Alho-poró.",
 	"const_ENTITY_PLANT": "Refere-se a uma entidade do tipo Planta.",
 	"const_ENTITY_TURRET": "Refere-se a uma entidade do tipo Torreta.",
+	"const_STATE_ROOTED": "Representa o estado Enraizado: a entidade não pode mais se mover, nem ser empurrada ou atraída, mas a Inversão e o Replantio ainda a deslocam.",
+	"const_STATE_UNHEALABLE": "Representa o estado Incurável: a entidade não pode mais ser curada — curas, roubo de vida e regeneração não têm efeito.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Contexto de combate tipo desafio.",
 	"const_FIGHT_CONTEXT_GARDEN": "Contexto de combate na horta.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Contexto de combate em Battle Royale.",

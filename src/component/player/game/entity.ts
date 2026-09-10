@@ -59,7 +59,7 @@ abstract class FightEntity extends Entity {
 	 * conditionné à addState : un effet d'état dont la valeur n'a pas été enregistrée
 	 * (fusion d'effets côté serveur qui additionnait les identifiants d'état) renvoyait
 	 * `undefined`, et drawImage faisait alors tomber toute la boucle de jeu — combat figé.
-	 * Un état sans icône (2, 4...) part en 404, dont le repli évite une Image « broken »
+	 * Un état sans icône (le Pacifiste 4 aujourd'hui) part en 404, dont le repli évite une Image « broken »
 	 * que drawImage refuserait aussi (#11819723).
 	 */
 	static stateImage(state: number): HTMLImageElement {

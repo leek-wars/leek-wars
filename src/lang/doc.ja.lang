@@ -85,6 +85,8 @@
 	"const_ENTITY_LEEK": "ネギ型の実体を指します。",
 	"const_ENTITY_PLANT": "植物タイプのエンティティを指します。",
 	"const_ENTITY_TURRET": "タレット型エンティティを指します。",
+	"const_STATE_ROOTED": "根付き状態を指します。移動できず、押しも引きもできませんが、反転と植え替えでは動かせます。",
+	"const_STATE_UNHEALABLE": "治療不能状態を指します。回復・吸血・再生のいずれも効果がありません。",
 	"const_FIGHT_CONTEXT_CHALLENGE": "チャレンジタイプの戦闘背景。",
 	"const_FIGHT_CONTEXT_GARDEN": "菜園での戦いの文脈。",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "バトルロワイヤルでの戦闘のコンテキスト。",

@@ -80,6 +80,8 @@
 	"const_ENTITY_LEEK": "Bezieht sich auf eine Entität vom Typ Lauch.",
 	"const_ENTITY_PLANT": "Bezieht sich auf eine Entität vom Typ Pflanze.",
 	"const_ENTITY_TURRET": "Bezieht sich auf eine Entität vom Typ Turm.",
+	"const_STATE_ROOTED": "Bezeichnet den Zustand Verwurzelt: die Entität kann sich nicht mehr bewegen und weder gestoßen noch angezogen werden, aber Umkehrung und Umtopfen versetzen sie weiterhin.",
+	"const_STATE_UNHEALABLE": "Bezeichnet den Zustand Unheilbar: die Entität kann nicht mehr geheilt werden — Heilung, Lebensdiebstahl und Regeneration bleiben wirkungslos.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Kampfhintergrund vom Herausforderungstyp.",
 	"const_FIGHT_CONTEXT_GARDEN": "Kontext des Kampfes im Gemüsegarten.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Kontext des Kampfes in Battle Royale.",

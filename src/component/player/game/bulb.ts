@@ -13,8 +13,11 @@ class Bulb extends FightEntity {
 
 	public static SCALE: number = 0.30
 	// Les plantes sont plus imposantes qu'un bulbe : enracinées, ce sont des
-	// pièces de terrain plus que des familiers.
-	public static PLANT_SCALE: number = 0.45
+	// pièces de terrain plus que des familiers. 0,45 -> 0,55 le 10/09 (demande de
+	// Pierre) : le Maïs passe de 68 à 83 px de haut, le Piment de 65 à 80, le
+	// Prototaxite de 79 à 97, contre 38 à 66 px pour un bulbe. Tout le rendu suit
+	// cette seule valeur (ombre, pousse, rebond, texture mise à l'échelle).
+	public static PLANT_SCALE: number = 0.55
 
 	public skin!: number
 	declare public bulbName: string
@@ -111,6 +114,14 @@ class Bulb extends FightEntity {
 	private setPlant(zoneColor: string) {
 		this.plant = true
 		this.spriteScale = Bulb.PLANT_SCALE
+		// Une plante est PLANTÉE : elle ne flotte pas comme un bulbe. Le `baseZ = -6`
+		// du bulbe décale le corps de 6 px et l'ombre de 6 + 6 × SHADOW_SCALE dans
+		// l'autre sens (cf. drawShadow, qui défait le translate de startDraw dans un
+		// repère retourné et écrasé) : sur un sprite haut comme le Prototaxite, les
+		// deux se décrochent visiblement. À plat, le pied de l'ombre rejoint celui
+		// de la plante.
+		this.baseZ = 0
+		this.z = 0
 		this.zoneColor = zoneColor
 		this.zoneRange = zoneColor ? 3 : 0
 	}

@@ -80,6 +80,8 @@
 	"const_ENTITY_LEEK": "Represents the entity type of a leek.",
 	"const_ENTITY_PLANT": "Represents the entity type of a plant.",
 	"const_ENTITY_TURRET": "Represents the entity type of a turret.",
+	"const_STATE_ROOTED": "Represents the Rooted state: the entity can no longer move, be pushed or pulled, but Inversion and Repotting still move it.",
+	"const_STATE_UNHEALABLE": "Represents the Unhealable state: the entity can no longer be healed — heals, life steal and regeneration have no effect on it.",
 	"const_BULB_PUNY": "Represents the puny bulb type.",
 	"const_BULB_FIRE": "Represents the fire bulb type.",
 	"const_BULB_HEALER": "Represents the healer bulb type.",

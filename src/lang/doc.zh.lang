@@ -85,6 +85,8 @@
 	"const_ENTITY_LEEK": "指一个韭菜类实体。",
 	"const_ENTITY_PLANT": "指的是植物类型的实体。",
 	"const_ENTITY_TURRET": "指的是炮塔类型的实体。",
+	"const_STATE_ROOTED": "指扎根状态：实体无法移动，也不能被推动或吸引，但反转和移栽仍可使其位移。",
+	"const_STATE_UNHEALABLE": "指不可治疗状态：实体无法再被治疗——治疗、吸血和再生都无效。",
 	"const_FIGHT_CONTEXT_CHALLENGE": "挑战式战斗背景。",
 	"const_FIGHT_CONTEXT_GARDEN": "在菜园里打架的背景。",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "大逃杀中的战斗环境。",

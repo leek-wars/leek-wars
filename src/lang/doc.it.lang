@@ -80,6 +80,8 @@
 	"const_ENTITY_LEEK": "Si riferisce a un'entità di tipo Leek.",
 	"const_ENTITY_PLANT": "Fa riferimento a un'entità di tipo Pianta.",
 	"const_ENTITY_TURRET": "Si riferisce a un'entità di tipo torretta.",
+	"const_STATE_ROOTED": "Designa lo stato Radicato: l'entità non può più muoversi, né essere spinta o attirata, ma Inversione e Rinvaso la spostano comunque.",
+	"const_STATE_UNHEALABLE": "Designa lo stato Incurabile: l'entità non può più essere curata — cure, furto di vita e rigenerazione non hanno alcun effetto.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Sfondo di combattimento di tipo sfida.",
 	"const_FIGHT_CONTEXT_GARDEN": "Contesto di combattimento nell'orto.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Contesto del combattimento in Battle Royale.",

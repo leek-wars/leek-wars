@@ -85,6 +85,8 @@
 	"const_ENTITY_LEEK": "Mengacu pada entitas tipe daun bawang.",
 	"const_ENTITY_PLANT": "Mengacu pada entitas tipe Tanaman.",
 	"const_ENTITY_TURRET": "Mengacu pada entitas tipe Turret.",
+	"const_STATE_ROOTED": "Represents the Rooted state: the entity can no longer move, be pushed or pulled, but Inversion and Repotting still move it.",
+	"const_STATE_UNHEALABLE": "Represents the Unhealable state: the entity can no longer be healed — heals, life steal and regeneration have no effect on it.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Latar belakang tempur tipe tantangan.",
 	"const_FIGHT_CONTEXT_GARDEN": "Konteks pertarungan di kebun sayur.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Konteks pertempuran di Battle Royale.",

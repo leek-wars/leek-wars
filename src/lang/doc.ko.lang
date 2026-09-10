@@ -85,6 +85,8 @@
 	"const_ENTITY_LEEK": "부추 유형 개체를 나타냅니다.",
 	"const_ENTITY_PLANT": "식물 유형의 엔티티를 나타냅니다.",
 	"const_ENTITY_TURRET": "Turret 유형 엔티티를 나타냅니다.",
+	"const_STATE_ROOTED": "Represents the Rooted state: the entity can no longer move, be pushed or pulled, but Inversion and Repotting still move it.",
+	"const_STATE_UNHEALABLE": "Represents the Unhealable state: the entity can no longer be healed — heals, life steal and regeneration have no effect on it.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "도전형 전투 배경.",
 	"const_FIGHT_CONTEXT_GARDEN": "채소밭에서의 싸움의 맥락.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "배틀로얄의 전투 상황.",

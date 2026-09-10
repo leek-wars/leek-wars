@@ -2160,11 +2160,15 @@ class Capsaicin extends ChipAnimation {
 				const angle = Math.random() * Math.PI * 2
 				const dist = 0.8 + Math.random() * 2.4
 				const texture = i === 3 ? spark : drop
-				this.game.particles.addGarbage(pepper.ox, pepper.oy, pepper.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, texture, 1, 0, 0.8 + Math.random() * 0.7, 0, 70)
+				// 0,35 de la hauteur : la gerbe sort du bas du fruit, pas de la pointe des
+				// feuilles (0,9 avant le 10/09). Les gouttes montent ensuite d'elles-mêmes
+				// (vitesse verticale 3 à 6,5), donc un point d'émission bas se lit quand
+				// même de loin.
+				this.game.particles.addGarbage(pepper.ox, pepper.oy, pepper.height * 0.35, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, texture, 1, 0, 0.8 + Math.random() * 0.7, 0, 70)
 			}
 			// Et le Piment lui-même crache un peu de feu
 			if (Math.random() > 0.5) {
-				this.game.particles.addFire(pepper.ox + Math.random() * 10 - 5, pepper.oy + Math.random() * 6 - 3, pepper.height * 0.8, Math.random() * Math.PI * 2, false)
+				this.game.particles.addFire(pepper.ox + Math.random() * 10 - 5, pepper.oy + Math.random() * 6 - 3, pepper.height * 0.3, Math.random() * Math.PI * 2, false)
 			}
 		}
 		if (!this.targets) { return }
@@ -2269,7 +2273,9 @@ class Popcorn extends ChipAnimation {
 			for (let i = 0; i < 3; ++i) {
 				const angle = Math.random() * Math.PI * 2
 				const dist = 0.8 + Math.random() * 2.2
-				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.9, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, T.popcorn, Math.random() > 0.5 ? 1 : -1, 0, 0.4 + Math.random() * 0.3, 0, 70)
+				// 0,4 de la hauteur : l'épi éclate au ras de la plante, pas au-dessus
+				// d'elle (0,9 avant le 10/09). Les grains montent ensuite tout seuls.
+				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, T.popcorn, Math.random() > 0.5 ? 1 : -1, 0, 0.4 + Math.random() * 0.3, 0, 70)
 			}
 		}
 		// Le soin sur chaque allié quand la pluie les atteint

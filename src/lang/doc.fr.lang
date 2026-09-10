@@ -88,6 +88,8 @@
 	"const_ENTITY_LEEK": "Désigne une entité de type Poireau.",
 	"const_ENTITY_PLANT": "Désigne une entité de type Plante.",
 	"const_ENTITY_TURRET": "Désigne une entité de type Tourelle.",
+	"const_STATE_ROOTED": "Désigne l'état Enraciné : l'entité ne peut plus se déplacer, ni être poussée ou attirée, mais l'Inversion et le Rempotage la déplacent toujours.",
+	"const_STATE_UNHEALABLE": "Désigne l'état Insoignable : l'entité ne peut plus être soignée — soins, vol de vie et régénération n'ont aucun effet sur elle.",
 	"const_BULB_PUNY": "Désigne le type de bulbe Chétif.",
 	"const_BULB_FIRE": "Désigne le type de bulbe de Feu.",
 	"const_BULB_HEALER": "Désigne le type de bulbe Soigneur.",

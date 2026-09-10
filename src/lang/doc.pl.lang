@@ -80,6 +80,8 @@
 	"const_ENTITY_LEEK": "Odnosi się do podmiotu typu Leek.",
 	"const_ENTITY_PLANT": "Odnosi się do jednostki typu Roślina.",
 	"const_ENTITY_TURRET": "Odnosi się do jednostki typu Turret.",
+	"const_STATE_ROOTED": "Odnosi się do stanu Zakorzeniony: encja nie może się poruszać ani być popychana czy przyciągana, ale Inwersja i Przesadzanie wciąż ją przemieszczają.",
+	"const_STATE_UNHEALABLE": "Odnosi się do stanu Nieuleczalny: encji nie można już leczyć — leczenie, kradzież życia i regeneracja nie mają na nią wpływu.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Tło walki typu wyzwanie.",
 	"const_FIGHT_CONTEXT_GARDEN": "Kontekst walki w ogrodzie.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Kontekst walki w Battle Royale.",

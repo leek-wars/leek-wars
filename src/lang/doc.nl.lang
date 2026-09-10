@@ -80,6 +80,8 @@
 	"const_ENTITY_LEEK": "Verwijst naar een Leek-type entiteit.",
 	"const_ENTITY_PLANT": "Verwijst naar een Plant-type entiteit.",
 	"const_ENTITY_TURRET": "Verwijst naar een entiteit van het type Torentje.",
+	"const_STATE_ROOTED": "Verwijst naar de toestand Geworteld: de entiteit kan niet meer bewegen, niet geduwd of aangetrokken worden, maar Omkering en Verpotten verplaatsen haar nog steeds.",
+	"const_STATE_UNHEALABLE": "Verwijst naar de toestand Ongeneeslijk: de entiteit kan niet meer genezen worden — genezing, levensdiefstal en regeneratie hebben geen effect.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Uitdagingstype gevechtsachtergrond.",
 	"const_FIGHT_CONTEXT_GARDEN": "Context van het gevecht in de moestuin.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Context van gevechten in Battle Royale.",
