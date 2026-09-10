@@ -145,9 +145,14 @@
 						<!-- #3303 : orthogonal aux autres grades, donc pas de v-else-if.
 						     Le « + » doré au lieu du texte, et il mène à la page LW+. Pas de
 						     clé i18n, « LW+ » est un nom de marque. -->
-						<router-link v-if="farmer.lwplus" to="/lwplus" class="grade lwplus">
-							<img src="/image/lwplus/plus_badge.webp" alt="LW+" width="128" height="128">
-						</router-link>
+						<v-tooltip v-if="farmer.lwplus" location="bottom">
+							<template #activator="{ props }">
+								<router-link to="/lwplus" class="grade lwplus" v-bind="props">
+									<img src="/image/lwplus/plus_badge.webp" alt="LW+" width="128" height="128">
+								</router-link>
+							</template>
+							<span>Leek Wars +</span>
+						</v-tooltip>
 						<!-- #3237 : comptes déclarés du joueur. C'est la contrepartie visible
 						     de la déclaration — l'afficher est tout l'objet du dispositif. -->
 						<v-menu v-if="farmer.linked_accounts && farmer.linked_accounts.length > 1" location="bottom">
@@ -1525,11 +1530,15 @@
 		background: #2196f3;
 	}
 	// Le « + » doré en relief remplace la pastille de texte : plus de fond, l'image
-	// EST le badge. Elle mène à la page d'abonnement, d'où le curseur de lien.
+	// EST le badge, et elle mène à la page d'abonnement. Boîte en inline-flex
+	// de la même hauteur qu'une pastille de grade : une image en ligne s'aligne
+	// sur la BASE du texte voisin, pas sur son milieu, et le badge pendait.
 	.grade.lwplus {
 		background: none;
 		padding: 0;
-		line-height: 0;
+		height: 24px;
+		display: inline-flex;
+		align-items: center;
 		vertical-align: middle;
 		img {
 			// Le « + » seul, pas le logo entier (Pierre, 10/09) : à côté d'une
@@ -1537,6 +1546,11 @@
 			width: 22px;
 			height: 22px;
 		}
+	}
+	// Les pastilles voisines se calent sur le même axe, sinon c'est le texte qui
+	// décroche du badge.
+	.grades .grade {
+		vertical-align: middle;
 	}
 	// #3237 : gris neutre volontaire — déclarer ses comptes n'est ni une
 	// distinction ni un avertissement, c'est une information.
