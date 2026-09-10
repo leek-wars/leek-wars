@@ -71,6 +71,10 @@ const CLASS_DOC: Record<string, ClassDoc> = {
 		en: 'A mob: a hostile entity controlled by the game.',
 		fr: 'Un monstre : une entité hostile contrôlée par le jeu.',
 	},
+	Plant: {
+		en: 'A plant: a rooted summon, which never plays its own turn.',
+		fr: 'Une plante : une invocation enracinée, qui ne joue jamais son tour.',
+	},
 	Item: {
 		en: 'An item of the game (weapon or chip): shared base of Weapon and Chip.',
 		fr: 'Un objet du jeu (arme ou puce) : base commune de Weapon et Chip.',

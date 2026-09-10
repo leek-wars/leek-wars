@@ -535,12 +535,26 @@ declare class Mob {
 	readonly type: Mob.Type;
 }
 interface Mob extends Entity {}
+/**
+ * Une plante invoquée (enracinée : elle ne joue pas son tour).
+ * Une plante : une invocation enracinée, qui ne joue jamais son tour.
+ */
+declare class Plant {
+	/**
+	 * Espèce de plante (Plant.Type.CORN...).
+	 * Renvoie le type de plante de l'entité entity. Retourne -1 si l'entité n'est pas une plante. Utilisez les constantes PLANT_* pour comparer le résultat.
+	 * @returns Le type de plante de l'entité entity, ou -1 si ce n'est pas une plante.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getPlantType)
+	 */
+	readonly type: Plant.Type;
+}
+interface Plant extends Entity {}
 
 /** Une entité du combat (poireau, tourelle, bulbe, monstre…) : caractéristiques, position, effets et actions. */
 declare class Entity {
 	readonly id: number;
 	/**
-	 * Genre d'entité (Entity.Type.LEEK/BULB/TURRET/CHEST/MOB). À ne pas confondre avec le .type des sous-classes (sous-variante : Bulb.Type.*...).
+	 * Genre d'entité (Entity.Type.LEEK/BULB/TURRET/CHEST/MOB/PLANT). À ne pas confondre avec le .type des sous-classes (sous-variante : Bulb.Type.*...).
 	 * Renvoie le type d'entité de l'entité entity.
 	 * @returns Le type d'entité de entity :ENTITY_LEEK s'il s'agit d'un poireau.ENTITY_BULB s'il s'agit d'un bulbe.ENTITY_TURRET s'il s'agit d'une tourelle.
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getType)
@@ -1035,7 +1049,7 @@ declare class Me extends Entity {
 	itemUses(item: Item | number): number;
 	/**
 	 * Change l'équipement courant (nom du loadout). 'changeStats' (défaut true) applique aussi sa répartition de capital.
-	 * Applique un loadout pour ce combat uniquement, sans modifier l'équipement persistant du poireau. À utiliser uniquement dans beforeFight(). Si le nom n'existe pas ou si setLoadout est appelé en dehors de beforeFight(), la fonction renvoie false et un avertissement est ajouté au rapport. Une potion de restat n'est consommée que si la répartition du loadout impose de réduire une caractéristique ; sans potion, ou si le loadout demande plus de capital que le poireau n'en a, seul l'équipement est appliqué.
+	 * Applique un loadout pour ce combat uniquement, sans modifier l'équipement persistant du poireau. À utiliser uniquement dans beforeFight(). Si le nom n'existe pas ou si setLoadout est appelé en dehors de beforeFight(), la fonction renvoie false et un avertissement est ajouté au rapport. Une potion de restat n'est consommée que si la répartition du loadout impose de réduire une caractéristique ; sans potion, ou si le loadout demande plus de capital que le poireau n'en a, seul l'équipement est appliqué. En JS, TS et Python, beforeFight() n'est appelée que si l'IA définit turn() et que le code à la racine du fichier n'effectue aucune action de combat ; sinon le hook est sauté et un avertissement est ajouté au rapport.
 	 * @param name Le nom exact du loadout à appliquer (sensible à la casse).
 	 * @param changeStats (optionnel) Appliquer aussi la répartition de capital du loadout (true par défaut). À false, seuls les armes, puces et composants changent, les caractéristiques restent celles du poireau.
 	 * @returns true si le loadout a été appliqué, false sinon.
@@ -2269,6 +2283,11 @@ declare namespace Entity {
 		/** 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_MOB) */
 		const MOB: Entity.Type;
 		/**
+		 * Désigne une entité de type Plante.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_PLANT)
+		 */
+		const PLANT: Entity.Type;
+		/**
 		 * Désigne une entité de type Tourelle.
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/ENTITY_TURRET)
 		 */
@@ -2399,6 +2418,28 @@ declare namespace Bulb {
 		 * 📖 [Documentation](https://leekwars.com/help/documentation/BULB_WIZARD)
 		 */
 		const WIZARD: Bulb.Type;
+	}
+}
+
+declare namespace Plant {
+	/** Constante de la famille Plant.Type (CHILLI_PEPPER, CORN, PROTOTAXITE...). */
+	type Type = number;
+	namespace Type {
+		/**
+		 * Désigne le type de plante Piment.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/PLANT_CHILLI_PEPPER)
+		 */
+		const CHILLI_PEPPER: Plant.Type;
+		/**
+		 * Désigne le type de plante Maïs.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/PLANT_CORN)
+		 */
+		const CORN: Plant.Type;
+		/**
+		 * Désigne le type de plante Prototaxite.
+		 * 📖 [Documentation](https://leekwars.com/help/documentation/PLANT_PROTOTAXITE)
+		 */
+		const PROTOTAXITE: Plant.Type;
 	}
 }
 
@@ -2594,6 +2635,8 @@ declare namespace Chip {
 	const bramble: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_BURNING) */
 	const burning: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_CAPSAICIN) */
+	const capsaicin: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_CARAPACE) */
 	const carapace: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_CHILLI_PEPPER) */
@@ -2704,6 +2747,10 @@ declare namespace Chip {
 	const protein: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PROTOTAXITE) */
 	const prototaxite: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PIQUANT) */
+	const piquant: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_POPCORN) */
+	const popcorn: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PUNISHMENT) */
 	const punishment: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_PUNY_BULB) */
@@ -2752,6 +2799,8 @@ declare namespace Chip {
 	const stalactite: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_STEROID) */
 	const steroid: Chip;
+	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_SUGAR) */
+	const sugar: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_STRETCHING) */
 	const stretching: Chip;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/CHIP_SUPERINFECTION) */

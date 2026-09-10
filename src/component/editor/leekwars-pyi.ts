@@ -146,6 +146,8 @@ const CLASSES: ClassSpec[] = [
 	{ name: 'Bulb', base: 'Entity', inject: 'Bulb', body: ['type: int'] },
 	{ name: 'Chest', base: 'Entity', inject: 'Chest', body: ['type: int'] },
 	{ name: 'Mob', base: 'Entity', inject: 'Mob', body: ['type: int'] },
+	// Plante (invocation enracinée) : type d'entité à part entière depuis la 2.50, pas un bulbe.
+	{ name: 'Plant', base: 'Entity', inject: 'Plant', body: ['type: int'] },
 	// Conteneur de catégories seul (STATE_*), pas de membres statiques.
 	{ name: 'State', inject: 'State', body: [] },
 	// Les registres ne stockent QUE du texte (getRegister -> STRING_OR_NULL, getRegisters ->
@@ -309,7 +311,7 @@ export function buildLeekwarsPyi(constants: readonly Constant[]): string {
 		'',
 	]
 	const exported: string[] = ['Cell', 'Entity', 'Weapon', 'Chip', 'Item', 'Effect', 'Feature', 'Message', 'Me',
-		'Leek', 'Turret', 'Bulb', 'Chest', 'Mob', 'State', 'CellLike', 'EntityLike', 'WeaponLike', 'ChipLike']
+		'Leek', 'Turret', 'Bulb', 'Chest', 'Mob', 'Plant', 'State', 'CellLike', 'EntityLike', 'WeaponLike', 'ChipLike']
 
 	for (const spec of CLASSES) {
 		const header = spec.base ? `class ${spec.name}(${spec.base}):` : `class ${spec.name}:`

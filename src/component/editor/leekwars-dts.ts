@@ -84,6 +84,7 @@ const CONST_CONTAINERS: { prefix: string, container: string, sub?: string, item?
 	{ prefix: 'CELL_', container: 'Cell', sub: 'Type' },
 	{ prefix: 'CHEST_', container: 'Chest', sub: 'Type' },
 	{ prefix: 'BULB_', container: 'Bulb', sub: 'Type' },
+	{ prefix: 'PLANT_', container: 'Plant', sub: 'Type' },
 	{ prefix: 'MOB_', container: 'Mob', sub: 'Type' },
 	{ prefix: 'BOSS_', container: 'Fight', sub: 'Boss' },
 	{ prefix: 'EROSION_', container: 'Fight', sub: 'Erosion' },
@@ -304,7 +305,7 @@ export interface ObjectApiModel {
 
 // Classes dont les membres constituent l'« union d'instance » (offerte après `variable.`). On exclut
 // les singletons (Fight/Field/Registers/Debug...), accédés par leur nom, pas via une variable typée.
-const INSTANCE_CLASSES = ['Entity', 'Me', 'Cell', 'Weapon', 'Chip', 'Item', 'Effect', 'Feature', 'Message', 'Leek', 'Turret', 'Bulb', 'Chest', 'Mob']
+const INSTANCE_CLASSES = ['Entity', 'Me', 'Cell', 'Weapon', 'Chip', 'Item', 'Effect', 'Feature', 'Message', 'Leek', 'Turret', 'Bulb', 'Chest', 'Mob', 'Plant']
 
 // Parse OBJECT_API_DECLARATIONS (format régulier généré à la main) en modèle de complétion. Robuste
 // au format exact du bloc ci-dessous : `declare class X {` / `declare namespace X {` / `declare const
@@ -494,6 +495,7 @@ export const OBJECT_MEMBER_LS: Record<string, string> = {
 	'Chip.bulbStats': 'getBulbStats', 'Chip.getAll': 'getAllChips', 'Chip.isChip': 'isChip',
 	// Sous-types d'entité
 	'Bulb.type': 'getBulbType', 'Chest.type': 'getChestType', 'Mob.type': 'getMobType',
+	'Plant.type': 'getPlantType',
 	// Effect / Message
 	'Effect.getAll': 'getAllEffects',
 	'Message.author': 'getMessageAuthor', 'Message.type': 'getMessageType', 'Message.params': 'getMessageParams',
@@ -823,10 +825,16 @@ declare class Mob {
 	readonly type: Mob.Type;
 }
 interface Mob extends Entity {}
+/** Une plante invoquée (enracinée : elle ne joue pas son tour). */
+declare class Plant {
+	/** Espèce de plante (Plant.Type.CORN...). */
+	readonly type: Plant.Type;
+}
+interface Plant extends Entity {}
 
 declare class Entity {
 	readonly id: number;
-	/** Genre d'entité (Entity.Type.LEEK/BULB/TURRET/CHEST/MOB). À ne pas confondre avec le .type des sous-classes (sous-variante : Bulb.Type.*...). */
+	/** Genre d'entité (Entity.Type.LEEK/BULB/TURRET/CHEST/MOB/PLANT). À ne pas confondre avec le .type des sous-classes (sous-variante : Bulb.Type.*...). */
 	readonly entityType: Entity.Type;
 	readonly life: number;
 	readonly maxLife: number;

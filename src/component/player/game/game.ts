@@ -160,6 +160,7 @@ const ENTITY_CLASSES = [
 	Turret,
 	Chest,
 	Mob,
+	Bulb, // PLANT : type d'entité distinct côté moteur, même rendu qu'un bulbe (setPlant)
 ]
 
 export const WEAPONS = [

@@ -21,6 +21,10 @@ enum EntityType {
 	TURRET = 2,
 	CHEST = 3,
 	MOB = 4,
+	// v2.50 — les plantes (Maïs, Piment, Prototaxite) sont un type d'entité à part côté moteur :
+	// enracinées, elles ne jouent pas leur tour. Le rendu reste celui d'un bulbe (cf Bulb.setPlant),
+	// et les combats d'avant le changement les envoient encore en BULB.
+	PLANT = 5,
 }
 enum EntityDirection {
 	NORTH = 0,
