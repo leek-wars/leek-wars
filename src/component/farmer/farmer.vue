@@ -1213,7 +1213,7 @@
 	function pickTitle(title: number[]) {
 		farmer.value!.title = title
 		titleDialog.value = false
-		LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+		LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0, gold: !!title[4]})
 		store.commit('set-title', title)
 	}
 

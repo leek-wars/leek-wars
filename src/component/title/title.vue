@@ -1,5 +1,5 @@
 <template lang="html">
-	<span class="title">
+	<span class="title" :class="{gold}">
 		<span class="quote">«</span>
 		<trophy-icon v-if="icon && TROPHIES[icon - 1]" :code="TROPHIES[icon - 1].code" :class="{notext: !noun && !adjective}" />
 		<span v-if="nounFirst">{{ nounWord }} {{ adjectiveWord }}</span>
@@ -28,6 +28,9 @@ const icon = computed(() => props.title[0])
 const noun = computed(() => props.title[1])
 const gender = computed(() => props.title[2])
 const adjective = computed(() => props.title[3])
+// 5e case : l'or, posé par l'apparat « Titre doré ». Absente de tous les titres écrits
+// avant lui, donc un titre ordinaire reste ordinaire.
+const gold = computed(() => !!props.title[4])
 
 const nounFirst = computed(() => NOUN_FIRST_LOCALES.has(locale.value))
 const lowercaseSecond = computed(() => LOWERCASE_SECOND_LOCALES.has(locale.value))
@@ -86,8 +89,7 @@ img {
 
 /* Le titre est une distinction : gagné, affiché, un peu vantard. Le v3 le
    traite comme tel au lieu du gris de texte secondaire — police d'affichage en
-   capitales et or des podiums, avec la lueur discrète qu'on réserve à ce qui
-   est mérité (cf. REDESIGN.md, « Le halo, motif réutilisable »).
+   capitales (cf. REDESIGN.md).
    Écrit ici et non dans la coquille : `.title` est une classe partagée par les
    dialogues et les en-têtes de panneau, la styler globalement les emporterait
    tous. Le style scopé du composant ne touche que ce titre-là. */
@@ -96,14 +98,25 @@ body:not(.v2) .title {
 	font-size: 13px;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
-	color: var(--rank-first);
-	text-shadow: 0 0 10px color-mix(in srgb, var(--rank-first) 40%, transparent);
 	gap: 2px;
 }
 /* Les chevrons restent en retrait : ils encadrent, ils ne crient pas. */
 body:not(.v2) .quote {
 	font-size: 16px;
-	color: color-mix(in srgb, var(--rank-first) 45%, var(--text-color));
+	color: var(--text-color-secondary);
 	text-shadow: none;
+}
+
+/* L'or des podiums et la lueur discrète qu'on réserve à ce qui est mérité (« Le
+   halo, motif réutilisable ») ne s'affichent QUE pour qui a acheté l'apparat
+   « Titre doré » : sans lui, le titre garde l'encre de texte secondaire.
+   Dans les DEUX thèmes : l'apparat est payé, il doit se voir aussi en v2 (où
+   `--rank-first` est l'or historique du site). */
+.title.gold {
+	color: var(--rank-first);
+	text-shadow: 0 0 10px color-mix(in srgb, var(--rank-first) 40%, transparent);
+}
+.title.gold .quote {
+	color: color-mix(in srgb, var(--rank-first) 45%, var(--text-color));
 }
 </style>

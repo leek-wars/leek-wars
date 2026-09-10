@@ -1684,7 +1684,7 @@
 	function pickTitle(title: number[]) {
 		leek.value!.title = title
 		titleDialog.value = false
-		LeekWars.put('leek/set-title', {leek_id: leek.value!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+		LeekWars.put('leek/set-title', {leek_id: leek.value!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0, gold: !!title[4]})
 		store.commit('set-leek-title', {leek: leek.value!.id, title})
 	}
 

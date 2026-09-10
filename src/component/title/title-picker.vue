@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="title-picker">
-		<lw-title v-if="noun" class="preview" :title="[icon, noun, gender, adjective]" />
+		<lw-title v-if="noun" class="preview" :title="[icon, noun, gender, adjective, gold ? 1 : 0]" />
 		<div class="selection">
 			<div class="select-icon select">
 				<lw-select v-model="icon" :items="icons" item-value="id" item-title="id">
@@ -72,13 +72,23 @@
 				</v-btn>
 			</div>
 		</div>
+		<!-- L'or est un apparat qui s'achète : sans lui, la ligne mène au marché. -->
+		<div v-ripple class="gold-option" :class="{on: gold, locked: !goldPomp}" @click="toggleGold">
+			<img src="/image/pomp/golden_title.png">
+			<span class="label">{{ $t('pomp.golden_title') }}</span>
+			<v-icon v-if="!goldPomp" size="20">mdi-lock</v-icon>
+			<!-- La case ne se clique pas elle-même : c'est la ligne entière qui bascule. -->
+			<lw-checkbox v-else :model-value="gold" />
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 import LwTitle from '@/component/title/title.vue'
 import { titleAgreementGender, agreedTrophyKey } from '@/component/title/title-agreement'
 
@@ -89,6 +99,10 @@ const props = defineProps<{
 }>()
 
 const { t, locale } = useI18n()
+const router = useRouter()
+
+// Apparat « Titre doré » (item 566), comme les autres apparats de la page d'un poireau.
+const POMP_GOLDEN_TITLE = 566
 
 interface TrophyWord {
 	id: number
@@ -109,6 +123,8 @@ const allNouns = ref<TrophyWord[]>([])
 const allAdjectives = ref<TrophyWord[]>([])
 const icons = ref<(TrophyWord | { id: 0, code: '', t: '', rarity: 0 })[]>([])
 const gender = ref(props.title[2] || 1)
+const gold = ref(!!props.title[4])
+const goldPomp = computed(() => !!(store.state.farmer && LeekWars.selectWhere(store.state.farmer.pomps, 'template', POMP_GOLDEN_TITLE) !== null))
 const genders = [
 	{ id: 1, code: 'male' },
 	{ id: 2, code: 'female' }
@@ -152,8 +168,16 @@ function changeNoun() {
 }
 
 function getTitle() {
-	if (icon.value || noun.value) return [icon.value, noun.value, gender.value, adjective.value]
+	if (icon.value || noun.value) return [icon.value, noun.value, gender.value, adjective.value, gold.value ? 1 : 0]
 	return []
+}
+
+function toggleGold() {
+	if (!goldPomp.value) {
+		router.push('/market/golden_title')
+		return
+	}
+	gold.value = !gold.value
 }
 
 function formatRarity(rarity: number) {
@@ -173,6 +197,9 @@ defineExpose({ getTitle })
 <style lang="scss" scoped>
 .selection {
 	display: flex;
+	// Tout sur la même ligne d'axe : les champs n'ont pas la même hauteur (celui de
+	// l'icône porte une image de 25 px), ils se centrent au lieu de s'étirer.
+	align-items: center;
 }
 .select {
 	margin: 0 4px;
@@ -183,9 +210,17 @@ defineExpose({ getTitle })
 .select-words {
 	display: flex;
 	flex: 1;
+	align-items: center;
 	&.en {
 		flex-direction: row-reverse;
 	}
+}
+// Le bouton d'effacement à la hauteur des champs : le v-btn par défaut fait 43 px et
+// dépassait la ligne des deux côtés.
+.v-btn {
+	width: 32px;
+	min-width: 32px;
+	height: 32px;
 }
 .select-icon {
 	width: 80px;
@@ -229,5 +264,35 @@ defineExpose({ getTitle })
 	text-align: center;
 	padding-bottom: 20px;
 	justify-content: center;
+}
+// Une pastille juste assez large pour son contenu, centrée sous les champs : une bande
+// pleine largeur donnait plus de poids à l'option qu'au titre lui-même.
+.gold-option {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: fit-content;
+	margin: 16px auto 0;
+	padding: 3px 10px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	cursor: pointer;
+	color: var(--text-color-secondary);
+	img {
+		width: 24px;
+		height: 24px;
+	}
+	&.on {
+		color: var(--rank-first);
+		border-color: color-mix(in srgb, var(--rank-first) 50%, var(--border));
+	}
+	// Verrouillé : l'image reste, en retrait, et le cadenas dit que ça s'achète.
+	&.locked img {
+		filter: grayscale(1);
+		opacity: 0.6;
+	}
+	:deep(.lw-checkbox) {
+		pointer-events: none;
+	}
 }
 </style>
