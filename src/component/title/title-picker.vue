@@ -72,8 +72,9 @@
 				</v-btn>
 			</div>
 		</div>
-		<!-- L'or est un apparat qui s'achète : sans lui, la ligne mène au marché. -->
-		<div v-ripple class="gold-option" :class="{on: gold, locked: !goldPomp}" @click="toggleGold">
+		<!-- L'or est un apparat de fidélité LW+ (9 mois d'abonnement cumulé) : sans lui, la
+		     ligne mène à la page LW+, où la frise des récompenses le montre. -->
+		<div v-ripple class="gold-option" :class="{on: gold, locked: !goldPomp}" :title="goldPomp ? undefined : $t('pomp.golden_title_locked')" @click="toggleGold">
 			<img src="/image/pomp/golden_title.png">
 			<span class="label">{{ $t('pomp.golden_title') }}</span>
 			<v-icon v-if="!goldPomp" size="20">mdi-lock</v-icon>
@@ -102,6 +103,8 @@ const { t, locale } = useI18n()
 const router = useRouter()
 
 // Apparat « Titre doré » (item 566), comme les autres apparats de la page d'un poireau.
+// Récompense de fidélité LW+ (palier des 9 mois) depuis le 11/09/2026 : il n'est plus
+// au marché, et le trophée Doré ne le verrouille plus.
 const POMP_GOLDEN_TITLE = 566
 
 interface TrophyWord {
@@ -174,7 +177,9 @@ function getTitle() {
 
 function toggleGold() {
 	if (!goldPomp.value) {
-		router.push('/market/golden_title')
+		// L'apparat n'est plus au marché : il se gagne avec 9 mois de LW+. La page LW+
+		// montre la frise des récompenses, le Titre doré compris.
+		router.push('/lwplus')
 		return
 	}
 	gold.value = !gold.value

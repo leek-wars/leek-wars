@@ -1,64 +1,109 @@
 <template>
 	<panel :title="$t('title')" icon="mdi-medal-outline" class="lwplus-timeline">
 		<loader v-if="loading" />
-		<template v-else>
-			<div class="pitch">{{ $t('pitch') }}</div>
-
+		<!-- Le résumé à gauche, la frise à droite (demande de Pierre, 11/09/2026) ;
+		     l'un sous l'autre quand la place manque, comme dans la colonne de la banque. -->
+		<div v-else class="layout">
 			<!-- Où en est le joueur. Le compteur fait autorité sur la barre : celle-ci
 			     ne mesure QUE la portion en cours entre deux paliers, pas le chemin
 			     total — sinon les trois premiers mois paraissent insignifiants. -->
 			<div class="summary">
 				<div class="total">{{ totalLabel }}</div>
-				<template v-if="nextIn !== null">
+				<!-- Pas encore de palier = jamais abonné (le premier tombe dès le premier
+				     jour) : pas de barre, elle n'aurait rien à mesurer. -->
+				<div v-if="tier === 0" class="next">{{ $t('not_started') }}</div>
+				<template v-else-if="nextIn !== null">
 					<div class="bar"><div class="fill" :style="{ width: progress + '%' }"></div></div>
-					<div class="next">{{ tier > 0 || seconds > 0 ? $t('next_in', [daysLabel(nextIn)]) : $t('not_started') }}</div>
+					<div class="next">{{ $t('next_in', [daysLabel(nextIn)]) }}</div>
 				</template>
 				<div v-else class="next done">{{ $t('all_done') }}</div>
 			</div>
 
-			<div class="rail">
-				<div
-					v-for="step in ladder"
-					:key="step.tier"
-					class="step"
-					:class="{ unlocked: step.tier <= tier, next: step.tier === tier + 1 }">
-					<div class="node">
-						<v-icon v-if="step.tier <= tier">mdi-check</v-icon>
-						<span v-else>{{ step.months }}</span>
-					</div>
-					<div class="body">
-						<div class="head">
-							<span class="name">{{ $t('tier_' + step.key) }}</span>
-							<span class="months">{{ monthsLabel(step.months) }}</span>
+			<!-- Une page de paliers à la fois : 10 au plus, moins si la place manque, et
+			     des flèches pour les précédents et les suivants. -->
+			<div ref="pager" class="pager">
+				<v-btn v-if="paginated" class="arrow" icon variant="text" size="small" :disabled="start === 0" @click="anchor = start - perPage">
+					<v-icon>mdi-chevron-left</v-icon>
+				</v-btn>
+				<div class="rail">
+					<div
+						v-for="step in visible"
+						:key="step.tier"
+						class="step"
+						:class="{ unlocked: step.tier <= tier, next: step.tier === tier + 1, end: step.tier === ladder.length, pending: step.reward.pending }"
+							:style="{ flexBasis: 100 / perPage + '%' }">
+						<div class="node">
+							<v-icon v-if="step.tier <= tier">mdi-check</v-icon>
+							<!-- Le palier d'accueil n'a pas de durée à afficher : une pousse. -->
+							<v-icon v-else-if="step.months === 0">mdi-sprout</v-icon>
+							<span v-else>{{ nodeLabel(step.months) }}</span>
 						</div>
-						<div class="rewards">
-							<span v-for="(reward, r) in step.rewards" :key="r" class="reward" :class="{ pending: reward.pending }">
-								<v-icon>{{ REWARD_ICON[reward.display] }}</v-icon>
-								<span>{{ rewardLabel(reward) }}</span>
-								<!-- Récompense décidée mais pas encore produite (chapeau à
-								     modéliser, skin à dessiner). Elle sera remise
-								     rétroactivement, donc on l'annonce au lieu de la cacher. -->
-								<em v-if="reward.pending">{{ $t('soon') }}</em>
-							</span>
-						</div>
+						<!-- Un palier = une vignette carrée de sa récompense (retour de Pierre,
+						     11/09/2026) : l'objet débloqué, l'icône du trophée, ou un emplacement
+						     en pointillés pour ce qui n'est pas encore dessiné. Le nom en petit
+						     dessous (retour de Pierre), la durée est déjà dans la pastille. -->
+						<!-- Objet existant : la fiche complète de l'item, comme partout ailleurs. -->
+						<!-- Vers le haut (sens par défaut) : vers le bas, elle recouvrait le pied de
+						     page (retour de Pierre, 11/09/2026). -->
+						<!-- Lot de ressources : l'objet principal, le nombre d'objets, le détail en infobulle. -->
+						<v-tooltip v-if="step.reward.items" location="top">
+							<template #activator="{ props: tip }">
+								<div v-bind="tip" class="tile bundle">
+									<img :src="templateImage(step.reward.items[0][0])" :alt="rewardLabel(step.reward)">
+									<span v-if="bundleCount(step.reward) > 1" class="count">×{{ bundleCount(step.reward) }}</span>
+								</div>
+							</template>
+							<div v-for="(entry, e) in step.reward.items" :key="e">{{ entry[1] }} × {{ templateName(entry[0]) }}</div>
+						</v-tooltip>
+						<rich-tooltip-item v-else-if="rewardItem(step.reward)" v-slot="{ props: tip }" :item="rewardItem(step.reward)">
+							<div v-bind="tip" class="tile">
+								<img :src="rewardImage(step.reward)!" :alt="rewardLabel(step.reward)">
+							</div>
+						</rich-tooltip-item>
+						<rich-tooltip-trophy v-else-if="rewardTrophy(step.reward)" v-slot="{ props: tip }" :trophy="rewardTrophy(step.reward)!">
+							<div v-bind="tip" class="tile">
+								<trophy-icon class="trophy" :code="rewardTrophy(step.reward)!.code" />
+							</div>
+						</rich-tooltip-trophy>
+						<v-tooltip v-else location="top">
+							<template #activator="{ props: tip }">
+								<div v-bind="tip" class="tile" :class="{ placeholder: !step.reward.icon && step.reward.pending }">
+									<trophy-icon v-if="step.reward.icon" class="trophy" :code="step.reward.icon" />
+									<v-icon v-else>{{ REWARD_ICON[step.reward.display] }}</v-icon>
+								</div>
+							</template>
+							{{ rewardLabel(step.reward) }}
+						</v-tooltip>
+						<div class="label">{{ rewardName(step.reward) }}</div>
 					</div>
 				</div>
+				<v-btn v-if="paginated" class="arrow" icon variant="text" size="small" :disabled="start + perPage >= ladder.length" @click="anchor = start + perPage">
+					<v-icon>mdi-chevron-right</v-icon>
+				</v-btn>
 			</div>
-		</template>
+		</div>
 	</panel>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
+import { useI18n } from 'vue-i18n'
+import { itemImageUrl, itemTranslationKey } from '@/model/item'
+import TrophyIcon from '@/component/trophy-icon.vue'
+import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 
 defineOptions({ name: 'LwplusTimeline', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('lwplus-timeline')
+const { t: tGlobal } = useI18n({ useScope: 'global' })
 
-interface Reward { type: string, display: string, level: string | null, pending: boolean }
-interface Step { tier: number, key: string, seconds: number, months: number, rewards: Reward[] }
+// `template` : id de template d'item quand l'objet existe ; `icon` : icône du trophée.
+// `items` : lot de ressources, [[template, quantité], …].
+interface Reward { type: string, display: string, level: string | null, pending: boolean, template: number | null, icon: string | null, items: [number, number][] | null }
+interface Step { tier: number, seconds: number, months: number, reward: Reward }
 interface Loyalty {
 	seconds: number
 	tier: number
@@ -75,10 +120,19 @@ const REWARD_ICON: Record<string, string> = {
 	hat: 'mdi-hat-fedora',
 	skin: 'mdi-palette',
 	potion: 'mdi-flask',
-	// Même glyphe que la ligne « Badge de profil » du comparatif LW+.
-	badge: 'mdi-shield-star',
-	nickname: 'mdi-format-color-text',
+	// Même glyphe que les apparats du marché (ITEM_TYPE_ICONS).
+	pomp: 'mdi-auto-fix',
+	resources: 'mdi-treasure-chest',
+	surprise: 'mdi-gift',
 }
+
+// Pagination : au plus 10 paliers par page, et jamais un palier plus étroit que
+// STEP_MIN_WIDTH (en dessous, le libellé de la récompense ne tient plus). Les
+// flèches sont décomptées même quand elles sont masquées : le nombre de paliers
+// par page ne doit pas dépendre de leur présence, sinon il oscille.
+const MAX_PER_PAGE = 10
+const STEP_MIN_WIDTH = 110
+const ARROW_WIDTH = 40
 
 const loading = ref(true)
 const seconds = ref(0)
@@ -86,12 +140,28 @@ const tier = ref(0)
 const nextIn = ref<number | null>(null)
 const palierSeconds = ref(90 * 86400)
 const ladder = ref<Step[]>([])
+const pager = ref<HTMLElement | null>(null)
+const perPage = ref(MAX_PER_PAGE)
+// Le palier qu'on veut voir, pas le début de page : quand la largeur change, la
+// page se recale autour de lui au lieu de le perdre.
+const anchor = ref(0)
+
+const start = computed(() => Math.floor(Math.max(0, anchor.value) / perPage.value) * perPage.value)
+const visible = computed(() => ladder.value.slice(start.value, start.value + perPage.value))
+const paginated = computed(() => ladder.value.length > perPage.value)
+
+const observer = new ResizeObserver(entries => {
+	const width = entries[0].contentRect.width - 2 * ARROW_WIDTH
+	perPage.value = Math.max(1, Math.min(MAX_PER_PAGE, Math.floor(width / STEP_MIN_WIDTH)))
+})
+watch(pager, (element, previous) => {
+	if (previous) { observer.unobserve(previous) }
+	if (element) { observer.observe(element) }
+})
+onBeforeUnmount(() => observer.disconnect())
 
 // Pluriel à la main, comme lwplus-packs : deux formes suffisent, et ça évite
 // d'imposer une règle de pluriel à 17 fichiers de langue.
-function monthsLabel(n: number) {
-	return n === 1 ? t('months_one', [n]) : t('months_other', [n])
-}
 function daysLabel(remaining: number) {
 	// Arrondi vers le haut : à 12 h du palier, il reste « 1 jour », pas « 0 ».
 	const days = Math.max(1, Math.ceil(remaining / 86400))
@@ -114,8 +184,49 @@ const progress = computed(() => {
 })
 
 function rewardLabel(reward: Reward) {
-	if (reward.display === 'badge' && reward.level) { return t('reward_badge_' + reward.level) }
 	return t('reward_' + reward.display)
+}
+
+// Pastille : les anniversaires en années (« 1 an », « 2 ans »), le reste en mois.
+function nodeLabel(months: number) {
+	if (months % 12 !== 0) { return String(months) }
+	const years = months / 12
+	return years === 1 ? t('years_one', [years]) : t('years_other', [years])
+}
+
+// Image de l'objet débloqué, retrouvée dans les game data par son template. null
+// tant que l'objet n'existe pas (chapeau, skin à dessiner) : place au placeholder.
+function rewardItem(reward: Reward) {
+	return reward.type === 'item' && !reward.items && reward.template ? LeekWars.items[reward.template] ?? null : null
+}
+// Trophée déclaré, cherché par son id : la liste des trophées n'est pas indexée par id.
+function rewardTrophy(reward: Reward) {
+	return reward.type === 'trophy' && reward.template ? LeekWars.trophies.find(trophy => trophy.id === reward.template) ?? null : null
+}
+function templateImage(template: number): string {
+	const item = LeekWars.items[template]
+	return item ? itemImageUrl(item) : ''
+}
+function templateName(template: number): string {
+	const item = LeekWars.items[template]
+	return item ? tGlobal(itemTranslationKey(item)) : ''
+}
+function bundleCount(reward: Reward): number {
+	return (reward.items ?? []).reduce((total, entry) => total + entry[1], 0)
+}
+function rewardImage(reward: Reward): string | null {
+	const item = rewardItem(reward)
+	return item ? itemImageUrl(item) : null
+}
+
+// Nom sous la vignette : le vrai nom de l'objet ou du trophée quand il existe
+// (« Couronne bronze LW+ », « Leek Wars + — an I »), sinon le genre (« Chapeau »…).
+function rewardName(reward: Reward): string {
+	if (reward.items) { return rewardLabel(reward) }
+	const item = rewardItem(reward)
+	if (item) { return tGlobal(itemTranslationKey(item)) }
+	const trophy = rewardTrophy(reward)
+	return trophy ? tGlobal('trophy.' + trophy.code) : rewardLabel(reward)
 }
 
 onMounted(() => {
@@ -125,6 +236,10 @@ onMounted(() => {
 		nextIn.value = data.next_in
 		palierSeconds.value = data.palier_seconds
 		ladder.value = data.ladder
+		// On ouvre sur la page du palier visé (index `tier`, les paliers comptant
+		// depuis 1), ou sur la dernière si l'échelle est terminée : un abonné de
+		// longue date ne doit pas tomber sur des paliers déjà acquis.
+		anchor.value = Math.min(data.tier, data.ladder.length - 1)
 		loading.value = false
 	}).error(() => {
 		// La chronologie est un bonus d'affichage : si l'appel échoue, la page LW+ et
@@ -138,13 +253,27 @@ onMounted(() => {
 <style lang="scss" scoped>
 	// Même or que le reste de LW+ : les jetons --gold-bright / --rank-first du
 	// système, jamais une couleur en dur — ils s'inversent seuls en sombre.
-	.pitch {
-		padding: 14px 14px 0;
-		color: var(--text-color-secondary);
-		font-size: 14px;
+
+	// Le panneau précédent (offre, mois à l'unité) est le dernier de son bloc et
+	// perd donc sa marge basse : c'est à celui-ci de reprendre l'écart.
+	.lwplus-timeline {
+		margin-top: 12px;
+	}
+	// Pas de double marge (retour de Pierre) : le contenu du panneau n'en a aucune,
+	// le résumé et la frise portent chacun la leur.
+	.lwplus-timeline > :deep(.content) {
+		padding: 0;
+	}
+	.layout {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
 	}
 	.summary {
-		padding: 12px 14px 14px;
+		// Largeur fixe à côté de la frise : c'est elle, pas le résumé, qui prend la place.
+		flex: 0 1 240px;
+		min-width: 0;
+		padding: 12px;
 		.total {
 			font-size: 22px;
 			font-weight: 700;
@@ -171,34 +300,60 @@ onMounted(() => {
 			}
 		}
 	}
+	.pager {
+		// En dessous de 400 px à côté du résumé, la frise passe à la ligne et prend
+		// toute la largeur.
+		flex: 1 1 400px;
+		min-width: 0;
+		display: flex;
+		align-items: flex-start;
+		padding: 12px 0;
+		.arrow {
+			flex-shrink: 0;
+			// Centrée sur les pastilles (30 px) plutôt que sur toute la hauteur.
+			margin-top: -5px;
+		}
+	}
+	// Paliers de gauche à droite, à parts égales sur la largeur de la page.
 	.rail {
-		padding: 0 14px 12px;
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		padding: 0 8px;
 	}
 	.step {
+		// Largeur fixée par le nombre de paliers d'une page PLEINE (style en ligne) : la
+		// dernière page, plus courte, garde la même grille au lieu de s'étirer.
+		flex: 0 0 auto;
+		min-width: 0;
 		display: flex;
-		gap: 12px;
-		// Le trait qui relie les paliers est porté par l'ÉTAPE, pas par la pastille :
-		// accroché à la pastille, `calc(100% - 30px)` se mesurait sur ses 30 px de
-		// haut et donnait un trait de hauteur nulle. Ici il descend jusqu'au bas de
-		// l'étape, qui suit la hauteur réelle du bloc de récompenses.
+		flex-direction: column;
+		align-items: flex-start;
+		padding-right: 12px;
+		// Le trait part du bord droit de la pastille et court jusqu'au bord de
+		// l'étape, où commence la pastille suivante. Il déborde de la page vers la
+		// flèche quand d'autres paliers suivent : c'est lui qui dit « la suite ».
 		position: relative;
 		&::before {
 			content: '';
 			position: absolute;
-			top: 30px;
-			left: 15px; // centre de la pastille (30 px de côté)
-			bottom: 0;
-			width: 1px;
+			top: 15px; // milieu de la pastille (30 px de côté)
+			left: 30px;
+			right: 0;
+			height: 1px;
 			background: var(--border);
 		}
-		&:last-child::before {
+		&.end::before {
 			display: none;
 		}
 		.node {
 			position: relative;
 			flex-shrink: 0;
-			width: 30px;
+			// 30 px de haut ; s'élargit pour « 2 ans ». Posée par-dessus le trait.
+			min-width: 30px;
+			padding: 0 6px;
 			height: 30px;
+			margin-bottom: 8px;
 			border-radius: var(--radius-pill);
 			display: flex;
 			align-items: center;
@@ -213,53 +368,63 @@ onMounted(() => {
 				height: 16px;
 			}
 		}
-		.body {
-			flex: 1;
-			min-width: 0;
-			padding-bottom: 16px;
-		}
-		.head {
+		.tile {
+			width: 64px;
+			height: 64px;
+			border-radius: var(--radius);
+			border: 1px solid var(--border);
+			background: var(--background-secondary);
 			display: flex;
-			align-items: baseline;
-			gap: 8px;
-			flex-wrap: wrap;
-			.name {
-				font-weight: 600;
-				color: var(--text-color-secondary);
-			}
-			.months {
-				font-size: 12px;
-				color: var(--text-color-secondary);
-				opacity: 0.75;
-			}
-		}
-		.rewards {
-			margin-top: 4px;
-			display: flex;
-			flex-wrap: wrap;
-			gap: 4px 10px;
-		}
-		.reward {
-			display: inline-flex;
 			align-items: center;
-			gap: 4px;
-			font-size: 13px;
-			color: var(--text-color-secondary);
+			justify-content: center;
+			img {
+				max-width: 80%;
+				max-height: 80%;
+				object-fit: contain;
+			}
+			.trophy {
+				width: 40px;
+				height: 40px;
+			}
+			&.bundle {
+				position: relative;
+			}
+			.count {
+				position: absolute;
+				right: 4px;
+				bottom: 2px;
+				font-size: 11px;
+				font-weight: 700;
+				color: var(--text-color);
+			}
 			.v-icon {
-				font-size: 16px;
+				font-size: 32px;
+				color: var(--text-color-secondary);
 				:deep(svg) {
-					width: 16px;
-					height: 16px;
+					width: 32px;
+					height: 32px;
 				}
 			}
-			em {
-				font-style: normal;
-				font-size: 11px;
-				opacity: 0.7;
+			// Pas encore dessiné : un emplacement, pas une récompense.
+			&.placeholder {
+				border-style: dashed;
+				background: transparent;
+				.v-icon {
+					opacity: 0.35;
+				}
 			}
-			&.pending {
-				opacity: 0.7;
-			}
+		}
+		.label {
+			margin-top: 4px;
+			max-width: 100%;
+			font-size: 11px;
+			line-height: 1.25;
+			color: var(--text-color-secondary);
+			// Deux lignes au plus : « Couronne bronze LW+ » tient, un nom plus long se coupe.
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
 		}
 		// Palier acquis : la pastille passe en or plein, et le texte reprend l'encre
 		// normale — c'est le contraste avec les paliers gris qui fait la progression.
@@ -274,8 +439,8 @@ onMounted(() => {
 			&::before {
 				background: var(--gold-bright);
 			}
-			.head .name, .reward {
-				color: var(--text-color);
+			.tile {
+				border-color: var(--gold-bright);
 			}
 		}
 		// Le palier visé : cerclé d'or, mais pas rempli.

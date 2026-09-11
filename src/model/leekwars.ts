@@ -222,7 +222,10 @@ const SKINS: { [key: number]: string } = {
 	24: "whiteandblack", 25: "ghost", 26: "salmon", 27: "radioactive", 28: "sand", 29: "teal", 30: "matcha", 31: "peach",
 	32: "fire", 33: "venimous", 34: "greyscale", 35: "frozen", 36: "dalton", 37: "charlie", 38: "mariniere", 39: "france",
 	40: "iron", 41: "diamond", 42: "mafia", 43: "bordeaux",
-	// 44: "ventura"
+	// 44 : récompense de fidélité LW+ (#3303). « ventura », prévu ici un temps et
+	// jamais sorti, prendra un id libre.
+	44: "terracotta",
+	45: "emerald",
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {

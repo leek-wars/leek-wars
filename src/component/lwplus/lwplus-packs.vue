@@ -346,11 +346,16 @@ async function confirmEuros() {
 </script>
 
 <style lang="scss" scoped>
+	// Pas de double marge (retour de Pierre, 11/09/2026) : le contenu du panneau ne
+	// garde aucun padding, chaque bloc porte le sien, ramené à 12 px.
+	.lwplus-packs > :deep(.panel > .content) {
+		padding: 0;
+	}
 	// Or du système : --gold en aplat (avec --gold-text par-dessus), --rank-first
 	// en encre. Aucune couleur en dur, les jetons s'inversent seuls en sombre.
 
 	.pitch {
-		padding: 16px 16px 12px;
+		padding: 12px 12px 8px;
 		color: var(--text-color-secondary);
 		display: flex;
 		align-items: center;
@@ -371,7 +376,7 @@ async function confirmEuros() {
 	.benefits {
 		list-style: none;
 		margin: 0;
-		padding: 16px 16px 28px;
+		padding: 8px 12px 16px;
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 10px 16px;
@@ -402,7 +407,7 @@ async function confirmEuros() {
 		display: flex;
 		align-items: center;
 		gap: 10px;
-		padding: 14px 16px;
+		padding: 12px;
 		font-size: 16px;
 		.ok {
 			color: var(--rank-first);
@@ -418,7 +423,7 @@ async function confirmEuros() {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 16px;
-		padding: 0 16px 16px;
+		padding: 0 12px 12px;
 	}
 	.pack {
 		position: relative;
@@ -470,19 +475,19 @@ async function confirmEuros() {
 		font-weight: 500;
 	}
 	.euro-payment {
-		padding: 0 16px 16px;
+		padding: 0 12px 12px;
 	}
 	// Vert comme les boutons d'achat : c'est la fin du même geste.
 	.pay-btn {
 		margin-top: 12px;
 	}
 	.message {
-		padding: 0 16px 16px;
+		padding: 0 12px 12px;
 		color: var(--rank-first);
 		font-weight: 500;
 	}
 	.error-message {
-		padding: 0 16px 16px;
+		padding: 0 12px 12px;
 		color: red;
 	}
 </style>
