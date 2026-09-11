@@ -226,6 +226,7 @@ const SKINS: { [key: number]: string } = {
 	// jamais sorti, prendra un id libre.
 	44: "terracotta",
 	45: "emerald",
+	46: "amethyst", 47: "sapphire", 48: "topaz", 49: "ruby", 50: "opal",
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
