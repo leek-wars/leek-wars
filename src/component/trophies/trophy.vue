@@ -33,7 +33,9 @@
 					</template>
 				</i18n-t>
 			</template>
-			<span class="rarity"><span v-if="trophy.unlocked"> • </span>{{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
+			<!-- Nombre de détenteurs et rareté : absents d'un trophée tiré des game data (frise des
+			     récompenses LW+), qui afficherait sinon « NaN% ». -->
+			<span v-if="trophy.total != null && trophy.rarity != null" class="rarity"><span v-if="trophy.unlocked"> • </span>{{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
 		</div>
 	</router-link>
 </template>

@@ -10,6 +10,7 @@
 	"not_started": "Subscribe to start the counter.",
 	"all_done": "Ladder complete. Thank you for your support!",
 	"reward_trophy": "Trophy",
+	"trophy_named": "Trophy {0}",
 	"reward_hat": "Hat",
 	"reward_skin": "Leek skin",
 	"reward_potion": "Potion",

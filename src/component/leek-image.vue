@@ -118,6 +118,10 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 	51: {width: 470, height: 278},
 	52: {width: 300, height: 342},
 	53: {width: 300, height: 212},
+	54: {width: 300, height: 342},
+	55: {width: 300, height: 342},
+	56: {width: 300, height: 320},
+	57: {width: 300, height: 260},
 }
 
 const is_boss = computed(() => {

@@ -10,6 +10,7 @@
 	"not_started": "Abonnez-vous pour lancer le compteur.",
 	"all_done": "Échelle terminée. Merci de votre soutien !",
 	"reward_trophy": "Trophée",
+	"trophy_named": "Trophée {0}",
 	"reward_hat": "Chapeau",
 	"reward_skin": "Skin de poireau",
 	"reward_potion": "Potion",

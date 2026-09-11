@@ -45,16 +45,15 @@
 						<!-- Objet existant : la fiche complète de l'item, comme partout ailleurs. -->
 						<!-- Vers le haut (sens par défaut) : vers le bas, elle recouvrait le pied de
 						     page (retour de Pierre, 11/09/2026). -->
-						<!-- Lot de ressources : l'objet principal, le nombre d'objets, le détail en infobulle. -->
-						<v-tooltip v-if="step.reward.items" location="top">
-							<template #activator="{ props: tip }">
-								<div v-bind="tip" class="tile bundle">
-									<img :src="templateImage(step.reward.items[0][0])" :alt="rewardLabel(step.reward)">
-									<span v-if="bundleCount(step.reward) > 1" class="count">×{{ bundleCount(step.reward) }}</span>
-								</div>
-							</template>
-							<div v-for="(entry, e) in step.reward.items" :key="e">{{ entry[1] }} × {{ templateName(entry[0]) }}</div>
-						</v-tooltip>
+						<!-- Lot de ressources : la fiche de la ressource, avec sa quantité et, grâce à
+						     `inventory`, sa valeur estimée et celle du lot (un lot n'en
+						     porte qu'une ; s'il en portait plusieurs, la première fait la vignette). -->
+						<rich-tooltip-item v-if="step.reward.items" v-slot="{ props: tip }" :item="LeekWars.items[step.reward.items[0][0]]" :quantity="step.reward.items[0][1]" :inventory="true">
+							<div v-bind="tip" class="tile bundle">
+								<img :src="templateImage(step.reward.items[0][0])" :alt="rewardLabel(step.reward)">
+								<span v-if="bundleCount(step.reward) > 1" class="count">×{{ bundleCount(step.reward) }}</span>
+							</div>
+						</rich-tooltip-item>
 						<rich-tooltip-item v-else-if="rewardItem(step.reward)" v-slot="{ props: tip }" :item="rewardItem(step.reward)">
 							<div v-bind="tip" class="tile">
 								<img :src="rewardImage(step.reward)!" :alt="rewardLabel(step.reward)">
@@ -207,10 +206,6 @@ function templateImage(template: number): string {
 	const item = LeekWars.items[template]
 	return item ? itemImageUrl(item) : ''
 }
-function templateName(template: number): string {
-	const item = LeekWars.items[template]
-	return item ? tGlobal(itemTranslationKey(item)) : ''
-}
 function bundleCount(reward: Reward): number {
 	return (reward.items ?? []).reduce((total, entry) => total + entry[1], 0)
 }
@@ -222,11 +217,19 @@ function rewardImage(reward: Reward): string | null {
 // Nom sous la vignette : le vrai nom de l'objet ou du trophée quand il existe
 // (« Couronne bronze LW+ », « Leek Wars + — an I »), sinon le genre (« Chapeau »…).
 function rewardName(reward: Reward): string {
-	if (reward.items) { return rewardLabel(reward) }
+	// Lot de ressources : « Aragonite x200 » (retour de Pierre) ; sans « x1 » pour une seule.
+	if (reward.items) {
+		return reward.items.map(([template, quantity]) => {
+			const item = LeekWars.items[template]
+			const name = item ? tGlobal(itemTranslationKey(item)) : ''
+			return quantity > 1 ? name + ' x' + quantity : name
+		}).join(', ')
+	}
 	const item = rewardItem(reward)
 	if (item) { return tGlobal(itemTranslationKey(item)) }
 	const trophy = rewardTrophy(reward)
-	return trophy ? tGlobal('trophy.' + trophy.code) : rewardLabel(reward)
+	// « Trophée Leek Wars + an I » : le genre devant le nom, ordre propre à chaque langue.
+	return trophy ? t('trophy_named', [tGlobal('trophy.' + trophy.code)]) : rewardLabel(reward)
 }
 
 onMounted(() => {
