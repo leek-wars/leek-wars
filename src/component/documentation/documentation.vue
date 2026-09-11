@@ -25,7 +25,10 @@
 					<v-icon class="search-icon">mdi-magnify</v-icon>
 					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
-				<div v-if="!popup" class="tab action" icon="search" link="/search" @click="toggleLarge">
+				<!-- v2 seulement : le shell v3 (et le thème XP qui en hérite) retire le
+				     max-width de 1100 px de toutes les pages, la doc y est déjà en pleine
+				     largeur et le bouton ne faisait rien (Pierre, 2026-09-11). -->
+				<div v-if="!popup && LeekWars.legacyTheme" class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
 					<v-icon v-else>mdi-fullscreen</v-icon>
 				</div>

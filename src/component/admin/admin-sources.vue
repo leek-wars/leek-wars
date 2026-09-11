@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Sources', link: '/admin/sources'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Sources', link: '/admin/sources'}]" :raw="true" /></h1>
+				</div>
+			</div>
 
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="refresh">

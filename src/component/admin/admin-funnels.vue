@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Funnels', link: '/admin/funnels'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Funnels', link: '/admin/funnels'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<v-tabs v-model="selectedFunnel" @update:model-value="load">

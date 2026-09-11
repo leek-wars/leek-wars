@@ -1,8 +1,11 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>{{ t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="home" fallback="mdi-home" />
+				<div class="page-title-text">
+					<h1>{{ t('title') }}</h1>
+				</div>
 			</div>
 			<div class="tabs">
 				<v-menu location="bottom end">

@@ -62,7 +62,11 @@ const ICONS = {
 	// Icônes de titre de page qui n'ont pas d'entrée de menu (barre de page en
 	// couleur, demande de Pierre du 2026-09-07 : « celui en couleur au lieu de
 	// juste vert »).
-	'settings':   { glyph: 'mdiCog',           parts: [null, 'ink'] },
+	// Le rouage était gris (`ink`) : trop terne à côté des autres titres (Pierre,
+	// 2026-09-11 : « plus d'icônes en couleur dans le titre de pages »).
+	'settings':   { glyph: 'mdiCog',           parts: [null, 'cyan'] },
+	'bank':       { glyph: 'mdiBank',          parts: ['gold', 'cream', 'amber', 'cream', 'cream'] },
+	'encyclopedia': { glyph: 'mdiBookOpenPageVariant', parts: ['lime', 'cyan'] },
 	'messages':   { glyph: 'mdiEmailOutline',  parts: ['cyan', null, null] },
 	'tournament': { glyph: 'mdiTournament',    parts: ['lime'] },
 	'fight':      { glyph: 'mdiSword',         parts: ['red', 'ink'] },

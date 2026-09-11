@@ -233,8 +233,9 @@ const arenaLabel = computed<[string, string]>(() => {
 			/* Cartes plus hautes en v3 (demande de Pierre, 2026-08-31) : 52 px
 			   au lieu de 42, le v2 garde sa hauteur au pixel. Les noms gagnent
 			   du rembourrage pour rester au centre optique, l'heure garde son
-			   coin bas. */
-			height: 52px;
+			   coin bas. Redescendues à 46 px le 2026-09-11 (« on peut réduire un
+			   peu la hauteur d'un combat dans l'historique ? »). */
+			height: 46px;
 			/* `height: 100%` et pas 52 px : la carte est en `border-box`, ses
 			   52 px comprennent donc ses deux bordures et ne laissent que 50 px
 			   de contenu. Les enfants calés à 52 dépassaient d'un pixel en bas
@@ -242,14 +243,15 @@ const arenaLabel = computed<[string, string]>(() => {
 			   52 px vs 50 »). En pourcentage, ils suivent la carte quelle que
 			   soit sa hauteur. */
 			.center {
-				flex-basis: 52px;
+				flex-basis: 46px;
 				height: 100%;
 			}
 			.fighters {
 				height: 100%;
 			}
+			/* 44 px de contenu (46 moins les bordures) = 30 d'interligne + 2 × 7. */
 			.fighter {
-				padding: 9px 0;
+				padding: 7px 0;
 			}
 		}
 		.win {

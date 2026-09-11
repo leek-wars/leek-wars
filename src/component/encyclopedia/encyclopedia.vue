@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<div class="flex">
 				<h1 :class="{small: breadcrumb_items.length >= 3}">
-					<v-icon class="book">mdi-book-open-page-variant</v-icon>
+					<page-icon name="encyclopedia" fallback="mdi-book-open-page-variant" class="book" />
 					<breadcrumb :items="breadcrumb_items" :raw="true" />
 					<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 				</h1>
@@ -49,12 +49,12 @@
 					<v-icon>mdi-delete</v-icon>
 					{{ $t('main.delete') }}
 				</div>
-				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
+				<v-menu v-if="page && Object.values(translations).length" offset-y>
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props"><v-icon>mdi-translate</v-icon></div>
 					</template>
 					<v-list :dense="true">
-						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
+						<router-link v-for="(translation, l) in translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
 							<v-list-item class="language">
 								<template #prepend>
 									<flag :code="LeekWars.languages[l].country" :clickable="false" />
@@ -85,9 +85,9 @@
 							<i18n-t keypath="not_found" tag="div" class="message">
 								<template #name>{{ code }}</template>
 							</i18n-t>
-							<div v-if="Object.keys(page.translations).length" class="available-translations">
+							<div v-if="Object.keys(translations).length" class="available-translations">
 								{{ $t('available_in') }}
-								<router-link v-for="(title, lang) in page.translations" :key="lang" :to="'/encyclopedia/' + lang + '/' + title.replace(/ /g, '_')">
+								<router-link v-for="(title, lang) in translations" :key="lang" :to="'/encyclopedia/' + lang + '/' + title.replace(/ /g, '_')">
 									<flag :code="LeekWars.languages[lang].country" :clickable="false" />
 									{{ LeekWars.languages[lang].name }}
 								</router-link>
@@ -323,6 +323,11 @@
 		return lang in LeekWars.languages ? lang : i18nLocale.value as string
 	})
 	const main_title = computed(() => LeekWars.languages[language.value].encyclopedia)
+	// Le serveur renvoie toutes les traductions présentes en base, y compris dans des
+	// langues que le site ne gère pas (des pages en hindi, sans drapeau ni nom dans
+	// `LeekWars.languages`) : on ne propose que les langues du site (2026-09-11).
+	const translations = computed<Record<string, string>>(() => Object.fromEntries(
+		Object.entries(page.value?.translations ?? {}).filter(([lang]) => lang in LeekWars.languages)))
 	const code = computed(() => 'page' in route.params ? (route.params.page as string).replace(/_/g, ' ') : main_title.value)
 	const lanuage_and_code = computed(() => language.value + '/' + code.value)
 	const title = computed(() => page.value ? page.value.title : 'Encyclopedia')
@@ -930,6 +935,18 @@ h1 {
 		font-size: 22px;
 		margin: 6px 0;
 	}
+	/* L'asset coloré du v3 est centré par le flex du titre : les 6 px de marge du
+	   glyphe le descendaient de 4 px sous la ligne du fil d'Ariane. */
+	img.book {
+		margin: 0;
+	}
+}
+/* Les autres pages posent leur icône dans un bloc `page-title` sans rembourrage ;
+   ici elle vit dans le h1, dont les 15 px de gauche la décalaient d'autant
+   (Pierre, 2026-09-11 : « l'icône encyclopédie est décalée sur la droite »).
+   L'image n'existe qu'en v3 : le v2 garde son rembourrage. */
+h1:has(> img.page-icon) {
+	padding-left: 0;
 }
 .page-header .flex {
 	align-items: center;

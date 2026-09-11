@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="bank" fallback="mdi-bank" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<page-tabs active="bank" />
 		</div>
 		<!-- Deux colonnes dès qu'il y a la place : les lots de cristaux à gauche, les

@@ -22,12 +22,16 @@
 								<span v-if="isMain(account)" class="chip main">{{ t('main_account') }}</span>
 								<span v-if="account.lwplus" class="chip lwplus">LW+</span>
 							</div>
-							<div class="meta">
-								<v-icon>mdi-podium</v-icon>
-								<span>{{ account.talent }}</span>
+							<div v-if="account.leeks !== undefined" class="meta">
+								<span class="stat" :title="$t('main.leeks')">
+									<v-icon>mdi-leek</v-icon>
+									<span>{{ account.leeks }}</span>
+								</span>
+								<span class="stat">{{ $t('main.total_level') }} {{ LeekWars.formatNumber(account.total_level ?? 0) }}</span>
 							</div>
 						</div>
-						<div class="actions">
+						<!-- Seul, un compte n'a ni principal à choisir ni lien à défaire. -->
+						<div v-if="accounts.length > 1" class="actions">
 							<div v-if="!isMain(account)" v-ripple class="account-action" :class="{disabled: busy}" :title="t('set_main')" @click="setMain(account)">
 								<v-icon>mdi-star-outline</v-icon>
 							</div>
@@ -90,7 +94,7 @@
 
 	const t = useNamespacedT('accounts')
 
-	interface LinkedAccount { id: number, name: string, avatar_changed: number, talent: number, lwplus: boolean }
+	interface LinkedAccount { id: number, name: string, avatar_changed: number, talent: number, total_level?: number, leeks?: number, lwplus: boolean }
 	interface PlayerResponse { player: { id: number, main: number | null } | null, accounts: LinkedAccount[], max: number, max_free: number, max_lwplus: number }
 
 	const accounts = ref<LinkedAccount[]>([])
@@ -168,7 +172,11 @@
 		margin: 0 0 12px;
 		color: var(--text-color-secondary);
 	}
+	// Un span nu dans les actions du header s'étire sur ses 36 px et colle son
+	// texte en haut : on le centre comme les boutons voisins.
 	.counter {
+		display: inline-flex;
+		align-items: center;
 		color: var(--text-color-secondary);
 		padding: 0 8px;
 	}
@@ -267,9 +275,17 @@
 	.meta {
 		display: flex;
 		align-items: center;
-		gap: 4px;
+		gap: 12px;
 		color: var(--text-color-secondary);
 		font-size: 13px;
+	}
+	.stat {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		.v-icon {
+			font-size: 18px;
+		}
 	}
 	.linkable {
 		display: flex;

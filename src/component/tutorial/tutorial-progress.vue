@@ -58,7 +58,9 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 		gap: 6px;
 		margin: 25px 0;
 		.item {
-			height: 30px;
+			// 38 px (30 auparavant) : « agrandir un peu les rectangles pour chaque
+			// partie du tuto » (Pierre, 2026-09-11).
+			height: 38px;
 			border-radius: var(--radius);
 			background: var(--background-secondary);
 			box-shadow: var(--elevation-1);
@@ -73,7 +75,7 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				align-items: center;
 				justify-content: center;
 				.v-icon {
-					font-size: 20px;
+					font-size: 22px;
 				}
 			}
 			&.completed {

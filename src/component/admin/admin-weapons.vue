@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Armes', link: '/admin/weapons'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Armes', link: '/admin/weapons'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel v-for="weapon in weapons" :key="weapon.id">
 			<div class="head">

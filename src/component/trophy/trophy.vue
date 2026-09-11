@@ -5,9 +5,14 @@
 		<error v-if="notFound" :title="$t('trophy')" :message="$t('main.page_not_found')" />
 		<template v-else>
 		<div class="page-bar page-header">
-			<h1>
-				<breadcrumb :items="[{name: $t('trophies'), link: '/trophies'}, {name: $t('trophy.' + code), link: ''}]" :raw="true" />
-			</h1>
+			<div class="page-title">
+				<page-icon name="trophies" fallback="mdi-trophy" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="[{name: $t('trophies'), link: '/trophies'}, {name: $t('trophy.' + code), link: ''}]" :raw="true" />
+					</h1>
+				</div>
+			</div>
 		</div>
 		<panel v-if="!trophy" class="first">
 			<loader />

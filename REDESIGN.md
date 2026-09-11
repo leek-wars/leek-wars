@@ -1179,6 +1179,47 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       talent ») : son survol passait le trait au vert, contre la doctrine du
       2026-08-31. Même jeu que les onglets : trait à l'encre du texte au
       survol, trait et chiffre verts sous le clic.
+    - **Entrées du menu** (`.menu .section`, « il faudrait un style active
+      sur les items du menu », 2026-09-11) : même lecture d'« active » = pressé.
+      Sous le clic, l'entrée prend l'encre verte et un aplat vert à 20 % —
+      l'allure de l'entrée courante (12 %) qu'elle va devenir, un cran plus
+      soutenue pour rester visible sur l'entrée déjà courante. Sans transition,
+      pour que le retour soit immédiat.
+    - **Libellés du menu de 12,5 à 14 px** (« dans le menu les items sont à
+      12.5px et dans le chat les messages à 15px, c'est pas très uniforme »,
+      2026-09-11). Pas d'alignement sur le chat : on lit le chat, on repère le
+      menu. Échelle retenue — **13** métadonnées (compteurs, dates, pastilles),
+      **14** navigation et titres (menu, `.panel > .header h2`), **15** texte
+      lu (chat, contenu). Hauteur d'entrée inchangée (40 px).
+    - **Plus d'icônes colorées en titre de page** (« home, banque, paramètres,
+      page d'un trophée, encyclopédie, sous pages admin », 2026-09-11) : même
+      bloc `page-title` + `<page-icon>` que les 17 pages déjà passées. Deux
+      assets neufs dans `generate-menu-icons.mjs` — `bank` (toit or, colonnes
+      crème, socle ambre) et `encyclopedia` (livre cyan, page lime) — et le
+      rouage des réglages passe du gris `ink` au cyan, trop terne à côté des
+      autres. La page d'un trophée reprend la coupe de la liste, les 26
+      sous-pages admin le bouclier de `/admin`.
+    - **Cartes de l'historique de 52 à 46 px** (« on peut réduire un peu la
+      hauteur d'un combat dans l'historique ? », 2026-09-11) : noms en 7 px de
+      rembourrage vertical au lieu de 9 ; le v2 garde ses 42 px.
+    - **Widget « Talent et derniers combats » : une rangée de plus**
+      (« on ne peut pas rajouter une ligne de combat ici sous le graphe ? »,
+      2026-09-11) : la courbe passe de 40 à 28 % de la hauteur du panneau
+      (plancher 70, plafond 200 inchangés). À la taille par défaut, 3 rangées
+      de 2 combats au lieu de 2 — les six que le serveur envoie.
+    - **Encyclopédie** (2026-09-11) : l'icône du titre, logée dans le h1 et non
+      dans un bloc `page-title`, était décalée de 15 px par le rembourrage du
+      h1 — annulé quand le h1 porte l'image (`h1:has(> img.page-icon)`, donc
+      v3 seulement). Le menu des traductions ne propose plus que les langues
+      du site : la base contient des pages en hindi (468 en local), sans
+      drapeau ni nom côté client.
+    - **Rangée des chapitres du tutoriel** (`tutorial-progress.vue`,
+      « agrandir un peu les rectangles », 2026-09-11) : 30 → 38 px de haut,
+      icônes 20 → 22 px.
+    - **Bouton « agrandir » de la documentation masqué en v3** (« la page est
+      déjà agrandie », 2026-09-11) : le shell v3 retire le `max-width: 1100px`
+      de `.app-wrapper` sur toutes les pages, `LeekWars.large` n'y change donc
+      rien. Le bouton reste en v2, où la limite existe encore.
     - **Langues des réglages** (`settings.vue`, « mettre les langues en
       grille plus propre », puis « réduire un peu la grille ») : des
       `inline-block` de largeurs inégales, centrés, avec une pastille « bêta »

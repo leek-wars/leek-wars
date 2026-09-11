@@ -1,9 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Newsletters', link: '/admin/newsletters'}]" :raw="true" /></h1>
-				<div class="info">{{ count }} inscrits</div>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Newsletters', link: '/admin/newsletters'}]" :raw="true" /></h1>
+					<div class="info">{{ count }} inscrits</div>
+				</div>
 			</div>
 		</div>
 		<panel class="first">

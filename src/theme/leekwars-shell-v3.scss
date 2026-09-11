@@ -1055,7 +1055,9 @@ body:not(.v2) {
 	.menu .section {
 		background: transparent;
 		color: var(--text-color-secondary);
-		font-size: 12.5px;
+		/* 14 px, la taille des titres de panneaux : le 12,5 du mockup se perdait
+		   dans des entrées de 40 px et ne répondait à aucune autre taille du thème. */
+		font-size: 14px;
 		font-weight: 500;
 		height: auto;
 		line-height: normal;
@@ -1078,6 +1080,14 @@ body:not(.v2) {
 	.menu .section.active {
 		background: color-mix(in srgb, var(--primary) 12%, transparent);
 		color: var(--primary);
+	}
+	/* Pressé (`:active`, bouton de la souris enfoncé), comme les onglets : l'entrée
+	   prend déjà l'encre et l'aplat de l'entrée courante qu'elle va devenir, un cran
+	   plus soutenus pour se lire aussi sur l'entrée déjà courante. */
+	.menu .section:active {
+		background: color-mix(in srgb, var(--primary) 20%, transparent);
+		color: var(--primary);
+		transition: none;
 	}
 	.menu .section .v-icon,
 	.menu .section i {
@@ -1190,8 +1200,8 @@ body:not(.v2) {
 		color: var(--text-color-secondary);
 		border-radius: 0;
 		font-family: ui-monospace, 'SF Mono', monospace;
-		font-size: 10px;
-		padding: 1px 5px;
+		font-size: 13px;
+		padding: 2px 6px;
 		position: static;
 		margin: 0 0 0 auto;
 	}
@@ -1242,11 +1252,15 @@ body:not(.v2) {
 		font-size: 20px;
 		margin: 0;
 	}
+	/* Replié, la pastille garde son petit gabarit : en 13 px, « 264+10 » couvrirait
+	   toute la largeur de la colonne et l'icône en dessous. */
 	#app.menu-collapsed .menu .section[label]::after {
 		position: absolute;
 		top: 2px;
 		right: 2px;
 		margin: 0;
+		font-size: 10px;
+		padding: 1px 5px;
 	}
 	#app.menu-collapsed .soussous-dans-popoche {
 		margin: 12px 6px;

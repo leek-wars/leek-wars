@@ -138,9 +138,15 @@
 	// boucle — plus de place, un combat de plus, donc moins de place… — le
 	// scénario que son garde-fou anti-oscillation existe justement pour rattraper
 	// (le gel de l'accueil mobile du 2026-09-09).
+	//
+	// 28 % depuis le 2026-09-11 (« on ne peut pas rajouter une ligne de combat ici
+	// sous le graphe ? ») : à la taille par défaut (~340 px de contenu), les 40 %
+	// laissaient ~138 px aux combats, soit 2 rangées de 56 px et un blanc de 26 px
+	// entre la courbe et la liste. À 28 %, la troisième rangée tient, et avec elle
+	// les six combats du serveur.
 	.chart-wrap {
 		flex: 0 0 auto;
-		height: clamp(70px, 40cqh, 200px);
+		height: clamp(70px, 28cqh, 200px);
 		position: relative;
 	}
 	// Panel trop bas pour loger la courbe ET des combats lisibles : les combats
