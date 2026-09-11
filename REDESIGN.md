@@ -1220,6 +1220,16 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       déjà agrandie », 2026-09-11) : le shell v3 retire le `max-width: 1100px`
       de `.app-wrapper` sur toutes les pages, `LeekWars.large` n'y change donc
       rien. Le bouton reste en v2, où la limite existe encore.
+    - **Cartes de la page trophées, survol et clic** (`trophies/trophy.vue`,
+      « un style hover/active sur les trophées », 2026-09-11) : mêmes états
+      que le widget « Mes poireaux » et le forum — `--background-row` et
+      `--border-strong` au survol, `--primary` sur le liseré au clic, 0,12 s.
+      Liseré transparent au repos sur les trophées verrouillés (sans `.card`),
+      pour qu'aucune carte ne bouge. v2 inchangé.
+    - **Page LW+, panneau d'abonnement à la hauteur des lots** (`lwplus.vue`,
+      « combler le vide », 2026-09-11) : `.offers` passe de
+      `align-items: flex-start` à `stretch`. Le panneau « Votre abonnement »
+      (ou le tunnel de souscription) descend au bas des lots de mois.
     - **Langues des réglages** (`settings.vue`, « mettre les langues en
       grille plus propre », puis « réduire un peu la grille ») : des
       `inline-block` de largeurs inégales, centrés, avec une pastille « bêta »

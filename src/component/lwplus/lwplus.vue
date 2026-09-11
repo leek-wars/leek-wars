@@ -314,10 +314,14 @@ async function resume() {
 		width: 460px;
 		max-width: 100%;
 	}
+	// `stretch` : côte à côte, le panneau d'abonnement descend à la hauteur des
+	// lots au lieu de s'arrêter à son contenu et de laisser un blanc dessous
+	// (Pierre, 2026-09-11 : « agrandir le panel de l'abonnement courant pour
+	// combler le vide »). Empilés, chacun est seul sur sa ligne : sans effet.
 	.offers {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: flex-start;
+		align-items: stretch;
 		gap: 0 12px;
 		& > :deep(.lwplus-packs) {
 			flex: 1 1 460px;

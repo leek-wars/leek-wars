@@ -183,6 +183,25 @@ defineProps<{
 			opacity: 0.8;
 		}
 	}
+	/* v3 : les états officiels des cartes cliquables (widget « Mes poireaux »,
+	   forum) — surface de rangée et liseré fort au survol, liseré vert sous le
+	   clic (Pierre, 2026-09-11 : « un style hover/active sur les trophées »).
+	   Le trophée verrouillé n'a pas de `.card`, donc pas de liseré : il en reçoit
+	   un transparent, pour que la carte ne bouge pas d'un pixel au survol. */
+	body:not(.v2) .trophy {
+		border: 1px solid transparent;
+		transition: background .12s ease, border-color .12s ease;
+		&.card {
+			border-color: var(--border);
+		}
+		&:hover {
+			background: var(--background-row);
+			border-color: var(--border-strong);
+		}
+		&:active {
+			border-color: var(--primary);
+		}
+	}
 	.list-icon {
 		margin-right: 10px;
 	}
