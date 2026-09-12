@@ -712,9 +712,12 @@
 		}
 		.levels {
 			display: inline-flex;
-			flex-wrap: wrap;
+			// Jamais de retour à la ligne : une équipe tient sur une seule ligne, la table
+			// s'élargit (et défile horizontalement sur mobile) plutôt que de casser la liste.
+			flex-wrap: nowrap;
+			white-space: nowrap;
 			justify-content: center;
-			gap: 4px 9px;
+			gap: 9px;
 		}
 		.level {
 			white-space: nowrap;
