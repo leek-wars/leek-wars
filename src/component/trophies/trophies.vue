@@ -531,9 +531,27 @@ watch(sort_by, () => {
 	}
 	.trophies {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
 		grid-gap: 8px;
 		padding: 8px;
+	}
+	// Le nom du trophée se coupe en points de suspension plutôt que de pousser le
+	// compteur de points hors de la carte (retour de Pierre, 12/09/2026). En
+	// `:deep` parce que le nom est rendu par trophy.vue : la portée de ce fichier
+	// ne couvre que la racine de la carte. Réservé à la grille — l'infobulle
+	// riche, plus large, garde ses noms entiers sur deux lignes.
+	.trophies .trophy {
+		:deep(.info), :deep(.header) {
+			min-width: 0;
+		}
+		:deep(.name) {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		:deep(.points) {
+			flex-shrink: 0;
+		}
 	}
 	#app.app .trophies {
 		grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
