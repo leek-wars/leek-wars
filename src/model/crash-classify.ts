@@ -29,10 +29,10 @@ export function isInitOrderCrash(m: string): boolean {
 	return m.includes('before initialization') || m.includes('uninitialized variable')
 }
 
-// Crash né DANS une extension de navigateur : les frames ne citent que des scripts d'extension
-// (chrome-extension:// sur Chromium, moz-extension:// sur Firefox, safari-web-extension:// sur
-// Safari, qui masque en webkit-masked-url:// l'URL des scripts qu'il injecte depuis 16.4) et
-// aucun script de la page. Cas réel : une extension qui wrappe XMLHttpRequest crashe dans son
+// Crash né DANS une extension de navigateur, reconnu à ses scripts (chrome-extension:// sur
+// Chromium, moz-extension:// sur Firefox, safari-web-extension:// sur Safari, qui masque en
+// webkit-masked-url:// l'URL des scripts qu'il injecte depuis 16.4).
+// Cas réel : une extension qui wrappe XMLHttpRequest crashe dans son
 // propre onreadystatechange et le rejet remonte en unhandledrejection dans la page (`reading
 // 'M_ID'`, 342 rapports d'un seul joueur, erreur #11832526 / issue #4787). Rien d'actionnable
 // côté app → rapport masqué, le seul canal où ça se décide étant reportVueError. Le pendant
@@ -41,21 +41,35 @@ export function isInitOrderCrash(m: string): boolean {
 // On raisonne sur les FRAMES (URL suivie de :ligne:colonne) des DEUX côtés, jamais sur la ligne
 // de message où une URL citée ne prouve rien : un message d'extension mentionne très souvent une
 // URL du site (« Failed to fetch https://leekwars.com/api/… ») et sur V8 une stack sans frames
-// N'EST que cette ligne de message. Une seule frame de la page rend le rapport visible : une
-// stack MIXTE est un bug applicatif simplement traversé par un wrapper d'extension.
+// N'EST que cette ligne de message.
 const EXTENSION_FRAME = /\b(?:(?:chrome|moz|safari-web)-extension|webkit-masked-url):\/\/\S*:\d+:\d+/i
 const PAGE_FRAME = /\bhttps?:\/\/\S*:\d+:\d+/i
 
-// « Du code à nous est dans la stack » : la règle qui rend un rapport visible, partagée par
-// toutes les familles « cause externe » pour qu'affiner la regex ne les fasse pas diverger.
-function hasPageFrame(stack: string): boolean {
-	return PAGE_FRAME.test(stack)
-}
+// Forme d'une ligne de frame : `at <fn> (<url>:l:c)` sur V8, `<fn>@<url>:l:c` sur Firefox et
+// WebKit. Exigée pour que la ligne de MESSAGE reste hors du raisonnement même quand elle cite une
+// URL suivie de :ligne:colonne — Monaco relance ses erreurs en `new Error(message + '\n\n' +
+// stack)`, la stack d'origine se retrouvant alors dans le message de celle qui remonte.
+const FRAME_LINE = /^\s*at\s|@\S*:\d+:\d+/
 
+// Le throw a-t-il eu lieu DANS un script d'extension ? On cherche le SITE DU THROW, c'est-à-dire
+// la frame identifiable la plus haute — les suivantes ne sont que ses appelants, et les frames
+// sans script nommé (`at Array.forEach (<anonymous>)`, marqueurs asynchrones Firefox `promise
+// callback*`) ne désignent personne. Une stack mixte ne dit rien par sa seule composition :
+// l'extension peut envelopper notre code (page → wrapper → notre code qui casse : bug à nous,
+// rapport visible) comme être appelée par lui (notre dispatch de websocket → listener d'extension
+// qui casse : rien d'actionnable). Seule la position tranche. Cas réel de la 2e forme : le
+// userscript Better-LeekWars, branché sur nos événements, construit un PointerEvent avec un `view`
+// d'un autre realm — Firefox refuse, en boucle sur un onglet du Potager laissé ouvert (erreur
+// #11884235 / issue #5049). Perte assumée de la règle : une extension qui monkeypatche une API
+// native et casse sur un argument que NOUS lui passons mal est désormais masquée — le site du
+// throw est chez elle, et l'app ne peut de toute façon pas corriger son code.
 export function isBrowserExtensionCrash(stack: string): boolean {
-	// Frame de page d'abord : elle tranche dès la première frame sur un crash applicatif, alors
-	// que l'alternation d'extensions, elle, parcourt toute la stack avant d'échouer.
-	return !hasPageFrame(stack) && EXTENSION_FRAME.test(stack)
+	for (const line of stack.split('\n')) {
+		if (!FRAME_LINE.test(line)) continue
+		if (EXTENSION_FRAME.test(line)) return true
+		if (PAGE_FRAME.test(line)) return false
+	}
+	return false
 }
 
 // Firefox : accès à un wrapper d'objet MORT (objet d'un compartiment détruit — document ou
@@ -65,9 +79,10 @@ export function isBrowserExtensionCrash(stack: string): boolean {
 // détenir un objet mort — le site n'a pas d'iframe de même origine — donc la source est un
 // script injecté ; sans stack, isBrowserExtensionCrash ne peut pas le prouver. On classe donc
 // sur le message, et seulement tant que la stack ne cite AUCUNE frame de la page : une seule
-// suffirait à faire de ce rapport un bug applicatif, à voir.
+// suffirait à faire de ce rapport un bug applicatif, à voir. Règle propre à cette famille — sans
+// stack, il n'y a pas de site du throw à opposer comme le fait isBrowserExtensionCrash.
 export function isDeadObjectCrash(m: string, stack: string): boolean {
-	return m.includes('access dead object') && !hasPageFrame(stack)
+	return m.includes('access dead object') && !PAGE_FRAME.test(stack)
 }
 
 // Échec de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...",
@@ -83,6 +98,51 @@ export function isChunkLoadError(m: string): boolean {
 		m.includes('Loading chunk') ||
 		m.includes('Loading CSS chunk') ||
 		m.includes('Unable to preload CSS')
+}
+
+// Un événement du DOM lancé ou rejeté à la place d'une Error. Monaco fait exactement ça : quand un
+// de ses workers échoue (chargement du chunk du worker, crash interne), webWorkerFactory transmet
+// l'ErrorEvent BRUT à onUnexpectedError, dont le handler par défaut le relance tel quel depuis un
+// setTimeout dès qu'il n'a pas de `.stack` — un Event n'en a jamais. Un Event n'a pas non plus de
+// `.message`, et ses champs sont des accesseurs de prototype que JSON.stringify ignore : le rapport
+// se réduisait à `Error: {"isTrusted":true}`, sans stack ni rien d'exploitable (#4985). Reconnu par
+// sa FORME plutôt que par `instanceof Event`, qui échoue sur un événement venu d'un autre realm —
+// et sur `type` + les méthodes de l'interface, pas sur `isTrusted` que tous les moteurs n'exposent
+// pas, pour ne pas confondre avec un objet métier qui aurait lui aussi un champ `type`.
+// Un Event lancé n'est jamais un bug de l'app — c'est un échec de ressource (worker, script, média)
+// relayé tel quel : on le masque, là où un autre non-Error (une string lancée par notre code) garde
+// le rapport complet et sa trace de navigation.
+interface EventLike { type: string, target?: unknown, message?: unknown, filename?: unknown, lineno?: unknown, colno?: unknown }
+export function isDomEvent(value: unknown): value is EventLike {
+	if (!value || typeof value !== 'object') return false
+	const ev = value as { type?: unknown, preventDefault?: unknown, stopPropagation?: unknown }
+	return typeof ev.type === 'string' && typeof ev.preventDefault === 'function' && typeof ev.stopPropagation === 'function'
+}
+
+// Nom de classe : `ErrorEvent` plutôt qu'`Event` pour l'événement, `Worker` pour sa cible.
+function className(value: unknown): string | undefined {
+	return (value as { constructor?: { name?: string } } | null)?.constructor?.name
+}
+
+// Décrit une valeur lancée ou rejetée qui n'est PAS une Error, pour un rapport lisible : un Event
+// est nommé explicitement (type, classe de la cible, message/fichier s'il en porte comme un
+// ErrorEvent), tout le reste retombe sur JSON.stringify. Borné à 200 caractères des deux côtés, le
+// message que porte un ErrorEvent étant celui d'une exception quelconque, donc de longueur libre.
+export function describeNonError(value: unknown): string {
+	try {
+		if (isDomEvent(value)) {
+			const parts = [value.type]
+			// La cible nomme le sous-système fautif : `on Worker` pour un worker Monaco.
+			const target = className(value.target)
+			if (target) parts.push('on ' + target)
+			if (typeof value.message === 'string' && value.message) parts.push(value.message)
+			if (typeof value.filename === 'string' && value.filename) parts.push(value.filename + ':' + value.lineno + ':' + value.colno)
+			return ((className(value) || 'Event') + '(' + parts.join(' ') + ')').slice(0, 200)
+		}
+		return JSON.stringify(value)?.slice(0, 200) ?? String(value)
+	} catch {
+		return '(unserializable)'
+	}
 }
 
 /**

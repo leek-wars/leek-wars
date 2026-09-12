@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createRepeatLimiter, isBrowserExtensionCrash, isChunkLoadError, isDeadObjectCrash, isDomCorruptionCrash, isInitOrderCrash } from './crash-classify'
+import { createRepeatLimiter, describeNonError, isBrowserExtensionCrash, isChunkLoadError, isDeadObjectCrash, isDomCorruptionCrash, isDomEvent, isInitOrderCrash } from './crash-classify'
 
 describe('isInitOrderCrash', () => {
 
@@ -75,8 +75,17 @@ describe('isBrowserExtensionCrash', () => {
     at f (chrome-extension://abc/x.js:1:1)`)).toBe(true)
 	})
 
-	// Une frame de la page = bug applicatif potentiel, simplement traversé par un wrapper
-	// d'extension : le rapport doit rester visible.
+	// La stack réelle de l'erreur #11884235 : le userscript Better-LeekWars, branché sur nos
+	// événements, casse dans son propre dispatchClick. Les frames de la page sont ses APPELANTS,
+	// elles ne doivent pas rendre le rapport visible — seul le haut de la stack compte.
+	it('reconnaît une extension appelée par du code de la page', () => {
+		expect(isBrowserExtensionCrash(`dispatchClick@moz-extension://02517779/userscripts/Better-LeekWars.user.js?id=13622d41:1225:31
+dispatch@moz-extension://02517779/userscripts/Better-LeekWars.user.js?id=13622d41:3016:36
+At@https://leekwars.com/leek/134647:10:91`)).toBe(true)
+	})
+
+	// L'autre sens du même mélange : l'extension enveloppe notre code, qui casse. Le site du
+	// throw est à nous, le rapport doit rester visible.
 	it('laisse passer une stack mixte ou applicative', () => {
 		expect(isBrowserExtensionCrash(`TypeError: boom
     at k (https://leekwars.com/assets/index-a1b2.js:9:1)
@@ -84,6 +93,14 @@ describe('isBrowserExtensionCrash', () => {
 		expect(isBrowserExtensionCrash('TypeError: boom\n    at k (https://leekwars.com/assets/index-a1b2.js:9:1)')).toBe(false)
 		// Dev local en http:// : c'est aussi une frame de la page.
 		expect(isBrowserExtensionCrash('at k (http://localhost:8080/src/model/vue.ts:9:1)\nat w (chrome-extension://abc/hook.js:1:1)')).toBe(false)
+	})
+
+	// Monaco relance ses erreurs en `new Error(message + '\n\n' + stack)` : la ligne de message
+	// embarque alors des frames. Seules les lignes de FORME frame comptent, jamais la prose.
+	it('ne prend pas une ligne de message pour le site du throw', () => {
+		expect(isBrowserExtensionCrash(`Error: refused to load chrome-extension://abc/x.js:1:1
+
+    at k (https://leekwars.com/assets/index-a1b2.js:9:1)`)).toBe(false)
 	})
 
 	// Sans :ligne:colonne, une URL d'extension n'est pas une frame mais du texte de message
@@ -157,7 +174,8 @@ describe('isDeadObjectCrash', () => {
 	})
 
 	// Une frame de la page prouve que du code à nous est dans le coup : le rapport doit rester
-	// visible, exactement comme pour isBrowserExtensionCrash.
+	// visible. Règle propre à cette famille : sans stack, il n'y a pas de site du throw à opposer
+	// comme le fait isBrowserExtensionCrash, la seule présence d'une frame de page suffit.
 	it('laisse visible un objet mort dont la stack cite la page', () => {
 		expect(isDeadObjectCrash("can't access dead object", 'f@https://leekwars.com/assets/x.js:2:9')).toBe(false)
 	})
@@ -165,5 +183,67 @@ describe('isDeadObjectCrash', () => {
 	it('ignore les messages d\'autres familles', () => {
 		expect(isDeadObjectCrash("can't access property \"leeks\", t is null", '')).toBe(false)
 		expect(isDeadObjectCrash('', '')).toBe(false)
+	})
+})
+
+describe('isDomEvent', () => {
+
+	// Le cas réel de l'erreur #11873108 : Monaco relance l'ErrorEvent d'un worker en échec depuis
+	// un setTimeout, il arrive dans window.onerror en `event.error` et n'a ni message ni stack.
+	it('reconnaît un événement du DOM lancé à la place d\'une Error', () => {
+		expect(isDomEvent(new Event('error'))).toBe(true)
+		expect(isDomEvent(new ErrorEvent('error', { message: 'boom' }))).toBe(true)
+	})
+
+	it('laisse passer les vraies erreurs et les autres valeurs', () => {
+		expect(isDomEvent(new Error('boom'))).toBe(false)
+		expect(isDomEvent('boom')).toBe(false)
+		expect(isDomEvent(null)).toBe(false)
+		expect(isDomEvent(undefined)).toBe(false)
+		// Un objet métier qui a un `type` mais rien d'un événement : le champ seul ne suffit pas
+		expect(isDomEvent({ type: 'weapon', id: 42 })).toBe(false)
+	})
+})
+
+describe('describeNonError', () => {
+
+	// JSON.stringify d'un Event ne rend que {"isTrusted":true} : ses champs sont des accesseurs
+	// de prototype. C'est tout ce que contenait le rapport de #11873108.
+	it('nomme un Event que JSON.stringify réduirait à isTrusted', () => {
+		expect(describeNonError(new Event('error'))).toBe('Event(error)')
+	})
+
+	// Le cas réel : la cible est le Worker Monaco en échec, seul indice du sous-système fautif.
+	it('ajoute la classe de la cible et le message porté', () => {
+		class Worker extends EventTarget { }
+		const worker = new Worker()
+		let description = ''
+		worker.addEventListener('error', (event) => { description = describeNonError(event) })
+		worker.dispatchEvent(new ErrorEvent('error', { message: 'Script load failed' }))
+		expect(description).toBe('ErrorEvent(error on Worker Script load failed)')
+	})
+
+	it('ajoute la position d\'un ErrorEvent qui en porte une', () => {
+		const event = new ErrorEvent('error', { message: 'oops', filename: 'https://leekwars.com/a.js', lineno: 2, colno: 9 })
+		expect(describeNonError(event)).toBe('ErrorEvent(error oops https://leekwars.com/a.js:2:9)')
+	})
+
+	// Un ErrorEvent porte le message d'une exception quelconque : sans borne, il partirait entier
+	// dans le champ `error` du rapport, là où la sérialisation JSON était déjà bornée.
+	it('borne la description d\'un Event trop long', () => {
+		const event = new ErrorEvent('error', { message: 'x'.repeat(500) })
+		expect(describeNonError(event).length).toBe(200)
+	})
+
+	it('retombe sur JSON.stringify pour les autres valeurs', () => {
+		expect(describeNonError({ code: 429 })).toBe('{"code":429}')
+		expect(describeNonError('boom')).toBe('"boom"')
+		expect(describeNonError(undefined)).toBe('undefined')
+	})
+
+	it('tolère une valeur non sérialisable', () => {
+		const cyclic: Record<string, unknown> = {}
+		cyclic.self = cyclic
+		expect(describeNonError(cyclic)).toBe('(unserializable)')
 	})
 })
