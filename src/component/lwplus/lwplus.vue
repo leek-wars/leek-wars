@@ -115,7 +115,7 @@ const benefits = [
 	{ key: 'crystals', icon: 'mdi-diamond-stone' },
 ]
 
-const priceEur = ref(3)
+const priceEur = ref(3.99)
 const loading = ref(true)
 const active = ref(false)
 const until = ref(0)
