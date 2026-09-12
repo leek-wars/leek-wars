@@ -319,10 +319,19 @@
 							<td><div class="country-wrapper"><flag v-if="row.country" :code="row.country" /></div></td>
 							<td>{{ row.turns }}</td>
 							<td>{{ row.leeks }}</td>
-							<!-- La colonne montre la somme des niveaux, mais les classements sont triés sur le
-							     power (superlinéaire en niveau) : les deux ne sont pas monotones l'un par rapport
-							     à l'autre, d'où le power en survol pour expliquer l'ordre (#3627). -->
-							<td :title="$t('team_power') + ' : ' + LeekWars.formatNumber(row.power)">{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</td>
+							<!-- La colonne montre les niveaux des poireaux du run, mais les classements sont
+							     triés sur le power (superlinéaire en niveau) : les deux ne sont pas monotones
+							     l'un par rapport à l'autre, d'où le power en survol pour expliquer l'ordre.
+							     Sans niveaux enregistrés (run antérieur), on retombe sur la valeur unique
+							     reconstituée depuis le power (#3627). -->
+							<td :title="$t('team_power') + ' : ' + LeekWars.formatNumber(row.power)">
+								<span v-if="row.levels && row.levels.length" class="levels">
+									<span v-for="group in levelGroups(row.levels)" :key="group.level" class="level">
+										{{ group.level }}<span v-if="group.count > 1" class="count"> ×{{ group.count }}</span>
+									</span>
+								</span>
+								<template v-else>{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</template>
+							</td>
 							<td>{{ new Date(row.date * 1000).toLocaleDateString() }}</td>
 							<td class="fight-link-cell">
 								<router-link v-if="row.fight" :to="'/fight/' + row.fight" :title="$t('main.fight')" style="vertical-align: bottom;">
@@ -428,7 +437,16 @@
 		{ id: 'power', icon: 'mdi-arm-flex' },
 		{ id: 'first', icon: 'mdi-flag-checkered' },
 	]
-	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, date: number, fight: number }
+	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, levels: number[], date: number, fight: number }
+	// Niveaux du run, du plus haut au plus bas, les identiques regroupés : 301, 301, 301, 150 => "301 ×3" "150" (#3627)
+	const levelGroups = (levels: number[]) => {
+		const groups: {level: number, count: number}[] = []
+		for (const level of [...levels].sort((a, b) => b - a)) {
+			const last = groups[groups.length - 1]
+			if (last && last.level === level) { last.count++ } else { groups.push({ level, count: 1 }) }
+		}
+		return groups
+	}
 	// Dernier boss / mode visités, restaurés au clic sur l'onglet Boss (#3627)
 	const bossId = computed(() => category.value.startsWith('boss-') ? (parseInt(category.value.substring(5), 10) || 1) : (parseInt(localStorage.getItem('ranking/boss-id') || '1', 10) || 1))
 	const bossMode = computed(() => category.value.startsWith('boss-') && order.value ? order.value : (localStorage.getItem('ranking/boss-mode') || 'turns'))
@@ -691,6 +709,18 @@
 		}
 		.column-country {
 			width: 60px;
+		}
+		.levels {
+			display: inline-flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 4px 9px;
+		}
+		.level {
+			white-space: nowrap;
+			.count {
+				color: var(--text-color-secondary);
+			}
 		}
 	}
 	.fight-link-cell {

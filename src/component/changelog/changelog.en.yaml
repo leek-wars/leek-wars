@@ -14,6 +14,7 @@
     - "#ai switch no longer tests cases one by one: when every case is a constant number or text, the right branch is found directly, and the switch costs a single operation instead of one per case tested. A 10-case switch on texts goes from 71 to 8 operations per run."
     - "#ai Comparing two objects with == or != is about 3 times faster: the comparison is now done directly instead of going through a long series of type checks. Arrays, maps and sets still compare on their contents."
     - "Boss rankings are now settled on merit rather than seniority: on a tie, \"Fastest\" compares the number of leeks then their level, \"Fewest leeks\" compares turns then level, and \"Lowest level\" compares leeks then turns. The run date is only the last resort."
+    - "Boss rankings: the Level column now shows the levels of the leeks of the run, highest first and grouped when identical (\"301 ×4\"), instead of a single reconstructed level. The team power, still the criterion of the \"Lowest level\" ranking, is shown on hover."
     - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
     - "#ai Deprecated constants (EFFECT_BUFF_FORCE, USE_FAILED...) are no longer offered in the JavaScript, TypeScript and Python API: only the current names exist (Effect.BUFF_STRENGTH...) (thanks to WiseMan)."
     - "#ai The documentation of the STATE_* constants now lists the weapons and chips that apply the state, like the other constant families."
