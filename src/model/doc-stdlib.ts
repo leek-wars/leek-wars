@@ -100,7 +100,11 @@ const ROWS: Row[] = [
 	['jsonEncode', 'JSON.stringify', 'JSON.stringify(value): string', 'json.dumps', 'json.dumps(value) -> str'],
 	['jsonDecode', 'JSON.parse', 'JSON.parse(json: string): any', 'json.loads', 'json.loads(json: str) -> Any'],
 	['typeOf', 'typeof', 'typeof value: string', 'type', 'type(value) -> type'],
-	['clone', 'structuredClone', 'structuredClone(value)', 'copy.deepcopy', 'copy.deepcopy(value)'],
+	// `structuredClone` n'existe PAS dans GraalJS (c'est une API WHATWG, pas ECMAScript) : vérifié
+	// dans le moteur, `typeof structuredClone` y vaut `undefined`. Laisser l'entrée TS vide affiche
+	// la forme LeekScript avec son badge, ce qui est exact ; la section `#### TypeScript` de la page
+	// d'encyclopédie explique quoi écrire à la place (copie récursive, ou JSON pour des données pures).
+	['clone', null, null, 'copy.deepcopy', 'copy.deepcopy(value)'],
 
 	// --- Listes ------------------------------------------------------------------------------
 	['count', 'a.length', 'a.length: number', 'len', 'len(a) -> int'],
