@@ -21,7 +21,7 @@
 
 			<!-- Une page de paliers à la fois : 10 au plus, moins si la place manque, et
 			     des flèches pour les précédents et les suivants. -->
-			<div ref="pager" class="pager">
+			<div ref="pager" class="pager" :class="{ compact }">
 				<v-btn v-if="paginated" class="arrow" icon variant="text" size="small" :disabled="start === 0" @click="anchor = start - perPage">
 					<v-icon>mdi-chevron-left</v-icon>
 				</v-btn>
@@ -129,9 +129,15 @@ const REWARD_ICON: Record<string, string> = {
 // STEP_MIN_WIDTH (en dessous, le libellé de la récompense ne tient plus). Les
 // flèches sont décomptées même quand elles sont masquées : le nombre de paliers
 // par page ne doit pas dépendre de leur présence, sinon il oscille.
+// Sous COMPACT_WIDTH (mobile), la frise se resserre — vignette et flèches plus
+// petites — pour montrer trois paliers au lieu de deux (retour de Pierre,
+// 12/09/2026) : deux, c'est trop peu pour lire une progression.
 const MAX_PER_PAGE = 10
 const STEP_MIN_WIDTH = 110
+const COMPACT_STEP_MIN_WIDTH = 84
+const COMPACT_WIDTH = 560
 const ARROW_WIDTH = 40
+const COMPACT_ARROW_WIDTH = 28
 
 const loading = ref(true)
 const seconds = ref(0)
@@ -141,6 +147,7 @@ const palierSeconds = ref(90 * 86400)
 const ladder = ref<Step[]>([])
 const pager = ref<HTMLElement | null>(null)
 const perPage = ref(MAX_PER_PAGE)
+const compact = ref(false)
 // Le palier qu'on veut voir, pas le début de page : quand la largeur change, la
 // page se recale autour de lui au lieu de le perdre.
 const anchor = ref(0)
@@ -150,8 +157,11 @@ const visible = computed(() => ladder.value.slice(start.value, start.value + per
 const paginated = computed(() => ladder.value.length > perPage.value)
 
 const observer = new ResizeObserver(entries => {
-	const width = entries[0].contentRect.width - 2 * ARROW_WIDTH
-	perPage.value = Math.max(1, Math.min(MAX_PER_PAGE, Math.floor(width / STEP_MIN_WIDTH)))
+	const full = entries[0].contentRect.width
+	compact.value = full < COMPACT_WIDTH
+	const width = full - 2 * (compact.value ? COMPACT_ARROW_WIDTH : ARROW_WIDTH)
+	const step = compact.value ? COMPACT_STEP_MIN_WIDTH : STEP_MIN_WIDTH
+	perPage.value = Math.max(1, Math.min(MAX_PER_PAGE, Math.floor(width / step)))
 })
 watch(pager, (element, previous) => {
 	if (previous) { observer.unobserve(previous) }
@@ -450,6 +460,52 @@ onMounted(() => {
 		&.next .node {
 			border-color: var(--gold-bright);
 			color: var(--rank-first);
+		}
+	}
+	// Mobile : tout rétrécit d'un cran — flèches, vignettes, libellés — pour que
+	// trois paliers tiennent. Les largeurs suivent COMPACT_ARROW_WIDTH et
+	// COMPACT_STEP_MIN_WIDTH : les changer ici sans les changer là-bas fait
+	// déborder la frise.
+	.pager.compact {
+		.arrow {
+			width: 28px;
+			min-width: 28px;
+			margin-top: -3px;
+		}
+		.rail {
+			padding: 0 4px;
+		}
+		.step {
+			padding-right: 8px;
+			&::before {
+				top: 13px; // milieu de la pastille (26 px de côté)
+				left: 26px;
+			}
+			.node {
+				min-width: 26px;
+				height: 26px;
+				padding: 0 5px;
+				margin-bottom: 6px;
+				font-size: 11px;
+			}
+			.tile {
+				width: 52px;
+				height: 52px;
+				.trophy {
+					width: 34px;
+					height: 34px;
+				}
+				.v-icon {
+					font-size: 26px;
+					:deep(svg) {
+						width: 26px;
+						height: 26px;
+					}
+				}
+			}
+			.label {
+				font-size: 10px;
+			}
 		}
 	}
 </style>
