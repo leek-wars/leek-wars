@@ -1,7 +1,7 @@
 300:
   title: "Leek Wars 3.0: new design, alterations, Leek Wars +, a home page to compose and 6 chips."
   added:
-    - "Leek Wars gets a new face: sharp corners, crisp outlines and pixel shadows, no more rounded edges."
+    - "Leek Wars gets a new face: sharp corners, crisp outlines and pixel shadows, no more rounded edges. #img_300_design"
     - "New typography: pixel font for titles, Inter for text, and a bolder brand green."
     - "Every control has been redrawn: switches, checkboxes, radio buttons, dropdowns."
     - "Tooltips, dialogs, menus and notifications follow the new theme, in light mode as well as dark."
@@ -77,10 +77,10 @@
     - "#ai Hover a symbol, Ctrl+click to its definition, and imports resolved across your AIs."
     - "The tutorial now exists in JavaScript and Python as well as LeekScript."
     - "Every chapter has its version in the language you picked."
-    - "Personal API keys, created from the Settings."
+    - "Personal API keys, created from the Settings. #img_300_api_keys"
     - "Each key carries a role — public read, player or account — that decides what it opens."
     - "It shows its usage over the last 14 days and can be revoked in one click."
-    - "The API documentation has been rebuilt: over 300 services described and translated."
+    - "The API documentation has been rebuilt: over 300 services described and translated. #img_300_api_doc"
     - "A ready-to-copy call example in cURL, JavaScript, Python and HTTP for each of them."
     - "Search digs into descriptions, a permalink per endpoint, and an OpenAPI export."
     - "An official MCP server, npx @leekwars/mcp: a coding assistant plugged into your account."
