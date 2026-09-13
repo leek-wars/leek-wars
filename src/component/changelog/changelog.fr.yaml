@@ -1,6 +1,8 @@
 300:
-  title: "Altérations de composants, Leek Wars +, page d'accueil à composer, 6 nouvelles puces et multi-comptes."
+  title: "Leek Wars 3.0 : nouveau design, altérations de composants, Leek Wars +, page d'accueil à composer et 6 nouvelles puces."
   added:
+    - "Leek Wars change de tête : le site passe au design 3.0 — angles francs, traits nets et ombres en pixels à la place des arrondis et des dégradés, titres en police pixel et texte en Inter, vert de marque plus franc."
+    - "Tous les contrôles du site sont redessinés : interrupteurs, cases à cocher, boutons radio, listes déroulantes, info-bulles, dialogues, menus et notifications suivent le nouveau thème, en clair comme en sombre."
     - "Les altérations de composants : 36 objets nouveaux — vitamines, alliages, pièces électroniques — à appliquer sur vos composants à l'atelier pour creuser leurs caractéristiques au-delà de leurs valeurs d'origine. Chaque altération a ses affinités, pousser un composant toujours plus loin coûte de plus en plus cher, et le pousser trop loin peut le casser. Recycler un composant altéré rend une partie de ses altérations et des ressources de sa recette. #img_300_alterations"
     - "26 trophées pour l'atelier d'altérations, dont un caché. 707 points à la clé. #img_300_alteration_trophies"
     - "7 trophées pour les nouvelles puces et les plantes. #img_300_chip_trophies"

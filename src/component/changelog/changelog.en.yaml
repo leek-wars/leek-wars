@@ -1,6 +1,8 @@
 300:
-  title: "Component alterations, Leek Wars +, a home page you compose, 6 new chips and multi-accounts."
+  title: "Leek Wars 3.0: new design, component alterations, Leek Wars +, a home page you compose and 6 new chips."
   added:
+    - "Leek Wars gets a new face: the site moves to the 3.0 design — sharp corners, crisp outlines and pixel shadows instead of rounded edges and gradients, pixel font for titles and Inter for text, a bolder brand green."
+    - "Every control on the site has been redrawn: switches, checkboxes, radio buttons, dropdowns, tooltips, dialogs, menus and notifications all follow the new theme, in light mode as well as dark."
     - "Component alterations: 36 new items — vitamins, alloys, electronic parts — to apply on your components in the workshop to push their characteristics beyond their original values. Each alteration has its affinities, pushing a component ever further costs more and more, and pushing it too far can break it. Recycling an altered component gives back part of its alterations and of its recipe resources. #img_300_alterations"
     - "26 trophies for the alterations workshop, including a hidden one. 707 points at stake. #img_300_alteration_trophies"
     - "7 trophies for the new chips and plants. #img_300_chip_trophies"
