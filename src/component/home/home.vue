@@ -201,11 +201,21 @@
 	const AGGREGATED = new Set(['trophies', 'rare_trophies', 'collection', 'ranking', 'classement', 'leek_stats', 'forum', 'tournaments'])
 
 	// Disposition par défaut (grille 24 colonnes) si l'éleveur n'a jamais personnalisé.
+	// Composée par Pierre, trois rangées de 10 : ce qui est à soi en haut (poireaux et
+	// chat), ce qu'on suit au milieu (talent, trophées, direct), le jeu autour en bas
+	// (collection, forum, joueurs remarquables).
+	// Le chat n'impose PAS de canal : sans `params.chat` le widget prend le chat public
+	// de la langue du joueur, sinon tout le monde atterrirait sur le canal de la locale
+	// dans laquelle la disposition a été composée.
 	const DEFAULT_LAYOUT: WidgetInstance[] = [
-		{ id: 'leeks', type: 'leeks', x: 0, y: 0, w: 12, h: 8, params: {} },
-		{ id: 'talent', type: 'talent', x: 12, y: 0, w: 12, h: 8, params: {} },
-		{ id: 'trophies', type: 'trophies', x: 0, y: 8, w: 8, h: 6, params: {} },
-		{ id: 'chat', type: 'chat', x: 8, y: 8, w: 16, h: 10, params: {} },
+		{ id: 'leeks', type: 'leeks', x: 0, y: 0, w: 9, h: 10, params: {} },
+		{ id: 'chat', type: 'chat', x: 9, y: 0, w: 15, h: 10, params: {} },
+		{ id: 'talent', type: 'talent', x: 0, y: 10, w: 9, h: 10, params: {} },
+		{ id: 'trophies', type: 'trophies', x: 9, y: 10, w: 8, h: 10, params: {} },
+		{ id: 'live', type: 'live', x: 17, y: 10, w: 7, h: 10, params: {} },
+		{ id: 'collection', type: 'collection', x: 0, y: 20, w: 7, h: 10, params: {} },
+		{ id: 'forum', type: 'forum', x: 7, y: 20, w: 10, h: 10, params: {} },
+		{ id: 'ranking', type: 'ranking', x: 17, y: 20, w: 7, h: 10, params: {} },
 	]
 	const cloneDefault = () => DEFAULT_LAYOUT.map(w => ({ ...w, params: { ...w.params } }))
 
