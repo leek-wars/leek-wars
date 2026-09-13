@@ -9,7 +9,6 @@
 	"cancel": "Cancel",
 	"no_linkable": "To declare an account, first connect it from the account switcher, at the top right.",
 	"cap_reached": "You have reached the limit of {0} declared accounts.",
-	"cap_reached_upsell": "Limit of {0} accounts reached. A subscription lets you declare up to {1}:",
 	"error_account_not_connected": "This account must be connected to be declared.",
 	"error_already_linked": "This account is already declared.",
 	"error_invalid_account": "This account cannot be declared.",

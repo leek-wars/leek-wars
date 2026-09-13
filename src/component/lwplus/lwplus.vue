@@ -109,7 +109,8 @@ const benefits = [
 	{ key: 'fights', icon: 'mdi-sword-cross' },
 	{ key: 'queue', icon: 'mdi-fast-forward' },
 	{ key: 'ratelimit', icon: 'mdi-speedometer' },
-	// Potager rapide plutôt que les 10 comptes (Pierre, 09/09/2026), comme dans la banque.
+	// Potager rapide (Pierre, 09/09/2026), comme dans la banque. Les comptes déclarables
+	// ne sont plus un avantage LW+ : leur plafond est le même pour tout le monde.
 	{ key: 'fastgarden', icon: 'mdi-lightning-bolt' },
 	{ key: 'badge', icon: 'mdi-shield-star' },
 	{ key: 'crystals', icon: 'mdi-diamond-stone' },

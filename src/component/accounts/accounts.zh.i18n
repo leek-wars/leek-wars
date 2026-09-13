@@ -9,7 +9,6 @@
 	"cancel": "取消",
 	"no_linkable": "要申报一个账号，请先从右上角的账号切换器登录该账号。",
 	"cap_reached": "你已达到 {0} 个申报账号的上限。",
-	"cap_reached_upsell": "已达到 {0} 个账号的上限。订阅后最多可申报 {1} 个：",
 	"error_account_not_connected": "该账号需要处于登录状态才能申报。",
 	"error_already_linked": "该账号已经申报过了。",
 	"error_invalid_account": "该账号无法申报。",

@@ -9,7 +9,6 @@
 	"cancel": "Batal",
 	"no_linkable": "Untuk mendeklarasikan sebuah akun, masuk dulu ke akun itu melalui pemilih akun di kanan atas.",
 	"cap_reached": "Anda sudah mencapai batas {0} akun yang dideklarasikan.",
-	"cap_reached_upsell": "Batas {0} akun tercapai. Dengan langganan Anda bisa mendeklarasikan hingga {1}:",
 	"error_account_not_connected": "Akun ini harus dalam keadaan masuk untuk bisa dideklarasikan.",
 	"error_already_linked": "Akun ini sudah dideklarasikan.",
 	"error_invalid_account": "Akun ini tidak bisa dideklarasikan.",

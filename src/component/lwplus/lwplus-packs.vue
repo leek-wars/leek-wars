@@ -115,8 +115,9 @@ const benefits = [
 	{ key: 'fights', icon: 'mdi-sword-cross' },
 	{ key: 'queue', icon: 'mdi-fast-forward' },
 	{ key: 'ratelimit', icon: 'mdi-speedometer' },
-	// Potager rapide (lancer plusieurs combats d'un coup) plutôt que les 10 comptes :
-	// c'est l'avantage que Pierre veut mettre en avant ici (09/09/2026).
+	// Potager rapide (lancer plusieurs combats d'un coup) : c'est l'avantage que Pierre
+	// veut mettre en avant ici (09/09/2026). Les comptes déclarables ne sont plus un
+	// avantage LW+ : leur plafond est le même pour tout le monde.
 	{ key: 'fastgarden', icon: 'mdi-lightning-bolt' },
 	{ key: 'badge', icon: 'mdi-shield-star' },
 	{ key: 'crystals', icon: 'mdi-diamond-stone' },

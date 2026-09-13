@@ -9,7 +9,6 @@
 	"cancel": "Peruuta",
 	"no_linkable": "Ilmoittaaksesi tilin kirjaudu siihen ensin oikean yläkulman tilinvalitsimesta.",
 	"cap_reached": "Olet saavuttanut {0} ilmoitetun tilin rajan.",
-	"cap_reached_upsell": "{0} tilin raja saavutettu. Tilauksella voit ilmoittaa jopa {1}:",
 	"error_account_not_connected": "Tämän tilin täytyy olla kirjautuneena, jotta sen voi ilmoittaa.",
 	"error_already_linked": "Tämä tili on jo ilmoitettu.",
 	"error_invalid_account": "Tätä tiliä ei voi ilmoittaa.",

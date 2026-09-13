@@ -9,7 +9,6 @@
 	"cancel": "Annuller",
 	"no_linkable": "For at angive en konto skal du først logge ind på den fra kontovælgeren øverst til højre.",
 	"cap_reached": "Du har nået grænsen på {0} angivne konti.",
-	"cap_reached_upsell": "Grænsen på {0} konti er nået. Et abonnement giver dig mulighed for at angive op til {1}:",
 	"error_account_not_connected": "Denne konto skal være logget ind for at kunne angives.",
 	"error_already_linked": "Denne konto er allerede angivet.",
 	"error_invalid_account": "Denne konto kan ikke angives.",

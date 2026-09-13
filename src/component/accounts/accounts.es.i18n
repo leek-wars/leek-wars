@@ -9,7 +9,6 @@
 	"cancel": "Cancelar",
 	"no_linkable": "Para declarar una cuenta, conéctate primero a ella desde el selector de cuentas, arriba a la derecha.",
 	"cap_reached": "Has alcanzado el límite de {0} cuentas declaradas.",
-	"cap_reached_upsell": "Límite de {0} cuentas alcanzado. Una suscripción permite declarar hasta {1}:",
 	"error_account_not_connected": "Esta cuenta debe estar conectada para poder declararla.",
 	"error_already_linked": "Esta cuenta ya está declarada.",
 	"error_invalid_account": "Esta cuenta no puede declararse.",

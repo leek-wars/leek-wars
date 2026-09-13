@@ -9,7 +9,6 @@
 	"cancel": "Annullera",
 	"no_linkable": "För att ange ett konto, logga först in på det via kontoväljaren uppe till höger.",
 	"cap_reached": "Du har nått gränsen på {0} angivna konton.",
-	"cap_reached_upsell": "Gränsen på {0} konton är nådd. Med ett abonnemang kan du ange upp till {1}:",
 	"error_account_not_connected": "Det här kontot måste vara inloggat för att kunna anges.",
 	"error_already_linked": "Det här kontot är redan angivet.",
 	"error_invalid_account": "Det här kontot kan inte anges.",

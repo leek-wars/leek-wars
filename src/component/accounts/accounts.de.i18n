@@ -9,7 +9,6 @@
 	"cancel": "Abbrechen",
 	"no_linkable": "Um ein Konto anzugeben, melden Sie sich zuerst über die Kontoauswahl oben rechts damit an.",
 	"cap_reached": "Sie haben das Limit von {0} angegebenen Konten erreicht.",
-	"cap_reached_upsell": "Limit von {0} Konten erreicht. Mit einem Abo können Sie bis zu {1} angeben:",
 	"error_account_not_connected": "Dieses Konto muss angemeldet sein, um angegeben werden zu können.",
 	"error_already_linked": "Dieses Konto ist bereits angegeben.",
 	"error_invalid_account": "Dieses Konto kann nicht angegeben werden.",

@@ -9,7 +9,6 @@
 	"cancel": "Annulla",
 	"no_linkable": "Per dichiarare un account, collegalo prima dal selettore di account, in alto a destra.",
 	"cap_reached": "Hai raggiunto il limite di {0} account dichiarati.",
-	"cap_reached_upsell": "Limite di {0} account raggiunto. Un abbonamento permette di dichiararne fino a {1}:",
 	"error_account_not_connected": "Questo account deve essere collegato per essere dichiarato.",
 	"error_already_linked": "Questo account è già dichiarato.",
 	"error_invalid_account": "Questo account non può essere dichiarato.",

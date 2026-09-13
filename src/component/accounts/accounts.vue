@@ -46,11 +46,7 @@
 					     saisi pour qu'un compte y apparaisse comme connecté). -->
 					<div v-if="accounts.length >= max" class="hint full">
 						<v-icon>mdi-information-outline</v-icon>
-						<span v-if="max >= maxLwplus">{{ t('cap_reached', [max]) }}</span>
-						<span v-else>
-							{{ t('cap_reached_upsell', [max, maxLwplus]) }}
-							<router-link to="/lwplus">LW+</router-link>
-						</span>
+						<span>{{ t('cap_reached', [max]) }}</span>
 					</div>
 					<template v-else>
 						<div v-for="account in linkable" :key="account.id" v-ripple class="list-item card linkable" @click="link(account)">
@@ -95,12 +91,11 @@
 	const t = useNamespacedT('accounts')
 
 	interface LinkedAccount { id: number, name: string, avatar_changed: number, talent: number, total_level?: number, leeks?: number, lwplus: boolean }
-	interface PlayerResponse { player: { id: number, main: number | null } | null, accounts: LinkedAccount[], max: number, max_free: number, max_lwplus: number }
+	interface PlayerResponse { player: { id: number, main: number | null } | null, accounts: LinkedAccount[], max: number }
 
 	const accounts = ref<LinkedAccount[]>([])
 	const main = ref<number | null>(null)
-	const max = ref(3)
-	const maxLwplus = ref(10)
+	const max = ref(10)
 	const loading = ref(true)
 	const busy = ref(false)
 	const unlinkDialog = ref(false)
@@ -109,8 +104,7 @@
 	function apply(data: PlayerResponse) {
 		accounts.value = data.accounts ?? []
 		main.value = data.player ? data.player.main : null
-		max.value = data.max ?? 3
-		maxLwplus.value = data.max_lwplus ?? 10
+		max.value = data.max ?? 10
 		loading.value = false
 		busy.value = false
 	}

@@ -9,7 +9,6 @@
 	"cancel": "Annuleren",
 	"no_linkable": "Om een account op te geven, log er eerst mee in via de accountkiezer rechtsboven.",
 	"cap_reached": "Je hebt de limiet van {0} opgegeven accounts bereikt.",
-	"cap_reached_upsell": "Limiet van {0} accounts bereikt. Met een abonnement kun je er tot {1} opgeven:",
 	"error_account_not_connected": "Dit account moet ingelogd zijn om te kunnen worden opgegeven.",
 	"error_already_linked": "Dit account is al opgegeven.",
 	"error_invalid_account": "Dit account kan niet worden opgegeven.",

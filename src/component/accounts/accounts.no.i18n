@@ -9,7 +9,6 @@
 	"cancel": "Avbryt",
 	"no_linkable": "For å oppgi en konto må du først logge inn på den fra kontovelgeren øverst til høyre.",
 	"cap_reached": "Du har nådd grensen på {0} oppgitte kontoer.",
-	"cap_reached_upsell": "Grensen på {0} kontoer er nådd. Med et abonnement kan du oppgi opptil {1}:",
 	"error_account_not_connected": "Denne kontoen må være innlogget for å kunne oppgis.",
 	"error_already_linked": "Denne kontoen er allerede oppgitt.",
 	"error_invalid_account": "Denne kontoen kan ikke oppgis.",

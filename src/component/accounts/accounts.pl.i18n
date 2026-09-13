@@ -9,7 +9,6 @@
 	"cancel": "Anuluj",
 	"no_linkable": "Aby zgłosić konto, najpierw zaloguj się na nie w przełączniku kont w prawym górnym rogu.",
 	"cap_reached": "Osiągnięto limit {0} zgłoszonych kont.",
-	"cap_reached_upsell": "Osiągnięto limit {0} kont. Abonament pozwala zgłosić nawet {1}:",
 	"error_account_not_connected": "To konto musi być zalogowane, aby można je zgłosić.",
 	"error_already_linked": "To konto jest już zgłoszone.",
 	"error_invalid_account": "Tego konta nie można zgłosić.",
