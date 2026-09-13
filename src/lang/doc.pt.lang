@@ -1005,7 +1005,7 @@
 	"const_BULB_SAVANT": "Representa o tipo de bulbo sábio.",
 	"const_PLANT_CORN": "Representa o tipo de planta Milho.",
 	"const_PLANT_CHILLI_PEPPER": "Representa o tipo de planta Pimenta.",
-	"const_PLANT_PROTOTAXITE": "Representa o tipo de planta Prototaxites.",
+	"const_PLANT_PROTOTAXITE": "Representa o tipo de planta Prototaxite.",
 	"func_getBulbType": "Retorna o tipo de bulbo da <b>entity</b> fornecida.",
 	"func_getBulbType_arg_1": "O id da entidade.",
 	"func_getBulbType_return": "O tipo de bulbo da entidade:<ul><li>#BULB_PUNY para um bulbo fraco.</li><li>#BULB_FIRE para um bulbo de fogo.</li><li>#BULB_HEALER para um bulbo curandeiro.</li><li>#BULB_ROCKY para um bulbo rochoso.</li><li>#BULB_ICED para um bulbo gelado.</li><li>#BULB_LIGHTNING para um bulbo elétrico.</li><li>#BULB_METALLIC para um bulbo metálico.</li><li>#BULB_WIZARD para um bulbo mago.</li><li>#BULB_TACTICIAN para um bulbo tático.</li><li>#BULB_SAVANT para um bulbo sábio.</li></ul>Retorna -1 se a entidade não for um bulbo, ou null se a entidade não existir.",

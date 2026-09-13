@@ -1008,7 +1008,7 @@
 	"const_BULB_SAVANT": "Odnosi się do typu żarówki Uczony.",
 	"const_PLANT_CORN": "Odnosi się do typu rośliny Kukurydza.",
 	"const_PLANT_CHILLI_PEPPER": "Odnosi się do typu rośliny Papryczka chili.",
-	"const_PLANT_PROTOTAXITE": "Odnosi się do typu rośliny Prototaxites.",
+	"const_PLANT_PROTOTAXITE": "Odnosi się do typu rośliny Prototaxite.",
 	"func_getBulbType": "Zwraca typ żarówki encji <b>entity</b>.",
 	"func_getBulbType_arg_1": "Identyfikator encji.",
 	"func_getBulbType_return": "Typ żarówki encji:<ul><li>#BULB_PUNY dla wątłej żarówki.</li><li>#BULB_FIRE dla ognistej żarówki.</li><li>#BULB_HEALER dla żarówki uzdrowiciela.</li><li>#BULB_ROCKY dla skalistej żarówki.</li><li>#BULB_ICED dla lodowej żarówki.</li><li>#BULB_LIGHTNING dla piorunowej żarówki.</li><li>#BULB_METALLIC dla metalicznej żarówki.</li><li>#BULB_WIZARD dla żarówki czarodzieja.</li><li>#BULB_TACTICIAN dla żarówki taktyka.</li><li>#BULB_SAVANT dla żarówki uczonego.</li></ul>Zwraca -1, jeśli encja nie jest żarówką, lub null, jeśli encja nie istnieje.",

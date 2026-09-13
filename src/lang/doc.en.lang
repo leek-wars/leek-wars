@@ -94,7 +94,7 @@
 	"const_BULB_SAVANT": "Represents the savant bulb type.",
 	"const_PLANT_CORN": "Represents the corn plant type.",
 	"const_PLANT_CHILLI_PEPPER": "Represents the chilli pepper plant type.",
-	"const_PLANT_PROTOTAXITE": "Represents the prototaxites plant type.",
+	"const_PLANT_PROTOTAXITE": "Represents the prototaxite plant type.",
 	"const_FIGHT_CONTEXT_CHALLENGE": "Fight context for challenges.",
 	"const_FIGHT_CONTEXT_BATTLE_ROYALE": "Fight context for Battle Royales.",
 	"const_FIGHT_CONTEXT_GARDEN": "Fight context for garden fights.",

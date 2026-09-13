@@ -351,7 +351,7 @@ export const CHIP_ANIMATIONS = [
 	Exasperation, // 114
 	Maturation, // 115 (2.50)
 	Superinfection, // 116 (2.50)
-	null, // 117 prototaxites (Prototaxite, invocation 2.50 — passe par ActionType.SUMMON)
+	null, // 117 prototaxite (Prototaxite, invocation 2.50 — passe par ActionType.SUMMON)
 	// Puces des plantes 2.50 (Éveil) : réservées au Piment et au Maïs
 	Piquant, // 118 (2.50)
 	Capsaicin, // 119 (2.50)

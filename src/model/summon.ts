@@ -8,14 +8,13 @@ class SummonTemplate {
 }
 
 // v2.50 — les plantes (Maïs, Piment, Prototaxite) ont leur propre dossier `image/plant/` et un
-// seul visuel : enracinées, elles ne se retournent jamais, donc pas de `_back`. Le fichier du
-// Prototaxite est au SINGULIER comme sa constante (CHIP_PROTOTAXITE), alors que son template
-// d'invocation, lui, est au pluriel. Source unique du chemin : la fiche du marché, le HUD, le
-// panneau d'entité et le rendu du combat passent tous par ici.
+// seul visuel : enracinées, elles ne se retournent jamais, donc pas de `_back`. Source unique du
+// chemin : la fiche du marché, le HUD, le panneau d'entité et le rendu du combat passent tous
+// par ici.
 const PLANT_IMAGES: {[name: string]: string} = {
 	corn: 'corn',
 	chilli_pepper: 'chilli_pepper',
-	prototaxites: 'prototaxite',
+	prototaxite: 'prototaxite',
 }
 
 /** Chemin de l'image d'une invocation, SANS `/` initial (le rendu du combat le veut relatif). */

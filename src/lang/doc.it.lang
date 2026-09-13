@@ -1017,7 +1017,7 @@
 	"const_BULB_SAVANT": "Designa il tipo di bulbo Sapiente.",
 	"const_PLANT_CORN": "Designa il tipo di pianta Mais.",
 	"const_PLANT_CHILLI_PEPPER": "Designa il tipo di pianta Peperoncino.",
-	"const_PLANT_PROTOTAXITE": "Designa il tipo di pianta Prototaxites.",
+	"const_PLANT_PROTOTAXITE": "Designa il tipo di pianta Prototaxite.",
 	"func_getBulbType": "Restituisce il tipo di bulbo dell'entità <b>entity</b>.",
 	"func_getBulbType_arg_1": "L'id dell'entità di cui verrà restituito il tipo di bulbo.",
 	"func_getBulbType_return": "Il tipo di bulbo dell'entità:<ul><li>#BULB_PUNY per un bulbo Gracile.</li><li>#BULB_FIRE per un bulbo di Fuoco.</li><li>#BULB_HEALER per un bulbo Curatore.</li><li>#BULB_ROCKY per un bulbo Roccioso.</li><li>#BULB_ICED per un bulbo Ghiacciato.</li><li>#BULB_LIGHTNING per un bulbo di Fulmine.</li><li>#BULB_METALLIC per un bulbo Metallico.</li><li>#BULB_WIZARD per un bulbo Mago.</li><li>#BULB_TACTICIAN per un bulbo Tattico.</li><li>#BULB_SAVANT per un bulbo Sapiente.</li></ul>Restituisce -1 se l'entità non è un bulbo, o null se l'entità non esiste.",

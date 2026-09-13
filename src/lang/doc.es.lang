@@ -1005,7 +1005,7 @@
 	"const_BULB_SAVANT": "Represents the savant bulb type.",
 	"const_PLANT_CORN": "Designa el tipo de planta Maíz.",
 	"const_PLANT_CHILLI_PEPPER": "Designa el tipo de planta Guindilla.",
-	"const_PLANT_PROTOTAXITE": "Designa el tipo de planta Prototaxites.",
+	"const_PLANT_PROTOTAXITE": "Designa el tipo de planta Prototaxite.",
 	"func_getBulbType": "Devuelve el tipo de bulbo de la entidad <b>entity</b>.",
 	"func_getBulbType_arg_1": "The entity's ID.",
 	"func_getBulbType_return": "The bulb type of the entity:<ul><li>#BULB_PUNY for a puny bulb.</li><li>#BULB_FIRE for a fire bulb.</li><li>#BULB_HEALER for a healer bulb.</li><li>#BULB_ROCKY for a rocky bulb.</li><li>#BULB_ICED for an iced bulb.</li><li>#BULB_LIGHTNING for a lightning bulb.</li><li>#BULB_METALLIC for a metallic bulb.</li><li>#BULB_WIZARD for a wizard bulb.</li><li>#BULB_TACTICIAN for a tactician bulb.</li><li>#BULB_SAVANT for a savant bulb.</li></ul>Returns -1 if the entity is not a bulb, or null if the entity does not exist.",

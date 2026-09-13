@@ -7,7 +7,7 @@ import { SHADOW_QUALITY, T, Texture } from './texture'
 // Invocation Prototaxite (#1544, 2.50 — ex-Menhir, devenu « un truc vivant mais statique »).
 // 13 = id du template d'invocation côté serveur (SummonTemplateRegistry), après les
 // bulbes 1-8/11-12 et les plantes 9-10.
-export const PROTOTAXITES_SUMMON_TEMPLATE = 13
+export const PROTOTAXITE_SUMMON_TEMPLATE = 13
 
 class Bulb extends FightEntity {
 
@@ -82,8 +82,8 @@ class Bulb extends FightEntity {
 			this.bodyTexFront = T.get(this.game, summonImage('chilli_pepper'), true, SHADOW_QUALITY)
 			this.bodyTexBack = this.bodyTexFront
 			this.setPlant('#ff4d0a', 8) // portée de tir
-		} else if (skin === PROTOTAXITES_SUMMON_TEMPLATE) { // Prototaxite (2.50) — pas de zone
-			this.bodyTexFront = T.get(this.game, summonImage('prototaxites'), true, SHADOW_QUALITY)
+		} else if (skin === PROTOTAXITE_SUMMON_TEMPLATE) { // Prototaxite (2.50) — pas de zone
+			this.bodyTexFront = T.get(this.game, summonImage('prototaxite'), true, SHADOW_QUALITY)
 			this.bodyTexBack = this.bodyTexFront
 			this.setPlant('', 11)
 		} else if (skin === 11) {

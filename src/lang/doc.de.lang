@@ -1005,7 +1005,7 @@
 	"const_BULB_SAVANT": "Bezeichnet den Bulbentyp Gelehrter.",
 	"const_PLANT_CORN": "Bezeichnet den Pflanzentyp Mais.",
 	"const_PLANT_CHILLI_PEPPER": "Bezeichnet den Pflanzentyp Chilischote.",
-	"const_PLANT_PROTOTAXITE": "Bezeichnet den Pflanzentyp Prototaxites.",
+	"const_PLANT_PROTOTAXITE": "Bezeichnet den Pflanzentyp Prototaxite.",
 	"func_getBulbType": "Gibt den Bulbentyp der Entität <b>entity</b> zurück.",
 	"func_getBulbType_arg_1": "Die ID der Entität, deren Bulbentyp zurückgegeben wird.",
 	"func_getBulbType_return": "Der Bulbentyp der Entität:<ul><li>#BULB_PUNY für eine mickrige Bulbe.</li><li>#BULB_FIRE für eine Feuer-Bulbe.</li><li>#BULB_HEALER für eine Heiler-Bulbe.</li><li>#BULB_ROCKY für eine felsige Bulbe.</li><li>#BULB_ICED für eine vereiste Bulbe.</li><li>#BULB_LIGHTNING für eine Blitz-Bulbe.</li><li>#BULB_METALLIC für eine metallische Bulbe.</li><li>#BULB_WIZARD für eine Zauberer-Bulbe.</li><li>#BULB_TACTICIAN für eine Taktiker-Bulbe.</li><li>#BULB_SAVANT für eine Gelehrten-Bulbe.</li></ul>Gibt -1 zurück, wenn die Entität keine Bulbe ist, oder null, wenn die Entität nicht existiert.",
