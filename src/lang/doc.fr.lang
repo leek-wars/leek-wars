@@ -528,6 +528,8 @@
 	"func_getPlantType": "Renvoie le type de plante de l'entité <b>entity</b>. Retourne -1 si l'entité n'est pas une plante. Utilisez les constantes PLANT_* pour comparer le résultat.",
 	"func_getPlantType_arg_1": "L'id de l'entité dont le type de plante sera renvoyé.",
 	"func_getPlantType_return": "Le type de plante de l'entité <b>entity</b>, ou -1 si ce n'est pas une plante.",
+	"func_getPlantTrigger": "Renvoie l'entité qui vient d'entrer dans la zone de la plante et l'a réveillée. N'a de sens que pendant le réveil d'une plante : renvoie -1 partout ailleurs. C'est la même valeur que le premier argument de la fonction confiée à #summon.",
+	"func_getPlantTrigger_return": "L'id de l'entité qui a réveillé la plante, ou -1 hors d'un réveil.",
 	"func_getName": "Renvoie le nom de l'entité d'id <b>entity</b>.",
 	"func_getName_arg_1": "L'id de l'entité dont le nom sera renvoyé.",
 	"func_getName_return": "Le nom de l'entité <b>entity</b>.",

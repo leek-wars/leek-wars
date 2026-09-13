@@ -1015,6 +1015,8 @@
 	"func_getPlantType": "Gibt den Pflanzentyp der Entität <b>entity</b> zurück. Gibt -1 zurück, wenn die Entität keine Pflanze ist. Verwende die PLANT_*-Konstanten zum Vergleichen des Ergebnisses.",
 	"func_getPlantType_arg_1": "Die ID der Entität, deren Pflanzentyp zurückgegeben wird.",
 	"func_getPlantType_return": "Der Pflanzentyp der Entität <b>entity</b> oder -1, wenn es keine Pflanze ist.",
+	"func_getPlantTrigger": "Gibt die Entität zurück, die gerade die Zone der Pflanze betreten und sie geweckt hat. Nur während des Erwachens einer Pflanze sinnvoll: sonst wird -1 zurückgegeben. Derselbe Wert wie das erste Argument der an #summon übergebenen Funktion.",
+	"func_getPlantTrigger_return": "Die id der Entität, die die Pflanze geweckt hat, oder -1 außerhalb eines Erwachens.",
 	"func_getNextPlayer_arg_1": "Die ID der Referenzentität.",
 	"func_getPreviousPlayer_arg_1": "Die ID der Referenzentität.",
 	"func_getStat": "Gibt den Wert der Statistik <b>stat</b> der Entität <b>entity</b> zurück. Verwende die STAT_*-Konstanten, um die Statistik anzugeben (z. B. STAT_STRENGTH, STAT_LIFE usw.).",

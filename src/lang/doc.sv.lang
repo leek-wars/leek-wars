@@ -1018,6 +1018,8 @@
 	"func_getPlantType": "Returns the plant type of the entity <b>entity</b>. Returns -1 if the entity is not a plant. Use the PLANT_* constants to compare the result.",
 	"func_getPlantType_arg_1": "The id of the entity whose plant type will be returned.",
 	"func_getPlantType_return": "The plant type of the entity <b>entity</b>, or -1 if it is not a plant.",
+	"func_getPlantTrigger": "Returnerar entiteten som just klev in i växtens zon och väckte den. Meningsfull endast under en växts uppvaknande: returnerar -1 i övrigt. Samma värde som första argumentet till funktionen som ges till #summon.",
+	"func_getPlantTrigger_return": "Id:t för entiteten som väckte växten, eller -1 utanför ett uppvaknande.",
 	"func_getNextPlayer_arg_1": "The id of the reference entity.",
 	"func_getPreviousPlayer_arg_1": "The id of the reference entity.",
 	"func_getStat": "Returns the value of the stat <b>stat</b> for the entity <b>entity</b>. Use the STAT_* constants to specify the stat (e.g. STAT_STRENGTH, STAT_LIFE, etc.).",

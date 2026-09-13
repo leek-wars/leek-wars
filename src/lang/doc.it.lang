@@ -1027,6 +1027,8 @@
 	"func_getPlantType": "Restituisce il tipo di pianta dell'entità <b>entity</b>. Restituisce -1 se l'entità non è una pianta. Usa le costanti PLANT_* per confrontare il risultato.",
 	"func_getPlantType_arg_1": "L'id dell'entità di cui verrà restituito il tipo di pianta.",
 	"func_getPlantType_return": "Il tipo di pianta dell'entità <b>entity</b>, o -1 se non è una pianta.",
+	"func_getPlantTrigger": "Restituisce l'entità che è appena entrata nella zona della pianta e l'ha svegliata. Ha senso solo durante il risveglio di una pianta: altrove restituisce -1. È lo stesso valore del primo argomento della funzione affidata a #summon.",
+	"func_getPlantTrigger_return": "L'id dell'entità che ha svegliato la pianta, o -1 fuori da un risveglio.",
 	"func_getStat": "Restituisce il valore della statistica <b>stat</b> dell'entità <b>entity</b>. Usa le costanti STAT_* per specificare la statistica (es. STAT_STRENGTH, STAT_LIFE, ecc.).",
 	"func_getStat_arg_1": "L'id dell'entità di cui verrà restituita la statistica.",
 	"func_getStat_arg_2": "La statistica da restituire (costante STAT_*).",

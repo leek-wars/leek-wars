@@ -1015,6 +1015,8 @@
 	"func_getPlantType": "返回实体 <b>entity</b> 的植物类型。如果实体不是植物，返回 -1。使用 PLANT_* 常量来比较结果。",
 	"func_getPlantType_arg_1": "要返回植物类型的实体 ID。",
 	"func_getPlantType_return": "实体 <b>entity</b> 的植物类型，如果不是植物则返回 -1。",
+	"func_getPlantTrigger": "返回刚刚进入植物区域并将其唤醒的实体。仅在植物苏醒期间有意义，其他情况返回 -1。与传给 #summon 的函数的第一个参数相同。",
+	"func_getPlantTrigger_return": "唤醒植物的实体 id，苏醒之外返回 -1。",
 	"func_getNextPlayer_arg_1": "参考实体的 ID。",
 	"func_getPreviousPlayer_arg_1": "参考实体的 ID。",
 	"func_getStat": "返回实体 <b>entity</b> 的统计 <b>stat</b> 的值。使用 STAT_* 常量来指定统计项（例如 STAT_STRENGTH、STAT_LIFE 等）。",

@@ -1015,6 +1015,8 @@
 	"func_getPlantType": "Возвращает тип растения сущности <b>entity</b>. Возвращает -1, если сущность не является растением. Используйте константы PLANT_* для сравнения результата.",
 	"func_getPlantType_arg_1": "The id of the entity whose plant type will be returned.",
 	"func_getPlantType_return": "The plant type of the entity <b>entity</b>, or -1 if it is not a plant.",
+	"func_getPlantTrigger": "Возвращает сущность, которая только что вошла в зону растения и разбудила его. Имеет смысл только во время пробуждения растения: в остальных случаях возвращает -1. То же значение, что и первый аргумент функции, переданной в #summon.",
+	"func_getPlantTrigger_return": "Id сущности, разбудившей растение, или -1 вне пробуждения.",
 	"func_getNextPlayer_arg_1": "Идентификатор опорной сущности.",
 	"func_getPreviousPlayer_arg_1": "The id of the reference entity.",
 	"func_getStat": "Возвращает значение характеристики <b>stat</b> для сущности <b>entity</b>. Используйте константы STAT_* для указания характеристики (например STAT_STRENGTH, STAT_LIFE и т. д.).",

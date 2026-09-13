@@ -1018,6 +1018,8 @@
 	"func_getPlantType": "Zwraca typ rośliny encji <b>entity</b>. Zwraca -1, jeśli encja nie jest rośliną. Użyj stałych PLANT_*, aby porównać wynik.",
 	"func_getPlantType_arg_1": "Identyfikator encji, której typ rośliny zostanie zwrócony.",
 	"func_getPlantType_return": "Typ rośliny encji <b>entity</b> lub -1, jeśli nie jest rośliną.",
+	"func_getPlantTrigger": "Zwraca encję, która właśnie weszła w strefę rośliny i ją obudziła. Ma sens tylko podczas przebudzenia rośliny: w innych przypadkach zwraca -1. Ta sama wartość co pierwszy argument funkcji przekazanej do #summon.",
+	"func_getPlantTrigger_return": "Id encji, która obudziła roślinę, lub -1 poza przebudzeniem.",
 	"func_getNextPlayer_arg_1": "Identyfikator encji odniesienia.",
 	"func_getPreviousPlayer_arg_1": "Identyfikator encji odniesienia.",
 	"func_getStat": "Zwraca wartość statystyki <b>stat</b> encji <b>entity</b>. Użyj stałych STAT_*, aby określić statystykę (np. STAT_STRENGTH, STAT_LIFE itp.).",

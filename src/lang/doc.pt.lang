@@ -1015,6 +1015,8 @@
 	"func_getPlantType": "Retorna o tipo de planta da entidade <b>entity</b>. Retorna -1 se a entidade não for uma planta. Use as constantes PLANT_* para comparar o resultado.",
 	"func_getPlantType_arg_1": "O id da entidade cujo tipo de planta será retornado.",
 	"func_getPlantType_return": "O tipo de planta da entidade <b>entity</b>, ou -1 se não for uma planta.",
+	"func_getPlantTrigger": "Devolve a entidade que acabou de entrar na zona da planta e a despertou. Só faz sentido durante o despertar de uma planta: devolve -1 noutros casos. É o mesmo valor que o primeiro argumento da função passada a #summon.",
+	"func_getPlantTrigger_return": "O id da entidade que despertou a planta, ou -1 fora de um despertar.",
 	"func_getNextPlayer_arg_1": "O id da entidade de referência.",
 	"func_getPreviousPlayer_arg_1": "O id da entidade de referência.",
 	"func_getStat": "Retorna o valor da estatística <b>stat</b> para a entidade <b>entity</b>. Use as constantes STAT_* para especificar a estatística (ex. STAT_STRENGTH, STAT_LIFE, etc.).",

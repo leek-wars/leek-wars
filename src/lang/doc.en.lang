@@ -510,6 +510,8 @@
 	"func_getPlantType": "Returns the plant type of the entity <b>entity</b>. Returns -1 if the entity is not a plant. Use the PLANT_* constants to compare the result.",
 	"func_getPlantType_arg_1": "The id of the entity whose plant type will be returned.",
 	"func_getPlantType_return": "The plant type of the entity <b>entity</b>, or -1 if it is not a plant.",
+	"func_getPlantTrigger": "Returns the entity that just walked into the plant's zone and woke it up. Only meaningful during a plant awakening: returns -1 anywhere else. Same value as the first argument of the function passed to #summon.",
+	"func_getPlantTrigger_return": "The id of the entity that woke the plant, or -1 outside an awakening.",
 	"func_getName": "Returns given <b>entity</b>'s name.",
 	"func_getName_arg_1": "Desired entity.",
 	"func_getName_return": "Given <b>entity</b>'s name.",
