@@ -1582,6 +1582,21 @@ class Game {
 			}
 			break
 		}
+		case ActionType.PLANT_AWAKE: {
+			// Éveil : une entité vient d'entrer dans la zone de la plante, qui va jouer
+			// juste après. Un rebond et un coup de lueur sur son losange suffisent à
+			// dire laquelle répond — les USE_CHIP qui suivent racontent le reste.
+			const plant = this.leeks[action.params[1]]
+			this.log(action)
+			if (plant && !this.jumping) {
+				const bulb = plant as Bulb
+				bulb.awakeGlow = 1
+				bulb.bounceY = 1.18
+				bulb.bounceX = 0.88
+			}
+			this.actionDone(this.jumping ? 0 : 20)
+			break
+		}
 		case ActionType.RESURRECTION: {
 			const target = action.params[2]
 			const cell = this.ground.field.cells[action.params[3]]
@@ -2927,7 +2942,7 @@ class Game {
 		// le Prototaxite n'a pas de zone), sous les entités.
 		for (const entity of this.leeks) {
 			if (entity instanceof Bulb && entity.plant && entity.active && !entity.dead && entity.zoneRange > 0 && entity.cell) {
-				this.drawEffectArea(entity.plantArea(), entity.zoneColor, 2, 0.45, 0.12)
+				this.drawEffectArea(entity.plantArea(), entity.zoneColor, 2, 0.45 + entity.awakeGlow * 0.5, 0.12 + entity.awakeGlow * 0.25)
 			}
 		}
 

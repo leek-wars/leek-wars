@@ -39,6 +39,7 @@
 	"n_power": "{0} vermogen",
 	"n_poison": "een gif van {0}",
 	"open_chest": "{entity} opent de kist {chest} en krijgt: {resources}",
+	"plant_awake": "{plant} ontwaakt wanneer {leek} binnenkomt",
 	"reduce_effects": "De effecten van {leek} worden verminderd met {value}",
 	"remove_poisons": "De giffen van {leek} worden geneutraliseerd",
 	"remove_shackles": "De boeien van {leek} zijn vernietigd",

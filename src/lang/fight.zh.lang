@@ -39,6 +39,7 @@
 	"n_power": "{0} 倍率",
 	"n_poison": "{0} 毒",
 	"open_chest": "{entity} 打开宝箱 {chest}，获得：{resources}",
+	"plant_awake": "{leek} 走入，{plant} 苏醒",
 	"reduce_effects": "{leek} 的效果降低了 {value}",
 	"remove_poisons": "{leek} 的毒已被解除",
 	"remove_shackles": "{leek} 的牵制已被解除",

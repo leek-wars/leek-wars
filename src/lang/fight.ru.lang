@@ -39,6 +39,7 @@
 	"n_power": "{0} мощность",
 	"n_poison": "яд {0}",
 	"open_chest": "{entity} открывает сундук {chest} и получает: {resources}",
+	"plant_awake": "{plant} просыпается, когда {leek} входит",
 	"reduce_effects": "Эффекты {leek} уменьшены на {value}",
 	"remove_poisons": "Яды {leek} нейтрализуются",
 	"remove_shackles": "Оковы {leek} уничтожены",

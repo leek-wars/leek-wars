@@ -39,6 +39,7 @@
 	"n_power": "{0} poder",
 	"n_poison": "um veneno de {0}",
 	"open_chest": "{entity} abra o baú {chest} e obtenha: {resources}",
+	"plant_awake": "{plant} acorda com a passagem de {leek}",
 	"reduce_effects": "Os efeitos de {leek} são reduzidos em {value}",
 	"remove_poisons": "Os venenos de {leek} são neutralizados",
 	"remove_shackles": "As algemas de {leek} são destruídas",

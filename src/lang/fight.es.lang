@@ -39,6 +39,7 @@
 	"n_power": "{0} poder",
 	"n_poison": "un veneno de {0}",
 	"open_chest": "{entity} abre el cofre {chest} y obtiene: {resources}",
+	"plant_awake": "{plant} despierta al paso de {leek}",
 	"reduce_effects": "Los efectos de {leek} se reducen en {value}",
 	"remove_poisons": "Los venenos de {leek} son neutralizados",
 	"remove_shackles": "Los grilletes de {leek} están destruidos",

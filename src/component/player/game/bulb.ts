@@ -32,6 +32,10 @@ class Bulb extends FightEntity {
 	public bounceY: number = 1
 	public zoneColor: string = ''
 	public zoneRange: number = 0
+	// Éveil : intensité de la lueur de zone, de 1 à 0. Posée à 1 quand la plante se
+	// réveille, résorbée par update() — c'est ce qui fait clignoter le losange une
+	// fois, pour qu'on voie QUELLE plante répond.
+	public awakeGlow: number = 0
 	private zoneArea: number[][] | null = null
 	private zoneAreaCellId: number = -1
 
@@ -144,6 +148,9 @@ class Bulb extends FightEntity {
 		if (!this.dead) {
 			this.bounceX += (1 - this.bounceX) * Math.min(1, 0.1 * dt)
 			this.bounceY += (1 - this.bounceY) * Math.min(1, 0.1 * dt)
+			if (this.awakeGlow > 0) {
+				this.awakeGlow = Math.max(0, this.awakeGlow - 0.04 * dt)
+			}
 		}
 	}
 

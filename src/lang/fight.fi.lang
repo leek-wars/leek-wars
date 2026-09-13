@@ -39,6 +39,7 @@
 	"n_power": "{0} teho",
 	"n_poison": "myrkky {0}",
 	"open_chest": "{entity} avaa arkun {chest} ja saa: {resources}",
+	"plant_awake": "{plant} herää, kun {leek} astuu sisään",
 	"reduce_effects": "{leek}:n vaikutukset heikkenevät {value}",
 	"remove_poisons": "{leek}:n myrkyt neutraloidaan",
 	"remove_shackles": "{leek}:n kahleet tuhoutuvat",
