@@ -223,9 +223,10 @@
 					</div>
 				</div>
 				<div v-if="errors.length" class="title">{{ $t('n_errors', errors.length) }}</div>
-				<div class="errors" @mouseover="mouseover">
-					<div v-for="(e, i) in errors" :key="i" class="log error" :a="e.action" :i="e.index">
+				<div class="errors">
+					<div v-for="(e, i) in errors" :key="i" class="log error">
 						<pre>[{{ e.entity }}] {{ e.data }} <span v-if="e.resolvedAI" class="ai" @click="goToAI(e.resolvedAI, e.line)">[{{ e.resolvedAI.path }}:{{ e.line }}]</span></pre>
+						<a class="goto" @click.prevent="goToAction(e.action, e.index)">➡️</a>
 					</div>
 				</div>
 				<div v-if="warnings.length" class="title">
@@ -235,9 +236,10 @@
 					</template>
 					</i18n-t>
 				</div>
-				<div class="errors" @mouseover="mouseover">
-					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">
+				<div class="errors">
+					<div v-for="(w, i) in warnings" :key="i" class="log warning">
 						<pre>[{{ w.entity }}] {{ w.data }} <span v-if="w.resolvedAI" class="ai" @click="goToAI(w.resolvedAI, w.line)">[{{ w.resolvedAI.path }}:{{ w.line }}]</span></pre>
+						<a class="goto" @click.prevent="goToAction(w.action, w.index)">➡️</a>
 					</div>
 				</div>
 			</div>
@@ -373,7 +375,6 @@
 	const map_id = ref<number>(0)
 	const map_teams = ref<{[team: number]: Set<number>} | null>(null)
 	const legends = ref<string[] | null>(null)
-	let currentLink: Element | null = null
 
 	const id = computed(() => route.params.id)
 	const team1Title = computed(() => {
@@ -795,32 +796,13 @@
 		}
 	}
 
-	function mouseover(e: MouseEvent) {
-		let target = (e.target as Element)
-		if (target.tagName === 'PRE') target = target.parentElement as Element
-		else if (target.tagName === 'A') target = target.parentElement as Element
-		else if (target.tagName === 'SPAN') target = target.closest('.log') as Element || target
-		if (currentLink && currentLink !== target) {
-			const l = currentLink.querySelector('a')
-			if (l) {
-				currentLink.removeChild(l)
-			}
-		}
-		currentLink = target
-		const link = target.querySelector('a')
-		if (!link) {
-			const action = target.getAttribute('a')
-			const index = target.getAttribute('i')
-			const l = document.createElement('a')
-			l.innerText = '➡️'
-			l.onclick = (e) => {
-				const error = document.querySelector('.fight-actions [l="' + action + '"][i="' + index + '"') as HTMLElement
-				if (error) {
-					window.scrollTo(0, error.offsetTop - 100)
-				}
-				e.preventDefault()
-			}
-			target.appendChild(l)
+	// Le lien de saut est rendu dans chaque ligne et seulement masqué en CSS : le créer
+	// au survol (ancien comportement) relayoutait tout le bloc à chaque mouvement de souris,
+	// ce qui figeait le navigateur sur les rapports à plusieurs centaines d'erreurs (#5063).
+	function goToAction(action: string, index: number) {
+		const error = document.querySelector('.fight-actions [l="' + action + '"][i="' + index + '"]') as HTMLElement | null
+		if (error) {
+			window.scrollTo(0, error.offsetTop - 100)
 		}
 	}
 </script>
@@ -890,6 +872,16 @@
 		gap: 4px;
 		&:deep(a) {
 			cursor: pointer;
+		}
+		.goto {
+			flex-shrink: 0;
+			font-size: 11px;
+			line-height: 1;
+			cursor: pointer;
+			visibility: hidden;
+		}
+		&:hover > .goto {
+			visibility: visible;
 		}
 	}
 	.warning {
