@@ -19,7 +19,9 @@ function orderChips(chips: { [key: number]: ChipTemplate }): { [key: number]: nu
 	const chipsByType: { [key: number]: ChipTemplate[] } = {}
 	for (const i in chips) {
 		const chip = chips[i]
-		const type = chip.effects[0].type
+		// Même catégorie que le marché : `chip.type` peut être forcé par le serveur
+		// quand le premier effet range la puce au mauvais endroit (Maturation).
+		const type = chip.type ?? chip.effects[0].type
 		if (chipsByType[type] === undefined) { chipsByType[type] = [] }
 		chipsByType[type].push(chip)
 	}
