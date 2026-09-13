@@ -1,3 +1,6 @@
+// En premier : une màj qui redessine des images doit purger le cache HTTP avant
+// que la page ne s'affiche avec les anciennes.
+import './cache-bust'
 import './polyfills'
 import '@/model/vue'
 import './global.scss'
