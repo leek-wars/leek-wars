@@ -217,7 +217,17 @@
 		{ id: 'forum', type: 'forum', x: 7, y: 20, w: 10, h: 10, params: {} },
 		{ id: 'ranking', type: 'ranking', x: 17, y: 20, w: 7, h: 10, params: {} },
 	]
-	const cloneDefault = () => DEFAULT_LAYOUT.map(w => ({ ...w, params: { ...w.params } }))
+	// Un éleveur qui n'a qu'un poireau voit « Mes poireaux » afficher une seule
+	// vignette dans un panneau prévu pour quatre : ce poireau-là mérite mieux que
+	// ça, il prend donc la place avec ses statistiques (demande de Pierre). Le
+	// widget choisit le premier poireau de l'éleveur quand aucun ne lui est passé,
+	// il n'y a donc pas d'id à écrire dans la disposition.
+	const cloneDefault = () => {
+		const single = Object.keys(store.state.farmer?.leeks ?? {}).length === 1
+		return DEFAULT_LAYOUT.map(w => single && w.type === 'leeks'
+			? { ...w, id: 'leek_stats', type: 'leek_stats', params: {} }
+			: { ...w, params: { ...w.params } })
+	}
 
 	function parseLayout(raw: string | null | undefined): WidgetInstance[] {
 		if (!raw) return cloneDefault()
