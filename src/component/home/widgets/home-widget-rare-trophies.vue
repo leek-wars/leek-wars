@@ -2,22 +2,27 @@
 	<div class="rare-trophies-widget">
 		<loader v-if="!loaded" />
 		<div v-else-if="rarest.length" ref="linesEl" class="lines">
-			<rich-tooltip-trophy v-for="trophy in visibleRarest" :key="trophy.code" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true">
-				<router-link :to="'/trophy/' + trophy.code" class="trophy-line" v-bind="props">
-					<trophy-icon :code="trophy.code" class="trophy" />
-					<div class="info">
-						<!-- L'API ne renvoie plus de nom traduit, seulement le code -->
-						<span class="name">{{ $t('trophy.' + trophy.code) }}</span>
-						<span class="rarity">{{ rarityText(trophy.rarity) }}</span>
-					</div>
-					<!-- Les 5 derniers éleveurs à l'avoir débloqué (demande de Pierre), du
-					     plus récent au plus ancien. Pas de lien par avatar : la ligne EST
-					     déjà un lien, le nom vit dans le title. -->
-					<div v-if="unlockers[trophy.id] && unlockers[trophy.id].length" class="unlockers">
-						<img v-for="f in unlockers[trophy.id]" :key="f.id" class="avatar" :src="LeekWars.getAvatar(f.id, f.avatar_changed)" :title="f.name">
-					</div>
-				</router-link>
-			</rich-tooltip-trophy>
+			<router-link v-for="trophy in visibleRarest" :key="trophy.code" :to="'/trophy/' + trophy.code" class="trophy-line">
+				<!-- L'infobulle riche ne s'ouvre que sur l'icône (demande de Pierre) :
+				     posée sur la ligne entière, elle recouvrait les lignes voisines
+				     dès qu'on passait sur les avatars. -->
+				<span class="trophy-tooltip">
+					<rich-tooltip-trophy :trophy="trophy" :bottom="true" :instant="true">
+						<trophy-icon :code="trophy.code" class="trophy" />
+					</rich-tooltip-trophy>
+				</span>
+				<div class="info">
+					<!-- L'API ne renvoie plus de nom traduit, seulement le code -->
+					<span class="name">{{ $t('trophy.' + trophy.code) }}</span>
+					<span class="rarity">{{ rarityText(trophy.rarity) }}</span>
+				</div>
+				<!-- Les 5 derniers éleveurs à l'avoir débloqué (demande de Pierre), du
+				     plus récent au plus ancien. Pas de lien par avatar : la ligne EST
+				     déjà un lien, le nom vit dans le title. -->
+				<div v-if="unlockers[trophy.id] && unlockers[trophy.id].length" class="unlockers">
+					<img v-for="f in unlockers[trophy.id]" :key="f.id" class="avatar" :src="LeekWars.getAvatar(f.id, f.avatar_changed)" :title="f.name">
+				</div>
+			</router-link>
 		</div>
 		<div v-else class="none">{{ t('no_trophy') }}</div>
 	</div>
@@ -55,12 +60,19 @@
 	const lineCount = useFitCount(linesEl, '.trophy-line', 10, 4)
 	const visibleRarest = computed(() => rarest.value.slice(0, lineCount.value))
 
-	// Rareté lisible : arrondie selon l'ordre de grandeur, pas de queue de décimales.
+	// Rareté lisible. `rarity` est une FRACTION (possesseurs / éleveurs), comme
+	// partout ailleurs dans le client (cf. trophies/trophy.vue) : elle passe donc
+	// en pourcentage ici — sans ça la ligne affichait cent fois moins.
+	// Sous 1 %, on donne le chiffre exact à deux chiffres significatifs, le même
+	// que l'infobulle : un « < 0.01 % » rendait identiques tous les trophées du
+	// haut de la liste, qui sont justement ceux qu'on vient regarder (demande de
+	// Pierre). `Number()` retire les zéros de queue de `toPrecision` (0.50 → 0.5).
 	function rarityText(rarity: number): string {
-		if (rarity >= 1) return Math.round(rarity) + '%'
-		if (rarity >= 0.1) return rarity.toFixed(1) + '%'
-		if (rarity >= 0.01) return rarity.toFixed(2) + '%'
-		return '< 0.01%'
+		const percent = rarity * 100
+		if (percent >= 10) return Math.round(percent) + '%'
+		if (percent >= 1) return percent.toFixed(1) + '%'
+		if (percent > 0) return Number(percent.toPrecision(2)) + '%'
+		return '0%'
 	}
 
 	// Les derniers éleveurs à avoir débloqué chaque trophée affiché. Service
@@ -127,6 +139,13 @@
 	.trophy {
 		width: 36px;
 		height: 36px;
+		flex-shrink: 0;
+	}
+	// L'activateur de l'infobulle (un <span> rendu par rich-tooltip-trophy, d'où
+	// le :deep) devient le porteur de l'icône dans la ligne : il doit se
+	// comporter comme elle, sinon l'inline ajoute un décalage de ligne de base.
+	.trophy-tooltip, .trophy-tooltip :deep(span) {
+		display: flex;
 		flex-shrink: 0;
 	}
 	.info {
