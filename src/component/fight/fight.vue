@@ -26,7 +26,7 @@
 
 		<panel class="first">
 			<template #content>
-				<div class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
+				<div ref="playerContainer" class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
 					<player v-if="fight_id" ref="playerRef" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" :mobile-panels="mobilePanels" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
 				<!-- Ordre des poireaux et actions, sous le lecteur en mobile (#4860). Le conteneur
@@ -163,6 +163,7 @@
 	const t = useNamespacedT('fight')
 	const route = useRoute()
 	const playerRef = useTemplateRef<{ loaded: boolean }>('playerRef')
+	const playerContainer = useTemplateRef<HTMLElement>('playerContainer')
 	// Cible du Teleport du hud (#4860) : nulle au premier rendu, le hud attend qu'elle existe.
 	const mobilePanels = useTemplateRef<HTMLElement>('mobilePanelsRef')
 
@@ -248,6 +249,25 @@
 		return (parseFloat(style.borderLeftWidth) || 0) + (parseFloat(style.borderRightWidth) || 0)
 	}
 
+	// Le lecteur ne colle pas le bas de la fenêtre : il reste le trait du panneau et
+	// un peu d'air, pour qu'on voie que la page continue en dessous.
+	const MARGIN_BOTTOM = 8
+
+	/**
+	 * Ce que la page prend au-dessus du lecteur : l'en-tête fixe, la barre de titre
+	 * et le trait du panneau. C'était `128` en dur, une mesure de la v2 ; en v3
+	 * l'en-tête fait 80 px et la barre de titre 60 px, soit 161 px. Le lecteur
+	 * dépassait donc du bas de la fenêtre et sa rangée de commandes, ainsi que le
+	 * bas de la barre des poireaux, partaient hors de l'écran (retour de Pierre,
+	 * 2026-09-13). La position du lecteur ne dépend pas de sa propre hauteur : la
+	 * mesurer ici ne peut pas boucler.
+	 */
+	function verticalOffset(): number {
+		const container = playerContainer.value
+		if (!container) return 128
+		return container.getBoundingClientRect().top + window.scrollY
+	}
+
 	function reload() {
 		fight_id.value = null
 		nextTick(() => {
@@ -290,7 +310,7 @@
 				const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
 				const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
 				const theoricalHeight = Math.round(theoricalHeight1 + padding_bottom + padding_top + controls)
-				const height = Math.min(window.innerHeight - 128, theoricalHeight)
+				const height = Math.min(window.innerHeight - verticalOffset() - MARGIN_BOTTOM, theoricalHeight)
 				playerWidth.value = maxWidth
 				playerHeight.value = height
 				playerHorizontal.value = false
