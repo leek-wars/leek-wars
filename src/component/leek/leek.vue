@@ -874,7 +874,7 @@
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
 	import { alteredClass } from '@/model/alteration'
-	import { Component } from '@/model/component'
+	import { Component, componentsBonus } from '@/model/component'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Potion, PotionEffect } from '@/model/potion'
@@ -1619,19 +1619,12 @@
 	function refreshTotalCharacteristics() {
 		if (!leek.value) return
 		const l = leek.value as Leek & Record<string, number>
+		// Item hors catalogue (cf. la garde du même cas dans le template) : on ne connaît
+		// pas ses stats, il ne compte simplement pas.
+		const bonus = componentsBonus(leek.value.components, max_components.value,
+			template => LeekWars.components[LeekWars.items[template]?.params]?.stats)
 		for (const charac of LeekWars.characteristics) {
-			l['total_' + charac] = l[charac]
-		}
-		for (let c = 0; c < 8; ++c) {
-			const component = leek.value.components[c]
-			if (component && c < max_components.value) {
-				// Item hors catalogue (cf. la garde du même cas dans le template) :
-				// on ne connaît pas ses stats, il ne compte simplement pas.
-				const stats = LeekWars.components[LeekWars.items[component.template]?.params]?.stats
-				for (const charac of stats ?? []) {
-					l['total_' + charac[0]] += charac[1]
-				}
-			}
+			l['total_' + charac] = l[charac] + (bonus[charac] || 0)
 		}
 	}
 
