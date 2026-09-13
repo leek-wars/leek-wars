@@ -424,6 +424,11 @@ async function confirmEuros() {
 		flex-wrap: wrap;
 		gap: 16px;
 		padding: 0 12px 12px;
+		// En compact (page /lwplus), ni accroche ni avantages au-dessus : c'est le
+		// premier bloc du panneau, il porte sa marge du haut.
+		&:first-child {
+			padding-top: 12px;
+		}
 	}
 	.pack {
 		position: relative;
