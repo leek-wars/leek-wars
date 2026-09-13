@@ -1094,8 +1094,12 @@ body:not(.v2) {
 		color: inherit;
 	}
 	/* Les icônes du v2 étaient flottées en 24 px avec leurs propres marges ;
-	   dans une entrée flex du mockup c'est la gouttière qui espace. */
-	.menu .section img {
+	   dans une entrée flex du mockup c'est la gouttière qui espace.
+	   `.menu-center` et non `.menu` : la seule `.section` qui vive ailleurs est le
+	   bloc de l'éleveur du tiroir mobile, dont l'IMAGE est l'avatar. Sans ce
+	   resserrement, `.menu .section img` (0,3,2) l'emportait sur le `width: 100%`
+	   d'`avatar.vue` (0,2,1) et l'avatar tombait à 20 px dans sa tuile de 44. */
+	.menu-center .section img {
 		width: 20px;
 		height: 20px;
 		float: none;
