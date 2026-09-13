@@ -75,6 +75,7 @@
     - "Editor: a comment glued to an operator stays gray. The greedy operator run used to swallow the opening of the comment: \"!/**/\" had no color at all, while \"! /**/\" did (thanks to LaLongueTerre)."
     - "Fight report: the \"<\" and \">\" arrows in the turn header once again move from one turn to the next inside the report, instead of opening the fight in the player. The player is still reachable through the arrow that appears to the right of the header (thanks to Tabarius)."
     - "The X key in a fight no longer regenerates the map obstacles: this testing shortcut scrambled the display, the visible obstacles no longer matched the real obstacles of the fight. It is now restricted to admins (thanks to LaLongueTerre)."
+    - "Fight report: hovering the errors and warnings list no longer freezes the browser on large reports, and the arrow that jumps to the action no longer shifts the lines when it appears (thanks to Amal)."
 
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
