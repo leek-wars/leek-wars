@@ -1230,6 +1230,15 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       « combler le vide », 2026-09-11) : `.offers` passe de
       `align-items: flex-start` à `stretch`. Le panneau « Votre abonnement »
       (ou le tunnel de souscription) descend au bas des lots de mois.
+    - **Paliers de parrainage débloqués illisibles** (page éleveur, « petit bug
+      d'affichage sur les récompenses parrainage », 2026-09-11) : la récompense
+      obtenue porte `.card` ET `.notif-trophy`. Depuis que la notification
+      trophée est un aplat d'or à encre sombre (`--gold-text` en !important),
+      le fond d'or est écrasé par le `.card` du v3, déclaré plus bas à
+      spécificité égale — il reste l'encre sombre sur la carte sombre. Le
+      palier garde sa carte (neuf aplats d'or pèseraient trop dans la grille) :
+      teinte d'or à 12 %, liseré d'or, texte à l'encre normale, coche en
+      `--rank-first`.
     - **Langues des réglages** (`settings.vue`, « mettre les langues en
       grille plus propre », puis « réduire un peu la grille ») : des
       `inline-block` de largeurs inégales, centrés, avec une pastille « bêta »

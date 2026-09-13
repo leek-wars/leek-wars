@@ -1488,7 +1488,19 @@ body:not(.v2) {
 	   en sombre). Elle prend l'accent de la rangée, comme la grande icône.
 	   Sélecteur long : la règle du composant en compte six. */
 	.sponsorship .rewards .reward.notif-trophy .v-icon {
-		color: var(--notif-accent);
+		color: var(--rank-first);
+	}
+	/* Le palier débloqué porte `.card` ET `.notif-trophy`. Depuis que la
+	   notification trophée est un aplat d'or à encre sombre, le `.card` (plus
+	   bas dans ce fichier, même spécificité) efface l'or et garde l'encre : du
+	   noir sur la carte noire (Pierre, 2026-09-11 : « petit bug d'affichage sur
+	   les récompenses parrainage »). Le palier reste une carte — neuf aplats
+	   d'or pèseraient trop dans la grille — teintée et bordée d'or, à l'encre
+	   normale ; la coche ci-dessus prend l'or encre du thème. */
+	.sponsorship .rewards .reward.notif-trophy {
+		background: color-mix(in srgb, var(--rank-first) 12%, var(--background-secondary));
+		border-color: color-mix(in srgb, var(--rank-first) 55%, transparent);
+		color: var(--text-color) !important;
 	}
 	/* Même famille : l'anneau d'une catégorie complétée du panneau Collection
 	   est en `#f1c40f`, un or Material en dur qui tombe à 1,55 sur le parchemin.
