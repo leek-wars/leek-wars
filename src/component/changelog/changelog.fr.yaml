@@ -98,6 +98,7 @@
     - "Éditeur : un commentaire collé à un opérateur reste grisé (merci à LaLongueTerre)."
     - "Documentation : pendant une recherche, les catégories se replient de nouveau à la flèche."
     - "Chat : un $ dans un bloc de code n'y met plus de balises &lt;latex&gt; (merci à fujiwar)."
+    - "Rapport de combat : survoler la liste des erreurs ne fige plus le navigateur (merci à Amal)."
     - "#ai Python : les opérations sont comptées par expression, comme en LeekScript et en JavaScript."
     - "#ai Les fonctions de combat coûtent le même nombre d'opérations dans tous les langages."
     - "#ai Les coûts des fonctions mathématiques sont mesurés sur le moteur réel (merci à GSoMan)."

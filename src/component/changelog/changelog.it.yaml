@@ -98,6 +98,7 @@
     - "Editor: un commento attaccato a un operatore resta in grigio (grazie a LaLongueTerre)."
     - "Documentazione: durante una ricerca, le categorie si richiudono di nuovo con la freccia."
     - "Chat: un $ dentro un blocco di codice non mette più tag &lt;latex&gt; (grazie a fujiwar)."
+    - "Rapporto di combattimento: passare il mouse sugli errori non blocca più il browser (grazie a Amal)."
     - "#ai Python: le operazioni sono contate per espressione, come in LeekScript e JavaScript."
     - "#ai Le funzioni di combattimento costano lo stesso numero di operazioni in ogni linguaggio."
     - "#ai I costi delle funzioni matematiche sono misurati sul motore reale (grazie a GSoMan)."

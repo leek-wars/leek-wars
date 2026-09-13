@@ -98,6 +98,7 @@
     - "Editor: a comment glued to an operator stays greyed out (thanks to LaLongueTerre)."
     - "Documentation: while searching, categories can be collapsed again by clicking their arrow."
     - "Chat: a $ inside a code block no longer adds &lt;latex&gt; tags (thanks to fujiwar)."
+    - "Fight report: hovering the errors list no longer freezes the browser (thanks to Amal)."
     - "#ai Python: operations are counted per expression, like in LeekScript and JavaScript."
     - "#ai Combat functions now cost the same number of operations in every language."
     - "#ai The costs of the math functions are now measured on the real engine (thanks to GSoMan)."
