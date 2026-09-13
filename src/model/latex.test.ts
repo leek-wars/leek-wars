@@ -3,7 +3,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 // latexify charge katex + son CSS en dynamic import (lazy). On mocke les deux : le CSS
 // n'a aucun effet en test, et renderToString est remplacé par une fonction inspectable
 // pour vérifier le rendu, les macros passées et le fallback en cas d'erreur.
-const k = vi.hoisted(() => ({ renderToString: vi.fn((f: string) => `KATEX(${f})`) }))
+// Le second paramètre est typé bien qu'inutilisé : sans lui, le mock n'a qu'un
+// argument et `mock.calls[0][1]` — les options, donc les macros — n'existe pas
+// pour TypeScript.
+type KatexOptions = { macros: Record<string, string> }
+const k = vi.hoisted(() => ({ renderToString: vi.fn((f: string, _options?: KatexOptions) => `KATEX(${f})`) }))
 vi.mock('katex', () => ({ renderToString: k.renderToString, default: { renderToString: k.renderToString } }))
 vi.mock('katex/dist/katex.min.css', () => ({ default: {} }))
 

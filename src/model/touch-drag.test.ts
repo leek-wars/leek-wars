@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { startTouchDrag } from '@/model/touch-drag'
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
+import { startTouchDrag, type TouchDragOptions } from '@/model/touch-drag'
 
 // Événement tactile minimal : happy-dom n'a pas TouchEvent, et seules les
 // propriétés lues par touch-drag (touches/changedTouches) comptent ici.
@@ -17,8 +17,10 @@ describe('touch-drag', () => {
 	let element: HTMLElement
 	let zoneA: HTMLElement
 	let zoneB: HTMLElement
-	let start: ReturnType<typeof vi.fn>
-	let end: ReturnType<typeof vi.fn>
+	// Typés sur le contrat de touch-drag : un vi.fn() nu ne s'assigne pas aux
+	// callbacks de TouchDragOptions.
+	let start: Mock<TouchDragOptions['start']>
+	let end: Mock<TouchDragOptions['end']>
 	let finger: { x: number, y: number }
 
 	// Élément à déplacer + deux zones de dépôt, l'une sous le doigt à la fois.
@@ -28,8 +30,8 @@ describe('touch-drag', () => {
 		zoneA = document.getElementById('a')!
 		zoneB = document.getElementById('b')!
 		element = document.querySelector('.item')!
-		start = vi.fn()
-		end = vi.fn()
+		start = vi.fn<TouchDragOptions['start']>()
+		end = vi.fn<TouchDragOptions['end']>()
 		finger = { x: 0, y: 0 }
 		document.elementFromPoint = () => (finger.y < 100 ? zoneA : zoneB)
 	})
