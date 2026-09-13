@@ -51,19 +51,19 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
-								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-bind="props">
+							<rich-tooltip-item v-for="weapon in weapons" :key="weapon.id" v-slot="{ props }" :item="weapon.item" :bottom="true" :leek="leek" @update:modelValue="setParent">
+								<img :src="'/image/' + weapon.item.name.replace('_', '/') + '.png'" class="weapon" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="chips">
-							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
-								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-bind="props">
+							<rich-tooltip-item v-for="chip in chips" :key="chip.id" v-slot="{ props }" :item="chip.item" :bottom="true" :leek="leek" @update:modelValue="setParent">
+								<img :src="'/image/chip/' + chip.chip.name + '.png'" class="chip" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="components">
-							<template v-for="(component, ci) in leek.components" :key="ci"><rich-tooltip-item v-if="component" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @update:modelValue="setParent">
-								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-bind="props">
-							</rich-tooltip-item></template>
+							<rich-tooltip-item v-for="component in components" :key="component.id" v-slot="{ props }" :item="component.item" :bottom="true" @update:modelValue="setParent">
+								<img :src="'/image/component/' + component.item.name + '.png'" class="component" v-bind="props">
+							</rich-tooltip-item>
 						</div>
 					</div>
 				</div>
@@ -106,6 +106,32 @@ const value = ref(false)
 
 const _open_delay = computed(() => props.openDelay ?? (props.instant ? 1 : 500))
 const _close_delay = computed(() => props.instant ? 1 : 1)
+
+/**
+ * Les trois listes d'équipement, chacune appariée à son template d'objet.
+ *
+ * Le template était lu deux fois par vignette directement dans le rendu
+ * (`LeekWars.items[x]` pour l'infobulle, puis pour le chemin de l'image), sans
+ * jamais vérifier qu'il existe. Un objet que le client ne connaît pas — jeu de
+ * données plus ancien que celui du poireau, objet non public équipé par un
+ * compte d'administration — donnait une prop `item` à `undefined` (le flot de
+ * « Invalid prop: type check failed for prop "item" » remonté par Pierre le
+ * 2026-09-10) puis une lecture de `.name` sur `undefined` au rendu de l'image.
+ *
+ * Les vignettes sans template sont donc écartées : sans nom d'objet il n'y a ni
+ * image ni fiche à montrer. Les puces demandent en plus leur entrée dans CHIPS,
+ * qui porte le nom du fichier d'image.
+ */
+const weapons = computed(() => (leek.value?.weapons ?? [])
+	.map(weapon => ({ ...weapon, item: LeekWars.items[weapon.template] }))
+	.filter(weapon => weapon.item))
+const chips = computed(() => (leek.value?.chips ?? [])
+	.map(chip => ({ ...chip, item: LeekWars.items[chip.template], chip: CHIPS[chip.template] }))
+	.filter(chip => chip.item && chip.chip))
+const components = computed(() => (leek.value?.components ?? [])
+	.filter(component => component)
+	.map(component => ({ ...component!, item: LeekWars.items[component!.template] }))
+	.filter(component => component.item))
 
 watch(() => props.id, () => {
 	leek.value = null
