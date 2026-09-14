@@ -1820,6 +1820,19 @@
 		position: relative;
 		padding-right: 0;
 	}
+	/* Le titre et les boutons de la barre de page appartiennent à la coquille du
+	   site, pas à l'éditeur : c'est le seul endroit de la page où les deux thèmes
+	   se touchent. Ils héritaient du `--text-color` du thème de CODE alors que
+	   leur fond (`--background-input`) et leur bordure restent ceux du SITE :
+	   site clair + éditeur sombre donnait du texte presque blanc sur un bouton
+	   crème, illisible (rapport de FdHP), et la combinaison inverse du noir sur
+	   noir. `--page-bar-color`, la couleur que le thème du site donne à sa barre
+	   de page, n'est jamais réécrite par un thème d'éditeur. Les onglets, eux,
+	   gardent le thème du code : ils prolongent la surface qu'ils surmontent. */
+	.page-header > .menu {
+		--text-color: var(--page-bar-color);
+		color: var(--text-color);
+	}
 	/* La barre de page de l'éditeur n'est pas recentrée par la coquille v3 (elle
 	   contient un `> .menu`, cf `leekwars-shell-v3.scss`) : ses enfants sont donc
 	   étirés, et la bande d'onglets, haute de 36 px dans une barre de 48, restait
