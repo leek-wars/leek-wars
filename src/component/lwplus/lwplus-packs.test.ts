@@ -29,7 +29,7 @@ describe('traductions du panneau des mois LW+', () => {
 
 	it.each(LOCALES)('%s : les placeholders sont conservés', (locale) => {
 		const messages = JSON.parse(readFileSync(`${DIR}/lwplus-packs.${locale}.i18n`, 'utf8')) as Record<string, string>
-		for (const key of ['active_until', 'months_one', 'months_other', 'save', 'subscribe_for', 'cadence_months', 'bought', 'confirm_question']) {
+		for (const key of ['active_until', 'months_one', 'months_other', 'save', 'subscribe_for', 'cadence_months', 'tooltip_subscribe', 'tooltip_crystals', 'bought', 'confirm_question']) {
 			expect(messages[key], key).toContain('{0}')
 		}
 	})

@@ -27,22 +27,34 @@
 				<div v-if="discount(pack)" class="save">{{ $t('save', [discount(pack)]) }}</div>
 				<div class="months">{{ monthsLabel(pack.months) }}</div>
 
-				<!-- En euros, c'est un abonnement : le bouton porte le prix, la ligne
-				     dessous porte la périodicité. Les deux ensemble, jamais l'un sans
-				     l'autre — un prix sans son « tous les 3 mois » se lit comme un
-				     paiement unique. -->
-				<v-btn class="buy-euro" color="primary" variant="flat" prepend-icon="mdi-autorenew" :disabled="busy || covered || !verified" @click="subscribeTo(pack)">
-					<span v-if="LeekWars.currencies[LeekWars.currency].prefix"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ price(pack) }}</span>
-					<span v-else>{{ price(pack) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
-				</v-btn>
-				<div class="cadence">{{ cadence(pack) }}</div>
+				<!-- Un panier, comme tout achat du site (ICONS.md) : la nature
+				     récurrente se dit dans l'infobulle et sous la grille, pas par un
+				     glyphe que personne ne décode. -->
+				<v-tooltip location="bottom">
+					<template #activator="{ props: tprops }">
+						<v-btn v-bind="tprops" class="buy-euro" color="primary" variant="flat" prepend-icon="mdi-cart-outline" :disabled="busy || covered || !verified" @click="subscribeTo(pack)">
+							<span v-if="LeekWars.currencies[LeekWars.currency].prefix"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ price(pack) }}</span>
+							<span v-else>{{ price(pack) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
+						</v-btn>
+					</template>
+					<span>{{ $t('tooltip_subscribe', [cadence(pack)]) }}</span>
+				</v-tooltip>
 
-				<v-btn class="buy-crystals" color="primary" variant="tonal" :disabled="busy || !enough(pack)" :loading="buying === pack.id" @click="askCrystals(pack)">
-					{{ $filters.number(pack.crystals) }}&nbsp;<span class="crystal"></span>
-				</v-btn>
-				<div class="cadence">{{ $t('one_time') }}</div>
+				<v-tooltip location="bottom">
+					<template #activator="{ props: tprops }">
+						<v-btn v-bind="tprops" class="buy-crystals" color="primary" variant="tonal" :disabled="busy || !enough(pack)" :loading="buying === pack.id" @click="askCrystals(pack)">
+							{{ $filters.number(pack.crystals) }}&nbsp;<span class="crystal"></span>
+						</v-btn>
+					</template>
+					<span>{{ $t('tooltip_crystals', [monthsLabel(pack.months)]) }}</span>
+				</v-tooltip>
 			</div>
 		</div>
+
+		<!-- La différence entre les deux boutons, dite UNE fois pour toute la grille
+		     plutôt que six fois sous les boutons. Visible sans survol : sur mobile il
+		     n'y a pas d'infobulle, et un prélèvement récurrent ne se devine pas. -->
+		<div v-if="!loading" class="plan-notice">{{ $t('payment_note') }}</div>
 
 		<!-- Pourquoi les boutons en euros sont éteints. Deux raisons seulement, et
 		     elles se disent, sinon le joueur clique dans le vide. -->
@@ -527,19 +539,15 @@ async function confirmSubscription() {
 		font-size: 16px;
 		font-weight: 500;
 	}
-	// Périodicité sous chaque bouton : « tous les 3 mois » sous le prix, « achat
-	// unique » sous les cristaux. Discrète mais toujours là — c'est elle qui dit
-	// que le bouton du dessus engage un prélèvement récurrent.
-	.cadence {
-		margin-top: -6px;
-		font-size: 12px;
-		color: var(--text-color-secondary);
-		text-align: center;
-	}
 	.plan-notice {
 		padding: 0 12px 12px;
 		color: var(--text-color-secondary);
 		font-size: 14px;
+	}
+	// Deux notices d'affilée (la règle de paiement, puis le pourquoi d'un bouton
+	// éteint) : la première ne reprend pas le padding du bas.
+	.plan-notice + .plan-notice {
+		margin-top: -8px;
 	}
 	.cancel-anytime {
 		margin-top: 8px;
