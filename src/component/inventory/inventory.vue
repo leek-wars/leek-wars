@@ -233,24 +233,18 @@
 	const retrieveDialog = ref(false)
 	const retrieveItems = ref<Item[]>([])
 
+	// Le compte des ingrédients passe par le getter du store, seul endroit qui sait qu'une
+	// pièce ALTÉRÉE est une instance à part, rangée sous le même template que la pile de ses
+	// jumelles neuves : la recherche à la main renvoyait la première ligne venue, et une
+	// pomme altérée cachait les 470 autres.
 	function isSchemeCraftable(item: Item & { type: ItemType }): boolean {
 		if (item.type !== ItemType.SCHEME || !store.state.farmer) return true
 		const scheme = LeekWars.schemes[LeekWars.items[item.template].params]
 		if (!scheme) return true
-		const farmer = store.state.farmer
 		for (const ingredient of scheme.items) {
 			if (!ingredient) continue
 			const [itemId, quantity] = ingredient
-			if (itemId === 148) {
-				if (farmer.habs < quantity) return false
-			} else {
-				const found = farmer.resources.find((i) => i.template === itemId)
-					|| farmer.components.find((i) => i.template === itemId)
-					|| farmer.potions.find((i) => i.template === itemId)
-					|| farmer.weapons.find((i) => i.template === itemId)
-					|| farmer.chips.find((i) => i.template === itemId)
-				if (!found || found.quantity < quantity) return false
-			}
+			if (store.getters.item_quantity(itemId) < quantity) return false
 		}
 		return true
 	}

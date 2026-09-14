@@ -92,50 +92,17 @@ function craftIngredient(ingredient: Ingredient) {
 	if (scheme) emitter.emit('craft', scheme)
 }
 
+// Ingrédient possédé, en partie, ou pas du tout. Le compte vient du getter du store et
+// non d'une boucle locale sur les inventaires : cette boucle-là rendait la quantité de la
+// PREMIÈRE ligne trouvée, et une pièce altérée — instance unique rangée à côté de la pile
+// de ses jumelles neuves, sous le même template — faisait passer 470 pommes pour une
+// seule, recette en rouge et craft refusé alors que le serveur l'aurait accepté.
 const item_present = computed(() => items.value.map(item => {
-	if (item === null) return 'present'
-	if (store.state.farmer) {
-		if (item.item.id === 148) {
-			return store.state.farmer.habs >= item.quantity ? 'present' : 'partial'
-		} else {
-			for (const resource of store.state.farmer!.resources) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.components) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.potions) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.weapons) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.chips) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.hats) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.pomps) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-		}
-	}
-	return 'missing'
+	if (item === null || !item.item) return 'present'
+	if (!store.state.farmer) return 'missing'
+	const owned = store.getters.item_quantity(item.item.id)
+	if (owned >= item.quantity) return 'present'
+	return owned > 0 ? 'partial' : 'missing'
 }))
 </script>
 
