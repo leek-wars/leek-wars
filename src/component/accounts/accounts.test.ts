@@ -76,9 +76,10 @@ describe('accounts.vue — déliaison', () => {
 		// Le dialogue est TÉLÉPORTÉ hors du composant : on le cherche dans le document.
 		const dialog = document.body.querySelector('.v-overlay-container .popup')
 		expect(dialog, 'le dialogue de confirmation doit être rendu').not.toBeNull()
-		// useNamespacedT lit l'instance i18n de l'app, pas celle du harnais : les clés sortent
-		// brutes. Voir `unlink_message` suffit — il n'est rendu que si la cible est bien posée.
-		expect(dialog!.textContent).toContain('unlink_message')
+		// On vise la ligne de message par son sélecteur et pas par son texte : useNamespacedT lit
+		// l'instance i18n de l'app, pas celle du harnais, donc les clés sortent brutes ici. Sa
+		// présence dit ce qui compte — la cible de la déliaison est bien posée.
+		expect(dialog!.querySelector('.unlink-message'), 'le message doit nommer le compte visé').not.toBeNull()
 
 		const confirm = [...dialog!.querySelectorAll('.actions .action')].find(el => el.classList.contains('red'))
 		expect(confirm, 'le bouton de confirmation doit exister').toBeTruthy()

@@ -44,14 +44,24 @@ function isRendered(node: Node): boolean {
 	return true
 }
 
+/** Un `<template v-if="…" #content>` laisse le slot par défaut servir de repli : rien n'est perdu. */
+function isConditional(node: Node): boolean {
+	return (node.props ?? []).some(prop => prop.type === DIRECTIVE && (prop.name === 'if' || prop.name === 'else-if'))
+}
+
 function walk(node: Node, file: string, found: string[]) {
 	const children = (node.children ?? []) as Node[]
 	if (node.type === ELEMENT && node.tag?.toLowerCase() === 'panel') {
 		const slots = children.map(slotName)
-		if (slots.includes('content')) {
+		const content = children.find((child, i) => slots[i] === 'content')
+		if (content && !isConditional(content)) {
 			children.forEach((child, i) => {
-				if (slots[i] === null && isRendered(child)) {
-					const what = child.type === ELEMENT ? '<' + child.tag + '>' : 'du texte'
+				// Le slot par défaut s'écrit aussi bien en vrac qu'en `<template #default>` :
+				// dans les deux cas le panneau le jette, donc on inspecte les deux formes.
+				const dropped = slots[i] === null ? [child] : slots[i] === 'default' ? child.children as Node[] : []
+				for (const node of dropped) {
+					if (!isRendered(node)) continue
+					const what = node.type === ELEMENT ? '<' + node.tag + '>' : 'du texte'
 					found.push(path.relative(SRC, file) + ' : ' + what + ' dans le slot par défaut d\'un <panel> qui a un #content')
 				}
 			})
@@ -68,8 +78,8 @@ function vueFiles(dir: string): string[] {
 	})
 }
 
-function droppedNodes(file: string): string[] {
-	const { descriptor } = parse(fs.readFileSync(file, 'utf8'), { filename: file })
+function droppedNodes(source: string, file: string): string[] {
+	const { descriptor } = parse(source, { filename: file })
 	const ast = descriptor.template?.ast as RootNode & { children: TemplateChildNode[] } | undefined
 	if (!ast) return []
 	const found: string[] = []
@@ -77,8 +87,28 @@ function droppedNodes(file: string): string[] {
 	return found
 }
 
+const sfc = (template: string) => droppedNodes('<template>' + template + '</template>', 'fixture.vue')
+
 describe('slots de <panel>', () => {
 	it('rien n\'est posé dans le slot par défaut d\'un panneau qui fournit #content', { timeout: 30_000 }, () => {
-		expect(vueFiles(SRC).flatMap(droppedNodes)).toEqual([])
+		expect(vueFiles(SRC).flatMap(file => droppedNodes(fs.readFileSync(file, 'utf8'), file))).toEqual([])
+	})
+
+	// Le garde-fou lui-même : il doit voir les deux écritures du slot par défaut, et ne pas
+	// crier sur les panneaux qui n'ont pas le problème.
+	it('voit le slot par défaut, en vrac comme en <template #default>', () => {
+		expect(sfc('<panel><template #content><div /></template><popup /></panel>')).toHaveLength(1)
+		expect(sfc('<panel><template #content><div /></template><template #default><popup /></template></panel>')).toHaveLength(1)
+		expect(sfc('<panel><template #content><div /></template>du texte</panel>')).toHaveLength(1)
+	})
+
+	it('laisse passer ce qui est bien rendu', () => {
+		// Slot par défaut seul, et slot #content seul : les deux cas normaux.
+		expect(sfc('<panel><popup /></panel>')).toEqual([])
+		expect(sfc('<panel><template #content><popup /></template></panel>')).toEqual([])
+		// Les blancs, les commentaires et les autres slots nommés ne sont pas du contenu perdu.
+		expect(sfc('<panel><template #actions><div /></template><template #content><div /></template>\n\t<!-- rien --></panel>')).toEqual([])
+		// #content conditionnel : le slot par défaut lui sert de repli, il est bien rendu.
+		expect(sfc('<panel><template v-if="ok" #content><div /></template><popup /></panel>')).toEqual([])
 	})
 })

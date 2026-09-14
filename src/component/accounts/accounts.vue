@@ -67,7 +67,7 @@
 			<popup v-model="unlinkDialog" :width="560">
 				<template #icon><v-icon>mdi-link-variant-off</v-icon></template>
 				<template #title><span>{{ t('unlink') }}</span></template>
-				<div v-if="unlinkTarget">{{ t('unlink_message', [unlinkTarget.name]) }}</div>
+				<div v-if="unlinkTarget" class="unlink-message">{{ t('unlink_message', [unlinkTarget.name]) }}</div>
 				<div class="cooldown-warning">
 					<v-icon>mdi-clock-alert-outline</v-icon>
 					<span>{{ t('unlink_cooldown_warning') }}</span>
