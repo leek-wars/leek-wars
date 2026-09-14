@@ -20,8 +20,6 @@
 	"cadence_month": "co miesiąc",
 	"cadence_months": "co {0} miesiące",
 	"cadence_year": "co rok",
-	"tooltip_subscribe": "Subskrypcja odnawiana {0}, możesz zrezygnować w każdej chwili.",
-	"tooltip_crystals": "Zakup jednorazowy na {0}, bez odnawiania.",
 	"subscribe_for": "Subskrybuj za {0}",
 	"cancel_anytime": "Możesz zrezygnować w każdej chwili: zachowujesz korzyści do końca opłaconego okresu.",
 	"must_verify": "Potwierdź swój adres e-mail, aby móc subskrybować.",

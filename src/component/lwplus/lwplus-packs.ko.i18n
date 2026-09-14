@@ -20,8 +20,6 @@
 	"cadence_month": "매월",
 	"cadence_months": "{0}개월마다",
 	"cadence_year": "매년",
-	"tooltip_subscribe": "{0} 갱신되는 구독이며, 언제든지 해지할 수 있습니다.",
-	"tooltip_crystals": "{0} 1회 구매이며, 자동 갱신되지 않습니다.",
 	"subscribe_for": "{0}에 구독하기",
 	"cancel_anytime": "언제든지 해지할 수 있습니다. 결제한 기간이 끝날 때까지 혜택은 유지됩니다.",
 	"must_verify": "구독하려면 이메일 주소를 인증해야 합니다.",

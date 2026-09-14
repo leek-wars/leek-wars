@@ -20,8 +20,6 @@
 	"cadence_month": "hver måned",
 	"cadence_months": "hver {0}. måned",
 	"cadence_year": "hvert år",
-	"tooltip_subscribe": "Abonnement, fornys {0}, kan opsiges når som helst.",
-	"tooltip_crystals": "Engangskøb af {0}, ingen fornyelse.",
 	"subscribe_for": "Abonnér for {0}",
 	"cancel_anytime": "Kan opsiges når som helst: du beholder dine fordele indtil udgangen af den betalte periode.",
 	"must_verify": "Bekræft din e-mailadresse for at kunne abonnere.",

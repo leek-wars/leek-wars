@@ -20,8 +20,6 @@
 	"cadence_month": "setiap bulan",
 	"cadence_months": "setiap {0} bulan",
 	"cadence_year": "setiap tahun",
-	"tooltip_subscribe": "Langganan diperpanjang {0}, bisa dibatalkan kapan saja.",
-	"tooltip_crystals": "Pembelian sekali untuk {0}, tanpa perpanjangan.",
 	"subscribe_for": "Berlangganan seharga {0}",
 	"cancel_anytime": "Bisa dibatalkan kapan saja: keuntunganmu berlaku sampai akhir periode yang sudah dibayar.",
 	"must_verify": "Verifikasi alamat emailmu untuk bisa berlangganan.",

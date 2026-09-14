@@ -20,8 +20,6 @@
 	"cadence_month": "elke maand",
 	"cadence_months": "elke {0} maanden",
 	"cadence_year": "elk jaar",
-	"tooltip_subscribe": "Abonnement, {0} verlengd, altijd opzegbaar.",
-	"tooltip_crystals": "Eenmalige aankoop van {0}, geen verlenging.",
 	"subscribe_for": "Abonneren voor {0}",
 	"cancel_anytime": "Altijd opzegbaar: je behoudt je voordelen tot het einde van de betaalde periode.",
 	"must_verify": "Bevestig je e-mailadres om je te kunnen abonneren.",

@@ -27,27 +27,19 @@
 				<div v-if="discount(pack)" class="save">{{ $t('save', [discount(pack)]) }}</div>
 				<div class="months">{{ monthsLabel(pack.months) }}</div>
 
-				<!-- Un panier, comme tout achat du site (ICONS.md) : la nature
-				     récurrente se dit dans l'infobulle et sous la grille, pas par un
-				     glyphe que personne ne décode. -->
-				<v-tooltip location="bottom">
-					<template #activator="{ props: tprops }">
-						<v-btn v-bind="tprops" class="buy-euro" color="primary" variant="flat" prepend-icon="mdi-cart-outline" :disabled="busy || covered || !verified" @click="subscribeTo(pack)">
-							<span v-if="LeekWars.currencies[LeekWars.currency].prefix"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ price(pack) }}</span>
-							<span v-else>{{ price(pack) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
-						</v-btn>
-					</template>
-					<span>{{ $t('tooltip_subscribe', [cadence(pack)]) }}</span>
-				</v-tooltip>
+				<!-- Un panier, comme tout achat du site (ICONS.md). La carte ne dit ni
+				     la périodicité ni le caractère unique de l'achat : les deux se
+				     disent au moment de payer, sur le bouton de paiement lui-même
+				     (« S'abonner pour 10,99 € tous les 3 mois ») et dans la popup de
+				     confirmation des cristaux. -->
+				<v-btn class="buy-euro" color="primary" variant="flat" prepend-icon="mdi-cart-outline" :disabled="busy || covered || !verified" @click="subscribeTo(pack)">
+					<span v-if="LeekWars.currencies[LeekWars.currency].prefix"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ price(pack) }}</span>
+					<span v-else>{{ price(pack) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
+				</v-btn>
 
-				<v-tooltip location="bottom">
-					<template #activator="{ props: tprops }">
-						<v-btn v-bind="tprops" class="buy-crystals" color="primary" variant="tonal" :disabled="busy || !enough(pack)" :loading="buying === pack.id" @click="askCrystals(pack)">
-							{{ $filters.number(pack.crystals) }}&nbsp;<span class="crystal"></span>
-						</v-btn>
-					</template>
-					<span>{{ $t('tooltip_crystals', [monthsLabel(pack.months)]) }}</span>
-				</v-tooltip>
+				<v-btn class="buy-crystals" color="primary" variant="tonal" :disabled="busy || !enough(pack)" :loading="buying === pack.id" @click="askCrystals(pack)">
+					{{ $filters.number(pack.crystals) }}&nbsp;<span class="crystal"></span>
+				</v-btn>
 			</div>
 		</div>
 

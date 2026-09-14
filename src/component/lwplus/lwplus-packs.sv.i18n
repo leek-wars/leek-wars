@@ -20,8 +20,6 @@
 	"cadence_month": "varje månad",
 	"cadence_months": "var {0}:e månad",
 	"cadence_year": "varje år",
-	"tooltip_subscribe": "Prenumeration som förnyas {0}, kan sägas upp när som helst.",
-	"tooltip_crystals": "Engångsköp av {0}, ingen förnyelse.",
 	"subscribe_for": "Prenumerera för {0}",
 	"cancel_anytime": "Kan sägas upp när som helst: du behåller dina förmåner till slutet av den betalda perioden.",
 	"must_verify": "Bekräfta din e-postadress för att kunna prenumerera.",
