@@ -149,7 +149,7 @@ monaco.editor.defineTheme("monokai", {
 		{ token: "type", foreground: "86d7ff" },
 		{ token: "lsconstant", fontStyle: 'bold' },
 		{ token: "lsfunction", fontStyle: 'italic' },
-		{ token: "lsfunction-deprecated", foreground: '777777', fontStyle: 'italic' },
+		{ token: "lsfunction-deprecated", foreground: '777777', fontStyle: 'italic strikethrough' },
 		{ token: "atom", foreground: 'ae81ff' },
 		{ token: "number", foreground: 'ae81ff' },
 		{ token: "annotation", foreground: 'ffaa44', fontStyle: 'bold' },

@@ -117,6 +117,7 @@
     - "#ai Le formatage (Ctrl+Maj+F) ne colle plus and, or, xor, not, instanceof, as et new à la parenthèse."
     - "#ai L'éditeur ne plante plus au clic sur le titre de la fenêtre des définitions (merci à Hurracan)."
     - "#ai L'éditeur ne plante plus si l'autocomplétion se ferme pendant l'affichage d'une doc."
+    - "#ai Les mots-clés ne sont plus barrés dans l'éditeur."
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
   added:

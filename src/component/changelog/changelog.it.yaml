@@ -117,6 +117,7 @@
     - "#ai La formattazione (Ctrl+Maiusc+F) non attacca più and, or, xor, not, instanceof, as e new."
     - "#ai L'editor non va più in crash cliccando il titolo delle definizioni (grazie a Hurracan)."
     - "#ai L'editor non va più in crash se il completamento si chiude mentre appare una doc."
+    - "#ai Le parole chiave non sono più barrate nell'editor."
 249:
   title: "IA in JavaScript, TypeScript e Python, pagina Collezione, ed eventi stagionali."
   added:

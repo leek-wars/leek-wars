@@ -599,9 +599,6 @@ defineExpose({
 	& :deep(code) {
 		display: inline-flex !important;
 	}
-	& :deep(.mtk17) {
-		text-decoration: line-through;
-	}
 	& :deep(.lw) {
 		padding: 4px 10px;
 	}

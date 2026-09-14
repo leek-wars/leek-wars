@@ -117,6 +117,7 @@
     - "#ai Formatting (Ctrl+Shift+F) no longer glues and, or, xor, not, instanceof, as and new."
     - "#ai The editor no longer crashes when clicking the definitions window title (thanks to Hurracan)."
     - "#ai The editor no longer crashes if autocompletion closes while a doc is being shown."
+    - "#ai Keywords are no longer struck through in the editor."
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
   added:
