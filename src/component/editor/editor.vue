@@ -40,15 +40,26 @@
 					<div class="tab action" icon="settings" @click="settings()">
 						<v-icon>mdi-cogs</v-icon>
 					</div>
+					<!-- Pas de `list-icon` ici : cette classe (12 px de marge à droite)
+					     sert aux icônes d'un item de LISTE. Sur une action de barre de
+					     page, elle s'ajoutait à la gouttière de 6 px du conteneur et
+					     éloignait le ▶ de son libellé — le bouton en sortait trop long
+					     (rapport de Nyaleph). -->
 					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="startTest()">
-						<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
+						<v-icon>mdi-play</v-icon><span>{{ $t('test') }}</span>
 					</div>
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="appliedTheme" group="tabs" :all-tabs="tabs1" :style="{ 'width': (editor1Width * 80) + '%' }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
+			<!-- Les deux barres d'onglets se partagent la place qui reste à droite du
+			     menu, dans la proportion des deux éditeurs en dessous. Elles étaient
+			     larges d'un POURCENTAGE de la barre entière (`* 80` d'un côté, `* 100`
+			     de l'autre) : la somme débordait toujours, le flex les rabotait au
+			     prorata de ces bases, et deux éditeurs à 50/50 se retrouvaient avec des
+			     barres de 45/55. En `flex`, elles suivent exactement le partage. -->
+			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="appliedTheme" group="tabs" :all-tabs="tabs1" :style="{ 'flex': splitted ? editor1Width : 1 }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab2" :active="currentSide === 2" :splitted="splitted" :theme="appliedTheme" group="tabs2" :all-tabs="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @select="selectTab2" @close-tab="closeTab2" @close-all="closeAllTabs2" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab2" :active="currentSide === 2" :splitted="splitted" :theme="appliedTheme" group="tabs2" :all-tabs="tabs2" :style="{ 'flex': editor2Width }" @select="selectTab2" @close-tab="closeTab2" @close-all="closeAllTabs2" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -1809,6 +1820,21 @@
 		position: relative;
 		padding-right: 0;
 	}
+	/* La barre de page de l'éditeur n'est pas recentrée par la coquille v3 (elle
+	   contient un `> .menu`, cf `leekwars-shell-v3.scss`) : ses enfants sont donc
+	   étirés, et la bande d'onglets, haute de 36 px dans une barre de 48, restait
+	   collée en haut — 5 px plus haut que le centre des boutons d'action, que la
+	   coquille centre. Les onglets se recentrent, sans toucher au `.menu` qui, lui,
+	   a bien besoin de toute la hauteur. */
+	.page-header > .tabs-wrapper {
+		align-self: center;
+	}
+	/* Une gouttière entre les deux barres d'onglets, sinon le dernier onglet du
+	   panneau gauche — souvent coupé, la bande défile — touche le premier du
+	   panneau droit et les deux groupes se lisent comme un seul. */
+	.page-header > .tabs-wrapper + .tabs-wrapper {
+		margin-left: 12px;
+	}
 	.container {
 		flex: 1;
 		min-height: 0;
@@ -1817,6 +1843,10 @@
 	.menu {
 		flex-shrink: 0;
 		display: flex;
+		/* Les onglets démarraient au pixel où finit le bouton « Tester »
+		   (rapport de Nyaleph). Même respiration qu'entre le titre et les actions,
+		   que `global.scss` fixe à 20 px. */
+		margin-right: 20px;
 	}
 	.v-list__tile__content {
 		padding-left: 8px;
