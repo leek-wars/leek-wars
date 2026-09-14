@@ -21,16 +21,24 @@ export interface OpenApiService {
 	scope?: string
 }
 
-type Schema = { type: string, items?: Schema, description?: string }
+type Schema = { type?: string, items?: Schema, format?: string, description?: string }
 
 /** Type déclaré par le registre serveur -> schéma JSON. */
 function schema(type: string): Schema {
 	switch (type) {
 		case 'number': return { type: 'number' }
 		case 'boolean': return { type: 'boolean' }
-		case 'array': return { type: 'array', items: { type: 'string' } }
-		case 'json':
+		// Le registre serveur dit seulement « array », jamais le type des éléments : la
+		// plupart de ces listes contiennent des objets (function/get-all, fight/get-logs…).
+		// `items` est obligatoire en OpenAPI 3.0.3, on met donc le schéma vide (= n'importe
+		// quel type) plutôt que d'inventer un tableau de chaînes que l'API ne renvoie pas.
+		case 'array': return { type: 'array', items: {} }
+		// `json` = un corps JSON libre : objet pour les uns (characteristics, filters),
+		// tableau pour les autres (weapons, obstacles). Le schéma vide couvre les deux.
+		case 'json': return {}
 		case 'object': return { type: 'object' }
+		// Un paramètre `file` est un vrai upload multipart, pas une chaîne.
+		case 'file': return { type: 'string', format: 'binary' }
 		default: return { type: 'string' }
 	}
 }
@@ -88,9 +96,12 @@ export function buildOpenApi(services: OpenApiService[], describe: (service: Ope
 			for (let i = 0; i < service.parameters.length; i++) {
 				properties[service.parameters[i]] = schema(service.parameters_types[i])
 			}
+			// Un endpoint qui prend un fichier (avatar, emblème) attend un envoi multipart,
+			// pas du JSON : le corps entier change de type de contenu.
+			const contentType = service.parameters_types.includes('file') ? 'multipart/form-data' : 'application/json'
 			operation.requestBody = {
 				required: true,
-				content: { 'application/json': { schema: { type: 'object', properties, required: [...service.parameters] } } },
+				content: { [contentType]: { schema: { type: 'object', properties, required: [...service.parameters] } } },
 			}
 		}
 
