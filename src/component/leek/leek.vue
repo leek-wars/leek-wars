@@ -394,7 +394,7 @@
 					<v-tooltip>
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props" icon="play_arrow" @click="copyAsTest()">
-								<v-icon class="list-icon">mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
+								<v-icon>mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
 							</div>
 						</template>
 						{{ $t('copy_as_test', [leek.name]) }}

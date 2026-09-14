@@ -211,20 +211,15 @@
 		border-top-left-radius: var(--radius);
 		border-top-right-radius: var(--radius);
 	}
-	/* La bande d'onglets défile à la molette (`mousewheel`), sans ascenseur.
-	 *
-	 * `::-webkit-scrollbar` ne suffit plus : le thème v3 pose `scrollbar-width` et
-	 * `scrollbar-color` sur le `body`, tous deux hérités, et Chrome IGNORE les
-	 * règles `::-webkit-scrollbar` dès qu'une de ces propriétés standard est
-	 * définie. L'ascenseur était donc revenu — 10 px pris sur les 36 de la bande,
-	 * qui rognaient le bas des onglets, avec deux flèches aux extrémités
-	 * (rapport de Nyaleph). `scrollbar-width: none` le fait taire pour de bon ;
-	 * la règle webkit reste pour les moteurs qui ne connaissent que celle-là. */
+	/* La bande défile à la molette (`mousewheel`), sans ascenseur. La règle webkit
+	   seule ne suffit plus : le thème v3 pose `scrollbar-width` sur `*`, et Chrome
+	   ignore tout `::-webkit-scrollbar` dès qu'une de ces propriétés standard est
+	   définie — l'ascenseur reprenait 10 px sur les 36 de la bande. Les deux
+	   formes cohabitent, comme `.m-pill-row` dans `redesign/components.scss`. */
 	#app:not(.app) .list {
 		scrollbar-width: none;
 		&::-webkit-scrollbar {
-			width: 0px;
-			height: 0px;
+			display: none;
 		}
 	}
 	.tab {
