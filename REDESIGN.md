@@ -234,6 +234,16 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     v2 n'avait jamais fait. Firefox n'a que `scrollbar-width`/`scrollbar-color`,
     posés dans un `@supports not selector(::-webkit-scrollbar)` : dans Chrome
     ces propriétés désactiveraient les pseudo-éléments.
+    **Le piège s'est refermé une fois** : une première version de la section,
+    restée plus haut dans le même fichier, posait `scrollbar-width` sur `&, & *`
+    SANS le `@supports`. Sous Chrome, elle a tenu hors service les 38 règles
+    `::-webkit-scrollbar` du dépôt — cette section-ci comprise, plus le thème XP
+    et le HUD de combat — et le navigateur rendait une barre `thin` générique.
+    Symptôme qui a fini par le trahir : un ascenseur revenu dans les onglets de
+    l'éditeur (rapport de Nyaleph, topic 12112), là où `editor-tabs.vue` croyait
+    l'avoir masqué. La première section a été supprimée, elle faisait doublon.
+    À retenir : `scrollbar-width` et `scrollbar-color` ne se posent JAMAIS hors
+    du `@supports`, où qu'on soit dans le dépôt.
   - **Widget « Mes poireaux » de l'accueil** (demande de Pierre) : vraie grille
     équilibrée au lieu d'un retour à la ligne — à quatre cartes dans un panel
     qui en tient trois, 2 × 2 et non 3 + 1. Colonnes calculées : on prend ce

@@ -2103,37 +2103,6 @@ body:not(.v2) {
 		}
 	}
 
-	/* ====== Barres de défilement ======
-	 *
-	 * Le v2 les fait épaisses (10 px) avec un pouce gris clair, calibré pour un
-	 * fond blanc : en thème sombre, cette barre claire est la chose la plus
-	 * lumineuse de la colonne. Le v3 les affine et les fond dans la surface —
-	 * le pouce prend le trait fort, la piste reste creuse. */
-	::-webkit-scrollbar {
-		width: 8px;
-		height: 8px;
-	}
-	::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	::-webkit-scrollbar-thumb {
-		background: var(--border-strong);
-		border-radius: 0;
-	}
-	::-webkit-scrollbar-thumb:hover {
-		background: var(--text-color-faint);
-	}
-	/* Firefox n'expose pas ces pseudo-éléments : deux propriétés standard, qui
-	   n'acceptent que « fine » et un couple pouce/piste.
-	   `& *` est nécessaire : `scrollbar-color` s'hérite, mais pas
-	   `scrollbar-width` — sans lui, seule la page serait affinée, pas le menu
-	   ni les panneaux qui défilent. */
-	&,
-	& * {
-		scrollbar-width: thin;
-		scrollbar-color: var(--border-strong) transparent;
-	}
-
 	/* ====== Encre des icônes de la barre de page ======
 	 *
 	 * `global.scss` écrit `color: white` en dur sur l'icône d'un onglet : la
@@ -2738,9 +2707,16 @@ body:not(.v2) {
 	}
 	/* Firefox ne connaît pas les pseudo-éléments webkit ; il n'a que ces deux
 	   propriétés (et impose son pouce arrondi). Le `@supports` évite de les
-	   poser dans Chrome, où elles DÉSACTIVERAIENT les règles ci-dessus. */
+	   poser dans Chrome, où elles DÉSACTIVERAIENT les règles ci-dessus — ce
+	   n'est pas une précaution théorique : une première version de cette section
+	   les posait sans garde, et a tenu les pseudo-éléments webkit de TOUT le
+	   dépôt hors service sous Chrome (le v3, le thème XP, le HUD de combat)
+	   jusqu'à ce qu'un ascenseur réapparaisse dans les onglets de l'éditeur.
+	   `&` autant que `& *` : `scrollbar-color` s'hérite, mais pas
+	   `scrollbar-width`, et la barre de la page se pilote depuis `body`. */
 	@supports not selector(::-webkit-scrollbar) {
-		* {
+		&,
+		& * {
 			scrollbar-width: thin;
 			scrollbar-color: color-mix(in srgb, var(--text-color) 50%, transparent) var(--background-input);
 		}
