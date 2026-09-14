@@ -1,5 +1,8 @@
 <template lang="html">
-	<nav class="menu">
+	<!-- `dida` : les bulles du didacticiel sont posées 420 px à DROITE de leur
+	     entrée, donc hors du menu — un conteneur qui défile les rognerait. Le
+	     menu d'un débutant tient de toute façon dans n'importe quel écran. -->
+	<nav class="menu" :class="{ dida: LeekWars.didactitial_step > 0 }">
 
 		<div v-if="!LeekWars.mobile" class="menu-button" @click="LeekWars.menuCollapsed = !LeekWars.menuCollapsed">
 			<v-icon v-if="LeekWars.menuCollapsed">mdi-chevron-right</v-icon>
@@ -535,6 +538,19 @@
 		background: rgba(80, 80, 80, 0.6);
 		padding: 12px;
 		padding-left: 0;
+		/* La liste des entrées est la seule partie du menu qui défile quand
+		   l'écran est trop court : le coffre des récompenses, dernier enfant de
+		   la colonne, reste ainsi collé en bas au lieu de partir hors de l'écran
+		   (le menu est fixé du haut en bas, il ne défile pas avec la page).
+		   `min-height: 0` : sans lui un enfant flex refuse de descendre sous la
+		   hauteur de son contenu et rien ne défile. */
+		min-height: 0;
+		overflow-y: auto;
+		overflow-x: hidden;
+		scrollbar-width: thin;
+	}
+	.menu.dida .menu-wrapper {
+		overflow: visible;
 	}
 	#app.app .menu-wrapper {
 		flex: 1;
@@ -549,6 +565,7 @@
 		background: rgba(80, 80, 80, 0.6);
 		width: 30px;
 		height: 30px;
+		flex: none;
 		margin-bottom: 4px;
 		cursor: pointer;
 		user-select: none;
@@ -1086,6 +1103,8 @@
 		margin: 15px;
 		position: relative;
 		align-self: flex-start;
+		/* Il ne se comprime jamais : c'est la liste au-dessus qui cède et défile. */
+		flex: none;
 		img {
 			width: 42px;
 			height: 42px;
