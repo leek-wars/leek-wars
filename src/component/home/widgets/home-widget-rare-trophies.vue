@@ -8,7 +8,11 @@
 				     dès qu'on passait sur les avatars. -->
 				<span class="trophy-tooltip">
 					<rich-tooltip-trophy :trophy="trophy" :bottom="true" :instant="true">
-						<trophy-icon :code="trophy.code" class="trophy" />
+						<!-- Le palmarès est celui du JEU : la plupart des lignes sont
+						     des trophées que le lecteur n'a pas. Il les reconnaît à
+						     l'icône atténuée, la même convention que la page des
+						     trophées (trophy.vue). -->
+						<trophy-icon :code="trophy.code" class="trophy" :class="{locked: !trophy.unlocked}" />
 					</rich-tooltip-trophy>
 				</span>
 				<div class="info">
@@ -81,14 +85,17 @@
 	const unlockers = ref<Unlockers>({})
 
 	// Repli quand la requête groupée n'a rien pour ce widget : les deux appels
-	// d'origine, le service complet puis les débloqueurs.
+	// d'origine, le service complet puis les débloqueurs. Le service renvoie TOUS
+	// les trophées du jeu, débloqués ou non : on y applique les mêmes exclusions
+	// que le serveur (bonus, uniques, et ceux que personne n'a débloqués, dont la
+	// rareté vaut 0 et passerait devant tout le monde).
 	function load() {
 		if (!store.state.farmer) { loaded.value = true; return }
 		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
 			const all: Trophy[] = Object.values(data.trophies)
 			rarest.value = all
-				.filter(tr => tr.unlocked && !tr.bonus)
-				.sort((a, b) => a.rarity - b.rarity)
+				.filter(tr => !tr.bonus && !tr.unik && tr.total > 0)
+				.sort((a, b) => a.rarity - b.rarity || a.id - b.id)
 				.slice(0, RARE_TROPHIES)
 			loaded.value = true
 			if (rarest.value.length) {
@@ -140,6 +147,9 @@
 		width: 36px;
 		height: 36px;
 		flex-shrink: 0;
+	}
+	.trophy.locked {
+		opacity: 0.8;
 	}
 	// L'activateur de l'infobulle (un <span> rendu par rich-tooltip-trophy, d'où
 	// le :deep) devient le porteur de l'icône dans la ligne : il doit se
