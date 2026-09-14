@@ -63,7 +63,12 @@ vi.mock('@/component/rich-tooltip/rich-tooltip-item.vue', () => ({
 
 import Forge from '@/component/forge/forge.vue'
 import { emitter } from '@/model/emitter'
+import { store } from '@/model/store'
 import type { SchemeTemplate } from '@/model/scheme'
+
+// Le store est mocké ci-dessus : ses commits disent ce que la fabrication a réellement
+// retiré de l'inventaire.
+const commit = vi.mocked(store.commit)
 
 // Schéma de la Lance du soleil (69) : 30 éclats de soleil + 60 fers
 const SCHEME: SchemeTemplate = { id: 69, result: 440, quantity: 1, items: [[430, 30], [193, 60], null, null, null, null, null, null] }
@@ -109,6 +114,10 @@ describe('forge.vue', () => {
 		// armée par un test en échec, en restaurant l'implémentation d'origine.
 		leekWarsMock.LeekWars.post.mockReset()
 		leekWarsMock.LeekWars.toast.mockClear()
+		commit.mockClear()
+		// La taille du lot est retenue dans le localStorage : sans purge, un test qui
+		// passe en ×10 le laisserait armé pour les suivants.
+		localStorage.clear()
 		vi.useRealTimers()
 	})
 
@@ -136,7 +145,7 @@ describe('forge.vue', () => {
 		expect(cells[8].classes()).toContain('active')
 		expect(cells[8].classes()).not.toContain('impossible')
 		await craftThroughAnimation(wrapper, async () => {
-			expect(leekWarsMock.LeekWars.post).toHaveBeenCalledWith('item/craft', { scheme_id: 69 })
+			expect(leekWarsMock.LeekWars.post).toHaveBeenCalledWith('item/craft', { scheme_id: 69, count: 1 })
 			// Les ingrédients sont retirés de l'inventaire dès la réponse du serveur, alors qu'ils
 			// sont encore affichés le temps de l'animation : ils ne doivent pas virer au rouge.
 			delete inventory.owned[430]
@@ -177,6 +186,53 @@ describe('forge.vue', () => {
 		expect(wrapper.findAll('.cell')[8].classes()).not.toContain('built')
 		expect(wrapper.findAll('.cell')[0].classes()).toContain('active')
 		expect(leekWarsMock.LeekWars.toast).toHaveBeenCalled()
+	})
+
+	// Lot ×10 : la forge affiche et consomme la recette multipliée, et le lot est tout ou
+	// rien — il faut de quoi fabriquer les dix, sinon le bouton reste inerte.
+	describe('lot ×10', () => {
+
+		const batchButton = (wrapper: Awaited<ReturnType<typeof mountForge>>) => wrapper.find('.corner-btn.batch')
+
+		it('affiche les quantités du lot dans les cases', async () => {
+			const wrapper = await mountForge({ 430: 300, 193: 600 })
+			await batchButton(wrapper).trigger('click')
+			const cells = wrapper.findAll('.cell')
+			expect(cells[0].find('.quantity').text()).toBe('300')
+			expect(cells[1].find('.quantity').text()).toBe('600')
+			expect(cells[0].classes()).not.toContain('partial')
+			expect(cells[8].classes()).toContain('active')
+		})
+
+		it('refuse le lot quand il ne reste de quoi fabriquer qu’une fois', async () => {
+			const wrapper = await mountForge({ 430: 30, 193: 60 })
+			await batchButton(wrapper).trigger('click')
+			const cells = wrapper.findAll('.cell')
+			expect(cells[0].classes()).toContain('partial')
+			expect(cells[8].classes()).toContain('impossible')
+			await cells[8].trigger('click')
+			expect(leekWarsMock.LeekWars.post).not.toHaveBeenCalled()
+		})
+
+		it('fabrique dix fois et retire dix fois les ingrédients', async () => {
+			leekWarsMock.LeekWars.post.mockImplementation(() =>
+				Promise.resolve({ id: 1, template: 440, time: 0, crafted: 10 }))
+			const wrapper = await mountForge({ 430: 300, 193: 600 })
+			await batchButton(wrapper).trigger('click')
+			await craftThroughAnimation(wrapper, () => {
+				expect(leekWarsMock.LeekWars.post).toHaveBeenCalledWith('item/craft', { scheme_id: 69, count: 10 })
+			})
+			expect(commit).toHaveBeenCalledWith('add-inventory', expect.objectContaining({ quantity: 10 }))
+			expect(commit).toHaveBeenCalledWith('remove-inventory', expect.objectContaining({ item_template: 430, quantity: 300 }))
+			expect(commit).toHaveBeenCalledWith('remove-inventory', expect.objectContaining({ item_template: 193, quantity: 600 }))
+		})
+
+		it('retient le lot d’une visite à l’autre', async () => {
+			await batchButton(await mountForge({ 430: 300, 193: 600 })).trigger('click')
+			const wrapper = await mountForge({ 430: 300, 193: 600 })
+			expect(batchButton(wrapper).text()).toBe('×10')
+			expect(wrapper.findAll('.cell')[0].find('.quantity').text()).toBe('300')
+		})
 	})
 
 	// Scénario du rapport #4886 : ressources pour un seul exemplaire, on fabrique, puis le

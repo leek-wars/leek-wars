@@ -5,13 +5,15 @@
 		     meme hauteur qu'on pose ou non des alterations (demande de Pierre). -->
 		<div ref="gridEl" class="grid">
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, partial: slotStates[i] === 'partial', missing: slotStates[i] === 'missing', removable: !!item && !!component, fusing: fusing && !!item}" :style="cellVars(i)" @click="component && removeAlteration(i)">
-				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
+				<!-- Les quantites affichees sont celles du LOT (x1 ou x10) : c'est ce que le
+				     clic va reellement consommer, et c'est sur elles que se calcule le manque. -->
+				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1] * craftBatch">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
 						<img :src="itemImageUrl(LeekWars.items[item[0]])">
 						<!-- Numero de dosage, en haut a gauche comme dans la palette (#622). -->
 						<span v-if="slotNumber(item) !== null" class="alt-number">{{ slotNumber(item) }}</span>
 						<!-- La cle sur la quantite fait rejouer le petit rebond a chaque ajout. -->
-						<div v-if="item[1] > 1" :key="item[1]" class="quantity">{{ $filters.number(item[1]) }}</div>
+						<div v-if="item[1] * craftBatch > 1" :key="item[1] * craftBatch" class="quantity">{{ $filters.number(item[1] * craftBatch) }}</div>
 					</div>
 				</rich-tooltip-item>
 			</div>
@@ -54,10 +56,10 @@
 				</div>
 			</div>
 			<div v-else class="cell" :class="{cell8: true, active: !!result && !built && !impossible, built, impossible}" @click="craft">
-				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
+				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity * craftBatch" :open-delay="built ? 500 : 1000">
 					<div v-ripple="possible || built" v-bind="props" class="item" :class="{building}" :type="LeekWars.items[result].type">
 						<img :src="itemImageUrl(LeekWars.items[result])">
-						<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
+						<div v-if="scheme.quantity * craftBatch > 1" class="quantity">{{ $filters.number(scheme.quantity * craftBatch) }}</div>
 					</div>
 				</rich-tooltip-item>
 				<v-icon v-if="result && !building && !built" :class="{disabled: impossible}">mdi-hammer-wrench</v-icon>
@@ -97,15 +99,27 @@
 				<v-tooltip activator="parent" location="top">{{ $t('main.alteration_clear') }}</v-tooltip>
 			</v-btn>
 			<!-- Recommencer : repose la derniere recette d'alteration (#622). Coin BAS droit,
-			     la ou se trouve Fusionner : les deux ne coexistent jamais. -->
-			<v-btn v-if="component && lastForge && alterationCount === 0" class="corner-btn redo" icon variant="flat"
+			     la ou se trouve Fusionner : les deux ne coexistent jamais. Jamais dans Detruire :
+			     rien n'y sera altere, et le coin bas droit y porte desormais le bouton
+			     Detruire (demande de Pierre). -->
+			<v-btn v-if="component && lastForge && alterationCount === 0 && mode !== 'destroy'" class="corner-btn redo" icon variant="flat"
 				size="small" @click="repeat">
 				<v-icon color="primary">mdi-restore</v-icon>
 				<!-- Vers le bas : le bouton est au coin BAS de la grille, une infobulle
 				     au-dessus vient recouvrir les cases (demande de Pierre). -->
 				<v-tooltip activator="parent" location="bottom">{{ $t('main.alteration_repeat') }}</v-tooltip>
 			</v-btn>
-			<!-- Recyclage : coin BAS gauche, tant qu'aucune alteration n'est posee, et
+			<!-- Taille du lot : coin BAS gauche, ×1 ou ×10, dans Fabriquer comme dans
+			     Detruire (demande de Pierre). Un clic bascule, et le choix est retenu d'une
+			     visite a l'autre. Sur Detruire il ne s'affiche que si la pile a de quoi en
+			     detruire plusieurs. -->
+			<v-btn v-if="batchVisible" class="corner-btn batch" icon variant="flat"
+				size="small" @click="toggleBatch">
+				<span class="batch-label">×{{ batch }}</span>
+				<v-tooltip activator="parent" location="bottom">{{ $t('main.craft_quantity') }}</v-tooltip>
+			</v-btn>
+			<!-- Recyclage : coin BAS DROIT (la ou tombe la main droite, comme Alterer dans
+			     l'onglet d'a cote, demande de Pierre), tant qu'aucune alteration n'est posee, et
 			     SEULEMENT dans l'onglet Detruire (demande de Pierre) : sur Ameliorer, une
 			     piece posee avant sa premiere alteration pouvait partir au recyclage par
 			     erreur, alors que le joueur venait justement de la choisir pour la monter. -->
@@ -179,6 +193,33 @@
 	/** Onglet actif de l'atelier : seul le mode destruction empile les composants. */
 	const mode = ref(localStorage.getItem('workshop/tab') || 'craft')
 	const destroying = ref(false)
+
+	// --- Lot (x1 / x10) ---
+	/** Taille du lot demandee par le joueur, retenue d'une visite a l'autre. */
+	const batch = ref(localStorage.getItem('workshop/batch') === '10' ? 10 : 1)
+	/**
+	 * Lot REELLEMENT applique a la fabrication : 1 tant qu'aucun schema n'est pose, pour
+	 * que les cases d'alteration (memes cases, autre onglet) ne soient jamais multipliees.
+	 */
+	const craftBatch = computed(() => scheme.value ? batch.value : 1)
+	/**
+	 * Detruire n'a besoin du lot que si la pile en contient plusieurs ; une piece unique
+	 * (ou alteree, donc forcement seule) n'en tirerait rien.
+	 */
+	const batchVisible = computed(() => {
+		if (mode.value === 'craft') return !!scheme.value
+		if (mode.value === 'destroy') return !!component.value && alterationCount.value === 0 && component.value.quantity > 1
+		return false
+	})
+	function toggleBatch() {
+		batch.value = batch.value === 1 ? 10 : 1
+		localStorage.setItem('workshop/batch', String(batch.value))
+		// En destruction, le lot pilote directement la pile a recycler (plafonnee a ce que
+		// le joueur possede) : le compteur de la case doit suivre le bouton.
+		if (mode.value === 'destroy' && component.value) {
+			componentCount.value = Math.min(batch.value, component.value.quantity)
+		}
+	}
 
 	// --- Animations de fusion (#622) ---
 	/** Duree du vol des alterations vers le composant, en ms (calee sur fuse-travel). */
@@ -269,9 +310,14 @@
 	const slotStates = computed(() => forge.value.map(slot => {
 		if (!slot || building.value) return null
 		const owned = store.getters.item_quantity(slot[0])
-		return owned >= slot[1] ? null : (owned > 0 ? 'partial' : 'missing')
+		const needed = slot[1] * craftBatch.value
+		return owned >= needed ? null : (owned > 0 ? 'partial' : 'missing')
 	}))
-	const possible = computed(() => !!scheme.value && store.getters.scheme_possible(scheme.value))
+	// Le lot est TOUT OU RIEN : un ×10 a moitie finance n'est pas fabricable, et la forge
+	// le dit en peignant les cases en manque. Le compte se refait donc ici plutot que par
+	// le getter scheme_possible du store, qui ne connait que la recette a l'unite.
+	const possible = computed(() => !!scheme.value && scheme.value.items.every(item =>
+		item === null || store.getters.item_quantity(item[0]) >= item[1] * craftBatch.value))
 	const impossible = computed(() => !!result.value && !built.value && !building.value && !possible.value)
 
 	// Jeton d'invalidation des retours en vol : vider ou re-remplir la forge le périme.
@@ -302,7 +348,9 @@
 		}
 		clear()
 		component.value = item
-		componentCount.value = 1
+		// Le lot choisi s'applique des la pose, plafonne a la pile reellement possedee :
+		// en ×10, poser une piece prepare la destruction de dix d'un coup.
+		componentCount.value = mode.value === 'destroy' ? Math.min(batch.value, item.quantity) : 1
 	}
 
 	function onWorkshopMode(m: string) {
@@ -317,6 +365,11 @@
 			clear()
 			component.value = item
 			componentCount.value = 1
+		}
+		// Le lot vaut aussi pour une piece deja posee qu'on amene sur Detruire : sinon le
+		// bouton affichait ×10 et le clic n'en detruisait qu'une.
+		if (m === 'destroy' && component.value && alterationCount.value === 0) {
+			componentCount.value = Math.min(batch.value, component.value.quantity)
 		}
 	}
 
@@ -971,13 +1024,17 @@
 		// 500 ms tourne pendant l'aller-retour ; on attend les deux avant de conclure.
 		const s = scheme.value
 		const token = craftToken
+		const count = craftBatch.value
 		building.value = true
 		const animation = new Promise(resolve => setTimeout(resolve, 500))
 		// Forme à deux arguments : une exception du handler de succès ne doit pas être
 		// prise pour un refus du serveur (le craft a alors bien eu lieu).
-		const outcome = LeekWars.post('item/craft', { scheme_id: s.id }).then(item => {
+		const outcome = LeekWars.post<{ id: number, template: number, time: number, crafted?: number }>('item/craft', { scheme_id: s.id, count }).then(item => {
 			const template = LeekWars.items[item.template]
-			store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: s.quantity })
+			// Le lot REELLEMENT fabrique vient du serveur : c'est lui qui borne le paquet,
+			// et l'inventaire doit bouger de ce qu'il a consomme, pas de ce qu'on a demande.
+			const made = item.crafted ?? 1
+			store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: s.quantity * made })
 			// On retient la piece fabriquee pour la reposer dans la forge si le joueur passe
 			// a Ameliorer ou Detruire. L'objet du store est prefere a une copie : la forge
 			// ecrit dessus (stats, altered_power) apres une fusion (#622).
@@ -989,10 +1046,10 @@
 			for (const ingredient of s.items) {
 				if (ingredient === null) continue;
 				if (ingredient[0] === 148) { // hab
-					store.commit('update-habs', -ingredient[1])
+					store.commit('update-habs', -ingredient[1] * made)
 				} else {
 					const it = LeekWars.items[ingredient[0]]
-					store.commit('remove-inventory', { type: it.type, item_template: ingredient[0], quantity: ingredient[1] })
+					store.commit('remove-inventory', { type: it.type, item_template: ingredient[0], quantity: ingredient[1] * made })
 				}
 			}
 			// L'historique des fabrications montre le craft aussitot (#622).
@@ -1138,10 +1195,21 @@
 // Vider les alterations : coin HAUT gauche, en miroir de la croix — les deux nettoient,
 // l'une la recette seule, l'autre la forge entiere.
 .sweep { left: -4px; top: -4px; }
-// Recyclage : coin BAS gauche.
-.recycle { left: -4px; bottom: -4px; }
+// Recyclage : coin BAS DROIT, la ou tombe naturellement la main droite, et ou se trouve
+// Alterer dans l'onglet d'a cote : l'action engageante est toujours au meme endroit.
+.recycle { right: -4px; bottom: -4px; }
 // Alterer : coin BAS droit, la ou tombe naturellement la main droite.
 .fuse-btn { right: -4px; bottom: -4px; }
+// Taille du lot : coin BAS gauche, libere par le recyclage.
+.batch { left: -4px; bottom: -4px; }
+// Le libelle (×1 / ×10) tient dans la meme pastille ronde que les icones des autres
+// boutons d'angle : ×10 est le plus large, il fixe la taille.
+.batch-label {
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 1;
+	color: var(--text-color);
+}
 .cell8.component .item img {
 	max-width: 100%;
 	max-height: 100%;
