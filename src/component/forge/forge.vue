@@ -128,6 +128,16 @@
 				<v-icon color="white">mdi-recycle</v-icon>
 				<v-tooltip activator="parent" location="bottom">{{ $t('main.destroy') }}</v-tooltip>
 			</v-btn>
+			<!-- Recommencer une destruction : la forge se vide une fois la piece en eclats,
+			     et il fallait retourner la chercher dans l'inventaire pour en detruire
+			     d'autres. Le bouton prend EXACTEMENT la place de Detruire (demande de
+			     Pierre) : le geste ne bouge pas d'un recyclage au suivant. Il ne s'affiche
+			     que s'il reste une piece a reposer. -->
+			<v-btn v-if="mode === 'destroy' && !component && repeatDestroyItem" class="corner-btn redo-destroy" icon variant="flat"
+				size="small" @click="repeatDestroy">
+				<v-icon color="primary">mdi-restore</v-icon>
+				<v-tooltip activator="parent" location="bottom">{{ $t('main.alteration_repeat') }}</v-tooltip>
+			</v-btn>
 			<!-- Alterer : coin BAS droit de la grille, sous la main du joueur. -->
 			<v-btn v-if="component && alterationCount > 0" class="corner-btn fuse-btn" icon variant="flat"
 				size="small" :loading="altering" :disabled="!plan || !plan.fits" @click="alter">
@@ -903,6 +913,36 @@
 	/** Confirmation avant de recycler une piece chargee (#622). */
 	const confirmDestroy = ref(false)
 
+	/**
+	 * Derniere destruction, pour la rejouer d'un clic : la forge se vide apres le
+	 * recyclage, et il fallait sinon retourner chercher la meme piece dans l'inventaire
+	 * (demande de Pierre). Pendant du bouton de recraft de l'onglet Fabriquer.
+	 */
+	const lastDestroy = ref<{ template: number, count: number } | null>(null)
+	/**
+	 * La piece a reposer pour recommencer : la MEME s'il en reste. Une pile neuve
+	 * d'abord, c'est ce que le joueur vient de detruire ; a defaut n'importe quel
+	 * exemplaire. Rien s'il n'en a plus : le bouton disparait alors tout seul.
+	 */
+	const repeatDestroyItem = computed(() => {
+		const last = lastDestroy.value
+		if (!last) return null
+		const components = store.state.farmer?.components as InventoryItem[] | undefined
+		if (!components) return null
+		return components.find(c => c.template === last.template && c.stats == null && c.quantity > 0)
+			?? components.find(c => c.template === last.template && c.quantity > 0)
+			?? null
+	})
+	function repeatDestroy() {
+		const item = repeatDestroyItem.value
+		const last = lastDestroy.value
+		if (!item || !last) return
+		clear()
+		component.value = item
+		// Le meme nombre que la fois d'avant, plafonne a ce qu'il reste.
+		componentCount.value = Math.min(last.count, item.quantity)
+	}
+
 	function destroy() {
 		if (!component.value || destroying.value) return
 		// Recycler detruit la piece : si elle porte de la charge, on previent d'abord
@@ -952,6 +992,9 @@
 				shattering.value = false
 				clear()
 				destroying.value = false
+				// Apres clear(), qui remet la forge a zero : c'est ce souvenir qui fait
+				// apparaitre « Recommencer » a la place du bouton Detruire.
+				lastDestroy.value = { template: item.template, count: destroyed }
 			}, SHATTER_DURATION)
 		}).error(error => {
 			destroying.value = false
@@ -1200,6 +1243,9 @@
 .recycle { right: -4px; bottom: -4px; }
 // Alterer : coin BAS droit, la ou tombe naturellement la main droite.
 .fuse-btn { right: -4px; bottom: -4px; }
+// Recommencer une destruction : meme coin que Detruire, qu'il remplace une fois la
+// piece partie en eclats — les deux ne coexistent jamais.
+.redo-destroy { right: -4px; bottom: -4px; }
 // Taille du lot : coin BAS gauche, libere par le recyclage.
 .batch { left: -4px; bottom: -4px; }
 // Le libelle (×1 / ×10) tient dans la meme pastille ronde que les icones des autres
