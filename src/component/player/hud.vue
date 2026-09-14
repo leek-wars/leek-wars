@@ -533,6 +533,15 @@
 		& > *:first-child {
 			margin-top: auto;
 		}
+		// Les lignes sont des items de ce flex : dès que la liste déborde, elles
+		// sont candidates au rétrécissement. Les lignes ordinaires y échappent
+		// parce que leur `min-height: auto` vaut la hauteur de leur contenu,
+		// mais celle du trophée porte `overflow: hidden` (le reflet du thème v3),
+		// ce qui ramène ce minimum automatique à zéro : elle était écrasée à ses
+		// 8px de padding, rognant l'icône de 36px et le texte.
+		& > * {
+			flex-shrink: 0;
+		}
 		&::-webkit-scrollbar {
 			width: 4px;
 		}
