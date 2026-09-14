@@ -74,7 +74,7 @@ class LeekWarsState {
 function itemQuantity(state: LeekWarsState, template: number): number {
 	if (!state.farmer) return 0
 	if (template === 148) return state.farmer.habs
-	const inventories: { template: number, quantity: number }[][] = [
+	const inventories: { template: number, quantity: number, stats?: { [carac: string]: number } }[][] = [
 		state.farmer.resources, state.farmer.components, state.farmer.potions,
 		state.farmer.chips, state.farmer.weapons, state.farmer.hats, state.farmer.pomps,
 		// Les alterations manquaient : une alteration posee dans la forge passait
@@ -82,9 +82,15 @@ function itemQuantity(state: LeekWarsState, template: number): number {
 		// rouge grise alors que la tentative etait possible.
 		state.farmer.alterations ?? []
 	]
+	// Une piece ALTEREE est une instance unique (`stats`), rangee a cote de la pile
+	// de ses jumelles neuves et du meme template. Elle etait comptee comme le stock
+	// entier : 470 pommes plus une pomme alteree, et la forge ne voyait qu'UNE
+	// pomme — recette impossible alors que le craft aurait marche. Le serveur ne
+	// consomme que la pile neuve (`stats IS NULL`, ItemController::getFarmerItemByTemplate),
+	// le compte du client dit donc la meme chose que lui.
 	for (const inventory of inventories) {
 		for (const resource of inventory) {
-			if (resource.template === template) return resource.quantity
+			if (resource.template === template && resource.stats == null) return resource.quantity
 		}
 	}
 	return 0
@@ -846,12 +852,18 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					return
 				}
 			}
-			const item = LeekWars.selectWhere(list, 'template', data.item_template)
-			if (item !== null) {
-				item.quantity -= quantity
-				if (item.quantity <= 0) {
-					LeekWars.removeOneWhere(list, 'template', data.item_template)
-				}
+			// Sans id, c'est la pile NEUVE qu'on entame, jamais l'instance alteree posee
+			// juste a cote sous le meme template : le serveur consomme celle-la
+			// (`stats IS NULL`), et decrementer l'alteree l'aurait fait disparaitre de
+			// l'inventaire alors qu'elle est toujours en base.
+			const items = list as { id: number, template: number, quantity: number, stats?: { [carac: string]: number } }[]
+			const plain = items.findIndex(i => i.template === data.item_template && i.stats == null)
+			// Rien que d'altere sous ce template : on retombe sur la premiere ligne, le
+			// comportement d'avant, plutot que de ne rien retirer du tout.
+			const target = plain === -1 ? items.findIndex(i => i.template === data.item_template) : plain
+			if (target !== -1) {
+				items[target].quantity -= quantity
+				if (items[target].quantity <= 0) { items.splice(target, 1) }
 			}
 		},
 
