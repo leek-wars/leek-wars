@@ -27,6 +27,7 @@ const AdminMatchmaking = () => import(/* webpackChunkName: "admin" */ `@/compone
 const AdminGameAnimations = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-game-animations.vue`)
 const AdminSeasons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-seasons.vue`)
 const AdminIcons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-icons.vue`)
+const AdminComponents = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-components.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
 import Error from '@/component/app/error.vue'
@@ -102,7 +103,6 @@ import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized, NavigationGuardNext, RouteLocationRaw, RouteLocationResolved, RouteRecordRaw } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
-import AdminComponents from './component/admin/admin-components.vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
 import { vueMain } from './model/emitter'
 
