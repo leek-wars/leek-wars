@@ -1075,7 +1075,10 @@ code {
 	position: fixed;
 	left: 0;
 	right: 0;
-	z-index: 1000;
+	// Au-dessus des overlays Vuetify (v-dialog : 2400, +10 par overlay empilé),
+	// sinon un toast déclenché depuis un dialogue (équiper un composant, par
+	// exemple) s'affiche sous lui et le joueur ne voit jamais l'erreur.
+	z-index: 10000;
 	bottom: 100px;
 	text-align: center;
 	pointer-events: none;
