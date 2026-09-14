@@ -22,7 +22,6 @@
 	"cadence_year": "todo ano",
 	"tooltip_subscribe": "Assinatura renovada {0}, cancele quando quiser.",
 	"tooltip_crystals": "Compra única de {0}, sem renovação.",
-	"payment_note": "Em euros é uma assinatura, cancelável quando quiser; em cristais, uma compra única.",
 	"subscribe_for": "Assinar por {0}",
 	"cancel_anytime": "Cancele quando quiser: você mantém as vantagens até o fim do período pago.",
 	"must_verify": "Valide seu endereço de e-mail para poder assinar.",

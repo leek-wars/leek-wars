@@ -22,7 +22,6 @@
 	"cadence_year": "ogni anno",
 	"tooltip_subscribe": "Abbonamento rinnovato {0}, disdici quando vuoi.",
 	"tooltip_crystals": "Acquisto singolo di {0}, senza rinnovo.",
-	"payment_note": "In euro è un abbonamento, disdicibile quando vuoi; in cristalli, un acquisto singolo.",
 	"subscribe_for": "Abbonati per {0}",
 	"cancel_anytime": "Disdici quando vuoi: mantieni i vantaggi fino alla fine del periodo pagato.",
 	"must_verify": "Conferma il tuo indirizzo e-mail per abbonarti.",

@@ -51,11 +51,6 @@
 			</div>
 		</div>
 
-		<!-- La différence entre les deux boutons, dite UNE fois pour toute la grille
-		     plutôt que six fois sous les boutons. Visible sans survol : sur mobile il
-		     n'y a pas d'infobulle, et un prélèvement récurrent ne se devine pas. -->
-		<div v-if="!loading" class="plan-notice">{{ $t('payment_note') }}</div>
-
 		<!-- Pourquoi les boutons en euros sont éteints. Deux raisons seulement, et
 		     elles se disent, sinon le joueur clique dans le vide. -->
 		<div v-if="!loading && !verified" class="plan-notice">{{ $t('must_verify') }}</div>
@@ -543,11 +538,6 @@ async function confirmSubscription() {
 		padding: 0 12px 12px;
 		color: var(--text-color-secondary);
 		font-size: 14px;
-	}
-	// Deux notices d'affilée (la règle de paiement, puis le pourquoi d'un bouton
-	// éteint) : la première ne reprend pas le padding du bas.
-	.plan-notice + .plan-notice {
-		margin-top: -8px;
 	}
 	.cancel-anytime {
 		margin-top: 8px;

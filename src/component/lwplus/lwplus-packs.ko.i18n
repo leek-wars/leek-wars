@@ -22,7 +22,6 @@
 	"cadence_year": "매년",
 	"tooltip_subscribe": "{0} 갱신되는 구독이며, 언제든지 해지할 수 있습니다.",
 	"tooltip_crystals": "{0} 1회 구매이며, 자동 갱신되지 않습니다.",
-	"payment_note": "유로는 구독(언제든 해지 가능), 크리스탈은 1회 구매입니다.",
 	"subscribe_for": "{0}에 구독하기",
 	"cancel_anytime": "언제든지 해지할 수 있습니다. 결제한 기간이 끝날 때까지 혜택은 유지됩니다.",
 	"must_verify": "구독하려면 이메일 주소를 인증해야 합니다.",

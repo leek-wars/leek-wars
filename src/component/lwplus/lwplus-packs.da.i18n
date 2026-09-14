@@ -22,7 +22,6 @@
 	"cadence_year": "hvert år",
 	"tooltip_subscribe": "Abonnement, fornys {0}, kan opsiges når som helst.",
 	"tooltip_crystals": "Engangskøb af {0}, ingen fornyelse.",
-	"payment_note": "I euro er det et abonnement, der kan opsiges når som helst; i krystaller et engangskøb.",
 	"subscribe_for": "Abonnér for {0}",
 	"cancel_anytime": "Kan opsiges når som helst: du beholder dine fordele indtil udgangen af den betalte periode.",
 	"must_verify": "Bekræft din e-mailadresse for at kunne abonnere.",

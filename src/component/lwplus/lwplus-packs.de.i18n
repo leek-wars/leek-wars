@@ -22,7 +22,6 @@
 	"cadence_year": "jedes Jahr",
 	"tooltip_subscribe": "Abo, verlängert sich {0}, jederzeit kündbar.",
 	"tooltip_crystals": "Einmalkauf von {0}, keine Verlängerung.",
-	"payment_note": "In Euro ist es ein Abo, jederzeit kündbar; in Kristallen ein Einmalkauf.",
 	"subscribe_for": "Für {0} abonnieren",
 	"cancel_anytime": "Jederzeit kündbar: Deine Vorteile bleiben bis zum Ende des bezahlten Zeitraums.",
 	"must_verify": "Bestätige deine E-Mail-Adresse, um abonnieren zu können.",

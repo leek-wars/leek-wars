@@ -22,7 +22,6 @@
 	"cadence_year": "every year",
 	"tooltip_subscribe": "Subscription renewed {0}, cancel anytime.",
 	"tooltip_crystals": "One-time purchase of {0}, no renewal.",
-	"payment_note": "In euros it's a subscription, cancel anytime; in crystals, a one-time purchase.",
 	"subscribe_for": "Subscribe for {0}",
 	"cancel_anytime": "Cancel anytime: you keep your benefits until the end of the period you paid for.",
 	"must_verify": "Verify your email address to subscribe.",

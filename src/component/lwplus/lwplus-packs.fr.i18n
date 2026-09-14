@@ -22,7 +22,6 @@
 	"cadence_year": "tous les ans",
 	"tooltip_subscribe": "Abonnement renouvelé {0}, résiliable à tout moment.",
 	"tooltip_crystals": "Achat unique de {0}, sans renouvellement.",
-	"payment_note": "En euros c'est un abonnement, résiliable à tout moment ; en cristaux, un achat unique.",
 	"subscribe_for": "S'abonner pour {0}",
 	"cancel_anytime": "Résiliable à tout moment : vous gardez vos avantages jusqu'à la fin de la période payée.",
 	"must_verify": "Validez votre adresse e-mail pour pouvoir vous abonner.",
