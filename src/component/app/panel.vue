@@ -13,7 +13,14 @@
 			</div>
 		</div>
 		<template v-if="expanded">
-			<slot v-if="$slots.content" name="content"></slot>
+			<!-- `#content` remplace le corps paddé par défaut, mais ne doit RIEN jeter : tant que
+			     le slot par défaut n'était pas rendu ici, un dialogue posé à côté du `#content`
+			     disparaissait sans un bruit, et son bouton d'ouverture ne faisait rien (le cas
+			     d'accounts.vue, topic forum 12109). -->
+			<template v-if="$slots.content">
+				<slot name="content"></slot>
+				<slot></slot>
+			</template>
 			<div v-else class="content">
 				<slot></slot>
 			</div>

@@ -87,6 +87,20 @@ describe('panel.vue', () => {
 		await nextTick()
 	})
 
+	// Fournir un #content remplace le corps paddé par défaut — mais ne doit rien JETER. Tant que
+	// le slot par défaut n'était pas rendu à côté, un dialogue posé là disparaissait sans un
+	// bruit : c'est ce qui rendait le bouton « Délier » de accounts.vue inerte (topic 12109).
+	it('rend le slot par défaut même quand un #content est fourni', () => {
+		const w = mountComponent(Panel, {
+			props: { title: 'Titre' },
+			slots: { content: () => h('div', { class: 'mon-contenu' }), default: () => h('div', { class: 'mon-dialogue' }) },
+		}, { messages: {}, leekWars: {} })
+		expect(w.find('.mon-contenu').exists()).toBe(true)
+		expect(w.find('.mon-dialogue').exists()).toBe(true)
+		// Le #content remplace bien le conteneur paddé : pas de .content par-dessus.
+		expect(w.find('.content').exists()).toBe(false)
+	})
+
 	it('relit le cran numérique', async () => {
 		localStorage.setItem('test/panel', '1')
 		const w = mountPanel({ states: 3 })
