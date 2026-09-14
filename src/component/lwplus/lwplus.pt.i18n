@@ -25,15 +25,13 @@
 	"price_notice": "Sem compromisso, cancelável a qualquer momento.",
 	"your_subscription": "A sua subscrição",
 	"renews_on": "Ativa, renova a {0}.",
+	"plan_cadence": "Plano renovado {0}.",
+	"cadence_month": "todo mês",
+	"cadence_months": "a cada {0} meses",
+	"cadence_year": "todo ano",
 	"active_until": "Ativa até {0}.",
 	"canceled_notice": "A sua subscrição não será renovada. Mantém as vantagens até essa data.",
 	"resume": "Retomar a subscrição",
 	"cancel_subscription": "Cancelar",
-	"subscribe_title": "Subscrever",
-	"subscribe_for": "Subscrever por {0} € por mês",
-	"must_verify": "Tem de validar o seu endereço de email antes de subscrever.",
-	"cancel_anytime": "Cancelável a qualquer momento: mantém as vantagens até ao fim do mês já pago.",
-	"generic_error": "Ocorreu um erro. Tente novamente.",
-	"unavailable": "A subscrição está temporariamente indisponível.",
-	"activation_pending": "Pagamento aceite. A ativação pode demorar alguns instantes."
+	"generic_error": "Ocorreu um erro. Tente novamente."
 }

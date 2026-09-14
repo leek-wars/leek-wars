@@ -25,15 +25,13 @@
 	"price_notice": "Senza vincoli, disdicibile in qualsiasi momento.",
 	"your_subscription": "Il tuo abbonamento",
 	"renews_on": "Attivo, si rinnova il {0}.",
+	"plan_cadence": "Formula rinnovata {0}.",
+	"cadence_month": "ogni mese",
+	"cadence_months": "ogni {0} mesi",
+	"cadence_year": "ogni anno",
 	"active_until": "Attivo fino al {0}.",
 	"canceled_notice": "Il tuo abbonamento non sarà rinnovato. Mantieni i vantaggi fino a questa data.",
 	"resume": "Riprendi l'abbonamento",
 	"cancel_subscription": "Disdici",
-	"subscribe_title": "Abbonati",
-	"subscribe_for": "Abbonati per {0} € al mese",
-	"must_verify": "Devi convalidare il tuo indirizzo email prima di abbonarti.",
-	"cancel_anytime": "Disdicibile in qualsiasi momento: mantieni i vantaggi fino alla fine del mese già pagato.",
-	"generic_error": "Si è verificato un errore. Riprova.",
-	"unavailable": "L'abbonamento non è momentaneamente disponibile.",
-	"activation_pending": "Pagamento accettato. L'attivazione può richiedere qualche istante."
+	"generic_error": "Si è verificato un errore. Riprova."
 }

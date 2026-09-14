@@ -25,15 +25,13 @@
 	"price_notice": "No commitment, cancel at any time.",
 	"your_subscription": "Your subscription",
 	"renews_on": "Active, renews on {0}.",
+	"plan_cadence": "Plan renewed {0}.",
+	"cadence_month": "every month",
+	"cadence_months": "every {0} months",
+	"cadence_year": "every year",
 	"active_until": "Active until {0}.",
 	"canceled_notice": "Your subscription will not be renewed. You keep your benefits until that date.",
 	"resume": "Resume subscription",
 	"cancel_subscription": "Cancel",
-	"subscribe_title": "Subscribe",
-	"subscribe_for": "Subscribe for €{0} per month",
-	"must_verify": "You must verify your email address before subscribing.",
-	"cancel_anytime": "Cancel at any time: you keep your benefits until the end of the month you already paid for.",
-	"generic_error": "Something went wrong. Please try again.",
-	"unavailable": "Subscription is temporarily unavailable.",
-	"activation_pending": "Payment accepted. Activation may take a few moments."
+	"generic_error": "Something went wrong. Please try again."
 }

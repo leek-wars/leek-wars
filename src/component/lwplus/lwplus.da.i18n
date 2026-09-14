@@ -25,15 +25,13 @@
 	"price_notice": "Uden binding, kan opsiges når som helst.",
 	"your_subscription": "Dit abonnement",
 	"renews_on": "Aktivt, fornyes den {0}.",
+	"plan_cadence": "Abonnementet fornys {0}.",
+	"cadence_month": "hver måned",
+	"cadence_months": "hver {0}. måned",
+	"cadence_year": "hvert år",
 	"active_until": "Aktivt indtil {0}.",
 	"canceled_notice": "Dit abonnement fornyes ikke. Du beholder dine fordele indtil denne dato.",
 	"resume": "Genoptag abonnement",
 	"cancel_subscription": "Opsig",
-	"subscribe_title": "Abonner",
-	"subscribe_for": "Abonner for {0} € om måneden",
-	"must_verify": "Du skal bekræfte din e-mailadresse, før du kan abonnere.",
-	"cancel_anytime": "Kan opsiges når som helst: du beholder dine fordele indtil udgangen af den allerede betalte måned.",
-	"generic_error": "Der opstod en fejl. Prøv igen.",
-	"unavailable": "Abonnementet er midlertidigt utilgængeligt.",
-	"activation_pending": "Betaling accepteret. Aktiveringen kan tage et øjeblik."
+	"generic_error": "Der opstod en fejl. Prøv igen."
 }

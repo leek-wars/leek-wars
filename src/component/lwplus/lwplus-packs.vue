@@ -27,26 +27,38 @@
 				<div v-if="discount(pack)" class="save">{{ $t('save', [discount(pack)]) }}</div>
 				<div class="months">{{ monthsLabel(pack.months) }}</div>
 
-				<v-btn class="buy-euro" color="primary" variant="flat" prepend-icon="mdi-cart-outline" :disabled="busy" @click="payEuros(pack)">
+				<!-- En euros, c'est un abonnement : le bouton porte le prix, la ligne
+				     dessous porte la périodicité. Les deux ensemble, jamais l'un sans
+				     l'autre — un prix sans son « tous les 3 mois » se lit comme un
+				     paiement unique. -->
+				<v-btn class="buy-euro" color="primary" variant="flat" prepend-icon="mdi-autorenew" :disabled="busy || covered || !verified" @click="subscribeTo(pack)">
 					<span v-if="LeekWars.currencies[LeekWars.currency].prefix"><span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>{{ price(pack) }}</span>
 					<span v-else>{{ price(pack) }}&nbsp;<span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span></span>
 				</v-btn>
+				<div class="cadence">{{ cadence(pack) }}</div>
 
 				<v-btn class="buy-crystals" color="primary" variant="tonal" :disabled="busy || !enough(pack)" :loading="buying === pack.id" @click="askCrystals(pack)">
 					{{ $filters.number(pack.crystals) }}&nbsp;<span class="crystal"></span>
 				</v-btn>
+				<div class="cadence">{{ $t('one_time') }}</div>
 			</div>
 		</div>
 
-		<!-- Paiement en euros : le Payment Element se déplie sous la grille, sans
-		     quitter la page. Un seul lot à la fois, celui sur lequel on a cliqué. -->
+		<!-- Pourquoi les boutons en euros sont éteints. Deux raisons seulement, et
+		     elles se disent, sinon le joueur clique dans le vide. -->
+		<div v-if="!loading && !verified" class="plan-notice">{{ $t('must_verify') }}</div>
+		<div v-else-if="!loading && covered" class="plan-notice">{{ $t('already_covered') }}</div>
+
+		<!-- Souscription : le Payment Element se déplie sous la grille, sans quitter
+		     la page. Une seule formule à la fois, celle sur laquelle on a cliqué. -->
 		<div v-if="euroPack" class="euro-payment">
 			<loader v-if="stripeLoading" />
 			<div id="lwplus-packs-payment-element"></div>
-			<v-btn v-if="stripeReady" color="primary" variant="flat" size="large" :loading="paying" block class="pay-btn" @click="confirmEuros">
+			<v-btn v-if="stripeReady" color="primary" variant="flat" size="large" :loading="paying" block class="pay-btn" @click="confirmSubscription">
 				<template #prepend><v-icon>mdi-lock</v-icon></template>
-				{{ $t('pay_for', [monthsLabel(euroPack.months)]) }}
+				{{ $t('subscribe_for', [priceWithCadence(euroPack)]) }}
 			</v-btn>
+			<div v-if="stripeReady" class="cancel-anytime">{{ $t('cancel_anytime') }}</div>
 		</div>
 
 		<div v-if="message" class="message">{{ message }}</div>
@@ -71,6 +83,7 @@
 		<template #title><span>{{ $t('confirm_title') }}</span></template>
 		<div v-if="confirmPack" class="confirm">
 			<div>{{ $t('confirm_question', [monthsLabel(confirmPack.months)]) }}</div>
+			<div class="line secondary">{{ $t('confirm_one_time') }}</div>
 			<div class="line">
 				<b>{{ $t('confirm_cost') }}</b> : {{ $filters.number(confirmPack.crystals) }}&nbsp;<span class="crystal"></span>
 			</div>
@@ -153,7 +166,7 @@ function confirmCrystals() {
 	if (confirmPack.value) { payCrystals(confirmPack.value) }
 }
 
-function showThanks(months: string, until: number, crystals?: number, priceText?: string) {
+function showThanks(months: string | undefined, until: number, crystals?: number, priceText?: string) {
 	thanksMonths.value = months
 	thanksCrystals.value = crystals
 	thanksPrice.value = priceText
@@ -161,6 +174,7 @@ function showThanks(months: string, until: number, crystals?: number, priceText?
 	thanksDialog.value = true
 }
 
+// Formule dont le tunnel de souscription est déplié, ou null.
 const euroPack = ref<MonthPack | null>(null)
 const stripeLoading = ref(false)
 const stripeReady = ref(false)
@@ -184,10 +198,28 @@ function monthsLabel(n: number) {
 	return n === 1 ? t('months_one', [n]) : t('months_other', [n])
 }
 
+// Périodicité de la formule, telle qu'elle sera prélevée. 12 mois se dit « tous
+// les ans » et pas « tous les 12 mois » : c'est ce que Stripe écrira sur la facture.
+function cadence(pack: MonthPack) {
+	if (pack.months === 12) { return t('cadence_year') }
+	return pack.months === 1 ? t('cadence_month') : t('cadence_months', [pack.months])
+}
+
+// « 10,99 € tous les 3 mois » : le prix ne se montre jamais sans sa périodicité.
+function priceWithCadence(pack: MonthPack) {
+	return `${priceLabel(pack)} ${cadence(pack)}`
+}
+
 // Un achat en cours (cristaux ou euros) verrouille toute la grille : sans ça, un
 // double clic sur deux lots différents lance deux paiements que le joueur ne voit
 // pas arriver.
 const busy = ref(false)
+
+// On ne peut pas s'abonner par-dessus un droit en cours : le serveur refuse
+// (already_subscribed), parce qu'un second abonnement se prélèverait en parallèle
+// du premier. Les cristaux, eux, s'empilent — ils ne se renouvellent pas.
+const covered = computed(() => until.value > LeekWars.time)
+const verified = computed(() => store.state.farmer?.verified ?? false)
 
 function price(pack: MonthPack) {
 	const n = pack.prices[LeekWars.currency]
@@ -274,9 +306,10 @@ function stripeAppearance() {
 	}
 }
 
-let paymentIntentId = ''
-
-async function payEuros(pack: MonthPack) {
+// Souscription à une formule : les trois sont récurrentes, seul l'intervalle
+// change (tous les mois, tous les 3 mois, tous les ans). L'achat sans
+// renouvellement, c'est le bouton en cristaux.
+async function subscribeTo(pack: MonthPack) {
 	if (busy.value) return
 	euroPack.value = pack
 	stripeReady.value = false
@@ -284,8 +317,7 @@ async function payEuros(pack: MonthPack) {
 	message.value = ''
 	error.value = ''
 	try {
-		const r = await LeekWars.post('subscription/begin-months-payment', { pack_id: pack.id, currency: LeekWars.currency })
-		paymentIntentId = r.payment_intent_id
+		const r = await LeekWars.post('subscription/subscribe', { pack_id: pack.id, currency: LeekWars.currency })
 		stripe = await loadStripe(r.publishable_key)
 		if (!stripe) { throw new Error('stripe') }
 		elements = stripe.elements({ clientSecret: r.client_secret, appearance: stripeAppearance() })
@@ -298,14 +330,17 @@ async function payEuros(pack: MonthPack) {
 		element.mount('#lwplus-packs-payment-element')
 	} catch (err) {
 		const code = (err as { error?: string } | null)?.error
-		error.value = code === 'stripe_not_configured' ? t('unavailable') : t('generic_error')
+		error.value = code === 'stripe_not_configured' ? t('unavailable')
+			: code === 'already_subscribed' ? t('already_covered')
+			: code === 'not_verified' ? t('must_verify')
+			: t('generic_error')
 		euroPack.value = null
 	} finally {
 		stripeLoading.value = false
 	}
 }
 
-async function confirmEuros() {
+async function confirmSubscription() {
 	if (!stripe || !elements || !euroPack.value) return
 	busy.value = true
 	paying.value = true
@@ -326,23 +361,31 @@ async function confirmEuros() {
 		paying.value = false
 		return
 	}
-	// Le paiement est passé chez Stripe ; c'est execute-stripe-payment (ou le webhook,
-	// en filet) qui accorde les mois. On confirme tout de suite pour ne pas faire
-	// attendre le joueur, l'octroi est idempotent des deux côtés.
+	// Contrairement à un paiement unique, le droit d'un abonnement n'est ouvert par
+	// AUCUNE réponse d'API : seul le webhook `invoice.paid` l'écrit. On relit donc
+	// l'état quelques secondes avant de conclure, comme le faisait la page /lwplus.
 	const paidPack = euroPack.value
-	try {
-		const data = await LeekWars.post('bank/execute-stripe-payment', { payment_intent_id: paymentIntentId })
-		applyUntil(data.lwplus_until)
-		message.value = t('bought', [formatDate(data.lwplus_until)])
-		if (paidPack) { showThanks(monthsLabel(paidPack.months), data.lwplus_until, undefined, priceLabel(paidPack)) }
-		euroPack.value = null
-		emit('bought')
-	} catch (_err) {
-		error.value = t('activation_pending')
-	} finally {
-		busy.value = false
-		paying.value = false
+	for (let i = 0; i < 5; i++) {
+		try {
+			const data = await LeekWars.get('subscription/get-status')
+			if (data.active) {
+				applyUntil(data.until)
+				message.value = t('bought', [formatDate(data.until)])
+				showThanks(undefined, data.until, undefined, priceWithCadence(paidPack))
+				euroPack.value = null
+				busy.value = false
+				paying.value = false
+				emit('bought')
+				return
+			}
+		} catch (_err) { /* on retente : c'est l'attente du webhook, pas une erreur */ }
+		await new Promise(resolve => setTimeout(resolve, 1500))
 	}
+	// Payé, mais le webhook n'est pas encore arrivé : surtout ne pas parler d'échec.
+	busy.value = false
+	paying.value = false
+	error.value = t('activation_pending')
+	emit('bought')
 }
 </script>
 
@@ -402,6 +445,10 @@ async function confirmEuros() {
 		padding: 16px;
 		.line {
 			margin-top: 8px;
+		}
+		.secondary {
+			color: var(--text-color-secondary);
+			font-size: 14px;
 		}
 	}
 	.active-panel .status {
@@ -479,6 +526,26 @@ async function confirmEuros() {
 		width: 100%;
 		font-size: 16px;
 		font-weight: 500;
+	}
+	// Périodicité sous chaque bouton : « tous les 3 mois » sous le prix, « achat
+	// unique » sous les cristaux. Discrète mais toujours là — c'est elle qui dit
+	// que le bouton du dessus engage un prélèvement récurrent.
+	.cadence {
+		margin-top: -6px;
+		font-size: 12px;
+		color: var(--text-color-secondary);
+		text-align: center;
+	}
+	.plan-notice {
+		padding: 0 12px 12px;
+		color: var(--text-color-secondary);
+		font-size: 14px;
+	}
+	.cancel-anytime {
+		margin-top: 8px;
+		font-size: 13px;
+		color: var(--text-color-secondary);
+		text-align: center;
 	}
 	.euro-payment {
 		padding: 0 12px 12px;

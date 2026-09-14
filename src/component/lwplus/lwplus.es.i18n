@@ -25,15 +25,13 @@
 	"price_notice": "Sin compromiso, cancelable en cualquier momento.",
 	"your_subscription": "Tu suscripción",
 	"renews_on": "Activa, se renueva el {0}.",
+	"plan_cadence": "Plan renovado {0}.",
+	"cadence_month": "cada mes",
+	"cadence_months": "cada {0} meses",
+	"cadence_year": "cada año",
 	"active_until": "Activa hasta el {0}.",
 	"canceled_notice": "Tu suscripción no se renovará. Conservas tus ventajas hasta esa fecha.",
 	"resume": "Reanudar la suscripción",
 	"cancel_subscription": "Cancelar",
-	"subscribe_title": "Suscribirse",
-	"subscribe_for": "Suscribirse por {0} € al mes",
-	"must_verify": "Debes validar tu dirección de correo antes de suscribirte.",
-	"cancel_anytime": "Cancelable en cualquier momento: conservas tus ventajas hasta el final del mes ya pagado.",
-	"generic_error": "Se ha producido un error. Inténtalo de nuevo.",
-	"unavailable": "La suscripción no está disponible por el momento.",
-	"activation_pending": "Pago aceptado. La activación puede tardar unos instantes."
+	"generic_error": "Se ha producido un error. Inténtalo de nuevo."
 }

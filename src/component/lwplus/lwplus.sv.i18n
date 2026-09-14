@@ -25,15 +25,13 @@
 	"price_notice": "Utan bindningstid, kan avslutas när som helst.",
 	"your_subscription": "Din prenumeration",
 	"renews_on": "Aktiv, förnyas den {0}.",
+	"plan_cadence": "Abonnemanget förnyas {0}.",
+	"cadence_month": "varje månad",
+	"cadence_months": "var {0}:e månad",
+	"cadence_year": "varje år",
 	"active_until": "Aktiv till {0}.",
 	"canceled_notice": "Din prenumeration förnyas inte. Du behåller dina förmåner till detta datum.",
 	"resume": "Återuppta prenumerationen",
 	"cancel_subscription": "Avsluta",
-	"subscribe_title": "Prenumerera",
-	"subscribe_for": "Prenumerera för {0} € per månad",
-	"must_verify": "Du måste bekräfta din e-postadress innan du kan prenumerera.",
-	"cancel_anytime": "Kan avslutas när som helst: du behåller dina förmåner till slutet av den redan betalda månaden.",
-	"generic_error": "Ett fel uppstod. Försök igen.",
-	"unavailable": "Prenumerationen är tillfälligt otillgänglig.",
-	"activation_pending": "Betalning accepterad. Aktiveringen kan ta en stund."
+	"generic_error": "Ett fel uppstod. Försök igen."
 }

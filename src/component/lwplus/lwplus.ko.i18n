@@ -25,15 +25,13 @@
 	"price_notice": "약정 없이 언제든지 해지할 수 있습니다.",
 	"your_subscription": "내 구독",
 	"renews_on": "이용 중, {0}에 갱신됩니다.",
+	"plan_cadence": "{0} 갱신됩니다.",
+	"cadence_month": "매월",
+	"cadence_months": "{0}개월마다",
+	"cadence_year": "매년",
 	"active_until": "{0}까지 이용할 수 있습니다.",
 	"canceled_notice": "구독이 갱신되지 않습니다. 해당 날짜까지 혜택은 유지됩니다.",
 	"resume": "구독 재개",
 	"cancel_subscription": "해지",
-	"subscribe_title": "구독하기",
-	"subscribe_for": "월 {0} 유로로 구독",
-	"must_verify": "구독하기 전에 이메일 주소를 확인해야 합니다.",
-	"cancel_anytime": "언제든지 해지할 수 있습니다. 이미 결제한 달의 마지막 날까지 혜택이 유지됩니다.",
-	"generic_error": "오류가 발생했습니다. 다시 시도해 주세요.",
-	"unavailable": "구독을 일시적으로 이용할 수 없습니다.",
-	"activation_pending": "결제가 승인되었습니다. 활성화에 잠시 걸릴 수 있습니다."
+	"generic_error": "오류가 발생했습니다. 다시 시도해 주세요."
 }

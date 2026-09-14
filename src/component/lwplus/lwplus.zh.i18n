@@ -25,15 +25,13 @@
 	"price_notice": "无需承诺，可随时取消。",
 	"your_subscription": "你的订阅",
 	"renews_on": "生效中，将于 {0} 续订。",
+	"plan_cadence": "{0}自动续费。",
+	"cadence_month": "每月",
+	"cadence_months": "每 {0} 个月",
+	"cadence_year": "每年",
 	"active_until": "有效期至 {0}。",
 	"canceled_notice": "你的订阅将不会续订。在此日期之前你仍保留全部权益。",
 	"resume": "恢复订阅",
 	"cancel_subscription": "取消订阅",
-	"subscribe_title": "订阅",
-	"subscribe_for": "以每月 {0} 欧元订阅",
-	"must_verify": "订阅前需要先验证你的邮箱地址。",
-	"cancel_anytime": "可随时取消：已付费月份结束前，你仍保留全部权益。",
-	"generic_error": "发生错误，请重试。",
-	"unavailable": "订阅暂时不可用。",
-	"activation_pending": "支付已受理，激活可能需要片刻。"
+	"generic_error": "发生错误，请重试。"
 }

@@ -33,46 +33,36 @@
 			<loader />
 		</panel>
 
-		<!-- Lots de mois d'abord, abonnement ensuite (ordre voulu par Pierre, 09/09/2026),
-		     côte à côte quand la largeur le permet, l'un sous l'autre sinon. -->
+		<!-- Les trois formules d'abord, l'abonnement en cours ensuite (ordre voulu par
+		     Pierre, 09/09/2026), côte à côte quand la largeur le permet. -->
 		<div v-else class="offers">
-		<!-- Mois à l'unité (euros ou cristaux), même composant que dans la banque.
-		     `compact` : la page porte déjà le logo, le comparatif et l'état. -->
+		<!-- Le panneau des formules porte AUSSI le tunnel de souscription depuis que
+		     les euros sont récurrents (14/09/2026) : il n'y a plus qu'une seule façon
+		     de s'abonner, et elle se choisit dans la grille. `compact` : la page porte
+		     déjà le logo, le comparatif et l'état. -->
 		<lwplus-packs compact @bought="refreshStatus" />
 
 		<!-- Abonnement en cours : état et gestion -->
 		<panel v-if="active" :title="$t('your_subscription')">
 			<div class="status">
 				<v-icon class="ok">mdi-check-decagram</v-icon>
-				<span v-if="cancelAtPeriodEnd">{{ $t('active_until', [formatDate(until)]) }}</span>
-				<span v-else>{{ $t('renews_on', [formatDate(until)]) }}</span>
+				<!-- « Renouvellement le … » seulement si quelque chose se renouvelle :
+				     des mois payés en cristaux, eux, s'arrêtent à leur terme. -->
+				<span v-if="recurring">{{ $t('renews_on', [formatDate(until)]) }}</span>
+				<span v-else>{{ $t('active_until', [formatDate(until)]) }}</span>
 			</div>
+			<div v-if="recurring && months > 0" class="plan">{{ $t('plan_cadence', [cadence]) }}</div>
 			<div v-if="cancelAtPeriodEnd" class="canceled-notice">{{ $t('canceled_notice') }}</div>
 
 			<div class="actions">
-				<v-btn v-if="cancelAtPeriodEnd" color="primary" :loading="updating" @click="resume">
+				<v-btn v-if="cancelAtPeriodEnd && manageable" color="primary" :loading="updating" @click="resume">
 					<v-icon>mdi-refresh</v-icon> {{ $t('resume') }}
 				</v-btn>
-				<v-btn v-else variant="tonal" :loading="updating" @click="cancel">
+				<v-btn v-else-if="manageable" variant="tonal" :loading="updating" @click="cancel">
 					{{ $t('cancel_subscription') }}
 				</v-btn>
 			</div>
 			<div v-if="error" class="error-message">{{ error }}</div>
-		</panel>
-
-		<!-- Pas encore abonné : tunnel de souscription -->
-		<panel v-else :title="$t('subscribe_title')">
-			<div v-if="!verified" class="not-verified">{{ $t('must_verify') }}</div>
-			<template v-else>
-				<loader v-if="stripeLoading" />
-				<div id="stripe-subscription-element"></div>
-				<div v-if="error" class="error-message">{{ error }}</div>
-				<v-btn v-if="stripeReady" size="large" :loading="paying" block class="pay-btn" @click="subscribe">
-					<template #prepend><v-icon>mdi-lock</v-icon></template>
-					{{ $t('subscribe_for', [priceEur]) }}
-				</v-btn>
-				<div class="cancel-anytime">{{ $t('cancel_anytime') }}</div>
-			</template>
 		</panel>
 		</div>
 
@@ -80,21 +70,17 @@
 		     Sous l'offre, pas au-dessus — c'est un argument de durée, il se lit après
 		     le prix. Affichée aussi aux non-abonnés, entièrement verrouillée. -->
 		<lwplus-timeline v-if="!loading" />
-
-		<lwplus-thanks v-model="thanksDialog" :price="$t('price_per_month', [priceEur])" :until="until" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, defineAsyncComponent } from 'vue'
-import { loadStripe, type Stripe, type StripeElements } from '@stripe/stripe-js'
+import { computed, ref, onMounted, defineAsyncComponent } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 import { locale, mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
 import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
 
 const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
-const LwplusThanks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-thanks.${locale}.i18n`))
 const LwplusTimeline = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-timeline.${locale}.i18n`))
 
 defineOptions({ name: 'lwplus', i18n: {}, mixins: [...mixins] })
@@ -121,43 +107,35 @@ const loading = ref(true)
 const active = ref(false)
 const until = ref(0)
 const cancelAtPeriodEnd = ref(false)
+// Durée d'une échéance de l'abonnement en cours : 1, 3 ou 12 mois. 0 quand le
+// droit ne vient pas d'un abonnement (mois achetés en cristaux) — il n'y a alors
+// rien à résilier, et rien qui se renouvelle.
+const months = ref(0)
+const recurring = ref(false)
+const status = ref<string | null>(null)
+
+// Un abonnement qu'on peut encore piloter chez Stripe. `canceled`, `unpaid` et les
+// `incomplete*` n'ont plus rien à résilier : le bouton disparaît plutôt que de
+// rendre une erreur. `past_due` en fait partie — il se prélève encore.
+const manageable = computed(() => ['active', 'trialing', 'past_due'].includes(status.value ?? ''))
 const updating = ref(false)
-const paying = ref(false)
 const error = ref('')
 
-// Remerciement après la souscription récurrente. Les mois à l'unité ont le leur,
-// porté par le panneau des lots.
-const thanksDialog = ref(false)
-
-const stripeLoading = ref(false)
-const stripeReady = ref(false)
-let stripe: Stripe | null = null
-let elements: StripeElements | null = null
-
-const verified = ref(store.state.farmer ? store.state.farmer.verified : false)
 const formatDate = LeekWars.formatDate
 
-// Apparence calée sur le thème du site, comme la banque : le Payment Element doit
-// coller au panneau en clair comme en sombre (LeekWars.darkMode, PAS LeekWars.dark).
-function stripeAppearance() {
-	const s = getComputedStyle(document.body)
-	const v = (name: string) => s.getPropertyValue(name).trim() || undefined
-	return {
-		theme: (LeekWars.darkMode ? 'night' : 'stripe') as 'night' | 'stripe',
-		variables: {
-			colorPrimary: v('--primary'),
-			colorBackground: v('--background'),
-			colorText: v('--text-color'),
-			colorTextSecondary: v('--text-color-secondary'),
-			borderRadius: '4px',
-		},
-	}
-}
+// Périodicité en toutes lettres, comme sur les boutons de la grille.
+const cadence = computed(() => {
+	if (months.value === 12) { return t('cadence_year') }
+	return months.value === 1 ? t('cadence_month') : t('cadence_months', [months.value])
+})
 
-function applyStatus(data: { active: boolean, until: number, cancel_at_period_end: boolean, price_eur?: number }) {
+function applyStatus(data: { active: boolean, until: number, cancel_at_period_end: boolean, status?: string | null, months?: number, recurring?: boolean, price_eur?: number }) {
 	active.value = data.active
 	until.value = data.until
 	cancelAtPeriodEnd.value = data.cancel_at_period_end
+	months.value = data.months ?? 0
+	recurring.value = data.recurring ?? false
+	status.value = data.status ?? null
 	if (data.price_eur) { priceEur.value = data.price_eur }
 	if (store.state.farmer) {
 		store.state.farmer.lwplus = data.active
@@ -173,68 +151,15 @@ async function refreshStatus() {
 
 onMounted(async () => {
 	try {
-		const data = await refreshStatus()
-		if (!data.active && verified.value) { initStripe() }
+		// Le tunnel de souscription vit dans <lwplus-packs> : la page ne fait plus
+		// que lire l'état.
+		await refreshStatus()
 	} catch (e) {
 		error.value = t('generic_error')
 	} finally {
 		loading.value = false
 	}
 })
-
-async function initStripe() {
-	stripeReady.value = false
-	stripeLoading.value = true
-	error.value = ''
-	try {
-		const r = await LeekWars.post('subscription/subscribe', {})
-		stripe = await loadStripe(r.publishable_key)
-		if (!stripe) { throw new Error('stripe') }
-		elements = stripe.elements({ clientSecret: r.client_secret, appearance: stripeAppearance() })
-		const element = elements.create('payment')
-		// Bouton révélé seulement sur 'ready' : sinon un clic peut partir avant que
-		// l'iframe Stripe soit chargée, et confirmPayment lance une IntegrationError (#4379).
-		element.on('ready', () => { stripeReady.value = true })
-		element.on('loaderror', (e) => { error.value = e.error?.message || t('generic_error') })
-		await nextTick()
-		element.mount('#stripe-subscription-element')
-	} catch (err) {
-		const code = (err as { error?: string } | null)?.error
-		error.value = code === 'stripe_not_configured' ? t('unavailable') : t('generic_error')
-	} finally {
-		stripeLoading.value = false
-	}
-}
-
-async function subscribe() {
-	if (!stripe || !elements) { return }
-	paying.value = true
-	error.value = ''
-	let stripeError
-	try {
-		;({ error: stripeError } = await stripe.confirmPayment({
-			elements,
-			confirmParams: { return_url: window.location.origin + '/lwplus' },
-			redirect: 'if_required'
-		}))
-	} catch (err) {
-		stripeError = { message: (err as { message?: string } | null)?.message || t('generic_error') }
-	}
-	if (stripeError) {
-		error.value = stripeError.message || t('generic_error')
-		paying.value = false
-		return
-	}
-	// Le droit est ouvert par le webhook, pas par cette réponse : on laisse à Stripe
-	// le temps de nous l'envoyer avant de dire au joueur que ce n'est pas actif.
-	for (let i = 0; i < 5; i++) {
-		const data = await refreshStatus()
-		if (data.active) { paying.value = false; thanksDialog.value = true; return }
-		await new Promise(resolve => setTimeout(resolve, 1500))
-	}
-	paying.value = false
-	error.value = t('activation_pending')
-}
 
 async function cancel() {
 	updating.value = true
@@ -448,20 +373,14 @@ async function resume() {
 			font-size: 26px;
 		}
 	}
-	.pay-btn {
-		background: var(--gold-bright);
-		color: var(--gold-text);
-		font-weight: 600;
-		margin-top: 12px;
-	}
-	.canceled-notice, .not-verified, .cancel-anytime {
+	// Le tunnel de souscription (et son bouton) vit désormais dans <lwplus-packs>.
+	.canceled-notice, .plan {
 		padding: 0 10px 10px;
 		font-size: 13px;
 		color: var(--text-color-secondary);
 	}
-	.cancel-anytime {
-		text-align: center;
-		padding-top: 10px;
+	.plan {
+		margin-top: -6px;
 	}
 	.actions {
 		padding: 0 10px 10px;

@@ -25,15 +25,13 @@
 	"price_notice": "Sans engagement, résiliable à tout moment.",
 	"your_subscription": "Votre abonnement",
 	"renews_on": "Actif, renouvellement le {0}.",
+	"plan_cadence": "Formule renouvelée {0}.",
+	"cadence_month": "tous les mois",
+	"cadence_months": "tous les {0} mois",
+	"cadence_year": "tous les ans",
 	"active_until": "Actif jusqu'au {0}.",
 	"canceled_notice": "Votre abonnement ne sera pas renouvelé. Vous gardez vos avantages jusqu'à cette date.",
 	"resume": "Reprendre l'abonnement",
 	"cancel_subscription": "Résilier",
-	"subscribe_title": "S'abonner",
-	"subscribe_for": "S'abonner pour {0} € par mois",
-	"must_verify": "Vous devez valider votre adresse e-mail avant de pouvoir vous abonner.",
-	"cancel_anytime": "Résiliable à tout moment : vous gardez vos avantages jusqu'à la fin du mois déjà payé.",
-	"generic_error": "Une erreur est survenue. Veuillez réessayer.",
-	"unavailable": "L'abonnement est momentanément indisponible.",
-	"activation_pending": "Paiement accepté. L'activation peut prendre quelques instants."
+	"generic_error": "Une erreur est survenue. Veuillez réessayer."
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync, readdirSync } from 'node:fs'
 
-// Le panneau des mois LW+ (banque) vit dans son propre namespace lwplus-packs.* :
+// Le panneau des formules LW+ (banque) vit dans son propre namespace lwplus-packs.* :
 // les avantages qu'il résume ne peuvent pas être lus dans lwplus.*, qui n'est
 // chargé que sur la page /lwplus. Une locale oubliée afficherait la clé brute
 // (pas de fallbackLocale, cf. model/i18n.ts).
@@ -29,7 +29,7 @@ describe('traductions du panneau des mois LW+', () => {
 
 	it.each(LOCALES)('%s : les placeholders sont conservés', (locale) => {
 		const messages = JSON.parse(readFileSync(`${DIR}/lwplus-packs.${locale}.i18n`, 'utf8')) as Record<string, string>
-		for (const key of ['active_until', 'months_one', 'months_other', 'save', 'pay_for', 'bought', 'confirm_question']) {
+		for (const key of ['active_until', 'months_one', 'months_other', 'save', 'subscribe_for', 'cadence_months', 'bought', 'confirm_question']) {
 			expect(messages[key], key).toContain('{0}')
 		}
 	})

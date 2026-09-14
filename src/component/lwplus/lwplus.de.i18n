@@ -25,15 +25,13 @@
 	"price_notice": "Ohne Bindung, jederzeit kündbar.",
 	"your_subscription": "Dein Abonnement",
 	"renews_on": "Aktiv, Verlängerung am {0}.",
+	"plan_cadence": "Tarif verlängert sich {0}.",
+	"cadence_month": "jeden Monat",
+	"cadence_months": "alle {0} Monate",
+	"cadence_year": "jedes Jahr",
 	"active_until": "Aktiv bis {0}.",
 	"canceled_notice": "Dein Abonnement wird nicht verlängert. Deine Vorteile bleiben bis zu diesem Datum bestehen.",
 	"resume": "Abonnement fortsetzen",
 	"cancel_subscription": "Kündigen",
-	"subscribe_title": "Abonnieren",
-	"subscribe_for": "Für {0} € pro Monat abonnieren",
-	"must_verify": "Du musst deine E-Mail-Adresse bestätigen, bevor du abonnieren kannst.",
-	"cancel_anytime": "Jederzeit kündbar: Deine Vorteile bleiben bis zum Ende des bereits bezahlten Monats bestehen.",
-	"generic_error": "Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
-	"unavailable": "Das Abonnement ist vorübergehend nicht verfügbar.",
-	"activation_pending": "Zahlung angenommen. Die Aktivierung kann einen Moment dauern."
+	"generic_error": "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
 }
