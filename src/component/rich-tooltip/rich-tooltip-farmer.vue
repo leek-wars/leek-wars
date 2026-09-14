@@ -24,21 +24,29 @@
 							<div class="spacer"></div>
 							<v-btn v-if="!store.state.farmer || id != store.state.farmer.id" variant="text" icon="mdi-chat" size="small" @click="sendMessage()" />
 						</span>
-						<div>
+						<div class="stats">
 							<router-link :to="'/trophies/' + farmer.id" class="stat">
-								<img class="icon" src="/image/icon/grey/trophy.png">{{ LeekWars.formatNumber(farmer.points) }}
+								<!-- Glyphes mdi et non des PNG (règle ICONS.md) : le trophée gris
+								     portait sa couleur en dur et s'éteignait sur le thème sombre,
+								     le glyphe suit l'encre. -->
+								<v-icon>mdi-trophy</v-icon>{{ LeekWars.formatNumber(farmer.points) }}
 							</router-link>
 							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'" class="stat">
-								<img class="icon" src="/image/forum.png">{{ $t('main.n_messages', farmer.forum_messages) }}
+								<v-icon>mdi-forum</v-icon>{{ $t('main.n_messages', farmer.forum_messages) }}
 							</router-link>
+						</div>
+						<!-- Dans la colonne de droite, comme dans les tooltips poireau, équipe
+						     et composition : nom, compteurs et talent partagent alors un seul
+						     bord gauche au lieu de deux. -->
+						<div class="talent-line">
+							<talent :id="farmer.id" :talent="farmer.talent" :max_talent="farmer.max_talent" category="farmer" />
+							<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
+							<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
+							<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
+							<v-btn class="expand" variant="text" size="x-small" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_leeks = !expand_leeks" />
 						</div>
 					</div>
 				</div>
-				<talent :id="farmer.id" :talent="farmer.talent" :max_talent="farmer.max_talent" category="farmer" />
-				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
-				<ranking-badge v-if="farmer && farmer.ranking && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
-				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
-				<v-btn class="expand" variant="text" size="x-small" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_leeks = !expand_leeks" />
 				<table v-if="expand_leeks" class="leeks">
 					<thead>
 						<tr>
@@ -200,22 +208,17 @@ function setParent(event: boolean) {
 	.spacer {
 		flex: 1;
 	}
+	/* Les trois lignes sont empilées en colonne et centrées chacune sur sa
+	   ligne : c'est la boîte qui aligne, plus les `vertical-align` et les
+	   `margin-top` à la main qui donnaient cinq hauteurs différentes sur la
+	   seule ligne du talent. */
 	.info {
 		flex: 1;
+		min-width: 0;
 		padding-left: 10px;
-		.icon {
-			width: 15px;
-			margin-right: 4px;
-			vertical-align: middle;
-			padding-bottom: 2px;
-		}
-		.stat {
-			padding-right: 4px;
-			font-size: 13px;
-			img {
-				opacity: 0.5;
-			}
-		}
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
 		.title {
 			font-size: 14px;
 		}
@@ -226,7 +229,6 @@ function setParent(event: boolean) {
 		font-size: 16px;
 		height: 25px;
 		margin-right: -4px;
-		margin-bottom: 6px;
 		img, .country {
 			height: 17px;
 			margin-right: 3px;
@@ -234,41 +236,46 @@ function setParent(event: boolean) {
 		i {
 			font-size: 18px;
 		}
-		.emblem {
+		.emblem, .country {
 			margin-left: 5px;
-			margin-top: 3px;
-		}
-		.country {
-			margin-left: 5px;
-			margin-top: 1px;
 		}
 	}
-	.talent-more {
-		font-size: 15px;
-		margin-left: 5px;
-		color: var(--grey-7);
-		display: inline-block;
-		vertical-align: top;
-		margin-top: 10px;
+	.stats {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		.stat {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			font-size: 13px;
+			.v-icon {
+				font-size: 17px;
+				opacity: 0.6;
+			}
+		}
 	}
-	.badge {
-		margin-bottom: 2px;
-		vertical-align: bottom;
-		margin-right: 0;
-	}
-	.level {
-		display: inline-block;
-		font-size: 15px;
-		font-weight: 500;
-		margin-left: 5px;
-		vertical-align: top;
-		margin-top: 10px;
-		color: var(--text-color-secondary);
-	}
-	.expand {
-		vertical-align: top;
-		margin-top: 5px;
-		margin-left: 10px;
+	.talent-line {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		.talent-more {
+			font-size: 15px;
+			color: var(--grey-7);
+		}
+		.badge {
+			margin: 0;
+		}
+		.level {
+			font-size: 15px;
+			font-weight: 500;
+			color: var(--text-color-secondary);
+		}
+		.expand {
+			width: 24px;
+			height: 24px;
+			margin-left: 4px;
+		}
 	}
 	.leeks {
 		text-align: left;
@@ -283,12 +290,24 @@ function setParent(event: boolean) {
 		td, th {
 			padding: 3px 4px;
 		}
+		/* Colonnes de chiffres : centrées sous leur icône, et en chasse fixe pour
+		   qu'une colonne ne change pas de largeur d'un poireau à l'autre. */
+		td:not(:first-child), th:not(:first-child) {
+			text-align: center;
+		}
+		td {
+			font-variant-numeric: tabular-nums;
+		}
 		td:first-child, th:first-child {
-			padding-left: 10px;
+			padding-left: 8px;
 			padding-right: 10px;
 		}
 		img {
 			width: 18px;
+		}
+		th img {
+			display: block;
+			margin: 0 auto;
 		}
 		.c {
 			width: 30px;
