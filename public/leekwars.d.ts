@@ -771,6 +771,13 @@ declare class Entity {
 	 * 📖 [Documentation](https://leekwars.com/help/documentation/getEntityTurnOrder)
 	 */
 	readonly turnOrder: number;
+	/**
+	 * Rayon de la zone d'Éveil, 0 pour une entité qui joue son tour.
+	 * Renvoie le rayon de la zone d'Éveil de l'entité entity, en cases. Une plante à zone ne joue pas de tour : elle se réveille quand une entité entre dans sa zone. Renvoie 0 pour toute entité qui joue son tour, y compris une plante enracinée sans zone. La zone est un cercle, mesuré comme getCellDistance.
+	 * @returns Le rayon de la zone d'Éveil de l'entité, en cases, 0 si elle n'en a pas, ou null si l'entité n'existe pas.
+	 * 📖 [Documentation](https://leekwars.com/help/documentation/getAwakeningZone)
+	 */
+	readonly awakeningZone: number;
 	/** 📖 [Documentation](https://leekwars.com/help/documentation/getSide) */
 	readonly side: number;
 	/**

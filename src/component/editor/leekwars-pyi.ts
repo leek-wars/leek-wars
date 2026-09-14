@@ -99,7 +99,7 @@ const CLASSES: ClassSpec[] = [
 		'weapon: Weapon', 'weapons: list[Weapon]', 'chips: list[Chip]', 'effects: list[Effect]',
 		'launchedEffects: list[Effect]', 'passiveEffects: list[Feature]', 'states: list', 'summons: list[Entity]',
 		'summoner: Entity', 'summoned: bool', 'alive: bool', 'dead: bool', 'isStatic: bool',
-		'birthTurn: int', 'turnOrder: int', 'side: int', 'leekID: int', 'teamID: int', 'teamName: str',
+		'birthTurn: int', 'turnOrder: int', 'awakeningZone: int', 'side: int', 'leekID: int', 'teamID: int', 'teamName: str',
 		'compositionName: str', 'farmerID: int', 'farmerName: str', 'farmerCountry: str',
 		'aiID: int', 'aiName: str',
 		'def isAlly(self) -> bool: ...', 'def isEnemy(self) -> bool: ...',

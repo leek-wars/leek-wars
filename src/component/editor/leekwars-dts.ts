@@ -431,6 +431,7 @@ export const OBJECT_MEMBER_LS: Record<string, string> = {
 	'Entity.passiveEffects': 'getPassiveEffects', 'Entity.states': 'getStates', 'Entity.summons': 'getSummons',
 	'Entity.summoner': 'getSummoner', 'Entity.summoned': 'isSummon', 'Entity.alive': 'isAlive', 'Entity.dead': 'isDead',
 	'Entity.isStatic': 'isStatic', 'Entity.birthTurn': 'getBirthTurn', 'Entity.turnOrder': 'getEntityTurnOrder',
+	'Entity.awakeningZone': 'getAwakeningZone',
 	'Entity.side': 'getSide', 'Entity.leekID': 'getLeekID', 'Entity.teamID': 'getTeamID', 'Entity.teamName': 'getTeamName',
 	'Entity.compositionName': 'getCompositionName', 'Entity.farmerID': 'getFarmerID', 'Entity.farmerName': 'getFarmerName',
 	'Entity.farmerCountry': 'getFarmerCountry', 'Entity.aiID': 'getAIID', 'Entity.aiName': 'getAIName',
@@ -874,6 +875,8 @@ declare class Entity {
 	readonly isStatic: boolean;
 	readonly birthTurn: number;
 	readonly turnOrder: number;
+	/** Rayon de la zone d'Éveil, 0 pour une entité qui joue son tour. */
+	readonly awakeningZone: number;
 	readonly side: number;
 	readonly leekID: number;
 	readonly teamID: number;
