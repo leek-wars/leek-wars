@@ -30,7 +30,7 @@
     - "The tutorial now exists in JavaScript and Python as well as LeekScript."
     - "Personal API keys, created from the Settings, each with a role and revocable in one click. #img_300_api_keys"
     - "The API documentation is rebuilt: 300 services, copy-ready examples and an OpenAPI export. #img_300_api_doc"
-    - "An official MCP server, npx @leekwars/mcp: a coding assistant plugged into your account."
+    - "An official MCP server, npx @leek-wars/mcp: a coding assistant plugged into your account."
     - "The talent chart can be set to 7 or 30 days, and history is now kept for 30 days. #img_300_talent_chart"
     - "Notifications about one of your leeks show its thumbnail next to the icon. #img_300_notifications"
     - "A team page has its own \"Live\" panel: trophies, milestones and topics from its members. #img_300_team_live"

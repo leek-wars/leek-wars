@@ -30,7 +30,7 @@
     - "Il tutorial esiste ora in JavaScript e in Python oltre che in LeekScript."
     - "Chiavi API personali dalle Impostazioni, ognuna con un ruolo e revocabile con un clic. #img_300_api_keys"
     - "La documentazione dell'API è rifatta: 300 servizi, esempi da copiare ed esportazione OpenAPI. #img_300_api_doc"
-    - "Un server MCP ufficiale, npx @leekwars/mcp: un assistente di codice sul tuo account."
+    - "Un server MCP ufficiale, npx @leek-wars/mcp: un assistente di codice sul tuo account."
     - "Il grafico del talento si imposta su 7 o 30 giorni, e lo storico è conservato 30 giorni. #img_300_talent_chart"
     - "Le notifiche su un tuo porro mostrano la sua miniatura accanto all'icona. #img_300_notifications"
     - "La pagina di una squadra ha il pannello « In diretta »: trofei, soglie e argomenti dei membri. #img_300_team_live"
