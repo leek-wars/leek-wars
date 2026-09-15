@@ -239,7 +239,7 @@
 }
 .flex {
 	align-items: center;
-	margin-right: -4px;
+	gap: 4px;
 }
 .name {
 	font-weight: 500;
@@ -266,6 +266,7 @@
 .farmer-avatar {
 	width: 30px;
 	height: 30px;
+    flex: 30px 0 0;
 }
 .stats {
 	display: flex;
