@@ -39,7 +39,12 @@
 <style lang="scss" scoped>
 	.resources-list {
 		display: inline-flex;
-		gap: 2px;
+		// Sans wrap la liste déborde de sa ligne au lieu de la remplir : comme le tri
+		// est par prix décroissant, ce sont les ressources les plus communes qui
+		// disparaissent. Le row-gap laisse la place au badge de quantité, qui dépasse
+		// de 5px sous l'image.
+		flex-wrap: wrap;
+		gap: 7px 2px;
 		vertical-align: bottom;
 	}
 	.resource {
