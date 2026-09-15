@@ -299,6 +299,7 @@
 	"n_words": "0 个词 | 1 个词 | {n} 个词",
 	"n_year": "1 年 | {n} 年",
 	"name": "名称",
+	"network_error": "与服务器的连接已断开，请稍后再试。",
 	"new_leek": "新韭菜",
 	"new_version": "网站有新版本可用！",
 	"new_version_later": "稍后",

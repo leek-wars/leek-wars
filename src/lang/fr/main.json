@@ -299,6 +299,7 @@
 	"n_words": "0 mot | 1 mot | {n} mots",
 	"n_year": "1 an | {n} ans",
 	"name": "Nom",
+	"network_error": "Connexion au serveur perdue, réessaie dans un instant.",
 	"new_leek": "Nouveau poireau",
 	"new_version": "Une nouvelle version du site est disponible !",
 	"new_version_later": "Plus tard",

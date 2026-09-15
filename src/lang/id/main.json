@@ -299,6 +299,7 @@
 	"n_words": "0 kata | 1 kata | {n} kata",
 	"n_year": "1 tahun | {n} tahun",
 	"name": "Nama",
+	"network_error": "Koneksi ke server terputus, coba lagi sebentar lagi.",
 	"new_leek": "Daun bawang baru",
 	"new_version": "Versi baru situs telah tersedia!",
 	"new_version_later": "Nanti",

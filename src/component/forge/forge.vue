@@ -183,7 +183,7 @@
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { t } from '@/model/i18n'
-	import type { ApiError } from '@/model/api-error'
+	import { isReportedByTransport, type ApiError } from '@/model/api-error'
 	import { emitter } from '@/model/emitter'
 	import { forgeComponent, forgePendingPower, forgeCharge, forgePreview } from '@/model/forge-state'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue'
@@ -577,12 +577,12 @@
 	/**
 	 * Libelle d'une erreur de forge (alteration, recyclage, fabrication) : chaque code du
 	 * serveur a sa traduction, le code brut ne sort qu'en dernier recours. Null pour
-	 * too_many_requests, deja signale par la couche requete.
+	 * les erreurs deja signalees par la couche requete.
 	 */
 	function forgeErrorMessage(error: ApiError): string | null {
+		if (isReportedByTransport(error)) return null
 		const code = error?.error
 		switch (code) {
-			case 'too_many_requests': return null
 			case 'duplicate_exception_stat': return t('main.error_duplicate_exception_stat', [t('characteristic.' + (error as { carac?: string }).carac)])
 			case 'well_overflow': return t('main.error_well_overflow')
 			case 'component_changed': return t('main.error_component_changed')

@@ -299,6 +299,7 @@
 	"n_words": "0 ord | 1 ord | {n} ord",
 	"n_year": "1 år | {n} år",
 	"name": "Namn",
+	"network_error": "Anslutningen till servern bröts, försök igen om en stund.",
 	"new_leek": "Ny purjolök",
 	"new_version": "En ny version av webbplatsen är tillgänglig!",
 	"new_version_later": "Senare",

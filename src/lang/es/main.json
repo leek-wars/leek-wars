@@ -299,6 +299,7 @@
 	"n_words": "0 palabra | 1 palabra | {n} palabras",
 	"n_year": "1 año | {n} años",
 	"name": "Nombre",
+	"network_error": "Se ha perdido la conexión con el servidor, inténtalo de nuevo en un momento.",
 	"new_leek": "Puerro nuevo",
 	"new_version": "¡Hay una nueva versión del sitio disponible!",
 	"new_version_later": "Más tarde",

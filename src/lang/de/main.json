@@ -299,6 +299,7 @@
 	"n_words": "0 Wort | 1 Wort | {n} Wörter",
 	"n_year": "1 Jahr | {n} Jahre",
 	"name": "Name",
+	"network_error": "Verbindung zum Server verloren, versuche es gleich noch einmal.",
 	"new_leek": "Neuer Lauch",
 	"new_version": "Eine neue Version der Website ist verfügbar!",
 	"new_version_later": "Später",

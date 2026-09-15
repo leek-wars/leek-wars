@@ -84,9 +84,18 @@ const RETRY_CONFIG = {
 	maxRetries: 3,
 	baseDelay: 1000,  // 1s, 2s, 4s
 	maxDelay: 10000,
+	jitter: 1000,     // = largeur de la fenêtre de comptage du serveur (RateLimit, 1 seconde)
 }
+// Les requêtes rate-limitées le sont toujours par paquet (un montage de page en tire plusieurs
+// dans la même seconde), et un backoff exact les rejouait toutes dans LA MÊME seconde suivante —
+// donc re-limitées en bloc, jusqu'à épuiser les trois essais. L'aléa les étale.
+// Il doit couvrir une fenêtre de comptage ENTIÈRE : le serveur compte par seconde pleine, un aléa
+// plus étroit laisserait le paquet retomber groupé dans la même seconde. Additif et non
+// multiplicatif, pour que l'étalement reste d'une seconde au lieu de grandir avec le backoff.
+// Appliqué AVANT le plafond, sinon maxDelay n'en est plus un.
 function retryDelay(retry: number) {
-	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
+	const delay = RETRY_CONFIG.baseDelay * Math.pow(2, retry) + Math.random() * RETRY_CONFIG.jitter
+	return Math.round(Math.min(delay, RETRY_CONFIG.maxDelay))
 }
 
 interface ExtendedPromise<T> extends Promise<T> {
@@ -161,15 +170,25 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				}
 			}
 			xhr.onerror = () => {
-				// En dev (cross-origin), une 429 sur le preflight CORS se traduit par un onerror
-				if ((LOCAL || DEV) && retry < RETRY_CONFIG.maxRetries) {
+				// `onerror` n'est PAS une 429 (celle-ci arrive par `onload` avec son statut, réessai
+				// géré plus haut) : ici la couche réseau a lâché — 4G qui décroche, serveur
+				// injoignable, requête coupée par un bloqueur. Le message doit le dire, sans quoi le
+				// joueur se croit rate-limité alors qu'il navigue tranquillement.
+				//
+				// Pas de réessai automatique : `onerror` peut survenir APRÈS que le serveur a traité
+				// la requête (réponse perdue en route), et rejouer un POST le ferait deux fois —
+				// deux combats lancés, deux objets fabriqués. Seule exception, le GET en dev :
+				// cross-origin, une 429 sur le preflight CORS s'y traduit par un onerror indistinguable
+				// d'une panne réseau. Restreint au GET parce que DEV (port 8080) tape l'API de
+				// PRODUCTION : y rejouer un POST perdu fabriquerait vraiment l'objet deux fois.
+				if ((LOCAL || DEV) && method === 'GET' && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					console.warn("[CORS/429?] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
 					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
 				} else {
-					console.error("[429] " + method + " " + url + " — all retries exhausted")
-					LeekWars.toast($t('main.too_many_requests'))
-					reject({ error: 'too_many_requests' })
+					console.error("[network] " + method + " " + url)
+					LeekWars.toast($t('main.network_error'))
+					reject({ error: 'network_error' })
 				}
 			}
 			xhr.send(params)

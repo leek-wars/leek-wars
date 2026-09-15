@@ -299,6 +299,7 @@
 	"n_words": "0 단어 | 1 단어 | {n} 단어",
 	"n_year": "1년 | {n}년",
 	"name": "이름",
+	"network_error": "서버와의 연결이 끊어졌습니다. 잠시 후 다시 시도해 주세요.",
 	"new_leek": "새로운 부추",
 	"new_version": "사이트의 새 버전이 있습니다!",
 	"new_version_later": "나중에",

@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { apiErrorKey } from '@/model/api-error'
+import { apiErrorKey, isReportedByTransport } from '@/model/api-error'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
@@ -122,6 +122,7 @@ function resend() {
 		logEvent('resend')
 		close()
 	}).error(payload => {
+		if (isReportedByTransport(payload)) return
 		const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
 		LeekWars.toast(t('error_' + code) as string)
 	}).finally(() => {

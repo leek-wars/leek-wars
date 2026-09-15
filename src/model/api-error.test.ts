@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeApiError } from '@/model/api-error'
+import { apiErrorKey, isReportedByTransport, normalizeApiError } from '@/model/api-error'
+import fr from '@/lang/fr/main.json'
 
 // Régression #11810483 : les endpoints garden/start-*-fight répondent une string JSON nue
 // ('error_fight_not_enough_fights'), pas un objet. Les appelants faisaient `t(error.error)` avec
@@ -31,5 +32,26 @@ describe('normalizeApiError', () => {
 		for (const body of [null, undefined, '', { error: '' }, 500, ['a']]) {
 			expect(normalizeApiError(body).error).toBe('unknown_error')
 		}
+	})
+})
+
+// La panne réseau est le seul code fabriqué par la couche requête qui soit affiché au joueur.
+// Son libellé est commun à tout le site (main.json) et non recopié dans le .i18n de chaque
+// appelant : sans ces deux règles il ressortait en clé brute, le défaut même qu'on corrigeait.
+describe('network_error', () => {
+	it('pointe vers le libellé commun, traduit, et non vers une clé par composant', () => {
+		expect(apiErrorKey({ error: 'network_error' })).toBe('main.network_error')
+		expect(fr).toHaveProperty('network_error')
+	})
+
+	it('garde la convention error_ pour les codes du serveur', () => {
+		expect(apiErrorKey({ error: 'not_enough_habs' })).toBe('error_not_enough_habs')
+		expect(apiErrorKey({ error: 'unknown_error' })).toBe('error_unknown')
+	})
+
+	it('est signalé par la couche requête, donc silencieux chez les appelants', () => {
+		expect(isReportedByTransport({ error: 'network_error' })).toBe(true)
+		expect(isReportedByTransport({ error: 'not_enough_habs' })).toBe(false)
+		expect(isReportedByTransport({ error: 'unknown_error' })).toBe(false)
 	})
 })

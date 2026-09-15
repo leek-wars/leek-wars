@@ -52,6 +52,20 @@ export function apiFieldMessages(error: ApiError, t: (key: string, params?: unkn
 
 // Clé i18n du message d'échec, pour les composants qui préfixent les codes serveur par error_.
 // Le code de repli de normalizeApiError ('unknown_error') garde sa clé historique error_unknown.
+// 'network_error' n'est pas un code du serveur mais de la couche requête : son libellé est commun
+// à tout le site, dans main.json, plutôt que recopié dans le .i18n de chaque appelant — les cinq
+// qui passent par ici n'étaient que deux à traduire son prédécesseur, et les trois autres
+// affichaient la clé brute. Le `t` des composants (useNamespacedT) résout un `main.` préfixé.
 export function apiErrorKey(error: ApiError): string {
-	return error.error === 'unknown_error' ? 'error_unknown' : 'error_' + error.error
+	if (error.error === 'unknown_error') return 'error_unknown'
+	if (error.error === 'network_error') return 'main.network_error'
+	return 'error_' + error.error
+}
+
+// Vrai pour les erreurs que la couche requête a DÉJÀ signalées au joueur (cf. le toast de
+// `xhr.onerror` dans model/leekwars.ts) : l'appelant qui en affiche un second le fait en double.
+// Les 59 sites qui construisent leur clé en `'error_' + code` n'ont pas de traduction pour ces
+// codes-là — ils afficheraient la clé brute par-dessus le message correct.
+export function isReportedByTransport(error: ApiError): boolean {
+	return error.error === 'network_error'
 }

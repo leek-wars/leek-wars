@@ -299,6 +299,7 @@
 	"n_words": "0 sanaa | 1 sana | {n} sanaa",
 	"n_year": "1 vuosi | {n} vuotta",
 	"name": "Nimi",
+	"network_error": "Yhteys palvelimeen katkesi, yritä hetken kuluttua uudelleen.",
 	"new_leek": "Uutta purjoa",
 	"new_version": "Sivuston uusi versio on saatavilla!",
 	"new_version_later": "Myöhemmin",

@@ -309,7 +309,7 @@
 
 <script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
-	import { apiErrorKey, apiFieldMessages } from '@/model/api-error'
+	import { apiErrorKey, apiFieldMessages, isReportedByTransport } from '@/model/api-error'
 	import { locale, mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -485,7 +485,7 @@
 			LeekWars.toast(gt('settings.password_changed'))
 			router.push('/login')
 		}).error(error => {
-			LeekWars.toast(t('error_' + error.error, error.params))
+			if (!isReportedByTransport(error)) LeekWars.toast(t('error_' + error.error, error.params))
 		})
 		return false
 	}
@@ -505,7 +505,7 @@
 			URL.revokeObjectURL(url)
 			exporting.value = false
 		}).error(error => {
-			LeekWars.toast(t('error_' + error.error, error.params))
+			if (!isReportedByTransport(error)) LeekWars.toast(t('error_' + error.error, error.params))
 			exporting.value = false
 		})
 	}

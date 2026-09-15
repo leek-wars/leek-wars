@@ -299,6 +299,7 @@
 	"n_words": "0 woord | 1 woord | {n} woorden",
 	"n_year": "1 jaar | {n} jaar",
 	"name": "Naam",
+	"network_error": "Verbinding met de server verbroken, probeer het zo meteen opnieuw.",
 	"new_leek": "Nieuwe prei",
 	"new_version": "Er is een nieuwe versie van de site beschikbaar!",
 	"new_version_later": "Later",

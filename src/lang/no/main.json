@@ -299,6 +299,7 @@
 	"n_words": "0 ord | 1 ord | {n} ord",
 	"n_year": "1 år | {n} år",
 	"name": "Navn",
+	"network_error": "Mistet forbindelsen til serveren, prøv igjen om et øyeblikk.",
 	"new_leek": "Ny purre",
 	"new_version": "En ny versjon av siden er tilgjengelig!",
 	"new_version_later": "Senere",

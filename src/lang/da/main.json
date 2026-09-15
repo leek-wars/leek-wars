@@ -299,6 +299,7 @@
 	"n_words": "0 ord | 1 ord | {n} ord",
 	"n_year": "1 år | {n} år",
 	"name": "Navn",
+	"network_error": "Forbindelsen til serveren blev afbrudt, prøv igen om et øjeblik.",
 	"new_leek": "Ny porre",
 	"new_version": "En ny version af siden er tilgængelig!",
 	"new_version_later": "Senere",

@@ -133,19 +133,35 @@ function fsUri(path: string): string {
 	return monaco.Uri.file(path).toString()
 }
 
+// Le serveur limite un joueur à 5 requêtes/seconde : charger tous les .py du fermier en
+// `Promise.all` tirait autant d'`ai/read` d'un coup, et tout ce qui dépassait revenait en 429 —
+// rejoué en backoff, parfois jusqu'à épuisement des essais (« seed impossible », donc imports
+// non résolus dans l'éditeur). `ai/read` est de loin la première source de 429 en production.
+// Ce pool glissant borne les requêtes EN VOL, pas le débit : à faible latence il peut encore
+// dépasser 5 req/s, il écrête seulement la rafale et la tempête de réessais qu'elle déclenche.
+// Le vrai correctif est un ordonnanceur global dans `request()`, qui couvrirait aussi les autres
+// rafales d'`ai/read` (monaco.ts, editor-explorer.vue, filesystem.reloadChangedFiles).
+const PY_SEED_CONCURRENCY = 3
+
 /** Charge le code de tous les .py du fermier (modèle ouvert, cache IndexedDB ou ai/read) dans `out`
  *  ({ '/path': code }, rempli au fil de l'eau) pour le seed initial (initializationOptions.files).
  *  Ne touche PAS à `seeded` : ensure() l'alimente depuis le snapshot qu'il retient — ainsi un
  *  chargement qui résout APRÈS le timeout de boot ne marque rien comme monté à tort. */
 async function loadPlayerPyFiles(out: Record<string, string>): Promise<void> {
-	await Promise.all(Object.values(fileSystem.ais).filter((ai) => isPlayerPy(ai.path)).map(async (ai) => {
-		try {
-			out['/' + ai.path] = ai.model ? ai.model.getValue() : ((await fileSystem.load(ai)).code ?? '')
-		} catch (e) {
-			// Non monté : ses importeurs verront « import non résolu » (reportMissingImports) -> tracer.
-			console.warn('[pyright] seed impossible pour', ai.path, e)
+	const ais = Object.values(fileSystem.ais).filter((ai) => isPlayerPy(ai.path))
+	let next = 0
+	const worker = async () => {
+		while (next < ais.length) {
+			const ai = ais[next++]
+			try {
+				out['/' + ai.path] = ai.model ? ai.model.getValue() : ((await fileSystem.load(ai)).code ?? '')
+			} catch (e) {
+				// Non monté : ses importeurs verront « import non résolu » (reportMissingImports) -> tracer.
+				console.warn('[pyright] seed impossible pour', ai.path, e)
+			}
 		}
-	}))
+	}
+	await Promise.all(Array.from({ length: PY_SEED_CONCURRENCY }, worker))
 }
 
 // Chemins de recherche = dossiers des IA d'ENTRÉE (assignées à un poireau), comme au runtime.
