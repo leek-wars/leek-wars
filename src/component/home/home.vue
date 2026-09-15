@@ -190,7 +190,9 @@
 		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 8, defaultH: 8, minW: 6, minH: 4, link: '/trophies', noScroll: true },
 		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 8, defaultH: 8, minW: 6, minH: 6, link: '/forum', noScroll: true },
 		live: { icon: 'mdi-access-point', component: markRaw(Live), defaultW: 8, defaultH: 10, minW: 6, minH: 6 },
-		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 8, defaultH: 6, minW: 6, minH: 4 },
+		// Le widget liste TOUS les vainqueurs de la dernière édition, soit une
+		// trentaine de lignes : posé sur 6 rangées il n'en montrait que quatre.
+		tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetTournaments), defaultW: 8, defaultH: 12, minW: 6, minH: 4 },
 	}
 	const WIDGET_TYPES = Object.keys(widgetMeta)
 
