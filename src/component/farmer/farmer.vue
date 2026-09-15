@@ -1733,11 +1733,15 @@
 		aspect-ratio: 1;
 		vertical-align: bottom;
 	}
+	/* La date vit DANS l'infobulle : elle se pose sur --tooltip-color et pas sur
+	   le texte de la page. Un gris fixe (--grey-12, clair) se lisait sur
+	   l'infobulle sombre de la v2 mais disparaissait sur la claire de la v3. */
 	.trophy-date {
 		padding-top: 4px;
 		font-size: 13px;
 		font-style: italic;
-		color: var(--grey-12);
+		color: inherit;
+		opacity: 0.7;
 	}
 	.trophies.grid .trophy {
 		background: var(--white);
