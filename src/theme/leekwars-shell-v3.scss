@@ -2004,6 +2004,11 @@ body:not(.v2) {
 		box-shadow: var(--shadow-pixel);
 	}
 	.v-menu > .v-overlay__content .v-list,
+	/* `v-card` ne porte pas la classe `v-sheet` en Vuetify 3 : les menus dont
+	   le contenu est une carte (barre de réaction du chat, sélecteur d'emoji,
+	   sous-menus du compte et du menu) gardaient donc le blanc de la surface
+	   Material par-dessus la surface de panneau. */
+	.v-menu > .v-overlay__content .v-card,
 	.v-menu > .v-overlay__content .v-sheet {
 		background: transparent;
 		color: var(--text-color);
