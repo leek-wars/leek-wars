@@ -25,16 +25,42 @@ function fixed_top_offset(): number {
 	return offset === 0 ? 0 : offset + SCROLL_GAP
 }
 
+// Le scroll part dès que l'élément existe, donc avant que les images au-dessus
+// de lui (celles d'un message du forum, sans dimensions connues du HTML) aient
+// leur hauteur : la cible redescend APRÈS coup, d'autant plus qu'on arrive avec
+// un cache froid — le cas de quelqu'un qui suit un lien. On réaligne pendant
+// deux secondes, et on lâche à la première intention de l'utilisateur.
+const SCROLL_SETTLE_DURATION = 2000
+const SCROLL_CANCEL_EVENTS = ['wheel', 'touchstart', 'keydown', 'mousedown']
+let scroll_request = 0
+
 function scroll_to_hash(hash: string, route: RouteLocationNormalized) {
 	const id = decodeURIComponent(hash).replace(/'/g, '~').substring(1)
 	const element = document.getElementById(id)
 	// console.log("scroll element", id, element, route)
-	if (element) {
-		setTimeout(() => {
-			const offset = fixed_top_offset() + ((route.meta?.scrollOffset as number) || 0)
-			window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset)
-		})
+	if (!element) { return }
+	// Un nouveau saut d'ancre (le « # » d'un message, un lien du sommaire)
+	// périme le précédent, sinon les deux réalignements se disputent la page.
+	const request = ++scroll_request
+	let cancelled = false
+	const cancel = () => { cancelled = true }
+	for (const event of SCROLL_CANCEL_EVENTS) {
+		window.addEventListener(event, cancel, { passive: true })
 	}
+	const stop = () => {
+		for (const event of SCROLL_CANCEL_EVENTS) {
+			window.removeEventListener(event, cancel)
+		}
+	}
+	const start = Date.now()
+	const align = () => {
+		if (cancelled || request !== scroll_request) { stop() ; return }
+		const offset = fixed_top_offset() + ((route.meta?.scrollOffset as number) || 0)
+		const top = element.getBoundingClientRect().top + window.scrollY - offset
+		if (Math.abs(top - window.scrollY) > 1) { window.scrollTo(0, top) }
+		if (Date.now() - start < SCROLL_SETTLE_DURATION) { requestAnimationFrame(align) } else { stop() }
+	}
+	setTimeout(align)
 }
 
 export { scroll_to_hash }
