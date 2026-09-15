@@ -47,7 +47,6 @@
 	"error_password_required": "Kata sandi diperlukan untuk menghapus akun ini.",
 	"error_wrong_token": "Sesi telah berakhir, silakan masuk kembali.",
 	"language": "Bahasa",
-	"leek_theme": "Daun bawang besar berwarna putih",
 	"logout": "Keluar",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Aktif sampai {0}.",

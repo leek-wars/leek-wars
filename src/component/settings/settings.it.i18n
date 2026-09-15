@@ -47,7 +47,6 @@
 	"error_password_required": "È richiesta una password per eliminare questo account.",
 	"error_wrong_token": "Sessione scaduta, effettua di nuovo l'accesso.",
 	"language": "Lingua",
-	"leek_theme": "Grandi porri in bianco",
 	"logout": "Disconnettersi",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Attivo fino al {0}.",

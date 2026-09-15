@@ -47,7 +47,6 @@
 	"error_password_required": "Для удаления этого аккаунта требуется пароль.",
 	"error_wrong_token": "Сессия истекла, пожалуйста, войдите снова.",
 	"language": "Язык",
-	"leek_theme": "Лук-порей белый",
 	"logout": "Выйти",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Активна до {0}.",

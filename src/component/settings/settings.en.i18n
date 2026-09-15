@@ -38,7 +38,6 @@
 	"error_too_many_requests": "Too many attempts, please try again in a few moments.",
 	"error_unknown": "An unexpected error occurred, please try again.",
 	"language": "Language",
-	"leek_theme": "Big leeks in white",
 	"logout": "Log out",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Active until {0}.",

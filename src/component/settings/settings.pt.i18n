@@ -47,7 +47,6 @@
 	"error_password_required": "É necessária uma senha para excluir esta conta.",
 	"error_wrong_token": "Sessão expirada, faça login novamente.",
 	"language": "Idioma",
-	"leek_theme": "Alho-poró grande em branco",
 	"logout": "Sair",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Ativa até {0}.",

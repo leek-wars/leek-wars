@@ -47,7 +47,6 @@
 	"error_password_required": "Zum Löschen dieses Kontos ist ein Passwort erforderlich.",
 	"error_wrong_token": "Sitzung abgelaufen, bitte melde dich erneut an.",
 	"language": "Sprache",
-	"leek_theme": "Großer Lauch in Weiß",
 	"logout": "Ausloggen",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Aktiv bis {0}.",

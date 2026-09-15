@@ -2497,13 +2497,88 @@ body:not(.v2) {
 
 	/* Les deux poireaux géants des marges viennent du v2 : ils encadraient une
 	   colonne posée sur un fond sombre. Le v3 traite ces marges comme la suite
-	   de l'interface, et un décor de 500 px de haut en plein milieu s'y lit
-	   comme une erreur. Masqués ici, et pas supprimés du template : l'ancien
-	   design les garde, et une seule ligne suffit à les remettre (ou à les
-	   passer en `opacity: .15` si tu veux garder une texture). */
-	.big-leek-1,
-	.big-leek-2 {
-		display: none;
+	   de l'interface, et un décor de 500 px de haut sur toutes les pages s'y lit
+	   comme une erreur. Ils ne restent que sur les deux pages de présentation
+	   (inscription et groupes privés), en clin d'œil au v2 — la classe `showcase`
+	   est posée par app.vue selon la route. L'ancien design ne voit pas cette
+	   feuille et les garde partout. */
+	.big-leeks:not(.showcase) {
+		.big-leek-1,
+		.big-leek-2 {
+			display: none;
+		}
+	}
+	/* Le cadrage du v2 (une boîte de 1100 px centrée, les poireaux débordant de
+	   part et d'autre) posait le décor EN PLEIN dans le contenu : la colonne des
+	   pages de présentation fait 1400 px, donc les poireaux tombaient dedans et il
+	   n'en dépassait qu'un fragment, lu par transparence à travers les surfaces.
+	   On garde donc la recette du v2, avec la bonne largeur : la boîte de
+	   référence passe à 1400 px, et les décalages glissent le bord intérieur de
+	   chaque poireau SOUS la colonne — il n'est pas posé à côté, il sort de
+	   derrière. Les décalages sont ceux du v2, le premier reculé de 10 px (-163
+	   et -230, soit 89 px et 168 px sous la colonne) : c'est le rapport à la colonne
+	   qui fait le décor, pas la place qui reste autour. Cette place-là change
+	   d'une page à l'autre — 297 px de marge sur l'inscription contre 178 px sur
+	   les groupes vus connecté, où le menu et le panneau social mangent le reste
+	   — et le bord de la fenêtre coupe alors le poireau, exactement comme le v2
+	   le faisait sur un petit écran.
+	   Sous 1700 px de conteneur il reste moins de 150 px de marge : il n'en
+	   resterait qu'un copeau, on les retire. La requête porte sur le CONTENEUR et
+	   pas sur la fenêtre, justement parce qu'il suit la colonne. */
+	.big-leeks.showcase {
+		container-type: inline-size;
+		.wrapper {
+			max-width: 1400px;
+			width: 100%;
+		}
+	}
+	/* Encore faut-il que le conteneur soit celui de la colonne. app.vue place
+	   `.big-leeks` avec les mesures du v2 — menu à 170 px, panneau social à
+	   400 px, retrait de 20 px oublié — alors que le v3 a un menu de 220 px, un
+	   panneau social de largeur variable (`--social-width`) et rien à droite
+	   quand il est replié. Le décor ratait donc la colonne de 50 px à gauche et
+	   de 20 à droite dès qu'on était connecté, et les poireaux flottaient à côté
+	   d'elle au lieu d'en sortir. On reprend ici, à l'identique, la boîte de
+	   `.app-center` — ses marges et ses 20 px de retrait — dont la colonne est
+	   le centre. Les sélecteurs doublent ceux d'app.vue (même #app, mêmes
+	   `:not()`, même ordre) pour passer devant eux à coup sûr. */
+	#app .big-leeks.showcase {
+		left: 20px;
+		right: 20px;
+	}
+	#app.connected:not(.app) .big-leeks.showcase {
+		left: calc(220px + 20px);
+	}
+	#app.menu-collapsed:not(.app) .big-leeks.showcase {
+		left: calc(64px + 20px);
+	}
+	@media screen and (min-width: 1600px) {
+		#app.connected:not(.social-collapsed):not(.app) .big-leeks.showcase {
+			right: calc(var(--social-width, 400px) + 20px);
+		}
+		#app.connected.social-collapsed:not(.app) .big-leeks.showcase {
+			right: 20px;
+		}
+	}
+	@container (min-width: 1700px) {
+		.big-leeks.showcase {
+			.big-leek-1 {
+				left: -163px;
+				bottom: 0;
+			}
+			.big-leek-2 {
+				right: -230px;
+				bottom: 0;
+			}
+		}
+	}
+	@container (max-width: 1699px) {
+		.big-leeks.showcase {
+			.big-leek-1,
+			.big-leek-2 {
+				display: none;
+			}
+		}
 	}
 
 	/* Le contenu recule quand le panneau s'élargit.

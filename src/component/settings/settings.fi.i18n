@@ -47,7 +47,6 @@
 	"error_password_required": "Tämän tilin poistamiseen vaaditaan salasana.",
 	"error_wrong_token": "Istunto on vanhentunut, kirjaudu uudelleen sisään.",
 	"language": "Kieli",
-	"leek_theme": "Isot purjo valkoisena",
 	"logout": "Kirjautua ulos",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Voimassa {0} asti.",

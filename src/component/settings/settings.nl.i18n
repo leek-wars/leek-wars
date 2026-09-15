@@ -47,7 +47,6 @@
 	"error_password_required": "Er is een wachtwoord vereist om dit account te verwijderen.",
 	"error_wrong_token": "Sessie verlopen, log opnieuw in.",
 	"language": "Taal",
-	"leek_theme": "Grote prei in het wit",
 	"logout": "Uitloggen",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Actief tot {0}.",

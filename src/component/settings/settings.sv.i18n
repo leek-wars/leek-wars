@@ -47,7 +47,6 @@
 	"error_password_required": "Ett lösenord krävs för att radera det här kontot.",
 	"error_wrong_token": "Sessionen har gått ut, logga in igen.",
 	"language": "Språk",
-	"leek_theme": "Stor purjolök i vitt",
 	"logout": "Logga ut",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Aktiv till {0}.",

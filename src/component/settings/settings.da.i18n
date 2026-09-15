@@ -47,7 +47,6 @@
 	"error_password_required": "Der kræves en adgangskode for at slette denne konto.",
 	"error_wrong_token": "Sessionen er udløbet, log venligst ind igen.",
 	"language": "Sprog",
-	"leek_theme": "Store porrer i hvid",
 	"logout": "Log ud",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Aktivt indtil {0}.",

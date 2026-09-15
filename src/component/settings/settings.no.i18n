@@ -47,7 +47,6 @@
 	"error_password_required": "Et passord kreves for å slette denne kontoen.",
 	"error_wrong_token": "Økten er utløpt, logg inn på nytt.",
 	"language": "Språk",
-	"leek_theme": "Stor purre i hvitt",
 	"logout": "Logg ut",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Aktivt til {0}.",

@@ -40,7 +40,6 @@
 	"error_login_length": "ユーザー名には {0} ～ {1} 文字を含める必要があります",
 	"error_mail_already_used": "このメールアドレスは既に使用されています",
 	"language": "言語",
-	"leek_theme": "白ネギ大",
 	"logout": "ログアウト",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "{0} まで有効です。",

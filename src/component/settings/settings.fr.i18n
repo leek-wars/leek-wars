@@ -47,7 +47,6 @@
 	"error_too_many_requests": "Trop de tentatives, veuillez réessayer dans quelques instants.",
 	"error_unknown": "Une erreur inattendue est survenue, veuillez réessayer.",
 	"language": "Langue",
-	"leek_theme": "Grands poireaux en blanc",
 	"logout": "Déconnexion",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Actif jusqu'au {0}.",

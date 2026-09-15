@@ -47,7 +47,6 @@
 	"error_password_required": "Do usunięcia tego konta wymagane jest hasło.",
 	"error_wrong_token": "Sesja wygasła, zaloguj się ponownie.",
 	"language": "Język",
-	"leek_theme": "Duże pory w kolorze białym",
 	"logout": "Wyloguj",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Aktywna do {0}.",

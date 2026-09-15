@@ -47,7 +47,6 @@
 	"error_password_required": "Se requiere una contraseña para eliminar esta cuenta.",
 	"error_wrong_token": "Sesión caducada, vuelve a iniciar sesión.",
 	"language": "Lengua",
-	"leek_theme": "Puerros grandes en blanco",
 	"logout": "Cerrar sesión",
 	"lwplus": "Leek Wars +",
 	"lwplus_active_until": "Activa hasta el {0}.",

@@ -22,10 +22,17 @@
 					</div>
 				</div>
 
+				<!-- Les deux poireaux géants des marges. Le v3 ne les garde que sur les
+				     pages de présentation (inscription et groupes), en clin d'œil au
+				     v2, et toujours en blanc : l'option « grands poireaux en blanc » a
+				     disparu des réglages. La classe `showcase` est posée en impératif
+				     (cf. applyLayout), surtout pas par un `$route` dans ce template —
+				     app.vue ne doit pas se re-rendre à chaque navigation (#4163).
+				     L'ancien design, lui, les garde partout et en couleur. -->
 				<div v-if="!LeekWars.mobile" ref="bigLeeksEl" class="big-leeks">
 					<div class="wrapper">
-						<img class="big-leek-1" width="252" height="372" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
-						<img class="big-leek-2" width="398" height="508" fetchpriority="high" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
+						<img class="big-leek-1" width="252" height="372" :src="LeekWars.legacyTheme ? '/image/big_leek_1.webp' : '/image/big_leek_1_white.webp'">
+						<img class="big-leek-2" width="398" height="508" :src="LeekWars.legacyTheme ? '/image/big_leek_2.webp' : '/image/big_leek_2_white.webp'">
 					</div>
 				</div>
 
@@ -483,7 +490,7 @@
 			document.body.classList.add('dark')
 		else
 			document.body.classList.remove('dark')
-		// Cookie miroir, comme `leek_theme` : il permet au serveur de poser la
+		// Cookie miroir : il permet au serveur de poser la
 		// classe sur <body> dès le HTML. Sans lui, le CSS clair (le défaut) peint
 		// la page entre le chargement de la feuille et le montage de Vue, ce qui
 		// fait un flash blanc à chaque chargement en mode sombre.
@@ -536,12 +543,20 @@
 		if (b) {
 			b.classList.toggle('flex', LeekWars.flex || LeekWars.large)
 			b.classList.toggle('hidden', LeekWars.didactitial)
+			// Le v3 ne montre les poireaux que sur les deux pages de présentation :
+			// l'inscription et les groupes privés. Ailleurs, le décor se lit comme
+			// une erreur. La route est lue ici, dans l'impératif, pour la même raison
+			// que les flags de layout. '/' et '/godfather/:login' rendent tous les
+			// deux l'inscription quand on n'est pas connecté (cf. router.ts).
+			const path = router.currentRoute.value.path
+			const signup = !store.state.connected && (path === '/' || path.startsWith('/godfather'))
+			b.classList.toggle('showcase', signup || path === '/groups')
 		}
 		document.body.classList.toggle('lightbar', LeekWars.lightBar)
 	}
 	// mobile est inclus : big-leeks est en v-if="!mobile", il faut ré-appliquer ses
 	// classes quand il (re)monte. flush:'post' garantit que le DOM est à jour.
-	watch(() => [LeekWars.large, LeekWars.flex, LeekWars.box, LeekWars.didactitial, LeekWars.lightBar, LeekWars.mobile], applyLayout, { flush: 'post' })
+	watch(() => [LeekWars.large, LeekWars.flex, LeekWars.box, LeekWars.didactitial, LeekWars.lightBar, LeekWars.mobile, router.currentRoute.value.path, store.state.connected], applyLayout, { flush: 'post' })
 	onMounted(applyLayout)
 	onMounted(startVersionCheck)
 

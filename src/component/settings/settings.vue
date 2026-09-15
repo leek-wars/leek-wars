@@ -121,7 +121,6 @@
 					<lw-switch id="notifs-open-report-button" v-model="notifsOpenReport" class="setting" :label="$t('notifs_open_report')" />
 					<lw-switch v-if="LeekWars.mobile" v-model="chatFirst" class="setting" :label="$t('chat_first')" />
 					<lw-switch v-model="homeDashboard" class="setting" :label="$t('home_dashboard')" />
-					<lw-switch v-if="!LeekWars.mobile" v-model="LeekWars.leekTheme" class="setting" :label="$t('leek_theme')" />
 					<!-- « Ancien design » masqué le 2026-09-10 à la demande de Pierre : la
 					     bascule reviendra, mais pas dans cette màj. Le réglage lui-même
 					     est intact (clé `design` du localStorage, `LeekWars.legacyTheme`),
@@ -564,12 +563,6 @@
 		if (!settings.value) return
 		LeekWars.post("settings/update-setting", {setting: 'google_login', value: settings.value.google_login})
 	}
-
-	watch(() => LeekWars.leekTheme, () => {
-		localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
-		// Cookie miroir pour que le serveur puisse injecter le bon preload du big-leek dans le HTML.
-		document.cookie = 'leek_theme=' + (LeekWars.leekTheme ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax'
-	})
 
 	function submit(e: Event) {
 		e.preventDefault()
