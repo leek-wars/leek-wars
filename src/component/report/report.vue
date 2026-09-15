@@ -461,6 +461,9 @@
 			}
 
 			let currentPlayer: ReportLeek | null = null
+			// Entité dont c'est le tour, mise de côté le temps du réveil d'une plante : les
+			// actions du réveil sont celles de la plante (#5088).
+			let awakenedFrom: ReportLeek | null = null
 			const effects: {[key: number]: { turns: number; value: number; type: number; target: number }} = {}
 			fightActions.value = fight.value.data.actions.map((a: number[]) => {
 				const action = new Action(a)
@@ -478,6 +481,16 @@
 					effects[a[2]] = { turns: a[7], value: a[6], type: a[5], target: a[4] }
 				} else if (a[0] === ActionType.STACK_EFFECT) {
 					action.item = effects[a[1]]
+				} else if (a[0] === ActionType.PLANT_AWAKE && a[3] !== undefined) {
+					// a[3] (les PT de la plante) date du même correctif que PLANT_ASLEEP :
+					// sans lui, le combat n'a pas de borne de fin de réveil.
+					awakenedFrom = currentPlayer
+					currentPlayer = leeks.value[a[1]]
+				} else if (a[0] === ActionType.PLANT_ASLEEP) {
+					if (awakenedFrom) {
+						currentPlayer = awakenedFrom
+						awakenedFrom = null
+					}
 				}
 				action.entity = currentPlayer
 				return action

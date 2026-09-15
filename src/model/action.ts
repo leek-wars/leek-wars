@@ -17,6 +17,7 @@ enum ActionType {
 	OPEN_CHEST = 15,
 	USE_WEAPON = 16,
 	PLANT_AWAKE = 17,
+	PLANT_ASLEEP = 18,
 	TP_LOST = 100,
 	LIFE_LOST = 101,
 	MP_LOST = 102,

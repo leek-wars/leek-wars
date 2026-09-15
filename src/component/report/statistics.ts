@@ -173,6 +173,8 @@ class FightStatistics {
 		let state = StatisticsState.BEGIN_TURN
 		let itemCaster: StatisticsEntity | null = null
 		let lastDamageAction: RawAction | null = null
+		// Entité dont c'est le tour, mise de côté le temps du réveil d'une plante.
+		let awakenedFrom: StatisticsEntity | null = null
 
 		for (const action of fight.data.actions) {
 			const type = action[0] as ActionType
@@ -458,6 +460,26 @@ class FightStatistics {
 					entity.life = 0
 					this.updateLifes()
 					this.addTime()
+					break
+				}
+				case ActionType.PLANT_AWAKE: {
+					// Un réveil tombe au milieu du tour d'une autre entité, et les actions
+					// de la plante ne portent pas qui les joue : sans ce basculement, ses
+					// dégâts et ses soins sont comptés au passant (#5088).
+					// action[3] (les PT de la plante) date du même correctif que PLANT_ASLEEP :
+					// sans lui, le combat n'a pas de borne de fin de réveil.
+					const plant = action[3] !== undefined ? entities[action[1]] : null
+					if (plant) {
+						awakenedFrom = currentEntity
+						currentEntity = plant
+					}
+					break
+				}
+				case ActionType.PLANT_ASLEEP: {
+					if (awakenedFrom) {
+						currentEntity = awakenedFrom
+						awakenedFrom = null
+					}
 					break
 				}
 				case ActionType.LAMA:

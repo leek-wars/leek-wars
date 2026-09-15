@@ -446,6 +446,9 @@ class Game {
 	public avgFPS: number = 0
 	public showCellTime: number = 0
 	public currentPlayer: number | null = null
+	// Plante en train de jouer son réveil : currentPlayer pointe sur elle, et ceci garde
+	// l'entité dont c'est le tour, à qui PLANT_ASLEEP rendra la main.
+	public awakeningPlayer: number | null = null
 	public selectedEntity: FightEntity | null = null
 	public hoverEntity: FightEntity | null = null
 	public jumping: boolean = false
@@ -1249,6 +1252,7 @@ class Game {
 		}
 		case ActionType.END_TURN: {
 			this.currentPlayer = null
+			this.awakeningPlayer = null
 			// Reinitialisation of characteristics
 			this.leeks[action.params[1]].tp = action.params[2]
 			this.leeks[action.params[1]].mp = action.params[3]
@@ -1588,6 +1592,20 @@ class Game {
 			// dire laquelle répond — les USE_CHIP qui suivent racontent le reste.
 			const plant = this.leeks[action.params[1]]
 			this.log(action)
+			// Ce qui suit est joué par la plante, au milieu du tour d'une autre entité.
+			// SAY, USE_CHIP et compagnie ne portent pas l'entité qui agit : sans ce
+			// basculement, le passant prononcerait les say() de la plante et perdrait ses
+			// PT pour elle (#5088). PLANT_ASLEEP rend la main.
+			// Les PT de la plante en 4e paramètre datent du même correctif que
+			// PLANT_ASLEEP : leur absence signe un combat d'avant, qui n'a pas de borne de
+			// fin — on le rejoue alors comme avant, sinon la plante garderait la main
+			// jusqu'à la fin du tour.
+			if (plant && action.params[3] !== undefined) {
+				this.awakeningPlayer = this.currentPlayer
+				this.currentPlayer = action.params[1]
+				// Le moteur rend ses PT à la plante à chaque réveil.
+				plant.tp = action.params[3]
+			}
 			if (plant && !this.jumping) {
 				const bulb = plant as Bulb
 				bulb.awakeGlow = 1
@@ -1595,6 +1613,13 @@ class Game {
 				bulb.bounceX = 0.88
 			}
 			this.actionDone(this.jumping ? 0 : 20)
+			break
+		}
+		case ActionType.PLANT_ASLEEP: {
+			// Fin du réveil : la main revient à l'entité dont c'est le tour.
+			this.currentPlayer = this.awakeningPlayer
+			this.awakeningPlayer = null
+			this.actionDone()
 			break
 		}
 		case ActionType.RESURRECTION: {
@@ -3161,6 +3186,7 @@ class Game {
 		this.clearMarks()
 		this.turn = 1
 		this.currentPlayer = null
+		this.awakeningPlayer = null
 
 		this.showCellTime = 0
 		for (const chip of this.chips) {
