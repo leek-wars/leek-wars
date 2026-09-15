@@ -685,6 +685,21 @@
 			display: none;
 		}
 	}
+	// v3 : le titre d'un article n'est pas un titre de coquille, c'est la
+	// première ligne du contenu — et sur les pages de documentation il porte une
+	// signature de fonction (`acos(nombre argument) → réel result`). La règle
+	// globale `h1` du thème lui donnait la police d'affichage, la seule ligne en
+	// pixel d'un article entièrement composé en typo de corps (Pierre,
+	// 2026-09-15 : « est-ce qu'on peut enlever la police pixelisée pour les
+	// titres de l'encyclopédie ? »). Le fil d'Ariane de la barre de page, lui,
+	// reste en police d'affichage : c'est de la coquille.
+	// Le corps ne change pas (2em) : il reste au-dessus des `h2` de l'article
+	// (25 px), qui sont déjà dans cette police.
+	body:not(.v2) .md :deep(h1) {
+		font-family: var(--font-body);
+		font-weight: 500;
+		letter-spacing: normal;
+	}
 	// Citation déclarant la page parent d'une page d'encyclopédie : métadonnée, pas du contenu.
 	.md :deep(blockquote.parent-page) {
 		display: none;
