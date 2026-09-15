@@ -1,31 +1,34 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>
-					<breadcrumb :items="breadcrumb_items" :raw="true" />
-				</h1>
-				<v-menu offset-y>
-					<template #activator="{ props }">
-						<div class="forum-language info" v-bind="props">
-							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
-							<v-icon class="caret">mdi-menu-down</v-icon>
-						</div>
-					</template>
-					<v-list>
-						<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
-							<template #prepend>
-								<v-list-item-action start>
-									<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop @update:model-value="updateCategories" />
-								</v-list-item-action>
-							</template>
-							<div class="flex">
-								<flag :code="language.country" :clickable="false" />
-								<span class="name">{{ language.name }}</span>
+			<div class="page-title">
+				<page-icon name="forum" fallback="mdi-forum" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
+					<v-menu offset-y>
+						<template #activator="{ props }">
+							<div class="forum-language info" v-bind="props">
+								<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
+								<v-icon class="caret">mdi-menu-down</v-icon>
 							</div>
-						</v-list-item>
-					</v-list>
-				</v-menu>
+						</template>
+						<v-list>
+							<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
+								<template #prepend>
+									<v-list-item-action start>
+										<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop @update:model-value="updateCategories" />
+									</v-list-item-action>
+								</template>
+								<div class="flex">
+									<flag :code="language.country" :clickable="false" />
+									<span class="name">{{ language.name }}</span>
+								</div>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</div>
 			</div>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab" @click="createDialog = true">
@@ -728,12 +731,20 @@
 
 <style lang="scss" scoped>
 
+// Le sélecteur de langue est posé À CÔTÉ du titre, sur la même ligne centrée
+// (même motif que la page d'accueil du forum) : en simple enfant de la barre, il
+// se calait en haut du h1 et les drapeaux flottaient 6 px au-dessus du milieu du
+// fil d'Ariane.
+.page-title-text {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
 .forum-language {
 	display: inline-flex;
 	padding: 0 4px;
 	cursor: pointer;
 	align-items: center;
-	height: 100%;
 	gap: 6px;
 	user-select: none;
 }

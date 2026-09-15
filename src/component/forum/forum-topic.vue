@@ -1,33 +1,36 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div class="title-wrapper">
-				<h1>
-					<router-link to="/forum">{{ $t('main.forum') }}</router-link>
-					<v-icon>mdi-chevron-right</v-icon>
-					<router-link v-if="topic && category" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
-					<v-icon>mdi-chevron-right</v-icon>
-					<flag v-if="category && forumLanguages.length >= 2 && category.lang" :code="LeekWars.languages[category.lang].country" />
-					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
-					<div v-if="topic" class="info attrs">
-						<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
-						<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr status-resolved">mdi-check-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr status-not-a-bug">mdi-close-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.OBSOLETE" :title="$t('status_obsolete')" class="attr status-obsolete">mdi-archive</v-icon>
-						<v-icon v-if="topic.hidden" :title="$t('hide_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
-					</div>
-				</h1>
-				<div v-if="!LeekWars.mobile" class="tabs">
-					<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">
-						<v-icon>mdi-newspaper-minus</v-icon>
-						{{ $t('unsubscribe') }}
-					</div>
-					<div v-else class="tab" @click="subscribe">
-						<v-icon>mdi-newspaper-plus</v-icon>
-						{{ $t('subscribe') }}
+			<div class="page-title">
+				<page-icon name="forum" fallback="mdi-forum" />
+				<div class="page-title-text title-wrapper">
+					<h1>
+						<router-link to="/forum">{{ $t('main.forum') }}</router-link>
+						<v-icon>mdi-chevron-right</v-icon>
+						<router-link v-if="topic && category" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
+						<v-icon>mdi-chevron-right</v-icon>
+						<flag v-if="category && forumLanguages.length >= 2 && category.lang" :code="LeekWars.languages[category.lang].country" />
+						<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
+						<div v-if="topic" class="info attrs">
+							<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
+							<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr status-resolved">mdi-check-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr status-not-a-bug">mdi-close-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.OBSOLETE" :title="$t('status_obsolete')" class="attr status-obsolete">mdi-archive</v-icon>
+							<v-icon v-if="topic.hidden" :title="$t('hide_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
+						</div>
+					</h1>
+					<div v-if="!LeekWars.mobile" class="tabs">
+						<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">
+							<v-icon>mdi-newspaper-minus</v-icon>
+							{{ $t('unsubscribe') }}
+						</div>
+						<div v-else class="tab" @click="subscribe">
+							<v-icon>mdi-newspaper-plus</v-icon>
+							{{ $t('subscribe') }}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -846,31 +849,51 @@
 		font-size: 18px;
 		color: var(--grey-7);
 	}
+	// Titre et onglet « S'abonner » sur une ligne : l'onglet flottait à droite du
+	// h1 `display: inline`, ce que le h1 en flex (ci-dessous) ne permet plus.
 	.title-wrapper {
 		flex: 1;
+		min-width: 0;
+		display: flex;
+		// `nowrap` : l'onglet reste au bout de la barre, comme quand il y flottait.
+		// Un titre trop long fait plier le h1 (lui-même en `wrap`), pas la barre.
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: space-between;
 	}
+	// Le fil d'Ariane passe en ligne flex centrée : calés sur la ligne de BASE,
+	// les chevrons tombaient 3,5 px sous le milieu des capitales et le drapeau
+	// remontait 2,5 px au-dessus (mesuré sur la page rendue, 2026-09-15) — la
+	// police pixel a une ligne de base plus haute que celle pour laquelle les
+	// `vertical-align` et le `margin-bottom: 11px` avaient été réglés.
+	// `flex-wrap` garde le repli des titres longs sur plusieurs lignes.
 	h1 {
-		display: inline;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		// `0 1 auto` et non `1` : en v2 le titre porte le bandeau vert, qui doit
+		// épouser le texte et non toute la largeur de la barre.
+		flex: 0 1 auto;
+		min-width: 0;
+		gap: 0 6px;
 		line-height: 36px;
+		// La hauteur fixe du h1 global ne s'appliquait pas à un élément `inline` ;
+		// sur un conteneur flex, elle tronquerait les titres repliés.
+		height: auto;
 		min-height: 36px;
 		white-space: normal;
 		padding: 6px 15px;
 		padding-right: 0px;
 		.v-icon {
-			vertical-align: text-bottom;
 			font-size: 24px;
-			margin: 0 4px;
 		}
 		.flag {
 			height: 16px;
-			vertical-align: bottom;
-			margin-bottom: 11px;
-			margin-right: 6px;
 		}
 	}
 	.tabs {
 		margin-left: 18px;
-		float: right;
+		flex: 0 0 auto;
 	}
 	// Sur tablette / fenêtre étroite (layout desktop car mobile dépend de l'UA), le
 	// bandeau vert du titre passe sur plusieurs lignes : le triangle décoratif se

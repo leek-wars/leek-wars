@@ -22,6 +22,14 @@ defineProps<{
 			font-size: 24px;
 		}
 	}
+	/* Posé dans un titre (`raw`), le fil passe en ligne flex centrée : calé sur
+	   la ligne de base, le chevron tombait sous le milieu des capitales de la
+	   police pixel, dont la ligne de base est plus haute (2026-09-15). */
+	.breadcrumb.raw {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+	}
 	.breadcrumb:not(.raw) {
 		font-size: 16px;
 		line-height: 30px;

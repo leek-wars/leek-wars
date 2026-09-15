@@ -303,6 +303,15 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le salon courant est posé à côté du titre, sur la même ligne centrée : en
+	// enfants d'un bloc, le h1 et le `.info` se calaient sur la ligne de base, et
+	// la police pixel du titre, dont la ligne de base est plus haute, laissait le
+	// nom du salon 3 px trop haut (retour de Pierre, 2026-09-15). L'écart reste
+	// celui du `margin-left` global de `.page-bar .info`.
+	.page-title-text {
+		display: flex;
+		align-items: center;
+	}
 	.page-header .info {
 		display: inline-flex;
 		align-items: center;
