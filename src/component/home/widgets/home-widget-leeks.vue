@@ -1,15 +1,18 @@
 <template>
-	<div ref="root" class="leeks-widget" :class="{ horizontal: layout.horizontal }" :style="{ '--cols': layout.columns, '--image': layout.image + 'px' }">
+	<div ref="root" class="leeks-widget" :class="[{ horizontal: layout.horizontal }, 'info-' + layout.mode]" :style="{ '--cols': layout.columns, '--image': layout.image + 'px' }">
 		<rich-tooltip-leek v-for="leek in leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
 			<router-link v-ripple :to="'/leek/' + leek.id" class="leek" v-bind="props">
 				<leek-image :leek="leek" :scale="0.75" />
 				<div class="info">
 					<div class="name">{{ leek.name }}</div>
-					<div class="talent-ranking">
+					<!-- Carte serrée : le talent puis le niveau sortent, dans cet ordre.
+					     Tout reste dans l'infobulle riche, et le panneau garde des cartes
+					     entières — avant, le bloc débordait sur la carte du dessous. -->
+					<div v-if="layout.mode !== 'minimal'" class="talent-ranking">
 						<talent :id="leek.id" :talent="leek.talent" :max_talent="leek.max_talent" category="leek" />
 						<ranking-badge v-if="leek.ranking && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 					</div>
-					<span class="level">{{ t('main.level_n', [leek.level]) }}</span>
+					<span v-if="layout.mode === 'full'" class="level">{{ t('main.level_n', [leek.level]) }}</span>
 				</div>
 			</router-link>
 		</rich-tooltip-leek>
@@ -51,22 +54,59 @@
 	 * mesurer tels qu'ils sont rendus.
 	 */
 	const MIN_INFO_WIDTH = 110
+	// Largeur qu'il faut au seul nom, qui s'ellipse : c'est la ligne de talent qui
+	// impose `infoWidth`, et elle n'est pas là dans le mode le plus serré.
+	const MIN_NAME_WIDTH = 60
 	const PADDING = 20
 	const GAP = 10
 	const MIN_IMAGE = 40
+	// Plancher de secours, quand le panel est trop petit pour que quoi que ce soit
+	// tienne : mieux vaut un poireau plus petit que le minimum qu'un poireau rogné.
+	const TINY_IMAGE = 24
 	const MAX_IMAGE = 160
+	// Marges verticales de la ligne de talent, à garder en phase avec le style :
+	// elles ne sont pas dans son `offsetHeight`, mais elles comptent dans la
+	// hauteur du bloc d'infos.
+	const TALENT_MARGIN = 8
+	const TALENT_MARGIN_COMPACT = 2
+	// Ce que la carte montre sous le nom, du plus riche au plus pauvre. Le nom ne
+	// part jamais : c'est lui qui dit de quel poireau on parle.
+	type InfoMode = 'full' | 'compact' | 'minimal'
+	const INFO_MODES: InfoMode[] = ['full', 'compact', 'minimal']
 	// La carte debout reste la disposition de référence : coucher la carte doit
 	// rapporter un gain net (15 %), pas deux pixels. Sans cette préférence, les
 	// deux sens se valent souvent et le widget bascule de l'un à l'autre au
 	// moindre redimensionnement.
 	const UPRIGHT_PREFERENCE = 1.15
+	// Ce que vaut chaque mode, en pixels de poireau : garder le talent en vaut
+	// 70, garder le niveau 25 de plus. Une disposition ne sacrifie donc pas le
+	// talent pour vingt pixels de poireau, mais un poireau deux fois plus gros
+	// reste préférable à la ligne du niveau.
+	const MODE_BONUS: Record<InfoMode, number> = { full: 95, compact: 70, minimal: 0 }
 
 	const root = ref<HTMLElement | null>(null)
 	const width = ref(0)
 	const height = ref(0)
 	const infoWidth = ref(MIN_INFO_WIDTH)
-	const infoHeight = ref(0)
+	// Les trois lignes du bloc d'infos, mesurées séparément : un mode resserré en
+	// retire, et il faut pouvoir dire ce que coûterait leur retour. Elles partent
+	// de leur taille habituelle plutôt que de zéro — le temps du premier rendu,
+	// une ligne à 0 ferait croire que tout tient et le widget s'ouvrirait en
+	// débordant avant de se reprendre.
+	const nameHeight = ref(19)
+	const talentHeight = ref(24)
+	const levelHeight = ref(18)
 	let observer: ResizeObserver | null = null
+
+	/** Ce que pèse le bloc d'infos dans un mode donné. */
+	const infoHeightFor = (mode: InfoMode) => {
+		if (mode === 'minimal') { return nameHeight.value }
+		if (mode === 'compact') { return nameHeight.value + TALENT_MARGIN_COMPACT * 2 + talentHeight.value }
+		return nameHeight.value + TALENT_MARGIN * 2 + talentHeight.value + levelHeight.value
+	}
+
+	/** Et ce qu'il lui faut en largeur : la ligne de talent, ou le seul nom. */
+	const infoWidthFor = (mode: InfoMode) => mode === 'minimal' ? MIN_NAME_WIDTH : infoWidth.value
 
 	const measure = () => {
 		const el = root.value
@@ -74,17 +114,21 @@
 		width.value = el.clientWidth
 		height.value = el.clientHeight
 		let contentWidth = 0
-		let contentHeight = 0
-		// La ligne talent + classement donne la largeur (le nom, lui, s'ellipse),
-		// le bloc d'infos entier donne la hauteur.
+		// La ligne talent + classement donne la largeur (le nom, lui, s'ellipse).
 		for (const row of el.querySelectorAll('.talent-ranking')) {
 			contentWidth = Math.max(contentWidth, (row as HTMLElement).offsetWidth)
 		}
-		for (const info of el.querySelectorAll('.info')) {
-			contentHeight = Math.max(contentHeight, (info as HTMLElement).offsetHeight)
+		if (contentWidth > 0) { infoWidth.value = Math.max(MIN_INFO_WIDTH, contentWidth) }
+		// Chaque ligne garde sa dernière hauteur connue : en mode resserré elle
+		// n'est plus rendue, mais c'est elle qui dit si on peut la remettre quand
+		// le panneau grandit.
+		const keep = (r: typeof nameHeight, selector: string) => {
+			const node = el.querySelector(selector) as HTMLElement | null
+			if (node && node.offsetHeight > 0) { r.value = node.offsetHeight }
 		}
-		infoWidth.value = Math.max(MIN_INFO_WIDTH, contentWidth)
-		infoHeight.value = contentHeight
+		keep(nameHeight, '.name')
+		keep(talentHeight, '.talent-ranking')
+		keep(levelHeight, '.level')
 	}
 
 	// Le contenu est observé lui aussi : sa taille bouge au chargement des
@@ -118,7 +162,7 @@
 
 	const count = computed(() => Math.max(1, leeks.value.length + (canCreate.value ? 1 : 0)))
 
-	interface Layout { columns: number, rows: number, horizontal: boolean, image: number, score: number, room: number, cellWidth: number, holes: number, fits: boolean }
+	interface Layout { columns: number, rows: number, horizontal: boolean, mode: InfoMode, rank: number, image: number, score: number, room: number, missing: number, cellWidth: number, holes: number, fits: boolean }
 
 	const layout = computed(() => {
 		let best: Layout | null = null
@@ -131,30 +175,53 @@
 			const cellHeight = (height.value - GAP * (rows - 1)) / rows
 			const holes = columns * rows - count.value
 			for (const horizontal of [false, true]) {
-				// Place restante pour le poireau : les infos sont sous lui quand la
-				// carte est debout, à côté de lui quand elle est couchée.
-				const room = horizontal
-					? Math.min(cellHeight - PADDING, cellWidth - PADDING - GAP - infoWidth.value)
-					: Math.min(cellHeight - PADDING - infoHeight.value, cellWidth - PADDING)
-				// Une carte debout doit aussi loger ses infos en largeur, sans quoi
-				// la ligne de talent déborde de sa case.
-				const fits = room >= MIN_IMAGE && (horizontal || cellWidth - PADDING >= infoWidth.value)
-				const image = Math.min(MAX_IMAGE, Math.max(MIN_IMAGE, room))
-				const candidate: Layout = { columns, rows, horizontal, image, score: horizontal ? image : image * UPRIGHT_PREFERENCE, room, cellWidth, holes, fits }
-				const better = !best ? true
-					: candidate.fits !== best.fits ? candidate.fits
-					// Quand rien ne tient (panel minuscule), on sauve d'abord la
-					// lisibilité : les cases les plus larges, donc le moins de
-					// colonnes, quitte à ce que le poireau soit tout petit.
-					: !candidate.fits ? (candidate.cellWidth !== best.cellWidth ? candidate.cellWidth > best.cellWidth : candidate.room > best.room)
-					: candidate.score !== best.score ? candidate.score > best.score
-					: candidate.holes !== best.holes ? candidate.holes < best.holes
-					: false
-				if (better) { best = candidate }
+				// Les trois modes sont essayés pour chaque grille : ce que la carte
+				// montre se paie en pixels de poireau (MODE_BONUS), et c'est le score
+				// qui tranche — un mode plus pauvre peut gagner s'il rend le poireau
+				// franchement plus grand.
+				for (const mode of INFO_MODES) {
+					const info = infoHeightFor(mode)
+					const iw = infoWidthFor(mode)
+					// Place restante pour le poireau : les infos sont sous lui quand la
+					// carte est debout, à côté de lui quand elle est couchée.
+					const room = horizontal
+						? Math.min(cellHeight - PADDING, cellWidth - PADDING - GAP - iw)
+						: Math.min(cellHeight - PADDING - info, cellWidth - PADDING)
+					// Une carte couchée doit loger ses infos en hauteur, une carte
+					// debout en largeur — sans quoi le bloc déborde de sa case et
+					// vient recouvrir la carte voisine.
+					const infoFits = horizontal ? info <= cellHeight - PADDING : iw <= cellWidth - PADDING
+					const fits = room >= MIN_IMAGE && infoFits
+					// Ce qui manque à ce candidat pour tenir : le poireau qu'on n'a pas
+					// la place de dessiner, plus les infos qui dépassent dans l'autre
+					// sens. C'est ce total qu'on minimise quand rien ne tient.
+					const missing = Math.max(0, MIN_IMAGE - room)
+						+ (horizontal ? Math.max(0, info - (cellHeight - PADDING)) : Math.max(0, iw - (cellWidth - PADDING)))
+					const image = Math.min(MAX_IMAGE, Math.max(fits ? MIN_IMAGE : TINY_IMAGE, room))
+					// Ce que montre la carte entre dans le score, converti en pixels de
+					// poireau (MODE_BONUS).
+					const rank = INFO_MODES.indexOf(mode)
+					const score = (horizontal ? image : image * UPRIGHT_PREFERENCE) + MODE_BONUS[mode]
+					const candidate: Layout = { columns, rows, horizontal, mode, rank, image, score, room, missing, cellWidth, holes, fits }
+					const better = !best ? true
+						: candidate.fits !== best.fits ? candidate.fits
+						// Quand rien ne tient (panel minuscule), on prend le moins mauvais
+						// — celui à qui il manque le moins de place, et à égalité celui
+						// qui laisse le plus grand poireau.
+						: !candidate.fits ? (candidate.missing !== best.missing ? candidate.missing < best.missing : candidate.room > best.room)
+						: candidate.score !== best.score ? candidate.score > best.score
+						: candidate.holes !== best.holes ? candidate.holes < best.holes
+						: false
+					if (better) { best = candidate }
+				}
 			}
 		}
 		return best!
 	})
+
+	// Les lignes qui reviennent (ou disparaissent) sont de nouveaux nœuds : sans
+	// ça l'observateur garde les anciens et ne voit plus rien bouger.
+	watch(() => layout.value.mode, () => nextTick(observeAll))
 </script>
 
 <style lang="scss" scoped>
@@ -177,6 +244,11 @@
 		align-items: center;
 		justify-content: center;
 		min-width: 0;
+		// Filet : une carte ne déborde jamais sur sa voisine. Le calcul du mode
+		// d'infos fait en sorte qu'il n'y ait rien à couper, mais entre deux
+		// mesures (chargement des polices, changement de talent) il vaut mieux
+		// rogner d'un pixel que recouvrir la carte du dessous.
+		overflow: hidden;
 		padding: 10px;
 		text-decoration: none;
 		color: var(--text-color);
@@ -262,6 +334,18 @@
 		align-items: center;
 		gap: 4px;
 		margin: 8px 0;
+	}
+	// Carte serrée : la ligne de talent respire moins. Les deux valeurs sont
+	// partagées avec le script (TALENT_MARGIN, TALENT_MARGIN_COMPACT), qui les
+	// ajoute à la hauteur du bloc — la marge n'est pas dans son offsetHeight.
+	.leeks-widget.info-compact .talent-ranking {
+		margin: 2px 0;
+	}
+	// Mode le plus serré : il ne reste que le nom, qui lui sait s'ellipser. Le
+	// `flex-shrink: 0` ci-dessus protège la ligne de talent, absente ici — sans
+	// cette exception le nom pousse le bloc hors de sa carte.
+	.leeks-widget.info-minimal .info {
+		flex-shrink: 1;
 	}
 	// La pastille du talent se cale sur la hauteur du nombre qu'elle précède.
 	// v2 seulement : en v3 le talent est UNE boîte, la même partout (Pierre,
