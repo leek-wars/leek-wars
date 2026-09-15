@@ -147,7 +147,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
+	import { GROUND_PADDING_TOP } from '../player/game/ground'
 	import Comments from '@/component/comment/comments.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
@@ -249,9 +249,19 @@
 		return (parseFloat(style.borderLeftWidth) || 0) + (parseFloat(style.borderRightWidth) || 0)
 	}
 
-	// Le lecteur ne colle pas le bas de la fenêtre : il reste le trait du panneau et
-	// un peu d'air, pour qu'on voie que la page continue en dessous.
-	const MARGIN_BOTTOM = 8
+	/**
+	 * Ce que la page prend SOUS le lecteur : le trait du bas du panneau, et rien
+	 * d'autre. C'était `8` en dur, de l'air pour qu'on voie que la page continue
+	 * en dessous ; la rangée de commandes le dit déjà, et ce liseré de fond sous
+	 * un panneau qui remplit l'écran se lisait comme un défaut d'alignement
+	 * (Pierre, 2026-09-15). Zéro ne convient pas non plus : le trait du panneau
+	 * passerait alors juste sous la ligne de flottaison.
+	 */
+	function verticalOutset(): number {
+		const panel = document.querySelector('.page .panel.first')
+		if (!panel) return 1
+		return parseFloat(getComputedStyle(panel).borderBottomWidth) || 0
+	}
 
 	/**
 	 * Ce que la page prend au-dessus du lecteur : l'en-tête fixe, la barre de titre
@@ -305,29 +315,52 @@
 					playerHorizontal.value = false
 				}
 			} else {
-				// Desktop
-				const maxWidth = reference.offsetWidth - offset
-				const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
-				const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
-				const theoricalHeight = Math.round(theoricalHeight1 + padding_bottom + padding_top + controls)
-				const height = Math.min(window.innerHeight - verticalOffset() - MARGIN_BOTTOM, theoricalHeight)
-				playerWidth.value = maxWidth
-				playerHeight.value = height
+				// Desktop : le lecteur prend toute la hauteur libre, et le panneau
+				// s'arrête donc juste au-dessus du bas de la fenêtre.
+				//
+				// Il était borné par la hauteur qu'il faut au terrain pour tenir dans
+				// la largeur de la colonne (`theoricalHeight`). Dès que la colonne est
+				// étroite pour la fenêtre — chat ouvert, écran haut — c'est cette borne
+				// qui gagnait, et le panneau tombait court : 63 px de vide sous lui en
+				// 1920×1000, plus encore en 1678 (demande de Pierre, 2026-09-15). Le
+				// terrain, lui, ne grandit pas pour autant : il reste limité par la
+				// largeur et `Ground.resize` le centre dans la place reçue, la hauteur
+				// en trop devient du décor de part et d'autre.
+				playerWidth.value = reference.offsetWidth - offset
+				playerHeight.value = window.innerHeight - verticalOffset() - verticalOutset()
 				playerHorizontal.value = false
 			}
 		}
 	}
 
+	// La hauteur du lecteur se déduit de sa position dans la page. Or celle-ci
+	// bouge APRÈS le premier calcul : `resize()` part du `setup`, quand le
+	// conteneur n'existe pas encore et que `verticalOffset()` en est réduit à sa
+	// valeur de repli, puis la barre de titre reçoit le nom du combat et le retour
+	// au potager. Chaque pixel gagné ou perdu au-dessus du lecteur est un pixel
+	// d'écart en bas du panneau, et rien ne le recalculait : ni le chargement du
+	// combat, ni un changement de hauteur de la barre (retour de Pierre,
+	// 2026-09-15, « j'ai encore un écart »). On remesure donc au montage, à
+	// l'arrivée du combat, et à chaque fois que la barre de titre change de taille.
+	let headerObserver: ResizeObserver | undefined
+
 	onMounted(() => {
 		emitter.on('resize', resize)
 		emitter.on('trophy', onTrophy)
 		emitter.on('fight_notification', onFightNotification)
+		nextTick(resize)
+		const header = document.querySelector('.page > .page-header')
+		if (header) {
+			headerObserver = new ResizeObserver(() => resize())
+			headerObserver.observe(header)
+		}
 	})
 
 	onUnmounted(() => {
 		emitter.off('resize', resize)
 		emitter.off('trophy', onTrophy)
 		emitter.off('fight_notification', onFightNotification)
+		headerObserver?.disconnect()
 
 		// Notifications de trophées restants
 		for (const message of trophyQueue) {
@@ -354,6 +387,8 @@
 			loadedFight.title = t('entity.' + loadedFight.boss_name) as string
 		}
 		LeekWars.setTitle(loadedFight.title, LeekWars.formatDate(loadedFight.date))
+		// Le titre qu'on vient de poser peut changer la hauteur de la barre.
+		nextTick(resize)
 	}
 
 	function onTrophy(trophy: unknown) {
