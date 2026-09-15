@@ -310,8 +310,8 @@
 	.category > div {
 		padding: 10px;
 	}
-	#app.app .category > div {
-		padding: 4px 6px;
+	#app.app .category .seen {
+		padding: 14px;
 	}
 	.category:not(.header) {
 		border: 1px solid var(--border);
@@ -359,10 +359,10 @@
 	}
 	body:not(.v2) .category > .seen {
 		width: auto;
-		padding: 10px 30px;
+		padding: 10px 24px;
 	}
 	.category .dot {
-		font-size: 20px;
+		font-size: 24px;
 		color: var(--text-color-secondary);
 		opacity: 0.45;
 	}

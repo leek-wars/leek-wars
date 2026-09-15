@@ -817,7 +817,7 @@ i.attr {
 	}
 }
 .topic > div {
-	padding: 8px;
+	padding: 8px 0;
 	flex: 1;
 	min-width: 0;
 }
@@ -848,14 +848,14 @@ body:not(.v2) {
 // poireau en PNG qui portait sa couleur en dur (cf. ICONS.md), ni une pastille
 // ronde — le v3 n'a pas d'arrondis (principe 2).
 .topic > .seen {
-	flex: 0 0 34px;
+	flex: 0 0 50px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 8px 4px;
 }
 .topic .dot {
-	font-size: 20px;
+	font-size: 24px;
 	color: var(--text-color-secondary);
 	opacity: 0.45;
 }
