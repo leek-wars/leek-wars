@@ -85,6 +85,15 @@
 									<template v-else-if="col.type === 'eur'">
 										{{ $filters.number(item[col.key]) }} €
 									</template>
+									<!-- liste de poireaux, chacun avec sa rich-tooltip. La couleur et
+									     l'estompe viennent du serveur : le client ne fait que peindre. -->
+									<template v-else-if="col.type === 'leek_list'">
+										<div class="leek-list">
+											<rich-tooltip-leek v-for="leek in (item[col.key] as LeekChip[])" :id="leek.id" :key="leek.id" v-slot="{ props }" :bottom="true">
+												<router-link :to="'/leek/' + leek.id" v-bind="props" class="leek-chip" :class="{ dim: leek.dim }" :style="leek.color ? { backgroundColor: leek.color, color: 'white' } : {}">{{ leek.name }}</router-link>
+											</rich-tooltip-leek>
+										</div>
+									</template>
 									<!-- texte brut (défaut) -->
 									<template v-else>
 										{{ item[col.key] }}
@@ -106,6 +115,7 @@
 	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
 	const STORAGE_KEY = 'admin_dashboard_last'
 
@@ -118,6 +128,13 @@
 		scheme?: string
 		max?: number
 		tooltip_key?: string
+	}
+	/** Entrée d'une colonne `leek_list` : le serveur décide du libellé et des couleurs. */
+	interface LeekChip {
+		id: number
+		name: string
+		color?: string | null
+		dim?: boolean
 	}
 	interface Dashboard {
 		id: string
@@ -182,7 +199,8 @@
 		const d = data[id]
 		if (!d) return []
 		return d.columns.map((col: DashboardColumn) => {
-			const header: { title: string, key: string, sortable: boolean, sort?: (a: unknown, b: unknown, itemA: Record<string, number>, itemB: Record<string, number>) => number } = { title: col.title, key: col.key, sortable: true }
+			// Une liste de poireaux ne se trie pas : la colonne porte un tableau, pas une valeur.
+			const header: { title: string, key: string, sortable: boolean, sort?: (a: unknown, b: unknown, itemA: Record<string, number>, itemB: Record<string, number>) => number } = { title: col.title, key: col.key, sortable: col.type !== 'leek_list' }
 			if (col.sort_key) {
 				const sortKey = col.sort_key
 				header.sort = (a, b, itemA, itemB) => itemA[sortKey] - itemB[sortKey]
@@ -224,6 +242,27 @@
 </script>
 
 <style lang="scss" scoped>
+	.leek-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2px;
+		padding: 3px 0;
+		max-width: 620px;
+	}
+	.leek-chip {
+		display: inline-block;
+		padding: 0 4px;
+		border-radius: 3px;
+		font-size: 12px;
+		line-height: 17px;
+		white-space: nowrap;
+		background: var(--background-secondary);
+		color: var(--text-color);
+		text-decoration: none;
+		&.dim {
+			opacity: 0.55;
+		}
+	}
 	.dashboard-summary {
 		padding: 12px 16px;
 		font-size: 15px;
