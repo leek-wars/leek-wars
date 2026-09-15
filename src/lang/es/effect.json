@@ -151,7 +151,7 @@
 	"type_6": "Protege de <b>{0}</b> a <b>{1}</b> de daño",
 	"type_61_fixed": "Cura del total del efecto anterior",
 	"type_63_fixed": "Otorga <b>{0}%</b> del daño recibido como resistencia",
-	"type_64_fixed": "Convierte el <b>{0}%</b> de los venenos del objetivo en daño inmediato",
+	"type_64_fixed": "Hace detonar los venenos del objetivo: el <b>{0}%</b> de su suma en daño inmediato",
 	"type_6_fixed": "Protege de <b>{0}</b> de daño",
 	"type_7": "Aumenta los PM de <b>{0}</b> a <b>{1}</b>",
 	"type_7_fixed": "Aumenta los PM de <b>{0}</b>",

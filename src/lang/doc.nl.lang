@@ -54,7 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "Het effect is cumulatief.",
 	"const_EFFECT_NOVA_DAMAGE": "Verwijdert maximale levenspunten. Versterkt door de wetenschap.",
 	"const_EFFECT_POISON": "Verwijdert hitpoints van een entiteit. Versterkt door magie. Vermindert de maximale hitpoints met 10% van het aantal verwijderde hitpoints.",
-	"const_EFFECT_SUPERINFECTION": "Zet een deel van de actieve vergiften van het doelwit om in directe schade: elk vergif doet meteen 50% van zijn resterende schade (65% bij een kritieke treffer) en zijn waarde per beurt wordt evenredig verlaagd. De totale vergifschade blijft behouden, ze wordt alleen vervroegd. Oneindige vergiften worden genegeerd.",
+	"const_EFFECT_SUPERINFECTION": "Laat de actieve vergiften van het doelwit detoneren: ze verdwijnen allemaal en doen in één keer 50% van de som van hun waarden (65% bij een kritieke treffer). De beurten die ze nog hadden, spelen geen rol. Oneindige vergiften detoneren niet.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Geeft een entiteit een absoluut schild, waardoor het aantal levenspunten dat wordt verwijderd door schade (EFFECT_DAMAGE) met een vast bedrag wordt verminderd. Niet te versterken.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Verleent flexibiliteit aan een entiteit. Niet te versterken.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Verleent magie aan een entiteit. Niet te versterken.",

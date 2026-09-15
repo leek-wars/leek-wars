@@ -54,7 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "Efekt jest kumulatywny.",
 	"const_EFFECT_NOVA_DAMAGE": "Usuwa maksymalne punkty życia. Wzmocnione przez naukę.",
 	"const_EFFECT_POISON": "Usuwa punkty życia z istoty. Wzmocniony magią. Zmniejsza maksymalne punkty życia o 10% ilości usuniętych punktów życia.",
-	"const_EFFECT_SUPERINFECTION": "Zamienia część aktywnych trucizn celu w natychmiastowe obrażenia: każda trucizna od razu zadaje 50% pozostałych obrażeń (65% przy trafieniu krytycznym), a jej wartość na turę zostaje odpowiednio zmniejszona. Łączne obrażenia od trucizny są zachowane, tylko przyspieszone. Nieskończone trucizny są pomijane.",
+	"const_EFFECT_SUPERINFECTION": "Detonuje aktywne trucizny celu: wszystkie znikają i zadają od razu 50% sumy swoich wartości (65% przy trafieniu krytycznym). Pozostałe tury nie są brane pod uwagę. Nieskończone trucizny nie detonują.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Zapewnia absolutną tarczę jednostce, zmniejszając liczbę punktów wytrzymałości usuwanych przez obrażenia (EFFECT_DAMAGE) o ustaloną wartość. Nie do amplifikacji.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Zapewnia zwinność podmiotowi. Nie do amplifikacji.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Daje magię podmiotowi. Nie do amplifikacji.",

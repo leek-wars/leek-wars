@@ -54,7 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "Effekten är kumulativ.",
 	"const_EFFECT_NOVA_DAMAGE": "Tar bort max livspoäng. Förstärkt av vetenskap.",
 	"const_EFFECT_POISON": "Tar bort träffpunkter från en enhet. Förstärkt av magi. Minskar maximala träffpoäng med 10 % av antalet träffpoäng som tas bort.",
-	"const_EFFECT_SUPERINFECTION": "Omvandlar en del av målets aktiva gifter till omedelbar skada: varje gift gör genast 50% av sin återstående skada (65% vid kritisk träff) och dess värde per runda minskas i motsvarande grad. Den totala giftskadan bevaras, den tidigareläggs bara. Oändliga gifter ignoreras.",
+	"const_EFFECT_SUPERINFECTION": "Får målets aktiva gifter att detonera: de försvinner alla och gör på en gång 50% av summan av sina värden (65% vid kritisk träff). Rundorna de hade kvar räknas inte in. Oändliga gifter detonerar inte.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Ger absolut skydd till en enhet, vilket minskar antalet träffpoäng som tas bort av skada (EFFECT_DAMAGE) med ett fast belopp. Ej förstärkningsbar.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Ger smidighet till en enhet. Ej förstärkningsbar.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Ger magi till en enhet. Ej förstärkningsbar.",

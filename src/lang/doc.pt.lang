@@ -54,7 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "O efeito é cumulativo.",
 	"const_EFFECT_NOVA_DAMAGE": "Remove pontos de vida máximos. Amplificado pela ciência.",
 	"const_EFFECT_POISON": "Remove pontos de vida de uma entidade. Amplificado por magia. Reduz os pontos de vida máximos em 10% da quantidade de pontos de vida removidos.",
-	"const_EFFECT_SUPERINFECTION": "Converte parte dos venenos ativos do alvo em dano imediato: cada veneno causa de imediato 50% do seu dano restante (65% em crítico) e o seu valor por turno é reduzido em conformidade. O dano total de veneno é conservado, apenas antecipado. Os venenos infinitos são ignorados.",
+	"const_EFFECT_SUPERINFECTION": "Faz detonar os venenos ativos do alvo: desaparecem todos e causam de uma só vez 50% da soma dos seus valores (65% em crítico). Os turnos que lhes restavam não entram no cálculo. Os venenos infinitos não detonam.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Concede escudo absoluto a uma entidade, reduzindo a quantidade de pontos de vida removidos por dano (EFFECT_DAMAGE) em um valor fixo. Não amplificável.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Concede agilidade a uma entidade. Não amplificável.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Concede magia a uma entidade. Não amplificável.",

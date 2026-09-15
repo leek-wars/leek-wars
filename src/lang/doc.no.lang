@@ -69,7 +69,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "Effekten er kumulativ.",
 	"const_EFFECT_NOVA_DAMAGE": "Fjerner maks livspoeng. Forsterket av vitenskap.",
 	"const_EFFECT_POISON": "Fjerner treffpunkter fra en enhet. Forsterket av magi. Reduserer maksimale treffpoeng med 10 % av antall treffpoeng som er fjernet.",
-	"const_EFFECT_SUPERINFECTION": "Gjør en del av målets aktive gifter om til umiddelbar skade: hver gift påfører straks 50% av sin gjenværende skade (65% ved kritisk treff) og verdien per runde reduseres tilsvarende. Den totale giftskaden bevares, den blir bare fremskyndet. Uendelige gifter ignoreres.",
+	"const_EFFECT_SUPERINFECTION": "Får målets aktive gifter til å detonere: de forsvinner alle og påfører på én gang 50% av summen av verdiene sine (65% ved kritisk treff). Rundene de hadde igjen teller ikke med. Uendelige gifter detonerer ikke.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Gir absolutt skjold til en enhet, og reduserer mengden treffpoeng som er fjernet av skade (EFFECT_DAMAGE) med et fast beløp. Ikke forsterkbar.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Gir smidighet til en enhet. Kan ikke forsterkes.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Gir magi til en enhet. Kan ikke forsterkes.",

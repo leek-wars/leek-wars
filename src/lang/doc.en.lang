@@ -54,7 +54,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "This effect is stackable.",
 	"const_EFFECT_NOVA_DAMAGE": "Remove maximum life points, limited by the life points of the entity. Amplified by science.",
 	"const_EFFECT_POISON": "Removes life points from an entity at the begining of its turn. Amplified by magic. Reduces the maximum life points by 10% of the removed life points. Not affected by shields and damage return.",
-	"const_EFFECT_SUPERINFECTION": "Converts part of the target's active poisons into immediate damage: each poison instantly deals 50% of its remaining damage (65% on critical) and its per-turn value is reduced accordingly. The total poison damage is preserved, only brought forward. Infinite poisons are ignored.",
+	"const_EFFECT_SUPERINFECTION": "Detonates the target's active poisons: they all disappear and instantly deal 50% of the sum of their values (65% on critical). Their remaining turns are not taken into account. Infinite poisons do not detonate.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Provides absolute shield to an entity, diminishing the quantity of life points removed by damages (EFFECT_DAMAGE) of a fixed value.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Provides an agility bonus to an entity.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Provides a magic bonus to an entity.",

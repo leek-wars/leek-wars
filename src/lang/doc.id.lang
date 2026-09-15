@@ -59,7 +59,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "Efeknya kumulatif.",
 	"const_EFFECT_NOVA_DAMAGE": "Menghapus poin kehidupan maksimal. Diperkuat oleh sains.",
 	"const_EFFECT_POISON": "Menghapus hit point dari entitas. Diperkuat dengan sihir. Mengurangi poin hit maksimum sebesar 10% dari jumlah poin hit yang dihapus.",
-	"const_EFFECT_SUPERINFECTION": "Mengubah sebagian racun aktif pada target menjadi kerusakan langsung: setiap racun langsung memberikan 50% dari sisa kerusakannya (65% saat kritis) dan nilainya per giliran berkurang sebanyak itu. Total kerusakan racun tetap sama, hanya dimajukan. Racun tak terbatas diabaikan.",
+	"const_EFFECT_SUPERINFECTION": "Meledakkan racun aktif pada target: semuanya hilang dan langsung memberikan 50% dari jumlah nilainya (65% saat kritis). Sisa giliran tidak diperhitungkan. Racun tak terbatas tidak meledak.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "Memberikan perisai absolut ke entitas, mengurangi jumlah poin hit yang dihilangkan oleh kerusakan (EFFECT_DAMAGE) dengan jumlah yang tetap. Tidak dapat diamplifikasi.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "Memberikan kelincahan pada entitas. Tidak dapat diamplifikasi.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "Memberikan sihir ke entitas. Tidak dapat diamplifikasi.",

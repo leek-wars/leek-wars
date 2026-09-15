@@ -59,7 +59,7 @@
 	"const_EFFECT_MODIFIER_STACKABLE": "효과는 누적됩니다.",
 	"const_EFFECT_NOVA_DAMAGE": "최대 라이프 포인트를 제거합니다. 과학으로 증폭.",
 	"const_EFFECT_POISON": "엔터티에서 히트 포인트를 제거합니다. 마법으로 증폭. 제거된 체력의 10%만큼 최대 체력이 감소합니다.",
-	"const_EFFECT_SUPERINFECTION": "대상에게 걸린 독의 일부를 즉시 피해로 전환합니다. 각 독은 남은 피해의 50%(치명타 시 65%)를 즉시 입히고, 턴당 수치는 그만큼 감소합니다. 독 피해의 총량은 유지되며 앞당겨질 뿐입니다. 무한 지속 독은 무시됩니다.",
+	"const_EFFECT_SUPERINFECTION": "대상에게 걸린 독을 폭발시킵니다. 독은 모두 사라지고 그 수치 합계의 50%(치명타 시 65%)를 즉시 피해로 입힙니다. 남은 턴 수는 계산에 들어가지 않습니다. 무한 지속 독은 폭발하지 않습니다.",
 	"const_EFFECT_RAW_ABSOLUTE_SHIELD": "엔터티에 절대 보호막을 부여하여 손상으로 제거되는 체력(EFFECT_DAMAGE)을 고정된 양만큼 줄입니다. 증폭 불가.",
 	"const_EFFECT_RAW_BUFF_AGILITY": "엔터티에 민첩성을 부여합니다. 증폭 불가능.",
 	"const_EFFECT_RAW_BUFF_MAGIC": "엔티티에 마법을 부여합니다. 증폭 불가능.",

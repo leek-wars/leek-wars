@@ -151,7 +151,7 @@
 	"type_6": "Melindungi dari <b>{0}</b> hingga <b>{1}</b> kerusakan",
 	"type_61_fixed": "Menyembuhkan sejumlah total efek sebelumnya",
 	"type_63_fixed": "Memberikan <b>{0}%</b> dari kerusakan yang diterima sebagai resistansi",
-	"type_64_fixed": "Mengubah <b>{0}%</b> racun target menjadi kerusakan langsung",
+	"type_64_fixed": "Meledakkan racun target: <b>{0}%</b> dari jumlahnya sebagai kerusakan langsung",
 	"type_6_fixed": "Melindungi dari <b>{0}</b> kerusakan",
 	"type_7": "Tingkatkan MP dari <b>{0}</b> menjadi <b>{1}</b>",
 	"type_7_fixed": "Meningkatkan MP sebesar <b>{0}</b>",

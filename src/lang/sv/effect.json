@@ -151,7 +151,7 @@
 	"type_6": "Skyddar från <b>{0}</b> till <b>{1}</b> skador",
 	"type_61_fixed": "Läker för totalen av den föregående effekten",
 	"type_63_fixed": "Ger <b>{0}%</b> av mottagen skada som motstånd",
-	"type_64_fixed": "Omvandlar <b>{0}%</b> av målets gifter till omedelbar skada",
+	"type_64_fixed": "Får målets gifter att detonera: <b>{0}%</b> av deras summa som omedelbar skada",
 	"type_6_fixed": "Skyddar från <b>{0}</b> skador",
 	"type_7": "Ökar MP från <b>{0}</b> till <b>{1}</b>",
 	"type_7_fixed": "Ökar MP med <b>{0}</b>",

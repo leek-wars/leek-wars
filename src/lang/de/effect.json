@@ -151,7 +151,7 @@
 	"type_6": "Schützt vor <b>{0}</b> bis <b>{1}</b> Schaden",
 	"type_61_fixed": "Heilt um den Gesamtwert des vorherigen Effekts",
 	"type_63_fixed": "Gibt <b>{0}%</b> des erlittenen Schadens als Widerstand",
-	"type_64_fixed": "Wandelt <b>{0}%</b> der Gifte des Ziels in sofortigen Schaden um",
+	"type_64_fixed": "Lässt die Gifte des Ziels detonieren: <b>{0}%</b> ihrer Summe als sofortigen Schaden",
 	"type_6_fixed": "Schützt vor <b>{0}</b> Schaden",
 	"type_7": "Erhöht die MP von <b>{0}</b> auf <b>{1}</b>",
 	"type_7_fixed": "Erhöht MP um <b>{0}</b>",

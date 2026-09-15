@@ -151,7 +151,7 @@
 	"type_6": "Reduces damage taken by <b>{0}</b> to <b>{1}</b>",
 	"type_61_fixed": "Heals for the total of the previous effect",
 	"type_63_fixed": "Gives <b>{0}%</b> of damage received as resistance",
-	"type_64_fixed": "Converts <b>{0}%</b> of the target's poisons into immediate damage",
+	"type_64_fixed": "Detonates the target's poisons: <b>{0}%</b> of their sum as immediate damage",
 	"type_6_fixed": "Reduces damage taken by <b>{0}</b>",
 	"type_7": "Increases MP by <b>{0}</b> to <b>{1}</b>",
 	"type_7_fixed": "Increases MP by <b>{0}</b>",
