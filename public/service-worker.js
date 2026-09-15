@@ -15,7 +15,7 @@ const MANIFESTS = ['/manifest.json', '/manifest_beta.json'];
 // qui a déjà vu l'ancienne. Rien côté serveur ne peut invalider un cache déjà posé,
 // et Chrome n'applique pas la directive `Clear-Site-Data: "cache"`.
 // À incrémenter à chaque màj qui redessine des images existantes.
-const IMAGE_VERSION = '300';
+const IMAGE_VERSION = '301';
 
 // Throttle background SWR refreshes to avoid hammering the network when the user
 // triggers many cache-eligible fetches in quick succession.

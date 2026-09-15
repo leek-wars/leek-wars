@@ -93,7 +93,10 @@ function bboxArea(d) {
 function render(name, { glyph, parts, zones = [] }) {
 	const d = mdi[glyph]
 	if (!d) throw new Error(`${name} : glyphe ${glyph} inconnu`)
-	const subs = d.split(/(?=M)/)
+	// Les sous-tracés mdi sont rarement fermés (`Z`) : le remplissage ferme tout seul,
+	// mais pas le trait — l'arête de fermeture (le pan droit du toit de la banque)
+	// resterait sans contour noir. On la ferme donc explicitement.
+	const subs = d.split(/(?=M)/).map(s => /Z$/i.test(s) ? s : s + 'Z')
 	if (subs.length !== parts.length) throw new Error(`${name} : ${subs.length} sous-tracés, ${parts.length} couleurs`)
 	const order = subs.map((_, i) => i).sort((a, b) => bboxArea(subs[b]) - bboxArea(subs[a]))
 	const holes = order.filter(i => parts[i] === null)
