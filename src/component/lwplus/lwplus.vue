@@ -93,10 +93,12 @@ const t = useNamespacedT('lwplus')
 // scripts/generate-mdi-icons.mjs les trouve au scan (sinon icône vide).
 const benefits = [
 	{ key: 'fights', icon: 'mdi-sword-cross' },
+	// File prioritaire ET combats générés en parallèle (#3303) sur une seule carte :
+	// c'est le même avantage vu du joueur (ses combats sortent plus vite), et six
+	// cartes remplissent la grille de 3 colonnes là où sept laissaient un trou.
+	// Le plafond de parallélisme est une part du parc de runners
+	// (FightManager.maxParallel), soit 1 et 2 à la taille de pool actuelle.
 	{ key: 'queue', icon: 'mdi-fast-forward' },
-	// Combats générés en parallèle (#3303) : le plafond réel est une part du parc de
-	// runners (FightManager.maxParallel), soit 1 et 2 à la taille de pool actuelle.
-	{ key: 'parallel', icon: 'mdi-call-split' },
 	{ key: 'ratelimit', icon: 'mdi-speedometer' },
 	// Potager rapide (Pierre, 09/09/2026), comme dans la banque. Les comptes déclarables
 	// ne sont plus un avantage LW+ : leur plafond est le même pour tout le monde.
