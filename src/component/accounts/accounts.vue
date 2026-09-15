@@ -93,9 +93,13 @@
 	interface LinkedAccount { id: number, name: string, avatar_changed: number, talent: number, total_level?: number, leeks?: number, lwplus: boolean }
 	interface PlayerResponse { player: { id: number, main: number | null } | null, accounts: LinkedAccount[], max: number }
 
+	// Plafond de repli avant la réponse de player/get : le serveur
+	// (PlayerController::MAX_ACCOUNTS) est le seul à décider.
+	const MAX_ACCOUNTS = 42
+
 	const accounts = ref<LinkedAccount[]>([])
 	const main = ref<number | null>(null)
-	const max = ref(10)
+	const max = ref(MAX_ACCOUNTS)
 	const loading = ref(true)
 	const busy = ref(false)
 	const unlinkDialog = ref(false)
@@ -104,7 +108,7 @@
 	function apply(data: PlayerResponse) {
 		accounts.value = data.accounts ?? []
 		main.value = data.player ? data.player.main : null
-		max.value = data.max ?? 10
+		max.value = data.max ?? MAX_ACCOUNTS
 		loading.value = false
 		busy.value = false
 	}
