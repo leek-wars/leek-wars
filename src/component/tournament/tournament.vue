@@ -19,10 +19,6 @@
 
 					<loader v-if="!tournament" />
 					<tournament-graph v-else :tournament="tournament" :zoomed="zoomed" :class="{zoomed: zoomed}" :style="{minWidth: zoomed && LeekWars.mobile ? '950px' : ''}" />
-
-					<pre v-if="$store.getters.admin && tournament" class="info">
-Min power: {{ $filters.number(tournament.min_power || 0) }}
-Max power: {{ $filters.number(tournament.max_power || 0) }}</pre>
 				</div>
 			</template>
 		</panel>
@@ -32,6 +28,13 @@ Max power: {{ $filters.number(tournament.max_power || 0) }}</pre>
 		<panel :title="$t('comments')" icon="mdi-comment-multiple-outline">
 			<comments :comments="tournament ? tournament.comments : null" @comment="comment" />
 		</panel>
+
+		<div v-if="$store.getters.admin && tournament" class="page-footer page-bar">
+			<div class="tabs">
+				<div class="tab disabled">Min power: {{ $filters.number(tournament.min_power || 0) }}</div>
+				<div class="tab disabled">Max power: {{ $filters.number(tournament.max_power || 0) }}</div>
+			</div>
+		</div>
 
 	</div>
 </template>
@@ -225,10 +228,6 @@ function generateTournament() {
 		stroke-width: 3;
 		fill: none;
 	}
-.info {
-	text-align: center;
-	margin-top: -36px;
-}
 .small-loader {
 	padding: 0;
 }

@@ -357,7 +357,7 @@ import { computed, ref, onMounted, onBeforeUnmount, useTemplateRef, watch, provi
 import TournamentBlock from '@/component/tournament/tournament-block.vue'
 import TournamentFight from '@/component/tournament/tournament-fight.vue'
 import type { Tournament, TournamentEntry } from '@/model/tournament'
-import { CHAMPION, sameEntry } from '@/component/tournament/bracket'
+import { CHAMPION, NAME_HEIGHT, NAME_OVERFLOW, sameEntry } from '@/component/tournament/bracket'
 
 defineOptions({ name: 'TournamentGraph', components: {
 	'tournament-block': TournamentBlock,
@@ -370,15 +370,27 @@ const props = defineProps<{
 	zoomed?: boolean
 }>()
 
-// Le bracket est dessiné dans un repère fixe, symétrique autour de x = 0, de
-// hauteur BASE_HEIGHT. Sur un grand écran il est plus haut que large une fois
-// étiré à 100 % de la largeur, et débordait donc en bas. On le limite
-// désormais à la place disponible verticalement, et la largeur restante est
-// distribuée dans les espaces entre les tours : les cases restent carrées
-// (leeks et avatars non déformés), seuls les connecteurs s'allongent.
-// 810 et non 805 : les noms sous la dernière rangée de cases débordaient de
-// quelques pixels du viewBox, et se retrouvaient rognés.
-const BASE_HEIGHT = 810
+// Le bracket est dessiné dans un repère fixe, symétrique autour de x = 0. Sur un
+// grand écran il est plus haut que large une fois étiré à 100 % de la largeur,
+// et débordait donc en bas. On le limite désormais à la place disponible
+// verticalement, et la largeur restante est distribuée dans les espaces entre
+// les tours : les cases restent carrées (leeks et avatars non déformés), seuls
+// les connecteurs s'allongent.
+//
+// Le repère colle au dessin, sans une unité de marge : le facteur d'échelle en
+// descend directement, donc tout creux du viewBox rapetissit l'arbre d'autant —
+// et toute encre qui en dépasse se fait rogner. En haut, la case du vainqueur en
+// y -395, moins la moitié de son trait de 2. En bas, la dernière case du bracket
+// (huitièmes en y 305 sur 60 de côté pour un tournoi de 32, tour de 32 en y 355
+// sur 40 pour un tournoi de 64), son étiquette de nom, et la moitié du trait de
+// celle-ci. Une valeur en dur valait 810 pour les deux : le bracket de 32
+// traînait 31 unités de vide en bas.
+const TOP = -396
+const bottom = (y: number, size: number) => Math.ceil(y + size + 1 + NAME_HEIGHT + 0.5)
+const BASE_HEIGHT_32 = bottom(305, 60) - TOP
+const BASE_HEIGHT_64 = bottom(355, 40) - TOP
+// Le padding bas du panneau (15) plus son trait : sans ça le bas du panneau
+// passerait sous la ligne de flottaison.
 const BOTTOM_MARGIN = 16
 const MIN_HEIGHT = 300
 // Au-delà, sur une fenêtre très basse, les tours seraient si écartés que le
@@ -392,20 +404,26 @@ const MAX_STRETCH = 2
 // sommet du bracket et restent centrés, les demi-finales s'écartant sous eux.
 const BANDS_32 = [[-470, -340], [-300, -240], [-210, -140], [-120, -40], [40, 120], [140, 210], [240, 300], [340, 470]]
 const BANDS_64 = [[-610, -500], ...BANDS_32, [500, 610]]
+// Bord extérieur du dessin : la case du premier tour, plus le débord de son
+// étiquette de nom. Comme en hauteur, le repère colle à l'encre — les 954 et
+// 1234 d'origine gardaient 7 unités de vide de chaque côté.
+const OUTER_32 = 470 + NAME_OVERFLOW
+const OUTER_64 = 610 + NAME_OVERFLOW
 
 const svg = useTemplateRef<SVGSVGElement>('svg')
 const width = ref(0)
 const available = ref(0)
 
 const bands = computed(() => props.tournament.size === 64 ? BANDS_64 : BANDS_32)
-const baseWidth = computed(() => props.tournament.size === 64 ? 1234 : 954)
+const baseWidth = computed(() => 2 * (props.tournament.size === 64 ? OUTER_64 : OUTER_32))
+const baseHeight = computed(() => props.tournament.size === 64 ? BASE_HEIGHT_64 : BASE_HEIGHT_32)
 
 // Tant que rien n'est mesuré (premier rendu), on garde le repère d'origine et
 // on laisse le SVG se dimensionner tout seul.
-const scale = computed(() => width.value && available.value ? Math.min(width.value / baseWidth.value, available.value / BASE_HEIGHT) : 0)
+const scale = computed(() => width.value && available.value ? Math.min(width.value / baseWidth.value, available.value / baseHeight.value) : 0)
 const vbWidth = computed(() => scale.value ? Math.min(baseWidth.value * MAX_STRETCH, Math.max(baseWidth.value, Math.round(width.value / scale.value))) : baseWidth.value)
-const height = computed(() => scale.value ? Math.round(BASE_HEIGHT * scale.value) : 0)
-const viewBox = computed(() => (-vbWidth.value / 2) + ' -400 ' + vbWidth.value + ' ' + BASE_HEIGHT)
+const height = computed(() => scale.value ? Math.round(baseHeight.value * scale.value) : 0)
+const viewBox = computed(() => (-vbWidth.value / 2) + ' ' + TOP + ' ' + vbWidth.value + ' ' + baseHeight.value)
 
 // Décalage de chaque bande : elles s'écartent du centre, chaque espace
 // grandissant proportionnellement à sa largeur d'origine.

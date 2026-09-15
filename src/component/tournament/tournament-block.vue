@@ -33,7 +33,7 @@
 		<image :x="avatarCx - avatarSize / 2" :y="y + size - avatarSize / 3 - avatarSize / 2" :width="avatarSize" :height="avatarSize" :xlink:href="farmerAvatar" :clip-path="'url(#' + clipId + ')'" />
 		<circle :cx="avatarCx" :cy="y + size - avatarSize / 3" :r="avatarSize / 2" fill="none" stroke="var(--bracket-line)" :stroke-width="1.5" />
 	</a>
-	<foreignObject v-if="displayName" :x="x" :y="nameAbove ? y - nameFontSize * 1.6 - 1 : y + size + 1" :width="size" :height="nameFontSize * 1.6" style="overflow: visible; pointer-events: none">
+	<foreignObject v-if="displayName" :x="x - NAME_OVERFLOW" :y="nameAbove ? y - NAME_HEIGHT - 1 : y + size + 1" :width="size + 2 * NAME_OVERFLOW" :height="NAME_HEIGHT" style="overflow: visible; pointer-events: none">
 		<div class="block-name-wrap" :class="{ above: nameAbove }"><span class="block-name" :style="nameStyle">{{ displayName }}</span></div>
 	</foreignObject>
 </template>
@@ -46,7 +46,7 @@ import { emitter } from '@/model/emitter'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
-import { CHAMPION, cutSquare, sameEntry } from '@/component/tournament/bracket'
+import { CHAMPION, cutSquare, NAME_FONT_SIZE, NAME_HEIGHT, NAME_OVERFLOW, sameEntry } from '@/component/tournament/bracket'
 
 defineOptions({ name: 'TournamentBlock' })
 
@@ -113,18 +113,16 @@ const entityId = computed(() => {
 // tronqué par CSS (ellipsis) seulement s'il déborde réellement. Le serveur suffixe
 // le nom par " (niveau)", retiré ici pour l'affichage.
 const displayName = computed(() => (props.item?.name ?? '').replace(/ \(\d+\)$/, ''))
-// Taille FIXE, et volontairement petite : elle suivait la case, ce qui coupait
-// les noms des petits tours (les plus nombreux) très tôt, et donnait au passage
-// deux tailles de texte par colonne. Le SVG étant mis à l'échelle pour tenir
-// dans l'écran, ces unités valent à peu près autant de pixels.
-const nameFontSize = 8
+// Taille fixe, partagée avec le graphe : c'est elle qui fixe le bas du repère.
+const nameFontSize = NAME_FONT_SIZE
 const nameStyle = {
 	fontSize: nameFontSize + 'px',
 	lineHeight: (nameFontSize * 1.3) + 'px',
-	// Marge intérieure resserrée (0,35 → 0,22) : sur une case de 40, elle mangeait
-	// à elle seule 14 % de la place du nom.
-	padding: (nameFontSize * 0.08) + 'px ' + (nameFontSize * 0.22) + 'px',
-	borderRadius: (nameFontSize * 0.35) + 'px',
+	// Latérale à 0,5 et non 0,22 (Pierre, 2026-09-15) : elle avait été resserrée
+	// quand l'étiquette était confinée à la largeur de la case, où elle mangeait
+	// 14 % de la place du nom. Depuis NAME_OVERFLOW elle ne la prend plus au texte.
+	// Pas d'angles arrondis : une pastille sur un bracket tout en angles droits.
+	padding: (nameFontSize * 0.08) + 'px ' + (nameFontSize * 0.5) + 'px',
 }
 
 function activate() {
@@ -192,8 +190,14 @@ function mouseleave() {
 		max-width: 100%;
 		box-sizing: border-box;
 		font-weight: 500;
-		color: var(--white);
-		background: rgba(0, 0, 0, 0.55);
+		// Encre et surface du thème : en clair, texte foncé sur le crème du
+		// panneau (demande de Pierre, 2026-09-15) ; en sombre, l'inverse, sans
+		// rien de plus à écrire. Le voile noir fixe d'avant restait noir sur un
+		// thème clair, et la surface valant exactement celle du panneau,
+		// l'étiquette ne se lit plus comme une pastille posée dessus : juste le
+		// nom, qui masque au passage le trait qui lui passerait derrière.
+		color: var(--text-color);
+		background: var(--panel-background);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
