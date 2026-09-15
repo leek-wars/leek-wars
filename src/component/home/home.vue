@@ -189,7 +189,7 @@
 		leek_stats: { icon: 'mdi-chart-line', component: markRaw(HomeWidgetLeekStats), defaultW: 8, defaultH: 12, minW: 6, minH: 8, multi: true, configurable: true, noScroll: true },
 		rare_trophies: { icon: 'mdi-star-circle-outline', component: markRaw(HomeWidgetRareTrophies), defaultW: 8, defaultH: 8, minW: 6, minH: 4, link: '/trophies', noScroll: true },
 		forum: { icon: 'mdi-forum-outline', component: markRaw(HomeWidgetForum), defaultW: 8, defaultH: 8, minW: 6, minH: 6, link: '/forum', noScroll: true },
-		live: { icon: 'mdi-access-point', component: markRaw(Live), defaultW: 8, defaultH: 10, minW: 6, minH: 6 },
+		live: { icon: 'mdi-access-point', component: markRaw(Live), defaultW: 8, defaultH: 10, minW: 6, minH: 6, noScroll: true },
 		// Les vainqueurs de la dernière édition (une trentaine) tiennent en trois
 		// rangées d'avatars, une par type de tournoi : rien à faire défiler. Neuf
 		// rangées de grille, c'est la hauteur qu'occupent les trois sections à la

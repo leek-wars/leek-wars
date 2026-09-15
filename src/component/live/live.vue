@@ -1,36 +1,41 @@
 <template>
 	<div class="live-widget">
 		<loader v-if="!loaded" />
-		<transition-group v-else-if="events.length" name="event" tag="div" class="events">
-			<div v-for="event in events" :key="eventKey(event)" class="event">
-				<!-- L'avatar dit QUI, la pastille dit QUOI (toujours une icône générique),
-					 et l'image du trophée, en bout de ligne, dit LEQUEL. -->
-				<router-link :to="'/farmer/' + event.farmer.id" class="event-avatar">
-					<avatar :farmer="(event.farmer as any)" />
-					<v-icon class="badge">{{ badgeIcon(event) }}</v-icon>
-				</router-link>
-				<div class="event-body">
-					<div class="text">
-						<router-link :to="'/farmer/' + event.farmer.id" class="farmer">{{ event.farmer.name }}</router-link>
-						<!-- Espaces explicites : le mode condense de Vue avale l'espace de tête -->
-						<template v-if="event.type === 'trophy'">{{ ' ' + t('event_trophy', [$t('trophy.' + event.trophy)]) }}</template>
-						<template v-else-if="event.type === 'threshold'">{{ ' ' + t('event_' + event.metric, [$filters.number(event.threshold)]) }}</template>
-						<template v-else-if="event.type === 'topic'">{{ ' ' + t('event_topic') + ' ' }}<router-link :to="'/forum/category-' + event.topic.category + '/topic-' + event.topic.id" class="topic">{{ event.topic.title }}</router-link></template>
+		<div v-else-if="events.length" ref="eventsEl" class="events">
+			<!-- `transition-group` sans `tag` ne pose aucun élément : les lignes sont
+				 les enfants directs de `.events`, que useFitCount mesure. -->
+			<transition-group name="event">
+				<div v-for="event in visibleEvents" :key="eventKey(event)" class="event">
+					<!-- L'avatar dit QUI, la pastille dit QUOI (toujours une icône générique),
+						 et l'image du trophée, en bout de ligne, dit LEQUEL. -->
+					<router-link :to="'/farmer/' + event.farmer.id" class="event-avatar">
+						<avatar :farmer="(event.farmer as any)" />
+						<v-icon class="badge">{{ badgeIcon(event) }}</v-icon>
+					</router-link>
+					<div class="event-body">
+						<div class="text">
+							<router-link :to="'/farmer/' + event.farmer.id" class="farmer">{{ event.farmer.name }}</router-link>
+							<!-- Espaces explicites : le mode condense de Vue avale l'espace de tête -->
+							<template v-if="event.type === 'trophy'">{{ ' ' + t('event_trophy', [$t('trophy.' + event.trophy)]) }}</template>
+							<template v-else-if="event.type === 'threshold'">{{ ' ' + t('event_' + event.metric, [$filters.number(event.threshold)]) }}</template>
+							<template v-else-if="event.type === 'topic'">{{ ' ' + t('event_topic') + ' ' }}<router-link :to="'/forum/category-' + event.topic.category + '/topic-' + event.topic.id" class="topic">{{ event.topic.title }}</router-link></template>
+						</div>
+						<div class="date">{{ $filters.duration(event.date) }}</div>
 					</div>
-					<div class="date">{{ $filters.duration(event.date) }}</div>
+					<router-link v-if="event.type === 'trophy' && event.trophy" :to="'/trophy/' + event.trophy" class="event-trophy">
+						<trophy-icon :code="event.trophy" />
+					</router-link>
 				</div>
-				<router-link v-if="event.type === 'trophy' && event.trophy" :to="'/trophy/' + event.trophy" class="event-trophy">
-					<trophy-icon :code="event.trophy" />
-				</router-link>
-			</div>
-		</transition-group>
+			</transition-group>
+		</div>
 		<div v-else class="none">{{ t('empty') }}</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { onBeforeUnmount, ref, watch } from 'vue'
+	import { computed, onBeforeUnmount, ref, watch } from 'vue'
 	import { emitter } from '@/model/emitter'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { socketRef, socketResubscribe } from '@/model/socket-subscription'
@@ -100,6 +105,13 @@
 
 	const loaded = ref(false)
 	const events = ref<LiveEvent[]>([])
+
+	// Le panneau ne défile pas : on montre les N plus récents que la hauteur
+	// permet, jamais une ligne coupée. Sur la page d'équipe, où le panneau n'a pas
+	// de hauteur imposée, le compte vaut MAX_EVENTS et rien ne change.
+	const eventsEl = ref<HTMLElement | null>(null)
+	const eventCount = useFitCount(eventsEl, '.event', MAX_EVENTS)
+	const visibleEvents = computed(() => events.value.slice(0, eventCount.value))
 
 	function load() {
 		const panel = props.team
@@ -203,9 +215,20 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le panneau occupe toute la hauteur qu'on lui donne et la liste prend ce qui
+	// reste ; `overflow: hidden` n'est qu'un filet, le nombre de lignes affichées
+	// est calculé pour tenir sans en couper aucune (useFitCount).
+	.live-widget {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
 	.events {
 		display: flex;
 		flex-direction: column;
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
 	}
 	.event {
 		display: flex;
