@@ -10,44 +10,23 @@
 					<span class="group-title">{{ $t(group.title) }}</span>
 					<span class="group-date">{{ $filters.date(group.date) }}</span>
 				</div>
-				<div v-for="w in group.winners" :key="w.tournament" class="winner">
-					<!-- L'avatar mène à l'éleveur (à l'équipe pour un tournoi d'équipes),
-					     le nom au vainqueur lui-même : deux liens distincts, chacun avec
-					     son infobulle riche. Les enveloppes portent la mise en page : le
-					     composant d'infobulle rend un <span> inline autour de son
-					     activateur, qui décalerait la ligne de base (cf. rare-trophies). -->
-					<span class="portrait-tooltip">
-						<rich-tooltip-farmer v-if="w.winner.farmer_id" :id="w.winner.farmer_id" v-slot="{ props }" :bottom="true">
-							<router-link :to="'/farmer/' + w.winner.farmer_id" class="portrait" v-bind="props">
-								<img :src="LeekWars.getAvatar(w.winner.farmer_id, w.winner.avatar_changed || 0)" class="avatar" loading="lazy">
+				<!-- Les vainqueurs en rangée d'avatars : une édition, c'est une
+				     vingtaine de tournois de poireaux, et le panel de l'accueil ne
+				     défile pas. Le nom, le niveau et le talent sont dans l'infobulle. -->
+				<div class="winners">
+					<!-- L'enveloppe porte la mise en page : le composant d'infobulle rend
+					     un <span> inline autour de son activateur, qui décalerait la ligne
+					     de base (cf. rare-trophies). `|| 0` : une infobulle sans id reste
+					     fermée plutôt que d'aller chercher un poireau qui n'existe pas —
+					     le serveur part en prod avant le client, mais l'inverse arrive. -->
+					<span v-for="w in group.winners" :key="w.tournament" class="portrait-tooltip">
+						<component :is="tooltipOf(w.type)" :id="w.winner.id || 0" v-slot="{ props }" :bottom="true">
+							<router-link :to="w.winner.link" class="portrait" v-bind="props">
+								<emblem v-if="w.winner.team_id" :team="{id: w.winner.team_id, emblem_changed: w.winner.emblem_changed || 0}" class="avatar" />
+								<img v-else :src="LeekWars.getAvatar(w.winner.farmer_id || 0, w.winner.avatar_changed || 0)" class="avatar" loading="lazy">
 							</router-link>
-						</rich-tooltip-farmer>
-						<rich-tooltip-team v-else-if="w.winner.team_id" :id="w.winner.team_id" v-slot="{ props }" :bottom="true">
-							<router-link :to="'/team/' + w.winner.team_id" class="portrait" v-bind="props">
-								<emblem :team="{id: w.winner.team_id, emblem_changed: w.winner.emblem_changed || 0}" class="avatar" />
-							</router-link>
-						</rich-tooltip-team>
+						</component>
 					</span>
-
-					<div class="info">
-						<div class="name-tooltip">
-							<!-- `|| 0` : une infobulle sans id reste fermée plutôt que de
-							     partir chercher un poireau qui n'existe pas. Le serveur part
-							     en prod avant le client, mais l'inverse arrive aussi. -->
-							<component :is="tooltipOf(w.type)" :id="w.winner.id || 0" v-slot="{ props }" :bottom="true">
-								<router-link :to="w.winner.link" class="name" v-bind="props">{{ w.winner.name }}</router-link>
-							</component>
-						</div>
-						<!-- Pour une équipe, `name` est celui de l'équipe : la composition
-						     qui a gagné est une autre information, et c'est elle qui joue. -->
-						<span v-if="w.winner.composition" class="composition">{{ w.winner.composition }}</span>
-						<span v-else-if="w.winner.level" class="composition">{{ $t('main.level_n', [w.winner.level]) }}</span>
-					</div>
-
-					<span v-if="w.winner.talent" class="talent"><img src="/image/talent.png"> {{ $filters.number(w.winner.talent) }}</span>
-					<router-link :to="'/tournament/' + w.tournament" class="bracket" :title="$t('main.tournament')">
-						<v-icon>mdi-tournament</v-icon>
-					</router-link>
 				</div>
 			</div>
 		</template>
@@ -62,7 +41,6 @@
 	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
 	defineOptions({ name: 'HomeWidgetTournaments' })
 
@@ -141,10 +119,14 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le panel de l'accueil ne défile pas : le contenu est clippé plutôt que de
+	// pousser une barre de défilement dans le widget.
 	.tournaments-widget {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		height: 100%;
+		overflow: hidden;
 	}
 	.group-header {
 		display: flex;
@@ -166,77 +148,28 @@
 		font-size: 11px;
 		color: var(--text-color-secondary);
 	}
-	.winner {
+	.winners {
 		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 3px 6px;
-		border-radius: var(--radius);
-		min-width: 0;
-	}
-	.winner:hover {
-		background: var(--background-secondary);
+		flex-wrap: wrap;
+		gap: 4px;
+		padding: 0 6px;
 	}
 	// Le <span> d'activation rendu par le composant d'infobulle est inline : il doit
-	// se comporter comme le contenu qu'il porte, sinon l'avatar retombe sur la ligne
-	// de base et le nom perd sa coupure. La carte de l'infobulle est téléportée hors
-	// du widget, ces sélecteurs ne l'atteignent donc jamais.
+	// se comporter comme l'avatar qu'il porte, sinon celui-ci retombe sur la ligne de
+	// base et la rangée gagne quelques pixels par ligne. La carte de l'infobulle est
+	// téléportée hors du widget, ces sélecteurs ne l'atteignent donc jamais.
 	.portrait-tooltip, .portrait-tooltip :deep(span), .portrait {
 		display: flex;
 		flex-shrink: 0;
 	}
 	.avatar {
-		width: 28px;
-		height: 28px;
+		width: 30px;
+		height: 30px;
 		object-fit: cover;
+		transition: transform 0.1s;
 	}
-	.info {
-		display: flex;
-		flex-direction: column;
-		min-width: 0;
-		flex: 1;
-	}
-	.name-tooltip, .name-tooltip :deep(span) {
-		display: block;
-		min-width: 0;
-	}
-	.name {
-		display: block;
-		font-weight: bold;
-		color: var(--text-color);
-		text-decoration: none;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.composition {
-		font-size: 12px;
-		color: var(--text-color-secondary);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.talent {
-		flex-shrink: 0;
-		font-size: 13px;
-		font-weight: 500;
-		color: var(--text-color-secondary);
-		white-space: nowrap;
-		img {
-			width: 14px;
-			vertical-align: -2px;
-		}
-	}
-	.bracket {
-		flex-shrink: 0;
-		display: flex;
-		color: var(--text-color-secondary);
-		i {
-			font-size: 20px;
-		}
-	}
-	.bracket:hover i {
-		color: var(--primary);
+	.portrait:hover .avatar {
+		transform: scale(1.12);
 	}
 	.none {
 		color: var(--text-color-secondary);
