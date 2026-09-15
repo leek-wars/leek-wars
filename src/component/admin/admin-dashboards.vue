@@ -27,7 +27,7 @@
 							<v-data-table
 								:headers="getHeaders(d.id)"
 								:items="data[d.id].rows"
-								:items-per-page="50"
+								:items-per-page="itemsPerPage(d.id)"
 								density="compact"
 								class="elevation-1">
 								<template v-for="col in data[d.id].columns" :key="col.key" #[cellSlot(col.key)]="{ item }">
@@ -207,6 +207,17 @@
 			}
 			return header
 		})
+	}
+
+	/**
+	 * Une colonne `leek_list` monte une rich-tooltip par poireau, soit un overlay Vuetify chacune :
+	 * 50 lignes de 30 poireaux en instancient 1500 et figent l'onglet à l'ouverture. On pagine donc
+	 * plus court dès qu'une telle colonne est présente.
+	 */
+	function itemsPerPage(id: string): number {
+		const d = data[id]
+		if (d && d.columns.some((col: DashboardColumn) => col.type === 'leek_list')) return 10
+		return 50
 	}
 
 	function cellSlot(key: string) {
