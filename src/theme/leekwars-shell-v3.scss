@@ -125,11 +125,11 @@ body:not(.v2) {
 	 * les boutons déborder sur le panneau élargi. Même repli que la marge. */
 	/* Pierre, 2026-09-09 : « la barre du haut doit prendre toute la largeur si
 	   l'écran est plus petit qu'une certaine largeur ». Sous 2200 px la barre
-	   court donc d'un bord à l'autre — pas de cale à gauche, et à droite juste
-	   les 30 px de la poignée du panneau social, qui vit dans le bandeau
-	   (voir `.blabla-button`). Au-delà, elle se cale sur les colonnes. */
+	   court donc d'un bord à l'autre — de chaque côté, juste les 30 px de la
+	   poignée de repli, qui vit dans le bandeau (voir `.blabla-button` et
+	   `.menu-button`). Au-delà, elle se cale sur les colonnes. */
 	#app.connected:not(.app) header.header {
-		--shell-menu: 0px;
+		--shell-menu: 30px;
 		--shell-social: 30px;
 	}
 	@media screen and (min-width: 2200px) {
@@ -182,6 +182,12 @@ body:not(.v2) {
 	#app:not(.app) nav.menu {
 		top: var(--header-height);
 		padding-top: 0;
+		/* Son `z-index: 1` (menu.vue) en fait un contexte d'empilement : la
+		   poignée de repli, qui remonte dans le bandeau (voir `.menu-button`
+		   plus bas), y restait enfermée et passait sous lui (1001) quel que
+		   soit son propre z-index. C'est donc la colonne qui monte — elle
+		   commence sous le bandeau, rien d'autre ne la croise. */
+		z-index: 1002;
 	}
 	/* La colonne centrale n'a plus la barre en tête de flux. */
 	#app:not(.app) .app-center {
@@ -1047,8 +1053,21 @@ body:not(.v2) {
 	}
 	.menu .menu-wrapper {
 		background: transparent;
-		border-top: 1.5px solid var(--border-strong);
 		padding: 12px 0;
+	}
+	/* Le trait de tête ne subsiste que là où quelque chose le précède dans la
+	   colonne : le bloc éleveur du tiroir de l'appli, et la poignée de repli
+	   des écrans étroits (voir `.menu-button` plus bas). Ailleurs la colonne
+	   démarre au ras du bandeau, et les deux traits se doublaient (Pierre,
+	   2026-09-15 : « il y a une double bordure entre la barre et le menu ») ;
+	   c'est celui du bandeau qui reste. */
+	#app.app .menu .menu-wrapper {
+		border-top: 1.5px solid var(--border-strong);
+	}
+	@media screen and (max-width: 1199px) {
+		.menu .menu-wrapper {
+			border-top: 1.5px solid var(--border-strong);
+		}
 	}
 
 	/* Une entrée de menu : pas de fond, l'état actif se marque par un aplat
@@ -1302,6 +1321,28 @@ body:not(.v2) {
 		top: calc((var(--header-height) - 30px) / 2);
 		right: 0;
 		z-index: 1002;
+	}
+
+	/* La poignée du menu répond à celle du panneau social (Pierre, 2026-09-15 :
+	   « la flèche pour rabattre le menu peut être symétrique avec celle pour
+	   rabattre le menu de droite ») : elle restait dans le flux de la colonne,
+	   donc SOUS le bandeau et un cran plus bas que sa jumelle, qui vit dedans.
+	   Elle passe en fixe au coin gauche du bandeau, même hauteur, même retrait
+	   du bord — et la barre lui réserve ses 30 px comme à droite (plus haut,
+	   `--shell-menu`). Sortie du flux, elle rend ses 34 px à la colonne, qui
+	   démarre alors au ras du bandeau comme le panneau social.
+	   Même seuil que les cales : sous 1200 px la barre n'est plus une flexbox
+	   (`display: block`, header.vue), elle empile logo et boutons sur deux
+	   lignes et n'a plus de coin où loger une poignée — celle de droite a
+	   d'ailleurs disparu depuis 1600 px (`social.vue`). La poignée du menu
+	   reste alors en tête de colonne, comme avant. */
+	@media screen and (min-width: 1200px) {
+		#app:not(.app) .menu-button {
+			position: fixed;
+			top: calc((var(--header-height) - 30px) / 2);
+			left: 0;
+			z-index: 1002;
+		}
 	}
 
 	/* Les deux poignées de repli (menu et panneau social) étaient deux carrés

@@ -1377,11 +1377,30 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
       La marge passe à 0 en v3 (`leekwars-shell-v3.scss`), il ne reste que
       les 20 px de retrait de `.app-center` : contenu jusqu'à 1885,
       symétrique. Le v2 garde ses 30 px.
+    - **2026-09-15 — la poignée du menu la rejoint** (« la flèche pour
+      rabattre le menu peut être symétrique avec celle pour rabattre le menu
+      de droite ») : celle de gauche était restée dans le flux de la colonne,
+      donc sous le bandeau, un cran plus bas que sa jumelle. Elle passe en
+      fixe au coin gauche du bandeau, même hauteur, même retrait du bord, et
+      la barre lui réserve 30 px de ce côté aussi (`--shell-menu`, qui valait
+      0 sous 2200 px). Mesuré à 1920 : les deux carrés à `y = 25`, à 30 px
+      de leur bord. Deux effets de bord traités : le `z-index: 1` de
+      `nav.menu` en faisait un contexte d'empilement, la poignée y restait
+      enfermée sous le bandeau (1001) quel que soit son propre z-index —
+      c'est la colonne entière qui monte à 1002 ; et la colonne, libérée des
+      34 px de la poignée, démarre au ras de la barre, où le trait de tête
+      du `.menu-wrapper` doublait celui du bandeau (« il y a une double
+      bordure entre la barre et le menu ») — il ne reste que là où quelque
+      chose précède les entrées. Sous 1200 px la barre n'est plus une
+      flexbox (`display: block`) et n'a plus de coin à offrir : la poignée
+      reprend sa place en tête de colonne, et son trait avec elle. La
+      poignée de droite, elle, disparaît dès 1600 px (`social.vue`).
   - **Barre du haut pleine largeur sous 2200 px** (« la barre du haut doit
     prendre toute la largeur si l'écran est plus petit qu'une certaine
     largeur ») : les cales qui calaient le logo sur le menu et les boutons
     sur le panneau social ne jouent plus qu'à partir de 2200 px ; en dessous
-    la barre court d'un bord à l'autre, moins les 30 px de la poignée.
+    la barre court d'un bord à l'autre, moins les 30 px de la poignée de
+    chaque côté (celle de gauche depuis le 2026-09-15, voir ci-dessus).
     Mesuré : à 1920 le logo est à 20 px du bord, à 2400 il tombe sur la
     colonne (240 px) et les boutons sur le bord du panneau.
   - **Barre de page** (valeurs de Pierre) : 60 px de haut au lieu de 72, et
