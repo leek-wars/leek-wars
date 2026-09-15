@@ -15,7 +15,7 @@
 			<!-- Récap par rareté : les six paliers du jeu (`difficulty`), avec leurs
 			     icônes et leurs clés existantes — la page des trophées compte déjà
 			     de cette façon. Les paliers vides sautent. -->
-			<div v-if="anyTrophies" class="rarities">
+			<div v-if="anyTrophies" class="rarities" :class="{ 'odd-tail': rarities.length >= 3 && rarities.length % 2 === 1 }" :style="{ '--rarity-columns': rarities.length, '--rarity-columns-narrow': Math.ceil(rarities.length / 2) }">
 				<v-tooltip v-for="r in rarities" :key="r.difficulty">
 					<template #activator="{ props }">
 						<span class="rarity-count" v-bind="props">
@@ -89,9 +89,16 @@
 	].filter(s => s.list.length))
 	const anyTrophies = computed(() => best.value.length > 0)
 
+	// Hauteur naturelle d'une section (intitulé + rangée) et écart entre deux,
+	// mesurés dans les deux thèmes : les sections s'étirent ensuite pour remplir
+	// le panel, donc leur hauteur rendue ne peut plus servir à décider combien il
+	// en tient — c'est celle-ci qui le décide (cf. useFitCount).
+	const SECTION_HEIGHT = LeekWars.legacyTheme ? 73 : 53
+	const SECTION_GAP = LeekWars.legacyTheme ? 8 : 14
+
 	// Autant de sections que la hauteur du panel le permet, jamais coupées.
 	const sectionsEl = ref<HTMLElement | null>(null)
-	const sectionCount = useFitCount(sectionsEl, '.section-block', 3, 8)
+	const sectionCount = useFitCount(sectionsEl, '.section-block', 3, SECTION_GAP, SECTION_HEIGHT)
 	const visibleSections = computed(() => sections.value.slice(0, sectionCount.value))
 
 	function apply(data: TrophiesData) {
@@ -174,9 +181,14 @@
 		flex-direction: column;
 		gap: 8px;
 	}
+	// Les sections retenues se partagent TOUTE la hauteur restante (demande de
+	// Pierre) : plus de blanc en bas du panneau, l'intitulé et sa rangée restent
+	// ensemble au centre de la bande qui revient à la section.
 	.section-block {
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
+		flex: 1 1 auto;
 		gap: 8px;
 	}
 	.summary {
@@ -201,14 +213,32 @@
 	// Récap par rareté : une rangée de compteurs, l'icône du palier et son
 	// nombre. Le nom du palier est dans l'infobulle — l'écrire tiendrait six
 	// libellés sur une ligne de widget.
+	// Les paliers occupent TOUTE la ligne (demande de Pierre) : une colonne par
+	// palier affiché, à parts égales. Elles sont calées sur le nombre réel de
+	// paliers et non sur les six du jeu — avec quatre paliers, six colonnes
+	// laisseraient un vide au bout de la ligne.
 	.rarities {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(var(--rarity-columns), minmax(0, 1fr));
 		gap: 4px;
+	}
+	// Panneau étroit : six compteurs sur une ligne se toucheraient. On passe à
+	// deux lignes de trois plutôt que de les serrer — le même parti pris que la
+	// rangée de trophées, et les deux lignes restent pleines.
+	@container (max-width: 340px) {
+		.rarities {
+			grid-template-columns: repeat(var(--rarity-columns-narrow), minmax(0, 1fr));
+		}
+		// Nombre impair de paliers : la seconde ligne en a un de moins et finirait
+		// sur un trou. Le dernier compteur prend les deux colonnes qui restent.
+		.rarities.odd-tail .rarity-count:last-child {
+			grid-column: span 2;
+		}
 	}
 	.rarity-count {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		gap: 4px;
 		padding: 2px 6px;
 		img {
