@@ -10,14 +10,14 @@
 			<div v-if="garden" class="tabs">
 				<v-tooltip>
 					<template #activator="{ props }">
-						<div v-bind="props" class="tab action hidden disabled">
+						<div v-bind="props" class="tab action counter hidden disabled">
 							<img class="restat-potion" src="/image/potion/restat.png">
 							<span>{{ restatPotionCount }}</span>
 						</div>
 					</template>
 					{{ $t('potion.restat') }}
 				</v-tooltip>
-				<div class="tab action hidden disabled">
+				<div class="tab action counter hidden disabled">
 					<v-icon>mdi-sword-cross</v-icon>
 					<span>{{ garden.fights }}</span>
 					<span v-if="$store.state.farmer?.team_fights">+ {{ $store.state.farmer.team_fights }}</span>

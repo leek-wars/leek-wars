@@ -88,16 +88,25 @@ img {
 }
 
 /* Le titre est une distinction : gagné, affiché, un peu vantard. Le v3 le
-   traite comme tel au lieu du gris de texte secondaire — police d'affichage en
-   capitales (cf. REDESIGN.md).
+   traite comme tel au lieu du gris de texte secondaire, avec la police
+   d'affichage (cf. REDESIGN.md).
+   Plus de capitales depuis le 2026-09-15 (Pierre, pour les titres de poireaux
+   et d'éleveur) : la police pixel est déjà une voix, les capitales ne lui
+   ajoutaient pas de relief et lui retiraient ses hampes et ses jambages. Même
+   règle que les titres de page et les actions de la barre de page.
    Écrit ici et non dans la coquille : `.title` est une classe partagée par les
    dialogues et les en-têtes de panneau, la styler globalement les emporterait
    tous. Le style scopé du composant ne touche que ce titre-là. */
 body:not(.v2) .title {
 	font-family: var(--font-display);
-	font-size: 13px;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
+	letter-spacing: -0.0769em;  /* une case de grille */
+	font-weight: 700;
+	/* 14 px (Pierre, 2026-09-15 : « police un poil plus grande »). Le corps net
+	   suivant serait 26 px — les corps pixel-parfaits de la police d'affichage
+	   sont les multiples de 13 — donc ce cran-là se paie en netteté : c'est un
+	   arbitrage de taille, assumé, pas un oubli. */
+	font-size: 14px;
+	text-transform: none;
 	gap: 2px;
 }
 /* Les chevrons restent en retrait : ils encadrent, ils ne crient pas. */

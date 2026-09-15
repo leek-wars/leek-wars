@@ -230,8 +230,9 @@
 	// est Roboto : l'intitulé y reste un simple libellé en capitales.
 	%caption {
 		font-family: var(--font-display);
+		letter-spacing: -0.0769em;  /* une case de grille */
+		font-weight: 700;
 		font-size: 11px;
-		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		color: var(--text-color-secondary);
 	}

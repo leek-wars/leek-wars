@@ -16,15 +16,25 @@
  */
 
 body {
-	/* Police d'affichage : Tiny5, essayée le 2026-09-09 apres Pixelify Sans
-	   (chiffres peu lisibles) et Press Start 2P (moins aimee, capitales
-	   accentuees dessinees en minuscules). Meme hauteur de capitale que
-	   Pixelify, donc les corps ne changent pas ; couvre latin, cyrillique et
-	   grec. Les deux autres restent declarees dans global.scss : revenir en
-	   arriere tient a ce jeton. Roboto ferme la chaine pour le japonais, le
-	   coreen et le chinois, qui n'ont pas d'equivalent pixel : le navigateur y
-	   retombe glyphe par glyphe. */
-	--font-display: "Tiny5", "Roboto", sans-serif;
+	/* Police d'affichage, choisie le 2026-09-15 apres des critiques de joueurs
+	   sur la lisibilite de la police pixel. La chaine compte, chaque cran a une
+	   raison :
+
+	   1. Pixel Operator pour le latin. Grille de 16 cases par cadratin, la plus
+	      fine des douze polices pixel comparees, avec un gras dessine par son
+	      auteur. Mais 238 glyphes seulement : pas de cyrillique, pas de grec,
+	      pas de CJK, et pas le polonais.
+	   2. Fusion Pixel 12px prend tout ce qui manque — le russe, le grec, le
+	      polonais. Les `size-adjust` des deux polices sont calcules pour leur
+	      donner la MEME hauteur de capitale (0,692 cadratin) et les MEMES corps
+	      nets (multiples de 13), donc le relais ne se voit pas : cf. global.scss.
+	   3. Roboto ferme la chaine pour le japonais, le coreen et le chinois —
+	      Fusion Pixel les couvre, mais ces sous-ensembles ne sont pas deployes.
+
+	   Tiny5, Pixelify Sans et Press Start 2P restent declarees dans global.scss
+	   (rien n'est telecharge tant qu'aucune regle ne les demande) : revenir en
+	   arriere tient a ce jeton. */
+	--font-display: "Pixel Operator", "Fusion Pixel", "Roboto", sans-serif;
 
 	/* Police de corps : l'Inter du mockup (--f-body). Roboto reste en repli
 	   pour les glyphes hors sous-ensembles, puis la chaîne système. */

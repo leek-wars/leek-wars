@@ -190,6 +190,166 @@
 	src: url('/fonts/tiny5-greek.woff2') format('woff2');
 	unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
 }
+// Pixel Operator (CC0, Jayvee Enaguas), la police d'affichage depuis le
+// 2026-09-15 (Pierre, en parcourant la page de comparatif : « la Pixel Operator
+// est trop bien ! »). Grille de 16 cases par cadratin, la plus fine des polices
+// essayées, et un GRAS dessiné par l'auteur (`PixelOperator-Bold`, trait de
+// 2 cases, avance +1) — pas besoin de le fabriquer comme pour Fusion Pixel.
+//
+// `size-adjust: 123.08%`, soit 16 × 2 / 26 : les corps multiples de 13 tombent
+// alors pile sur sa grille, donc le titre de page (26 px) et l'en-tête du
+// panneau social (13 px) sont PIXEL-PARFAITS — 0 % de pixels en demi-teinte.
+// Et ce facteur lui donne une hauteur de capitale de 0,692 cadratin, EXACTEMENT
+// celle de Fusion Pixel à 92,31 % : c'est ce qui rend le repli ci-dessous
+// invisible. Ne toucher à l'un de ces deux descripteurs qu'en corrigeant l'autre.
+//
+// ⚠️ Elle ne compte que 238 glyphes : ni cyrillique, ni grec, ni CJK, et il lui
+// manque le polonais (ą ć ę ł ń ś ź ż). Mesuré sur les fichiers de langue du
+// client : sur les 17 langues, 2 943 caractères lui échappent, dont 2 932 que
+// Fusion Pixel reprend. D'où la chaîne `--font-display` : Pixel Operator pour
+// le latin, Fusion Pixel pour le cyrillique, le grec et le reste, Roboto en
+// dernier. Les 11 caractères qu'aucune des deux n'a sont des emojis, déjà servis
+// par Noto Color Emoji.
+//
+// GRAS : la variante **HB** (« half bold »), livrée avec la famille. Le faux
+// gras du navigateur, essayé avant elle, bavait (Pierre : « c'est un peu baveux
+// avec le font weight 700, y'a pas un peu moins gras ou plus net ? ») — normal,
+// il étale les contours hors grille.
+//
+// HB répond exactement à la question, mesuré à 26 px sur la même ligne :
+//   maigre 400          encre  +0 %    0 % de pixels lissés   largeur 322 px
+//   faux gras 700       encre +65 %   57 % de pixels lissés   largeur 322 px
+//   HB                  encre +64 %    0 % de pixels lissés   largeur 364 px
+//   Bold d'origine      encre +72 %    0 % de pixels lissés   largeur 362 px
+// Même épaisseur que le faux gras, mais dessinée sur la grille. Elle élargit les
+// textes de 13 % (la synthèse, elle, n'élargit pas l'avance) : vérifié sur les
+// sept pages, rien ne déborde.
+//
+// ESPACEMENT : les 21 règles portent aussi `letter-spacing: -0.0769em`, soit
+// exactement UNE CASE de grille — le blanc entre deux fûts passe de 2 cases à 1,
+// mesuré sur « nnnn » (Pierre : « tu peux réduire le letter-spacing sur la font
+// pixel ? »). Cela annule au passage les 13 % de largeur qu'ajoutait HB.
+//
+// La valeur vaut une case pour les DEUX polices, et ce n'est pas un hasard :
+// Pixel Operator a 16 cases par cadratin avec `size-adjust: 123.08%`, Fusion
+// Pixel en a 12 avec `92.31%`, et 1,2308/16 = 0,9231/12 = 0,0769. Les deux sont
+// calées sur les mêmes corps nets, donc sur la même case rendue. Si l'un des
+// deux `size-adjust` bouge, cette valeur bouge avec lui.
+//
+// Les faces déclarent `400 700` en pointant le fichier HB : les 21 règles en
+// `--font-display` demandent 700, et cette plage empêche Chromium d'ajouter sa
+// synthèse PAR-DESSUS le gras déjà dessiné. Côté repli, Fusion Pixel passe sur
+// ses fichiers `-bold-` pour la même raison, et sa densité d'encre est à 3 % de
+// celle de HB — le relais reste cohérent en graisse. Les fichiers maigres
+// restent sur le disque : y revenir tient au `src` des faces.
+@font-face {
+	font-family: 'Pixel Operator';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 123.08%;
+	src: url('/fonts/pixel-operator-hb-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Pixel Operator';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 123.08%;
+	src: url('/fonts/pixel-operator-hb-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+// Fusion Pixel 12px (SIL OFL, TakWolf), essayée le 2026-09-15 après les critiques
+// de joueurs sur la lisibilité de la police pixel.
+//
+// Dessinée sur une grille de 12 cases par cadratin, contre 8 à Tiny5 : à
+// hauteur de capitale égale ses glyphes ont 50 % de détail en plus, ce qui se
+// voit surtout sur les chiffres (« 16 077 » se lisait « 16 877 ») et sur les
+// capitales accentuées. Elle couvre en plus le japonais, le coréen et le
+// chinois, qui retombent aujourd'hui sur Roboto — ces sous-ensembles-là ne sont
+// PAS déployés pour l'instant (689 Ko à eux seuls, à découper par blocs).
+//
+// `size-adjust: 92.31%`, et c'est le descripteur qui fait tout le travail.
+//
+// Une police pixel n'est NETTE qu'aux corps multiples de sa grille : ailleurs un
+// pixel dessiné vaut 1,6 pixel écran et le navigateur le lisse. 92,31 % vaut
+// 12/13 : les corps du site passent par ce facteur à 24 px pour le titre de page
+// (26) et à 12 px pour l'en-tête du panneau social (13), tous deux PIXEL-PARFAITS
+// — mesuré à 0 % de pixels en demi-teinte, contre 38 % et 68 % avec Tiny5.
+//
+// Les deux autres réglages, essayés et écartés :
+// - 83,33 % rendrait exactement la hauteur de capitale de Tiny5 (0,625 contre
+//   0,75 ici), donc un gabarit au pixel près — mais 14,4 px n'est un corps de
+//   personne : rien n'est jamais net (61 % de demi-teintes sur le titre).
+// - 100 % avec les corps recalés sur 12 et 24 est net partout, au prix d'une
+//   capitale 20 % plus haute sur TOUTES les surfaces, gabarits à reprendre.
+//
+// À 92,31 % la capitale gagne 11 % sur celle de Tiny5. Vérifié sur la bêta
+// locale (accueil, éleveur, classement, marché, trophées, potager, forum) :
+// aucun texte en police d'affichage ne déborde de son conteneur.
+//
+// GRAS (Pierre, 2026-09-15 : « j'aimerais bien la mettre en bold partout, elle
+// est trop fine là »). TakWolf ne publie pas de graisse grasse, et le faux gras
+// du navigateur étale les contours HORS grille — il rend le trait épais mais
+// reprend 56 % de pixels en demi-teinte, soit tout ce que le choix de la police
+// venait de gagner. Le gras servi ici est donc dessiné : chaque glyphe est uni à
+// sa copie décalée d'une case (100 unités sur 1200 d'em) et son avance suit, ce
+// qui donne un trait de 2 cases en restant exactement sur la grille — 0 % de
+// demi-teintes, comme le maigre (`comparatif-polices/embolden.py`).
+//
+// Les faces déclarent `400 700` en pointant le MÊME fichier : la police n'a
+// qu'une graisse dessinée, et cette plage empêche le navigateur de synthétiser
+// un faux gras par-dessus quand une règle demande 700. Rien à changer dans les
+// composants, tout ce qui est en `--font-display` est gras.
+// Les cinq sous-ensembles maigres (`fusion-pixel-*.woff2`, sans `-bold`) restent
+// sur le disque : revenir au maigre tient au `src` de ces cinq faces.
+// Cf. `REDESIGN.md` et `~/dev/leek-wars/comparatif-polices/`.
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-cyrillic.woff2') format('woff2');
+	unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-cyrillic-ext.woff2') format('woff2');
+	unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-greek.woff2') format('woff2');
+	unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
 // Noto Color Emoji (SIL OFL), la police de repli des emojis : elle n'est peinte
 // que par `.emoji-font`, donc seulement pour les joueurs sans emojis natifs
 // (Linux, vieux Android — cf. `detectNativeEmojis`).

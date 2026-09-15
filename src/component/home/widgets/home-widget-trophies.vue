@@ -253,9 +253,9 @@
 	// elle doublait le titre sans rien apprendre.
 	body:not(.v2) .section {
 		font-family: var(--font-display);
+		letter-spacing: -0.0769em;  /* une case de grille */
 		font-size: 11px;
-		font-weight: normal;
-		letter-spacing: 0.06em;
+		font-weight: 700;
 		text-transform: uppercase;
 		margin: 2px 0 0;
 	}

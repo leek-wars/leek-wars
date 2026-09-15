@@ -317,9 +317,9 @@
 	// police d'affichage (cf. `leekwars-shell-v3.scss`, titre de page).
 	body:not(.v2) h2 {
 		font-family: var(--font-display);
+		letter-spacing: -0.0769em;  /* une case de grille */
 		font-size: 16px;
-		font-weight: normal;
-		letter-spacing: 0.04em;
+		font-weight: 700;
 		text-transform: none;
 	}
 	body:not(.v2) h2:before,

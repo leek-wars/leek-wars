@@ -1704,6 +1704,178 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
   - Vérifié : profil, barre du haut, entrée de chat, liste d'équipes, deux
     thèmes, **v2 intact** (avatars ronds) ; 14 pages balayées à la sonde (aucun
     avatar écrasé ni non carré), 732 tests verts.
+- **2026-09-15 — la police d'affichage passe à Fusion Pixel 12px** (Pierre :
+  « la police pixel est assez critiquée par certains joueurs, tu pourrais m'en
+  trouver d'autres plus lisibles ? »). Planche comparative de douze polices
+  pixel libres, aux corps du site et à **hauteur de capitale égalisée** — sans
+  quoi la comparaison ment. Elle est dans `~/dev/leek-wars/comparatif-polices/`
+  (six planches, les scripts, les mesures).
+  - **Ce que la planche a appris, et qui vaut plus que le choix de la police :
+    une police pixel n'est nette qu'aux corps multiples de sa grille.** Tiny5
+    est dessinée sur 8 cases par cadratin, donc nette à 8, 16, 24 et 32 px ; le
+    site la pose à 11, 13, 14 et 26 px. Un pixel dessiné y vaut 1,6 pixel écran
+    et le navigateur le lisse : **63 % des pixels d'encre sont des demi-teintes
+    à 14 px, 38 % à 26 px** (mesure au rendu, 1 dpr, `measure.cjs`). C'est ça
+    que les joueurs voient. Attention : plusieurs polices dites « pixel »
+    (Pixelify Sans, DotGothic16, Handjet, VT323, Jersey) ont des contours **non
+    alignés** et ne sont nettes à aucun corps — la grille se mesure, elle ne se
+    déduit pas du nom.
+  - **Fusion Pixel 12px** (SIL OFL, TakWolf) : grille de 12, donc 50 % de détail
+    en plus à hauteur égale. Les chiffres cessent de se confondre — « Trophées
+    (16 077) » se lisait « 16 877 ». Elle couvre latin, latin étendu,
+    cyrillique, grec **et** le japonais, le coréen et le chinois, qui retombent
+    aujourd'hui sur Roboto ; ces sous-ensembles-là ne sont pas déployés (689 Ko,
+    à découper par blocs si on veut les servir un jour). Cinq sous-ensembles
+    woff2 (`public/fonts/fusion-pixel-*`), **15,3 Ko en tout contre 43,2 Ko pour
+    Tiny5**. Ark Pixel 12px, la police dont elle dérive, a un rendu latin
+    **strictement identique** (diff pixel nulle) : le choix entre les deux ne se
+    joue que sur la couverture.
+  - **`size-adjust: 92.31%`**, soit 12/13 : le titre de page (26 px) tombe sur
+    24 px de rendu et l'en-tête du panneau social (13 px) sur 12 px — les deux
+    **pixel-parfaits**, 0 % de demi-teintes. Les deux autres réglages ont été
+    mesurés et écartés : 83,33 % rend la hauteur de capitale exacte de Tiny5
+    (gabarits au pixel près) mais n'est net nulle part (61 % sur le titre) ;
+    100 % avec les corps recalés sur 12 et 24 est net partout mais monte la
+    capitale de 20 % sur toutes les surfaces. À 92,31 % elle monte de 11 %.
+  - Les trois polices précédentes restent déclarées dans `global.scss` (rien
+    n'est téléchargé tant qu'aucune règle ne les demande) : **revenir en arrière
+    tient au jeton `--font-display`**.
+  - Vérifié connecté sur la bêta locale, thème sombre — accueil, éleveur,
+    classement, marché, trophées, potager, forum : aucun texte en police
+    d'affichage ne déborde de son conteneur (sonde `scrollWidth > clientWidth`
+    sur tous les nœuds peints en `--font-display`).
+  - **Elle est servie en GRAS** (Pierre, le même jour : « j'aimerais bien la
+    mettre en bold partout, elle est trop fine là »). TakWolf ne publie pas de
+    graisse grasse et le faux gras du navigateur étale les contours **hors
+    grille** : il épaissit bien le trait, mais ramène 56 % de pixels en
+    demi-teinte — soit exactement ce que la bascule venait de gagner. Le gras
+    est donc **dessiné** : chaque glyphe est uni à sa copie décalée d'une case
+    (100 unités sur 1200 d'em), l'avance suit, ce qui donne un trait de 2 cases
+    en restant sur la grille — 0 % de demi-teintes, comme le maigre. L'union
+    n'a pas besoin d'opération booléenne : en remplissage non-zero, superposer
+    deux copies correctement orientées donne leur union (script
+    `comparatif-polices/embolden.py`, 36 259 glyphes traités).
+    Les cinq sous-ensembles gras pèsent 20 Ko (15,3 en maigre). Les faces
+    déclarent `font-weight: 400 700` sur le même fichier : aucune règle de
+    composant à toucher, et cette plage empêche le navigateur d'ajouter un faux
+    gras par-dessus quand une règle demande 700. Revenir au maigre tient au
+    `src` des cinq faces, les fichiers restent sur le disque.
+    Revérifié sur les sept pages : le gras élargit les textes d'environ 8 % et
+    rien ne déborde.
+  - **Une page de comparatif remplace les planches** (Pierre, après six PNG :
+    « je suis pas satisfait, tu peux me faire une page html de comparatif ? »).
+    `comparatif-polices/comparatif.html`, fichier autonome ouvrable en `file://`
+    avec les 16 polices embarquées : thème, graisse, zoom, corps (capitale
+    égalisée / bruts / calés sur la grille), filtres, tri, et sur chaque carte
+    les mesures faites au rendu en direct. Elle a corrigé deux de nos valeurs :
+    **la grille annoncée par une police ment** (Silkscreen se déclare sur 20, la
+    mesure la dit nette à 16), et un faux gras n'est net à aucun corps.
+  - **Et c'est elle qui a tranché : Pixel Operator** (CC0, Jayvee Enaguas ;
+    Pierre : « la Pixel Operator est trop bien ! »). Grille de 16, la plus fine
+    des douze, et un **gras dessiné par l'auteur** — rien à fabriquer.
+    `size-adjust: 123.08%` (16 × 2 / 26) : titre de page et en-tête du panneau
+    social pixel-parfaits, et surtout une hauteur de capitale de 0,692 cadratin,
+    **exactement celle de Fusion Pixel à 92,31 %**.
+    - Car elle ne compte que **238 glyphes** : ni cyrillique, ni grec, ni CJK, et
+      **pas le polonais**. Mesuré sur les fichiers de langue du client : sur les
+      17 langues, 2 943 caractères lui échappent, dont 2 932 que Fusion Pixel
+      reprend (les 11 derniers sont des emojis, déjà servis par Noto).
+      D'où la chaîne `--font-display: "Pixel Operator", "Fusion Pixel",
+      "Roboto"` — le repli se fait glyphe par glyphe, et les deux `size-adjust`
+      sont calculés pour que le relais soit invisible. **Ne toucher à l'un de
+      ces deux descripteurs qu'en corrigeant l'autre.**
+    - Vérifié sur la bêta locale : une ligne polonaise (`Zażółć gęślą jaźń`),
+      une russe et une grecque, peintes par le site, gardent la même hauteur de
+      capitale et le même grain que la ligne latine ; les sept pages habituelles
+      ne débordent pas. Deux sous-ensembles woff2 (`pixel-operator-bold-*`),
+      4,7 Ko — le reste du latin étendu, le cyrillique et le grec continuent de
+      venir des cinq sous-ensembles de Fusion Pixel.
+  - **Plus de `letter-spacing`, et le gras est celui du navigateur** (Pierre,
+    le même jour : « tu peux enlever les letter-spacing sur les textes de cette
+    police et mettre en gras faux gras 700 qui rend le mieux »).
+    - Les 19 `letter-spacing` posés dans les 21 règles qui peignent en
+      `--font-display` sont retirés — ils dataient de Press Start 2P, dont les
+      lettres presque monolarges avaient besoin d'air. Pixel Operator a son
+      propre blanc, l'espacement supplémentaire délavait les petites capitales.
+      Les règles touchées : titres de page et de panneau, en-têtes de tableau,
+      onglets et actions de la barre de page, intitulés de menu, rareté, pied de
+      pagination, plus sept composants (`title`, `menu`, `statistics`,
+      `history`, `settings`, `home-widget-trophies`, `garden-batch`).
+    - **Puis resserrés d'une case** (Pierre : « tu peux réduire le
+      letter-spacing sur la font pixel ? ») : les 21 règles portent
+      `letter-spacing: -0.0769em`. Le blanc entre deux fûts passe de 2 cases de
+      grille à 1 — mesuré sur « nnnn », 4 px → 2 px à 26 px de corps — et les
+      13 % de largeur qu'ajoutait HB sont annulés au passage. **Le rendu reste à
+      0 % de pixels lissés** : la valeur vaut une case entière, pas une fraction.
+      Elle vaut une case pour les DEUX polices, et ce n'est pas un hasard :
+      1,2308/16 = 0,9231/12 = 0,0769, les deux `size-adjust` étant calés sur les
+      mêmes corps nets. **Si l'un des deux bouge, cette valeur bouge avec lui.**
+    - Le gras est passé par le **faux gras de Chromium**, puis par la variante
+      **HB** (« half bold ») livrée avec la famille — le faux gras bavait à
+      l'usage (Pierre : « c'est un peu baveux avec le font weight 700, y'a pas
+      un peu moins gras ou plus net ? »), ce que la mesure annonçait.
+      À 26 px, sur la même ligne : maigre +0 % d'encre et 0 % de pixels lissés ;
+      faux gras +65 % et **57 % lissés** ; **HB +64 % et 0 % lissés** ; Bold
+      d'origine +72 % et 0 %. HB donne donc la même épaisseur que le faux gras
+      en restant sur la grille. Elle élargit les textes de 13 % — la synthèse,
+      elle, n'élargit pas l'avance — et rien ne déborde sur les sept pages.
+    - Les faces déclarent `400 700` en pointant le fichier HB : les 21 règles
+      demandent 700, et cette plage empêche Chromium d'ajouter sa synthèse
+      par-dessus un gras déjà dessiné. Fusion Pixel repasse sur ses fichiers
+      `-bold-` pour la même raison ; sa densité d'encre est à 3 % de celle de
+      HB, donc le relais reste cohérent en graisse. Les fichiers maigres restent
+      sur le disque.
+    - Vérifié sur les sept pages, connecté : plus aucun texte en police
+      d'affichage n'a de `letter-spacing`, tous sont rendus en 700, aucun
+      débordement.
+  - **Les actions de barre de page sortaient de la police d'affichage** (Pierre,
+    capture des onglets du marché : « tu peux enlever la font bizarre ? pourquoi
+    elle est là et est-ce qu'elle y est ailleurs ? »). `.page-bar .tabs
+    .tab.action` était peinte en `ui-monospace` : la règle visait les COMPTEURS
+    du potager — potions de restat, combats restants — parce que la police pixel
+    confond 5 et S, ce qui compte sur un nombre. Mais `.tab.action` ne désigne
+    pas un compteur : c'est n'importe quelle action de barre de page, **52
+    occurrences dans 27 composants**, presque toutes des libellés (Boutique,
+    Banque, Marché, Inventaire, Collection, Chat, Déconnexion, GitHub, OpenAPI…).
+    Tous étaient donc rendus dans la monospace du système, sans rapport avec le
+    reste du site, et en 13 px au lieu de 15.
+    Les deux compteurs de `garden.vue` prennent une classe `counter` et la règle
+    se restreint à `.tab.action.counter`. Vérifié : les onglets du marché et de
+    l'inventaire sont en police d'affichage, les deux compteurs du potager
+    restent en monospace.
+    Les autres emplois de `ui-monospace` sont légitimes et ne bougent pas — ils
+    ne peignent que des nombres : pastilles du menu, compteur de non-lus du
+    panneau social, « topstats » du widget trophées, compteurs de la barre du
+    haut.
+  - **Les en-têtes du panneau social passent de 13 à 14 px** (Pierre : « dans le
+    blabla panel, tu peux passer les titres à 14px comme les autres panels ? »),
+    donc la même valeur que tout autre en-tête de panneau. Les 13 px venaient du
+    mockup, où l'`aside-head` fait 9 px, convertis au facteur 1,43 de l'époque de
+    Press Start 2P.
+    À noter pour plus tard : 13 px est un corps **net** pour la police
+    d'affichage actuelle (les corps nets sont les multiples de 13), 14 px ne
+    l'est pas — ces titres perdent donc leur rendu pixel-parfait pour rejoindre
+    les autres, qui ne l'avaient jamais eu. Uniformiser à **13 px** plutôt qu'à
+    14 les rendrait tous nets d'un coup : `.panel > .header h2` est la seule
+    règle à changer.
+  - **Trois réglages de barre de page et de titre**, valeurs de Pierre le
+    2026-09-15 :
+    - `.page-bar .actions .tab` (les actions à droite : « Se désinscrire »,
+      « Agressions », « Déconnexion ») passe de 12 à **13 px** et perd ses
+      capitales. 13 est un corps NET pour la police d'affichage — ses corps
+      pixel-parfaits sont les multiples de 13 — donc ces actions gagnent le
+      rendu au pixel près en même temps que la taille.
+    - `body:not(.v2) .title` (`title.vue` : les titres de poireau et d'éleveur,
+      « Débuggueur infernal ») perd ses capitales lui aussi, même raison que les
+      titres de page : la police pixel est déjà une voix, les capitales lui
+      retiraient ses hampes et ses jambages sans rien ajouter.
+    - Puis il passe de 13 à **14 px** (« police un poil plus grande »). Le cran
+      net suivant étant 26 px, celui-ci se paie en netteté : arbitrage de taille
+      assumé.
+  - **Reste à faire si on va au bout** : caler les autres corps en police
+    d'affichage sur la grille. Après le `size-adjust`, sont nets les corps
+    multiples de 13 ; les 11, 12, 14, 15 et 16 px ne le sont pas. Les passer à
+    13 et 26 les rendrait nets sans nouvelle bascule de police.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
