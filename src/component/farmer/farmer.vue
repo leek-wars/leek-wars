@@ -315,9 +315,12 @@
 				</div></template>
 			</panel>
 		</div>
-		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies">
+		<!-- Le glyphe passe par la prop `icon` et non par le slot `#title` : le slot porte
+		     la portée de CE composant, donc la règle `i { margin-right: 7px }` de
+		     `panel.vue` (scopée) ne l'atteignait pas et la coupe restait collée au mot. -->
+		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies" icon="mdi-trophy">
 			<template #title>
-				<v-icon>mdi-trophy</v-icon>{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ $filters.number(farmer.points) }})</span>
+				{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ $filters.number(farmer.points) }})</span>
 			</template>
 			<template #actions>
 				<router-link :to="'/trophies/' + id" class="button flat">
@@ -365,7 +368,7 @@
 		     est un flex qui replie ses panneaux en dessous de leur base. Les enfants ne
 		     sont pas réindentés, le fichier étant en cours de modification ailleurs. -->
 		<div class="container grid large">
-		<panel :title="$t('leeks')">
+		<panel :title="$t('leeks')" icon="mdi-leek">
 			<loader v-if="!farmer" />
 			<div v-else ref="leeksEl" class="leeks" :style="{'--columns': leekColumns}">
 				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
@@ -1743,9 +1746,12 @@
 		color: inherit;
 		opacity: 0.7;
 	}
+	/* Même cas que la carte d'avertissement plus bas : la tuile de la vue grille
+	   peignait un `--white` fixe, crème dans les DEUX thèmes, sous le nom du
+	   trophée écrit à l'encre du thème. */
 	.trophies.grid .trophy {
-		background: var(--white);
-		border: 1px solid var(--grey-12);
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
 	}
 	.trophies-bonus {
 		margin: 5px;
@@ -1759,12 +1765,16 @@
 		text-align: center;
 		padding-bottom: 20px;
 		.warning-title {
-			color: red;
+			color: var(--error);
 			margin-bottom: 15px;
 		}
+		/* La carte laisse `.card` poser sa surface : elle peignait un `--white`
+		   fixe, qui en v3 vaut le parchemin dans les DEUX thèmes. En sombre, le
+		   texte de la carte (encre claire du thème) tombait à 1,09 de contraste
+		   sur ce fond crème — illisible. Même chose pour les gris fixes de la
+		   date et de l'auteur, qui ne se lisent que sur une surface claire. */
 		.warning {
 			padding: 5px;
-			background: var(--white);
 			border-radius: var(--radius-tiny);
 			width: 250px;
 			display: inline-block;
@@ -1775,11 +1785,11 @@
 			}
 			.date {
 				font-size: 12px;
-				color: var(--grey-5);
+				color: var(--text-color-secondary);
 			}
 			.author {
 				font-size: 12px;
-				color: var(--grey-5);
+				color: var(--text-color-secondary);
 			}
 		}
 	}

@@ -720,6 +720,19 @@ body:not(.v2) {
 		margin-left: 0;
 		padding: 0 14px;
 	}
+	/* Barre SATURÉE : `.tabs.compact`. Le titre de page est un flex-item à base 0
+	   (`.page-title { flex: 1 }`) : ce sont les onglets qui prennent la place, et
+	   le titre se fait écraser jusqu'à déborder par-dessus le premier onglet dès
+	   que la ligne ne tient plus. Le classement a neuf onglets, tous avec leur
+	   glyphe — 960 px, soit toute la barre. On resserre le crénage et l'icône
+	   plutôt que d'écrire des pixels dans la page : une barre chargée est un cas
+	   de la coquille, pas une particularité du classement. */
+	.page-bar .tabs.compact .tab {
+		padding: 0 9px;
+	}
+	.page-bar .tabs.compact .tab .v-icon {
+		font-size: 20px;
+	}
 	/* Survol : le trait apparaît dessous, à l'encre du texte (Pierre,
 	   2026-09-08 : « un hover qui fait apparaître une barre blanche en bas,
 	   active qui la passe en vert avec le texte »). */

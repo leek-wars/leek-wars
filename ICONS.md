@@ -52,6 +52,8 @@ recopiées d'ici à la main — modifier l'un, c'est modifier l'autre.
 | Concept | Glyphe | Notes |
 | --- | --- | --- |
 | **Poireau** | `mdi-leek` | Un poireau *précis* (menu, ligne de liste) garde sa **vignette de tête**, qui le distingue de ses frères ; `mdi-leek` sert au concept générique. |
+| **Éleveur** | `mdi-account` | La silhouette pleine. Un éleveur *précis* garde son avatar, comme un poireau garde sa tête. À ne pas confondre avec `mdi-account-group` (groupes privés) ni `mdi-account-multiple` (une liste de gens : membres d'équipe, comptes liés). Posé le 2026-09-15 avec les onglets du classement, où le concept n'avait encore aucun glyphe. |
+| **Niveau** | `mdi-stairs` | Les marches — un niveau est un palier. Sert au classement par niveau. À ne pas confondre avec `mdi-transfer-up` (la **montée** de niveau, un évènement) ni `mdi-chevron-triple-up` (la pastille de rang de `ranking-badge.vue`). Posé le 2026-09-15. |
 | **Trophée** | `mdi-trophy` | La coupe. `mdi-trophy-outline` = trophée **non débloqué**, et rien d'autre. |
 | **Classement** | `mdi-podium` | |
 | **Tournoi** | `mdi-tournament` | L'arbre à branches — l'objet lui-même. Libère la coupe, que le tournoi lui empruntait. |
@@ -61,6 +63,10 @@ recopiées d'ici à la main — modifier l'un, c'est modifier l'autre.
 | **Défi** | `mdi-flag-outline` | Le drapeau qu'on plante pour provoquer. Contour **par exception** : le drapeau plein dit déjà « signalement », et cette paire-là est en place partout dans le code (onglets, historique, tooltips, notifications). |
 | **Signalement / avertissement** | `mdi-flag` | Le drapeau qu'on lève sur quelqu'un : bouton « Signaler », dialogue de signalement, avertissement reçu. |
 | **Arme** | `mdi-pistol` | Le dialogue de choix d'armes, déjà le glyphe des Armes côté admin. |
+| **Puce** | `mdi-chip` | Déjà en place depuis longtemps (panneau et dialogue de puces de la page poireau, onglet du groupe, dialogue de montée de niveau) ; inscrit au tableau le 2026-09-15. |
+| **Invocation** | `mdi-flower` | Les invocations de Leek Wars poussent : bulbe, maïs, piment, prototaxite. `mdi-sprout` n'est pas libre (widget « Poireaux » de l'accueil) et `mdi-seed` dit la **graine** d'un combat, pas une plante. |
+| **Coffre** | `mdi-treasure-chest` | Le coffre du jeu (chasse au coffre, compteur de coffres de l'historique). **Partagé avec l'Inventaire**, qui est lui aussi un coffre — c'est le même dessin pour le même objet, pas deux concepts sous un glyphe. |
+| **Tourelle** | `mdi-tower-fire` | Déjà la bascule des tourelles du graphique de vie du rapport de combat. |
 | **Arène** (Battle Royale, évènements de groupe) | `mdi-stadium` | Déjà le glyphe de la catégorie de trophées « arène ». |
 | **Boss** | `mdi-crown` | La couronne, déjà en place dans l'historique de combats, la tooltip de combat et le menu — les boss de Leek Wars sont des rois. |
 | **Équipe** | `mdi-shield` | Le blason — les équipes ont un emblème, la métaphore tient. |
@@ -196,6 +202,67 @@ Le v2 et le thème XP gardent leurs PNG **dans le menu**, qui branche déjà sur
 c'est le vocabulaire, pas le style, et le dédoubler garantirait qu'il dérive.
 `page-tabs.vue` faisait déjà comme ça pour Collection, Boutique, Banque et
 Inventaire — le Marché était le dernier à ne pas suivre.
+
+## Appliqué le 2026-09-15 — les onglets du classement
+
+Pierre : « ça serait sympa de mettre des icônes sur ces onglets page classements ».
+Les onglets de `ranking.vue` portent maintenant leur glyphe : Poireaux
+`mdi-leek`, Niveau N `mdi-stairs`, Éleveurs `mdi-account`, Équipes `mdi-shield`,
+Boss `mdi-crown`, Fun `mdi-emoticon-happy`, Statistiques
+`mdi-chart-timeline-variant` (celui que portent déjà les quatre autres barres
+qui pointent `/statistics` : à propos, changelog, appli, kit presse). Le pays
+gardait son drapeau / son globe, la recherche sa loupe.
+
+**Statistiques est parti en barre de PIED** (Pierre, dans la foulée) : c'est un
+lien vers une autre page, pas une vue du classement, et les huit autres onglets
+le sont. La page reçoit donc son premier `.page-footer.page-bar`, comme l'éleveur,
+le poireau ou l'équipe.
+
+Deux glyphes **nouveaux au vocabulaire** en sont sortis — l'éleveur et le niveau,
+ajoutés au tableau ci-dessus. Le sourire du Fun n'y est pas : ce n'est pas un
+concept du jeu mais le nom d'une page, comme « Statistiques ».
+
+La barre y a gagné 210 px et n'entrait plus : le titre de page est un flex-item à
+base 0, il se fait écraser en silence et « Classement » débordait par-dessus le
+premier onglet. D'où `.tabs.compact` dans la coquille v3 (crénage 9 px, glyphe
+20 px) — une barre saturée est un cas de la coquille, pas une particularité du
+classement. Elle reste en place après le départ de Statistiques : huit onglets
+tiennent, mais de justesse, et une langue plus bavarde que le français ramènerait
+le débordement.
+
+**Les vingt classements fun**, dans la foulée (« est-ce que tu peux me mettre des
+icônes pour tous les classements fun ? »). La table `FUN_ICONS` de `ranking.vue`
+est indexée par le `title` que renvoie `RankingController::serviceFun` :
+
+| Classement | Glyphe | | Classement | Glyphe |
+| --- | --- | --- | --- | --- |
+| Argent gagné | `mdi-cash-multiple` | | Battles Royales gagnées | `mdi-stadium` |
+| Le plus de trophées | `mdi-trophy` | | Tournois solo / éleveur / équipe | `mdi-tournament` |
+| Jours connecté | `mdi-calendar-check` | | Coffres ouverts | `mdi-treasure-chest` |
+| Nombre de kills | `mdi-grave-stone` | | Nombre de crashes | `mdi-bug` |
+| Nombre d'alliés tués | `mdi-heart-broken` | | Boss tués | `mdi-crown` |
+| Nombre total de tirs | `mdi-crosshairs` | | Tourelles détruites | `mdi-tower-fire` |
+| Distance parcourue | `mdi-map-marker-distance` | | Dégâts infligés | `mdi-flash` |
+| Puces utilisées | `mdi-chip` | | Nombre total de combats | `mdi-sword` |
+| Invocations | `mdi-flower` | | Trèfles trouvés | `mdi-clover` |
+
+Trois choix méritent leur ligne. **Pas de crâne pour les kills** : `mdi-skull-outline`
+dit « défaite » dans l'historique et la tooltip de combat, et le plein ne peut pas
+servir à dire autre chose que le creux — d'où la pierre tombale, et le cœur brisé
+pour le tir ami. **Les trois tournois partagent `mdi-tournament`** : c'est un seul
+objet vu à trois échelles, seul le titre les sépare ; leur donner trois dessins
+inventerait trois concepts. **Le glyphe est secondaire** (`--text-color-secondary`)
+et à 20 px : ces titres sont vingt fois répétés dans une grille, un aplat d'encre
+pleine en ferait une guirlande.
+
+**Page éleveur, le même jour** (Pierre : « il y a un souci avec l'icône trophy »).
+Le glyphe du panneau Trophées était **collé au mot** : il était posé dans le slot
+`#title`, qui porte la portée de `farmer.vue`, alors que la règle
+`i { margin-right: 7px }` vit dans le style **scopé de `panel.vue`** — elle ne
+l'atteignait donc jamais. Un glyphe d'en-tête de panneau passe par la **prop
+`icon`**, jamais par le slot ; le slot ne sert qu'au texte que la prop `title` ne
+sait pas porter (ici le compteur de points). Au passage le panneau Poireaux reçoit
+son `mdi-leek`.
 
 ### Reste à trancher
 

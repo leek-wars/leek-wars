@@ -7,11 +7,12 @@
 					<h1>{{ $t('title') }}</h1>
 				</div>
 			</div>
-			<div class="tabs">
-				<router-link :to="getURL('leek', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'leek'}">{{ $t('leeks') }}</div></router-link>
+			<div class="tabs compact">
+				<router-link :to="getURL('leek', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'leek'}"><v-icon>mdi-leek</v-icon><span>{{ $t('leeks') }}</span></div></router-link>
 				<router-link :to="getURL('level-' + rankingLevel, 'talent', country, LeekWars.rankingInactive)">
 					<div class="tab" :class="{active: category.startsWith('level')}">
-						{{ $t('main.level_n', [rankingLevel]) }}
+						<v-icon>mdi-stairs</v-icon>
+						<span>{{ $t('main.level_n', [rankingLevel]) }}</span>
 						<v-menu offset-y>
 							<template #activator="{ props }">
 								<v-icon v-bind="props" @click.prevent="">mdi-chevron-down</v-icon>
@@ -24,9 +25,9 @@
 						</v-menu>
 					</div>
 				</router-link>
-				<router-link :to="getURL('farmer', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'farmer'}">{{ $t('farmers') }}</div></router-link>
-				<router-link :to="getURL(teamMode, 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team' || category === 'composition'}">{{ $t('teams') }}</div></router-link>
-				<router-link :to="getURL('boss-' + bossId, bossMode, null, LeekWars.rankingInactive)"><div class="tab" :class="{active: category.startsWith('boss')}">{{ $t('boss') }}</div></router-link>
+				<router-link :to="getURL('farmer', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'farmer'}"><v-icon>mdi-account</v-icon><span>{{ $t('farmers') }}</span></div></router-link>
+				<router-link :to="getURL(teamMode, 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team' || category === 'composition'}"><v-icon>mdi-shield</v-icon><span>{{ $t('teams') }}</span></div></router-link>
+				<router-link :to="getURL('boss-' + bossId, bossMode, null, LeekWars.rankingInactive)"><div class="tab" :class="{active: category.startsWith('boss')}"><v-icon>mdi-crown</v-icon><span>{{ $t('boss') }}</span></div></router-link>
 
 				<v-menu v-model="countryList" offset-y>
 					<template #activator="{ props }">
@@ -58,8 +59,7 @@
 						</router-link>
 					</v-list>
 				</v-menu>
-				<router-link to="/ranking/fun"><div class="tab" :class="{active: category === 'fun'}">{{ $t('fun') }}</div></router-link>
-				<router-link to="/statistics"><div class="tab">{{ $t('statistics') }}</div></router-link>
+				<router-link to="/ranking/fun"><div class="tab" :class="{active: category === 'fun'}"><v-icon>mdi-emoticon-happy</v-icon><span>{{ $t('fun') }}</span></div></router-link>
 				<div class="tab action" icon="search" @click="openSearch">
 					<v-icon class="search-icon">mdi-magnify</v-icon>
 				</div>
@@ -70,7 +70,7 @@
 				<div v-if="category === 'fun'" class="fun-rankings">
 				<loader v-if="!rankings" />
 				<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
-					<h4>{{ $t(funRanking.title + '_title') }}</h4>
+					<h4><v-icon>{{ FUN_ICONS[funRanking.title] ?? 'mdi-emoticon-happy' }}</v-icon>{{ $t(funRanking.title + '_title') }}</h4>
 					<table class="ranking">
 						<tr class="header">
 							<th>{{ $t('place') }}</th>
@@ -358,6 +358,17 @@
 			</template>
 		</panel>
 
+		<div class="page-footer page-bar">
+			<div class="tabs">
+				<router-link to="/statistics">
+					<div class="tab">
+						<v-icon>mdi-chart-timeline-variant</v-icon>
+						<span>{{ $t('statistics') }}</span>
+					</div>
+				</router-link>
+			</div>
+		</div>
+
 		<popup v-model="searchDialog" :width="500" icon="mdi-magnify" :title="$t('search_in_ranking')">
 			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" :aria-label="$t('search_name')" class="query" type="text">
 			<div class="flex">
@@ -421,6 +432,35 @@
 		}
 	}
 	const rankings = ref<FunRanking[] | null>(null)
+	// Un glyphe par classement fun, indexé par le `title` que renvoie l'API
+	// (`RankingController::serviceFun`). Le vocabulaire d'ICONS.md d'abord : combat,
+	// arène, tournoi, boss, trophée, puce, coffre et tourelle reprennent le glyphe
+	// qu'ils portent ailleurs sur le site. Les autres sont propres à ces classements.
+	// Pas de crâne pour les kills : il dit « défaite » dans l'historique et la tooltip
+	// de combat, d'où la pierre tombale. Les trois tournois partagent volontairement
+	// `mdi-tournament` — c'est le même objet, seul le titre les sépare.
+	const FUN_ICONS: Record<string, string> = {
+		richest: 'mdi-cash-multiple',
+		trophies: 'mdi-trophy',
+		connection: 'mdi-calendar-check',
+		kills: 'mdi-grave-stone',
+		allies_killed: 'mdi-heart-broken',
+		shots: 'mdi-crosshairs',
+		distance: 'mdi-map-marker-distance',
+		chips: 'mdi-chip',
+		summons: 'mdi-flower',
+		fights: 'mdi-sword',
+		clovers: 'mdi-clover',
+		br: 'mdi-stadium',
+		solo_tournaments: 'mdi-tournament',
+		farmer_tournaments: 'mdi-tournament',
+		team_tournaments: 'mdi-tournament',
+		chests: 'mdi-treasure-chest',
+		crashes: 'mdi-bug',
+		boss_killed: 'mdi-crown',
+		turrets_killed: 'mdi-tower-fire',
+		damage: 'mdi-flash',
+	}
 	const page = ref(0)
 	const pages = ref(0)
 	const category = ref('')
@@ -786,6 +826,13 @@
 	h4 {
 		text-align: left;
 		margin: 8px 5px;
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		.v-icon {
+			font-size: 20px;
+			color: var(--text-color-secondary);
+		}
 	}
 	.ranking {
 		background: var(--pure-white);

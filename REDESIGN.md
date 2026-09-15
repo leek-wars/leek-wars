@@ -1876,6 +1876,40 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     d'affichage sur la grille. Après le `size-adjust`, sont nets les corps
     multiples de 13 ; les 11, 12, 14, 15 et 16 px ne le sont pas. Les passer à
     13 et 26 les rendrait nets sans nouvelle bascule de police.
+- **2026-09-15 — icônes sur les onglets du classement, et `.tabs.compact`**
+  (Pierre : « ça serait sympa de mettre des icônes sur ces onglets page
+  classements »). Les onglets de `ranking.vue` portent leur glyphe, pris
+  dans `ICONS.md` ; deux concepts y manquaient et y ont été ajoutés (éleveur =
+  `mdi-account`, niveau = `mdi-stairs`). **Statistiques est descendu en barre de
+  pied** (« tu peux mettre l'onglet Statistiques en tab mais de bas de page ? ») :
+  les huit autres onglets sont des vues du classement, lui est un lien vers une
+  autre page. La page reçoit son premier `.page-footer.page-bar`.
+  - Ce que ça a révélé : **le titre de page se fait écraser en silence quand la
+    barre déborde**. `.page-title` est un flex-item en `flex: 1` (base 0,
+    `min-width: 0`) et les onglets un bloc à sa taille naturelle : ce sont eux
+    qui servent d'abord. Les 210 px de glyphes ont réduit le titre à 40 px et
+    « Classement » débordait par-dessus le premier onglet — sans rogner, sans
+    points de suspension, sans ascenseur.
+  - **`.tabs.compact`** dans la coquille : crénage de 14 à 9 px, glyphe de 24 à
+    20 px. 960 px → 826 px, le titre retrouve sa place. La classe est dans la
+    coquille et pas dans la page parce qu'une barre saturée est un cas de la
+    coquille ; le classement est seulement le premier à l'atteindre (neuf
+    onglets, c'est la barre la plus chargée du site).
+  - Vérifié en local, connecté, dans les deux thèmes : le titre ne touche plus
+    le premier onglet (415 px contre 429), les glyphes prennent bien les trois
+    encres de leur onglet, et sous 1 100 px de large les onglets passent
+    proprement à la ligne au lieu de se superposer au titre.
+  - **Les vingt classements fun** portent leur glyphe en tête de tableau (table
+    `FUN_ICONS`, détail et arbitrages dans `ICONS.md`). Encre secondaire et 20 px :
+    répété vingt fois dans une grille, un glyphe en encre pleine ferait guirlande.
+  - **Un glyphe d'en-tête de panneau passe par la prop `icon`, jamais par le slot
+    `#title`** (relevé par Pierre sur la page éleveur : « il y a un souci avec
+    l'icône trophy »). Le slot porte la portée du composant APPELANT ; la règle
+    `i { margin-right: 7px }` vit dans le style scopé de `panel.vue` et ne
+    l'atteint pas — la coupe des Trophées restait collée au mot, seule de tous
+    les panneaux de la page. Le slot ne garde que ce que la prop `title` ne sait
+    pas porter (ici le compteur de points). Le panneau Poireaux reçoit son
+    `mdi-leek` au passage.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
