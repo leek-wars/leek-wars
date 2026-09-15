@@ -16,12 +16,18 @@
 				<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
 			</div>
 			<div class="spacer"></div>
-			<span class="date" :title="LeekWars.formatDateTime(notification.date)">{{ LeekWars.formatDuration(notification.date) }}</span>
+			<!-- Le glyphe décoratif et la date forment le bloc de droite, posé dans le
+			     FLUX et non en absolu : sinon il ne réserve aucune place et le titre,
+			     qui occupe toute la largeur avant de s'élider, lui passe dessous — la
+			     coupe des notifications de trophée tombait en plein sur le texte. -->
+			<div class="side">
+				<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
+				<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
+				<span class="date" :title="LeekWars.formatDateTime(notification.date)">{{ LeekWars.formatDuration(notification.date) }}</span>
+			</div>
 			<span v-if="resultIcon && LeekWars.notifsResults" class="result">
 				<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
 			</span>
-			<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
-			<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
 		</component>
 		<v-btn v-if="!notification.read" class="read" size="small" color="primary" @click.stop="read"><v-icon>mdi-check</v-icon></v-btn>
 	</div>
@@ -70,6 +76,10 @@ function read() {
 		display: flex;
 		min-width: 0;
 		align-items: center;
+		// La même ligne sert le panneau du header (400 px), le panneau social
+		// (400 à 800), la page et la barre mobile : c'est sa largeur à elle, pas
+		// celle de la fenêtre, qui dit s'il reste de la place pour l'ornement.
+		container-type: inline-size;
 		a {
 			align-items: center;
 			position: relative;
@@ -128,12 +138,25 @@ function read() {
 	.result .mdi-close {
 		color: red;
 	}
+	// Bloc de droite : le glyphe décoratif centré, la date calée en bas comme avant.
+	// `flex: none` le met hors de portée du rétrécissement — c'est lui qui fixe
+	// l'endroit où le titre s'élide.
+	.side {
+		flex: none;
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+	}
 	.large-icon {
-		position: absolute;
-		top: 0;
-		right: 80px;
 		font-size: 50px;
 		opacity: 0.5;
+	}
+	// Trop étroit : entre la vignette, le glyphe et la date il ne resterait rien
+	// pour le titre. Le glyphe n'est qu'un ornement, c'est lui qui s'efface.
+	@container (max-width: 330px) {
+		.large-icon {
+			display: none;
+		}
 	}
 	.message {
 		color: var(--text-color-secondary);
@@ -144,14 +167,14 @@ function read() {
 		overflow: hidden;
 	}
 	.date {
-		position: absolute;
-		bottom: 5px;
-		right: 0;
+		align-self: flex-end;
 		color: var(--text-color-secondary);
 		font-size: 12px;
-		padding: 0 8px;
+		padding: 0 8px 5px;
+		white-space: nowrap;
 	}
 	.image {
+		flex: none;
 		height: 50px;
 		width: 50px;
 		padding: 10px;
