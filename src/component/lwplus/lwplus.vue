@@ -94,6 +94,9 @@ const t = useNamespacedT('lwplus')
 const benefits = [
 	{ key: 'fights', icon: 'mdi-sword-cross' },
 	{ key: 'queue', icon: 'mdi-fast-forward' },
+	// Combats générés en parallèle (#3303) : le plafond réel est une part du parc de
+	// runners (FightManager.maxParallel), soit 1 et 2 à la taille de pool actuelle.
+	{ key: 'parallel', icon: 'mdi-call-split' },
 	{ key: 'ratelimit', icon: 'mdi-speedometer' },
 	// Potager rapide (Pierre, 09/09/2026), comme dans la banque. Les comptes déclarables
 	// ne sont plus un avantage LW+ : leur plafond est le même pour tout le monde.
