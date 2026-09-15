@@ -1,15 +1,20 @@
 <template>
 	<div class="remarkable-widget">
 		<loader v-if="!loaded" />
-		<div v-else ref="listEl" class="players">
+		<div v-else ref="listEl" class="players" :style="{ '--row-height': ROW_HEIGHT + 'px' }">
 			<router-link v-for="p in visiblePlayers" :key="p.id" v-ripple :to="'/farmer/' + p.id" class="player">
 				<img :src="LeekWars.getAvatar(p.id, p.avatar_changed)" class="avatar" loading="lazy">
 				<div class="info">
 					<div class="name-line">
-						<span class="name">{{ p.name }}</span>
+						<!-- Couleur de grade (admin, modérateur, référent, contributeur),
+						     comme au forum : le serveur envoie la classe, pas la teinte. -->
+						<span class="name" :class="p.color">{{ p.name }}</span>
 						<flag v-if="p.country" :code="p.country" :clickable="false" class="flag" />
 					</div>
-					<span class="reason">{{ reasonText(p.reason) }}</span>
+					<span class="reason">
+						<v-icon class="reason-icon">{{ reasonIcon(p.reason) }}</v-icon>
+						<span class="reason-text">{{ reasonText(p.reason) }}</span>
+					</span>
 				</div>
 			</router-link>
 			<div v-if="!players.length" class="none">{{ t('nobody') }}</div>
@@ -27,8 +32,16 @@
 
 	const t = useNamespacedT('home')
 
+	// Nombre de joueurs servis par l'API (`getRemarkablePlayers`), et hauteur
+	// naturelle d'une rangée : celles retenues s'étirent pour remplir le panneau,
+	// donc leur hauteur rendue ne peut plus dire combien il en tient.
+	const PLAYERS = 15
+	const ROW_HEIGHT = 42
+
 	interface Reason { type: string, value: number, rank: number }
-	interface Player { id: number, name: string, avatar_changed: number, country: string | null, reason: Reason }
+	// `color` : classe de grade servie par le serveur (admin, moderator, referent,
+	// contributor), vide pour la plupart des joueurs.
+	interface Player { id: number, name: string, avatar_changed: number, country: string | null, color?: string, reason: Reason }
 
 	// Charge utile de la requête groupée de l'accueil (cf. home.vue) : `undefined`
 	// tant qu'elle est en vol, `null` si ce widget n'en a rien tiré.
@@ -38,10 +51,23 @@
 	const players = ref<Player[]>([])
 
 	// Autant de joueurs que la hauteur du panel en laisse tenir entiers, jamais
-	// plus que les dix servis par l'API (`getRemarkablePlayers`).
+	// plus que ceux servis par l'API (`getRemarkablePlayers`).
 	const listEl = ref<HTMLElement | null>(null)
-	const playerCount = useFitCount(listEl, '.player', 10)
+	const playerCount = useFitCount(listEl, '.player', PLAYERS, 0, ROW_HEIGHT)
 	const visiblePlayers = computed(() => players.value.slice(0, playerCount.value))
+
+	// Un glyphe par vivier, celui du concept (cf. ICONS.md) : le classement pour
+	// le talent, la coupe pour les trophées, les bulles pour le forum, le cœur
+	// pour les j'aime — le même que le compteur de la page éleveur.
+	function reasonIcon(r: Reason): string {
+		switch (r.type) {
+			case 'top_talent': return 'mdi-podium'
+			case 'forum_messages': return 'mdi-forum'
+			case 'trophies': return 'mdi-trophy'
+			case 'likes': return 'mdi-heart'
+			default: return ''
+		}
+	}
 
 	function reasonText(r: Reason): string {
 		switch (r.type) {
@@ -83,11 +109,16 @@
 		min-height: 0;
 		overflow: hidden;
 	}
+	// Les rangées retenues se partagent TOUTE la hauteur du panneau : pas de blanc
+	// résiduel en bas, et c'est `--row-height`, leur hauteur naturelle, qui décide
+	// combien il en tient.
 	.player {
 		display: flex;
 		align-items: center;
 		gap: 10px;
-		padding: 6px 8px;
+		flex: 1 1 auto;
+		min-height: var(--row-height);
+		padding: 4px 8px;
 		border-radius: var(--radius);
 		text-decoration: none;
 		color: var(--text-color);
@@ -104,6 +135,7 @@
 	.info {
 		display: flex;
 		flex-direction: column;
+		flex: 1 1 auto;
 		min-width: 0;
 	}
 	.name-line {
@@ -125,11 +157,24 @@
 	// les rangées n'avaient plus la même hauteur — useFitCount les suppose
 	// homogènes et en laissait dépasser une.
 	.reason {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		min-width: 0;
 		font-size: 12px;
 		color: var(--text-color-secondary);
+	}
+	.reason-text {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+	.reason-icon {
+		font-size: 14px;
+		width: 14px;
+		height: 14px;
+		flex-shrink: 0;
+		color: inherit;
 	}
 	.none {
 		color: var(--text-color-secondary);
