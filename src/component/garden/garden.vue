@@ -19,8 +19,7 @@
 				</v-tooltip>
 				<div class="tab action counter hidden disabled">
 					<v-icon>mdi-sword-cross</v-icon>
-					<span>{{ garden.fights }}</span>
-					<span v-if="$store.state.farmer?.team_fights">+ {{ $store.state.farmer.team_fights }}</span>
+					<span>{{ garden.fights }}<template v-if="$store.state.farmer?.team_fights"> + {{ $store.state.farmer.team_fights }}</template></span>
 				</div>
 			</div>
 		</div>
