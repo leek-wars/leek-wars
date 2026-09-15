@@ -394,7 +394,7 @@
 					<v-tooltip>
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props" icon="play_arrow" @click="copyAsTest()">
-								<v-icon>mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
+								<v-icon class="list-icon">mdi-content-copy</v-icon><span>{{ $t('test') }}</span>
 							</div>
 						</template>
 						{{ $t('copy_as_test', [leek.name]) }}
@@ -873,8 +873,9 @@
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
-	import { alteredClass } from '@/model/alteration'
+	import { alteredClass, displayRatio } from '@/model/alteration'
 	import { Component, componentsBonus } from '@/model/component'
+	import type { InventoryItem } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Potion, PotionEffect } from '@/model/potion'
@@ -1011,7 +1012,20 @@
 	})
 
 	const farmer_hats = computed(() => store.state.farmer ? store.state.farmer.hats : [])
-	const farmer_components = computed(() => store.state.farmer ? store.state.farmer.components : [])
+	/** Charge d'altération d'une pièce, exactement le ratio de la jauge (#622). */
+	function componentCharge(component: InventoryItem) {
+		const weights = LeekWars.alterations?.weights
+		if (!component.stats || !weights) return 0
+		return displayRatio(component.stats, LeekWars.componentCapacity(component.template), weights)
+	}
+	// Niveau croissant (les pièces utilisables d'abord, les verrouillées à la fin), puis
+	// charge décroissante comme dans l'inventaire : l'ordre du serveur est arbitraire.
+	const farmer_components = computed(() => {
+		if (!store.state.farmer) return []
+		return [...store.state.farmer.components].sort((a, b) =>
+			((LeekWars.items[a.template]?.level ?? 0) - (LeekWars.items[b.template]?.level ?? 0))
+			|| (componentCharge(b) - componentCharge(a)))
+	})
 
 	// Suggestions d'achat : items achetables en cristaux non possédés, depuis le catalogue du marché
 	const marketItems = ref<ItemTemplate[]>([])
