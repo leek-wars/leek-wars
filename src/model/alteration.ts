@@ -250,16 +250,38 @@ function hasBreakableCarac(base: Stats | StatList, added: Stats): boolean {
  *   une carte mère pourtant pleine, qui n'acceptait plus rien ;
  * - en dessous, le BRUT. Il dit l'ampleur réelle des dégâts et atteint -100 % quand la
  *   casse a creusé la pièce à son plancher, là où le budget ne descend qu'à -50 %.
+ *
+ * La puissance est ARRONDIE à l'entier avant la division, comme le serveur qui la stocke
+ * en entier dans `item.altered_power` et fait tourner les trophées de palier dessus
+ * (TrophyController::addAlterationAttempt). Sans cet arrondi, une pièce dont le déficit
+ * tombe sur un quart de point se lisait ici un cheveu sous le seuil que le serveur
+ * venait de franchir, ou l'inverse.
  */
 function displayRatio(added: Stats | null | undefined, capacity: number,
                       weights: { [carac: string]: number }): number {
 	if (!added || !capacity) return 0
-	const budget = addedPower(added, weights)
+	const budget = Math.round(addedPower(added, weights))
 	// Jamais borné : une pièce peut descendre jusqu'à -500 % de sa capacité (la casse creuse
 	// chaque carac jusqu'à 100 % de sa valeur native, et la capacité ne vaut qu'un cinquième
 	// de la puissance de base). L'anneau, lui, se contente d'être plein au-delà d'un tour :
 	// c'est le CHIFFRE qui porte l'information, et le vrai chiffre vaut mieux qu'un plafond.
-	return (budget >= 0 ? budget : rawAddedPower(added, weights)) / capacity
+	return (budget >= 0 ? budget : Math.round(rawAddedPower(added, weights))) / capacity
+}
+
+/**
+ * Pourcentage de charge AFFICHÉ, tronqué vers zéro et jamais arrondi.
+ *
+ * Un arrondi affichait « 50 % » à partir de 49,5 %, alors que le palier de couleur et les
+ * trophées Ébauche / Soigné / Orfèvre se déclenchent au seuil EXACT : une carte SSD à
+ * 61/123 (49,6 %) s'affichait pleine à 50 % sans rien débloquer, et le joueur n'avait
+ * aucun moyen de voir qu'il lui manquait un demi-point (#5092). Tronquer rend l'équivalence
+ * stricte : le chiffre affiché atteint 50 que si le seuil est réellement franchi.
+ *
+ * Vers zéro et non vers le bas : sous zéro, tronquer reste la lecture prudente, une pièce
+ * creusée à -49,6 % n'affiche pas -50 % de dégâts qu'elle n'a pas.
+ */
+function chargePercent(ratio: number): number {
+	return Math.trunc(ratio * 100)
 }
 
 /** Part de la carac visée dans la puissance du composant : x1 si seule, x3 si absente. */
@@ -492,7 +514,7 @@ function alteredClass(item: { stats?: Stats | null, altered_power?: number, temp
 export {
 	AlterationFamily, ComponentFamily, ALTERATION_FAMILY_NAMES, ALTERATION_TIERS, alterationTier,
 	COMPONENT_FAMILY_KEYS, COMPONENT_FAMILY_ICONS, COMPONENT_FAMILIES,
-	well, power, addedPower, rawAddedPower, displayRatio, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
+	well, power, addedPower, rawAddedPower, displayRatio, chargePercent, part, difficulty, efficiencyTier, planAttempt, toMap, mergeStats, alteredClass,
 	componentFamily, isIndivisibleWrongFamily, wrongFamilyIndivisible,
 }
 export type { AlterationTemplate, AlterationData, AlterationRecipe, Stats, StatList }

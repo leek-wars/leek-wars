@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { AlterationFamily, ComponentFamily, addedPower, alterationTier, alteredClass, displayRatio, isIndivisibleWrongFamily, planAttempt, power, rawAddedPower, well, wrongFamilyIndivisible } from './alteration'
+import { AlterationFamily, ComponentFamily, addedPower, alterationTier, alteredClass, chargePercent, displayRatio, isIndivisibleWrongFamily, planAttempt, power, rawAddedPower, well, wrongFamilyIndivisible } from './alteration'
 import type { AlterationData } from './alteration'
 
 /**
@@ -275,6 +275,50 @@ describe('paliers de couleur', () => {
 
 	it('évite le vert clair, illisible sur les composants déjà verts', () => {
 		expect(alterationTier(0.2)?.color).toBe('#008800')
+	})
+})
+
+describe('pourcentage de charge affiché', () => {
+	it('n\'affiche jamais un palier qui n\'est pas atteint', () => {
+		// Le cas signalé (#5092) : une carte SSD niveau 218 (capacité 123) portant +1 PT et
+		// trois caracs creusées par la casse pèse exactement 61 de budget, soit 49,6 %.
+		// Arrondi, le chiffre disait « 50 % » alors que ni le palier bleu ni le trophée
+		// Ébauche ne se déclenchaient : le joueur voyait le seuil franchi et n'avait rien.
+		const ssd = { tp: 1, ram: 0, life: -22, wisdom: -4, science: -23 }
+		const weights = DATA.weights
+		expect(addedPower(ssd, weights)).toBe(61)
+		const ratio = displayRatio(ssd, 123, weights)
+		expect(chargePercent(ratio)).toBe(49)
+		expect(alterationTier(ratio)?.tier).toBe(1)
+	})
+
+	it('affiche le palier dès qu\'il est réellement atteint', () => {
+		// Un point de budget de plus sur la même pièce (62/123 = 50,4 %) : le chiffre passe à
+		// 50 en même temps que le palier bleu et le trophée. L'équivalence est stricte dans
+		// les deux sens — c'est tout l'intérêt de la troncature.
+		const weights = DATA.weights
+		const ratio = displayRatio({ life: 62 }, 123, weights)
+		expect(chargePercent(ratio)).toBe(50)
+		expect(alterationTier(ratio)?.tier).toBe(2)
+	})
+
+	it('ne surestime pas les dégâts d\'une pièce creusée', () => {
+		// Sous zéro, tronquer vers zéro reste la lecture prudente : -49,6 % s'affiche -49 %
+		// et non -50 %, la pièce ne passe pas pour plus abîmée qu'elle n'est.
+		expect(chargePercent(-0.496)).toBe(-49)
+		expect(chargePercent(-1)).toBe(-100)
+	})
+
+	it('lit le même entier que le serveur, quart de point compris', () => {
+		// Le serveur stocke `item.altered_power` en ENTIER et fait tourner les trophées de
+		// palier dessus. Un déficit qui tombe sur un quart de point (le demi-remboursement)
+		// doit donc s'arrondir ici aussi : 61,25 vaut 61 des deux côtés.
+		const weights = DATA.weights
+		// +1 PT (80) et 75 de vie creusée : 80 - 18,75 = 61,25 de budget.
+		const piece = { tp: 1, life: -75 }
+		expect(addedPower(piece, weights)).toBeCloseTo(61.25, 6)
+		expect(displayRatio(piece, 123, weights)).toBeCloseTo(61 / 123, 6)
+		expect(chargePercent(displayRatio(piece, 123, weights))).toBe(49)
 	})
 })
 

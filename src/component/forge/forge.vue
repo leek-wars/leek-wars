@@ -45,7 +45,7 @@
 				<!-- Charge BUDGETAIRE, comme la jauge de l'inventaire : c'est elle qui dit s'il
 				     reste de la place. Le brut comptait les deficits au tarif plein et affichait
 				     77 % sur une piece pourtant pleine, qui n'acceptait plus rien (#622). -->
-				<div v-if="plan && chargeAfter !== 0" class="charge-corner" :class="{ over: plan.overfilled, deficit: chargeAfter < 0 }" :title="chargeTitle">{{ Math.round(chargeAfter * 100) }}%</div>
+				<div v-if="plan && chargeAfter !== 0" class="charge-corner" :class="{ over: plan.overfilled, deficit: chargeAfter < 0 }" :title="chargeTitle">{{ chargePercent(chargeAfter) }}%</div>
 				<!-- Nombre de pieces empilees a recycler d'un coup (#622). -->
 				<div v-if="componentCount > 1" class="stack-count">×{{ componentCount }}</div>
 				<!-- Destruction : 8 copies de l'image, chacune decoupee en part de pizza,
@@ -179,7 +179,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, ItemType, itemImageUrl } from '@/model/item'
 	import { InventoryItem } from '@/model/farmer'
-	import { planAttempt, alterationTier, alteredClass, componentFamily, isIndivisibleWrongFamily, type AlterationRecipe } from '@/model/alteration'
+	import { planAttempt, alterationTier, alteredClass, chargePercent, componentFamily, isIndivisibleWrongFamily, type AlterationRecipe } from '@/model/alteration'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { t } from '@/model/i18n'

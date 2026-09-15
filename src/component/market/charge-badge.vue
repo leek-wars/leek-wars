@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue'
-	import { addedPower, alterationTier, displayRatio, rawAddedPower } from '@/model/alteration'
+	import { addedPower, alterationTier, chargePercent, displayRatio, rawAddedPower } from '@/model/alteration'
 	import { LeekWars } from '@/model/leekwars'
 
 	/**
@@ -40,7 +40,9 @@
 		// justement l'information qui compte avant de l'equiper ou de l'acheter (#622).
 		return r !== 0 ? r : null
 	})
-	const percent = computed(() => ratio.value !== null ? Math.round(ratio.value * 100) : 0)
+	// Tronque, jamais arrondi : le chiffre doit dire le même palier que l'anneau qui
+	// l'entoure et que les trophées de charge (cf. chargePercent, #5092).
+	const percent = computed(() => ratio.value !== null ? chargePercent(ratio.value) : 0)
 	// Infobulle : le budget consomme sur la capacite, plus la valeur NETTE des stats quand
 	// elle en differe. L'ecart vaut la moitie de ce que la casse a creuse, et il n'est
 	// lisible nulle part ailleurs.
