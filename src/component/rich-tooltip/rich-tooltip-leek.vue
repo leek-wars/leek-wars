@@ -61,8 +61,10 @@
 							</rich-tooltip-item>
 						</div>
 						<div class="components">
-							<rich-tooltip-item v-for="component in components" :key="component.id" v-slot="{ props }" :item="component.item" :bottom="true" @update:modelValue="setParent">
-								<img :src="'/image/component/' + component.item.name + '.png'" class="component" v-bind="props">
+							<!-- :instance obligatoire, sinon l'infobulle retombe sur les stats de BASE
+							     du template et le liseré de palier disparaît (#622). -->
+							<rich-tooltip-item v-for="component in components" :key="component.id" v-slot="{ props }" :item="component.item" :instance="(component as any)" :bottom="true" @update:modelValue="setParent">
+								<img :src="'/image/component/' + component.item.name + '.png'" :class="alteredClass(component, LeekWars.componentCapacity(component.template), LeekWars.alterations?.weights)" class="component" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 					</div>
@@ -79,6 +81,7 @@ import { LeekWars } from '@/model/leekwars'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import LeekImage from '@/component/leek-image.vue'
 import { CHIPS as CHIPS_TYPED } from '@/model/chips'
+import { alteredClass } from '@/model/alteration'
 
 const LwTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 

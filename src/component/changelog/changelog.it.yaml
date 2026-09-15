@@ -101,6 +101,7 @@
     - "Chat: un $ dentro un blocco di codice non mette più tag &lt;latex&gt; (grazie a fujiwar)."
     - "Rapporto di combattimento: passare il mouse sugli errori non blocca più il browser (grazie a Amal)."
     - "Alterazioni: la carica mostrata non arrotonda più per eccesso e indica il livello reale (grazie a Kraspen)."
+    - "Tooltip di un porro: i componenti alterati mostrano le loro statistiche reali (grazie a Tabarius)."
     - "#ai Python: le operazioni sono contate per espressione, come in LeekScript e JavaScript."
     - "#ai Le funzioni di combattimento costano lo stesso numero di operazioni in ogni linguaggio."
     - "#ai I costi delle funzioni matematiche sono misurati sul motore reale (grazie a GSoMan)."

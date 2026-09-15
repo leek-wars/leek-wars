@@ -101,6 +101,7 @@
     - "Chat: a $ inside a code block no longer adds &lt;latex&gt; tags (thanks to fujiwar)."
     - "Fight report: hovering the errors list no longer freezes the browser (thanks to Amal)."
     - "Alterations: the displayed charge no longer rounds up and shows the real tier (thanks to Kraspen)."
+    - "Leek tooltip: altered components now show their real stats (thanks to Tabarius)."
     - "#ai Python: operations are counted per expression, like in LeekScript and JavaScript."
     - "#ai Combat functions now cost the same number of operations in every language."
     - "#ai The costs of the math functions are now measured on the real engine (thanks to GSoMan)."
