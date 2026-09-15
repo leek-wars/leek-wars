@@ -579,13 +579,14 @@ body:not(.v2) {
 	.panel > .header {
 		border-bottom: 1px solid var(--border);
 	}
-	/* En-tete de panneau : la typo d'affichage, en capitales espacees, comme le
-	   `.panel-header` du mockup. */
+	/* En-tete de panneau : la typo d'affichage, espacee, comme le
+	   `.panel-header` du mockup — mais sans ses capitales (cf. le titre de
+	   page). */
 	.panel > .header h2 {
 		font-family: var(--font-display);
 		font-size: 14px;
 		letter-spacing: 0.06em;
-		text-transform: uppercase;
+		text-transform: none;
 	}
 	/* Un `h2` d'en-tête ne contient pas toujours qu'un titre : l'inventaire y
 	   loge ses catégories, l'atelier ses trois onglets. Ces blocs héritaient des
@@ -769,6 +770,16 @@ body:not(.v2) {
 	   redonne exactement la hauteur de capitale d'origine (18 px).
 	   Ce facteur 1,43 vaut pour tout report d'une taille du mockup en police
 	   d'affichage. */
+	/* PLUS DE CAPITALES SUR LES TITRES EN POLICE D'AFFICHAGE (Pierre,
+	   2026-09-15 : « il faut enlever le uppercase sur les titres pixelisés »).
+	   La police pixel est déjà une voix : ses lettres sont anguleuses et de
+	   largeur presque égale, si bien qu'un titre en capitales n'ajoutait pas de
+	   relief, il supprimait le seul repère de forme qui restait (les jambages
+	   et les hampes) et faisait un bloc. Vaut pour les TITRES — titre de page,
+	   en-tête de panneau, en-tête du panneau social, barre d'objet, titres de
+	   section des statistiques. Les petites capitales gardent leur rôle là où
+	   le texte n'est pas un titre mais une étiquette : en-têtes de tableau,
+	   onglets et actions, intitulés de menu, rareté, pied de pagination. */
 	h1,
 	h1.items-title {
 		background: none;
@@ -777,7 +788,7 @@ body:not(.v2) {
 		font-size: 26px;
 		line-height: 36px;
 		letter-spacing: 0.04em;
-		text-transform: uppercase;
+		text-transform: none;
 		text-shadow: none;
 		border-top-left-radius: 0;
 	}
@@ -1344,7 +1355,8 @@ body:not(.v2) {
 		margin-bottom: 0;
 	}
 	/* En-tête de section du panneau social, façon `.aside-head` du mockup :
-	   capitales espacées et corps réduit, sur la surface haute. */
+	   espacé et en corps réduit, sur la surface haute. Sans capitales, comme
+	   tous les titres (cf. le titre de page). */
 	.blabla-panel .panel > .header {
 		height: auto;
 		background: var(--background-header);
@@ -1356,7 +1368,7 @@ body:not(.v2) {
 		   1,43 de Press Start 2P vers Pixelify Sans (cf. les titres de page). */
 		font-size: 13px;
 		letter-spacing: 0.06em;
-		text-transform: uppercase;
+		text-transform: none;
 		height: auto;
 		line-height: normal;
 		padding: 10px 14px;
@@ -1730,12 +1742,14 @@ body:not(.v2) {
 		border-bottom: 1px solid var(--border);
 		color: var(--text-color);
 	}
+	/* Le nom de l'objet est un titre de panneau : même traitement, casse
+	   comprise (cf. le titre de page). */
 	.item-preview > .header h2.name {
 		color: var(--text-color);
 		font-family: var(--font-display);
 		font-size: 14px;
 		letter-spacing: 0.06em;
-		text-transform: uppercase;
+		text-transform: none;
 	}
 	.item-preview .rarity {
 		border-radius: 0;

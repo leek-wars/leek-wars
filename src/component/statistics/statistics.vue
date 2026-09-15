@@ -313,13 +313,14 @@
 	}
 	// v3 : le titre de section en police d'affichage, encadré du pointillé
 	// vert de la barre de page — les deux dégradés flous étaient un reste du
-	// v2 (audit du 2026-09-08).
+	// v2 (audit du 2026-09-08). Sans capitales, comme tous les titres en
+	// police d'affichage (cf. `leekwars-shell-v3.scss`, titre de page).
 	body:not(.v2) h2 {
 		font-family: var(--font-display);
 		font-size: 16px;
 		font-weight: normal;
 		letter-spacing: 0.04em;
-		text-transform: uppercase;
+		text-transform: none;
 	}
 	body:not(.v2) h2:before,
 	body:not(.v2) h2:after {
