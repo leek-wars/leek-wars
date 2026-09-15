@@ -50,6 +50,9 @@ type Events = {
 	'garden-queue': number,
 	'fight-progress': [number, number],
 	'history-update': [number],
+	/** Nouveaux événements du panneau « En direct » : [panneau, événements], où
+	 *  le panneau vaut 0 pour l'accueil (tout le site) ou l'id d'une équipe. */
+	'live-events': [number, unknown[]],
 	'update-leek-xp': unknown,
 	'update-leek-talent': unknown,
 	'update-team-talent': { composition: number; talent: number },

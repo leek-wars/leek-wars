@@ -95,6 +95,9 @@ enum SocketMessage {
 	HISTORY_REGISTER = 94,
 	HISTORY_UPDATE = 95,
 	HISTORY_UNREGISTER = 96,
+	LIVE_REGISTER = 97,
+	LIVE_EVENTS = 98,
+	LIVE_UNREGISTER = 99,
 }
 
 // Le daemon diffuse CONNECTED_COUNT à TOUS les clients toutes les 30 s
@@ -291,6 +294,10 @@ class Socket {
 				}
 				case SocketMessage.HISTORY_UPDATE: {
 					emitter.emit('history-update', data)
+					break
+				}
+				case SocketMessage.LIVE_EVENTS: {
+					emitter.emit('live-events', data)
 					break
 				}
 				case SocketMessage.TOURNAMENT_UPDATE: {

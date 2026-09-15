@@ -2,42 +2,21 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { emitter } from '@/model/emitter'
 import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
+import { socketRef, socketResubscribe } from '@/model/socket-subscription'
 import type { Fight } from '@/model/fight'
 
 const HISTORY_TYPE: Record<string, number> = { farmer: 0, leek: 1, team: 2 }
 
-// Comptage de références PARTAGÉ entre toutes les instances du composable.
-// Indispensable : lors d'une navigation (ex. poireau -> historique), Vue exécute
-// le setup de la nouvelle page (qui s'abonne) AVANT de démonter l'ancienne (qui se
-// désabonne). Sans compteur, le UNREGISTER du composant démonté annulerait
-// l'abonnement que la nouvelle page vient de poser pour la même entité. On
-// n'envoie donc REGISTER qu'au passage 0->1 et UNREGISTER qu'au passage 1->0.
-const historyRefs = new Map<string, number>()
-const fightRefs = new Map<number, number>()
-
+// Le comptage de références, partagé avec les autres abonnements websocket,
+// vit dans socket-subscription.ts (qui explique pourquoi il est indispensable).
 function historyRef(type: string, id: number, on: boolean) {
 	const code = HISTORY_TYPE[type]
 	if (code === undefined) return
-	const key = type + ':' + id
-	const n = (historyRefs.get(key) || 0) + (on ? 1 : -1)
-	if (n <= 0) {
-		historyRefs.delete(key)
-		if (!on) LeekWars.socket.send([SocketMessage.HISTORY_UNREGISTER, code, id])
-	} else {
-		historyRefs.set(key, n)
-		if (on && n === 1) LeekWars.socket.send([SocketMessage.HISTORY_REGISTER, code, id])
-	}
+	socketRef([SocketMessage.HISTORY_REGISTER, code, id], [SocketMessage.HISTORY_UNREGISTER, code, id], on)
 }
 
 function fightRef(fightId: number, on: boolean) {
-	const n = (fightRefs.get(fightId) || 0) + (on ? 1 : -1)
-	if (n <= 0) {
-		fightRefs.delete(fightId)
-		if (!on) LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, fightId])
-	} else {
-		fightRefs.set(fightId, n)
-		if (on && n === 1) LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, fightId])
-	}
+	socketRef([SocketMessage.FIGHT_PROGRESS_REGISTER, fightId], [SocketMessage.FIGHT_PROGRESS_UNREGISTER, fightId], on)
 }
 
 /**
@@ -146,10 +125,10 @@ export function useLiveHistory(options: {
 	function onWsConnected() {
 		const code = HISTORY_TYPE[options.type]
 		if (code !== undefined && currentId !== undefined) {
-			LeekWars.socket.send([SocketMessage.HISTORY_REGISTER, code, currentId])
+			socketResubscribe([SocketMessage.HISTORY_REGISTER, code, currentId])
 		}
 		for (const fid of registered) {
-			LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, fid])
+			socketResubscribe([SocketMessage.FIGHT_PROGRESS_REGISTER, fid])
 		}
 		if (wasConnected) scheduleReload()
 		wasConnected = true
