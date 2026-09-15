@@ -225,13 +225,13 @@
 </script>
 
 <style lang="scss" scoped>
-	// Intitulé de chiffre : les petites capitales espacées de la police d'affichage,
+	// Intitulé de chiffre : les petites capitales de la police d'affichage,
 	// comme les actions de panneau (`.panel-action`). En v2 la police d'affichage
 	// est Roboto : l'intitulé y reste un simple libellé en capitales.
 	%caption {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;  /* une case de grille */
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 11px;
 		text-transform: uppercase;
 		color: var(--text-color-secondary);

@@ -592,8 +592,8 @@ body:not(.v2) {
 	   page). */
 	.panel > .header h2 {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 14px;
 		text-transform: none;
 	}
@@ -711,8 +711,8 @@ body:not(.v2) {
 	}
 	.page-bar .tabs .tab {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		background: transparent;
 		color: var(--text-color-secondary);
 		border-bottom: 2px solid transparent;
@@ -760,6 +760,9 @@ body:not(.v2) {
 	   peux enlever la font bizarre ? »). */
 	.page-bar .tabs .tab.action.counter {
 		font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+		/* Le crénage vient de `.page-bar .tabs .tab` et vaut une case de la grille
+		   de la police d'affichage : il n'a aucun sens sur une monospace. */
+		letter-spacing: normal;
 		font-size: 13px;
 	}
 	/* Champ de recherche de la barre de page : il était peint en noir translucide
@@ -779,8 +782,8 @@ body:not(.v2) {
 
 	/* ====== Titre de page ======
 	 *
-	 * Le mockup ne met pas le titre dans un aplat vert : c'est du texte, en
-	 * capitales espacées, souligné par un tiret vert pointillé (`.px-sep`).
+	 * Le mockup ne met pas le titre dans un aplat vert : c'est du texte souligné
+	 * par un tiret vert pointillé (`.px-sep`).
 	 * L'aplat vert et son biseau sautent, la barre de page reçoit le pointillé.
 	 *
 	 * `.items-title` (la bande « Ils n'attendent que vous » de la banque) peint
@@ -808,8 +811,8 @@ body:not(.v2) {
 		background: none;
 		color: var(--text-color);
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 26px;
 		line-height: 36px;
 		text-transform: none;
@@ -935,8 +938,8 @@ body:not(.v2) {
 	}
 	.panel-actions .panel-action {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 11px;
 		text-transform: uppercase;
 		display: inline-flex;
@@ -1012,8 +1015,8 @@ body:not(.v2) {
 	}
 	.page-bar .actions .tab {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		/* 13 px et sans capitales (2026-09-15, valeurs de Pierre). 13 est un corps
 		   NET pour la police d'affichage — ses corps nets sont les multiples de
 		   13 — donc ces actions sont rendues au pixel près. Les capitales
@@ -1232,17 +1235,17 @@ body:not(.v2) {
 		text-shadow: none;
 	}
 	/* Les intitulés de section du menu, façon « ◆ MES POIREAUX » du mockup :
-	   capitales, corps réduit, très espacées, dans l'encre la plus pâle. */
+	   capitales, corps réduit, resserrées, dans l'encre la plus pâle. */
 	.menu h4 {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
+		letter-spacing: var(--font-display-tracking);
 		/* Même conversion que les autres intitulés en police d'affichage. */
 		font-size: 13px;
 		text-transform: uppercase;
 		/* `--text-color-faint` (l'`ink-3` du mockup) ne donne que 3,56:1 sur la
 		   surface haute à ce corps : un cran plus foncé pour rester lisible. */
 		color: var(--text-color-secondary);
-		font-weight: 700;
+		font-weight: var(--font-display-weight);
 		padding: 4px 14px 8px;
 	}
 	/* Le losange des intitulés du mockup (« ◆ MES POIREAUX ») : dans la
@@ -1422,30 +1425,23 @@ body:not(.v2) {
 	.blabla-panel > .content > .panel:last-child {
 		margin-bottom: 0;
 	}
-	/* En-tête de section du panneau social, façon `.aside-head` du mockup :
-	   espacé et en corps réduit, sur la surface haute. Sans capitales, comme
-	   tous les titres (cf. le titre de page). */
+	/* En-tête de section du panneau social, façon `.aside-head` du mockup : en
+	   corps réduit, sur la surface haute. Sans capitales, comme tous les titres
+	   (cf. le titre de page). Il gardait la hauteur libre de l'`aside-head` du
+	   mockup, ce qui faisait trois bandeaux de 42 px à côté des 36 px de tous
+	   les autres panneaux (Pierre, 2026-09-15 : « ces 3 panels ont un titre plus
+	   haut que les autres panels ») : il reprend la hauteur commune. */
 	.blabla-panel .panel > .header {
-		height: auto;
 		background: var(--background-header);
 		border-bottom: 1.5px solid var(--border);
 	}
+	/* Les en-têtes du panneau social sont des en-têtes de panneau comme les
+	   autres : police, corps et capitales viennent de `.panel > .header h2`
+	   (2026-09-15, Pierre : « passer les titres à 14px comme les autres panels »
+	   — ils étaient restés à 13 px depuis le mockup). Ne reste ici que ce qui
+	   leur est propre. */
 	.blabla-panel .panel > .header h2 {
-		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
-		/* 14 px, comme tout autre en-tête de panneau (2026-09-15, Pierre : « dans
-		   le blabla panel, tu peux passer les titres à 14px comme les autres
-		   panels ? »). Il était à 13 px depuis le mockup, où l'`aside-head` fait
-		   9 px — converti au facteur 1,43 de l'époque, quand la police
-		   d'affichage était Press Start 2P puis Pixelify Sans. Le panneau social
-		   n'est pas une aside secondaire du site, ses en-têtes suivent la règle
-		   commune. */
-		font-size: 14px;
-		text-transform: none;
-		height: auto;
-		line-height: normal;
-		padding: 10px 14px;
+		padding: 0 14px;
 		color: var(--text-color);
 	}
 	/* Le compteur de non-lus devient la pastille verte pleine du mockup. */
@@ -1714,9 +1710,9 @@ body:not(.v2) {
 	.ranking tr.header th,
 	.ranking tr.header td {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
+		letter-spacing: var(--font-display-tracking);
 		font-size: 12px;
-		font-weight: 700;
+		font-weight: var(--font-display-weight);
 		text-transform: uppercase;
 		/* `--text-color-faint` (l'`ink-3` du mockup) ne donne que 3,56:1 sur la
 		   surface haute à ce corps : un cran plus foncé pour rester lisible. */
@@ -1735,9 +1731,9 @@ body:not(.v2) {
 	   en-tête de liste du site à ne pas ressembler aux autres. */
 	.header.category {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
+		letter-spacing: var(--font-display-tracking);
 		font-size: 12px;
-		font-weight: 700;
+		font-weight: var(--font-display-weight);
 		text-transform: uppercase;
 		/* `--text-color-faint` (l'`ink-3` du mockup) ne donne que 3,56:1 sur la
 		   surface haute à ce corps : un cran plus foncé pour rester lisible. */
@@ -1761,8 +1757,8 @@ body:not(.v2) {
 		background: var(--background-header);
 		color: var(--text-color-secondary);
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 13px;
 	}
 	/* Survol discret (doctrine du 2026-08-31) : le vert reste à la page
@@ -1823,8 +1819,8 @@ body:not(.v2) {
 	.item-preview > .header h2.name {
 		color: var(--text-color);
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 14px;
 		text-transform: none;
 	}
@@ -2393,8 +2389,8 @@ body:not(.v2) {
 		padding: 0;
 		color: color-mix(in srgb, var(--rarity) 75%, var(--text-color));
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 11px;
 		text-transform: uppercase;
 		text-shadow: 0 0 8px color-mix(in srgb, var(--rarity) 55%, transparent);
@@ -2775,9 +2771,9 @@ body:not(.v2) {
 	}
 	.v-table .v-table__wrapper > table > thead > tr > th {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
+		letter-spacing: var(--font-display-tracking);
 		font-size: 12px;
-		font-weight: 700;
+		font-weight: var(--font-display-weight);
 		text-transform: uppercase;
 		color: var(--text-color-secondary);
 		border-bottom: 1px solid var(--border-strong);
@@ -2791,8 +2787,8 @@ body:not(.v2) {
 	.v-data-table-footer {
 		border-top: 1px solid var(--border);
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;   // une case de grille
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 11px;
 		text-transform: uppercase;
 		color: var(--text-color-secondary);

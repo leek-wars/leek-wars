@@ -197,8 +197,8 @@
 // 2 cases, avance +1) — pas besoin de le fabriquer comme pour Fusion Pixel.
 //
 // `size-adjust: 123.08%`, soit 16 × 2 / 26 : les corps multiples de 13 tombent
-// alors pile sur sa grille, donc le titre de page (26 px) et l'en-tête du
-// panneau social (13 px) sont PIXEL-PARFAITS — 0 % de pixels en demi-teinte.
+// alors pile sur sa grille, donc le titre de page (26 px) et les actions de la
+// barre de page (13 px) sont PIXEL-PARFAITS — 0 % de pixels en demi-teinte.
 // Et ce facteur lui donne une hauteur de capitale de 0,692 cadratin, EXACTEMENT
 // celle de Fusion Pixel à 92,31 % : c'est ce qui rend le repli ci-dessous
 // invisible. Ne toucher à l'un de ces deux descripteurs qu'en corrigeant l'autre.
@@ -258,7 +258,14 @@
 	font-display: swap;
 	size-adjust: 123.08%;
 	src: url('/fonts/pixel-operator-hb-latin-ext.woff2') format('woff2');
-	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+	/* La plage exacte des 38 glyphes du fichier, et non la plage « latin-ext »
+	   de Google : Pixel Operator n'a que 238 glyphes, la plage large faisait
+	   télécharger 1,6 Ko pour rien à toute langue dont les caractères étendus
+	   lui manquent — le polonais, par exemple, n'en a aucun. Les quatre
+	   codepoints que cette face partage avec la face latine (ı Œ œ †) en sont
+	   RETIRÉS : à égalité, c'est la face déclarée en dernier qui gagne, et « Cœur »
+	   suffisait à faire charger ce second fichier sur toute page française. */
+	unicode-range: U+0108-0109, U+010C-010F, U+011A-011D, U+0124-0125, U+0134-0135, U+0147-0148, U+0158-0159, U+015C-015D, U+0160-0161, U+0164-0165, U+016C-016F, U+0178, U+017D-017E, U+02C7, U+20B1, U+20B7;
 }
 // Fusion Pixel 12px (SIL OFL, TakWolf), essayée le 2026-09-15 après les critiques
 // de joueurs sur la lisibilité de la police pixel.
@@ -274,9 +281,10 @@
 //
 // Une police pixel n'est NETTE qu'aux corps multiples de sa grille : ailleurs un
 // pixel dessiné vaut 1,6 pixel écran et le navigateur le lisse. 92,31 % vaut
-// 12/13 : les corps du site passent par ce facteur à 24 px pour le titre de page
-// (26) et à 12 px pour l'en-tête du panneau social (13), tous deux PIXEL-PARFAITS
-// — mesuré à 0 % de pixels en demi-teinte, contre 38 % et 68 % avec Tiny5.
+// 12/13 : les corps multiples de 13 passent par ce facteur sur des entiers —
+// le titre de page (26) à 24 px de rendu, les actions de barre de page (13) à
+// 12 — PIXEL-PARFAITS, mesurés à 0 % de pixels en demi-teinte contre 38 % et
+// 68 % avec Tiny5.
 //
 // Les deux autres réglages, essayés et écartés :
 // - 83,33 % rendrait exactement la hauteur de capitale de Tiny5 (0,625 contre

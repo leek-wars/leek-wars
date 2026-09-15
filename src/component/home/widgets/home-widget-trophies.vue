@@ -247,15 +247,15 @@
 		color: var(--text-color-secondary);
 		margin-top: 4px;
 	}
-	// Intitulé de section du v3 : la typo d'affichage en capitales espacées et
-	// petit corps, comme les en-têtes du panneau social — et non un h4 de corps
+	// Intitulé de section du v3 : la typo d'affichage en capitales et petit
+	// corps, comme les en-têtes du panneau social — et non un h4 de corps
 	// de texte, qui pesait autant que les trophées qu'il annonce. L'icône saute :
 	// elle doublait le titre sans rien apprendre.
 	body:not(.v2) .section {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;  /* une case de grille */
+		letter-spacing: var(--font-display-tracking);
 		font-size: 11px;
-		font-weight: 700;
+		font-weight: var(--font-display-weight);
 		text-transform: uppercase;
 		margin: 2px 0 0;
 	}

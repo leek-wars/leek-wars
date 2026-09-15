@@ -17,6 +17,12 @@
 html body.v2 {
 	/* Police d'affichage : titres, en-tetes, onglets, libelles de section */
 	--font-display: "Roboto", sans-serif;
+	/* Le v2 peint en Roboto : ni la case de grille d'une police pixel, ni sa
+	   graisse. Ces deux jetons doivent exister dans les deux thèmes, sinon les
+	   règles partagées par les deux (le `%caption` de garden-batch.vue, qui
+	   n'est pas gardé par `body:not(.v2)`) emportent les valeurs du v3. */
+	--font-display-tracking: 0.06em;
+	--font-display-weight: inherit;
 	/* Police de corps historique, inchangée : seul le v3 passe à Inter. */
 	--font-body: "Roboto", sans-serif;
 

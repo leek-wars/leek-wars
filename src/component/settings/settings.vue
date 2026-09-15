@@ -702,8 +702,8 @@
 			position: static;
 			padding: 0 4px;
 			font-family: var(--font-display);
-			letter-spacing: -0.0769em;  /* une case de grille */
-			font-weight: 700;
+			letter-spacing: var(--font-display-tracking);
+			font-weight: var(--font-display-weight);
 			font-size: 8px;
 			text-transform: uppercase;
 			color: var(--text-color-secondary);

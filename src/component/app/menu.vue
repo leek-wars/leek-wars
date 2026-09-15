@@ -886,8 +886,8 @@
 		padding: 0;
 		line-height: 1.2;
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;  /* une case de grille */
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 15px;
 	}
 	body:not(.v2) .menu .menu-top .account-switcher-btn {

@@ -352,8 +352,8 @@ watch(viewMode, () => {
 	// page courante de la pagination (doctrine du 2026-08-31).
 	body:not(.v2) .period {
 		font-family: var(--font-display);
-		letter-spacing: -0.0769em;  /* une case de grille */
-		font-weight: 700;
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
 		font-size: 12px;
 		text-transform: uppercase;
 		padding: 9px 10px;

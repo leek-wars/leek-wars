@@ -99,8 +99,8 @@ img {
    tous. Le style scopé du composant ne touche que ce titre-là. */
 body:not(.v2) .title {
 	font-family: var(--font-display);
-	letter-spacing: -0.0769em;  /* une case de grille */
-	font-weight: 700;
+	letter-spacing: var(--font-display-tracking);
+	font-weight: var(--font-display-weight);
 	/* 14 px (Pierre, 2026-09-15 : « police un poil plus grande »). Le corps net
 	   suivant serait 26 px — les corps pixel-parfaits de la police d'affichage
 	   sont les multiples de 13 — donc ce cran-là se paie en netteté : c'est un

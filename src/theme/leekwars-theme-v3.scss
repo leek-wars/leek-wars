@@ -36,6 +36,15 @@ body {
 	   arriere tient a ce jeton. */
 	--font-display: "Pixel Operator", "Fusion Pixel", "Roboto", sans-serif;
 
+	/* Crénage et graisse de la police d'affichage. Ils décrivent la POLICE, pas
+	   la mise en page : -0,0769 em vaut exactement une case de grille pour Pixel
+	   Operator (16 cases, `size-adjust: 123.08%`) comme pour Fusion Pixel (12
+	   cases, `92.31%`), puisque 1,2308/16 = 0,9231/12. Les 21 règles qui peignent
+	   en `--font-display` les prennent d'ici ; si un `size-adjust` bouge dans
+	   global.scss, c'est cette ligne-ci qui bouge, et elle seule. */
+	--font-display-tracking: -0.0769em;
+	--font-display-weight: 700;
+
 	/* Police de corps : l'Inter du mockup (--f-body). Roboto reste en repli
 	   pour les glyphes hors sous-ensembles, puis la chaîne système. */
 	--font-body: "Inter", "Roboto", system-ui, sans-serif;
