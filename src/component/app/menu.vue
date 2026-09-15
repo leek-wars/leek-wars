@@ -920,6 +920,10 @@
 	   de la leur. */
 	body:not(.v2) .menu-top .moneys > .crystals {
 		flex: 0 0 auto;
+		/* L'`overflow: hidden` de la boîte, posé pour les habs à dix chiffres,
+		   rognait les deux pointes du cristal. L'ellipse du montant tient sur le
+		   span, pas sur la boîte. */
+		overflow: visible;
 	}
 	body:not(.v2) .menu-top .moneys .farmer-habs,
 	body:not(.v2) .menu-top .moneys .farmer-crystals {
@@ -936,8 +940,8 @@
 	/* Le cristal dépasse de la boîte en haut et en bas, comme sur la barre du
 	   grand écran : c'est sa signature. */
 	body:not(.v2) .menu-top .moneys .crystal {
-		width: 14px;
-		height: 36px;
+		width: 16px;
+		height: 38px;
 		margin: 0;
 		flex: 0 0 auto;
 		background-size: contain;
