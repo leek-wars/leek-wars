@@ -1,5 +1,5 @@
 <template>
-	<div class="tournaments-widget">
+	<div ref="rootEl" class="tournaments-widget" :style="rootStyle">
 		<loader v-if="!loaded" />
 		<template v-else-if="groups.length">
 			<!-- Une section par type de tournoi : une édition, c'est une vingtaine de
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watch } from 'vue'
+	import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { useNamespacedT } from '@/model/i18n'
 	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
@@ -103,6 +103,100 @@
 		return result
 	})
 
+	// Le panel est rempli jusqu'en bas : plutôt que des avatars de taille fixe et du
+	// blanc dessous, on cherche le plus gros avatar avec lequel les trois sections
+	// tiennent encore entièrement. Tout se calcule à partir de la taille du widget,
+	// jamais à partir de la taille rendue des avatars — une mesure qui dépendrait de
+	// ce qu'on vient de décider ne convergerait pas (cf. useFitCount).
+	const MIN_AVATAR = 28
+	// Les avatars sont servis en 200×200 : au-delà de 96 px ils se dépixellisent sur
+	// un écran à forte densité.
+	const MAX_AVATAR = 96
+	// Hauteur de repli de l'intertitre avant la première mesure (police fixe).
+	const HEADER_HEIGHT = 25
+	// Entre l'intertitre et sa rangée d'avatars.
+	const HEADER_GAP = 4
+
+	const rootEl = ref<HTMLElement | null>(null)
+	const width = ref(0)
+	const height = ref(0)
+	const headerHeight = ref(HEADER_HEIGHT)
+
+	function clamp(value: number, min: number, max: number) {
+		return Math.max(min, Math.min(max, value))
+	}
+
+	// Ce que donne une taille d'avatar : les marges suivent l'avatar (demande de
+	// Pierre : plus gros ET plus aéré), les colonnes s'étalent sur toute la largeur.
+	function metrics(avatar: number, w: number, counts: number[]) {
+		const gap = clamp(Math.round(avatar * 0.22), 4, 14)
+		const padding = clamp(Math.round(avatar * 0.2), 6, 14)
+		const groupGap = clamp(Math.round(avatar * 0.3), 8, 20)
+		const inner = Math.max(avatar, w - 2 * padding)
+		const columns = Math.max(1, Math.floor((inner + gap) / (avatar + gap)))
+		// Gouttière horizontale élargie pour que la rangée aille jusqu'au bord droit,
+		// plafonnée : à deux ou trois colonnes l'étalement disperserait les avatars.
+		const spread = columns > 1 ? clamp((inner - columns * avatar) / (columns - 1), gap, gap * 2.5) : gap
+		const rows = counts.map(n => Math.ceil(n / columns))
+		const total = rows.reduce((acc, r) => acc + headerHeight.value + HEADER_GAP + r * avatar + (r - 1) * gap, 0)
+			+ (counts.length - 1) * groupGap
+		return { avatar, gap, spread, padding, groupGap, columns, rows, total }
+	}
+
+	// Le reste de hauteur après la taille retenue (la suivante aurait fait passer une
+	// rangée à la ligne) part dans les interlignes, plafonné : sans plafond, un panel
+	// très haut écartait ses deux rangées de poireaux d'une centaine de pixels et la
+	// section n'en était plus une. Ce qui reste alors se partage en haut et en bas.
+	function fill(m: ReturnType<typeof metrics>, h: number) {
+		const rows = m.rows.reduce((acc, r) => acc + r, 0)
+		const slots = (rows - m.rows.length) + (m.rows.length - 1)
+		const leftover = h - m.total
+		const extra = slots > 0 && leftover > 0 ? Math.min(leftover / slots, m.avatar * 0.5) : 0
+		return { ...m, gap: m.gap + extra, groupGap: m.groupGap + extra, justify: leftover > 0 ? 'center' : 'flex-start' }
+	}
+
+	const layout = computed(() => {
+		const counts = groups.value.map(g => g.winners.length)
+		if (!counts.length || width.value <= 0 || height.value <= 0) return fill(metrics(MIN_AVATAR, width.value || 240, counts.length ? counts : [1]), 0)
+		for (let avatar = MAX_AVATAR; avatar > MIN_AVATAR; avatar--) {
+			const m = metrics(avatar, width.value, counts)
+			if (m.total <= height.value) return fill(m, height.value)
+		}
+		// Rien ne tient : on garde la plus petite taille, le clipping fait filet.
+		return fill(metrics(MIN_AVATAR, width.value, counts), height.value)
+	})
+
+	const rootStyle = computed(() => ({
+		'--avatar': layout.value.avatar + 'px',
+		'--gap': layout.value.gap + 'px',
+		'--spread': layout.value.spread + 'px',
+		'--padding': layout.value.padding + 'px',
+		'--group-gap': layout.value.groupGap + 'px',
+		'--justify': layout.value.justify,
+	}))
+
+	function measure() {
+		const el = rootEl.value
+		if (!el) return
+		width.value = el.clientWidth
+		height.value = el.clientHeight
+		const header = el.querySelector('.group-header') as HTMLElement | null
+		if (header && header.offsetHeight > 0) headerHeight.value = header.offsetHeight
+	}
+
+	let resizeObserver: ResizeObserver | null = null
+	watch(rootEl, el => {
+		if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null }
+		if (el) {
+			resizeObserver = new ResizeObserver(() => measure())
+			resizeObserver.observe(el)
+		}
+	}, { immediate: true })
+	// Le contenu arrive après la requête : l'intertitre n'existe qu'à ce moment-là,
+	// et la taille du widget, elle, n'a pas bougé (pas de ResizeObserver déclenché).
+	watch(groups, () => nextTick(measure))
+	onBeforeUnmount(() => { if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null } })
+
 	function load() {
 		LeekWars.get<{ winners: Winner[] }>('tournament/get-recent-winners').then((data) => {
 			winners.value = data.winners ?? []
@@ -124,17 +218,26 @@
 	.tournaments-widget {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: var(--group-gap);
 		height: 100%;
 		overflow: hidden;
+		// Les interlignes absorbent déjà le reste de hauteur (cf. `fill`) ; le
+		// reliquat se partage en haut et en bas plutôt que de tomber sous la
+		// dernière rangée. En débordement, on repart du haut : centré, l'intertitre
+		// de la première section serait rogné.
+		justify-content: var(--justify);
+	}
+	.group {
+		display: flex;
+		flex-direction: column;
 	}
 	.group-header {
 		display: flex;
 		align-items: baseline;
 		gap: 8px;
-		padding: 2px 6px;
+		padding: 2px var(--padding);
 		border-bottom: 1px solid var(--border);
-		margin-bottom: 2px;
+		margin-bottom: 4px;
 	}
 	.group-title {
 		font-weight: bold;
@@ -151,8 +254,8 @@
 	.winners {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 4px;
-		padding: 0 6px;
+		gap: var(--gap) var(--spread);
+		padding: 0 var(--padding);
 	}
 	// Le <span> d'activation rendu par le composant d'infobulle est inline : il doit
 	// se comporter comme l'avatar qu'il porte, sinon celui-ci retombe sur la ligne de
@@ -163,8 +266,8 @@
 		flex-shrink: 0;
 	}
 	.avatar {
-		width: 30px;
-		height: 30px;
+		width: var(--avatar);
+		height: var(--avatar);
 		object-fit: cover;
 		transition: transform 0.1s;
 	}
