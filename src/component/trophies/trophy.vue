@@ -193,16 +193,37 @@ defineProps<{
 	body:not(.v2) .trophy {
 		border: 1px solid transparent;
 		transition: background .12s ease, border-color .12s ease;
+		/* Le trophée obtenu doit se lire d'un coup d'œil dans la grille. Le
+		   `.card` du shell v3 lui donnait `--background-secondary`, qui est AUSSI
+		   `--panel-background` : même fond que le panneau qui le porte, il ne
+		   restait qu'un filet à 8 % de blanc en sombre (Pierre, 2026-09-15 : « la
+		   différence entre les trophées obtenus et pas obtenus est très fine »).
+		   Il prend donc la surface de rangée et le trait fort. */
 		&.card {
-			border-color: var(--border);
+			background: var(--background-row);
+			border-color: var(--border-strong);
 		}
 		&:hover {
 			background: var(--background-row);
 			border-color: var(--border-strong);
 		}
+		/* Une carte déjà pleine doit monter d'un cran de plus au survol, sinon
+		   « obtenu » et « survolé » deviennent le même état. Le mélange part de
+		   l'encre : il éclaircit en sombre et fonce en clair, comme la rangée. */
+		&.card:hover {
+			background: color-mix(in srgb, var(--text-color) 8%, var(--background-row));
+		}
 		&:active {
 			border-color: var(--primary);
 		}
+	}
+	/* v3 : l'icône verrouillée s'éteint un peu, pour appuyer la surface. Pas de
+	   `grayscale` (Pierre, 2026-09-15 : « on enlève le grayscale, un léger
+	   opacity pourquoi pas ») : l'accent coloré de l'icône code la difficulté,
+	   il doit rester lisible sur un trophée qu'on n'a pas encore. Seule l'image
+	   est touchée — le texte garde les contrastes calibrés du thème. */
+	body:not(.v2) .trophy.locked .image {
+		opacity: 0.6;
 	}
 	.list-icon {
 		margin-right: 10px;

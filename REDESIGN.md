@@ -1910,6 +1910,34 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     les panneaux de la page. Le slot ne garde que ce que la prop `title` ne sait
     pas porter (ici le compteur de points). Le panneau Poireaux reçoit son
     `mdi-leek` au passage.
+- **2026-09-15 — le trophée obtenu est une carte pleine** (Pierre : « la
+  différence entre les trophées obtenus et pas obtenus sur la page des trophées
+  est très fine »). Elle l'était littéralement : le seul marqueur du débloqué
+  était la classe `.card`, or le `.card` du v3 pose `--background-secondary`,
+  qui est AUSSI `--panel-background`. La carte avait donc exactement le fond du
+  panneau qui la porte, et tout l'écart tenait dans un filet à **8 %** de blanc
+  en sombre (14 % d'encre en clair) — plus le traitement du verrouillé,
+  `opacity: .8` sur l'image, imperceptible sur un SVG déjà gris. Hors du texte
+  « Débloqué le… », rien ne distinguait les deux états.
+  - **Le débloqué prend la surface de rangée** (`--background-row`) et le trait
+    fort (`--border-strong`) : une tuile pleine dans la grille, le verrouillé
+    reste à plat sur le panneau.
+  - **Le survol devait monter d'un cran**, sinon « obtenu » et « survolé »
+    devenaient le même état — il valait déjà `--background-row` depuis le lot
+    du 2026-09-11. Une carte pleine survolée passe à
+    `color-mix(in srgb, var(--text-color) 8%, var(--background-row))` : le
+    mélange part de l'encre, donc il éclaircit en sombre et fonce en clair,
+    comme la rangée elle-même.
+  - **Pas de `grayscale` sur l'icône verrouillée** (essayé, refusé le jour même :
+    « on enlève le grayscale, un léger opacity pourquoi pas »). L'accent coloré
+    d'une icône de trophée **code sa difficulté** : l'éteindre revenait à retirer
+    cette lecture précisément sur les trophées qu'on n'a pas encore. Il reste un
+    `opacity: .6`, qui appuie la surface sans rien effacer. Le texte n'est pas
+    touché — ses contrastes sont calibrés.
+  - Vérifié en local, connecté, sur les 481 trophées de Pilow. **L'infobulle
+    riche réutilise la même carte** (`rich-tooltip-trophy.vue` l'enveloppe dans
+    un `.card`) : la tuile pleine s'y lit comme le corps de l'infobulle, pas
+    comme un double liseré. v2 inchangé.
 - **À trancher, relevé par l'audit de contraste en thème clair (2026-08-26)** —
   aucun n'est propre au mobile, tous cassent aussi sur grand écran :
   - **Bandeau de saison** (`season.ts`) : l'encre est `--white` sur un dégradé
