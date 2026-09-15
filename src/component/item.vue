@@ -1,5 +1,5 @@
 <template lang="html">
-	<rich-tooltip-item :bottom="true" :instant="true" :item="item" :inventory="true">
+	<rich-tooltip-item :bottom="true" :instant="true" :item="item" :instance="instance" :inventory="true">
 		<div class="item">
 			<img :src="url" :alt="label" :class="{weapon: is_weapon}">
 		</div>
@@ -10,6 +10,7 @@
 import { computed, defineAsyncComponent } from 'vue'
 import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, itemImageName, type ItemTemplate } from '@/model/item'
 import { i18n } from '@/model/i18n'
+import type { InventoryItem } from '@/model/farmer'
 
 const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
@@ -17,9 +18,16 @@ defineOptions({ name: 'Item' })
 
 const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	item: ItemTemplate
-}>()
+	/**
+	 * Instance affichée, quand elle porte des données propres (alterations, #622) : sans elle
+	 * l'infobulle montre les stats du template, et une pièce altérée s'y lit comme une neuve.
+	 */
+	instance?: InventoryItem | null
+}>(), {
+	instance: null,
+})
 
 const image = computed(() => itemImageName(props.item))
 const url = computed(() => '/image/' + ITEM_CATEGORY_NAME[props.item.type] + '/' + image.value + '.png')

@@ -70,8 +70,8 @@
 							</div>
 							<div class="preview-col preview-col-components">
 								<template v-for="c in loadout.components" :key="'comp' + c.index">
-								<div v-if="LeekWars.items[c.template]" class="preview-slot" :class="componentClass(c)" :title="componentTitle(c)">
-										<item :item="LeekWars.items[c.template]" />
+								<div v-if="LeekWars.items[c.template]" class="preview-slot" :class="componentClass(c)">
+										<item :item="LeekWars.items[c.template]" :instance="componentInstance(c)" />
 									</div>
 								</template>
 							</div>
@@ -204,9 +204,9 @@
 							<v-btn :class="{'invisible-btn': editing.components.length === 0}" size="x-small" variant="text" icon @click="editing.components = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="components-grid">
-							<div v-for="i in MAX_COMPONENTS" :key="i" class="component-slot" :class="componentClass(componentAtSlot(i - 1))" :title="componentTitle(componentAtSlot(i - 1))" @click="clearComponentSlot(i - 1)">
+							<div v-for="i in MAX_COMPONENTS" :key="i" class="component-slot" :class="componentClass(componentAtSlot(i - 1))" @click="clearComponentSlot(i - 1)">
 								<template v-if="componentAtSlot(i - 1)">
-									<item v-if="LeekWars.items[componentAtSlot(i - 1)!.template]" :item="LeekWars.items[componentAtSlot(i - 1)!.template]" />
+									<item v-if="LeekWars.items[componentAtSlot(i - 1)!.template]" :item="LeekWars.items[componentAtSlot(i - 1)!.template]" :instance="componentInstance(componentAtSlot(i - 1))" />
 									<v-icon class="remove-icon" size="12">mdi-close</v-icon>
 								</template>
 								<div v-else class="slot-empty">{{ i }}</div>
@@ -217,9 +217,9 @@
 						     l'instance la plus proche à l'application. -->
 						<div class="available-items">
 							<div v-for="c in allComponents" :key="componentKey(c)" class="item-slot"
-								:class="[{selected: isComponentSelected(c)}, componentClass(c)]" :title="componentTitle(c)"
+								:class="[{selected: isComponentSelected(c)}, componentClass(c)]"
 								@click="addComponent(c)">
-								<item v-if="LeekWars.items[c.template]" :item="LeekWars.items[c.template]" />
+								<item v-if="LeekWars.items[c.template]" :item="LeekWars.items[c.template]" :instance="componentInstance(c)" />
 							</div>
 						</div>
 					</div>
@@ -305,6 +305,7 @@
 	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
 	import Sortable from 'sortablejs'
 	import { Farmer } from '@/model/farmer'
+	import type { InventoryItem } from '@/model/farmer'
 	import { Potion } from '@/model/potion'
 	import { Weapon } from '@/model/weapon'
 	import { Chip } from '@/model/chip'
@@ -766,11 +767,16 @@
 				if (!c || !c.stats) return ''
 				return alteredClass(c, LeekWars.componentCapacity(c.template), LeekWars.alterations?.weights)
 			},
-			/** Le delta d'une pièce altérée en clair (« +150 vie, +1 PT »), pour distinguer deux variantes. */
-			componentTitle(c: { template: number, stats?: ComponentStats | null } | null): string | undefined {
-				if (!c || !c.stats) return undefined
-				return Object.entries(c.stats).filter(([, v]) => v)
-					.map(([k, v]) => (v > 0 ? '+' : '') + v + ' ' + this.$t('characteristic.' + k)).join(', ')
+			/**
+			 * Instance à montrer dans l'infobulle d'une pièce choisie : l'ensemble ne mémorise
+			 * pas d'exemplaire, seulement son delta, mais ça suffit à l'aperçu pour afficher les
+			 * stats altérées, la charge et le palier — sans quoi deux variantes d'un même
+			 * template donnent la même fiche, celle de la pièce neuve (retour de Pierre).
+			 * Le delta remplace le `title` natif qui le disait en texte brut.
+			 */
+			componentInstance(c: { template: number, stats?: ComponentStats | null, altered_power?: number } | null): InventoryItem | null {
+				if (!c || !c.stats) return null
+				return { id: 0, template: c.template, quantity: 1, stats: c.stats, altered_power: c.altered_power }
 			},
 			isForgottenTemplate(tpl: number): boolean {
 				const item = LeekWars.items[tpl]
