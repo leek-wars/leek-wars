@@ -1404,7 +1404,12 @@ Lisibles dans les commentaires des fichiers de thème, rappelés ici :
     Mesuré : à 1920 le logo est à 20 px du bord, à 2400 il tombe sur la
     colonne (240 px) et les boutons sur le bord du panneau.
   - **Barre de page** (valeurs de Pierre) : 60 px de haut au lieu de 72, et
-    20 px entre le pointillé et les panneaux au lieu de 12.
+    20 px entre le pointillé et les panneaux au lieu de 12 — puis **56 et 15
+    le 2026-09-15**, en même temps que le retrait latéral de `.app-center`
+    (20 → 15 px). Un joueur trouvait l'arbre des tournois « bien plus petit »
+    depuis la 3.00 : il se dimensionne sur la hauteur libre, donc chaque pixel
+    de chrome au-dessus de lui le rapetissit. 9 px repris sur la verticale,
+    les mêmes 15 px des quatre côtés du gabarit.
   - **Barres des widgets Collection et Statistiques** (« les barres de
     progression n'ont pas de hachures ici ») : elles portaient leurs propres
     classes ; elles reprennent le vocabulaire des jauges (`global-bar > bar`,

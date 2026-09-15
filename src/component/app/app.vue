@@ -797,7 +797,9 @@
 		transform: translateX(250px);
 	}
 	.app-center {
-		padding: 0 20px;
+		/* 15 px et non 20 (Pierre, 2026-09-15) : autant de largeur rendue au
+		   contenu de chaque côté. */
+		padding: 0 15px;
 		display: flex;
 	}
 	#app.connected:not(.app) .app-center {

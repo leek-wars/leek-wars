@@ -66,7 +66,9 @@ body:not(.v2) {
 		z-index: 1001;
 		box-sizing: border-box;
 		height: var(--header-height);
-		padding: 0 20px;
+		/* Le même retrait que `.app-center` (20 → 15 px le 2026-09-15) : le logo
+		   et les boutons du bandeau se calent sur les bords du contenu. */
+		padding: 0 15px;
 		/* Le contenu était calé en bas, la barre n'ayant pas de fond : l'espace
 		   au-dessus se lisait comme du fond extérieur. Sur un bandeau plein, il
 		   se lirait comme un vide. */
@@ -683,8 +685,11 @@ body:not(.v2) {
 	   grandir, et l'éditeur — reconnu à son `> .menu`, comme au-dessus — mesure
 	   déjà sa barre lui-même. */
 	.page-header.page-bar:not(:has(> .menu)) {
-		/* 60 px (Pierre, 2026-09-09), après les 72 hérités du sous-titre. */
-		min-height: 60px;
+		/* 72 hérités du sous-titre, 60 le 2026-09-09, 56 le 2026-09-15 : même
+		   arbitrage que la marge sous le pointillé, rendre de la hauteur aux
+		   pages qui se dimensionnent sur la fenêtre. Le titre fait 36 px, il
+		   reste 10 de part et d'autre. */
+		min-height: 56px;
 	}
 	/* Sur mobile, le titre de page vit dans la barre d'application et
 	   `global.scss` masque le `h1` de la barre de page. Quand la barre ne
@@ -811,9 +816,11 @@ body:not(.v2) {
 	.page-header.page-bar {
 		border-bottom: 3px solid transparent;
 		border-image: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px) 3;
-		/* 20 px et non 12 (Pierre, 2026-09-09) : plus d'air entre le pointillé et
-		   les panneaux. */
-		margin-bottom: 20px;
+		/* 12 px à l'origine (la gouttière des panneaux), 20 le 2026-09-09 pour
+		   plus d'air entre le pointillé et les panneaux, 15 depuis le
+		   2026-09-15 : la hauteur de fenêtre est la ressource rare des pages
+		   qui se dimensionnent dessus, l'arbre des tournois le premier. */
+		margin-bottom: 15px;
 	}
 	/* Mode application (mobile) : la barre d'application porte déjà le nom de la
 	   page et ses actions, et global.scss y masque le h1. Restaient l'icône, la
