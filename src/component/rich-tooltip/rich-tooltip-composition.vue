@@ -116,6 +116,10 @@ function open(_v: boolean) {
 			if (expand_leeks.value) {
 				menu.value?.updateLocation?.()
 			}
+		}, () => {
+			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
+			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			content_created.value = false
 		})
 	}
 }

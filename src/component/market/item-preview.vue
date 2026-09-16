@@ -11,7 +11,7 @@
 		<div v-if="item.rarity > 0" class="rarity-wrapper">
 			<span class="rarity" :class="'difficulty-' + item.rarity">{{ $t('main.difficulty_' + item.rarity) }}</span>
 		</div>
-		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ item.name.toUpperCase() }}</div>
+		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ constantName ?? item.name.toUpperCase() }}</div>
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
 			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" :width="WeaponsData[item.params]?.width" @click="playSound(item, category)">
 			<scheme-image v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" />
@@ -75,6 +75,7 @@ import PompPreview from '@/component/market/pomp-preview.vue'
 import PotionPreview from '@/component/market/potion-preview.vue'
 import ResourcePreview from '@/component/market/resource-preview.vue'
 import WeaponPreview from '@/component/market/weapon-preview.vue'
+import { playAudio } from '@/model/audio'
 import { CHIPS as CHIPSImport } from '@/model/chips'
 import { ITEM_CATEGORY_NAME, ItemTemplate, ItemType } from '@/model/item'
 import { Leek } from '@/model/leek'
@@ -105,11 +106,18 @@ const props = withDefaults(defineProps<{
 	showUse?: boolean
 	leek?: Leek
 	craftCost?: number
+	/**
+	 * Identifiant a afficher pour l'arme ou la puce, quand ce n'est pas la constante plate
+	 * LeekScript : la page de documentation y passe la forme du langage lu (`Chip.adrenaline`).
+	 * Non renseigne ailleurs -> `CHIP_ADRENALINE`, comme avant.
+	 */
+	constantName?: string
 }>(), {
 	showUse: false,
 	craftCost: 0,
 	quantity: 0,
 	leek: undefined,
+	constantName: undefined,
 })
 
 const emit = defineEmits<{
@@ -214,6 +222,8 @@ function weaponSound(id: number) {
 			38: ['sword'],
 			39: ['sword'],
 			40: ['quantum_rifle'],
+			41: ['sword'],
+			42: ['sword'],
 		} as {[key: number]: unknown[]})[id]
 	}
 
@@ -251,7 +261,7 @@ function playSound(item: ItemTemplate, type: string) {
 			const sound_ext = sound.includes('.') ? sound : sound + '.mp3'
 			const audio = new Audio('/sound/' + sound_ext)
 			audio.volume = 0.5
-			audio.play()
+			playAudio(audio)
 			if (sounds.length > 2) {
 				const delay = parseFloat(sounds[1] as string)
 				setTimeout(() => {

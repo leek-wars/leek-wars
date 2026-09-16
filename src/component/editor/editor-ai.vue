@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { fileSystem } from '@/model/filesystem'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { AIItem } from './editor-item'

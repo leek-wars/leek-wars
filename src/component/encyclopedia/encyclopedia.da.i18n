@@ -12,5 +12,6 @@
 	"end_edition": "Afslut redigering",
 	"editing_by_x": "Bliver i øjeblikket redigeret af {0}",
 	"redirected_from": "Omdirigeret fra {0}",
-	"aliases": "Også kendt som: {0}"
+	"aliases": "Også kendt som: {0}",
+	"quiz_locked": "Afslut først kapitel {0} for at besvare denne quiz."
 }

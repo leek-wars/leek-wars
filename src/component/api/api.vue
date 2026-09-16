@@ -41,10 +41,9 @@
 									<span>{{ c }}</span>
 									<span v-if="query.length">({{ category.length }})</span>
 									<div class="spacer"></div>
-									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
-									<v-icon v-else>mdi-chevron-down</v-icon>
+									<v-icon>{{ isCategoryOpen(c) ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 								</h2>
-								<div v-if="query.length || categoryState[c]">
+								<div v-if="isCategoryOpen(c)">
 									<div v-for="(item, i) in category" :key="i" :item="item.name" class="item" @click="navigate(item.module + '/' + item.function)">
 										<span class="method chip" :class="item.method">{{ item.method }}</span>
 										{{ item.function }}
@@ -95,12 +94,7 @@
 							</ul>
 						</template>
 
-						<template v-if="service.example">
-							<json-viewer class="example"
-								:value="service.example"
-								:expand-depth=2
-								></json-viewer>
-						</template>
+						<pre v-if="service.example" class="example">{{ formatExample(service.example) }}</pre>
 					</panel>
 				</div>
 			</div>
@@ -114,12 +108,22 @@ import { useRoute, useRouter } from 'vue-router'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Breadcrumb from '../forum/breadcrumb.vue'
-// @ts-expect-error - no types for vue-json-viewer
-import JsonViewer from 'vue-json-viewer'
 import Markdown from '@/component/encyclopedia/markdown.vue'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
+import { useCategoryState } from '@/model/category-state'
 
-defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins], components: { JsonViewer } })
+defineOptions({ name: 'Api', i18n: {}, mixins: [...mixins] })
+
+// Rendu d'exemple JSON sans dépendance (vue-json-viewer injectait un <style>
+// runtime sans nonce → violation CSP style-src). Un <pre> formaté suffit.
+function formatExample(ex: unknown): string {
+	if (ex === null || ex === undefined) return ''
+	let value: unknown = ex
+	if (typeof ex === 'string') {
+		try { value = JSON.parse(ex) } catch { return ex }
+	}
+	try { return JSON.stringify(value, null, 2) } catch { return String(ex) }
+}
 
 const t = useNamespacedT('api')
 const route = useRoute()
@@ -141,9 +145,8 @@ interface ApiService {
 }
 
 const services = ref<ApiService[]>([])
-const categories = ref<Record<string, ApiService[]>>({})
 const query = ref('')
-const categoryState = ref<{[key: string]: boolean}>({})
+const { isCategoryOpen, toggleCategory } = useCategoryState('api-doc/category-', query)
 const search = useTemplateRef<HTMLElement>('search')
 const elements = useTemplateRef<HTMLElement>('elements')
 
@@ -227,11 +230,6 @@ LeekWars.get<ApiService[]>('service/get-all').then(servicesData => {
 	services.value = servicesData
 	for (const service of servicesData) {
 		if (service.example) service.example = JSON.parse(service.example)
-		if (!(service.module in categories.value)) categories.value[service.module] = []
-		categories.value[service.module].push(service)
-	}
-	for (const category in categories.value) {
-		categoryState.value[category] = localStorage.getItem('api-doc/category-' + category) === 'true'
 	}
 	LeekWars.setTitle('API')
 	update()
@@ -263,11 +261,6 @@ function selectItem(item: string) {
 			}
 		}, 100)
 	})
-}
-
-function toggleCategory(c: string) {
-	categoryState.value[c] = !categoryState.value[c]
-	localStorage.setItem('api-doc/category-' + c, '' + categoryState.value[c])
 }
 
 function scroll() {}
@@ -515,25 +508,17 @@ onBeforeUnmount(() => {
 		margin-bottom: 8px;
 		font-size: 15px;
 	}
-	.example.jv-container {
-		background: var(--pure-white);
-	}
-	.example :deep(.jv-code) {
+	.example {
+		background: var(--background-secondary);
 		color: var(--text-color);
 		border: 1px solid var(--border);
-		padding: 5px;
+		padding: 8px 10px;
 		border-radius: 4px;
 		max-height: 300px;
-		overflow-y: auto;
-		font-size: 15px;
-		.jv-node {
-			padding: 2px 0;
-		}
-		.jv-key, .jv-array, .jv-object {
-			color: var(--text-color);
-		}
-	}
-	body.dark .example :deep(.jv-code) {
-		// background: ;
+		overflow: auto;
+		font-size: 13px;
+		font-family: monospace;
+		white-space: pre;
+		margin: 0;
 	}
 </style>

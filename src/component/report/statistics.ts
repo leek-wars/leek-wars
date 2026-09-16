@@ -559,10 +559,16 @@ class FightStatistics {
 					break
 				}
 				case ActionType.RESURRECTION: {
-					entities[action[2]].resurrection++
-					entities[action[2]].life = action[4]
+					const entity = entities[action[2]]
+					entity.resurrection++
+					entity.life = action[4]
+					// La résurrection divise la vie max : sans la reprendre, le graphe en pourcentage affiche une entité full life à ~50%
+					if (action.length > 5) {
+						entity.max_life = action[5]
+					}
+					entity.alive = true
 					const cell = this.field.cells[action[3]]
-					entities[action[2]].move(cell)
+					entity.move(cell)
 					if (preciseLives) {
 						this.updateLifes()
 					}

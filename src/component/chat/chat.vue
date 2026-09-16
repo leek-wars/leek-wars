@@ -158,7 +158,7 @@
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
@@ -180,6 +180,7 @@
 
 	const isScrollBottom = ref(true)
 	let userScroll = false
+	let lastRefresh = 0
 	const unread = ref(false)
 
 	const menuMessage = ref<ChatMessage | null>(null)
@@ -229,6 +230,7 @@
 	emitter.on('chat-history', chatHistory)
 	emitter.on('resize', onResize)
 	emitter.on('wsconnected', update)
+	emitter.on('visible', refresh)
 	if (store.state.wsconnected) {
 		update()
 	}
@@ -246,6 +248,7 @@
 		emitter.off('chat-history', chatHistory)
 		emitter.off('resize', onResize)
 		emitter.off('wsconnected', update)
+		emitter.off('visible', refresh)
 	})
 
 	function newMessage(e: number[]) {
@@ -315,8 +318,26 @@
 
 	function update() {
 		if (!props.id) { return }
+		lastRefresh = Date.now()
 		store.commit('register-chat', {id: props.id})
 		store.commit('load-chat', chat.value)
+		read()
+	}
+
+	// Retour sur l'onglet ou sur l'app mobile : on recharge les messages en HTTP tout de
+	// suite, sans attendre la socket. Pendant la mise en veille elle meurt en silence, et
+	// sa reconnexion (détection + poignée de main + auth) prend plusieurs secondes pendant
+	// lesquelles la conversation affichée restait figée sur son ancien contenu.
+	function refresh() {
+		if (!props.id) { return }
+		// Socket manifestement vivante (onglet simplement passé au second plan sur un
+		// ordinateur) : elle a livré les messages au fil de l'eau, rien à rattraper.
+		if (!LeekWars.socket.maybeStale()) { return }
+		if (!chat.value) { update(); return }
+		// Aller-retour éclair entre deux apps : rien de neuf à aller chercher.
+		if (Date.now() - lastRefresh < 2000) { return }
+		lastRefresh = Date.now()
+		store.commit('reload-chat', chat.value)
 		read()
 	}
 
@@ -334,7 +355,8 @@
 					const lastLeekId = (arenaLeekId && farmer.leeks[arenaLeekId]) ? arenaLeekId : gardenLeekId
 					const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0]
 					if (leek) {
-						LeekWars.arena.register(leek.id)
+						const preference = parseInt(localStorage.getItem('arena/preference') || '-1', 10)
+						LeekWars.arena.register(leek.id, preference)
 					}
 				}
 			}
@@ -381,11 +403,9 @@
 		if (message.censored === 0) {
 			censoredMessages.value[message.id] = true
 		}
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				if (sub.censored === 0) {
-					censoredMessages.value[sub.id] = true
-				}
+		for (const sub of message.subMessages) {
+			if (sub.censored === 0) {
+				censoredMessages.value[sub.id] = true
 			}
 		}
 	}
@@ -397,10 +417,8 @@
 		muteFarmer.value = message.farmer
 		deletedMessages.value = {}
 		deletedMessages.value[message.id] = true
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				deletedMessages.value[sub.id] = true
-			}
+		for (const sub of message.subMessages) {
+			deletedMessages.value[sub.id] = true
 		}
 	}
 
@@ -509,10 +527,8 @@
 	}
 
 	function formatMessage(message: ChatMessage) {
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				formatMessage(sub)
-			}
+		for (const sub of message.subMessages) {
+			formatMessage(sub)
 		}
 		if (message.formatted) return message
 

@@ -166,7 +166,7 @@ import { store } from '@/model/store'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Trophy from './trophy.vue'
 import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 defineOptions({ name: 'Trophies', i18n: {}, mixins: [...mixins] })
 

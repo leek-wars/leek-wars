@@ -43,7 +43,7 @@ import Comments from '@/component/comment/comments.vue'
 import { SocketMessage } from '@/model/socket'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import TournamentGraph from './tournament-graph.vue'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 defineOptions({ name: 'Tournament', i18n: {}, mixins: [...mixins], components: {
 	'tournament-block': TournamentBlock,

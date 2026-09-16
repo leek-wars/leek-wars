@@ -60,6 +60,7 @@
 	"boss": "Boss",
 	"turns": "Tours",
 	"power": "Niveau",
+	"team_power": "Puissance de l'équipe",
 	"date": "Date",
 	"boss_mode_turns": "Le plus rapide",
 	"boss_mode_leeks": "Le moins de poireaux",

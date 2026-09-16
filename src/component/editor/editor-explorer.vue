@@ -205,7 +205,7 @@
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 	import { explorer } from './explorer'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 	import { useRouter } from 'vue-router'
 

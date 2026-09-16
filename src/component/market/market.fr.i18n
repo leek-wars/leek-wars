@@ -35,6 +35,7 @@
 	"not_sellable": "Item non revendable",
 	"pomps": "Apparats",
 	"potion": "Potion",
+	"scheme_required": "Vous ne possédez pas le schéma",
 	"schemes": "Schémas",
 	"potion_bought": "Potion achetée !",
 	"potions": "Potions",

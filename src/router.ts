@@ -5,6 +5,7 @@ const AcceptConditions = () => import(/* webpackChunkName: "[request]" */ `@/com
 const AdminEmails = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-emails.vue`)
 const AdminErrors = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-errors.vue`)
 const AdminHats = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-hats.vue`)
+const AdminWeapons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-weapons.vue`)
 const AdminSkins = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-skins.vue`)
 const AdminNewsletters = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-newsletters.vue`)
 const AdminServers = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-servers.vue`)
@@ -30,6 +31,7 @@ import Error from '@/component/app/error.vue'
 const BankBuy = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-buy.vue`)
 const BankValidate = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-validate.vue`)
 const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank.${locale}.i18n`)
+const BankHistory = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-history.vue`)
 const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/component/change-email/change-email.${locale}.i18n`)
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)
@@ -152,6 +154,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/emails', component: AdminEmails, beforeEnter: connected },
 	{ path: '/admin/skins', component: AdminSkins, beforeEnter: connected },
 	{ path: '/admin/hats', component: AdminHats, beforeEnter: connected },
+	{ path: '/admin/weapons', component: AdminWeapons, beforeEnter: connected },
 	{ path: '/admin/newsletters', component: AdminNewsletters, beforeEnter: connected },
 	{ path: '/admin/errors', component: AdminErrors, beforeEnter: connected },
 	{ path: '/admin/servers', component: AdminServers, beforeEnter: connected },
@@ -222,6 +225,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/help/polyglot', component: HelpPolyglot },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
+	{ path: '/help/tutorial/:lang', component: Tutorial },
 	{ path: '/inventory', component: InventoryPage, meta: LAYOUT_BOX },
 	// Scroll naturel de la page + footer (pas de box : la grille est haute et
 	// déborderait sur le footer en hauteur fixe 100vh). resetLayout par défaut.
@@ -285,6 +289,7 @@ if (import.meta.env.VITE_SOCIAL !== 'false') {
 if (import.meta.env.VITE_BANK !== 'false') {
 	routes.push(
 		{ path: '/bank', component: Bank, beforeEnter: connected },
+		{ path: '/bank/history', component: BankHistory, beforeEnter: connected },
 		{ path: '/bank/buy/:pack', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/buy/:pack/:offer', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/validate/', component: BankValidate, beforeEnter: connected },

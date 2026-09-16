@@ -39,6 +39,7 @@
 	"potion_selled": "Juoma myyty!",
 	"price": "Hinta",
 	"resell": "Jälleenmyy",
+	"scheme_required": "Sinulla ei ole kaaviota",
 	"sell": "Myy",
 	"summon_available_chips": "Varustetut sirut",
 	"summon_characteristics": "Ominaisuudet",

@@ -1,22 +1,22 @@
 <template>
 	<div class="forge">
 		<div class="grid">
-			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building}">
+			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building, partial: slotStates[i] === 'partial', missing: slotStates[i] === 'missing'}">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item[0]].type] + '/' + LeekWars.items[item[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
+						<img :src="itemImageUrl(LeekWars.items[item[0]])">
 						<div v-if="item[1] > 1" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
 				</rich-tooltip-item>
 			</div>
-			<div class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
+			<div class="cell" :class="{cell8: true, active: !!result && !built && !impossible, built, impossible}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
-					<div v-ripple v-bind="props" class="item" :class="{building}" :type="LeekWars.items[result].type">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[result].type] + '/' + LeekWars.items[result].name.replace('hat_', '').replace('potion_', '') + '.png'">
+					<div v-ripple="possible || built" v-bind="props" class="item" :class="{building}" :type="LeekWars.items[result].type">
+						<img :src="itemImageUrl(LeekWars.items[result])">
 						<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 					</div>
 				</rich-tooltip-item>
-				<v-icon v-if="result && !building && !built">mdi-hammer-wrench</v-icon>
+				<v-icon v-if="result && !building && !built" :class="{disabled: impossible}">mdi-hammer-wrench</v-icon>
 				<v-icon v-if="result && built">mdi-refresh</v-icon>
 			</div>
 			<v-icon v-if="scheme" class="clear" @click="clear">mdi-refresh</v-icon>
@@ -26,19 +26,18 @@
 
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
+	import { itemImageUrl } from '@/model/item'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
-	import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
-	import Breadcrumb from '../forum/breadcrumb.vue'
+	import { emitter } from '@/model/emitter'
+	import { t } from '@/model/i18n'
+	import type { ApiError } from '@/model/api-error'
+	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
 	defineOptions({ name: 'Forge' })
 
 	type ForgeSlot = [number, number]
-
-	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
 
 	const forge = ref<(ForgeSlot | null)[]>([null, null, null, null, null, null, null, null])
 	const scheme = ref<SchemeTemplate | null>(null)
@@ -46,17 +45,38 @@
 	const building = ref(false)
 	const built = ref(false)
 
+	// Manque de chaque ingrédient placé dans la forge : quantité insuffisante ('partial'),
+	// aucun exemplaire ('missing'), rien à signaler sinon. La forge peut être remplie par un
+	// schéma qu'on n'a pas les moyens de fabriquer (bouton Fabriquer du marché),
+	// il faut donc montrer ce qui manque plutôt que laisser croire au craft.
+	// Pendant l'animation de fabrication les ingrédients sont déjà retirés de l'inventaire
+	// alors qu'ils sont encore affichés : ne rien signaler tant qu'elle tourne.
+	const slotStates = computed(() => forge.value.map(slot => {
+		if (!slot || building.value) return null
+		const owned = store.getters.item_quantity(slot[0])
+		return owned >= slot[1] ? null : (owned > 0 ? 'partial' : 'missing')
+	}))
+	const possible = computed(() => !!scheme.value && store.getters.scheme_possible(scheme.value))
+	const impossible = computed(() => !!result.value && !built.value && !building.value && !possible.value)
+
+	// Jeton d'invalidation des retours en vol : vider ou re-remplir la forge le périme.
+	// L'identité de l'objet schéma ne suffirait pas, le marché émet toujours le même
+	// singleton LeekWars.schemes[id].
+	let craftToken = 0
+
+	function onCraft(s: SchemeTemplate) {
+		clear()
+		scheme.value = s
+		for (let i = 0; i < s.items.length; ++i) {
+			forge.value[i] = s.items[i]
+		}
+		result.value = s.result
+	}
+
 	onMounted(() => {
 		LeekWars.footer = false
 		LeekWars.box = true
-		emitter.on('craft', (s: SchemeTemplate) => {
-			clear()
-			scheme.value = s
-			for (let i = 0; i < s.items.length; ++i) {
-				forge.value[i] = s.items[i]
-			}
-			result.value = s.result
-		})
+		emitter.on('craft', onCraft)
 	})
 
 	function clearIngredients() {
@@ -65,6 +85,7 @@
 		}
 	}
 	function clear() {
+		craftToken++
 		clearIngredients()
 		result.value = null
 		scheme.value = null
@@ -73,21 +94,33 @@
 	}
 
 	onBeforeUnmount(() => {
-		emitter.off('craft')
+		// off ciblé : sans le handler, mitt retirerait aussi les écouteurs des autres
+		// composants (le scrollToForge de la page inventaire)
+		emitter.off('craft', onCraft)
 	})
 
 	function craft() {
-		if (!scheme.value) return
+		if (!scheme.value || building.value || impossible.value) return
 		if (built.value) {
 			const s = scheme.value
 			clear()
 			emitter.emit('craft', s)
 			return
 		}
-		LeekWars.post('item/craft', { scheme_id: scheme.value.id }).then(item => {
+		// L'état « fabriqué » (et le bouton de recraft qui va avec) n'est acquis qu'à la
+		// confirmation du serveur : sinon un refus (ressources déjà épuisées) jouerait quand
+		// même l'animation et laisserait croire à des fabrications en série. L'animation de
+		// 500 ms tourne pendant l'aller-retour ; on attend les deux avant de conclure.
+		const s = scheme.value
+		const token = craftToken
+		building.value = true
+		const animation = new Promise(resolve => setTimeout(resolve, 500))
+		// Forme à deux arguments : une exception du handler de succès ne doit pas être
+		// prise pour un refus du serveur (le craft a alors bien eu lieu).
+		const outcome = LeekWars.post('item/craft', { scheme_id: s.id }).then(item => {
 			const template = LeekWars.items[item.template]
-			store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: scheme.value!.quantity })
-			for (const ingredient of scheme.value!.items) {
+			store.commit('add-inventory', { type: template.type, id: item.id, template: item.template, time: item.time, quantity: s.quantity })
+			for (const ingredient of s.items) {
 				if (ingredient === null) continue;
 				if (ingredient[0] === 148) { // hab
 					store.commit('update-habs', -ingredient[1])
@@ -96,14 +129,25 @@
 					store.commit('remove-inventory', { type: it.type, item_template: ingredient[0], quantity: ingredient[1] })
 				}
 			}
+			return true
+		}, error => {
+			const code = (error as ApiError).error
+			// too_many_requests a déjà son toast dans la couche requête
+			if (code !== 'too_many_requests') {
+				const insufficient = code === 'not_enough_habs' || code === 'no_such_item_or_not_enough_quantity'
+				LeekWars.toast(insufficient ? t('main.error_craft_not_enough_resources') : t('main.error_x', [code]))
+			}
+			return false
 		})
-
-		building.value = true
-		setTimeout(() => {
+		Promise.all([outcome, animation]).then(([success]) => {
+			// La forge a pu être vidée ou re-remplie entre-temps (clear() a déjà remis l'état)
+			if (token !== craftToken) return
 			building.value = false
-			clearIngredients()
-			built.value = true
-		}, 500)
+			if (success) {
+				clearIngredients()
+				built.value = true
+			}
+		})
 	}
 </script>
 
@@ -133,6 +177,16 @@
 		&.active {
 			background: var(--pure-white);
 			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		}
+		&.partial {
+			background: #f704;
+		}
+		&.missing {
+			background: #f004;
+			img {
+				filter: grayscale(1);
+				opacity: 0.6;
+			}
 		}
 		&:not(.cell8) .item {
 			animation: item-animation 0.5s ease 1;
@@ -188,6 +242,12 @@
 		&.active {
 			cursor: pointer;
 		}
+		&.impossible {
+			cursor: default;
+			.item {
+				filter: grayscale(1);
+			}
+		}
 		&:not(.built) .item {
 			opacity: 0.4;
 		}
@@ -203,6 +263,10 @@
 			border-radius: 50%;
 			pointer-events: none;
 			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			&.disabled {
+				color: var(--text-color-secondary);
+				background: var(--background-disabled);
+			}
 		}
 		& :deep(.v-ripple__container) {
 			border-radius: 20px;

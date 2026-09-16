@@ -48,6 +48,7 @@
 	"stackable": "kumulatiivinen",
 	"state_1": "Patsas",
 	"state_11": "Staattinen",
+	"state_12": "Steriili",
 	"state_2": "Parantumaton",
 	"state_3": "Voittamaton",
 	"state_4": "Pasifisti",

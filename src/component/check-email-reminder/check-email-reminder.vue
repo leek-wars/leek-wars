@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { apiErrorKey } from '@/model/api-error'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
@@ -146,15 +147,11 @@ function useProvider(provider: 'github' | 'google') {
 	}
 	LeekWars.post(`farmer/verify-${provider}`, { login: farmer.login, godfather: '' }).then(() => {
 		document.location.href = LeekWars.API + `farmer/start-${provider}-login`
-	}).error(payload => {
+	}).error(error => {
 		oauthLoading.value = false
 		actionTaken = false // permet de retenter ou snoozer normalement après échec
-		if (Array.isArray(payload) && payload.length > 0 && Array.isArray(payload[0])) {
-			LeekWars.toast(t('error_' + payload[0][1]) as string)
-		} else {
-			const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
-			LeekWars.toast(t('error_' + code) as string)
-		}
+		// error.error reprend déjà le code de la première erreur de formulaire, s'il y en a une.
+		LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 	})
 }
 </script>

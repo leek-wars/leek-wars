@@ -31,8 +31,12 @@ import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer } from './analyzer'
 import { getLanguageForPath } from './file-types'
+import { disposeEditor } from './monaco-dispose'
+import { colorDecoratorOptions } from './monaco-color-decorators'
 import { pyOpen, pyChange, pyClose } from './pyright'
-import { code, dochash, createSubApp, emitter } from '@/model/vue'
+import { code, dochash } from '@/model/directives'
+import { createSubApp } from '@/model/sub-app'
+import { emitter } from '@/model/emitter'
 import { useNamespacedT } from '@/model/i18n'
 import DocumentationConstant from '../documentation/documentation-constant.vue'
 import DocumentationFunction from '../documentation/documentation-function.vue'
@@ -100,6 +104,9 @@ const props = defineProps<{
 	t?: (key: string, values?: unknown[]) => string
 	console?: boolean
 	lineNumbers?: boolean
+	popups?: boolean
+	autoClosing?: boolean
+	autocompleteOption?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -116,6 +123,8 @@ let jumpToLine: number | null = 0
 let jumpToColumn: number | null = 0
 let scrollListener: monaco.IDisposable
 let analyzerTimeout: ReturnType<typeof setTimeout> | null = null
+// Numéro de la dernière analyse lancée par cet éditeur (l'indicateur ne suit qu'elle)
+let analyzeSeq = 0
 let viewStateSaveTimeout: ReturnType<typeof setTimeout> | null = null
 let currentAiPath: string | null = null
 const analyzing = ref(false)
@@ -128,6 +137,20 @@ let currentVersionId = 0
 let conflictDecorations: monaco.editor.IEditorDecorationsCollection | null = null
 let conflictLenses: monaco.IDisposable | null = null
 let conflicts: MergeConflict[] = []
+
+// Options pilotées par les paramètres de l'éditeur ; prop absente = activée
+// (usages du composant sans ces props, comme les consoles)
+function optionalOptions(): monaco.editor.IEditorOptions {
+	const autoClosing = props.autoClosing !== false ? 'languageDefined' : 'never'
+	const autocomplete = props.autocompleteOption !== false
+	return {
+		hover: { enabled: props.popups !== false },
+		autoClosingBrackets: autoClosing,
+		autoClosingQuotes: autoClosing,
+		quickSuggestions: autocomplete,
+		suggestOnTriggerCharacters: autocomplete,
+	}
+}
 
 onMounted(() => {
 	editor = markRaw(monaco.editor.create(editorEl.value as HTMLElement, {
@@ -155,6 +178,9 @@ onMounted(() => {
 		},
 		fixedOverflowWidgets: true,
 		accessibilitySupport: 'off',
+		// Options des paramètres de l'éditeur (absentes = activées, cas de la console)
+		...optionalOptions(),
+		...colorDecoratorOptions,
 	}, {
 		storageService: {
 			get() {},
@@ -221,6 +247,16 @@ onMounted(() => {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const suggestionWidget = (editor.getContribution('editor.contrib.suggestController') as any).widget
+	// Repositionne le panneau de détails une fois la fiche Vue montée et mesurée. Le report à la tâche
+	// suivante laisse le temps à la suggestion d'être fermée : Monaco remet alors _anchorBox à undefined
+	// et _placeAtAnchor plante en lisant anchorBox.top (#4745). Monaco fait la même garde de son côté.
+	const placeSuggestDetails = (doc: { $el: HTMLElement }) => {
+		setTimeout(() => {
+			const details = suggestionWidget.value._details
+			if (!details._anchorBox) return
+			details._placeAtAnchor(details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
+		})
+	}
 	suggestionWidget.value.onDidShow(() => {
 		const widget = suggestionWidget.value._details.widget
 		widget.onDidChangeContents(() => {
@@ -237,9 +273,7 @@ onMounted(() => {
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
-				setTimeout(() => {
-					suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
-				})
+				placeSuggestDetails(doc)
 			}
 			const constant = LeekWars.constants.find((c) => c.name === docs.innerText)
 			if (constant) {
@@ -248,9 +282,7 @@ onMounted(() => {
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
-				setTimeout(() => {
-					suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
-				})
+				placeSuggestDetails(doc)
 			}
 			const symbol = fileSystem.symbols[docs.innerText]
 			if (symbol && symbol.javadoc) {
@@ -258,9 +290,7 @@ onMounted(() => {
 					.directive('code', code)
 					.directive('dochash', dochash)
 					.mount(element)
-				setTimeout(() => {
-					suggestionWidget.value._details._placeAtAnchor(suggestionWidget.value._details._anchorBox, { width: 500, height: doc.$el.clientHeight + 10 }, true)
-				})
+				placeSuggestDetails(doc)
 			}
 		})
 	})
@@ -346,9 +376,7 @@ onBeforeUnmount(() => {
 	if (currentAiPath !== null && getLanguageForPath(currentAiPath) === 'python') pyClose(monaco.Uri.file(currentAiPath).toString())
 	scrollListener?.dispose()
 	conflictLenses?.dispose()
-	if (editor) {
-		editor.dispose()
-	}
+	disposeEditor(editor)
 })
 
 watch([() => props.theme, () => props.lineHeight, () => props.fontSize], () => {
@@ -358,6 +386,11 @@ watch([() => props.theme, () => props.lineHeight, () => props.fontSize], () => {
 		lineHeight: props.lineHeight,
 		fontSize: props.fontSize,
 	})
+})
+
+watch([() => props.popups, () => props.autoClosing, () => props.autocompleteOption], () => {
+	if (!editor) return
+	editor.updateOptions(optionalOptions())
 })
 
 watch(() => props.ai?.path, () => update(), { immediate: true })
@@ -453,14 +486,17 @@ function setAnalyzerTimeout() {
 
 		analyzer.updateTodos(ai)
 
+		const seq = ++analyzeSeq
 		analyzer.analyze(ai, ai.code).then((result) => {
-			analyzing.value = false
+			// null = pas d'analyse (polyglot, ou fichier > MAX_ANALYZE_CODE_SIZE) : rien à appliquer.
 			if (!result) return
 			analyzer.applyAnalyzeResult(result as Parameters<typeof analyzer.applyAnalyzeResult>[0])
 			analyzer.updateTodos(ai)
 			analyzer.updateCount()
-		}).catch(() => {
-			analyzing.value = false
+		}).finally(() => {
+			// L'indicateur ne se coupe que pour l'analyse la plus récente de cet éditeur : une analyse
+			// dépassée qui se résout entre-temps ne doit pas l'éteindre alors que la courante tourne encore.
+			if (seq === analyzeSeq) analyzing.value = false
 		})
 	}, 500)
 }

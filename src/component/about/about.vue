@@ -217,7 +217,6 @@ const technologies = [
 		{ name: 'Sass', link: 'https://sass-lang.com/', image: 'sass.svg' },
 		{ name: 'JavaScript', link: 'http://www.w3schools.com/js/DEFAULT.asp', image: 'javascript.png' },
 		{ name: 'TypeScript', link: 'https://www.typescriptlang.org/', image: 'typescript.svg' },
-		{ name: 'CodeMirror', link: 'https://codemirror.net/', image: 'codemirror.svg' },
 		{ name: 'Vue', link: 'https://vuejs.org/', image: 'vue.png' },
 		{ name: 'Chart.js', link: 'https://www.chartjs.org/', image: 'chartjs.png' },
 		{ name: 'KaTeX', link: 'https://katex.org/', image: 'katex.png' },
@@ -251,10 +250,10 @@ const technologies = [
 
 const team = computed(() => [[
 	{ name: 'Pilow', id: 1, grade: 'admin', role: t('team_web_graphism') + '<br>' + t('team_leekscript_fights') },
-	{ name: 'SilentHunter', id: 11, grade: 'admin', role: t('team_admin_server') },
 	{ name: 'TheTintin', id: 38357, grade: 'moderator', role: t('main.grade_moderator') },
 	{ name: 'Ref', id: 43276, grade: 'moderator', role: t('main.grade_moderator') },
 ], [
+	{ name: 'SilentHunter', id: 11, grade: 'former admin', role: t('team_admin_server') },
 	{ name: 'Dawyde', id: 2, grade: 'former admin', role: t('former_dev') },
 	{ name: 'mistigis', id: 100, grade: 'former moderator', role: t('former_mod') },
 	{ name: 'McNalYoo', id: 273, grade: 'former moderator', role: t('former_mod') },

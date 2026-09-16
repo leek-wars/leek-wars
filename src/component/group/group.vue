@@ -281,6 +281,7 @@
 		<div v-if="group && group.is_supervisor" class="container last">
 			<panel :title="$t('settings')" icon="mdi-cog-outline">
 				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details @change="updateSettingChat" />
+				<v-switch v-model="group.use_passwords" :label="$t('setting_use_passwords')" hide-details @change="updateUsePasswords" />
 			</panel>
 			<panel :title="$t('member_options')" icon="mdi-cog-outline">
 				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
@@ -596,7 +597,7 @@
 	import { computed, defineAsyncComponent, reactive, ref, useTemplateRef } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
@@ -773,6 +774,7 @@
 	}
 
 	function updateSettingChat() { settingPut('chat', group.value!.setting_chat) }
+	function updateUsePasswords() { settingPut('use-passwords', group.value!.use_passwords) }
 	function updateSettingBank() { settingPut('bank', group.value!.setting_bank) }
 	function updateSettingPublicChat() { settingPut('public-chat', group.value!.setting_public_chat) }
 	function updateSettingBuyFights() { settingPut('buy-fights', group.value!.setting_buy_fights) }

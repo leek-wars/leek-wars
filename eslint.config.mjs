@@ -86,6 +86,13 @@ export default tseslint.config(
 				'endTag': 'never',
 				'selfClosingTag': 'always',
 			}],
+			// La CSP de production sert script-src sans 'unsafe-inline' : un gestionnaire écrit en
+			// attribut HTML (onclick="…", oncontextmenu="…") est converti en null par le navigateur,
+			// sans erreur visible. Rien ne le signalait, et le bug ne se voit pas en local (aucune CSP).
+			'vue/no-restricted-static-attribute': ['error', {
+				key: '/^on[a-z]/',
+				message: "Gestionnaire inline interdit : bloqué par la CSP en production. Utiliser @event.",
+			}],
 			'vue/no-use-v-if-with-v-for': 'off',
 			'vue/multi-word-component-names': 'off',
 		},

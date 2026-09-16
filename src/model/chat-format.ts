@@ -34,10 +34,17 @@ const CODE_SPAN_RE = /```[\s\S]*?```|`[^`]*?`/g
 
 // Sentinelle distincte (0xE001) pour masquer les segments LaTeX $...$ pendant le
 // formatage du texte (linkify/emojis/commandes), afin que leur contenu reste opaque.
-// Code masqué EN PREMIER (callers), donc un `$` dans du code ne peut pas être capté ici.
+// Code masqué EN PREMIER (callers), donc un `$` dans du code ne peut pas être capté ici,
+// et un segment $...$ n'enjambe jamais un bloc de code masqué (#5030) : le `$` d'un
+// snippet PHP ne s'apparie pas avec un `$` du texte autour.
 const LATEX_MARK = String.fromCharCode(0xE001)
 const LATEX_MARK_RE = new RegExp(LATEX_MARK + '(\\d+)' + LATEX_MARK, 'g')
-const LATEX_SPAN_RE = /\$[^$\n]+\$/g
+const LATEX_SPAN_RE = new RegExp('\\$([^$\\n' + CODE_MARK + ']+)\\$', 'g')
+
+// Contenu d'un span de code sans ses délimiteurs ``` ou `.
+function codeSpanInner(span: string): string {
+	return span.startsWith('```') ? span.slice(3, -3) : span.slice(1, -1)
+}
 
 // Replace every code span (```...``` and `...`) with a sentinel placeholder and
 // push the raw span into `codeSpans`. Keeps code content opaque to text formatting
@@ -69,12 +76,24 @@ export function formatChatMessage(
 	// the v-chat-code-latex directive still renders them as code.
 	result = result.replace(CODE_MARK_RE, (_, i) => {
 		const span = codeSpans[+i]
-		if (span.startsWith('```')) {
-			return '```' + escapeCode(span.slice(3, -3)).replace(/\n/g, '<br>') + '```'
-		}
-		return '`' + escapeCode(span.slice(1, -1)) + '`'
+		const inner = escapeCode(codeSpanInner(span))
+		return span.startsWith('```') ? '```' + inner.replace(/\n/g, '<br>') + '```' : '`' + inner + '`'
 	})
 	return result
+}
+
+// Balisage HTML d'un message déjà formaté (directive v-chat-code-latex) : les blocs
+// ```...``` et `...` deviennent des <code>, les segments $...$ des <latex>. Même
+// scanner et même ordre que formatChatMessage (code masqué d'abord), pour qu'un `$`
+// dans un snippet PHP ou shell ne fasse jamais apparaître de <latex> dans le code (#5030).
+export function markupChatCodeLatex(html: string): string {
+	const codeSpans: string[] = []
+	let result = maskCodeSpans(html, codeSpans)
+	result = result.replace(LATEX_SPAN_RE, (span, content: string) => {
+		// Pas de LaTeX autour d'une balise (URL linkifiée).
+		return /<\w/.test(content) ? span : '<latex>' + span + '</latex>'
+	})
+	return result.replace(CODE_MARK_RE, (_, i) => '<code>' + codeSpanInner(codeSpans[+i]) + '</code>')
 }
 
 export function formatChatPreview(content: string, authorName: string): string {
@@ -89,8 +108,7 @@ export function formatChatPreview(content: string, authorName: string): string {
 	result = result.replace(CODE_MARK_RE, (_, i) => {
 		const span = codeSpans[+i]
 		const delim = span.startsWith('```') ? '```' : '`'
-		const inner = span.startsWith('```') ? span.slice(3, -3) : span.slice(1, -1)
-		return delim + escapeCode(inner).replace(/\n/g, ' ') + delim
+		return delim + escapeCode(codeSpanInner(span)).replace(/\n/g, ' ') + delim
 	})
 	return result
 }

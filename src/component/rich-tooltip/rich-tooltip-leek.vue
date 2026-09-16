@@ -123,6 +123,10 @@ function open(v: boolean) {
 			if (expand_items.value) {
 				menu.value?.updateLocation?.()
 			}
+		}, () => {
+			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
+			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			content_created.value = false
 		})
 	}
 }

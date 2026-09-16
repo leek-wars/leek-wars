@@ -1,10 +1,13 @@
 import mitt from 'mitt'
-import { ComponentPublicInstance } from 'vue'
-import { Folder, Item } from '@/component/editor/editor-item'
-import { Farmer } from './farmer'
-import { AI } from './ai'
 import { i18n } from '@/model/i18n'
-import { SchemeTemplate } from '@/model/scheme'
+// Imports de TYPE uniquement : ce module est importé par ~50 composants, il doit rester
+// une feuille du graphe. Un import de valeur y tirerait farmer/ai/editor-item et
+// recréerait des cycles (cf. model/vue.test.ts).
+import type { ComponentPublicInstance } from 'vue'
+import type { Folder, Item } from '@/component/editor/editor-item'
+import type { Farmer } from './farmer'
+import type { AI } from './ai'
+import type { SchemeTemplate } from '@/model/scheme'
 
 type Events = {
 	keydown: KeyboardEvent
@@ -22,6 +25,7 @@ type Events = {
 	keyup: KeyboardEvent
 	resize: void
 	focus: void
+	visible: void
 	htmlclick: void
 	loaded: void
 	connected: Farmer
@@ -55,11 +59,17 @@ type Events = {
 	'editor-menu': unknown,
 	'br-started': number,
 	'reanalyze': void,
+	// L'analyseur a appliqué un nouveau résultat : ce qu'il sait des symboles a changé. Émis par
+	// Analyzer lui-même (monaco.ts l'importe déjà, l'inverse ferait un cycle), écouté par monaco.ts
+	// pour rafraîchir les compteurs de références des CodeLens.
+	'analyzer-updated': void,
 	'git-file-changed': void,
 	'git-repos-changed': void,
 	'git-history-refresh': void,
 	'file-reloaded': string,
 	'ai-path-changed': { oldPath: string, newPath: string | null },
+	'ai-created': string,
+	'ai-deleted': string,
 	'close-diff': { folder: string, file: string },
 	'close-file-tab': string,
 	'close-merge-tabs': { folder: string },

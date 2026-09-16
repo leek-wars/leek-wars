@@ -1,3 +1,8 @@
+// BOOTSTRAP de l'application : ce module s'exécute pour ses effets de bord (app.use(router),
+// router.beforeEach, store.commit…). Il doit rester une RACINE du graphe d'imports, importé
+// par le seul main.ts — c'est vérifié par model/vue.test.ts, qui explique pourquoi.
+// ⚠️ Ne rien exporter d'ici : ce qui doit être importable par un composant vit dans son propre
+// module (emitter, sub-app, directives, error-report, vuetify).
 import App from '@/component/app/app.vue'
 import Code from '@/component/app/code.vue'
 import Error from '@/component/app/error.vue'
@@ -5,8 +10,7 @@ import LWLoader from '@/component/app/loader.vue'
 import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
 import Flag from '@/component/flag.vue'
-import '@/component/editor/leekscript.scss'
-import '@/component/editor/leekscript-monokai.scss'
+import '@/component/editor/monaco-highlight.scss'
 import Emblem from '@/component/emblem.vue'
 import LeekImage from '@/component/leek-image.vue'
 import TrophyIcon from '@/component/trophy-icon.vue'
@@ -21,415 +25,23 @@ import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router, { getRedirectAfterLogin } from '@/router'
 import { createApp, defineAsyncComponent, defineComponent, getCurrentInstance, h, nextTick } from 'vue'
-import type { App as VueApp, Component, ComponentPublicInstance } from 'vue'
+import type { Component, ComponentPublicInstance } from 'vue'
 import { Translation } from 'vue-i18n'
 import { Latex } from './latex'
 import { scroll_to_hash } from '@/router-functions'
 
-import { createVuetify } from 'vuetify'
-import 'vuetify/styles'
-import { da, de, en, es, fi, fr, id, it, ja, ko, nl, no, pl, pt, ru, sv, zhHans } from 'vuetify/locale'
-import { locale as initialLocale } from '@/locale'
-import { watch } from 'vue'
-import { aliases as mdiSvgAliases } from 'vuetify/iconsets/mdi-svg'
-import { mdiIconSet } from './icon-set'
+import { vuetify } from './vuetify'
+import { code, dochash, splitCodeLanguage } from './directives'
+import { markupChatCodeLatex } from './chat-format'
+import { installGlobalErrorHandlers, recordEvent, recordNavigation, reportVueError } from './error-report'
+import { createSubApp } from './sub-app'
 import { formatEmojis } from './emojis'
 import { displayWarningMessage, emitter, setVueMain } from './emitter'
 import '@/chart'
 
 const Console = defineAsyncComponent(() => import('@/component/app/console.vue'))
 
-const cspNonce = (document.querySelector('meta[name="csp-nonce"]') as HTMLMetaElement | null)?.content || undefined
-
-// Vuetify nomme le chinois 'zhHans'.
-const toVuetifyLocale = (lang: string) => lang === 'zh' ? 'zhHans' : lang
-
-const vuetify = createVuetify({
-	locale: {
-		locale: toVuetifyLocale(initialLocale),
-		fallback: 'en',
-		messages: { da, de, en, es, fi, fr, id, it, ja, ko, nl, no, pl, pt, ru, sv, zhHans },
-	},
-	icons: {
-		defaultSet: 'mdi',
-		aliases: mdiSvgAliases,
-		sets: { mdi: mdiIconSet },
-	},
-	theme: {
-		cspNonce,
-		themes: {
-			dark: {
-				colors: {
-					primary: '#5fad1b',
-				},
-			},
-			light: {
-				colors: {
-					primary: '#5fad1b',
-
-				},
-			},
-		},
-	},
-	defaults: {
-		VSwitch: {
-			color: 'primary',
-		},
-		VRadio: {
-			color: 'primary',
-		},
-		VRadioGroup: {
-			color: 'primary',
-		},
-		VCheckbox: {
-			color: 'primary',
-		},
-		VTooltip: {
-			location: 'bottom',
-		},
-		VList: {
-			density: 'compact'
-		},
-		VListItem: {
-			density: 'compact',
-		},
-	},
-})
-
-// Garde la locale des composants Vuetify (footer v-data-table, etc.) synchronisée
-// quand la langue change à chaud, sans rechargement de page.
-watch(() => i18n.locale, (lang) => {
-	vuetify.locale.current.value = toVuetifyLocale(lang)
-})
-
-// Cache-busted reload on Vite asset errors, with a cooldown to break out of
-// refresh-on-every-click loops when the new bundle still errors.
-const PRELOAD_RELOAD_KEY = 'vite-preload-reload-at'
-const RELOAD_COOLDOWN = 60_000
-
-function reloadWithCacheBust() {
-	const now = Date.now()
-	const last = parseInt(sessionStorage.getItem(PRELOAD_RELOAD_KEY) || '0', 10)
-	if (now - last < RELOAD_COOLDOWN) return
-	sessionStorage.setItem(PRELOAD_RELOAD_KEY, now.toString())
-	const url = new URL(window.location.href)
-	url.searchParams.set('_r', now.toString())
-	window.location.replace(url.toString())
-}
-
-window.addEventListener('vite:preloadError', (event) => {
-	// Un preloadError pendant une navigation = chunk dynamique annulé par le navigateur
-	// (surtout Firefox), PAS forcément un déploiement périmé : l'asset existe souvent
-	// encore (HTTP 200). On ne recharge donc toute la page (#_r=) QUE si l'asset a vraiment
-	// disparu (404 = vrai chunk périmé) ; sinon on laisse Vite/le routeur réessayer.
-	// Le marqueur ":suppressed" mesure les rechargements intempestifs ainsi évités.
-	// Le message est soit "...module: https://.../assets/x.js" (URL absolue, erreurs JS),
-	// soit "Unable to preload CSS for /assets/x.css" (chemin relatif, erreurs CSS) : capter les deux.
-	const message = (event as { payload?: { message?: string } })?.payload?.message || ''
-	const assetUrl = message.match(/https?:\/\/\S+|\/[^\s'"]+\.(?:css|m?js)/)?.[0]
-	if (!assetUrl) { reloadWithCacheBust(); return }
-	fetch(assetUrl, { method: 'HEAD', cache: 'no-store' })
-		.then(r => {
-			if (r.ok) reportHidden('vite:preloadError:suppressed', message) // asset 200 → reload évité
-			else reloadWithCacheBust()                                      // 404 → vrai stale → reload
-		})
-		.catch(() => reportHidden('vite:preloadError:suppressed', message + ' (head error)'))
-})
-
-// Enregistre une erreur normalement avalée (bruit navigateur/cache, chunk périmé,
-// annulation Monaco) en "masquée" côté serveur : loggée pour mesurer son volume mais
-// sans issue GitHub ni notification admin, et exclue de la vue par défaut de #admin/errors.
-// Throttle 1s indépendant des vraies erreurs pour ne pas s'auto-étouffer mutuellement.
-let lastHiddenSent = 0
-function reportHidden(message: string, stack?: string) {
-	if (LeekWars.DEV) return
-	const now = Date.now()
-	if (now - lastHiddenSent < 1000) return
-	lastHiddenSent = now
-	try {
-		LeekWars.post('error/report', {
-			error: message,
-			stack: (stack || '(no stack)') + '\n\nOrigin: hidden',
-			file: document.location.href,
-			locale: i18n.locale,
-			user_agent: navigator.userAgent,
-			hidden: true,
-			build_date: typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null,
-			build_commit: typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null,
-		})
-	} catch { /* best effort */ }
-}
-
-// Suppress Monaco internal error when hovering markers on a disposed editor
-window.addEventListener('error', (event) => {
-	if (event.error?.message?.includes('InstantiationService has been disposed')) {
-		reportHidden(event.error.message, event.error.stack)
-		event.preventDefault()
-	}
-})
-
-let lastErrorSent = 0
-
-// Instrumentation #4163 : tracer la SÉQUENCE d'erreurs (chunk/async-loader → cascade parentNode)
-// et l'écart depuis le dernier bump routerViewKey (rustine), pour distinguer un PREMIER crash
-// organique d'une cascade auto-induite par la rustine. Read-only, aucun changement de comportement.
-let droppedSinceLastReport = 0
-const recentEvents: { t: number, kind: string, msg: string }[] = []
-function recordEvent(kind: string, msg: unknown) {
-	recentEvents.push({ t: Date.now(), kind, msg: String(msg ?? '').slice(0, 80) })
-	if (recentEvents.length > 14) recentEvents.shift()
-}
-
-interface NavSnapshot {
-	fullPath: string
-	name: string | null
-	at: number
-}
-let previousNav: NavSnapshot | null = null
-let currentNav: NavSnapshot | null = null
-
-function describeRouteSubtree(instance: unknown): string | null {
-	try {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let node = (instance as any)?.subTree
-		let depth = 0
-		while (node && depth < 20) {
-			const child = node.component
-			if (child) {
-				const t = child.type
-				const name = t?.name || t?.__name || t?.__file || 'Anonymous'
-				return name
-			}
-			node = node.children?.[0]
-			depth++
-		}
-	} catch { /* empty */ }
-	return null
-}
-
-// Pour les erreurs "parentNode is null" pendant un patch in-place de <RouterView>
-// (ex. navigation /leek/A → /leek/B, cluster #4050-#4056) : la stack ne contient
-// que des frames vendor (flush async du scheduler), donc Vue n'attribue que
-// <RouterView> et le composant fautif reste invisible. On parcourt le sous-arbre
-// de vnodes APRÈS l'erreur (lecture seule, aucun effet sur le rendu) pour nommer
-// le chemin jusqu'au vnode dont `el` est null — le nœud réellement cassé.
-function findNullElVnodePath(instance: unknown): string | null {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const label = (vn: any): string => {
-		const t = vn?.type
-		if (t == null) return 'vnode'
-		if (typeof t === 'symbol') return t.description || 'Fragment'
-		if (typeof t === 'string') return t
-		return t.name || t.__name || t.__file || 'Component'
-	}
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const visit = (vn: any, depth: number): string[] | null => {
-		if (!vn || typeof vn !== 'object' || depth > 50) return null
-		// Descendre dans le sous-arbre rendu d'un composant
-		if (vn.component?.subTree) {
-			const r = visit(vn.component.subTree, depth + 1)
-			if (r) return [label(vn), ...r]
-		}
-		if (Array.isArray(vn.children)) {
-			for (const c of vn.children) {
-				if (c && typeof c === 'object' && 'type' in c) {
-					const r = visit(c, depth + 1)
-					if (r) return [label(vn), ...r]
-				}
-			}
-		}
-		// Un vnode élément/composant monté doit porter un `el`. On ignore les
-		// Fragment/Text/Comment (type = symbol) qui peuvent légitimement avoir un
-		// el null/anchor.
-		if (vn.el == null && typeof vn.type !== 'symbol') return [label(vn) + '(el=null)']
-		return null
-	}
-	try {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const root = (instance as any)?.subTree
-		const path = root ? visit(root, 0) : null
-		return path ? path.join(' › ') : null
-	} catch { return null }
-}
-
-export function reportVueError(err: unknown, vm: unknown, info: unknown, origin: string = 'main') {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const e = err as any
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const vmAny = vm as any
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const infoAny = info as any
-
-	if (LeekWars.DEV) return
-
-	// Instrumentation v2 (#4163) : mémoriser LA première erreur de la session (corrupteur
-	// racine d'un el null) en sessionStorage — le buffer roule et la perd. Capturée pour TOUT
-	// type d'erreur (y compris chunk/async-loader) et réinjectée dans chaque rapport complet.
-	let firstCrashTrace = ''
-	try {
-		const stored = sessionStorage.getItem('lw_first_crash')
-		if (!stored) {
-			sessionStorage.setItem('lw_first_crash', JSON.stringify({
-				m: (e?.message || String(e) || '').slice(0, 100), info: String(infoAny),
-				route: currentNav?.fullPath || null, prev: previousNav?.fullPath || null,
-				sinceNav: currentNav ? Date.now() - currentNav.at : null, at: Date.now(),
-			}))
-		} else {
-			const f = JSON.parse(stored)
-			firstCrashTrace = '\n\nFirst crash this session (' + (Date.now() - f.at) + 'ms ago): ' + f.m +
-				' | info=' + f.info + ' | route=' + f.route + ' prev=' + f.prev + ' sinceNav=' + f.sinceNav + 'ms'
-		}
-	} catch { /* empty */ }
-
-	// Échecs de chargement de chunk/CSS (Chrome: "Failed to fetch...", Firefox: "error loading...").
-	// On les logge en masqué SANS recharger : la récupération après déploiement est gérée par le
-	// handler `vite:preloadError` (HEAD-checké) qui fire pour le même échec et ne recharge que sur un vrai 404.
-	if (e?.message?.includes('Failed to fetch dynamically imported module') ||
-		e?.message?.includes('error loading dynamically imported module') ||
-		e?.message?.includes('Loading chunk') ||
-		e?.message?.includes('Loading CSS chunk') ||
-		e?.message?.includes('Unable to preload CSS')) {
-		recordEvent('chunk', e?.message)
-		reportHidden(e?.message || String(e), e?.stack)
-		return
-	}
-
-	// runtime-13 = ASYNC_COMPONENT_LOADER : sur un échec de chunk, le handler vite:preloadError
-	// gère déjà la récup ; sur un vrai throw de composant, recharger ne sert à rien (boucle). On logge.
-	if (infoAny?.includes?.('runtime-13')) {
-		recordEvent('async-loader', e?.message)
-		reportHidden((e?.message || String(e)) + ' [' + infoAny + ']', e?.stack)
-		return
-	}
-
-	if (Date.now() - lastErrorSent < 1000) {
-		droppedSinceLastReport++
-		recordEvent('dropped', e?.message)
-		return
-	}
-	lastErrorSent = Date.now()
-	recordEvent('crash', e?.message)
-
-	let errorBody: string
-	try {
-		errorBody = e?.message || (e && typeof e === 'object' ? JSON.stringify(e) : String(e))
-	} catch {
-		errorBody = String(e)
-	}
-	const error = (e?.name || 'Error') + ": " + errorBody
-	const file = document.location.href
-	const locale = i18n.locale
-	const user_agent = navigator.userAgent
-
-	let componentTrace = ''
-	let routeSubtree: string | null = null
-	let nullElPath: string | null = null
-	try {
-		if (vmAny) {
-			const components: string[] = []
-			// errorCaptured passes a public proxy (.$ → internal instance); app.config.errorHandler
-			// passes the internal instance directly. Handle both.
-			let instance = vmAny.$ || vmAny
-			const leafInstance = instance
-			while (instance && components.length < 100) {
-				const name = instance.type?.name || instance.type?.__name || 'Anonymous'
-				const propsDef = instance.type?.props
-				let propsStr = ''
-				if (propsDef && instance.props) {
-					const parts: string[] = []
-					const keys = Array.isArray(propsDef) ? propsDef : Object.keys(propsDef)
-					for (const key of keys) {
-						const val = instance.props[key]
-						if (val !== undefined && val !== null && val !== false) {
-							let s: string
-							if (typeof val === 'object') {
-								s = Array.isArray(val) ? '[Array(' + val.length + ')]' : '[Object]'
-							} else {
-								s = String(val).substring(0, 50)
-							}
-							parts.push(key + '=' + s)
-						}
-					}
-					if (parts.length) propsStr = ' ' + parts.join(' ')
-				}
-				components.push('<' + name + propsStr + '>')
-				instance = instance.parent
-			}
-			componentTrace = '\n\nComponent: ' + components[0] + '\nHierarchy: ' + components.join(' → ')
-			// For RouterView/Anonymous-rooted errors, expose the actual route component being patched.
-			const leafName = leafInstance?.type?.name || leafInstance?.type?.__name
-			if (leafName === 'RouterView' || !leafName) {
-				routeSubtree = describeRouteSubtree(leafInstance)
-				// Erreurs de patch sur un el null (cluster #4050-#4056) : pointer le vnode cassé
-				if (e?.message?.includes('parentNode') || e?.message?.includes("reading 'el'")) {
-					nullElPath = findNullElVnodePath(leafInstance)
-				}
-			}
-		}
-	} catch (ex) {
-		componentTrace = '\n\n[Component trace failed: ' + (ex as Error).message + ']'
-	}
-
-	let navTrace = ''
-	try {
-		const lines: string[] = []
-		if (currentNav) lines.push('Route: ' + currentNav.fullPath + (currentNav.name ? ' [' + currentNav.name + ']' : ''))
-		if (previousNav) lines.push('Previous route: ' + previousNav.fullPath + (previousNav.name ? ' [' + previousNav.name + ']' : ''))
-		if (currentNav) lines.push('Since last navigation: ' + (Date.now() - currentNav.at) + 'ms')
-		// Écart entre les 2 dernières navs : un gap minuscule = double-nav rapprochée
-		// (interruption probable de la nav précédente pendant son démontage).
-		if (currentNav && previousNav) lines.push('Gap prev→current nav: ' + (currentNav.at - previousNav.at) + 'ms')
-		if (routeSubtree) lines.push('Route subtree: <' + routeSubtree + '>')
-		if (nullElPath) lines.push('Null-el path: ' + nullElPath)
-		if (lines.length) navTrace = '\n\n' + lines.join('\n')
-	} catch { /* empty */ }
-
-	let instrTrace = ''
-	try {
-		const now = Date.now()
-		const lastReload = parseInt(sessionStorage.getItem('parentNode-reload-at') || '0', 10)
-		const reloadAge = lastReload ? (now - lastReload) + 'ms' : 'never'
-		const seq = recentEvents.map(ev => ev.kind + ' +' + (now - ev.t) + 'ms' + (ev.msg ? ' ' + ev.msg : '')).join('\n  ')
-		instrTrace = '\n\nSince last auto-reload: ' + reloadAge +
-			'\nDropped since last report: ' + droppedSinceLastReport +
-			'\nRecent events (oldest→newest):\n  ' + seq
-		droppedSinceLastReport = 0
-	} catch { /* empty */ }
-
-	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + firstCrashTrace
-	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
-	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
-	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
-
-	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
-	// fait alors parentNode/nextSibling/style(null) → crash, et la session crashe en BOUCLE).
-	// Le reset par routerViewKey++ (essayé 06/2026) NE RÉCUPÈRE PAS : observé en prod via
-	// l'instrumentation #4163, la session crashe en boucle 4+ min malgré les bumps. On revient
-	// au HARD RELOAD (le comportement d'avant le 11/06), qui repart d'un arbre Vue sain. Délai
-	// court pour laisser le POST error/report partir ; cooldown 30s anti-boucle de reload.
-	const m = e?.message || ''
-	if (m.includes('parentNode') || m.includes('nextSibling') ||
-		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'")) {
-		const RELOAD_KEY = 'parentNode-reload-at'
-		const last = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10)
-		if (Date.now() - last > 30_000) {
-			recordEvent('reload', '')
-			sessionStorage.setItem(RELOAD_KEY, Date.now().toString())
-			setTimeout(() => location.reload(), 400)
-		}
-	}
-}
-
-export function createSubApp(component: Component, props?: Record<string, unknown>, origin: string = 'sub-app'): VueApp {
-	const subApp = createApp(component, props)
-	subApp.config.errorHandler = (err, vm, info) => reportVueError(err, vm, info, origin)
-	subApp.use(vuetify)
-	subApp.use(i18n)
-	subApp.use(store)
-	subApp.use(router)
-	subApp.mixin({ data() { return { LeekWars } } })
-	return subApp
-}
+installGlobalErrorHandlers()
 
 let secondInterval: ReturnType<typeof setInterval> | null = null, minuteInterval: ReturnType<typeof setInterval> | null = null
 
@@ -516,19 +128,14 @@ const app = createApp({
 		})
 		document.addEventListener('visibilitychange', () => {
 			if (document.visibilityState === 'visible') {
+				// Avant checkAlive() : celui-ci rebranche la socket sur le compte du
+				// cookie, qui peut avoir changé pendant que l'onglet était en veille.
+				emitter.emit('visible')
 				LeekWars.socket.checkAlive()
 			}
 		})
 		window.addEventListener('click', () => {
 			emitter.emit('htmlclick')
-		})
-
-		// Ignore Monaco "Canceled" errors (normal behavior when switching files/canceling operations)
-		window.addEventListener('unhandledrejection', (event) => {
-			if (event.reason?.message === 'Canceled' || event.reason?.message === 'Model not found') {
-				reportHidden(event.reason.message, event.reason.stack)
-				event.preventDefault()
-			}
 		})
 
 		emitter.on('loaded', () => {
@@ -690,13 +297,7 @@ app.directive('autostopscroll', {
 	}
 })
 
-const code = {
-	mounted: (el: HTMLElement) => {
-		el.querySelectorAll('code').forEach((c: Element) => {
-			createSubApp(Code, { code: (c as HTMLElement).innerText }, 'v-code').mount(c)
-		})
-	}
-}
+
 
 app.directive('code', code)
 
@@ -723,22 +324,17 @@ app.directive('latex', {
 
 app.directive('chat-code-latex', {
 	mounted: (el: HTMLElement) => {
-		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string, content: string) => {
-			// Skip if the captured content already contains HTML tags (e.g. linkified URL)
-			if (/<\w/.test(content)) return str
-			return "<latex>" + str.replace(/`/g, "") + "</latex>"
-		})
-		el.innerHTML = el.innerHTML.replace(/```(.*?)```/g, (str: string, code: string) => {
-			return "<code>" + code + "</code>"
-		})
-		el.innerHTML = el.innerHTML.replace(/`(.*?)`/g, (str: string, code: string) => {
-			return "<code>" + code + "</code>"
-		})
+		// La plupart des messages n'ont ni code ni LaTeX : pas de réécriture du DOM pour rien.
+		const html = el.innerHTML
+		const marked = markupChatCodeLatex(html)
+		if (marked !== html) { el.innerHTML = marked }
 		el.querySelectorAll('code').forEach((c: Element) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
-				props = { code, expandable: true }
+				const raw = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
+				// Langage optionnel sur la 1re ligne (```js, ```python, ...) : cf. splitCodeLanguage.
+				const { code, language } = splitCodeLanguage(raw, c)
+				props = { code, expandable: true, language }
 			} else {
 				props = { code: c.textContent || '', single: true }
 			}
@@ -768,21 +364,6 @@ app.directive('chat-code-latex', {
 	}
 })
 
-const dochash = {
-	mounted: (el: HTMLElement) => {
-		el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a: string, b: string) => {
-			return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
-		})
-		el.querySelectorAll('a').forEach((a: HTMLAnchorElement) => {
-			a.onclick = (e: Event) => {
-				e.stopPropagation()
-				e.preventDefault()
-				emitter.emit('doc-navigate', a.innerText)
-				return false
-			}
-		})
-	}
-}
 
 app.directive('dochash', dochash)
 
@@ -820,6 +401,9 @@ try {
 	const tpl = document.getElementById('app-data-error') as HTMLTemplateElement | null
 	if (root && tpl) {
 		root.replaceChildren(tpl.content.cloneNode(true))
+		// Le bouton ne peut pas porter de onclick inline : la CSP de production
+		// n'autorise pas 'unsafe-inline' dans script-src.
+		root.querySelector('#app-data-error-reload')?.addEventListener('click', () => location.reload())
 	}
 	// Re-throw : indispensable pour stopper la suite (sinon app.mount('#app2') écraserait l'UI d'erreur).
 	throw e
@@ -878,12 +462,7 @@ router.afterEach((to, _from, failure) => {
 	// failure.type : 4=duplicated (push vers la route courante), 2=aborted, 8/16=redirect.
 	// Un nav-done SANS nav-start = nav qui a sauté beforeEach → ce type le caractérise (#4163).
 	recordEvent('nav-done' + (failure ? '✗' + ((failure as { type?: number }).type ?? '?') : ''), to.fullPath)
-	previousNav = currentNav
-	currentNav = {
-		fullPath: to.fullPath,
-		name: typeof to.name === 'string' ? to.name : (to.name ? String(to.name) : null),
-		at: Date.now(),
-	}
+	recordNavigation(to.fullPath, typeof to.name === 'string' ? to.name : (to.name ? String(to.name) : null))
 
 	if (to.hash) {
 		setTimeout(() => {
@@ -920,5 +499,3 @@ if (window.__FARMER__) {
 		})
 	}
 }
-
-export { emitter, dochash, code }

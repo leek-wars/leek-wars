@@ -1,9 +1,12 @@
 import packageJson from '@/../package.json'
 import { env } from '@/env'
 import { locale } from '@/locale'
+import { normalizeApiError, type ApiError } from '@/model/api-error'
 import { Arena } from '@/model/arena'
+import { playAudio } from '@/model/audio'
 import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, COMPLEXITIES } from '@/model/data'
 import { linkify, toChatLink } from '@/model/linkify'
+import { buildObjectApiModel } from '@/component/editor/leekwars-dts'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -18,7 +21,7 @@ import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
-import { PotionEffect, PotionTemplate } from './potion'
+import { isRestatPotion, Potion, PotionEffect, PotionTemplate } from './potion'
 import { ITEMS } from './items'
 import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
@@ -28,7 +31,7 @@ import { DATA_TYPES, loadGameData as loadGameDataRaw } from './gamedata'
 import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
-const LOCAL = window.location.port === '8500' || window.location.port === '5100'
+const LOCAL = window.location.port === '8500' || window.location.port === '5100' || window.location.hostname === 'leekwars.local'
 
 // Helper functions to avoid TypeScript "excessively deep" errors with vue-i18n
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,12 +86,6 @@ function retryDelay(retry: number) {
 	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
 }
 
-interface ApiError {
-	error: string
-	params?: unknown[]
-	[key: string]: unknown
-}
-
 interface ExtendedPromise<T> extends Promise<T> {
 	abort: () => void
 	error: (callback: (error: ApiError) => void) => ExtendedPromise<T>
@@ -112,7 +109,10 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 			const xhr = new XMLHttpRequest()
 			currentXhr = xhr
 			xhr.open(method, url)
-			xhr.responseType = 'json'
+			// 'text' et non 'json' : le parsing manuel ci-dessous est le seul moyen de distinguer
+			// un corps VIDE (succès sans contenu) d'un corps ILLISIBLE (réponse cassée) — avec
+			// responseType 'json' les deux donnent le même `response` null.
+			xhr.responseType = 'text'
 			if (store.state.connected) {
 				xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
 			}
@@ -121,21 +121,40 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 			}
 			xhr.onload = () => {
-				if (xhr.status === 200) {
-					resolve(xhr.response)
-				} else if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
+				// Réessai avant toute lecture du corps : celui d'une 429 n'intéresse personne.
+				if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 						console.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
 					}
 					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
+					return
+				}
+				// Corps vide = succès sans contenu : le Router n'écho rien quand un service renvoie
+				// null (farmer/get-godfather-info sur un login inconnu, par exemple), et ses appelants
+				// traitent ce null comme une réponse valide. Corps non vide mais illisible = réponse
+				// cassée (tronquée, dump PHP collé devant le JSON, page d'erreur d'un proxy) : c'est
+				// un échec. La résoudre faisait planter les `.then` qui déréférencent le résultat —
+				// #11848884 (`f.leeks`, rich-tooltip-farmer) et #11843514 (`data.code`, ai/read) — en
+				// unhandledrejection non rattrapée.
+				const text = xhr.responseText
+				let body: unknown = null
+				let unreadable = false
+				if (text !== '') {
+					try { body = JSON.parse(text) } catch { unreadable = true }
+				}
+				if (xhr.status === 200 && !unreadable) {
+					resolve(body as T)
 				} else {
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 						const message = "[" + xhr.status + "] " + method + " " + url
 						console.error(message)
 						// LeekWars.toast(message, 5000)
 					}
-					reject(xhr.response)
+					// L'URL voyage avec l'erreur : un corps illisible se normalise en 'unknown_error'
+					// (seul code traduit dans les 18 locales) et serait sinon indistinguable des
+					// autres dans les rapports masqués.
+					reject(normalizeApiError(unreadable ? { invalid_response: method + ' ' + url } : body))
 				}
 			}
 			xhr.onerror = () => {
@@ -368,7 +387,10 @@ const LeekWars = reactive({
 	get,
 	put,
 	delete: del,
-	cgu_version: 1,
+	// Version affichée en tête des CGU. À garder synchro avec
+	// FarmerController::LAST_CGU_VERSION côté serveur (qui, lui, remplit farmer.cgu
+	// à l'inscription) : le shell HTML n'injecte pas la valeur serveur ici.
+	cgu_version: 2,
 	mobile: false,
 	// Firefox gère mal le loading="lazy" sur les pages à forte densité d'images
 	// (trophées, marché) : les images ne se chargent pas de façon fiable. On
@@ -378,7 +400,7 @@ const LeekWars = reactive({
 	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
-	actions: [] as { icon?: string, image?: string, click: (e?: MouseEvent) => void }[],
+	actions: [] as { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[],
 	lightBar: false,
 	dark: 0,
 	title: '',
@@ -671,7 +693,7 @@ const LeekWars = reactive({
 		LeekWars.header = true
 		LeekWars.lightBar = false
 	},
-	setActions(actions: { icon?: string, image?: string, click: (e?: MouseEvent) => void }[]) {
+	setActions(actions: { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[]) {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
@@ -834,7 +856,7 @@ const LeekWars = reactive({
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatDayMonthShortUTC, formatLongDuration,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag, setMeta,
 	shadeColor,
-	createCodeArea, createCodeAreaSimple,
+	createCodeArea, createCodeAreaSimple, codeLanguageMode,
 	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as ReturnType<typeof setTimeout> | null, lucky,
 	setFavicon,
 	linkify, toChatLink,
@@ -1148,6 +1170,19 @@ function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
 	return result
 }
 
+/** Potions de restat d'un inventaire, dans l'ordre où le serveur les consomme (offertes avant achetées). */
+function restatPotionsOf(potions: Potion[]): Potion[] {
+	// `LeekWars.potions` et pas `POTIONS` : loadGameData() remplace la propriété de
+	// LeekWars, l'objet importé de data.ts reste vide, donc tout lookup y échoue.
+	return potions
+		.filter(p => p.quantity > 0 && isRestatPotion(LeekWars.potions[p.template]))
+		.sort((a, b) => b.template - a.template)
+}
+
+function countRestatPotions(potions: Potion[]): number {
+	return restatPotionsOf(potions).reduce((total, p) => total + p.quantity, 0)
+}
+
 function potionByName(potions: {[key: string]: PotionTemplate}) {
 	const result: { [key: string]: PotionTemplate } = {}
 	for (const w in potions) {
@@ -1299,18 +1334,18 @@ function formatTime(time: number) {
 	return date.getHours() + ":" + minuts
 }
 
-// Module codemirror-wrapper mis en cache : une fois chargé, le formatage est
-// synchrone (avant le paint), sinon le bloc brut est peint un instant puis
-// remplacé par la version formatée (flicker à chaque re-rendu, ex. édition encyclopédie).
-let codeMirrorWrapper: typeof import("@/codemirror-wrapper") | null = null
-function withCodeMirror(callback: (wrapper: typeof import("@/codemirror-wrapper")) => void) {
-	if (codeMirrorWrapper) {
-		callback(codeMirrorWrapper)
+// Moteur de coloration Monaco (tokenizer statique, léger) mis en cache : une fois
+// chargé, la coloration est synchrone (avant le paint), sinon le bloc brut est peint
+// un instant puis recoloré (flicker à chaque re-rendu, ex. édition encyclopédie).
+let highlighter: typeof import("@/component/editor/monaco-highlight") | null = null
+function withHighlighter(callback: (h: typeof import("@/component/editor/monaco-highlight")) => void) {
+	if (highlighter) {
+		callback(highlighter)
 		return
 	}
-	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
-		codeMirrorWrapper = wrapper
-		callback(wrapper)
+	import(/* webpackChunkName: "monaco-highlight" */ "@/component/editor/monaco-highlight").then(h => {
+		highlighter = h
+		callback(h)
 	})
 }
 // Marqueur posé de façon synchrone : si l'élément a déjà été formaté (un update
@@ -1321,25 +1356,73 @@ function markFormatted(element: HTMLElement): boolean {
 	element.dataset.lwFormatted = '1'
 	return true
 }
-function createCodeArea(code: string, element: HTMLElement) {
+// Langages de coloration des blocs de code (```lang ...) -> id de langage Monaco.
+// Non reconnu / absent => LeekScript (défaut historique).
+const CODE_LANGUAGE_IDS: {[key: string]: string} = {
+	leekscript: 'leekscript', ls: 'leekscript', lw: 'leekscript', lse: 'leekscript',
+	js: 'javascript', javascript: 'javascript',
+	ts: 'typescript', typescript: 'typescript',
+	py: 'python', python: 'python',
+	json: 'json',
+	// Langages « invités » : colorés dans les aperçus (forum, chat, encyclopédie) mais pas
+	// éditables sur le site. Grammaires enregistrées dans monaco-highlight.ts.
+	sql: 'sql', mysql: 'sql', psql: 'sql', postgres: 'sql', postgresql: 'sql',
+	sh: 'shell', bash: 'shell', zsh: 'shell', shell: 'shell', console: 'shell', terminal: 'shell',
+	html: 'html', htm: 'html',
+	css: 'css',
+	xml: 'xml', svg: 'xml',
+	java: 'java',
+	php: 'php',
+	yaml: 'yaml', yml: 'yaml',
+}
+// Retourne l'id de langage Monaco pour un jeton de langage, ou undefined si inconnu.
+function codeLanguageMode(language: string | undefined | null): string | undefined {
+	if (!language) { return undefined }
+	return CODE_LANGUAGE_IDS[language.toLowerCase().trim()]
+}
+// Injecte dans les tokenizers de l'aperçu les données que possède leekwars.ts (permet à
+// monaco-highlight de n'importer aucun module applicatif, cf. leekscript-monarch.js) :
+//  - LeekScript : noms de constantes/fonctions (game data) ; tant qu'elles ne sont pas chargées,
+//    on réessaie au rendu suivant.
+//  - Python : noms des classes de l'API (Field, Debug, Color…), colorées en `type` ; source
+//    statique (modèle d'API objet, même déclaration que le leekwars.d.ts).
+let leekscriptDataFed = false
+let pythonClassesFed = false
+function feedHighlighterData(h: typeof import("@/component/editor/monaco-highlight")) {
+	if (!pythonClassesFed) {
+		pythonClassesFed = true
+		const model = buildObjectApiModel()
+		h.setPythonClasses([...model.singletons, ...model.classes])
+	}
+	if (leekscriptDataFed) { return }
+	const constants = LeekWars.constants, functions = LeekWars.functions
+	if (!constants?.length && !functions?.length) { return }
+	leekscriptDataFed = true
+	h.setLeekScriptData({
+		constants: constants.map(c => c.name),
+		functions: functions.filter(f => !f.deprecated).map(f => f.name),
+		deprecatedFunctions: functions.filter(f => f.deprecated).map(f => f.name),
+	})
+}
+function createCodeArea(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
-		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
-
-		const num = code.split(/\n/).length
-		for (let j = 0; j < num; j++) {
-			const line_num = element.getElementsByTagName('span')[0]
-			line_num.innerHTML += '<span>' + (j + 1) + '</span>'
-		}
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		feedHighlighterData(h)
+		const tokens = h.highlightToHtml(code, lang)
+		const num = code.split('\n').length
+		let gutter = ''
+		for (let j = 0; j < num; j++) { gutter += '<span>' + (j + 1) + '</span>' }
+		element.innerHTML = '<span class="line-number">' + gutter + '</span><pre>' + tokens + '</pre>'
 		element.classList.add('formatted')
 	})
 }
-function createCodeAreaSimple(code: string, element: HTMLElement) {
+function createCodeAreaSimple(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
-		element.innerHTML = '<pre>' + element.innerHTML + '</pre>'
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		feedHighlighterData(h)
+		element.innerHTML = '<pre>' + h.highlightToHtml(code, lang) + '</pre>'
 		element.classList.add('single')
 	})
 }
@@ -1369,7 +1452,7 @@ function lucky(isFake: boolean = false) {
 	if (!LeekWars.sfw) {
 		const audio = new Audio('/sound/move.mp3')
 		audio.volume = 0.4
-		audio.play()
+		playAudio(audio)
 		if (document.hidden) {
 			const cancel = () => {
 				audio.pause()
@@ -1405,7 +1488,7 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	} else if (type === 'team') {
 		url = 'ranking/get-team-rank' + active + '/' + id + '/' + order
 	} else if (type === 'composition') {
-		url = 'ranking/get-composition-rank/' + id + '/' + order
+		url = 'ranking/get-composition-rank' + active + '/' + id + '/' + order
 	}
 	LeekWars.get(url).then(data => {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
@@ -1469,4 +1552,4 @@ async function loadGameData() {
 
 if (DEV || LOCAL) { (window as unknown as Record<string, unknown>).LeekWars = LeekWars }
 
-export { LeekWars, Language, loadGameData }
+export { LeekWars, Language, loadGameData, restatPotionsOf, countRestatPotions }

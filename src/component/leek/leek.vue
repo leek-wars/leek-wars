@@ -1,15 +1,24 @@
 <template lang="html">
-	<!-- Racine STABLE unique (.page toujours montée) : un v-if/v-else à la racine crée un
-	     Fragment dont l'el peut devenir null pendant le patch/unmount -> "parentNode of null"
-	     (#4163, surtout sur un mob où `error` bascule). L'erreur 404 rend DANS .page. -->
+	<!-- Le drapeau 404 s'appelle `notFound` et SURTOUT PAS `error` : dans un <script setup>,
+	     une balise est résolue d'abord contre les liaisons du script, donc un `const error`
+	     masquerait le composant <error>. Le vnode aurait alors un booléen pour type, ne
+	     serait jamais monté, et la bascule suivante de cette branche crasherait la session en
+	     « nextSibling of null ». Garde-fou : component-tag-shadowing.test.ts. -->
 	<div class="page">
-		<error v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
+		<error v-if="notFound" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
 		<template v-else>
 		<div class="page-header page-bar">
-			<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ props }" :bottom="true">
-				<h1 v-bind="props">{{ leek.name }}</h1>
+			<!-- Titre STABLE, même raison que la racine ci-dessus : le v-if/v-else entre le
+			     composant `rich-tooltip-leek` (slot d'activateur géré par Vuetify) et un `h1`
+			     nu faisait basculer la branche à chaque (re)chargement de `leek`, et le vnode
+			     du titre se retrouvait avec `el === null` -> "nextSibling of null" au patch
+			     suivant (cluster #4050-#4056, seul cluster client multi-joueurs d'août 2026,
+			     TOUJOURS sur /leek/:id, chemin `div › v-fgt › div › h1`). Le tooltip est
+			     désormais toujours monté, simplement désactivé tant que le poireau n'est pas
+			     chargé (il ne charge son contenu qu'à l'ouverture, et seulement si id > 0). -->
+			<rich-tooltip-leek :id="leek ? leek.id : 0" v-slot="{ props }" :disabled="!leek" :bottom="true">
+				<h1 v-bind="props">{{ leek ? leek.name : '...' }}</h1>
 			</rich-tooltip-leek>
-			<h1 v-else>...</h1>
 			<div class="tabs">
 				<template v-if="leek && my_leek">
 					<template v-if="leek.tournament && leek.tournament.current">
@@ -104,7 +113,7 @@
 					<template v-else-if="leek">
 						<b>{{ $t('remaining_xp', [LeekWars.formatNumber(remaining_xp)]) }} ({{ Math.round(100 * (leek.xp - leek.down_xp) / (leek.up_xp - leek.down_xp)) }}%)</b>
 						<br>
-						{{ $t('xp', [LeekWars.formatNumber(leek.xp) + " / " + LeekWars.formatNumber(leek.up_xp)]) }}
+						{{ $t('xp', [LeekWars.formatNumber(leek.xp)]) }} / {{ LeekWars.formatNumber(leek.up_xp) }}
 					</template>
 				</v-tooltip>
 
@@ -254,9 +263,9 @@
 									<router-link v-if="my_leek" :to="'/editor/' + (leek.ai.path || leek.ai.name)">
 										<ai :ai="leek.ai" :library="false" :small="false" />
 									</router-link>
-									<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.path" target="_blank">
+									<div v-else-if="$store.getters.admin" class="admin-ai" @click="openAdminAI">
 										<ai :ai="leek.ai" :library="false" :small="false" />
-									</a>
+									</div>
 									<ai v-else :ai="leek.ai" :library="false" :small="false" />
 								</template>
 								<span v-else class="empty">{{ $t('no_ai') }}</span>
@@ -703,6 +712,19 @@
 
 		<level-dialog v-if="leek" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 
+		<popup v-if="leek && !my_leek && leek.ai" v-model="adminAIDialog" :width="1000">
+			<template #icon>
+				<v-icon>mdi-code-braces</v-icon>
+			</template>
+			<template #title>
+				{{ leek.ai.path }}
+			</template>
+			<div class="admin-ai-code">
+				<loader v-if="adminAICode === null" />
+				<lw-code v-else :code="adminAICode" :language="adminAILanguage" />
+			</div>
+		</popup>
+
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="1050">
 			<template #icon>
 				<v-icon>mdi-code-braces</v-icon>
@@ -827,7 +849,7 @@
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { useLiveHistory } from '@/model/use-live-history'
 	import { Line } from 'vue-chartjs'
 	import type { ChartData, ChartOptions } from 'chart.js'
@@ -855,7 +877,7 @@
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
 
 	const leek = ref<Leek | null>(null)
-	const error = ref(false)
+	const notFound = ref(false)
 	const weaponsDialog = ref(false)
 	const draggedWeapon = ref<Weapon | null>(null)
 	const draggedWeaponLocation = ref<string | null>(null)
@@ -875,6 +897,8 @@
 	const levelPopup = ref(false)
 	const levelPopupData = ref<unknown>(null)
 	const aiDialog = ref(false)
+	const adminAIDialog = ref(false)
+	const adminAICode = ref<string | null>(null)
 	const draggedAI = ref<AI | null>(null)
 	const chipsDialog = ref(false)
 	const draggedChip = ref<Chip | null>(null)
@@ -1055,6 +1079,10 @@
 		const msg = message as { leek: number, talent: number }
 		if (leek.value && msg.leek === leek.value.id) {
 			leek.value.talent += msg.talent
+			// Rafraîchit en direct le point d'aujourd'hui du graphe pendant les combats.
+			// On reconstruit chartData (nouvelle référence) : vue-chartjs compare les
+			// références des datasets et ignore une mutation en place.
+			chart()
 		}
 	}
 	const onUpdateLeekXp = (message: unknown) => {
@@ -1097,7 +1125,7 @@
 		// affiché et on swappe atomiquement quand la réponse arrive.
 		tournamentRange.value = null
 		tournamentRangeLoading.value = false
-		error.value = false
+		notFound.value = false
 		const reqId = id.value
 		const method = my_leek.value ? 'leek/get-private/' + id.value : 'leek/get/' + id.value
 		request = LeekWars.get<Leek>(method)
@@ -1133,7 +1161,7 @@
 		}).error(() => {
 			if (reqId !== id.value) return
 			leek.value = null
-			error.value = true
+			notFound.value = true
 		})
 	}
 
@@ -1249,15 +1277,24 @@
 		for (let i = 1; i <= 7; ++i) {
 			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
 		}
+		labels.reverse()
+		labels.push(LeekWars.formatDayMonthShort(time))
+		const data = [...leek.value.talent_history, leek.value.talent]
+		const lastIndex = data.length - 1
 		chartData.value = {
-			labels: labels.reverse(),
+			labels,
 			datasets: [{
 				tension: 0.2,
-				data: leek.value.talent_history,
+				data,
 				borderColor: '#5fad1b',
 				pointBackgroundColor: '#5fad1b',
 				borderWidth: 2,
 				fill: { target: 'origin', above: '#5fad1b30' },
+				// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
+				segment: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
+				},
 			}]
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} as any
@@ -1307,6 +1344,23 @@
 		if (!leek.value) return
 		leek.value.ai = null
 		LeekWars.delete('leek/remove-ai', {leek_id: leek.value.id})
+	}
+
+	// Extension du path (.js/.ts/.py) sinon LeekScript, pour la coloration de l'aperçu admin
+	const adminAILanguage = computed(() => {
+		const m = /\.(js|ts|py)$/.exec(leek.value?.ai?.path || '')
+		return m ? m[1] : 'leekscript'
+	})
+
+	function openAdminAI() {
+		if (!leek.value || !leek.value.ai) return
+		adminAIDialog.value = true
+		adminAICode.value = null
+		LeekWars.post('ai/read-admin', {farmer_id: leek.value.farmer.id, path: leek.value.ai.path}).then((data) => {
+			adminAICode.value = data.code
+		}).error(() => {
+			adminAICode.value = ''
+		})
 	}
 
 	function selectAI(ai: AI) {
@@ -1886,6 +1940,13 @@
 			display: flex;
 			justify-content: center;
 		}
+	}
+	.admin-ai {
+		cursor: pointer;
+	}
+	.admin-ai-code {
+		max-height: calc(100vh - 220px);
+		overflow-y: auto;
 	}
 	.component {
 		display: inline-block;

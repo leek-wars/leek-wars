@@ -6,11 +6,11 @@
 					<template v-if="line.type === 'code'">
 						<!-- <span class="arrow">›</span> -->
 						<v-icon class="arrow">mdi-chevron-right</v-icon>
-						<span v-single-code><code>{{ line.code }}</code></span>
+						<lw-code :code="line.code ?? ''" single :theme="codeThemeClass" :language="language" />
 					</template>
 					<template v-else-if="line.type === 'result'">
 						<div class="line result">
-							<span v-single-code><code>{{ line.result }}</code></span>
+							<lw-code :code="String(line.result ?? '')" single :theme="codeThemeClass" :language="language" />
 							<span class="ops">{{ line.ops }} ops</span>
 						</div>
 					</template>
@@ -20,7 +20,8 @@
 					<template v-else-if="line.type === 'error'">
 						<div class="error">
 							<div v-if="line.location" class="zigzag">{{ line.zigzags }}</div>
-							<div>{{ $t('leekscript.error_' + line.error, line.params ?? [], { escapeParameter: false }) }}</div>
+							<div v-if="line.message">{{ line.message }}</div>
+							<div v-else>{{ $t('leekscript.error_' + line.error, line.params ?? [], { escapeParameter: false }) }}</div>
 						</div>
 						<span v-if="line.ops" class="ops">{{ line.ops }} ops</span>
 					</template>
@@ -44,11 +45,13 @@ import { FileSystem, fileSystem } from '@/model/filesystem'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
+import { getLanguageVersions } from '../editor/file-types'
+import LwCode from './code.vue'
 
-defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco } })
+defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco, 'lw-code': LwCode } })
 
 interface EditorRef {
 	editor: {
@@ -66,9 +69,26 @@ interface ConsoleLine {
 	ops?: number
 	log?: unknown[]
 	error?: string
+	message?: string
 	params?: (string | number)[]
 	location?: number[]
 	zigzags?: string
+}
+
+// Extension de path par langage : pilote la coloration/autocomplétion Monaco (getLanguageForPath)
+// et le langage envoyé au serveur. LeekScript garde la convention historique `.leek`.
+const LANGUAGE_EXT: { [lang: string]: string } = {
+	leekscript: '.leek',
+	javascript: '.js',
+	typescript: '.ts',
+	python: '.py',
+}
+// Jeton de langage attendu par le serveur (PolyglotConsole) : js / ts / python, ou leekscript.
+const SERVER_LANGUAGE: { [lang: string]: string } = {
+	leekscript: 'leekscript',
+	javascript: 'js',
+	typescript: 'ts',
+	python: 'python',
 }
 
 const editorRef = useTemplateRef<EditorRef>('editor')
@@ -77,7 +97,21 @@ const scrollRef = useTemplateRef<HTMLElement>('scroll')
 const lines = ref<ConsoleLine[]>([])
 const history = ref<string[]>([])
 const historyPos = ref(0)
-const ai = ref<AI>(new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' }))
+const language = ref<string>(localStorage.getItem('console/language') || 'leekscript')
+// Un identifiant stable par session : chaque langage a son propre path (donc son modèle Monaco),
+// réutilisé au fil des bascules de langage plutôt que d'accumuler des modèles orphelins.
+const consoleId = Math.random()
+function consolePath(lang: string) {
+	return FileSystem.CONSOLE_MAGIC_KEY + consoleId + (LANGUAGE_EXT[lang] ?? '.leek')
+}
+const ai = ref<AI>(new AI({ id: 0, code: '', path: consolePath(language.value) }))
+// Version sélectionnée pour le langage polyglot courant (pragma). Une seule version par langage
+// aujourd'hui (le runtime l'impose) : purement indicatif, mais mémorisé par langage pour le jour où
+// plusieurs versions coexisteront. Vide pour LeekScript (qui a son propre sélecteur version/strict).
+function defaultVersion(lang: string) {
+	return getLanguageVersions(lang)[0]?.pragma ?? ''
+}
+const languageVersion = ref<string>(localStorage.getItem('console/version/' + language.value) || defaultVersion(language.value))
 const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'monokai' : 'leek-wars'))
 const leekscript = reactive({
 	version: 4,
@@ -111,7 +145,7 @@ function clear() {
 	history.value = []
 	historyPos.value = 0
 	setEditorValue('')
-	LeekWars.socket.send([SocketMessage.CONSOLE_NEW, leekscript.version, leekscript.strict])
+	LeekWars.socket.send([SocketMessage.CONSOLE_NEW, leekscript.version, leekscript.strict, SERVER_LANGUAGE[language.value] ?? 'leekscript'])
 }
 
 function up() {
@@ -190,6 +224,9 @@ function focus() {
 }
 
 const cssTheme = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(theme.value) ? 'monokai' : 'leekwars')
+// Les aperçus des lignes passées suivent le thème PROPRE de la console (pas celui du site,
+// qui peut être clair alors que la console est sombre, et inversement).
+const codeThemeClass = computed(() => 'code-theme-' + theme.value)
 
 function saveTheme() {
 	localStorage.setItem('editor/theme', theme.value)
@@ -205,7 +242,21 @@ watch(() => leekscript.strict, () => {
 	clear()
 })
 
-defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
+// Bascule de langage : nouveau path (donc bascule de la coloration/autocomplétion Monaco via le
+// watcher de props.ai.path dans l'éditeur), puis on repart sur une session REPL neuve.
+watch(language, (lang) => {
+	localStorage.setItem('console/language', lang)
+	languageVersion.value = localStorage.getItem('console/version/' + lang) || defaultVersion(lang)
+	ai.value = new AI({ id: 0, code: '', path: consolePath(lang) })
+	fileSystem.consoleAI = ai.value
+	clear()
+})
+
+watch(languageVersion, (v) => {
+	if (v) localStorage.setItem('console/version/' + language.value, v)
+})
+
+defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript, language, languageVersion })
 </script>
 
 <style lang="scss" scoped>
@@ -346,5 +397,10 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
 .console:deep(code) {
 	border: none;
 	padding: 0;
+	// Les thèmes sombres posent leur propre fond sur le <pre> : inutile ici, la console
+	// a déjà le fond assorti au thème.
+	pre {
+		background: transparent;
+	}
 }
 </style>

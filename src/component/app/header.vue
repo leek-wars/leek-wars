@@ -113,8 +113,8 @@
 								</div>
 							</router-link>
 						</template>
-						{{ $t('main.free_fights') }} : {{ $filters.number($store.state.farmer.fights - $store.state.farmer.bought_fights) }}<br>
-						{{ $t('main.paid_fights') }} : {{ $filters.number($store.state.farmer.bought_fights) }}<template v-if="$store.state.farmer.team_fights"><br>
+						{{ $t('main.free_fights') }} : {{ $filters.number(Math.max(0, $store.state.farmer.fights - $store.state.farmer.bought_fights)) }}<br>
+						{{ $t('main.paid_fights') }} : {{ $filters.number(Math.min($store.state.farmer.fights, $store.state.farmer.bought_fights)) }}<template v-if="$store.state.farmer.team_fights"><br>
 						{{ $t('main.team') }} : {{ $filters.number($store.state.farmer.team_fights) }}</template>
 					</v-tooltip>
 					<router-link v-else to="/garden">

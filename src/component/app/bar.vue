@@ -38,9 +38,11 @@
 				</router-link>
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">
+				<doc-language-selector v-if="onDocumentation" />
 				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
-					<v-icon v-if="action.icon" class="action">{{ action.icon }}</v-icon>
-					<img v-else :src="'/image/' + action.image" class="action">
+					<img v-if="action.image" :src="'/image/' + action.image" class="action">
+					<v-icon v-else-if="action.icon" class="action">{{ action.icon }}</v-icon>
+					<span v-if="action.text" class="action action-text">{{ action.text }}</span>
 				</div>
 			</div>
 		</div>
@@ -51,13 +53,26 @@
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
-import { ref } from 'vue'
+import { emitter } from '@/model/emitter'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 import type { Notification } from '@/model/notification'
 
 defineOptions({ name: 'LwBar' })
 
 const dark = ref(false)
+const route = useRoute()
+
+/**
+ * Le sélecteur de langage n'a de sens que là où on LIT de la documentation. Sur mobile la
+ * barre d'onglets de la page n'existe pas — c'est cette barre d'application qui la remplace —
+ * donc sans ça le sélecteur serait tout simplement absent sur téléphone.
+ */
+const onDocumentation = computed(() => {
+	const path = route.path
+	return path.startsWith('/help/documentation') || path.startsWith('/encyclopedia')
+})
 
 function mainButton() {
 	if (LeekWars.menuExpanded || !LeekWars.splitBack) {
@@ -83,6 +98,19 @@ function readNotification(notification: Notification) {
 </script>
 
 <style lang="scss" scoped>
+	// Le sélecteur n'est pas dans une `.page-bar .tabs`, il ne reçoit donc PAS la mise en forme
+	// d'onglet du site : sans hauteur ni centrage explicites il se calait en haut d'une barre
+	// de 56px. On l'aligne sur les autres actions, qui font toute la hauteur.
+	// `:deep` et non une classe passée au composant : sa racine est un `<v-menu>`, dont
+	// l'héritage d'attributs n'atteint pas l'élément activateur — la classe se perdait en route.
+	.actions :deep(.doc-language-selector) {
+		display: inline-flex;
+		align-items: center;
+		height: 56px;
+		padding: 0 12px;
+		vertical-align: top;
+	}
+
 	.app-bar {
 		position: fixed;
 		top: 0;
@@ -188,6 +216,14 @@ function readNotification(notification: Notification) {
 		height: 56px;
 		opacity: 1;
 		padding: 16px;
+	}
+	.action-text {
+		height: 56px;
+		line-height: 56px;
+		padding: 0 12px;
+		color: white;
+		font-size: 16px;
+		white-space: nowrap;
 	}
 	.app-bar.content .action.list:not(.content),
 	.app-bar.list .action.content:not(.list),

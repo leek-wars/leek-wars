@@ -130,6 +130,7 @@
 				<div class="grades">
 					{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,
 					<span class="moderator">{{ $t('main.grade_moderator') }}</span>,
+					<span class="referent">{{ $t('main.grade_referent') }}</span>,
 					<span class="contributor">{{ $t('main.grade_contributor') }}</span>,
 					<span>{{ $t('main.grade_member') }}</span>
 				</div>
@@ -154,7 +155,7 @@
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { store } from '@/model/store'
 	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { useRouter } from 'vue-router'
 
 	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))

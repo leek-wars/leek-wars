@@ -1,11 +1,16 @@
 <template lang="html">
 	<div v-if="fun" class="doc-function lw" :class="{deprecated: fun.deprecated}">
 		<h2>
-			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">,&nbsp;</span>
-			</span>)
-			<span v-if="fun.return_type != 0">
-				&nbsp;<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span>&nbsp;{{ fun.return_name }}
-			</span>
+			<span v-if="signatureText" class="object-signature">{{ signatureText }}</span>
+			<template v-else>
+				<img v-if="docLanguage !== 'leekscript'" src="/image/language/leekscript.svg"
+					class="leekscript-only" title="LeekScript" alt="LeekScript">
+				{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">,&nbsp;</span>
+				</span>)
+				<span v-if="fun.return_type != 0">
+					&nbsp;<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span>&nbsp;{{ fun.return_name }}
+				</span>
+			</template>
 			<div class="spacer"></div>
 			<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + fun.name" :title="'Encyclopédie > ' + fun.name + '()'">
 				<v-icon class="book">mdi-book-open-page-variant</v-icon>
@@ -24,6 +29,10 @@
 				<h4>{{ s }}</h4>
 				<markdown :content="section" :pages="{}" mode="encyclopedia" />
 			</div>
+			<div v-for="note in sections.notes" :key="note.title" class="language-note">
+				<h4><img :src="'/image/language/' + normalizeDocLanguage(note.title) + '.svg'" :alt="note.title">{{ note.title }}</h4>
+				<markdown :content="note.content" :pages="{}" mode="encyclopedia" />
+			</div>
 			<div class="operations">
 				<i18n-t v-if="fun.complexity == 1" keypath="doc.operations" :plural="fun.operations">
 					<template #o>
@@ -36,9 +45,9 @@
 					</template>
 				</i18n-t>
 			</div>
-			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click.stop="expanded = !expanded">{{ $t('doc.details') }} ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
+			<div v-if="Object.values(sections.others).length" class="expand" @click.stop="expanded = !expanded">{{ $t('doc.details') }} ({{ Object.values(sections.others).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
 			<div v-if="expanded" class="secondary">
-				<div v-for="(section, s) in new_fun.secondary" :key="s">
+				<div v-for="(section, s) in sections.others" :key="s">
 					<h4>{{ s }}</h4>
 					<markdown :content="section" :pages="{}" mode="encyclopedia" />
 				</div>
@@ -78,12 +87,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Markdown from '@/component/encyclopedia/markdown.vue'
 import { FUNCTION_BY_ID } from '@/model/function_by_id'
 import { locale } from '@/locale'
 import type { LSFunction } from '@/model/function'
 import { LeekWars } from '@/model/leekwars'
+import { docLanguage, normalizeDocLanguage, splitLanguageSections } from '@/model/doc-language'
+import { displaySignature } from '@/model/doc-signature'
 
 defineOptions({ name: 'DocumentationFunction' })
 
@@ -92,7 +103,24 @@ const props = defineProps<{
 }>()
 
 const expanded = ref(false)
+
+/**
+ * Signature dans le langage choisi. En LeekScript on garde le rendu plat historique (typé
+ * par le registre serveur) ; en JS/TS/Python on affiche le membre objet, qui est le SEUL nom
+ * appelable dans ces langages — `getLife(entity)` n'y existe tout simplement pas.
+ */
+const signatureText = computed(() => {
+	return displaySignature(props.fun.name, props.fun.return_type, docLanguage.value)
+})
 const new_fun = ref<{ description: string, primary: Record<string, string>, secondary: Record<string, string> } | null>(null)
+
+/**
+ * Le serveur range dans `secondary` tout ce qui n'est pas Paramètres/Retour. Une section
+ * `#### Python` y tombe aussi : on la remonte en note visible quand on lit en Python (elle
+ * corrige ce que la section Retour dit du NaN de LeekScript) et on la cache dans les autres
+ * langages, où elle n'aurait rien à faire, même repliée.
+ */
+const sections = computed(() => splitLanguageSections(new_fun.value?.secondary ?? {}, docLanguage.value))
 
 watch(() => props.fun, () => {
 	LeekWars.documentation(locale).then((functions) => {
@@ -103,6 +131,18 @@ watch(() => props.fun, () => {
 </script>
 
 <style lang="scss" scoped>
+	// Fonction sans équivalent dans l'API objet (alias historiques comme getForce, formes
+	// retirées avant la v4) : on garde la signature plate et on marque qu'elle est
+	// LeekScript-only. Un logo plutôt qu'une phrase : rien à traduire en 17 langues.
+	.leekscript-only {
+		width: 16px;
+		height: 16px;
+		margin-right: 6px;
+		vertical-align: -3px;
+	}
+	.object-signature {
+		white-space: pre-wrap;
+	}
 	h2 {
 		margin-bottom: 12px;
 		font-size: 17px;
@@ -122,6 +162,22 @@ watch(() => props.fun, () => {
 	.argument {
 		color: var(--type-color);
 		font-weight: bold;
+	}
+	.language-note {
+		margin-top: 10px;
+		padding: 2px 10px 6px;
+		border-left: 3px solid var(--primary);
+		background: var(--background-secondary);
+		h4 {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin-top: 6px;
+			img {
+				width: 16px;
+				height: 16px;
+			}
+		}
 	}
 	.operations {
 		padding-top: 8px;

@@ -57,7 +57,7 @@
 						:items="filteredRows"
 						:items-per-page="25"
 						:items-per-page-options="itemsPerPageOptions"
-						:sort-by="[{ key: 'total', order: 'desc' }]"
+						:sort-by="[{ key: 'total', order: 'asc' }]"
 						:row-props="rowProps"
 						density="compact"
 						class="items-table">

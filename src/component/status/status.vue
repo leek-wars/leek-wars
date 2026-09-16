@@ -134,6 +134,10 @@ const lastCheckedLabel = computed(() => {
 	&.ok { background: var(--primary); }
 	&.partial { background: #f0ad4e; }
 	&.down { background: #d9534f; }
+	// Teintes plus sombres en dark : le bandeau est large, les couleurs vives flashent
+	body.dark &.ok { background: #4a8815; }
+	body.dark &.partial { background: #8a5d16; }
+	body.dark &.down { background: #9c3936; }
 }
 .overall-icon {
 	font-size: 42px !important;
@@ -159,10 +163,12 @@ const lastCheckedLabel = computed(() => {
 	gap: 12px;
 	padding: 14px 16px;
 	border-radius: 4px;
-	background: var(--grey-lighter, #f5f5f5);
+	background: var(--background-header);
 	border-left: 4px solid transparent;
 	&.ok { border-left-color: var(--primary); }
 	&.error { border-left-color: #d9534f; }
+	// Rouge légèrement éclairci : un rouge moyen se noie sur fond sombre
+	body.dark &.error { border-left-color: #ef6a66; }
 }
 .service-icon {
 	font-size: 28px !important;
@@ -185,8 +191,9 @@ const lastCheckedLabel = computed(() => {
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
-	background: #999;
+	background: var(--text-color-secondary);
 	.ok & { background: var(--primary); }
 	.error & { background: #d9534f; }
+	body.dark .error & { background: #ef6a66; }
 }
 </style>

@@ -149,7 +149,7 @@
 						<div v-for="item in retrieveItems" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
 							<div class="item" :quantity="item.quantity" :type="LeekWars.items[item.template].type">
 								<img v-if="LeekWars.items[item.template].type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
-								<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item.template].type] + '/' + LeekWars.items[item.template].name.replace('potion_', '').replace('hat_', '').replace('weapon_', '').replace('chip_', '').replace('pomp_', '') + '.png'">
+								<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="itemImageUrl(LeekWars.items[item.template])">
 							</div>
 						</div>
 					</div>
@@ -166,14 +166,14 @@
 
 <script lang="ts" setup>
 	import { mixins, useNamespacedT } from '@/model/i18n'
-	import { type Item, type ItemTemplate, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
+	import { type Item, type ItemTemplate, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, itemImageUrl } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import SchemeImage from '../market/scheme-image.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
@@ -270,6 +270,18 @@
 		tooltipVisible.value = false
 	}
 
+	// Chaque objet affiché est rendu à partir de LeekWars.items[item.template] (rareté,
+	// image, prix) : un template absent des game data — ressource de saison tout juste
+	// droppée, données de jeu pas encore rafraîchies — fait planter la page entière
+	// (#4503). On l'écarte plutôt que de perdre tout l'inventaire.
+	function withKnownTemplate<T extends { template: number }>(items: T[]): T[] {
+		return items.filter(item => {
+			if (item.template in LeekWars.items) return true
+			console.warn('[inventory] template inconnu, objet ignoré :', item.template)
+			return false
+		})
+	}
+
 	const inventory = computed(() => {
 		const inventory = []
 		if (store.state.farmer) {
@@ -285,7 +297,7 @@
 			inventory.push(...store.state.farmer.schemes.map(p => ({type: ItemType.SCHEME, ...p})))
 			inventory.push(...(store.state.farmer.fight_packs || []).map(p => ({type: ItemType.FIGHT_PACK, ...p})))
 		}
-		return inventory
+		return withKnownTemplate(inventory)
 	})
 
 	const filtered_inventory = computed(() => {
@@ -389,6 +401,7 @@
 	}
 
 	const actions = [
+		{icon: 'mdi-trophy-variant-outline', click: () => router.push('/collection')},
 		{icon: 'mdi-bank', click: () => router.push('/bank?ref=inventory_action')},
 		{image: 'icon/market.png', click: () => router.push('/market')},
 	]
@@ -434,7 +447,7 @@
 	}
 
 	function retrieve(items: unknown[]) {
-		const typedItems = items as Item[]
+		const typedItems = withKnownTemplate(items as Item[])
 		if (typedItems.length) {
 			retrieveDialog.value = true
 			retrieveItems.value = typedItems

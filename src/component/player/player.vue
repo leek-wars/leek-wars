@@ -250,6 +250,7 @@
 	import { Fight, FightMap, FightType, Report } from '@/model/fight'
 	import { loadLocalizedMessages, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import type { ApiError } from '@/model/api-error'
 	import { SocketMessage } from '@/model/socket'
 	import { Game } from './game/game'
 	import type { FightEntity } from './game/entity'
@@ -258,7 +259,7 @@
 	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: 'Player', i18n: {}, mixins: [...mixins], components: { Hud, 'lw-title': LwTitle } })
 
@@ -514,7 +515,7 @@
 		else if (k === 70) { toggleFullscreen(); e.preventDefault() }
 		else if (k === 86) { game.value.sound = !game.value.sound; e.preventDefault() }
 		else if (k === 77) { game.value.clearMarks(); e.preventDefault() }
-		else if (k === 88 && !game.value.creator) {
+		else if (k === 88 && !game.value.creator && store.state.farmer && store.state.farmer.admin) {
 			game.value.map.seed = Math.random() * 10000000 | 0
 			game.value.mapLoaded()
 			e.preventDefault()
@@ -638,7 +639,11 @@
 				}).error((err) => {
 					if (destroyed) return
 					request = null
-					error.value = err
+					// L'API répond un code nu (fight_not_found, fight_with_secret_trophy) que
+					// LeekWars.get enveloppe en {error}. Le template compare le code : sans cette
+					// extraction, un combat à trophée secret affichait « erreur à la génération ».
+					// Un throw de fightLoaded arrive aussi ici (Error sans .error) → message générique.
+					error.value = (err as ApiError | null)?.error ?? true
 				})
 			}
 		}

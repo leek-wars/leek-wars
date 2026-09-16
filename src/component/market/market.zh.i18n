@@ -39,6 +39,7 @@
 	"potion_selled": "药水卖了！",
 	"price": "价格",
 	"resell": "转售",
+	"scheme_required": "您没有该方案",
 	"sell": "卖",
 	"summon_available_chips": "配备芯片",
 	"summon_characteristics": "特征",

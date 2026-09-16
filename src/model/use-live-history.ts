@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
 import type { Fight } from '@/model/fight'

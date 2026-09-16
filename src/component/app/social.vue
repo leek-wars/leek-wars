@@ -58,7 +58,7 @@ import Conversation from '@/component/messages/conversation.vue'
 import { LeekWars } from '@/model/leekwars'
 import type { Notification } from '@/model/notification'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { defineAsyncComponent, nextTick, ref } from 'vue'
 
 const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))

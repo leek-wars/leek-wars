@@ -195,7 +195,7 @@
 				</div>
 				<div v-if="currentMap" class="column map-column">
 					<div class="title name"></div>
-					<div class="map" oncontextmenu="return false;">
+					<div class="map" @contextmenu.prevent>
 						<div class="map-wrapper">
 							<div v-for="(line, l) of map" :key="l" class="line">
 								<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.cell in currentMap.data.obstacles, team1: currentMap.data.team1.indexOf(cell.cell) !== -1, team2: currentMap.data.team2.indexOf(cell.cell) !== -1}" class="cell" @mousedown="cellMouseDown($event, cell)" @mouseenter="cellMouseEnter($event, cell)" @mouseup="cellMouseUp" @dragstart="cellDragStart"></span>
@@ -395,7 +395,7 @@
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
@@ -698,6 +698,25 @@
 	function selectLeek(leek: Leek) {
 		currentLeek.value = leek
 		localStorage.setItem('editor/leek', '' + leek.id)
+	}
+
+	function selectLeekById(id: number) {
+		const leek = leeks.value.find(l => l.id === id)
+		if (leek) selectLeek(leek)
+		return leek !== undefined
+	}
+
+	// Sélection demandée depuis /editor#leek-<id> (copie d'un poireau en poireau de
+	// test) alors que la liste n'est pas encore chargée : appliquée à la fin de load().
+	let pendingLeekSelection: number | null = null
+
+	function openLeek(id: number) {
+		currentTab.value = 'leeks'
+		if (initialized.value) {
+			selectLeekById(id)
+		} else {
+			pendingLeekSelection = id
+		}
 	}
 
 	type ScenarioPersistData = Partial<Pick<TestScenario, 'type' | 'map' | 'seed' | 'max_turns' | 'turret_ai_team1' | 'turret_ai_team2'>> & { ai: string }
@@ -1254,11 +1273,10 @@
 					leek.real = false
 					leek.ai = null
 				}
-				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
-				if (startLeekID && startLeekID in leeks.value) {
-					const found = leeks.value.find(l => l.id === startLeekID)
-					if (found) selectLeek(found)
-				} else if (leeks.value.length) {
+				// Le poireau demandé par openLeek() prime sur le dernier poireau utilisé.
+				const startLeekID = pendingLeekSelection ?? parseInt(localStorage.getItem('editor/leek') || '', 10)
+				pendingLeekSelection = null
+				if (!selectLeekById(startLeekID) && leeks.value.length) {
 					selectLeek(leeks.value[0])
 				}
 
@@ -1330,7 +1348,7 @@
 		}
 	}
 
-	defineExpose({ onAIDeleted })
+	defineExpose({ onAIDeleted, openLeek })
 </script>
 
 
@@ -1436,6 +1454,10 @@
 		gap: 9px;
 		.name {
 			flex: 1;
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.v-icon {
 			font-size: 20px;
@@ -1612,10 +1634,7 @@
 		color: white;
 		border-radius: 4px;
 		padding: 0 4px;
-		margin-left: 5px;
-		position: absolute;
-		right: 7px;
-		top: 8px;
+		flex-shrink: 0;
 	}
 	.popup.mobile .leek-column {
 		width: auto;

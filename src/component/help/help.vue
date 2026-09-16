@@ -102,7 +102,7 @@
 			</panel>
 
 		</div>
-		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
+		<Didactitiel v-if="didactitiel_enabled" v-model="didactitiel_open" />
 	</div>
 </template>
 
@@ -121,7 +121,7 @@ const t = useNamespacedT('help')
 const router = useRouter()
 
 const advanced = ref(false)
-const didactitiel = ref(false)
+const didactitiel_open = ref(false)
 const didactitiel_enabled = ref(false)
 
 onBeforeMount(() => {
@@ -132,7 +132,7 @@ onBeforeMount(() => {
 function show_didactitiel() {
 	didactitiel_enabled.value = true
 	nextTick(() => {
-		didactitiel.value = true
+		didactitiel_open.value = true
 	})
 }
 </script>

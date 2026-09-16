@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, getCurrentInstance, type App } from 'vue'
 import { store } from '@/model/store'
-import { createSubApp } from '@/model/vue'
+import { createSubApp } from '@/model/sub-app'
 import Pseudo from '../app/pseudo.vue'
 import type { ChatMessage } from '@/model/chat'
 import Loader from '@/component/app/loader.vue'

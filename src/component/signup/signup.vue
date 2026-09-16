@@ -58,9 +58,8 @@
 							<div>
 								<div class="title">{{ t('default_language') }}</div>
 								<div class="languages">
-									<div v-for="l in AI_LANGUAGES" :key="l.id" class="language" :class="{selected: aiLanguage === l.id}" @click="aiLanguage = l.id">
-										<img :src="l.logo">
-										<span>{{ l.label }}</span>
+									<div v-for="l in AI_LANGUAGES" :key="l.id" class="language" :class="{selected: aiLanguage === l.id}" :title="l.label" @click="aiLanguage = l.id">
+										<img :src="l.logo" :alt="l.label">
 									</div>
 								</div>
 							</div>
@@ -389,12 +388,13 @@
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import Avatar from '@/component/avatar.vue'
 	import { locale } from '@/locale'
+	import { apiErrorKey, apiFieldMessages } from '@/model/api-error'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { AI_LANGUAGES } from '@/component/editor/file-types'
 	import { RankingLeekRow, RankingFarmerRow, RankingTeamRow } from '@/model/ranking'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { getRedirectAfterLogin } from '@/router'
 	import { defineAsyncComponent, ref } from 'vue'
 	import { useI18n } from 'vue-i18n'
@@ -545,10 +545,11 @@
 				localStorage.setItem('login-attempt', 'true')
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(errs => {
-			for (const error of (errs as unknown as [number, string, (string | number)[]][])) {
-				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-				addError(form, t('error_' + error[1], error[2]) as string)
+		}).error(error => {
+			if (error.fields) {
+				for (const [field, message] of apiFieldMessages(error, t)) addError(field, message)
+			} else {
+				LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 			}
 		})
 		return false
@@ -970,16 +971,14 @@
 		.language {
 			display: flex;
 			align-items: center;
-			gap: 6px;
-			padding: 5px 10px;
+			padding: 6px 8px;
 			border: 2px solid transparent;
 			border-radius: 6px;
 			background: rgba(0, 0, 0, 0.05);
 			cursor: pointer;
-			font-size: 13px;
 			img {
-				width: 18px;
-				height: 18px;
+				width: 24px;
+				height: 24px;
 			}
 			&.selected {
 				border-color: #5FAD1B;

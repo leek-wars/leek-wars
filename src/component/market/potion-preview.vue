@@ -54,7 +54,7 @@ import type { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import { PotionEffect, PotionTemplate } from '@/model/potion'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed } from 'vue'
 
 defineOptions({
