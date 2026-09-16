@@ -132,8 +132,6 @@ class Leek extends FightEntity {
 	public kill(animation: boolean, damageType: DamageType, dx: number, dy: number) {
 		super.kill(animation, damageType, dx, dy)
 
-		// console.log("kill", "dx", dx, "dy", dy)
-
 		if (animation) {
 			// Throw hat
 			if (this.hat && damageType === DamageType.DEFAULT) {

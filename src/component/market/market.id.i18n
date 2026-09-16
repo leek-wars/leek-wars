@@ -39,6 +39,7 @@
 	"potion_selled": "Ramuan terjual!",
 	"price": "Harga",
 	"resell": "Jual kembali",
+	"scheme_required": "Anda belum memiliki diagram",
 	"sell": "Jual",
 	"summon_available_chips": "Dilengkapi chip",
 	"summon_characteristics": "Fitur",

@@ -69,6 +69,7 @@ import { cspNonce } from '@/component/editor/monaco-csp'
 import BankProduct from './bank-product.vue'
 import Breadcrumb from '@/component/forum/breadcrumb.vue'
 import { store } from '@/model/store'
+import { logger } from '@/utils/logger'
 
 defineOptions({ name: 'Bank', i18n: {}, mixins: [...mixins] })
 
@@ -219,11 +220,11 @@ function loadPayPal() {
 			},
 			onError: (err) => {
 				LeekWars.post('bank/track-payment-abort', { order_id: '', reason: 'error' })
-				console.error('PayPal button error', err)
+				logger.error('PayPal button error', err)
 			}
 		}).render('#paypal-button-container')
 	}).catch((err) => {
-		console.error('failed to load the PayPal JS SDK script', err)
+		logger.error('failed to load the PayPal JS SDK script', err)
 	})
 }
 

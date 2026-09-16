@@ -9,6 +9,7 @@
 	"change_password": "Cambia la contraseña",
 	"confirm_password": "Confirmación",
 	"delete_account": "Eliminar su cuenta",
+	"export_data": "Exportar mis datos",
 	"delete_cancel": "Anular",
 	"delete_confirm": "Borrar cuenta",
 	"delete_confirmation": "Confirmación",
@@ -21,12 +22,15 @@
 	"delete_password": "Contraseña",
 	"delete_success": "Eliminación exitosa",
 	"delete_success_message": "Tu cuenta ha sido eliminada, serás redirigido en unos segundos, ¡nos vemos pronto en Leek Wars!",
+	"delete_team_dissolve": "Eres el creador y el único miembro del equipo {0}: el equipo se disolverá al eliminar tu cuenta.",
+	"delete_team_transfer": "Eres el creador del equipo {0}: al eliminar tu cuenta, el equipo pasará al miembro más antiguo.",
 	"discrete_mode": "Modo discreto",
 	"empty": "Vacío",
 	"empty_localstorage": "Vaciar el almacenamiento local",
 	"error_not_same_password": "Las dos contraseñas ingresadas deben ser idénticas",
 	"error_password_length": "La contraseña debe contener entre {0} y {1} caracteres",
 	"error_wrong_password": "La contraseña es incorrecta",
+	"error_too_many_requests": "Demasiadas solicitudes, inténtalo de nuevo en unos minutos",
 	"error_forbidden_name": "Este nombre está prohibido",
 	"error_invalid_godfather": "Este jugador no existe",
 	"error_invalid_length": "La contraseña debe contener entre {0} y {1} caracteres",
@@ -75,5 +79,6 @@
 	"auto": "Auto",
 	"theme": "Tema",
 	"modern_theme": "Tema moderno (beta)",
-	"xp_theme": "Tema XP"
+	"xp_theme": "Tema XP",
+	"purchase_history": "Historial de compras"
 }

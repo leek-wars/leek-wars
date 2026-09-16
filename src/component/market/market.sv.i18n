@@ -39,6 +39,7 @@
 	"potion_selled": "Potion såld!",
 	"price": "Pris",
 	"resell": "Återförsälja",
+	"scheme_required": "Du äger inte diagrammet",
 	"sell": "Sälja",
 	"summon_available_chips": "Utrustade chips",
 	"summon_characteristics": "Funktioner",

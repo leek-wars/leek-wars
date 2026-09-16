@@ -19,5 +19,6 @@
 	"referencing_translations": "Länkade översättningar",
 	"linked_from": "Sidor som innehåller en länk",
 	"n_references": "referens | referens | referenser",
-	"views": "visningar"
+	"views": "visningar",
+	"quiz_locked": "Slutför kapitel {0} först för att svara på detta quiz."
 }

@@ -609,6 +609,173 @@ export class Scythe extends WhiteWeaponAnimation {
 	}
 }
 
+class DesertSaber extends WhiteWeaponAnimation {
+	static textures = [T.slash, T.desert_saber]
+	static sounds = [S.sword]
+	constructor(game: Game) {
+		super(game, T.desert_saber, 41)
+	}
+}
+
+/**
+ * Lance du soleil : arme blanche qui embroche toute une ligne (1 à 3 cases), d'où la zone
+ * surlignée comme celle d'un laser en plus du mouvement d'arme blanche.
+ */
+class SunSpear extends WhiteWeaponAnimation {
+	/** Inclinaison de port, pointe levée, quand la lance n'est pas en train de piquer. */
+	static REST_TILT = Math.PI / 4
+	/**
+	 * Vu de face, c'est-à-dire en visant vers le bas de l'écran, le poireau ne remonte pas ses
+	 * mains des 10 px qu'il prend de dos : la lance passe alors au-dessus de la ligne visée.
+	 */
+	static FRONT_DROP = 32
+	/**
+	 * Recul en armant, puis allonge du coup, tous deux le long de l'axe de la lance.
+	 * L'allonge maximale en bout de détente vaut REACH - PULL_BACK / 2.
+	 */
+	static PULL_BACK = 60
+	static REACH = 110
+	/**
+	 * centerX/centerZ/x/z de WeaponsData sont réglés pour l'aperçu statique, où leek-image
+	 * tourne le sprite autour du centre de sa boîte englobante (transform-box: fill-box),
+	 * ce qui affiche la hampe bien sous le pivot. En combat le pivot est la prise
+	 * elle-même : hauteur de port figée ici (GRIP_*), et point de tenue sur la hampe
+	 * dérivé des mains (hand1/2, partagées avec le statique) dans le constructeur —
+	 * le poireau tient la lance là où ses mains sont dessinées, comme en statique.
+	 */
+	static GRIP_X = 40
+	static GRIP_Z = 62
+	/**
+	 * Frames jusqu'au bout de course de la pointe : mise en garde (1 / 0.05 = 20)
+	 * + demi-détente (0.5 / 0.09 ≈ 6). Le log avance à l'IMPACT — les dégâts
+	 * s'affichent quand le fer touche, comme le moteur les applique (dégâts PUIS
+	 * repoussée) — pendant que retrait et glissement se finissent en roue libre.
+	 */
+	static IMPACT_DELAY = 26
+	static textures = [T.sun_spear]
+	static sounds = [S.sword]
+
+	/** Décalage courant le long de l'axe de la lance : négatif = armé, positif = transperce. */
+	public thrust = 0
+	/** 0 = portée pointe levée, 1 = mise en ligne avec la cible visée. */
+	public aim = 0
+	/** Trois temps : mise en garde, piqué, puis retour au port une fois la lance dégagée. */
+	public steps = 3
+	/** Cibles embrochées en cours de repoussée (EFFECT_REPEL) : glissement visuel pendant le retrait. */
+	private repels: { entity: FightEntity, cell: Cell, sx: number, sy: number, ex: number, ey: number }[] = []
+
+	constructor(game: Game) {
+		super(game, T.sun_spear, 42)
+		this.cx = SunSpear.GRIP_X
+		this.cz = SunSpear.GRIP_Z
+		this.x = -(this.mx1 + this.mx2) / 2
+		this.z = -(this.mz1 + this.mz2) / 2
+	}
+
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
+		super.shoot(leekX, leekY, handPos, angle, orientation, pos, targets, caster, cell, scale)
+		this.repels = []
+		const template = LeekWars.weapons[LeekWars.items[this.id].params]
+		if (caster.cell && cell) {
+			const dx = Math.sign(cell.x - caster.cell.x)
+			const dy = Math.sign(cell.y - caster.cell.y)
+			if (dx !== 0 || dy !== 0) {
+				const cells = [] as Cell[]
+				let current = this.game.ground.field.next_cell(caster.cell, dx, dy)
+				for (let r = 0; r < template.max_range; ++r) {
+					if (!current || current.obstacle) { break }
+					cells.push(current)
+					current = this.game.ground.field.next_cell(current, dx, dy)
+				}
+				if (cells.length) {
+					this.game.setEffectAreaLaser(cells, '#ffb029', dx, dy, SunSpear.IMPACT_DELAY + 60)
+				}
+			}
+			// Rejoue l'EFFECT_REPEL du serveur : cellules logiques à jour dès maintenant
+			// (le log de combat n'a pas d'action de déplacement), le visuel glisse pendant
+			// la détente puis est scellé par setCell en fin de piqué.
+			for (const move of this.game.applyWeaponRepel(caster, cell, template, caster.lastCritical)) {
+				const xy = this.game.ground.field.cellToXY(move.cell)
+				const pixels = this.game.ground.xyToXYPixels(xy.x, xy.y)
+				this.repels.push({ entity: move.entity, cell: move.cell, sx: move.entity.ox, sy: move.entity.oy, ex: pixels.x, ey: pixels.y })
+			}
+		}
+		return SunSpear.IMPACT_DELAY
+	}
+
+	/**
+	 * Estoc : la lance descend de sa position de port jusque dans l'axe de la cible tout en
+	 * reculant, puis part d'un coup en avant et revient. Pas de rotation pendant la détente,
+	 * donc pas d'entaille : elle transperce tout ce qui est sur la ligne.
+	 */
+	public update(dt: number): void {
+		if (this.inte >= 1) { return }
+		if (this.step === 1) {
+			// Mise en garde : la pointe s'abaisse vers la cible pendant que la lance recule.
+			this.inte += dt * 0.05
+			const i = Math.min(1, this.inte)
+			this.aim = i
+			this.thrust = -SunSpear.PULL_BACK * i
+		} else if (this.step === 2) {
+			// Détente : la lance reste dans l'axe, elle transperce puis se retire.
+			this.inte += dt * 0.09
+			const i = Math.min(1, this.inte)
+			this.aim = 1
+			this.thrust = -SunSpear.PULL_BACK * (1 - i) + SunSpear.REACH * Math.sin(i * Math.PI)
+			// La pointe est en bout de course à mi-détente : les cibles embrochées
+			// glissent alors vers leur cellule de repoussée pendant le retrait du fer.
+			// Le log avance à l'impact, donc les dégâts tombent PENDANT ce retrait :
+			// une cible tuée ne glisse plus (le moteur ne repousse pas les morts).
+			const slide = Math.max(0, (i - 0.5) * 2)
+			for (const repel of this.repels) {
+				if (repel.entity.dead) { continue }
+				repel.entity.ox = repel.sx + (repel.ex - repel.sx) * slide
+				repel.entity.oy = repel.sy + (repel.ey - repel.sy) * slide
+			}
+		} else {
+			// La lance est dégagée : seulement maintenant on relève la pointe.
+			this.inte += dt * 0.08
+			this.aim = 1 - Math.min(1, this.inte)
+			this.thrust = 0
+		}
+		if (this.inte >= 1) {
+			this.step++
+			if (this.step === 2) {
+				S.sword.play(this.game)
+			}
+			if (this.step === 3) {
+				// Lance dégagée : positions visuelles scellées sur les cellules logiques.
+				for (const repel of this.repels) {
+					if (repel.entity.dead) { continue }
+					repel.entity.setCell(repel.cell)
+				}
+				this.repels = []
+			}
+			if (this.step <= this.steps) {
+				this.inte = 0.001
+			} else {
+				// Pas d'actionDone ici : le log a déjà avancé à l'impact (IMPACT_DELAY),
+				// le retrait et le relevé de pointe se finissent en roue libre.
+				this.step = 0
+				this.inte = 1
+				this.thrust = 0
+				this.aim = 0
+			}
+		}
+	}
+
+	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, front: boolean = true): void {
+		// Contrairement à une épée, la lance pivote DANS la main : on tourne autour du point de
+		// tenue, puis on la place le long de son propre axe. Faire l'inverse (le tourner-déplacer
+		// des armes blanches) reculerait la prise vers le bas de l'écran au lieu de la hampe.
+		// Le repère reçu est déjà orienté vers la cible par le poireau, donc pointe levée de
+		// REST_TILT au repos, et parfaitement dans l'axe une fois en garde.
+		ctx.rotate(-SunSpear.REST_TILT * (1 - this.aim))
+		ctx.translate(this.x + this.thrust, this.z + (front ? SunSpear.FRONT_DROP : 0))
+		ctx.drawImage(texture, 0, 0, this.w, this.h)
+	}
+}
+
 class Laser extends LaserWeapon {
 	static textures = [T.laser, T.laser_bullet, T.cart_laser]
 	static sounds = [S.laser]
@@ -1022,4 +1189,4 @@ class QuantumRifle extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, PlutoniumBazooka, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword, QuantumRifle }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, DesertSaber, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, PlutoniumBazooka, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer, Sword, HeavySword, QuantumRifle, SunSpear }

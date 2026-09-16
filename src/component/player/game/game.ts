@@ -2,6 +2,8 @@
 import Player from '@/component/player/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
+import { getPreSummonMultipliers, unmultiplyStats } from '@/component/player/game/colossus'
+import { playAudio } from '@/model/audio'
 import { Farmer } from '@/model/farmer'
 import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, effectRecipients, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Exasperation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
@@ -11,22 +13,24 @@ import { Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, J
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
-import { T, Texture } from '@/component/player/game/texture'
-import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, PlutoniumBazooka, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
+import { loadDrawableImage, T, Texture } from '@/component/player/game/texture'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, DesertSaber, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, PlutoniumBazooka, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, SunSpear, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { CHIPS } from '@/model/chips'
-import { EffectType, EntityEffect, State } from '@/model/effect'
+import { EffectType, EntityEffect, repelDistance, State } from '@/model/effect'
 import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
+import { WeaponTemplate } from '@/model/weapon'
 
 import { Chest } from './chest'
 import { Mob } from './mob'
 import { Turret } from './turret'
+import { logger } from '@/utils/logger'
 
 /** Anything the game loop can draw on a canvas row */
 interface Drawable {
@@ -200,6 +204,34 @@ export const WEAPONS = [
 	Excalibur, // 38
 	Scythe, // 39
 	QuantumRifle, // 40
+	DesertSaber, // 41
+	SunSpear, // 42
+]
+
+// Icône affichée sous le nom de l'entité pour un effet d'arme, indexée par template.
+// À tenir à jour en même temps que WEAPONS : une arme oubliée ici s'affiche sans
+// icône dans la liste d'effets. Deux entrées ne sont pas l'image de l'arme mais celle
+// de l'effet qu'elle pose : flamme (Lance-flammes) et gaz_icon (Gazeur).
+export const WEAPON_EFFECT_IMAGES: (string | null)[] = [
+	"pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
+	"lightninger",
+	"plutonium_bazooka", // 26
+	"neutrino", // 27
+	null, // 28
+	"bazooka", // 29
+	null, // 30
+	null, // 31
+	"dark_katana", // 32
+	"enhanced_lightninger", // 33
+	"unstable_destroyer", // 34
+	"sword", // 35
+	"heavy_sword", // 36
+	"odachi", // 37
+	"excalibur", // 38
+	"scythe", // 39
+	"quantum_rifle", // 40
+	"desert_saber", // 41
+	"sun_spear", // 42
 ]
 
 export const CHIP_ANIMATIONS = [
@@ -470,7 +502,7 @@ class Game {
 	public init(fight: Fight) {
 
 		if (this.initialized) {
-			console.warn("Déjà initialisé !")
+			logger.warn("Déjà initialisé !")
 			return
 		}
 
@@ -480,7 +512,7 @@ class Game {
 
 		// Check data
 		if (this.data == null) {
-			console.warn("Fight is null...")
+			logger.warn("Fight is null...")
 			this.setError()
 			return
 		}
@@ -506,7 +538,6 @@ class Game {
 			const o = this.obstacles[i]
 			if (this.data.map.id) { // Map fixe
 				const info = OBSTACLES[o as unknown as number]
-				// console.log("add obstacle", o, info)
 				const obstacle = new Obstacle(this, info.geometry, this.ground.field.cells[parseInt(i, 10)], info!)
 				obstacle.resize()
 				this.ground.addObstacle(obstacle)
@@ -514,7 +545,6 @@ class Game {
 				const _type = o instanceof Array ? o[0] : -2
 				const size = o instanceof Array ? o[1] : o // Before the obstacle was an array [type, size]
 				if (size !== -1) {
-					// console.log({ type, size })
 					const types = size === 2 ? this.map.options.largeObstacles.length : this.map.options.smallObstacles.length
 					const realType = this.map.random.next() * types | 0
 					const info = size === 1 ? this.map.options.smallObstacles[realType] : this.map.options.largeObstacles[realType]
@@ -527,8 +557,15 @@ class Game {
 
 		// Add entities
 		const entities = this.data.leeks
+		const preSummonMultipliers = getPreSummonMultipliers(entities, this.data.actions)
 
-		for (const e of entities) {
+		for (const raw of entities) {
+
+			// Le snapshot d'une invocation figé APRÈS son multiplicateur de Colosse
+			// contient déjà les stats multipliées : on les ramène à la base, l'action
+			// d'effet rejouée juste après se charge de les multiplier (cf.
+			// getPreSummonMultipliers).
+			const e = raw.id in preSummonMultipliers ? unmultiplyStats(raw, preSummonMultipliers[raw.id]) : raw
 
 			const type = typeof(e.type) === 'undefined' ? EntityType.LEEK : e.type
 
@@ -557,6 +594,7 @@ class Game {
 			entity.displayLife = e.life
 			entity.maxLife = entity.life
 			entity.initialMaxLife = entity.maxLife
+			entity.baseLife = entity.maxLife
 
 			// Strength
 			entity.strength = 0
@@ -719,12 +757,17 @@ class Game {
 		this.actions = this.data.actions.map(a => new Action(a))
 		this.currentAction = 0
 
-		// Check first action
-		// if (this.actions.length === 0 || this.actions[0].type !== ActionType.START_FIGHT) {
-		// 	console.warn("Error ! no action START_FIGHT")
-		// 	this.setError()
-		// 	return
-		// }
+		// Le générateur peut émettre des effets initiaux (états permanents des
+		// tourelles, cf. Turret.java) AVANT l'action START_FIGHT. Or le player
+		// suppose que actions[0] est le START_FIGHT et ne la passe jamais à
+		// doAction (lecture normale comme jump démarrent à l'index 1) : le
+		// premier effet du préambule était perdu (tourelle sans état STATIC →
+		// swap visuel par Inversion puis tourelle invisible, #4408). On remonte
+		// le START_FIGHT en tête pour que le préambule soit réellement exécuté.
+		const startFight = this.actions.findIndex(a => a.type === ActionType.START_FIGHT)
+		if (startFight > 0) {
+			this.actions.unshift(...this.actions.splice(startFight, 1))
+		}
 		this.log(this.actions[0])
 
 		// Get the relative position of the turns in the actions
@@ -767,9 +810,6 @@ class Game {
 					break
 			}
 		}
-		// console.log("used chips", chipsUsed)
-		// console.log("weapons taken", weaponsTaken)
-		// console.log("weapons used", weaponsUsed)
 
 		// Load common textures
 		T.tp.load(this)
@@ -815,8 +855,6 @@ class Game {
 		for (const sound of Fish.sounds) {
 			sounds.add(sound)
 		}
-		// console.log("textures to load", textures)
-		// console.log("sounds to load", sounds)
 		for (const texture of textures) {
 			texture.load(this)
 		}
@@ -877,7 +915,6 @@ class Game {
 			}
 		}
 
-		// console.log(this.leeks)
 		for (const leek of this.leeks) {
 			this.states[leek.id] = {
 				absoluteShield: 0,
@@ -1140,7 +1177,7 @@ class Game {
 			}
 			for (const sound of this.activeSounds) {
 				if (sound !== this.atmosphere) {
-					sound.sound.play()
+					playAudio(sound.sound)
 				}
 			}
 			this.paused = false
@@ -1298,7 +1335,6 @@ class Game {
 					}
 				}
 				if (chip === 89) { // boxing glove
-					// console.log("glove", cell.id, "targets=" + targets.length)
 					if (targets.length && !targets[0].states.has(State.STATIC)) {
 						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell, targets[0])
 						realCell.setEntity(targets[0])
@@ -1352,6 +1388,7 @@ class Game {
 			const leek = this.leeks[this.currentPlayer!] as Leek
 			const weapon_template = LeekWars.weapons[LeekWars.items[leek.weapon!.id].params]
 			leek.lastDamageType = leek.weapon!.damageType
+			leek.lastCritical = result === 2
 			action.entity = leek
 			action.item = weapon_template
 			this.log(action)
@@ -1361,11 +1398,15 @@ class Game {
 			}
 
 			if (this.jumping) {
+				// Le log n'a pas d'action de déplacement pour les effets de mouvement :
+				// on rejoue l'EFFECT_REPEL (lance du soleil), comme le grappin et le
+				// gant de boxe plus haut côté puces. La resynchro visuelle de fin de
+				// saut lit les cellules logiques mises à jour ici.
+				this.applyWeaponRepel(leek, cell, weapon_template, result === 2)
 				this.actionDone()
 				break
 			}
 
-			// console.log(leek.weapon, weapon_template)
 			const targets = this.ground.field.getTargets(cell, weapon_template.area, leek.cell!, weapon_template.max_range, weapon_template.min_range) as FightEntity[]
 
 			const duration = leek.useWeapon(cell, targets, result)
@@ -1448,7 +1489,6 @@ class Game {
 					const angle = Math.atan2(dy, dx)
 					const ndx = Math.cos(angle)
 					const ndy = Math.sin(angle)
-					// console.log("dx", dx, "dy", dy, "angle", angle, "ndx", ndx, "ndy", ndy)
 					entity.kill(true, killer.lastDamageType, ndx, ndy) // Animation
 				} else {
 					entity.kill(true, DamageType.DEFAULT, 0, 0) // Animation
@@ -1651,7 +1691,7 @@ class Game {
 			break
 		}
 		default: {
-			console.warn("Erreur : action inconnue", action)
+			logger.warn("Erreur : action inconnue", action)
 			this.actionDone()
 		}
 		}
@@ -1667,7 +1707,12 @@ class Game {
 
 		const effect = this.effects[id]
 		if (effect) {
-			effect.value += value
+			// La valeur d'un effet d'état est un identifiant d'état, pas une quantité :
+			// l'additionner donnait un état inexistant (invincible + invincible = 6).
+			// Corrigé côté générateur, mais les combats déjà enregistrés le contiennent.
+			if (effect.type !== EffectType.ADD_STATE) {
+				effect.value += value
+			}
 			const leek = this.leeks[effect.target]
 			this.updateCharacteristics(leek, effect.type, value)
 
@@ -1677,8 +1722,6 @@ class Game {
 	}
 
 	public addEffect(action: Action, stacked: boolean) {
-
-		// console.log("addEffect", action, stacked)
 
 		const item = action.params[1]
 		const id = action.params[2]
@@ -1712,26 +1755,15 @@ class Game {
 				image = LeekWars.STATIC + "image/chip/" + CHIPS[item].name + ".png"
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
-					const template = LeekWars.items[item].params
-					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
-					"lightninger",
-					"plutonium_bazooka", // 26
-					"neutrino", // 27
-					null, // 28
-					"bazooka", // 29
-					null, // 30
-					null, // 31
-					"dark_katana", // 32
-					"enhanced_lightninger", // 33
-					"unstable_destroyer", // 34
-					"sword", // 35
-					"heavy_sword", // 36
-					"odachi", // 37
-					"excalibur", // 38
-					"scythe", // 39
-
-				][template - 1]
-					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
+					// params arrive en chaîne depuis l'API ("41") : sans Number(), les
+					// comparaisons strictes ci-dessous ne matchaient jamais.
+					const template = Number(LeekWars.items[item].params)
+					const img = WEAPON_EFFECT_IMAGES[template - 1]
+					// Le tableau s'arrête aux armes connues du client : le serveur peut
+					// être déployé avant lui et envoyer un template plus récent.
+					if (img) {
+						image = LeekWars.STATIC + "image/weapon/" + img + ".png"
+					}
 					// Gestion des états du poireau
 					if (template === 8) {
 						leek.burn()
@@ -1740,8 +1772,9 @@ class Game {
 					}
 				}
 			}
-			const texture = new Image()
-			texture.src = image
+			// Une icône absente du serveur laisserait l'Image dans l'état « broken »,
+			// où drawImage lève InvalidStateError et casse le rendu (#11819723).
+			const texture = loadDrawableImage(image)
 
 			// Ajout de l'effet
 			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture, modifiers }
@@ -1844,7 +1877,10 @@ class Game {
 				if (leek.mp) leek.buffMP(leek.mp * factor, this.jumping)
 				// Mirror server EffectMultiplyStats.apply: additive on maxLife so erosion is preserved.
 				// First apply adds (factor-1)*lifeBase; replacement adds 1*lifeBase.
-				const lifeBase = leek.initialMaxLife
+				// lifeBase = vie de base du serveur, donc baseLife et non initialMaxLife :
+				// cette dernière est divisée par 1.2 sur une invocation critique (taille
+				// d'affichage), ce qui sous-évaluait le bonus des bulbes critiques du Colosse.
+				const lifeBase = leek.baseLife
 				const lifeDelta = leek.maxLife <= lifeBase ? lifeBase * factor : lifeBase
 				const ratio = leek.maxLife > 0 ? leek.life / leek.maxLife : 1
 				leek.winMaxLife(lifeDelta, this.jumping)
@@ -2042,6 +2078,11 @@ class Game {
 			leek.power += delta
 			break
 		}
+		// La valeur d'un effet d'état est un identifiant d'état, pas une quantité : la
+		// réduire donnait un autre état (Libération à -40 % sur Stérile : 12 → 7, l'état
+		// magnétisé, sans icône). Corrigé côté générateur, mais les combats déjà
+		// enregistrés portent la valeur mise à l'échelle.
+		if (effect.type === EffectType.ADD_STATE) { return }
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
 
@@ -2112,7 +2153,6 @@ class Game {
 	}
 
 	public mousedown(_e: MouseEvent) {
-		// console.log("game mousedown")
 		if (this.creator) {
 			if (this.groundPaint) {
 				this.painting = true
@@ -2120,7 +2160,6 @@ class Game {
 				const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
 				if (obstacle) {
 					this.draggedObstacle = obstacle
-					// console.log("game dragged=", this.draggedObstacle)
 				}
 				const entity = this.leeks.find(e => e.cell === this.mouseCell)
 				if (entity) {
@@ -2201,17 +2240,14 @@ class Game {
 		}
 		if (this.creator) {
 			if (this.draggedObstacle && this.mouseCell && this.ground.field.canFit(this.draggedObstacle, this.mouseCell)) {
-				// console.log("move draggedObstacle", this.paused)
 				this.draggedObstacle.move(this.mouseCell)
 				this.player.$emit('edited', 'obstacle' + this.draggedObstacle.drawID)
 			}
 			if (this.draggedEntity && this.mouseCell && this.mouseCell.isAvailable()) {
-				// console.log("move draggedObstacle", this.paused)
 				this.draggedEntity.setCell(this.mouseCell)
 				this.player.$emit('edited', 'entity' + this.draggedEntity.drawID)
 			}
 			if (this.painting && this.groundPaint && this.mouseCell) {
-				// console.log("change cell color", this.mouseCell, this.map.options)
 				const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
 				if (this.mouseCell.color !== paint) {
 					this.mouseCell.color = paint
@@ -2228,7 +2264,6 @@ class Game {
 	public click() {
 		if (this.creator) {
 			if (this.groundPaint && this.mouseCell) {
-				// console.log("change cell color", this.mouseCell, this.map.options)
 				const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
 				if (this.mouseCell.color !== paint) {
 					this.mouseCell.color = paint
@@ -2250,7 +2285,6 @@ class Game {
 			this.draggedEntity = null
 
 			const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
-			// console.log("obstacle found", obstacle)
 			if (obstacle) {
 				this.removeObstacle(obstacle)
 				this.ground.resize(this.width, this.height, this.shadows)
@@ -2306,13 +2340,11 @@ class Game {
 	}
 
 	public addObstacle(obstacle: Obstacle) {
-		// console.log("addObstacle", obstacle.y)
 		this.ground.obstacles.push(obstacle)
 		obstacle.drawID = this.addDrawableElement(obstacle, obstacle.y)
 	}
 
 	public removeObstacle(obstacle: Obstacle) {
-		// console.log("removeObstacle", obstacle.y)
 		for (const coord of obstacle.geometry.cells) {
 			const cell = this.ground.field.next_cell(obstacle.cell, coord[0], coord[1])
 			if (cell) { cell.obstacle = null }
@@ -2337,16 +2369,14 @@ class Game {
 	}
 
 	public addDrawableElement(element: Drawable, line: number): number {
-		// console.log("add drawable element")
 		this.drawableElementCurrentId++
 		this.drawableElements[line][this.drawableElementCurrentId] = element
 		return this.drawableElementCurrentId
 	}
 
 	public moveDrawableElement(element: Drawable, id: number, line: number, newLine: number) {
-		// console.log("move drawable element")
 		if (!this.drawableElements[newLine]) {
-			console.warn("Error moving object to line " + newLine)
+			logger.warn("Error moving object to line " + newLine)
 			return
 		}
 		this.drawableElements[newLine][id] = element // Ajout de l'élément sur la nouvelle ligne
@@ -2357,14 +2387,62 @@ class Game {
 		// if (this.drawableElements[line] !== undefined) {
 		// 	if (this.drawableElements[line][id] != null) {
 				if (!this.drawableElements[line][id]) {
-					console.log("No drawable element to remove", id, line)
-					console.log(this.drawableElements)
+					logger.warn("No drawable element to remove", id, line)
+					logger.warn(this.drawableElements)
 				} else {
-				// 	console.log("remove", this.drawableElements[line][id])
 					delete this.drawableElements[line][id]
 				}
 		// 	}
 		// }
+	}
+
+	/**
+	 * Rejoue la branche TYPE_REPEL du serveur (Attack.java) pour une arme : le log de
+	 * combat ne contient pas d'action de déplacement pour les effets de mouvement,
+	 * c'est au client de recalculer (comme le grappin / gant de boxe côté puces).
+	 * Les entités de la zone, de la plus proche à la plus lointaine, sont repoussées
+	 * de value1 cases en s'éloignant du tireur (×1,3 arrondi en coup critique, comme
+	 * la puissance des autres effets). Poussées séquentielles, occupation
+	 * mise à jour entre chaque : une entité déjà arrêtée bloque la suivante, comme
+	 * sur le serveur. Seules les cellules logiques sont mises à jour ici, l'appelant
+	 * anime (ou pas) le déplacement visuel à partir des mouvements retournés.
+	 */
+	public applyWeaponRepel(caster: FightEntity, cell: Cell, template: WeaponTemplate, critical: boolean): {entity: FightEntity, cell: Cell}[] {
+		const repel = template.effects.find((e) => e.id === EffectType.REPEL)
+		if (!repel || !caster.cell) { return [] }
+		const distance = repelDistance(repel.value1, critical)
+
+		// Entités de la zone. Cas laser à part : comme AreaLaserLine côté serveur, la
+		// ligne va de min_range à max_range dans la direction visée (getAreaCells ne
+		// sait pas produire cette zone-là), stoppée par un obstacle si l'arme a la ligne
+		// de vue. La plus proche d'abord : l'ordre de poussée en dépend.
+		const entities = [] as FightEntity[]
+		if (template.area === Area.LASER_LINE) {
+			const dx = Math.sign(cell.x - caster.cell.x)
+			const dy = Math.sign(cell.y - caster.cell.y)
+			if ((dx === 0) === (dy === 0)) { return [] } // pas aligné : zone vide
+			let current: Cell | null = caster.cell
+			for (let i = 1; i <= template.max_range; ++i) {
+				current = this.ground.field.next_cell(current, dx, dy)
+				if (!current) { break }
+				if (i < template.min_range) { continue }
+				if (template.los && current.obstacle) { break }
+				if (current.entity) { entities.push(current.entity as FightEntity) }
+			}
+		} else {
+			entities.push(...this.ground.field.getTargets(cell, template.area, caster.cell, template.max_range, template.min_range) as FightEntity[])
+		}
+
+		const moves = [] as {entity: FightEntity, cell: Cell}[]
+		for (const entity of entities) {
+			if (entity === caster || entity.dead) { continue }
+			if (entity.states.has(State.STATIC)) { continue } // slideEntity ignore les statiques
+			const destination = this.ground.field.computeRepelCell(caster.cell, entity.cell!, distance)
+			if (destination === entity.cell) { continue }
+			destination.setEntity(entity) // cellule logique à jour, sans toucher au visuel
+			moves.push({ entity, cell: destination })
+		}
+		return moves
 	}
 
 	public createEffectAreaCells(cells: Cell[], lines: number[][], convert: {[key: number]: [number, number]}) {
@@ -2895,7 +2973,6 @@ class Game {
 
 	public drawGroundPaint() {
 		if (this.groundPaint) {
-			// console.log("drawGroundPaint", this.groundPaint)
 			const x = this.mouseX!
 			const y = this.mouseY!
 			const size = this.ground.tileSizeY
@@ -3103,7 +3180,6 @@ class Game {
 	public resourceLoaded(_res: string) { // variable utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }
-		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")
 		if (this.loadedData === this.numData && this.initialized === true) {
 			if (!this.launched) {
 				this.launch() // Start game if all resources are loaded

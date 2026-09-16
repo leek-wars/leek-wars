@@ -138,7 +138,8 @@
 					<div v-if="farmer" class="grades">
 						<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
 						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
-						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+						<div v-if="farmer.referent" class="grade referent">{{ $t('referent') }}</div>
+						<div v-else-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
 					</div>
 
 
@@ -432,7 +433,7 @@
 					<div v-if="farmer" class="rewards">
 						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': Number(r) <= (farmer.godsons_level ?? 0)}">
 							<div class="level">{{ $filters.number(Number(r)) }}<v-icon v-if="Number(r) <= (farmer.godsons_level ?? 0)">mdi-check</v-icon></div>
-							<trophy-icon v-if="reward.trophy" :code="reward.trophy" />
+							<trophy-icon v-if="reward.trophy" :code="reward.trophy" :light="Number(r) <= (farmer.godsons_level ?? 0)" />
 							<rich-tooltip-item v-else-if="reward.resource" v-slot="{ props }" :item="LeekWars.items[reward.item!]" :bottom="true">
 								<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
 							</rich-tooltip-item>
@@ -507,6 +508,10 @@
 					<div class="tab" @click="trophyDialog = true">
 						<v-icon>mdi-trophy-outline</v-icon>
 						Donner trophée
+					</div>
+					<div class="tab" @click="openGradeDialog()">
+						<v-icon>mdi-shield-account-outline</v-icon>
+						Changer le grade
 					</div>
 				</template>
 			</div>
@@ -607,6 +612,22 @@
 			<template #actions>
 				<div v-ripple @click="trophyDialog = false">{{ $t('cancel') }}</div>
 				<div v-ripple class="green" @click="giveTrophy()">Donner</div>
+			</template>
+		</popup>
+
+		<popup v-if="farmer" v-model="gradeDialog" :width="500" icon="mdi-shield-account-outline">
+			<template #title>Changer le grade de {{ farmer.name }}</template>
+
+			<div class="grade-options">
+				<label v-for="option in gradeOptions" :key="option.value" class="grade-option">
+					<input v-model="gradeChoice" type="radio" :value="option.value">
+					<span :class="option.color">{{ option.label }}</span>
+				</label>
+			</div>
+
+			<template #actions>
+				<div v-ripple @click="gradeDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="setGrade()">Valider</div>
 			</template>
 		</popup>
 
@@ -716,6 +737,14 @@
 		5000: { potion: 'mafia', item: 282 },
 		10000: { hat: 'gold_fedora', item: 280 },
 	}
+	const gradeDialog = ref(false)
+	// Distinction spéciale (champ special, 0/1/2). Le grade modo/admin se gère ailleurs.
+	const gradeOptions = [
+		{ value: 'none', label: "Aucune", color: '', special: 0 },
+		{ value: 'contributor', label: "Contributeur", color: 'contributor', special: 1 },
+		{ value: 'referent', label: "Référent", color: 'referent', special: 2 },
+	]
+	const gradeChoice = ref('none')
 	const invitationSent = ref(false)
 	const chartData = ref<ChartData<'line'> | null>(null)
 	const chartOptions = ref<ChartOptions<'line'> | null>(null)
@@ -913,16 +942,25 @@
 		for (let i = 1; i <= 7; ++i) {
 			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
 		}
+		labels.reverse()
+		labels.push(LeekWars.formatDayMonthShort(time))
+		const data = [...farmer.value.talent_history, farmer.value.talent]
+		const lastIndex = data.length - 1
 		chartData.value = {
-			labels: labels.reverse(),
+			labels,
 			datasets: [
 				{
 					tension: 0.2,
-					data: farmer.value.talent_history,
+					data,
 					borderColor: '#5fad1b',
 					pointBackgroundColor: '#5fad1b',
 					borderWidth: 2,
 					fill: { target: 'origin', above: '#5fad1b30' },
+					// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
+					segment: {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
+					},
 				}
 			]
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1222,6 +1260,33 @@
 		}
 	}
 
+	function openGradeDialog() {
+		if (!farmer.value) return
+		// Détermine la distinction actuelle à partir des booléens exposés
+		if (farmer.value.referent) gradeChoice.value = 'referent'
+		else if (farmer.value.contributor) gradeChoice.value = 'contributor'
+		else gradeChoice.value = 'none'
+		gradeDialog.value = true
+	}
+
+	function setGrade() {
+		if (!farmer.value) return
+		const option = gradeOptions.find(o => o.value === gradeChoice.value)
+		if (!option) return
+		// On ne touche pas au grade modo/admin : on le conserve tel quel
+		const grade = farmer.value.admin ? 100 : (farmer.value.moderator ? 10 : 0)
+		LeekWars.post('farmer/set-grade', { farmer_id: farmer.value.id, grade, special: option.special })
+			.then(data => {
+				if (!farmer.value) return
+				farmer.value.referent = option.special === 2
+				farmer.value.contributor = option.special === 1
+				farmer.value.grade = data.color
+				gradeDialog.value = false
+				LeekWars.toast("Grade mis à jour !")
+			})
+			.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
+	}
+
 	function toggleLike() {
 		if (!farmer.value) return
 		const liked = farmer.value.liked
@@ -1458,6 +1523,22 @@
 	}
 	.grade.contributor {
 		background: #009c1d;
+	}
+	.grade.referent {
+		background: #2196f3;
+	}
+	.grade-options {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 5px 0;
+	}
+	.grade-option {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		cursor: pointer;
+		font-size: 16px;
 	}
 	.avatar-wrapper {
 		position: relative;

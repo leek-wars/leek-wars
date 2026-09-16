@@ -6,6 +6,7 @@
 import * as monaco from 'monaco-editor'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { getLanguageForPath } from './file-types'
+import { colorDecoratorOptions } from './monaco-color-decorators'
 
 defineOptions({ name: 'GitDiff', i18n: {} })
 
@@ -119,6 +120,7 @@ function createEditor() {
 		lineNumbersMinChars: 3,
 		hideUnchangedRegions: { enabled: props.collapseUnchanged },
 		wordWrap: "on",
+		...colorDecoratorOptions,
 	}))
 
 	diffEditor.setModel({

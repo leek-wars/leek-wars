@@ -164,7 +164,6 @@ class Field {
 	}
 
 	public getTargets(center: Cell, area: Area, caster_cell: Cell, max_range: number, min_range: number = 1): Entity[] {
-		// console.log("getTargets", center, area, caster_cell)
 		if (area === Area.FIRST_INLINE) {
 			const cell = this.getFirstWithEntity(caster_cell, center, max_range, min_range)
 			if (cell) {
@@ -246,7 +245,6 @@ class Field {
 	}
 
 	public getLastAvailableCell(from: Cell, target: Cell, targetEntity: FightEntity) {
-		// console.log("getLastAvailableCell", "from=" + from.id, "target=" + target.id, "static=" + targetEntity.states.has(State.STATIC))
 		const dx = Math.sign(target.x - from.x)
 		const dy = Math.sign(target.y - from.y)
 		let current = from
@@ -279,6 +277,24 @@ class Field {
 				if (next.obstacle || next.entity) { break }
 				current = next
 			}
+		}
+		return current
+	}
+
+	/**
+	 * Miroir de Map.getRepelLastAvailableCell (générateur) : repousse une entité de
+	 * `distance` cases en s'éloignant du lanceur, arrêt net sur le premier obstacle,
+	 * la première entité ou le bord de la carte. C'est le déplacement d'EFFECT_REPEL.
+	 */
+	public computeRepelCell(casterCell: Cell, entityCell: Cell, distance: number) {
+		const dx = Math.sign(entityCell.x - casterCell.x)
+		const dy = Math.sign(entityCell.y - casterCell.y)
+		if (dx === 0 && dy === 0) { return entityCell } // même case : pas de direction
+		let current = entityCell
+		for (let i = 0; i < distance; ++i) {
+			const next = this.next_cell(current, dx, dy)
+			if (!next || next.obstacle || next.entity) { break }
+			current = next
 		}
 		return current
 	}

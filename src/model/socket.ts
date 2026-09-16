@@ -4,6 +4,7 @@ import { emitter } from '@/model/emitter'
 import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
+import { logger } from '@/utils/logger'
 const getAnalyzer = () => import('@/component/editor/analyzer').then(m => m.analyzer)
 
 enum SocketMessage {
@@ -97,12 +98,23 @@ enum SocketMessage {
 	HISTORY_UNREGISTER = 96,
 }
 
-// On visibility change, if no message received for this long, send a probe ping
-const PROBE_STALE_THRESHOLD = 25000
+// Le daemon diffuse CONNECTED_COUNT à TOUS les clients toutes les 30 s
+// (WebSocketServer.scheduleFarmerUpdates) : c'est le seul battement de cœur qu'une socket
+// vivante mais silencieuse est garantie de recevoir, donc la seule mesure fiable de son
+// état côté client.
+const SERVER_HEARTBEAT = 30000
+// On visibility change, if no message received for this long, send a probe ping. Calé sur le
+// battement de cœur + une marge : en dessous, une socket parfaitement saine serait déclarée
+// suspecte à chaque retour sur l'onglet.
+const PROBE_STALE_THRESHOLD = SERVER_HEARTBEAT + 10000
 // Beyond this, skip the probe and reconnect directly (almost certainly dead, e.g. mobile suspend)
 const PROBE_DEAD_THRESHOLD = 60000
-// Force-reconnect if probe ping gets no response within this time
-const PROBE_RESPONSE_TIMEOUT = 3000
+// Force-reconnect if probe ping gets no response within this time.
+// ATTENTION : le daemon n'a pas de `case PING` (les constantes PING/PONG sont déclarées des
+// deux côtés mais rien ne répond), donc la sonde expire TOUJOURS et ne peut que conclure à
+// une socket morte. Ce délai est le prix payé avant chaque reconnexion : à garder court tant
+// que le serveur ne renvoie pas de PONG.
+const PROBE_RESPONSE_TIMEOUT = 2000
 
 class Socket {
 	public socket!: WebSocket
@@ -120,10 +132,8 @@ class Socket {
 		}
 		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
 		this.socket = new WebSocket(url, [ 'leek-wars', store.state.token! ])
-		// console.log("[socket] socket", this.socket)
 
 		this.socket.onopen = () => {
-			// console.log("[ws] onopen")
 			store.commit('invalidate-chats')
 			store.commit('wsconnected')
 			this.retry_delay = 1000
@@ -138,12 +148,11 @@ class Socket {
 			this.schedulePing()
 		}
 		this.socket.onclose = () => {
-			// console.log("[ws] onclose")
 			this.clearPing()
 			this.clearPongProbe()
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 				const message = "[WS] fermée"
-				console.error(message)
+				logger.error(message)
 				// LeekWars.toast(message, 5000)
 			}
 			store.commit('wsclose')
@@ -154,7 +163,7 @@ class Socket {
 		this.socket.onerror = (event) => {
 			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 				const message = "[WS] erreur"
-				console.error(message, event)
+				logger.error(message, event)
 				// LeekWars.toast(message, 5000)
 			}
 		}
@@ -165,7 +174,6 @@ class Socket {
 			const id = json[0]
 			const data = json[1]
 			const request_id = json[2]
-			// console.log("[WS] onmessage", id, data, request_id)
 
 			emitter.emit('wsmessage', {type: id, data, id: request_id})
 
@@ -237,7 +245,6 @@ class Socket {
 					break
 				}
 				case SocketMessage.CHAT_RECEIVE : {
-					// console.log("socket chat receive", data)
 					const message = data as ChatMessage
 					store.commit('chat-receive', { chat: message.chat, type: data.type, message, new: true })
 					break
@@ -320,7 +327,6 @@ class Socket {
 					break
 				}
 				case SocketMessage.ADD_RESOURCE: {
-					// console.log("add resource", data)
 					const template = data[0]
 					const id = data[1]
 					const quantity = data[2]
@@ -368,11 +374,11 @@ class Socket {
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE: {
-					getAnalyzer().then(a => a.analyzeResult(data))
+					getAnalyzer().then(a => a.analyzeResult(data, request_id))
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE_ERROR: {
-					getAnalyzer().then(a => a.analyzeError())
+					getAnalyzer().then(a => a.analyzeError(request_id))
 					break
 				}
 				case SocketMessage.EDITOR_HOVER: {
@@ -449,11 +455,20 @@ class Socket {
 			this.pongProbeTimeout = setTimeout(() => {
 				this.pongProbeTimeout = null
 				if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
-					console.warn("[WS] probe timeout, forcing reconnect")
+					logger.warn("[WS] probe timeout, forcing reconnect")
 				}
 				this.reconnect()
 			}, PROBE_RESPONSE_TIMEOUT)
 		}
+	}
+
+	// Vrai si la socket a pu rater des messages : pas connectée, ou silencieuse depuis plus
+	// longtemps que le battement de cœur du serveur. Sert à décider s'il faut rattraper le
+	// contenu en HTTP au retour sur l'app : un onglet d'ordinateur simplement passé au
+	// second plan a continué de recevoir, il n'y a rien à rattraper.
+	public maybeStale() {
+		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) { return true }
+		return Date.now() - this.lastReceivedTime > PROBE_STALE_THRESHOLD
 	}
 
 	private clearPongProbe() {
@@ -473,7 +488,7 @@ class Socket {
 	public retry() {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] retry(" + this.retry_delay + "ms)"
-			console.log(message)
+			logger.debug(message)
 		}
 		if (this.intentionallyClosed) { return }
 		if (this.retryTimeout) { clearTimeout(this.retryTimeout) }
@@ -505,7 +520,6 @@ class Socket {
 
 	public send(message: unknown) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-			// console.log("[WS] send", message)
 			this.socket.send(JSON.stringify(message))
 		} else {
 			this.queue.push(message)
@@ -517,7 +531,7 @@ class Socket {
 	public disconnect() {
 		if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 			const message = "[WS] disconnect()"
-			console.log(message)
+			logger.debug(message)
 		}
 		this.intentionallyClosed = true
 		this.clearPing()

@@ -34,6 +34,7 @@
 	"error_1008": "Funktiota {0}() ei voi kutsua beforeFight()- tai afterFight()-koukussa.",
 	"error_1009": "Loadout \"{0}\": yhtään unohdettua asetta ei ole saatavilla, kaikki ehdokkaat ovat jo varustettuina kasvattajan muilla purjoilla.",
 	"error_1010": "Loadout \"{0}\": restat-juomaa ei ole saatavilla, ominaisuuksia ei muutettu.",
+	"error_1011": "Loadout \"{0}\": vaatii enemmän pääomaa kuin purjolla on, ominaisuuksia ei muutettu.",
 	"error_101": "AI-keskeytys: Liian monta toimintoa kulutettu.",
 	"error_103": "Keskeytetty AI: liian paljon RAM-muistia kulutettu.",
 	"error_104": "Vain yksi peräkkäinen numeerinen erotin on sallittu.",

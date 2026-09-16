@@ -9,6 +9,7 @@
 	"change_password": "更改密码",
 	"confirm_password": "确认",
 	"delete_account": "删除他的帐户",
+	"export_data": "导出我的数据",
 	"delete_cancel": "取消",
 	"delete_confirm": "删除帐户",
 	"delete_confirmation": "确认",
@@ -21,12 +22,15 @@
 	"delete_password": "密码",
 	"delete_success": "删除成功",
 	"delete_success_message": "您的帐户已被删除，几秒钟后您将被重定向，韭菜大战再见！",
+	"delete_team_dissolve": "你是团队 {0} 的创建者，也是唯一的成员：删除账号后，团队将被解散。",
+	"delete_team_transfer": "你是团队 {0} 的创建者：删除账号后，团队将移交给最早加入的成员。",
 	"discrete_mode": "谨慎模式",
 	"empty": "空的",
 	"empty_localstorage": "清空本地存储",
 	"error_not_same_password": "两次输入的密码必须相同",
 	"error_password_length": "密码必须包含 {0} 到 {1} 个字符",
 	"error_wrong_password": "密码不正确",
+	"error_too_many_requests": "请求过于频繁，请几分钟后再试",
 	"error_forbidden_name": "这个名字被禁止",
 	"error_invalid_godfather": "该玩家不存在",
 	"error_invalid_length": "密码必须包含 {0} 到 {1} 个字符",
@@ -75,5 +79,6 @@
 	"auto": "汽车",
 	"theme": "主题",
 	"modern_theme": "现代主题（测试版）",
-	"xp_theme": "XP 主题"
+	"xp_theme": "XP 主题",
+	"purchase_history": "购买记录"
 }

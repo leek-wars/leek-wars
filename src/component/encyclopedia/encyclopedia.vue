@@ -12,6 +12,7 @@
 				</div>
 			</div>
 			<div v-if="page" class="tabs">
+				<doc-language-selector v-if="!edition && !inAppBar" />
 				<v-menu v-if="contributor && edition" offset-y>
 					<template #activator="{ props }">
 						<div class="page-language info" v-bind="props">
@@ -217,7 +218,11 @@
 <script setup lang="ts">
 	import type * as Monaco from 'monaco-editor'
 	import '@/component/editor/monaco-csp'
+	import { colorDecoratorOptions } from '@/component/editor/monaco-color-decorators'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
+	import { docLanguage } from '@/model/doc-language'
+	import { displaySignature, flatNameForObjectPath } from '@/model/doc-signature'
 	import { locale } from '@/locale'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -324,7 +329,7 @@
 			return parts
 		}
 	})
-	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator : false)
+	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator || store.state.farmer.referent : false)
 	const parents = computed(() => {
 		const list: { id: number, title: string, [key: string]: unknown }[] = []
 		const visited = new Set<number>()
@@ -337,9 +342,28 @@
 		}
 		return list.reverse()
 	})
+	/**
+	 * La barre d'application mobile (lw-bar) porte déjà le sélecteur de langage, mais elle
+	 * n'existe que connecté (`#app:not(.connected) .app-bar { display: none }`). Hors de ce
+	 * cas — desktop, ou mobile déconnecté — c'est la barre d'onglets de la page qui le porte,
+	 * sans quoi il n'y en aurait aucun.
+	 */
+	const inAppBar = computed(() => LeekWars.mobile && store.state.connected)
+
 	const function_args = computed(() => {
 		for (const fun of FUNCTIONS) {
 			if (fun.name === code.value) {
+				// En JS/TS/Python la fonction plate n'existe PAS : afficher sa signature à côté
+				// du titre induirait en erreur. On montre le membre objet, seul nom appelable.
+				// Le titre de la page reste le nom plat : c'est la clé de l'encyclopédie.
+				if (docLanguage.value !== 'leekscript') {
+					const signature = displaySignature(fun.name, fun.return_type, docLanguage.value)
+					if (!signature) return undefined
+					// La flèche sépare le titre de la page du membre objet : sans elle les deux se
+					// collent (`getLifeentity.life`), le `(` de la forme plate faisant office
+					// de séparateur implicite.
+					return ' → <span class="lstype">' + LeekWars.protect(signature) + '</span>'
+				}
 				let name = "("
 				let i = 0
 				for (const a in fun.arguments_names) {
@@ -471,6 +495,14 @@
 		referencedBy.value = null
 		destroyDiffEditor()
 
+		// Adresse écrite avec le nom OBJET (`Entity.life`) : les pages sont titrées du nom plat,
+		// on redirige vers la bonne, en réutilisant le bandeau « redirigé depuis » existant.
+		const flat = flatNameForObjectPath(code.value)
+		if (flat && flat !== code.value) {
+			router.replace('/encyclopedia/' + language.value + '/' + flat + '?from=' + encodeURIComponent(code.value))
+			return
+		}
+
 		LeekWars.get<EncyclopediaPage & { redirect?: string }>('encyclopedia/get/' + language.value + '/' + code.value).then(p => {
 			if (p.redirect) {
 				router.replace('/encyclopedia/' + language.value + '/' + p.redirect.replace(/ /g, '_') + '?from=' + encodeURIComponent(code.value))
@@ -580,6 +612,7 @@ ${ret}
 					overviewRulerBorder: false,
 					renderLineHighlight: "line",
 					accessibilitySupport: 'off', // Workaround Firefox : sélection backward + remplacement (#2802)
+					...colorDecoratorOptions,
 				}))
 
 				editor.value.onDidChangeModelContent(() => {
@@ -794,6 +827,7 @@ ${ret}
 				wordWrap: 'on',
 				hideUnchangedRegions: { enabled: true },
 				theme: LeekWars.darkMode ? 'vs-dark' : 'vs',
+				...colorDecoratorOptions,
 			}))
 			diffEditor.value.setModel({
 				original: markRaw(monaco.editor.createModel(oldContent, 'markdown')),

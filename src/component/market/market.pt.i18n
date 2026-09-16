@@ -39,6 +39,7 @@
 	"potion_selled": "Poção vendida!",
 	"price": "Preço",
 	"resell": "Revender",
+	"scheme_required": "Você não possui o esquema",
 	"sell": "Vender",
 	"summon_available_chips": "Chips equipados",
 	"summon_characteristics": "Características",

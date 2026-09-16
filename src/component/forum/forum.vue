@@ -130,6 +130,7 @@
 				<div class="grades">
 					{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,
 					<span class="moderator">{{ $t('main.grade_moderator') }}</span>,
+					<span class="referent">{{ $t('main.grade_referent') }}</span>,
 					<span class="contributor">{{ $t('main.grade_contributor') }}</span>,
 					<span>{{ $t('main.grade_member') }}</span>
 				</div>

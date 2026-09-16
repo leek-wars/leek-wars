@@ -133,9 +133,7 @@
 		})
 	})
 
-	console.log("LeekWars.schemes", LeekWars.schemes)
 	schemes.value = Object.values(LeekWars.schemes)
-	console.log("Schemes", schemes.value)
 
 	onMounted(() => {
 		LeekWars.footer = false

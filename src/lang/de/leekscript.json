@@ -34,6 +34,7 @@
 	"error_1008": "Die Funktion {0}() kann nicht innerhalb eines beforeFight()- oder afterFight()-Hooks aufgerufen werden.",
 	"error_1009": "Loadout \"{0}\": keine vergessene Waffe verfügbar, alle Kandidaten sind bereits auf anderen Lauchen des Züchters ausgerüstet.",
 	"error_1010": "Loadout \"{0}\": kein Restat-Trank verfügbar, die Eigenschaften wurden nicht geändert.",
+	"error_1011": "Loadout \"{0}\": erfordert mehr Kapital, als der Lauch besitzt, die Eigenschaften wurden nicht geändert.",
 	"error_101": "AI Interrupt: Zu viele Operationen verbraucht.",
 	"error_103": "Unterbrochene KI: zu viel RAM verbraucht.",
 	"error_104": "Es ist nur ein fortlaufendes numerisches Trennzeichen erlaubt.",

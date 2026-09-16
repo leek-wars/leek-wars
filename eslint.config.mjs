@@ -35,6 +35,7 @@ export default tseslint.config(
 	{
 		files: ['**/*.ts', '**/*.vue'],
 		rules: {
+			'no-console': ['error', { allow: ['warn', 'error'] }],
 			'@typescript-eslint/no-inferrable-types': 'off',
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
 			'@typescript-eslint/no-unused-vars': ['error', {
@@ -99,4 +100,10 @@ export default tseslint.config(
 	},
 
 	eslintConfigPrettier,
+	{
+		files: ['**/*.test.ts'],
+		rules: {
+			'no-console': 'off',
+		},
+	},
 )

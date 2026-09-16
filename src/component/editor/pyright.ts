@@ -34,3 +34,28 @@ export function pyChange(model: import('monaco-editor').editor.ITextModel): void
 export function pyClose(uri: string): void {
 	if (mod) void mod.then((m) => m.closePy(uri))
 }
+
+/** Complétion Pyright. null si le client n'est pas chargé (aucun .py ouvert -> pas de complétion
+ *  demandée de toute façon) ou si le worker est indisponible : l'appelant replie sur le statique. */
+export function pyComplete(model: import('monaco-editor').editor.ITextModel, position: import('monaco-editor').Position): Promise<import('monaco-editor').languages.CompletionList | null> {
+	if (!mod) return Promise.resolve(null)
+	return mod.then((m) => m.completePy(model, position))
+}
+
+/** Résolution paresseuse d'un item de complétion (doc/détail calculés au focus). */
+export function pyResolveCompletion(item: import('monaco-editor').languages.CompletionItem): Promise<import('monaco-editor').languages.CompletionItem> {
+	if (!mod) return Promise.resolve(item)
+	return mod.then((m) => m.resolveCompletionPy(item))
+}
+
+/** Survol Pyright (type + docstring en markdown). null si le client n'est pas chargé. */
+export function pyHover(model: import('monaco-editor').editor.ITextModel, position: import('monaco-editor').Position): Promise<Awaited<ReturnType<Client['hoverPy']>>> {
+	if (!mod) return Promise.resolve(null)
+	return mod.then((m) => m.hoverPy(model, position))
+}
+
+/** Définition Pyright (path + range dans un fichier du joueur). null si le client n'est pas chargé. */
+export function pyDefinition(model: import('monaco-editor').editor.ITextModel, position: import('monaco-editor').Position): Promise<Awaited<ReturnType<Client['definitionPy']>>> {
+	if (!mod) return Promise.resolve(null)
+	return mod.then((m) => m.definitionPy(model, position))
+}

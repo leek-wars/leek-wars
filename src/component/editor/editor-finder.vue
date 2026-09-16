@@ -55,8 +55,8 @@
 				result.push({ai, score: 0, name: [ai.name], type: 1})
 			}
 		} else {
-			for (const path in fileSystem.aiByFullPath) {
-				const ai = fileSystem.aiByFullPath[path]
+			for (const path in fileSystem.ais) {
+				const ai = fileSystem.ais[path]
 				if (fileSystem.isInBin(ai.folder)) { continue } // Exclude recycle bin AIs
 				if (isClosed(ai)) continue // Closed folder
 				const s = score(path, ai.name, query.value, queryLower)

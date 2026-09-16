@@ -174,6 +174,17 @@
 				<div>{{ $t('main.logged_out_other_tab') }}</div>
 			</popup>
 
+				<popup v-model="accountChangedOtherTab" :width="500" :persistent="true">
+					<template #title>
+						<v-icon>mdi-account-switch</v-icon>
+						{{ $t('main.account_changed_other_tab_title') }}
+					</template>
+					<div>{{ $t('main.account_changed_other_tab') }}</div>
+					<template #actions>
+						<v-btn @click="reload">{{ $t('main.account_changed_other_tab_reload') }}</v-btn>
+					</template>
+				</popup>
+
 				<popup v-model="LeekWars.logoutDialog" :width="500">
 					<template #title>
 						<v-icon>mdi-logout</v-icon>
@@ -212,7 +223,7 @@
 					<span>{{ $t('main.new_version') }}</span>
 				</div>
 				<template #actions>
-					<v-btn variant="text" color="#5fad1b" @click="reloadNewVersion">{{ $t('main.new_version_reload') }}</v-btn>
+					<v-btn variant="text" color="#5fad1b" @click="reload">{{ $t('main.new_version_reload') }}</v-btn>
 					<v-btn variant="text" @click="LeekWars.newVersionPopup = false">{{ $t('main.new_version_later') }}</v-btn>
 				</template>
 			</v-snackbar>
@@ -250,6 +261,7 @@
 	}
 </script>
 <script lang="ts" setup>
+	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -280,6 +292,7 @@
 	const checkEmailReminderDismissed = ref(false)
 	const showActivationWelcome = ref(false)
 	const loggedOutOtherTab = ref(false)
+	const accountChangedOtherTab = ref(false)
 
 	// Bandeau bas "Valide ton compte" (verify-banner) : visible une fois le
 	// didactitiel terminé (ou au moins un combat joué pour les comptes
@@ -507,7 +520,7 @@
 	onMounted(applyLayout)
 	onMounted(startVersionCheck)
 
-	function reloadNewVersion() {
+	function reload() {
 		window.location.reload()
 	}
 
@@ -569,9 +582,28 @@
 		if (e.key === 'connected' && e.newValue === 'true' && !store.state.connected) {
 			window.location.reload()
 		}
+		if (e.key === 'active-account') { checkActiveAccount() }
 	}
 	window.addEventListener('storage', onStorage)
 	onBeforeUnmount(() => window.removeEventListener('storage', onStorage))
+
+	// Changement de compte dans un autre onglet : le cookie JWT est commun, cet
+	// onglet agit déjà au nom du nouveau compte (API, et WebSocket dès qu'il se
+	// reconnecte) tout en affichant l'ancien. On recharge pour resynchroniser.
+	function checkActiveAccount() {
+		const active = localStorage.getItem('active-account')
+		if (!active || !store.state.farmer || active === '' + store.state.farmer.id) { return }
+		// Une IA modifiée ne vit que dans le modèle Monaco et n'est plus enregistrable
+		// (le compte a déjà basculé) : on laisse le joueur copier son code et recharger.
+		if (fileSystem.unsavedAIs.length) {
+			accountChangedOtherTab.value = true
+			return
+		}
+		reload()
+	}
+	// L'événement `storage` n'atteint pas un onglet en bfcache ou suspendu, et n'est
+	// pas rejoué au réveil : sans cette relecture il ne rechargerait jamais.
+	emitter.on('visible', checkActiveAccount)
 
 	const queryParams = new URLSearchParams(window.location.search)
 	const toast = queryParams.get('toast')

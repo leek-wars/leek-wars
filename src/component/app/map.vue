@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+	import { OBSTACLES } from '@/component/player/game/ground'
 	import { TEAM_COLORS } from '@/model/team'
 	import { ref, watch } from 'vue'
 
@@ -25,6 +26,7 @@
 
 	const props = defineProps<{
 		obstacles: Record<number, number>
+		mapId?: number
 		teams?: {[key: number]: Set<number>}
 	}>()
 
@@ -32,6 +34,19 @@
 
 	function update() {
 		const size = 34
+		// Carte fixe (boss) : la valeur d'un obstacle est un id de template OBSTACLES,
+		// sa géométrie donne les cases couvertes (#4619). Carte générée : la valeur
+		// est directement la taille (1 ou 2).
+		const covered = props.mapId ? new Set<number>() : null
+		if (covered) {
+			for (const c in props.obstacles) {
+				const info = OBSTACLES[props.obstacles[c] as unknown as number]
+				if (!info) { continue }
+				for (const [dx, dy] of info.geometry.cells) {
+					covered.add(parseInt(c, 10) + 18 * dx + 17 * dy)
+				}
+			}
+		}
 		const m: MapCell[][] = []
 		for (let i = 0; i <= size; ++i) {
 			const line = []
@@ -45,7 +60,9 @@
 				let color = ""
 				let obstacleSize = 1
 				if (enabled) {
-					if (cell in props.obstacles) {
+					if (covered) {
+						obstacle = covered.has(cell)
+					} else if (cell in props.obstacles) {
 						obstacle = true
 						obstacleSize = props.obstacles[cell]
 					}

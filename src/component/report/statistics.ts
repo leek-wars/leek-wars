@@ -176,7 +176,6 @@ class FightStatistics {
 
 		for (const action of fight.data.actions) {
 			const type = action[0] as ActionType
-			// console.log(action)
 			switch (type) {
 				case ActionType.NEW_TURN: {
 					// Possible d'avoir des action new_turn deux fois de suite (bug corrigé)
@@ -205,7 +204,6 @@ class FightStatistics {
 						switch (effect.type) {
 							case EffectType.POISON: {
 								const value = Math.max(0, Math.min(life, effect.value))
-								// console.log("poison from", caster, value)
 								caster.poison_out += value
 								caster.nova_out += Math.round(value * 0.1)
 								entity.poison_in += value
