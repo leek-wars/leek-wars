@@ -68,7 +68,10 @@ class AI {
 			const comments: {[key: number]: string} = {}
 			const comment_regex = /\/\*([^]*?)\*\/\s*/gm
 			while ((match = comment_regex.exec(this.code)) != null) {
-				const content = match[1].trim().split("\n").map(line => line.replace(/^\s*\*\s?/, '')).join("\n").trim()
+				// split(/\r?\n/) : avec des fins de ligne Windows, un \r résiduel en fin
+				// de ligne fait échouer le match des @param (le . des regex JS exclut \r)
+				// qui partent alors dans la description (#3946)
+				const content = match[1].trim().split(/\r?\n/).map(line => line.replace(/^\s*\*\s?/, '')).join("\n").trim()
 				comments[match.index + match[0].length] = content
 			}
 			this.comments = comments

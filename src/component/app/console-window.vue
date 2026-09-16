@@ -3,11 +3,25 @@
 		<template #title>
 			<div @mousedown="consoleMouseDown">
 				{{ $t('main.console') }}
-				<v-menu v-if="consoleRef" offset-y :close-on-content-click="false">
+				<v-menu v-if="consoleRef" offset-y>
+					<template #activator="{ props }">
+						<v-chip v-bind="props" size="small"><img class="lang-logo" :src="currentLanguage.logo"> {{ currentLanguage.label }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+					</template>
+					<div class="lang-menu">
+						<div v-for="l in languages" :key="l.id" class="lang-item" :class="{ active: consoleRef.language === l.id }" @click="consoleRef.language = l.id"><img class="lang-logo" :src="l.logo"> {{ l.label }}</div>
+					</div>
+				</v-menu>
+				<v-menu v-if="consoleRef && consoleRef.language === 'leekscript'" offset-y :close-on-content-click="false">
 					<template #activator="{ props }">
 						<v-chip v-bind="props" size="small">LS {{ consoleRef.leekscript.version }} {{ consoleRef.leekscript.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
 					</template>
 					<leekscript-versions v-model:version="consoleRef.leekscript.version" v-model:strict="consoleRef.leekscript.strict" />
+				</v-menu>
+				<v-menu v-else-if="consoleRef && currentVersionShort" offset-y :close-on-content-click="false">
+					<template #activator="{ props }">
+						<v-chip v-bind="props" size="small">{{ currentVersionShort }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+					</template>
+					<polyglot-versions :language="consoleRef.language" v-model:version="consoleRef.languageVersion" />
 				</v-menu>
 				<v-chip v-if="consoleRef && !consoleRef.isEmpty()" size="small" @click="consoleRef.clear()"><v-icon>mdi-cancel</v-icon></v-chip>
 			</div>
@@ -32,11 +46,15 @@
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
 import { emitter } from '@/model/vue'
-import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'
+import PolyglotVersions from './polyglot-versions.vue'
+import { AI_LANGUAGES, getLanguageVersions } from '../editor/file-types'
 
-defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions } })
+defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions, PolyglotVersions } })
+
+const languages = AI_LANGUAGES
 
 defineProps<{
 	modelValue: boolean
@@ -48,6 +66,15 @@ const emit = defineEmits<{
 }>()
 
 const consoleRef = useTemplateRef<InstanceType<typeof Console>>('console')
+const currentLanguage = computed(() => {
+	const lang = (consoleRef.value as unknown as { language?: string })?.language
+	return languages.find(l => l.id === lang) ?? languages[0]
+})
+const currentVersionShort = computed(() => {
+	const c = consoleRef.value as unknown as { language?: string, languageVersion?: string } | null
+	if (!c?.language) return ''
+	return getLanguageVersions(c.language).find(v => v.pragma === c.languageVersion)?.short ?? ''
+})
 const consoleX = ref(0)
 const consoleY = ref(0)
 const consoleDown = ref(false)
@@ -134,6 +161,15 @@ body.dark .theme-menu {
 		}
 	}
 }
+body.dark .lang-menu {
+	background: #2a2a2a;
+	.lang-item {
+		color: #eee;
+		&:hover {
+			background: #3a3a3a;
+		}
+	}
+}
 
 </style>
 
@@ -159,6 +195,34 @@ body.dark .theme-menu {
 			color: #5fad1b;
 		}
 	}
+}
+
+.lang-menu {
+	background: white;
+	padding: 4px 0;
+	.lang-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 16px;
+		cursor: pointer;
+		font-size: 14px;
+		white-space: nowrap;
+		&:hover {
+			background: #eee;
+		}
+		&.active {
+			font-weight: bold;
+			color: #5fad1b;
+		}
+	}
+}
+
+.lang-logo {
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	object-fit: contain;
 }
 
 </style>

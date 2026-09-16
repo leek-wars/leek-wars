@@ -72,6 +72,7 @@
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
+	import router from '@/router'
 	import { store } from '@/model/store'
 	import { computed, onMounted, ref, watch } from 'vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
@@ -255,6 +256,14 @@
 		tooltipOnTooltip = false
 		tooltipVisible.value = false
 	}
+
+	// Actions mobile : les onglets du header (page-tabs) sont masqués sur mobile,
+	// on expose donc les mêmes liens dans la barre d'app.
+	LeekWars.setActions([
+		{icon: 'mdi-bank', click: () => router.push('/bank?ref=collection_action')},
+		{image: 'icon/market.png', click: () => router.push('/market')},
+		{icon: 'mdi-treasure-chest', click: () => router.push('/inventory')},
+	])
 
 	onMounted(() => {
 		LeekWars.setTitle(t('main.collection') as string)

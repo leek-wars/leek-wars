@@ -877,6 +877,8 @@
 		cursor: pointer;
 		width: 40px;
 		height: 40px;
+		draggable: false;
+		user-select: none;
 	}
 	.console .title .spacer {
 		flex: 1;
