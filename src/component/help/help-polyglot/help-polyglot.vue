@@ -59,6 +59,18 @@ def turn():
 
 En JavaScript, une IA simple (sans \`turn()\`) est rejouée dans une portée fraîche à chaque tour : pour garder un état, utilise \`turn()\` avec des variables/classes au niveau du fichier. En Python, les variables de module persistent d'un tour à l'autre.
 
+Si ton IA TypeScript ou JavaScript est un **module** (elle contient un \`import\` ou un \`export\`), déclare la fonction avec \`export function turn()\`. Une fonction \`turn()\` non exportée reste privée au module et n'est pas trouvée par le moteur :
+
+\`\`\`typescript
+export {} // ou n'importe quel import/export : le fichier devient un module
+
+export function turn(): void {
+    const me = Fight.me
+    me.setWeapon(Weapon.pistol)
+    me.useWeapon(Fight.getNearestEnemy())
+}
+\`\`\`
+
 ## Fight.me : ton entité
 
 Il n'y a pas de variable globale \`me\` : ton entité s'obtient via \`Fight.me\`. Récupère-la une fois en début de tour :
@@ -144,6 +156,18 @@ def turn():
 \`\`\`
 
 In JavaScript, a simple AI (without \`turn()\`) runs in a fresh scope each turn: to keep state, use \`turn()\` with file-level variables/classes. In Python, module variables persist between turns.
+
+If your TypeScript or JavaScript AI is a **module** (it contains an \`import\` or an \`export\`), declare the function with \`export function turn()\`. A non-exported \`turn()\` stays private to the module and is not found by the engine:
+
+\`\`\`typescript
+export {} // or any import/export: the file becomes a module
+
+export function turn(): void {
+    const me = Fight.me
+    me.setWeapon(Weapon.pistol)
+    me.useWeapon(Fight.getNearestEnemy())
+}
+\`\`\`
 
 ## Fight.me: your entity
 

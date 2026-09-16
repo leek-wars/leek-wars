@@ -62,7 +62,7 @@
 										<v-list-item v-for="r in readFilterItems" :key="r.value" density="compact" @click="filterRead = r.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterRead" :value="r.value" density="compact" hide-details @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
+													<v-icon size="small" class="radio-indicator" :class="{ selected: filterRead === r.value }">{{ filterRead === r.value ? 'mdi-radiobox-marked' : 'mdi-radiobox-blank' }}</v-icon>
 												</v-list-item-action>
 											</template>
 											<span>{{ r.title }}</span>
@@ -93,7 +93,7 @@
 										<v-list-item v-for="a in acknowledgedFilterItems" :key="a.value" density="compact" @click="filterAcknowledged = a.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterAcknowledged" :value="a.value" density="compact" hide-details @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
+													<v-icon size="small" class="radio-indicator" :class="{ selected: filterAcknowledged === a.value }">{{ filterAcknowledged === a.value ? 'mdi-radiobox-marked' : 'mdi-radiobox-blank' }}</v-icon>
 												</v-list-item-action>
 											</template>
 											<span>{{ a.title }}</span>
@@ -104,7 +104,7 @@
 										<v-list-item v-for="l in lockedFilterItems" :key="l.value" density="compact" @click="filterLocked = l.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterLocked" :value="l.value" density="compact" hide-details @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
+													<v-icon size="small" class="radio-indicator" :class="{ selected: filterLocked === l.value }">{{ filterLocked === l.value ? 'mdi-radiobox-marked' : 'mdi-radiobox-blank' }}</v-icon>
 												</v-list-item-action>
 											</template>
 											<span>{{ l.title }}</span>
@@ -1081,6 +1081,12 @@ body.dark .topic .seen img.seen {
 }
 .filter-icon {
 	margin-right: 4px;
+}
+.radio-indicator {
+	color: var(--text-color-secondary);
+	&.selected {
+		color: #5fad1b;
+	}
 }
 .filter-item-icon {
 	margin-right: 4px;

@@ -1,3 +1,13 @@
+250:
+  title: "WIP"
+  added:
+    - "The LeekScript console becomes the Console: run JavaScript, TypeScript and Python interactively too, with state kept between lines."
+  improved:
+    - "#ai The JavaScript, TypeScript and Python API is now 100% object-oriented: no more global functions or constants, everything goes through objects (Fight, me, Weapon.pistol, System.operations, Network, Color...). The LeekScript stdlib is replaced by the language natives (Math, JSON, random...)."
+    - "Account deletion is now possible for team creators: the team is handed over to its oldest member, or dissolved if the creator was alone."
+  fixed:
+    - "Forum: the radio filters (Read / Unread, Acknowledged, Locked) that all appeared selected on the first click and could no longer be deselected."
+
 249:
   title: "AIs in JavaScript, TypeScript and Python, Collection page, and seasonal events."
   added:
@@ -15,9 +25,11 @@
     - "Maintenance page with a leek runner mini-game. #img_249_maintenance"
     - "Start a group demo to try Leek Wars with others, without an account."
     - "Welcome message in the chat for newly registered players."
+    - "Push notifications: enable them from the Notifications page to be alerted directly in your browser."
     - "#ai Return type covariance when overriding a method. #img_249_covariant"
     - "#ai Optional indexed access with the `a?[b]` operator."
   improved:
+    - "Number of remaining Restat Potions displayed in the garden, next to the fight count."
     - "The fight history updates live, without reloading the page."
     - "Dedicated article pages for the dev blog, indexed by search engines."
     - "Payment now follows the light or dark theme of the site."
@@ -31,7 +43,7 @@
     - "Dialog prompting you to start the LeekScript tutorial. #img_249_tutorial_dialog"
     - "Trophy icons adapted to dark mode."
     - "Fights compressed server-side for lighter storage."
-    - "Purchased fight packs land in your inventory (to activate) instead of being credited directly."
+    - "Purchased fight packs land in your inventory (to activate) instead of being credited directly, usable from the garden when you're out of fights."
     - "Automatic removal from the garden after a losing streak now requires distinct opponents."
     - "#ai Entry-point functions are no longer flagged as unused."
     - "#ai Python AI validation in the editor: undefined names, type and syntax errors reported live."

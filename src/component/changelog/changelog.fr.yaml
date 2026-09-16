@@ -1,3 +1,13 @@
+250:
+  title: "WIP"
+  added:
+    - "La console LeekScript devient la Console : exécutez aussi du JavaScript, du TypeScript et du Python en interactif, avec un état conservé entre les lignes."
+  improved:
+    - "#ai L'API JavaScript, TypeScript et Python devient 100 % orientée objet : plus aucune fonction ni constante globale, tout passe par les objets (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript est remplacée par les natifs du langage (Math, JSON, random...)."
+    - "Suppression de compte possible pour le créateur d'une équipe : elle est transmise au membre le plus ancien, ou dissoute s'il est seul."
+  fixed:
+    - "Forum : les filtres radio (Lu / Non lu, Pris en compte, Verrouillé) qui apparaissaient tous sélectionnés au premier clic et ne pouvaient plus être désélectionnés."
+
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
   added:
@@ -15,9 +25,11 @@
     - "Page de maintenance avec un mini-jeu de course de poireau. #img_249_maintenance"
     - "Lancez une démo de groupe pour essayer Leek Wars à plusieurs, sans compte."
     - "Message de bienvenue dans le chat pour les nouveaux inscrits."
+    - "Notifications push : activez-les depuis la page Notifications pour être prévenu directement dans votre navigateur."
     - "#ai Covariance du type de retour lors de la redéfinition d'une méthode. #img_249_covariant"
     - "#ai Accès indexé optionnel avec l'opérateur `a?[b]`."
   improved:
+    - "Nombre de potions de réinitialisation restantes affiché dans le Potager, à côté du nombre de combats."
     - "L'historique de combat se met à jour en direct, sans recharger la page."
     - "Pages d'article dédiées pour le dev-blog, indexées par les moteurs de recherche."
     - "Le paiement suit le thème clair ou sombre du site."
@@ -31,7 +43,7 @@
     - "Dialogue incitant à démarrer le tutoriel LeekScript. #img_249_tutorial_dialog"
     - "Icônes de trophée adaptées au mode sombre."
     - "Combats compressés côté serveur pour un stockage plus léger."
-    - "Les packs de combats achetés arrivent dans l'inventaire (à activer) au lieu d'être crédités directement."
+    - "Les packs de combats achetés arrivent dans l'inventaire (à activer) au lieu d'être crédités directement, utilisables depuis le potager quand vous n'avez plus de combats."
     - "Le retrait automatique du potager après une série de défaites exige désormais des adversaires distincts."
     - "#ai Les fonctions points d'entrée ne sont plus signalées comme inutilisées."
     - "#ai Validation des IA Python dans l'éditeur : noms indéfinis, erreurs de type et de syntaxe signalés en direct."

@@ -1,12 +1,15 @@
 # API objet Leek Wars (polyglot JS / TS / Python)
 
 Référence complète de l'**API de combat orientée objet** exposée aux IA écrites en **JavaScript**,
-**TypeScript** et **Python** (style stdlib objet LeekScript v5). Généré depuis la source de vérité de
-l'éditeur : `OBJECT_API_DECLARATIONS` + `CONST_CONTAINERS` dans
-[leekwars-dts.ts](leekwars-dts.ts) (runtime : `generator/.../polyglot/objects.js` / `objects.py`).
+**TypeScript** et **Python**. Généré depuis la source de vérité de l'éditeur :
+`OBJECT_API_DECLARATIONS` + `CONST_CONTAINERS` dans [leekwars-dts.ts](leekwars-dts.ts)
+(runtime : `generator/.../polyglot/objects.js` / `objects.py`).
 
-> L'API plate (fonctions `getNearestEnemy()`, constantes `WEAPON_PISTOL`…) reste disponible au
-> runtime, mais l'**objet** est la forme idiomatique. Ce document ne couvre que la forme objet.
+> L'API est **100 % objet** : les fonctions plates (`getNearestEnemy()`…) et les constantes plates
+> (`WEAPON_PISTOL`…) **n'existent plus** en JS/TS/Python. La stdlib LeekScript (`round`, `min`,
+> `jsonEncode`, `typeOf`…) n'est pas exposée non plus : utilise les natifs du langage (`Math`,
+> `JSON`, `typeof` / `type()`, `random`…). `Math.random()` et le module `random` restent seedés
+> par la graine du combat (reproductible).
 
 ## Point d'entrée
 
@@ -63,29 +66,27 @@ Alias d'arguments (acceptent l'objet **ou** son id) :
 |--------|------|-------------|
 | `me` | `Me` | Ton entité courante. |
 | `turn` | `number` | Numéro du tour. |
-| `getNearestEnemy()` | `Entity \| null` | Ennemi vivant le plus proche. |
-| `getNearestAlly()` | `Entity \| null` | Allié vivant le plus proche. |
-| `getFarthestEnemy()` | `Entity \| null` | Ennemi vivant le plus loin. |
-| `getFarthestAlly()` | `Entity \| null` | Allié vivant le plus loin. |
-| `getNearestEnemyTo(target)` | `Entity \| null` | Ennemi le plus proche de `target` (`EntityLike`). |
-| `getNearestAllyTo(target)` | `Entity \| null` | Allié le plus proche de `target` (`EntityLike`). |
-| `getNearestEnemyToCell(cell)` | `Entity \| null` | Ennemi le plus proche d'une **case** (`CellLike`). |
-| `getNearestAllyToCell(cell)` | `Entity \| null` | Allié le plus proche d'une **case** (`CellLike`). |
-| `getEnemies()` | `Entity[]` | Tous les ennemis. |
-| `getAllies()` | `Entity[]` | Tous les alliés. |
-| `getAliveEnemies()` | `Entity[]` | Ennemis vivants. |
-| `getAliveAllies()` | `Entity[]` | Alliés vivants. |
-| `getDeadEnemies()` | `Entity[]` | Ennemis morts. |
-| `getDeadAllies()` | `Entity[]` | Alliés morts. |
-| `getEnemiesCount()` | `number` | Nombre d'ennemis. |
-| `getAlliesCount()` | `number` | Nombre d'alliés. |
-| `getAliveEnemiesCount()` | `number` | Nombre d'ennemis vivants. |
-| `getAliveAlliesCount()` | `number` | Nombre d'alliés vivants. |
-| `getAlliedTurret()` | `Entity \| null` | Ta tourelle d'équipe. |
-| `getEnemyTurret()` | `Entity \| null` | Tourelle ennemie. |
+| `id` | `number` | Id du combat. |
+| `type` | `number` | Type de combat (`Fight.Type.*`). |
+| `context` | `number` | Contexte (`Fight.Context.*`). |
+| `boss` | `number` | Boss du combat (`Fight.Boss.*`). |
+| `winner` | `number` | Vainqueur. |
+| `alliesLife` / `enemiesLife` | `number` | Somme des PV des alliés / ennemis. |
+| `getNearestEnemy()` / `getNearestAlly()` | `Entity \| null` | Ennemi/allié vivant le plus proche. |
+| `getFarthestEnemy()` / `getFarthestAlly()` | `Entity \| null` | Le plus loin. |
+| `getNearestEnemyTo(target)` / `getNearestAllyTo(target)` | `Entity \| null` | Le plus proche de `target` (`EntityLike`). |
+| `getNearestEnemyToCell(cell)` / `getNearestAllyToCell(cell)` | `Entity \| null` | Le plus proche d'une **case**. |
+| `getEnemies()` / `getAllies()` | `Entity[]` | Tous. |
+| `getAliveEnemies()` / `getAliveAllies()` | `Entity[]` | Vivants. |
+| `getDeadEnemies()` / `getDeadAllies()` | `Entity[]` | Morts. |
+| `getEnemiesCount()` / `getAlliesCount()` | `number` | Comptes. |
+| `getAliveEnemiesCount()` / `getAliveAlliesCount()` / `getDeadEnemiesCount()` | `number` | Comptes filtrés. |
+| `getAlliedTurret()` / `getEnemyTurret()` | `Entity \| null` | Tourelles. |
+| `getNextPlayer(entity?)` / `getPreviousPlayer(entity?)` | `Entity \| null` | Ordre de jeu. |
+| `listen()` | `any[][]` | Paroles prononcées (say) : liste de `[entité, message]`. |
 
 Sous-conteneurs de constantes : `Fight.Type`, `Fight.Context`, `Fight.Boss`, `Fight.Erosion`,
-`Fight.Use`, `Fight.Message` (cf. [Constantes](#constantes)).
+`Fight.Use` (cf. [Constantes](#constantes)).
 
 ### `Field` — le terrain
 
@@ -94,11 +95,20 @@ Sous-conteneurs de constantes : `Fight.Type`, `Fight.Context`, `Fight.Boss`, `Fi
 | `type` | `number` | Type de carte (`Field.<MAP>`). |
 | `cellFromXY(x, y)` | `Cell \| null` | Case aux coordonnées `(x, y)`. |
 | `getObstacles()` | `Cell[]` | Cases obstacle. |
-| `distance(a, b)` | `number` | Distance à vol d'oiseau (`CellLike`, `CellLike`). |
+| `distance(a, b)` | `number` | Distance à vol d'oiseau. |
 | `cellDistance(a, b)` | `number` | Distance en cases. |
-| `pathLength(a, b)` | `number` | Longueur du chemin. |
-| `lineOfSight(a, b)` | `boolean` | Ligne de vue dégagée. |
-| `path(from, to, ignoredCells?)` | `Cell[]` | Chemin de `from` à `to`, en évitant `ignoredCells` (`CellLike[]`). |
+| `pathLength(a, b, ignoredCells?)` | `number` | Longueur du chemin. |
+| `lineOfSight(a, b, ignoredEntities?)` | `boolean` | Ligne de vue dégagée. |
+| `onSameLine(a, b)` | `boolean` | Les deux cases sont alignées. |
+| `path(from, to, ignoredCells?)` | `Cell[]` | Chemin de `from` à `to`. |
+
+### `Network` — messages d'équipe
+
+| Membre | Type | Description |
+|--------|------|-------------|
+| `sendTo(entity, type, params)` | `boolean` | Envoie un message typé (`Message.Type.*`) à un allié. |
+| `sendAll(type, params)` | `void` | Envoie à tous les alliés. |
+| `getMessages(entity?)` | `Message[]` | Messages reçus (de `entity` seulement si fourni). |
 
 ### `Registers` — stockage persistant entre combats
 
@@ -109,17 +119,41 @@ Sous-conteneurs de constantes : `Fight.Type`, `Fight.Context`, `Fight.Boss`, `Fi
 | `delete(key)` | `any` | Supprime un registre. |
 | `all()` | `any` | Tous les registres. |
 
-### `Debug` — marquage / visualisation
+### `Debug` — marquage / visualisation / journal
 
 | Membre | Type | Description |
 |--------|------|-------------|
-| `mark(cells, color?, duration?)` | `boolean` | Marque une/des case(s) (`CellLike \| CellLike[]`). |
+| `log(value, color?)` | `void` | Écrit dans le journal de combat (en couleur si `color`). |
+| `mark(cells, color?, duration?)` | `boolean` | Marque une/des case(s). |
 | `markText(cells, text, color?, duration?)` | `boolean` | Marque avec un texte. |
 | `clearMarks()` | `void` | Efface les marquages. |
 | `show(cell, color?)` | `boolean` | Met en évidence une case. |
 | `pause()` | `void` | Met le combat en pause (debug). |
 
-`console.log(...)` (JS) et `print(...)` (Python) sont redirigés vers le journal de combat.
+`console.log(...)` (JS) et `print(...)` (Python) sont aussi redirigés vers le journal de combat
+(`console.warn`/`console.error` → niveaux warning/erreur).
+
+### `System` — budget d'exécution et horloge
+
+| Membre | Type | Description |
+|--------|------|-------------|
+| `operations` | `number` | Opérations consommées ce tour (borne tes recherches avec `maxOperations`). |
+| `maxOperations` | `number` | Budget d'opérations du tour. |
+| `instructionsCount` | `number` | Instructions exécutées. |
+| `usedRAM` / `maxRAM` | `number` | Mémoire utilisée / budget. |
+| `date` / `time` | `string` | Date / heure du combat. |
+| `timestamp` | `number` | Timestamp du combat. |
+
+Constantes : `System.OPERATIONS_LIMIT`, `System.INSTRUCTIONS_LIMIT`.
+
+### `Color` — couleurs (journal, marquages)
+
+| Membre | Type | Description |
+|--------|------|-------------|
+| `rgb(r, g, b)` | `number` | Compose une couleur (composantes 0-255). |
+| `red(c)` / `green(c)` / `blue(c)` | `number` | Extrait une composante. |
+
+Constantes : `Color.RED`, `Color.GREEN`, `Color.BLUE`.
 
 ---
 
@@ -131,29 +165,31 @@ Propriétés (lecture seule) :
 
 | Propriété | Type | | Propriété | Type |
 |-----------|------|-|-----------|------|
-| `id` | `number` | | `absoluteShield` | `number` |
-| `life` | `number` | | `relativeShield` | `number` |
-| `maxLife` | `number` | | `cell` | `Cell` |
-| `tp` | `number` | | `weapon` | `Weapon \| null` |
-| `maxTP` | `number` | | `weapons` | `Weapon[]` |
-| `mp` | `number` | | `chips` | `Chip[]` |
-| `maxMP` | `number` | | `effects` | `Effect[]` |
-| `strength` | `number` | | `launchedEffects` | `Effect[]` |
-| `agility` | `number` | | `passiveEffects` | `Feature[]` |
-| `wisdom` | `number` | | `states` | `any[]` |
-| `resistance` | `number` | | `summons` | `Entity[]` |
-| `science` | `number` | | `summoner` | `Entity \| null` |
-| `magic` | `number` | | `summoned` | `boolean` |
-| `power` | `number` | | `alive` | `boolean` |
-| `level` | `number` | | `dead` | `boolean` |
-| `name` | `string` | | | |
+| `id` | `number` | | `cell` | `Cell` |
+| `life` / `maxLife` | `number` | | `weapon` | `Weapon \| null` |
+| `tp` / `maxTP` | `number` | | `weapons` | `Weapon[]` |
+| `mp` / `maxMP` | `number` | | `chips` | `Chip[]` |
+| `strength` | `number` | | `effects` | `Effect[]` |
+| `agility` | `number` | | `launchedEffects` | `Effect[]` |
+| `wisdom` | `number` | | `passiveEffects` | `Feature[]` |
+| `resistance` | `number` | | `states` | `any[]` |
+| `science` | `number` | | `summons` | `Entity[]` |
+| `magic` | `number` | | `summoner` | `Entity \| null` |
+| `power` | `number` | | `summoned` | `boolean` |
+| `level` | `number` | | `alive` / `dead` | `boolean` |
+| `name` | `string` | | `isStatic` | `boolean` |
+| `absoluteShield` | `number` | | `birthTurn` / `turnOrder` / `side` | `number` |
+| `relativeShield` | `number` | | `leekID` / `teamID` / `farmerID` / `aiID` | `number` |
+| `damageReturn` | `number` | | `teamName` / `compositionName` | `string` |
+| `frequency` | `number` | | `farmerName` / `farmerCountry` | `string` |
+| `cores` / `ram` | `number` | | `aiName` | `string` |
 
 Méthodes :
 
 | Méthode | Type | Description |
 |---------|------|-------------|
-| `isAlly()` | `boolean` | L'entité est-elle une alliée. |
-| `isEnemy()` | `boolean` | L'entité est-elle une ennemie. |
+| `isAlly()` / `isEnemy()` | `boolean` | Camp de l'entité. |
+| `stat(stat)` | `number` | Caractéristique par constante (`Entity.Stat.*`). |
 | `distance(target)` | `number` | Distance en cases jusqu'à `target` (`CellLike`). |
 
 Sous-conteneurs de constantes : `Entity.Stat`, `Entity.Type`.
@@ -164,27 +200,30 @@ En plus de tout `Entity` :
 
 | Méthode | Type | Description |
 |---------|------|-------------|
-| `moveToward(target)` | `number` | Se rapproche de `target` (`CellLike`). |
-| `moveAwayFrom(target)` | `number` | S'éloigne de `target` (`CellLike`). |
-| `useWeapon(target)` | `number` | Utilise l'arme courante sur `target` (`EntityLike`). |
-| `useWeaponOnCell(cell)` | `number` | Utilise l'arme sur une case (`CellLike`). |
-| `useChip(chip, target)` | `number` | Utilise `chip` (`ChipLike`) sur `target` (`EntityLike`). |
-| `useChipOnCell(chip, cell)` | `number` | Utilise `chip` sur une case. |
-| `setWeapon(weapon)` | `boolean` | Équipe `weapon` (`WeaponLike`, coûte 1 PT). |
+| `moveToward(target, mp?)` / `moveAwayFrom(target, mp?)` | `number` | Se rapproche / s'éloigne (`mp` = PM max à dépenser). |
+| `moveTowardCells(cells, mp?)` / `moveAwayFromCells(cells, mp?)` | `number` | Variante plurielle (cases). |
+| `moveTowardEntities(entities, mp?)` / `moveAwayFromEntities(entities, mp?)` | `number` | Variante plurielle (entités). |
+| `moveTowardLine(a, b, mp?)` / `moveAwayFromLine(a, b, mp?)` | `number` | Vers/depuis une ligne. |
+| `useWeapon(target)` / `useWeaponOnCell(cell)` | `number` | Utilise l'arme courante. |
+| `useChip(chip, target?)` / `useChipOnCell(chip, cell)` | `number` | Utilise une puce. |
+| `setWeapon(weapon)` | `boolean` | Équipe `weapon` (coûte 1 PT). |
 | `say(message)` | `boolean` | Fait parler ton entité. |
-| `canUseWeapon(target)` | `number` | Peut-on utiliser l'arme sur `target`. |
-| `canUseChip(chip, target)` | `number` | Peut-on utiliser `chip` sur `target`. |
-| `resurrect(target, cell)` | `number` | Ressuscite `target` (`EntityLike`) sur `cell` (`CellLike`). |
-| `weaponCell(target, weapon?, ignoredCells?)` | `Cell \| null` | Case d'où utiliser l'arme (courante ou `weapon`) sur `target` (entité **ou** case). |
-| `weaponCells(target, weapon?, ignoredCells?)` | `Cell[]` | Toutes les cases d'où utiliser l'arme sur `target`. |
-| `chipCell(chip, target, ignoredCells?)` | `Cell \| null` | Case d'où utiliser `chip` sur `target`. |
-| `chipCells(chip, target, ignoredCells?)` | `Cell[]` | Toutes les cases d'où utiliser `chip` sur `target`. |
-| `weaponTargets(cell, weapon?)` | `Entity[]` | Entités touchées si l'arme est utilisée sur `cell`. |
-| `chipTargets(chip, cell)` | `Entity[]` | Entités touchées si `chip` est utilisée sur `cell`. |
+| `lama()` | `void` | « lama » (trophée). |
+| `canUseWeapon(target)` / `canUseWeapon(weapon, target)` | `number` | Test d'attaque à l'arme. |
+| `canUseWeaponOnCell(cell)` / `canUseWeaponOnCell(weapon, cell)` | `number` | Idem sur case. |
+| `canUseChip(chip, target)` / `canUseChipOnCell(chip, cell)` | `number` | Test de lancement de puce. |
+| `resurrect(target, cell)` | `number` | Ressuscite `target` sur `cell`. |
+| `itemUses(item)` | `number` | Utilisations de l'item ce tour. |
+| `setLoadout(name, keep?)` | `boolean` | Change l'équipement courant. |
+| `summon(chip, cell, callback, name?)` | `number` | Invoque un bulbe (`callback` rejouée à chaque tour du bulbe). |
+| `weaponCell(target, weapon?, ignoredCells?)` | `Cell \| null` | Case d'où utiliser l'arme sur `target` (entité **ou** case). |
+| `weaponCells(target, weapon?, ignoredCells?)` | `Cell[]` | Toutes les cases. |
+| `chipCell(chip, target, ignoredCells?)` / `chipCells(...)` | `Cell \| null` / `Cell[]` | Idem pour une puce. |
+| `weaponTargets(cell, weapon?)` / `chipTargets(chip, cell)` | `Entity[]` | Entités touchées. |
 
 ### Sous-types d'entité
 
-Renvoyés typés par l'API (`x instanceof Bulb`…). Ils héritent de `Entity`.
+Renvoyés typés par l'API (`x instanceof Bulb` / `isinstance(x, Bulb)`). Ils héritent de `Entity`.
 
 | Classe | Membre propre | Constantes |
 |--------|---------------|------------|
@@ -198,54 +237,49 @@ Renvoyés typés par l'API (`x instanceof Bulb`…). Ils héritent de `Entity`.
 
 | Membre | Type | Description |
 |--------|------|-------------|
-| `id` | `number` | Identifiant de la case. |
-| `x` | `number` | Coordonnée X. |
-| `y` | `number` | Coordonnée Y. |
-| `empty` | `boolean` | Case vide. |
-| `obstacle` | `boolean` | Case obstacle. |
+| `id` / `x` / `y` | `number` | Identifiant et coordonnées. |
+| `empty` / `obstacle` / `hasEntity` | `boolean` | Nature de la case. |
 | `entity` | `Entity \| null` | Entité présente sur la case. |
 | `content` | `number` | Contenu (`Cell.Type.EMPTY/PLAYER/ENTITY/OBSTACLE`). |
-| `distance(target)` | `number` | Distance en cases jusqu'à `target` (`CellLike`). |
-| `pathLength(target)` | `number` | Longueur du chemin jusqu'à `target`. |
-| `lineOfSight(target)` | `boolean` | Ligne de vue jusqu'à `target`. |
-| `path(target, ignoredCells?)` | `Cell[]` | Chemin jusqu'à `target`, en évitant `ignoredCells`. |
+| `distance(target)` | `number` | Distance en cases. |
+| `pathLength(target, ignoredCells?)` | `number` | Longueur du chemin. |
+| `lineOfSight(target, ignoredEntities?)` | `boolean` | Ligne de vue. |
+| `path(target, ignoredCells?)` | `Cell[]` | Chemin jusqu'à `target`. |
+| `onSameLine(target)` | `boolean` | Case alignée avec la cible. |
 
 Sous-conteneur de constantes : `Cell.Type`.
 
 ### `Item` — base commune arme / puce
 
-| Membre | Type | Description |
-|--------|------|-------------|
-| `id` | `number` | Identifiant de l'item. |
-
-Sous-conteneurs de constantes : `Item.LaunchType`, `Item.Area`.
+`id: number` + sous-conteneurs `Item.LaunchType`, `Item.Area`.
 
 ### `Weapon` (extends `Item`) — une arme
 
 | Membre | Type | | Membre | Type |
 |--------|------|-|--------|------|
-| `cost` | `number` (PT) | | `area` | `number` |
-| `minRange` | `number` | | `launchType` | `number` |
-| `maxRange` | `number` | | `maxUses` | `number` |
-| `minScope` | `number` | | `inline` | `boolean` |
-| `maxScope` | `number` | | `needsLos` | `boolean` |
-| `name` | `string` | | `features` | `Feature[]` |
+| `cost` | `number` (PT) | | `maxUses` | `number` |
+| `minRange` / `maxRange` | `number` | | `inline` | `boolean` |
+| `name` | `string` | | `needsLos` | `boolean` |
+| `area` | `number` | | `failure` | `number` (%) |
+| `launchType` | `number` | | `features` / `passiveFeatures` | `Feature[]` |
 
-Constantes : instances `Weapon.<nom>` (ex. `Weapon.pistol`, `Weapon.machineGun`).
+Méthodes : `effectiveArea(cell, from?): Cell[]`. Statiques : `Weapon.getAll(): Weapon[]`,
+`Weapon.isWeapon(v): boolean`. Constantes : instances `Weapon.<nom>` (ex. `Weapon.pistol`).
 
 ### `Chip` (extends `Item`) — une puce
 
 | Membre | Type | | Membre | Type |
 |--------|------|-|--------|------|
-| `cost` | `number` (PT) | | `area` | `number` |
-| `cooldown` | `number` | | `launchType` | `number` |
-| `currentCooldown` | `number` | | `maxUses` | `number` |
-| `minRange` | `number` | | `inline` | `boolean` |
-| `maxRange` | `number` | | `needsLos` | `boolean` |
-| `minScope` | `number` | | `features` | `Feature[]` |
-| `maxScope` | `number` | | `name` | `string` |
+| `cost` | `number` (PT) | | `maxUses` | `number` |
+| `cooldown` / `currentCooldown` | `number` | | `inline` / `needsLos` | `boolean` |
+| `minRange` / `maxRange` | `number` | | `failure` | `number` (%) |
+| `minScope` / `maxScope` | `number` | | `features` | `Feature[]` |
+| `name` | `string` | | `bulbChips` | `Chip[]` (puce d'invocation) |
+| `area` / `launchType` | `number` | | `bulbCharacteristics` / `bulbStats` | `any` |
 
-Constantes : instances `Chip.<nom>` (ex. `Chip.bandage`, `Chip.fireball`).
+Méthodes : `currentCooldownOf(entity): number`, `effectiveArea(cell, from?): Cell[]`.
+Statiques : `Chip.getAll(): Chip[]`, `Chip.isChip(v): boolean`. Constantes : instances
+`Chip.<nom>` (ex. `Chip.bandage`, `Chip.fireball`).
 
 ### `Effect` — un effet actif/lancé sur une entité
 
@@ -254,41 +288,37 @@ Un effet en cours (dégâts, soin, poison…). À distinguer de `Feature` (poten
 | Membre | Type | Description |
 |--------|------|-------------|
 | `raw` | `any[]` | Tableau brut `[type, value, caster, turns, critical, item, target, modifiers]`. |
-| `type` | `number` | Type d'effet (`Effect.DAMAGE`…). |
-| `value` | `number` | Valeur. |
-| `caster` | `Entity \| null` | Lanceur. |
-| `turns` | `number` | Tours restants. |
+| `type` / `value` / `turns` / `item` / `modifiers` | `number` | Champs nommés. |
+| `caster` / `target` | `Entity \| null` | Lanceur / cible. |
 | `critical` | `boolean` | Coup critique. |
-| `item` | `number` | Id de l'arme/puce (0 si aucun). |
-| `target` | `Entity \| null` | Cible. |
-| `modifiers` | `number` | Modificateurs. |
+
+Statique : `Effect.getAll(): number[]` (liste des ids de types d'effets). Constantes : `Effect.DAMAGE`…
 
 ### `Feature` — une caractéristique déclarée par une arme/puce
 
 Potentiel d'un item (fourchette de valeurs), à distinguer d'`Effect` (effet actif).
+`raw` = `[type, minValue, maxValue, turns, targets, modifiers]`, champs nommés idem.
+
+### `Message` — un message d'équipe reçu
 
 | Membre | Type | Description |
 |--------|------|-------------|
-| `raw` | `any[]` | Tableau brut `[type, minValue, maxValue, turns, targets, modifiers]`. |
-| `type` | `number` | Type. |
-| `minValue` | `number` | Valeur min. |
-| `maxValue` | `number` | Valeur max. |
-| `turns` | `number` | Durée. |
-| `targets` | `number` | Cibles. |
-| `modifiers` | `number` | Modificateurs. |
+| `raw` | `any[]` | Tableau brut `[auteur, type, params]`. |
+| `author` | `Entity \| null` | Expéditeur. |
+| `type` | `number` | Type (`Message.Type.*`). |
+| `params` | `any` | Contenu. |
 
 ---
 
 ## Constantes
 
-Les constantes plates (`WEAPON_PISTOL`, `EFFECT_DAMAGE`, `STAT_STRENGTH`…) sont rangées par **famille**
-sous des conteneurs objet. Deux formes :
+Les constantes sont rangées par **famille** sous des conteneurs objet. Deux formes :
 
 - **instances** (armes/puces) : camelCase, typées par leur conteneur — `Weapon.pistol`, `Chip.bandage`.
 - **catégories** : MAJUSCULES, valeur `number` — `Effect.DAMAGE`, `Fight.Type.SOLO`.
 
-| Conteneur | Préfixe plat | Exemples |
-|-----------|--------------|----------|
+| Conteneur | Préfixe LS | Exemples |
+|-----------|------------|----------|
 | `Weapon.<nom>` | `WEAPON_` | `Weapon.pistol`, `Weapon.machineGun` |
 | `Chip.<nom>` | `CHIP_` | `Chip.bandage`, `Chip.fireball` |
 | `Item.LaunchType.*` | `LAUNCH_TYPE_` | `Item.LaunchType.LINE`, `.STAR` |
@@ -301,17 +331,19 @@ sous des conteneurs objet. Deux formes :
 | `Mob.Type.*` | `MOB_` | `Mob.Type.GRAAL` |
 | `Fight.Type.*` | `FIGHT_TYPE_` | `Fight.Type.SOLO`, `.TEAM`, `.BR` |
 | `Fight.Context.*` | `FIGHT_CONTEXT_` | `Fight.Context.TEST`, `.GARDEN` |
-| `Fight.Boss.*` | `BOSS_` | — |
-| `Fight.Erosion.*` | `EROSION_` | — |
-| `Fight.Use.*` | `USE_` | `Fight.Use.SUCCESS`, `.FAILED` |
-| `Fight.Message.*` | `MESSAGE_` | — |
+| `Fight.Boss.*` / `Fight.Erosion.*` / `Fight.Use.*` | `BOSS_` / `EROSION_` / `USE_` | `Fight.Use.SUCCESS` |
+| `Message.Type.*` | `MESSAGE_` | `Message.Type.HEAL` |
 | `Field.*` | `MAP_` | `Field.NEXUS`, `.FACTORY` |
 | `Effect.*` | `EFFECT_` | `Effect.DAMAGE`, `.HEAL`, `.POISON` |
 | `State.*` | `STATE_` | `State.UNHEALABLE` |
+| `Color.*` | `COLOR_` | `Color.RED`, `.GREEN`, `.BLUE` |
+| `System.*` | — | `System.OPERATIONS_LIMIT`, `.INSTRUCTIONS_LIMIT` |
+| `Fight.*` | — | `Fight.CRITICAL_FACTOR`, `.MAX_TURNS`, `.SUMMON_LIMIT` |
 
 > Les noms exacts des membres proviennent des *game data* du serveur ; les exemples ci-dessus sont
 > indicatifs. L'autocomplétion de l'éditeur (`Weapon.`, `Effect.`, `Entity.Stat.`…) liste les membres
-> réels disponibles.
+> réels disponibles. Les constantes sans famille (`PI`, `SORT_*`, `TYPE_*`…) ne sont pas exposées :
+> utilise les natifs du langage.
 
 ---
 
@@ -319,4 +351,5 @@ sous des conteneurs objet. Deux formes :
 
 Le moteur neutralise l'aléa et l'horloge : `Math.random()` (JS) et le module `random` (Python) sont
 initialisés par la graine du combat ; aucun accès au système, au réseau ni aux fichiers. Ton IA
-dispose d'un budget d'opérations et de mémoire par tour, calibré pour être comparable entre langages.
+dispose d'un budget d'opérations et de mémoire par tour, calibré pour être comparable entre langages
+(surveille-le avec `System.operations` / `System.maxOperations`).
