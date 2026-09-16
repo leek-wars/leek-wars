@@ -132,6 +132,19 @@ class FightStatistics {
 	public lives: {x: number, y: number | null}[][] = []
 	public lives_percent: {x: number, y: number | null}[][] = []
 	public lives_turns: boolean[] = []
+	// Quantités par tour pour l'histogramme (#537). On capture le cumul de chaque entité aux
+	// bornes de tour (turn_metrics_raw[t][id] = [dmg_out, dmg_in, heal, tank, usedPT, usedPM] à
+	// la fin du tour t, index 0 = état initial), puis on diffère pour obtenir la quantité gagnée
+	// à chaque tour. turn_damage_out[entityIndex][turnIndex] = quantité de ce tour. L'ordre des
+	// métriques suit damageChartType du panneau Répartition (0..5) pour un sélecteur unifié.
+	public turn_metrics_raw: { [id: number]: [number, number, number, number, number, number] }[] = []
+	public turn_damage_out: number[][] = []
+	public turn_damage_in: number[][] = []
+	public turn_heal: number[][] = []
+	public turn_tank: number[][] = []
+	public turn_tp: number[][] = []
+	public turn_pm: number[][] = []
+	public turn_count: number = 0
 	public team1: StatisticsEntity[] = []
 	public team2: StatisticsEntity[] = []
 	public teams: {[key: number]: Set<number>} = {}
@@ -167,6 +180,7 @@ class FightStatistics {
 		let currentEntity!: StatisticsEntity
 		let currentTurn = 0
 		this.lives_raw.push([])
+		this.snapshotTurnMetrics() // état initial (tout à zéro), borne 0 des quantités par tour
 		this.updateLifes()
 		const preciseLives = leek_count <= 2 && fight.report.duration <= 32
 
@@ -181,6 +195,8 @@ class FightStatistics {
 				case ActionType.NEW_TURN: {
 					// Possible d'avoir des action new_turn deux fois de suite (bug corrigé)
 					if (currentTurn !== action[1]) {
+						// On quitte un vrai tour : on fige le cumul atteint (borne de fin de tour) (#537)
+						if (currentTurn >= 1) { this.snapshotTurnMetrics() }
 						currentTurn = action[1]
 						this.newGlobalTurn = true
 						this.lives_raw.push([])
@@ -598,6 +614,8 @@ class FightStatistics {
 		}
 		this.updateLifes()
 		this.finalizeLifes()
+		this.snapshotTurnMetrics() // fin du dernier tour
+		this.finalizeTurnMetrics()
 
 		for (const j in entities) {
 			const leek = entities[j]
@@ -683,6 +701,46 @@ class FightStatistics {
 			}
 			this.lives.push(lives)
 			this.lives_percent.push(lives_percent)
+		}
+	}
+
+	// Fige le cumul courant des 6 métriques de chaque entité (#537). dmg_out/dmg_in/heal ne sont
+	// sommés qu'en fin de generate(), on les recalcule donc ici à la volée depuis leurs composantes.
+	// Ordre = damageChartType : [dégâts infligés, dégâts reçus, soins, tank, PT utilisés, PM utilisés].
+	private snapshotTurnMetrics() {
+		const snapshot: { [id: number]: [number, number, number, number, number, number] } = {}
+		for (const j in this.entities) {
+			const e = this.entities[j]
+			const dmg_out = e.direct_dmg_out + e.poison_out + e.return_out + e.nova_out + e.life_dmg_out
+			const dmg_in = e.direct_dmg_in + e.poison_in + e.return_in + e.nova_in + e.life_dmg_in
+			const heal = e.heal_out + e.life_steal_out + e.max_life_out
+			snapshot[j] = [dmg_out, dmg_in, heal, e.tank, e.usedPT, e.usedPM]
+		}
+		this.turn_metrics_raw.push(snapshot)
+	}
+
+	// Transforme les bornes cumulées en quantités par tour (delta entre deux bornes) (#537).
+	// Ces métriques ne font que croître, donc les deltas sont toujours >= 0.
+	private finalizeTurnMetrics() {
+		this.turn_count = Math.max(0, this.turn_metrics_raw.length - 1)
+		for (const j in this.entities) {
+			const dmg_out = [], dmg_in = [], heal = [], tank = [], tp = [], pm = []
+			for (let t = 1; t <= this.turn_count; ++t) {
+				const cur = this.turn_metrics_raw[t][j]
+				const prev = this.turn_metrics_raw[t - 1][j]
+				dmg_out.push(cur[0] - prev[0])
+				dmg_in.push(cur[1] - prev[1])
+				heal.push(cur[2] - prev[2])
+				tank.push(cur[3] - prev[3])
+				tp.push(cur[4] - prev[4])
+				pm.push(cur[5] - prev[5])
+			}
+			this.turn_damage_out.push(dmg_out)
+			this.turn_damage_in.push(dmg_in)
+			this.turn_heal.push(heal)
+			this.turn_tank.push(tank)
+			this.turn_tp.push(tp)
+			this.turn_pm.push(pm)
 		}
 	}
 

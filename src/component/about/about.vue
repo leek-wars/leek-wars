@@ -217,7 +217,6 @@ const technologies = [
 		{ name: 'Sass', link: 'https://sass-lang.com/', image: 'sass.svg' },
 		{ name: 'JavaScript', link: 'http://www.w3schools.com/js/DEFAULT.asp', image: 'javascript.png' },
 		{ name: 'TypeScript', link: 'https://www.typescriptlang.org/', image: 'typescript.svg' },
-		{ name: 'CodeMirror', link: 'https://codemirror.net/', image: 'codemirror.svg' },
 		{ name: 'Vue', link: 'https://vuejs.org/', image: 'vue.png' },
 		{ name: 'Chart.js', link: 'https://www.chartjs.org/', image: 'chartjs.png' },
 		{ name: 'KaTeX', link: 'https://katex.org/', image: 'katex.png' },

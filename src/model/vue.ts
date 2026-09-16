@@ -5,8 +5,7 @@ import LWLoader from '@/component/app/loader.vue'
 import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
 import Flag from '@/component/flag.vue'
-import '@/component/editor/leekscript.scss'
-import '@/component/editor/leekscript-monokai.scss'
+import '@/component/editor/monaco-highlight.scss'
 import Emblem from '@/component/emblem.vue'
 import LeekImage from '@/component/leek-image.vue'
 import TrophyIcon from '@/component/trophy-icon.vue'
@@ -252,6 +251,64 @@ function findNullElVnodePath(instance: unknown): string | null {
 	} catch { return null }
 }
 
+// Famille de crashs = corruption de l'arbre de vnodes de Vue (el/anchor/instance devenus
+// null pendant le patch, cause probable moteur de traduction/extension qui mute le DOM).
+// Une seule définition, partagée par le diagnostic ET la récupération par hard reload, pour
+// éviter que les deux listes de motifs divergent.
+function isDomCorruptionCrash(m: string): boolean {
+	return m.includes('parentNode') || m.includes('nextSibling') ||
+		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'") ||
+		m.includes("reading 'insertBefore'") || m.includes('"insertBefore"') || m.includes('emitsOptions')
+}
+
+// Crash d'ordre d'initialisation (TDZ) : accès à une liaison `const`/import avant son
+// initialisation (« Cannot access 'X' before initialization » sur V8/JSC, « can't access
+// lexical declaration 'X' before initialization » sur Firefox). Le rendu d'une page référence
+// un import statique de composant (ex. <Conversation> dans messages.vue) qui remonte TDZ.
+// Or nos bundles n'ont AUCUN cycle d'import inter-chunks (vérifié au build) : un import statique
+// ne PEUT donc pas être en TDZ pour un moteur conforme sur un graphe de modules sain. Quand ça
+// arrive quand même (observé sur Safari iOS), la cause est externe — un moteur de traduction /
+// une extension qui réévalue ou mute le contexte de la page. Traité comme la famille corruption
+// DOM : diagnostic d'interférence attaché, masqué si traduction active (voir reportVueError).
+function isInitOrderCrash(m: string): boolean {
+	return m.includes('before initialization')
+}
+
+// Empreintes DOM d'interférence externe (moteurs de traduction, extensions), collées aux
+// rapports de crash de la famille corruption-DOM (nextSibling/parentNode/insertBefore null).
+// Les navigateurs interdisent d'énumérer les extensions : on détecte donc leurs artefacts
+// injectés. Le but est de CONFIRMER en prod que ce cluster corrèle avec la traduction et de
+// quantifier sa part. On dumpe tous les attributs de <html> (capture les marqueurs inconnus,
+// ex. Firefox natif) plutôt que de hardcoder une liste.
+// `translation` = un moteur de traduction (Google Translate, Firefox Translations…) est
+// actif : marqueur qui prouve que le crash de patch est induit de l'extérieur, donc
+// irréparable côté app. On s'en sert pour masquer ces rapports (voir reportVueError).
+function detectDOMInterference(): { text: string, translation: boolean } {
+	try {
+		const signals: string[] = []
+		let translation = false
+		const html = document.documentElement
+		// Google Translate : classe translated-ltr/rtl + DOM du widget.
+		if (/\btranslated-(ltr|rtl)\b/.test(html.className || '')) { signals.push('google-translate'); translation = true }
+		if (document.querySelector('.goog-te-banner-frame, #goog-gt-tt, ins.skiptranslate')) { signals.push('goog-te-dom'); translation = true }
+		// <font> dans #app : signature d'un moteur de traduction (l'app n'en rend jamais).
+		const app = document.getElementById('app')
+		const fonts = app ? app.getElementsByTagName('font').length : 0
+		if (fonts) { signals.push('font-nodes=' + fonts); translation = true }
+		// Extensions invasives connues qui muteraient le DOM.
+		if (document.querySelector('grammarly-extension, grammarly-desktop-integration')) signals.push('grammarly')
+		if (document.querySelector('style.darkreader, style#dark-reader-style')) signals.push('darkreader')
+		// Attributs bruts de <html> : capte les marqueurs non anticipés (translate, lang forcé, etc.).
+		const attrs = Array.from(html.attributes)
+			.map(a => a.name + (a.value ? '="' + a.value.substring(0, 60) + '"' : ''))
+			.join(' ')
+		const text = '\n\nDOM interference: ' + (signals.length ? signals.join(' ') : 'no known marker') + '\nhtml attrs: ' + attrs
+		return { text, translation }
+	} catch (ex) {
+		return { text: '\n\nDOM interference: [detection failed: ' + (ex as Error).message + ']', translation: false }
+	}
+}
+
 export function reportVueError(err: unknown, vm: unknown, info: unknown, origin: string = 'main') {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const e = err as any
@@ -396,10 +453,26 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 		droppedSinceLastReport = 0
 	} catch { /* empty */ }
 
-	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + firstCrashTrace
+	// Signaux d'interférence DOM externe, pour les familles de crashs à cause externe probable :
+	// corruption-DOM (patch sur un el null) ET ordre d'init/TDZ (import statique en TDZ alors qu'aucun
+	// cycle d'import inter-chunks n'existe → impossible sans réévaluation externe du contexte page).
+	const isCorruption = isDomCorruptionCrash(e?.message || '')
+	// Familles dont la cause probable est externe (moteur de traduction / extension) : on leur
+	// attache le diagnostic d'interférence et on les masque si une traduction est active.
+	const externallyInduced = isCorruption || isInitOrderCrash(e?.message || '')
+	const interference = externallyInduced ? detectDOMInterference() : { text: '', translation: false }
+	const domInterference = interference.text
+
+	const stack = (e?.stack || '(no stack)') + '\n\nOrigin: ' + origin + '\nVue info: ' + infoAny + componentTrace + navTrace + instrTrace + domInterference + firstCrashTrace
 	const build_date = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : null
 	const build_commit = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : null
-	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit })
+	// Crash (patch DOM ou TDZ d'import) AVEC un moteur de traduction actif (goog-te-dom, <font>
+	// injectés…) : induit de l'extérieur, irréparable côté app. On le logge en MASQUÉ (hidden) pour
+	// mesurer son volume sans créer d'issue GitHub ni noyer #admin/errors. Sans marqueur de traduction,
+	// on garde le rapport complet : un nextSibling/parentNode null « nu » peut être un vrai bug de
+	// patch, un TDZ « nu » une vraie régression de bundling (cycle d'import réintroduit).
+	const hidden = externallyInduced && interference.translation
+	LeekWars.post('error/report', { error, stack, file, locale, user_agent, build_date, build_commit, hidden })
 
 	// Récupération après corruption de l'arbre de vnodes (un el devenu null : Vue re-render
 	// fait alors parentNode/nextSibling/style(null) → crash, et la session crashe en BOUCLE).
@@ -407,9 +480,7 @@ export function reportVueError(err: unknown, vm: unknown, info: unknown, origin:
 	// l'instrumentation #4163, la session crashe en boucle 4+ min malgré les bumps. On revient
 	// au HARD RELOAD (le comportement d'avant le 11/06), qui repart d'un arbre Vue sain. Délai
 	// court pour laisser le POST error/report partir ; cooldown 30s anti-boucle de reload.
-	const m = e?.message || ''
-	if (m.includes('parentNode') || m.includes('nextSibling') ||
-		m.includes("reading 'style'") || m.includes('property "style"') || m.includes("reading 'el'")) {
+	if (isCorruption) {
 		const RELOAD_KEY = 'parentNode-reload-at'
 		const last = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10)
 		if (Date.now() - last > 30_000) {
@@ -737,8 +808,19 @@ app.directive('chat-code-latex', {
 		el.querySelectorAll('code').forEach((c: Element) => {
 			let props
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
-				props = { code, expandable: true }
+				let code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").replace(/^\n+|\n+$/g, '')
+				// Langage optionnel sur la 1re ligne (```js, ```python, ...), à la Markdown :
+				// on ne retire la ligne que si le jeton correspond à un langage connu.
+				let language: string | undefined
+				const firstBreak = code.indexOf("\n")
+				if (firstBreak > 0) {
+					const firstLine = code.slice(0, firstBreak).trim()
+					if (LeekWars.codeLanguageMode(firstLine)) {
+						language = firstLine
+						code = code.slice(firstBreak + 1)
+					}
+				}
+				props = { code, expandable: true, language }
 			} else {
 				props = { code: c.textContent || '', single: true }
 			}
