@@ -4,6 +4,7 @@
 	"bazooka": "火箭筒",
 	"broadsword": "阔剑",
 	"dark_katana": "暗武士刀",
+	"desert_saber": "沙漠弯刀",
 	"destroyer": "驱逐舰",
 	"double_gun": "双枪",
 	"electrisor": "电击器",
@@ -26,15 +27,16 @@
 	"neutrino": "中微子",
 	"odachi": "大太刀",
 	"pistol": "手枪",
+	"plutonium_bazooka": "钚火箭筒",
 	"quantum_rifle": "量子步枪",
 	"revoked_m_laser": "已撤销的 M-激光",
 	"rhino": "犀牛",
 	"rifle": "步枪",
 	"scythe": "镰刀",
 	"shotgun": "霰弹枪",
+	"sun_spear": "太阳之枪",
 	"sword": "剑",
 	"taser": "泰瑟枪",
 	"unbridled_gazor": "不羁的气化器",
-	"unstable_destroyer": "不稳定的毁灭者",
-	"plutonium_bazooka": "钚火箭筒"
+	"unstable_destroyer": "不稳定的毁灭者"
 }

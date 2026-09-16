@@ -223,6 +223,10 @@ html {
 body.beta {
 	background: #492e46;
 }
+// Marqueur visuel du dev local (leekwars.local) : fond extérieur bleuté (classe ajoutée dans main.ts)
+body.local {
+	background: #24344d;
+}
 body {
 	margin: 0;
 	font-family: "Roboto", sans-serif;
@@ -608,6 +612,10 @@ body.dark img.emoji[src$="frequency.png"] {
 }
 .contributor, a.contributor {
 	color: #009c1d;
+	font-weight: bold;
+}
+.referent, a.referent {
+	color: #2196f3;
 	font-weight: bold;
 }
 .bot, a.bot {

@@ -16,18 +16,6 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<panel v-if="outOfFights && ownedFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross" class="use-packs-panel">
-					<template #content>
-						<div class="items fights">
-							<div v-for="pack in ownedFightPacks" :key="pack.template" class="item fight-pack owned-pack">
-								<img :src="'/image/fight-pack/fight_pack_' + pack.fights + '.png'">
-								<div>{{ $t('n_fights', [pack.fights]) }}</div>
-								<div class="owned-count">×{{ pack.count }}</div>
-								<v-btn size="small" color="primary" class="use-btn" @click="useFightPack(pack.template)">{{ $t('main.retrieve') }}</v-btn>
-							</div>
-						</div>
-					</template>
-				</panel>
 				<panel v-if="$store.state.farmer?.buy_fights_enabled && filteredFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross">
 					<template #content>
 						<loader v-if="!fight_packs.length" />
@@ -43,7 +31,7 @@
 					<template #content>
 						<loader v-if="!weapons.length" />
 						<div v-else class="items weapons">
-							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level}">
+							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level, 'craft-locked': craftLocked.has(weapon.id)}">
 								<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'" loading="lazy">
 								<div v-if="items[weapon.id].leek_count || items[weapon.id].farmer_count" class="counts">
 									<span v-if="items[weapon.id].leek_count" class="leek-count">{{ items[weapon.id].leek_count }}</span>
@@ -159,8 +147,13 @@
 								</router-link>
 
 								<div class="buy-buttons">
-									<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
+									<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals && !selectedScheme" class="already-have">
 										{{ $t('cannot_buy') }}
+									</div>
+									<div v-if="selectedScheme" class="buy">
+										<h4 class="buy-label">{{ $t('main.craft') }}</h4>
+										<v-btn class="craft-button" :disabled="!selectedSchemeOwned" prepend-icon="mdi-hammer-wrench" @click="goCraft()">{{ $t('main.craft') }}</v-btn>
+										<div v-if="!selectedSchemeOwned" class="already-have">{{ $t('scheme_required') }}</div>
 									</div>
 									<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }}</h4>
@@ -323,6 +316,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { PompTemplate } from '@/model/pomp'
 	import { PotionTemplate } from '@/model/potion'
+	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import ItemPreview from './item-preview.vue'
 	import SchemeImage from './scheme-image.vue'
@@ -379,6 +373,53 @@ const t = useNamespacedT('market')
 		return 0
 	})
 
+	// Schéma dont l'item est le résultat, pour les items craft-only du marché
+	// (market mais non achetables : Sabre du désert, Lance du soleil...)
+	function resultScheme(itemId: number): SchemeTemplate | null {
+		for (const s of Object.values(LeekWars.schemes) as SchemeTemplate[]) {
+			if (s.result === itemId) { return s }
+		}
+		return null
+	}
+
+	// Ids des schémas (scheme_template) possédés par l'éleveur
+	const farmerSchemes = computed(() => {
+		const set = new Set<number>()
+		if (store.state.farmer) {
+			for (const s of store.state.farmer.schemes) {
+				const template = LeekWars.items[s.template]
+				if (template) { set.add(parseInt('' + template.params, 10)) }
+			}
+		}
+		return set
+	})
+
+	const selectedScheme = computed(() => {
+		const item = selectedItem.value
+		if (!item || item.buyable || item.buyable_crystals) { return null }
+		return resultScheme(item.id)
+	})
+	const selectedSchemeOwned = computed(() => !!selectedScheme.value && farmerSchemes.value.has(selectedScheme.value.id))
+
+	// Items craft-only dont l'éleveur n'a pas le schéma : grisés dans les listes
+	const craftLocked = computed(() => {
+		const set = new Set<number>()
+		for (const s of Object.values(LeekWars.schemes) as SchemeTemplate[]) {
+			const item = LeekWars.items[s.result]
+			if (!item || item.buyable || item.buyable_crystals) { continue }
+			if (!farmerSchemes.value.has(s.id)) { set.add(s.result) }
+		}
+		return set
+	})
+
+	function goCraft() {
+		if (selectedScheme.value) {
+			// Le panneau Schémas doit être déplié pour que la forge soit montée à l'arrivée
+			localStorage.setItem('inventory/workshop', 'true')
+			router.push('/inventory?craft=' + selectedScheme.value.id)
+		}
+	}
+
 	function matchesSearch(item: ItemTemplate): boolean {
 		if (!search.value) { return true }
 		const query = search.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -388,26 +429,6 @@ const t = useNamespacedT('market')
 	}
 
 	const filteredFightPacks = computed(() => fight_packs.value.filter(p => matchesSearch(p)))
-
-	// Packs de combat possédés (utilisables manuellement). Les templates réels 265..268 sont
-	// chargés dans `items` avec leur farmer_count ; on les surface quand le joueur n'a plus de combats.
-	const FIGHT_PACK_TEMPLATES = [{ template: 265, fights: 50 }, { template: 266, fights: 100 }, { template: 267, fights: 200 }, { template: 268, fights: 500 }]
-	const outOfFights = computed(() => (store.state.farmer?.fights ?? 0) <= 0)
-	const ownedFightPacks = computed(() => FIGHT_PACK_TEMPLATES
-		.map(p => ({ ...p, count: items[p.template]?.farmer_count ?? 0 }))
-		.filter(p => p.count > 0))
-
-	function useFightPack(template: number) {
-		LeekWars.post<{ fights: number }>('item/retrieve', { template, quantity: 1 }).then(data => {
-			if (data.fights) {
-				store.commit('update-fights', data.fights)
-				store.commit('update-bought-fights', data.fights)
-			}
-			if (items[template]) items[template].farmer_count = Math.max(0, (items[template].farmer_count ?? 0) - 1)
-			store.commit('remove-inventory', { type: ItemType.FIGHT_PACK, item_template: template, quantity: 1 })
-			updateSubtitle()
-		}).error(error => LeekWars.toast(t('error_' + error.error, error.params)))
-	}
 
 	const filteredWeapons = computed(() => weapons.value.filter(w => matchesSearch(items[w.id])))
 	const filteredChips = computed(() => chips.value.filter(c => matchesSearch(items[c.id])))
@@ -850,6 +871,12 @@ const t = useNamespacedT('market')
 		&.toohigh {
 			opacity: 0.4;
 		}
+		&.craft-locked {
+			opacity: 0.4;
+			img {
+				filter: grayscale(1);
+			}
+		}
 	}
 	.items .item.router-link-active {
 		background: var(--pure-white);
@@ -892,20 +919,6 @@ const t = useNamespacedT('market')
 		div {
 			margin-top: 10px;
 		}
-	}
-	.item.fight-pack.owned-pack {
-		cursor: default;
-		.owned-count {
-			margin-top: 4px;
-			font-size: 13px;
-			color: var(--text-color-secondary);
-		}
-		.use-btn {
-			margin-top: 8px;
-		}
-	}
-	.use-packs-panel {
-		border: 1px solid var(--primary);
 	}
 	.fights img {
 		height: 75px;

@@ -4,6 +4,7 @@
 	"bazooka": "Bazoka",
 	"broadsword": "Pedang",
 	"dark_katana": "Katana gelap",
+	"desert_saber": "Pedang Gurun",
 	"destroyer": "Perusak",
 	"double_gun": "Senjata ganda",
 	"electrisor": "Penyetrum",
@@ -26,15 +27,16 @@
 	"neutrino": "Neutrino",
 	"odachi": "Odachi",
 	"pistol": "Pistol",
+	"plutonium_bazooka": "Bazoka plutonium",
 	"quantum_rifle": "Senapan kuantum",
 	"revoked_m_laser": "M-Laser dicabut",
 	"rhino": "Badak",
 	"rifle": "Senapan",
 	"scythe": "Sabit",
 	"shotgun": "Shotgun",
+	"sun_spear": "Tombak Matahari",
 	"sword": "Pedang",
 	"taser": "Taser",
 	"unbridled_gazor": "Gasser yang tak terkendali",
-	"unstable_destroyer": "Penghancur yang Tidak Stabil",
-	"plutonium_bazooka": "Bazoka plutonium"
+	"unstable_destroyer": "Penghancur yang Tidak Stabil"
 }

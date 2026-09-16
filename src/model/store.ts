@@ -7,6 +7,7 @@ import { Team } from '@/model/team'
 
 import Vuex, { Store } from 'vuex'
 import { clearAICache } from './ai-code-cache'
+import { setLocalStorageSafe } from './storage'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
@@ -30,6 +31,12 @@ function updateChatFarmer(chat: Chat, farmer: Farmer) {
 		chat.farmers.push(farmer)
 	}
 }
+
+// Numéro de la dernière requête de chargement lancée pour chaque conversation. Deux
+// rechargements peuvent se chevaucher (rafraîchissement immédiat au retour sur l'app +
+// rechargement à la reconnexion de la socket) : seule la réponse de la requête la plus
+// récente doit être appliquée, sinon une réponse en retard réécrase les messages frais.
+const chatLoadSequence: {[id: number]: number} = {}
 
 export interface AccountInfo {
 	id: number
@@ -157,11 +164,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			state.accounts = merged
 			localStorage.setItem('accounts', JSON.stringify(merged))
+			// Prévient les autres onglets du compte désormais actif (cf. onStorage dans app.vue).
+			setLocalStorageSafe('active-account', '' + state.farmer.id)
 			for (const id in state.farmer.leeks) {
 				state.farmer.leeks[id].country = state.farmer.country
 			}
 			state.farmer.animated_habs = state.farmer.habs
 			state.farmer.animated_crystals = state.farmer.crystals
+			// Jamais de compteur négatif (données serveur potentiellement erronées)
+			state.farmer.fights = Math.max(0, state.farmer.fights)
+			state.farmer.team_fights = Math.max(0, state.farmer.team_fights)
 			state.token = data.token
 			state.connected = true
 			state.connected_farmers = data.farmers
@@ -230,6 +242,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.removeItem('login-attempt')
 			localStorage.removeItem('token')
 			localStorage.removeItem('accounts')
+			localStorage.removeItem('active-account')
 			state.token = null
 			state.farmer = null
 			state.accounts = []
@@ -292,7 +305,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			// console.log("load chat", chat, chat.id)
 			state.chat[chat.id].opened = true
 			state.chat[chat.id].loading = true
+			const sequence = chatLoadSequence[chat.id] = (chatLoadSequence[chat.id] || 0) + 1
 			LeekWars.get('message/get-messages/' + chat.id + '/' + 30 + '/0').then(data => {
+				// Réponse périmée : une requête plus récente est en cours, c'est elle qui
+				// remplira la conversation (et qui remettra loading à false). Conversation
+				// disparue : déconnexion ou changement de compte pendant la requête ('reset'
+				// vide state.chat), il n'y a plus rien à remplir.
+				if (chatLoadSequence[chat.id] !== sequence || !state.chat[chat.id]) return
 				store.commit('clear-chat', chat.id)
 				for (const farmer of data.mentions) {
 					state.farmer_by_name[farmer.name] = farmer
@@ -306,6 +325,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.chat[chat.id].loaded = true
 				state.chat[chat.id].loading = false
 			}).error(() => {
+				if (chatLoadSequence[chat.id] !== sequence || !state.chat[chat.id]) return
 				store.commit('clear-chat', chat.id)
 				state.chat[chat.id].loaded = true
 				state.chat[chat.id].loading = false
@@ -474,7 +494,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'update-fights'(state: LeekWarsState, fights: number) {
 			if (state.farmer) {
-				state.farmer.fights += fights
+				state.farmer.fights = Math.max(0, state.farmer.fights + fights)
 				state.farmer.bought_fights = Math.min(state.farmer.bought_fights, state.farmer.fights)
 			}
 		},
@@ -484,7 +504,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'update-team-fights'(state: LeekWarsState, fights: number) {
-			if (state.farmer) { state.farmer.team_fights += fights }
+			if (state.farmer) { state.farmer.team_fights = Math.max(0, state.farmer.team_fights + fights) }
+		},
+
+		// Resynchronise les compteurs depuis le serveur (garden/get) : les
+		// décréments locaux ne voient pas les compos créées entre temps
+		'set-fights-counts'(state: LeekWarsState, counts: { fights: number, team_fights: number }) {
+			if (state.farmer) {
+				state.farmer.fights = Math.max(0, counts.fights)
+				state.farmer.team_fights = Math.max(0, counts.team_fights)
+			}
 		},
 
 		'set-talent'(state: LeekWarsState, talent: number) {
@@ -962,8 +991,35 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'level-up'(state: LeekWarsState, data: { leek: number, level: number, capital: number }) {
 			if (state.farmer) {
-				state.farmer.leeks[data.leek].level = data.level
-				state.farmer.leeks[data.leek].capital = data.capital
+				// Poireau d'un autre compte : même raison que 'update-xp' plus bas.
+				const leek = state.farmer.leeks[data.leek]
+				if (!leek) { return }
+				leek.level = data.level
+				leek.capital = data.capital
+				// Niveau 301 : le serveur (worker, etre301) équipe la couronne (item 83),
+				// rend l'ancien chapeau au stock et offre la potion peau dorée (82).
+				// Répliqué ici, sinon inventaire et modale de chapeaux restent
+				// désynchronisés jusqu'au rechargement de la page.
+				if (data.level === 301) {
+					const CROWN_ITEM = 83
+					const crown_template = LeekWars.items[CROWN_ITEM]
+					const crown = crown_template ? LeekWars.hats[crown_template.params] : null
+					// Garde anti-rejeu (reconnexion WS) : ne rien faire si la couronne est déjà portée
+					if (crown && leek.hat?.hat_template !== crown.id) {
+						store.commit('change-hat', { leek: data.leek, hat: {
+							id: -CROWN_ITEM,
+							template: CROWN_ITEM,
+							hat_template: crown.id,
+							name: crown.name,
+							level: crown.level,
+							quantity: 1,
+						} })
+					}
+					const GOLD_SKIN_POTION = 82
+					if (!state.farmer.potions.find(p => p.template === GOLD_SKIN_POTION)) {
+						state.farmer.potions.push({ id: -GOLD_SKIN_POTION, template: GOLD_SKIN_POTION, quantity: 1, time: Date.now() / 1000 })
+					}
+				}
 			}
 		},
 
@@ -1044,16 +1100,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		// Comme 'level-up', ces mutations sont pilotées par le WebSocket, qui peut être
+		// authentifié sur un autre compte que celui affiché : le poireau du message
+		// n'appartient alors pas à l'éleveur courant (cf. store-leek-updates.test.ts).
 		'update-xp'(state: LeekWarsState, data: { leek: number, xp: number }) {
-			if (state.farmer) {
-				state.farmer.leeks[data.leek].xp += data.xp
-			}
+			const leek = state.farmer?.leeks[data.leek]
+			if (leek) { leek.xp += data.xp }
 		},
 
 		'update-leek-talent'(state: LeekWarsState, data: { leek: number, talent: number }) {
-			if (state.farmer) {
-				state.farmer.leeks[data.leek].talent += data.talent
-			}
+			const leek = state.farmer?.leeks[data.leek]
+			if (leek) { leek.talent += data.talent }
 		},
 
 		'update-farmer-talent'(state: LeekWarsState, talent: number) {

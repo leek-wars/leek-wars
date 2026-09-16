@@ -48,6 +48,7 @@
 	"stackable": "cumulable",
 	"state_1": "Statue",
 	"state_11": "Statique",
+	"state_12": "Stérile",
 	"state_2": "Insoignable",
 	"state_3": "Invincible",
 	"state_4": "Pacifiste",

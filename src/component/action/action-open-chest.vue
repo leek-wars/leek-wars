@@ -13,11 +13,11 @@
 				<template #activator="{ props }">
 					<span class="res" v-bind="props">
 						<b>{{ quantity }}</b>
-						<img v-if="LeekWars.items[resource]" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '/' + LeekWars.items[resource].name.replace('hat_', '').replace('potion_', '') + '.png'">
+						<img v-if="LeekWars.items[resource]" :src="itemImageUrl(LeekWars.items[resource])">
 						<span v-else>{{ resource }}</span>
 					</span>
 				</template>
-				{{ quantity }}x <b v-if="LeekWars.items[resource]">{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource].type] + '.' + LeekWars.items[resource].name.replace('hat_', '').replace('potion_', '')) }}</b>
+				{{ quantity }}x <b v-if="LeekWars.items[resource]">{{ $t(itemTranslationKey(LeekWars.items[resource])) }}</b>
 			</v-tooltip>
 
 			<!-- <span v-for="(resource, i) in props.action.params[3]" :key="i">{{ resource }}, </span> -->
@@ -29,9 +29,7 @@
 import type { Action } from '@/model/action'
 import type { ReportLeek } from '@/model/fight'
 import Leek from '../report/action-leek.vue'
-import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
-
-const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
+import { itemImageUrl, itemTranslationKey } from '@/model/item'
 
 defineProps<{
 	action: Action

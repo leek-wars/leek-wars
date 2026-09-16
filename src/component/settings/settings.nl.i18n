@@ -9,6 +9,7 @@
 	"change_password": "Verander wachtwoord",
 	"confirm_password": "Bevestiging",
 	"delete_account": "Verwijder zijn account",
+	"export_data": "Mijn gegevens exporteren",
 	"delete_cancel": "Annuleren",
 	"delete_confirm": "Account verwijderen",
 	"delete_confirmation": "Bevestiging",
@@ -21,12 +22,15 @@
 	"delete_password": "Wachtwoord",
 	"delete_success": "Succesvolle verwijdering",
 	"delete_success_message": "Je account is verwijderd, je wordt over een paar seconden doorgestuurd, tot ziens op Leek Wars!",
+	"delete_team_dissolve": "Je bent de oprichter en het enige lid van team {0}: het team wordt ontbonden wanneer je account wordt verwijderd.",
+	"delete_team_transfer": "Je bent de oprichter van team {0}: wanneer je account wordt verwijderd, wordt het team overgedragen aan het oudste lid.",
 	"discrete_mode": "Discrete modus",
 	"empty": "Leeg",
 	"empty_localstorage": "Leeg de localStorage",
 	"error_not_same_password": "De twee ingevoerde wachtwoorden moeten identiek zijn",
 	"error_password_length": "Wachtwoord moet tussen {0} en {1} tekens bevatten",
 	"error_wrong_password": "Het wachtwoord is incorrect",
+	"error_too_many_requests": "Te veel verzoeken, probeer het over een paar minuten opnieuw",
 	"error_forbidden_name": "Deze naam is verboden",
 	"error_invalid_godfather": "Deze speler bestaat niet",
 	"error_invalid_length": "Wachtwoord moet tussen {0} en {1} tekens bevatten",
@@ -75,5 +79,6 @@
 	"auto": "Auto",
 	"theme": "Thema",
 	"modern_theme": "Modern thema (bèta)",
-	"xp_theme": "XP-thema"
+	"xp_theme": "XP-thema",
+	"purchase_history": "Aankoopgeschiedenis"
 }

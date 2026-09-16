@@ -1,7 +1,14 @@
-import { FUNCTIONS } from '@/model/functions'
-import { LeekWars } from '@/model/leekwars'
-
-export default {
+// Grammaire Monarch LeekScript construite par une FABRIQUE plutôt qu'exportée en objet
+// statique : les listes de constantes/fonctions (jadis lues via des imports statiques de
+// `@/model/leekwars` + `@/model/functions`) sont désormais INJECTÉES à l'enregistrement.
+// Objectif : que le chunk de coloration des aperçus (monaco-highlight) n'importe AUCUN
+// module applicatif. L'ancienne chaîne monarch -> leekwars -> @/router introduisait un
+// cycle d'import : quand le chunk d'aperçu était le premier à évaluer ce cycle (ex. HMR d'un
+// module du boot), il plantait sur un TDZ (`Cannot access 'router' before initialization`),
+// l'import échouait et les blocs de code restaient sans coloration. Les données sont fournies
+// au runtime par `leekwars.ts` (createCodeArea) et par `monaco.ts` (éditeur).
+export function buildLeekScriptMonarch({ constants = [], functions = [], deprecatedFunctions = [] } = {}) {
+	return {
 
 	defaultToken: 'invalid',
 	tokenPostfix: '.js',
@@ -22,9 +29,9 @@ export default {
 		'true', 'false', 'null', 'NaN', 'Infinity'
 	],
 
-	lsConstants: LeekWars.constants.map(c => c.name),
-	lsFunctions: FUNCTIONS.filter(f => !f.deprecated).map(f => f.name),
-	lsFunctionsDeprecated: FUNCTIONS.filter(f => f.deprecated).map(f => f.name),
+	lsConstants: constants,
+	lsFunctions: functions,
+	lsFunctionsDeprecated: deprecatedFunctions,
 
 	typeKeywords: [
 		'any', 'boolean', 'number', 'object', 'string', 'undefined',
@@ -180,4 +187,5 @@ export default {
 			{ include: 'common' }
 		],
 	},
-};
+	}
+}

@@ -10,12 +10,13 @@
 				</div>
 				<loader v-if="!errors" />
 				<div v-else>
-					<div class="delete">
+					<div class="toolbar">
 						<v-switch v-model="showHidden" color="primary" density="compact" hide-details label="Erreurs masquées" @update:model-value="onShowHiddenChange" />
-						<div class="spacer"></div>
-						Supprimer par mot-clé
-						<input v-model="deleteQuery" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-						<v-btn size="small" @click="deleteErrors">Supprimer</v-btn>
+						<div class="delete-query">
+							<label for="delete-query">Supprimer par mot-clé</label>
+							<input id="delete-query" v-model="deleteQuery" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+							<v-btn size="small" color="error" :disabled="!deleteQuery.trim()" @click="deleteErrors">Supprimer</v-btn>
+						</div>
 					</div>
 
 					<h2 v-if="errors.length === 0">Aucune erreur !</h2>
@@ -435,13 +436,53 @@
 	#app.app .error code {
 		font-size: 10px;
 	}
-	.delete {
+	// Barre d'outils : le switch garde sa taille, le bloc de suppression prend le reste et passe
+	// seul à la ligne sous 320px de place restante (sinon en mobile tout était écrasé à 1 caractère
+	// de large, labels rendus à la verticale et superposés).
+	.toolbar {
 		display: flex;
-		gap: 10px;
-		width: 100%;
-		justify-content: flex-end;
+		flex-wrap: wrap;
 		align-items: center;
+		gap: 10px 16px;
 		margin-bottom: 10px;
+		.v-switch {
+			flex: none;
+		}
+	}
+	.delete-query {
+		flex: 1 1 320px;
+		min-width: 0;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		label {
+			white-space: nowrap;
+			color: var(--text-color-secondary);
+		}
+		input {
+			flex: 1 1 140px;
+			min-width: 0;
+			max-width: 420px;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			padding: 6px 10px;
+			background: var(--background);
+			color: var(--text-color);
+			&:focus {
+				border-color: var(--primary);
+				outline: none;
+			}
+		}
+		// En mobile le libellé prend sa propre ligne, sinon le bouton se retrouve seul sur une
+		// troisième ligne avec un champ de saisie minuscule.
+		@media (max-width: 599px) {
+			justify-content: flex-start;
+			label {
+				flex: 1 0 100%;
+			}
+		}
 	}
 	.flag {
 		height: 16px;

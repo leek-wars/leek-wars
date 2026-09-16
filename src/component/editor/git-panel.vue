@@ -173,7 +173,7 @@
 						</v-list-item>
 					</template>
 					<v-divider />
-					<v-list-item prepend-icon="mdi-refresh" :disabled="fetching" @click.stop="fetchRemote">
+					<v-list-item prepend-icon="mdi-refresh" :disabled="fetching || !hasRemote" @click.stop="fetchRemote">
 						<v-list-item-title>{{ fetching ? $t('fetching') : $t('fetch') }}</v-list-item-title>
 					</v-list-item>
 					<v-list-item prepend-icon="mdi-plus" class="create-branch" @click="promptCreateBranch">
@@ -411,11 +411,16 @@
 		const code = err?.error
 		if (code === 'quota_size_exceeded') return t('quota_size_exceeded') as string
 		if (code === 'quota_files_exceeded') return t('quota_files_exceeded') as string
+		if (code === 'no_remote') return t('no_remote') as string
 		if (err?.quota_exceeded) return t('quota_size_exceeded') as string
 		return err?.details || code || 'error'
 	}
 
 	watch(selectedRepo, (repo) => {
+		// Les bannières parlent du dépôt qu'on quitte : les garder afficherait une
+		// erreur de push ou de fetch au-dessus d'un autre dépôt.
+		syncError.value = ''
+		syncInfo.value = ''
 		if (repo === '') {
 			changes.value = []
 			branch.value = ''
@@ -446,12 +451,20 @@
 
 	async function fetchRemote() {
 		if (fetching.value) return
+		// Un dépôt volontairement local n'a rien à actualiser : sans cette garde le
+		// simple fait d'ouvrir le sélecteur de branches déclenchait un git/fetch voué
+		// à l'échec, et donc une bannière rouge à chaque ouverture.
+		if (!hasRemote.value) { await loadBranches(); return }
 		fetching.value = true
+		syncError.value = ''
 		try {
 			await gitCall('git/fetch', { folder: selectedRepo.value })
 			lastFetchAt[selectedRepo.value] = Date.now()
 			await Promise.all([loadBranches(), refreshStatus()])
-		} catch {
+		} catch (e: unknown) {
+			// Le fetch alimente les branches distantes : en cas d'échec la liste
+			// reste muette et donne l'impression que le remote n'a qu'une branche.
+			syncError.value = 'Fetch: ' + gitErrorMessage(e)
 			await Promise.all([loadBranches(), refreshStatus()])
 		} finally {
 			fetching.value = false

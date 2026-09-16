@@ -4,6 +4,7 @@
 	"bazooka": "Bazooka",
 	"broadsword": "Breitschwert",
 	"dark_katana": "Dunkles Katana",
+	"desert_saber": "Wüstensäbel",
 	"destroyer": "Zerstörer",
 	"double_gun": "Doppelkanone",
 	"electrisor": "Elektrifizierer",
@@ -26,15 +27,16 @@
 	"neutrino": "Neutrinos",
 	"odachi": "Odachi",
 	"pistol": "Pistole",
+	"plutonium_bazooka": "Plutonium-Bazooka",
 	"quantum_rifle": "Quantengewehr",
 	"revoked_m_laser": "M-Laser widerrufen",
 	"rhino": "Rhino",
 	"rifle": "Gewehr",
 	"scythe": "Sense",
 	"shotgun": "Schrotflinte",
+	"sun_spear": "Sonnenspeer",
 	"sword": "Schwert",
 	"taser": "Taser",
 	"unbridled_gazor": "Ungezügelter Gazor",
-	"unstable_destroyer": "Instabiler Zerstörer",
-	"plutonium_bazooka": "Plutonium-Bazooka"
+	"unstable_destroyer": "Instabiler Zerstörer"
 }

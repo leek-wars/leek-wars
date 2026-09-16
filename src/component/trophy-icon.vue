@@ -10,7 +10,10 @@ import { LeekWars } from '@/model/leekwars'
 // sombre. On génère des variantes `<code>_dark.svg` (gris éclairci, accents
 // conservés) via scripts/generate-trophy-dark.mjs, et on bascule simplement
 // le src selon le thème. Pas de recoloration runtime : <img> natif + lazy.
-const props = defineProps<{ code: string }>()
+// `light` force la variante claire (gris #444) même en thème sombre : utile
+// sur un fond jaune vif (récompenses de parrainage débloquées) où le gris
+// éclairci serait délavé.
+const props = defineProps<{ code: string, light?: boolean }>()
 
-const src = computed(() => LeekWars.STATIC + 'image/trophy/' + props.code + (LeekWars.darkMode ? '_dark' : '') + '.svg')
+const src = computed(() => LeekWars.STATIC + 'image/trophy/' + props.code + (LeekWars.darkMode && !props.light ? '_dark' : '') + '.svg')
 </script>

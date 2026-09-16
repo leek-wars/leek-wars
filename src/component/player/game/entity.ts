@@ -2,7 +2,7 @@ import { Bubble } from '@/component/player/game/bubble'
 import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
-import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
+import { loadDrawableImage, SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
 import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
@@ -42,9 +42,28 @@ enum DamageType {
 abstract class FightEntity extends Entity {
 
 	static stateImages: Map<number, HTMLImageElement> = new Map()
+	// Couleur du fond de l'icône d'état, indexée par état. Vert = bénéfique, bleu =
+	// neutre, rouge = subi. Un état sans couleur ne peint pas de fond.
 	static stateColors = [
-		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue'
+		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue', 'red'
 	]
+
+	/**
+	 * Icône d'un état, toujours dessinable. Le chargement est paresseux et jamais
+	 * conditionné à addState : un effet d'état dont la valeur n'a pas été enregistrée
+	 * (fusion d'effets côté serveur qui additionnait les identifiants d'état) renvoyait
+	 * `undefined`, et drawImage faisait alors tomber toute la boucle de jeu — combat figé.
+	 * Un état sans icône (2, 4...) part en 404, dont le repli évite une Image « broken »
+	 * que drawImage refuserait aussi (#11819723).
+	 */
+	static stateImage(state: number): HTMLImageElement {
+		let image = FightEntity.stateImages.get(state)
+		if (!image) {
+			image = loadDrawableImage(LeekWars.STATIC + "image/state/" + state + ".svg")
+			FightEntity.stateImages.set(state, image)
+		}
+		return image
+	}
 
 	// Infos générales
 	public game: Game
@@ -72,6 +91,10 @@ abstract class FightEntity extends Entity {
 	public power = 0
 	public maxLife = 1
 	public initialMaxLife = 1
+	// Vie de base de l'entité (stats de base côté serveur), invariante pendant le
+	// combat. Distincte de initialMaxLife, qui est amputée du bonus de critique des
+	// invocations pour le calcul de la taille d'affichage (growth).
+	public baseLife = 1
 	public maxTP = 0
 	public maxMP = 0
 	public absoluteShield = 0
@@ -135,6 +158,8 @@ abstract class FightEntity extends Entity {
 	public frame: number
 	public growth: number = 1.0
 	public lastDamageType: DamageType = DamageType.DEFAULT
+	/** Dernière attaque jouée = coup critique. Lu par les animations d'arme (repoussée de la lance). */
+	public lastCritical: boolean = false
 	public crashAnim: number = 0
 	public carbonizeAnim: number = 0
 	public deadAnim: number = 0
@@ -1172,11 +1197,14 @@ abstract class FightEntity extends Entity {
 				}
 				// Value
 				if (effect.type == EffectType.ADD_STATE) {
-					ctx.globalAlpha = 0.85 * (1 - this.deadAnim)
-					ctx.fillStyle = FightEntity.stateColors[effect.value]
-					ctx.fillRect(x, (2 - state_size) * effect_size - 2, effect_size * state_size + 2, effect_size * state_size + 2)
+					const color = FightEntity.stateColors[effect.value]
+					if (color) {
+						ctx.globalAlpha = 0.85 * (1 - this.deadAnim)
+						ctx.fillStyle = color
+						ctx.fillRect(x, (2 - state_size) * effect_size - 2, effect_size * state_size + 2, effect_size * state_size + 2)
+					}
 					ctx.globalAlpha = (1 - this.deadAnim)
-					ctx.drawImage(FightEntity.stateImages.get(effect.value)!, x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
+					ctx.drawImage(FightEntity.stateImage(effect.value), x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
 				} else {
 					let effect_message = '' + effect.value
 					if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
@@ -1322,10 +1350,7 @@ abstract class FightEntity extends Entity {
 
 	addState(state: number) {
 		this.states.add(state)
-		// Load image
-		const image = new Image()
-		image.src = LeekWars.STATIC + "image/state/" + state + ".svg"
-		FightEntity.stateImages.set(state, image)
+		FightEntity.stateImage(state)
 	}
 }
 

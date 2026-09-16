@@ -4,6 +4,7 @@
 	"bazooka": "Bazooka",
 	"broadsword": "Zwaard",
 	"dark_katana": "Donkere katana",
+	"desert_saber": "Woestijnsabel",
 	"destroyer": "Destroyer",
 	"double_gun": "Dubbel geweer",
 	"electrisor": "Elektrificatie",
@@ -26,15 +27,16 @@
 	"neutrino": "Neutrino",
 	"odachi": "Odachi",
 	"pistol": "Pistool",
+	"plutonium_bazooka": "Plutonium-bazooka",
 	"quantum_rifle": "Kwantumgeweer",
 	"revoked_m_laser": "M-Laser ingetrokken",
 	"rhino": "Neushoorn",
 	"rifle": "Geweer",
 	"scythe": "Zeis",
 	"shotgun": "Jachtgeweer",
+	"sun_spear": "Zonnespeer",
 	"sword": "Zwaard",
 	"taser": "Taser",
 	"unbridled_gazor": "Ongebreidelde gasser",
-	"unstable_destroyer": "Onstabiele Destroyer",
-	"plutonium_bazooka": "Plutonium-bazooka"
+	"unstable_destroyer": "Onstabiele Destroyer"
 }

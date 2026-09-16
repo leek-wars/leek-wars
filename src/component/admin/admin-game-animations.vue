@@ -85,20 +85,20 @@
 	// splitBack (vue mobile liste/contenu) qu'on gère ici au mount/unmount.
 	onMounted(() => { LeekWars.large = true; LeekWars.box = true; LeekWars.footer = false; LeekWars.splitBack = false })
 
-	// Scène fixe : lanceur au centre, 2 ennemis et 2 alliés autour.
+	// Scène : lanceur au centre, 2 ennemis et 2 alliés autour, un par diagonale
+	// (un pas de diagonale = ±17 / ±18 en id de cellule sur la carte 18×18).
+	// Leur éloignement s'adapte à la portée de l'arme (cf. sceneDistance) : à
+	// distance fixe, une épée ou la lance du soleil frapperaient dans le vide.
 	const CASTER_CELL = 306
-	const SCENE = [
-		{ id: 0, cell: CASTER_CELL, team: 1 }, // lanceur
-		{ id: 1, cell: 221, team: 2 },         // ennemi
-		{ id: 2, cell: 396, team: 2 },         // ennemi
-		{ id: 3, cell: 216, team: 1 },         // allié
-		{ id: 4, cell: 391, team: 1 },         // allié
+	const SCENE_SLOTS = [
+		{ diagonal: -17, team: 2 }, // ennemi (id d'entité 1)
+		{ diagonal: 18, team: 2 },  // ennemi (id 2)
+		{ diagonal: -18, team: 1 }, // allié (id 3)
+		{ diagonal: 17, team: 1 },  // allié (id 4)
 	]
-	// Cibles non-lanceur, ennemi / allié alternés pour bien voir la différence.
-	const NON_CASTER_TARGETS = [SCENE[1].cell, SCENE[3].cell, SCENE[2].cell, SCENE[4].cell]
-	// Puces : d'abord soi-même, puis les 4 autres. Armes : seulement les 4 autres.
-	const CHIP_TARGETS = [CASTER_CELL, ...NON_CASTER_TARGETS]
-	const WEAPON_TARGETS = NON_CASTER_TARGETS
+	// Cibles non-lanceur à tour de rôle, ennemi / allié alternés pour bien voir la différence.
+	const TARGET_ORDER = [0, 2, 1, 3]
+	const DEFAULT_DISTANCE = 5
 	// Cases vides alternées pour les puces type téléportation / invocation qui
 	// exigent une cellule libre (504 puis 306 en boucle).
 	const EMPTY_CELLS = [504, 306]
@@ -136,6 +136,15 @@
 
 	const loopMode = computed(() => repetitions.value === -1)
 	const castCount = computed(() => loopMode.value ? 100 : repetitions.value)
+
+	// Distance des cibles : au plus près de 5 cases tout en restant dans la plage
+	// de portée de l'arme, pour que les coups touchent (contact, repel...).
+	function sceneDistance(entry: AnimEntry): number {
+		if (entry.kind !== 'weapon') { return DEFAULT_DISTANCE }
+		const tpl = LeekWars.weapons[entry.id]
+		if (!tpl) { return DEFAULT_DISTANCE }
+		return Math.max(tpl.min_range, Math.min(DEFAULT_DISTANCE, tpl.max_range))
+	}
 
 	// Armes (id = template, animation = WEAPONS[id-1]) puis puces (id = chipId,
 	// animation = CHIP_ANIMATIONS[id-1]). On ne garde que celles ayant une animation.
@@ -200,14 +209,18 @@
 		setupLoop()
 	}
 
-	// Construit un combat synthétique sur la scène fixe : le lanceur (id 0) utilise
-	// l'arme ou la puce sur les cibles à tour de rôle. Pas de dégâts réels (aucune
-	// action LIFE_LOST émise) → personne ne meurt, la boucle reste valide.
+	// Construit un combat synthétique sur la scène : le lanceur (id 0) utilise
+	// l'arme ou la puce sur les cibles à tour de rôle. Les armes émettent un
+	// LIFE_LOST à leurs dégâts de base (sang + décompte comme un vrai log) : trop
+	// faible pour tuer en 100 lancers, et la boucle infinie repart à vie pleine.
 	function buildFight(entry: AnimEntry, casts: number): Fight {
+		const distance = sceneDistance(entry)
+		const cells = SCENE_SLOTS.map((s) => CASTER_CELL + distance * s.diagonal)
 		// Ids 0-based et denses : le moteur itère this.leeks via for...of (un id
 		// manquant à l'index 0 ferait planter launch() sur entity.cell).
-		const leeks = SCENE.map((s, i) => ({
-			id: s.id, type: 0, name: 'Poireau ' + (i + 1),
+		const scene = [{ cell: CASTER_CELL, team: 1 }, ...SCENE_SLOTS.map((s, i) => ({ cell: cells[i], team: s.team }))]
+		const leeks = scene.map((s, i) => ({
+			id: i, type: 0, name: 'Poireau ' + (i + 1),
 			team: s.team,
 			level: 100, life: 2500,
 			strength: 300, wisdom: 300, agility: 200, resistance: 100,
@@ -220,17 +233,36 @@
 		}))
 		const casterId = 0
 		const emptyCell = entry.kind === 'chip' && needsEmptyCell(entry.id)
+		const chipTargets = [CASTER_CELL, ...TARGET_ORDER.map((slot) => cells[slot])]
+		// Arme à repoussée (lance du soleil) : le client rejoue le déplacement de la
+		// cible (applyWeaponRepel), il faut donc la ramener sur sa case de scène,
+		// sinon les lancers suivants visent une case vide.
+		const weaponTemplate = entry.kind === 'weapon' ? LeekWars.weapons[entry.id] : undefined
+		const repel = weaponTemplate?.effects.find((e) => e.id === EffectType.REPEL)
+		const damage = weaponTemplate?.effects.find((e) => e.id === EffectType.DAMAGE)
 
-		const actions: number[][] = [[ActionType.START_FIGHT]]
+		const actions: (number | number[])[][] = [[ActionType.START_FIGHT]]
 		for (let k = 0; k < casts; k++) {
 			actions.push([ActionType.NEW_TURN, k + 1])
 			actions.push([ActionType.LEEK_TURN, casterId])
 			if (entry.kind === 'weapon') {
-				const cell = WEAPON_TARGETS[k % WEAPON_TARGETS.length]
+				const slot = TARGET_ORDER[k % TARGET_ORDER.length]
 				actions.push([ActionType.SET_WEAPON, entry.id])
-				actions.push([ActionType.USE_WEAPON, cell, 0])
+				actions.push([ActionType.USE_WEAPON, cells[slot], 0])
+				if (damage) {
+					actions.push([ActionType.LIFE_LOST, 1 + slot, Math.round(damage.value1 + damage.value2 / 2)])
+				}
+				if (repel) {
+					// La cible revient à pied de sa cellule de repoussée (la scène est
+					// sans obstacle et loin des bords : la poussée fait ses value1 cases).
+					const path = [] as number[]
+					for (let step = distance + repel.value1 - 1; step >= distance; step--) {
+						path.push(CASTER_CELL + step * SCENE_SLOTS[slot].diagonal)
+					}
+					actions.push([ActionType.MOVE_TO, 1 + slot, CASTER_CELL + (distance + repel.value1) * SCENE_SLOTS[slot].diagonal, path])
+				}
 			} else {
-				const cell = emptyCell ? EMPTY_CELLS[k % EMPTY_CELLS.length] : CHIP_TARGETS[k % CHIP_TARGETS.length]
+				const cell = emptyCell ? EMPTY_CELLS[k % EMPTY_CELLS.length] : chipTargets[k % chipTargets.length]
 				actions.push([ActionType.USE_CHIP, entry.id, cell, 0])
 			}
 			actions.push([ActionType.END_TURN, casterId, 100, 6])

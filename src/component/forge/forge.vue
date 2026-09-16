@@ -4,7 +4,7 @@
 			<div v-for="(item, i) in forge" :key="i" class="cell" :class="{['cell' + i]: true, active: !!item, building: item && building}">
 				<rich-tooltip-item v-if="item" :key="item[0]" v-slot="{ props }" :item="LeekWars.items[item[0]]" :inventory="true" :quantity="item[1]">
 					<div class="item" v-bind="props" :type="LeekWars.items[item[0]].type">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item[0]].type] + '/' + LeekWars.items[item[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
+						<img :src="itemImageUrl(LeekWars.items[item[0]])">
 						<div v-if="item[1] > 1" class="quantity">{{ $filters.number(item[1]) }}</div>
 					</div>
 				</rich-tooltip-item>
@@ -12,7 +12,7 @@
 			<div class="cell" :class="{cell8: true, active: !!result && !built, built}" @click="craft">
 				<rich-tooltip-item v-if="result && scheme" v-slot="{ props }" :item="LeekWars.items[result]" :inventory="true" :quantity="scheme.quantity" :open-delay="built ? 500 : 1000">
 					<div v-ripple v-bind="props" class="item" :class="{building}" :type="LeekWars.items[result].type">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[result].type] + '/' + LeekWars.items[result].name.replace('hat_', '').replace('potion_', '') + '.png'">
+						<img :src="itemImageUrl(LeekWars.items[result])">
 						<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 					</div>
 				</rich-tooltip-item>
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
+	import { itemImageUrl } from '@/model/item'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
 	import { emitter } from '@/model/vue'
@@ -37,8 +37,6 @@
 	defineOptions({ name: 'Forge' })
 
 	type ForgeSlot = [number, number]
-
-	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
 
 	const forge = ref<(ForgeSlot | null)[]>([null, null, null, null, null, null, null, null])
 	const scheme = ref<SchemeTemplate | null>(null)

@@ -4,6 +4,7 @@
 	"bazooka": "Базука",
 	"broadsword": "Палаш",
 	"dark_katana": "Темная катана",
+	"desert_saber": "Пустынная сабля",
 	"destroyer": "Разрушитель",
 	"double_gun": "Двустволка",
 	"electrisor": "Электрификатор",
@@ -26,15 +27,16 @@
 	"neutrino": "Нейтрино",
 	"odachi": "Одачи",
 	"pistol": "Пистолет",
+	"plutonium_bazooka": "Плутониевая базука",
 	"quantum_rifle": "Квантовая винтовка",
 	"revoked_m_laser": "Отозванный М-лазер",
 	"rhino": "Носорог",
 	"rifle": "Винтовка",
 	"scythe": "Коса",
 	"shotgun": "Дробовик",
+	"sun_spear": "Солнечное копьё",
 	"sword": "Меч",
 	"taser": "Тазер",
 	"unbridled_gazor": "Необузданный газсер",
-	"unstable_destroyer": "Нестабильный разрушитель",
-	"plutonium_bazooka": "Плутониевая базука"
+	"unstable_destroyer": "Нестабильный разрушитель"
 }

@@ -199,7 +199,7 @@
 		<panel :title="$t('movements')" toggle="report/movements" icon="mdi-map-outline">
 			<loader v-if="!loaded || !fight" />
 			<div v-else class="movements">
-				<lw-map v-if="map_obstacles" :teams="map_teams" :obstacles="map_obstacles" />
+				<lw-map v-if="map_obstacles" :teams="map_teams" :obstacles="map_obstacles" :map-id="map_id" />
 
 				<v-btn class="all" @click="walkedCells(999)">{{ $t('all') }}</v-btn>
 				<template v-if="fight.type !== FightType.BATTLE_ROYALE">
@@ -370,6 +370,7 @@
 	const damagesBarsHeight = ref(0)
 	const damagesDisplaySummons = ref(false)
 	const map_obstacles = ref<{[key: number]: number[]} | null>(null)
+	const map_id = ref<number>(0)
 	const map_teams = ref<{[team: number]: Set<number>} | null>(null)
 	const legends = ref<string[] | null>(null)
 	let currentLink: Element | null = null
@@ -768,6 +769,7 @@
 
 	function updateMap() {
 		map_obstacles.value = fight.value!.data.map.obstacles
+		map_id.value = fight.value!.data.map.id
 	}
 
 	function walkedCells(fid: number) {

@@ -4,6 +4,7 @@
 	"bazooka": "Bazooka",
 	"broadsword": "Broadsword",
 	"dark_katana": "Dark Katana",
+	"desert_saber": "Desert Saber",
 	"destroyer": "Destroyer",
 	"double_gun": "Double Gun",
 	"electrisor": "Electrisor",
@@ -26,15 +27,16 @@
 	"neutrino": "Neutrino",
 	"odachi": "Odachi",
 	"pistol": "Pistol",
+	"plutonium_bazooka": "Plutonium Bazooka",
 	"quantum_rifle": "Quantum Rifle",
 	"revoked_m_laser": "Revoked M-Laser",
 	"rhino": "Rhino",
 	"rifle": "Rifle",
 	"scythe": "Scythe",
 	"shotgun": "Shotgun",
+	"sun_spear": "Sun Spear",
 	"sword": "Sword",
 	"taser": "Taser",
 	"unbridled_gazor": "Unbridled Gazor",
-	"unstable_destroyer": "Unstable Destroyer",
-	"plutonium_bazooka": "Plutonium Bazooka"
+	"unstable_destroyer": "Unstable Destroyer"
 }

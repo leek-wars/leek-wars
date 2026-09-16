@@ -64,7 +64,15 @@ class FileSystem {
 
 	public ais: {[key: string]: AI} = {}
 	public folderById: {[key: number]: Folder} = {}
-	public get aiByFullPath() { return this.ais } // alias pour compatibilité
+	// Même map que `ais`, en lecture par chemin arbitraire (URI d'un modèle Monaco, argument d'une
+	// commande) : typée `| undefined` pour que le compilateur impose la garde qui manquait au crash #4709.
+	public get aiByFullPath(): {[key: string]: AI | undefined} { return this.ais }
+	// IA ouvertes dont le code modifié ne vit que dans le modèle Monaco. La corbeille
+	// est exclue : son contenu n'est plus enregistrable. Définition partagée par la
+	// confirmation de sortie de l'éditeur et le rechargement sur changement de compte.
+	public get unsavedAIs(): AI[] {
+		return Object.values(this.ais).filter(ai => ai.modified && !ai.path.startsWith('.trash/'))
+	}
 	public aiCount: number = 0
 	public rootFolder!: Folder
 	public bin!: Folder
@@ -190,8 +198,13 @@ class FileSystem {
 	 */
 	public load(ai: AI): Promise<AI> {
 		return getAICache(ai.path).then((cached) => {
-			// Cache hit : le mtime local correspond au mtime serveur
-			if (cached !== null && cached.mtime > 0 && cached.mtime >= ai.mtime) {
+			// Cache hit : le mtime local correspond au mtime serveur.
+			// On exige `ai.mtime > 0` : un fichier fraîchement créé/restauré/en corbeille a
+			// ai.mtime===0, et alors `cached.mtime >= 0` serait toujours vrai — n'importe quelle
+			// entrée de cache orpheline pour ce path (laissée par un ancien fichier au même nom)
+			// gagnerait et écraserait le vrai code renvoyé par le serveur. Sans mtime de référence
+			// fiable, le serveur fait autorité.
+			if (cached !== null && cached.mtime > 0 && ai.mtime > 0 && cached.mtime >= ai.mtime) {
 				ai.code = cached.code
 				if (!ai.functions.length) { ai.analyze() }
 				return ai
@@ -224,6 +237,7 @@ class FileSystem {
 		this.ais[ai.path] = ai
 		folder.items.push(new AIItem(ai, folder.id))
 		this.sortFolder(folder)
+		emitter.emit('ai-created', ai.path)
 	}
 
 	public add_folder(folder: Folder, parent: Folder) {
@@ -232,9 +246,12 @@ class FileSystem {
 		this.sortFolder(parent)
 	}
 
-	public getAIByPath(path: string) {
+	// Résolution d'un chemin quelconque (URI d'un modèle Monaco, argument de commande) : peut ne rien
+	// trouver — un modèle survit à son fichier (suppression, renommage, changement de branche git), et
+	// certaines URI ne désignent aucun fichier du joueur. Le type le dit pour que les appelants gardent.
+	public getAIByPath(path: string): AI | undefined {
 		if (path.includes(FileSystem.CONSOLE_MAGIC_KEY)) {
-			return this.consoleAI!
+			return this.consoleAI ?? undefined
 		}
 		return this.ais[path] || this.ais['/' + path]
 	}
@@ -284,6 +301,7 @@ class FileSystem {
 		removeAICache(ai.path)
 		this.bin.items.push(...item)
 		this.sortFolder(this.bin)
+		emitter.emit('ai-deleted', oldPath)
 		LeekWars.delete('ai/delete', {path: oldPath}).then((data) => {
 			if (data.trash_name && data.trash_name !== ai.name) {
 				delete this.ais[ai.path]
@@ -324,14 +342,30 @@ class FileSystem {
 
 	public restore(ai: AI) {
 		const trashName = ai.name
+		const oldPath = ai.path
 		const item = this.bin.items.splice(this.bin.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
 		ai.folder = 0
-		ai.path = ai.name
 		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-		this.ais[ai.path] = ai
+		// Libérer la clé corbeille + son cache.
+		delete this.ais[oldPath]
+		removeAICache(oldPath)
 		this.rootFolder.items.push(...item)
 		this.sortFolder(this.rootFolder)
-		LeekWars.post('ai/restore', {trash_name: trashName}).error((error) => LeekWars.toast(translateFileSystemError(error)))
+		// On N'INSCRIT PAS l'IA dans la map/cache sous un nom deviné : à la racine un fichier du même
+		// nom peut déjà exister, auquel cas le serveur suffixe (main -> main_2). Réclamer 'main'
+		// localement écraserait l'entrée de map et le cache du fichier existant. On attend donc le
+		// path autoritatif renvoyé par le serveur pour poser la clé définitive.
+		LeekWars.post('ai/restore', {trash_name: trashName}).then((data) => {
+			const path = data.path || trashName
+			ai.name = path.split('/').pop()!
+			ai.path = path
+			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+			removeAICache(path)
+			this.ais[path] = ai
+			item[0].name = ai.name
+			this.sortFolder(this.rootFolder)
+			emitter.emit('ai-created', path)
+		}).error((error) => LeekWars.toast(translateFileSystemError(error)))
 	}
 
 	public restoreFolder(folder: Folder) {

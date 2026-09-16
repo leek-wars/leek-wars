@@ -35,6 +35,7 @@
 	"not_sellable": "Item not sellable",
 	"pomps": "Pomps",
 	"potion": "Potion",
+	"scheme_required": "You don't own the diagram",
 	"schemes": "Diagrams",
 	"potion_bought": "Potion bought!",
 	"potions": "Potions",
