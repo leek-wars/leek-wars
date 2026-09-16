@@ -1,3 +1,7 @@
 {
-	"title": "Varsler"
+	"title": "Varsler",
+	"push_blocked": "Varsler er blokkert. Tillat dem i nettleserinnstillingene.",
+	"push_error": "Kunne ikke aktivere push-varsler.",
+	"push_notifications": "Push-varsler",
+	"push_unsupported": "Nettleseren din støtter ikke push-varsler."
 }

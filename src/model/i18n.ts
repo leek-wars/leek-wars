@@ -30,6 +30,17 @@ const i18n = createI18n({
 	escapeParameter: true, // échappe les params interpolés dans v-html="$t(k,[userData])" (défense XSS) — #4007
 }) as unknown as I18nWithCompat
 
+// vue-i18n lève un SyntaxError (INVALID_ARGUMENT) dès que la clé n'est pas une string non vide, et
+// beaucoup de clés sont calculées à partir de données serveur. Dans un .catch() ce throw devient une
+// unhandledrejection non rattrapée qui casse la page, dans un render il casse le composant. Le reste
+// de la config traite déjà tout échec de lookup comme non fatal (missingWarn / fallbackWarn /
+// silentTranslationWarn) : on étend la même règle aux clés inexploitables. Emballé ici sur le
+// composer plutôt que sur chaque helper, donc avant le app.use(i18n) de vue.ts qui recopie ce
+// descripteur : t(), useNamespacedT(), i18n.t et le $t global en héritent d'un coup. Erreur #11810483.
+const rawTranslate = (i18n.global.t as (...a: unknown[]) => unknown).bind(i18n.global)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(i18n.global as any).t = (key: unknown, ...args: unknown[]) => typeof key === 'string' && key ? rawTranslate(key, ...args) : ''
+
 // Compat wrappers: en mode composition, i18n.global.locale est un WritableComputedRef
 // et t/tc nécessitent un binding correct. On garde i18n.t() / i18n.tc() / i18n.locale
 // pour le code historique (pages chargées hors composant Vue, services, etc.)

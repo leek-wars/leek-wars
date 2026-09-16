@@ -75,6 +75,7 @@ import PompPreview from '@/component/market/pomp-preview.vue'
 import PotionPreview from '@/component/market/potion-preview.vue'
 import ResourcePreview from '@/component/market/resource-preview.vue'
 import WeaponPreview from '@/component/market/weapon-preview.vue'
+import { playAudio } from '@/model/audio'
 import { CHIPS as CHIPSImport } from '@/model/chips'
 import { ITEM_CATEGORY_NAME, ItemTemplate, ItemType } from '@/model/item'
 import { Leek } from '@/model/leek'
@@ -251,7 +252,7 @@ function playSound(item: ItemTemplate, type: string) {
 			const sound_ext = sound.includes('.') ? sound : sound + '.mp3'
 			const audio = new Audio('/sound/' + sound_ext)
 			audio.volume = 0.5
-			audio.play()
+			playAudio(audio)
 			if (sounds.length > 2) {
 				const delay = parseFloat(sounds[1] as string)
 				setTimeout(() => {

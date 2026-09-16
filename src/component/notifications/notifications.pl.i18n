@@ -1,3 +1,7 @@
 {
-	"title": "Powiadomienia"
+	"title": "Powiadomienia",
+	"push_blocked": "Powiadomienia są zablokowane. Zezwól na nie w ustawieniach przeglądarki.",
+	"push_error": "Nie udało się włączyć powiadomień push.",
+	"push_notifications": "Powiadomienia push",
+	"push_unsupported": "Twoja przeglądarka nie obsługuje powiadomień push."
 }

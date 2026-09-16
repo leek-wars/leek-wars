@@ -31,6 +31,7 @@ import './monaco'
 import { AI } from '@/model/ai'
 import { analyzer } from './analyzer'
 import { getLanguageForPath } from './file-types'
+import { colorDecoratorOptions } from './monaco-color-decorators'
 import { pyOpen, pyChange, pyClose } from './pyright'
 import { code, dochash, createSubApp, emitter } from '@/model/vue'
 import { useNamespacedT } from '@/model/i18n'
@@ -100,6 +101,9 @@ const props = defineProps<{
 	t?: (key: string, values?: unknown[]) => string
 	console?: boolean
 	lineNumbers?: boolean
+	popups?: boolean
+	autoClosing?: boolean
+	autocompleteOption?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -116,6 +120,8 @@ let jumpToLine: number | null = 0
 let jumpToColumn: number | null = 0
 let scrollListener: monaco.IDisposable
 let analyzerTimeout: ReturnType<typeof setTimeout> | null = null
+// Numéro de la dernière analyse lancée par cet éditeur (l'indicateur ne suit qu'elle)
+let analyzeSeq = 0
 let viewStateSaveTimeout: ReturnType<typeof setTimeout> | null = null
 let currentAiPath: string | null = null
 const analyzing = ref(false)
@@ -128,6 +134,20 @@ let currentVersionId = 0
 let conflictDecorations: monaco.editor.IEditorDecorationsCollection | null = null
 let conflictLenses: monaco.IDisposable | null = null
 let conflicts: MergeConflict[] = []
+
+// Options pilotées par les paramètres de l'éditeur ; prop absente = activée
+// (usages du composant sans ces props, comme les consoles)
+function optionalOptions(): monaco.editor.IEditorOptions {
+	const autoClosing = props.autoClosing !== false ? 'languageDefined' : 'never'
+	const autocomplete = props.autocompleteOption !== false
+	return {
+		hover: { enabled: props.popups !== false },
+		autoClosingBrackets: autoClosing,
+		autoClosingQuotes: autoClosing,
+		quickSuggestions: autocomplete,
+		suggestOnTriggerCharacters: autocomplete,
+	}
+}
 
 onMounted(() => {
 	editor = markRaw(monaco.editor.create(editorEl.value as HTMLElement, {
@@ -155,6 +175,9 @@ onMounted(() => {
 		},
 		fixedOverflowWidgets: true,
 		accessibilitySupport: 'off',
+		// Options des paramètres de l'éditeur (absentes = activées, cas de la console)
+		...optionalOptions(),
+		...colorDecoratorOptions,
 	}, {
 		storageService: {
 			get() {},
@@ -360,6 +383,11 @@ watch([() => props.theme, () => props.lineHeight, () => props.fontSize], () => {
 	})
 })
 
+watch([() => props.popups, () => props.autoClosing, () => props.autocompleteOption], () => {
+	if (!editor) return
+	editor.updateOptions(optionalOptions())
+})
+
 watch(() => props.ai?.path, () => update(), { immediate: true })
 
 function update() {
@@ -453,14 +481,17 @@ function setAnalyzerTimeout() {
 
 		analyzer.updateTodos(ai)
 
+		const seq = ++analyzeSeq
 		analyzer.analyze(ai, ai.code).then((result) => {
-			analyzing.value = false
+			// null = pas d'analyse (polyglot, ou fichier > MAX_ANALYZE_CODE_SIZE) : rien à appliquer.
 			if (!result) return
 			analyzer.applyAnalyzeResult(result as Parameters<typeof analyzer.applyAnalyzeResult>[0])
 			analyzer.updateTodos(ai)
 			analyzer.updateCount()
-		}).catch(() => {
-			analyzing.value = false
+		}).finally(() => {
+			// L'indicateur ne se coupe que pour l'analyse la plus récente de cet éditeur : une analyse
+			// dépassée qui se résout entre-temps ne doit pas l'éteindre alors que la courante tourne encore.
+			if (seq === analyzeSeq) analyzing.value = false
 		})
 	}, 500)
 }

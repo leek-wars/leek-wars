@@ -368,11 +368,11 @@ class Socket {
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE: {
-					getAnalyzer().then(a => a.analyzeResult(data))
+					getAnalyzer().then(a => a.analyzeResult(data, request_id))
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE_ERROR: {
-					getAnalyzer().then(a => a.analyzeError())
+					getAnalyzer().then(a => a.analyzeError(request_id))
 					break
 				}
 				case SocketMessage.EDITOR_HOVER: {

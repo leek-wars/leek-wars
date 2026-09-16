@@ -19,7 +19,7 @@
 							</div>
 							<div class="loadout-name">
 								{{ loadout.name }}
-								<v-tooltip v-if="loadoutStatus[loadout.id]?.statsDiffer" location="bottom">
+								<v-tooltip v-if="loadoutStatus[loadout.id]?.requiresRestat" location="bottom">
 									<template #activator="{ props }">
 										<img v-bind="props" src="/image/potion/restat.png" width="18" height="18" class="loadout-restat-icon">
 									</template>
@@ -110,6 +110,7 @@
 							<h4>
 								{{ $t('characteristic.characteristics') }}
 								<span class="capital-used" :class="{warning: totalCapital() > softMaxCapital}">({{ totalCapital() }} / {{ softMaxCapital }})</span>
+								<span v-if="softMaxCapital - totalCapital() > 0" class="capital-remaining">{{ $t('main.n_capital', [softMaxCapital - totalCapital()]) }}</span>
 								<v-tooltip v-if="totalCapital() > softMaxCapital" location="bottom">
 									<template #activator="{ props }">
 										<v-icon v-bind="props" color="warning" size="18" class="capital-warning-icon">mdi-alert</v-icon>
@@ -119,7 +120,7 @@
 							</h4>
 							<v-btn :class="{'invisible-btn': Object.keys(editing.stats).length === 0}" size="x-small" variant="text" icon @click="editing.stats = {}"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
-						<loadout-stats-picker v-model="editing.stats" :max="maxCapital" />
+						<loadout-stats-picker v-model="editing.stats" :max="maxCapital" :totals="editingStatTotals" />
 					</div>
 
 					<!-- Armes -->
@@ -406,6 +407,12 @@
 				if (!this.leek || !this.editing) return 0
 				return ramFor(this.leek.level, this.editing.stats.ram || 0, this.editing.components)
 			},
+			editingStatTotals(): { [stat: string]: number } {
+				const out: { [stat: string]: number } = {}
+				if (!this.editing) return out
+				for (const stat of CHARACTERISTICS) out[stat] = this.statTotalFor(this.editing, stat)
+				return out
+			},
 			restatPotionCount(): number {
 				const farmer = store.state.farmer as Farmer | null
 				if (!farmer || !farmer.potions) return 0
@@ -446,8 +453,8 @@
 			hasAnyForgotten(): boolean {
 				return this.allWeapons.some((w: Weapon) => this.isForgottenTemplate(w.template))
 			},
-			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } {
-				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } = {}
+			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } {
+				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } = {}
 				if (!this.leek) return result
 				const leek = this.leek
 				const leekWeapons = (leek.weapons || []).map((w: Weapon) => w.template).sort((a: number, b: number) => a - b)
@@ -486,7 +493,8 @@
 						else for (const k of leekCompKeys) if (leekComps[+k] !== ldComps[+k]) { itemsDiffer = true; break }
 					}
 					const statsDiffer = this.statsDifferFromLeek(loadout)
-					result[loadout.id] = { itemsDiffer, statsDiffer, fullyApplied: !itemsDiffer && !statsDiffer }
+					const requiresRestat = statsDiffer && this.statsRequireRestatFromLeek(loadout)
+					result[loadout.id] = { itemsDiffer, statsDiffer, requiresRestat, fullyApplied: !itemsDiffer && !statsDiffer }
 				}
 				return result
 			},
@@ -569,7 +577,8 @@
 					const w = LeekWars.weapons[item.params]
 					if (w?.name) return 'weapon.' + w.name
 				} else if (s.type === 'chip') {
-					const c = LeekWars.chips[item.params]
+					// LeekWars.chips est indexé par id d'item_template, pas par item.params (id de chip_template)
+					const c = LeekWars.chips[s.template]
 					if (c?.name) return 'chip.' + c.name
 				} else if (s.type === 'component') {
 					const c = LeekWars.components[item.params]
@@ -694,12 +703,12 @@
 				if (!this.editing) return 0
 				return Object.values(this.editing.stats).reduce((a, b) => a + b, 0)
 			},
-			statBonusFor(loadout: Loadout, stat: string): number {
+			statBonusFor(loadout: { stats: LoadoutStats }, stat: string): number {
 				if (!loadout.stats) return 0
 				const cap = loadout.stats[stat] || 0
 				return cap > 0 ? capitalToStatBonus(stat, cap) : 0
 			},
-			statTotalFor(loadout: Loadout, stat: string): number {
+			statTotalFor(loadout: { stats: LoadoutStats, components: LoadoutComponent[] }, stat: string): number {
 				const level = this.leek?.level || 1
 				let total = baseStatFor(level, stat) + this.statBonusFor(loadout, stat)
 				for (const c of loadout.components || []) {
@@ -792,8 +801,10 @@
 			},
 			apply(loadout: Loadout) {
 				if (!this.leek) return
-				// Détection locale d'un changement de stats → confirmation potion de restat
-				if (this.statsDifferFromLeek(loadout)) {
+				// Une potion de restat n'est nécessaire que pour *réduire* le capital
+				// investi sur une stat. Un changement additif (ex. juste après un
+				// restat, capital libre) s'investit directement, sans potion (#4716).
+				if (this.statsDifferFromLeek(loadout) && this.statsRequireRestatFromLeek(loadout)) {
 					this.pendingApply = loadout
 					this.restatDialogOpen = true
 					return
@@ -859,9 +870,11 @@
 						store.commit('set-components', data.inventory.components)
 					}
 					if (data.stats_changed) {
-						// Mise à jour des stats du leek + décrément potion côté store
+						// Mise à jour des stats du leek côté store
 						this.applyStatsLocally(loadout)
-						this.decrementRestatPotion()
+						// Potion décrémentée seulement si le serveur en a réellement
+						// consommé une (changement réducteur, pas additif — #4716)
+						if (data.restat_used) this.decrementRestatPotion()
 					}
 					this.$emit('applied')
 					if (data.skipped && data.skipped.length > 0) {
@@ -887,6 +900,19 @@
 					const target = (loadout.stats && loadout.stats[stat]) || 0
 					const current = statBonusToCapital(stat, baseBonuses[stat] || 0)
 					if (target !== current) return true
+				}
+				return false
+			},
+			// Miroir client de LoadoutController::statsRequireRestat : un restat
+			// (potion) n'est requis que pour *réduire* le capital d'une stat.
+			statsRequireRestatFromLeek(loadout: Loadout): boolean {
+				if (!this.leek) return false
+				const leek = this.leek
+				for (const stat of CHARACTERISTICS) {
+					const bonus = (leek[stat] as number) - baseStatFor(leek.level, stat)
+					const current = statBonusToCapital(stat, bonus)
+					const target = (loadout.stats && loadout.stats[stat]) || 0
+					if (target < current) return true
 				}
 				return false
 			},
@@ -1014,6 +1040,8 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; min-height: 24px; }
 .capital-used { font-weight: 400; color: #666; font-size: 12px; margin-left: 4px; }
 .capital-used.warning { color: #e67e22; font-weight: 600; }
+.capital-remaining { font-weight: 500; color: #2d8a2d; font-size: 12px; margin-left: 6px; }
+body.dark .capital-remaining { color: #6ac46a; }
 .capital-warning-icon { vertical-align: middle; margin-left: 4px; }
 .invisible-btn { visibility: hidden; pointer-events: none; }
 .skipped-list { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; max-height: 400px; overflow-y: auto; }

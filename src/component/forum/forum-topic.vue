@@ -58,6 +58,7 @@
 								</div>
 								<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
 								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
+								<div v-else-if="message.writer.color == 'referent'" class="grade referent">{{ $t('main.grade_referent') }}</div>
 								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
 								<i18n-t class="messages-count" keypath="main.n_messages" tag="div">
@@ -980,6 +981,9 @@
 	}
 	.grade.contributor {
 		background: #009c1d;
+	}
+	.grade.referent {
+		background: #2196f3;
 	}
 	.profile .messages-count, .profile .trophy-count {
 		font-size: 12px;

@@ -15,6 +15,7 @@
 	"confirm_password": "확인",
 	"dark": "어둡게",
 	"delete_account": "계정 삭제",
+	"export_data": "내 데이터 내보내기",
 	"delete_cancel": "취소",
 	"delete_confirm": "계정 삭제",
 	"delete_confirmation": "확인",
@@ -27,6 +28,8 @@
 	"delete_password": "비밀번호",
 	"delete_success": "성공적인 삭제",
 	"delete_success_message": "계정이 삭제되었습니다. 몇 초 후에 리디렉션됩니다. 곧 Leek Wars에서 뵙겠습니다!",
+	"delete_team_dissolve": "당신은 팀 {0}의 창설자이자 유일한 멤버입니다. 계정을 삭제하면 팀이 해체됩니다.",
+	"delete_team_transfer": "당신은 팀 {0}의 창설자입니다. 계정을 삭제하면 팀은 가장 오래된 멤버에게 넘어갑니다.",
 	"discrete_mode": "비밀 모드",
 	"empty": "비우기",
 	"empty_localstorage": "LocalStorage 비우기",
@@ -82,5 +85,6 @@
 	"verify_tip": "팁: 사용자 이름이 포함된 쿠키를 보관하십시오. 쿠키를 분실하면 계정에 대한 액세스 권한을 완전히 잃게 됩니다.",
 	"xp_theme": "XP 테마",
 	"your_email": "귀하의 이메일 주소",
-	"your_farmer_name": "사육자 이름"
+	"your_farmer_name": "사육자 이름",
+	"purchase_history": "구매 내역"
 }

@@ -20,10 +20,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import router from '@/router'
 import Popup from '@/component/popup.vue'
-import { tutorial_items } from '@/component/tutorial/tutorial-items'
+import { tutorial_items, tutorialTrackForLanguage } from '@/component/tutorial/tutorial-items'
 
 defineOptions({ name: 'TutorialNudgeDialog', i18n: {}, mixins: [...mixins] })
 
@@ -47,7 +48,9 @@ function later() {
 function start() {
 	LeekWars.track('tutorial-nudge-start')
 	show.value = false
-	router.push('/help/tutorial')
+	// On envoie le joueur vers le tutoriel du langage qu'il a choisi (LeekScript, JS/TS ou Python).
+	const track = tutorialTrackForLanguage(store.state.farmer ? store.state.farmer.ai_language : null)
+	router.push('/help/tutorial/' + track)
 }
 </script>
 

@@ -3,6 +3,15 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div v-if="garden" class="tabs">
+				<v-tooltip>
+					<template #activator="{ props }">
+						<div v-bind="props" class="tab action hidden disabled">
+							<img class="restat-potion" src="/image/potion/restat.png">
+							<span>{{ restatPotions }}</span>
+						</div>
+					</template>
+					{{ $t('potion.restat') }}
+				</v-tooltip>
 				<div class="tab action hidden disabled">
 					<img src="/image/icon/garden.png">
 					<span>{{ garden.fights }}</span>
@@ -433,10 +442,12 @@
 
 <script setup lang="ts">
 	import { locale } from '@/locale'
+	import type { ApiError } from '@/model/api-error'
 	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
+	import { PotionEffect } from '@/model/potion'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
@@ -468,6 +479,7 @@
 
 	interface GardenData {
 		fights: number
+		team_fights: number
 		farmer_enabled: boolean
 		team_enabled: boolean
 		battle_royale_enabled: boolean
@@ -517,10 +529,16 @@
 	const bossEnabled = computed(() => true)
 	const liveArenaCount = computed(() => store.state.arenaCount || 0)
 	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
+	// Toute potion avec un effet RESTAT (49 classique, 58 admin)
+	const restatPotions = computed(() => {
+		const potions = store.state.farmer?.potions || []
+		return potions.filter(p => LeekWars.potions[p.template]?.effects?.some(e => e.type === PotionEffect.RESTAT))
+			.reduce((sum, p) => sum + p.quantity, 0)
+	})
 
-	function batchErrorToast(error: unknown) {
-		const key = typeof error === 'string' ? error : (error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : null) || 'unknown_error'
-		LeekWars.toast(t(key))
+	// La forme du corps d'erreur est déjà normalisée par LeekWars.request().
+	function batchErrorToast(error: ApiError) {
+		LeekWars.toast(t(error.error))
 	}
 	function batchSoloAttack() {
 		if (!selectedLeek.value) return
@@ -574,13 +592,7 @@
 		advanced.value = localStorage.getItem("editor/test/advanced") === 'true'
 
 		request = LeekWars.get('garden/get')
-		request.then((r) => {
-			garden.value = (r as { garden: GardenData }).garden
-			for (const composition of garden.value.my_compositions) {
-				compositions_by_id[composition.id] = composition
-			}
-			update()
-		})
+		request.then(handleGardenData)
 
 		emitter.on('back', back)
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
@@ -605,14 +617,23 @@
 		localStorage.removeItem('garden/category')
 	}
 
+	function handleGardenData(r: unknown) {
+		garden.value = (r as { garden: GardenData }).garden
+		// Jamais de compteur négatif (ex: dernier combat dépensé en attendant dans la file d'arène)
+		garden.value.fights = Math.max(0, garden.value.fights)
+		garden.value.team_fights = Math.max(0, garden.value.team_fights)
+		for (const composition of garden.value.my_compositions) {
+			composition.fights = Math.max(0, composition.fights)
+			compositions_by_id[composition.id] = composition
+		}
+		// Resynchronise les compteurs du menu/header : les valeurs du store
+		// dérivent (décréments locaux, compos créées sans refetch du farmer)
+		store.commit('set-fights-counts', { fights: garden.value.fights, team_fights: garden.value.team_fights })
+		update()
+	}
+
 	function reload() {
-		LeekWars.get('garden/get').then((r) => {
-			garden.value = (r as { garden: GardenData }).garden
-			for (const composition of garden.value.my_compositions) {
-				compositions_by_id[composition.id] = composition
-			}
-			update()
-		})
+		LeekWars.get('garden/get').then(handleGardenData)
 	}
 
 	function onPageShow(event: PageTransitionEvent) {
@@ -792,7 +813,7 @@
 		LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
 			router.push('/fight/' + data.fight)
 			store.commit('update-fights', -1)
-		}).error(error => LeekWars.toast(t('error_' + (error?.error || 'unknown_error'), error?.params || [])))
+		}).error(error => LeekWars.toast(t(error.error) as string))
 	}
 
 	function clickCompositionOpponent(composition: Composition) {
@@ -912,6 +933,10 @@
 
 
 <style lang="scss" scoped>
+	.tabs .tab img.restat-potion {
+		width: 32px;
+		margin: -4px 0;
+	}
 	// Quand le bandeau de saison est présent, les panneaux du dessus s'y collent :
 	// on carre leurs coins hauts pour une jointure nette avec le bandeau.
 	.season-banner + .container .panel.first {
@@ -1020,7 +1045,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 4px;
-		margin: 6px 0;
+		margin: 10px 0;
 		font-size: 13px;
 		color: var(--text-color-secondary);
 		.v-icon { font-size: 18px; }
