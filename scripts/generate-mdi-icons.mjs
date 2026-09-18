@@ -60,6 +60,8 @@ const DYNAMIC = [
 	'history', 'translate', 'star-outline', 'shopping-outline', 'podium', 'api', 'merge',
 	'leaf', 'chart-line', 'dice-6-outline', 'robot', 'map-outline', 'script-text-outline',
 	'trophy', 'trophy-outline', 'school', 'account-group',
+	'bank', 'database', 'git', 'github', 'heart-pulse', 'basket-outline', 'bag-personal-outline',
+	'puzzle-outline', 'clipboard-text-clock-outline', 'account-switch-outline',
 	// tutorial-items.ts
 	'laptop', 'alpha-x-box-outline', 'source-branch', 'circle-off-outline', 'plus',
 	'format-text', 'restore', 'code-brackets', 'function-variant',

@@ -1,5 +1,12 @@
 # Instructions pour Claude Code - Leek Wars Client
 
+## Icônes
+
+**Un concept du jeu (combat, tournoi, équipe, forum…) = un glyphe, le même
+partout**, y compris dans une notification. Toujours un glyphe mdi via `<v-icon>`, jamais un PNG
+(un PNG ne suit pas la couleur du thème). Après avoir utilisé un nouveau
+`mdi-*`, lancer `node scripts/generate-mdi-icons.mjs`.
+
 ## Structure du projet
 
 - **Frontend Vue.js 3** (Composition API, `<script setup>`) avec TypeScript, **Vite 7** et **Vuetify 3**
