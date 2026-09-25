@@ -117,7 +117,7 @@
 								<git-terminal v-else-if="bottomPanel === 'git'" :theme="appliedTheme" />
 							</div>
 							<div class="status">
-								<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
+								<v-menu v-if="currentAI && isLeekScript(currentAI.path)" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
 									<template #activator="{ props }">
 										<div v-ripple class="version" v-bind="props">
 											LeekScript&nbsp;{{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
@@ -125,6 +125,23 @@
 										</div>
 									</template>
 									<leekscript-versions :version="currentAI.version" :strict="currentAI.strict" @update:version="onVersionUpdate" @update:strict="onStrictUpdate" />
+								</v-menu>
+								<v-menu v-else-if="currentAIPolyglotVersion" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="true">
+									<template #activator="{ props }">
+										<div v-ripple class="version" v-bind="props">
+											{{ currentAIPolyglotVersion.label }}
+											<v-icon>mdi-chevron-down</v-icon>
+										</div>
+									</template>
+									<v-list class="version-menu">
+										<v-list-item v-ripple :lines="false" @click="onPolyglotVersionSelect">
+											<template #prepend>
+												<v-icon class="list-icon">mdi-star</v-icon>
+											</template>
+											<v-list-item-title>{{ currentAIPolyglotVersion.label }}</v-list-item-title>
+											<v-list-item-subtitle><code>{{ currentAIPolyglotVersion.comment }} @version:{{ currentAIPolyglotVersion.pragma }}</code></v-list-item-subtitle>
+										</v-list-item>
+									</v-list>
 								</v-menu>
 								<div v-ripple class="problems" :class="{active: bottomPanel === 'problems'}" @click="toggleBottomPanel('problems')">
 									<span v-if="!analyzer.error_count && !analyzer.warning_count" class="no-error">
@@ -302,10 +319,9 @@
 	import GitTerminal from './git-terminal.vue'
 	import { gitLog } from './git-log'
 	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
-	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
-	import { isLeekScript } from './file-types'
+	import { getLanguageVersion, isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
@@ -323,7 +339,8 @@
 	// plutôt que composant invisible définitif).
 	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
 		.finally(() => { explorerI18nReady.value = true })
-	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+	const editorTestReady = import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+		.catch(() => undefined)
 		.finally(() => { editorTestI18nReady.value = true })
 
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
@@ -360,11 +377,6 @@
 		openNewAI(folder: Folder): void
 		openNewFolder(folder: Folder): void
 		deleteAI(ai: AI): void
-	}
-	interface EditorTestInstance {
-		currentTab: string | number
-		allLeeks: Record<number, unknown>
-		selectLeek(leek: unknown): void
 	}
 
 	defineOptions({
@@ -452,7 +464,7 @@
 	const finder = useTemplateRef<InstanceType<typeof EditorFinder>>('finder')
 	const editors = useTemplateRef<HTMLElement>('editors')
 	const explorerEl = useTemplateRef<ExplorerInstance>('explorerEl')
-	const editorTestRef = useTemplateRef<EditorTestInstance>('editorTestRef')
+	const editorTestRef = useTemplateRef<InstanceType<typeof EditorTest>>('editorTestRef')
 
 	const gitLogCount = computed(() => gitLog.entries.length)
 	const problemsCount = computed(() => analyzer.error_count + analyzer.warning_count + analyzer.todo_count)
@@ -471,6 +483,12 @@
 		const key = currentSide.value === 1 ? currentAI1.value : currentAI2.value
 		return key ? (fileSystem.ais[key] ?? null) : null
 	})
+	// Version du langage pour les IA polyglot (JS/TS/Python) : une seule version possible,
+	// imposée par le runtime. Le menu ne sert qu'à écrire le pragma `@version` dans le fichier
+	// (avec la syntaxe de commentaire du langage), pour épingler la version des IA existantes
+	// le jour où plusieurs versions coexisteront. Le menu LeekScript, lui, reste réservé aux
+	// fichiers LeekScript (il réécrirait un pragma `// @version:N` invalide dans du Python).
+	const currentAIPolyglotVersion = computed(() => currentAI.value ? getLanguageVersion(currentAI.value.path) : null)
 	const ai1Ready = computed(() => {
 		const ai = currentAI1.value ? fileSystem.ais[currentAI1.value] : null
 		return ai && ai.code !== undefined
@@ -675,22 +693,18 @@
 	}
 
 	let updateGen = 0
+	let load1Gen = 0
 	let load2Gen = 0
 	function update() {
 		const routeHash = route.params.hash as string | undefined
 		const isDiffRoute = routeHash || route.path.endsWith('/diff')
-		if (route.hash) {
-			if (route.hash.startsWith('#leek-')) {
-				const id = parseInt(route.hash.substring(6))
+		if (route.hash.startsWith('#leek-')) {
+			const id = parseInt(route.hash.substring(6))
+			if (!isNaN(id)) {
 				testDialog.value = true
-				setTimeout(() => {
-					const test = editorTestRef.value
-					if (!test) return
-					test.currentTab = 1
-					if (test.allLeeks[id]) {
-						test.selectLeek(test.allLeeks[id])
-					}
-				}, 200)
+				// editor-test est monté derrière un v-if (i18n) : on attend sa résolution
+				// puis le flush du rendu pour que le template ref soit disponible.
+				editorTestReady.then(() => nextTick(() => editorTestRef.value?.openLeek(id)))
 			}
 		}
 		if (route.params.id) {
@@ -829,10 +843,7 @@
 	}
 
 	onBeforeRouteLeave((_to, _from, next) => {
-		let num = 0
-		for (const i in fileSystem.ais) {
-			if (fileSystem.ais[i].modified && !fileSystem.ais[i].path.startsWith('.trash/')) { num++ }
-		}
+		const num = fileSystem.unsavedAIs.length
 		if (num > 0 && !window.confirm(t('n_ais_unsaved', [num]) as string)) {
 			next(false)
 		} else {
@@ -847,23 +858,29 @@
 		aiEditor.save()
 		aiEditor.serverError = false
 
+		// editor1/editor2 sont réutilisés d'un onglet à l'autre (props.ai change au changement
+		// d'onglet, et aiEditor.ai renvoie toujours l'IA courante). Sur connexion lente, l'utilisateur
+		// peut changer d'onglet pendant que la requête ai/write est en vol : on capture l'IA visée ICI
+		// pour que le callback écrive le cache/mtime/modified sur CE fichier, et pas sur celui désormais
+		// affiché — sinon le code sauvegardé atterrit dans le cache du mauvais fichier (corruption).
+		const savedAI = aiEditor.ai
 		const content = aiEditor.editor.getValue()
-		aiEditor.ai.code = content
+		savedAI.code = content
 
 		LeekWars.track('save-ai')
 
-		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
+		LeekWars.post('ai/write', {path: savedAI.path, code: content}).then((data) => {
 			aiEditor.saving = false
-			aiEditor.ai.mtime = data.modified || Date.now()
-			setAICache(aiEditor.ai.path, content, aiEditor.ai.mtime)
-			aiEditor.ai.modified = false
+			savedAI.mtime = data.modified || Date.now()
+			setAICache(savedAI.path, content, savedAI.mtime)
+			savedAI.modified = false
 
 			if (data.result) {
 				aiEditor.goods = []
 				analyzer.applyAnalyzeResult(data.result, (ai) => {
 					if (aiEditor.goods.length === 0) aiEditor.goods.push({ai})
 				})
-				analyzer.updateTodos(aiEditor.ai)
+				analyzer.updateTodos(savedAI)
 				analyzer.updateCount()
 				setTimeout(() => aiEditor.goods = [], 2000)
 			}
@@ -872,6 +889,11 @@
 		}).error((error) => {
 			aiEditor.serverError = true
 			aiEditor.saving = false
+			// aiEditor.save() a passé modified=false de façon optimiste AVANT le POST. Sur échec
+			// (connexion lente/coupée), on re-signale le fichier comme non sauvegardé : sinon l'UI
+			// affiche « sauvegardé », le garde onBeforeRouteLeave ne prévient plus, et l'utilisateur
+			// perd ses modifications en croyant les avoir enregistrées.
+			savedAI.modified = true
 			LeekWars.toast(translateFileSystemError(error))
 		})
 	}
@@ -1367,6 +1389,15 @@
 		currentAI.value.analyze()
 	}
 
+	// Écrit (ou réécrit) le pragma @version dans une IA polyglot, avec la syntaxe de
+	// commentaire du langage. Pas d'analyze() : la validation polyglot passe par le save.
+	function onPolyglotVersionSelect() {
+		if (!currentEditor.value || !currentAIPolyglotVersion.value) return
+		const v = currentAIPolyglotVersion.value
+		rewritePragma('version', v.pragma, v.comment)
+		save(currentEditor.value)
+	}
+
 	function onStrictUpdate(strict: boolean) {
 		if (!currentAI.value) return
 		currentAI.value.strict = strict
@@ -1376,12 +1407,14 @@
 		currentAI.value.analyze()
 	}
 
-	function rewritePragma(name: 'version' | 'strict', value: number | boolean) {
+	// `comment` = syntaxe de commentaire du langage : '//' (LeekScript, JS, TS) ou '#' (Python)
+	function rewritePragma(name: 'version' | 'strict', value: number | boolean | string, comment: '//' | '#' = '//') {
 		if (!currentEditor.value) return
 		const editor = currentEditor.value.editor
 		const code = editor.getValue()
-		const pragmaRe = new RegExp(`^[ \\t]*//[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
-		const line = name === 'version' ? `// @version:${value}\n` : (value ? `// @strict\n` : '')
+		const commentRe = comment === '#' ? '#' : '//'
+		const pragmaRe = new RegExp(`^[ \\t]*${commentRe}[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
+		const line = name === 'version' ? `${comment} @version:${value}\n` : (value ? `// @strict\n` : '')
 		const match = pragmaRe.exec(code)
 		let newCode: string
 		if (match) {
@@ -1450,7 +1483,12 @@
 		const aiObj = fileSystem.ais[ai]
 		if (aiObj) {
 			if (side === 1) {
-				fileSystem.load(aiObj).then(() => { currentAI1.value = ai })
+				// Garde anti-course : sur connexion lente, cliquer A puis B où load(B) résout
+				// avant load(A) laisserait le .then le plus lent poser currentAI1 = A alors que
+				// l'onglet actif est B. L'éditeur afficherait A sous l'onglet B → une sauvegarde
+				// écrirait le contenu dans le mauvais fichier. (Symétrique du garde de droite.)
+				const gen = ++load1Gen
+				fileSystem.load(aiObj).then(() => { if (gen === load1Gen) currentAI1.value = ai })
 			} else {
 				// Garde anti-course : un switch rapide d'onglets droits ne doit pas
 				// laisser le .then le plus lent écraser currentAI2 du plus récent.

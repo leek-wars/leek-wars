@@ -9,6 +9,7 @@
 	"change_password": "Bytt passord",
 	"confirm_password": "Bekreftelse",
 	"delete_account": "Slett kontoen hans",
+	"export_data": "Eksporter dataene mine",
 	"delete_cancel": "Avbryt",
 	"delete_confirm": "Slett konto",
 	"delete_confirmation": "Bekreftelse",
@@ -21,12 +22,15 @@
 	"delete_password": "Passord",
 	"delete_success": "Vellykket sletting",
 	"delete_success_message": "Kontoen din har blitt slettet, du vil bli omdirigert i løpet av noen sekunder, vi sees snart på Leek Wars!",
+	"delete_team_dissolve": "Du er skaperen og det eneste medlemmet av laget {0}: laget oppløses når kontoen din slettes.",
+	"delete_team_transfer": "Du er skaperen av laget {0}: når kontoen din slettes, overføres laget til det eldste medlemmet.",
 	"discrete_mode": "Diskret modus",
 	"empty": "Tømme",
 	"empty_localstorage": "Tøm den lokale lagringen",
 	"error_not_same_password": "De to passordene som legges inn må være identiske",
 	"error_password_length": "Passordet må inneholde mellom {0} og {1} tegn",
 	"error_wrong_password": "Passordet er feil",
+	"error_too_many_requests": "For mange forespørsler, prøv igjen om noen minutter",
 	"error_forbidden_name": "Dette navnet er forbudt",
 	"error_invalid_godfather": "Denne spilleren eksisterer ikke",
 	"error_invalid_length": "Passordet må inneholde mellom {0} og {1} tegn",
@@ -75,5 +79,6 @@
 	"auto": "Auto",
 	"theme": "Tema",
 	"modern_theme": "Moderne tema (beta)",
-	"xp_theme": "XP-tema"
+	"xp_theme": "XP-tema",
+	"purchase_history": "Kjøpshistorikk"
 }

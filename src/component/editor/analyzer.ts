@@ -25,6 +25,29 @@ export interface CompletionResult {
 	items: Array<{ name: string }>
 }
 
+/** Une analyse envoyée au daemon dont on attend encore la réponse */
+interface PendingAnalyze {
+	path: string
+	version: number
+	resolve: (value: unknown) => void
+	timer: number
+}
+
+// Analyses en vol, indexées par identifiant de requête (le daemon le renvoie dans sa réponse).
+// Volontairement hors de l'objet reactive() plus bas : ce sont des resolveurs de promesse et des
+// identifiants de timer, que Vue n'a aucune raison de proxyfier ni de suivre.
+const pendingAnalyzes = new Map<number, PendingAnalyze>()
+
+// Au-delà, on considère la réponse perdue (socket coupé en plein vol) et on libère la requête,
+// sinon la promesse ne se résoudrait jamais et l'indicateur d'analyse resterait allumé.
+const ANALYZE_TIMEOUT = 30_000
+
+// Au-delà de cette taille, analyze() et complete() répondent « pas de résultat » (null).
+// Surtout ne JAMAIS reject() sans raison ici : complete() remonte telle quelle à
+// provideCompletionItems (await sans catch), et le handler d'erreur par défaut de Monaco
+// crashe en boucle sur un rejet undefined (« can't access property "stack" », #11807887).
+const MAX_ANALYZE_CODE_SIZE = 60_000
+
 export class AnalyzerPromise {
 	// eslint-disable-next-line unicorn/no-thenable
 	public then!: (data: unknown) => void
@@ -41,8 +64,7 @@ class Analyzer {
 	public todo_count: number = 0
 	public promise!: Promise<unknown>
 	public requestID: number = 0
-	public analyzeResolve!: ((value: unknown) => void) | null
-	private analyzeVersion: number = 0
+	private analyzeVersions: {[path: string]: number} = {}
 	public hoverResolve!: (value: unknown) => void
 	public lastHover: unknown
 	public completeResolve: {[key: number]: (value: unknown) => void} = {}
@@ -139,36 +161,71 @@ class Analyzer {
 		if (language !== 'leekscript') {
 			return Promise.resolve(null)
 		}
-		if (code.length > 60_000) {
-			return Promise.reject()
+		if (code.length > MAX_ANALYZE_CODE_SIZE) {
+			return Promise.resolve(null)
 		}
 
-		const version = ++this.analyzeVersion
+		// Deux analyses peuvent se chevaucher (le debounce de frappe est de 500 ms, une analyse de
+		// grosse IA avec includes dure plus longtemps). Chaque requête porte donc un identifiant, que
+		// le daemon renvoie dans sa réponse, comme le font déjà EDITOR_COMPLETE et EDITOR_REFERENCES.
+		// L'identifiant est en FIN de paquet, pas en position 1 : un daemon antérieur l'ignore
+		// simplement au lieu de décaler ai.path et le code.
+		const requestID = this.requestID++
 
-		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code])
+		// Version PAR CHEMIN : une réponse n'est périmée que si une analyse plus récente du MÊME
+		// fichier a été lancée depuis. Un compteur global jetterait le résultat valide d'un fichier dès
+		// qu'un autre est analysé (vue splittée, changement d'onglet), et l'avertissement corrigé
+		// resterait affiché.
+		this.analyzeVersions[ai.path] = (this.analyzeVersions[ai.path] ?? 0) + 1
+		const version = this.analyzeVersions[ai.path]
+
+		LeekWars.socket.send([SocketMessage.EDITOR_ANALYZE, ai.path, code, requestID])
 
 		return new Promise<unknown>((resolve) => {
-			this.analyzeResolve = (data: unknown) => {
-				if (version === this.analyzeVersion) {
-					resolve(data)
-				}
-				// Stale result: ignore but don't clear resolve,
-				// so the next (correct) result can still resolve.
-			}
+			pendingAnalyzes.set(requestID, {
+				path: ai.path,
+				version,
+				resolve,
+				timer: window.setTimeout(() => {
+					pendingAnalyzes.delete(requestID)
+					resolve(null)
+				}, ANALYZE_TIMEOUT)
+			})
 		})
 	}
 
-	public analyzeResult(data: unknown[]) {
-		if (this.analyzeResolve) {
-			// console.timeEnd('hover')
-			this.analyzeResolve(data)
+	/**
+	 * Résout la requête d'analyse à laquelle répond le daemon.
+	 * @param requestID identifiant renvoyé par le daemon : absent s'il précède la corrélation,
+	 * négatif si la requête n'est pas passée par analyze() (restoreDaemonCache envoie des
+	 * EDITOR_ANALYZE bruts, dont la réponse ne doit résoudre aucune promesse).
+	 */
+	private resolveAnalyze(requestID: number | undefined, data: unknown) {
+		let key = requestID
+		if (key === undefined) {
+			// Daemon antérieur à la corrélation : il répond dans l'ordre des requêtes, on retombe donc
+			// sur la plus ancienne en attente (Map = ordre d'insertion). Dégradé mais fonctionnel.
+			key = pendingAnalyzes.keys().next().value
+		} else if (key < 0) {
+			return
 		}
+		if (key === undefined) { return }
+		const entry = pendingAnalyzes.get(key)
+		if (!entry) { return }
+		pendingAnalyzes.delete(key)
+		clearTimeout(entry.timer)
+		// Analyse dépassée par une plus récente du même fichier : ne rien appliquer, la réponse à jour
+		// arrive juste après.
+		entry.resolve(entry.version === this.analyzeVersions[entry.path] ? data : null)
 	}
 
-	public analyzeError() {
-		if (this.analyzeResolve) {
-			this.analyzeResolve(null)
-		}
+	public analyzeResult(data: unknown[], requestID?: number) {
+		// console.timeEnd('hover')
+		this.resolveAnalyze(requestID, data)
+	}
+
+	public analyzeError(requestID?: number) {
+		this.resolveAnalyze(requestID, null)
 	}
 
 	public applyAnalyzeResult(
@@ -177,8 +234,14 @@ class Analyzer {
 	) {
 		for (const epPath in result) {
 			const ai = fileSystem.ais[epPath]
-			if (!ai) continue
 			const entry = result[epPath]
+			if (!ai) {
+				// Entrypoint non chargé côté client (IA absente de fileSystem.ais). On nettoie tout de même
+				// son bucket périmé s'il revient en stats-only, sinon un doublon subsisterait sans qu'aucune
+				// IA locale ne permette de l'effacer via removeProblems.
+				if (entry.problems === undefined) this.removeProblemsByPath(epPath)
+				continue
+			}
 			if (typeof entry.total_lines === 'number') ai.total_lines = entry.total_lines
 			if (typeof entry.total_chars === 'number') ai.total_chars = entry.total_chars
 			// Polyglot (.js/.ts/.py) : la validité et les problèmes sont pilotés CÔTÉ CLIENT (service TS de
@@ -203,6 +266,47 @@ class Analyzer {
 				if (ai.valid && onValid) onValid(ai)
 			}
 		}
+
+		this.purgeStaleBuckets(result)
+	}
+
+	// Élimine les doublons : un même fichier ne doit apparaître QUE sous l'entrypoint dont l'analyse est la
+	// plus récente. Cette analyse vient de (re)poser des problèmes sous ses buckets (result) ; tout fichier
+	// qui y figure fait donc autorité. S'il traîne encore dans le bucket d'un AUTRE entrypoint non rafraîchi,
+	// c'est un doublon périmé — soit un include partagé par plusieurs entrypoints, soit un reliquat après un
+	// redémarrage du daemon (graphe d'includes perdu -> le fichier est recompilé en standalone sans que ses
+	// includers soient renvoyés pour nettoyage). On l'y retire, sans toucher aux problèmes PROPRES de ces
+	// autres entrypoints (leurs autres fichiers restent intacts).
+	private purgeStaleBuckets(result: {[path: string]: {problems?: unknown[][]}}) {
+		// Tous les fichiers que cette analyse fait autorité : l'entrypoint analysé lui-même + tous les
+		// fichiers (includes) distribués sous son bucket par handleProblems.
+		const refreshedFiles = new Set<string>()
+		for (const epPath in result) {
+			if (result[epPath].problems === undefined) continue
+			refreshedFiles.add(epPath)
+			const bucket = this.problems[epPath]
+			if (bucket) for (const filePath in bucket) refreshedFiles.add(filePath)
+		}
+		if (!refreshedFiles.size) return
+		for (const epPath in this.problems) {
+			// Bucket rafraîchi par cette analyse (y compris le bucket propre du fichier) : déjà à jour.
+			if (epPath in result) continue
+			// Les TODO sont gérés à part par updateTodos, qui tourne juste après : ne pas y toucher.
+			if (epPath === '_todos') continue
+			let changed = false
+			for (const filePath of refreshedFiles) {
+				if (this.problems[epPath][filePath]) {
+					delete this.problems[epPath][filePath]
+					const file = fileSystem.ais[filePath]
+					if (file && file.problems[epPath]) {
+						delete file.problems[epPath]
+						this.updateAiErrors(file)
+					}
+					changed = true
+				}
+			}
+			if (changed && Object.keys(this.problems[epPath]).length === 0) delete this.problems[epPath]
+		}
 	}
 
 	public hover(ai: AI, line: number, column: number) {
@@ -225,9 +329,8 @@ class Analyzer {
 
 	public complete(ai: AI, code: string, line: number, column: number): Promise<CompletionResult | null> {
 
-		if (code.length > 60_000) {
-			// return { ...Promise.reject(), abort: () => null }
-			return Promise.reject()
+		if (code.length > MAX_ANALYZE_CODE_SIZE) {
+			return Promise.resolve(null)
 		}
 
 		const requestID = this.requestID++
@@ -341,6 +444,10 @@ class Analyzer {
 		// Group problems by ai path
 		const problemsByAI = {} as {[key: string]: Problem[]}
 		const markersByAI = {} as {[key: string]: monaco.editor.IMarkerData[]}
+		// Dédoublonnage par fichier : le daemon peut renvoyer deux fois le même problème (fusion des
+		// entrypoints, includes en diamant...). Un problème identique en position ET message n'a aucune
+		// raison d'être listé — ni compté — deux fois dans un même fichier.
+		const seenByAI = {} as {[key: string]: Set<string>}
 		for (const problem of problems) {
 			const level = problem[0] as number
 			let aiPath = problem[1] as string
@@ -355,16 +462,22 @@ class Analyzer {
 			if (!problemsByAI[aiPath]) {
 				problemsByAI[aiPath] = []
 				markersByAI[aiPath] = []
+				seenByAI[aiPath] = new Set()
 			}
-			problemsByAI[aiPath].push(new Problem(problem[2] as number, problem[3] as number, problem[4] as number, problem[5] as number, level, info))
+			const startLine = problem[2] as number, startColumn = problem[3] as number
+			const endLine = problem[4] as number, endColumn = problem[5] as number
+			const dupKey = `${level}:${startLine}:${startColumn}:${endLine}:${endColumn}:${info}`
+			if (seenByAI[aiPath].has(dupKey)) continue
+			seenByAI[aiPath].add(dupKey)
+			problemsByAI[aiPath].push(new Problem(startLine, startColumn, endLine, endColumn, level, info))
 			const errorCode = problem[6] as number
 			markersByAI[aiPath].push({
 				message: info,
 				severity: level === 0 ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
-				startLineNumber: problem[2] as number,
-				startColumn: (problem[3] as number) + 1,
-				endLineNumber: problem[4] as number,
-				endColumn: (problem[5] as number) + 2,
+				startLineNumber: startLine,
+				startColumn: startColumn + 1,
+				endLineNumber: endLine,
+				endColumn: endColumn + 2,
 				tags: errorCode === ERROR_UNUSED_VARIABLE || errorCode === ERROR_UNUSED_FUNCTION ? [monaco.MarkerTag.Unnecessary] : [],
 			})
 		}
@@ -405,14 +518,26 @@ class Analyzer {
 	}
 
 	public removeProblems(entrypoint: AI) {
-		for (const aiPath in fileSystem.ais) {
-			const ai = fileSystem.ais[aiPath]
-			if (ai.problems && Object.values(ai.problems).length) {
-				delete ai.problems[entrypoint.path]
-				this.updateAiErrors(ai)
+		this.removeProblemsByPath(entrypoint.path)
+	}
+
+	// Efface le bucket d'un entrypoint par son CHEMIN (sans exiger l'IA en mémoire) : nécessaire quand le
+	// daemon renvoie un entrypoint absent de fileSystem.ais (cf. applyAnalyzeResult).
+	public removeProblemsByPath(entrypointPath: string) {
+		// Les fichiers ayant des problèmes sous cet entrypoint sont exactement les clés de son bucket
+		// (setProblems écrit this.problems[ep][path] et ai.problems[ep] ensemble). On les parcourt plutôt
+		// que TOUT fileSystem.ais, ce qui évite un scan de tout le projet à chaque analyse.
+		const bucket = this.problems[entrypointPath]
+		if (bucket) {
+			for (const aiPath in bucket) {
+				const ai = fileSystem.ais[aiPath]
+				if (ai && ai.problems[entrypointPath]) {
+					delete ai.problems[entrypointPath]
+					this.updateAiErrors(ai)
+				}
 			}
 		}
-		delete this.problems[entrypoint.path]
+		delete this.problems[entrypointPath]
 	}
 
 	public updateAiErrors(ai: AI) {

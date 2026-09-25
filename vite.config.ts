@@ -551,8 +551,6 @@ export default defineConfig({
 							return 'js-beautify'
 						case 'monaco-editor':
 							return 'monaco'
-						case 'codemirror':
-							return 'codemirror'
 						case 'katex':
 							return 'katex'
 					}

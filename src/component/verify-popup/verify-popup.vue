@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { apiErrorKey, apiFieldMessages, type ApiError } from '@/model/api-error'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
@@ -100,13 +101,7 @@ function submit() {
 	}).then(() => {
 		LeekWars.toast(t('mail_sent'))
 		close()
-	}).error(errs => {
-		for (const err of (errs as unknown as [number, string][])) {
-			const field = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][err[0]] ?? 'login'
-			if (!errors.value[field]) errors.value[field] = []
-			errors.value[field].push(t('error_' + err[1]) as string || (err[1] as string))
-		}
-	}).finally(() => {
+	}).error(showError).finally(() => {
 		submitting.value = false
 	})
 }
@@ -121,19 +116,21 @@ function useProvider(provider: 'github' | 'google') {
 	oauthLoading.value = true
 	LeekWars.post(`farmer/verify-${provider}`, { login: login.value, godfather: '' }).then(() => {
 		document.location.href = LeekWars.API + `farmer/start-${provider}-login`
-	}).error(errs => {
+	}).error(error => {
 		oauthLoading.value = false
-		if (Array.isArray(errs)) {
-			for (const err of errs) {
-				const field = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][err[0]] ?? 'login'
-				if (!errors.value[field]) errors.value[field] = []
-				errors.value[field].push(t('error_' + err[1]) as string || (err[1] as string))
-			}
-		} else {
-			const code = typeof errs?.error === 'string' ? errs.error : 'unknown'
-			LeekWars.toast(t('error_' + code) as string)
-		}
+		showError(error)
 	})
+}
+
+function showError(error: ApiError) {
+	if (error.fields) {
+		for (const [field, message] of apiFieldMessages(error, t)) {
+			if (!errors.value[field]) errors.value[field] = []
+			errors.value[field].push(message)
+		}
+	} else {
+		LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
+	}
 }
 </script>
 

@@ -9,6 +9,7 @@
 	"change_password": "Изменить пароль",
 	"confirm_password": "Подтверждение",
 	"delete_account": "Удалить его аккаунт",
+	"export_data": "Экспортировать мои данные",
 	"delete_cancel": "Отмена",
 	"delete_confirm": "Удалить аккаунт",
 	"delete_confirmation": "Подтверждение",
@@ -21,12 +22,15 @@
 	"delete_password": "Пароль",
 	"delete_success": "Успешное удаление",
 	"delete_success_message": "Ваш аккаунт удален, через несколько секунд вы будете перенаправлены, скоро увидимся на Leek Wars!",
+	"delete_team_dissolve": "Вы создатель и единственный участник команды {0}: команда будет распущена при удалении аккаунта.",
+	"delete_team_transfer": "Вы создатель команды {0}: при удалении аккаунта команда перейдёт к самому давнему участнику.",
 	"discrete_mode": "Дискретный режим",
 	"empty": "Пустой",
 	"empty_localstorage": "Очистить локальное хранилище",
 	"error_not_same_password": "Два введенных пароля должны быть идентичными",
 	"error_password_length": "Пароль должен содержать от {0} до {1} символов.",
 	"error_wrong_password": "Неправильный пароль",
+	"error_too_many_requests": "Слишком много запросов, попробуйте через несколько минут",
 	"error_forbidden_name": "Это имя запрещено",
 	"error_invalid_godfather": "Этот плеер не существует",
 	"error_invalid_length": "Пароль должен содержать от {0} до {1} символов.",
@@ -75,5 +79,6 @@
 	"auto": "Авто",
 	"theme": "Тема",
 	"modern_theme": "Современная тема (бета)",
-	"xp_theme": "Тема XP"
+	"xp_theme": "Тема XP",
+	"purchase_history": "История покупок"
 }

@@ -4,10 +4,14 @@
 
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
+	import { applyEmojis } from '@/model/emojis'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { mdiIcons } from '@/model/mdi-icons'
 	import { Latex } from '@/model/latex'
 	import { createSubApp } from '@/model/vue'
+	import { resolveCodeThemeClass } from '@/component/editor/code-theme'
+	import CodeTabs from '@/component/encyclopedia/code-tabs.vue'
+	import { findCodeBlockGroups } from '@/model/doc-language'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
@@ -16,7 +20,7 @@
 	import TutorialMenu from '../tutorial/tutorial-menu.vue'
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
 	import { VBtn, VCheckbox } from 'vuetify/components'
-	import { tutorial_items } from '../tutorial/tutorial-items'
+	import { tutorial_items, toTutorialTrack } from '../tutorial/tutorial-items'
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
@@ -93,6 +97,10 @@
 				// Rendu LaTeX inline ($...$) — fait avant la transformation des blocs
 				// de code pour que le contenu des <code>/<pre> reste intact.
 				renderMath(mdEl)
+				// Smileys / emojis (:) :/ :D <3 ...) dans les messages forum et le
+				// dev-blog (mode="forum"). applyEmojis saute code/pre/latex/liens, donc
+				// c'est fait avant createCodeArea sans risque de toucher au code.
+				if (props.mode === 'forum') { applyEmojis(mdEl) }
 				mdEl.querySelectorAll('h1, h2, h3, h4, h5').forEach((item) => {
 					const el = item as HTMLHeadingElement
 					const level = parseInt(el.tagName.substring(1), 10)
@@ -144,15 +152,29 @@
 					svg.appendChild(pathEl)
 					item.replaceWith(svg)
 				})
+				// Un même exemple décliné en plusieurs langages s'écrit en fences CONSÉCUTIVES
+				// (```leekscript puis ```js puis ```python) : on les regroupe en onglets. Les blocs
+				// restants — l'immense majorité des pages — passent par le chemin normal ci-dessous.
+				for (const group of findCodeBlockGroups(mdEl)) {
+					const container = document.createElement('div')
+					group.elements[0].replaceWith(container)
+					group.elements.forEach(e => e.remove())
+					const app = createSubApp(CodeTabs, { blocks: group.blocks }, 'encyclopedia-code-tabs')
+					app.mount(container)
+					components.push({ $destroy: () => app.unmount() })
+				}
 				mdEl.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')
-					if (LeekWars.darkMode) item.classList.add('theme-monokai')
-					LeekWars.createCodeArea(content, item as HTMLElement)
+					item.classList.add(resolveCodeThemeClass())
+					// markdown-it pose une classe language-<lang> sur les blocs ```lang
+					const langClass = Array.from(item.classList).find((c) => c.startsWith('language-'))
+					const language = langClass ? langClass.slice('language-'.length) : undefined
+					LeekWars.createCodeArea(content, item as HTMLElement, language)
 				})
 				mdEl.querySelectorAll('code:not(.multi)').forEach((item) => {
 					const content = ('' + item.textContent).trim()
-					if (LeekWars.darkMode) item.classList.add('theme-monokai')
+					item.classList.add(resolveCodeThemeClass())
 					LeekWars.createCodeAreaSimple(content, item as HTMLElement)
 				})
 
@@ -232,13 +254,15 @@
 				})
 				// Tutorial menu
 				mdEl.querySelectorAll('.tutorial-menu').forEach((item) => {
-					const app = createSubApp(TutorialMenu, { locale: props.locale }, 'tutorial-menu')
+					const track = toTutorialTrack(item.getAttribute('data-track'))
+					const app = createSubApp(TutorialMenu, { locale: language.value, track }, 'tutorial-menu')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
 				mdEl.querySelectorAll('.tutorial-progress').forEach((item) => {
-					const app = createSubApp(TutorialProgress, { locale: props.locale }, 'tutorial-progress')
+					const track = toTutorialTrack(item.getAttribute('data-track'))
+					const app = createSubApp(TutorialProgress, { locale: language.value, track }, 'tutorial-progress')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
@@ -483,9 +507,11 @@
 				} else if (tag.startsWith('line-of-sight')) {
 					return "<div class='encyclopedia-los'></div>"
 				} else if (tag.startsWith('tutorial-menu')) {
-					return "<div class='tutorial-menu'></div>"
+					// {{ tutorial-menu }} = piste LeekScript ; {{ tutorial-menu:python }} = piste Python, etc.
+					// toTutorialTrack ne renvoie qu'une valeur connue (a-z), sûre pour l'attribut.
+					return "<div class='tutorial-menu' data-track='" + toTutorialTrack(tag.split(':')[1]) + "'></div>"
 				} else if (tag.startsWith('tutorial-progress')) {
-					return "<div class='tutorial-progress'></div>"
+					return "<div class='tutorial-progress' data-track='" + toTutorialTrack(tag.split(':')[1]) + "'></div>"
 				} else if (tag.startsWith('tutorial-score')) {
 					return "<div>" + (store.state.farmer ? store.state.farmer.tutorial_progress : 0) + " / " + tutorial_items.length + "</div>"
 				} else if (tag.startsWith('tutorial-lock')) {

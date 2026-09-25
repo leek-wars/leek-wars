@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="tutorial-menu">
-		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + $t(item.name, locale).replace(/ /g, '_')">
+		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + ($t(item.name, locale) + suffix).replace(/ /g, '_')">
 			<v-icon class="icon">mdi-{{ item.icon }}</v-icon>
 			<div class="bottom">
 				<div class="name">
@@ -18,16 +18,18 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/model/store'
 import { mixins } from '@/model/i18n'
-import { tutorial_items } from './tutorial-items'
+import { tutorial_items, tutorialTitleSuffix, type TutorialTrack } from './tutorial-items'
 
 defineOptions({ name: 'TutorialMenu', i18n: {}, mixins: [...mixins] })
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	locale: string
-}>()
+	track?: TutorialTrack
+}>(), { track: 'leekscript' })
 
 const { mergeLocaleMessage } = useI18n()
 const items = tutorial_items
+const suffix = tutorialTitleSuffix(props.track)
 
 import(/* webpackChunkName: "tutorial-[request]" */ `@/lang/${props.locale}/tutorial.json`).then(module => {
 	mergeLocaleMessage(props.locale, module.default)

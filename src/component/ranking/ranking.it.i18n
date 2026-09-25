@@ -60,6 +60,7 @@
 	"boss": "Boss",
 	"turns": "Turni",
 	"power": "Livello",
+	"team_power": "Potenza della squadra",
 	"date": "Data",
 	"boss_mode_turns": "Il più veloce",
 	"boss_mode_leeks": "Meno porri",

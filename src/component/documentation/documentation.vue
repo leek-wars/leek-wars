@@ -11,15 +11,16 @@
 				<router-link v-if="!LeekWars.mobile && !popup" :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.game_rules').replace(/ /g, '_')">
 					<div class="tab">
 						<v-icon>mdi-help-circle-outline</v-icon>
-						{{ $t('main.general_help') }}
+						<span class="tab-label">{{ $t('main.general_help') }}</span>
 					</div>
 				</router-link>
 				<router-link v-if="!LeekWars.mobile && !popup" :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial')">
 					<div class="tab">
 						<v-icon>mdi-laptop</v-icon>
-						{{ $t('main.tutorial') }}
+						<span class="tab-label">{{ $t('main.tutorial') }}</span>
 					</div>
 				</router-link>
+				<doc-language-selector v-if="!inAppBar" />
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
 					<input ref="search" v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -44,10 +45,11 @@
 								</h2>
 								<div v-if="query.length || categoryState[c]">
 									<div v-for="(item, i) in (category as LSFunction[])" :key="i" :item="item.name" class="item" @click="navigate(item.name)">
-										{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i as number]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i as number]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i as number]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
+										<template v-if="objectPathOf(item.name)">{{ objectPathOf(item.name) }}</template>
+									<template v-else>{{ item.name }}<span v-if="item.arguments_types" class="arguments">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i as number]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i as number]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i as number]">]</span><span v-if="Number(i) < item.arguments_names.length - 1">, </span></span>)
 										<span v-if="item.return_type != 0">
 											<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
-										</span></span>
+										</span></span></template>
 									</div>
 								</div>
 							</div>
@@ -69,6 +71,9 @@
 
 <script lang="ts" setup>
 	import { locale } from '@/locale'
+	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
+	import { docLanguage } from '@/model/doc-language'
+	import { displaySignature, objectSignatureOf } from '@/model/doc-signature'
 	import type { Constant } from '@/model/constant'
 	import type { LSFunction } from '@/model/function'
 	import { FUNCTIONS } from '@/model/functions'
@@ -77,6 +82,7 @@
 	import { FUNCTION_CATEGORIES } from '@/model/function_categories'
 	import { i18n, mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
@@ -106,7 +112,7 @@
 		4: 'mdi-code-braces-box',
 		13: 'mdi-code-not-equal-variant',
 		14: 'mdi-code-brackets',
-		5: 'mdi-account',
+		5: 'mdi-leek',
 		6: 'mdi-sword',
 		7: 'mdi-chip',
 		8: 'mdi-grid',
@@ -143,7 +149,19 @@
 			if (!(item.category in cats)) cats[item.category] = []
 			cats[item.category].push(item)
 		}
-		return cats
+		if (docLanguage.value === 'leekscript') return cats
+		// Une catégorie dont AUCUNE fonction n'existe dans le langage lu n'a rien à y faire :
+		// les intervalles n'ont pas de type équivalent en JS ni en Python, afficher leurs 16
+		// entrées à un lecteur qui ne peut en utiliser aucune est du bruit.
+		// Règle sur la catégorie ENTIÈRE, pas sur chaque fonction : une fonction isolée sans
+		// équivalent reste affichée avec son badge LeekScript, ce qui est une information.
+		const retenues: {[key: number]: (LSFunction | Constant)[]} = {}
+		for (const [categorie, items] of Object.entries(cats)) {
+			const utile = items.some(item => 'return_type' in item
+				&& displaySignature(item.name, (item as LSFunction).return_type, docLanguage.value) !== null)
+			if (utile) retenues[Number(categorie)] = items
+		}
+		return retenues
 	})
 
 	;(async () => {
@@ -244,6 +262,25 @@
 		}
 	}
 	watch(() => route.params, update)
+
+	/**
+	 * Chemin objet à afficher dans la liste de gauche (`Entity.life`), ou null en LeekScript
+	 * et pour les fonctions sans équivalent objet — la liste retombe alors sur la signature
+	 * plate. Sans ça la colonne annoncerait `getLife` à un lecteur en Python, à qui la fiche
+	 * de droite affiche `entity.life`.
+	 */
+	/**
+	 * La barre d'application mobile (lw-bar) porte déjà le sélecteur de langage, mais elle
+	 * n'existe que connecté (`#app:not(.connected) .app-bar { display: none }`). Hors de ce
+	 * cas — desktop, ou mobile déconnecté — c'est la barre d'onglets de la page qui le porte,
+	 * sans quoi il n'y en aurait aucun.
+	 */
+	const inAppBar = computed(() => LeekWars.mobile && store.state.connected)
+
+	function objectPathOf(name: string): string | null {
+		if (docLanguage.value === 'leekscript') return null
+		return objectSignatureOf(name, undefined, docLanguage.value)?.path ?? null
+	}
 
 	function navigate(item: string) {
 		if (props.popup) {
@@ -346,6 +383,17 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 0;
+	}
+	// Le sélecteur de langage doit rester atteignable sur petit écran : sans ça la barre
+	// d'onglets déborde (496px de contenu dans 390px de large) et le dernier logo passe hors
+	// champ. `LeekWars.mobile` est basé sur l'user-agent, pas sur la largeur, et ne couvre donc
+	// pas une fenêtre étroite sur ordinateur — d'où une media query. On garde les icônes des
+	// onglets voisins, seuls leurs libellés tombent : ça libère ~160px, assez pour que tout
+	// tienne, sélecteur et recherche compris.
+	@media screen and (max-width: 700px) {
+		.tab-label {
+			display: none;
+		}
 	}
 	.items-list {
 		overflow-y: scroll;

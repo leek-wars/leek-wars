@@ -1,3 +1,29 @@
+250:
+  title: "WIP"
+  added:
+    - "La console LeekScript devient la Console : exécutez aussi du JavaScript, du TypeScript et du Python en interactif, avec un état conservé entre les lignes."
+    - "#ai L'éditeur Python devient un vrai IDE : autocomplétion de vos fonctions, variables et modules avec inférence de types, survol d'un symbole avec son type et l'endroit où il est défini, Ctrl+clic pour aller à la définition, et résolution des imports entre vos IA."
+  improved:
+    - "#ai L'API JavaScript, TypeScript et Python devient 100 % orientée objet : plus aucune fonction ni constante globale, tout passe par les objets (Fight, me, Weapon.pistol, System.operations, Network, Color...). La stdlib LeekScript est remplacée par les natifs du langage (Math, JSON, random...)."
+    - "#ai Types de l'API JavaScript, TypeScript et Python affinés (merci à Nyaleph) : les familles de constantes sont nommées dans les signatures (Entity.Stat, Fight.Use, Item.Area...), Item porte enfin ce que les armes et les puces ont en commun, et les registres sont typés comme du texte. Attention, une IA qui utilisait la valeur de retour de Registers.delete, ou une valeur de registre directement comme un nombre, signalera désormais une erreur : passez par parseInt."
+    - "#ai API JavaScript, TypeScript et Python : Effect.item rend maintenant l'arme ou la puce elle-même au lieu de son numéro, on peut retrouver un objet depuis son identifiant (Cell.get, Entity.get, Weapon.get, Chip.get, Item.get), et les objets rendus par l'API sont partagés et en lecture seule, donc comparables entre eux (me.cell === me.cell). Les constantes EFFECT_MODIFIER_* et EFFECT_TARGET_* sont regroupées en Effect.Modifier.* et Effect.Target.* (merci à Nyaleph)."
+    - "Suppression de compte possible pour le créateur d'une équipe : elle est transmise au membre le plus ancien, ou dissoute s'il est seul."
+    - "#ai Les constantes dépréciées (EFFECT_BUFF_FORCE, USE_FAILED...) ne sont plus proposées dans l'API JavaScript, TypeScript et Python : seuls les noms actuels existent (Effect.BUFF_STRENGTH...) (merci à WiseMan)."
+  fixed:
+    - "#ai Assigner une valeur à un champ typé d'une classe à travers une variable non typée (any) applique maintenant les mêmes conversions que du code typé, au lieu d'échouer en combat avec une fausse erreur « champ inconnu » (merci à Bily)."
+    - "Le mode préféré en arène ne change plus tout seul : la commande /br du chat inscrivait sans préférence, et un changement de mode depuis le menu était oublié à l'inscription suivante depuis le potager."
+    - "Les obstacles des cartes de boss (remparts du château, torii...) s'affichent maintenant avec leur taille réelle sur la carte des déplacements du rapport, sans trous qui semblaient traversables (merci à TheScout)."
+    - "Le rôle référent devient discret comme les autres rôles en mode discret : pseudo sans gras dans le chat et badge de grade sobre (merci à Portevent)."
+    - "#ai API JavaScript, TypeScript et Python : Field.distance renvoie maintenant une distance en nombre de cases, comme Cell.distance et Entity.distance, au lieu de la distance à vol d'oiseau. Le vol d'oiseau reste disponible avec Field.euclideanDistance (merci à GSoMan)."
+    - "#ai API JavaScript, TypeScript et Python : préciser une arme à me.weaponCell, me.weaponCells, me.weaponTargets ou me.canUseWeapon fonctionne enfin. La liste revenait vide, et en Python le mot-clé weapon était refusé : les arguments partaient dans l'ordre inverse au moteur. Ces méthodes prennent la cible d'abord et l'arme ensuite, comme leur documentation, et l'ordre inverse reste accepté (merci à GSoMan)."
+    - "La page Inventaire ne plante plus au premier butin d'une nouvelle saison : les ressources d'une saison (Sable doré, Ambre marin...) sont maintenant publiées automatiquement la veille de son début."
+    - "Les saisons commencent et se terminent maintenant à minuit heure française, et non à 2 h du matin."
+    - "L'éditeur ne déclenche plus une erreur à chaque frappe sur les vieux Safari (iPhone et iPad sous iOS 15) : la détection des couleurs de Monaco utilisait une expression régulière que ces navigateurs ne comprennent pas."
+    - "Changer de compte dans un onglet ne fait plus planter les onglets restés ouverts sur l'ancien compte : ils se rechargent maintenant automatiquement sur le nouveau compte, ou vous proposent de le faire si des IA non enregistrées y sont ouvertes (merci à Portevent)."
+    - "#ai L'éditeur ne plante plus quand, dans une IA JavaScript ou TypeScript, on clique sur le titre de la fenêtre des définitions ou des références pour un symbole de l'API : cette cible n'est pas un de vos fichiers, elle est maintenant simplement ignorée (merci à Hurracan)."
+    - "L'affichage d'un combat sur la carte usine ne plante plus quand le décor est redessiné pendant le chargement : les ombres des boulons du sol étaient dessinées avant d'être prêtes (merci à Nyctéis)."
+    - "Appliquer un équipement qui ne fait qu'investir du capital libre (par exemple juste après une potion de restat) ne consomme plus de potion : une potion n'est demandée que lorsqu'il faut réellement réduire une caractéristique (merci à Smartiz)."
+
 249:
   title: "IA en JavaScript, TypeScript et Python, page Collection, et saisons événementielles."
   added:
@@ -15,9 +41,11 @@
     - "Page de maintenance avec un mini-jeu de course de poireau. #img_249_maintenance"
     - "Lancez une démo de groupe pour essayer Leek Wars à plusieurs, sans compte."
     - "Message de bienvenue dans le chat pour les nouveaux inscrits."
+    - "Notifications push : activez-les depuis la page Notifications pour être prévenu directement dans votre navigateur."
     - "#ai Covariance du type de retour lors de la redéfinition d'une méthode. #img_249_covariant"
     - "#ai Accès indexé optionnel avec l'opérateur `a?[b]`."
   improved:
+    - "Nombre de potions de réinitialisation restantes affiché dans le Potager, à côté du nombre de combats."
     - "L'historique de combat se met à jour en direct, sans recharger la page."
     - "Pages d'article dédiées pour le dev-blog, indexées par les moteurs de recherche."
     - "Le paiement suit le thème clair ou sombre du site."
@@ -31,7 +59,7 @@
     - "Dialogue incitant à démarrer le tutoriel LeekScript. #img_249_tutorial_dialog"
     - "Icônes de trophée adaptées au mode sombre."
     - "Combats compressés côté serveur pour un stockage plus léger."
-    - "Les packs de combats achetés arrivent dans l'inventaire (à activer) au lieu d'être crédités directement."
+    - "Les packs de combats achetés arrivent dans l'inventaire (à activer) au lieu d'être crédités directement, utilisables depuis le potager quand vous n'avez plus de combats."
     - "Le retrait automatique du potager après une série de défaites exige désormais des adversaires distincts."
     - "#ai Les fonctions points d'entrée ne sont plus signalées comme inutilisées."
     - "#ai Validation des IA Python dans l'éditeur : noms indéfinis, erreurs de type et de syntaxe signalés en direct."

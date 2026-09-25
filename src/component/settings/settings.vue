@@ -169,6 +169,12 @@
 				</div>
 				<two-factor v-if="view2FA" /> -->
 
+				<div v-ripple class="list-item card" @click="exportData">
+					<v-icon>mdi-download</v-icon>
+					<span class="label">{{ $t('export_data') }}</span>
+					<v-icon v-if="exporting">mdi-loading</v-icon>
+				</div>
+
 				<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
 					<v-icon>mdi-delete-forever</v-icon>
 					<span class="label">{{ $t('delete_account') }}</span>
@@ -178,6 +184,12 @@
 					<v-btn color="error" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 					<br><br>
 				</div>
+
+				<router-link to="/bank/history" class="list-item card">
+					<v-icon>mdi-history</v-icon>
+					<span class="label">{{ $t('purchase_history') }}</span>
+					<v-icon>mdi-chevron-right</v-icon>
+				</router-link>
 
 				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" hide-details @change="updateGithubLogin" />
 				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" hide-details @change="updateGoogleLogin" />
@@ -245,6 +257,11 @@
 			<template #icon><v-icon>mdi-delete</v-icon></template>
 			<template #title><span>{{ $t('delete_account') }}</span></template>
 			<div v-html="$t('delete_message')"></div>
+			<div v-if="teamOwner" class="team-warning">
+				<v-icon>mdi-alert</v-icon>
+				<span v-if="teamOwnerAlone">{{ $t('delete_team_dissolve', [teamName]) }}</span>
+				<span v-else>{{ $t('delete_team_transfer', [teamName]) }}</span>
+			</div>
 			<br v-if="$store.state.farmer?.verified">
 			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
 			<template #actions>
@@ -280,9 +297,12 @@
 
 <script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
+	import { apiErrorKey, apiFieldMessages } from '@/model/api-error'
 	import { mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { TeamMemberLevel } from '@/model/team'
+	import { usePushNotifications } from '@/model/use-push-notifications'
 	import { computed, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 
@@ -291,7 +311,6 @@
 	const t = useNamespacedT('settings')
 	const router = useRouter()
 
-	const vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
 	const mails = [
 		{ id: 1, icon: 'mdi-star', name: 'general' },
 		{ id: 2, icon: 'mdi-gamepad-square', name: 'game' },
@@ -311,15 +330,7 @@
 	const notifsOpenReport = ref(localStorage.getItem('options/notifs-open-report') === 'true')
 	const chatFirst = ref(localStorage.getItem('options/chat-first') === 'true')
 	const modernTheme = ref(localStorage.getItem('theme') === 'xp')
-	const pushNotifications = ref(false)
-	const pushSupported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
-	const pushPermission = ref<NotificationPermission | null>(pushSupported ? Notification.permission : null)
-	// Persistent explanation shown next to the toggle (warning icon + tooltip) when push can't be enabled.
-	const pushHint = computed(() => {
-		if (!pushSupported) { return t('push_unsupported') }
-		if (pushPermission.value === 'denied') { return t('push_blocked') }
-		return ''
-	})
+	const { pushSupported, pushNotifications, pushHint, reconcilePushToggle, updatePushNotifications } = usePushNotifications(t)
 	const deleteDialog = ref(false)
 	const deleteConfirmDialog = ref(false)
 	const deleteConfirmPassword = ref('')
@@ -327,6 +338,7 @@
 	const deleteFailedDialog = ref(false)
 	const deleteFailedError = ref<string>('unknown')
 	const deleteForumMessages = ref(false)
+	const exporting = ref(false)
 	const advanced = ref(false)
 	const password = ref('')
 	const newPassword1 = ref('')
@@ -343,6 +355,12 @@
 	const password1 = ref('')
 	const submittingVerify = ref(false)
 
+	// Créateur d'une équipe : elle sera transmise au membre le plus ancien
+	// à la suppression du compte, ou dissoute s'il est le seul membre
+	const teamOwner = computed(() => !!store.state.farmer?.team && store.state.farmer.team.member_level === TeamMemberLevel.OWNER)
+	const teamOwnerAlone = computed(() => store.state.farmer?.team?.member_count === 1)
+	const teamName = computed(() => store.state.farmer?.team?.name || '')
+
 	settings.value = {}
 	for (const category in mails) {
 		settings.value['push_' + category] = false
@@ -358,54 +376,9 @@
 		if (store.state.farmer) {
 			LeekWars.setTitle(t('title'), store.state.farmer.name)
 		}
-		// Reconcile the toggle with the actual push subscription. Wait for navigator.serviceWorker.ready
-		// rather than reading LeekWars.service_worker, which is populated asynchronously and may still be
-		// null when get-settings resolves (race: the toggle showed OFF after a reload even while subscribed).
-		if (pushSupported) {
-			getPushSubscription().then(subscription => {
-				if (subscription && data.push_endpoints.includes(subscription.endpoint)) {
-					pushNotifications.value = true
-				}
-			}).catch(() => { /* push unavailable on this browser, leave toggle OFF */ })
-		}
+		// La page Réglages a la liste serveur des endpoints : on exige que l'endpoint local y figure.
+		reconcilePushToggle(data.push_endpoints)
 	})
-
-	function getPushSubscription(): Promise<PushSubscription | null> {
-		return navigator.serviceWorker.ready.then(registration => registration.pushManager.getSubscription())
-	}
-
-	function updatePushNotifications() {
-		if (!pushSupported) {
-			LeekWars.toast(t('push_unsupported'))
-			return
-		}
-		if (pushNotifications.value) {
-			pushNotifications.value = false
-			getPushSubscription().then(subscription => subscription?.unsubscribe())
-			return
-		}
-		// Request permission directly from the click so the prompt stays inside the user gesture (Safari requirement).
-		// If already denied, requestPermission() resolves to 'denied' without reprompting and we explain below.
-		Notification.requestPermission().then(permission => {
-			pushPermission.value = permission
-			if (permission !== 'granted') {
-				LeekWars.toast(t('push_blocked'))
-				return
-			}
-			navigator.serviceWorker.ready
-				.then(registration => registration.pushManager.subscribe({ applicationServerKey: vapid_key, userVisibleOnly: true }))
-				.then(subscription => {
-					// Only reflect the toggle as ON once the browser actually granted the subscription,
-					// so it stays OFF (instead of lying) when notifications are blocked.
-					pushNotifications.value = true
-					LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
-				})
-				.catch(() => {
-					pushNotifications.value = false
-					LeekWars.toast(t('push_error'))
-				})
-		})
-	}
 
 	function logout() {
 		LeekWars.logoutDialog = true
@@ -484,6 +457,26 @@
 			LeekWars.toast(t('error_' + error.error, error.params))
 		})
 		return false
+	}
+
+	function exportData() {
+		if (exporting.value) return
+		exporting.value = true
+		LeekWars.get('farmer/export-data').then(data => {
+			const json = JSON.stringify(data.export, null, '\t')
+			const blob = new Blob([json], {type: 'application/json'})
+			const url = URL.createObjectURL(blob)
+			const playerName = (store.state.farmer?.name || 'export').replace(/[^a-zA-Z0-9_-]/g, '_')
+			const link = document.createElement('a')
+			link.href = url
+			link.download = 'leekwars-data-' + playerName + '.json'
+			link.click()
+			URL.revokeObjectURL(url)
+			exporting.value = false
+		}).error(error => {
+			LeekWars.toast(t('error_' + error.error, error.params))
+			exporting.value = false
+		})
 	}
 
 	function deleteAccountConfirm() {
@@ -568,16 +561,12 @@
 			} else {
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(payload => {
+		}).error(error => {
 			submittingVerify.value = false
-			if (Array.isArray(payload)) {
-				for (const error of payload) {
-					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-					addError(form, t('error_' + error[1], error[2]) as string)
-				}
+			if (error.fields) {
+				for (const [field, message] of apiFieldMessages(error, t)) addError(field, message)
 			} else {
-				const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
-				LeekWars.toast(t('error_' + code) as string)
+				LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 			}
 		})
 		return false
@@ -604,6 +593,23 @@
 </script>
 
 <style lang="scss" scoped>
+	.team-warning {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 12px;
+		padding: 8px 12px;
+		border-radius: 4px;
+		background: #fff3e0;
+		color: #a04000;
+		.v-icon {
+			color: #e67e22;
+		}
+	}
+	body.dark .team-warning {
+		background: #4a3520;
+		color: #ffcc80;
+	}
 	.languages {
 		text-align: center;
 		.language {
@@ -673,6 +679,8 @@
 		display: flex;
 		align-items: center;
 		user-select: none;
+		color: var(--text-color);
+		text-decoration: none;
 	}
 	.list-item:not(:first-child) {
 		margin-top: 10px;

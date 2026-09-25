@@ -9,6 +9,7 @@
 	"change_password": "Ganti kata sandi",
 	"confirm_password": "Konfirmasi",
 	"delete_account": "Hapus akunnya",
+	"export_data": "Ekspor data saya",
 	"delete_cancel": "Batal",
 	"delete_confirm": "Hapus akun",
 	"delete_confirmation": "Konfirmasi",
@@ -21,12 +22,15 @@
 	"delete_password": "Kata sandi",
 	"delete_success": "Penghapusan berhasil",
 	"delete_success_message": "Akun Anda telah dihapus, Anda akan dialihkan dalam beberapa detik, sampai jumpa di Leek Wars!",
+	"delete_team_dissolve": "Kamu adalah pembuat sekaligus satu-satunya anggota tim {0}: tim akan dibubarkan saat akunmu dihapus.",
+	"delete_team_transfer": "Kamu adalah pembuat tim {0}: saat akunmu dihapus, tim akan diserahkan kepada anggota paling lama.",
 	"discrete_mode": "Modus rahasia",
 	"empty": "Kosong",
 	"empty_localstorage": "Kosongkan penyimpanan lokal",
 	"error_not_same_password": "Kedua kata sandi yang dimasukkan harus identik",
 	"error_password_length": "Sandi harus berisi antara {0} dan {1} karakter",
 	"error_wrong_password": "Kata sandi salah",
+	"error_too_many_requests": "Terlalu banyak permintaan, coba lagi dalam beberapa menit",
 	"error_forbidden_name": "Nama ini dilarang",
 	"error_invalid_godfather": "Pemain ini tidak ada",
 	"error_invalid_length": "Sandi harus berisi antara {0} dan {1} karakter",
@@ -75,5 +79,6 @@
 	"auto": "Otomatis",
 	"theme": "Tema",
 	"modern_theme": "Tema modern (beta)",
-	"xp_theme": "Tema XP"
+	"xp_theme": "Tema XP",
+	"purchase_history": "Riwayat pembelian"
 }

@@ -51,6 +51,10 @@
 	.smiley, .hab, .crystal {
 		opacity: 0.2;
 	}
+	.season-decoration {
+		opacity: 0.08;
+		filter: none;
+	}
 	.menu-wrapper {
 		background: none;
 	}
@@ -157,7 +161,7 @@
 	.global-bar .bar, .category-bar .bar, .trophy .trophy-bar .bar {
 		background: var(--background-header);
 	}
-	.moderator, .admin, .contributor, .author {
+	.moderator, .admin, .contributor, .referent, .author {
 		font-weight: normal;
 	}
 	.characteristics .characteristic div > span {
@@ -213,6 +217,10 @@
 	.grade.contributor {
 		background: none;
 		color: #009c1d;
+	}
+	.grade.referent {
+		background: none;
+		color: #2196f3;
 	}
 	.vote.up.active {
 		background: none;

@@ -1,4 +1,9 @@
-import CodeMirror from "codemirror"
+// Position dans un document : ligne (0-based) et colonne (0-based), comme l'ancien
+// type CodeMirror.Position (CodeMirror a été retiré au profit de Monaco).
+interface Position {
+	line: number
+	ch: number
+}
 
 class Problem {
 
@@ -18,7 +23,7 @@ class Problem {
 		this.info = info
 	}
 
-	public contains(position: CodeMirror.Position) {
+	public contains(position: Position) {
 		const line = position.line + 1
 		if (line >= this.start_line && line <= this.end_line) {
 			return position.ch >= (line === this.start_line ? this.start_column : 0) && position.ch <= (line === this.end_line ? this.end_column : Infinity)

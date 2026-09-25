@@ -223,11 +223,11 @@
 
 		<v-menu v-if="$store.state.farmer?.rewards?.length" location="right" :offset="15" :max-height="500" :close-on-content-click="false">
 			<template #activator="{ props }">
-				<div v-ripple class="rewards-button notif-trophy" v-bind="props">
+				<div v-ripple class="soussous-dans-popoche notif-trophy" v-bind="props">
 					<img src="/image/icon/chest.svg">
 				</div>
 			</template>
-			<v-card class="reward-dialog">
+			<v-card class="soussous-panel">
 				<div class="title">
 					<div>
 						<h4>{{ $t('main.rewards') }} ({{ $store.state.farmer.rewards.length }})</h4>
@@ -235,9 +235,9 @@
 					</div>
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">{{ $t('main.retrieve_all') }}</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
-				<div v-autostopscroll class="rewards">
+				<div v-autostopscroll class="soussous-list">
 					<template v-for="reward in $store.state.farmer.rewards" :key="reward.trophy">
-					<div v-if="TROPHIES[reward.trophy - 1]" class="reward">
+					<div v-if="TROPHIES[reward.trophy - 1]" class="soussous-item">
 						<router-link :to="'/trophy/' + TROPHIES[reward.trophy - 1].code">
 							<trophy-icon :code="TROPHIES[reward.trophy - 1].code" />
 							{{ $t('trophy.' + TROPHIES[reward.trophy - 1].code) }}
@@ -415,6 +415,9 @@
 
 	function changeArenaPreference(preference: number | null) {
 		if (preference === null) return
+		// Choix explicite du joueur : on met aussi à jour la préférence durable,
+		// pour que la prochaine inscription depuis le potager reparte sur ce mode.
+		localStorage.setItem('arena/preference', '' + preference)
 		const leek = parseInt(localStorage.getItem('arena-leek') || '', 10)
 		if (!leek) return
 		const wantsColossus = localStorage.getItem('arena-colossus') === '1'
@@ -892,7 +895,7 @@
 			justify-content: center;
 		}
 	}
-	.rewards-button {
+	.soussous-dans-popoche {
 		padding: 10px;
 		border-radius: 4px;
 		cursor: pointer;
@@ -923,7 +926,8 @@
 			margin-left: 8px;
 		}
 	}
-	.reward-dialog {
+	.soussous-panel {
+		max-width: calc(100vw - 24px);
 		.title {
 			display: flex;
 			align-items: center;
@@ -936,11 +940,12 @@
 				margin-bottom: 5px;
 			}
 		}
-		.rewards {
+		.soussous-list {
 			max-height: 315px;
 			width: 450px;
+			max-width: calc(100vw - 24px);
 			overflow-y: scroll;
-			.reward {
+			.soussous-item {
 				display: flex;
 				align-items: center;
 				padding: 4px 8px;
@@ -948,12 +953,16 @@
 				font-weight: 500;
 				a {
 					flex: 1;
+					min-width: 0;
 					display: flex;
 					align-items: center;
 					gap: 8px;
 				}
 				& > a > img {
 					width: 34px;
+					height: 34px;
+					object-fit: contain;
+					flex-shrink: 0;
 				}
 				.v-btn {
 					padding: 0;
@@ -963,7 +972,7 @@
 			}
 		}
 	}
-	#app.app .reward-dialog .rewards {
+	#app.app .soussous-panel .soussous-list {
 		width: auto;
 		max-width: 350px;
 	}

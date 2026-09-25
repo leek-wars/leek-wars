@@ -9,6 +9,7 @@
 	"change_password": "Ändra lösenord",
 	"confirm_password": "Bekräftelse",
 	"delete_account": "Ta bort hans konto",
+	"export_data": "Exportera mina data",
 	"delete_cancel": "Annullera",
 	"delete_confirm": "Radera konto",
 	"delete_confirmation": "Bekräftelse",
@@ -21,12 +22,15 @@
 	"delete_password": "Lösenord",
 	"delete_success": "Lyckad borttagning",
 	"delete_success_message": "Ditt konto har raderats, du kommer att omdirigeras inom några sekunder, vi ses snart på Leek Wars!",
+	"delete_team_dissolve": "Du är skaparen och den enda medlemmen i laget {0}: laget upplöses när ditt konto raderas.",
+	"delete_team_transfer": "Du är skaparen av laget {0}: när ditt konto raderas överförs laget till den äldsta medlemmen.",
 	"discrete_mode": "Diskret läge",
 	"empty": "Tömma",
 	"empty_localstorage": "Töm det lokala lagringsutrymmet",
 	"error_not_same_password": "De två lösenorden som anges måste vara identiska",
 	"error_password_length": "Lösenordet måste innehålla mellan {0} och {1} tecken",
 	"error_wrong_password": "Lösenordet är felaktigt",
+	"error_too_many_requests": "För många förfrågningar, försök igen om några minuter",
 	"error_forbidden_name": "Detta namn är förbjudet",
 	"error_invalid_godfather": "Denna spelare finns inte",
 	"error_invalid_length": "Lösenordet måste innehålla mellan {0} och {1} tecken",
@@ -75,5 +79,6 @@
 	"auto": "Auto",
 	"theme": "Tema",
 	"modern_theme": "Modernt tema (beta)",
-	"xp_theme": "XP-tema"
+	"xp_theme": "XP-tema",
+	"purchase_history": "Köphistorik"
 }

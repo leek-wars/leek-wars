@@ -9,6 +9,7 @@
 	"change_password": "パスワードを変更する",
 	"confirm_password": "確認",
 	"delete_account": "彼のアカウントを削除する",
+	"export_data": "データをエクスポート",
 	"delete_cancel": "キャンセル",
 	"delete_confirm": "アカウントを削除する",
 	"delete_confirmation": "確認",
@@ -21,6 +22,8 @@
 	"delete_password": "パスワード",
 	"delete_success": "削除成功",
 	"delete_success_message": "あなたのアカウントは削除されました。数秒後にリダイレクトされます。Leek Wars でお会いしましょう!",
+	"delete_team_dissolve": "あなたはチーム {0} の作成者であり唯一のメンバーです。アカウントを削除すると、チームは解散されます。",
+	"delete_team_transfer": "あなたはチーム {0} の作成者です。アカウントを削除すると、チームは最も古いメンバーに引き継がれます。",
 	"discrete_mode": "秘密モード",
 	"empty": "空",
 	"empty_localstorage": "LocalStorage を空にする",
@@ -82,5 +85,6 @@
 	"error_password_required": "このアカウントを削除するにはパスワードが必要です。",
 	"error_too_many_requests": "試行回数が多すぎます。しばらくしてから再度お試しください。",
 	"error_unknown": "予期しないエラーが発生しました。再度お試しください。",
-	"error_wrong_token": "セッションが期限切れです。再度ログインしてください。"
+	"error_wrong_token": "セッションが期限切れです。再度ログインしてください。",
+	"purchase_history": "購入履歴"
 }

@@ -7,6 +7,7 @@ const CACHE_VERSION = 'v4';
 const NAV_CACHE = 'nav-' + CACHE_VERSION;
 const ASSET_CACHE = 'assets-' + CACHE_VERSION;
 const ALL_CACHES = [NAV_CACHE, ASSET_CACHE];
+const MANIFESTS = ['/manifest.json', '/manifest_beta.json'];
 
 // Throttle background SWR refreshes to avoid hammering the network when the user
 // triggers many cache-eligible fetches in quick succession.
@@ -26,6 +27,10 @@ self.addEventListener('activate', event => {
 		await Promise.all(
 			keys.filter(key => !ALL_CACHES.includes(key)).map(key => caches.delete(key))
 		);
+		// Evict manifests cached by earlier versions: a stale copy makes the browser
+		// install the PWA with the old icons (see the bypass in the fetch handler).
+		const assets = await caches.open(ASSET_CACHE);
+		await Promise.all(MANIFESTS.map(path => assets.delete(path).catch(() => {})));
 		await self.clients.claim();
 	})());
 });
@@ -43,6 +48,9 @@ self.addEventListener('fetch', event => {
 	// Explicit bypass: the new-version check (version-check.ts) needs the network copy of
 	// index.html — a stale-while-revalidate replay would defeat the comparison.
 	if (url.searchParams.has('no-sw')) return;
+	// Manifest bypass: the browser re-reads it on every PWA install, and a stale
+	// cached copy freezes the installed app on the previous set of icons.
+	if (MANIFESTS.includes(url.pathname)) return;
 	// Images bypass: they ship immutable long-lived Cache-Control, so the browser's
 	// native HTTP cache serves them. Routing every <img> through Cache Storage SWR
 	// is redundant and counter-productive on Firefox, where Cache Storage reads/writes

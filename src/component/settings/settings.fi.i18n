@@ -9,6 +9,7 @@
 	"change_password": "Vaihda salasana",
 	"confirm_password": "Vahvistus",
 	"delete_account": "Poista tilisi",
+	"export_data": "Vie tietoni",
 	"delete_cancel": "Peruuttaa",
 	"delete_confirm": "Poista tili",
 	"delete_confirmation": "Vahvistus",
@@ -21,12 +22,15 @@
 	"delete_password": "Salasana",
 	"delete_success": "Onnistui poistaminen",
 	"delete_success_message": "Tilisi on poistettu, sinut ohjataan muutaman sekunnin kuluttua, nähdään pian Leek Warsissa!",
+	"delete_team_dissolve": "Olet miehistön {0} perustaja ja ainoa jäsen: miehistö lakkautetaan, kun tilisi poistetaan.",
+	"delete_team_transfer": "Olet miehistön {0} perustaja: kun tilisi poistetaan, miehistö siirtyy sen vanhimmalle jäsenelle.",
 	"discrete_mode": "Huomaamaton tila",
 	"empty": "Tyhjä",
 	"empty_localstorage": "Tyhjennä paikallinen tallennustila",
 	"error_not_same_password": "Syötettyjen kahden salasanan on oltava identtisiä",
 	"error_password_length": "Salasanan tulee sisältää {0}–{1} merkkiä",
 	"error_wrong_password": "Salasana on väärä",
+	"error_too_many_requests": "Liikaa pyyntöjä, yritä uudelleen muutaman minuutin kuluttua",
 	"error_forbidden_name": "Tämä nimi on kielletty",
 	"error_invalid_godfather": "Tätä pelaajaa ei ole olemassa",
 	"error_invalid_length": "Salasanan tulee sisältää {0}–{1} merkkiä",
@@ -75,5 +79,6 @@
 	"auto": "Auto",
 	"theme": "Teema",
 	"modern_theme": "Moderni teema (beta)",
-	"xp_theme": "XP-teema"
+	"xp_theme": "XP-teema",
+	"purchase_history": "Ostohistoria"
 }

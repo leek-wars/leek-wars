@@ -477,7 +477,8 @@
 	},
 	"249_polyglot": {
 		"emoji": "🐍",
-		"description": "Write your AIs in JavaScript, Python or TypeScript, with the full fight API"
+		"description": "Write your AIs in JavaScript, Python or TypeScript, with the full fight API",
+		"cover": "249_js_ts_py"
 	},
 	"249_language_logos": {
 		"emoji": "🔤",

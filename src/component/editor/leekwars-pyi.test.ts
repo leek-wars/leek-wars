@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { execFileSync } from 'child_process'
-import { writeFileSync, mkdtempSync } from 'fs'
+import { writeFileSync, mkdtempSync, existsSync } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
-import { buildLeekwarsPyi, PY_TYPE } from './leekwars-pyi'
-import { TS_TYPE, buildObjectApiModel, buildLeekwarsDeclarations } from './leekwars-dts'
+import ts from 'typescript'
+import { buildLeekwarsPyi } from './leekwars-pyi'
+import { buildObjectApiModel, buildLeekwarsDeclarations } from './leekwars-dts'
 import type { LSFunction } from '@/model/function'
 import type { Constant } from '@/model/constant'
 
@@ -15,7 +16,7 @@ const cst = (name: string, type = 6): Constant => ({ name, type } as unknown as 
 const FUNCTIONS = [
 	fn('getNearestEnemy'),
 	fn('moveToward', [['cell', 6]]),
-	fn('getPath', [['from', 6], ['to', 6], ['ignored', 4]], 4, [false, false, true]), // arg python keyword 'from'
+	fn('getPath', [['from', 6], ['to', 6], ['ignored', 4]], 4, [false, false, true]),
 	fn('setWeapon', [['weapon', 6]], 3),
 ]
 const CONSTANTS = [
@@ -27,11 +28,44 @@ const CONSTANTS = [
 	cst('FIGHT_TYPE_SOLO'),
 	cst('STATE_UNHEALABLE'),
 	cst('MAP_NEXUS'),
-	cst('PI', 7), // non-container flat constant
+	cst('MESSAGE_HEAL'),
+	cst('COLOR_RED'),
+	cst('OPERATIONS_LIMIT'),
+	cst('PI', 7), // constante sans famille : NON exposée (API 100% objet)
 ]
 
+// Compile un .d.ts avec le VRAI compilateur TypeScript, dans la configuration de l'éditeur
+// (cf monaco.configurePolyglotTypeScript : lib esnext seule, pas de DOM, pas de @types, non strict).
+// Renvoie les diagnostics formatés. Les assertions `toContain` du reste du fichier passent sur un
+// fichier qui ne compile pas : c'est ce test qui garantit qu'il tient debout.
+function compileDts(dts: string): string[] {
+	const dir = mkdtempSync(join(tmpdir(), 'lw-dts-'))
+	const file = join(dir, 'leekwars.d.ts')
+	writeFileSync(file, dts)
+	const program = ts.createProgram([file], {
+		noEmit: true, target: ts.ScriptTarget.ESNext, lib: ['lib.esnext.d.ts'],
+		allowJs: true, checkJs: true, types: [], typeRoots: [],
+	})
+	return ts.getPreEmitDiagnostics(program)
+		.map((d) => `${d.code} ${ts.flattenDiagnosticMessageText(d.messageText, ' ')}`)
+}
+
+describe('le .d.ts généré compile', () => {
+	it('avec des game data complètes', () => {
+		expect(compileDts(buildLeekwarsDeclarations(FUNCTIONS, CONSTANTS))).toEqual([])
+	})
+
+	// Le bloc écrit à la main référence des familles (Effect.Type, Fight.Use, Entity.Stat...) qui sont
+	// émises par le générateur. Si elles dépendaient des constantes CHARGÉES, un d.ts bâti avant leur
+	// arrivée référencerait des namespaces inexistants -> API entière en `any`, et monaco ne s'en
+	// relève pas (son rattrapage ne surveille que LeekWars.functions). D'où l'émission depuis la config.
+	it('même sans aucune game data', () => {
+		expect(compileDts(buildLeekwarsDeclarations([], []))).toEqual([])
+	})
+})
+
 describe('buildLeekwarsPyi', () => {
-	const stub = buildLeekwarsPyi(FUNCTIONS, CONSTANTS)
+	const stub = buildLeekwarsPyi(CONSTANTS)
 
 	it('exposes the object API but NOT a global `me`', () => {
 		expect(stub).toContain('class Me(Entity):')
@@ -47,13 +81,25 @@ describe('buildLeekwarsPyi', () => {
 		expect(stub).toContain('DAMAGE: int')
 		expect(stub).toMatch(/class Stat:[\s\S]*STRENGTH: int/)
 		expect(stub).toMatch(/class Type:[\s\S]*SOLO: int/) // Fight.Type.SOLO
-		expect(stub).toContain('PI: float') // constante plate hors conteneur
+		expect(stub).toMatch(/class Type:[\s\S]*HEAL: int/) // Message.Type.HEAL
+		expect(stub).toContain('RED: int') // Color.RED
+		expect(stub).toContain('OPERATIONS_LIMIT: int') // System.OPERATIONS_LIMIT
 	})
 
-	it('emits flat functions, sanitizing python-keyword arg names', () => {
-		expect(stub).toContain('def getNearestEnemy() -> int: ...')
-		expect(stub).toContain('def moveToward(')
-		expect(stub).toContain('def getPath(a0: int, to: int, ignored: list = ...)') // 'from' -> a0
+	it('is 100% object: no flat functions nor flat constants', () => {
+		// aucune def top-level (toutes les def du stub sont indentées dans une classe)
+		expect(stub).not.toMatch(/^def /m)
+		expect(stub).not.toMatch(/^\s*PI: /m)
+		expect(stub).not.toContain('getNearestEnemy() -> int') // la forme plate n'existe plus
+		expect(stub).toContain('def getNearestEnemy(self) -> Entity: ...') // la forme objet oui
+	})
+
+	it('exposes the new singletons (System, Network, Color) and Message', () => {
+		expect(stub).toContain('System: _System')
+		expect(stub).toContain('Network: _Network')
+		expect(stub).toContain('Color: _Color')
+		expect(stub).toContain('class Message:')
+		expect(stub).toContain('operations: int')
 	})
 
 	const hasPython = (() => {
@@ -69,34 +115,99 @@ describe('buildLeekwarsPyi', () => {
 })
 
 // Gardes anti-dérive entre les deux générateurs (le .d.ts TS et le .pyi Python décrivent la MÊME API,
-// en partie à la main). Si l'un gagne un type-id ou un membre d'API objet que l'autre n'a pas, ces
-// tests échouent -> divergence rendue bruyante au lieu de faux positifs Pyright silencieux.
+// en partie à la main). Si l'un gagne un membre d'API objet que l'autre n'a pas, ces tests échouent
+// -> divergence rendue bruyante au lieu de faux positifs Pyright silencieux.
 describe('parité stub Python <-> API TS (anti-dérive)', () => {
-	it('PY_TYPE couvre tous les type-ids mappés par TS_TYPE', () => {
-		for (const id of Object.keys(TS_TYPE)) {
-			expect(PY_TYPE, `type-id ${id} présent dans TS_TYPE mais absent de PY_TYPE`).toHaveProperty(id)
-		}
+	it('d.ts : 100% objet, routage des constantes inchangé', () => {
+		const dts = buildLeekwarsDeclarations(FUNCTIONS, CONSTANTS)
+		// plus AUCUNE déclaration plate (ni fonction, ni constante)
+		expect(dts).not.toContain('declare function')
+		expect(dts).not.toContain('declare const PI')
+		// routage objet des constantes
+		expect(dts).toContain('const pistol: Weapon;') // membre de namespace (item)
+		expect(dts).toContain('const DAMAGE: Effect.Type;') // membre de catégorie, typé par sa famille
+		expect(dts).toContain('const OPERATIONS_LIMIT: number;') // fusionné dans namespace System
+		expect(dts).toContain('const RED: Color.Value;') // fusionné dans namespace Color
+		expect(dts).toMatch(/declare namespace Message \{[\s\S]*namespace Type \{[\s\S]*HEAL/) // Message.Type.HEAL
+		// alias de famille émis à côté du namespace de valeurs (Entity.Stat en type ET en valeurs)
+		expect(dts).toContain('type Type = number;')
+		expect(dts).toMatch(/declare namespace Entity \{[\s\S]*type Stat = number;[\s\S]*namespace Stat \{/)
 	})
 
-	// Le d.ts TS et le stub Python partagent routeConstant()/functionParams() : on caractérise la sortie
-	// du d.ts pour garantir que l'extraction de ces helpers reste iso-comportement.
-	it('d.ts: routage des constantes et paramètres inchangés', () => {
-		const dts = buildLeekwarsDeclarations(FUNCTIONS, CONSTANTS)
-		expect(dts).toContain('declare function getNearestEnemy(): number;')
-		// 'from' est un identifiant JS valide -> conservé (contrairement au Python) ; 3e arg optionnel -> `?`.
-		expect(dts).toContain('declare function getPath(from: number, to: number, ignored?: any[]): any[];')
-		expect(dts).toContain('const pistol: Weapon;') // membre de namespace (item)
-		expect(dts).toContain('const DAMAGE: number;') // membre de catégorie
-		expect(dts).toContain('declare const PI: number;') // constante plate hors conteneur
+	// #4621 : une constante dépréciée des game data (EFFECT_BUFF_FORCE, USE_FAILED...) n'est PAS émise
+	// dans l'API objet (ni d.ts, ni stub Python) : seuls les noms actuels existent. Le runtime, lui,
+	// continue de les fournir (jamais de régression d'une IA qui tourne).
+	it('constante dépréciée : absente du d.ts et du stub Python', () => {
+		const consts = [
+			{ ...cst('EFFECT_BUFF_STRENGTH'), id: 138 },
+			{ ...cst('EFFECT_BUFF_FORCE'), id: 65, deprecated: true, replacement: 138 },
+		] as Constant[]
+		const dts = buildLeekwarsDeclarations([], consts)
+		expect(dts).toContain('const BUFF_STRENGTH: Effect.Type;')
+		expect(dts).not.toContain('BUFF_FORCE')
+		expect(compileDts(dts)).toEqual([])
+		const pyi = buildLeekwarsPyi(consts)
+		expect(pyi).toContain('BUFF_STRENGTH: int')
+		expect(pyi).not.toContain('BUFF_FORCE')
 	})
 
 	it('tout membre de l\'API objet déclaré côté TS existe dans le stub Python', () => {
-		const emptyStub = buildLeekwarsPyi([], []) // bloc objet statique seul (indépendant des game data)
+		const emptyStub = buildLeekwarsPyi([]) // bloc objet statique seul (indépendant des game data)
 		const model = buildObjectApiModel() // parse OBJECT_API_DECLARATIONS (source du .d.ts)
 		for (const container of Object.keys(model.members)) {
 			for (const m of model.members[container]) {
 				expect(new RegExp(`\\b${m.name}\\b`).test(emptyStub), `${container}.${m.name} (API TS) manquant dans le stub Python (CLASSES)`).toBe(true)
 			}
 		}
+		for (const container of Object.keys(model.statics)) {
+			for (const m of model.statics[container]) {
+				expect(new RegExp(`\\b${m.name}\\b`).test(emptyStub), `${container}.${m.name} (static TS) manquant dans le stub Python (CLASSES)`).toBe(true)
+			}
+		}
+	})
+})
+
+// Anti-régression du bug #4540 : le moteur Pyright navigateur (@typefox/pyright-browser, GELÉ en 1.1.299)
+// et le typeshed bundlé (harvesté du paquet `pyright`, cf pyrightTypeshedPlugin dans vite.config.ts) DOIVENT
+// rester co-versionnés. Un typeshed trop récent définit `Any` en `class Any: ...` (au lieu de `Any = object()`)
+// que le vieux moteur ne spécial-case pas -> il traite `Any` comme une classe nominale, et TOUT paramètre
+// typé `Any` (Debug.mark, markText, Message.params...) rejette les arguments concrets. On fige donc `pyright`
+// en 1.1.299 (package.json) ; ce test échoue si un bump le désaligne. On fait tourner le VRAI Pyright bundlé
+// (node_modules/pyright = même version/typeshed que le worker) sur le code exact du rapport #4540.
+describe('Pyright bundlé accepte l\'API `Any` (anti-régression #4540)', () => {
+	const clientRoot = process.cwd()
+	const pyrightBin = join(clientRoot, 'node_modules', '.bin', 'pyright')
+	const typeshedPath = join(clientRoot, 'node_modules', 'pyright', 'dist', 'typeshed-fallback')
+	const hasBundledPyright = existsSync(pyrightBin) && existsSync(typeshedPath)
+
+	it.runIf(hasBundledPyright)('Debug.mark(Cell) / mark(list) / markText ne sont PAS signalés incompatibles', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'lwpy4540-'))
+		// Stub monté comme __builtins__.pyi à la racine (comme le worker) : les noms de l'API doivent
+		// résoudre SANS import — le test vérifie donc aussi ce mécanisme, pas seulement les signatures.
+		writeFileSync(join(dir, '__builtins__.pyi'), buildLeekwarsPyi([cst('COLOR_BLUE'), cst('COLOR_RED')]))
+		// Code du rapport #4540 (+ variantes liste / markText), tel que le joueur l'écrit. La dernière
+		// ligne garde la stdlib sous surveillance : __builtins__.pyi REMPLACE le module builtins dans la
+		// résolution, print/len ne survivent que par le chaînage de scopes — un bump pyright/typeshed
+		// qui le casserait rendrait tout builtin « not defined » en prod.
+		writeFileSync(join(dir, 'ia.py'), [
+			'sud = Field.cellFromXY(17, 0)',
+			'Debug.mark(sud, Color.BLUE, 1)',
+			'Debug.mark([sud, sud], Color.BLUE, 1)',
+			'Debug.markText(sud, "hp", Color.RED)',
+			'print(len(str(sud.id)))',
+		].join('\n'))
+		writeFileSync(join(dir, 'pyrightconfig.json'), JSON.stringify({
+			typeCheckingMode: 'basic', reportMissingImports: 'none', typeshedPath,
+		}))
+		// pyright renvoie un code de sortie non nul dès qu'il y a des erreurs -> on capture stdout quoi qu'il arrive.
+		let out = ''
+		try {
+			out = execFileSync(pyrightBin, ['--outputjson', 'ia.py'], { cwd: dir, encoding: 'utf-8', stdio: 'pipe' })
+		} catch (e) {
+			out = (e as { stdout?: string }).stdout ?? ''
+		}
+		const report = JSON.parse(out) as { generalDiagnostics: Array<{ severity: string, message: string }> }
+		const errors = report.generalDiagnostics.filter((d) => d.severity === 'error')
+		expect(errors, `Pyright signale des erreurs (typeshed désaligné du moteur ?) :\n${errors.map((d) => d.message).join('\n')}`).toEqual([])
 	})
 })
