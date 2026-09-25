@@ -378,7 +378,7 @@ const LeekWars = reactive({
 	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
-	actions: [] as { icon?: string, image?: string, click: (e?: MouseEvent) => void }[],
+	actions: [] as { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[],
 	lightBar: false,
 	dark: 0,
 	title: '',
@@ -671,7 +671,7 @@ const LeekWars = reactive({
 		LeekWars.header = true
 		LeekWars.lightBar = false
 	},
-	setActions(actions: { icon?: string, image?: string, click: (e?: MouseEvent) => void }[]) {
+	setActions(actions: { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[]) {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
@@ -834,7 +834,7 @@ const LeekWars = reactive({
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatDayMonthShortUTC, formatLongDuration,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag, setMeta,
 	shadeColor,
-	createCodeArea, createCodeAreaSimple,
+	createCodeArea, createCodeAreaSimple, codeLanguageMode,
 	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as ReturnType<typeof setTimeout> | null, lucky,
 	setFavicon,
 	linkify, toChatLink,
@@ -1299,18 +1299,18 @@ function formatTime(time: number) {
 	return date.getHours() + ":" + minuts
 }
 
-// Module codemirror-wrapper mis en cache : une fois chargé, le formatage est
-// synchrone (avant le paint), sinon le bloc brut est peint un instant puis
-// remplacé par la version formatée (flicker à chaque re-rendu, ex. édition encyclopédie).
-let codeMirrorWrapper: typeof import("@/codemirror-wrapper") | null = null
-function withCodeMirror(callback: (wrapper: typeof import("@/codemirror-wrapper")) => void) {
-	if (codeMirrorWrapper) {
-		callback(codeMirrorWrapper)
+// Moteur de coloration Monaco (tokenizer statique, léger) mis en cache : une fois
+// chargé, la coloration est synchrone (avant le paint), sinon le bloc brut est peint
+// un instant puis recoloré (flicker à chaque re-rendu, ex. édition encyclopédie).
+let highlighter: typeof import("@/component/editor/monaco-highlight") | null = null
+function withHighlighter(callback: (h: typeof import("@/component/editor/monaco-highlight")) => void) {
+	if (highlighter) {
+		callback(highlighter)
 		return
 	}
-	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
-		codeMirrorWrapper = wrapper
-		callback(wrapper)
+	import(/* webpackChunkName: "monaco-highlight" */ "@/component/editor/monaco-highlight").then(h => {
+		highlighter = h
+		callback(h)
 	})
 }
 // Marqueur posé de façon synchrone : si l'élément a déjà été formaté (un update
@@ -1321,25 +1321,37 @@ function markFormatted(element: HTMLElement): boolean {
 	element.dataset.lwFormatted = '1'
 	return true
 }
-function createCodeArea(code: string, element: HTMLElement) {
+// Langages de coloration des blocs de code (```lang ...) -> id de langage Monaco.
+// Non reconnu / absent => LeekScript (défaut historique).
+const CODE_LANGUAGE_IDS: {[key: string]: string} = {
+	leekscript: 'leekscript', ls: 'leekscript', lw: 'leekscript', lse: 'leekscript',
+	js: 'javascript', javascript: 'javascript',
+	ts: 'typescript', typescript: 'typescript',
+	py: 'python', python: 'python',
+	json: 'json',
+}
+// Retourne l'id de langage Monaco pour un jeton de langage, ou undefined si inconnu.
+function codeLanguageMode(language: string | undefined | null): string | undefined {
+	if (!language) { return undefined }
+	return CODE_LANGUAGE_IDS[language.toLowerCase().trim()]
+}
+function createCodeArea(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
-		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
-
-		const num = code.split(/\n/).length
-		for (let j = 0; j < num; j++) {
-			const line_num = element.getElementsByTagName('span')[0]
-			line_num.innerHTML += '<span>' + (j + 1) + '</span>'
-		}
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		const tokens = h.highlightToHtml(code, lang)
+		const num = code.split('\n').length
+		let gutter = ''
+		for (let j = 0; j < num; j++) { gutter += '<span>' + (j + 1) + '</span>' }
+		element.innerHTML = '<span class="line-number">' + gutter + '</span><pre>' + tokens + '</pre>'
 		element.classList.add('formatted')
 	})
 }
-function createCodeAreaSimple(code: string, element: HTMLElement) {
+function createCodeAreaSimple(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
-		element.innerHTML = '<pre>' + element.innerHTML + '</pre>'
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		element.innerHTML = '<pre>' + h.highlightToHtml(code, lang) + '</pre>'
 		element.classList.add('single')
 	})
 }

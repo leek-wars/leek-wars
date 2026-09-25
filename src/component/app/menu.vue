@@ -924,6 +924,7 @@
 		}
 	}
 	.reward-dialog {
+		max-width: calc(100vw - 24px);
 		.title {
 			display: flex;
 			align-items: center;
@@ -939,6 +940,7 @@
 		.rewards {
 			max-height: 315px;
 			width: 450px;
+			max-width: calc(100vw - 24px);
 			overflow-y: scroll;
 			.reward {
 				display: flex;
@@ -948,12 +950,16 @@
 				font-weight: 500;
 				a {
 					flex: 1;
+					min-width: 0;
 					display: flex;
 					align-items: center;
 					gap: 8px;
 				}
 				& > a > img {
 					width: 34px;
+					height: 34px;
+					object-fit: contain;
+					flex-shrink: 0;
 				}
 				.v-btn {
 					padding: 0;

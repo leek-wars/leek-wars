@@ -32,5 +32,12 @@
 	"refresh_items": "Päivitä valikoima",
 	"back": "Takaisin pankkiin",
 	"best_value": "Paras tarjous",
-	"offered": "ilmaiseksi"
+	"offered": "ilmaiseksi",
+	"purchase_history": "Ostohistoria",
+	"history_title": "Ostohistoria",
+	"history_date": "Päivämäärä",
+	"history_crystals": "Kristallit",
+	"history_price": "Hinta",
+	"history_no_purchases": "Et ole vielä tehnyt yhtään ostosta.",
+	"history_buy_first": "Osta ensimmäiset kristallisi"
 }

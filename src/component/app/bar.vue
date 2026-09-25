@@ -39,8 +39,9 @@
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">
 				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
-					<v-icon v-if="action.icon" class="action">{{ action.icon }}</v-icon>
-					<img v-else :src="'/image/' + action.image" class="action">
+					<img v-if="action.image" :src="'/image/' + action.image" class="action">
+					<v-icon v-else-if="action.icon" class="action">{{ action.icon }}</v-icon>
+					<span v-if="action.text" class="action action-text">{{ action.text }}</span>
 				</div>
 			</div>
 		</div>
@@ -188,6 +189,14 @@ function readNotification(notification: Notification) {
 		height: 56px;
 		opacity: 1;
 		padding: 16px;
+	}
+	.action-text {
+		height: 56px;
+		line-height: 56px;
+		padding: 0 12px;
+		color: white;
+		font-size: 16px;
+		white-space: nowrap;
 	}
 	.app-bar.content .action.list:not(.content),
 	.app-bar.list .action.content:not(.list),

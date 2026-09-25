@@ -1,3 +1,7 @@
 {
-	"title": "알림"
+	"title": "알림",
+	"push_blocked": "알림이 차단되어 있습니다. 브라우저 설정에서 허용해 주세요.",
+	"push_error": "푸시 알림을 활성화할 수 없습니다.",
+	"push_notifications": "푸시 알림",
+	"push_unsupported": "사용 중인 브라우저는 푸시 알림을 지원하지 않습니다."
 }

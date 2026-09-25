@@ -1055,6 +1055,10 @@
 		const msg = message as { leek: number, talent: number }
 		if (leek.value && msg.leek === leek.value.id) {
 			leek.value.talent += msg.talent
+			// Rafraîchit en direct le point d'aujourd'hui du graphe pendant les combats.
+			// On reconstruit chartData (nouvelle référence) : vue-chartjs compare les
+			// références des datasets et ignore une mutation en place.
+			chart()
 		}
 	}
 	const onUpdateLeekXp = (message: unknown) => {
@@ -1249,15 +1253,24 @@
 		for (let i = 1; i <= 7; ++i) {
 			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
 		}
+		labels.reverse()
+		labels.push(LeekWars.formatDayMonthShort(time))
+		const data = [...leek.value.talent_history, leek.value.talent]
+		const lastIndex = data.length - 1
 		chartData.value = {
-			labels: labels.reverse(),
+			labels,
 			datasets: [{
 				tension: 0.2,
-				data: leek.value.talent_history,
+				data,
 				borderColor: '#5fad1b',
 				pointBackgroundColor: '#5fad1b',
 				borderWidth: 2,
 				fill: { target: 'origin', above: '#5fad1b30' },
+				// Le talent d'aujourd'hui est encore en cours : segment en pointillés.
+				segment: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					borderDash: (ctx: any) => ctx.p1DataIndex === lastIndex ? [6, 6] : undefined,
+				},
 			}]
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} as any

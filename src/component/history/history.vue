@@ -13,6 +13,35 @@
 					<div v-ripple :class="{selected: period === '24h'}" class="period card" @click="select_period('24h')">{{ $t('24h') }}</div>
 					<div v-ripple :class="{selected: period === '2days'}" class="period card" @click="select_period('2days')">{{ $t('2days') }}</div>
 					<div v-ripple :class="{selected: period === '1week'}" class="period card" @click="select_period('1week')">{{ $t('1week') }}</div>
+					<div v-ripple :class="{selected: period === 'custom'}" class="period card" @click="select_period('custom')">{{ $t('custom_date') }}</div>
+				</div>
+				<div v-if="period === 'custom'" class="custom-range">
+					<div class="custom-field">
+						<span class="custom-label">{{ $t('date_from') }}</span>
+						<v-menu v-model="fromMenu" :close-on-content-click="false" location="bottom start">
+							<template #activator="{ props: menuProps }">
+								<button type="button" class="dt-input dt-date" v-bind="menuProps">
+									<v-icon size="16">mdi-calendar</v-icon>
+									<span>{{ formatDateDisplay(fromDate) }}</span>
+								</button>
+							</template>
+							<v-date-picker :model-value="fromDateObj" :min="minDateObj" :max="toDateObj || maxDateObj" color="primary" show-adjacent-months hide-header @update:model-value="onFromDate" />
+						</v-menu>
+						<input v-model="fromTime" type="time" class="dt-input dt-time">
+					</div>
+					<div class="custom-field">
+						<span class="custom-label">{{ $t('date_to') }}</span>
+						<v-menu v-model="toMenu" :close-on-content-click="false" location="bottom start">
+							<template #activator="{ props: menuProps }">
+								<button type="button" class="dt-input dt-date" v-bind="menuProps">
+									<v-icon size="16">mdi-calendar</v-icon>
+									<span>{{ formatDateDisplay(toDate) }}</span>
+								</button>
+							</template>
+							<v-date-picker :model-value="toDateObj" :min="fromDateObj || minDateObj" :max="maxDateObj" color="primary" show-adjacent-months hide-header @update:model-value="onToDate" />
+						</v-menu>
+						<input v-model="toTime" type="time" class="dt-input dt-time">
+					</div>
 				</div>
 			</div>
 
@@ -154,6 +183,17 @@ const displayLoot = ref<Record<string, boolean>>({ chests: false, rareloot: fals
 const displayResults = ref<Record<string, boolean>>({ win: true, draw: true, defeat: true, generating: true })
 const opponentSearch = ref('')
 const viewMode = ref<'grid' | 'table'>((localStorage.getItem('options/history-view') as 'grid' | 'table') || 'grid')
+// Mode « Date personnalisée » : date et heure séparées par borne (champs plus lisibles
+// et heure plus simple à choisir qu'avec datetime-local). minDate/maxDate bornent les
+// champs date : le serveur ne renvoie que ~7 jours, donc plus ancien = maintenant - 7 j.
+const fromDate = ref('')
+const fromTime = ref('')
+const toDate = ref('')
+const toTime = ref('')
+const minDate = ref('')
+const maxDate = ref('')
+const fromMenu = ref(false)
+const toMenu = ref(false)
 
 // Case à cocher "Tous" par ligne de filtres : cochée quand toutes les options de la
 // ligne le sont, indéterminée si partiellement cochée. Cliquer (re)coche toute la ligne.
@@ -203,8 +243,26 @@ const breadcrumb_items = computed(() => [
 	{ name: t('title_html', [entity.value ? entity.value.name : '...']), link: '/' + props.type + '/' + (entity.value ? entity.value.id : '') + '/history' }
 ])
 
+// Bornes temporelles du filtre. Presets : borne basse = start_date, pas de borne haute.
+// Mode « Date personnalisée » : plage [de, à] clampée à [maintenant - 7 j, maintenant],
+// le serveur ne renvoyant que ~7 jours d'historique (rien de sélectionnable au-delà).
+const dateBounds = computed(() => {
+	if (period.value !== 'custom') {
+		return { min: start_date.value, max: Infinity }
+	}
+	const now = Date.now() / 1000
+	const floor = now - 7 * 24 * 3600
+	const fromTs = combineDateTime(fromDate.value, fromTime.value)
+	const toTs = combineDateTime(toDate.value, toTime.value)
+	const from = fromTs !== null ? fromTs : floor
+	const to = toTs !== null ? toTs : now
+	return { min: Math.max(from, floor), max: Math.min(to, now) }
+})
+
 const filteredFights = computed(() => fights.value.filter((fight) => {
-	const contextFilter = fight.date >= start_date.value && (
+	const dateFilter = fight.date >= dateBounds.value.min && fight.date <= dateBounds.value.max
+
+	const contextFilter = (
 		(displayContexts.value.challenge && fight.context === FightContext.CHALLENGE) ||
 		(displayContexts.value.garden && fight.context === FightContext.GARDEN) ||
 		(displayContexts.value.tournament && fight.context === FightContext.TOURNAMENT) ||
@@ -239,7 +297,7 @@ const filteredFights = computed(() => fights.value.filter((fight) => {
 	const query = opponentSearch.value.trim().toLowerCase()
 	const opponentFilter = !query || fightSearchText(fight).includes(query)
 
-	return contextFilter && typeFilter && lootFilter && resultFilter && opponentFilter
+	return dateFilter && contextFilter && typeFilter && lootFilter && resultFilter && opponentFilter
 }))
 
 const victories = computed(() => filteredFights.value.filter(f => f.result === 'win').length)
@@ -247,8 +305,59 @@ const defeats = computed(() => filteredFights.value.filter(f => f.result === 'de
 const draws = computed(() => filteredFights.value.filter(f => f.result === 'draw').length)
 const ratio = computed(() => defeats.value === 0 ? '∞' : LeekWars.numberPrecision(victories.value / defeats.value, 3))
 
+// Formatage heure locale pour les champs natifs : date (YYYY-MM-DD) et heure (HH:MM).
+const pad2 = (n: number) => String(n).padStart(2, '0')
+function toDateStr(seconds: number): string {
+	const d = new Date(seconds * 1000)
+	return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
+}
+function toTimeStr(seconds: number): string {
+	const d = new Date(seconds * 1000)
+	return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`
+}
+// Recombine une date (YYYY-MM-DD) et une heure (HH:MM) en timestamp secondes, ou null si
+// aucune date. Heure absente → minuit.
+function combineDateTime(dateStr: string, timeStr: string): number | null {
+	if (!dateStr) { return null }
+	return new Date(`${dateStr}T${timeStr || '00:00'}`).getTime() / 1000
+}
+// Ponts entre l'état chaîne (YYYY-MM-DD) et les objets Date attendus par <v-date-picker>.
+const strToDate = (s: string) => s ? new Date(`${s}T00:00`) : null
+const minDateObj = computed(() => strToDate(minDate.value))
+const maxDateObj = computed(() => strToDate(maxDate.value))
+const fromDateObj = computed(() => strToDate(fromDate.value))
+const toDateObj = computed(() => strToDate(toDate.value))
+function onFromDate(value: unknown) {
+	if (value instanceof Date) { fromDate.value = toDateStr(value.getTime() / 1000) }
+	fromMenu.value = false
+}
+function onToDate(value: unknown) {
+	if (value instanceof Date) { toDate.value = toDateStr(value.getTime() / 1000) }
+	toMenu.value = false
+}
+// Affichage compact de la date choisie sur le bouton déclencheur, selon la locale.
+function formatDateDisplay(s: string): string {
+	return s ? new Date(`${s}T00:00`).toLocaleDateString() : ''
+}
+// Rafraîchit les bornes des champs date : plus ancien sélectionnable = maintenant - 7 j.
+function refreshCustomBounds() {
+	const now = Date.now() / 1000
+	minDate.value = toDateStr(now - 7 * 24 * 3600)
+	maxDate.value = toDateStr(now)
+}
+
 function select_period(p: string) {
 	period.value = p
+	localStorage.setItem('options/history-period', p)
+	if (p === 'custom') {
+		// Bornes des champs fraîches (min = maintenant - 7 j), et plage par défaut si
+		// vide : la dernière heure (il y a 1 h → maintenant).
+		refreshCustomBounds()
+		const now = Date.now() / 1000
+		if (!fromDate.value) { fromDate.value = toDateStr(now - 3600); fromTime.value = toTimeStr(now - 3600) }
+		if (!toDate.value) { toDate.value = toDateStr(now); toTime.value = toTimeStr(now) }
+		return
+	}
 	const now = Date.now() / 1000
 	const midnight = new Date()
 	midnight.setHours(0, 0, 0, 0)
@@ -259,7 +368,6 @@ function select_period(p: string) {
 		if (p === '2days') return now - 2 * day
 		return now - 7 * day
 	})()
-	localStorage.setItem('options/history-period', p)
 }
 
 // Fusionne les filtres sauvegardés avec les défauts : une clé ajoutée après la
@@ -274,6 +382,12 @@ displayContexts.value = storedFilters('options/history-contexts', { challenge: t
 displayTypes.value = storedFilters('options/history-types', { solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
 displayLoot.value = storedFilters('options/history-loot', { chests: false, rareloot: false })
 displayResults.value = storedFilters('options/history-results', { win: true, draw: true, defeat: true, generating: true })
+const savedFrom = (localStorage.getItem('options/history-custom-from') || '').split('T')
+const savedTo = (localStorage.getItem('options/history-custom-to') || '').split('T')
+fromDate.value = savedFrom[0] || ''
+fromTime.value = savedFrom[1] || ''
+toDate.value = savedTo[0] || ''
+toTime.value = savedTo[1] || ''
 select_period(initialPeriod)
 
 function loadHistory() {
@@ -313,6 +427,23 @@ watch(displayResults, () => {
 watch(viewMode, () => {
 	localStorage.setItem('options/history-view', viewMode.value)
 })
+watch([fromDate, fromTime], () => {
+	localStorage.setItem('options/history-custom-from', fromDate.value ? `${fromDate.value}T${fromTime.value || '00:00'}` : '')
+})
+watch([toDate, toTime], () => {
+	localStorage.setItem('options/history-custom-to', toDate.value ? `${toDate.value}T${toTime.value || '00:00'}` : '')
+})
+// Cohérence du range : « de » ne peut pas dépasser « à ». Les <v-date-picker> se contraignent
+// déjà via min/max au niveau du jour ; ce garde-fou couvre le cas d'une heure incohérente le
+// même jour (on aligne alors « à » sur « de »).
+watch([fromDate, fromTime, toDate, toTime], () => {
+	const f = combineDateTime(fromDate.value, fromTime.value)
+	const t = combineDateTime(toDate.value, toTime.value)
+	if (f !== null && t !== null && f > t) {
+		toDate.value = fromDate.value
+		toTime.value = fromTime.value
+	}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -343,6 +474,66 @@ watch(viewMode, () => {
 	.period.selected {
 		background: var(--background-header);
 		font-weight: bold;
+	}
+	.custom-range {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 10px 24px;
+		margin-top: 10px;
+	}
+	.custom-field {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.custom-label {
+		font-size: 12px;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.4px;
+		color: var(--text-color-secondary);
+	}
+	.dt-input {
+		height: 34px;
+		padding: 0 10px;
+		font-size: 14px;
+		color: var(--text-color);
+		background: var(--pure-white);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		transition: border-color 0.15s;
+	}
+	// Déclencheur date : bouton avec icône + date formatée, aligné sur le look des champs.
+	button.dt-input {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		cursor: pointer;
+		font: inherit;
+		text-align: left;
+	}
+	button.dt-input .v-icon {
+		color: var(--text-color-secondary);
+	}
+	.dt-input:hover {
+		border-color: var(--text-color-secondary);
+	}
+	.dt-input:focus,
+	.dt-input:focus-visible {
+		outline: none;
+		border-color: var(--primary);
+	}
+	.dt-date {
+		width: 150px;
+	}
+	.dt-time {
+		width: 92px;
+	}
+	// Le champ heure natif suit color-scheme ; on l'aligne sur le thème sombre.
+	body.dark .dt-time {
+		color-scheme: dark;
 	}
 	.header-row {
 		display: flex;

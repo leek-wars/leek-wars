@@ -1,3 +1,7 @@
 {
-	"title": "Benachrichtigungen"
+	"title": "Benachrichtigungen",
+	"push_blocked": "Benachrichtigungen sind blockiert. Erlaube sie in den Browsereinstellungen.",
+	"push_error": "Push-Benachrichtigungen konnten nicht aktiviert werden.",
+	"push_notifications": "Mitteilungen",
+	"push_unsupported": "Dein Browser unterstützt keine Push-Benachrichtigungen."
 }
