@@ -1,0 +1,20 @@
+{
+	"title": "Palkinnot",
+	"total_one": "{0} kuukausi kertynyt",
+	"total_other": "{0} kuukautta kertynyt",
+	"days_one": "{0} päivä",
+	"days_other": "{0} päivää",
+	"years_one": "{0} vuosi",
+	"years_other": "{0} vuotta",
+	"next_in": "Seuraava taso {0} kuluttua",
+	"not_started": "Tilaa käynnistääksesi laskurin.",
+	"all_done": "Portaikko suoritettu. Kiitos tuestasi!",
+	"reward_trophy": "Palkinto",
+	"trophy_named": "Palkinto {0}",
+	"reward_hat": "Hattu",
+	"reward_skin": "Purjon ulkoasu",
+	"reward_potion": "Juoma",
+	"reward_pomp": "Esiintyminen",
+	"reward_resources": "Harvinaiset resurssit",
+	"reward_surprise": "Yllätys"
+}

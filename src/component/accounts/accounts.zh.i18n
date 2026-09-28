@@ -1,0 +1,22 @@
+{
+	"title": "我的账号",
+	"desc": "关联你拥有的其他账号。它们会出现在你的所有设备上，无需重新输入密码，并在你的个人资料中显示为你的账号。",
+	"main_account": "主账号",
+	"set_main": "设为主账号",
+	"unlink": "取消关联",
+	"unlink_message": "要将 {0} 从你的账号中移除吗？",
+	"unlink_cooldown_warning": "取消关联的账号需等待 7 天才能重新关联。",
+	"cancel": "取消",
+	"no_linkable": "要关联一个账号，请先通过右上角的账号切换器登录该账号。",
+	"cap_reached": "你关联的账号数量已达上限（{0} 个）。",
+	"error_account_not_connected": "该账号需要处于登录状态才能关联。",
+	"error_already_linked": "该账号已关联。",
+	"error_invalid_account": "该账号无法关联。",
+	"error_no_player": "你还没有关联任何账号。",
+	"error_no_such_farmer": "找不到该账号。",
+	"error_not_linked": "该账号不在你关联的账号中。",
+	"error_same_account": "这是你当前登录的账号。",
+	"error_too_many_declared_accounts": "你关联的账号数量已达上限。",
+	"error_unlink_cooldown": "该账号取消关联还不到 7 天。",
+	"console": "控制台"
+}

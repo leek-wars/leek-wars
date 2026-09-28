@@ -1,28 +1,32 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>
-				<breadcrumb :items="breadcrumb_items" :raw="true" />
-			</h1>
+			<div class="page-title">
+				<page-icon name="bank" fallback="mdi-bank" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details density="compact" variant="solo">
+			<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" class="currency-select">
 				<template #selection>
 					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
 					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
 				</template>
-				<template #item="{ props, item }">
-					<v-list-item v-bind="props" class="currency">
-						<template #prepend>
-							<flag :code="LeekWars.currencies[item.value].flag" :clickable="false" />
-						</template>
-						<template #append>
-							<span class="symbol">{{ LeekWars.currencies[item.value].symbol }}</span>
-						</template>
-					</v-list-item>
+				<!-- La ligne est un élément ordinaire depuis lw-select : le drapeau, le code
+				     et le symbole se posent à la suite, le symbole poussé à droite. -->
+				<template #item="{ props: itemProps, item }">
+					<div v-bind="itemProps" class="currency">
+						<flag :code="LeekWars.currencies[String(item.value)].flag" :clickable="false" />
+						<span>{{ item.value }}</span>
+						<span class="symbol">{{ LeekWars.currencies[String(item.value)].symbol }}</span>
+					</div>
 				</template>
-			</v-select>
+			</lw-select>
 
 			<div v-if="firstPurchase" class="first-purchase-banner">
 				<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
@@ -260,6 +264,12 @@ watch(() => LeekWars.darkMode, () => {
 	display: flex;
 	align-items: center;
 }
+// Le symbole fermait la ligne via le #append de v-list-item ; sur une ligne
+// ordinaire, c'est la marge automatique qui l'y pousse.
+.currency .symbol {
+	margin-left: auto;
+	padding-left: 12px;
+}
 .flag {
 	max-width: 28px;
 	max-height: 28px;
@@ -268,12 +278,9 @@ watch(() => LeekWars.darkMode, () => {
 .first {
 	padding: 25px 0;
 }
-.v-select {
-	display: inline-block;
-	:deep(input) {
-		border: none;
-		width: 10px;
-	}
+// Même règle que bank.vue : le champ lw-select reste à la taille de son contenu.
+:deep(.currency-select) {
+	display: inline-flex;
 }
 .container {
 	padding: 10px 0px;
@@ -298,9 +305,9 @@ watch(() => LeekWars.darkMode, () => {
 		margin: 10px 0;
 		font-size: 16px;
 		font-weight: 600;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: #7b1fa2;
-		color: white;
+		color: var(--white);
 	}
 	.back {
 		padding: 10px;

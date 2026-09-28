@@ -1,0 +1,22 @@
+{
+	"title": "Mina konton",
+	"desc": "Ange de andra konton som tillhör dig. Du hittar dem på alla dina enheter utan att skriva in lösenordet igen, och de visas som dina på din profil.",
+	"main_account": "huvudkonto",
+	"set_main": "Ange som huvudkonto",
+	"unlink": "Koppla bort",
+	"unlink_message": "Ta bort {0} från dina konton?",
+	"unlink_cooldown_warning": "Ett bortkopplat konto kan anges igen först efter 7 dagar.",
+	"cancel": "Annullera",
+	"no_linkable": "För att ange ett konto, logga först in på det via kontoväljaren uppe till höger.",
+	"cap_reached": "Du har nått gränsen på {0} angivna konton.",
+	"error_account_not_connected": "Det här kontot måste vara inloggat för att kunna anges.",
+	"error_already_linked": "Det här kontot är redan angivet.",
+	"error_invalid_account": "Det här kontot kan inte anges.",
+	"error_no_player": "Du har inga angivna konton.",
+	"error_no_such_farmer": "Kontot hittades inte.",
+	"error_not_linked": "Det här kontot är inte ett av dina.",
+	"error_same_account": "Det är kontot du är inloggad på.",
+	"error_too_many_declared_accounts": "Du har nått gränsen för angivna konton.",
+	"error_unlink_cooldown": "Det här kontot kopplades bort för mindre än 7 dagar sedan.",
+	"console": "Konsol"
+}

@@ -1,0 +1,18 @@
+{
+	"title": "Kontokonsol",
+	"manage": "Hantera mina konton",
+	"account": "Konto",
+	"talent": "Talang",
+	"fights": "Strider",
+	"garden": "Grönsaksträdgård",
+	"tournament": "Turnering",
+	"main": "huvudkonto",
+	"register_all": "Anmäl alla till turneringen",
+	"enter_all": "Sätt alla i grönsaksträdgården",
+	"exit_all": "Ta ut alla ur grönsaksträdgården",
+	"registered_n": "{0} purjolökar anmälda till turneringen.",
+	"empty": "Du har inte angett något annat konto.",
+	"empty_link": "Ange mina konton",
+	"error_no_player": "Du har inte angett något annat konto.",
+	"error_wrong_token": "Sessionen har gått ut."
+}

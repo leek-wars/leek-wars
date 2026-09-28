@@ -1,0 +1,22 @@
+{
+	"title": "Mijn accounts",
+	"desc": "Geef de andere accounts op die van jou zijn. Je vindt ze terug op al je apparaten zonder hun wachtwoord opnieuw in te voeren, en ze verschijnen als de jouwe op je profiel.",
+	"main_account": "hoofdaccount",
+	"set_main": "Instellen als hoofdaccount",
+	"unlink": "Ontkoppelen",
+	"unlink_message": "{0} uit je accounts verwijderen?",
+	"unlink_cooldown_warning": "Een ontkoppeld account kan pas na 7 dagen opnieuw worden opgegeven.",
+	"cancel": "Annuleren",
+	"no_linkable": "Om een account op te geven, log er eerst mee in via de accountkiezer rechtsboven.",
+	"cap_reached": "Je hebt de limiet van {0} opgegeven accounts bereikt.",
+	"error_account_not_connected": "Dit account moet ingelogd zijn om te kunnen worden opgegeven.",
+	"error_already_linked": "Dit account is al opgegeven.",
+	"error_invalid_account": "Dit account kan niet worden opgegeven.",
+	"error_no_player": "Je hebt geen opgegeven account.",
+	"error_no_such_farmer": "Account niet gevonden.",
+	"error_not_linked": "Dit account is niet een van de jouwe.",
+	"error_same_account": "Dit is het account waarmee je bent ingelogd.",
+	"error_too_many_declared_accounts": "Je hebt de limiet van opgegeven accounts bereikt.",
+	"error_unlink_cooldown": "Dit account is minder dan 7 dagen geleden ontkoppeld.",
+	"console": "Console"
+}

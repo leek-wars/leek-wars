@@ -1,0 +1,22 @@
+{
+	"title": "Akun saya",
+	"desc": "Deklarasikan akun lain yang Anda miliki. Anda akan menemukannya di semua perangkat Anda tanpa mengetik ulang kata sandinya, dan akun-akun itu akan tampil sebagai milik Anda di profil Anda.",
+	"main_account": "utama",
+	"set_main": "Jadikan akun utama",
+	"unlink": "Lepaskan",
+	"unlink_message": "Hapus {0} dari akun Anda?",
+	"unlink_cooldown_warning": "Akun yang dilepas baru bisa dideklarasikan lagi setelah 7 hari.",
+	"cancel": "Batal",
+	"no_linkable": "Untuk mendeklarasikan sebuah akun, masuk dulu ke akun itu melalui pemilih akun di kanan atas.",
+	"cap_reached": "Anda sudah mencapai batas {0} akun yang dideklarasikan.",
+	"error_account_not_connected": "Akun ini harus dalam keadaan masuk untuk bisa dideklarasikan.",
+	"error_already_linked": "Akun ini sudah dideklarasikan.",
+	"error_invalid_account": "Akun ini tidak bisa dideklarasikan.",
+	"error_no_player": "Anda belum mendeklarasikan akun apa pun.",
+	"error_no_such_farmer": "Akun tidak ditemukan.",
+	"error_not_linked": "Akun ini bukan salah satu akun Anda.",
+	"error_same_account": "Ini akun yang sedang Anda gunakan.",
+	"error_too_many_declared_accounts": "Anda sudah mencapai batas akun yang dideklarasikan.",
+	"error_unlink_cooldown": "Akun ini dilepas kurang dari 7 hari yang lalu.",
+	"console": "Konsol"
+}

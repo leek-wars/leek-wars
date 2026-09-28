@@ -1,0 +1,20 @@
+{
+	"title": "Nagrody",
+	"total_one": "{0} miesiąc łącznie",
+	"total_other": "{0} miesięcy łącznie",
+	"days_one": "{0} dzień",
+	"days_other": "{0} dni",
+	"years_one": "{0} rok",
+	"years_other": "{0} l.",
+	"next_in": "Następny próg za {0}",
+	"not_started": "Wykup subskrypcję, aby uruchomić licznik.",
+	"all_done": "Drabina ukończona. Dziękujemy za wsparcie!",
+	"reward_trophy": "Trofeum",
+	"trophy_named": "Trofeum {0}",
+	"reward_hat": "Kapelusz",
+	"reward_skin": "Wygląd pora",
+	"reward_potion": "Mikstura",
+	"reward_pomp": "Splendor",
+	"reward_resources": "Rzadkie zasoby",
+	"reward_surprise": "Niespodzianka"
+}

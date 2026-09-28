@@ -3,7 +3,12 @@
 		<loader v-if="loading" />
 		<template v-else-if="success">
 			<div class="page-header page-bar">
-				<h1><breadcrumb :items="[{name: $t('title'), link: '/bank'}, {name: $t('payment_success_simple'), link: ''}]" :raw="true" /></h1>
+				<div class="page-title">
+					<page-icon name="bank" fallback="mdi-bank" />
+					<div class="page-title-text">
+						<h1><breadcrumb :items="[{name: $t('title'), link: '/bank'}, {name: $t('payment_success_simple'), link: ''}]" :raw="true" /></h1>
+					</div>
+				</div>
 			</div>
 			<panel class="first center">
 				<br>
@@ -90,7 +95,7 @@ onMounted(() => {
 		display: inline-block;
 		padding: 4px 8px;
 		margin: 0 2px;
-		// color: black;
+		// color: var(--black);
 	}
 	.thank-you {
 		font-size: 30px;

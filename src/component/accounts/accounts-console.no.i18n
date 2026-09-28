@@ -1,0 +1,18 @@
+{
+	"title": "Kontokonsoll",
+	"manage": "Administrer kontoene mine",
+	"account": "Konto",
+	"talent": "Talent",
+	"fights": "Kamper",
+	"garden": "Grønnsakshage",
+	"tournament": "Turnering",
+	"main": "hovedkonto",
+	"register_all": "Meld alle på turneringen",
+	"enter_all": "Sett alle i grønnsakshagen",
+	"exit_all": "Ta alle ut av grønnsakshagen",
+	"registered_n": "{0} purrer meldt på turneringen.",
+	"empty": "Du har ikke oppgitt noen annen konto.",
+	"empty_link": "Oppgi kontoene mine",
+	"error_no_player": "Du har ikke oppgitt noen annen konto.",
+	"error_wrong_token": "Økten er utløpt."
+}

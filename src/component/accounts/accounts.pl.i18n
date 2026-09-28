@@ -1,0 +1,22 @@
+{
+	"title": "Moje konta",
+	"desc": "Zgłoś pozostałe konta, które do ciebie należą. Znajdziesz je na wszystkich swoich urządzeniach bez ponownego wpisywania hasła, a na twoim profilu pojawią się jako twoje.",
+	"main_account": "główne",
+	"set_main": "Ustaw jako konto główne",
+	"unlink": "Odłącz",
+	"unlink_message": "Usunąć {0} z twoich kont?",
+	"unlink_cooldown_warning": "Odłączone konto można zgłosić ponownie dopiero po 7 dniach.",
+	"cancel": "Anuluj",
+	"no_linkable": "Aby zgłosić konto, najpierw zaloguj się na nie w przełączniku kont w prawym górnym rogu.",
+	"cap_reached": "Osiągnięto limit {0} zgłoszonych kont.",
+	"error_account_not_connected": "To konto musi być zalogowane, aby można je zgłosić.",
+	"error_already_linked": "To konto jest już zgłoszone.",
+	"error_invalid_account": "Tego konta nie można zgłosić.",
+	"error_no_player": "Nie masz żadnego zgłoszonego konta.",
+	"error_no_such_farmer": "Nie znaleziono konta.",
+	"error_not_linked": "To konto nie należy do twoich.",
+	"error_same_account": "To konto, na które jesteś zalogowany.",
+	"error_too_many_declared_accounts": "Osiągnięto limit zgłoszonych kont.",
+	"error_unlink_cooldown": "To konto zostało odłączone mniej niż 7 dni temu.",
+	"console": "Konsola"
+}

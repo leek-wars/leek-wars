@@ -1,0 +1,20 @@
+{
+	"title": "Beloningen",
+	"total_one": "{0} maand verzameld",
+	"total_other": "{0} maanden verzameld",
+	"days_one": "{0} dag",
+	"days_other": "{0} dagen",
+	"years_one": "{0} jaar",
+	"years_other": "{0} jaar",
+	"next_in": "Volgende trede over {0}",
+	"not_started": "Neem een abonnement om de teller te starten.",
+	"all_done": "Ladder voltooid. Bedankt voor je steun!",
+	"reward_trophy": "Trofee",
+	"trophy_named": "Trofee {0}",
+	"reward_hat": "Hoed",
+	"reward_skin": "Preiskin",
+	"reward_potion": "Drankje",
+	"reward_pomp": "Verschijning",
+	"reward_resources": "Zeldzame grondstoffen",
+	"reward_surprise": "Verrassing"
+}

@@ -1,0 +1,20 @@
+{
+	"title": "Награды",
+	"total_one": "{0} месяц накоплен",
+	"total_other": "{0} мес. накоплено",
+	"days_one": "{0} день",
+	"days_other": "{0} дн.",
+	"years_one": "{0} год",
+	"years_other": "{0} г.",
+	"next_in": "Следующая ступень через {0}",
+	"not_started": "Оформите подписку, чтобы запустить счётчик.",
+	"all_done": "Лестница пройдена. Спасибо за поддержку!",
+	"reward_trophy": "Трофей",
+	"trophy_named": "Трофей {0}",
+	"reward_hat": "Шляпа",
+	"reward_skin": "Облик порея",
+	"reward_potion": "Зелье",
+	"reward_pomp": "Внешний вид",
+	"reward_resources": "Редкие ресурсы",
+	"reward_surprise": "Сюрприз"
+}

@@ -1,0 +1,20 @@
+{
+	"title": "Belohnungen",
+	"total_one": "{0} Monat gesammelt",
+	"total_other": "{0} Monate gesammelt",
+	"days_one": "{0} Tag",
+	"days_other": "{0} Tage",
+	"years_one": "{0} Jahr",
+	"years_other": "{0} Jahre",
+	"next_in": "Nächste Stufe in {0}",
+	"not_started": "Abonniere, um den Zähler zu starten.",
+	"all_done": "Alle Stufen erreicht. Danke für deine Unterstützung!",
+	"reward_trophy": "Trophäe",
+	"trophy_named": "Trophäe {0}",
+	"reward_hat": "Hut",
+	"reward_skin": "Lauch-Skin",
+	"reward_potion": "Trank",
+	"reward_pomp": "Apparat",
+	"reward_resources": "Seltene Ressourcen",
+	"reward_surprise": "Überraschung"
+}

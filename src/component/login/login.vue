@@ -17,12 +17,12 @@
 							<input id="code-field" v-model="form.code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" autocapitalize="none" autocorrect="off" spellcheck="false">
 							<br><br>
 						</template>
-						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
+						<lw-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" />
 						<br><br>
 						<div class="center"><v-btn size="large" color="primary" type="submit" :loading="loading">{{ $t('connection') }}</v-btn></div>
 						<br>
 						<div v-if="error" class="error">
-							<span v-if="error.error">{{ $t('error_' + error.error) }}</span>
+							<span v-if="error.error && knownError(error.error)">{{ $t('error_' + error.error) }}</span>
 							<span v-else>{{ $t('error_server') }}</span>
 						</div>
 						<br>
@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { mixins , useNamespacedT } from '@/model/i18n'
+import { i18n, mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { getRedirectAfterLogin } from '@/router'
@@ -51,6 +51,12 @@ import { getRedirectAfterLogin } from '@/router'
 defineOptions({ name: 'Login', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('login')
+// Un code d'erreur serveur inconnu du dictionnaire (ex. internal_error) doit afficher
+// le message générique, pas la clé i18n brute (pas de fallback global dans vue-i18n ici)
+const knownError = (code: string) => {
+	const te = i18n.global.te as (key: string) => boolean
+	return te('login.error_' + code) || te('error_' + code)
+}
 const route = useRoute()
 const router = useRouter()
 
@@ -154,19 +160,6 @@ function oauthStart(provider: 'github' | 'google') {
 		width: 1px;
 		height: 300px;
 	}
-	@media screen and (max-width: 599px) {
-		.container {
-			flex-direction: column;
-		}
-		.divider {
-			width: 300px;
-			height: 1px;
-		}
-		.oauth-buttons {
-			align-self: center;
-			margin-top: 0;
-		}
-	}
 	.oauth-buttons {
 		display: flex;
 		flex-direction: column;
@@ -174,6 +167,23 @@ function oauthStart(provider: 'github' | 'google') {
 		gap: 20px;
 		align-self: flex-start;
 		margin-top: 60px;
+	}
+	// Après la règle de base : à spécificité égale c'est la dernière qui gagne,
+	// et la règle mobile passait avant — les boutons OAuth restaient calés en
+	// haut à gauche avec 60 px de vide.
+	@media screen and (max-width: 599px) {
+		.container {
+			flex-direction: column;
+		}
+		.divider {
+			width: 100%;
+			max-width: 300px;
+			height: 1px;
+		}
+		.oauth-buttons {
+			align-self: stretch;
+			margin-top: 0;
+		}
 	}
 	.v-btn.gh-button, .v-btn.google-button {
 		height: 40px;

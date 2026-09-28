@@ -1,0 +1,305 @@
+<template>
+	<panel :title="t('title')" icon="mdi-account-multiple" class="accounts-panel">
+		<template #actions>
+			<router-link v-if="accounts.length > 1" to="/accounts" class="button">
+				<v-icon>mdi-view-dashboard-outline</v-icon>
+				<span>{{ t('console') }}</span>
+			</router-link>
+			<span class="counter" :class="{ full: accounts.length >= max }">{{ accounts.length }} / {{ max }}</span>
+		</template>
+		<template #content>
+			<div class="content accounts-content">
+				<p class="desc">{{ t('desc') }}</p>
+
+				<div v-if="loading" class="loading"><loader /></div>
+
+				<template v-else>
+					<div v-for="account in accounts" :key="account.id" class="account-card">
+						<img :src="avatarUrl(account)" class="avatar">
+						<div class="infos">
+							<div class="name-line">
+								<router-link :to="'/farmer/' + account.id" class="name">{{ account.name }}</router-link>
+								<span v-if="isMain(account)" class="chip main">{{ t('main_account') }}</span>
+								<span v-if="account.lwplus" class="chip lwplus">LW+</span>
+							</div>
+							<div v-if="account.leeks !== undefined" class="meta">
+								<span class="stat" :title="$t('main.leeks')">
+									<v-icon>mdi-leek</v-icon>
+									<span>{{ account.leeks }}</span>
+								</span>
+								<span class="stat">{{ $t('main.total_level') }} {{ LeekWars.formatNumber(account.total_level ?? 0) }}</span>
+							</div>
+						</div>
+						<!-- Seul, un compte n'a ni principal à choisir ni lien à défaire. -->
+						<div v-if="accounts.length > 1" class="actions">
+							<div v-if="!isMain(account)" v-ripple class="account-action" :class="{disabled: busy}" :title="t('set_main')" @click="setMain(account)">
+								<v-icon>mdi-star-outline</v-icon>
+							</div>
+							<div v-ripple class="account-action red" :class="{disabled: busy}" :title="t('unlink')" @click="askUnlink(account)">
+								<v-icon>mdi-link-variant-off</v-icon>
+							</div>
+						</div>
+					</div>
+
+					<!-- Déclarer un compte, uniquement parmi ceux connectés dans le switcher. -->
+					<div v-if="accounts.length >= max" class="hint full">
+						<v-icon>mdi-information-outline</v-icon>
+						<span>{{ t('cap_reached', [max]) }}</span>
+					</div>
+					<template v-else>
+						<div v-for="account in linkable" :key="account.id" v-ripple class="list-item card linkable" @click="link(account)">
+							<img :src="avatarUrl(account)" class="avatar small">
+							<span class="label">{{ account.name }}</span>
+							<v-icon>mdi-link-variant-plus</v-icon>
+						</div>
+						<div v-if="!linkable.length" class="hint">
+							<v-icon>mdi-information-outline</v-icon>
+							<span>{{ t('no_linkable') }}</span>
+						</div>
+					</template>
+				</template>
+			</div>
+		</template>
+
+		<popup v-model="unlinkDialog" :width="560">
+			<template #icon><v-icon>mdi-link-variant-off</v-icon></template>
+			<template #title><span>{{ t('unlink') }}</span></template>
+			<div v-if="unlinkTarget" class="unlink-message">{{ t('unlink_message', [unlinkTarget.name]) }}</div>
+			<div class="cooldown-warning">
+				<v-icon>mdi-clock-alert-outline</v-icon>
+				<span>{{ t('unlink_cooldown_warning') }}</span>
+			</div>
+			<template #actions>
+				<div v-ripple class="action dismiss" @click="unlinkDialog = false">{{ t('cancel') }}</div>
+				<div v-ripple class="action red" @click="unlink">{{ t('unlink') }}</div>
+			</template>
+		</popup>
+	</panel>
+</template>
+
+<script setup lang="ts">
+	import { mixins, useNamespacedT } from '@/model/i18n'
+	import { LeekWars } from '@/model/leekwars'
+	import type { ApiError } from '@/model/api-error'
+	import { store, type AccountInfo } from '@/model/store'
+	import { computed, ref } from 'vue'
+
+	defineOptions({ name: 'Accounts', i18n: {}, mixins: [...mixins] })
+
+	const t = useNamespacedT('accounts')
+
+	interface LinkedAccount { id: number, name: string, avatar_changed: number, talent: number, total_level?: number, leeks?: number, lwplus: boolean }
+	interface PlayerResponse { player: { id: number, main: number | null } | null, accounts: LinkedAccount[], max: number }
+
+	// Plafond de repli avant la réponse de player/get.
+	const MAX_ACCOUNTS = 42
+
+	const accounts = ref<LinkedAccount[]>([])
+	const main = ref<number | null>(null)
+	const max = ref(MAX_ACCOUNTS)
+	const loading = ref(true)
+	const busy = ref(false)
+	const unlinkDialog = ref(false)
+	const unlinkTarget = ref<LinkedAccount | null>(null)
+
+	function apply(data: PlayerResponse) {
+		accounts.value = data.accounts ?? []
+		main.value = data.player ? data.player.main : null
+		max.value = data.max ?? MAX_ACCOUNTS
+		loading.value = false
+		busy.value = false
+	}
+
+	LeekWars.get('player/get').then(apply).error(() => { loading.value = false })
+
+	/**
+	 * Comptes déclarables : ceux du switcher qui sont connectés et pas déjà liés.
+	 * Le compte courant est exclu — il est
+	 * toujours du lot par construction.
+	 */
+	const linkable = computed(() => {
+		const linked = new Set(accounts.value.map(a => a.id))
+		return (store.state.accounts ?? []).filter((a: AccountInfo) => a.connected && !linked.has(a.id) && a.id !== store.state.farmer?.id)
+	})
+
+	function isMain(account: LinkedAccount) {
+		return main.value === account.id
+	}
+
+	function avatarUrl(account: { id: number, avatar_changed: number }) {
+		if (account.avatar_changed > 0) {
+			return LeekWars.AVATAR + 'avatar/' + account.id + '.png?' + account.avatar_changed
+		}
+		return '/image/no_avatar.png'
+	}
+
+	function link(account: { id: number }) {
+		busy.value = true
+		LeekWars.post('player/link', { farmer_id: account.id })
+			.then(apply)
+			.error((error: ApiError) => { busy.value = false; LeekWars.toast(t('error_' + error.error)) })
+	}
+
+	function askUnlink(account: LinkedAccount) {
+		unlinkTarget.value = account
+		unlinkDialog.value = true
+	}
+
+	function unlink() {
+		if (!unlinkTarget.value) { return }
+		busy.value = true
+		unlinkDialog.value = false
+		LeekWars.post('player/unlink', { farmer_id: unlinkTarget.value.id })
+			.then(apply)
+			.error((error: ApiError) => { busy.value = false; LeekWars.toast(t('error_' + error.error)) })
+	}
+
+	function setMain(account: LinkedAccount) {
+		busy.value = true
+		LeekWars.post('player/set-main', { farmer_id: account.id })
+			.then(apply)
+			.error((error: ApiError) => { busy.value = false; LeekWars.toast(t('error_' + error.error)) })
+	}
+</script>
+
+<style lang="scss" scoped>
+	.desc {
+		margin: 0 0 12px;
+		color: var(--text-color-secondary);
+	}
+	// Un span nu dans les actions du header s'étire sur ses 36 px et colle son
+	// texte en haut : on le centre comme les boutons voisins.
+	.counter {
+		display: inline-flex;
+		align-items: center;
+		color: var(--text-color-secondary);
+		padding: 0 8px;
+	}
+	// Pas de variable sémantique d'erreur en v2 (`--error` n'existe qu'en v3) :
+	// teinte claire ici, override sombre plus bas, cf. CLAUDE.md.
+	.counter.full {
+		color: #c0392b;
+	}
+	body.dark .counter.full {
+		color: #e57373;
+	}
+	.loading {
+		text-align: center;
+		padding: 16px;
+	}
+	.account-card {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 8px;
+		border: 1px solid var(--border);
+		background: var(--background);
+		margin-bottom: 6px;
+	}
+	.avatar {
+		width: 48px;
+		height: 48px;
+		&.small {
+			width: 28px;
+			height: 28px;
+		}
+	}
+	.infos {
+		flex: 1;
+		min-width: 0;
+		// Centrage vertical explicite du bloc nom + talent face à l'avatar.
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 2px;
+	}
+	.actions {
+		display: flex;
+		align-items: center;
+	}
+	// Les v-btn small mettaient une icône de 16 px au centre d'une large boîte
+	// Material : icônes minuscules et très écartées. Des
+	// carrés cliquables francs, icône pleine taille, collés l'un à l'autre.
+	.account-action {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		cursor: pointer;
+		color: var(--text-color-secondary);
+		.v-icon {
+			font-size: 22px;
+		}
+		&:hover {
+			background: var(--background-row, rgba(0, 0, 0, 0.06));
+			color: var(--text-color);
+		}
+		&.red {
+			color: var(--error, #c0392b);
+		}
+		&.disabled {
+			opacity: 0.4;
+			cursor: default;
+			pointer-events: none;
+		}
+	}
+	body.dark .account-action.red {
+		color: var(--error, #e57373);
+	}
+	.name-line {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		flex-wrap: wrap;
+	}
+	.name {
+		font-weight: bold;
+		color: var(--text-color);
+	}
+	.chip {
+		font-size: 11px;
+		padding: 1px 6px;
+		border: 1px solid var(--border);
+		color: var(--text-color-secondary);
+		&.main {
+			border-color: var(--primary);
+			color: var(--primary);
+		}
+	}
+	.meta {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		color: var(--text-color-secondary);
+		font-size: 13px;
+	}
+	.stat {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		.v-icon {
+			font-size: 18px;
+		}
+	}
+	.linkable {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.hint {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--text-color-secondary);
+		padding: 8px 4px;
+		font-size: 13px;
+	}
+	.cooldown-warning {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-top: 12px;
+		color: var(--text-color-secondary);
+	}
+</style>

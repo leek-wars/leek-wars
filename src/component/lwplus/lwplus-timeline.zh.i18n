@@ -1,0 +1,20 @@
+{
+	"title": "奖励",
+	"total_one": "累计 {0} 个月",
+	"total_other": "累计 {0} 个月",
+	"days_one": "{0} 天",
+	"days_other": "{0} 天",
+	"years_one": "{0}年",
+	"years_other": "{0}年",
+	"next_in": "距下一档奖励还有 {0}",
+	"not_started": "订阅即可开始计时。",
+	"all_done": "奖励已全部解锁。感谢你的支持！",
+	"reward_trophy": "奖杯",
+	"trophy_named": "奖杯“{0}”",
+	"reward_hat": "帽子",
+	"reward_skin": "韭葱皮肤",
+	"reward_potion": "药水",
+	"reward_pomp": "装饰",
+	"reward_resources": "稀有资源",
+	"reward_surprise": "惊喜"
+}

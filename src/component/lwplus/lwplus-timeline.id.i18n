@@ -1,0 +1,20 @@
+{
+	"title": "Hadiah",
+	"total_one": "{0} bulan terkumpul",
+	"total_other": "{0} bulan terkumpul",
+	"days_one": "{0} hari",
+	"days_other": "{0} hari",
+	"years_one": "{0} tahun",
+	"years_other": "{0} tahun",
+	"next_in": "Tingkat berikutnya dalam {0}",
+	"not_started": "Berlanggananlah untuk memulai penghitung.",
+	"all_done": "Tangga selesai. Terima kasih atas dukunganmu!",
+	"reward_trophy": "Trofi",
+	"trophy_named": "Trofi {0}",
+	"reward_hat": "Topi",
+	"reward_skin": "Skin bawang prei",
+	"reward_potion": "Ramuan",
+	"reward_pomp": "Penampilan",
+	"reward_resources": "Sumber daya langka",
+	"reward_surprise": "Kejutan"
+}

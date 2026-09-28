@@ -11,7 +11,7 @@
 	"error_wrong_token": "会话已过期，请重新登录",
 	"error_already_verified": "你的账号已验证",
 	"error_no_pending_verify": "没有待处理的验证",
-	"error_no_login": "缺少用户名，请刷新页面",
+	"error_no_login": "缺少饲养员名称，请刷新页面",
 	"error_too_many_requests": "请稍后再试",
 	"error_unknown": "出错了，请稍后重试"
 }

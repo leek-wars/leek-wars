@@ -1,0 +1,22 @@
+{
+	"title": "マイアカウント",
+	"desc": "自分が所有する他のアカウントを申告しよう。パスワードを再入力しなくてもすべての端末で使えるようになり、プロフィールに自分のアカウントとして表示される。",
+	"main_account": "メイン",
+	"set_main": "メインアカウントに設定",
+	"unlink": "連携を解除",
+	"unlink_message": "{0} をあなたのアカウントから外しますか？",
+	"unlink_cooldown_warning": "連携を解除したアカウントは、7 日経たないと再申告できません。",
+	"cancel": "キャンセル",
+	"no_linkable": "アカウントを申告するには、まず右上のアカウント切り替えからそのアカウントにログインしてください。",
+	"cap_reached": "申告できるアカウントの上限 {0} 件に達しました。",
+	"error_account_not_connected": "このアカウントを申告するには、ログインしている必要があります。",
+	"error_already_linked": "このアカウントはすでに申告されています。",
+	"error_invalid_account": "このアカウントは申告できません。",
+	"error_no_player": "申告したアカウントがありません。",
+	"error_no_such_farmer": "アカウントが見つかりません。",
+	"error_not_linked": "このアカウントはあなたのものではありません。",
+	"error_same_account": "現在ログイン中のアカウントです。",
+	"error_too_many_declared_accounts": "申告できるアカウントの上限に達しました。",
+	"error_unlink_cooldown": "このアカウントは 7 日以内に連携を解除されています。",
+	"console": "コンソール"
+}
