@@ -1,0 +1,18 @@
+{
+	"title": "Accountconsole",
+	"manage": "Mijn accounts beheren",
+	"account": "Account",
+	"talent": "Talent",
+	"fights": "Gevechten",
+	"garden": "Moestuin",
+	"tournament": "Toernooi",
+	"main": "hoofdaccount",
+	"register_all": "Alles inschrijven voor het toernooi",
+	"enter_all": "Alles in de moestuin zetten",
+	"exit_all": "Alles uit de moestuin halen",
+	"registered_n": "{0} preien ingeschreven voor het toernooi.",
+	"empty": "Je hebt geen ander account opgegeven.",
+	"empty_link": "Mijn accounts opgeven",
+	"error_no_player": "Je hebt geen ander account opgegeven.",
+	"error_wrong_token": "Sessie verlopen."
+}

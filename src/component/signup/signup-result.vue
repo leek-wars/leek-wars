@@ -1,7 +1,12 @@
 <template lang="html">
 	<div>
 		<div class="page-header page-bar">
-			<h1 v-if="success">{{ $t('validated') }}</h1>
+			<div v-if="success" class="page-title">
+				<page-icon name="signup" fallback="mdi-account-plus" />
+				<div class="page-title-text">
+					<h1>{{ $t('validated') }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first center">
 			<img src="/image/map/nexus_block_small.png">
@@ -40,6 +45,6 @@ const farmer = computed(() => route.params.farmer)
 <style lang="scss" scoped>
 	h2 {
 		font-size: 18px;
-		color: #333;
+		color: var(--grey-2);
 	}
 </style>

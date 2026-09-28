@@ -13,7 +13,7 @@
 			<div class="separator"><span>{{ t('or') }}</span></div>
 			<div class="oauth-buttons">
 				<div v-ripple class="action oauth gh" :class="{ disabled: oauthLoading }" @click="useProvider('github')">
-					<img src="/image/github_white.png" alt="GitHub"> {{ t('use_github') }}
+					<v-icon>mdi-github</v-icon> {{ t('use_github') }}
 				</div>
 				<div v-ripple class="action oauth google" :class="{ disabled: oauthLoading }" @click="useProvider('google')">
 					<img src="/image/google.svg" alt="Google"> {{ t('use_google') }}
@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { apiErrorKey, isReportedByTransport } from '@/model/api-error'
 import { LeekWars } from '@/model/leekwars'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { store } from '@/model/store'
@@ -121,6 +122,7 @@ function resend() {
 		logEvent('resend')
 		close()
 	}).error(payload => {
+		if (isReportedByTransport(payload)) return
 		const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
 		LeekWars.toast(t('error_' + code) as string)
 	}).finally(() => {
@@ -146,15 +148,11 @@ function useProvider(provider: 'github' | 'google') {
 	}
 	LeekWars.post(`farmer/verify-${provider}`, { login: farmer.login, godfather: '' }).then(() => {
 		document.location.href = LeekWars.API + `farmer/start-${provider}-login`
-	}).error(payload => {
+	}).error(error => {
 		oauthLoading.value = false
 		actionTaken = false // permet de retenter ou snoozer normalement après échec
-		if (Array.isArray(payload) && payload.length > 0 && Array.isArray(payload[0])) {
-			LeekWars.toast(t('error_' + payload[0][1]) as string)
-		} else {
-			const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
-			LeekWars.toast(t('error_' + code) as string)
-		}
+		// error.error reprend déjà le code de la première erreur de formulaire, s'il y en a une.
+		LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 	})
 }
 </script>
@@ -175,7 +173,7 @@ function useProvider(provider: 'github' | 'google') {
 		padding: 10px 12px;
 		background: rgba(255, 152, 0, 0.12);
 		border-left: 3px solid #ff9800;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 13px;
 		color: var(--text-color);
 		.v-icon {
@@ -218,7 +216,7 @@ function useProvider(provider: 'github' | 'google') {
 		justify-content: center;
 		gap: 8px;
 		padding: 10px 16px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 		font-weight: 500;
 		font-size: 14px;
@@ -228,12 +226,12 @@ function useProvider(provider: 'github' | 'google') {
 		}
 		&.gh {
 			background: #1f1f1f;
-			color: #fff;
+			color: var(--white);
 			&:hover { background: #2f2f2f; }
 		}
 		&.google {
-			background: #fff;
-			color: #444;
+			background: var(--white);
+			color: var(--grey-3);
 			border: 1px solid #dadce0;
 			&:hover { background: #f7f7f7; }
 		}

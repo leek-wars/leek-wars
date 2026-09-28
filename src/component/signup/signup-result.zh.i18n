@@ -1,4 +1,4 @@
 {
-	"validated": "注册已验证！",
-	"validated_message": "恭喜{farmer}，您只需检查您的收件箱并点击里面的激活链接即可完成您的注册！"
+	"validated": "注册成功！",
+	"validated_message": "恭喜你，{farmer}！只需查收邮件并点击其中的激活链接，即可完成注册！"
 }

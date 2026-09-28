@@ -74,7 +74,7 @@ function close() {
 		gap: 10px;
 		background: var(--background-secondary);
 		padding: 10px 12px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 	}
 	.reward-icon {
 		flex-shrink: 0;

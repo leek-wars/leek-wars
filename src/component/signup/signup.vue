@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="signup-page">
 		<div v-if="godfather_info" class="godfather-invite-banner">
 			<avatar :farmer="(godfather_info as any)" class="godfather-avatar" />
 			<div class="godfather-text">
@@ -12,7 +12,12 @@
 			</div>
 		</div>
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="signup" fallback="mdi-account-plus" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 		</div>
 		<div class="container grid large top">
 			<panel class="first">
@@ -58,9 +63,8 @@
 							<div>
 								<div class="title">{{ t('default_language') }}</div>
 								<div class="languages">
-									<div v-for="l in AI_LANGUAGES" :key="l.id" class="language" :class="{selected: aiLanguage === l.id}" @click="aiLanguage = l.id">
-										<img :src="l.logo">
-										<span>{{ l.label }}</span>
+									<div v-for="l in AI_LANGUAGES" :key="l.id" class="language" :class="{selected: aiLanguage === l.id}" :title="l.label" @click="aiLanguage = l.id">
+										<img :src="l.logo" :alt="l.label">
 									</div>
 								</div>
 							</div>
@@ -88,11 +92,11 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<v-radio-group v-model="signupMethod" class="radio" :inline="true" :dense="true" :hide-details="true">
-										<v-radio :label="$t('email_password')" :value="1" />
-										<v-radio label="GitHub" :value="2" />
-										<v-radio label="Google" :value="3" />
-									</v-radio-group>
+									<lw-radio-group v-model="signupMethod" class="radio" :inline="true">
+										<lw-radio :label="$t('email_password')" :value="1" />
+										<lw-radio label="GitHub" :value="2" />
+										<lw-radio label="Google" :value="3" />
+									</lw-radio-group>
 								</td>
 							</tr>
 							<tr v-if="signupMethod === 1">
@@ -125,7 +129,7 @@
 					<div class="center">
 						<v-btn v-if="fastRegister" size="large" color="primary" type="submit">{{ $t('play_button') }}</v-btn>
 						<v-btn v-else-if="signupMethod === 1" size="large" color="primary" type="submit">{{ $t('signup') }}</v-btn>
-						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_white.png"> {{ $t('signup_gh') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <v-icon>mdi-github</v-icon> {{ $t('signup_gh') }}</v-btn>
 						<v-btn v-else type="submit" class="google-button"> <img src="/image/google.svg"> {{ $t('signup_google') }}</v-btn>
 					</div>
 				</form>
@@ -389,12 +393,14 @@
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import Avatar from '@/component/avatar.vue'
 	import { locale } from '@/locale'
+	import { apiErrorKey, apiFieldMessages } from '@/model/api-error'
+	import { desktopAutoLogin, desktopTicket, isDesktop } from '@/model/desktop'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { AI_LANGUAGES } from '@/component/editor/file-types'
 	import { RankingLeekRow, RankingFarmerRow, RankingTeamRow } from '@/model/ranking'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { getRedirectAfterLogin } from '@/router'
 	import { defineAsyncComponent, ref } from 'vue'
 	import { useI18n } from 'vue-i18n'
@@ -517,8 +523,18 @@
 	function submit(e: Event) {
 		e.preventDefault()
 		errors.value = {}
+		// Inscription rapide depuis l'application de bureau : le compte de la plateforme
+		// est lié dès la création. Sans ticket (plateforme absente), inscription rapide normale.
+		if (fastRegister.value && isDesktop()) {
+			desktopTicket().then(ticket => send(ticket))
+		} else {
+			send(null)
+		}
+		return false
+	}
+	function send(ticket: string | null) {
 		const provider = signupMethod.value === 2 ? 'github' : signupMethod.value === 3 ? 'google' : null
-		const service = fastRegister.value ? 'farmer/register-fast' : (provider ? `farmer/register-${provider}` : 'farmer/register')
+		const service = fastRegister.value ? (ticket ? 'farmer/register-desktop' : 'farmer/register-fast') : (provider ? `farmer/register-${provider}` : 'farmer/register')
 		const args: Record<string, unknown> = {
 			leek_name: leek.value,
 			hat: leekHat.value,
@@ -533,6 +549,9 @@
 			args.password = password1.value
 			args.email = email.value
 		}
+		if (ticket) {
+			args.ticket = ticket
+		}
 		LeekWars.post(service, args).then(data => {
 			if (fastRegister.value) {
 				store.commit('connect', data)
@@ -545,13 +564,17 @@
 				localStorage.setItem('login-attempt', 'true')
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(errs => {
-			for (const error of (errs as unknown as [number, string, (string | number)[]][])) {
-				const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-				addError(form, t('error_' + error[1], error[2]) as string)
+		}).error(error => {
+			if (ticket && error.error === 'already_registered') {
+				desktopAutoLogin().then(ok => { if (ok) { router.push(getRedirectAfterLogin()) } })
+				return
+			}
+			if (error.fields) {
+				for (const [field, message] of apiFieldMessages(error, t)) addError(field, message)
+			} else {
+				LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 			}
 		})
-		return false
 	}
 	function addError(form: string, error: string) {
 		if (!(form in errors.value)) {
@@ -576,6 +599,15 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le v3 ouvre toutes les pages en pleine largeur (cf. « Largeur » dans
+	// leekwars-shell-v3.scss) : la coquille (menu + panneau social) encadre le
+	// contenu. Mais l'inscription est vue déconnecté, sans menu ni panneau
+	// social : sur un écran large, le formulaire et les textes s'étiraient d'un
+	// bord à l'autre. Cette page-là se borne donc elle-même et se centre.
+	.signup-page {
+		max-width: 1400px;
+		margin: 0 auto;
+	}
 	.groups-teaser {
 		padding: 5px;
 		.teaser-intro {
@@ -646,10 +678,10 @@
 		display: flex;
 		align-items: center;
 		gap: 16px;
-		background: var(--primary);
-		color: white;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		padding: 12px 20px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		margin-bottom: 12px;
 		.godfather-avatar {
 			width: 56px;
@@ -737,7 +769,7 @@
 		height: 30px;
 	}
 	input[type=text]:focus, input[type=password]:focus {
-		border: 2px solid #555;
+		border: 2px solid var(--grey-4);
 	}
 	input[status=error], input[status=error]:focus {
 		border: 2px solid red;
@@ -748,7 +780,7 @@
 		margin: 5px 0;
 	}
 	input[status=valid], input[status=valid]:focus {
-		border: 2px solid #5fad1b;
+		border: 2px solid var(--primary);
 	}
 	.space {
 		height: 8px;
@@ -761,7 +793,7 @@
 		text-align: center;
 		margin-bottom: 10px;
 		a {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 	.ranking {
@@ -795,15 +827,15 @@
 			border-right: none;
 		}
 		.first a {
-			color: #ffa900;
+			color: var(--rank-first);
 			font-weight: bold;
 		}
 		.second a {
-			color: #9c9c9c;
+			color: var(--inactive-color);
 			font-weight: bold;
 		}
 		.third a {
-			color: #ae4e00;
+			color: var(--rank-third);
 			font-weight: bold;
 		}
 		.p15 {
@@ -904,7 +936,7 @@
 		align-items: center;
 	}
 	.info {
-		color: #eee;
+		color: var(--grey-13);
 	}
 	.leek-creator {
 		display: flex;
@@ -949,8 +981,8 @@
 			width: 35px;
 			height: 35px;
 			border-radius: 50%;
-			border: 2px solid white;
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			border: 2px solid var(--white);
+			box-shadow: var(--elevation-1);
 			cursor: pointer;
 		}
 		.hats {
@@ -970,19 +1002,17 @@
 		.language {
 			display: flex;
 			align-items: center;
-			gap: 6px;
-			padding: 5px 10px;
+			padding: 6px 8px;
 			border: 2px solid transparent;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			background: rgba(0, 0, 0, 0.05);
 			cursor: pointer;
-			font-size: 13px;
 			img {
-				width: 18px;
-				height: 18px;
+				width: 24px;
+				height: 24px;
 			}
 			&.selected {
-				border-color: #5FAD1B;
+				border-color: var(--primary);
 				background: rgba(95, 173, 27, 0.12);
 			}
 		}
@@ -1020,7 +1050,7 @@
 	img {
 		border: 5px solid var(--pure-white);
 		box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
-		border-radius: 5px;
+		border-radius: var(--radius);
 		min-width: 0;
 		max-width: 380px;
 		flex-shrink: 0;
@@ -1076,7 +1106,7 @@
 			margin-bottom: 30px;
 			&:after {
 				width: 100%;
-				background: #5fad1b;
+				background: var(--primary-surface);
 				height: 2px;
 				content: "";
 				position: absolute;
@@ -1117,9 +1147,9 @@
 	background: #000a;
 	z-index: 10;
 	img {
-		border: 5px solid white;
+		border: 5px solid var(--white);
 		box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
-		border-radius: 10px;
+		border-radius: var(--radius-large);
 		max-width: 90vw;
 		max-height: 90vh;
 	}
@@ -1139,7 +1169,7 @@
 	}
 	h2 {
 		font-weight: 500;
-		color: #222;
+		color: var(--grey-1);
 		font-size: 20px;
 		margin-bottom: 10px;
 	}

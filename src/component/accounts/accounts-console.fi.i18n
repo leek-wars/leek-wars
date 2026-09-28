@@ -1,0 +1,18 @@
+{
+	"title": "Tilikonsoli",
+	"manage": "Hallitse tilejäni",
+	"account": "Tili",
+	"talent": "Lahjakkuus",
+	"fights": "Taistelut",
+	"garden": "Vihannespuutarha",
+	"tournament": "Turnaus",
+	"main": "ensisijainen",
+	"register_all": "Ilmoita kaikki turnaukseen",
+	"enter_all": "Laita kaikki vihannespuutarhaan",
+	"exit_all": "Ota kaikki pois vihannespuutarhasta",
+	"registered_n": "{0} purjoa ilmoitettu turnaukseen.",
+	"empty": "Et ole ilmoittanut muita tilejä.",
+	"empty_link": "Ilmoita tilini",
+	"error_no_player": "Et ole ilmoittanut muita tilejä.",
+	"error_wrong_token": "Istunto vanhentunut."
+}

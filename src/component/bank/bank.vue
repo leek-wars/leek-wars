@@ -1,65 +1,87 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="bank" fallback="mdi-bank" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<page-tabs active="bank" />
 		</div>
-		<panel class="first">
-			<div class="bank-description center" v-html="$t('description')"></div>
+		<!-- Deux colonnes dès qu'il y a la place : les lots de cristaux à gauche, les
+		     mois de Leek Wars + à droite. En dessous de ~1200px de contenu, chaque
+		     panneau reprend toute la largeur (voir .bank-columns). -->
+		<div class="container bank-columns">
+			<panel class="first crystals-panel">
+				<div class="bank-description center" v-html="$t('description')"></div>
 
-			<v-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" hide-details density="compact" variant="solo">
-				<template #selection>
-					<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
-					{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
-				</template>
-				<template #item="{ props, item }">
-					<v-list-item v-bind="props" class="currency">
-						<template #prepend>
-							<flag :code="LeekWars.currencies[item.value].flag" :clickable="false" />
-						</template>
-						<template #append>
-							<span class="symbol">{{ LeekWars.currencies[item.value].symbol }}</span>
-						</template>
-					</v-list-item>
-				</template>
-			</v-select>
+				<lw-select v-model="LeekWars.currency" :items="Object.keys(LeekWars.currencies)" class="currency-select">
+					<template #selection>
+						<flag :code="LeekWars.currencies[LeekWars.currency].flag" :clickable="false" />&nbsp;
+						{{ LeekWars.currency }} &nbsp; <span class="symbol">{{ LeekWars.currencies[LeekWars.currency].symbol }}</span>
+					</template>
+					<!-- La ligne est un élément ordinaire depuis lw-select : le drapeau, le code
+					     et le symbole se posent à la suite, le symbole poussé à droite. -->
+					<template #item="{ props: itemProps, item }">
+						<div v-bind="itemProps" class="currency">
+							<flag :code="LeekWars.currencies[String(item.value)].flag" :clickable="false" />
+							<span>{{ item.value }}</span>
+							<span class="symbol">{{ LeekWars.currencies[String(item.value)].symbol }}</span>
+						</div>
+					</template>
+				</lw-select>
 
-			<router-link v-if="suggestion" :to="'/bank/buy/' + suggestion.pack.id" class="contextual-suggestion">
-				<div v-if="suggestion.target === 'item' && suggestion.item" class="suggestion-icon">
-					<item :item="suggestion.item" />
-				</div>
-				<div v-else class="suggestion-icon fights">
-					<img src="/image/fight-pack/fight_pack_100.png" alt="fights">
-				</div>
-				<div class="suggestion-body">
-					<div class="suggestion-target">
-						<span class="target-name">{{ suggestion.target === 'fights' ? $t('suggestion_target_fights') : suggestionItemName }}</span>
-						<span class="target-price">·&nbsp;{{ $filters.number(suggestion.neededCrystals) }}&nbsp;<span class="crystal"></span></span>
+				<router-link v-if="suggestion" :to="'/bank/buy/' + suggestion.pack.id" class="contextual-suggestion">
+					<div v-if="suggestion.target === 'item' && suggestion.item" class="suggestion-icon">
+						<item :item="suggestion.item" />
 					</div>
-					<div class="suggestion-arrow">
-						<i18n-t v-if="suggestion.remainder > 0" tag="span" keypath="suggestion_with_remainder">
-							<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
-							<template #price><b>{{ suggestionPrice }}</b></template>
-							<template #remainder><b>{{ $filters.number(suggestion.remainder) }}&nbsp;<span class="crystal"></span></b></template>
-						</i18n-t>
-						<i18n-t v-else tag="span" keypath="suggestion_exact">
-							<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
-							<template #price><b>{{ suggestionPrice }}</b></template>
-						</i18n-t>
+					<div v-else class="suggestion-icon fights">
+						<img src="/image/fight-pack/fight_pack_100.png" alt="fights">
 					</div>
+					<div class="suggestion-body">
+						<div class="suggestion-target">
+							<span class="target-name">{{ suggestion.target === 'fights' ? $t('suggestion_target_fights') : suggestionItemName }}</span>
+							<span class="target-price">·&nbsp;{{ $filters.number(suggestion.neededCrystals) }}&nbsp;<span class="crystal"></span></span>
+						</div>
+						<div class="suggestion-arrow">
+							<i18n-t v-if="suggestion.remainder > 0" tag="span" keypath="suggestion_with_remainder">
+								<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
+								<template #price><b>{{ suggestionPrice }}</b></template>
+								<template #remainder><b>{{ $filters.number(suggestion.remainder) }}&nbsp;<span class="crystal"></span></b></template>
+							</i18n-t>
+							<i18n-t v-else tag="span" keypath="suggestion_exact">
+								<template #pack><b>{{ $filters.number(suggestion.pack.crystals) }}&nbsp;<span class="crystal"></span></b></template>
+								<template #price><b>{{ suggestionPrice }}</b></template>
+							</i18n-t>
+						</div>
+					</div>
+					<v-btn class="suggestion-cta" color="primary" variant="flat" append-icon="mdi-arrow-right">{{ $t('suggestion_cta') }}</v-btn>
+				</router-link>
+
+				<div v-if="firstPurchase" class="first-purchase-banner">
+					<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
 				</div>
-				<v-btn class="suggestion-cta" color="#1976d2" variant="flat" append-icon="mdi-arrow-right">{{ $t('suggestion_cta') }}</v-btn>
-			</router-link>
 
-			<div v-if="firstPurchase" class="first-purchase-banner">
-				<v-icon>mdi-gift</v-icon> {{ $t('first_purchase_banner') }}
-			</div>
+				<loader v-if="!packs" />
+				<div v-else class="packs">
+					<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="Number(p)" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
+				</div>
+			</panel>
 
-			<loader v-if="!packs" />
-			<div v-else class="packs">
-				<bank-product v-for="(pack, p) in packs" :key="pack.crystals" :product="pack" :index="Number(p)" :best="pack.bonus === bestBonus" :first-purchase="firstPurchase" />
+			<!-- Colonne Leek Wars + : les mois à l'unité, puis la chronologie
+			     de fidélité. Les deux panneaux s'empilent dans la même colonne pour ne
+			     pas casser le basculement en deux colonnes ci-dessous. -->
+			<div class="lwplus-column">
+				<!-- Mois en euros comme en cristaux. Même composant que dans le marché :
+				     une seule grille de prix à maintenir. -->
+				<lwplus-packs />
+				<!-- Ce que le temps d'abonnement cumulé débloque. Même composant que
+				     sur /lwplus. -->
+				<lwplus-timeline />
 			</div>
-		</panel>
+		</div>
+
 		<div v-if="items" class="items-header">
 			<h1 class="items-title">{{ $t('items_title') }}</h1>
 			<v-tooltip location="bottom">
@@ -71,7 +93,7 @@
 				<span>{{ $t('refresh_items') }}</span>
 			</v-tooltip>
 		</div>
-		<div class="container grid">
+		<div class="items-grid">
 			<panel v-if="!items">
 				<loader />
 			</panel>
@@ -86,11 +108,14 @@
 								<router-link :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" class="name">{{ translateItemName(item) }}</router-link>
 								<v-tooltip location="bottom">
 									<template #activator="{ props: tprops }">
+										<!-- `primary` et non un #4caf50 Material en dur : sur le vert néon du
+										     v3, Vuetify calcule l'encre selon la luminosité et pose du sombre,
+										     là où le vert Material gardait du blanc à 2,8 de contraste. -->
 										<v-btn
 											v-bind="tprops"
 											class="buy-button"
 											:class="{ 'not-enough': !hasEnough(item) }"
-											:color="hasEnough(item) ? '#4caf50' : undefined"
+											:color="hasEnough(item) ? 'primary' : undefined"
 											variant="flat"
 											prepend-icon="mdi-cart-outline"
 											@click="onBuyClick(item)">
@@ -105,6 +130,12 @@
 					</template>
 				</panel>
 			</template>
+		</div>
+
+		<div class="center">
+			<router-link to="/bank/history" class="history-link">
+				<v-icon>mdi-history</v-icon> {{ $t('purchase_history') }}
+			</router-link>
 		</div>
 
 		<popup v-model="buyDialog" :width="600">
@@ -130,9 +161,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { defineAsyncComponent, ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { i18n, mixins , useNamespacedT } from '@/model/i18n'
+import { i18n, locale, mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { ITEM_CATEGORY_NAME, ItemType, type ItemTemplate } from '@/model/item'
@@ -140,6 +171,11 @@ import Item from '@/component/item.vue'
 import PageTabs from '@/component/app/page-tabs.vue'
 import BankProduct from './bank-product.vue'
 import Popup from '@/component/popup.vue'
+
+// Chargé par son fichier .i18n : c'est lui qui accroche les traductions au
+// composant (voir le plugin i18n de vite.config.ts).
+const LwplusPacks = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-packs.${locale}.i18n`))
+const LwplusTimeline = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus-timeline.${locale}.i18n`))
 
 interface Pack { id: number; crystals: number; bonus: number; prices: Record<string, number> }
 
@@ -282,7 +318,7 @@ const suggestionPrice = computed(() => {
 })
 
 LeekWars.setActions([
-	{ image: 'icon/market.png', click: () => router.push('/market') },
+	{ icon: 'mdi-store', click: () => router.push('/market') },
 	{ icon: 'mdi-treasure-chest', click: () => router.push('/inventory') },
 ])
 LeekWars.get('bank/get-packs').then(data => {
@@ -313,25 +349,58 @@ watch(() => LeekWars.currency, () => {
 </script>
 
 <style lang="scss" scoped>
+	// Côte à côte au-delà de ~1200px de contenu, empilés en dessous : pas de point
+	// de rupture sur la fenêtre, c'est la largeur réellement disponible qui tranche.
+	.bank-columns {
+		// Chacun sa hauteur naturelle : étirés, les mois de LW+ traîneraient un
+		// grand vide sous leurs trois cartes.
+		align-items: flex-start;
+		// Les cristaux demandent nettement plus de largeur que les mois de LW+ : ces
+		// deux bases décident seules du basculement, et le rapport de croissance 3/1
+		// évite que la colonne de droite s'étale sur les écrans très larges.
+		& > .crystals-panel {
+			flex: 3 1 720px;
+		}
+		& > .lwplus-column {
+			flex: 1 1 480px;
+			// `min-width: 0` : sans lui, un enfant flex refuse de descendre sous la
+			// largeur de son contenu et la colonne des cristaux se fait écraser.
+			min-width: 0;
+		}
+	}
+	.items-grid {
+		display: grid;
+		gap: 12px;
+		margin-bottom: 12px;
+		// Plafonné à 4 colonnes : `calc(25% - 9px)` est la largeur exacte d'un quart
+		// gouttières comprises, et le `max()` reprend la main sous 1200px pour
+		// retomber à 3, 2 puis 1 colonne. Les 8 items forment ainsi deux rangées
+		// pleines sur grand écran, jamais un 5 + 3.
+		grid-template-columns: repeat(auto-fill, minmax(max(300px, calc(25% - 9px)), 1fr));
+		& > :deep(.panel) {
+			margin-bottom: 0;
+		}
+	}
+// Le champ est rendu par lw-select hors de la portée de ce composant, d'où le :deep().
+// En flex bloc il prendrait toute la largeur du panneau : on le laisse à la taille de
+// son contenu (drapeau, code, symbole), comme l'ancien v-select en inline-block.
+:deep(.currency-select) {
+	display: inline-flex;
+}
 .currency {
 	display: flex;
 	align-items: center;
+}
+// Le symbole fermait la ligne via le #append de v-list-item ; sur une ligne
+// ordinaire, c'est la marge automatique qui l'y pousse.
+.currency .symbol {
+	margin-left: auto;
+	padding-left: 12px;
 }
 .flag {
 	max-width: 28px;
 	max-height: 28px;
 	margin-right: 8px;
-}
-.v-select {
-	margin-left: 10px;
-	display: inline-block;
-	:deep(input) {
-		border: none;
-		width: 10px;
-	}
-}
-#app.app .v-select {
-	margin-left: 0;
 }
 	.bank-description {
 		padding: 20px;
@@ -352,7 +421,7 @@ watch(() => LeekWars.currency, () => {
 		gap: 16px;
 		padding: 12px 16px;
 		margin: 10px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		border: 1px solid var(--border);
 		color: var(--text-color);
@@ -447,9 +516,9 @@ watch(() => LeekWars.currency, () => {
 		margin: 10px;
 		font-size: 16px;
 		font-weight: 600;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: #7b1fa2;
-		color: white;
+		color: var(--white);
 	}
 	.packs {
 		display: grid;
@@ -468,9 +537,9 @@ watch(() => LeekWars.currency, () => {
 		align-items: center;
 		justify-content: space-between;
 		.refresh-button {
-			// le header est posé sur le fond d'app (sombre dans les deux thèmes),
-			// comme le titre : on garde le bouton blanc en permanence.
-			color: white;
+			// le header est posé sur le fond d'app, comme le titre : l'encre suit
+			// celle de la barre de page (le v3 en clair n'a plus de coquille sombre).
+			color: var(--page-bar-color);
 			opacity: 0.75;
 			&:hover {
 				opacity: 1;
@@ -478,11 +547,27 @@ watch(() => LeekWars.currency, () => {
 		}
 	}
 	.items-title {
-		background: #222;
-		color: white;
+		background: var(--grey-1);
+		color: var(--white);
 		font-size: 17px;
 		&::after {
-			border-color: transparent transparent transparent #222;
+			border-color: transparent transparent transparent var(--grey-1);
+		}
+	}
+	.history-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin: 20px 0;
+		padding: 6px 14px;
+		// Bouton posé sur le fond d'app, derrière un voile gris translucide :
+		// l'encre suit la barre de page plutôt qu'un blanc en dur.
+		color: var(--page-bar-color);
+		background: rgba(150, 150, 150, 0.2);
+		border-radius: var(--radius);
+		text-decoration: none;
+		&:hover {
+			background: rgba(150, 150, 150, 0.35);
 		}
 	}
 	.item-sample {

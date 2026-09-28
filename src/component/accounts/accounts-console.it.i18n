@@ -1,0 +1,18 @@
+{
+	"title": "Console degli account",
+	"manage": "Gestisci i miei account",
+	"account": "Account",
+	"talent": "Talento",
+	"fights": "Combattimenti",
+	"garden": "Orto",
+	"tournament": "Torneo",
+	"main": "principale",
+	"register_all": "Iscrivi tutti al torneo",
+	"enter_all": "Metti tutti nell'orto",
+	"exit_all": "Togli tutti dall'orto",
+	"registered_n": "{0} porri iscritti al torneo.",
+	"empty": "Non hai dichiarato nessun altro account.",
+	"empty_link": "Dichiara i miei account",
+	"error_no_player": "Non hai dichiarato nessun altro account.",
+	"error_wrong_token": "Sessione scaduta."
+}

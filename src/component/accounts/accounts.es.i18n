@@ -1,0 +1,22 @@
+{
+	"title": "Mis cuentas",
+	"desc": "Declara las otras cuentas que te pertenecen. Las encontrarás en todos tus dispositivos sin volver a escribir su contraseña, y aparecerán como tuyas en tu perfil.",
+	"main_account": "principal",
+	"set_main": "Definir como cuenta principal",
+	"unlink": "Desvincular",
+	"unlink_message": "¿Quitar {0} de tus cuentas?",
+	"unlink_cooldown_warning": "Una cuenta desvinculada solo puede volver a declararse después de 7 días.",
+	"cancel": "Cancelar",
+	"no_linkable": "Para declarar una cuenta, conéctate primero a ella desde el selector de cuentas, arriba a la derecha.",
+	"cap_reached": "Has alcanzado el límite de {0} cuentas declaradas.",
+	"error_account_not_connected": "Esta cuenta debe estar conectada para poder declararla.",
+	"error_already_linked": "Esta cuenta ya está declarada.",
+	"error_invalid_account": "Esta cuenta no puede declararse.",
+	"error_no_player": "No tienes ninguna cuenta declarada.",
+	"error_no_such_farmer": "Cuenta no encontrada.",
+	"error_not_linked": "Esta cuenta no es una de las tuyas.",
+	"error_same_account": "Es la cuenta con la que estás conectado.",
+	"error_too_many_declared_accounts": "Has alcanzado el límite de cuentas declaradas.",
+	"error_unlink_cooldown": "Esta cuenta se desvinculó hace menos de 7 días.",
+	"console": "Consola"
+}

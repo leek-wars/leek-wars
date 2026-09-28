@@ -1,0 +1,22 @@
+{
+	"title": "Mine konti",
+	"desc": "Angiv de andre konti, der tilhører dig. Du finder dem på alle dine enheder uden at indtaste deres adgangskode igen, og de vises som dine på din profil.",
+	"main_account": "primær",
+	"set_main": "Angiv som primær konto",
+	"unlink": "Fjern tilknytning",
+	"unlink_message": "Fjerne {0} fra dine konti?",
+	"unlink_cooldown_warning": "En konto, hvis tilknytning er fjernet, kan først angives igen efter 7 dage.",
+	"cancel": "Annuller",
+	"no_linkable": "For at angive en konto skal du først logge ind på den fra kontovælgeren øverst til højre.",
+	"cap_reached": "Du har nået grænsen på {0} angivne konti.",
+	"error_account_not_connected": "Denne konto skal være logget ind for at kunne angives.",
+	"error_already_linked": "Denne konto er allerede angivet.",
+	"error_invalid_account": "Denne konto kan ikke angives.",
+	"error_no_player": "Du har ingen angivne konti.",
+	"error_no_such_farmer": "Kontoen blev ikke fundet.",
+	"error_not_linked": "Denne konto er ikke en af dine.",
+	"error_same_account": "Det er den konto, du er logget ind på.",
+	"error_too_many_declared_accounts": "Du har nået grænsen for angivne konti.",
+	"error_unlink_cooldown": "Denne kontos tilknytning blev fjernet for mindre end 7 dage siden.",
+	"console": "Konsol"
+}

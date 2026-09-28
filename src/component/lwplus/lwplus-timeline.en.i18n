@@ -1,0 +1,20 @@
+{
+	"title": "Rewards",
+	"total_one": "{0} month accumulated",
+	"total_other": "{0} months accumulated",
+	"days_one": "{0} day",
+	"days_other": "{0} days",
+	"years_one": "{0} year",
+	"years_other": "{0} years",
+	"next_in": "Next tier in {0}",
+	"not_started": "Subscribe to start the counter.",
+	"all_done": "Ladder complete. Thank you for your support!",
+	"reward_trophy": "Trophy",
+	"trophy_named": "Trophy {0}",
+	"reward_hat": "Hat",
+	"reward_skin": "Leek skin",
+	"reward_potion": "Potion",
+	"reward_pomp": "Pomp",
+	"reward_resources": "Rare resources",
+	"reward_surprise": "Surprise"
+}

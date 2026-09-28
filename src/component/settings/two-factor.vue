@@ -159,12 +159,12 @@ function disable() {
 			font-weight: bold;
 		}
 		div:hover {
-			background: white;
+			background: var(--white);
 		}
 	}
 	.step .title {
-		background: #5fad1b;
-		color: white;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		font-weight: bold;
 		padding: 5px 10px;
 		display: inline-block;
@@ -175,7 +175,7 @@ function disable() {
 		max-width: 120px;
 	}
 	.code::-webkit-input-placeholder {
-		color: #ddd;
+		color: var(--grey-12);
 	}
 	.secret {
 		margin: 5px 0;

@@ -1,0 +1,18 @@
+{
+	"title": "Console de comptes",
+	"manage": "Gérer mes comptes",
+	"account": "Compte",
+	"talent": "Talent",
+	"fights": "Combats",
+	"garden": "Potager",
+	"tournament": "Tournoi",
+	"main": "principal",
+	"register_all": "Tout inscrire au tournoi",
+	"enter_all": "Tout mettre au potager",
+	"exit_all": "Tout sortir du potager",
+	"registered_n": "{0} poireaux inscrits au tournoi.",
+	"empty": "Tu n'as déclaré aucun autre compte.",
+	"empty_link": "Déclarer mes comptes",
+	"error_no_player": "Tu n'as déclaré aucun autre compte.",
+	"error_wrong_token": "Session expirée."
+}

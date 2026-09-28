@@ -1,0 +1,18 @@
+{
+	"title": "Kontokonsol",
+	"manage": "Administrer mine konti",
+	"account": "Konto",
+	"talent": "Talent",
+	"fights": "Kampe",
+	"garden": "Grøntsagshave",
+	"tournament": "Turnering",
+	"main": "primær",
+	"register_all": "Tilmeld alle til turneringen",
+	"enter_all": "Sæt alle i grøntsagshaven",
+	"exit_all": "Tag alle ud af grøntsagshaven",
+	"registered_n": "{0} porrer tilmeldt turneringen.",
+	"empty": "Du har ikke angivet nogen anden konto.",
+	"empty_link": "Angiv mine konti",
+	"error_no_player": "Du har ikke angivet nogen anden konto.",
+	"error_wrong_token": "Sessionen er udløbet."
+}

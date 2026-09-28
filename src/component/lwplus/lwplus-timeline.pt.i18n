@@ -1,0 +1,20 @@
+{
+	"title": "Recompensas",
+	"total_one": "{0} mês acumulado",
+	"total_other": "{0} meses acumulados",
+	"days_one": "{0} dia",
+	"days_other": "{0} dias",
+	"years_one": "{0} ano",
+	"years_other": "{0} anos",
+	"next_in": "Próximo nível em {0}",
+	"not_started": "Assine para iniciar o contador.",
+	"all_done": "Escala concluída. Obrigado pelo apoio!",
+	"reward_trophy": "Troféu",
+	"trophy_named": "Troféu {0}",
+	"reward_hat": "Chapéu",
+	"reward_skin": "Visual do alho-poró",
+	"reward_potion": "Poção",
+	"reward_pomp": "Adorno",
+	"reward_resources": "Recursos raros",
+	"reward_surprise": "Surpresa"
+}

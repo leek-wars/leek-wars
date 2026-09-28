@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="settings" fallback="mdi-cog" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" icon="mdi-power" @click="logout">
 					<v-icon>mdi-power</v-icon>
@@ -48,11 +53,11 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<v-radio-group v-model="signupMethod" class="radio" :inline="true" :dense="true" :hide-details="true">
-									<v-radio label="Email / mot de passe" :value="1" />
-									<v-radio label="GitHub" :value="2" />
-									<v-radio label="Google" :value="3" />
-								</v-radio-group>
+								<lw-radio-group v-model="signupMethod" class="radio" :inline="true">
+									<lw-radio label="Email / mot de passe" :value="1" />
+									<lw-radio label="GitHub" :value="2" />
+									<lw-radio label="Google" :value="3" />
+								</lw-radio-group>
 							</td>
 						</tr>
 						<tr v-if="signupMethod === 1">
@@ -78,7 +83,7 @@
 					</table>
 					<div class="center">
 						<v-btn v-if="signupMethod === 1" size="large" color="primary" type="submit" :disabled="submittingVerify" :loading="submittingVerify">{{ $t('verify') }}</v-btn>
-						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/github_white.png"> {{ $t('verify_gh') }}</v-btn>
+						<v-btn v-else-if="signupMethod === 2" color="black" type="submit" class="gh-button" :disabled="submittingVerify" :loading="submittingVerify"> <v-icon>mdi-github</v-icon> {{ $t('verify_gh') }}</v-btn>
 						<v-btn v-else type="submit" class="google-button" :disabled="submittingVerify" :loading="submittingVerify"> <img src="/image/google.svg"> {{ $t('verify_google') }}</v-btn>
 					</div>
 				</form>
@@ -100,41 +105,32 @@
 					<div id="dark-button" class="setting">
 						<div>{{ $t('theme') }}</div>
 						<div width="100">
-							<v-radio-group v-model="LeekWars.themeSetting" hide-details inline>
-								<v-radio :label="$t('auto')" value="auto"></v-radio>
-								<v-radio :label="$t('light')" value="light"></v-radio>
-								<v-radio :label="$t('dark')" value="dark"></v-radio>
-							</v-radio-group>
+							<lw-radio-group v-model="LeekWars.themeSetting" inline>
+								<lw-radio :label="$t('auto')" value="auto"></lw-radio>
+								<lw-radio :label="$t('light')" value="light"></lw-radio>
+								<lw-radio :label="$t('dark')" value="dark"></lw-radio>
+							</lw-radio-group>
 						</div>
 					</div>
-					<div id="sfw-button" class="setting">
-						<div>{{ $t('activate_discrete_mode') }}</div>
-						<div><v-switch v-model="sfwMode" hide-details /></div>
-					</div>
-					<div id="notifs-popups-button" class="setting">
-						<div>{{ $t('notifs_popups') }}</div>
-						<div><v-switch v-model="notifsPopups" hide-details /></div>
-					</div>
-					<div id="notifs-results-button" class="setting">
-						<div>{{ $t('notifs_results') }}</div>
-						<div><v-switch v-model="notifsResults" hide-details /></div>
-					</div>
-					<div id="notifs-open-report-button" class="setting">
-						<div>{{ $t('notifs_open_report') }}</div>
-						<div><v-switch v-model="notifsOpenReport" hide-details /></div>
-					</div>
-					<div v-if="LeekWars.mobile" class="setting">
-						<div>{{ $t('chat_first') }}</div>
-						<div><v-switch v-model="chatFirst" hide-details /></div>
-					</div>
+					<!-- Interrupteur AVANT le libellé : la
+					     prop label de lw-switch fait ça toute seule, et la ligne entière
+					     reste cliquable. -->
+					<lw-switch id="sfw-button" v-model="sfwMode" class="setting" :label="$t('activate_discrete_mode')" />
+					<lw-switch id="notifs-popups-button" v-model="notifsPopups" class="setting" :label="$t('notifs_popups')" />
+					<lw-switch id="notifs-results-button" v-model="notifsResults" class="setting" :label="$t('notifs_results')" />
+					<lw-switch id="notifs-open-report-button" v-model="notifsOpenReport" class="setting" :label="$t('notifs_open_report')" />
+					<lw-switch v-if="LeekWars.mobile" v-model="chatFirst" class="setting" :label="$t('chat_first')" />
+					<lw-switch v-model="homeDashboard" class="setting" :label="$t('home_dashboard')" />
 					<div v-if="!LeekWars.mobile" class="setting">
-						<div>{{ $t('leek_theme') }}</div>
-						<div><v-switch v-model="LeekWars.leekTheme" hide-details /></div>
+						<div>{{ $t('big_leeks') }}</div>
+						<lw-radio-group v-model="LeekWars.bigLeeks" inline>
+							<lw-radio :label="$t('big_leeks_green')" value="green"></lw-radio>
+							<lw-radio :label="$t('big_leeks_discreet')" value="discreet"></lw-radio>
+							<lw-radio :label="$t('big_leeks_hidden')" value="hidden"></lw-radio>
+						</lw-radio-group>
 					</div>
-					<div class="setting">
-						<div>{{ $t('modern_theme') }}</div>
-						<div><v-switch v-model="modernTheme" hide-details /></div>
-					</div>
+					<!-- « Ancien design » : clé `design` du localStorage, `LeekWars.legacyTheme`. -->
+					<lw-switch v-model="LeekWars.legacyTheme" class="setting" :label="$t('legacy_theme')" />
 				</div>
 			</panel>
 
@@ -169,6 +165,12 @@
 				</div>
 				<two-factor v-if="view2FA" /> -->
 
+				<div v-ripple class="list-item card" @click="exportData">
+					<v-icon>mdi-download</v-icon>
+					<span class="label">{{ $t('export_data') }}</span>
+					<v-icon v-if="exporting">mdi-loading</v-icon>
+				</div>
+
 				<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
 					<v-icon>mdi-delete-forever</v-icon>
 					<span class="label">{{ $t('delete_account') }}</span>
@@ -179,8 +181,30 @@
 					<br><br>
 				</div>
 
-				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" hide-details @change="updateGithubLogin" />
-				<v-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" hide-details @change="updateGoogleLogin" />
+				<router-link to="/bank/history" class="list-item card">
+					<v-icon>mdi-history</v-icon>
+					<span class="label">{{ $t('purchase_history') }}</span>
+					<v-icon>mdi-chevron-right</v-icon>
+				</router-link>
+
+				<lw-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass && !settings.google_login" :label="$t('allow_github')" @change="updateGithubLogin" />
+				<lw-switch v-if="settings && $store.state.farmer?.verified" v-model="settings.google_login" :disabled="!$store.state.farmer.pass && !settings.github_login" :label="$t('allow_google')" @change="updateGoogleLogin" />
+			</panel>
+
+			<!-- Abonnement LW+. lwplus_until fait partie du bloc privé du farmer
+			     connecté : ce récap ne coûte donc aucune requête. Le détail (renouvellement
+			     ou non) et les actions vivent sur /lwplus, seul endroit qui interroge Stripe. -->
+			<panel :title="$t('lwplus')" icon="mdi-star-four-points" class="lwplus">
+				<div class="lwplus-status">
+					<v-icon v-if="lwplusActive" class="ok">mdi-check-decagram</v-icon>
+					<span v-if="lwplusOffered">{{ $t('lwplus_offered') }}</span>
+					<span v-else>{{ lwplusActive ? $t('lwplus_active_until', [formatDate(lwplusUntil)]) : $t('lwplus_inactive') }}</span>
+				</div>
+				<router-link to="/lwplus" class="list-item card">
+					<v-icon>mdi-star-four-points</v-icon>
+					<span class="label">{{ lwplusActive ? $t('lwplus_manage') : $t('lwplus_discover') }}</span>
+					<v-icon>mdi-chevron-right</v-icon>
+				</router-link>
 			</panel>
 
 			<panel v-if="$store.state.farmer?.verified" :title="$t('main.notifications')" icon="mdi-bell-outline">
@@ -190,7 +214,7 @@
 							<span class="push-notifs-button" v-bind="props" @click="updatePushNotifications">
 								<v-icon v-if="pushHint" class="push-warning">mdi-alert-circle-outline</v-icon>
 								<span>{{ $t('push_notifications') }}</span>
-								<v-switch :model-value="pushNotifications" hide-details />
+								<lw-switch :model-value="pushNotifications" />
 							</span>
 						</template>
 						{{ pushHint }}
@@ -211,10 +235,10 @@
 										{{ $t('notification.category_' + category.id + '_desc') }}
 									</td>
 									<td v-if="settings" class="push">
-										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @update:model-value="updateNotif('push_' + category.name, settings['push_' + category.name])" />
+										<lw-checkbox v-model="settings['push_' + category.name]" label="Push" @update:model-value="updateNotif('push_' + category.name, settings['push_' + category.name])" />
 									</td>
 									<td v-if="settings" class="mail">
-										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @update:model-value="updateNotif('mail_' + category.name, settings['mail_' + category.name])" />
+										<lw-checkbox v-model="settings['mail_' + category.name]" label="E-mail" @update:model-value="updateNotif('mail_' + category.name, settings['mail_' + category.name])" />
 									</td>
 								</tr>
 							</template>
@@ -225,6 +249,10 @@
 					</div>
 				</template>
 			</panel>
+
+			<accounts v-if="$store.state.farmer && $store.state.farmer.verified" />
+
+			<api-keys v-if="$store.state.farmer && $store.state.farmer.verified" />
 		</div>
 
 		<div class="center">
@@ -245,8 +273,13 @@
 			<template #icon><v-icon>mdi-delete</v-icon></template>
 			<template #title><span>{{ $t('delete_account') }}</span></template>
 			<div v-html="$t('delete_message')"></div>
+			<div v-if="teamOwner" class="team-warning">
+				<v-icon>mdi-alert</v-icon>
+				<span v-if="teamOwnerAlone">{{ $t('delete_team_dissolve', [teamName]) }}</span>
+				<span v-else>{{ $t('delete_team_transfer', [teamName]) }}</span>
+			</div>
 			<br v-if="$store.state.farmer?.verified">
-			<v-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
+			<lw-switch v-if="$store.state.farmer?.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" />
 			<template #actions>
 				<div v-ripple class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
@@ -280,24 +313,31 @@
 
 <script setup lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
-	import { mixins, t as gt , useNamespacedT } from '@/model/i18n'
+	import { apiErrorKey, apiFieldMessages, isReportedByTransport } from '@/model/api-error'
+	import { locale, mixins, t as gt , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { computed, ref, watch } from 'vue'
+	import { TeamMemberLevel } from '@/model/team'
+	import { usePushNotifications } from '@/model/use-push-notifications'
+	import { computed, defineAsyncComponent, ref, watch, watchEffect } from 'vue'
 	import { useRouter } from 'vue-router'
+
+	// Composant async : utilisable directement dans le template (script setup),
+	// NE PAS le référencer dans defineOptions (variable locale, hoisting interdit).
+	const ApiKeys = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/api-keys/api-keys.${locale}.i18n`))
+	const Accounts = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/accounts/accounts.${locale}.i18n`))
 
 	defineOptions({ name: 'Settings', i18n: {}, mixins: [...mixins], components: { TwoFactor } })
 
 	const t = useNamespacedT('settings')
 	const router = useRouter()
 
-	const vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
 	const mails = [
 		{ id: 1, icon: 'mdi-star', name: 'general' },
 		{ id: 2, icon: 'mdi-gamepad-square', name: 'game' },
 		{ id: 3, icon: 'mdi-sword-cross', name: 'fight' },
-		{ id: 4, icon: 'mdi-flag', name: 'challenge' },
-		{ id: 5, icon: 'mdi-trophy', name: 'tournament' },
+		{ id: 4, icon: 'mdi-flag-outline', name: 'challenge' },
+		{ id: 5, icon: 'mdi-tournament', name: 'tournament' },
 		{ id: 6, icon: 'mdi-chat', name: 'social' },
 		{ id: 7, icon: 'mdi-message-text-outline', name: 'private' },
 		{ id: 8, icon: 'mdi-account-multiple', name: 'team' },
@@ -310,16 +350,8 @@
 	const notifsResults = ref(localStorage.getItem('options/notifs-results') === 'true')
 	const notifsOpenReport = ref(localStorage.getItem('options/notifs-open-report') === 'true')
 	const chatFirst = ref(localStorage.getItem('options/chat-first') === 'true')
-	const modernTheme = ref(localStorage.getItem('theme') === 'xp')
-	const pushNotifications = ref(false)
-	const pushSupported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
-	const pushPermission = ref<NotificationPermission | null>(pushSupported ? Notification.permission : null)
-	// Persistent explanation shown next to the toggle (warning icon + tooltip) when push can't be enabled.
-	const pushHint = computed(() => {
-		if (!pushSupported) { return t('push_unsupported') }
-		if (pushPermission.value === 'denied') { return t('push_blocked') }
-		return ''
-	})
+	const homeDashboard = ref(localStorage.getItem('options/home-dashboard') !== 'false')
+	const { pushSupported, pushNotifications, pushHint, reconcilePushToggle, updatePushNotifications } = usePushNotifications(t)
 	const deleteDialog = ref(false)
 	const deleteConfirmDialog = ref(false)
 	const deleteConfirmPassword = ref('')
@@ -327,6 +359,7 @@
 	const deleteFailedDialog = ref(false)
 	const deleteFailedError = ref<string>('unknown')
 	const deleteForumMessages = ref(false)
+	const exporting = ref(false)
 	const advanced = ref(false)
 	const password = ref('')
 	const newPassword1 = ref('')
@@ -343,6 +376,18 @@
 	const password1 = ref('')
 	const submittingVerify = ref(false)
 
+	// Créateur d'une équipe : elle sera transmise au membre le plus ancien
+	// à la suppression du compte, ou dissoute s'il est le seul membre
+	// Abonnement LW+ : lu depuis le farmer du store, pas d'appel réseau.
+	const formatDate = LeekWars.formatDate
+	const lwplusUntil = computed(() => store.state.farmer?.lwplus_until ?? 0)
+	const lwplusOffered = computed(() => !!store.state.farmer?.lwplus_offered)
+	const lwplusActive = computed(() => lwplusOffered.value || lwplusUntil.value * 1000 > Date.now())
+
+	const teamOwner = computed(() => !!store.state.farmer?.team && store.state.farmer.team.member_level === TeamMemberLevel.OWNER)
+	const teamOwnerAlone = computed(() => store.state.farmer?.team?.member_count === 1)
+	const teamName = computed(() => store.state.farmer?.team?.name || '')
+
 	settings.value = {}
 	for (const category in mails) {
 		settings.value['push_' + category] = false
@@ -353,59 +398,17 @@
 		])
 	}
 
-	LeekWars.get('settings/get-settings').then(data => {
-		settings.value = data.settings
-		if (store.state.farmer) {
+	// Titre réactif : c'est ici qu'on change de langue, il doit suivre sans recharger la page.
+	watchEffect(() => {
+		if (settings.value && store.state.farmer) {
 			LeekWars.setTitle(t('title'), store.state.farmer.name)
 		}
-		// Reconcile the toggle with the actual push subscription. Wait for navigator.serviceWorker.ready
-		// rather than reading LeekWars.service_worker, which is populated asynchronously and may still be
-		// null when get-settings resolves (race: the toggle showed OFF after a reload even while subscribed).
-		if (pushSupported) {
-			getPushSubscription().then(subscription => {
-				if (subscription && data.push_endpoints.includes(subscription.endpoint)) {
-					pushNotifications.value = true
-				}
-			}).catch(() => { /* push unavailable on this browser, leave toggle OFF */ })
-		}
 	})
-
-	function getPushSubscription(): Promise<PushSubscription | null> {
-		return navigator.serviceWorker.ready.then(registration => registration.pushManager.getSubscription())
-	}
-
-	function updatePushNotifications() {
-		if (!pushSupported) {
-			LeekWars.toast(t('push_unsupported'))
-			return
-		}
-		if (pushNotifications.value) {
-			pushNotifications.value = false
-			getPushSubscription().then(subscription => subscription?.unsubscribe())
-			return
-		}
-		// Request permission directly from the click so the prompt stays inside the user gesture (Safari requirement).
-		// If already denied, requestPermission() resolves to 'denied' without reprompting and we explain below.
-		Notification.requestPermission().then(permission => {
-			pushPermission.value = permission
-			if (permission !== 'granted') {
-				LeekWars.toast(t('push_blocked'))
-				return
-			}
-			navigator.serviceWorker.ready
-				.then(registration => registration.pushManager.subscribe({ applicationServerKey: vapid_key, userVisibleOnly: true }))
-				.then(subscription => {
-					// Only reflect the toggle as ON once the browser actually granted the subscription,
-					// so it stays OFF (instead of lying) when notifications are blocked.
-					pushNotifications.value = true
-					LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
-				})
-				.catch(() => {
-					pushNotifications.value = false
-					LeekWars.toast(t('push_error'))
-				})
-		})
-	}
+	LeekWars.get('settings/get-settings').then(data => {
+		settings.value = data.settings
+		// La page Réglages a la liste serveur des endpoints : on exige que l'endpoint local y figure.
+		reconcilePushToggle(data.push_endpoints)
+	})
 
 	function logout() {
 		LeekWars.logoutDialog = true
@@ -425,26 +428,18 @@
 		}
 	})
 
-	watch(() => LeekWars.themeSetting, () => {
-		localStorage.setItem('theme', '' + LeekWars.themeSetting)
-		LeekWars.xpTheme = LeekWars.themeSetting === 'xp'
-		modernTheme.value = LeekWars.themeSetting === 'xp'
-		localStorage.setItem('xp-theme', '' + LeekWars.xpTheme)
-		if (LeekWars.themeSetting === 'xp') {
-			import('@/xp.scss')
-			LeekWars.xpCursorsInit()
-			LeekWars.darkMode = false
-			if (LeekWars.aprilFools) {
-				LeekWars.post('trophy/unlock', {trophy_id: 280})
-			}
-		} else {
-			document.querySelectorAll<HTMLElement>('[style*="pointer.png"]').forEach(el => { el.style.cursor = '' })
-			LeekWars.darkMode = LeekWars.themeSetting !== 'auto' ? LeekWars.themeSetting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
-		}
+	// Les trois boutons du réglage ne proposent que `auto`, `light` et `dark` ;
+	// la mécanique vit dans `LeekWars.applyThemeSetting`. Choisir un thème ici
+	// remplace toute autre valeur de la clé `theme`.
+	watch(() => LeekWars.themeSetting, () => LeekWars.applyThemeSetting(LeekWars.themeSetting))
+
+	watch(() => LeekWars.legacyTheme, () => {
+		localStorage.setItem('design', LeekWars.legacyTheme ? 'v2' : 'v3')
 	})
 
-	watch(modernTheme, () => {
-		LeekWars.themeSetting = modernTheme.value ? 'xp' : 'auto'
+	watch(() => LeekWars.bigLeeks, () => {
+		localStorage.setItem('big-leeks', LeekWars.bigLeeks)
+		localStorage.removeItem('leek-theme')
 	})
 
 	watch(notifsPopups, () => {
@@ -466,6 +461,10 @@
 		localStorage.setItem('options/chat-first', '' + chatFirst.value)
 	})
 
+	watch(homeDashboard, () => {
+		localStorage.setItem('options/home-dashboard', '' + homeDashboard.value)
+	})
+
 	function updateNotif(setting: string, value: boolean) {
 		LeekWars.post('settings/update-setting', {setting, value})
 	}
@@ -481,9 +480,29 @@
 			LeekWars.toast(gt('settings.password_changed'))
 			router.push('/login')
 		}).error(error => {
-			LeekWars.toast(t('error_' + error.error, error.params))
+			if (!isReportedByTransport(error)) LeekWars.toast(t('error_' + error.error, error.params))
 		})
 		return false
+	}
+
+	function exportData() {
+		if (exporting.value) return
+		exporting.value = true
+		LeekWars.get('farmer/export-data').then(data => {
+			const json = JSON.stringify(data.export, null, '\t')
+			const blob = new Blob([json], {type: 'application/json'})
+			const url = URL.createObjectURL(blob)
+			const playerName = (store.state.farmer?.name || 'export').replace(/[^a-zA-Z0-9_-]/g, '_')
+			const link = document.createElement('a')
+			link.href = url
+			link.download = 'leekwars-data-' + playerName + '.json'
+			link.click()
+			URL.revokeObjectURL(url)
+			exporting.value = false
+		}).error(error => {
+			if (!isReportedByTransport(error)) LeekWars.toast(t('error_' + error.error, error.params))
+			exporting.value = false
+		})
 	}
 
 	function deleteAccountConfirm() {
@@ -540,12 +559,6 @@
 		LeekWars.post("settings/update-setting", {setting: 'google_login', value: settings.value.google_login})
 	}
 
-	watch(() => LeekWars.leekTheme, () => {
-		localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
-		// Cookie miroir pour que le serveur puisse injecter le bon preload du big-leek dans le HTML.
-		document.cookie = 'leek_theme=' + (LeekWars.leekTheme ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax'
-	})
-
 	function submit(e: Event) {
 		e.preventDefault()
 		if (submittingVerify.value) return false
@@ -568,16 +581,12 @@
 			} else {
 				router.push('/signup/success/' + login.value)
 			}
-		}).error(payload => {
+		}).error(error => {
 			submittingVerify.value = false
-			if (Array.isArray(payload)) {
-				for (const error of payload) {
-					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-					addError(form, t('error_' + error[1], error[2]) as string)
-				}
+			if (error.fields) {
+				for (const [field, message] of apiFieldMessages(error, t)) addError(field, message)
 			} else {
-				const code = typeof payload?.error === 'string' ? payload.error : 'unknown'
-				LeekWars.toast(t('error_' + code) as string)
+				LeekWars.toast(t(apiErrorKey(error), error.params ?? []))
 			}
 		})
 		return false
@@ -604,6 +613,23 @@
 </script>
 
 <style lang="scss" scoped>
+	.team-warning {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 12px;
+		padding: 8px 12px;
+		border-radius: var(--radius);
+		background: #fff3e0;
+		color: #a04000;
+		.v-icon {
+			color: #e67e22;
+		}
+	}
+	body.dark .team-warning {
+		background: #4a3520;
+		color: #ffcc80;
+	}
 	.languages {
 		text-align: center;
 		.language {
@@ -613,7 +639,7 @@
 			margin: 5px;
 			cursor: pointer;
 			border: 1px solid var(--border);
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			position: relative;
 			.beta {
 				position: absolute;
@@ -621,8 +647,8 @@
 				right: -5px;
 				background: var(--pure-white);
 				padding: 2px 4px;
-				border: 1px solid #aaa;
-				border-radius: 4px;
+				border: 1px solid var(--grey-9);
+				border-radius: var(--radius);
 				font-size: 12px;
 			}
 			.flag {
@@ -633,24 +659,79 @@
 	}
 	.languages .language.selected {
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
+	}
+	// v3 : une grille régulière — cases de même taille, drapeau, nom et l'étiquette
+	// « bêta » DANS la case, plus de pastille qui déborde du coin. Même jeu
+	// d'états que les onglets : trait à l'encre au survol, vert pressé, et la
+	// langue courante en trait et encre verts.
+	body:not(.v2) .languages :deep(.content) {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+		gap: 6px;
+		padding: 8px;
+	}
+	body:not(.v2) .languages .language {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		margin: 0;
+		padding: 7px 4px 6px;
+		min-height: 66px;
+		border: 1px solid var(--border-strong);
+		border-radius: 0;
+		background: var(--background-input);
+		font-size: 12px;
+		transition: border-color .12s ease, color .12s ease;
+		br {
+			display: none;
+		}
+		.flag {
+			height: 18px;
+			margin: 0;
+		}
+		.beta {
+			position: static;
+			padding: 0 4px;
+			font-family: var(--font-display);
+			letter-spacing: var(--font-display-tracking);
+			font-weight: var(--font-display-weight);
+			font-size: 8px;
+			text-transform: uppercase;
+			color: var(--text-color-secondary);
+			background: none;
+			border: 1px solid var(--border);
+			border-radius: 0;
+		}
+		&:hover {
+			border-color: var(--text-color);
+		}
+		&:active {
+			border-color: var(--primary);
+			color: var(--primary);
+		}
+	}
+	body:not(.v2) .languages .language.selected {
+		background: var(--background-header);
+		border-color: var(--primary);
+		color: var(--primary);
+		box-shadow: none;
 	}
 	.misc-settings {
 		width: 100%;
 		font-size: 15px;
+		// Une colonne de lignes aérées, contrôle à gauche :
+		// plus de libellé à un bord et d'interrupteur à l'autre.
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
 		.setting {
 			display: flex;
-			justify-content: space-between;
 			align-items: center;
-			.v-input--radio-group--row :deep(.v-input--radio-group__input) {
-				flex-wrap: nowrap;
-			}
-			.v-radio {
-				margin-right: 8px;
-				&:last-child {
-					margin-right: 0;
-				}
-			}
+			gap: 10px;
 		}
 		.flex {
 			gap: 8px;
@@ -673,6 +754,8 @@
 		display: flex;
 		align-items: center;
 		user-select: none;
+		color: var(--text-color);
+		text-decoration: none;
 	}
 	.list-item:not(:first-child) {
 		margin-top: 10px;
@@ -700,7 +783,9 @@
 		}
 	}
 	.advanced-button {
-		color: white;
+		// Posé sur le fond d'app derrière un voile gris : l'encre suit la barre
+		// de page, --white supposait une coquille sombre (v2 seulement).
+		color: var(--page-bar-color);
 		background: rgba(150, 150, 150, 0.2);
 		padding: 2px 12px;
 		display: inline-block;
@@ -718,7 +803,7 @@
 		gap: 8px;
 		padding: 0 8px;
 		> span {
-			color: white;
+			color: var(--panel-header-color);
 		}
 		.push-warning {
 			color: #ffca28;
@@ -763,11 +848,9 @@
 			vertical-align: top;
 		}
 	}
-	.v-input--switch {
+	// Les lignes d'« Options diverses » (.setting) sont calées à gauche, sans retrait.
+	.lw-switch:not(.setting) {
 		margin-left: 8px;
-	}
-	:deep(.v-switch .v-selection-control) {
-		min-height: unset;
 	}
 	.account {
 		text-align: left;
@@ -798,7 +881,7 @@
 		ul {
 			margin-bottom: 0;
 			i {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 	}
@@ -816,5 +899,17 @@
 		color: red;
 		font-size: 12px;
 		margin: 5px 0;
+	}
+	// Or du système en encre (--rank-first), comme la page /lwplus et les lots de
+	// mois : le jeton s'inverse seul en sombre, un hex en dur non.
+	.lwplus-status {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 4px 12px 12px;
+		.ok {
+			color: var(--rank-first);
+			font-size: 26px;
+		}
 	}
 </style>

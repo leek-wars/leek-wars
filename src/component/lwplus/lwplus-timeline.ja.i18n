@@ -1,0 +1,20 @@
+{
+	"title": "報酬",
+	"total_one": "累計{0}か月",
+	"total_other": "累計{0}か月",
+	"days_one": "{0}日",
+	"days_other": "{0}日",
+	"years_one": "{0}年",
+	"years_other": "{0}年",
+	"next_in": "次の段階まであと{0}",
+	"not_started": "購読するとカウントが始まります。",
+	"all_done": "すべて達成しました。ご支援ありがとうございます！",
+	"reward_trophy": "トロフィー",
+	"trophy_named": "トロフィー {0}",
+	"reward_hat": "帽子",
+	"reward_skin": "ポロねぎのスキン",
+	"reward_potion": "ポーション",
+	"reward_pomp": "ポンプ",
+	"reward_resources": "レア資源",
+	"reward_surprise": "サプライズ"
+}

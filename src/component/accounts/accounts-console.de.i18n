@@ -1,0 +1,18 @@
+{
+	"title": "Kontenkonsole",
+	"manage": "Meine Konten verwalten",
+	"account": "Konto",
+	"talent": "Talent",
+	"fights": "Kämpfe",
+	"garden": "Gemüsegarten",
+	"tournament": "Turnier",
+	"main": "Hauptkonto",
+	"register_all": "Alle zum Turnier anmelden",
+	"enter_all": "Alle in den Gemüsegarten setzen",
+	"exit_all": "Alle aus dem Gemüsegarten nehmen",
+	"registered_n": "{0} Lauche zum Turnier angemeldet.",
+	"empty": "Sie haben kein weiteres Konto angegeben.",
+	"empty_link": "Meine Konten angeben",
+	"error_no_player": "Sie haben kein weiteres Konto angegeben.",
+	"error_wrong_token": "Sitzung abgelaufen."
+}

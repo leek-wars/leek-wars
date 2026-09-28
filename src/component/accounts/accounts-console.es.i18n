@@ -1,0 +1,18 @@
+{
+	"title": "Consola de cuentas",
+	"manage": "Gestionar mis cuentas",
+	"account": "Cuenta",
+	"talent": "Talento",
+	"fights": "Combates",
+	"garden": "Huerto",
+	"tournament": "Torneo",
+	"main": "principal",
+	"register_all": "Inscribir todos al torneo",
+	"enter_all": "Poner todos en el huerto",
+	"exit_all": "Sacar todos del huerto",
+	"registered_n": "{0} puerros inscritos al torneo.",
+	"empty": "No has declarado ninguna otra cuenta.",
+	"empty_link": "Declarar mis cuentas",
+	"error_no_player": "No has declarado ninguna otra cuenta.",
+	"error_wrong_token": "Sesión expirada."
+}

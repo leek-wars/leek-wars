@@ -1,0 +1,18 @@
+{
+	"title": "アカウントコンソール",
+	"manage": "マイアカウントを管理",
+	"account": "アカウント",
+	"talent": "タレント",
+	"fights": "戦闘",
+	"garden": "菜園",
+	"tournament": "トーナメント",
+	"main": "メイン",
+	"register_all": "全員をトーナメントに登録",
+	"enter_all": "全員を菜園に入れる",
+	"exit_all": "全員を菜園から出す",
+	"registered_n": "{0} 体のリーキをトーナメントに登録しました。",
+	"empty": "他のアカウントを申告していません。",
+	"empty_link": "マイアカウントを申告",
+	"error_no_player": "他のアカウントを申告していません。",
+	"error_wrong_token": "セッションの有効期限が切れました。"
+}

@@ -62,8 +62,8 @@ function reopen() {
 		gap: 18px;
 		width: min(740px, calc(100vw - 24px));
 		padding: 16px 18px 16px 22px;
-		border-radius: 14px;
-		color: white;
+		border-radius: var(--radius-pill);
+		color: var(--white);
 		background: linear-gradient(115deg, #b06000, #e89318, #ffc14d, #e89318, #b06000);
 		background-size: 300% 300%;
 		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
@@ -114,7 +114,7 @@ function reopen() {
 		align-items: center;
 		gap: 6px;
 		background: rgba(255, 255, 255, 0.22);
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		padding: 5px 10px;
 		font-size: 14px;
 		img {
@@ -125,12 +125,12 @@ function reopen() {
 	}
 	.cta {
 		flex-shrink: 0;
-		background: white;
+		background: var(--white);
 		color: #b06000;
 		font-weight: bold;
 		font-size: 16px;
 		padding: 12px 22px;
-		border-radius: 9px;
+		border-radius: var(--radius-large);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 		transition: transform 0.15s ease;
 		cursor: pointer;
@@ -157,9 +157,9 @@ function reopen() {
 		align-items: center;
 		gap: 10px;
 		padding: 10px 16px 10px 12px;
-		border-radius: 16px;
+		border-radius: var(--radius-pill);
 		cursor: pointer;
-		color: white;
+		color: var(--white);
 		background: linear-gradient(135deg, #b06000, #e89318);
 		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 		animation: verify-bubble-pop 0.4s cubic-bezier(0.22, 1.6, 0.36, 1);
@@ -220,6 +220,70 @@ function reopen() {
 		.verify-banner, .chest, .verify-bubble {
 			animation: none;
 			transition: none;
+		}
+	}
+
+	/* ====== v3 : une surface flottante, pas une pastille en relief ======
+	   Le bandeau était une pièce d'un autre design : coins à 14 px, dégradé
+	   orange écrit en dur, et une ombre floue d'élévation (`0 6px 24px`) que le
+	   thème bannit — seule l'ombre pixel est admise sous une surface
+	   flottante. Il prend donc le traitement des autres surfaces flottantes
+	   (trait fort + ombre pixel) et garde son caractère précieux par le motif
+	   validé sur les notifications de trophée : liseré d'or et halo, une
+	   émission de lumière et non une élévation. */
+	body:not(.v2) {
+		.verify-banner {
+			--accent: var(--rank-first);
+			border-radius: var(--radius-large);
+			color: var(--text-color);
+			background: var(--background-header);
+			border: 1px solid var(--border-strong);
+			border-left: 3px solid var(--accent);
+			box-shadow: var(--shadow-pixel), inset 0 0 18px color-mix(in srgb, var(--accent) 18%, transparent);
+			animation: none;
+		}
+		.title {
+			text-shadow: none;
+		}
+		.pitch {
+			color: var(--text-color-secondary);
+			opacity: 1;
+		}
+		.reward {
+			background: var(--background-row);
+			border: 1px solid var(--border);
+		}
+		/* Le bouton reprend l'or en aplat et le relief à trois états des boutons
+		   d'accent : l'encre orange sur blanc mesurait 4,33, sous le
+		   seuil, et le grossissement au survol n'est pas du vocabulaire du
+		   thème — c'est le pixel push. */
+		.cta {
+			background: var(--gold);
+			color: var(--gold-text);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow-pixel-small);
+			transition: box-shadow 0.1s ease, transform 0.1s ease;
+			&:hover {
+				transform: translate(-1px, -1px);
+				box-shadow: var(--shadow-pixel);
+			}
+			&:active {
+				transform: translate(1px, 1px);
+				box-shadow: var(--shadow-pixel-pressed);
+			}
+		}
+		.verify-bubble {
+			border-radius: var(--radius-large);
+			color: var(--gold-text);
+			background: var(--gold);
+			border: 1px solid var(--border-strong);
+			box-shadow: var(--shadow-pixel);
+			&:hover {
+				transform: translate(-1px, -1px);
+			}
+			.bubble-text {
+				text-shadow: none;
+			}
 		}
 	}
 </style>

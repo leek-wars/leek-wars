@@ -1,0 +1,22 @@
+{
+	"title": "Omat tilini",
+	"desc": "Ilmoita muut omistamasi tilit. Löydät ne kaikilta laitteiltasi ilman salasanan syöttämistä uudelleen, ja ne näkyvät sinun tileinäsi profiilissasi.",
+	"main_account": "ensisijainen",
+	"set_main": "Aseta ensisijaiseksi tiliksi",
+	"unlink": "Poista liitos",
+	"unlink_message": "Poistetaanko {0} tileiltäsi?",
+	"unlink_cooldown_warning": "Irrotetun tilin voi ilmoittaa uudelleen vasta 7 päivän kuluttua.",
+	"cancel": "Peruuta",
+	"no_linkable": "Ilmoittaaksesi tilin kirjaudu siihen ensin oikean yläkulman tilinvalitsimesta.",
+	"cap_reached": "Olet saavuttanut {0} ilmoitetun tilin rajan.",
+	"error_account_not_connected": "Tämän tilin täytyy olla kirjautuneena, jotta sen voi ilmoittaa.",
+	"error_already_linked": "Tämä tili on jo ilmoitettu.",
+	"error_invalid_account": "Tätä tiliä ei voi ilmoittaa.",
+	"error_no_player": "Sinulla ei ole yhtään ilmoitettua tiliä.",
+	"error_no_such_farmer": "Tiliä ei löytynyt.",
+	"error_not_linked": "Tämä tili ei ole yksi sinun tileistäsi.",
+	"error_same_account": "Tämä on tili, jolle olet kirjautunut.",
+	"error_too_many_declared_accounts": "Olet saavuttanut ilmoitettujen tilien rajan.",
+	"error_unlink_cooldown": "Tämä tili irrotettiin alle 7 päivää sitten.",
+	"console": "Konsoli"
+}

@@ -1,0 +1,20 @@
+{
+	"title": "Belöningar",
+	"total_one": "{0} månad samlat",
+	"total_other": "{0} månader samlat",
+	"days_one": "{0} dag",
+	"days_other": "{0} dagar",
+	"years_one": "{0} år",
+	"years_other": "{0} år",
+	"next_in": "Nästa steg om {0}",
+	"not_started": "Prenumerera för att starta räknaren.",
+	"all_done": "Stegen är klar. Tack för ditt stöd!",
+	"reward_trophy": "Trofé",
+	"trophy_named": "Trofé {0}",
+	"reward_hat": "Hatt",
+	"reward_skin": "Purjoutseende",
+	"reward_potion": "Trolldryck",
+	"reward_pomp": "Framträdande",
+	"reward_resources": "Sällsynta resurser",
+	"reward_surprise": "Överraskning"
+}

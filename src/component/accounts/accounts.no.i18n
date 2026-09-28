@@ -1,0 +1,22 @@
+{
+	"title": "Mine kontoer",
+	"desc": "Oppgi de andre kontoene som tilhører deg. Du finner dem igjen på alle enhetene dine uten å taste passordet på nytt, og de vises som dine på profilen din.",
+	"main_account": "hovedkonto",
+	"set_main": "Angi som hovedkonto",
+	"unlink": "Fjern tilknytning",
+	"unlink_message": "Fjerne {0} fra kontoene dine?",
+	"unlink_cooldown_warning": "En konto som er koblet fra, kan først oppgis på nytt etter 7 dager.",
+	"cancel": "Avbryt",
+	"no_linkable": "For å oppgi en konto må du først logge inn på den fra kontovelgeren øverst til høyre.",
+	"cap_reached": "Du har nådd grensen på {0} oppgitte kontoer.",
+	"error_account_not_connected": "Denne kontoen må være innlogget for å kunne oppgis.",
+	"error_already_linked": "Denne kontoen er allerede oppgitt.",
+	"error_invalid_account": "Denne kontoen kan ikke oppgis.",
+	"error_no_player": "Du har ingen oppgitte kontoer.",
+	"error_no_such_farmer": "Fant ikke kontoen.",
+	"error_not_linked": "Denne kontoen er ikke en av dine.",
+	"error_same_account": "Det er kontoen du er logget inn på.",
+	"error_too_many_declared_accounts": "Du har nådd grensen for oppgitte kontoer.",
+	"error_unlink_cooldown": "Denne kontoen ble koblet fra for mindre enn 7 dager siden.",
+	"console": "Konsoll"
+}
