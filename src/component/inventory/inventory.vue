@@ -1,13 +1,18 @@
 <template>
 	<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel">
 		<template #title>
-			<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== ItemType.ALL"> / {{ inventory.length }}</span>)</div>
+			<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== ItemType.ALL || query"> / {{ inventory.length }}</span>)</div>
 			<div class="categories">
 
 			</div>
 		</template>
 		<template #actions>
 			<span class="value" title="Valeur totale">{{ $filters.number(total_estimated) }} <div class="hab"></div></span>
+			<div class="search" :class="{ active: search }">
+				<v-icon class="search-icon" @click="searchInput?.focus()">mdi-magnify</v-icon>
+				<input ref="searchInput" v-model="search" type="text" :placeholder="$t('main.search')" :aria-label="$t('main.search')" autocomplete="off" spellcheck="false" @keyup.stop @keydown.esc="search = ''">
+				<v-icon v-if="search" class="clear" @click="search = ''">mdi-close</v-icon>
+			</div>
 			<v-menu offset-y>
 				<template #activator="{ props }">
 					<div class="button flat" v-bind="props">
@@ -42,6 +47,10 @@
 					<v-list-item v-ripple @click="sort = Sort.RARITY">
 						<span>{{ $t('rarity') }}</span>
 						<v-icon v-if="sort === Sort.RARITY">mdi-check</v-icon>
+					</v-list-item>
+					<v-list-item v-ripple @click="sort = Sort.CHARGE">
+						<span>{{ $t('charge') }}</span>
+						<v-icon v-if="sort === Sort.CHARGE">mdi-check</v-icon>
 					</v-list-item>
 				</v-list>
 			</v-menu>
@@ -106,6 +115,21 @@
 						<span>{{ $t('size_large') }}</span>
 						<v-icon v-if="size === Size.LARGE">mdi-check</v-icon>
 					</v-list-item>
+					<!-- Disposition de la PAGE (inventaire + atelier) : elle appartient au
+					     parent, qui la passe en prop. Sans prop (atelier), la section
+					     n'apparait pas. -->
+					<template v-if="layout">
+						<v-divider />
+						<v-list-item class="submenu-header">{{ $t('layout') }}</v-list-item>
+						<v-list-item v-ripple @click="emit('update:layout', 'rows')">
+							<span>{{ $t('layout_rows') }}</span>
+							<v-icon v-if="layout === 'rows'">mdi-check</v-icon>
+						</v-list-item>
+						<v-list-item v-ripple @click="emit('update:layout', 'columns')">
+							<span>{{ $t('layout_columns') }}</span>
+							<v-icon v-if="layout === 'columns'">mdi-check</v-icon>
+						</v-list-item>
+					</template>
 				</v-list>
 			</v-menu>
 		</template>
@@ -122,14 +146,22 @@
 							<span class="group-count">({{ entry.count }})</span>
 						</div>
 						<div v-else-if="entry.placeholder" class="placeholder"></div>
-						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()">
+						<div v-else-if="entry.item" class="cell active" :class="['rarity-border-' + LeekWars.items[entry.item.template].rarity, { 'not-craftable': !entry.craftable, selectable: entry.item.type === ItemType.COMPONENT || entry.item.type === ItemType.ALTERATION }]" @mouseenter="showTooltip(entry.item as InventoryItem, $event)" @mouseleave="scheduleHideTooltip()" @click="selectItem(entry.item as InventoryItem, $event)">
 							<div class="item" :quantity="$filters.number(entry.item.quantity)" :type="LeekWars.items[entry.item.template].type">
 								<img v-if="entry.item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
 								<scheme-image v-else-if="entry.item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[entry.item.template].params]" />
-								<img v-else-if="entry.item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
-								<img v-else class="image" :class="{small: entry.item.template === 37 || entry.item.template === 45 || entry.item.template === 153 || entry.item.template === 182}" :src="'/image/' + LeekWars.items[entry.item.template].name.replace('_', '/') + '.png'" loading="lazy">
+								<img v-else-if="entry.item.type === ItemType.COMPONENT" class="image" :class="alteredClassFor(entry.item as InventoryItem)" :src="'/image/component/' + LeekWars.items[entry.item.template].name + '.png'" loading="lazy">
+								<alteration-icon v-else-if="entry.item.type === ItemType.ALTERATION" :template="entry.item.template" :size="32" />
+								<img v-else class="image" :class="{small: entry.item.template === 37 || entry.item.template === 45 || entry.item.template === 153 || entry.item.template === 182}" :src="itemImageUrl(LeekWars.items[entry.item.template])" loading="lazy">
 								<img v-if="LeekWars.items[entry.item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
 								<img v-if="LeekWars.christmasPresents && LeekWars.items[entry.item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
+								<!-- Métabolisme resolu de la piece, coin haut gauche (#12146) : la
+								     reponse trouvee reste sous les yeux, y compris sur une piece
+								     mise de cote depuis des semaines.
+								     APRÈS la chaîne d'images, jamais au milieu : un `v-if` glissé
+								     entre deux branches coupe le `v-else-if`/`v-else` qui suit, et
+								     chaque case rendait alors DEUX images superposées. -->
+								<metabolism-badge v-if="entry.item.optimal_dose" :dose="entry.item.optimal_dose" />
 								<div class="id">#{{ entry.item.template }}</div>
 							</div>
 						</div>
@@ -139,7 +171,7 @@
 
 				<v-menu v-model="tooltipVisible" :activator="tooltipActivator" :close-on-content-click="false" :min-width="280" :open-delay="0" :close-delay="0" :bottom="true" offset-y :open-on-hover="false">
 					<div class="inventory-tooltip" @mouseenter="onTooltipEnter" @mouseleave="onTooltipLeave">
-						<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :inventory="true" :show-use="true" @retrieve="retrieve" />
+						<item-preview v-if="tooltipItem" :item="tooltipItem" :quantity="tooltipQuantity" :instance="tooltipInstance" :inventory="true" :show-use="true" @retrieve="retrieve" />
 					</div>
 				</v-menu>
 
@@ -149,7 +181,7 @@
 						<div v-for="item in retrieveItems" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
 							<div class="item" :quantity="item.quantity" :type="LeekWars.items[item.template].type">
 								<img v-if="LeekWars.items[item.template].type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
-								<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[item.template].type] + '/' + LeekWars.items[item.template].name.replace('potion_', '').replace('hat_', '').replace('weapon_', '').replace('chip_', '').replace('pomp_', '') + '.png'">
+								<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="itemImageUrl(LeekWars.items[item.template])">
 							</div>
 						</div>
 					</div>
@@ -166,17 +198,22 @@
 
 <script lang="ts" setup>
 	import { mixins, useNamespacedT } from '@/model/i18n'
-	import { type Item, type ItemTemplate, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
+	import { type Item, type ItemTemplate, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, itemImageUrl } from '@/model/item'
+	import { itemDisplayName } from '@/model/item-name'
+	import { foldText } from '@/model/text'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useRouter } from 'vue-router'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import SchemeImage from '../market/scheme-image.vue'
-	import { emitter } from '@/model/vue'
+	import AlterationIcon from '../alteration/alteration-icon.vue'
+	import MetabolismBadge from '../alteration/metabolism-badge.vue'
+	import { emitter } from '@/model/emitter'
+	import { alteredClass, displayRatio } from '@/model/alteration'
 
 	enum Sort {
-		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
+		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY, CHARGE
 	}
 	enum Group {
 		NONE, TYPE, RARITY
@@ -186,6 +223,14 @@
 	}
 
 	defineOptions({ name: 'Inventory', i18n: {}, mixins: [...mixins] })
+
+	/**
+	 * Disposition de la page qui accueille l'inventaire ('rows' ou 'columns'), pour
+	 * offrir le reglage dans le menu des options. Le parent reste proprietaire de la
+	 * valeur : l'inventaire ne fait que l'afficher et demander le changement.
+	 */
+	defineProps<{ layout?: 'rows' | 'columns' }>()
+	const emit = defineEmits<{ 'update:layout': [value: 'rows' | 'columns'] }>()
 
 	const t = useNamespacedT('inventory')
 	const router = useRouter()
@@ -203,24 +248,18 @@
 	const retrieveDialog = ref(false)
 	const retrieveItems = ref<Item[]>([])
 
+	// Le compte des ingrédients passe par le getter du store, seul endroit qui sait qu'une
+	// pièce ALTÉRÉE est une instance à part, rangée sous le même template que la pile de ses
+	// jumelles neuves : la recherche à la main renvoyait la première ligne venue, et une
+	// pomme altérée cachait les 470 autres.
 	function isSchemeCraftable(item: Item & { type: ItemType }): boolean {
 		if (item.type !== ItemType.SCHEME || !store.state.farmer) return true
 		const scheme = LeekWars.schemes[LeekWars.items[item.template].params]
 		if (!scheme) return true
-		const farmer = store.state.farmer
 		for (const ingredient of scheme.items) {
 			if (!ingredient) continue
 			const [itemId, quantity] = ingredient
-			if (itemId === 148) {
-				if (farmer.habs < quantity) return false
-			} else {
-				const found = farmer.resources.find((i) => i.template === itemId)
-					|| farmer.components.find((i) => i.template === itemId)
-					|| farmer.potions.find((i) => i.template === itemId)
-					|| farmer.weapons.find((i) => i.template === itemId)
-					|| farmer.chips.find((i) => i.template === itemId)
-				if (!found || found.quantity < quantity) return false
-			}
+			if (store.getters.item_quantity(itemId) < quantity) return false
 		}
 		return true
 	}
@@ -228,10 +267,65 @@
 	const tooltipVisible = ref(false)
 	const tooltipItem = ref<ItemTemplate | null>(null)
 	const tooltipQuantity = ref(0)
+	// L'instance survolee : c'est elle qui porte les alterations.
+	const tooltipInstance = ref<InventoryItem | null>(null)
 	const tooltipActivator = ref<HTMLElement | undefined>(undefined)
 	let tooltipShowTimer = 0
 	let tooltipHideTimer = 0
 	let tooltipOnTooltip = false
+
+	/**
+	 * Clic sur un item : un composant part dans la forge, qui devient l'atelier
+	 * d'alteration. Les autres types n'ont pas d'action au clic.
+	 */
+	/**
+	 * Palier d'alteration d'un composant, pour la silhouette coloree.
+	 *
+	 * Le lisere du haut de la cellule sert deja a la rarete du template : la marque
+	 * d'alteration passe donc par l'image elle-meme, ce qui epouse la decoupe de
+	 * l'objet et evite de generer 52 composants x 5 paliers d'images.
+	 */
+	function alteredClassFor(item: InventoryItem): string {
+		return alteredClass(item, LeekWars.componentCapacity(item.template), LeekWars.alterations?.weights)
+	}
+
+	function selectItem(item: InventoryItem, event?: MouseEvent) {
+		// Sur mobile il n'y a pas de survol : le tap est le seul moyen d'ouvrir une
+		// fiche. On l'affiche donc au clic, tout de suite, sans le delai du desktop.
+		if (LeekWars.mobile && event) {
+			showTooltipNow(item as Item & { type: ItemType }, event)
+		}
+		if (item.type === ItemType.COMPONENT) {
+			// Sur desktop l'infobulle suit la souris : on la ferme pour ne pas masquer
+			// la forge ou le composant vient d'atterrir.
+			if (!LeekWars.mobile) hideTooltip()
+			emitter.emit('alter', item)
+		} else if (item.type === ItemType.ALTERATION) {
+			emitter.emit('add-alteration', item)
+		}
+	}
+
+	/**
+	 * Ouvre l'infobulle au tap (mobile), sans le delai de 500 ms du survol.
+	 *
+	 * L'ouverture est differee d'un tick : sinon le meme evenement de tap remonte
+	 * jusqu'au detecteur de "clic exterieur" du v-menu, qui le referme aussitot. C'est
+	 * cette course qui faisait que l'infobulle ne s'ouvrait qu'une fois sur deux.
+	 */
+	function showTooltipNow(item: Item & { type: ItemType }, event: MouseEvent) {
+		clearTimeout(tooltipShowTimer)
+		clearTimeout(tooltipHideTimer)
+		// currentTarget devient null des que le handler rend la main : on le capture ici.
+		const target = event.currentTarget as HTMLElement
+		tooltipVisible.value = false
+		requestAnimationFrame(() => {
+			tooltipActivator.value = target
+			tooltipItem.value = LeekWars.items[item.template]
+			tooltipQuantity.value = item.quantity
+			tooltipInstance.value = item
+			tooltipVisible.value = true
+		})
+	}
 
 	function showTooltip(item: Item & { type: ItemType }, event: MouseEvent) {
 		clearTimeout(tooltipHideTimer)
@@ -240,12 +334,14 @@
 			tooltipActivator.value = target
 			tooltipItem.value = LeekWars.items[item.template]
 			tooltipQuantity.value = item.quantity
+			tooltipInstance.value = item
 		} else {
 			clearTimeout(tooltipShowTimer)
 			tooltipShowTimer = window.setTimeout(() => {
 				tooltipActivator.value = target
 				tooltipItem.value = LeekWars.items[item.template]
 				tooltipQuantity.value = item.quantity
+				tooltipInstance.value = item
 				tooltipVisible.value = true
 			}, 500)
 		}
@@ -270,31 +366,106 @@
 		tooltipVisible.value = false
 	}
 
+	// Chaque objet affiché est rendu à partir de LeekWars.items[item.template] (rareté,
+	// image, prix) : un template absent des game data — ressource de saison tout juste
+	// droppée, données de jeu pas encore rafraîchies — fait planter la page entière.
+	// On l'écarte plutôt que de perdre tout l'inventaire.
+	function withKnownTemplate<T extends { template: number }>(items: T[]): T[] {
+		return items.filter(item => {
+			if (item.template in LeekWars.items) return true
+			console.warn('[inventory] template inconnu, objet ignoré :', item.template)
+			return false
+		})
+	}
+
+	/**
+	 * L'inventaire, assemblé depuis les dix listes du fermier.
+	 *
+	 * Chaque liste est traitée défensivement, pour deux raisons vécues :
+	 *
+	 * - une liste ABSENTE de la réponse serveur (`.map` sur `undefined`) faisait planter le
+	 *   calcul, donc le panneau entier disparaissait ;
+	 * - un objet dont le TEMPLATE est inconnu des données de jeu casse le rendu plus loin
+	 *   (`LeekWars.items[template]` vaut `undefined`, et les composants qui l'affichent
+	 *   attendent un objet). C'est arrivé avec un cache IndexedDB antérieur aux altérations :
+	 *   36 objets inconnus suffisaient à vider un inventaire de 428.
+	 *
+	 * Dans les deux cas on préfère afficher ce qu'on sait afficher, et signaler le reste une
+	 * fois en console plutôt que de tout perdre.
+	 */
 	const inventory = computed(() => {
+		const farmer = store.state.farmer
+		if (!farmer) return []
 		const inventory = []
-		if (store.state.farmer) {
-			for (const weapon of store.state.farmer.weapons) {
-				inventory.push({type: ItemType.WEAPON, ...weapon})
+		const inconnus: number[] = []
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const listes: [ItemType, any[]][] = [
+			[ItemType.WEAPON, farmer.weapons], [ItemType.CHIP, farmer.chips],
+			[ItemType.POTION, farmer.potions], [ItemType.HAT, farmer.hats],
+			[ItemType.POMP, farmer.pomps], [ItemType.RESOURCE, farmer.resources],
+			[ItemType.COMPONENT, farmer.components], [ItemType.SCHEME, farmer.schemes],
+			[ItemType.ALTERATION, farmer.alterations], [ItemType.FIGHT_PACK, farmer.fight_packs],
+		]
+		for (const [type, liste] of listes) {
+			for (const item of (liste || [])) {
+				if (!LeekWars.items[item.template]) { inconnus.push(item.template); continue }
+				inventory.push({ type, ...item })
 			}
-			inventory.push(...store.state.farmer.chips.map(chip => ({type: ItemType.CHIP, ...chip})))
-			inventory.push(...store.state.farmer.potions.map(potion => ({type: ItemType.POTION, ...potion})))
-			inventory.push(...store.state.farmer.hats.map(hat => ({type: ItemType.HAT, ...hat})))
-			inventory.push(...store.state.farmer.pomps.map(pomp => ({type: ItemType.POMP, ...pomp})))
-			inventory.push(...store.state.farmer.resources.map(resource => ({type: ItemType.RESOURCE, ...resource})))
-			inventory.push(...store.state.farmer.components.map(p => ({type: ItemType.COMPONENT, ...p})))
-			inventory.push(...store.state.farmer.schemes.map(p => ({type: ItemType.SCHEME, ...p})))
-			inventory.push(...(store.state.farmer.fight_packs || []).map(p => ({type: ItemType.FIGHT_PACK, ...p})))
+		}
+		if (inconnus.length) {
+			console.warn(`[Inventaire] ${inconnus.length} objet(s) ignoré(s), template inconnu des`
+				+ ` données de jeu : ${[...new Set(inconnus)].join(', ')}.`
+				+ ` Cache périmé ? indexedDB.deleteDatabase('leek-wars-data') puis recharger.`)
 		}
 		return inventory
 	})
 
+	/**
+	 * Recherche par nom, insensible à la casse et aux accents. Elle porte sur le
+	 * nom affiché dans la langue du joueur ; un schéma se retrouve donc aussi par le nom
+	 * de ce qu'il fabrique. « #123 » ou « 123 » retrouve l'objet par son numéro, celui
+	 * qu'affiche chaque case.
+	 */
+	const search = ref('')
+	const searchInput = useTemplateRef<HTMLInputElement>('searchInput')
+	const query = computed(() => foldText(search.value.trim()))
+
+	// Noms repliés, par template : ils ne dépendent que de la langue, pas de ce qui est
+	// tapé, et une frappe ne les retraduit donc pas. Calculé seulement quand on cherche.
+	const foldedNames = computed(() => {
+		const names = new Map<number, string>()
+		for (const item of inventory.value) {
+			if (!names.has(item.template)) names.set(item.template, foldText(itemDisplayName(LeekWars.items[item.template], t)))
+		}
+		return names
+	})
+
 	const filtered_inventory = computed(() => {
-		if (filter.value === ItemType.ALL) return inventory.value
-		return inventory.value.filter(item => item.type == filter.value)
+		let items = inventory.value
+		if (filter.value !== ItemType.ALL) items = items.filter(item => item.type == filter.value)
+		const q = query.value
+		if (q) {
+			const id = q.replace(/^#/, '')
+			const names = foldedNames.value
+			items = items.filter(item => String(item.template) === id || names.get(item.template)!.includes(q))
+		}
+		return items
 	})
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	type InventoryItem = any
+
+	/**
+	 * Charge d'un composant en fraction de sa capacite, exactement telle que l'affiche sa
+	 * jauge (cf. displayRatio). 0 pour tout ce qui n'est pas un composant altere, qui se
+	 * retrouve donc en fin de tri.
+	 */
+	function chargeRatio(item: InventoryItem): number {
+		const weights = LeekWars.alterations?.weights
+		if (!item.stats || !weights) return 0
+		return displayRatio(item.stats, LeekWars.componentCapacity(item.template), weights)
+	}
+
 	function sortCompare(a: InventoryItem, b: InventoryItem) {
 		if (sort.value === Sort.DATE) {
 			if (b.time === a.time) return a.id - b.id
@@ -304,6 +475,10 @@
 		if (sort.value === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
 		if (sort.value === Sort.QUANTITY) return b.quantity - a.quantity
 		if (sort.value === Sort.RARITY) return LeekWars.items[b.template].rarity - LeekWars.items[a.template].rarity
+		// Tri par charge : en POURCENTAGE de la capacite et non en points, sinon une grosse
+		// piece a peine entamee passait devant une petite piece au maximum. C'est aussi le
+		// chiffre que porte la jauge, donc le tri suit ce que le joueur voit.
+		if (sort.value === Sort.CHARGE) return chargeRatio(b) - chargeRatio(a)
 		return LeekWars.items[b.template].level - LeekWars.items[a.template].level
 	}
 
@@ -389,8 +564,9 @@
 	}
 
 	const actions = [
+		{icon: 'mdi-trophy-variant-outline', click: () => router.push('/collection')},
 		{icon: 'mdi-bank', click: () => router.push('/bank?ref=inventory_action')},
-		{image: 'icon/market.png', click: () => router.push('/market')},
+		{icon: 'mdi-store', click: () => router.push('/market')},
 	]
 	LeekWars.setActions(actions)
 
@@ -434,7 +610,7 @@
 	}
 
 	function retrieve(items: unknown[]) {
-		const typedItems = items as Item[]
+		const typedItems = withKnownTemplate(items as Item[])
 		if (typedItems.length) {
 			retrieveDialog.value = true
 			retrieveItems.value = typedItems
@@ -508,13 +684,13 @@
 	display: flex;
 	align-items: stretch;
 	align-self: stretch;
-	color: white;
+	color: var(--white);
 	.category {
 		cursor: pointer;
 		display: flex;
 		align-items: center;
 		&.selected {
-			background: #666;
+			background: var(--grey-5);
 		}
 		.v-icon {
 			padding: 0 12px;
@@ -527,11 +703,77 @@
 	align-items: center;
 	vertical-align: bottom;
 	font-size: 15px;
-	color: #eee;
+	// La valeur totale vit dans le slot `#actions` du panneau : elle prend
+	// l'encre de l'en-tête. --grey-13 (« presque blanc ») supposait un en-tête
+	// sombre dans les deux thèmes, ce que le v3 en clair n'est plus — crème sur
+	// crème, le montant disparaissait et il ne restait que l'icône des habs.
+	color: var(--panel-header-color);
 	margin: 0 10px;
 	.hab {
 		margin-left: 5px;
 	}
+}
+// Même encre que la valeur : le fond du champ est dérivé de la couleur de
+// l'en-tête, pour rester lisible sur un en-tête sombre comme clair.
+.search {
+	display: inline-flex;
+	align-items: center;
+	align-self: center;
+	height: 26px;
+	margin-right: 6px;
+	padding: 0 6px;
+	border-radius: var(--radius-small);
+	color: var(--panel-header-color);
+	background: color-mix(in srgb, currentColor 12%, transparent);
+	.search-icon, .clear {
+		font-size: 18px;
+		margin: 0;
+		opacity: 0.8;
+	}
+	.clear {
+		cursor: pointer;
+	}
+	input {
+		width: 130px;
+		margin-left: 4px;
+		padding: 0;
+		border: none;
+		outline: none;
+		background: transparent;
+		color: inherit;
+		font-size: 14px;
+		transition: width 0.15s;
+		&::placeholder {
+			color: inherit;
+			opacity: 0.6;
+		}
+	}
+}
+// Sur mobile l'en-tête est déjà plein (valeur + quatre boutons) : la recherche
+// n'y est qu'une loupe, et le champ prend la place de la valeur une fois ouvert.
+#app.app .search {
+	padding: 0 4px;
+	.search-icon {
+		cursor: pointer;
+	}
+	input {
+		width: 0;
+		margin-left: 0;
+	}
+	&:focus-within, &.active {
+		input {
+			width: 110px;
+			margin-left: 4px;
+		}
+	}
+}
+#app.app .value:has(~ .search:focus-within, ~ .search.active) {
+	display: none;
+}
+// Un composant part dans la forge au clic.
+
+.cell.selectable {
+	cursor: pointer;
 }
 .cell {
 	border: 1px solid var(--border);
@@ -586,12 +828,12 @@
 		position: absolute;
 		content: attr(quantity);
 		background: #000b;
-		border-top-left-radius: 4px;
+		border-top-left-radius: var(--radius);
 		padding: 1.5px 4.5px;
 		right: 0;
 		bottom: 0;
 		font-size: 14px;
-		color: white;
+		color: var(--white);
 		font-weight: 500;
 	}
 	.size-0 &:after {

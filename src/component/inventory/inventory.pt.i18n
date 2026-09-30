@@ -6,10 +6,14 @@
 	"level": "Nível",
 	"date": "Data",
 	"rarity": "Raridade",
+	"charge": "Carga",
 	"type": "Tipo",
 	"no_group": "Sem grupo",
 	"size": "Tamanho",
 	"size_small": "Pequeno",
 	"size_normal": "Normal",
-	"size_large": "Grande"
+	"size_large": "Grande",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

@@ -20,4 +20,8 @@ class PotionTemplate {
 	public effects!: { type: number, params: unknown[], [key: string]: unknown }[]
 	public duration!: number
 }
-export { PotionEffect, Potion, PotionTemplate }
+/** Potion dont un effet est un restat : la 49 (achetée) comme la 58 (offerte en compensation). */
+function isRestatPotion(template: PotionTemplate | undefined): boolean {
+	return !!template?.effects?.some(e => e.type === PotionEffect.RESTAT)
+}
+export { PotionEffect, Potion, PotionTemplate, isRestatPotion }

@@ -6,10 +6,14 @@
 	"level": "Taso",
 	"date": "Päivämäärä",
 	"rarity": "Harvinaisuus",
+	"charge": "Lataus",
 	"type": "Tyyppi",
 	"no_group": "Ei ryhmää",
 	"size": "Koko",
 	"size_small": "Pieni",
 	"size_normal": "Normaali",
-	"size_large": "Suuri"
+	"size_large": "Suuri",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

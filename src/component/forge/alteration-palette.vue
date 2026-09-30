@@ -1,0 +1,212 @@
+<template>
+	<div class="alteration-palette">
+		<div v-for="row in rows" :key="row.carac" class="palette-row">
+			<img class="carac" :src="'/image/charac/small/' + row.carac + '.png'" :title="$t('characteristic.' + row.carac)">
+			<div class="cells">
+				<!-- Infobulle riche plutot que l'attribut title : elle donne les gains par
+				     famille de composant, la charge consommee et le dosage, ce qu'une seule
+				     ligne de texte ne pouvait pas porter. -->
+				<rich-tooltip-item v-for="a in row.alterations" :key="a.id" v-slot="{ props }" :item="LeekWars.items[a.template]" :inventory="true" :bottom="true" :pin="true">
+					<!-- Pas d'onde au clic sur une alteration qui ne rentre plus : le geste
+					     n'aboutit pas, il ne doit pas faire mine de repondre. -->
+					<div v-ripple="fits(a)" class="cell" :class="{empty: owned(a.template) === 0, over: !fits(a) && !forbidden(a), forbidden: forbidden(a)}" v-bind="props" @click="pick(a)">
+						<alteration-icon :template="a.template" title="" />
+						<span v-if="owned(a.template) > 0" class="owned">{{ owned(a.template) }}</span>
+					</div>
+				</rich-tooltip-item>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup lang="ts">
+	import { computed, defineAsyncComponent } from 'vue'
+	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
+	import { forgeComponent, forgeProjected } from '@/model/forge-state'
+	import { addedPowerWith, componentFamily, efficiencyTier, isIndivisibleWrongFamily } from '@/model/alteration'
+	import { emitter } from '@/model/emitter'
+	import type { InventoryItem } from '@/model/farmer'
+	import type { AlterationTemplate } from '@/model/alteration'
+	import AlterationIcon from '@/component/alteration/alteration-icon.vue'
+	const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
+
+	/**
+	 * Palette de toutes les alterations du jeu, en tete de l'onglet Ameliorer.
+	 * Une ligne par caracteristique, ses trois familles cote a cote ; un clic pose
+	 * l'alteration dans la forge. La quantite possedee est affichee ; les alterations
+	 * absentes de l'inventaire restent visibles mais grisees, pour montrer ce qui existe.
+	 */
+	defineOptions({ name: 'AlterationPalette' })
+
+	// Groupe les alterations par caracteristique, dans l'ordre canonique du jeu, chaque
+	// ligne triee par famille (vitamine, alliage, survolteur).
+	const rows = computed(() => {
+		const data = LeekWars.alterations
+		if (!data) return [] as { carac: string, alterations: AlterationTemplate[] }[]
+		const byCarac: { [carac: string]: AlterationTemplate[] } = {}
+		for (const id in data.alterations) {
+			const a = data.alterations[id]
+			;(byCarac[a.carac] ??= []).push(a)
+		}
+		return LeekWars.characteristics
+			.filter(carac => byCarac[carac])
+			.map(carac => ({ carac, alterations: byCarac[carac].sort((a, b) => a.family - b.family) }))
+	})
+
+	/** Quantite de cette alteration dans l'inventaire du fermier. */
+	function owned(template: number): number {
+		const item = store.state.farmer?.alterations?.find(a => a.template === template)
+		return item ? item.quantity : 0
+	}
+
+	/**
+	 * L'alteration est-elle INTERDITE sur cette piece ?
+	 *
+	 * Une indivisible (PT, PM, coeurs, memoire) hors de sa famille de composant ne peut rien
+	 * poser : l'API refuse la recette entiere. On l'interdit donc des la palette, avec son
+	 * propre motif — le liseré « ne rentre pas dans le puits » dirait autre chose.
+	 */
+	function forbidden(a: AlterationTemplate): boolean {
+		const data = LeekWars.alterations
+		const comp = forgeComponent.value
+		if (!data || !comp) return false
+		return isIndivisibleWrongFamily(data, a, componentFamily(data, comp.component))
+	}
+
+	/**
+	 * L'alteration rentre-t-elle encore dans la capacite de la piece posee, compte tenu de
+	 * ce qui est deja dans la forge ?
+	 *
+	 * La borne est la capacite PLEINE : au-dela de 100 % de charge, la tentative n'est pas
+	 * proposee, autant griser ce qui n'y rentre pas.
+	 *
+	 * Une indivisible hors de sa famille ne rentre JAMAIS : elle est interdite sur cette
+	 * piece (cf. forbidden), et c'est ce motif-la qui est affiche.
+	 */
+	function fits(a: AlterationTemplate): boolean {
+		const data = LeekWars.alterations
+		const comp = forgeComponent.value
+		if (!data || !comp) return true
+		if (forbidden(a)) return false
+		const capacity = LeekWars.componentCapacity(comp.template)
+		if (capacity <= 0) return true
+		const efficiency = (data.efficiency[a.family] || {})[componentFamily(data, comp.component)] || 0
+		const points = (data.gains[a.carac] || [0, 0, 0])[efficiencyTier(efficiency)]
+		// L'alteration candidate est posee sur les ecarts projetes de la piece, recette
+		// comprise, et la charge recalculee. Comptee a sa puissance brute, elle payait plein
+		// tarif le rebouchage d'un deficit : sur un ressort en elinvar creuse a 34/129, le PM
+		// natif perdu pesait 100 et etait refuse, alors qu'il se remet pour 25.
+		return addedPowerWith(forgeProjected.value, a.carac, points, data.weights) <= capacity
+	}
+
+	/** Pose l'alteration dans la forge : la forge verifie qu'un composant est present. */
+	function pick(a: AlterationTemplate) {
+		// Une alteration qui ne rentre plus dans le puits est grisee ET inerte : la poser
+		// n'aboutissait a rien, sinon a une fusion refusee. Le liseré
+		// rouge dit deja pourquoi, on n'ajoute pas de message.
+		if (!fits(a)) return
+		emitter.emit('add-alteration', { id: a.template, template: a.template, quantity: owned(a.template) } as InventoryItem)
+	}
+</script>
+
+<style lang="scss" scoped>
+	// Grille dynamique : chaque carte est une carac en ligne (son icone suivie de ses 3
+	// familles), et on en met autant par ligne que la largeur le permet.
+	// 165 px est la largeur ou une carac est a sa taille naturelle : 18 px
+	// d'icone + 5 de gouttiere + 3 vignettes de 44 px separees de 3 px. En dessous les
+	// colonnes se partagent la place et les vignettes retrecissent ; au-dessus, une
+	// colonne de plus apparait.
+	//
+	// auto-fit et non un nombre fixe de colonnes avec des points de rupture : la palette
+	// n'occupe pas toute la fenetre, sa largeur depend du panneau (atelier sous
+	// l'inventaire ou a cote) — une media query sur la fenetre se tromperait.
+	// min(165px, 100%) : sur un conteneur plus etroit que 165 px, une colonne fixe
+	// deborderait au lieu de retrecir.
+	// La largeur minimale d'une colonne est reglable de l'exterieur : dans une colonne
+	// etroite (atelier en ligne), on prefere deux colonnes de vignettes plus petites a
+	// une seule a taille pleine.
+	.alteration-palette {
+		--palette-column: 165px;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(var(--palette-column), 100%), 1fr));
+		gap: 6px 8px;
+		padding: 8px;
+		border-bottom: 1px solid var(--border);
+	}
+	.palette-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 5px;
+		min-width: 0;
+	}
+	.carac {
+		width: 18px;
+		height: 18px;
+		flex: 0 0 auto;
+	}
+	.cells {
+		display: flex;
+		gap: 3px;
+		min-width: 0;
+		flex: 1;
+	}
+	.cell {
+		position: relative;
+		flex: 1 1 0;
+		min-width: 0;
+		// Assez grand pour bien voir la vignette : les cases grandissent jusque-la puis
+		// se partagent la place restante de la colonne.
+		max-width: 44px;
+		aspect-ratio: 1;
+		padding: 3px;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		// Pas d'aplat sous la vignette : le fond du panneau suffit, la case est deja
+		// dessinee par son filet.
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		&:hover { border-color: var(--primary); }
+		// Alteration absente de l'inventaire : montree pour l'inventaire des possibles,
+		// mais estompee pour signaler qu'on ne peut pas encore la poser.
+		&.empty { opacity: 0.35; }
+		// Ne rentre plus dans la capacite de la piece posee : grisee et barree d'un liseré
+		// rouge, pour eviter le clic qui finit en refus.
+		&.over {
+			opacity: 0.4;
+			border-color: #c62828;
+			// Le clic ne fait rien : le curseur ne doit pas promettre le contraire.
+			cursor: default;
+			&:hover { border-color: #c62828; }
+		}
+		// Interdite sur cette famille de composant, et pas seulement « trop grosse » : le
+		// rouge dirait un dépassement de puits. Gris et désaturée, elle se lit comme « sans
+		// objet ici » ; l'infobulle donne déjà les gains par famille, donc le pourquoi.
+		&.forbidden {
+			opacity: 0.3;
+			filter: grayscale(1);
+			border-color: var(--border);
+			cursor: not-allowed;
+			&:hover { border-color: var(--border); }
+		}
+	}
+	// Quantite possedee en bas a droite ; le numero de dosage est en haut a gauche,
+	// pose par alteration-icon. Blanc sur noir translucide comme les quantites
+	// de l'inventaire et de l'historique : le blanc sur vert n'etait pas lisible.
+	.owned {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		padding: 0 4px;
+		border-top-left-radius: var(--radius);
+		background: #000000b3;
+		color: var(--white);
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 15px;
+		text-align: center;
+	}
+</style>

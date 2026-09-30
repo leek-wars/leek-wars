@@ -1,9 +1,9 @@
 {
 	"price": "价格",
-	"price_lot": "地段价格",
+	"price_lot": "总价",
 	"quantity": "数量",
 	"name": "名称",
-	"level": "级别",
+	"level": "等级",
 	"date": "日期",
 	"rarity": "稀有度"
 }

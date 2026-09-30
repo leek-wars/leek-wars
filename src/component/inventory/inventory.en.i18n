@@ -6,10 +6,14 @@
 	"level": "Level",
 	"date": "Date",
 	"rarity": "Rarity",
+	"charge": "Charge",
 	"type": "Type",
 	"no_group": "No group",
 	"size": "Size",
 	"size_small": "Small",
 	"size_normal": "Normal",
-	"size_large": "Large"
+	"size_large": "Large",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

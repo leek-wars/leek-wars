@@ -6,10 +6,14 @@
 	"level": "Eben",
 	"date": "Datum",
 	"rarity": "Knappheit",
+	"charge": "Ladung",
 	"type": "Type",
 	"no_group": "Keine Gruppe",
 	"size": "Größe",
 	"size_small": "Klein",
 	"size_normal": "Normal",
-	"size_large": "Groß"
+	"size_large": "Groß",
+	"layout": "Anordnung",
+	"layout_rows": "In Zeilen",
+	"layout_columns": "In Spalten"
 }

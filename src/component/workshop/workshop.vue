@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>{{ $t('main.workshop') }}</h1>
+			<div class="page-title">
+				<page-icon name="workshop" fallback="mdi-hammer-wrench" />
+				<div class="page-title-text">
+					<h1>{{ $t('main.workshop') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<a href="https://leek-wars.myspreadshop.fr" target="_blank" rel="noopener">
 					<div class="tab action" icon="cart-outline" link="https://leek-wars.myspreadshop.fr">
@@ -18,7 +23,7 @@
 				</router-link>
 				<router-link to="/market">
 					<div class="tab action" image="icon/market.png" link="/market">
-						<img src="/image/icon/market.png">
+						<v-icon>mdi-store</v-icon>
 						<span>{{ $t('main.market') }}</span>
 					</div>
 				</router-link>
@@ -34,14 +39,14 @@
 					<div class="grid">
 						<div v-for="(item, i) in forge" :key="i" class="cell" :class="{active: !!item}">
 							<div v-if="item" v-ripple class="item" :quantity="$filters.number(item.quantity)" :type="LeekWars.items[item.template].type" @click="remove(i, $event)">
-								<img :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
+								<img :src="itemImageUrl(LeekWars.items[item.template])">
 							</div>
 						</div>
 					</div>
 					<div class="symbol arrow">→</div>
 					<div class="cell" :class="{active: !!scheme}">
 						<div v-if="scheme" class="item" :quantity="1" :type="LeekWars.items[scheme.result].type">
-							<img :src="'/image/' + LeekWars.items[scheme.result].name.replace('_', '/') + '.png'">
+							<img :src="itemImageUrl(LeekWars.items[scheme.result])">
 						</div>
 					</div>
 				</div>
@@ -92,7 +97,10 @@
 			</template>
 			<template #content>
 				<div class="schemes">
-				<scheme v-for="(scheme, s) in sorted_schemes" :key="s" class="scheme" :scheme="scheme" :show-result="true"></scheme>
+				<!-- Claveté par le résultat du schéma, pas par l'indice : la liste se retrie
+				     (prix, rareté, ingrédients, niveau) et un diff par position ferait
+				     re-rendre toutes les cartes au lieu de les déplacer. -->
+				<scheme v-for="scheme in sorted_schemes" :key="scheme.result" class="scheme" :scheme="scheme" :show-result="true"></scheme>
 				</div>
 			</template>
 		</panel>
@@ -101,7 +109,7 @@
 
 <script setup lang="ts">
 	import { mixins } from '@/model/i18n'
-	import { ITEM_TYPE_NAME, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ItemType, ItemTypes } from '@/model/item'
+	import { itemImageUrl, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ItemType, ItemTypes } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { SchemeTemplate } from '@/model/scheme'
 	import RichTooltipItem from '../rich-tooltip/rich-tooltip-item.vue'
@@ -177,12 +185,12 @@
 	background: #e8e8e8;
 	padding: 3px;
 	&:not(.active) {
-		border: 2px inset white;
+		border: 2px inset var(--white);
 		padding: 0;
 	}
 	&.active {
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		background: var(--white);
+		box-shadow: var(--elevation-1);
 	}
 }
 

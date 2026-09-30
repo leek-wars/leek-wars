@@ -1,15 +1,19 @@
 {
 	"price": "价格",
-	"price_lot": "批量价格",
+	"price_lot": "总价",
 	"quantity": "数量",
 	"name": "名称",
 	"level": "等级",
 	"date": "日期",
 	"rarity": "稀有度",
+	"charge": "充能",
 	"type": "类型",
 	"no_group": "不分组",
 	"size": "大小",
 	"size_small": "小",
 	"size_normal": "中",
-	"size_large": "大"
+	"size_large": "大",
+	"layout": "布局",
+	"layout_rows": "按行",
+	"layout_columns": "按列"
 }

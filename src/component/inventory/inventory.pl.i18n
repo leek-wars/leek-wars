@@ -6,10 +6,14 @@
 	"level": "Poziom",
 	"date": "Data",
 	"rarity": "Niedostatek",
+	"charge": "Ładunek",
 	"type": "Type",
 	"no_group": "Bez grupy",
 	"size": "Rozmiar",
 	"size_small": "Mały",
 	"size_normal": "Normalny",
-	"size_large": "Duży"
+	"size_large": "Duży",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }
