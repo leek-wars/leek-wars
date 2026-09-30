@@ -6,10 +6,14 @@
 	"level": "レベル",
 	"date": "日にち",
 	"rarity": "希少性",
+	"charge": "充填",
 	"type": "タイプ",
 	"no_group": "グループなし",
 	"size": "サイズ",
 	"size_small": "小",
 	"size_normal": "中",
-	"size_large": "大"
+	"size_large": "大",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

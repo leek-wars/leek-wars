@@ -6,10 +6,14 @@
 	"level": "Tingkat",
 	"date": "Tanggal",
 	"rarity": "Kelangkaan",
+	"charge": "Muatan",
 	"type": "Tipe",
 	"no_group": "Tanpa grup",
 	"size": "Ukuran",
 	"size_small": "Kecil",
 	"size_normal": "Normal",
-	"size_large": "Besar"
+	"size_large": "Besar",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

@@ -6,10 +6,14 @@
 	"level": "Nivå",
 	"date": "Datum",
 	"rarity": "Brist",
+	"charge": "Laddning",
 	"type": "Type",
 	"no_group": "Ingen grupp",
 	"size": "Storlek",
 	"size_small": "Liten",
 	"size_normal": "Normal",
-	"size_large": "Stor"
+	"size_large": "Stor",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

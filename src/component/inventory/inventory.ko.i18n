@@ -6,10 +6,14 @@
 	"level": "레벨",
 	"date": "날짜",
 	"rarity": "희귀도",
+	"charge": "충전",
 	"type": "유형",
 	"no_group": "그룹 없음",
 	"size": "크기",
 	"size_small": "작게",
 	"size_normal": "보통",
-	"size_large": "크게"
+	"size_large": "크게",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

@@ -6,10 +6,14 @@
 	"level": "Niveau",
 	"date": "Dato",
 	"rarity": "Mangel",
+	"charge": "Ladning",
 	"type": "Type",
 	"no_group": "Ingen gruppe",
 	"size": "Størrelse",
 	"size_small": "Lille",
 	"size_normal": "Normal",
-	"size_large": "Stor"
+	"size_large": "Stor",
+	"layout": "Layout",
+	"layout_rows": "Rows",
+	"layout_columns": "Columns"
 }

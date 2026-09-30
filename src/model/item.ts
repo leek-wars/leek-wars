@@ -1,4 +1,5 @@
 import { Leek } from './leek'
+import { design } from './design'
 
 enum ItemType {
 	ALL = 0,
@@ -11,8 +12,9 @@ enum ItemType {
 	RESOURCE = 7,
 	COMPONENT = 8,
 	SCHEME = 9,
+	ALTERATION = 10,
 }
-const ItemTypes = [ItemType.ALL, ItemType.WEAPON, ItemType.CHIP, ItemType.POTION, ItemType.HAT, ItemType.POMP, ItemType.FIGHT_PACK, ItemType.RESOURCE, ItemType.COMPONENT, ItemType.SCHEME]
+const ItemTypes = [ItemType.ALL, ItemType.WEAPON, ItemType.CHIP, ItemType.POTION, ItemType.HAT, ItemType.POMP, ItemType.FIGHT_PACK, ItemType.RESOURCE, ItemType.COMPONENT, ItemType.SCHEME, ItemType.ALTERATION]
 
 export { ItemType, ItemTypes }
 
@@ -61,6 +63,7 @@ const ITEM_CATEGORY_NAME: { [key: number]: string } = {
 	[ItemType.RESOURCE]: 'resource',
 	[ItemType.COMPONENT]: 'component',
 	[ItemType.SCHEME]: 'scheme',
+	[ItemType.ALTERATION]: 'alteration',
 }
 
 const ITEM_TYPE_NAME: { [key: number]: string } = {
@@ -74,6 +77,7 @@ const ITEM_TYPE_NAME: { [key: number]: string } = {
 	[ItemType.RESOURCE]: 'resources',
 	[ItemType.COMPONENT]: 'components',
 	[ItemType.SCHEME]: 'schemes',
+	[ItemType.ALTERATION]: 'alterations',
 }
 
 const ITEM_TYPE_ICONS: { [key: number]: string } = {
@@ -87,6 +91,51 @@ const ITEM_TYPE_ICONS: { [key: number]: string } = {
 	[ItemType.RESOURCE]: 'mdi-leaf',
 	[ItemType.COMPONENT]: 'mdi-sd',
 	[ItemType.SCHEME]: 'mdi-map-outline',
+	[ItemType.ALTERATION]: 'mdi-flask',
 }
 
-export { Item, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_NAME, ITEM_TYPE_ICONS }
+/**
+ * Nom de fichier image d'un item, sans extension ni dossier.
+ *
+ * La plupart des noms sont prefixes par leur categorie (weapon_pistol,
+ * fight-pack_fight_pack_50...) et le prefixe doit sauter ; ressources,
+ * composants et alterations portent deja le nom du fichier. On retire donc le
+ * prefixe de categorie quand il est la, plutot que de couper au premier `_` :
+ * sinon une alteration comme vitamin_d finissait en /image/alteration/d.png,
+ * et un pack de combats nomme fight_pack_50 (la forme courte que le
+ * marche fabrique) en /image/fight-pack/pack_50.png.
+ */
+function itemImageName(item: { type: number, name: string }): string {
+	const prefix = ITEM_CATEGORY_NAME[item.type] + '_'
+	return item.name.startsWith(prefix) ? item.name.substring(prefix.length) : item.name
+}
+
+/**
+ * URL de la tuile d'une puce, par son nom de fichier (sans le préfixe `chip_`).
+ *
+ * Deux dossiers plutôt qu'un : les images sont servies avec un cache d'un an,
+ * un même nom de fichier ne peut donc pas changer de dessin sans que les
+ * joueurs gardent l'ancien pendant des mois. La série redessinée pour la 3.00
+ * vit dans `chipv3`, et `chip` garde les tuiles d'origine — que l'ancien design
+ * réaffiche.
+ */
+function chipImageDir(): string {
+	return design.legacy ? 'chip' : 'chipv3'
+}
+
+function chipImageUrl(name: string): string {
+	return '/image/' + chipImageDir() + '/' + name + '.png'
+}
+
+/** URL complete de l'image d'un item. */
+function itemImageUrl(item: { type: number, name: string }): string {
+	if (item.type === ItemType.CHIP) return chipImageUrl(itemImageName(item))
+	return '/image/' + ITEM_CATEGORY_NAME[item.type] + '/' + itemImageName(item) + '.png'
+}
+
+/** Clé de traduction du nom d'un item (ex: weapon.desert_saber, resource.sun_shard). */
+function itemTranslationKey(item: { type: number, name: string }): string {
+	return ITEM_CATEGORY_NAME[item.type] + '.' + itemImageName(item)
+}
+
+export { Item, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_NAME, ITEM_TYPE_ICONS, chipImageDir, chipImageUrl, itemImageName, itemImageUrl, itemTranslationKey }
