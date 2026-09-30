@@ -3,10 +3,19 @@
 // - Same-origin GET assets (non-/api/): Stale-while-revalidate with throttled background refresh
 // - Push notifications + click handling
 
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const NAV_CACHE = 'nav-' + CACHE_VERSION;
 const ASSET_CACHE = 'assets-' + CACHE_VERSION;
 const ALL_CACHES = [NAV_CACHE, ASSET_CACHE];
+const MANIFESTS = ['/manifest.json', '/manifest_beta.json'];
+
+// Version des images de /image/. Les images sont servies sous un nom stable avec un
+// Cache-Control d'un an : une image redessinée SANS être renommée (la 3.00 en compte
+// 220 — puces, apparats, trophées) resterait invisible pendant un an chez un joueur
+// qui a déjà vu l'ancienne. Rien côté serveur ne peut invalider un cache déjà posé,
+// et Chrome n'applique pas la directive `Clear-Site-Data: "cache"`.
+// À incrémenter à chaque màj qui redessine des images existantes.
+const IMAGE_VERSION = '304';
 
 // Throttle background SWR refreshes to avoid hammering the network when the user
 // triggers many cache-eligible fetches in quick succession.
@@ -26,6 +35,10 @@ self.addEventListener('activate', event => {
 		await Promise.all(
 			keys.filter(key => !ALL_CACHES.includes(key)).map(key => caches.delete(key))
 		);
+		// Evict manifests cached by earlier versions: a stale copy makes the browser
+		// install the PWA with the old icons (see the bypass in the fetch handler).
+		const assets = await caches.open(ASSET_CACHE);
+		await Promise.all(MANIFESTS.map(path => assets.delete(path).catch(() => {})));
 		await self.clients.claim();
 	})());
 });
@@ -43,12 +56,41 @@ self.addEventListener('fetch', event => {
 	// Explicit bypass: the new-version check (version-check.ts) needs the network copy of
 	// index.html — a stale-while-revalidate replay would defeat the comparison.
 	if (url.searchParams.has('no-sw')) return;
+	// Manifest bypass: the browser re-reads it on every PWA install, and a stale
+	// cached copy freezes the installed app on the previous set of icons.
+	if (MANIFESTS.includes(url.pathname)) return;
 	// Images bypass: they ship immutable long-lived Cache-Control, so the browser's
 	// native HTTP cache serves them. Routing every <img> through Cache Storage SWR
 	// is redundant and counter-productive on Firefox, where Cache Storage reads/writes
 	// are slow and image-dense pages (trophées d'éleveur, marché) issue hundreds of
 	// requests — the cache.match/cache.put overhead piles up and slows the page.
-	if (req.destination === 'image') return;
+	//
+	// Seule exception, et elle ne touche PAS Cache Storage : une image de /image/
+	// demandée sans le marqueur de version courante est rejouée sur une URL versionnée
+	// (`?v=300`). Nouvelle clé de cache, donc copie fraîche du serveur, que le
+	// navigateur garde ensuite normalement sous cette URL. C'est le seul moyen de
+	// remplacer une image redessinée qui a gardé son nom. En cas d'échec, on retombe
+	// sur la requête d'origine : une màj d'images ne doit jamais faire disparaître
+	// une image.
+	if (req.destination === 'image') {
+		if (url.pathname.startsWith('/image/') && url.searchParams.get('v') !== IMAGE_VERSION) {
+			url.searchParams.set('v', IMAGE_VERSION);
+			const versioned = url.toString();
+			event.respondWith((async () => {
+				try {
+					// L'Accept d'origine n'est pas lisible sur une requête no-cors : on le
+					// reconstruit, sinon le serveur servirait le
+					// PNG là où le navigateur sait lire le WebP, bien plus léger.
+					const response = await fetch(versioned, {
+						headers: { 'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' },
+					});
+					if (response && response.ok) return response;
+				} catch (e) { /* réseau coupé : on tente la requête telle quelle */ }
+				return fetch(req);
+			})());
+		}
+		return;
+	}
 	// Devtools "only-if-cached" oddity for non-same-origin (defensive).
 	if (req.cache === 'only-if-cached' && req.mode !== 'same-origin') return;
 
