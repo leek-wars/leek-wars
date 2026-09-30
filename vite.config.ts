@@ -331,6 +331,9 @@ function gameDataPlugin(): Plugin {
 	}
 	const caches: Record<string, ApiCache> = {}
 	let lastInjection = 'null' // Shared between middleware and transformIndexHtml
+	// Idem pour la classe de <body> : posée dès le HTML d'après le cookie `dark`,
+	// sinon le flash blanc au chargement n'existe qu'en dev.
+	let lastBodyClass = ''
 
 	function getCache(api: string): ApiCache {
 		if (!caches[api]) {
@@ -374,13 +377,21 @@ function gameDataPlugin(): Plugin {
 				const accept = req.headers.accept || ''
 				if (!accept.includes('text/html')) return next()
 
+				// Posé avant tout `return next()` en cas d'échec du fetch des données :
+				// la classe de thème ne dépend pas de l'API.
+				lastBodyClass = /(?:^|;\s*)dark=1(?:;|$)/.test(req.headers.cookie || '') ? 'dark' : ''
+
 				// Utiliser la même source API que le client selon le port d'accès
 				const host = req.headers['x-forwarded-host'] as string || req.headers.host || ''
+				const hostname = host.split(':')[0]
 				const port = host.split(':')[1] || ''
-				console.log('[game-data] Request host=' + req.headers.host + ' x-forwarded-host=' + req.headers['x-forwarded-host'] + ' → port=' + port + ' → api=' + ((port === '8500' || port === '5100') ? 'local' : 'prod'))
-				const api = (port === '8500' || port === '5100')
-					? 'http://localhost:' + port + '/api/'
+				// leekwars-beta.local : API beta via le proxy local
+				const beta = hostname === 'leekwars-beta.local'
+				const local = port === '8500' || port === '5100' || hostname === 'leekwars.local'
+				const api = beta ? 'http://leekwars-beta.local/api/'
+					: local ? 'http://localhost:' + (port || '8500') + '/api/'
 					: 'https://leekwars.com/api/'
+				console.log('[game-data] Request host=' + req.headers.host + ' x-forwarded-host=' + req.headers['x-forwarded-host'] + ' → api=' + api)
 
 				let cache: ApiCache
 				try {
@@ -432,7 +443,16 @@ function gameDataPlugin(): Plugin {
 		},
 
 		transformIndexHtml(html) {
-			return html.replace('var __DATA__=null', 'var __DATA__=' + lastInjection)
+			html = html.replace('var __DATA__=null', 'var __DATA__=' + lastInjection)
+			if (lastBodyClass) {
+				// Compléter la classe existante (le build beta pose
+				// `<body class="beta">`) plutôt qu'ajouter un second attribut,
+				// que le navigateur ignorerait.
+				html = /<body class="/.test(html)
+					? html.replace(/<body class="([^"]*)"/, '<body class="$1 ' + lastBodyClass + '"')
+					: html.replace('<body>', '<body class="' + lastBodyClass + '">')
+			}
+			return html
 		}
 	}
 }
@@ -499,6 +519,8 @@ export default defineConfig({
 	server: {
 		port: 8080,
 		host: true,
+		// Hostnames locaux servis via le proxy Apache (sinon Vite rejette le WS HMR par Origin)
+		allowedHosts: ['leekwars.local', 'leekwars-beta.local'],
 		// Static files from public/ are served automatically by Vite
 		watch: {
 			// Use polling to avoid ENOSPC error on systems with low file watcher limit
@@ -527,6 +549,13 @@ export default defineConfig({
 			},
 			output: {
 				manualChunks(id) {
+					// `__vitePreload`, le helper d'import dynamique de Vite : une vingtaine
+					// de lignes, mais sans affectation explicite Rollup le loge dans le
+					// premier chunk qui le référence — monaco — et `main` l'importe alors
+					// STATIQUEMENT de là. Chaque page du site téléchargeait, parsait et
+					// exécutait 3,7 Mo de monaco pour cette seule fonction. On l'épingle
+					// dans un chunk déjà chargé au démarrage.
+					if (id.includes('vite/preload-helper')) return 'vue-vendor'
 					const m = id.match(/node_modules\/(@[^/]+\/[^/]+|[^/]+)/)
 					if (!m) return
 					switch (m[1]) {
@@ -551,8 +580,6 @@ export default defineConfig({
 							return 'js-beautify'
 						case 'monaco-editor':
 							return 'monaco'
-						case 'codemirror':
-							return 'codemirror'
 						case 'katex':
 							return 'katex'
 					}
@@ -562,6 +589,18 @@ export default defineConfig({
 		}
 	},
 	optimizeDeps: {
-		include: ['vue', 'vue-router', 'vuetify'],
+		include: [
+			'vue', 'vue-router', 'vuetify',
+			// Internes Monaco importés par monaco-dispose.ts : pré-bundlés d'emblée, sinon Vite les
+			// découvre à la première destruction d'éditeur et recharge la page en plein usage.
+			'monaco-editor/esm/vs/base/browser/ui/hover/hoverDelegateFactory.js',
+			'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices.js',
+			'monaco-editor/esm/vs/platform/instantiation/common/instantiation.js',
+			'monaco-editor/esm/vs/platform/hover/browser/hover.js',
+			// Idem pour monaco-context-paste.ts : la commande « Coller » doit être CELLE de l'éditeur,
+			// donc pré-bundlée dans la même passe que le reste de Monaco, sans quoi on patche une copie.
+			'monaco-editor/esm/vs/editor/contrib/clipboard/browser/clipboard.js',
+			'monaco-editor/esm/vs/editor/browser/controller/editContext/clipboardUtils.js',
+		],
 	}
 })
