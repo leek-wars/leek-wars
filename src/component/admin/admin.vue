@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>Administration</h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1>Administration</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first" icon="mdi-chart-line" title="Statistiques & monitoring">
 			<template #content>
@@ -96,6 +101,12 @@
 							<h2>Trophées</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/reserves">
+						<div v-ripple class="section card">
+							<v-icon>mdi-gift-outline</v-icon>
+							<h2>Réserves</h2>
+						</div>
+					</router-link>
 					<router-link to="/admin/seasons">
 						<div v-ripple class="section card">
 							<v-icon>mdi-party-popper</v-icon>
@@ -108,6 +119,12 @@
 							<h2>Chapeaux</h2>
 						</div>
 					</router-link>
+					<router-link to="/admin/weapons">
+						<div v-ripple class="section card">
+							<v-icon>mdi-pistol</v-icon>
+							<h2>Armes</h2>
+						</div>
+					</router-link>
 					<router-link to="/admin/skins">
 						<div v-ripple class="section card">
 							<v-icon>mdi-palette</v-icon>
@@ -116,7 +133,7 @@
 					</router-link>
 					<router-link to="/help/items">
 						<div v-ripple class="section card">
-							<v-icon>mdi-chart-timeline-variant</v-icon>
+							<v-icon>mdi-shape</v-icon>
 							<h2>Items</h2>
 						</div>
 					</router-link>
@@ -124,6 +141,12 @@
 						<div v-ripple class="section card">
 							<v-icon>mdi-food-apple-outline</v-icon>
 							<h2>Composants</h2>
+						</div>
+					</router-link>
+					<router-link to="/admin/alterations">
+						<div v-ripple class="section card">
+							<v-icon>mdi-flask</v-icon>
+							<h2>Altérations</h2>
 						</div>
 					</router-link>
 					<router-link to="/admin/schemes">
@@ -142,6 +165,20 @@
 						<div v-ripple class="section card">
 							<v-icon>mdi-flask-outline</v-icon>
 							<h2>Game animations</h2>
+						</div>
+					</router-link>
+					<router-link to="/admin/icons">
+						<div v-ripple class="section card">
+							<v-icon>mdi-shape</v-icon>
+							<h2>Icônes</h2>
+						</div>
+					</router-link>
+					<!-- `mdi-palette-swatch` et pas `mdi-palette`, déjà pris par les Skins
+					     six cases plus haut dans la même grille (cf. /admin/icons). -->
+					<router-link to="/redesign">
+						<div v-ripple class="section card">
+							<v-icon>mdi-palette-swatch</v-icon>
+							<h2>Design system 3.0</h2>
 						</div>
 					</router-link>
 				</div>
@@ -256,6 +293,7 @@
 <script setup lang="ts">
 	import { env } from '@/env'
 	import { locale } from '@/locale'
+	import { arenaModeLabel } from '@/model/arena'
 	import { ChatMessage } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { i18n } from '@/model/i18n'
@@ -402,8 +440,7 @@
 
 	function arenaRegisterRandom() {
 		LeekWars.post('admin/arena-register-random').then((data) => {
-			const modes = ['BR', 'Guerre', 'Chasse', 'Colosse']
-			const pref = data.preference === -1 ? 'Aucune' : modes[data.preference]
+			const pref = i18n.t('main.' + arenaModeLabel(data.preference))
 			LeekWars.toast(`${data.farmer} / ${data.leek} inscrit (pref: ${pref})`)
 		}).error((error) => {
 			LeekWars.toast("Erreur : " + error.error)

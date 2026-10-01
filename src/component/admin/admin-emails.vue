@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Mails', link: '/admin/emails'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Mails', link: '/admin/emails'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<loader v-if="!farmers" />
@@ -13,6 +18,11 @@
 				</div>
 				<div v-if="deleteTarget" class="delete-confirm">
 					<p>Compte trouvé : <b>{{ deleteTarget.name }}</b> (id: {{ deleteTarget.id }})</p>
+					<p v-if="deleteTarget.team_owner" class="team-warning">
+						<v-icon>mdi-alert</v-icon>
+						<span v-if="deleteTarget.team_owner.member_count === 1">Ce compte est le créateur et seul membre de l'équipe « {{ deleteTarget.team_owner.name }} » : elle sera dissoute.</span>
+						<span v-else>Ce compte est le créateur de l'équipe « {{ deleteTarget.team_owner.name }} » ({{ deleteTarget.team_owner.member_count }} membres) : elle sera transmise au membre le plus ancien.</span>
+					</p>
 					<p>Pour confirmer la suppression, tapez le nom du joueur :</p>
 					<input v-model="deleteConfirm" type="text" :placeholder="deleteTarget.name">
 					<v-btn color="red" :disabled="deleteConfirm !== deleteTarget.name" @click="deleteAccount">Supprimer définitivement</v-btn>
@@ -93,7 +103,7 @@
 	const templates = ref<EmailTemplate[]>([])
 	const email = ref('')
 	const deleteEmail = ref('')
-	const deleteTarget = ref<{ id: number, name: string, [key: string]: unknown } | null>(null)
+	const deleteTarget = ref<{ id: number, name: string, team_owner?: { name: string, member_count: number }, [key: string]: unknown } | null>(null)
 	const deleteConfirm = ref('')
 	const deleteError = ref('')
 	const deleteSuccess = ref('')
@@ -205,11 +215,23 @@
 		padding: 10px;
 		background: #fff3cd;
 		border: 1px solid #ffc107;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		color: var(--grey-2); // le fond reste clair en mode sombre
 		p { margin: 0; }
+	}
+	// Le fond de .delete-confirm reste clair en mode sombre, pas d'override dark
+	.team-warning {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: #a04000;
+		font-weight: bold;
+		.v-icon {
+			color: #e67e22;
+		}
 	}
 	.delete-success {
 		margin-top: 10px;

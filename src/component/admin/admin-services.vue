@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Services', link: '/admin/services'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Services', link: '/admin/services'}]" :raw="true" /></h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<div class="tab disabled">{{ services ? services.length : '...' }} services</div>
 			</div>
@@ -58,11 +63,11 @@ LeekWars.get('service/get-all-admin').then(data => {
 		padding: 10px;
 		vertical-align: top;
 		font-size: 20px;
-		color: #ccc;
+		color: var(--grey-11);
 		margin-bottom: 10px
 	}
 	.service .module {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.service .function, .service .returns {
 		color: var(--pure-black);
@@ -74,9 +79,9 @@ LeekWars.get('service/get-all-admin').then(data => {
 		font-size: 12px;
 	}
 	.service .label {
-		color: white;
-		background: #999;
-		border-radius: 2px;
+		color: var(--white);
+		background: var(--grey-8);
+		border-radius: var(--radius-tiny);
 		padding: 2px 5px;
 		font-size: 12px;
 		font-weight: bold;
@@ -86,7 +91,7 @@ LeekWars.get('service/get-all-admin').then(data => {
 		background: red;
 	}
 	.service .implemented {
-		background: #5fad1b;
+		background: var(--primary-surface);
 	}
 	.service .admin {
 		background: #009aff;

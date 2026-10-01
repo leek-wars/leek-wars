@@ -1,16 +1,15 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>
-					<breadcrumb :items="breadcrumb_items" :raw="true" />
-				</h1>
-			</div>
-			<div class="tabs">
-				<div class="tab action content" icon="mdi-history">
-					<v-icon>mdi-history</v-icon> Historique
+			<div class="page-title">
+				<page-icon name="moderation" fallback="mdi-gavel" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
 				</div>
 			</div>
+			<moderation-tabs active="history" />
 		</div>
 
 		<panel title="Historique des jugements">
@@ -61,6 +60,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import ModerationTabs from './moderation-tabs.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 	defineOptions({ name: "ModerationHistory", i18n: {}, mixins: [...mixins] })
@@ -121,10 +121,10 @@
 		min-width: 24px;
 		text-align: center;
 		padding: 1px 8px;
-		border-radius: 10px;
+		border-radius: var(--radius-large);
 		font-size: 12px;
 		font-weight: bold;
-		color: white;
+		color: var(--white);
 		&.severity-1 { background: #4caf50; }
 		&.severity-2 { background: #ff9800; }
 		&.severity-3 { background: #f44336; }

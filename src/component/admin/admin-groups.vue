@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Groupes', link: '/admin/groups'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Groupes', link: '/admin/groups'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<loader v-if="!groups" />
@@ -29,8 +34,7 @@
 								<div v-ripple class="flex name">
 									<avatar :farmer="item.supervisor" />
 									<span>{{ item.supervisor.name }}</span>
-									<img v-if="item.supervisor.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="item.supervisor.connected" class="status" />
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
@@ -39,7 +43,7 @@
 						{{ $filters.date(item.creation_date) }}
 					</template>
 					<template #item.archived="{ item }">
-						<v-checkbox v-model="item.archived" :hide-details="true" />
+						<lw-checkbox v-model="item.archived" />
 					</template>
 					<template #item.demo="{ item }">
 						<div v-if="isDemo(item)" class="demo-cell">
@@ -119,20 +123,17 @@
 	gap: 6px;
 	justify-content: flex-start;
 }
-.status {
-	width: 15px;
-}
 .demo-cell {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 }
 .demo-badge {
-	background: var(--primary);
-	color: var(--pure-white);
+	background: var(--primary-surface);
+	color: var(--primary-surface-text);
 	font-size: 11px;
 	font-weight: bold;
 	padding: 2px 8px;
-	border-radius: 10px;
+	border-radius: var(--radius-large);
 }
 </style>

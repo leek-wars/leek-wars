@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Saisons', link: '/admin/seasons'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Saisons', link: '/admin/seasons'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 
 		<panel icon="mdi-party-popper" title="Saisons événementielles">
@@ -117,7 +122,7 @@
 		gap: 14px;
 		padding: 10px 14px;
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		.emoji {
 			font-size: 30px;

@@ -1,10 +1,10 @@
 {
 	"report_farmer": "举报{0}",
-	"reporting_deleted": "报告已删除",
+	"reporting_deleted": "举报已删除",
 	"title": "审核",
 	"warning_sent": "警告已发送！",
-	"you_are_muted": "你已经沉默了。",
-	"you_have_been_muted_by_x": "您已被 {0} 禁言。",
-	"you_have_been_unmuted_by_x": "{0} 允许您再次在聊天中发言。",
-	"you_must_choose_reason": "你必须选择一个模式！"
+	"you_are_muted": "你已被禁言。",
+	"you_have_been_muted_by_x": "你已被 {0} 禁言。",
+	"you_have_been_unmuted_by_x": "{0} 已允许你重新在聊天中发言。",
+	"you_must_choose_reason": "你必须选择一个理由！"
 }

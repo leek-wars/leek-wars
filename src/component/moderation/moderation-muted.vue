@@ -1,16 +1,15 @@
 <template>
 	<div>
 		<div class="page-header page-bar">
-			<div>
-				<h1>
-					<breadcrumb :items="breadcrumb_items" :raw="true" />
-				</h1>
-			</div>
-			<div class="tabs">
-				<div class="tab action content" icon="mdi-volume-off">
-					<v-icon>mdi-volume-off</v-icon> Mutés
+			<div class="page-title">
+				<page-icon name="moderation" fallback="mdi-gavel" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
 				</div>
 			</div>
+			<moderation-tabs active="muted" />
 		</div>
 
 		<panel title="Joueurs mutés">
@@ -50,6 +49,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import ModerationTabs from './moderation-tabs.vue'
 
 	defineOptions({ name: "ModerationMuted", i18n: {}, mixins: [...mixins] })
 
@@ -86,7 +86,7 @@
 		padding: 20px;
 		i {
 			font-size: 100px;
-			color: #ccc;
+			color: var(--grey-11);
 		}
 	}
 	.muted-list {
@@ -96,7 +96,7 @@
 		margin: 3px;
 		display: flex;
 		align-items: center;
-		img {
+		.avatar {
 			margin-right: 5px;
 			width: 25px;
 			height: 25px;
@@ -115,9 +115,9 @@
 		align-items: center;
 		gap: 3px;
 		padding: 2px 8px;
-		border-radius: 12px;
+		border-radius: var(--radius-pill);
 		font-size: 12px;
-		color: white;
+		color: var(--white);
 		&.chat {
 			background: #e67e22;
 		}
