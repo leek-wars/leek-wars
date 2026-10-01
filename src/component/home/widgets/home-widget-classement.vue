@@ -1,0 +1,206 @@
+<template>
+	<div class="classement-widget">
+		<loader v-if="!loaded" />
+		<template v-else>
+			<div class="head">
+				<span class="rank">{{ t('main.place') }}</span>
+				<span class="name">{{ nameColumn }}</span>
+				<span class="talent">{{ t('main.talent') }}</span>
+			</div>
+			<div ref="rowsEl" class="rows" :style="{ '--row-height': ROW_HEIGHT + 'px' }">
+				<router-link v-for="row in visibleRows" :key="row.id" v-ripple :to="linkFor(row)" class="row" :class="{ me: isMe(row) }">
+					<span class="rank" :class="rankClass(row.rank)">{{ row.rank }}</span>
+					<!-- La classe va sur l'activateur, pas sur le rich-tooltip : sa racine
+						est un v-menu, qui avale les attributs de l'appelant. -->
+					<span class="name">
+						<component :is="tooltipComponent" :id="row.id" v-slot="{ props }" :bottom="true">
+							<span v-bind="props" :class="rankClass(row.rank)">{{ row.name }}</span>
+						</component>
+					</span>
+					<flag v-if="row.country" :code="row.country" :clickable="false" class="flag" />
+					<span class="talent">{{ $filters.number(row.talent) }}</span>
+				</router-link>
+			</div>
+			<div v-if="!rows.length" class="none">{{ t('nobody') }}</div>
+		</template>
+	</div>
+</template>
+
+<script setup lang="ts">
+	import { computed, ref, watch } from 'vue'
+	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
+	import { useNamespacedT } from '@/model/i18n'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
+
+	defineOptions({ name: 'HomeWidgetClassement' })
+
+	// Hauteur naturelle d'une ligne (contenu + padding), posée en `min-height` par
+	// le style via la variable : les lignes s'étirent ensuite pour remplir le
+	// panel, mais c'est cette hauteur-là qui décide combien il en tient.
+	const ROW_HEIGHT = 31
+	const ROWS = 10
+
+	interface Row { id: number, rank: number, name: string, talent: number, country: string | null }
+
+	// `data` : charge utile de la requête groupée de l'accueil (cf. home.vue).
+	// `undefined` tant qu'elle est en vol, `null` si ce widget n'en a rien tiré —
+	// c'est alors, et alors seulement, qu'il refait son propre appel.
+	const props = defineProps<{ params?: { category?: string }, data?: { ranking: Row[] } | null }>()
+
+	const t = useNamespacedT('home')
+
+	const category = computed(() => props.params?.category || 'leek')
+	const loaded = ref(false)
+	const rows = ref<Row[]>([])
+
+	// Autant de lignes que la hauteur du panel le permet, jamais coupées.
+	const rowsEl = ref<HTMLElement | null>(null)
+	const rowCount = useFitCount(rowsEl, '.row', ROWS, 0, ROW_HEIGHT)
+	const visibleRows = computed(() => rows.value.slice(0, rowCount.value))
+
+	// La colonne des noms dit de qui parle le classement, comme sur /ranking.
+	const nameColumn = computed(() => t('main.' + category.value))
+	const tooltipComponent = computed(() => {
+		if (category.value === 'team') return RichTooltipTeam
+		if (category.value === 'farmer') return RichTooltipFarmer
+		return RichTooltipLeek
+	})
+
+	function linkFor(row: { id: number }): string {
+		if (category.value === 'team') return '/team/' + row.id
+		if (category.value === 'farmer') return '/farmer/' + row.id
+		return '/leek/' + row.id
+	}
+	function rankClass(rank: number): string {
+		return rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : ''
+	}
+	// Sa propre ligne, surlignée : son éleveur, un de ses poireaux — et son équipe,
+	// oubliée jusque-là, alors que c'est le seul classement des trois où l'on ne
+	// peut pas se reconnaître à son nom.
+	function isMe(row: { id: number }): boolean {
+		const farmer = store.state.farmer
+		if (!farmer) return false
+		if (category.value === 'farmer') return row.id === farmer.id
+		if (category.value === 'leek') return row.id in farmer.leeks
+		return !!farmer.team && row.id === farmer.team.id
+	}
+
+	function load() {
+		loaded.value = false
+		LeekWars.get<{ ranking: Row[] }>('ranking/get-active/' + category.value + '/talent/1/null').then((data) => {
+			rows.value = (data.ranking ?? []).slice(0, ROWS)
+			loaded.value = true
+		}).error(() => { rows.value = []; loaded.value = true })
+	}
+
+	// Le changement de catégorie est traité par l'accueil, qui redemande ce seul
+	// widget : pas de watcher sur `category` ici, il doublerait la requête.
+	watch(() => props.data, (data) => {
+		if (data === undefined) { loaded.value = false; return }
+		if (data === null) { load(); return }
+		rows.value = (data.ranking ?? []).slice(0, ROWS)
+		loaded.value = true
+	}, { immediate: true })
+</script>
+
+<style lang="scss" scoped>
+	.classement-widget {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+	.head {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 2px 8px 5px;
+		border-bottom: 1px solid var(--border);
+		margin-bottom: 3px;
+		font-size: 12px;
+		text-transform: uppercase;
+		color: var(--text-color-secondary);
+		flex-shrink: 0;
+	}
+	// La liste occupe la hauteur restante ; overflow hidden en filet de sécurité,
+	// le nombre de lignes affichées est calculé pour tenir sans couper.
+	.rows {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
+	}
+	// Les lignes retenues se partagent toute la hauteur du panel : pas de blanc
+	// résiduel en bas, et le contenu reste centré dans sa ligne.
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex: 1 1 auto;
+		min-height: var(--row-height);
+		padding: 6px 8px;
+		border-radius: var(--radius);
+		text-decoration: none;
+		color: var(--text-color);
+	}
+	.row:hover {
+		background: var(--background-secondary);
+	}
+	// Le vert du thème, pas le vert du v2 écrit en dur (invisible en v3 sombre).
+	.row.me {
+		background: color-mix(in srgb, var(--primary-surface) 12%, transparent);
+	}
+	// Assez large pour l'intitulé de colonne, pas seulement pour deux chiffres :
+	// « Place » y tient dans la plupart des langues, les plus longues (Placering,
+	// Peringkat) s'y coupent proprement au lieu de mordre sur la colonne des noms.
+	.rank {
+		width: 46px;
+		flex-shrink: 0;
+		text-align: center;
+		font-weight: bold;
+		color: var(--text-color-secondary);
+	}
+	.head .rank {
+		font-weight: normal;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.name {
+		flex: 1;
+		min-width: 0;
+		font-weight: bold;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	// Podium : les jetons du thème (le v2 avait ces couleurs en dur, elles
+	// tombaient sous le seuil de contraste sur le parchemin du v3 clair).
+	.first { color: var(--rank-first); }
+	.second { color: var(--rank-second); }
+	.third { color: var(--rank-third); }
+	.row:deep(.flag) {
+		height: 13px;
+		flex-shrink: 0;
+	}
+	// Largeur commune à l'en-tête et aux valeurs, sinon l'intitulé, plus large
+	// qu'un talent à 4 chiffres, ne tombe pas au-dessus de sa colonne.
+	.talent {
+		min-width: 54px;
+		text-align: right;
+		font-weight: bold;
+		color: var(--primary);
+	}
+	.head .talent {
+		font-weight: normal;
+		color: var(--text-color-secondary);
+	}
+	.none {
+		color: var(--text-color-secondary);
+		font-style: italic;
+		padding: 8px;
+	}
+</style>
