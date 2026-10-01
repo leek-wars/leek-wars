@@ -44,7 +44,7 @@ defineEmits<{
 
 <style lang="scss" scoped>
 	a, a:visited {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.all {
 		padding: 15px;

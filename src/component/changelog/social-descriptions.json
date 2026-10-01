@@ -477,7 +477,8 @@
 	},
 	"249_polyglot": {
 		"emoji": "🐍",
-		"description": "Write your AIs in JavaScript, Python or TypeScript, with the full fight API"
+		"description": "Write your AIs in JavaScript, Python or TypeScript, with the full fight API",
+		"cover": "249_js_ts_py"
 	},
 	"249_language_logos": {
 		"emoji": "🔤",
@@ -530,5 +531,65 @@
 	"248_notif_setting": {
 		"emoji": "🔔",
 		"description": "Open the fight report directly from a notification"
+	},
+	"301_new_components": {
+		"emoji": "🧩",
+		"description": "Four of them recycle into alterations that no component gave until now"
+	},
+	"301_editor_fight": {
+		"emoji": "🧪",
+		"description": "Change a line, run the test again and watch the same scenario without leaving your code"
+	},
+	"301_chat_images": {
+		"emoji": "🖼️",
+		"description": "Paste, drag or attach a picture right in the message box"
+	},
+	"301_markdown_editor": {
+		"emoji": "📝",
+		"description": "Ctrl+B, Ctrl+I and Ctrl+K to format, and Ctrl+Enter to post"
+	},
+	"301_chat_edit": {
+		"emoji": "✏️",
+		"description": "Fix a typo without deleting your message, a pencil marks the edit"
+	},
+	"301_exec": {
+		"emoji": "💻",
+		"description": "Answer a code question with a result everyone can see, operation cost included"
+	},
+	"301_live": {
+		"emoji": "📡",
+		"description": "Add it several times to your home page, each copy with its own filter"
+	},
+	"301_widgets": {
+		"emoji": "🏠",
+		"description": "Join the arena queue or check on your team without leaving the home page"
+	},
+	"301_forge_batch": {
+		"emoji": "⚒️",
+		"description": "Ten copies of a recipe in a single click"
+	},
+	"301_inventory_search": {
+		"emoji": "🔍",
+		"description": "Accents are optional, and #123 finds an item by its number"
+	},
+	"301_loadout_export": {
+		"emoji": "📋",
+		"description": "Share a build on the forum or move it to another account in one paste"
+	},
+	"301_fun_rankings": {
+		"emoji": "🏆",
+		"description": "Wars won, chest hunts won, Colossi defeated and wins as the Colossus"
+	},
+	"301_changelog_search": {
+		"emoji": "📜",
+		"description": "Find out in which version a feature or a fix arrived"
+	},
+	"301_big_leeks": {
+		"emoji": "🥬",
+		"description": "And the \"Old design\" option is back in the settings too"
+	},
+	"301_widgets_improved": {
+		"emoji": "🏅",
+		"description": "Rarest trophies now shows your progress, and Leek statistics your rank"
 	}
 }

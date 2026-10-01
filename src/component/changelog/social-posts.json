@@ -1,0 +1,162 @@
+{
+	"300": {
+		"updated": "2026-09-18",
+		"networks": [
+			{
+				"key": "x",
+				"label": "X (Twitter)",
+				"account": "@LeekWars",
+				"limit": 280,
+				"thread": true,
+				"manual": false,
+				"note": "Le lien dans le corps réduit la portée. L'image se colle directement dans le composer (bouton « copier l'image »).",
+				"imageFormat": "square",
+				"title": "",
+				"subreddit": "",
+				"firstComment": "",
+				"messages": [
+					{
+						"text": "🥬 La mise à jour 3.0 de Leek Wars est en ligne. C'est la plus grosse depuis longtemps : deux mois et 1285 commits.\n\nSi vous ne connaissez pas : vous ne déplacez pas votre combattant, vous écrivez l'IA qui le fait, et elle affronte celle des autres.\n\nLe détail ci-dessous.",
+						"length": 272,
+						"image": "300_square_cover.png"
+					},
+					{
+						"text": "🎨 Tout le site a été redessiné, en thème clair comme en thème sombre, cartes de combat comprises. C'est ce qui justifie le passage en 3.0.\n\nLa page d'accueil se compose aussi elle-même : une grille de widgets que vous choisissez, déplacez et redimensionnez.",
+						"length": 258,
+						"image": "300_square_design.png"
+					},
+					{
+						"text": "⚗️ Les altérations : 36 objets à appliquer à l'atelier pour pousser un composant au-delà de ses valeurs d'origine.\n\nChaque pièce supporte une charge qui dépend de son niveau. Plus vous poussez, plus la dose coûte cher et plus le risque de casser la pièce augmente.",
+						"length": 266,
+						"image": "300_square_alterations.png"
+					},
+					{
+						"text": "🌽 Trois plantes à fabriquer. Le Maïs et le Piment ne jouent pas de tour : ils se réveillent quand une entité entre dans leur zone, et la fonction passée à summon() la reçoit. C'est votre IA qui décide.",
+						"length": 202,
+						"image": "300_square_plants.png"
+					},
+					{
+						"text": "💥 Trois puces : Hémorragie rend la cible Insoignable un tour, Surinfection convertit en dégâts la moitié de ses poisons, Maturation renforce une invocation.\n\nDeux armes d'été, le Sabre du désert et la Lance du soleil, et quatre chapeaux dont la Couronne solaire.",
+						"length": 263,
+						"image": "300_square_chips.png"
+					},
+					{
+						"text": "⭐ Leek Wars +, l'abonnement de soutien : 3,99 € par mois, 100 combats par jour, file prioritaire, Potager rapide, et des récompenses tous les 60 jours. Rien qui rende plus fort en combat.\n\nChangelog complet :\nhttps://leekwars.com/release/3.00\n\n#LeekWars #gamedev",
+						"length": 254,
+						"image": "300_square_lwplus.png"
+					}
+				],
+				"extraImages": []
+			},
+			{
+				"key": "facebook",
+				"label": "Facebook",
+				"account": "Page LeekWars",
+				"limit": 63206,
+				"thread": false,
+				"manual": false,
+				"note": "Facebook ne pré-remplit plus le composer depuis une URL : le texte part dans le presse-papier, la page s'ouvre à côté.",
+				"imageFormat": "square",
+				"title": "",
+				"subreddit": "",
+				"firstComment": "",
+				"messages": [
+					{
+						"text": "Two months of work, 1285 commits, and Leek Wars goes to 3.0 🥬 The whole site has been redesigned, and that is only the start:\n\n🎨 A new design everywhere, light theme and dark theme, fight maps included\n⚗️ Component alterations: 36 items to push a component past its original values, with a real risk of breaking it if you get greedy\n🏠 A home page you compose yourself, a grid of widgets you pick, move and resize\n🌽 Three new plants to craft, and the Awakening: the Corn and the Chilli pepper no longer play a turn, they wake up when an entity steps into their zone and your AI decides what they do\n💥 Three new chips, two weapons, four hats and 40 new trophies\n⭐ Leek Wars +, an optional support subscription at 3.99 euros a month, with nothing in it that makes you stronger in combat\n\nFull changelog: https://leekwars.com/release/3.00\n\nGo have a look at your garden, it does not look the same anymore 🌱",
+						"length": 902,
+						"image": "300_square_cover.png"
+					}
+				],
+				"extraImages": [
+					"300_square_design.png",
+					"300_square_alterations.png",
+					"300_square_home.png",
+					"300_square_plants.png",
+					"300_square_chips.png",
+					"300_square_weapons_1.png",
+					"300_square_hats.png",
+					"300_square_lwplus.png"
+				]
+			},
+			{
+				"key": "linkedin",
+				"label": "LinkedIn",
+				"account": "leek-wars",
+				"limit": 3000,
+				"thread": false,
+				"manual": false,
+				"note": "Le composer LinkedIn accepte le texte pré-rempli par URL.",
+				"imageFormat": "square",
+				"title": "",
+				"subreddit": "",
+				"firstComment": "",
+				"messages": [
+					{
+						"text": "Leek Wars 3.0 is out. After two months and 1285 commits, the version number moved for the first time in years, and the reason is visible everywhere: the entire interface has been redesigned, in both themes.\n\n🎨 A full redesign of the site, rebuilt on design tokens so light and dark stay consistent down to the fight maps\n⚗️ Component alterations, a risk and reward system: each part carries a load that depends on its level, every dose costs more than the last and raises the chance of destroying the piece\n🌽 Plant Awakening, the feature I am happiest with: two of the new summons never play a turn of their own. They wake up when an entity enters their zone, and the callback passed to summon() receives that entity, so the reaction is written by the player, in their own AI code\n🔌 Personal API keys with scoped roles, a rebuilt API documentation covering 300 services with copy ready examples in cURL, JavaScript, Python and HTTP, an OpenAPI export, and an official MCP server (npx @leek-wars/mcp) that lets a coding assistant read your AIs, start test fights and read the reports\n🐍 The Python editor became a real IDE, with type inference, hover, go to definition and imports resolved across your scripts, and Python now counts operations per expression like the other languages\n\nLeek Wars is a free online game where you write the AI for your leeks and watch them fight. This release is mostly about making the place nicer to spend time in, and easier to plug your own tools into.\n\nTake a look: https://leekwars.com\nFull changelog: https://leekwars.com/release/3.00\n\n#LeekWars #gamedev #programming #indiegame #codinggame #python #api #mcp",
+						"length": 1643,
+						"image": "300_square_cover.png"
+					}
+				],
+				"extraImages": [
+					"300_square_design.png",
+					"300_square_alterations.png",
+					"300_square_plants.png",
+					"300_square_api_keys.png",
+					"300_square_api_doc.png",
+					"300_square_python_ide.png"
+				]
+			},
+			{
+				"key": "instagram",
+				"label": "Instagram",
+				"account": "@leekwars",
+				"limit": 2200,
+				"thread": false,
+				"manual": false,
+				"note": "Image obligatoire, et le lien n'est pas cliquable : la légende renvoie vers la bio.",
+				"imageFormat": "feed",
+				"title": "",
+				"subreddit": "",
+				"firstComment": "",
+				"messages": [
+					{
+						"text": "🎨 Leek Wars is 3.0, and it has a brand new look! Redesigned from top to bottom, plus component alterations, a customizable home page, three new plants that react on their own and a pile of new gear. Your garden is waiting 🌱\n\nFull changelog in bio.\n\n#LeekWars #gamedev #programming #indiegame #codinggame #webdev #redesign #ui #python #javascript #pvp #strategy #gaming #update",
+						"length": 376,
+						"image": "300_feed_cover.png"
+					}
+				],
+				"extraImages": [
+					"300_feed_design.png",
+					"300_feed_alterations.png",
+					"300_feed_home.png",
+					"300_feed_plants.png",
+					"300_feed_chips.png",
+					"300_feed_weapons_1.png",
+					"300_feed_hats.png",
+					"300_feed_lwplus.png"
+				]
+			},
+			{
+				"key": "reddit",
+				"label": "Reddit",
+				"account": "r/leekwars",
+				"limit": 40000,
+				"thread": false,
+				"manual": true,
+				"note": "Toujours à la main, avec du contexte : Reddit banne les publications scriptées. Le lien va en 1er commentaire.",
+				"imageFormat": null,
+				"title": "Leek Wars 3.0 is out: a full redesign, component alterations, and plants that wake up when you walk past them",
+				"subreddit": "leekwars",
+				"firstComment": "https://leekwars.com/release/3.00",
+				"messages": [
+					{
+						"text": "Two months and around 1285 commits later, 3.0 is live. It is the biggest update the game has had, and the version number moved for the first time in years because the whole site got redesigned.\n\nWhat is in it:\n\n- **A new design across the whole site**, light theme and dark theme, fight maps included.\n- **Component alterations**: 36 items you apply at the workshop to push a component past its original values. Each piece carries a load that depends on its level, every dose costs more than the last and raises the chance of destroying the piece.\n- **A home page you compose yourself**: a grid of widgets you pick, move and resize, and that follows you from one device to another.\n- **Three new plants to craft**, plus the Awakening: the Corn and the Chilli pepper no longer play a turn of their own. They wake up when an entity steps into their zone, and the function you passed to summon() receives that entity, so you decide what they do.\n- **Three new chips, two weapons, four hats and 40 new trophies.**\n- **Personal API keys** with scoped roles, a rebuilt API documentation covering 300 services, an OpenAPI export, and an official MCP server (npx @leek-wars/mcp) so a coding assistant can read your AIs and start test fights.\n- **The Python editor became a real IDE**: type inference, hover, go to definition, imports resolved across your scripts.\n\nThe Awakening is the part I am most curious about. It is the first summon whose behaviour is written entirely by the player and triggered by someone else's movement, and I genuinely do not know yet what people will build with it. If you try it, I want to hear what you came up with.\n\nChangelog link in the first comment.",
+						"length": 1677,
+						"image": null
+					}
+				],
+				"extraImages": []
+			}
+		]
+	}
+}
