@@ -1,11 +1,11 @@
 <template>
 	<span class="br-invite-card">
-		⚔️ {{ label || 'Arène' }}
+		⚔️ {{ label || $t('main.chat_cmd_label_arena') }}
 		<span v-if="arenaCount >= 0" class="progress">{{ arenaCount }}&nbsp;/&nbsp;20</span>
 		<span v-if="arenaCountdown >= 0" class="countdown">{{ arenaCountdown }}s</span>
-		<span v-if="eligibleLeek && !inArena" class="btn" @click="joinArena">Rejoindre</span>
-		<span v-else-if="needsModeChange" class="btn btn-change" @click="changeMode">Changer mode</span>
-		<span v-else-if="modeAlreadySelected" class="mode-selected">✓ Mode sélectionné</span>
+		<span v-if="eligibleLeek && !inArena" class="btn" @click="joinArena">{{ $t('main.chat_invite_join') }}</span>
+		<span v-else-if="needsModeChange" class="btn btn-change" @click="changeMode">{{ $t('main.chat_invite_change_mode') }}</span>
+		<span v-else-if="modeAlreadySelected" class="mode-selected">{{ $t('main.chat_invite_mode_selected') }}</span>
 	</span>
 </template>
 
@@ -74,7 +74,7 @@ function changeMode() {
 		gap: 0 8px;
 		font-size: 14px;
 		.progress {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 700;
 		}
 		.countdown {
@@ -82,16 +82,16 @@ function changeMode() {
 			font-weight: 700;
 		}
 		.mode-selected {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 600;
 			font-size: 12px;
 			padding: 1px 8px;
 		}
 		.btn {
-			background: #5fad1b;
-			color: white;
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
 			padding: 1px 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			cursor: pointer;
 			font-size: 12px;
 			&:hover {

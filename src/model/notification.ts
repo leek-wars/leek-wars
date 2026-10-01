@@ -53,6 +53,9 @@ enum NotificationType {
 	GODFATHER_REQUEST_ACCEPTED = 50, // Demande de parrainage acceptée (params : id_godfather, name_godfather)
 	GODFATHER_REQUEST_REFUSED = 51, // Demande de parrainage refusée (params : id_target, name_target)
 	COLOSSUS_OWN_REPORT = 52, // Rapport de Colosse, reçu par le colosse lui-même
+	BUG_REPORT_REWARD = 53, // Bug signalé puis corrigé : un Scarabée (params : topic_id, category_id, topic_title)
+	RESOURCE_GIFT = 54, // Don d'un organisateur (params : giver_name, template, quantity, message)
+	SUGGESTION_REWARD = 55, // Suggestion proposée puis réalisée : une Luciole (params : topic_id, category_id, topic_title)
 }
 
 // Notifications de résultat de combat dont le lien respecte la préférence
@@ -86,8 +89,17 @@ class Notification {
 	public read!: boolean
 	public icon!: boolean
 	public clazz!: string
+	/** Identifiant du poireau concerné, quand la notification parle de l'un des
+	 *  nôtres : sa miniature remplace alors l'icône générique. On garde l'ID et
+	 *  pas l'objet, pour que l'affichage lise le poireau à jour dans le store —
+	 *  et pour ne pas traîner le type `Leek`, dont la profondeur fait échouer
+	 *  l'inférence du template de `squares.vue`. */
+	public leek!: number | null
+	/** Texte libre écrit par un joueur (mot d'un don), affiché tel quel à la place du
+	 *  message traduit. */
+	public text: string | null = null
 
-	constructor(data: Record<string, unknown>, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null) {
+	constructor(data: Record<string, unknown>, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null, leek: number | null = null) {
 		this.id = data.id as number
 		this.date = data.date as number
 		this.type = data.type as NotificationType
@@ -107,6 +119,7 @@ class Notification {
 		this.title = title
 		this.message = message.map(LeekWars.protect)
 		this.result = result
+		this.leek = leek
 		this.read = data.read as boolean
 
 		this.clazz = ''
@@ -115,6 +128,10 @@ class Notification {
 		}
 		if (this.type === NotificationType.TEAM_TOURNAMENT_WIN || this.type === NotificationType.FARMER_TOURNAMENT_WIN || this.type === NotificationType.TOURNAMENT_WINNER) {
 			this.clazz = 'notif-bigwin'
+		}
+		// Image d'objet en couleurs : ni atténuée ni inversée comme les icônes monochromes
+		if (this.type === NotificationType.BUG_REPORT_REWARD || this.type === NotificationType.SUGGESTION_REWARD || this.type === NotificationType.RESOURCE_GIFT) {
+			this.clazz = 'notif-item'
 		}
 	}
 

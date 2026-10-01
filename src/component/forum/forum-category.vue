@@ -1,31 +1,34 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>
-					<breadcrumb :items="breadcrumb_items" :raw="true" />
-				</h1>
-				<v-menu offset-y>
-					<template #activator="{ props }">
-						<div class="forum-language info" v-bind="props">
-							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
-							<img width="10" src="/image/selector.png">
-						</div>
-					</template>
-					<v-list>
-						<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
-							<template #prepend>
-								<v-list-item-action start>
-									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop @update:model-value="updateCategories" />
-								</v-list-item-action>
-							</template>
-							<div class="flex">
-								<flag :code="language.country" :clickable="false" />
-								<span class="name">{{ language.name }}</span>
+			<div class="page-title">
+				<page-icon name="forum" fallback="mdi-forum" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
+					<v-menu offset-y>
+						<template #activator="{ props }">
+							<div class="forum-language info" v-bind="props">
+								<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
+								<v-icon class="caret">mdi-menu-down</v-icon>
 							</div>
-						</v-list-item>
-					</v-list>
-				</v-menu>
+						</template>
+						<v-list>
+							<v-list-item v-for="(language, i) in languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
+								<template #prepend>
+									<v-list-item-action start>
+										<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop @update:model-value="updateCategories" />
+									</v-list-item-action>
+								</template>
+								<div class="flex">
+									<flag :code="language.country" :clickable="false" />
+									<span class="name">{{ language.name }}</span>
+								</div>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</div>
 			</div>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab" @click="createDialog = true">
@@ -33,7 +36,7 @@
 					<span>{{ $t('create_new_topic') }}</span>
 				</div>
 				<div class="tab disabled search-box">
-					<img src="/image/search.png" @click="search">
+					<v-icon class="search-icon" @click="search">mdi-magnify</v-icon>
 					<input v-model="query" type="text" @keyup.enter="search">
 				</div>
 			</div>
@@ -62,7 +65,7 @@
 										<v-list-item v-for="r in readFilterItems" :key="r.value" density="compact" @click="filterRead = r.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterRead" :value="r.value" density="compact" hide-details @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
+													<lw-radio :model-value="filterRead" :value="r.value" @click.stop @update:model-value="filterRead = r.value; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ r.title }}</span>
@@ -73,7 +76,7 @@
 										<v-list-item density="compact" @click="filterStatus = []; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterStatus.length === 0" density="compact" hide-details @click.stop @update:model-value="filterStatus = []; saveFilters()" />
+													<lw-checkbox :model-value="filterStatus.length === 0" @click.stop @update:model-value="filterStatus = []; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ $t('filter_all') }}</span>
@@ -81,7 +84,7 @@
 										<v-list-item v-for="s in statusFilterItems" :key="s.value" density="compact" @click="toggleStatusFilter(s.value)">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterStatus.includes(s.value)" density="compact" hide-details @click.stop @update:model-value="toggleStatusFilter(s.value)" />
+													<lw-checkbox :model-value="filterStatus.includes(s.value)" @click.stop @update:model-value="toggleStatusFilter(s.value)" />
 												</v-list-item-action>
 											</template>
 											<v-icon v-if="s.icon" size="small" :class="s.iconClass" class="filter-item-icon">{{ s.icon }}</v-icon>
@@ -93,7 +96,7 @@
 										<v-list-item v-for="a in acknowledgedFilterItems" :key="a.value" density="compact" @click="filterAcknowledged = a.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterAcknowledged" :value="a.value" density="compact" hide-details @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
+													<lw-radio :model-value="filterAcknowledged" :value="a.value" @click.stop @update:model-value="filterAcknowledged = a.value; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ a.title }}</span>
@@ -104,7 +107,7 @@
 										<v-list-item v-for="l in lockedFilterItems" :key="l.value" density="compact" @click="filterLocked = l.value; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-radio :model-value="filterLocked" :value="l.value" density="compact" hide-details @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
+													<lw-radio :model-value="filterLocked" :value="l.value" @click.stop @update:model-value="filterLocked = l.value; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ l.title }}</span>
@@ -115,7 +118,7 @@
 										<v-list-item density="compact" @click="filterPriority = []; saveFilters()">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterPriority.length === 0" density="compact" hide-details @click.stop @update:model-value="filterPriority = []; saveFilters()" />
+													<lw-checkbox :model-value="filterPriority.length === 0" @click.stop @update:model-value="filterPriority = []; saveFilters()" />
 												</v-list-item-action>
 											</template>
 											<span>{{ $t('filter_all') }}</span>
@@ -123,7 +126,7 @@
 										<v-list-item v-for="p in priorityFilterItems" :key="p.value" density="compact" @click="togglePriorityFilter(p.value)">
 											<template #prepend>
 												<v-list-item-action start>
-													<v-checkbox :model-value="filterPriority.includes(p.value)" density="compact" hide-details @click.stop @update:model-value="togglePriorityFilter(p.value)" />
+													<lw-checkbox :model-value="filterPriority.includes(p.value)" @click.stop @update:model-value="togglePriorityFilter(p.value)" />
 												</v-list-item-action>
 											</template>
 											<v-icon v-if="p.icon" size="small" :class="p.iconClass" class="filter-item-icon">{{ p.icon }}</v-icon>
@@ -142,18 +145,19 @@
 								</template>
 							</v-list>
 						</v-menu>
-						<v-select v-model="order" :items="orderItems" item-value="value" item-title="title" hide-details density="compact" variant="solo" class="order-select">
+						<lw-select v-model="order" :items="orderItems" item-value="value" item-title="title" class="order-select">
 							<template #selection="{ item }">
-								<v-icon size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
+								<v-icon v-if="item" size="small">{{ item.raw.icon }}</v-icon>{{ item ? item.raw.title : '' }}
 							</template>
-							<template #item="{ props, item }">
-								<v-list-item v-bind="props">
-									<template #prepend>
-										<v-icon size="small">{{ item.raw.icon }}</v-icon>
-									</template>
-								</v-list-item>
+							<!-- La ligne redevient un élément ordinaire : l'icône et le libellé
+							     s'écrivent, là où v-list-item les tirait de son #prepend. -->
+							<template #item="{ props: itemProps, item }">
+								<div v-bind="itemProps">
+									<v-icon size="small">{{ item.raw.icon }}</v-icon>
+									<span>{{ item.title }}</span>
+								</div>
 							</template>
-						</v-select>
+						</lw-select>
 					</div>
 				</div>
 
@@ -179,10 +183,10 @@
 
 				<div class="topics" :class="{loading}">
 					<div v-if="loading" class="loading-overlay"><loader /></div>
-					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
+					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned, unread: !topic.seen}" class="topic">
 						<div class="seen">
-							<img v-if="topic.seen" class="seen" src="/image/forum_seen.png">
-							<img v-else src="/image/forum_unseen.png">
+							<v-icon v-if="topic.seen" class="dot">mdi-rhombus-outline</v-icon>
+							<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-rhombus</v-icon>
 						</div>
 						<div>
 							<span v-ripple class="title">
@@ -294,20 +298,19 @@
 				<h3>{{ $t('new_topic_title') }}</h3>
 				<input v-model="createTitle" class="topic-name card" type="text" @keyup="updateDraftTitle">
 				<h3>{{ $t('new_topic_message') }}</h3>
-				<textarea v-model="createMessage" class="topic-message card" @keyup="updateDraft"></textarea>
+				<markdown-editor v-model="createMessage" class="topic-message" upload-context="forum" :min-height="180" @submit="create" />
 
 				<div class="grid">
-					<v-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang" hide-details>
-						<v-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
-					</v-radio-group>
+					<lw-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang">
+						<lw-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
+					</lw-radio-group>
 					<template v-if="$store.state.farmer && $store.state.farmer.admin">
 						<div>
-							<v-text-field v-model.number="createRelease" label="Release" type="number" placeholder="245" hide-details variant="outlined" density="compact" />
+							<lw-input v-model.number="createRelease" label="Release" type="number" placeholder="245" />
 						</div>
-						<v-checkbox v-model="createHidden" :label="$t('hidden_topic')" hide-details />
+						<lw-checkbox v-model="createHidden" :label="$t('hidden_topic')" />
 					</template>
 				</div>
-				<formatting-rules />
 				<div v-if="isBugCategory" class="user-agent-notice">
 					<v-icon size="small">mdi-information-outline</v-icon>
 					{{ $t('bug_user_agent_notice') }}
@@ -334,19 +337,19 @@
 </template>
 
 <script lang="ts" setup>
-	import { locale } from '@/locale'
 	import type { ForumCategory } from '@/model/forum'
 	import { ForumTopicStatus } from '@/model/forum'
+	import { forumCategoryName, forumDisplayLanguage, loadForumCategoryNames } from '@/model/forum-language'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { type Language, LeekWars } from '@/model/leekwars'
-	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
+	import { computed, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from './breadcrumb.vue'
-	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
+	import MarkdownEditor from '@/component/markdown-editor/markdown-editor.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: 'ForumCategory', i18n: {}, mixins: [...mixins] })
 
@@ -493,16 +496,29 @@
 
 	const activeLanguages = computed(() => Object.entries(forumLanguages).filter(e => e[1]).map(e => e[0]))
 
+	// Langue du forum affiché : la page peut réunir les catégories de plusieurs langues,
+	// elle prend alors celle de l'éleveur si son forum en fait partie, sinon la première.
+	const categoryLanguage = computed(() => {
+		if (!categories.value) { return null }
+		return forumDisplayLanguage(categories.value.map(c => translations.value.find(tr => tr.id === c.id)?.lang))
+	})
+	// Le titre de la catégorie suit la langue du forum consulté, pas celle de l'éleveur.
+	const categoryName = computed(() => {
+		const category = categories.value ? categories.value[0] : null
+		if (!category) { return '...' }
+		return category.team > 0 ? category.name : forumCategoryName(category.name, categoryLanguage.value)
+	})
+
 	const breadcrumb_items = ref<{name: string, link: string}[]>([])
 	const category_ids = ref('')
 	function refreshBreadcrumb() {
 		category_ids.value = categories.value ? categories.value.map(c => c.id).join(',') : ''
 		breadcrumb_items.value = [
 			{name: t('main.forum') as string, link: '/forum'},
-			{name: categories.value ? categories.value[0].name : '...', link: '/forum/category-' + (categories.value ? category_ids.value : 0)}
+			{name: categoryName.value, link: '/forum/category-' + (categories.value ? category_ids.value : 0)}
 		]
 	}
-	watch([categories, i18nLocale], refreshBreadcrumb, { immediate: true })
+	watch([categories, categoryName, i18nLocale], refreshBreadcrumb, { immediate: true })
 
 	function update() {
 		const category = route.params.category
@@ -534,11 +550,14 @@
 			categories.value = data.categories
 			if (categories.value) {
 				rawCategoryName.value = categories.value[0].name
-				categories.value[0].name = categories.value[0].team > 0 ? categories.value[0].name : t('forum-category.' + categories.value[0].name) as string
 				topics.value = data.topics
 				pages.value = data.pages
 
-				LeekWars.setTitle(categories.value[0].name, t('n_topic_n_messages', [data.total_topics, data.total_messages]) as string)
+				// Le dictionnaire de la langue du forum arrive en différé : on attend qu'il soit
+				// là pour poser le titre, qui lui n'est pas réactif.
+				loadForumCategoryNames(categoryLanguage.value).then(() => {
+					LeekWars.setTitle(categoryName.value, t('n_topic_n_messages', [data.total_topics, data.total_messages]) as string)
+				})
 				emitter.emit('loaded')
 			}
 		})
@@ -551,7 +570,7 @@
 		for (const l of langs) {
 			forumLanguages[l] = true
 		}
-		createMessage.value = localStorage.getItem('forum/draft') as string
+		createMessage.value = localStorage.getItem('forum/draft') ?? ''
 		createTitle.value = localStorage.getItem('forum/draft-title') as string
 	}
 
@@ -614,8 +633,10 @@
 		localStorage.setItem('forum/languages', activeLanguages.value.join(','))
 		router.replace({ path: '/forum/category-' + translations.value.filter(t => forumLanguages[t.lang]).map(t => t.id).join(','), query: route.query })
 	}
+	// Brouillon gardé à chaque modification : frappe, image, emoji…
+	watch(createMessage, updateDraft)
 	function updateDraft() {
-		localStorage.setItem('forum/draft', createMessage.value)
+		localStorage.setItem('forum/draft', createMessage.value ?? '')
 	}
 	function updateDraftTitle() {
 		localStorage.setItem('forum/draft-title', createTitle.value)
@@ -727,12 +748,20 @@
 
 <style lang="scss" scoped>
 
+// Le sélecteur de langue est posé À CÔTÉ du titre, sur la même ligne centrée
+// (même motif que la page d'accueil du forum) : en simple enfant de la barre, il
+// se calait en haut du h1 et les drapeaux flottaient 6 px au-dessus du milieu du
+// fil d'Ariane.
+.page-title-text {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
 .forum-language {
 	display: inline-flex;
 	padding: 0 4px;
 	cursor: pointer;
 	align-items: center;
-	height: 100%;
 	gap: 6px;
 	user-select: none;
 }
@@ -795,7 +824,7 @@ i.attr {
 	// color: #666;
 	font-size: 19px;
 	&.resolved {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	&.not-reproduced {
 		color: orange;
@@ -816,25 +845,54 @@ i.attr {
 	}
 }
 .topic > div {
-	padding: 8px;
+	padding: 8px 0;
 	flex: 1;
 	min-width: 0;
 }
 .topic:not(.header):hover {
 	background-color: var(--pure-white);
-	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+	box-shadow: var(--elevation-1);
 }
+// Memes etats que les categories et que les cartes du widget « Mes poireaux »
+// (survol discret, actif en vert) : surface de rangee et trait
+// renforce au survol, liseré vert au clic. Le survol du v2 ci-dessus pose une
+// ombre floue et un `--pure-white` qui EST la surface du panneau
+// en v3.
+body:not(.v2) {
+	.topic:not(.header) {
+		transition: background-color .12s ease, border-color .12s ease;
+	}
+	.topic:not(.header):hover {
+		background-color: var(--background-row);
+		border-color: var(--border-strong);
+		box-shadow: none;
+	}
+	.topic:not(.header):active {
+		border-color: var(--primary);
+	}
+}
+// Marqueur lu / non lu : le losange des intitules de section du menu v3
+// (« ◆ POIREAUX », cf. leekwars-shell-v3.scss), a l'encre du theme. Ni le
+// poireau en PNG qui portait sa couleur en dur, ni une pastille
+// ronde — le v3 n'a pas d'arrondis.
 .topic > .seen {
 	flex: 0 0 50px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-right: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px 4px;
 }
-.topic .seen img {
-	height: 40px;
+.topic .dot {
+	font-size: 24px;
+	color: var(--text-color-secondary);
+	opacity: 0.45;
 }
-body.dark .topic .seen img.seen {
-	filter: invert(0.85);
+.topic .dot.unread {
+	color: var(--primary);
+	opacity: 1;
+}
+.topic.unread .title > a {
+	font-weight: bold;
 }
 .topic .flag {
 	height: 13px;
@@ -848,8 +906,8 @@ body.dark .topic .seen img.seen {
 	display: inline-block;
 	.issue, .release-badge {
 		background: #0366d6;
-		color: white;
-		border-radius: 5px;
+		color: var(--white);
+		border-radius: var(--radius);
 		font-size: 13px;
 		font-weight: 500;
 		padding: 0 4px;
@@ -890,7 +948,7 @@ body.dark .topic .seen img.seen {
 		margin-left: 6px;
 		.vote {
 			display: inline-block;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.vote i {
 			vertical-align: bottom;
@@ -904,7 +962,7 @@ body.dark .topic .seen img.seen {
 			font-weight: bold;
 		}
 		.vote.up, .vote.up i {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 		.vote.down {
 			color: red;
@@ -913,9 +971,9 @@ body.dark .topic .seen img.seen {
 			}
 		}
 		.vote.up.zero, .vote.down.zero {
-			color: #555;
+			color: var(--grey-4);
 			i {
-				color: #555;
+				color: var(--grey-4);
 			}
 		}
 	}
@@ -943,7 +1001,7 @@ body.dark .topic .seen img.seen {
 
 .topic .farmer.deleted {
 	font-style: italic;
-	color: #aaa;
+	color: var(--grey-9);
 }
 .topic .num-views {
 	flex: 0 0 100px;
@@ -984,7 +1042,7 @@ body.dark .topic .seen img.seen {
 	color: var(--text-color-secondary);
 	padding: 8px 10px;
 	background: var(--background-secondary);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	margin-top: 10px;
 	display: flex;
 	align-items: center;
@@ -1001,22 +1059,14 @@ body.dark .topic .seen img.seen {
 	font-size: 17px;
 }
 .create-popup .topic-message {
-	min-width: 100%;
-	max-width: 100%;
-	min-height: 100%;
-	height: 180px;
-	max-height: 500px;
 	margin-top: 5px;
 	margin-bottom: 10px;
-	padding: 10px;
-	font-size: 15px;
-	font-family: "Roboto", sans-serif;
 }
 .search-box img {
 	cursor: pointer;
 }
 .grey {
-	color: #888;
+	color: var(--grey-7);
 }
 
 .breadcrumb-sort {
@@ -1045,7 +1095,7 @@ body.dark .topic .seen img.seen {
 	}
 	.empty-subtitle {
 		font-size: 14px;
-		color: #888;
+		color: var(--grey-7);
 	}
 }
 .filter-list {
@@ -1084,7 +1134,7 @@ body.dark .topic .seen img.seen {
 }
 .filter-item-icon {
 	margin-right: 4px;
-	&.resolved { color: #5fad1b; }
+	&.resolved { color: var(--primary); }
 	&.not-reproduced { color: orange; }
 	&.not-planned { color: var(--text-color); opacity: 0.7; }
 	&.not-a-bug { color: var(--text-color-secondary); }
@@ -1113,7 +1163,9 @@ body.dark .topic .seen img.seen {
 	.pagination {
 		grid-area: c;
 	}
-	.order-select {
+	// Le champ est rendu par lw-select : il porte bien la classe, mais pas
+	// l'attribut de portée de ce composant — d'où le :deep().
+	:deep(.order-select) {
 		margin-right: 8px;
 	}
 }

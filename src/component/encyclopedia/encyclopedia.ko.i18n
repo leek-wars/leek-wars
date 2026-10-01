@@ -19,5 +19,6 @@
 	"redirected_from": "{0}에서 리디렉션됨",
 	"referencing_translations": "관련 번역",
 	"search": "페이지 검색",
-	"views": "조회수"
+	"views": "조회수",
+	"quiz_locked": "이 퀴즈에 답하려면 먼저 {0}장을 완료하세요."
 }

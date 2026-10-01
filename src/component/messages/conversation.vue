@@ -50,17 +50,17 @@ const formattedLastMessage = computed(() => formatChatPreview(props.chat.last_me
 	}
 	.conversation:hover {
 		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 		&.unread {
 			background-color: rgba(90, 194, 0, 0.25);
 		}
 	}
 	.selected {
-		background: #ddd;
+		background: var(--grey-12);
 		color: var(--pure-white);
 	}
 	.selected:hover {
-		background: #999;
+		background: var(--grey-8);
 	}
 	.content {
 		flex: 1;
@@ -82,7 +82,7 @@ const formattedLastMessage = computed(() => formatChatPreview(props.chat.last_me
 		max-width: 100%;
 	}
 	.selected .last-message {
-		color: #333;
+		color: var(--grey-2);
 	}
 	.name {
 		margin-bottom: 4px;

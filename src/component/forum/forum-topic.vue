@@ -1,33 +1,36 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div class="title-wrapper">
-				<h1>
-					<router-link to="/forum">{{ $t('main.forum') }}</router-link>
-					<v-icon>mdi-chevron-right</v-icon>
-					<router-link v-if="topic && category" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
-					<v-icon>mdi-chevron-right</v-icon>
-					<flag v-if="category && forumLanguages.length >= 2 && category.lang" :code="LeekWars.languages[category.lang].country" />
-					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
-					<div v-if="topic" class="info attrs">
-						<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
-						<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr status-resolved">mdi-check-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr status-not-a-bug">mdi-close-circle</v-icon>
-						<v-icon v-if="topic.status === ForumTopicStatus.OBSOLETE" :title="$t('status_obsolete')" class="attr status-obsolete">mdi-archive</v-icon>
-						<v-icon v-if="topic.hidden" :title="$t('hide_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
-					</div>
-				</h1>
-				<div v-if="!LeekWars.mobile" class="tabs">
-					<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">
-						<v-icon>mdi-newspaper-minus</v-icon>
-						{{ $t('unsubscribe') }}
-					</div>
-					<div v-else class="tab" @click="subscribe">
-						<v-icon>mdi-newspaper-plus</v-icon>
-						{{ $t('subscribe') }}
+			<div class="page-title">
+				<page-icon name="forum" fallback="mdi-forum" />
+				<div class="page-title-text title-wrapper">
+					<h1>
+						<router-link to="/forum">{{ $t('main.forum') }}</router-link>
+						<v-icon>mdi-chevron-right</v-icon>
+						<router-link v-if="topic && category" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
+						<v-icon>mdi-chevron-right</v-icon>
+						<flag v-if="category && forumLanguages.length >= 2 && category.lang" :code="LeekWars.languages[category.lang].country" />
+						<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
+						<div v-if="topic" class="info attrs">
+							<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
+							<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.RESOLVED" :title="$t('status_resolved')" class="attr status-resolved">mdi-check-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.NOT_REPRODUCED" :title="$t('status_not_reproduced')" class="attr status-not-reproduced">mdi-help-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.NOT_PLANNED" :title="$t('status_not_planned')" class="attr status-not-planned">mdi-minus-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.NOT_A_BUG" :title="$t('status_not_a_bug')" class="attr status-not-a-bug">mdi-close-circle</v-icon>
+							<v-icon v-if="topic.status === ForumTopicStatus.OBSOLETE" :title="$t('status_obsolete')" class="attr status-obsolete">mdi-archive</v-icon>
+							<v-icon v-if="topic.hidden" :title="$t('hide_topic')" class="attr hidden-icon">mdi-eye-off</v-icon>
+						</div>
+					</h1>
+					<div v-if="!LeekWars.mobile" class="tabs">
+						<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">
+							<v-icon>mdi-newspaper-minus</v-icon>
+							{{ $t('unsubscribe') }}
+						</div>
+						<div v-else class="tab" @click="subscribe">
+							<v-icon>mdi-newspaper-plus</v-icon>
+							{{ $t('subscribe') }}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -53,11 +56,11 @@
 							<div class="info">
 								<div class="pseudo">
 									{{ message.writer.name }}
-									<img v-if="message.writer.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="message.writer.connected" class="status" />
 								</div>
 								<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
 								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
+								<div v-else-if="message.writer.color == 'referent'" class="grade referent">{{ $t('main.grade_referent') }}</div>
 								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
 								<i18n-t class="messages-count" keypath="main.n_messages" tag="div">
@@ -87,14 +90,30 @@
 							<!-- Barre d'actions répétée en haut du 1er post quand le topic est long (#4154). -->
 							<div v-if="message.id === -1 && longTopic" class="bottom topic-bar-top">
 								<div v-if="!message.deleted" class="votes">
-									<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)">
-										<v-icon>mdi-thumb-up</v-icon>
-										<span class="counter">{{ message.votes_up }}</span>
-									</div>
-									<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)">
-										<v-icon>mdi-thumb-down</v-icon>
-										<span class="counter">{{ message.votes_down }}</span>
-									</div>
+									<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id]!.length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @update:model-value="loadVotesUp(message)">
+										<template #activator="{ props }">
+											<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" v-bind="props" @click="voteUp(message)">
+												<v-icon>mdi-thumb-up</v-icon>
+												<span class="counter">{{ message.votes_up }}</span>
+											</div>
+										</template>
+										<loader v-if="!votes_up_names[message.id]" :size="30" />
+										<div v-else>
+											<div v-for="name in votes_up_names[message.id]" :key="name">{{ name }}</div>
+										</div>
+									</v-tooltip>
+									<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id]!.length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @update:model-value="loadVotesDown(message)">
+										<template #activator="{ props }">
+											<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" v-bind="props" @click="voteDown(message)">
+												<v-icon>mdi-thumb-down</v-icon>
+												<span class="counter">{{ message.votes_down }}</span>
+											</div>
+										</template>
+										<loader v-if="!votes_down_names[message.id]" :size="30" />
+										<div v-else>
+											<div v-for="name in votes_down_names[message.id]" :key="name">{{ name }}</div>
+										</div>
+									</v-tooltip>
 								</div>
 								<forum-topic-actions
 									:topic="topic"
@@ -115,11 +134,9 @@
 							</div>
 
 							<div v-if="message.deleted" class="text deleted">{{ $t('deleted_message') }}</div>
-							<textarea v-else-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original" autocomplete="off" @input="autoResize(message, $event)"></textarea>
+							<markdown-editor v-else-if="message.editing" v-model="message.message" class="original" upload-context="forum" autofocus @submit="confirmEdit(message)" />
 							<div v-else-if="message.html" v-emojis v-code class="text" v-html="message.html"></div>
 							<markdown v-else :content="message.message" mode="forum" />
-
-							<emoji-picker v-if="message.editing" class="emoji-picker" @pick="textarea && addEmoji(message, $event, textarea[0])" />
 
 							<router-link v-if="message.id === -1 && topic.release" :to="'/release/' + releaseVersion.substring(1)" class="changelog-banner">
 								<img :src="'/image/mail/mail_' + topic.release + '.webp'" class="changelog-banner-image" @error="($event.target as HTMLImageElement).style.display = 'none'">
@@ -230,8 +247,6 @@
 									GitHub Issue <input v-model.number="topic.issue" type="number">
 								</span>
 							</div>
-
-							<formatting-rules v-if="message.editing" />
 						</div>
 					</div>
 				</div>
@@ -239,17 +254,13 @@
 				<pagination v-if="topic && category" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 
 				<div v-if="topic && !topic.locked && $store.state.farmer && $store.state.farmer.verified" class="editor">
-					<h4>{{ $t('answer') }}</h4>
-					<div class="response-wrapper">
-						<textarea ref="responseTextarea" v-model="newMessage" class="response card" autocomplete="off" @keyup="updateDraft"></textarea>
-						<emoji-picker @pick="addEmojiNewMessage">😀</emoji-picker>
-					</div>
+					<h4 class="response-title">{{ $t('answer') }}</h4>
+					<markdown-editor v-model="newMessage" class="response" upload-context="forum" @submit="send" />
 					<div class="center">
 						<div v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }}</div>
 						<div v-if="isOldTopic" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('old_topic_warning') }}</div>
 						<v-btn color="primary" class="send" :loading="sendingMessage" :disabled="!newMessage || !newMessage.trim()" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
 					</div>
-					<formatting-rules />
 					<br>
 				</div>
 
@@ -292,7 +303,7 @@
 			<template #icon><v-icon>mdi-tag</v-icon></template>
 			<template #title>{{ $t('set_release') }}</template>
 			<div>
-				<v-text-field ref="releaseField" v-model.number="releaseInput" type="number" placeholder="245" style="width: 100%" :hint="$t('release_hint')" autofocus />
+				<lw-input ref="releaseField" v-model.number="releaseInput" type="number" placeholder="245" style="width: 100%" :hint="$t('release_hint')" autofocus />
 			</div>
 			<template #actions>
 				<div v-ripple @click="releaseDialog = false">{{ $t('cancel') }}</div>
@@ -320,26 +331,27 @@
 
 <script setup lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
-	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { ForumCategory, ForumMessage, ForumTopic, ForumTopicStatus } from '@/model/forum'
+	import { forumCategoryName, forumDisplayLanguage, loadForumCategoryNames } from '@/model/forum-language'
 	import { i18n, mixins, useNamespacedT, t as globalT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { userImageErrorMessage } from '@/model/user-image-upload'
+	import type { ApiError } from '@/model/api-error'
 	import { Warning } from '@/model/moderation'
-	import EmojiPicker from '../chat/emoji-picker.vue'
+	import MarkdownEditor from '@/component/markdown-editor/markdown-editor.vue'
 	import Breadcrumb from './breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import ForumTopicActions from '@/component/forum/forum-topic-actions.vue'
 	import Pagination from '@/component/pagination.vue'
 	import LwTitle from '@/component/title/title.vue'
-	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
-	const FormattingRules = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`))
 
 	defineOptions({ name: 'ForumTopic', i18n: {}, mixins: [...mixins] })
 
@@ -348,8 +360,6 @@
 	const route = useRoute()
 	const router = useRouter()
 	const topicTitle = useTemplateRef<HTMLElement>('topicTitle')
-	const responseTextarea = useTemplateRef<HTMLTextAreaElement>('responseTextarea')
-	const textarea = useTemplateRef<HTMLTextAreaElement[]>('textarea')
 
 	const topic = ref<ForumTopic | null>(null)
 	const category = ref<ForumCategory | null>(null)
@@ -426,7 +436,9 @@
 		return 'v' + String(topic.value.release).charAt(0) + '.' + String(topic.value.release).slice(1)
 	})
 
-	const categoryName = computed(() => category.value ? (category.value.team > 0 ? category.value.name : t('forum-category.' + category.value.name)) : '')
+	// Le nom de la catégorie suit la langue du forum où le sujet est posté, pas celle de
+	// l'éleveur : un sujet du forum anglais s'annonce « Bug reports », même en français.
+	const categoryName = computed(() => category.value ? (category.value.team > 0 ? category.value.name : forumCategoryName(category.value.name, category.value.lang)) : '')
 
 	const breadcrumb_items = computed(() => [
 		{name: t('main.forum'), link: '/forum'},
@@ -469,7 +481,6 @@
 				if (topic.value.messages) {
 					for (const message of topic.value.messages) {
 						message.editing = false
-					message.height = 100
 					}
 				}
 			}
@@ -478,7 +489,7 @@
 			LeekWars.setActions([action])
 			if (topic.value.subscribed) { action.icon = 'mdi-newspaper-minus' }
 			emitter.emit('loaded')
-			newMessage.value = localStorage.getItem('forum/draft-' + topic.value.id) as string
+			newMessage.value = localStorage.getItem('forum/draft-' + topic.value.id) ?? ''
 			if (canMoveTopic.value) {
 				loadMoveCategories()
 			}
@@ -657,12 +668,15 @@
 	function loadMoveCategories() {
 		if (!category.value) { return }
 		const languages = forumLanguages.value.join(',')
-		LeekWars.get('forum/get-categories/' + languages).then((data) => {
+		// Les noms sont figés dans la liste du menu : on attend le dictionnaire de la langue
+		// du forum avant de la construire, sinon elle reste dans la langue de l'éleveur.
+		const lang = forumDisplayLanguage(forumLanguages.value)
+		Promise.all([LeekWars.get('forum/get-categories/' + languages), loadForumCategoryNames(lang)]).then(([data]) => {
 			moveCategories.value = data.categories
 				.filter((c: ForumCategory) => c.id !== category.value!.id && c.type !== 'team' && c.name !== 'admin' && c.name !== 'moderation')
 				.map((c: ForumCategory) => ({
 					id: c.id,
-					name: t('forum-category.' + c.name) as string
+					name: forumCategoryName(c.name, lang)
 				}))
 		})
 	}
@@ -676,8 +690,16 @@
 		})
 	}
 
+	// Brouillon de la réponse, gardé à chaque modification : frappe, image, emoji…
+	watch(newMessage, updateDraft)
 	function updateDraft() {
-		localStorage.setItem('forum/draft-' + topic.value!.id, newMessage.value)
+		if (!topic.value) { return }
+		const key = 'forum/draft-' + topic.value.id
+		if (newMessage.value) {
+			localStorage.setItem(key, newMessage.value)
+		} else {
+			localStorage.removeItem(key)
+		}
 	}
 
 	function send() {
@@ -694,9 +716,11 @@
 			newMessage.value = ''
 			update(true)
 			sendingMessage.value = false
-		}).error((error: { error: string }) => {
+		}).error((error: ApiError) => {
 			sendingMessage.value = false
-			LeekWars.toast(t(error.error) as string)
+			// Les refus liés aux images viennent du tronc commun (`main.error_*`) et non
+			// des clés du forum : sans ça le joueur lirait une clé brute.
+			LeekWars.toast(error.error?.startsWith('user_image') ? userImageErrorMessage(error) : t(error.error) as string)
 		})
 	}
 
@@ -722,20 +746,9 @@
 	}
 
 	function edit(message: ForumMessage) {
-		const textElement = document.querySelector('#message-' + message.id + ' .text, #message-' + message.id + ' .md') as HTMLElement
-		if (textElement) {
-			message.height = textElement.offsetHeight - 14
-		}
 		message.editing = true
 		if (message.id === -1) {
 			topicEditing.value = true
-		}
-	}
-
-	function autoResize(message: ForumMessage, e: Event) {
-		const textarea = e.target as HTMLTextAreaElement
-		if (textarea.scrollHeight > message.height) {
-			message.height = textarea.scrollHeight
 		}
 	}
 
@@ -771,23 +784,6 @@
 				release: topic.value.release || 0,
 			}).then(callback)
 		}
-	}
-
-	function addEmoji(message: ForumMessage, emoji: string, textarea: HTMLTextAreaElement) {
-		const index = textarea.selectionStart
-		message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
-	}
-
-	function addEmojiNewMessage(emoji: string) {
-		const textarea = responseTextarea.value
-		if (!textarea) return
-		const index = textarea.selectionStart
-		const text = newMessage.value || ''
-		newMessage.value = text.slice(0, index) + emoji + text.slice(index)
-		nextTick(() => {
-			textarea.focus()
-			textarea.selectionStart = textarea.selectionEnd = index + emoji.length
-		})
 	}
 
 	function toggleHidden() {
@@ -841,33 +837,53 @@
 		padding: 40px;
 		text-align: center;
 		font-size: 18px;
-		color: #888;
+		color: var(--grey-7);
 	}
+	// Titre et onglet « S'abonner » sur une ligne : l'onglet flottait à droite du
+	// h1 `display: inline`, ce que le h1 en flex (ci-dessous) ne permet plus.
 	.title-wrapper {
 		flex: 1;
+		min-width: 0;
+		display: flex;
+		// `nowrap` : l'onglet reste au bout de la barre, comme quand il y flottait.
+		// Un titre trop long fait plier le h1 (lui-même en `wrap`), pas la barre.
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: space-between;
 	}
+	// Le fil d'Ariane passe en ligne flex centrée : calés sur la ligne de BASE,
+	// les chevrons tombaient 3,5 px sous le milieu des capitales et le drapeau
+	// remontait 2,5 px au-dessus (mesuré sur la page rendue) — la
+	// police pixel a une ligne de base plus haute que celle pour laquelle les
+	// `vertical-align` et le `margin-bottom: 11px` avaient été réglés.
+	// `flex-wrap` garde le repli des titres longs sur plusieurs lignes.
 	h1 {
-		display: inline;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		// `0 1 auto` et non `1` : en v2 le titre porte le bandeau vert, qui doit
+		// épouser le texte et non toute la largeur de la barre.
+		flex: 0 1 auto;
+		min-width: 0;
+		gap: 0 6px;
 		line-height: 36px;
+		// La hauteur fixe du h1 global ne s'appliquait pas à un élément `inline` ;
+		// sur un conteneur flex, elle tronquerait les titres repliés.
+		height: auto;
 		min-height: 36px;
 		white-space: normal;
 		padding: 6px 15px;
 		padding-right: 0px;
 		.v-icon {
-			vertical-align: text-bottom;
 			font-size: 24px;
-			margin: 0 4px;
 		}
 		.flag {
 			height: 16px;
-			vertical-align: bottom;
-			margin-bottom: 11px;
-			margin-right: 6px;
 		}
 	}
 	.tabs {
 		margin-left: 18px;
-		float: right;
+		flex: 0 0 auto;
 	}
 	// Sur tablette / fenêtre étroite (layout desktop car mobile dépend de l'UA), le
 	// bandeau vert du titre passe sur plusieurs lignes : le triangle décoratif se
@@ -888,13 +904,13 @@
 		padding: 0;
 	}
 	.topic-title[contenteditable="true"] {
-		border: 1px solid white;
-		border-radius: 2px;
+		border: 1px solid var(--white);
+		border-radius: var(--radius-tiny);
 		padding: 4px 6px;
 		background: rgb(53, 97, 14);
 	}
 	.message-wrapper {
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		width: 100%;
 		margin-bottom: 15px;
 		height: 100%;
@@ -952,7 +968,7 @@
 	}
 	.farmer.deleted {
 		font-style: italic;
-		color: #aaa;
+		color: var(--grey-9);
 	}
 	.profile .avatar {
 		width: 130px;
@@ -964,8 +980,8 @@
 		margin-right: 10px;
 	}
 	.grade {
-		border-radius: 5px;
-		color: white;
+		border-radius: var(--radius-medium);
+		color: var(--white);
 		display: inline-block;
 		padding: 2px 4px;
 		margin-bottom: 5px;
@@ -981,6 +997,9 @@
 	.grade.contributor {
 		background: #009c1d;
 	}
+	.grade.referent {
+		background: #2196f3;
+	}
 	.profile .messages-count, .profile .trophy-count {
 		font-size: 12px;
 		color: var(--text-color-secondary);
@@ -989,8 +1008,6 @@
 		color: var(--text-color);
 	}
 	.profile .status {
-		width: 15px;
-		height: 15px;
 		vertical-align: middle;
 		margin-bottom: 2px;
 	}
@@ -1014,7 +1031,7 @@
 	}
 	.message .deleted.text {
 		font-style: italic;
-		color: #aaa;
+		color: var(--grey-9);
 		margin-bottom: 0;
 	}
 	.message a {
@@ -1024,7 +1041,7 @@
 		position: absolute;
 		top: 5px;
 		right: 7px;
-		color: #ccc;
+		color: var(--grey-11);
 		font-size: 18px;
 		display: none;
 	}
@@ -1037,7 +1054,7 @@
 		line-height: 1.6;
 	}
 	.message .text :deep(a) {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.message .md {
 		padding: 0;
@@ -1052,10 +1069,6 @@
 		}
 	}
 	.message .original {
-		padding: 4px;
-		min-width: 100%;
-		max-width: 100%;
-		min-height: 200px;
 		margin-bottom: 15px;
 	}
 	.message .user-agent {
@@ -1063,7 +1076,7 @@
 		color: var(--text-color-secondary);
 		padding: 6px 10px;
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		margin-top: 10px;
 		word-break: break-all;
 		display: flex;
@@ -1088,7 +1101,7 @@
 			display: inline-flex;
 			gap: 4px;
 			padding: 6px;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.action:hover {
 			color: var(--text-color);
@@ -1124,23 +1137,10 @@
 		margin-left: 10px;
 		margin-right: 10px;
 	}
-	.response-wrapper {
-		position: relative;
-		:deep(.chat-input-emoji) {
-			position: absolute;
-			right: 10px;
-			top: 10px;
-		}
+	.response-title {
+		margin: 0 0 6px;
 	}
 	.response {
-		width: 100%;
-		height: 170px;
-		min-height: 170px;
-		max-width: 100%;
-		margin-top: 5px;
-		padding: 10px;
-		font-size: 15px;
-		border: none;
 		margin-bottom: 10px;
 	}
 	.page-bar .attrs.info {
@@ -1156,8 +1156,11 @@
 	i.attr {
 		font-size: 22px;
 		margin: 0 6px;
+		// Pas `--white` : un « presque blanc » jamais redéfini, juste sur le bandeau
+		// vert du v2 et invisible sur le parchemin du v3 clair. `--page-bar-color` est
+		// le rôle « encre posée sur le fond d'app », qui suit le thème.
 		&.status-not-a-bug {
-			color: white;
+			color: var(--page-bar-color);
 		}
 		&.status-acknowledged {
 			color: #6f42c1;
@@ -1167,13 +1170,13 @@
 			opacity: 0.7;
 		}
 		&.hidden-icon {
-			color: white;
+			color: var(--page-bar-color);
 		}
 	}
 	.release-badge {
 		background: #28a745;
-		color: white;
-		border-radius: 5px;
+		color: var(--white);
+		border-radius: var(--radius-medium);
 		font-size: 13px;
 		font-weight: 500;
 		padding: 2px 6px;
@@ -1190,7 +1193,7 @@
 		cursor: pointer;
 		font-size: 16px;
 		padding: 2px 6px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		&.up:hover {
 			background: #5fad1b22;
 		}
@@ -1213,9 +1216,9 @@
 		font-weight: bold;
 	}
 	.vote.up, .vote.up.zero:hover {
-		color: #5fad1b;
+		color: var(--primary);
 		.v-icon {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 	.vote.up.zero, .vote.down.zero {
@@ -1231,17 +1234,17 @@
 		}
 	}
 	.vote.up.active {
-		color: white;
-		background: #5fad1b;
+		color: var(--primary-surface-text);
+		background: var(--primary-surface);
 		.v-icon {
-			color: white;
+			color: var(--primary-surface-text);
 		}
 	}
 	.vote.down.active {
-		color: white;
+		color: var(--white);
 		background: red;
 		.v-icon {
-			color: white;
+			color: var(--white);
 		}
 	}
 	.tooltip.votes-tooltip .content img {
@@ -1299,12 +1302,6 @@
 	.message :deep(h6) {
 		font-size: 16px;
 	}
-	.message :deep(.chat-input-emoji) {
-		position: absolute;
-		right: 10px;
-		top: 10px;
-		user-select: none;
-	}
 	.message-actions .v-icon {
 		margin-right: 6px;
 	}
@@ -1327,7 +1324,7 @@
 		display: flex;
 		flex-direction: column;
 		margin: 15px 0;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		overflow: hidden;
 		text-decoration: none;
 		transition: opacity 0.2s;
@@ -1344,12 +1341,12 @@
 		align-items: center;
 		gap: 8px;
 		padding: 12px 16px;
-		background: #5fad1b;
-		color: white;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		font-weight: 500;
 		font-size: 15px;
 		.v-icon {
-			color: white;
+			color: var(--primary-surface-text);
 		}
 	}
 </style>

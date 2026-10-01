@@ -1,10 +1,13 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>{{ $t('title') }}</h1>
-				<div class="info">
-					<v-icon v-if="isPrivate">mdi-at</v-icon><v-icon v-else>mdi-pound</v-icon> {{ chat_name }}
+			<div class="page-title">
+				<page-icon name="messages" fallback="mdi-email-outline" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+					<div class="info">
+						<v-icon v-if="isPrivate">mdi-at</v-icon><v-icon v-else>mdi-pound</v-icon> {{ chat_name }}
+					</div>
 				</div>
 			</div>
 			<div class="tabs">
@@ -116,7 +119,7 @@
 	import { store } from '@/model/store'
 	import { computed, defineAsyncComponent, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { env } from '@/env'
 	import Conversation from '@/component/messages/conversation.vue'
 
@@ -148,10 +151,10 @@
 		}
 		if (store.state.farmer && store.state.farmer.team) {
 			const team_chats = [
-				{ id: store.state.farmer.team.chat, name: store.state.farmer.team.name, icon: 'mdi-chat-outline' },
+				{ id: store.state.farmer.team.chat, name: store.state.farmer.team.name, icon: 'mdi-chat' },
 			]
 			if (store.state.farmer.group) {
-				team_chats.push({ id: store.state.farmer.group.chat, name: store.state.farmer.group.name, icon: 'mdi-chat-outline' })
+				team_chats.push({ id: store.state.farmer.group.chat, name: store.state.farmer.group.name, icon: 'mdi-chat' })
 			}
 			chats.push({name: t('cat_team') as string, icon: 'mdi-account-multiple', chats: team_chats })
 		}
@@ -300,6 +303,15 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le salon courant est posé à côté du titre, sur la même ligne centrée : en
+	// enfants d'un bloc, le h1 et le `.info` se calaient sur la ligne de base, et
+	// la police pixel du titre, dont la ligne de base est plus haute, laissait le
+	// nom du salon 3 px trop haut. L'écart reste
+	// celui du `margin-left` global de `.page-bar .info`.
+	.page-title-text {
+		display: flex;
+		align-items: center;
+	}
 	.page-header .info {
 		display: inline-flex;
 		align-items: center;
@@ -382,7 +394,7 @@
 		}
 	}
 	.chat-preview {
-		color: #555;
+		color: var(--grey-4);
 		display: flex;
 		position: relative;
 		.wrapper {
@@ -416,7 +428,7 @@
 			}
 		}
 		.unread {
-			background: #5fad1b;
+			background: var(--primary-surface);
 			border-radius: 50%;
 			width: 10px;
 			height: 10px;
@@ -424,7 +436,7 @@
 		}
 		&.unread {
 			font-weight: bold;
-			color: black;
+			color: var(--black);
 			.unread {
 				display: inline-block;
 			}
@@ -445,7 +457,7 @@
 	}
 	.unread-circle {
 		display: inline-block;
-		background: #5fad1b;
+		background: var(--primary-surface);
 		border-radius: 50%;
 		width: 10px;
 		height: 10px;

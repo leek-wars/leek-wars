@@ -1,19 +1,21 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
+			<div class="page-title">
+				<page-icon name="forum" fallback="mdi-forum" />
+				<div class="page-title-text">
 				<h1>{{ $t('title') }}</h1>
 				<v-menu offset-y>
 					<template #activator="{ props }">
 						<div class="forum-language info" v-bind="props">
 							<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
-							<img width="10" src="/image/selector.png">
+							<v-icon class="caret">mdi-menu-down</v-icon>
 						</div>
 					</template>
 					<v-list :dense="true" class="mobile-forum-languages">
 						<v-list-item v-for="(language, i) in languages" :key="i" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 							<template #prepend>
-								<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details density="compact" @click.stop="pickForumLanguage(language)" />
+								<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop @update:model-value="pickForumLanguage" />
 							</template>
 							<div class="language">
 								<flag :code="language.country" :clickable="false" />
@@ -23,16 +25,17 @@
 						</v-list-item>
 					</v-list>
 				</v-menu>
+				</div>
 			</div>
 			<div class="tabs">
 				<router-link to="/chat">
 					<div class="tab action" icon="mdi-chat" link="/chat">
-						<v-icon>mdi-chat-outline</v-icon>
+						<v-icon>mdi-chat</v-icon>
 						<span>{{ $t('main.chat') }}</span>
 					</div>
 				</router-link>
 				<div class="tab action disabled" icon="search" link="/search">
-					<img class="search-icon" src="/image/search.png" @click="search">
+					<v-icon class="search-icon" @click="search">mdi-magnify</v-icon>
 					<input v-model="searchQuery" type="text" class="search-input" @keyup.enter="search">
 				</div>
 			</div>
@@ -46,13 +49,13 @@
 						<template #activator="{ props }">
 							<div class="forum-language" v-bind="props">
 								<flag v-for="l in activeLanguages" :key="l" :code="LeekWars.languages[l].country" :clickable="false" />
-								<img width="10" src="/image/selector.png">
+								<v-icon class="caret">mdi-menu-down</v-icon>
 							</div>
 						</template>
 						<v-list :dense="true" class="mobile-forum-languages">
 							<v-list-item v-for="(language, i) in languages" :key="i" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
 								<template #prepend>
-									<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details density="compact" @click.stop="pickForumLanguage(language)" />
+									<lw-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click.stop @update:model-value="pickForumLanguage" />
 								</template>
 								<div class="language">
 									<flag :code="language.country" :clickable="false" />
@@ -68,16 +71,16 @@
 					<div class="num-topics">{{ $t('topics') }}</div>
 					<div class="num-messages">{{ $t('messages') }}</div>
 				</div>
-				<router-link v-for="category in categories" :key="category.id" v-ripple :to="'/forum/category-' + category.id" class="category">
+				<router-link v-for="category in categories" :key="category.id" v-ripple :to="'/forum/category-' + category.id" class="category" :class="{unread: !category.seen}">
 					<div class="seen">
-						<img v-if="category.seen" class="seen" src="/image/forum_seen.png">
-						<img v-else src="/image/forum_unseen.png">
+						<v-icon v-if="category.seen" class="dot">mdi-rhombus-outline</v-icon>
+						<v-icon v-else :title="$t('main.unread_messages')" class="dot unread">mdi-rhombus</v-icon>
 					</div>
 					<div class="text">
 						<template v-if="category.type == 'normal'">
-							<div class="title">{{ $t('forum-category.' + category.name) }}</div>
+							<div class="title">{{ forumCategoryName(category.name, categoryLanguage) }}</div>
 							<div class="description">
-								{{ $t('forum-category.' + category.name + '_desc') }}
+								{{ forumCategoryName(category.name + '_desc', categoryLanguage) }}
 								<span v-if="category.total_count" class="resolved-info" :class="resolvedClass(category)">
 									<v-progress-circular :model-value="Math.round(category.resolved_count / category.total_count * 100)" :size="16" :width="2" :color="resolvedColor(category)" />
 									{{ Math.round(category.resolved_count / category.total_count * 100) }}% {{ $t('resolved') }}
@@ -130,6 +133,7 @@
 				<div class="grades">
 					{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,
 					<span class="moderator">{{ $t('main.grade_moderator') }}</span>,
+					<span class="referent">{{ $t('main.grade_referent') }}</span>,
 					<span class="contributor">{{ $t('main.grade_contributor') }}</span>,
 					<span>{{ $t('main.grade_member') }}</span>
 				</div>
@@ -140,7 +144,7 @@
 			<div class="tabs">
 				<div class="tab" @click="notifyNewTopics = !notifyNewTopics">
 					<span>{{ $t('new_topic_notification') }}</span>
-					<v-switch v-model="notifyNewTopics" hide-details @click.stop />
+					<lw-switch v-model="notifyNewTopics" @click.stop />
 				</div>
 			</div>
 		</div>
@@ -149,12 +153,13 @@
 
 <script setup lang="ts">
 	import type { Farmer } from '@/model/farmer'
+	import { forumCategoryName, forumDisplayLanguage } from '@/model/forum-language'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { store } from '@/model/store'
-	import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
-	import { emitter } from '@/model/vue'
+	import { computed, defineAsyncComponent, reactive, ref, watch, watchEffect } from 'vue'
+	import { emitter } from '@/model/emitter'
 	import { useRouter } from 'vue-router'
 
 	const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
@@ -187,6 +192,11 @@
 
 	const activeLanguages = computed(() => Object.entries(forumLanguages).filter(e => e[1]).map(e => e[0]))
 
+	// Les catégories sont regroupées par nom, toutes langues sélectionnées confondues :
+	// une rangée fusionnée prend la langue de l'éleveur si son forum est affiché, sinon
+	// la première langue cochée.
+	const categoryLanguage = computed(() => forumDisplayLanguage(activeLanguages.value))
+
 	{
 		const langs = (localStorage.getItem('forum/languages') as string || i18n.locale).split(',')
 		for (const l in LeekWars.languages) {
@@ -202,10 +212,17 @@
 			store.commit('connected-count', data.farmers.length)
 			connected_languages.value = data.languages
 			notifyNewTopics.value = data.notif_topics
-			LeekWars.setTitle(t('title'), t('connected_farmers_subtitle', [data.farmers.length]) as string)
+		})
+		// Titre réactif : après un changement de langue, le dictionnaire du forum arrive en
+		// asynchrone, parfois après la réponse de l'API ; un setTitle unique figeait alors les
+		// clés brutes dans la barre du haut (mobile).
+		watchEffect(() => {
+			if (categories.value) {
+				LeekWars.setTitle(t('title'), t('connected_farmers_subtitle', [connected_farmers.value.length]) as string)
+			}
 		})
 		LeekWars.setActions([
-			{icon: 'mdi-chat-outline', click: () => router.push('/chat')},
+			{icon: 'mdi-chat', click: () => router.push('/chat')},
 			{icon: 'mdi-magnify', click: () => router.push('/search')}
 		])
 	}
@@ -218,8 +235,9 @@
 			categories.value = data.categories
 		})
 	}
-	function pickForumLanguage(language: Language) {
-		forumLanguages[language.code] = !forumLanguages[language.code]
+	// La case est déjà basculée par son v-model : la rebasculer ici annulait le clic et
+	// interdisait de cocher une deuxième langue.
+	function pickForumLanguage() {
 		localStorage.setItem('forum/languages', activeLanguages.value.join(','))
 		LeekWars.get('forum/get-categories/' + activeLanguages.value).then(data => {
 			categories.value = data.categories
@@ -248,13 +266,21 @@
 </script>
 
 <style lang="scss" scoped>
+	// Le sélecteur de langue est posé À CÔTÉ du titre, pas dessous : le bloc
+	// de titre passe en ligne flex centrée. Sans ça le h1 (inline-block) et le
+	// sélecteur (inline-flex) se calaient sur la ligne de base, et le drapeau
+	// flottait au-dessus du milieu du mot.
+	.page-title-text {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
 	.forum-language {
 		display: inline-flex;
 		padding: 0 4px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		cursor: pointer;
 		align-items: center;
-		height: 100%;
 		gap: 6px;
 		img.flag {
 			vertical-align: top;
@@ -269,7 +295,7 @@
 			gap: 6px;
 			cursor: pointer;
 			padding: 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			border: 1px solid var(--border);
 			img.flag {
 				width: 28px;
@@ -298,27 +324,68 @@
 	.category > div {
 		padding: 10px;
 	}
-	#app.app .category > div {
-		padding: 4px 6px;
+	#app.app .category .seen {
+		padding: 14px;
 	}
 	.category:not(.header) {
 		border: 1px solid var(--border);
 	}
 	.category:not(.header):hover {
 		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
+	// Etats du v3 (survol discret, actif en vert), les
+	// memes que les cartes du widget « Mes poireaux » de l'accueil : le survol
+	// pose la surface de rangee et renforce le trait, le clic allume le liseré
+	// vert. Le survol du v2 ci-dessus ne vaut rien ici — son ombre est une
+	// ombre floue, et son `--pure-white` EST la surface du
+	// panneau en v3, donc invisible. Le liseré est deja la au repos, la rangee
+	// ne bouge pas d'un pixel quand il change de couleur.
+	body:not(.v2) {
+		.category:not(.header) {
+			transition: background-color .12s ease, border-color .12s ease;
+		}
+		.category:not(.header):hover {
+			background-color: var(--background-row);
+			border-color: var(--border-strong);
+			box-shadow: none;
+		}
+		.category:not(.header):active {
+			border-color: var(--primary);
+		}
+	}
+	// Marqueur lu / non lu : le losange des intitules de section du menu v3
+	// (« ◆ POIREAUX », cf. leekwars-shell-v3.scss), a l'encre du theme. Ni le
+	// poireau en PNG qui portait sa couleur en dur, ni une
+	// pastille ronde — le v3 n'a pas d'arrondis.
 	.category > .seen {
-		width: 55px;
-		padding-top: 10px;
-		padding-bottom: 8px;
-		padding-right: 5px;
+		width: 34px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px 4px;
 	}
-	.category .seen img {
-		height: 40px;
+	// v3 : les cellules perdent leur marge
+	// horizontale, c'est le marqueur lu / non lu, élargi, qui décale le texte —
+	// la rangée respire à gauche sans que les colonnes de chiffres bougent.
+	body:not(.v2) .category > div {
+		padding: 10px 0;
 	}
-	body.dark .category .seen img.seen {
-		filter: invert(0.85);
+	body:not(.v2) .category > .seen {
+		width: auto;
+		padding: 10px 24px;
+	}
+	.category .dot {
+		font-size: 24px;
+		color: var(--text-color-secondary);
+		opacity: 0.45;
+	}
+	.category .dot.unread {
+		color: var(--primary);
+		opacity: 1;
+	}
+	.category.unread .title {
+		font-weight: bold;
 	}
 	.category .text {
 		flex: 1;
@@ -411,7 +478,7 @@
 	.mobile-forum-languages .v-list-item {
 		min-height: 36px;
 	}
-	.mobile-forum-languages .v-checkbox .v-selection-control {
+	.mobile-forum-languages .lw-checkbox {
 		margin-right: 10px;
 	}
 </style>

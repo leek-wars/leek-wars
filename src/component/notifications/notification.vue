@@ -3,20 +3,36 @@
 		<component :is="link ? 'router-link' : 'div'" :to="link || undefined">
 			<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
 			<img v-else :src="'/image/' + notification.image" class="image">
+			<!-- Quand la notification parle d'un de nos poireaux, sa miniature dit
+			     LEQUEL : trois rapports d'arène d'affilée portaient la même épée,
+			     sans rien pour les distinguer. Elle vient EN PLUS de l'icône de
+			     tête, qui garde le type d'événement. -->
+			<leek-image v-if="leek" :leek="leek" head class="leek-mini" />
 			<div class="content">
 				<i18n-t :keypath="'notification.title_' + notification.type" tag="div" class="title" scope="global">
 					<template #p0><b>{{ notification.title[0] }}</b></template>
 					<template #p1><b>{{ notification.title[1] }}</b></template>
 				</i18n-t>
-				<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
+				<!-- La date descend sur la ligne du sous-titre, à sa droite : le titre
+				     récupère toute la largeur de la ligne au lieu de s'élider devant
+				     une colonne de date qui restait vide sur deux étages. -->
+				<div class="bottom">
+					<div class="message">{{ notification.text || $t('notification.message_' + notification.type, notification.message) }}</div>
+					<div class="spacer"></div>
+					<span class="date" :title="LeekWars.formatDateTime(notification.date)">{{ LeekWars.formatDuration(notification.date) }}</span>
+				</div>
 			</div>
-			<div class="spacer"></div>
-			<span class="date" :title="LeekWars.formatDateTime(notification.date)">{{ LeekWars.formatDuration(notification.date) }}</span>
+			<!-- Le glyphe décoratif reste posé dans le FLUX et non en absolu : sinon il
+			     ne réserve aucune place et le titre, qui occupe toute la largeur avant
+			     de s'élider, lui passe dessous — la coupe des notifications de trophée
+			     tombait en plein sur le texte. -->
+			<div class="side">
+				<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
+				<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
+			</div>
 			<span v-if="resultIcon && LeekWars.notifsResults" class="result">
 				<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
 			</span>
-			<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
-			<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
 		</component>
 		<v-btn v-if="!notification.read" class="read" size="small" color="primary" @click.stop="read"><v-icon>mdi-check</v-icon></v-btn>
 	</div>
@@ -42,6 +58,10 @@ const props = defineProps<{
 }>()
 
 const link = computed(() => props.notification.link ? props.notification.link : '')
+// La notification ne porte que l'identifiant : on relit le poireau dans le store
+// pour que la miniature suive un changement de chapeau ou de niveau. Absent si le
+// poireau a été supprimé depuis — la ligne retombe alors sur son icône.
+const leek = computed(() => props.notification.leek ? store.state.farmer?.leeks[props.notification.leek] ?? null : null)
 const resultIcon = computed(() => props.notification.result === null ? '' : props.notification.result === 1 ? 'mdi-check' : props.notification.result === 0 ? 'mdi-equal' : 'mdi-close')
 
 function click() {
@@ -61,6 +81,10 @@ function read() {
 		display: flex;
 		min-width: 0;
 		align-items: center;
+		// La même ligne sert le panneau du header (400 px), le panneau social
+		// (400 à 800), la page et la barre mobile : c'est sa largeur à elle, pas
+		// celle de la fenêtre, qui dit s'il reste de la place pour l'ornement.
+		container-type: inline-size;
 		a {
 			align-items: center;
 			position: relative;
@@ -81,12 +105,23 @@ function read() {
 	}
 	.notification:hover {
 		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 		&.unread {
 			background-color: rgba(90, 194, 0, 0.25);
 		}
 	}
 	.content {
+		min-width: 0;
+		flex: 1;
+		// Le titre court désormais jusqu'au bout de la ligne : sans cette marge il
+		// collerait le bord du panneau (ou le glyphe décoratif).
+		padding-right: 8px;
+	}
+	// Sous-titre et date partagent la deuxième ligne ; la date ne rétrécit jamais,
+	// c'est le sous-titre qui s'élide si la place manque.
+	.bottom {
+		display: flex;
+		align-items: baseline;
 		min-width: 0;
 	}
 	.title {
@@ -119,12 +154,24 @@ function read() {
 	.result .mdi-close {
 		color: red;
 	}
+	// Bloc de droite : le glyphe décoratif, centré. `flex: none` le met hors de
+	// portée du rétrécissement — c'est lui qui fixe l'endroit où le titre s'élide.
+	.side {
+		flex: none;
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+	}
 	.large-icon {
-		position: absolute;
-		top: 0;
-		right: 80px;
 		font-size: 50px;
 		opacity: 0.5;
+	}
+	// Trop étroit : entre la vignette, le glyphe et la date il ne resterait rien
+	// pour le titre. Le glyphe n'est qu'un ornement, c'est lui qui s'efface.
+	@container (max-width: 330px) {
+		.large-icon {
+			display: none;
+		}
 	}
 	.message {
 		color: var(--text-color-secondary);
@@ -135,22 +182,22 @@ function read() {
 		overflow: hidden;
 	}
 	.date {
-		position: absolute;
-		bottom: 5px;
-		right: 0;
+		flex: none;
 		color: var(--text-color-secondary);
 		font-size: 12px;
-		padding: 0 8px;
+		padding-left: 8px;
+		white-space: nowrap;
 	}
 	.image {
+		flex: none;
 		height: 50px;
 		width: 50px;
 		padding: 10px;
 	}
-	.notification:not(.notif-bigwin):not(.notif-trophy) img.image {
+	.notification:not(.notif-bigwin):not(.notif-trophy):not(.notif-item) img.image {
 		opacity: 0.7;
 	}
-	body.dark .notification:not(.notif-bigwin):not(.notif-trophy) img.image {
+	body.dark .notification:not(.notif-bigwin):not(.notif-trophy):not(.notif-item) img.image {
 		filter: invert(1);
 		opacity: 0.9 !important;
 	}
@@ -158,5 +205,15 @@ function read() {
 		font-size: 32px;
 		color: var(--text-color);
 		opacity: 0.8;
+	}
+	// Miniature du poireau, juste après l'icône de type. Elle échappe volontairement
+	// aux règles d'opacité et d'inversion ci-dessus, qui ne visent que les PNG
+	// monochromes de l'icône de type. Marge gauche négative : l'icône de type porte
+	// déjà 10 px de rembourrage à droite, deux fois trop pour séparer deux vignettes.
+	.leek-mini {
+		height: 46px;
+		width: 46px;
+		flex: none;
+		margin-left: -10px;
 	}
 </style>

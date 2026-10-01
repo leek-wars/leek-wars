@@ -2,6 +2,7 @@ import { LeekWars } from '@/model/leekwars'
 import router from '@/router'
 import { emitter } from '@/model/emitter'
 import { ChatMessage } from './chat'
+import { desktopTrophyUnlocked } from './desktop'
 import { NotificationType } from './notification'
 import { store } from './store'
 const getAnalyzer = () => import('@/component/editor/analyzer').then(m => m.analyzer)
@@ -95,14 +96,26 @@ enum SocketMessage {
 	HISTORY_REGISTER = 94,
 	HISTORY_UPDATE = 95,
 	HISTORY_UNREGISTER = 96,
+	LIVE_REGISTER = 97,
+	LIVE_EVENTS = 98,
+	LIVE_UNREGISTER = 99,
+	CHAT_EXEC_RESULT = 100,
+	CHAT_EDIT = 101,
 }
 
-// On visibility change, if no message received for this long, send a probe ping
-const PROBE_STALE_THRESHOLD = 25000
+// Le serveur diffuse CONNECTED_COUNT à tous les clients toutes les 30 s : c'est le seul
+// battement de cœur qu'une socket vivante mais silencieuse est garantie de recevoir, donc la
+// seule mesure fiable de son état côté client.
+const SERVER_HEARTBEAT = 30000
+// On visibility change, if no message received for this long, send a probe ping. Calé sur le
+// battement de cœur + une marge : en dessous, une socket parfaitement saine serait déclarée
+// suspecte à chaque retour sur l'onglet.
+const PROBE_STALE_THRESHOLD = SERVER_HEARTBEAT + 10000
 // Beyond this, skip the probe and reconnect directly (almost certainly dead, e.g. mobile suspend)
 const PROBE_DEAD_THRESHOLD = 60000
-// Force-reconnect if probe ping gets no response within this time
-const PROBE_RESPONSE_TIMEOUT = 3000
+// Force-reconnect if probe ping gets no response within this time.
+// À garder court : ce délai est le prix payé avant chaque reconnexion.
+const PROBE_RESPONSE_TIMEOUT = 2000
 
 class Socket {
 	public socket!: WebSocket
@@ -118,7 +131,10 @@ class Socket {
 		if (!store.state.farmer || this.intentionallyClosed || this.connecting() || this.connected()) {
 			return
 		}
-		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
+		// leekwars-beta.local : WS de la beta via le proxy Apache local (same-origin, schéma de la page)
+		const url = window.location.hostname === 'leekwars-beta.local'
+			? (window.location.protocol === 'https:' ? "wss://" : "ws://") + window.location.host + "/ws"
+			: LeekWars.LOCAL ? "ws://localhost:1213/" : (LeekWars.DEV ? "wss://leekwars.com/ws" : "wss://" + window.location.host + "/ws")
 		this.socket = new WebSocket(url, [ 'leek-wars', store.state.token! ])
 		// console.log("[socket] socket", this.socket)
 
@@ -198,6 +214,9 @@ class Socket {
 				case SocketMessage.NOTIFICATION_RECEIVE : {
 
 					const message = { id: data[0], type: data[1], date: LeekWars.time, parameters: data[2], new: true }
+					if (message.type === NotificationType.TROPHY_UNLOCKED) {
+						desktopTrophyUnlocked(parseInt(message.parameters[0], 10))
+					}
 					
 					const spoilableTypes: number[] = [NotificationType.BATTLE_ROYALE_STARTED, NotificationType.FIGHT_REPORT, NotificationType.FARMER_FIGHT_REPORT, NotificationType.COMPOSITION_FIGHT_REPORT, NotificationType.CHALLENGE, NotificationType.FARMER_CHALLENGE, NotificationType.TOURNAMENT_WINNER, NotificationType.FARMER_TOURNAMENT_WIN, NotificationType.TEAM_TOURNAMENT_WIN, NotificationType.WAR_REPORT, NotificationType.CHEST_HUNT_REPORT, NotificationType.COLOSSUS_REPORT]
 
@@ -263,7 +282,8 @@ class Socket {
 					break
 				}
 				case SocketMessage.ARENA_LEAVE: {
-					LeekWars.arena.leave()
+					// data[0] : motif du refus, quand c'est le serveur qui nous sort.
+					LeekWars.arena.leave(data[0] as string | undefined)
 					break
 				}
 				case SocketMessage.GARDEN_QUEUE: {
@@ -276,6 +296,10 @@ class Socket {
 				}
 				case SocketMessage.HISTORY_UPDATE: {
 					emitter.emit('history-update', data)
+					break
+				}
+				case SocketMessage.LIVE_EVENTS: {
+					emitter.emit('live-events', data)
 					break
 				}
 				case SocketMessage.TOURNAMENT_UPDATE: {
@@ -313,6 +337,14 @@ class Socket {
 				}
 				case SocketMessage.CHAT_DELETE: {
 					store.commit('chat-delete', { chat: data[0], messages: data[1] })
+					break
+				}
+				case SocketMessage.CHAT_EDIT: {
+					store.commit('chat-edit', { chat: data[0], message: data[1], content: data[2], date: data[3], mentions: data[4] })
+					break
+				}
+				case SocketMessage.CHAT_EXEC_RESULT: {
+					store.commit('chat-exec-result', { chat: data[0], message: data[1], exec: data[2] })
 					break
 				}
 				case SocketMessage.CHAT_REACT: {
@@ -368,11 +400,11 @@ class Socket {
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE: {
-					getAnalyzer().then(a => a.analyzeResult(data))
+					getAnalyzer().then(a => a.analyzeResult(data, request_id))
 					break
 				}
 				case SocketMessage.EDITOR_ANALYZE_ERROR: {
-					getAnalyzer().then(a => a.analyzeError())
+					getAnalyzer().then(a => a.analyzeError(request_id))
 					break
 				}
 				case SocketMessage.EDITOR_HOVER: {
@@ -454,6 +486,15 @@ class Socket {
 				this.reconnect()
 			}, PROBE_RESPONSE_TIMEOUT)
 		}
+	}
+
+	// Vrai si la socket a pu rater des messages : pas connectée, ou silencieuse depuis plus
+	// longtemps que le battement de cœur du serveur. Sert à décider s'il faut rattraper le
+	// contenu en HTTP au retour sur l'app : un onglet d'ordinateur simplement passé au
+	// second plan a continué de recevoir, il n'y a rien à rattraper.
+	public maybeStale() {
+		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) { return true }
+		return Date.now() - this.lastReceivedTime > PROBE_STALE_THRESHOLD
 	}
 
 	private clearPongProbe() {

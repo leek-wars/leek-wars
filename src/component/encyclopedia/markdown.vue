@@ -4,10 +4,14 @@
 
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
+	import { applyEmojis } from '@/model/emojis'
 	import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { mdiIcons } from '@/model/mdi-icons'
 	import { Latex } from '@/model/latex'
-	import { createSubApp } from '@/model/vue'
+	import { createSubApp } from '@/model/sub-app'
+	import { resolveCodeThemeClass } from '@/component/editor/code-theme'
+	import CodeTabs from '@/component/encyclopedia/code-tabs.vue'
+	import { findCodeBlockGroups } from '@/model/doc-language'
 	import markdown from 'markdown-it'
 	import DOMPurify from 'dompurify'
 	import LineOfSight from '../line-of-sight/line-of-sight.vue'
@@ -15,11 +19,13 @@
 	import SearchBar from './search-bar.vue'
 	import TutorialMenu from '../tutorial/tutorial-menu.vue'
 	import TutorialProgress from '../tutorial/tutorial-progress.vue'
-	import { VBtn, VCheckbox } from 'vuetify/components'
-	import { tutorial_items } from '../tutorial/tutorial-items'
+	import { VBtn } from 'vuetify/components'
+	import LWCheckbox from '@/component/ui/lw-checkbox.vue'
+	import { tutorial_items, toTutorialTrack } from '../tutorial/tutorial-items'
 	import { store } from '@/model/store'
 	import { i18n } from '@/model/i18n'
 	import LeekImage from '../leek-image.vue'
+	import { isUserImageUrl, replaceBannedImages } from '@/model/user-image'
 	import { computed, defineComponent, h, nextTick, onBeforeUnmount, onBeforeUpdate, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
@@ -48,6 +54,23 @@
 		breaks: true,
 		linkify: true,
 	})
+
+	// CommonMark consomme le texte de la ligne d'ouverture d'une fence comme nom de langage,
+	// même quand ce n'en est pas un : ```class C { faisait disparaître la ligne du code affiché.
+	// Le chat ne retire cette première ligne que si c'est un langage connu (splitCodeLanguage,
+	// model/directives.ts) ; on applique la même règle ici. Rapport forum 12091.
+	const defaultFence = markdownInstance.renderer.rules.fence!
+	markdownInstance.renderer.rules.fence = (tokens, idx, options, env, self) => {
+		const token = tokens[idx]
+		// info vide ou blanche = fence normale, rien à restaurer (sinon on ajouterait une
+		// première ligne vide au code).
+		const info = token.info.trim()
+		if (info && !LeekWars.codeLanguageMode(info)) {
+			token.content = info + '\n' + token.content
+			token.info = ''
+		}
+		return defaultFence(tokens, idx, options, env, self)
+	}
 	const html = ref('')
 	let summary: { children: SummaryNode[] } = { children: [] }
 	let components: MountedComponent[] = []
@@ -64,13 +87,24 @@
 			DOMPurify.addHook('uponSanitizeElement', (node, data) => {
 				if (data.tagName === 'img' && node instanceof Element) {
 					const src = node.getAttribute('src')
-					if (src && !re.test(src)) {
+					// isUserImageUrl et pas une ligne de plus dans `re` : ce qu'est une image
+					// uploadée valide n'a qu'UNE définition, dans model/user-image.ts, et elle
+					// vérifie aussi que le chemin dérive du hash. Deux copies de cette règle,
+					// c'est une surface qui rend en <img> ce qu'une autre refuse.
+					if (src && !re.test(src) && !isUserImageUrl(src)) {
 						node.remove()
 					}
 				}
 			})
 
-			const sanitized = DOMPurify.sanitize(markdownInstance.render(props.content), {
+			// Les images bannies ne passent pas par le nettoyage ci-dessus : leur marqueur
+			// n'est pas une URL d'image, il n'y a donc rien à rendre. On l'échange contre la
+			// mention avant le rendu, sinon la modération laisserait un trou muet dans le
+			// message — et le lecteur qui avait vu l'image se demanderait ce qu'il a raté.
+			const content = replaceBannedImages(props.content,
+				'<span class="banned-image">' + LeekWars.protect(t('main.image_banned') as string) + '</span>')
+
+			const sanitized = DOMPurify.sanitize(markdownInstance.render(content), {
 				ADD_TAGS: ['img', 'center'],
 				ADD_ATTR: ['style', 'class', 'width', 'height', 'href', 'src', 'colspan', 'rowspan', 'alt', 'correct'],
 				ALLOW_UNKNOWN_PROTOCOLS: false,
@@ -90,9 +124,24 @@
 
 			nextTick(() => {
 				const mdEl = md.value!
+				// Dans l'encyclopédie, la page parent est déclarée par une citation
+				// « > Titre » placée juste après le titre : elle sert de métadonnée et ne
+				// doit pas s'afficher. On la marque ici, en premier, pour la masquer via
+				// `blockquote.parent-page`. Un marqueur explicite plutôt qu'une adjacence
+				// CSS : celle-ci ne survivait pas à l'encart d'alias inséré plus bas, et
+				// escamotait aussi les citations légitimes des messages du forum.
+				const parentQuote = props.mode === 'encyclopedia' ? mdEl.querySelector(':scope > h1:first-child + blockquote') : null
+				parentQuote?.classList.add('parent-page')
 				// Rendu LaTeX inline ($...$) — fait avant la transformation des blocs
 				// de code pour que le contenu des <code>/<pre> reste intact.
 				renderMath(mdEl)
+				// Smileys / emojis (:) :/ :D <3 ...) dans les messages forum et le
+				// dev-blog (mode="forum"). applyEmojis saute code/pre/latex/liens, donc
+				// c'est fait avant createCodeArea sans risque de toucher au code.
+				// Dans l'encyclopédie, seulement les codes exacts du panneau d'emojis :
+				// « Points de tour (TP) » doit rester une abréviation.
+				if (props.mode === 'forum') { applyEmojis(mdEl) }
+				else if (props.mode === 'encyclopedia') { applyEmojis(mdEl, true) }
 				mdEl.querySelectorAll('h1, h2, h3, h4, h5').forEach((item) => {
 					const el = item as HTMLHeadingElement
 					const level = parseInt(el.tagName.substring(1), 10)
@@ -144,15 +193,29 @@
 					svg.appendChild(pathEl)
 					item.replaceWith(svg)
 				})
+				// Un même exemple décliné en plusieurs langages s'écrit en fences CONSÉCUTIVES
+				// (```leekscript puis ```js puis ```python) : on les regroupe en onglets. Les blocs
+				// restants — l'immense majorité des pages — passent par le chemin normal ci-dessous.
+				for (const group of findCodeBlockGroups(mdEl)) {
+					const container = document.createElement('div')
+					group.elements[0].replaceWith(container)
+					group.elements.forEach(e => e.remove())
+					const app = createSubApp(CodeTabs, { blocks: group.blocks }, 'encyclopedia-code-tabs')
+					app.mount(container)
+					components.push({ $destroy: () => app.unmount() })
+				}
 				mdEl.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')
-					if (LeekWars.darkMode) item.classList.add('theme-monokai')
-					LeekWars.createCodeArea(content, item as HTMLElement)
+					item.classList.add(resolveCodeThemeClass())
+					// markdown-it pose une classe language-<lang> sur les blocs ```lang
+					const langClass = Array.from(item.classList).find((c) => c.startsWith('language-'))
+					const language = langClass ? langClass.slice('language-'.length) : undefined
+					LeekWars.createCodeArea(content, item as HTMLElement, language)
 				})
 				mdEl.querySelectorAll('code:not(.multi)').forEach((item) => {
 					const content = ('' + item.textContent).trim()
-					if (LeekWars.darkMode) item.classList.add('theme-monokai')
+					item.classList.add(resolveCodeThemeClass())
 					LeekWars.createCodeAreaSimple(content, item as HTMLElement)
 				})
 
@@ -232,13 +295,15 @@
 				})
 				// Tutorial menu
 				mdEl.querySelectorAll('.tutorial-menu').forEach((item) => {
-					const app = createSubApp(TutorialMenu, { locale: props.locale }, 'tutorial-menu')
+					const track = toTutorialTrack(item.getAttribute('data-track'))
+					const app = createSubApp(TutorialMenu, { locale: language.value, track }, 'tutorial-menu')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
 				// Tutorial progress
 				mdEl.querySelectorAll('.tutorial-progress').forEach((item) => {
-					const app = createSubApp(TutorialProgress, { locale: props.locale }, 'tutorial-progress')
+					const track = toTutorialTrack(item.getAttribute('data-track'))
+					const app = createSubApp(TutorialProgress, { locale: language.value, track }, 'tutorial-progress')
 					app.mount(item)
 					components.push({ $destroy: () => app.unmount() })
 				})
@@ -251,14 +316,21 @@
 						}
 					})
 
-					// Désactivé si pas le chapitre N + 1
-					if (store.state.farmer && chapter !== store.state.farmer.tutorial_progress + 1) {
+					// Le tutoriel est linéaire : on ne peut répondre qu'au chapitre N + 1. Le menu
+					// laisse pourtant ouvrir n'importe quel chapitre, donc un joueur en avance
+					// tomberait sur un quiz inerte sans le moindre message.
+					const progress = store.state.farmer ? store.state.farmer.tutorial_progress : 0
+					const completed = !!store.state.farmer && progress >= chapter
+					const locked = !!store.state.farmer && chapter > progress + 1
+
+					if (store.state.farmer && chapter !== progress + 1) {
 						item.querySelectorAll('ul').forEach((answers) => {
-							[...answers.children].forEach(child => child.classList.add('disabled'))
+							[...answers.children].forEach(child => {
+								child.classList.add('disabled')
+								if (locked) child.classList.add('locked')
+							})
 						})
 					}
-
-					const completed = store.state.farmer && store.state.farmer.tutorial_progress >= chapter
 					let submitContainer: HTMLElement | null = null
 					const set_finished = () => {
 						if (submitContainer) submitContainer.style.display = 'none'
@@ -318,29 +390,44 @@
 						}
 					}
 
-					// Create submit button using Vue 3 createApp with reactive disabled state
-					submitContainer = document.createElement('div')
-					item.append(submitContainer)
-					const BtnWrapper = defineComponent({
-						setup() {
-							return () => h(VBtn, {
-								color: 'primary',
-								disabled: btnDisabled.value,
-								onClick: handleSubmit
-							}, () => i18n.t('main.validate'))
-						}
-					})
-					const btnApp = createSubApp(BtnWrapper, undefined, 'tutorial-quiz-btn')
-					btnApp.mount(submitContainer)
-					components.push({ $destroy: () => btnApp.unmount() })
+					if (locked) {
+						// Pas de bouton de validation : on explique pourquoi les cases ne
+						// répondent pas plutôt que de laisser le joueur cliquer dans le vide.
+						const message = document.createElement('div')
+						message.className = 'quiz-locked'
+						message.textContent = i18n.t('encyclopedia.quiz_locked', [progress + 1]) as string
+						item.append(message)
+					} else {
+						// Create submit button using Vue 3 createApp with reactive disabled state
+						submitContainer = document.createElement('div')
+						item.append(submitContainer)
+						const BtnWrapper = defineComponent({
+							setup() {
+								return () => h(VBtn, {
+									color: 'primary',
+									disabled: btnDisabled.value,
+									onClick: handleSubmit
+								}, () => i18n.t('main.validate'))
+							}
+						})
+						const btnApp = createSubApp(BtnWrapper, undefined, 'tutorial-quiz-btn')
+						btnApp.mount(submitContainer)
+						components.push({ $destroy: () => btnApp.unmount() })
+					}
 
 					item.querySelectorAll('ul').forEach(answers => {
 						;[...answers.children].forEach((child, index) => {
 							child.setAttribute('index', '' + index)
 						})
-						answers.append(...Array.from(answers.children).sort((_a, _b) => {
-							return Math.random() - 0.5
-						}))
+						// Fisher-Yates : un sort((a, b) => Math.random() - 0.5) n'est pas un
+						// comparateur transitif et laisse la bonne réponse près de sa position
+						// d'origine, ce qui la rend devinable.
+						const shuffled = Array.from(answers.children)
+						for (let i = shuffled.length - 1; i > 0; i--) {
+							const j = Math.floor(Math.random() * (i + 1))
+							;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+						}
+						answers.append(...shuffled)
 						let answer = Array(answers.children.length).fill(false)
 						form.push(answer)
 						;[...answers.children].forEach((child, index) => {
@@ -357,9 +444,7 @@
 
 							const CheckboxWrapper = defineComponent({
 								setup() {
-									// eslint-disable-next-line @typescript-eslint/no-explicit-any
-							return () => h(VCheckbox as any, {
-										hideDetails: true,
+									return () => h(LWCheckbox, {
 										modelValue: checked.value,
 										'onUpdate:modelValue': (newValue: boolean) => {
 											checked.value = newValue
@@ -416,9 +501,10 @@
 						const container = document.createElement('div')
 						container.className = 'aliases-display'
 						container.textContent = i18n.t('encyclopedia.aliases', [aliases.join(', ')]) as string
-						const h1 = mdEl.querySelector('h1')
-						if (h1 && h1.nextSibling) {
-							h1.parentNode!.insertBefore(container, h1.nextSibling)
+						// Sous le titre, mais après la citation masquée qui déclare la page parent.
+						const anchor = parentQuote ?? mdEl.querySelector('h1')
+						if (anchor) {
+							anchor.after(container)
 						} else {
 							mdEl.prepend(container)
 						}
@@ -483,9 +569,11 @@
 				} else if (tag.startsWith('line-of-sight')) {
 					return "<div class='encyclopedia-los'></div>"
 				} else if (tag.startsWith('tutorial-menu')) {
-					return "<div class='tutorial-menu'></div>"
+					// {{ tutorial-menu }} = piste LeekScript ; {{ tutorial-menu:python }} = piste Python, etc.
+					// toTutorialTrack ne renvoie qu'une valeur connue (a-z), sûre pour l'attribut.
+					return "<div class='tutorial-menu' data-track='" + toTutorialTrack(tag.split(':')[1]) + "'></div>"
 				} else if (tag.startsWith('tutorial-progress')) {
-					return "<div class='tutorial-progress'></div>"
+					return "<div class='tutorial-progress' data-track='" + toTutorialTrack(tag.split(':')[1]) + "'></div>"
 				} else if (tag.startsWith('tutorial-score')) {
 					return "<div>" + (store.state.farmer ? store.state.farmer.tutorial_progress : 0) + " / " + tutorial_items.length + "</div>"
 				} else if (tag.startsWith('tutorial-lock')) {
@@ -612,11 +700,26 @@
 			display: none;
 		}
 	}
-	.md :deep(h1:first-child + blockquote) {
+	// v3 : le titre d'un article n'est pas un titre de coquille, c'est la
+	// première ligne du contenu — et sur les pages de documentation il porte une
+	// signature de fonction (`acos(nombre argument) → réel result`). La règle
+	// globale `h1` du thème lui donnerait la police d'affichage, la seule ligne en
+	// pixel d'un article entièrement composé en typo de corps. Le fil d'Ariane de
+	// la barre de page, lui,
+	// reste en police d'affichage : c'est de la coquille.
+	// Le corps ne change pas (2em) : il reste au-dessus des `h2` de l'article
+	// (25 px), qui sont déjà dans cette police.
+	body:not(.v2) .md :deep(h1) {
+		font-family: var(--font-body);
+		font-weight: 500;
+		letter-spacing: normal;
+	}
+	// Citation déclarant la page parent d'une page d'encyclopédie : métadonnée, pas du contenu.
+	.md :deep(blockquote.parent-page) {
 		display: none;
 	}
 	.md :deep(h2) {
-		// color: #000;
+		// color: var(--black);
 		&:not(:first-of-type) {
 			margin-top: 1em;
 		}
@@ -631,6 +734,12 @@
 	}
 	.md :deep(img) {
 		max-width: 100%;
+	}
+	// Mention laissée par la modération à la place d'une image bannie. Même
+	// apparence que dans le chat : le message garde sa place, seule l'image n'est plus là.
+	.md :deep(.banned-image) {
+		color: var(--text-color-secondary);
+		font-style: italic;
 	}
 	.md :deep(a) {
 		color: var(--link-color);
@@ -651,7 +760,7 @@
 			color: var(--text-color-secondary);
 			padding: 4px 0;
 		}
-		border-left: .3em solid #aaa;
+		border-left: .3em solid var(--grey-9);
 	}
 	.md :deep(code) {
 		background: var(--pure-white);
@@ -686,14 +795,14 @@
 	}
 	.md :deep(.summary) {
 		// border: 1px solid #aaa;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 		display: inline-block;
 		background: var(--pure-white);
 		margin: 5px 0;
 		padding-top: 5px;
 		padding-bottom: 5px;
 		padding-right: 20px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		ul {
 			margin: 0;
 		}
@@ -701,7 +810,7 @@
 	.md :deep(.item-preview) {
 		width: 350px;
 		display: inline-block;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 		h2 {
 			border-bottom: none;
 			padding: 0;
@@ -736,9 +845,9 @@
 			padding-inline-start: 0;
 			li {
 				background: var(--pure-white);
-				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+				box-shadow: var(--elevation-1);
 				padding: 15px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				cursor: pointer;
 				display: flex;
 				gap: 4px;
@@ -746,7 +855,7 @@
 					background: var(--background-secondary);
 				}
 				&.correct {
-					background: #5fad1b;
+					background: var(--primary-surface);
 				}
 				&.wrong {
 					background: red;
@@ -755,19 +864,25 @@
 					background: orange;
 				}
 				&.correct, &.wrong, &.missed {
-					color: white;
-					pre {
-						color: black;
+					color: var(--primary-surface-text);
+					pre, .pre {
+						color: var(--black);
 					}
 					.letter {
-						color: white;
+						color: var(--primary-surface-text);
 					}
 					.v-icon {
-						color: white !important;
+						color: var(--primary-surface-text) !important;
 					}
 				}
 				&.disabled {
 					pointer-events: none;
+				}
+				&.locked {
+					opacity: 0.5;
+					cursor: default;
+					box-shadow: none;
+					border: 1px dashed var(--border);
 				}
 				.letter {
 					font-weight: 500;
@@ -797,6 +912,14 @@
 			}
 		}
 	}
+	.md :deep(.quiz-locked) {
+		margin-top: 15px;
+		padding: 12px 15px;
+		border-radius: var(--radius);
+		background: var(--background-secondary);
+		color: var(--text-color-secondary);
+		font-weight: 500;
+	}
 	.md :deep(.lock) {
 		font-weight: 500;
 		&.locked ~ pre {
@@ -816,9 +939,9 @@
 		}
 		p {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			box-shadow: var(--elevation-1);
 			padding: 10px 15px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			margin: 0;
 		}
 	}

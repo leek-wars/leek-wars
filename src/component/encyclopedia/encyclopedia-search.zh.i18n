@@ -2,17 +2,17 @@
 	"all_categories": "所有类别",
 	"author": "作者",
 	"category": "类别",
-	"no_results_found": "没有找到结果...",
-	"not_enough_parameters": "没有足够的参数开始搜索",
+	"no_results_found": "未找到结果…",
+	"not_enough_parameters": "参数不足，无法进行搜索",
 	"post_by_x_the_x_in_x": "{farmer} 于 {date} 在 {topic} 中发布",
 	"query": "搜索",
 	"results": "搜索结果",
 	"search": "搜索",
 	"sort_by": "排序方式",
-	"sort_pertinence": "关联",
+	"sort_pertinence": "相关性",
 	"sort_date": "日期",
-	"sort_votes": "表决",
+	"sort_votes": "票数",
 	"title": "百科全书",
-	"too_few_params": "参数不够...",
-	"too_short": "搜索太短..."
+	"too_few_params": "参数不足…",
+	"too_short": "搜索内容太短…"
 }

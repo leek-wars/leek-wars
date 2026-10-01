@@ -19,5 +19,6 @@
 	"linked_from": "Strony zawierające link",
 	"n_references": "odniesienie | odniesienia | odniesień",
 	"referencing_translations": "Powiązane tłumaczenia",
-	"views": "wyświetleń"
+	"views": "wyświetleń",
+	"quiz_locked": "Ukończ najpierw rozdział {0}, aby odpowiedzieć na ten quiz."
 }

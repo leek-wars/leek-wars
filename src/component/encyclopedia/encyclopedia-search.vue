@@ -15,7 +15,7 @@
 
 				<div class="center">
 					<v-btn color="primary" class="search-button" @click="searchButton">
-						<img src="/image/search.png"><span>{{ $t('search') }}</span>
+						<v-icon>mdi-magnify</v-icon><span>{{ $t('search') }}</span>
 					</v-btn>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 			<div v-if="searchStarted">
 				<h4>{{ $t('results') }} <span v-if="results">({{ count }})</span></h4>
 
-				<pagination :current="options.page" :total="pages" :url="urlPagination" :query="true" />
+				<pagination v-if="pages > 1" :current="options.page" :total="pages" :url="urlPagination" :query="true" />
 
 				<loader v-if="!results" />
 
@@ -41,7 +41,7 @@
 						<div>{{ $t('no_results_found') }}</div>
 					</div>
 				</div>
-				<pagination :current="options.page" :total="pages" :url="urlPagination" :query="true" />
+				<pagination v-if="pages > 1" :current="options.page" :total="pages" :url="urlPagination" :query="true" />
 			</div>
 		</panel>
 	</div>
@@ -148,11 +148,11 @@ function searchButton() {
 
 <style lang="scss" scoped>
 h1 {
-	background: #222;
+	background: var(--grey-1);
 	font-size: 20px;
 	display: inline-flex;
 	&::after {
-		border-color: transparent transparent transparent #222;
+		border-color: transparent transparent transparent var(--grey-1);
 	}
 	.book {
 		margin-right: 10px;
@@ -189,7 +189,7 @@ h1 {
 	border: none;
 }
 .query:focus {
-	border: 1px solid #5fad1b;
+	border: 1px solid var(--primary);
 }
 .switch {
 	margin-bottom: 15px;
@@ -222,15 +222,15 @@ h2 {
 	font-size: 14px;
 }
 .result :deep(b) {
-	color: #5fad1b;
+	color: var(--primary);
 	font-weight: bold;
 }
 .info {
-	color: #aaa;
+	color: var(--grey-9);
 	margin-bottom: 10px;
 }
 .result .dark {
-	color: #555;
+	color: var(--grey-4);
 }
 .pagination {
 	text-align: center;
@@ -238,7 +238,7 @@ h2 {
 .no-results {
 	text-align: center;
 	padding: 10px;
-	color: #999;
+	color: var(--grey-8);
 	img {
 		margin-bottom: 8px;
 	}

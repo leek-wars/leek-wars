@@ -19,5 +19,6 @@
     "referencing_translations": "Traductions liées",
     "linked_from": "Pages contenant un lien",
     "n_references": "référence | référence | références",
-    "views": "vues"
+    "views": "vues",
+    "quiz_locked": "Terminez d'abord le chapitre {0} pour répondre à ce quiz."
 }

@@ -49,7 +49,6 @@ class ForumMessage {
 	public votes_down!: number
 	public my_vote!: number
 	public editing!: boolean
-	public height!: number
 	public edition_date!: number
 	public writer!: Farmer
 	public deleted!: boolean

@@ -15,44 +15,33 @@
 					<input v-model="options.farmer" class="query card" type="text" @keydown.enter="search">
 				</div>
 				<div>
-					<v-switch v-model="options.moderator" :label="$t('main.grade_moderator')" class="switch" hide-details @change="search" />
-					<v-switch v-model="options.admin" :label="$t('main.grade_admin')" class="switch" hide-details @change="search" />
+					<lw-switch v-model="options.moderator" :label="$t('main.grade_moderator')" class="switch" @change="search" />
+					<lw-switch v-model="options.admin" :label="$t('main.grade_admin')" class="switch" @change="search" />
 				</div>
 				<div>
 					<div class="label">{{ $t('category') }}</div>
-					<select v-model="options.category" class="search-category" @change="search">
-						<option value="-1">{{ $t('all_categories') }}</option>
-						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $t('forum-category.' + c.name) }}</option>
-					</select>
+					<lw-select v-model="options.category" :items="categoryItems" class="search-category" @update:model-value="search" />
 				</div>
 				<div>
 					<div class="label">{{ $t('sort_by') }}</div>
-					<select v-model="options.order" @change="search">
-						<option value="pertinence">{{ $t('sort_pertinence') }}</option>
-						<option value="date">{{ $t('sort_date') }}</option>
-						<option value="votes">{{ $t('sort_votes') }}</option>
-					</select>
+					<lw-select v-model="options.order" :items="orderItems" @update:model-value="search" />
 				</div>
 				<div>
 					<div class="label">{{ $t('resolved') }}</div>
-					<select v-model="options.resolved" @change="search">
-						<option value="all">{{ $t('resolved_all') }}</option>
-						<option value="yes">{{ $t('resolved_yes') }}</option>
-						<option value="no">{{ $t('resolved_no') }}</option>
-					</select>
+					<lw-select v-model="options.resolved" :items="resolvedItems" @update:model-value="search" />
 				</div>
 			</div>
 
 			<div class="center">
 				<v-btn color="primary" class="search-button" @click="searchButton">
-					<img src="/image/search.png"><span>{{ $t('search') }}</span>
+					<v-icon>mdi-magnify</v-icon><span>{{ $t('search') }}</span>
 				</v-btn>
 			</div>
 
 			<div v-if="searchStarted">
 				<h4>{{ $t('results') }} <span v-if="results">({{ count }})</span></h4>
 
-				<pagination :current="options.page" :total="pages" :url="urlPagination" :query="true" />
+				<pagination v-if="pages > 1" :current="options.page" :total="pages" :url="urlPagination" :query="true" />
 
 				<loader v-if="!results" />
 
@@ -76,7 +65,7 @@
 								</template>
 								<template #topic>
 									<router-link :to="'/forum/category-' + result.cid">
-										{{ $te('forum-category.' + result.cname) ? $t('forum-category.' + result.cname) : result.cname }}
+										{{ $te('forum-category.' + result.cname) ? forumCategoryName(result.cname, result.lang) : result.cname }}
 									</router-link>
 								</template>
 							</i18n-t>
@@ -100,13 +89,14 @@
 						<div>{{ $t('no_results_found') }}</div>
 					</div>
 				</div>
-				<pagination :current="options.page" :total="pages" :url="urlPagination" :query="true" />
+				<pagination v-if="pages > 1" :current="options.page" :total="pages" :url="urlPagination" :query="true" />
 			</div>
 		</panel>
 	</div>
 </template>
 
 <script setup lang="ts">
+	import { forumCategoryName } from '@/model/forum-language'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import Pagination from '@/component/pagination.vue'
@@ -117,7 +107,7 @@
 	defineOptions({ name: 'ForumSearch', i18n: {}, mixins: [...mixins] })
 
 	useI18n() // initialize local scope for <i18n-t>
-	const t = useNamespacedT('search')
+	const t = useNamespacedT('forum-search')
 	const route = useRoute()
 	const router = useRouter()
 
@@ -154,8 +144,24 @@
 	} as Record<string, unknown>
 	const queryLower = ref('')
 	const pages = ref(0)
-	const results = ref<{ id: number, pos: number, fname?: string, date: number, cid?: number, cname?: string, [key: string]: unknown }[] | null>(null)
+	const results = ref<{ id: number, pos: number, fname?: string, date: number, cid?: number, cname?: string, lang?: string, [key: string]: unknown }[] | null>(null)
 	const categories = ref<{ id: number, name: string, type: string }[]>([])
+	// Les trois listes en lw-select, pas en <select> natif : aucun contrôle nu du
+	// navigateur.
+	const categoryItems = computed(() => [
+		{ value: -1, title: t('all_categories') },
+		...categories.value.map(c => ({ value: c.id, title: c.type == 'team' ? c.name : i18n.t('forum-category.' + c.name) })),
+	])
+	const orderItems = computed(() => [
+		{ value: 'pertinence', title: t('sort_pertinence') },
+		{ value: 'date', title: t('sort_date') },
+		{ value: 'votes', title: t('sort_votes') },
+	])
+	const resolvedItems = computed(() => [
+		{ value: 'all', title: t('resolved_all') },
+		{ value: 'yes', title: t('resolved_yes') },
+		{ value: 'no', title: t('resolved_no') },
+	])
 	const searchStarted = ref(false)
 	const count = ref(0)
 	const floor = Math.floor
@@ -281,12 +287,7 @@
 		width: 100%;
 	}
 	.query:focus {
-		border: 1px solid #5fad1b;
-	}
-	select {
-		height: 36px;
-		width: 100%;
-		font-size: 16px;
+		border: 1px solid var(--primary);
 	}
 	h2 {
 		margin-top: 20px;
@@ -307,7 +308,7 @@
 		align-items: center;
 		gap: 4px;
 		.v-icon.resolved {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 		.v-icon {
 			font-size: 22px;
@@ -318,15 +319,15 @@
 		font-size: 14px;
 	}
 	.result :deep(b) {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: bold;
 	}
 	.info {
-		color: #aaa;
+		color: var(--grey-9);
 		margin-bottom: 10px;
 	}
 	.result .dark {
-		color: #555;
+		color: var(--grey-4);
 	}
 	.pagination {
 		text-align: center;
@@ -334,7 +335,7 @@
 	.no-results {
 		text-align: center;
 		padding: 10px;
-		color: #999;
+		color: var(--grey-8);
 		img {
 			margin-bottom: 8px;
 		}
@@ -347,7 +348,7 @@
 		display: inline-block;
 		font-size: 16px;
 		margin-right: 12px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 	}
 	.vote i {
 		vertical-align: bottom;
@@ -361,7 +362,7 @@
 		font-weight: bold;
 	}
 	.vote.up, .vote.up i {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.vote.down {
 		color: red;
@@ -371,9 +372,9 @@
 		}
 	}
 	.vote.up.zero, .vote.down.zero {
-		color: #555;
+		color: var(--grey-4);
 		i {
-			color: #555;
+			color: var(--grey-4);
 		}
 	}
 </style>

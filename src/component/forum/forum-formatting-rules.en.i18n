@@ -1,14 +1,15 @@
 {
+	"title": "Formatting",
 	"source_code": "Source code",
 	"source_code_ex": "my source code",
 	"image": "Image",
 	"image_ex": "url",
-	"big_title": "Big title",
+	"big_title": "Large heading",
 	"big_title_ex": "Main title",
-	"sub_title": "Sub-title",
-	"sub_title_ex": "Sub-title",
-	"sub_sub_title": "Sub-sub-title",
-	"sub_sub_title_ex": "Sub-sub-title",
+	"sub_title": "Subheading",
+	"sub_title_ex": "Subheading",
+	"sub_sub_title": "Small heading",
+	"sub_sub_title_ex": "Small heading",
 	"bold": "Bold",
 	"bold_ex": "bold",
 	"italic": "Italic",
@@ -17,5 +18,5 @@
 	"underlined_ex": "underlined",
 	"striked": "Strikethrough",
 	"striked_ex": "strikethrough",
-	"basic_html": "Basic HTML authorized"
+	"basic_html": "Basic HTML allowed"
 }
