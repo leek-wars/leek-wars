@@ -38,7 +38,7 @@
 						<div class="leeks">
 							<div v-if="currentScenario.type === FightType.TEAM" class="leek turret">
 								<div class="card">
-									<turret-image :level="100" :skin="0" :scale="0.4" />
+									<turret-image :level="100" :skin="1" :scale="0.4" />
 									<div>{{ $t('main.turret') }}</div>
 								</div>
 								<ai v-if="turretAI1" v-ripple :ai="turretAI1" :small="true" :library="false" @click="clickTurretAI(1)" />
@@ -61,7 +61,7 @@
 						<div class="leeks">
 							<div v-if="currentScenario.type === FightType.TEAM" class="leek turret">
 								<div class="card">
-									<turret-image :level="100" :skin="1" :scale="0.4" />
+									<turret-image :level="100" :skin="2" :scale="0.4" />
 									<div>{{ $t('main.turret') }}</div>
 								</div>
 								<ai v-if="turretAI2" v-ripple :ai="turretAI2" :small="true" :library="false" @click="clickTurretAI(2)" />
@@ -171,7 +171,7 @@
 						<div class="chips">
 							<div class="container">
 								<rich-tooltip-item v-for="(chip, c) of currentLeekChipIds" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :nodge="true" :leek="currentLeek">
-									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= currentLeek.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
+									<img :src="chipImageUrl(LeekWars.items[chip].name.replace('chip_', ''))" :class="{disabled: c >= currentLeek.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.chips.length < currentLeek.ram" class="add" @click="chipsDialog = true">+</div>
 							</div>
@@ -195,7 +195,7 @@
 				</div>
 				<div v-if="currentMap" class="column map-column">
 					<div class="title name"></div>
-					<div class="map" oncontextmenu="return false;">
+					<div class="map" @contextmenu.prevent>
 						<div class="map-wrapper">
 							<div v-for="(line, l) of map" :key="l" class="line">
 								<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.cell in currentMap.data.obstacles, team1: currentMap.data.team1.indexOf(cell.cell) !== -1, team2: currentMap.data.team2.indexOf(cell.cell) !== -1}" class="cell" @mousedown="cellMouseDown($event, cell)" @mouseenter="cellMouseEnter($event, cell)" @mouseup="cellMouseUp" @dragstart="cellDragStart"></span>
@@ -328,7 +328,7 @@
 			<div v-if="currentLeek" class="padding chips-dialog">
 				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :nodge="true" :leek="currentLeek">
 					<span :class="{disabled: hasChipEquipped(chip.id)}" v-bind="props">
-						<img :src="'/image/chip/' + chip.name + '.png'" class="chip" @click="addOrRemoveLeekChip(chip.id)">
+						<img :src="chipImageUrl(chip.name)" class="chip" @click="addOrRemoveLeekChip(chip.id)">
 					</span>
 				</rich-tooltip-item>
 			</div>
@@ -336,7 +336,7 @@
 
 		<popup v-model="weaponsDialog" :width="800">
 			<template #icon>
-				<img src="/image/icon/garden.png">
+				<v-icon>mdi-pistol</v-icon>
 			</template>
 			<template #title>
 				<span v-if="currentLeek">{{ $t('select_weapons') }} [{{ currentLeek.weapons.length }}/{{ MAX_WEAPONS }}]</span>
@@ -352,7 +352,7 @@
 
 		<popup v-if="currentLeek" v-model="skinPotionDialog" :width="750">
 			<template #icon>
-				<img src="/image/icon/potion.png">
+				<v-icon>mdi-flask</v-icon>
 			</template>
 			<template #title>
 				{{ $t("select_skin") }}
@@ -374,6 +374,7 @@
 </template>
 
 <script setup lang="ts">
+	import { chipImageUrl } from '@/model/item'
 	import { locale } from '@/locale'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
@@ -394,8 +395,7 @@
 	import Map from '@/component/app/map.vue'
 	import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
-	import { useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
@@ -408,8 +408,15 @@
 		currentAI: AI | null
 	}>()
 
+	// Le dialogue ne navigue plus lui-même vers le combat : c'est l'éditeur qui
+	// décide où le montrer (dans son panneau de combat, ou en page pleine sur
+	// mobile).
+	const emit = defineEmits<{
+		'update:modelValue': [value: boolean]
+		launched: [fight: number]
+	}>()
+
 	const { t } = useI18n()
-	const router = useRouter()
 
 	class TestScenarioLeek {
 		id!: number
@@ -599,19 +606,15 @@
 		return result
 	})
 
-	const turretAI1 = computed<AI | null>(() => {
-		if (currentScenario.value?.turret_ai_team1 && currentScenario.value.turret_ai_team1 in allAis.value) {
-			return allAis.value[currentScenario.value.turret_ai_team1]
-		}
-		return teamTurretAI.value
-	})
+	// Sans IA choisie, une tourelle joue celle de l'équipe si son camp compte un vrai
+	// poireau, et aucune sinon (camp de bots).
+	function turretAI(path: string | null | undefined, team: TestScenarioLeek[]): AI | null {
+		if (path && path in allAis.value) return allAis.value[path]
+		return team.some(leek => leek.id > 0) ? teamTurretAI.value : null
+	}
 
-	const turretAI2 = computed<AI | null>(() => {
-		if (currentScenario.value?.turret_ai_team2 && currentScenario.value.turret_ai_team2 in allAis.value) {
-			return allAis.value[currentScenario.value.turret_ai_team2]
-		}
-		return teamTurretAI.value
-	})
+	const turretAI1 = computed(() => currentScenario.value ? turretAI(currentScenario.value.turret_ai_team1, currentScenario.value.team1) : null)
+	const turretAI2 = computed(() => currentScenario.value ? turretAI(currentScenario.value.turret_ai_team2, currentScenario.value.team2) : null)
 
 	// currentLeek.chips runtime shape is number[] (template ids), not the typed Chip[]
 	const currentLeekChipIds = computed<number[]>(() => (currentLeek.value?.chips ?? []) as unknown as number[])
@@ -698,6 +701,25 @@
 	function selectLeek(leek: Leek) {
 		currentLeek.value = leek
 		localStorage.setItem('editor/leek', '' + leek.id)
+	}
+
+	function selectLeekById(id: number) {
+		const leek = leeks.value.find(l => l.id === id)
+		if (leek) selectLeek(leek)
+		return leek !== undefined
+	}
+
+	// Sélection demandée depuis /editor#leek-<id> (copie d'un poireau en poireau de
+	// test) alors que la liste n'est pas encore chargée : appliquée à la fin de load().
+	let pendingLeekSelection: number | null = null
+
+	function openLeek(id: number) {
+		currentTab.value = 'leeks'
+		if (initialized.value) {
+			selectLeekById(id)
+		} else {
+			pendingLeekSelection = id
+		}
 	}
 
 	type ScenarioPersistData = Partial<Pick<TestScenario, 'type' | 'map' | 'seed' | 'max_turns' | 'turret_ai_team1' | 'turret_ai_team2'>> & { ai: string }
@@ -1160,7 +1182,7 @@
 		LeekWars.post('ai/test-scenario', { scenario_id: currentScenario.value.id, ai_id: props.currentAI.path }).then(data => {
 			localStorage.setItem('editor/last-scenario', '' + currentScenario.value!.id)
 			localStorage.setItem('editor/last-scenario-ai', '' + props.currentAI!.path)
-			router.push('/fight/' + data.fight)
+			emit('launched', data.fight)
 		})
 		.error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
 	}
@@ -1233,7 +1255,6 @@
 				Object.assign(scenarios, data.scenarios)
 				if (data.turret_ai) {
 					teamTurretAI.value = data.turret_ai
-					data.turret_ai.path = data.turret_ai.file_path || data.turret_ai.name
 					alliesAIs[data.turret_ai.path] = data.turret_ai
 				}
 
@@ -1254,11 +1275,10 @@
 					leek.real = false
 					leek.ai = null
 				}
-				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
-				if (startLeekID && startLeekID in leeks.value) {
-					const found = leeks.value.find(l => l.id === startLeekID)
-					if (found) selectLeek(found)
-				} else if (leeks.value.length) {
+				// Le poireau demandé par openLeek() prime sur le dernier poireau utilisé.
+				const startLeekID = pendingLeekSelection ?? parseInt(localStorage.getItem('editor/leek') || '', 10)
+				pendingLeekSelection = null
+				if (!selectLeekById(startLeekID) && leeks.value.length) {
 					selectLeek(leeks.value[0])
 				}
 
@@ -1330,7 +1350,7 @@
 		}
 	}
 
-	defineExpose({ onAIDeleted })
+	defineExpose({ onAIDeleted, openLeek })
 </script>
 
 
@@ -1372,7 +1392,7 @@
 		width: 120px;
 	}
 	.leek-column .leek:hover {
-		background-color: white;
+		background-color: var(--white);
 		opacity: 0.35;
 	}
 	.leek-column .leek.selected {
@@ -1395,17 +1415,17 @@
 	}
 	.lateral-column {
 		flex: 220px 0 0;
-		background: #333;
-		color: #bbb;
+		background: var(--grey-2);
+		color: var(--grey-10);
 		display: flex;
 		flex-direction: column;
 	}
 	.lateral-column h4 {
 		padding: 5px 10px;
-		color: white;
+		color: var(--white);
 		text-transform: uppercase;
 		font-size: 16px;
-		background: #555;
+		background: var(--grey-4);
 		display: block;
 	}
 	.items {
@@ -1417,14 +1437,14 @@
 		position: relative;
 	}
 	.item:hover {
-		background: #222;
+		background: var(--grey-1);
 	}
 	.item.selected {
-		background: #5fad1b;
-		color: white;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 	}
 	.lateral-column .add {
-		background: #444;
+		background: var(--grey-3);
 	}
 	.lateral-column .item {
 		display: flex;
@@ -1436,11 +1456,15 @@
 		gap: 9px;
 		.name {
 			flex: 1;
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.v-icon {
 			font-size: 20px;
 			opacity: 0.5;
-			color: white;
+			color: var(--white);
 			&:hover {
 				opacity: 1;
 			}
@@ -1541,9 +1565,9 @@
 	}
 	.column-scenario .leek .delete {
 		color: red;
-		background: white;
+		background: var(--white);
 		border-radius: 50%;
-		border-bottom: 2px solid #aaa;
+		border-bottom: 2px solid var(--grey-9);
 		display: inline-block;
 		vertical-align: top;
 		padding: 1px 7px;
@@ -1608,14 +1632,11 @@
 		vertical-align: bottom;
 	}
 	.item.leek .bot, .item.scenario .base {
-		background: #777;
-		color: white;
-		border-radius: 4px;
+		background: var(--grey-6);
+		color: var(--white);
+		border-radius: var(--radius);
 		padding: 0 4px;
-		margin-left: 5px;
-		position: absolute;
-		right: 7px;
-		top: 8px;
+		flex-shrink: 0;
 	}
 	.popup.mobile .leek-column {
 		width: auto;
@@ -1695,13 +1716,13 @@
 				display: inline-block;
 				font-weight: bold;
 				padding: 2px 4px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				min-width: 120px;
 				margin-right: 10px;
 				&[contenteditable="true"] {
 					border: 1px solid var(--border);
 				&:hover {
-					border: 1px solid #777;
+					border: 1px solid var(--grey-6);
 				}
 				}
 			}
@@ -1776,7 +1797,7 @@
 		border: 1px solid var(--border);
 		margin: 2px;
 		cursor: pointer;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		background: var(--pure-white);
 		vertical-align: top;
 	}
@@ -1785,7 +1806,7 @@
 		background: transparent;
 	}
 	.map .cell:not(.disabled).obstacle {
-		background: #666;
+		background: var(--grey-5);
 	}
 	.map .cell:not(.disabled).team1 {
 		background: blue;
@@ -1804,7 +1825,7 @@
 		margin: 0 3px;
 	}
 	.map-column .instructions {
-		color: #aaa;
+		color: var(--grey-9);
 		padding-left: 20px;
 		margin-top: -20px;
 	}
@@ -1847,18 +1868,18 @@
 			}
 			.count {
 				font-size: 20px;
-				color: #555;
+				color: var(--grey-4);
 				vertical-align: top;
 				padding-top: 10px;
 				display: inline-block;
 				font-weight: bold;
 			}
 			i {
-				color: #555;
+				color: var(--grey-4);
 				font-size: 42px;
 			}
 			&.selected {
-				border: 3px solid #5fad1b;
+				border: 3px solid var(--primary);
 				background: var(--pure-white);
 			}
 		}
@@ -1894,11 +1915,11 @@
 		& > .ai {
 			padding: 6px;
 			cursor: pointer;
-			border-radius: 4px;
-			border: 1px solid #ccc;
+			border-radius: var(--radius);
+			border: 1px solid var(--grey-11);
 			&:hover {
-				background: white;
-				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+				background: var(--white);
+				box-shadow: var(--elevation-1);
 			}
 		}
 		& > * {
@@ -1914,12 +1935,12 @@
 		display: inline-flex;
 		width: 65px;
 		height: 87px;
-		border: 2px dashed #777;
+		border: 2px dashed var(--grey-6);
 		margin-top: 10px;
 		margin-left: -30px;
 		vertical-align: top;
 		background: var(--pure-white);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 	}
 </style>

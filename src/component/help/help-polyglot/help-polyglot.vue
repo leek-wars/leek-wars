@@ -1,8 +1,20 @@
 <template lang="html">
 	<div class="page">
-		<div class="content">
-			<markdown :content="content" mode="encyclopedia" />
+		<!-- Barre de page comme toutes les autres pages d'aide, plutôt qu'un bloc de
+		     texte posé nu. -->
+		<div class="page-header page-bar">
+			<div class="page-title">
+				<page-icon name="help" fallback="mdi-help-circle" />
+				<div class="page-title-text">
+					<h1>{{ locale === 'fr' ? 'IA en JavaScript, Python et TypeScript' : 'AI in JavaScript, Python and TypeScript' }}</h1>
+				</div>
+			</div>
 		</div>
+		<panel class="first">
+			<div class="content">
+				<markdown :content="content" mode="encyclopedia" />
+			</div>
+		</panel>
 	</div>
 </template>
 
@@ -58,6 +70,18 @@ def turn():
 \`\`\`
 
 En JavaScript, une IA simple (sans \`turn()\`) est rejouée dans une portée fraîche à chaque tour : pour garder un état, utilise \`turn()\` avec des variables/classes au niveau du fichier. En Python, les variables de module persistent d'un tour à l'autre.
+
+Si ton IA TypeScript ou JavaScript est un **module** (elle contient un \`import\` ou un \`export\`), déclare la fonction avec \`export function turn()\`. Une fonction \`turn()\` non exportée reste privée au module et n'est pas trouvée par le moteur :
+
+\`\`\`typescript
+export {} // ou n'importe quel import/export : le fichier devient un module
+
+export function turn(): void {
+    const me = Fight.me
+    me.setWeapon(Weapon.pistol)
+    me.useWeapon(Fight.getNearestEnemy())
+}
+\`\`\`
 
 ## Fight.me : ton entité
 
@@ -145,6 +169,18 @@ def turn():
 
 In JavaScript, a simple AI (without \`turn()\`) runs in a fresh scope each turn: to keep state, use \`turn()\` with file-level variables/classes. In Python, module variables persist between turns.
 
+If your TypeScript or JavaScript AI is a **module** (it contains an \`import\` or an \`export\`), declare the function with \`export function turn()\`. A non-exported \`turn()\` stays private to the module and is not found by the engine:
+
+\`\`\`typescript
+export {} // or any import/export: the file becomes a module
+
+export function turn(): void {
+    const me = Fight.me
+    me.setWeapon(Weapon.pistol)
+    me.useWeapon(Fight.getNearestEnemy())
+}
+\`\`\`
+
 ## Fight.me: your entity
 
 There is no global \`me\` variable: get your entity via \`Fight.me\`. Fetch it once at the start of the turn:
@@ -200,9 +236,14 @@ const content = computed(() => (locale.value === 'fr' ? FR : EN))
 }
 .content {
 	background: var(--background);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 20px 30px;
 	max-width: 900px;
 	margin: 0 auto;
+	// v3 : le texte est dans un panneau, plus besoin de sa propre feuille.
+	body:not(.v2) & {
+		background: none;
+		padding: 10px 20px;
+	}
 }
 </style>

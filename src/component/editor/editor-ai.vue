@@ -13,7 +13,7 @@
 				<v-tooltip v-if="leeks.length">
 					<template #activator="{ props }">
 						<span v-if="leeks" v-bind="props" class="count leek">
-							<img src="/image/icon/black/leek.png">
+							<v-icon>mdi-leek</v-icon>
 							{{ leeks.length }}
 						</span>
 					</template>
@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { fileSystem } from '@/model/filesystem'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { AIItem } from './editor-item'
@@ -123,7 +123,7 @@ function click(e: Event) {
 		margin-right: 4px;
 		vertical-align: top;
 		&.valid {
-			color: #5fad1b;
+			color: var(--primary);
 		}
 		&.error {
 			color: red;
@@ -140,7 +140,7 @@ function click(e: Event) {
 		flex: none;
 	}
 	.count {
-		border-radius: 10px;
+		border-radius: var(--radius-pill);
 		padding: 1px 6px;
 		font-size: 12px;
 		margin-left: 6px;
@@ -164,6 +164,7 @@ function click(e: Event) {
 			}
 		}
 	}
+	.theme-leek-wars-dark .count.leek img,
 	.theme-monokai .count.leek img {
 		filter: invert(1);
 	}

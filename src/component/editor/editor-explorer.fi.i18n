@@ -19,6 +19,8 @@
 	"destroy": "Tuhoaa pysyvästi",
 	"destroy_ai": "Tuhoaako AI \"{0}\" pysyvästi?",
 	"destroy_warning": "Tämä toimenpide on peruuttamaton.",
+	"destroy_folder": "Tuhotaanko kansio \"{0}\" pysyvästi?",
+	"destroy_folder_warning": "Kansio ja kaikki sen sisältämät AI:t poistetaan pysyvästi. Tätä toimintoa ei voi perua.",
 	"destroy_validate": "Tuhota",
 	"new_ai": "Uusi AI",
 	"new_folder": "Uusi kansio",

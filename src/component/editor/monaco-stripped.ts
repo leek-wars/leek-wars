@@ -4,16 +4,21 @@
 // own Worker that triggers a nested Vite build. We keep only the editor core plus
 // the basic-languages we use (markdown, yaml, javascript, python); LeekScript is registered in
 // `./monaco.ts`; JSON is given a worker-less syntax-only Monarch grammar.
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import editorWorker from './editor.worker?worker'
 // Worker du language service TypeScript (typecheck + autocomplétion des IA polyglot .ts/.js).
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import 'monaco-editor/esm/vs/editor/edcore.main.js'
 import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution.js'
 import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
-// javascript/typescript/python = coloration des IA polyglot (.js / .ts / .py) via grammaire Monarch.
+// javascript/typescript = coloration des IA polyglot (.js / .ts) via grammaire Monarch.
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'
 import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js'
-import 'monaco-editor/esm/vs/basic-languages/python/python.contribution.js'
+// Python : enregistré explicitement (pas le loader paresseux .contribution) pour poser notre grammaire
+// étendue (classes de l'API colorées en `type`) de façon déterministe. Les noms de classes sont
+// injectés ensuite par monaco.ts (éditeur) et leekwars.ts (aperçus). Cf. monaco-python-language.ts.
+import { registerPythonLanguage } from './monaco-python-language'
+// Répare le « Coller » du menu contextuel, sans effet dans le build standalone (voir le fichier).
+import './monaco-context-paste'
 // Language service TypeScript : ajoute par-dessus la coloration le typecheck + l'autocomplétion
 // (via ts.worker) pour les IA .ts ET .js (checkJs). Configuré dans `./monaco.ts` (lib sans DOM +
 // leekwars.d.ts de l'API de combat). C'est le worker "lourd" volontairement évité auparavant.
@@ -32,6 +37,10 @@ languages.register({
 })
 languages.setLanguageConfiguration('json', jsonConfig)
 languages.setMonarchTokensProvider('json', jsonTokens)
+
+// Python (config + grammaire standard) posé de façon déterministe ; monaco.ts injecte ensuite la
+// liste des classes de l'API pour les colorer en `type`.
+registerPythonLanguage(languages)
 
 // Wire the worker here (not via vite-plugin-monaco-editor) so every entry point
 // that imports `monaco-editor` — editor route AND encyclopedia diff viewer —

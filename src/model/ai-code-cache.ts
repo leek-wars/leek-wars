@@ -12,7 +12,7 @@
  * silencieusement vers "pas de cache" — le code est alors re-téléchargé depuis le
  * serveur. La clé est namespacée par farmer ID, comme l'ancien schéma (cf. #2678).
  */
-import { clear, del, get, set, setMany, createStore } from 'idb-keyval'
+import { clear, del, get, getMany, set, setMany, createStore } from 'idb-keyval'
 import { farmerId } from '@/model/store'
 
 const store = createStore('leekwars', 'ai-code')
@@ -64,6 +64,18 @@ export async function getAICache(path: string): Promise<AICacheEntry | null> {
 		return (await get<AICacheEntry>(cacheKey(path), store)) ?? null
 	} catch {
 		return null
+	}
+}
+
+// Lecture groupée (une seule transaction) : la recherche globale de l'éditeur interroge
+// tous les fichiers d'un coup. Une entrée absente vaut null, à l'index de son chemin.
+export async function getAICacheMany(paths: string[]): Promise<(AICacheEntry | null)[]> {
+	try {
+		await migrateLegacy()
+		const entries = await getMany<AICacheEntry | undefined>(paths.map(cacheKey), store)
+		return entries.map(e => e ?? null)
+	} catch {
+		return paths.map(() => null)
 	}
 }
 

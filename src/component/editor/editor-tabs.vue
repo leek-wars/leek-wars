@@ -50,6 +50,7 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { computed, nextTick, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
+	import { isDarkCodeTheme } from './code-theme'
 
 	export interface FileTab {
 		type: 'file'
@@ -95,7 +96,7 @@
 
 	const { t } = useI18n()
 
-	const isDark = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
+	const isDark = computed(() => isDarkCodeTheme(props.theme))
 
 	const menuOpened = ref(false)
 	const menuTarget = ref<[number, number]>([0, 0])
@@ -207,13 +208,18 @@
 		overflow-y: hidden;
 		white-space: nowrap;
 		position: relative;
-		border-top-left-radius: 4px;
-		border-top-right-radius: 4px;
+		border-top-left-radius: var(--radius);
+		border-top-right-radius: var(--radius);
 	}
+	/* La bande défile à la molette (`mousewheel`), sans ascenseur. La règle webkit
+	   seule ne suffit plus : le thème v3 pose `scrollbar-width` sur `*`, et Chrome
+	   ignore tout `::-webkit-scrollbar` dès qu'une de ces propriétés standard est
+	   définie — l'ascenseur reprenait 10 px sur les 36 de la bande. Les deux
+	   formes cohabitent, comme `.m-pill-row` dans `redesign/components.scss`. */
 	#app:not(.app) .list {
+		scrollbar-width: none;
 		&::-webkit-scrollbar {
-			width: 0px;
-			height: 0px;
+			display: none;
 		}
 	}
 	.tab {
@@ -252,7 +258,7 @@
 			vertical-align: baseline;
 			margin-right: 2px;
 			transition: none;
-			color: #5fad1b;
+			color: var(--primary);
 			&.error {
 				color: red
 			}
@@ -262,7 +268,7 @@
 		}
 	}
 	.tab .v-icon {
-		color: #eee;
+		color: var(--grey-13);
 		font-size: 20px;
 		margin-right: 6px;
 		&.hidden::before {
@@ -325,6 +331,52 @@
 			color: #e06c75 !important;
 		}
 	}
+	/* --- Peau v3 des onglets de fichier ---
+	 *
+	 * Ils étaient restés au v2 : un voile noir à 20 % pour le fond, de l'encre
+	 * #f2f2f2 en dur et `--grey-13` sur les icônes. Trois choses qui ne tiennent
+	 * que sur une barre SOMBRE — sur le parchemin, l'encre claire disparaissait.
+	 * Et l'onglet sélectionné prenait `--pure-white`, qui vaut le fond de PAGE en
+	 * thème sombre : il s'y lisait comme un trou plutôt que comme l'onglet actif.
+	 *
+	 * En v3 : surfaces du thème, encre du thème, et l'onglet actif se distingue
+	 * par la surface du panneau plus un trait vert au-dessus — le parti pris déjà
+	 * retenu pour les onglets de la barre de page. Le trait existait déjà
+	 * (`border-top: 2px solid transparent`), il ne servait qu'aux états git. */
+	body:not(.v2) {
+		.tab {
+			background: var(--background-header);
+			color: var(--text-color-secondary);
+		}
+		.tab:hover {
+			background: var(--background-row);
+			color: var(--text-color);
+		}
+		.tab.selected {
+			background: var(--background-secondary);
+			border-top-color: var(--primary);
+			color: var(--text-color);
+		}
+		.tab .v-icon {
+			color: var(--text-color-secondary);
+		}
+		.tab.selected .v-icon {
+			color: var(--text-color);
+		}
+		.unsplit {
+			background: var(--background-header);
+			.v-icon {
+				color: var(--text-color-secondary);
+			}
+			&:hover {
+				background: var(--background-row);
+				.v-icon {
+					color: var(--primary);
+				}
+			}
+		}
+	}
+
 	.menu .v-icon {
 		margin-right: 8px;
 	}
@@ -344,7 +396,7 @@
 		&:hover {
 			background: rgba(0, 0, 0, 0.35);
 			.v-icon {
-				color: #fff;
+				color: var(--white);
 			}
 		}
 	}

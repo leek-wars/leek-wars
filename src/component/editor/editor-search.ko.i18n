@@ -1,0 +1,18 @@
+{
+	"placeholder": "모든 파일에서 검색",
+	"match_case": "대소문자 구분",
+	"whole_word": "단어 단위로",
+	"regex": "정규식 사용",
+	"options": "검색 옵션",
+	"include_closed": "닫힌 폴더 포함",
+	"loading": "파일 불러오는 중 ({0} / {1})",
+	"no_results": "결과 없음",
+	"n_matches": "결과 {n}개 | 결과 1개 | 결과 {n}개",
+	"n_files": "파일 {n}개 | 파일 1개 | 파일 {n}개",
+	"truncated": "결과 {0}개에서 검색을 멈췄습니다",
+	"load_error": "일부 파일을 불러오지 못했습니다",
+	"skipped": "건너뛴 파일 {n}개 | 건너뛴 파일 1개 | 건너뛴 파일 {n}개",
+	"skipped_desc": "바이너리, 너무 크거나 없는 파일",
+	"invalid_regex": "잘못된 정규식",
+	"line": "{0}번째 줄"
+}

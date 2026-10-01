@@ -19,6 +19,8 @@
 	"destroy": "Destruir permanentemente",
 	"destroy_ai": "Destruir AI \"{0}\" permanentemente?",
 	"destroy_warning": "Esta ação é irreversível.",
+	"destroy_folder": "Destruir a pasta \"{0}\" definitivamente?",
+	"destroy_folder_warning": "A pasta e todas as IAs que ela contém serão excluídas definitivamente. Esta ação é irreversível.",
 	"destroy_validate": "Destruir",
 	"new_ai": "Nova IA",
 	"new_folder": "Nova pasta",

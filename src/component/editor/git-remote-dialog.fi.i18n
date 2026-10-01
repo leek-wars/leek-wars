@@ -1,0 +1,23 @@
+{
+	"title": "Remote-asetukset",
+	"remotes": "Remotet",
+	"no_remotes": "Yhtään remotea ei ole määritetty.",
+	"remote_name": "Nimi (esim. origin)",
+	"remote_url": "https://github.com/user/repo.git",
+	"select_repo": "Valitse tietovarasto...",
+	"authentication": "Todennus",
+	"connected_as": "Yhdistetty käyttäjänä {0}",
+	"connected_anonymous": "Yhdistetty",
+	"install_github_app": "Asenna GitHub App",
+	"install_hint": "Valitse asennuksen yhteydessä, mihin tietovarastoihin annat pääsyn.",
+	"github_app": "GitHub App",
+	"or_pat": "Tai käytä Personal Access Tokenia:",
+	"pat_placeholder": "Pääsytunnus",
+	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "Itse ylläpidetty instanssi",
+	"save": "Tallenna",
+	"add": "Lisää",
+	"invalid_token": "Palveluntarjoaja hylkäsi tunnuksen.",
+	"invalid_instance_url": "Virheellinen instanssin URL, tai palvelin ei tavoita sitä.",
+	"configure": "Määritä"
+}

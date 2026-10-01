@@ -1,10 +1,10 @@
 {
-	"title": "远程设置",
+	"title": "远程仓库设置",
 	"remotes": "远程仓库",
 	"no_remotes": "没有配置任何远程仓库。",
 	"remote_name": "名称（例如：origin）",
 	"remote_url": "https://github.com/user/repo.git",
-	"select_repo": "选择仓库...",
+	"select_repo": "选择仓库…",
 	"authentication": "身份验证",
 	"connected_as": "已以 {0} 身份连接",
 	"connected_anonymous": "已连接",
@@ -18,6 +18,6 @@
 	"save": "保存",
 	"add": "添加",
 	"invalid_token": "令牌被提供方拒绝。",
-	"invalid_instance_url": "实例 URL 无效或服务器无法访问。",
+	"invalid_instance_url": "实例 URL 无效，或无法从服务器访问。",
 	"configure": "配置"
 }

@@ -2,5 +2,6 @@
 	"close": "Tæt",
 	"close_others": "Luk andre",
 	"confirm_close": "Du har ikke-gemte ændringer af denne AI. Er du sikker på, at du vil lukke fanen og forlade dem?",
-	"split": "Opdelt editor"
+	"split": "Opdelt editor",
+	"open_file": "Åbn filen"
 }

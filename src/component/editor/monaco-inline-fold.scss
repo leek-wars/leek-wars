@@ -1,0 +1,14 @@
+// Repli en ligne des longs tableaux (cf. monaco-inline-fold.ts)
+.monaco-editor {
+	.inline-fold-hidden {
+		display: none;
+	}
+	.inline-fold-placeholder {
+		margin: 0 1px;
+		padding: 0 3px;
+		border-radius: 3px;
+		color: var(--vscode-editor-foldPlaceholderForeground);
+		background-color: var(--vscode-editor-foldBackground);
+		cursor: pointer;
+	}
+}

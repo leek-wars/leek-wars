@@ -269,7 +269,7 @@
 	}
 }
 .empty {
-	color: #888;
+	color: var(--grey-7);
 	font-size: 13px;
 	margin-bottom: 8px;
 }
@@ -280,7 +280,7 @@
 	padding: 8px 10px;
 	margin-bottom: 4px;
 	border: 1px solid rgba(0,0,0,0.08);
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background: rgba(0,0,0,0.02);
 	font-size: 13px;
 	transition: background 0.15s ease, border-color 0.15s ease;
@@ -298,13 +298,13 @@
 		font-weight: 600;
 		padding: 2px 8px;
 		background: rgba(0,0,0,0.06);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 12px;
 	}
 	.remote-url {
 		flex: 1;
 		min-width: 0;
-		color: #888;
+		color: var(--grey-7);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -339,7 +339,7 @@ body.dark .remote-item {
 	.input {
 		background: rgba(0,0,0,0.1);
 		border: 1px solid rgba(0,0,0,0.15);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 4px 8px;
 		font-size: 13px;
 		color: inherit;
@@ -349,14 +349,14 @@ body.dark .remote-item {
 	.add-btn {
 		cursor: pointer;
 		padding: 4px 14px;
-		background: #5fad1b;
-		color: white;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		border: none;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 13px;
 		font-weight: 500;
 		&:hover { background: #73d120; }
-		&:disabled { opacity: 0.3; cursor: default; background: #5fad1b; }
+		&:disabled { opacity: 0.3; cursor: default; background: var(--primary-surface); }
 	}
 }
 body.dark .add-remote .input {
@@ -370,7 +370,7 @@ body.dark .add-remote .input {
 	padding: 8px 10px;
 	margin-bottom: 4px;
 	border: 1px solid rgba(0,0,0,0.08);
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background: rgba(0,0,0,0.02);
 	font-size: 13px;
 	transition: background 0.15s ease, border-color 0.15s ease;
@@ -389,8 +389,8 @@ body.dark .add-remote .input {
 		font-weight: 600;
 		padding: 2px 8px;
 		background: rgba(0,0,0,0.06);
-		border-radius: 4px;
-		color: #666;
+		border-radius: var(--radius);
+		color: var(--grey-5);
 	}
 	.credential-user {
 		flex: 1;
@@ -399,9 +399,9 @@ body.dark .add-remote .input {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		font-size: 13px;
-		.anonymous { color: #888; font-style: italic; }
+		.anonymous { color: var(--grey-7); font-style: italic; }
 		.credential-instance {
-			color: #888;
+			color: var(--grey-7);
 			font-size: 12px;
 			font-family: monospace;
 			margin-left: 4px;
@@ -412,7 +412,7 @@ body.dark .add-remote .input {
 		font-size: 18px;
 		opacity: 0.4;
 		transition: opacity 0.15s ease, color 0.15s ease;
-		&:hover { opacity: 1; color: #5fad1b; }
+		&:hover { opacity: 1; color: var(--primary); }
 	}
 	.credential-delete {
 		cursor: pointer;
@@ -430,14 +430,14 @@ body.dark .credential-info {
 		background: rgba(255,255,255,0.06);
 		border-color: rgba(255,255,255,0.2);
 	}
-	.auth-type { background: rgba(255,255,255,0.1); color: #ccc; }
+	.auth-type { background: rgba(255,255,255,0.1); color: var(--grey-11); }
 	&.github .provider-icon    { color: #e6edf3; }
 	&.bitbucket .provider-icon { color: #579dff; }
 	&.forgejo .provider-icon   { color: #8ab84a; }
 }
 .auth-hint {
 	font-size: 11px;
-	color: #888;
+	color: var(--grey-7);
 	margin-top: 4px;
 }
 .auth-section {
@@ -446,11 +446,11 @@ body.dark .credential-info {
 		align-items: center;
 		gap: 6px;
 		padding: 6px 14px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 		font-size: 13px;
 		font-weight: bold;
-		color: white;
+		color: var(--white);
 		&.github { background: #24292e; }
 		&.github:hover { background: #3a3f44; }
 	}
@@ -458,7 +458,7 @@ body.dark .credential-info {
 		margin-top: 12px;
 		.pat-label {
 			font-size: 12px;
-			color: #888;
+			color: var(--grey-7);
 			margin-bottom: 6px;
 		}
 		.provider-tiles {
@@ -474,16 +474,16 @@ body.dark .credential-info {
 				gap: 4px;
 				padding: 10px 6px;
 				border: 1px solid rgba(0,0,0,0.12);
-				border-radius: 6px;
+				border-radius: var(--radius-medium);
 				cursor: pointer;
 				font-size: 12px;
 				font-weight: 500;
-				color: #555;
+				color: var(--grey-4);
 				background: rgba(0,0,0,0.02);
 				transition: all 0.15s ease;
 				.v-icon {
 					font-size: 28px;
-					color: #888;
+					color: var(--grey-7);
 					transition: color 0.15s ease;
 				}
 				&:hover {
@@ -493,11 +493,11 @@ body.dark .credential-info {
 					box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 				}
 				&.active {
-					color: white;
+					color: var(--white);
 					border-color: transparent;
 					transform: translateY(-1px);
 					box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-					.v-icon { color: white; }
+					.v-icon { color: var(--white); }
 				}
 				&.github.active    { background: #24292e; &:hover { background: #3a3f44; } }
 				&.gitlab.active    { background: #fc6d26; &:hover { background: #e24329; } }
@@ -515,7 +515,7 @@ body.dark .credential-info {
 			gap: 6px;
 			margin-bottom: 6px;
 			font-size: 12px;
-			color: #888;
+			color: var(--grey-7);
 			cursor: pointer;
 			user-select: none;
 			input { margin: 0; cursor: pointer; }
@@ -526,7 +526,7 @@ body.dark .credential-info {
 			box-sizing: border-box;
 			background: rgba(0,0,0,0.1);
 			border: 1px solid rgba(0,0,0,0.15);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			padding: 4px 8px;
 			font-size: 13px;
 			color: inherit;
@@ -540,16 +540,16 @@ body.dark .credential-info {
 				flex: 1;
 				background: rgba(0,0,0,0.1);
 				border: 1px solid rgba(0,0,0,0.15);
-				border-radius: 4px;
+				border-radius: var(--radius);
 				padding: 4px 8px;
 				font-size: 13px;
 				color: inherit;
 			}
 			.pat-save {
 				padding: 4px 12px;
-				background: #5fad1b;
-				color: white;
-				border-radius: 4px;
+				background: var(--primary-surface);
+				color: var(--primary-surface-text);
+				border-radius: var(--radius);
 				cursor: pointer;
 				font-size: 13px;
 				&:hover { background: #73d120; }
@@ -561,12 +561,12 @@ body.dark .credential-info {
 body.dark .pat-section .provider-tile {
 	border-color: rgba(255,255,255,0.15);
 	background: rgba(255,255,255,0.04);
-	color: #bbb;
+	color: var(--grey-10);
 	&:hover {
 		border-color: rgba(255,255,255,0.3);
 		background: rgba(255,255,255,0.08);
 	}
-	.v-icon { color: #aaa; }
+	.v-icon { color: var(--grey-9); }
 	&.github:not(.active)   .v-icon { color: #e6edf3; }
 	&.gitlab:not(.active)   .v-icon { color: #fc6d26; }
 	&.bitbucket:not(.active) .v-icon { color: #579dff; }

@@ -59,7 +59,16 @@ const currentFolder = ref<import("../editor/editor-item").Folder>(fileSystem.roo
 		grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
 		justify-items: center;
 		gap: 10px;
-		overflow-y: scroll;
+		// La zone de defilement prend toute la hauteur laissee par le titre,
+		// sinon elle s'arrete a la hauteur du contenu et l'explorateur ne
+		// profite pas de la place qu'on lui donne.
+		flex: 1;
+		min-height: 0;
+		align-content: start;
+		// `auto` et non `scroll` : la zone fait maintenant toute la hauteur du
+		// panneau, une gouttiere vide en permanence s'y verrait.
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	.ai {
 		cursor: pointer;

@@ -2,8 +2,13 @@
 	<div class="page editor" :class="'theme-' + appliedTheme">
 		<div class="page-header page-bar">
 			<div class="menu">
-				<h1>{{ $t('title') }}</h1>
-				<div class="tabs">
+				<div class="page-title">
+					<page-icon name="editor" fallback="mdi-code-braces" />
+					<div class="page-title-text"><h1>{{ $t('title') }}</h1></div>
+				</div>
+				<!-- Des ACTIONS, pas des onglets : conteneur `.actions`, comme sur les
+				     autres barres de page. -->
+				<div class="actions">
 					<div ref="fileButton" class="tab first action" icon="settings">
 						<v-icon>mdi-file-outline</v-icon> {{ $t('file') }}
 					</div>
@@ -36,14 +41,16 @@
 						<v-icon>mdi-cogs</v-icon>
 					</div>
 					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="startTest()">
-						<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
+						<v-icon>mdi-play</v-icon><span>{{ $t('test') }}</span>
 					</div>
 				</div>
 			</div>
 
-			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="appliedTheme" group="tabs" :all-tabs="tabs1" :style="{ 'width': (editor1Width * 80) + '%' }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
+			<!-- Les deux barres d'onglets se partagent en `flex` la place qui reste à
+			     droite du menu, dans la proportion des deux éditeurs en dessous. -->
+			<editor-tabs v-if="!LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab" :active="currentSide === 1" :splitted="splitted" :theme="appliedTheme" group="tabs" :all-tabs="tabs1" :style="{ 'flex': editor1Width }" @select="selectTab" @close-tab="closeTabEvent" @close-all="closeAllTabs" @split="setSplitted(true, $event)" @open-file="openDiffFileFromMenu" />
 
-			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab2" :active="currentSide === 2" :splitted="splitted" :theme="appliedTheme" group="tabs2" :all-tabs="tabs2" :style="{ 'width': (editor2Width * 100) + '%' }" @select="selectTab2" @close-tab="closeTab2" @close-all="closeAllTabs2" @close-panel="setSplitted(false)" />
+			<editor-tabs v-if="splitted && !LeekWars.mobile" :ais="fileSystem.ais" :history2="history" :current="currentTab2" :active="currentSide === 2" :splitted="splitted" :theme="appliedTheme" group="tabs2" :all-tabs="tabs2" :style="{ 'flex': editor2Width }" @select="selectTab2" @close-tab="closeTab2" @close-all="closeAllTabs2" @close-panel="setSplitted(false)" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -53,16 +60,22 @@
 				<panel class="editor-left editor-panel first">
 					<template #content>
 						<div class="full">
-							<div v-if="Object.keys(fileSystem.gitRepos).length > 0" class="left-panel-tabs">
-								<div :class="{active: leftPanelTab === 'explorer'}" class="left-tab" :title="$t('title')" @click="setLeftPanelTab('explorer')">
+							<div class="left-panel-tabs">
+								<div :class="{active: effectiveLeftTab === 'explorer'}" class="left-tab" :title="$t('files')" @click="setLeftPanelTab('explorer')">
 									<v-icon>mdi-file-tree</v-icon>
+									<span class="left-tab-label ellipsis">{{ $t('files') }}</span>
 								</div>
-								<div :class="{active: leftPanelTab === 'git'}" class="left-tab" title="Git" @click="setLeftPanelTab('git')">
+								<div :class="{active: effectiveLeftTab === 'search'}" class="left-tab" :title="$t('search') + ' (Ctrl + Shift + F)'" @click="setLeftPanelTab('search')">
+									<v-icon>mdi-magnify</v-icon>
+									<span class="left-tab-label ellipsis">{{ $t('search') }}</span>
+								</div>
+								<div v-if="hasGitRepos" :class="{active: effectiveLeftTab === 'git'}" class="left-tab" title="Git" @click="setLeftPanelTab('git')">
 									<v-icon>mdi-source-branch</v-icon>
+									<span class="left-tab-label ellipsis">Git</span>
 								</div>
 							</div>
 
-							<template v-if="leftPanelTab === 'explorer'">
+							<template v-if="effectiveLeftTab === 'explorer'">
 								<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
 									<Explorer v-if="explorerI18nReady" ref="explorerEl" :current-ai="currentAI ?? undefined" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 								</div>
@@ -75,17 +88,21 @@
 								</div>
 							</template>
 
-							<git-panel v-if="leftPanelTab === 'git'" :theme="appliedTheme" :active-diff="activeDiff" @show-diff="openDiff" @show-merge="openMerge" />
+							<!-- Monté au premier affichage puis seulement masqué : changer d'onglet ne
+							     perd ni la recherche ni ses résultats. -->
+							<editor-search v-if="searchMounted && editorSearchI18nReady" v-show="effectiveLeftTab === 'search'" ref="searchEl" @jump="jump" />
+
+							<git-panel v-if="effectiveLeftTab === 'git'" :theme="appliedTheme" :active-diff="activeDiff" @show-diff="openDiff" @show-merge="openMerge" />
 						</div>
 					</template>
 				</panel>
 			</div>
 
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="editor-column">
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: editorColumnWidth}" class="editor-column">
 				<panel class="editor-panel">
 					<template #content>
 						<div class="editor-left dida-element">
-							<div class="resizer explorer-resizer" @mousedown="resizerMousedown">
+							<div v-if="!LeekWars.mobile" class="resizer explorer-resizer" @mousedown="resizerMousedown">
 								<v-icon>mdi-drag-vertical-variant</v-icon>
 							</div>
 							<div ref="editors" :class="{tabs: tabs1.length > 1}" class="editors">
@@ -110,14 +127,14 @@
 							</span>
 
 							<div v-if="bottomPanel && problemsHeight" :style="{height: problemsHeight + 'px'}" class="bottom-panel">
-								<div class="resizer problems-resizer" @mousedown="problemsResizerMousedown">
+								<div v-if="!LeekWars.mobile" class="resizer problems-resizer" @mousedown="problemsResizerMousedown">
 									<v-icon>mdi-drag-horizontal-variant</v-icon>
 								</div>
 								<editor-problems v-if="bottomPanel === 'problems'" @jump="jump" />
 								<git-terminal v-else-if="bottomPanel === 'git'" :theme="appliedTheme" />
 							</div>
 							<div class="status">
-								<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
+								<v-menu v-if="currentAI && isLeekScript(currentAI.path)" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="false">
 									<template #activator="{ props }">
 										<div v-ripple class="version" v-bind="props">
 											LeekScript&nbsp;{{ currentAI.version }} <span v-if="currentAI.strict">&nbsp;({{ $t('strict') }})</span>
@@ -126,18 +143,35 @@
 									</template>
 									<leekscript-versions :version="currentAI.version" :strict="currentAI.strict" @update:version="onVersionUpdate" @update:strict="onStrictUpdate" />
 								</v-menu>
+								<v-menu v-else-if="currentAIPolyglotVersion" top :offset-y="true" :nudge-top="1" :max-width="600" :close-on-content-click="true">
+									<template #activator="{ props }">
+										<div v-ripple class="version" v-bind="props">
+											{{ currentAIPolyglotVersion.label }}
+											<v-icon>mdi-chevron-down</v-icon>
+										</div>
+									</template>
+									<v-list class="version-menu">
+										<v-list-item v-ripple :lines="false" @click="onPolyglotVersionSelect">
+											<template #prepend>
+												<v-icon class="list-icon">mdi-star</v-icon>
+											</template>
+											<v-list-item-title>{{ currentAIPolyglotVersion.label }}</v-list-item-title>
+											<v-list-item-subtitle><code>{{ currentAIPolyglotVersion.comment }} @version:{{ currentAIPolyglotVersion.pragma }}</code></v-list-item-subtitle>
+										</v-list-item>
+									</v-list>
+								</v-menu>
 								<div v-ripple class="problems" :class="{active: bottomPanel === 'problems'}" @click="toggleBottomPanel('problems')">
 									<span v-if="!analyzer.error_count && !analyzer.warning_count" class="no-error">
 										<v-icon>mdi-check-circle</v-icon> <span v-if="!LeekWars.mobile">{{ $t('no_problem') }}</span>
 									</span>
 									<span v-if="analyzer.error_count" class="errors">
-										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} {{ $t('error', analyzer.error_count).toLowerCase() }}
+										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} <span v-if="!LeekWars.mobile">{{ $t('error', analyzer.error_count).toLowerCase() }}</span>
 									</span>
 									<span v-if="analyzer.warning_count" class="warnings">
-										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} {{ $t('warning', analyzer.warning_count).toLowerCase() }}
+										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} <span v-if="!LeekWars.mobile">{{ $t('warning', analyzer.warning_count).toLowerCase() }}</span>
 									</span>
 									<span v-if="analyzer.todo_count" class="todos">
-										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} {{ $t('todo', analyzer.todo_count).toLowerCase() }}
+										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} <span v-if="!LeekWars.mobile">{{ $t('todo', analyzer.todo_count).toLowerCase() }}</span>
 									</span>
 								</div>
 								<div v-if="gitLogCount" v-ripple class="problems git-terminal-toggle" :class="{active: bottomPanel === 'git'}" @click="toggleBottomPanel('git')">
@@ -152,8 +186,41 @@
 										<v-icon>mdi-sync</v-icon>
 									</div>
 								</div>
-								<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.position.lineNumber + 1 }}, C {{ currentEditor.position.column }} <span v-if="currentEditor.selected">({{ currentEditor.selected.length }} Select.)</span></div>
+								<div v-if="currentEditor && currentEditor.editor && !LeekWars.mobile" class="version">L {{ currentEditor.position.lineNumber + 1 }}, C {{ currentEditor.position.column }} <span v-if="currentEditor.selected">({{ currentEditor.selected.length }} Select.)</span></div>
 							</div>
+						</div>
+					</template>
+				</panel>
+			</div>
+
+			<!-- Le combat de test se joue À CÔTÉ du code : la boucle « je change
+			     une ligne, je vois le résultat » ne quitte plus l'éditeur. Sur mobile,
+			     le combat reste une page à part : deux vues consécutives. -->
+			<div v-if="fightId && !LeekWars.mobile" :style="{width: fightWidth + 'px'}" class="column3 fight-column">
+				<panel class="editor-panel fight-panel" :title="fightTitle" icon="mdi-sword-cross">
+					<template #actions>
+						<div class="button text" :title="$t('relaunch_test')" @click="relaunchTest()">
+							<v-icon>mdi-replay</v-icon>
+						</div>
+						<router-link class="button text" :title="$t('open_fight')" :to="'/fight/' + fightId">
+							<v-icon>mdi-open-in-new</v-icon>
+						</router-link>
+						<div class="button text" :title="$t('main.close')" @click="closeFight()">
+							<v-icon>mdi-close</v-icon>
+						</div>
+					</template>
+					<template #content>
+						<div class="resizer fight-resizer" @mousedown="resizerFightMousedown">
+							<v-icon>mdi-drag-vertical-variant</v-icon>
+						</div>
+						<div ref="fightContainer" class="fight-container">
+							<div class="fight-stage">
+								<player v-if="fightPlayerWidth" :key="fightId" :fight-id="fightId" :required-width="fightPlayerWidth" :required-height="fightPlayerHeight" :mobile-panels="fightActions" :actions-below="fightActionsHeight > 0" no-report @fight="onFightLoaded" />
+							</div>
+							<div v-if="fightActionsHeight" class="resizer fight-actions-resizer" :style="{bottom: (fightActionsHeight - 5) + 'px'}" @mousedown="fightActionsResizerMousedown">
+								<v-icon>mdi-drag-horizontal-variant</v-icon>
+							</div>
+							<div ref="fightActions" class="fight-actions-below" :style="{height: fightActionsHeight + 'px'}"></div>
 						</div>
 					</template>
 				</panel>
@@ -178,9 +245,9 @@
 
 				<div class="title">{{ $t('display') }}</div>
 				<template v-if="!LeekWars.mobile">
-					<v-checkbox v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
-					<v-checkbox v-model="hideHeader" :label="$t('hide_header')" hide-details />
-					<br>
+					<!-- Sans effet en v3 : la page y prend déjà toute la largeur. -->
+					<lw-checkbox v-if="LeekWars.legacyTheme" v-model="enlargeWindow" :label="$t('enlarge_window')" />
+					<lw-checkbox v-model="hideHeader" :label="$t('hide_header')" />
 				</template>
 				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30" @keyup.stop>
 				<br>
@@ -188,34 +255,35 @@
 
 				<div class="title">{{ $t('theme') }}</div>
 
-				<v-checkbox v-model="themeAuto" :label="$t('theme_auto')" hide-details />
+				<lw-checkbox v-model="themeAuto" :label="$t('theme_auto')" />
 
 				<div v-if="themeAuto" class="theme-selectors">
-					<v-select v-model="lightTheme" :items="LIGHT_THEME_OPTIONS" :label="$t('light_theme')" density="compact" variant="outlined" hide-details />
-					<v-select v-model="darkTheme" :items="DARK_THEME_OPTIONS" :label="$t('dark_theme')" density="compact" variant="outlined" hide-details />
+					<lw-select v-model="lightTheme" :items="LIGHT_THEME_OPTIONS" :label="$t('light_theme')" />
+					<lw-select v-model="darkTheme" :items="DARK_THEME_OPTIONS" :label="$t('dark_theme')" />
 				</div>
-				<v-radio-group v-else v-model="theme" hide-details class="themes">
-					<v-radio label="Leek Wars" value="leek-wars" />
-					<v-radio label="Monokai" value="monokai" />
-					<v-radio label="VS Code clair" value="vs" />
-					<v-radio label="VS Code sombre" value="vs-dark" />
-					<v-radio label="High Contrast clair" value="hc-light" />
-					<v-radio label="High Contrast sombre" value="hc-black" />
-				</v-radio-group>
+				<lw-radio-group v-else v-model="theme" class="themes">
+					<lw-radio label="Leek Wars" value="leek-wars" />
+					<lw-radio label="Leek Wars Dark" value="leek-wars-dark" />
+					<lw-radio label="Monokai" value="monokai" />
+					<lw-radio label="VS Code clair" value="vs" />
+					<lw-radio label="VS Code sombre" value="vs-dark" />
+					<lw-radio label="High Contrast clair" value="hc-light" />
+					<lw-radio label="High Contrast sombre" value="hc-black" />
+				</lw-radio-group>
 				<!-- Custom theme name
 				<input v-model="theme"> -->
 
 				<div class="title">{{ $t('settings_editor') }}</div>
 
-				<v-checkbox v-model="autoClosing" :label="$t('auto_closing')" hide-details />
-				<!-- <v-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" hide-details /> -->
-				<v-checkbox v-model="autocomplete" :label="$t('autocompletion')" hide-details />
-				<v-checkbox v-model="popups" :label="$t('popups')" hide-details />
+				<lw-checkbox v-model="autoClosing" :label="$t('auto_closing')" />
+				<!-- <lw-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" /> -->
+				<lw-checkbox v-model="autocomplete" :label="$t('autocompletion')" />
+				<lw-checkbox v-model="popups" :label="$t('popups')" />
 
 				<div class="title">{{ $t('settings_diff') }}</div>
 
-				<v-checkbox v-model="diffInline" :label="$t('diff_inline')" hide-details />
-				<v-checkbox v-model="diffCollapseUnchanged" :label="$t('diff_collapse_unchanged')" hide-details />
+				<lw-checkbox v-model="diffInline" :label="$t('diff_inline')" />
+				<lw-checkbox v-model="diffCollapseUnchanged" :label="$t('diff_collapse_unchanged')" />
 
 				<div class="title">{{ $t('shortcuts') }}</div>
 
@@ -227,6 +295,7 @@
 					<li v-html="$t('shortcut.shortcut_5')"></li>
 					<li v-html="$t('shortcut.shortcut_6')"></li>
 					<li v-html="$t('shortcut.shortcut_7')"></li>
+					<li v-html="$t('shortcut.shortcut_16')"></li>
 					<li v-html="$t('shortcut.shortcut_8')"></li>
 					<li v-html="$t('shortcut.shortcut_9')"></li>
 					<li v-html="$t('shortcut.shortcut_10')"></li>
@@ -245,8 +314,8 @@
 
 		<popup v-model="cloneDialog" :width="480" icon="mdi-git" :title="$t('clone_repo')">
 			<div class="clone-dialog">
-				<v-text-field v-model="cloneUrl" :label="$t('clone_url')" :placeholder="$t('clone_url_placeholder')" variant="solo" density="compact" autofocus @input="onCloneUrlInput" @keyup.enter="doClone" @keyup.stop />
-				<v-text-field v-model="cloneFolder" :label="$t('clone_folder')" variant="solo" density="compact" :error-messages="cloneFolderError ? [cloneFolderError] : []" @keyup.enter="doClone" @keyup.stop />
+				<lw-input v-model="cloneUrl" :label="$t('clone_url')" :placeholder="$t('clone_url_placeholder')" autofocus @input="onCloneUrlInput" @keyup.enter="doClone" @keyup.stop />
+				<lw-input v-model="cloneFolder" :label="$t('clone_folder')" :error-messages="cloneFolderError ? [cloneFolderError] : []" @keyup.enter="doClone" @keyup.stop />
 				<div class="clone-hint">
 					<v-icon size="small">mdi-information-outline</v-icon>
 					<span>{{ $t('clone_auth_hint') }}</span>
@@ -265,7 +334,7 @@
 
 		<git-remote-dialog v-model="remoteDialog" :folder="remoteDialogFolder" />
 
-		<editor-test v-if="editorTestI18nReady" ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :current-a-i="currentAI" />
+		<editor-test v-if="editorTestI18nReady" ref="editorTestRef" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :current-a-i="currentAI" @launched="onTestLaunched" />
 
 		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
@@ -293,6 +362,7 @@
 	import { store, farmerId } from '@/model/store'
 	import AIViewMonaco from './ai-view-monaco.vue'
 	import EditorFinder from './editor-finder.vue'
+	import EditorSearch from './editor-search.vue'
 	import Explorer from './editor-explorer.vue'
 	import EditorTest from './editor-test.vue'
 	import { AIItem, Folder, Item } from './editor-item'
@@ -301,15 +371,15 @@
 	import GitMerge from './git-merge.vue'
 	import GitTerminal from './git-terminal.vue'
 	import { gitLog } from './git-log'
+	import { DARK_CODE_THEMES } from './code-theme'
 	import type { EditorTab, FileTab, DiffTab } from './editor-tabs.vue'
-	import './leekscript-monokai.scss'
 	import { SocketMessage } from '@/model/socket'
 	import { analyzer } from './analyzer'
-	import { isLeekScript } from './file-types'
+	import { getLanguageVersion, isLeekScript } from './file-types'
 	import AIElement from '@/component/app/ai.vue'
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import LeekscriptVersions from '../app/leekscript-versions.vue'
 
 	// Explorer et EditorTest sont accédés via template ref : defineAsyncComponent +
@@ -323,9 +393,17 @@
 	// plutôt que composant invisible définitif).
 	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
 		.finally(() => { explorerI18nReady.value = true })
-	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+	// Même montage que l'explorateur : le panneau de recherche est piloté par template ref.
+	const editorSearchI18nReady = ref(false)
+	import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-search.${locale}.i18n`)
+		.finally(() => { editorSearchI18nReady.value = true })
+	const editorTestReady = import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+		.catch(() => undefined)
 		.finally(() => { editorTestI18nReady.value = true })
 
+	// Le lecteur de combat pèse lourd (moteur + ressources) : il n'est chargé
+	// qu'au premier test lancé depuis l'éditeur, jamais à l'ouverture de la page.
+	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
 	const EditorTabs = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`))
 	const EditorProblems = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`))
 	const GitPanel = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/editor/git-panel.${locale}.i18n`))
@@ -335,8 +413,8 @@
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
-	const DEFAULT_THEME = () => LeekWars.darkMode ? "monokai" : "leek-wars"
-	const DARK_THEMES = ['monokai', 'vs-dark', 'hc-black']
+	const DEFAULT_THEME = () => LeekWars.darkMode ? "leek-wars-dark" : "leek-wars"
+	const DARK_THEMES = DARK_CODE_THEMES
 	// Thèmes proposés, séparés par luminosité (pour le mode automatique : un préféré clair, un préféré sombre).
 	const LIGHT_THEME_OPTIONS = [
 		{ value: 'leek-wars', title: 'Leek Wars' },
@@ -344,6 +422,7 @@
 		{ value: 'hc-light', title: 'High Contrast clair' },
 	]
 	const DARK_THEME_OPTIONS = [
+		{ value: 'leek-wars-dark', title: 'Leek Wars Dark' },
 		{ value: 'monokai', title: 'Monokai' },
 		{ value: 'vs-dark', title: 'VS Code sombre' },
 		{ value: 'hc-black', title: 'High Contrast sombre' },
@@ -360,11 +439,6 @@
 		openNewAI(folder: Folder): void
 		openNewFolder(folder: Folder): void
 		deleteAI(ai: AI): void
-	}
-	interface EditorTestInstance {
-		currentTab: string | number
-		allLeeks: Record<number, unknown>
-		selectLeek(leek: unknown): void
 	}
 
 	defineOptions({
@@ -410,7 +484,7 @@
 	const theme = ref<string>(DEFAULT_THEME())
 	const themeAuto = ref(false)
 	const lightTheme = ref('leek-wars')
-	const darkTheme = ref('monokai')
+	const darkTheme = ref('leek-wars-dark')
 	// Thème réellement appliqué : en mode auto il suit le mode sombre du site (LeekWars.darkMode, réactif),
 	// sinon c'est le thème choisi manuellement.
 	const appliedTheme = computed(() => themeAuto.value ? (LeekWars.darkMode ? darkTheme.value : lightTheme.value) : theme.value)
@@ -427,12 +501,33 @@
 	const testDialog = ref(false)
 	const panelWidth = ref(200)
 	const problemsHeight = ref(200)
-	const bottomPanel = ref<'problems' | 'git' | null>('problems')
+	const bottomPanel = ref<'problems' | 'git' | null>(null)
+	// Le panneau des problèmes ne s'ouvre tout seul que s'il y a quelque chose à montrer, et une
+	// seule fois : arriver dans l'éditeur sur du code sain le laisse fermé.
+	let problemsAutoOpen = true
 	const fileMenu = ref(false)
 	const fileMenuActivator = ref<Element | undefined>(undefined)
 	const history = ref<AI[]>([])
 	const alreadyOpenedDialog = ref(false)
 	const leftPanelTab = ref<string>(localStorage.getItem('editor/left_panel_tab') || 'explorer')
+	// L'onglet Git n'existe que s'il reste un repo. Supprimer le dernier repo (deinit) pendant
+	// qu'on est sur l'onglet Git faisait disparaître l'arbre ET le moyen d'y revenir jusqu'au
+	// rechargement. On dérive l'onglet affiché au lieu de le corriger au montage : plus d'état
+	// à rattraper.
+	const hasGitRepos = computed(() => Object.keys(fileSystem.gitRepos).length > 0)
+	const effectiveLeftTab = computed(() => {
+		if (leftPanelTab.value === 'search') return 'search'
+		if (leftPanelTab.value === 'git' && hasGitRepos.value) return 'git'
+		return 'explorer'
+	})
+	// Recherche dans tous les fichiers : montée au premier affichage de l'onglet.
+	const searchMounted = ref(leftPanelTab.value === 'search')
+	const searchEl = useTemplateRef<InstanceType<typeof EditorSearch>>('searchEl')
+	// Focus demandé par l'ouverture de l'onglet ou par Ctrl+Shift+F (avec le texte à chercher),
+	// en attente du montage du panneau (traductions encore en chargement). Null au chargement
+	// de la page : un rechargement sur l'onglet Recherche laisse le focus au code.
+	let pendingSearchFocus: string | null = null
+	watch(searchEl, applySearchFocus)
 	const tabs1 = ref<EditorTab[]>([])
 	let tabs1Loaded = false
 	const currentTab = ref<EditorTab | null>(null)
@@ -444,6 +539,39 @@
 	const editor2Width = ref(0.5)
 	let editorTotalWidth = 800
 	const splitted = ref(true)
+
+	// Panneau de combat : le dernier combat de test lancé depuis l'éditeur,
+	// joué dans une troisième colonne à droite du code. `fightId` nul = colonne
+	// fermée. La largeur se règle à la souris et se retient comme celle de
+	// l'explorateur. Le lecteur exige une taille en pixels : on la relève sur son
+	// conteneur (ResizeObserver), donc elle suit la fenêtre, le chat et la colonne.
+	const FIGHT_WIDTH_MIN = 320
+	const FIGHT_WIDTH_DEFAULT = 560
+	const fightId = ref<string | null>(null)
+	const fightWidth = ref(FIGHT_WIDTH_DEFAULT)
+	const fightTitle = ref('')
+	const fightContainer = useTemplateRef<HTMLElement>('fightContainer')
+	const fightPlayerWidth = ref(0)
+	const fightPlayerHeight = ref(0)
+	// Panneau plus haut que large : la carte, plus large que haute, laisserait du vide
+	// au-dessus et au-dessous. Les actions passent alors SOUS le combat, dans ce reste.
+	const fightActions = useTemplateRef<HTMLElement>('fightActions')
+	const fightActionsHeight = ref(0)
+	const FIGHT_ACTIONS_MIN_HEIGHT = 160
+	// Hauteur choisie à la poignée, 0 tant qu'on n'y a pas touché : les actions
+	// prennent alors tout ce que la carte laisse sous elle.
+	let fightActionsUserHeight = parseInt(localStorage.getItem('editor/fight-actions-height') || '', 10) || 0
+	const FIGHT_ACTIONS_DRAG_MIN = 80
+	const FIGHT_STAGE_MIN_HEIGHT = 150
+	// Hauteur du lecteur par défaut, en fraction de sa largeur (contrôles compris) :
+	// la carte y tient entière, sans bande vide au-dessus ni au-dessous.
+	const FIGHT_STAGE_RATIO = 0.72
+	let fightObserver: ResizeObserver | null = null
+	const editorColumnWidth = computed(() => {
+		if (LeekWars.mobile) return '100%'
+		const fight = fightId.value ? fightWidth.value : 0
+		return 'calc(100% - ' + (panelWidth.value + fight) + 'px)'
+	})
 	let broadcast: BroadcastChannel | null = null
 
 	const fileButton = useTemplateRef<HTMLElement>('fileButton')
@@ -452,7 +580,7 @@
 	const finder = useTemplateRef<InstanceType<typeof EditorFinder>>('finder')
 	const editors = useTemplateRef<HTMLElement>('editors')
 	const explorerEl = useTemplateRef<ExplorerInstance>('explorerEl')
-	const editorTestRef = useTemplateRef<EditorTestInstance>('editorTestRef')
+	const editorTestRef = useTemplateRef<InstanceType<typeof EditorTest>>('editorTestRef')
 
 	const gitLogCount = computed(() => gitLog.entries.length)
 	const problemsCount = computed(() => analyzer.error_count + analyzer.warning_count + analyzer.todo_count)
@@ -471,6 +599,12 @@
 		const key = currentSide.value === 1 ? currentAI1.value : currentAI2.value
 		return key ? (fileSystem.ais[key] ?? null) : null
 	})
+	// Version du langage pour les IA polyglot (JS/TS/Python) : une seule version possible,
+	// imposée par le runtime. Le menu ne sert qu'à écrire le pragma `@version` dans le fichier
+	// (avec la syntaxe de commentaire du langage), pour épingler la version des IA existantes
+	// le jour où plusieurs versions coexisteront. Le menu LeekScript, lui, reste réservé aux
+	// fichiers LeekScript (il réécrirait un pragma `// @version:N` invalide dans du Python).
+	const currentAIPolyglotVersion = computed(() => currentAI.value ? getLanguageVersion(currentAI.value.path) : null)
 	const ai1Ready = computed(() => {
 		const ai = currentAI1.value ? fileSystem.ais[currentAI1.value] : null
 		return ai && ai.code !== undefined
@@ -531,7 +665,7 @@
 		theme.value = localStorage.getItem('editor/theme') || DEFAULT_THEME()
 		themeAuto.value = localStorage.getItem('editor/theme_auto') === 'true'
 		lightTheme.value = localStorage.getItem('editor/light_theme') || 'leek-wars'
-		darkTheme.value = localStorage.getItem('editor/dark_theme') || 'monokai'
+		darkTheme.value = localStorage.getItem('editor/dark_theme') || 'leek-wars-dark'
 		autoClosing.value = localStorage.getItem('editor/auto_closing') === 'true'
 		autocomplete.value = localStorage.getItem('editor/autocomplete') === 'true'
 		popups.value = localStorage.getItem('editor/popups') === 'true'
@@ -544,6 +678,7 @@
 		problemsHeight.value = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
 		panelWidth.value = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
 		splitted.value = localStorage.getItem('editor/splitted') === 'true'
+		fightWidth.value = Math.max(FIGHT_WIDTH_MIN, parseInt(localStorage.getItem('editor/fight-width') || '', 10) || FIGHT_WIDTH_DEFAULT)
 		// editor1/2Width sont des fractions (0..1) ; ignorer toute valeur corrompue
 		// hors plage (ex. ancien bug persistant une largeur en pixels comme 800).
 		const storedW1 = parseFloat(localStorage.getItem('editor/editor1-width') || '')
@@ -601,9 +736,6 @@
 			fileSystem.gitRepos = repos
 		} catch {
 			// Pas de repos git
-		}
-		if (leftPanelTab.value === 'git' && Object.keys(fileSystem.gitRepos).length === 0) {
-			leftPanelTab.value = 'explorer'
 		}
 	}
 
@@ -675,22 +807,18 @@
 	}
 
 	let updateGen = 0
+	let load1Gen = 0
 	let load2Gen = 0
 	function update() {
 		const routeHash = route.params.hash as string | undefined
 		const isDiffRoute = routeHash || route.path.endsWith('/diff')
-		if (route.hash) {
-			if (route.hash.startsWith('#leek-')) {
-				const id = parseInt(route.hash.substring(6))
+		if (route.hash.startsWith('#leek-')) {
+			const id = parseInt(route.hash.substring(6))
+			if (!isNaN(id)) {
 				testDialog.value = true
-				setTimeout(() => {
-					const test = editorTestRef.value
-					if (!test) return
-					test.currentTab = 1
-					if (test.allLeeks[id]) {
-						test.selectLeek(test.allLeeks[id])
-					}
-				}, 200)
+				// editor-test est monté derrière un v-if (i18n) : on attend sa résolution
+				// puis le flush du rendu pour que le template ref soit disponible.
+				editorTestReady.then(() => nextTick(() => editorTestRef.value?.openLeek(id)))
 			}
 		}
 		if (route.params.id) {
@@ -780,7 +908,14 @@
 					})
 				})
 			} else {
-				currentFolder.value = fileSystem.folderById[parseInt(routeId)]
+				const folder = fileSystem.folderById[parseInt(routeId)]
+				// Ni une IA ni un dossier de l'éleveur (IA supprimée, adresse restée d'un autre
+				// compte après un changement de compte) : l'éditeur rouvre sa dernière IA.
+				if (!folder && !isDiffRoute && store.state.farmer) {
+					router.replace('/editor')
+					return
+				}
+				currentFolder.value = folder
 				currentType.value = 'folder'
 				explorer.selectFolder(currentFolder.value)
 				LeekWars.setTitle(t('title'), t('n_ais', [fileSystem.aiCount]))
@@ -829,10 +964,7 @@
 	}
 
 	onBeforeRouteLeave((_to, _from, next) => {
-		let num = 0
-		for (const i in fileSystem.ais) {
-			if (fileSystem.ais[i].modified && !fileSystem.ais[i].path.startsWith('.trash/')) { num++ }
-		}
+		const num = fileSystem.unsavedAIs.length
 		if (num > 0 && !window.confirm(t('n_ais_unsaved', [num]) as string)) {
 			next(false)
 		} else {
@@ -840,38 +972,50 @@
 		}
 	})
 
-	function save(aiEditor: InstanceType<typeof AIViewMonaco> | null = currentEditor.value) {
+	function save(aiEditor: InstanceType<typeof AIViewMonaco> | null = currentEditor.value, onSaved?: () => void) {
 		if (!aiEditor) { return }
 		if (aiEditor.saving) { return }
 		aiEditor.saving = true
 		aiEditor.save()
 		aiEditor.serverError = false
 
+		// editor1/editor2 sont réutilisés d'un onglet à l'autre (props.ai change au changement
+		// d'onglet, et aiEditor.ai renvoie toujours l'IA courante). Sur connexion lente, l'utilisateur
+		// peut changer d'onglet pendant que la requête ai/write est en vol : on capture l'IA visée ICI
+		// pour que le callback écrive le cache/mtime/modified sur CE fichier, et pas sur celui désormais
+		// affiché — sinon le code sauvegardé atterrit dans le cache du mauvais fichier (corruption).
+		const savedAI = aiEditor.ai
 		const content = aiEditor.editor.getValue()
-		aiEditor.ai.code = content
+		savedAI.code = content
 
 		LeekWars.track('save-ai')
 
-		LeekWars.post('ai/write', {path: aiEditor.ai.path, code: content}).then((data) => {
+		LeekWars.post('ai/write', {path: savedAI.path, code: content}).then((data) => {
 			aiEditor.saving = false
-			aiEditor.ai.mtime = data.modified || Date.now()
-			setAICache(aiEditor.ai.path, content, aiEditor.ai.mtime)
-			aiEditor.ai.modified = false
+			savedAI.mtime = data.modified || Date.now()
+			setAICache(savedAI.path, content, savedAI.mtime)
+			savedAI.modified = false
 
 			if (data.result) {
 				aiEditor.goods = []
 				analyzer.applyAnalyzeResult(data.result, (ai) => {
 					if (aiEditor.goods.length === 0) aiEditor.goods.push({ai})
 				})
-				analyzer.updateTodos(aiEditor.ai)
+				analyzer.updateTodos(savedAI)
 				analyzer.updateCount()
 				setTimeout(() => aiEditor.goods = [], 2000)
 			}
 
 			emitter.emit('git-file-changed')
+			onSaved?.()
 		}).error((error) => {
 			aiEditor.serverError = true
 			aiEditor.saving = false
+			// aiEditor.save() a passé modified=false de façon optimiste AVANT le POST. Sur échec
+			// (connexion lente/coupée), on re-signale le fichier comme non sauvegardé : sinon l'UI
+			// affiche « sauvegardé », le garde onBeforeRouteLeave ne prévient plus, et l'utilisateur
+			// perd ses modifications en croyant les avoir enregistrées.
+			savedAI.modified = true
 			LeekWars.toast(translateFileSystemError(error))
 		})
 	}
@@ -1172,6 +1316,149 @@
 		}
 		testDialog.value = true
 	}
+	/**
+	 * Un combat de test vient d'être créé (par le dialogue, ou par « Relancer »).
+	 * Sur mobile il s'ouvre en page pleine, comme avant : l'écran n'a pas la place
+	 * de deux colonnes, et la page du combat ramène à l'éditeur. Ailleurs
+	 * il se joue dans la colonne de droite, et le lecteur y suit lui-même la
+	 * génération (file d'attente, progression) comme sur la page du combat.
+	 */
+	function onTestLaunched(fight: number) {
+		testDialog.value = false
+		if (LeekWars.mobile) {
+			router.push('/fight/' + fight)
+			return
+		}
+		LeekWars.track('editor-fight-panel')
+		// Première ouverture sans largeur retenue : 45 % de la place à droite de
+		// l'explorateur, bornée. Les 560 px par défaut laissaient 180 px au code
+		// quand le chat est ouvert sur un écran de 1600.
+		if (!localStorage.getItem('editor/fight-width')) {
+			const container = document.querySelector('.page.editor .container.last') as HTMLElement | null
+			if (container) {
+				const free = container.clientWidth - panelWidth.value
+				fightWidth.value = Math.max(FIGHT_WIDTH_MIN, Math.min(FIGHT_WIDTH_DEFAULT, Math.round(free * 0.45)))
+			}
+		}
+		openFight('' + fight)
+	}
+
+	/**
+	 * Le combat reste ouvert d'une visite à l'autre : on part voir sa page, on revient
+	 * à l'éditeur, il est toujours là. Seule la croix le ferme.
+	 */
+	function openFight(fight: string) {
+		fightTitle.value = t('fight_panel') as string
+		localStorage.setItem('editor/fight', fight)
+		// Un id qui change suffit à remonter le lecteur (`:key`) ; le même id
+		// (impossible en pratique) le laisserait en place.
+		fightId.value = fight
+		nextTick(observeFightContainer)
+	}
+
+	/**
+	 * Relance le dernier test lancé depuis le dialogue — même scénario, même IA —
+	 * quel que soit le fichier ouvert : on corrige souvent une inclusion, pas l'IA
+	 * testée. Sans test mémorisé, celui de l'IA courante, sinon le scénario 0 du
+	 * serveur (le premier poireau contre un bot). Le code non sauvegardé l'est
+	 * d'abord, puis le combat part une fois l'écriture confirmée : tester la
+	 * version d'avant serait pire que ne rien faire.
+	 */
+	function relaunchTest() {
+		const editor = currentEditor.value
+		const ai = currentAI.value
+		const lastScenario = localStorage.getItem('editor/last-scenario')
+		const lastAI = localStorage.getItem('editor/last-scenario-ai')
+		const scenario = lastScenario && lastAI ? lastScenario : (ai?.scenario ?? 0)
+		const path = lastScenario && lastAI ? lastAI : ai?.path
+		if (!path) { return }
+		const launch = () => {
+			LeekWars.post('ai/test-scenario', { scenario_id: scenario, ai_id: path }).then(data => {
+				onTestLaunched(data.fight)
+			}).error(err => LeekWars.toast(t('error_' + err.error, (err.params ?? []) as (string | number)[]) as string))
+		}
+		if (editor && ai && ai.modified) {
+			save(editor, launch)
+		} else {
+			launch()
+		}
+	}
+
+	function closeFight() {
+		localStorage.removeItem('editor/fight')
+		fightId.value = null
+		fightPlayerWidth.value = 0
+		fightPlayerHeight.value = 0
+		fightActionsHeight.value = 0
+		fightObserver?.disconnect()
+		fightObserver = null
+	}
+
+	function onFightLoaded(fight: { team1_name: string, team2_name: string }) {
+		fightTitle.value = fight.team1_name + ' vs ' + fight.team2_name
+	}
+
+	function observeFightContainer() {
+		fightObserver?.disconnect()
+		fightObserver = null
+		const container = fightContainer.value
+		if (!container) { return }
+		fightObserver = new ResizeObserver(measureFight)
+		fightObserver.observe(container)
+		measureFight()
+	}
+
+	function measureFight() {
+		const container = fightContainer.value
+		if (!container) { return }
+		const width = container.clientWidth
+		const height = container.clientHeight
+		let actions = 0
+		if (height > width) {
+			actions = fightActionsUserHeight
+				? Math.min(fightActionsUserHeight, height - FIGHT_STAGE_MIN_HEIGHT)
+				: Math.max(FIGHT_ACTIONS_MIN_HEIGHT, height - Math.round(width * FIGHT_STAGE_RATIO))
+		}
+		fightActionsHeight.value = Math.max(0, actions)
+		fightPlayerWidth.value = width
+		fightPlayerHeight.value = height - fightActionsHeight.value
+	}
+
+	function fightActionsResizerMousedown(e: MouseEvent) {
+		const startHeight = fightActionsHeight.value
+		const startY = e.clientY
+		const mousemove = (ev: MouseEvent) => {
+			fightActionsUserHeight = Math.max(FIGHT_ACTIONS_DRAG_MIN, startHeight + startY - ev.clientY)
+			localStorage.setItem('editor/fight-actions-height', '' + fightActionsUserHeight)
+			measureFight()
+		}
+		const mouseup = (_ev: MouseEvent) => {
+			document.documentElement!.removeEventListener('mousemove', mousemove)
+			document.documentElement!.removeEventListener('mouseup', mouseup)
+		}
+		document.documentElement!.addEventListener('mousemove', mousemove, false)
+		document.documentElement!.addEventListener('mouseup', mouseup, false)
+		e.preventDefault()
+	}
+
+	function resizerFightMousedown(e: MouseEvent) {
+		const startWidth = fightWidth.value
+		const startX = e.clientX
+		// La colonne de code garde au moins 300 px, comme entre deux éditeurs.
+		const max = Math.max(FIGHT_WIDTH_MIN, window.innerWidth - panelWidth.value - 300)
+		const mousemove = (ev: MouseEvent) => {
+			fightWidth.value = Math.max(FIGHT_WIDTH_MIN, Math.min(max, startWidth - (ev.clientX - startX)))
+			localStorage.setItem('editor/fight-width', '' + fightWidth.value)
+		}
+		const mouseup = (_ev: MouseEvent) => {
+			document.documentElement!.removeEventListener('mousemove', mousemove)
+			document.documentElement!.removeEventListener('mouseup', mouseup)
+		}
+		document.documentElement!.addEventListener('mousemove', mousemove, false)
+		document.documentElement!.addEventListener('mouseup', mouseup, false)
+		e.preventDefault()
+	}
+
 	function toggleEditorTheme() {
 		// Bascule manuelle clair/sombre : on sort du mode auto en figeant le thème opposé à l'actuel,
 		// en respectant les thèmes préférés clair/sombre.
@@ -1207,10 +1494,17 @@
 		localStorage.setItem('editor/hideHeader', '' + hideHeader.value)
 	})
 	watch(problemsCount, (count, prev) => {
-		if (count === 0 && prev > 0 && bottomPanel.value === 'problems') {
-			bottomPanel.value = null
+		if (count === 0) {
+			if (prev && bottomPanel.value === 'problems') {
+				bottomPanel.value = null
+			}
+		} else if (problemsAutoOpen && bottomPanel.value === null) {
+			// Première analyse non vide (compteurs déjà remplis en revenant sur l'éditeur : d'où
+			// le immediate) : on ouvre le panneau, et plus jamais tout seul ensuite.
+			problemsAutoOpen = false
+			bottomPanel.value = 'problems'
 		}
-	})
+	}, {immediate: true})
 	watch(enableAnalyzer, () => {
 		if (enableAnalyzer.value) {
 			analyzer.init()
@@ -1243,7 +1537,8 @@
 		jump(event.ai, event.line, event.column)
 	}
 
-	function jump(ai: AI, line: number, column: number) {
+	// `length` : texte à sélectionner à l'arrivée (résultat de la recherche globale).
+	function jump(ai: AI, line: number, column: number, length: number = 0) {
 		if (showDiffViewer.value) {
 			currentTab.value = tabs1.value.find(t => t.type === 'file') || null
 			updateUrl()
@@ -1252,7 +1547,7 @@
 			router.push('/editor/' + ai.path)
 		}
 		nextTick(() => {
-			editor1.value?.scrollToLine(ai, line, column)
+			editor1.value?.scrollToLine(ai, line, column, length)
 		})
 	}
 
@@ -1324,6 +1619,7 @@
 	}
 
 	function toggleBottomPanel(panel: 'problems' | 'git') {
+		problemsAutoOpen = false // un choix manuel prime sur l'ouverture automatique
 		// Si on clique sur 'problems' sans aucun problème : ferme le panel (ou rien si déjà fermé)
 		if (panel === 'problems' && !analyzer.error_count && !analyzer.warning_count && !analyzer.todo_count) {
 			bottomPanel.value = null
@@ -1367,6 +1663,15 @@
 		currentAI.value.analyze()
 	}
 
+	// Écrit (ou réécrit) le pragma @version dans une IA polyglot, avec la syntaxe de
+	// commentaire du langage. Pas d'analyze() : la validation polyglot passe par le save.
+	function onPolyglotVersionSelect() {
+		if (!currentEditor.value || !currentAIPolyglotVersion.value) return
+		const v = currentAIPolyglotVersion.value
+		rewritePragma('version', v.pragma, v.comment)
+		save(currentEditor.value)
+	}
+
 	function onStrictUpdate(strict: boolean) {
 		if (!currentAI.value) return
 		currentAI.value.strict = strict
@@ -1376,12 +1681,14 @@
 		currentAI.value.analyze()
 	}
 
-	function rewritePragma(name: 'version' | 'strict', value: number | boolean) {
+	// `comment` = syntaxe de commentaire du langage : '//' (LeekScript, JS, TS) ou '#' (Python)
+	function rewritePragma(name: 'version' | 'strict', value: number | boolean | string, comment: '//' | '#' = '//') {
 		if (!currentEditor.value) return
 		const editor = currentEditor.value.editor
 		const code = editor.getValue()
-		const pragmaRe = new RegExp(`^[ \\t]*//[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
-		const line = name === 'version' ? `// @version:${value}\n` : (value ? `// @strict\n` : '')
+		const commentRe = comment === '#' ? '#' : '//'
+		const pragmaRe = new RegExp(`^[ \\t]*${commentRe}[ \\t]*@${name}(?:[ \\t]*:[ \\t]*\\S+)?[ \\t]*\\r?\\n?`, 'm')
+		const line = name === 'version' ? `${comment} @version:${value}\n` : (value ? `// @strict\n` : '')
 		const match = pragmaRe.exec(code)
 		let newCode: string
 		if (match) {
@@ -1450,7 +1757,12 @@
 		const aiObj = fileSystem.ais[ai]
 		if (aiObj) {
 			if (side === 1) {
-				fileSystem.load(aiObj).then(() => { currentAI1.value = ai })
+				// Garde anti-course : sur connexion lente, cliquer A puis B où load(B) résout
+				// avant load(A) laisserait le .then le plus lent poser currentAI1 = A alors que
+				// l'onglet actif est B. L'éditeur afficherait A sous l'onglet B → une sauvegarde
+				// écrirait le contenu dans le mauvais fichier. (Symétrique du garde de droite.)
+				const gen = ++load1Gen
+				fileSystem.load(aiObj).then(() => { if (gen === load1Gen) currentAI1.value = ai })
 			} else {
 				// Garde anti-course : un switch rapide d'onglets droits ne doit pas
 				// laisser le .then le plus lent écraser currentAI2 du plus récent.
@@ -1474,9 +1786,33 @@
 		currentEditor.value = (currentSide.value === 1 ? editor1.value : editor2.value) as InstanceType<typeof AIViewMonaco>
 	}
 
-	function setLeftPanelTab(tab: string) {
+	function setLeftPanelTab(tab: string, searchText = '') {
 		leftPanelTab.value = tab
 		localStorage.setItem('editor/left_panel_tab', tab)
+		if (tab === 'search') {
+			searchMounted.value = true
+			pendingSearchFocus = searchText
+			nextTick(applySearchFocus)
+		}
+	}
+
+	function applySearchFocus() {
+		if (pendingSearchFocus === null || !searchEl.value) return
+		searchEl.value.focus(pendingSearchFocus)
+		pendingSearchFocus = null
+	}
+
+	// Ctrl+Shift+F : ouvre l'onglet de recherche, pré-rempli avec la sélection de l'éditeur
+	// quand elle tient sur une ligne (comme VS Code).
+	function openSearch(event: Event) {
+		event.preventDefault()
+		const ed = currentEditor.value?.editor
+		const selection = ed?.getSelection()
+		let text = ''
+		if (selection && !selection.isEmpty() && selection.startLineNumber === selection.endLineNumber) {
+			text = ed.getModel()?.getValueInRange(selection) ?? ''
+		}
+		setLeftPanelTab('search', text)
 	}
 
 	// Remappe les références d'UI (éditeurs actifs + onglets ouverts) quand le path d'une IA change,
@@ -1507,6 +1843,11 @@
 		LeekWars.large = enlargeWindow.value
 		LeekWars.footer = false
 		LeekWars.box = true
+
+		const openedFight = localStorage.getItem('editor/fight')
+		if (openedFight && !LeekWars.mobile) {
+			openFight(openedFight)
+		}
 
 		// Toast après retour d'installation GitHub App
 		const gitAuth = route.query.git_auth as string | undefined
@@ -1541,6 +1882,7 @@
 		})
 		emitter.on('palette-test', () => startTest())
 		emitter.on('palette-toggle-theme', () => toggleEditorTheme())
+		emitter.on('ctrlShiftF', openSearch)
 		emitter.on('ctrlP', (event: Event) => {
 			if (!finder.value) return
 			finder.value.search = true
@@ -1582,12 +1924,31 @@
 			if (dragging.value instanceof Folder && isChild(folder, dragging.value)) { return }
 			const destPath = folder.id === 0 ? '' : fileSystem.getFolderPath(folder).replace(/\/$/, '')
 			const movedItem = dragging.value
+			// Le déplacement est optimiste côté client : si le serveur refuse (conflit de nom,
+			// quota), on prévient ET on resynchronise, sinon l'arbre affiché ment jusqu'au
+			// prochain rechargement. On remet d'abord les chemins d'avant le déplacement :
+			// `reload()` réindexe le code en cours d'édition PAR CHEMIN, donc laisser les
+			// chemins optimistes (absents de l'arbre serveur) jetterait le code et le modèle
+			// Monaco du fichier déplacé.
+			const movedAI = movedItem.folder ? null : (movedItem as AIItem).ai
+			const oldAIPath = movedAI ? movedAI.path : ''
+			const onMoveError = (error: unknown) => {
+				LeekWars.toast(translateFileSystemError(error))
+				movedItem.parent = parent.id
+				if (movedAI) {
+					movedAI.folder = parent.id
+					fileSystem.setPath(movedAI, oldAIPath)
+				} else {
+					fileSystem.refreshSubtreePaths(movedItem as Folder)
+				}
+				fileSystem.reload()
+			}
 			if (movedItem.folder) {
 				const srcPath = fileSystem.getFolderPath(movedItem as Folder).replace(/\/$/, '')
-				LeekWars.post('ai/move', {path: srcPath, dest: destPath})
+				LeekWars.post('ai/move', {path: srcPath, dest: destPath}).error(onMoveError)
 			} else {
 				const ai = (movedItem as AIItem).ai
-				LeekWars.post('ai/move', {path: ai.path, dest: destPath})
+				LeekWars.post('ai/move', {path: ai.path, dest: destPath}).error(onMoveError)
 				ai.folder = folder.id
 				// setPath re-clé la map, recalcule folderpath, invalide le cache (#4318)
 				fileSystem.setPath(ai, destPath ? destPath + '/' + ai.name : ai.name)
@@ -1660,6 +2021,9 @@
 		emitter.off('ctrlShiftP')
 		emitter.off('palette-test')
 		emitter.off('palette-toggle-theme')
+		emitter.off('ctrlShiftF', openSearch)
+		fightObserver?.disconnect()
+		fightObserver = null
 		emitter.off('ctrlP')
 		emitter.off('escape')
 		emitter.off('htmlclick')
@@ -1700,32 +2064,79 @@
 		--pure-white: #fff;
 		--pure-black: #000;
 		--background: #f2f2f2;
-		--background-secondary: #eee;
-		--background-disabled: #bbb;
+		--background-secondary: var(--grey-13);
+		--background-disabled: var(--grey-10);
 		--background-header: #e5e5e5;
-		--border: #ddd;
+		--border: var(--grey-12);
 		--text-color: #111;
-		--text-color-secondary: #777;
+		--text-color-secondary: var(--grey-6);
 		--type-color: #0000D0;
 		color: var(--text-color);
 	}
-	.theme-monokai, .theme-vs-dark, .theme-hc-black {
+	.theme-leek-wars-dark, .theme-monokai, .theme-vs-dark, .theme-hc-black {
 		--pure-white: #000;
 		--pure-black: #fff;
 		--background: #1f1f1f;
 		--background-secondary: #171717;
-		--background-disabled: #555;
+		--background-disabled: var(--grey-4);
 		--background-header: #2f2f2f;
-		--border: #444;
+		--border: var(--grey-3);
 		--text-color: #f7f7f7;
-		--text-color-secondary: #aaa;
+		--text-color-secondary: var(--grey-9);
 		--type-color: #0099d0;
 		color: var(--text-color);
+	}
+	// Les thèmes maison vont plus loin que les gris génériques : la coquille de
+	// l'éditeur prend les surfaces du site (thème v3), pour qu'elle soit dans la
+	// continuité du code qu'elle entoure au lieu de flotter dessus — même parti
+	// pris que la console (console.vue). Restreint à `body:not(.v2)` :
+	// en v2 les gris génériques SONT les surfaces du site.
+	body:not(.v2) .theme-leek-wars {
+		--pure-white: #FBF7E8;
+		--background: #FBF7E8;
+		--background-secondary: #E9E3CD;
+		--background-disabled: #D3CCB2;
+		--background-header: #F3EDD8;
+		--border: rgba(14, 20, 16, 0.14);
+		--text-color: #0E1410;
+		--text-color-secondary: #4A5847;
+		--type-color: #16688A;
+	}
+	body:not(.v2) .theme-leek-wars-dark {
+		--background: #0E1316;
+		--background-secondary: #0B0F0B;
+		--background-header: #11161A;
+		--border: rgba(255, 255, 255, 0.16);
+		--text-color: #E8F0E6;
+		--text-color-secondary: #A8B4A4;
+		--type-color: #5CE0FF;
 	}
 	.page-header {
 		flex-wrap: nowrap;
 		position: relative;
 		padding-right: 0;
+	}
+	/* Le titre et les boutons de la barre de page appartiennent à la coquille du
+	   site, pas à l'éditeur : c'est le seul endroit de la page où les deux thèmes
+	   se touchent. Ils héritaient du `--text-color` du thème de CODE alors que
+	   leur fond (`--background-input`) et leur bordure restent ceux du SITE :
+	   site clair + éditeur sombre donnait du texte presque blanc sur un bouton
+	   crème, illisible (rapport de FdHP), et la combinaison inverse du noir sur
+	   noir. `--page-bar-color`, la couleur que le thème du site donne à sa barre
+	   de page, n'est jamais réécrite par un thème d'éditeur. Les onglets, eux,
+	   gardent le thème du code : ils prolongent la surface qu'ils surmontent. */
+	.page-header > .menu {
+		--text-color: var(--page-bar-color);
+		color: var(--text-color);
+	}
+	/* La coquille v3 ne recentre pas la barre de page de l'éditeur (elle l'exclut
+	   sur son `> .menu`) : ses enfants sont étirés, et la bande d'onglets, haute de
+	   36 px dans une barre de 48, restait collée en haut. La gouttière est celle
+	   que `global.scss` donne déjà aux `.tabs` et aux `.actions` d'une barre de
+	   page ; elle sépare aussi les deux bandes quand l'éditeur est fractionné. */
+	.page-header > .tabs-wrapper {
+		align-self: center;
+		margin-left: 20px;
 	}
 	.container {
 		flex: 1;
@@ -1757,6 +2168,10 @@
 	}
 	.left-tab {
 		flex: 1;
+		// min-width/overflow : sans eux le libellé nowrap impose sa largeur et la barre
+		// déborde du panneau quand il est rétréci (mesuré à 120px) au lieu de tronquer.
+		min-width: 0;
+		overflow: hidden;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -1766,6 +2181,13 @@
 		border-bottom: 2px solid transparent;
 		transition: opacity 0.15s, border-color 0.15s;
 		.v-icon { font-size: 20px; }
+		// L'onglet Git remplace tout l'explorateur : deux icônes muettes ne disaient pas
+		// où on était, et un arbre masqué passait pour des fichiers disparus. La troncature
+		// vient de la classe utilitaire `.ellipsis` posée sur le libellé.
+		.left-tab-label {
+			margin-left: 5px;
+			font-size: 13px;
+		}
 		&:hover { opacity: 0.8; }
 		&.active {
 			opacity: 1;
@@ -1782,7 +2204,7 @@
 		margin: 10px;
 		background-color: var(--pure-white);
 		font-size: 14px;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	#app.app .ai-stats {
 		display: none;
@@ -1823,7 +2245,7 @@
 			color: var(--text-color-secondary);
 			padding: 6px 10px;
 			background: rgba(0, 0, 0, 0.04);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			.v-icon { flex-shrink: 0; margin-top: 1px; }
 		}
 		.clone-auth-btn {
@@ -1852,7 +2274,7 @@
 	}
 	.ai-list :deep(.router-link-active > .item > .label) {
 		background: #cacaca;
-		color: black;
+		color: var(--black);
 	}
 	.panel.editor-panel {
 		background: var(--background);
@@ -1887,7 +2309,7 @@
 	}
 	.column3 .panel {
 		margin-right: 0;
-		border-right: 1px solid #ddd;
+		border-right: 1px solid var(--grey-12);
 	}
 	.settings-dialog {
 		h3 {
@@ -1898,7 +2320,7 @@
 			margin-top: 0;
 		}
 		.title {
-			color: #5fad1b;
+			color: var(--primary);
 			font-size: 18px;
 			font-weight: 500;
 			margin-top: 15px;
@@ -1906,6 +2328,12 @@
 		}
 		.title:first-child {
 			margin-top: 0;
+		}
+		// Une case par ligne : en ligne, le gabarit n'en laisse aucun blanc entre elles.
+		.lw-checkbox {
+			display: flex;
+			width: fit-content;
+			margin-bottom: 8px;
 		}
 		.storage {
 			.storage-label {
@@ -1919,13 +2347,13 @@
 			}
 			.storage-bar {
 				height: 8px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				background: var(--border);
 				overflow: hidden;
 			}
 			.storage-bar-fill {
 				height: 100%;
-				background: #5fad1b;
+				background: var(--primary-surface);
 				transition: width 0.3s ease;
 			}
 			.storage-bar-warn {
@@ -1940,6 +2368,50 @@
 		position: relative;
 		height: 100%;
 	}
+	.fight-column {
+		flex-shrink: 0;
+	}
+	.fight-panel {
+		display: flex;
+		flex-direction: column;
+	}
+	.fight-panel .header {
+		flex-shrink: 0;
+	}
+	.fight-container {
+		flex: 1;
+		min-height: 0;
+		position: relative;
+		overflow: hidden;
+		// Le lecteur pose sa propre taille en pixels (celle qu'on lui a relevée) ;
+		// le conteneur, lui, est mesuré sans le lecteur pour ne pas boucler.
+		display: flex;
+		flex-direction: column;
+	}
+	.fight-stage {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.fight-actions-below {
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		&:empty {
+			display: none;
+		}
+	}
+	.fight-resizer {
+		width: 10px;
+		cursor: ew-resize;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: -5px;
+		z-index: 5;
+	}
 	.resizer {
 		z-index: 5;
 		display: flex;
@@ -1952,8 +2424,18 @@
 		&:hover {
 			background: #0086bc;
 			.v-icon {
-				color: white;
+				color: var(--white);
 			}
+		}
+	}
+	/* v3 : le bleu du survol (#0086bc, écrit en dur) est une couleur du v2 qui
+	   n'appartient à aucune palette du thème — une barre bleu vif en plein
+	   milieu de l'éditeur. La poignée s'allume dans le vert de marque, comme tout
+	   ce qui se manipule, et le glyphe suit. Le v2 garde son bleu. */
+	body:not(.v2) .resizer:hover {
+		background: color-mix(in srgb, var(--primary) 22%, transparent);
+		.v-icon {
+			color: var(--primary);
 		}
 	}
 	.explorer-resizer {
@@ -1970,6 +2452,13 @@
 		width: 10px;
 		z-index: 5;
 		margin-right: -10px;
+	}
+	.fight-actions-resizer {
+		height: 10px;
+		cursor: ns-resize;
+		position: absolute;
+		left: 0;
+		right: 0;
 	}
 	.problems-resizer {
 		height: 10px;
@@ -1993,6 +2482,11 @@
 		display: flex;
 		align-items: center;
 		border-top: 1px solid var(--border);
+		white-space: nowrap;
+		overflow: hidden;
+		& > * {
+			flex-shrink: 0;
+		}
 		.version {
 			line-height: 36px;
 			gap: 4px;
@@ -2020,9 +2514,9 @@
 				margin-bottom: 3px;
 			}
 			.no-error {
-				color: #5fad1b;
+				color: var(--primary);
 				.v-icon {
-					color: #5fad1b;
+					color: var(--primary);
 				}
 			}
 			.errors {
@@ -2049,7 +2543,7 @@
 			.count {
 				background: rgba(128, 128, 128, 0.25);
 				padding: 1px 6px;
-				border-radius: 8px;
+				border-radius: var(--radius-large);
 				font-size: 11px;
 				line-height: 14px;
 			}
@@ -2071,7 +2565,7 @@
 				}
 			}
 			.ready {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 			.running, .running i {
 				color: #0084a8;
@@ -2116,15 +2610,15 @@
 			}
 		}
 		.green {
-			background: #5fad1b;
-			color: white;
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
 			padding: 0 6px;
-			border-radius: 20px;
+			border-radius: var(--radius-pill);
 			margin-left: 4px;
 		}
 		.link {
 			padding: 5px;
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 500;
 			display: block;
 			i {
@@ -2142,7 +2636,7 @@
 	}
 	.shortcut {
 		font-size: 12px;
-		color: #888;
+		color: var(--grey-7);
 		font-weight: 500;
 		margin-left: 10px;
 	}

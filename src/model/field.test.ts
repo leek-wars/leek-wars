@@ -128,3 +128,44 @@ describe('Field - getAreaCells (au centre, toutes les cases existent)', () => {
 		expect(f.getAreaCells(center, Area.SQUARE_1)).toHaveLength(9)
 	})
 })
+
+// Miroir des tests du générateur (TestFightMap.repelDistanceTest / repelStopsOnObstacleTest) :
+// le client recalcule le déplacement d'EFFECT_REPEL pendant le replay, il doit donner
+// exactement les mêmes cellules que Map.getRepelLastAvailableCell côté serveur.
+describe('Field - computeRepelCell (EFFECT_REPEL)', () => {
+	it('repousse d\'exactement `distance` cases en s\'éloignant du lanceur', () => {
+		const f = new Field(SIZE, SIZE)
+		const caster = f.getCell(0, 0)
+		const entity = f.getCell(1, 0) // juste à côté, direction +x
+		expect(f.computeRepelCell(caster, entity, 3)).toBe(f.getCell(4, 0))
+	})
+	it('distance 0 : aucun déplacement', () => {
+		const f = new Field(SIZE, SIZE)
+		expect(f.computeRepelCell(f.getCell(0, 0), f.getCell(1, 0), 0)).toBe(f.getCell(1, 0))
+	})
+	it('même case que le lanceur : pas de direction, aucun déplacement', () => {
+		const f = new Field(SIZE, SIZE)
+		const cell = f.getCell(0, 0)
+		expect(f.computeRepelCell(cell, cell, 3)).toBe(cell)
+	})
+	it('s\'arrête net devant un obstacle', () => {
+		const f = new Field(SIZE, SIZE)
+		f.getCell(3, 0).obstacle = {} as never
+		expect(f.computeRepelCell(f.getCell(0, 0), f.getCell(1, 0), 3)).toBe(f.getCell(2, 0))
+	})
+	it('s\'arrête net devant une autre entité', () => {
+		const f = new Field(SIZE, SIZE)
+		f.getCell(3, 0).entity = {} as never
+		expect(f.computeRepelCell(f.getCell(0, 0), f.getCell(1, 0), 3)).toBe(f.getCell(2, 0))
+	})
+	it('s\'arrête au bord de la carte', () => {
+		const f = new Field(SIZE, SIZE)
+		const caster = f.getCell(SIZE - 3, 0)
+		const entity = f.getCell(SIZE - 2, 0)
+		expect(f.computeRepelCell(caster, entity, 3)).toBe(f.getCell(SIZE - 1, 0))
+	})
+	it('direction -y', () => {
+		const f = new Field(SIZE, SIZE)
+		expect(f.computeRepelCell(f.getCell(0, 0), f.getCell(0, -1), 2)).toBe(f.getCell(0, -3))
+	})
+})

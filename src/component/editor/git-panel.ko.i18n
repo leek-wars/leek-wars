@@ -33,6 +33,7 @@
 	"push_force_confirm": "⚠️ 강제 푸시: 리모트의 기록을 덮어씁니다. 계속하시겠습니까?",
 	"push_strategy": "푸시 전략",
 	"quota_files_exceeded": "파일 할당량을 초과했습니다. 제한 이하로 줄이려면 파일을 삭제하세요.",
+	"no_remote": "리모트가 설정되지 않았습니다.",
 	"quota_size_exceeded": "용량 할당량을 초과했습니다. 공간을 확보하려면 파일을 삭제하세요.",
 	"rebase": "리베이스",
 	"rebase_abort": "리베이스 취소",

@@ -1,0 +1,18 @@
+{
+	"placeholder": "Zoeken in alle bestanden",
+	"match_case": "Hoofdlettergevoelig",
+	"whole_word": "Heel woord",
+	"regex": "Reguliere expressie",
+	"options": "Zoekopties",
+	"include_closed": "Gesloten mappen meenemen",
+	"loading": "Bestanden laden ({0} / {1})",
+	"no_results": "Geen resultaten",
+	"n_matches": "0 resultaten | 1 resultaat | {n} resultaten",
+	"n_files": "0 bestanden | 1 bestand | {n} bestanden",
+	"truncated": "Zoeken gestopt bij {0} resultaten",
+	"load_error": "Sommige bestanden konden niet worden geladen",
+	"skipped": "0 bestanden overgeslagen | 1 bestand overgeslagen | {n} bestanden overgeslagen",
+	"skipped_desc": "Binaire, te grote of ontbrekende bestanden",
+	"invalid_regex": "Ongeldige reguliere expressie",
+	"line": "Regel {0}"
+}
