@@ -2,6 +2,7 @@
 	"forum_topic": "Forum ämne",
 	"need_ai_change": "Kan kräva ändringar i AI",
 	"popup_ok": "OK :)",
+	"search_results": "Inga resultat | 1 resultat | {n} resultat",
 	"see_all_changes": "Hitta hela listan över ändringar på sidan {changelog}.",
 	"title": "Ändringslogg",
 	"title_0": "🌟 Nyanlända",

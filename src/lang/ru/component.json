@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "Амазонитовая пластина",
+	"amethyst_ring": "Аметистовое кольцо",
 	"apple": "Apple",
 	"battery": "Аккумулятор",
 	"blue_mango": "Голубое манго",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "Острый каштан",
 	"chiyembekezo": "Chiyembekezo",
+	"cocoa": "Какао",
 	"copper_spring": "Медная пружина",
 	"core": "Сердце XN.a-56",
 	"core2": "Вычислительное ядро Y.v-57",
@@ -16,11 +18,13 @@
 	"core_desc": "Вычислительное ядро XN.a-56: 1 терафлопс вычислительной мощности. Тактовая частота 0,4 ГГц. 100 МБ кэш-памяти.",
 	"elinvar_spring": "Элинварная пружина",
 	"fan": "Вентилятор",
+	"gyroscope": "Гироскоп",
 	"hokajin": "Хокадзин",
 	"hylocereus": "Hylocereus",
 	"iron_plate": "Железная плита",
 	"kirabo": "Kirabo",
 	"kiwi": "Киви",
+	"levitator": "Левитатор",
 	"limbani": "Limbani",
 	"morus": "Morus",
 	"motherboard": "Материнская плата",
@@ -56,5 +60,6 @@
 	"switch2": "Switch Pro",
 	"thokozani": "Токозани",
 	"uzoma": "Uzoma",
+	"walnut": "Грецкий орех",
 	"watercooling": "Жидкостный охладитель"
 }

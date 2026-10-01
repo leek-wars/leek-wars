@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: dobra/desdobra o bloco de código atual",
 	"shortcut_14": "<b>Ctrl + J</b>: recolher todos os blocos de código",
 	"shortcut_15": "<b>Ctrl + I</b>: expande todos os blocos de código",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: pesquisa em todos os arquivos",
 	"shortcut_2": "<b>Ctrl + Q</b>: inicia um teste",
 	"shortcut_3": "<b>Ctrl + D</b>: duplica a linha ou seleção atual",
 	"shortcut_4": "<b>Ctrl + K</b>: exclui a linha atual",

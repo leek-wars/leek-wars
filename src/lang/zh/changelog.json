@@ -1,12 +1,13 @@
 {
-	"forum_topic": "论坛话题",
-	"need_ai_change": "可能需要改变 AI",
-	"popup_ok": "好的 ：）",
-	"see_all_changes": "在 {changelog} 页面上找到完整的更改列表。",
-	"title": "改变历史",
-	"title_0": "🌟 新品上架",
+	"forum_topic": "论坛主题",
+	"need_ai_change": "可能需要修改 AI",
+	"popup_ok": "好的 :)",
+	"search_results": "无结果 | 1 条结果 | {n} 条结果",
+	"see_all_changes": "完整的更新列表请见{changelog}页面。",
+	"title": "更新日志",
+	"title_0": "🌟 新增",
 	"title_1": "⚒️ 改进",
 	"title_2": "🐞 修复",
-	"version_n": "发布 {0}",
-	"version_online": "版本 {version} 上线！\n"
+	"version_n": "版本 {0}",
+	"version_online": "{version} 版本已上线！\n"
 }

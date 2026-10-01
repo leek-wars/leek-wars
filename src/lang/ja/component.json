@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "アマゾナイトプレート",
+	"amethyst_ring": "アメジストリング",
 	"apple": "アップル",
 	"battery": "バッテリー",
 	"blue_mango": "ブルーマンゴー",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "鋭い栗",
 	"chiyembekezo": "チエンベケゾー",
+	"cocoa": "カカオ",
 	"copper_spring": "銅バネ",
 	"core": "コア XN.a-56",
 	"core2": "X.v-57コンピューティング・コア",
@@ -16,11 +18,13 @@
 	"core_desc": "XN.a-56演算コア：1テラ・フロップの演算能力。クロックは0.4GHz。100MBキャッシュ・メモリー",
 	"elinvar_spring": "エリンバーのバネ",
 	"fan": "扇風機",
+	"gyroscope": "ジャイロスコープ",
 	"hokajin": "法華神",
 	"hylocereus": "ハイロセラス",
 	"iron_plate": "鉄板",
 	"kirabo": "キラボー",
 	"kiwi": "キウイ",
+	"levitator": "レビテーター",
 	"limbani": "リンバニ",
 	"morus": "モルス",
 	"motherboard": "マザーボード",
@@ -56,5 +60,6 @@
 	"switch2": "スイッチ・プロ",
 	"thokozani": "トコザニ",
 	"uzoma": "ウゾマ",
+	"walnut": "クルミ",
 	"watercooling": "液体クーラー"
 }

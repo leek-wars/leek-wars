@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "Amazoniittilevy",
+	"amethyst_ring": "Ametistisormus",
 	"apple": "Apple",
 	"battery": "Akku",
 	"blue_mango": "Sininen mango",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "Terävä kastanja",
 	"chiyembekezo": "Chiyembekezo",
+	"cocoa": "Kaakao",
 	"copper_spring": "Kuparijousi",
 	"core": "Sydän XN.a-56",
 	"core2": "X.v-57 laskentaydin",
@@ -16,11 +18,13 @@
 	"core_desc": "XN.a-56-laskentaydin: 1 teraflopin raaka laskentateho. Kellotaajuus 0,4 GHz. 100 Mt välimuistia.",
 	"elinvar_spring": "Elinvar-jousi",
 	"fan": "Tuuletin",
+	"gyroscope": "Gyroskooppi",
 	"hokajin": "Hokajin",
 	"hylocereus": "Hylocereus",
 	"iron_plate": "Rautalevy",
 	"kirabo": "Kirabo",
 	"kiwi": "Kiivi",
+	"levitator": "Levitaattori",
 	"limbani": "Limbani",
 	"morus": "Morus",
 	"motherboard": "Emolevy",
@@ -56,5 +60,6 @@
 	"switch2": "Switch Pro",
 	"thokozani": "Thokozani",
 	"uzoma": "Uzoma",
+	"walnut": "Saksanpähkinä",
 	"watercooling": "Nestejäähdytin"
 }

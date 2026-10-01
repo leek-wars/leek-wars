@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "Amazoniet plaat",
+	"amethyst_ring": "Amethistring",
 	"apple": "Appel",
 	"battery": "Batterij",
 	"blue_mango": "Blauwe mango",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "Scherpe kastanje",
 	"chiyembekezo": "Chiyembekezo",
+	"cocoa": "Cacao",
 	"copper_spring": "Koperen veer",
 	"core": "Hart XN.a-56",
 	"core2": "Y.v-57 rekenkern",
@@ -16,11 +18,13 @@
 	"core_desc": "XN.a-56 rekenkern: 1 Tera-flops aan ruwe rekenkracht. Geklokt op 0,4GHz. 100 MB cachegeheugen.",
 	"elinvar_spring": "Elinvar veer",
 	"fan": "Ventilator",
+	"gyroscope": "Gyroscoop",
 	"hokajin": "Hokajin",
 	"hylocereus": "Hylocereus",
 	"iron_plate": "IJzeren plaat",
 	"kirabo": "Kirabo",
 	"kiwi": "Kiwi",
+	"levitator": "Levitator",
 	"limbani": "Limbani",
 	"morus": "Morus",
 	"motherboard": "Moederbord",
@@ -56,5 +60,6 @@
 	"switch2": "Switch Pro",
 	"thokozani": "Thokozani",
 	"uzoma": "Uzoma",
+	"walnut": "Walnoot",
 	"watercooling": "Vloeistofkoeler"
 }

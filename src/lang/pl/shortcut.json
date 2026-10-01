@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: zwiń/rozwiń bieżący blok kodu",
 	"shortcut_14": "<b>Ctrl + J</b>: Zwiń wszystkie bloki kodu",
 	"shortcut_15": "<b>Ctrl + I</b>: rozwiń wszystkie bloki kodu",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: wyszukiwanie we wszystkich plikach",
 	"shortcut_2": "<b>Ctrl + Q</b>: uruchom test",
 	"shortcut_3": "<b>Ctrl + D</b>: powiela bieżący wiersz lub zaznaczenie",
 	"shortcut_4": "<b>Ctrl + K</b>: usuń bieżący wiersz",

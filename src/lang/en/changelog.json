@@ -2,6 +2,7 @@
 	"forum_topic": "Forum topic",
 	"need_ai_change": "May require changes in AI",
 	"popup_ok": "OK :)",
+	"search_results": "No results | 1 result | {n} results",
 	"see_all_changes": "See all changes at {changelog}.",
 	"title": "Changelog",
 	"title_0": "🌟 Added",

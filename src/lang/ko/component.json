@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "아마조나이트 판",
+	"amethyst_ring": "자수정 반지",
 	"apple": "사과",
 	"battery": "배터리",
 	"blue_mango": "푸른 망고",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "날카로운 밤",
 	"chiyembekezo": "치옘베케조",
+	"cocoa": "카카오",
 	"copper_spring": "구리 용수철",
 	"core": "코어 XN.a-56",
 	"core2": "연산 코어 Y.v-57",
@@ -16,11 +18,13 @@
 	"core_desc": "연산 코어 XN.a-56: 원시 연산 1테라플롭. 0.4GHz 클럭. 캐시 메모리 100MB.",
 	"elinvar_spring": "엘린바르 용수철",
 	"fan": "팬",
+	"gyroscope": "자이로스코프",
 	"hokajin": "호카진",
 	"hylocereus": "하이로세레우스",
 	"iron_plate": "철판",
 	"kirabo": "키라보",
 	"kiwi": "키위",
+	"levitator": "레비테이터",
 	"limbani": "림바니",
 	"morus": "모루스",
 	"motherboard": "메인보드",
@@ -56,5 +60,6 @@
 	"switch2": "스위치 프로",
 	"thokozani": "토코자니",
 	"uzoma": "우조마",
+	"walnut": "호두",
 	"watercooling": "수랭 시스템"
 }

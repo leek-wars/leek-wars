@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "Amazonit-platta",
+	"amethyst_ring": "Ametistring",
 	"apple": "Apple",
 	"battery": "Batteri",
 	"blue_mango": "Blå mango",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "Skarp kastanj",
 	"chiyembekezo": "Chiyembekezo",
+	"cocoa": "Kakao",
 	"copper_spring": "Kopparfjäder",
 	"core": "Hjärta XN.a-56",
 	"core2": "X.v-57 beräkningskärna",
@@ -16,11 +18,13 @@
 	"core_desc": "Beräkningskärna XN.a-56: 1 tera flops rå beräkningskraft. Klockad till 0,4 GHz. 100 MB cacheminne.",
 	"elinvar_spring": "Elinvar fjäder",
 	"fan": "Fläkt",
+	"gyroscope": "Gyroskop",
 	"hokajin": "Hokajin",
 	"hylocereus": "Hylocereus",
 	"iron_plate": "Järnplåt",
 	"kirabo": "Kirabo",
 	"kiwi": "Kiwi",
+	"levitator": "Levitator",
 	"limbani": "Limbani",
 	"morus": "Morus",
 	"motherboard": "Moderkort",
@@ -56,5 +60,6 @@
 	"switch2": "Switch Pro",
 	"thokozani": "Thokozani",
 	"uzoma": "Uzoma",
+	"walnut": "Valnöt",
 	"watercooling": "Vätskekylare"
 }

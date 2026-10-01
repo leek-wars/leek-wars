@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "Placa de amazonite",
+	"amethyst_ring": "Anel de ametista",
 	"apple": "Maçã",
 	"battery": "Bateria",
 	"blue_mango": "Manga azul",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "Castanha afiada",
 	"chiyembekezo": "Chiyembekezo",
+	"cocoa": "Cacau",
 	"copper_spring": "Mola de cobre",
 	"core": "Núcleo XN.a-56",
 	"core2": "Núcleo de computação Y.v-57",
@@ -16,11 +18,13 @@
 	"core_desc": "Núcleo de computação XN.a-56: 1 Tera-flops de potência de computação bruta. Velocidade de 0,4 GHz. memória cache de 100MB.",
 	"elinvar_spring": "Mola Elinvar",
 	"fan": "Ventilador",
+	"gyroscope": "Giroscópio",
 	"hokajin": "Hokajin",
 	"hylocereus": "Hylocereus",
 	"iron_plate": "Placa de ferro",
 	"kirabo": "Kirabo",
 	"kiwi": "Kiwi",
+	"levitator": "Levitador",
 	"limbani": "Limbani",
 	"morus": "Morus",
 	"motherboard": "Placa-mãe",
@@ -56,5 +60,6 @@
 	"switch2": "Switch Pro",
 	"thokozani": "Thokozani",
 	"uzoma": "Uzoma",
+	"walnut": "Noz",
 	"watercooling": "Resfriador líquido"
 }

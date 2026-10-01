@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: vouw/ontvouw het huidige codeblok",
 	"shortcut_14": "<b>Ctrl + J</b>: Vouw alle codeblokken samen",
 	"shortcut_15": "<b>Ctrl + I</b>: vouw alle codeblokken uit",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: zoeken in alle bestanden",
 	"shortcut_2": "<b>Ctrl + Q</b>: start een test",
 	"shortcut_3": "<b>Ctrl + D</b>: dupliceer de huidige regel of selectie",
 	"shortcut_4": "<b>Ctrl + K</b>: verwijder de huidige regel",

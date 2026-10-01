@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "Pelat amazonit",
+	"amethyst_ring": "Cincin kecubung",
 	"apple": "Apel",
 	"battery": "Baterai",
 	"blue_mango": "Mangga biru",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "Kastanye runcing",
 	"chiyembekezo": "Chiyembekezo",
+	"cocoa": "Kakao",
 	"copper_spring": "Pegas tembaga",
 	"core": "Inti XN.a-56",
 	"core2": "Inti komputasi Y.v-57",
@@ -16,11 +18,13 @@
 	"core_desc": "Inti komputasi XN.a-56: 1 Tera-flop daya komputasi mentah. Clock pada 0,4GHz. memori cache 100MB.",
 	"elinvar_spring": "Pegas Elinvar",
 	"fan": "Kipas angin",
+	"gyroscope": "Giroskop",
 	"hokajin": "Hokajin",
 	"hylocereus": "Hylocereus",
 	"iron_plate": "Pelat besi",
 	"kirabo": "Kirabo",
 	"kiwi": "Kiwi",
+	"levitator": "Levitator",
 	"limbani": "Limbani",
 	"morus": "Morus",
 	"motherboard": "Motherboard",
@@ -56,5 +60,6 @@
 	"switch2": "Switch Pro",
 	"thokozani": "Thokozani",
 	"uzoma": "Uzoma",
+	"walnut": "Kenari",
 	"watercooling": "Pendingin cair"
 }

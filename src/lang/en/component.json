@@ -1,5 +1,6 @@
 {
 	"amazonite_plate": "Amazonite plate",
+	"amethyst_ring": "Amethyst ring",
 	"apple": "Apple",
 	"battery": "Battery",
 	"blue_mango": "Blue mango",
@@ -7,6 +8,7 @@
 	"cd": "CD",
 	"chestnut": "Sharp Chestnut",
 	"chiyembekezo": "Chiyembekezo",
+	"cocoa": "Cocoa",
 	"copper_spring": "Copper spring",
 	"core": "XN.a-56 Core",
 	"core2": "Y.v-57 Computing Core",
@@ -16,11 +18,13 @@
 	"core_desc": "XN.a-56 computing core: 1 Tera-flop of raw computing power. Clocked at 0.4GHz. 100MB cache memory.",
 	"elinvar_spring": "Elinvar spring",
 	"fan": "Fan",
+	"gyroscope": "Gyroscope",
 	"hokajin": "Hokajin",
 	"hylocereus": "Hylocereus",
 	"iron_plate": "Iron plate",
 	"kirabo": "Kirabo",
 	"kiwi": "Kiwi",
+	"levitator": "Levitator",
 	"limbani": "Limbani",
 	"morus": "Morus",
 	"motherboard": "Motherboard",
@@ -56,5 +60,6 @@
 	"switch2": "Switch Pro",
 	"thokozani": "Thokozani",
 	"uzoma": "Uzoma",
+	"walnut": "Walnut",
 	"watercooling": "Liquid cooler"
 }

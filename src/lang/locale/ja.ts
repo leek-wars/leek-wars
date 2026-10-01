@@ -1,3 +1,4 @@
+import alteration from '@/lang/ja/alteration.json'
 import changelog from '@/lang/ja/changelog.json'
 import characteristic from '@/lang/ja/characteristic.json'
 import chip from '@/lang/ja/chip.json'
@@ -21,7 +22,7 @@ import trophy from "@/lang/ja/trophy.json"
 import warning from '@/lang/ja/warning.json'
 import weapon from '@/lang/ja/weapon.json'
 
-const translations = { component, main, changelog, characteristic, chip, flag, 'fight-pack': fight_pack, 'forum-category': forum_category, weapon, potion, effect, country, entity, hat, leekscript, mail, notification, resource, shortcut, trophy, pomp, warning }
+const translations = { component, alteration, main, changelog, characteristic, chip, flag, 'fight-pack': fight_pack, 'forum-category': forum_category, weapon, potion, effect, country, entity, hat, leekscript, mail, notification, resource, shortcut, trophy, pomp, warning }
 
 import { setTranslations } from "@/locale"
 setTranslations("ja", translations)

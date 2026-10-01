@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: 現在のコード ブロックを折りたたむ/展開する",
 	"shortcut_14": "<b>Ctrl + J</b>: すべてのコード ブロックを折りたたむ",
 	"shortcut_15": "<b>Ctrl + I</b>: すべてのコード ブロックを展開します",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: すべてのファイルを検索",
 	"shortcut_2": "<b>Ctrl + Q</b>: テストを開始します",
 	"shortcut_3": "<b>Ctrl + D</b>: 現在の行または選択範囲を複製します",
 	"shortcut_4": "<b>Ctrl + K</b>: 現在の行を削除",
