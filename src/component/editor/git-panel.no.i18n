@@ -33,6 +33,7 @@
 	"push_force_confirm": "⚠️ Force push: dette vil overskrive historikken på remote. Fortsette?",
 	"push_strategy": "Push-strategi",
 	"quota_files_exceeded": "Filkvote overskredet. Slett filer for å komme under grensen.",
+	"no_remote": "Ingen remote konfigurert.",
 	"quota_size_exceeded": "Lagringskvote overskredet. Slett filer for å frigjøre plass.",
 	"rebase": "Rebase",
 	"rebase_abort": "Avbryt rebase",

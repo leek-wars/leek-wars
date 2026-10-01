@@ -14,6 +14,7 @@
 	"or_pat": "Eller använd en Personal Access Token:",
 	"pat_placeholder": "Åtkomsttoken",
 	"instance_placeholder": "https://codeberg.org",
+	"self_hosted": "Självhostad instans",
 	"save": "Spara",
 	"add": "Lägg till",
 	"invalid_token": "Token avvisad av providern.",

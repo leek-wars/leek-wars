@@ -109,7 +109,7 @@
 
 		<popup v-model="renameDialog" :width="500" icon="mdi-pencil" :title="$t('rename')">
 			<div class="padding">
-				<v-text-field ref="nameInput" v-model="newName" variant="outlined" density="compact" autofocus
+				<lw-input ref="nameInput" v-model="newName" autofocus
 					:error-messages="renameError ? [renameError] : []"
 					:messages="!renameError && windowsWarning(newName) ? [isWindowsReservedName(newName) ? $t('windows_warning_reserved', [newName]) : $t('windows_warning_char', [windowsWarning(newName)])] : []"
 					:color="!renameError && windowsWarning(newName) ? 'warning' : undefined"
@@ -155,7 +155,7 @@
 
 		<popup v-model="newAIDialog" :width="500" icon="mdi-plus-circle-outline" :title="$t('new_desc')">
 			<div class="padding">
-				<v-text-field ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" :suffix="newAIExtension" variant="outlined" density="compact" autofocus
+				<lw-input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" :suffix="newAIExtension" autofocus
 					:error-messages="newAIError ? [newAIError] : []"
 					:messages="!newAIError && windowsWarning(newAIName) ? [isWindowsReservedName(newAIName) ? $t('windows_warning_reserved', [newAIName]) : $t('windows_warning_char', [windowsWarning(newAIName)])] : []"
 					:color="!newAIError && windowsWarning(newAIName) ? 'warning' : undefined"
@@ -170,7 +170,7 @@
 				<a v-if="newAILanguage !== 'leekscript'" href="/help/polyglot" target="_blank" rel="noopener" class="polyglot-help">
 					<v-icon size="16">mdi-book-open-variant</v-icon> {{ polyglotHelpLabel }}
 				</a>
-				<v-checkbox v-model="newAIStarter" :label="$t('include_starter')" density="compact" hide-details class="starter-checkbox" />
+				<lw-checkbox v-model="newAIStarter" :label="$t('include_starter')" class="starter-checkbox" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
@@ -180,7 +180,7 @@
 
 		<popup v-model="newFolderDialog" :width="500" icon="mdi-folder-plus" :title="$t('new_folder')">
 			<div class="padding">
-				<v-text-field ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" variant="outlined" density="compact" autofocus
+				<lw-input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" autofocus
 					:error-messages="newFolderError ? [newFolderError] : []"
 					:messages="!newFolderError && windowsWarning(newFolderName) ? [isWindowsReservedName(newFolderName) ? $t('windows_warning_reserved', [newFolderName]) : $t('windows_warning_char', [windowsWarning(newFolderName)])] : []"
 					:color="!newFolderError && windowsWarning(newFolderName) ? 'warning' : undefined"
@@ -205,7 +205,9 @@
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 	import { explorer } from './explorer'
-	import { emitter } from '@/model/vue'
+	import { isReservedName } from './reserved-names'
+	import { emitter } from '@/model/emitter'
+	import { isTyping } from '@/model/keyboard'
 	import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 	import { useRouter } from 'vue-router'
 
@@ -302,7 +304,7 @@
 
 	function nameError(name: string, parentFolder?: Folder, excludeName?: string): string | null {
 		if (name === '') return t('invalid_name_empty') as string
-		if (name === '.' || name === '..' || name === '.trash') return t('invalid_name_reserved') as string
+		if (isReservedName(name)) return t('invalid_name_reserved') as string
 		if (name.includes('/')) return t('invalid_name_slash') as string
 		if (parentFolder && name !== excludeName) {
 			for (const item of parentFolder.items) {
@@ -365,23 +367,29 @@
 	}
 
 	function rename() {
-		if (ai.value) {
-			if (newName.value !== ai.value.name) {
-				LeekWars.post('ai/rename', {path: ai.value.path, new_name: newName.value}).then(() => {
-					LeekWars.toast(gt('leekscript.ai_renamed', [newName.value]))
-					fileSystem.renameAI(ai.value!, newName.value)
-					router.replace('/editor/' + ai.value!.path)
+		// Cible ET nom capturés à l'appel : la boîte se referme juste en dessous et les refs
+		// servent au renommage suivant. Relus dans la réponse, ils pouvaient désigner autre
+		// chose — ou rien (`!` sur une ref remise à null = plantage).
+		const targetAI = ai.value
+		const targetFolder = folder.value
+		const name = newName.value
+		if (targetAI) {
+			if (name !== targetAI.name) {
+				LeekWars.post('ai/rename', {path: targetAI.path, new_name: name}).then(() => {
+					LeekWars.toast(gt('leekscript.ai_renamed', [name]))
+					fileSystem.renameAI(targetAI, name)
+					router.replace('/editor/' + targetAI.path)
 				}).error((error) => {
 					LeekWars.toast(translateFileSystemError(error))
 				})
 			}
-		} else if (folder.value) {
-			if (newName.value !== folder.value.name) {
-				const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
-				LeekWars.post('ai-folder/rename', {path: folderPath, new_name: newName.value}).then(() => {
-					LeekWars.toast(gt('leekscript.folder_renamed', [newName.value]))
+		} else if (targetFolder) {
+			if (name !== targetFolder.name) {
+				const folderPath = fileSystem.getFolderPath(targetFolder).replace(/\/$/, '')
+				LeekWars.post('ai-folder/rename', {path: folderPath, new_name: name}).then(() => {
+					LeekWars.toast(gt('leekscript.folder_renamed', [name]))
 					// renameFolder recalcule les paths + invalide le cache des IA descendantes (#4318)
-					fileSystem.renameFolder(folder.value!, newName.value)
+					fileSystem.renameFolder(targetFolder, name)
 				}).error((error) => {
 					LeekWars.toast(translateFileSystemError(error))
 				})
@@ -397,27 +405,29 @@
 	})
 
 	function initGit() {
-		if (!folder.value || folder.value.id <= 0) return
-		const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		const target = folder.value
+		if (!target || target.id <= 0) return
+		const folderPath = fileSystem.getFolderPath(target).replace(/\/$/, '')
 		LeekWars.post('git/init', { folder: folderPath }).then(() => {
 			fileSystem.gitRepos[folderPath] = true
 			emitter.emit('git-repos-changed')
-			LeekWars.toast('Git initialized in ' + folder.value!.name)
+			LeekWars.toast('Git initialized in ' + target.name)
 		}).error((error) => {
-			LeekWars.toast((error as { error: string }).error)
+			LeekWars.toast(translateFileSystemError(error))
 		})
 	}
 
 	function deinitGit() {
-		if (!folder.value || folder.value.id <= 0) return
-		if (!confirm(t('deinit_git_confirm', [folder.value.name]) as string)) return
-		const folderPath = fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		const target = folder.value
+		if (!target || target.id <= 0) return
+		if (!confirm(t('deinit_git_confirm', [target.name]) as string)) return
+		const folderPath = fileSystem.getFolderPath(target).replace(/\/$/, '')
 		LeekWars.post('git/deinit', { folder: folderPath }).then(() => {
 			delete fileSystem.gitRepos[folderPath]
 			emitter.emit('git-repos-changed')
-			LeekWars.toast('Git removed from ' + folder.value!.name)
+			LeekWars.toast('Git removed from ' + target.name)
 		}).error((error) => {
-			LeekWars.toast((error as { error: string }).error)
+			LeekWars.toast(translateFileSystemError(error))
 		})
 	}
 
@@ -495,24 +505,28 @@
 		setTimeout(() => newAIInput.value?.focus(), 50)
 	}
 	function newAI(v2: boolean, name: string) {
-		if (!folder.value) { return }
+		// `folder` est la cible PARTAGÉE du menu contextuel : un clic droit sur un fichier la
+		// remet à null (openMenu). La relire dans la réponse, c'est risquer de créer côté
+		// serveur sans insérer côté client — on la capture donc à l'appel.
+		const target = folder.value
+		if (!target) { return }
 		// Ne pas doubler l'extension si l'utilisateur l'a déjà tapée (ex: "main.js" + JavaScript).
 		const ext = newAIExtension.value
 		const fullName = ext && name.toLowerCase().endsWith(ext) ? name : name + ext
-		const folderPath = folder.value.id === 0 ? '' : fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		const folderPath = target.id === 0 ? '' : fileSystem.getFolderPath(target).replace(/\/$/, '')
 		LeekWars.post<{ path: string, code: string }>('ai/create', {folder: folderPath, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name: fullName, starter: newAIStarter.value}).then((data) => {
 			const newAi = new AI({
 				name: fullName,
 				path: data.path,
-				folder: folder.value!.id,
+				folder: target.id,
 				valid: true,
 				version: LeekWars.LATEST_LEEKSCRIPT_VERSION,
 				code: data.code,
 				total_chars: data.code.length,
 				total_lines: data.code.split("\n").length,
 			})
-			fileSystem.add_ai(newAi, folder.value!)
-			folder.value!.expanded = true
+			fileSystem.add_ai(newAi, target)
+			target.expanded = true
 			router.push('/editor/' + newAi.path)
 			newAIDialog.value = false
 			newAIName.value = ''
@@ -541,25 +555,32 @@
 		}
 	}
 	function newFolder(name: string) {
-		if (!folder.value) { return }
-		const parentPath = folder.value.id === 0 ? '' : fileSystem.getFolderPath(folder.value).replace(/\/$/, '')
+		// Cible capturée à l'appel : `folder` est partagée avec le menu des fichiers, qui la
+		// remet à null. Relue dans la réponse, elle pouvait valoir null — le dossier était
+		// alors créé côté serveur sans jamais apparaître dans l'arbre, et introuvable jusqu'au
+		// rechargement de la page (bug rapporté par LeeksLord).
+		const target = folder.value
+		if (!target) { return }
+		const parentPath = target.id === 0 ? '' : fileSystem.getFolderPath(target).replace(/\/$/, '')
 		const dirPath = parentPath ? parentPath + '/' + name : name
 		LeekWars.post('ai-folder/create', {path: dirPath}).then(() => {
-			if (folder.value) {
-				let nextId = 1
-				for (const id in fileSystem.folderById) { if (parseInt(id) >= nextId) nextId = parseInt(id) + 1 }
-				const newF = new Folder(nextId, name, folder.value.id)
-				newF.items = []
-				fileSystem.add_folder(newF, folder.value)
-				folder.value!.expanded = true
-				newFolderDialog.value = false
-				newFolderName.value = ''
-			}
+			let nextId = 1
+			for (const id in fileSystem.folderById) { if (parseInt(id) >= nextId) nextId = parseInt(id) + 1 }
+			const newF = new Folder(nextId, name, target.id)
+			newF.items = []
+			fileSystem.add_folder(newF, target)
+			target.expanded = true
+			newFolderDialog.value = false
+			newFolderName.value = ''
+		}).error((error) => {
+			// Sans ce handler, un 409 `name_conflict` partait en unhandledrejection : aucun
+			// message, la boîte restait ouverte, et le dossier semblait « exister mais invisible ».
+			LeekWars.toast(translateFileSystemError(error))
 		})
 	}
 
 	function keyup(e: KeyboardEvent) {
-		if (e.which === 46) { // Suppr
+		if (e.which === 46 && !isTyping(e)) { // Suppr
 			if (props.currentAi) {
 				ai.value = props.currentAi
 				deleteDialog.value = true
@@ -675,7 +696,7 @@
 	opacity: 0.5;
 	pointer-events: none;
 }
-.text-field-warning :deep(.v-messages__message) {
+.text-field-warning :deep(.message) {
 	color: #d35400;
 }
 .language-toggle {

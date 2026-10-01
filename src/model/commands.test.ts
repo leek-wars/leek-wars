@@ -15,8 +15,10 @@ vi.mock('@/model/leekwars', () => ({
 }))
 vi.mock('@/model/chips', () => ({ CHIPS: {} }))
 vi.mock('@/model/functions', () => ({ FUNCTIONS: [] }))
+vi.mock('@/model/i18n', () => ({ i18n: { t: (key: string) => key } }))
 
 import { Commands } from '@/model/commands'
+import { CODE_MARK, LINK_MARK } from '@/model/chat-sentinels'
 
 describe('Commands.execute - commandes simples', () => {
 	it('/shrug en début de message', () => {
@@ -36,6 +38,17 @@ describe('Commands.execute - commandes simples', () => {
 	})
 	it('texte sans commande reste inchangé', () => {
 		expect(Commands.execute('hello world', 'Bob')).toBe('hello world')
+	})
+})
+
+describe('Commands.execute - segments masqués par le chat', () => {
+	it('une commande à argument produit son lien', () => {
+		expect(Commands.execute('/doc:getLife', 'Bob')).toBe(' <a href="/help/documentation/getLife">getLife</a> ')
+	})
+	it('une commande qui engloberait un segment masqué reste telle quelle', () => {
+		for (const texte of ['/doc:' + CODE_MARK + '0' + CODE_MARK, '/encyclo:page#' + LINK_MARK + '0' + LINK_MARK]) {
+			expect(Commands.execute(texte, 'Bob')).toBe(texte)
+		}
 	})
 })
 

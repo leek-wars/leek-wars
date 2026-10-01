@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { fileSystem } from '@/model/filesystem'
 import { useNamespacedT } from '@/model/i18n'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EditorAI from './editor-ai.vue'
@@ -149,7 +149,7 @@ function click(e: Event) {
 	.item.ai .label:before {
 		content: "✔";
 		font-weight: bold;
-		color: #5fad1b;
+		color: var(--primary);
 		padding-right: 5px;
 	}
 	.item .label:hover {
@@ -176,8 +176,8 @@ function click(e: Event) {
 		pointer-events: none;
 	}
 	.folder.dragover {
-		border: 1px dashed #777;
-		background: #ddd;
+		border: 1px dashed var(--grey-6);
+		background: color-mix(in srgb, var(--pure-black) 10%, transparent);
 	}
 	.folder.dragover > .label {
 		margin-top: -1px;
@@ -207,8 +207,8 @@ function click(e: Event) {
 		vertical-align: top;
 	}
 	.count {
-		border-radius: 10px;
-		color: #333;
+		border-radius: var(--radius-large);
+		color: var(--grey-2);
 		padding: 1px 4px;
 		font-size: 12px;
 		margin-left: 6px;

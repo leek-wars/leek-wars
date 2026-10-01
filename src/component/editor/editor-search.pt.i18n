@@ -1,0 +1,18 @@
+{
+	"placeholder": "Pesquisar em todos os arquivos",
+	"match_case": "Diferenciar maiúsculas",
+	"whole_word": "Palavra inteira",
+	"regex": "Expressão regular",
+	"options": "Opções de pesquisa",
+	"include_closed": "Incluir pastas fechadas",
+	"loading": "Carregando arquivos ({0} / {1})",
+	"no_results": "Nenhum resultado",
+	"n_matches": "0 resultados | 1 resultado | {n} resultados",
+	"n_files": "0 arquivos | 1 arquivo | {n} arquivos",
+	"truncated": "Pesquisa interrompida em {0} resultados",
+	"load_error": "Alguns arquivos não puderam ser carregados",
+	"skipped": "0 arquivos ignorados | 1 arquivo ignorado | {n} arquivos ignorados",
+	"skipped_desc": "Arquivos binários, grandes demais ou ausentes",
+	"invalid_regex": "Expressão regular inválida",
+	"line": "Linha {0}"
+}

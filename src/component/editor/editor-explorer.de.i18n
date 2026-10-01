@@ -19,6 +19,8 @@
 	"destroy": "Dauerhaft zerstören",
 	"destroy_ai": "KI \"{0}\" dauerhaft zerstören?",
 	"destroy_warning": "Diese Aktion ist irreversibel.",
+	"destroy_folder": "Ordner \"{0}\" endgültig löschen?",
+	"destroy_folder_warning": "Der Ordner und alle darin enthaltenen KIs werden endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
 	"destroy_validate": "Zerstören",
 	"new_ai": "Neue KI",
 	"new_folder": "Neuer Ordner",

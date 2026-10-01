@@ -2,16 +2,16 @@
 	<div class="git-panel" :class="isDark ? 'theme--dark' : 'theme--light'">
 		<!-- Sélecteur de repo + actions -->
 		<div class="git-toolbar">
-			<v-select v-model="selectedRepo" :items="repoItems" :placeholder="$t('select_repo')" density="compact" variant="solo-filled" flat hide-details class="repo-select" :theme="isDark ? 'dark' : 'light'" @update:model-value="refreshStatus">
-				<template #prepend-inner>
+			<lw-select v-model="selectedRepo" :items="repoItems" :placeholder="$t('select_repo')" class="repo-select" @update:model-value="refreshStatus">
+				<template #prepend>
 					<v-icon size="small">mdi-source-branch</v-icon>
 				</template>
-				<template #append-inner>
+				<template #append>
 					<v-icon v-if="loading" class="spin" size="small">mdi-sync</v-icon>
 				</template>
-			</v-select>
-			<div class="action-btn" :title="$t('refresh')" @click="refreshStatus">
-				<v-icon>mdi-refresh</v-icon>
+			</lw-select>
+			<div class="action-btn" :title="$t('refresh')" @click="refresh">
+				<v-icon :class="{spin: fetching || loading}">mdi-refresh</v-icon>
 			</div>
 			<div class="action-btn" :title="$t('history')" :class="{active: showHistory}" @click="showHistory = !showHistory">
 				<v-icon>mdi-history</v-icon>
@@ -49,7 +49,7 @@
 					</div>
 				</template>
 				<template v-else>
-					<v-text-field v-model="commitMessage" :placeholder="$t('commit_message')" density="compact" variant="solo-filled" flat hide-details class="commit-input" :theme="isDark ? 'dark' : 'light'" @keyup.enter="commit" @keyup.stop />
+					<lw-input v-model="commitMessage" :placeholder="$t('commit_message')" class="commit-input" @keyup.enter="commit" @keyup.stop />
 					<div class="commit-btn" :class="{disabled: !canCommit}" :title="$t('commit')" @click="commit">
 						<v-icon>mdi-check</v-icon>
 					</div>
@@ -89,7 +89,7 @@
 						<v-icon>{{ stagedExpanded ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</v-icon>
 						<span class="section-title">{{ $t('staged') }}</span>
 						<span class="count">{{ stagedChanges.length }}</span>
-						<v-icon :title="$t('unstage_all')" class="section-action" @click.stop="unstageAll">mdi-minus</v-icon>
+						<div class="section-action" :title="$t('unstage_all')" @click.stop="unstageAll"><v-icon>mdi-minus</v-icon></div>
 					</div>
 					<div v-if="stagedExpanded" class="file-list">
 						<div v-for="change in stagedChanges" :key="'s-' + change.file" class="file-item" :class="{ active: isActiveDiff(change, true) }" @click="showDiff(change, true)">
@@ -108,8 +108,8 @@
 						<v-icon>{{ unstagedExpanded ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</v-icon>
 						<span class="section-title">{{ $t('changes') }}</span>
 						<span class="count">{{ unstagedChanges.length }}</span>
-						<v-icon :title="$t('stage_all')" class="section-action" @click.stop="stageAll">mdi-plus</v-icon>
-						<v-icon :title="$t('discard_all')" class="section-action" @click.stop="discardAll">mdi-undo</v-icon>
+						<div class="section-action" :title="$t('stage_all')" @click.stop="stageAll"><v-icon>mdi-plus</v-icon></div>
+						<div class="section-action" :title="$t('discard_all')" @click.stop="discardAll"><v-icon>mdi-undo</v-icon></div>
 					</div>
 					<div v-if="unstagedExpanded" class="file-list">
 						<div v-for="change in unstagedChanges" :key="'u-' + change.file" class="file-item" :class="{ active: isActiveDiff(change, false) }" @click="showDiff(change, false)">
@@ -173,7 +173,7 @@
 						</v-list-item>
 					</template>
 					<v-divider />
-					<v-list-item prepend-icon="mdi-refresh" :disabled="fetching" @click.stop="fetchRemote">
+					<v-list-item prepend-icon="mdi-refresh" :disabled="fetching || !hasRemote" @click.stop="fetchRemote">
 						<v-list-item-title>{{ fetching ? $t('fetching') : $t('fetch') }}</v-list-item-title>
 					</v-list-item>
 					<v-list-item prepend-icon="mdi-plus" class="create-branch" @click="promptCreateBranch">
@@ -247,7 +247,8 @@
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import GitHistory from './git-history.vue'
 	import { gitCall } from './git-log'
-	import { emitter } from '@/model/vue'
+	import { isDarkCodeTheme } from './code-theme'
+	import { emitter } from '@/model/emitter'
 	import type { DiffTab } from './editor-tabs.vue'
 	import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { useRouter } from 'vue-router'
@@ -318,7 +319,7 @@
 	let refreshDebounceTimer: ReturnType<typeof setTimeout> | null = null
 	const lastFetchAt: { [repo: string]: number } = {}
 
-	const isDark = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(props.theme))
+	const isDark = computed(() => isDarkCodeTheme(props.theme))
 	const repoItems = computed(() => repos.value.map(r => ({ title: r.name || '/', value: r.folder })))
 	const conflictChanges = computed<GitChange[]>(() => changes.value.filter(c => c.conflict))
 	const canPull = computed(() => {
@@ -411,11 +412,16 @@
 		const code = err?.error
 		if (code === 'quota_size_exceeded') return t('quota_size_exceeded') as string
 		if (code === 'quota_files_exceeded') return t('quota_files_exceeded') as string
+		if (code === 'no_remote') return t('no_remote') as string
 		if (err?.quota_exceeded) return t('quota_size_exceeded') as string
 		return err?.details || code || 'error'
 	}
 
 	watch(selectedRepo, (repo) => {
+		// Les bannières parlent du dépôt qu'on quitte : les garder afficherait une
+		// erreur de push ou de fetch au-dessus d'un autre dépôt.
+		syncError.value = ''
+		syncInfo.value = ''
 		if (repo === '') {
 			changes.value = []
 			branch.value = ''
@@ -446,16 +452,40 @@
 
 	async function fetchRemote() {
 		if (fetching.value) return
+		// Un dépôt volontairement local n'a rien à actualiser : sans cette garde le
+		// simple fait d'ouvrir le sélecteur de branches déclenchait un git/fetch voué
+		// à l'échec, et donc une bannière rouge à chaque ouverture.
+		if (!hasRemote.value) { await loadBranches(); return }
+		// Le dépôt est figé à l'entrée : changer de dépôt pendant le fetch ferait
+		// sinon passer l'horodatage sur le mauvais, et sauter son prochain fetch.
+		const repo = selectedRepo.value
 		fetching.value = true
+		syncError.value = ''
 		try {
-			await gitCall('git/fetch', { folder: selectedRepo.value })
-			lastFetchAt[selectedRepo.value] = Date.now()
+			await gitCall('git/fetch', { folder: repo })
+			lastFetchAt[repo] = Date.now()
 			await Promise.all([loadBranches(), refreshStatus()])
-		} catch {
+		} catch (e: unknown) {
+			// Le fetch alimente les branches distantes : en cas d'échec la liste
+			// reste muette et donne l'impression que le remote n'a qu'une branche.
+			syncError.value = 'Fetch: ' + gitErrorMessage(e)
 			await Promise.all([loadBranches(), refreshStatus()])
 		} finally {
 			fetching.value = false
 		}
+	}
+
+	// Bouton « Actualiser » de la barre d'outils. git/status compare HEAD aux refs
+	// distantes déjà connues localement : sans fetch préalable, les commits poussés
+	// entre-temps restent invisibles (compteur « en retard » figé à 0). L'état local
+	// est rafraîchi en premier pour que le bouton réponde tout de suite, même quand
+	// le remote est injoignable et que le fetch va mettre des secondes à échouer.
+	async function refresh() {
+		syncError.value = ''
+		syncInfo.value = ''
+		await refreshStatus()
+		emitter.emit('git-history-refresh')
+		if (hasRemote.value) await fetchRemote()
 	}
 
 	function debouncedRefresh() {
@@ -855,7 +885,8 @@
 	padding: 4px;
 	flex-shrink: 0;
 }
-.repo-select {
+// Le champ est rendu par lw-select : classe présente, attribut de portée absent.
+:deep(.repo-select) {
 	flex: 1;
 	min-width: 0;
 }
@@ -866,11 +897,11 @@
 	width: 40px;
 	height: 40px;
 	cursor: pointer;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	opacity: 0.6;
 	flex-shrink: 0;
 	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.15); }
-	&.active { opacity: 1; background: rgba(95, 173, 27, 0.2); color: #5fad1b; }
+	&.active { opacity: 1; background: rgba(95, 173, 27, 0.2); color: var(--primary); }
 	.v-icon { font-size: 22px; }
 }
 .commit-area {
@@ -892,7 +923,7 @@
 	padding: 0 12px;
 	height: 40px;
 	background: rgba(124, 142, 218, 0.15);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	color: #7c8eda;
 	.rebase-label-icon { font-size: 18px; }
 }
@@ -906,7 +937,7 @@
 	width: 40px;
 	height: 40px;
 	cursor: pointer;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	flex-shrink: 0;
 	color: #4caf50;
 	&.disabled { opacity: 0.3; cursor: default; }
@@ -937,18 +968,24 @@
 .count {
 	background: rgba(128, 128, 128, 0.3);
 	color: inherit;
-	border-radius: 8px;
+	border-radius: var(--radius-large);
 	padding: 0 6px;
 	font-size: 11px;
 	margin-right: 4px;
 }
+// Le padding va sur un conteneur : sur un <v-icon> (width/height: 1em, box-sizing:
+// border-box) il rognait la boîte de contenu jusqu'à 0 et le SVG, dimensionné en
+// 100%, disparaissait complètement.
 .section-action {
-	font-size: 18px !important;
-	padding: 9px;
+	display: inline-flex;
+	align-items: center;
+	align-self: stretch;
+	padding: 0 5px;
 	margin-left: 2px;
 	opacity: 0.5;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	cursor: pointer;
+	flex-shrink: 0;
 	&:hover { opacity: 1; background: rgba(128, 128, 128, 0.2); }
 }
 .file-list {
@@ -978,7 +1015,7 @@
 	line-height: 16px;
 	padding-top: 4px;
 	font-weight: bold;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	margin-right: 6px;
 	flex-shrink: 0;
 	&.status-m, &.status-M { color: #e8a838; }
@@ -1001,7 +1038,7 @@
 }
 .file-action-icon {
 	padding: 4px 6px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	align-self: stretch;
 	display: inline-flex;
 	align-items: center;
@@ -1012,7 +1049,7 @@
 .merge-banner {
 	padding: 8px;
 	background: #e8a838;
-	color: white;
+	color: var(--white);
 	display: flex;
 	align-items: center;
 	gap: 4px;
@@ -1023,7 +1060,7 @@
 	margin-left: auto;
 	cursor: pointer;
 	opacity: 0.8;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 2px;
 	&:hover { opacity: 1; background: rgba(0, 0, 0, 0.2); }
 	.v-icon { font-size: 18px; }
@@ -1035,7 +1072,7 @@
 	margin-left: auto;
 	cursor: pointer;
 	opacity: 0.9;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 2px;
 	&:hover { opacity: 1; background: rgba(0, 0, 0, 0.2); }
 	&.disabled { opacity: 0.4; cursor: default; pointer-events: none; }
@@ -1071,7 +1108,7 @@
 	gap: 4px;
 	cursor: pointer;
 	padding: 2px 4px;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	user-select: none;
 	min-width: 0;
 	max-width: 100%;
@@ -1086,7 +1123,7 @@
 	white-space: nowrap;
 	min-width: 0;
 }
-.branch-list .create-branch { color: #5fad1b; }
+.branch-list .create-branch { color: var(--primary); }
 .branch-delete {
 	font-size: 18px !important;
 	opacity: 0.4;
@@ -1105,7 +1142,7 @@
 	align-items: center;
 	gap: 3px;
 	padding: 4px 8px;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	cursor: pointer;
 	font-size: 12px;
 	font-weight: bold;
@@ -1120,7 +1157,7 @@
 .pull-group {
 	display: flex;
 	align-items: center;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	&:hover:not(.disabled) { background: rgba(128, 128, 128, 0.15); }
 	&.disabled .sync-btn {
 		opacity: 0.35;
@@ -1164,10 +1201,10 @@
 	.sync-error-close { color: #f44; }
 }
 .sync-info {
-	color: #5fad1b;
+	color: var(--primary);
 	background: rgba(95, 173, 27, 0.1);
 	border-top-color: rgba(95, 173, 27, 0.2);
-	.sync-info-close { color: #5fad1b; }
+	.sync-info-close { color: var(--primary); }
 }
 .no-changes {
 	padding: 20px;

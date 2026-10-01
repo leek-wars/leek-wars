@@ -1,0 +1,18 @@
+{
+	"placeholder": "Hae kaikista tiedostoista",
+	"match_case": "Sama kirjainkoko",
+	"whole_word": "Koko sana",
+	"regex": "Säännöllinen lauseke",
+	"options": "Hakuasetukset",
+	"include_closed": "Sisällytä suljetut kansiot",
+	"loading": "Ladataan tiedostoja ({0} / {1})",
+	"no_results": "Ei tuloksia",
+	"n_matches": "0 tulosta | 1 tulos | {n} tulosta",
+	"n_files": "0 tiedostoa | 1 tiedosto | {n} tiedostoa",
+	"truncated": "Haku pysäytettiin {0} tulokseen",
+	"load_error": "Joitakin tiedostoja ei voitu ladata",
+	"skipped": "0 tiedostoa ohitettu | 1 tiedosto ohitettu | {n} tiedostoa ohitettu",
+	"skipped_desc": "Binääri-, liian suuret tai puuttuvat tiedostot",
+	"invalid_regex": "Virheellinen säännöllinen lauseke",
+	"line": "Rivi {0}"
+}

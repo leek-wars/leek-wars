@@ -1,0 +1,18 @@
+{
+	"placeholder": "Search in all files",
+	"match_case": "Match case",
+	"whole_word": "Match whole word",
+	"regex": "Use regular expression",
+	"options": "Search options",
+	"include_closed": "Include closed folders",
+	"loading": "Loading files ({0} / {1})",
+	"no_results": "No results",
+	"n_matches": "0 results | 1 result | {n} results",
+	"n_files": "0 files | 1 file | {n} files",
+	"truncated": "Search stopped at {0} results",
+	"load_error": "Some files could not be loaded",
+	"skipped": "0 files skipped | 1 file skipped | {n} files skipped",
+	"skipped_desc": "Binary, too large or missing files",
+	"invalid_regex": "Invalid regular expression",
+	"line": "Line {0}"
+}

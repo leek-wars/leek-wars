@@ -2,7 +2,6 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Area } from './area'
 import { Cell } from './cell'
 import { Entity } from './entity'
-import { State } from './effect'
 import { FightEntity } from '@/component/player/game/entity'
 
 class Field {
@@ -171,6 +170,26 @@ class Field {
 				return [cell.entity!]
 			}
 		}
+		// Zones « tous les alliés » / « tous les ennemis » (Protection divine,
+		// Apocalypse) : la cellule visée n'y est pour rien, la zone est l'ensemble
+		// des entités vivantes du camp, où qu'elles soient sur la carte — comme
+		// AreaAllies / AreaEnemies du générateur (qui ignore aussi les cristaux
+		// alliés). Sans ce cas, getAreaCells rendait une zone vide et la puce
+		// n'avait aucune cible côté client : pas de glyphe, pas d'auréole.
+		if (area === Area.ALLIES || area === Area.ENEMIES) {
+			const caster = caster_cell.entity
+			if (!caster) { return [] }
+			const allies = area === Area.ALLIES
+			const entities: Entity[] = []
+			for (const cell of this.cells) {
+				const entity = cell.entity
+				if (!entity || (entity as { dead?: boolean }).dead) { continue }
+				const sameTeam = entity.team === caster.team
+				if (sameTeam && entity.name.includes('crystal')) { continue }
+				if (sameTeam === allies) { entities.push(entity) }
+			}
+			return entities
+		}
 		const entities: Entity[] = []
 		for (const cell of this.getAreaCells(center, area)) {
 			if (cell.entity) {
@@ -250,7 +269,7 @@ class Field {
 		const dx = Math.sign(target.x - from.x)
 		const dy = Math.sign(target.y - from.y)
 		let current = from
-		if (targetEntity && current.entity === targetEntity && targetEntity.states.has(State.STATIC)) {
+		if (targetEntity && current.entity === targetEntity && targetEntity.unmovable) {
 			return current
 		}
 		while (current !== target) {
@@ -279,6 +298,24 @@ class Field {
 				if (next.obstacle || next.entity) { break }
 				current = next
 			}
+		}
+		return current
+	}
+
+	/**
+	 * Miroir de Map.getRepelLastAvailableCell (générateur) : repousse une entité de
+	 * `distance` cases en s'éloignant du lanceur, arrêt net sur le premier obstacle,
+	 * la première entité ou le bord de la carte. C'est le déplacement d'EFFECT_REPEL.
+	 */
+	public computeRepelCell(casterCell: Cell, entityCell: Cell, distance: number) {
+		const dx = Math.sign(entityCell.x - casterCell.x)
+		const dy = Math.sign(entityCell.y - casterCell.y)
+		if (dx === 0 && dy === 0) { return entityCell } // même case : pas de direction
+		let current = entityCell
+		for (let i = 0; i < distance; ++i) {
+			const next = this.next_cell(current, dx, dy)
+			if (!next || next.obstacle || next.entity) { break }
+			current = next
 		}
 		return current
 	}

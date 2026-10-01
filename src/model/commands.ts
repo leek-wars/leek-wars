@@ -1,7 +1,14 @@
 import { LeekWars } from "@/model/leekwars"
 import { mdiBookOpenPageVariant } from "@mdi/js"
+import { hasSentinel } from "./chat-sentinels"
 import { CHIPS } from "./chips"
 import { FUNCTIONS } from "./functions"
+import { i18n } from "./i18n"
+
+// Traduits à l'affichage : les libellés dans la langue du lecteur, pas de l'auteur
+const tr = (key: string) => i18n.t('main.' + key) as string
+const loud = (key: string) => tr(key) + tr('chat_cmd_loud')
+const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // URLs for /encyclo and /doc
 const URL_ENCYCLOPEDIA = "/encyclopedia"
@@ -32,47 +39,47 @@ class Command {
 const COMMANDS = [
 	{
 		name: "arena",
-		description: "Inviter à rejoindre l'arène",
+		get description() { return tr('chat_cmd_arena') },
 		regex: /(^|\s)\/arena(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + '<span class="br-invite"></span>'
 	}, {
 		name: "arena!",
-		description: "Inviter à rejoindre l'arène, de manière appuyée",
+		get description() { return loud('chat_cmd_arena') },
 		regex: /(^|\s)\/arena!(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-label="À L\'ARÈÈÈÈNE !"></span>'
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-label="' + escape(tr('chat_cmd_label_arena_loud')) + '"></span>'
 	}, {
 		name: "br",
-		description: "Inviter à rejoindre un Battle Royale",
+		get description() { return tr('chat_cmd_br') },
 		regex: /(^|\s)\/br(?::(\d+))?(?=$|\s)/gi,
-		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="Battle Royale"></span>'
+		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="' + escape(tr('battle_royale')) + '"></span>'
 	}, {
 		name: "br!",
-		description: "Inviter à rejoindre un Battle Royale, de manière appuyée",
+		get description() { return loud('chat_cmd_br') },
 		regex: /(^|\s)\/br!(?::(\d+))?(?=$|\s)/gi,
-		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="LA BAGAAAAARRE !"></span>'
+		replacement: (_: string, space: string, level: string) => space + '<span class="br-invite" data-mode="0" data-level="' + (level || '') + '" data-label="' + escape(tr('chat_cmd_label_br_loud')) + '"></span>'
 	}, {
 		name: "chest",
-		description: "Inviter à rejoindre une chasse aux coffres",
+		get description() { return tr('chat_cmd_chest') },
 		regex: /(^|\s)\/chest(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="Chasse aux coffres"></span>'
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="' + escape(tr('chest_hunt')) + '"></span>'
 	}, {
 		name: "chest!",
-		description: "Inviter à rejoindre une chasse aux coffres, de manière appuyée",
+		get description() { return loud('chat_cmd_chest') },
 		regex: /(^|\s)\/chest!(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="AUX COFFREEEES !"></span>'
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="2" data-label="' + escape(tr('chat_cmd_label_chest_loud')) + '"></span>'
 	}, {
 		name: "coloss",
-		description: "Inviter à rejoindre un combat contre un colosse",
+		get description() { return tr('chat_cmd_coloss') },
 		regex: /(^|\s)\/coloss(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="Colosse"></span>'
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="' + escape(tr('colossus')) + '"></span>'
 	}, {
 		name: "coloss!",
-		description: "Inviter à rejoindre un combat contre un colosse, de manière appuyée",
+		get description() { return loud('chat_cmd_coloss') },
 		regex: /(^|\s)\/coloss!(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="LE COLOOOOSSE !"></span>'
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="3" data-label="' + escape(tr('chat_cmd_label_coloss_loud')) + '"></span>'
 	}, {
 		name: "doc",
-		description: "Lien vers la documentation",
+		get description() { return tr('chat_cmd_doc') },
 		regex: /(?:^|(\s))\/doc(?::([^\s#]+))?(?=\s|$)/gi,
 		replacement: (_: string, __: string, item: string) => {
 			const link = item ? URL_DOC + "/" + item : URL_DOC
@@ -81,26 +88,34 @@ const COMMANDS = [
 		}
 	}, {
 		name: "doc!",
-		description: "Lien vers la documentation",
+		get description() { return loud('chat_cmd_doc') },
 		regex: /(?:^|(\s))\/doc!(?=\s|$)/gi,
 		replacement: () => {
-			return " " + LeekWars.toChatLink(URL_DOC, "LA DOOOOOC", "target='_blank' rel='noopener'", "lw") + " "
+			return " " + LeekWars.toChatLink(URL_DOC, escape(tr('chat_cmd_label_doc_loud')), "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "encyclo",
-		description: "Lien vers l'encyclopédie (avec une page et une ancre)",
+		get description() { return tr('chat_cmd_encyclo') },
 		regex: /(?:^|(\s))\/encyclo(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
 		replacement: (_: string, __: string, page: string, anchor: string) => {
-			const name = page ? page + (anchor ? '#' + anchor : '') : "Encyclopédie"
+			const name = page ? page + (anchor ? '#' + anchor : '') : escape(tr('encyclopedia'))
 			const link = page ? URL_ENCYCLOPEDIA + '/' + page + (anchor ? '#' + anchor : '') : URL_ENCYCLOPEDIA
 			return  " " + mdiInlineSvg(mdiBookOpenPageVariant, 'book') + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
 		},
 		options: []
 	}, {
 		name: "encyclo!",
-		description: "Lien vers l'encyclopédie, de manière appuyée",
+		get description() { return loud('chat_cmd_encyclo_link') },
 		regex: /(?:^|(\s))\/encyclo!(?=\s|$)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_ENCYCLOPEDIA, "L'ENCYCLOPÉDIIIIIIE", "target='_blank' rel='noopener'", "lw") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_ENCYCLOPEDIA, escape(tr('chat_cmd_label_encyclo_loud')), "target='_blank' rel='noopener'", "lw") + " "
+	}, {
+		name: "exec",
+		// Le résultat de l'exécution s'affiche sous le message. Ici, rien à transformer : le
+		// message reste tel qu'il a été tapé, la
+		// commande n'est là que pour apparaître dans la liste de complétion du chat.
+		get description() { return tr('chat_cmd_exec') },
+		regex: /(^|\s)\/exec(?=$|\s)/gi,
+		replacement: (_: string, space: string) => space + "/exec"
 	}, {
 		name: "fliptable",
 		description: "(╯°□°）╯︵ ┻━┻",
@@ -108,21 +123,21 @@ const COMMANDS = [
 		replacement: (_: string, b: string) => b + "(╯°□°）╯︵ ┻━┻"
 	}, {
 		name: "issue",
-		description: "Lien vers les Issues sur GitHub",
+		get description() { return tr('chat_cmd_issue') },
 		regex: /(^|\s)\/issue(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_ISSUE, "Issue", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "issue!",
-		description: "Lien vers les Issues sur GitHub, de manière appuyée",
+		get description() { return loud('chat_cmd_issue') },
 		regex: /(^|\s)\/issue!(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_ISSUE, "ISSUEEEEE", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "lama",
-		description: "#LamaSwag avec une emphase",
+		get description() { return tr('chat_cmd_lama') },
 		regex: /(^|\s)\/lama(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + "<i>#LamaSwag</i>"
 	}, {
@@ -133,37 +148,37 @@ const COMMANDS = [
 	}, {
 		name: "market",
 		regex: /(?:^|(\s))\/market(?::([^\s#]+))?(?=\s|$)/gi,
-		description: "Lien vers un item du marché",
+		get description() { return tr('chat_cmd_market') },
 		replacement: (_: string, __: string, item: string) => {
 			const link = item ? URL_MARKET + "/" + item : URL_MARKET
-			const name = item ? item : "Marché"
+			const name = item ? item : escape(tr('market'))
 			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "market!",
 		regex: /(?:^|(\s))\/market!(?=\s|$)/gi,
-		description: "Lien vers le marché, de manière appuyée",
-		replacement: () => " " + LeekWars.toChatLink(URL_MARKET, "LE MARCHÉÉÉÉÉ", "target='_blank' rel='noopener'", "lw") + " "
+		get description() { return loud('chat_cmd_market_link') },
+		replacement: () => " " + LeekWars.toChatLink(URL_MARKET, escape(tr('chat_cmd_label_market_loud')), "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "me",
-		description: "Votre pseudo avec une emphase",
+		get description() { return tr('chat_cmd_me') },
 		regex: /(^|\s)\/me(?=$|\s)/gi,
 		replacement: (authorName: string, space: string) => space + "<i>" + authorName + "</i>"
 	}, {
 		name: "ping",
-		description: "Envoie un message ping au serveur",
+		get description() { return tr('chat_cmd_ping') },
 		regex: /(^|\s)\/ping(?=$|\s)/gi,
 		replacement: () => ''
 	}, {
 		name: "pr",
-		description: "Lien vers les Pull Request sur GitHub",
+		get description() { return tr('chat_cmd_pr') },
 		regex: /(^|\s)\/pr(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_PR, "Pull Request", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "pr!",
-		description: "Lien vers les PR sur GitHub de manière appuyée",
+		get description() { return loud('chat_cmd_pr') },
 		regex: /(^|\s)\/pr!(?=$|\s)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_PR, "PULL REQUESTTTTT", "target='_blank' rel='noopener'") + " "
@@ -180,38 +195,38 @@ const COMMANDS = [
 		replacement: (_: string, space: string) => space + "¯\\_(ツ)_/¯"
 	}, {
 		name: "tuto",
-		description: "Lien vers le tutorial",
+		get description() { return tr('chat_cmd_tuto') },
 		regex: /(^|\s)\/tuto(?=$|\s)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='noopener'", "lw") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, escape(tr('chat_cmd_label_tuto')), "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "tuto!",
-		description: "Lien vers le tutorial, de manière appuyée",
+		get description() { return loud('chat_cmd_tuto') },
 		regex: /(^|\s)\/tuto([!]?)(?=$|\s)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='noopener'", "lw") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, escape(tr('chat_cmd_label_tuto_loud')), "target='_blank' rel='noopener'", "lw") + " "
 	}, {
 		name: "update",
-		description: "Lien vers le sujet de la dernière mise à jour",
+		get description() { return tr('chat_cmd_update') },
 		regex: /(^|\s)\/update(?=$|\s)/gi,
 		replacement: () => {
-			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "la màj", "target='_blank' rel='noopener'", "lw") + " "
+			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), escape(tr('chat_cmd_label_update')), "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "update!",
-		description: "Lien vers le sujet de la dernière mise à jour, de manière appuyée",
+		get description() { return loud('chat_cmd_update') },
 		regex: /(^|\s)\/update!(?=$|\s)/gi,
 		replacement: () => {
-			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "LA MÀJJJJJ", "target='_blank' rel='noopener'", "lw") + " "
+			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), escape(tr('chat_cmd_label_update_loud')), "target='_blank' rel='noopener'", "lw") + " "
 		}
 	}, {
 		name: "war",
-		description: "Inviter à rejoindre une guerre",
+		get description() { return tr('chat_cmd_war') },
 		regex: /(^|\s)\/war(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="Guerre"></span>'
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="' + escape(tr('arena_mode_war')) + '"></span>'
 	}, {
 		name: "war!",
-		description: "Inviter à rejoindre une guerre, de manière appuyée",
+		get description() { return loud('chat_cmd_war') },
 		regex: /(^|\s)\/war!(?=$|\s)/gi,
-		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="À LA GUEEEEERRE !"></span>'
+		replacement: (_: string, space: string) => space + '<span class="br-invite" data-mode="1" data-label="' + escape(tr('chat_cmd_label_war_loud')) + '"></span>'
 	}
 ] as Command[]
 
@@ -236,7 +251,8 @@ const Commands = {
 	},
 	execute(text: string, authorName: string) {
 		for (const command of COMMANDS) {
-			text = text.replace(command.regex, (a, b, c, d, e) => command.replacement(authorName, b, c, d, e))
+			// Une commande qui engloberait un segment masqué (code, lien…) reste telle quelle.
+			text = text.replace(command.regex, (a, b, c, d, e) => hasSentinel(a) ? a : command.replacement(authorName, b, c, d, e))
 		}
 		return text
 	},
@@ -248,12 +264,12 @@ const Commands = {
 		for (const fun of FUNCTIONS) {
 			const name = fun.name
 			if (!doneFunc[name]) {
-				docCommand.options.push({name: fun.name, nameLower: fun.name.toLowerCase(), description: "Ajoute un lien vers la fonction \"" + fun.name + "\" de la documentation au message"})
+				docCommand.options.push({name: fun.name, nameLower: fun.name.toLowerCase(), get description() { return tr('chat_cmd_doc_function') }})
 				doneFunc[name] = true
 			}
 		}
 		for (const constant of LeekWars.constants) {
-			docCommand.options.push({name: constant.name, nameLower: constant.name.toLowerCase(), description: "Ajoute un lien vers la constante \"" + constant.name + "\" de la documentation au message"})
+			docCommand.options.push({name: constant.name, nameLower: constant.name.toLowerCase(), get description() { return tr('chat_cmd_doc_constant') }})
 		}
 	},
 	addMarketCommands: () => {
@@ -263,22 +279,22 @@ const Commands = {
 		for (const w in LeekWars.weapons) {
 			const weapon = LeekWars.weapons[w]
 			if (!LeekWars.items[weapon.item]?.market) { continue }
-			marketCommand.options.push({name: weapon.name, nameLower: weapon.name.toLowerCase(), description: "Ajoute un lien vers l'arme \"" + weapon.name + "\" du marché au message"})
+			marketCommand.options.push({name: weapon.name, nameLower: weapon.name.toLowerCase(), get description() { return tr('chat_cmd_market_weapon') }})
 		}
 		for (const c in CHIPS) {
 			const chip = CHIPS[c]
 			if (!LeekWars.items[LeekWars.chipTemplates[chip.id]?.item]?.market) { continue }
-			marketCommand.options.push({name: chip.name, nameLower: chip.name.toLowerCase(), description: "Ajoute un lien vers la puce \"" + chip.name + "\" du marché au message"})
+			marketCommand.options.push({name: chip.name, nameLower: chip.name.toLowerCase(), get description() { return tr('chat_cmd_market_chip') }})
 		}
 		for (const key in LeekWars.potions) {
 			const potion = LeekWars.potions[key]
 			if (!LeekWars.items[potion.id]?.market) { continue }
-			marketCommand.options.push({name: potion.name, nameLower: potion.name.toLowerCase(), description: "Ajoute un lien vers la potion \""  + potion.name + "\" du marché au message"})
+			marketCommand.options.push({name: potion.name, nameLower: potion.name.toLowerCase(), get description() { return tr('chat_cmd_market_potion') }})
 		}
 		for (const key in LeekWars.hats) {
 			const hat = LeekWars.hats[key]
 			if (!LeekWars.items[hat.item]?.market) { continue }
-			marketCommand.options.push({name: hat.name, nameLower: hat.name.toLowerCase(), description: "Ajoute un lien vers le chapeau \"" + hat.name + "\" du marché au message"})
+			marketCommand.options.push({name: hat.name, nameLower: hat.name.toLowerCase(), get description() { return tr('chat_cmd_market_hat') }})
 		}
 	}
 }

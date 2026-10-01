@@ -6,6 +6,8 @@
 import * as monaco from 'monaco-editor'
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { getLanguageForPath } from './file-types'
+import { createDiffEditor, disposeEditor } from './monaco-dispose'
+import { colorDecoratorOptions } from './monaco-color-decorators'
 
 defineOptions({ name: 'GitDiff', i18n: {} })
 
@@ -36,7 +38,7 @@ defineEmits<{
 
 const containerRef = useTemplateRef<HTMLElement>('container')
 
-let diffEditor: monaco.editor.IDiffEditor | null = null
+let diffEditor: monaco.editor.IStandaloneDiffEditor | null = null
 let originalModel: monaco.editor.ITextModel | null = null
 let modifiedModel: monaco.editor.ITextModel | null = null
 const editorReady = ref(false)
@@ -51,9 +53,7 @@ onBeforeUnmount(() => {
 
 function dispose() {
 	if (diffEditor) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		diffEditor.setModel(null as any)
-		diffEditor.dispose()
+		disposeEditor(diffEditor)
 		diffEditor = null
 	}
 	originalModel?.dispose()
@@ -105,7 +105,7 @@ function createEditor() {
 	originalModel = markRaw(monaco.editor.createModel(normalize(props.originalContent), language))
 	modifiedModel = markRaw(monaco.editor.createModel(normalize(props.modifiedContent), language))
 
-	diffEditor = markRaw(monaco.editor.createDiffEditor(container, {
+	diffEditor = markRaw(createDiffEditor(container, {
 		readOnly: true,
 		renderSideBySide: !props.inline,
 		automaticLayout: true,
@@ -119,6 +119,7 @@ function createEditor() {
 		lineNumbersMinChars: 3,
 		hideUnchangedRegions: { enabled: props.collapseUnchanged },
 		wordWrap: "on",
+		...colorDecoratorOptions,
 	}))
 
 	diffEditor.setModel({

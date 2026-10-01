@@ -1,0 +1,18 @@
+{
+	"placeholder": "Sök i alla filer",
+	"match_case": "Skilj på versaler och gemener",
+	"whole_word": "Helt ord",
+	"regex": "Reguljärt uttryck",
+	"options": "Sökalternativ",
+	"include_closed": "Inkludera stängda mappar",
+	"loading": "Läser in filer ({0} / {1})",
+	"no_results": "Inga resultat",
+	"n_matches": "0 resultat | 1 resultat | {n} resultat",
+	"n_files": "0 filer | 1 fil | {n} filer",
+	"truncated": "Sökningen stoppades vid {0} resultat",
+	"load_error": "Vissa filer kunde inte läsas in",
+	"skipped": "0 filer hoppades över | 1 fil hoppades över | {n} filer hoppades över",
+	"skipped_desc": "Binära, för stora eller saknade filer",
+	"invalid_regex": "Ogiltigt reguljärt uttryck",
+	"line": "Rad {0}"
+}

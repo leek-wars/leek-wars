@@ -1,0 +1,18 @@
+{
+	"placeholder": "Cari di semua berkas",
+	"match_case": "Cocokkan huruf besar/kecil",
+	"whole_word": "Seluruh kata",
+	"regex": "Ekspresi reguler",
+	"options": "Opsi pencarian",
+	"include_closed": "Sertakan folder yang tertutup",
+	"loading": "Memuat berkas ({0} / {1})",
+	"no_results": "Tidak ada hasil",
+	"n_matches": "{n} hasil | 1 hasil | {n} hasil",
+	"n_files": "{n} berkas | 1 berkas | {n} berkas",
+	"truncated": "Pencarian dihentikan pada {0} hasil",
+	"load_error": "Beberapa berkas tidak dapat dimuat",
+	"skipped": "{n} berkas dilewati | 1 berkas dilewati | {n} berkas dilewati",
+	"skipped_desc": "Berkas biner, terlalu besar, atau tidak ada",
+	"invalid_regex": "Ekspresi reguler tidak valid",
+	"line": "Baris {0}"
+}

@@ -51,6 +51,9 @@
 	"test_maps": "Mapas",
 	"test_advanced": "Avançado",
 	"templates": "Modelos",
+	"max_turns": "Turnos máximos",
+	"max_turns_desc": "Número máximo de turnos do combate (padrão 64)",
+	"max_turns_placeholder": "Número inteiro entre 1 e 64. Padrão = 64",
 	"free": "Livre",
 	"select_chips": "Selecionar os chips",
 	"select_weapons": "Selecionar armas"

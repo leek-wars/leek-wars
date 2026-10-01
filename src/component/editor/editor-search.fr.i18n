@@ -1,0 +1,18 @@
+{
+	"placeholder": "Rechercher dans tous les fichiers",
+	"match_case": "Respecter la casse",
+	"whole_word": "Mot entier",
+	"regex": "Expression régulière",
+	"options": "Options de recherche",
+	"include_closed": "Inclure les dossiers fermés",
+	"loading": "Chargement des fichiers ({0} / {1})",
+	"no_results": "Aucun résultat",
+	"n_matches": "0 résultat | 1 résultat | {n} résultats",
+	"n_files": "0 fichier | 1 fichier | {n} fichiers",
+	"truncated": "Recherche arrêtée à {0} résultats",
+	"load_error": "Certains fichiers n'ont pas pu être chargés",
+	"skipped": "0 fichier ignoré | 1 fichier ignoré | {n} fichiers ignorés",
+	"skipped_desc": "Fichiers binaires, trop gros ou introuvables",
+	"invalid_regex": "Expression régulière invalide",
+	"line": "Ligne {0}"
+}

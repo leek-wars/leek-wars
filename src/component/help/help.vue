@@ -1,7 +1,12 @@
 <template lang="html">
 	<div>
 		<div class="page-bar page-header">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="help" fallback="mdi-help-circle" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<div class="tab" @click="show_didactitiel">
 					<v-icon>mdi-play</v-icon> {{ $t('rewatch_didactitiel') }}
@@ -86,7 +91,7 @@
 			<panel v-ripple>
 				<template #content><router-link to="/help/items">
 					<h2>Items</h2>
-					<v-icon class="bigicon">mdi-chip</v-icon>
+					<v-icon class="bigicon">mdi-shape</v-icon>
 					<br>
 					<span class="description">Items</span>
 				</router-link></template>
@@ -102,7 +107,7 @@
 			</panel>
 
 		</div>
-		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
+		<Didactitiel v-if="didactitiel_enabled" v-model="didactitiel_open" />
 	</div>
 </template>
 
@@ -121,7 +126,7 @@ const t = useNamespacedT('help')
 const router = useRouter()
 
 const advanced = ref(false)
-const didactitiel = ref(false)
+const didactitiel_open = ref(false)
 const didactitiel_enabled = ref(false)
 
 onBeforeMount(() => {
@@ -132,7 +137,7 @@ onBeforeMount(() => {
 function show_didactitiel() {
 	didactitiel_enabled.value = true
 	nextTick(() => {
-		didactitiel.value = true
+		didactitiel_open.value = true
 	})
 }
 </script>
@@ -144,12 +149,12 @@ function show_didactitiel() {
 			padding: 15px;
 		}
 		h2 {
-			color: #444;
+			color: var(--grey-3);
 		}
 	}
 	.description {
 		font-size: 15px;
-		color: #555;
+		color: var(--grey-4);
 	}
 	img {
 		width: 90px;
@@ -164,7 +169,7 @@ function show_didactitiel() {
 		padding-bottom: 2px;
 	}
 	.advanced-button {
-		color: white;
+		color: var(--white);
 		background: rgba(150, 150, 150, 0.2);
 		padding: 2px 12px;
 		display: inline-flex;

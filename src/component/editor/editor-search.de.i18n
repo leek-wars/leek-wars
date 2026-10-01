@@ -1,0 +1,18 @@
+{
+	"placeholder": "In allen Dateien suchen",
+	"match_case": "Groß-/Kleinschreibung beachten",
+	"whole_word": "Ganzes Wort",
+	"regex": "Regulärer Ausdruck",
+	"options": "Suchoptionen",
+	"include_closed": "Geschlossene Ordner einbeziehen",
+	"loading": "Dateien werden geladen ({0} / {1})",
+	"no_results": "Keine Ergebnisse",
+	"n_matches": "0 Ergebnisse | 1 Ergebnis | {n} Ergebnisse",
+	"n_files": "0 Dateien | 1 Datei | {n} Dateien",
+	"truncated": "Suche bei {0} Ergebnissen abgebrochen",
+	"load_error": "Einige Dateien konnten nicht geladen werden",
+	"skipped": "0 Dateien übersprungen | 1 Datei übersprungen | {n} Dateien übersprungen",
+	"skipped_desc": "Binäre, zu große oder fehlende Dateien",
+	"invalid_regex": "Ungültiger regulärer Ausdruck",
+	"line": "Zeile {0}"
+}

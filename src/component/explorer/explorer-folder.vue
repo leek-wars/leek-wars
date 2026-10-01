@@ -27,17 +27,17 @@ defineProps<{
 		height: 135px;
 		width: 100%;
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		overflow: hidden;
 		&:hover {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			box-shadow: var(--elevation-1);
 		}
 	}
 	.icon {
 		font-size: 66px;
 		padding-top: 12px;
-		color: #666;
+		color: var(--grey-5);
 	}
 	.name {
 		text-overflow: ellipsis;

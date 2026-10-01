@@ -1,0 +1,18 @@
+{
+	"placeholder": "Søg i alle filer",
+	"match_case": "Forskel på store og små bogstaver",
+	"whole_word": "Helt ord",
+	"regex": "Regulært udtryk",
+	"options": "Søgeindstillinger",
+	"include_closed": "Medtag lukkede mapper",
+	"loading": "Indlæser filer ({0} / {1})",
+	"no_results": "Ingen resultater",
+	"n_matches": "0 resultater | 1 resultat | {n} resultater",
+	"n_files": "0 filer | 1 fil | {n} filer",
+	"truncated": "Søgningen stoppede ved {0} resultater",
+	"load_error": "Nogle filer kunne ikke indlæses",
+	"skipped": "0 filer sprunget over | 1 fil sprunget over | {n} filer sprunget over",
+	"skipped_desc": "Binære, for store eller manglende filer",
+	"invalid_regex": "Ugyldigt regulært udtryk",
+	"line": "Linje {0}"
+}
