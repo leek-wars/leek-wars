@@ -6,6 +6,7 @@
 	"dark_mode": "Nachtstand",
 	"decelerate": "Vertragen",
 	"display_cell_numbers": "Boxnummers weergeven",
+	"marks_foreground": "mark() op de voorgrond",
 	"display_debug": "Toon foutopsporingsinformatie",
 	"display_life_bars": "Toon gezondheidsbalken",
 	"display_logs": "Laat foutopsporing zien",

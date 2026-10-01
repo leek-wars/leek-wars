@@ -39,6 +39,7 @@
 	"n_power": "{0} 위력",
 	"n_poison": "{0} 독",
 	"open_chest": "{entity}이(가) 상자 {chest}을(를) 열고 다음을 얻습니다: {resources}",
+	"plant_awake": "{leek}이(가) 들어와 {plant}이(가) 깨어남",
 	"reduce_effects": "{leek}의 효과가 {value}만큼 감소합니다.",
 	"remove_poisons": "{leek}의 독이 중화되었습니다.",
 	"remove_shackles": "{leek}의 속박이 파괴되었습니다.",

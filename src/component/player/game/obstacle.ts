@@ -103,7 +103,7 @@ class Obstacle {
 			this.realX = ((this.x + this.nudgeX) / 2) * this.game.ground.tileSizeX + (this.game.ground.tileSizeX - this.realWidth) / 2
 			this.realY = ((this.y + this.nudgeY) / 2 + 1) * this.game.ground.tileSizeY - this.realHeight
 
-			this.texture = this.baseTexture.getScaled(this.realWidth)
+			this.texture = this.scaledTexture(this.realWidth)
 
 		} else if (this.geometry.id === 2) {
 
@@ -115,7 +115,7 @@ class Obstacle {
 			this.realX = ((this.x + 1) / 2) * this.game.ground.tileSizeX - this.realWidth / 2
 			this.realY = ((this.y + this.nudgeY) / 2 + 2) * this.game.ground.tileSizeY - this.realHeight
 
-			this.texture = this.baseTexture.getScaled(this.realWidth)
+			this.texture = this.scaledTexture(this.realWidth)
 
 		} else if (this.geometry.id === 3 || this.geometry.id === 5) {
 
@@ -127,8 +127,25 @@ class Obstacle {
 			this.realX = ((this.x + this.nudgeX + 1) / 2) * this.game.ground.tileSizeX - this.realWidth / 2
 			this.realY = ((this.y + this.nudgeY) / 2 + 2) * this.game.ground.tileSizeY - this.realHeight
 
-			this.texture = this.baseTexture.getScaled(this.realWidth)
+			this.texture = this.scaledTexture(this.realWidth)
 		}
+
+		// La texture est déjà à sa taille d'affichage : posée à cheval sur deux
+		// pixels, elle serait rééchantillonnée à chaque image au lieu d'être
+		// simplement copiée — floue, et sous Firefox une dizaine de fois plus chère
+		// qu'une copie alignée. Le sol dessine les obstacles dans son repère,
+		// translaté de (startX, startY) : l'arrondi se fait en pixels du canvas.
+		const ground = this.game.ground
+		this.realX = Math.round(ground.startX + this.realX) - ground.startX
+		this.realY = Math.round(ground.startY + this.realY) - ground.startY
+	}
+
+	// En mode sombre l'obstacle est redimensionné ET teinté, les deux mises en
+	// cache par la texture : rien de plus à faire au dessin.
+	private scaledTexture(width: number) {
+		return this.game.night
+			? this.baseTexture!.getScaledDark(width, this.game.map.nightColor)
+			: this.baseTexture!.getScaled(width)
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {
@@ -233,6 +250,23 @@ class Obstacle {
 		}
 	}
 
+	/**
+	 * Ligne de Game.drawableElements où l'obstacle est dessiné : sa rangée la plus
+	 * LARGE. Un 2×2 est ancré sur sa case du fond (rangée y) mais s'étend jusqu'à
+	 * y + 2, avec ses deux cases de côté en y + 1. Inscrit en y, il partageait sa
+	 * ligne avec ce qui se tient à côté de sa case du fond — pourtant DERRIÈRE ses
+	 * cases de côté — et l'ordre de création décidait : un petit obstacle à sa
+	 * droite, créé après lui, passait par-dessus. En y + 1, tout ce qui est
+	 * derrière tombe sur une ligne antérieure, tout ce qui est devant sur une ligne
+	 * postérieure, et ses seuls voisins de ligne sont côte à côte. Le 3×3, ancré
+	 * sur sa rangée centrale, y est déjà ; le torii et le pont-levis gardent leur
+	 * ancre. Comparé par l'id : dans l'éditeur le moteur est réactif, `geometry` y
+	 * est un proxy et n'est plus identique à Obstacle.GEOMETRY_2x2.
+	 */
+	public get drawLine(): number {
+		return this.geometry.id === Obstacle.GEOMETRY_2x2.id ? this.y + 1 : this.y
+	}
+
 	public move(cell: Cell) {
 		if (cell === this.cell) { return }
 
@@ -245,6 +279,7 @@ class Obstacle {
 		}
 
 		const oldY = this.y
+		const oldLine = this.drawLine
 		const pos = this.game.ground.field.cellToXY(cell)
 		this.x = pos.x
 		this.y = pos.y
@@ -252,7 +287,7 @@ class Obstacle {
 		this.resize()
 		if (oldY !== this.y) {
 			// console.log("move obstacle", oldY, this.y)
-			this.game.moveDrawableElement(this, this.drawID!, oldY, this.y)
+			this.game.moveDrawableElement(this, this.drawID!, oldLine, this.drawLine)
 			this.game.ground.resize(this.game.width, this.game.height, this.game.shadows)
 		}
 

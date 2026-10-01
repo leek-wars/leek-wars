@@ -1,7 +1,6 @@
 import { Game, GROUND_TEXTURE } from "@/component/player/game/game"
 import { Obstacle, ObstacleGeometry } from '@/component/player/game/obstacle'
 import { Field } from '@/model/field'
-import { LeekWars } from '@/model/leekwars'
 import { Position } from './position'
 import { T, Texture } from './texture'
 
@@ -129,8 +128,11 @@ class Ground {
 	public height: number = 0
 	public startX: number = 0
 	public startY: number = 0
+	public visibleLeft: number = 0 // Le journal large recouvre la gauche du canvas
 	public texture!: HTMLCanvasElement | null
 	public textureCtx!: CanvasRenderingContext2D | null
+	public hasTraces = false // Des traces (impacts, sang, douilles) ont été peintes depuis resize()
+	private clean: HTMLCanvasElement | null = null // Copie du fond sans trace, cf. clearTraces()
 	public pumpkin!: Texture
 	public obstacles: Obstacle[] = []
 	public game: Game
@@ -167,7 +169,8 @@ class Ground {
 		if (!this.game.initialized) { return  }
 
 		let padding_left = GROUND_PADDING_LEFT
-		if (LeekWars.mobile || this.game.creator) {
+		this.visibleLeft = 0
+		if (this.game.compact || this.game.creator) {
 			GROUND_PADDING_LEFT = 10
 			GROUND_PADDING_RIGHT = 10
 			GROUND_PADDING_BOTTOM = 5
@@ -175,9 +178,10 @@ class Ground {
 		} else {
 			GROUND_PADDING_RIGHT = 50
 			GROUND_PADDING_LEFT = 50
-			if (this.game.showActions && this.game.largeActions) {
+			if (this.game.showActions && this.game.largeActions && !this.game.actionsBelow) {
 				padding_left = (this.game.actionsWidth + 20)
 				GROUND_PADDING_RIGHT = 45
+				this.visibleLeft = this.game.actionsWidth * window.devicePixelRatio
 			}
 			GROUND_PADDING_BOTTOM = 105
 		}
@@ -227,6 +231,8 @@ class Ground {
 			this.texture.height = height
 			this.textureCtx = this.texture.getContext('2d')
 			if (!this.textureCtx) { return }
+			this.hasTraces = false
+			this.clean = null
 
 			// Translate
 			this.textureCtx.save()
@@ -235,43 +241,12 @@ class Ground {
 			// Draw pattern
 			this.drawPattern(this.textureCtx)
 
-			// Draw lines
-			this.drawGrid(this.textureCtx)
-
 			// Détails spécifiques à la carte
 			if (!this.game.plainBackground && this.game.map.drawDetails) {
 				this.textureCtx.save()
 				this.textureCtx.scale(this.game.ground.scale, this.game.ground.scale)
 				this.game.map.random.seed(this.game.map.seed)
 				this.game.map.drawDetails(this.textureCtx)
-				this.textureCtx.restore()
-			}
-
-
-			// Draw checkerboard
-			if (this.game.tactic) {
-				this.textureCtx.save()
-				this.textureCtx.fillStyle = this.game.map.options.checkerboardColor
-
-				for (const cell of this.field.cells) {
-
-					if (((cell.x + cell.y) % 2) || cell.obstacle) { continue }
-
-					this.textureCtx.save()
-					const xy = this.field.cellToXY(cell)
-					const real = this.xyToXYPixels(xy.x, xy.y)
-					this.textureCtx.translate(real.x * this.scale, real.y * this.scale)
-
-					this.textureCtx.beginPath()
-					this.textureCtx.moveTo(0, -this.tileSizeY / 2.)
-					this.textureCtx.lineTo(this.tileSizeX / 2., 0)
-					this.textureCtx.lineTo(0, this.tileSizeY / 2.)
-					this.textureCtx.lineTo(-this.tileSizeX / 2., 0)
-					this.textureCtx.closePath()
-					this.textureCtx.fill()
-
-					this.textureCtx.restore()
-				}
 				this.textureCtx.restore()
 			}
 
@@ -295,6 +270,24 @@ class Ground {
 					obstacle.drawShadow(this.textureCtx)
 				}
 			}
+
+			// Mode sombre : un seul multiply sur tout le fond déjà dessiné
+			// (motif, décors, détails de case, ombres des obstacles). Les obstacles
+			// eux-mêmes sont teintés dans leur texture, ils sont sur l'autre canvas.
+			if (this.game.night) {
+				this.textureCtx.save()
+				this.textureCtx.globalCompositeOperation = 'multiply'
+				this.textureCtx.fillStyle = this.game.map.nightColor
+				this.textureCtx.fillRect(-this.startX, -this.startY, this.width, this.height)
+				this.textureCtx.restore()
+			}
+
+			// Repères de lecture : par-dessus le décor dans tous les modes, donc après
+			// la teinte de nuit, qui en fait partie. Peints avant, le multiply divisait
+			// leur contraste et leur blanc de nuit se posait sur un fond encore en plein
+			// jour — sur la plage il n'en restait rien.
+			this.drawCheckerboard(this.textureCtx)
+			this.drawGrid(this.textureCtx)
 
 			// Black stripes
 			// this.textureCtx.fillStyle = '#000'
@@ -394,9 +387,12 @@ class Ground {
 
 		const cw = this.tileSizeX / 2 / Math.sqrt(2)
 
-		// Coupe des bords
+		// Coupe des bords : un losange par case le long de chaque bord. La boucle
+		// allait jusqu'à la largeur du canvas EN PIXELS (~2 000 tours, autant de
+		// losanges tracés hors du motif) : au-delà de la dernière case, plus rien ne
+		// touche le canvas.
 		pctx.globalCompositeOperation = 'destination-out'
-		for (let i = 0; i < this.width; ++i) {
+		for (let i = 0; i <= this.field.tilesX; ++i) {
 			pctx.save()
 			pctx.translate(i * this.tileSizeX, 0)
 			pctx.scale(1, 0.5)
@@ -423,7 +419,7 @@ class Ground {
 			pctx.fill()
 			pctx.restore()
 		}
-		for (let i = 0; i < this.height; ++i) {
+		for (let i = 0; i <= this.field.tilesY; ++i) {
 			pctx.save()
 			pctx.translate(0, i * this.tileSizeY)
 			pctx.scale(1, 0.5)
@@ -454,7 +450,30 @@ class Ground {
 		pctx.save()
 		pctx.globalCompositeOperation = 'destination-out'
 
+		// Les cases d'une autre couleur sont retirées d'un bloc : leurs losanges
+		// réunis en UN chemin, un seul remplissage. Retirées une à une, deux cases
+		// voisines laissaient sur leur arête commune jusqu'à un quart de la texture
+		// de zone (l'anticrénelage de chaque remplissage n'en ôte qu'une part) : la
+		// grille prenait la couleur de la zone sur toute la carte. C'est le carré
+		// [-cw, cw]² de la boucle ci-dessous, passé par scale(1, 0.5) · rotate(π/4).
+		const hx = cw * Math.SQRT2, hy = hx / 2
+		pctx.beginPath()
 		for (const cell of this.field.cells) {
+			if (cell.color === c) { continue }
+			const xy = this.field.cellToXY(cell)
+			const px = this.xyToXYPixels(xy.x, xy.y)
+			const x = px.x * this.scale, y = px.y * this.scale
+			pctx.moveTo(x - hx, y)
+			pctx.lineTo(x, y + hy)
+			pctx.lineTo(x + hx, y)
+			pctx.lineTo(x, y - hy)
+			pctx.closePath()
+		}
+		pctx.fill()
+
+		for (const cell of this.field.cells) {
+
+			if (cell.color !== c) { continue }
 
 			const xy = this.field.cellToXY(cell)
 			const px = this.xyToXYPixels(xy.x, xy.y)
@@ -465,167 +484,156 @@ class Ground {
 			pctx.scale(1, 0.5)
 			pctx.rotate(Math.PI / 4)
 
-			if (cell.color !== c) {
+			const E = this.game.map.options.radius * this.scale
+			const M = this.game.map.options.margin * this.scale
+			const C = Math.min(M, E)
+
+			const n1 = this.field.next_cell(cell, -1, 0)
+			const n2 = this.field.next_cell(cell, 0, 1)
+			const n3 = this.field.next_cell(cell, 1, 0)
+			const n4 = this.field.next_cell(cell, 0, -1)
+			const n5 = this.field.next_cell(cell, -1, 1)
+			const n6 = this.field.next_cell(cell, 1, 1)
+			const n7 = this.field.next_cell(cell, 1, -1)
+			const n8 = this.field.next_cell(cell, -1, -1)
+
+			const a1 = n1 ? n1.color : 0 // <= color
+			const a2 = n2 ? n2.color : 0 // <= color
+			const a3 = n3 ? n3.color : 0 // <= color
+			const a4 = n4 ? n4.color : 0 // <= color
+			const a5 = n5 ? n5.color : 0 // <= color
+			const a6 = n6 ? n6.color : 0 // <= color
+			const a7 = n7 ? n7.color : 0 // <= color
+			const a8 = n8 ? n8.color : 0 // <= color
+
+			// Côtés
+			if (!a1) { pctx.fillRect(-cw, -cw + M, M, 2 * cw - 2 * M) }
+			if (!a2) { pctx.fillRect(-cw + M, cw - M, 2 * cw - 2 * M, M) }
+			if (!a3) { pctx.fillRect(cw - M, -cw + M, M, 2 * cw - 2 * M) }
+			if (!a4) { pctx.fillRect(-cw + M, -cw, 2 * cw - 2 * M, M) }
+
+			// Coins
+			if (!a4 || !a1) { pctx.fillRect(-cw, -cw, M, M) }
+			if (!a3 || !a4) { pctx.fillRect(cw - M, -cw, M, M) }
+			if (!a2 || !a3) { pctx.fillRect(cw - M, cw - M, M, M) }
+			if (!a1 || !a2) { pctx.fillRect(-cw, cw - M, M, M) }
+
+			// Coins inversés
+			if (a3 && a4 && !a7) {
 				pctx.beginPath()
-				pctx.moveTo(-cw, cw)
-				pctx.lineTo(cw, cw)
-				pctx.lineTo(cw, -cw)
-				pctx.lineTo(-cw, -cw)
+				pctx.moveTo(cw, -cw)
+				pctx.lineTo(cw, -cw + M)
+				pctx.lineTo(cw - M + C, -cw + M)
+				pctx.quadraticCurveTo(cw - M, -cw + M, cw - M, -cw + M - C)
+				pctx.lineTo(cw - M, -cw)
 				pctx.closePath()
 				pctx.fill()
-			} else {
+			}
+			if (a4 && a1 && !a8) {
+				pctx.beginPath()
+				pctx.moveTo(-cw, -cw)
+				pctx.lineTo(-cw + M, -cw)
+				pctx.lineTo(-cw + M, -cw + M - C)
+				pctx.quadraticCurveTo(-cw + M, -cw + M, -cw + M - C, -cw + M)
+				pctx.lineTo(-cw, -cw + M)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (a1 && a2 && !a5) {
+				pctx.beginPath()
+				pctx.moveTo(-cw, cw)
+				pctx.lineTo(-cw + M, cw)
+				pctx.lineTo(-cw + M, cw - M + C)
+				pctx.quadraticCurveTo(-cw + M, cw - M, -cw + M - C, cw - M)
+				pctx.lineTo(-cw, cw - M)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (a2 && a3 && !a6) {
+				pctx.beginPath()
+				pctx.moveTo(cw, cw)
+				pctx.lineTo(cw - M, cw)
+				pctx.lineTo(cw - M, cw - M + C)
+				pctx.quadraticCurveTo(cw - M, cw - M, cw - M + C, cw - M)
+				pctx.lineTo(cw, cw - M)
+				pctx.closePath()
+				pctx.fill()
+			}
 
-				const E = this.game.map.options.radius * this.scale
-				const M = this.game.map.options.margin * this.scale
-				const C = Math.min(M, E)
+			// Coins arrondis
+			if (!a1 && !a2) {
+				pctx.beginPath()
+				pctx.moveTo(-cw + M, cw - M - M)
+				pctx.lineTo(-cw + M, cw - M)
+				pctx.lineTo(-cw + M + E, cw - M)
+				pctx.quadraticCurveTo(-cw + M, cw - M, -cw + M, cw - M - E)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (!a2 && !a3) {
+				pctx.beginPath()
+				pctx.moveTo(cw - M - E, cw - M)
+				pctx.lineTo(cw - M, cw - M)
+				pctx.lineTo(cw - M, cw - M - E)
+				pctx.quadraticCurveTo(cw - M, cw - M, cw - M - E, cw - M)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (!a3 && !a4) {
+				pctx.beginPath()
+				pctx.moveTo(cw - M, -cw + M + E)
+				pctx.lineTo(cw - M, -cw + M)
+				pctx.lineTo(cw - M - E, -cw + M)
+				pctx.quadraticCurveTo(cw - M, -cw + M, cw - M, -cw + M + E)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (!a4 && !a1) {
+				pctx.beginPath()
+				pctx.moveTo(-cw + M + E, -cw + M)
+				pctx.lineTo(-cw + M, -cw + M)
+				pctx.lineTo(-cw + M, -cw + M + E)
+				pctx.quadraticCurveTo(-cw + M, -cw + M, -cw + M + E, -cw + M)
+				pctx.closePath()
+				pctx.fill()
+			}
 
-				const n1 = this.field.next_cell(cell, -1, 0)
-				const n2 = this.field.next_cell(cell, 0, 1)
-				const n3 = this.field.next_cell(cell, 1, 0)
-				const n4 = this.field.next_cell(cell, 0, -1)
-				const n5 = this.field.next_cell(cell, -1, 1)
-				const n6 = this.field.next_cell(cell, 1, 1)
-				const n7 = this.field.next_cell(cell, 1, -1)
-				const n8 = this.field.next_cell(cell, -1, -1)
-
-				const a1 = n1 ? n1.color : 0 // <= color
-				const a2 = n2 ? n2.color : 0 // <= color
-				const a3 = n3 ? n3.color : 0 // <= color
-				const a4 = n4 ? n4.color : 0 // <= color
-				const a5 = n5 ? n5.color : 0 // <= color
-				const a6 = n6 ? n6.color : 0 // <= color
-				const a7 = n7 ? n7.color : 0 // <= color
-				const a8 = n8 ? n8.color : 0 // <= color
-
-				// Côtés
-				if (!a1) { pctx.fillRect(-cw, -cw + M, M, 2 * cw - 2 * M) }
-				if (!a2) { pctx.fillRect(-cw + M, cw - M, 2 * cw - 2 * M, M) }
-				if (!a3) { pctx.fillRect(cw - M, -cw + M, M, 2 * cw - 2 * M) }
-				if (!a4) { pctx.fillRect(-cw + M, -cw, 2 * cw - 2 * M, M) }
-
-				// Coins
-				if (!a4 || !a1) { pctx.fillRect(-cw, -cw, M, M) }
-				if (!a3 || !a4) { pctx.fillRect(cw - M, -cw, M, M) }
-				if (!a2 || !a3) { pctx.fillRect(cw - M, cw - M, M, M) }
-				if (!a1 || !a2) { pctx.fillRect(-cw, cw - M, M, M) }
-
-				// Coins inversés
-				if (a3 && a4 && !a7) {
-					pctx.beginPath()
-					pctx.moveTo(cw, -cw)
-					pctx.lineTo(cw, -cw + M)
-					pctx.lineTo(cw - M + C, -cw + M)
-					pctx.quadraticCurveTo(cw - M, -cw + M, cw - M, -cw + M - C)
-					pctx.lineTo(cw - M, -cw)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (a4 && a1 && !a8) {
-					pctx.beginPath()
-					pctx.moveTo(-cw, -cw)
-					pctx.lineTo(-cw + M, -cw)
-					pctx.lineTo(-cw + M, -cw + M - C)
-					pctx.quadraticCurveTo(-cw + M, -cw + M, -cw + M - C, -cw + M)
-					pctx.lineTo(-cw, -cw + M)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (a1 && a2 && !a5) {
-					pctx.beginPath()
-					pctx.moveTo(-cw, cw)
-					pctx.lineTo(-cw + M, cw)
-					pctx.lineTo(-cw + M, cw - M + C)
-					pctx.quadraticCurveTo(-cw + M, cw - M, -cw + M - C, cw - M)
-					pctx.lineTo(-cw, cw - M)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (a2 && a3 && !a6) {
-					pctx.beginPath()
-					pctx.moveTo(cw, cw)
-					pctx.lineTo(cw - M, cw)
-					pctx.lineTo(cw - M, cw - M + C)
-					pctx.quadraticCurveTo(cw - M, cw - M, cw - M + C, cw - M)
-					pctx.lineTo(cw, cw - M)
-					pctx.closePath()
-					pctx.fill()
-				}
-
-				// Coins arrondis
-				if (!a1 && !a2) {
-					pctx.beginPath()
-					pctx.moveTo(-cw + M, cw - M - M)
-					pctx.lineTo(-cw + M, cw - M)
-					pctx.lineTo(-cw + M + E, cw - M)
-					pctx.quadraticCurveTo(-cw + M, cw - M, -cw + M, cw - M - E)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (!a2 && !a3) {
-					pctx.beginPath()
-					pctx.moveTo(cw - M - E, cw - M)
-					pctx.lineTo(cw - M, cw - M)
-					pctx.lineTo(cw - M, cw - M - E)
-					pctx.quadraticCurveTo(cw - M, cw - M, cw - M - E, cw - M)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (!a3 && !a4) {
-					pctx.beginPath()
-					pctx.moveTo(cw - M, -cw + M + E)
-					pctx.lineTo(cw - M, -cw + M)
-					pctx.lineTo(cw - M - E, -cw + M)
-					pctx.quadraticCurveTo(cw - M, -cw + M, cw - M, -cw + M + E)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (!a4 && !a1) {
-					pctx.beginPath()
-					pctx.moveTo(-cw + M + E, -cw + M)
-					pctx.lineTo(-cw + M, -cw + M)
-					pctx.lineTo(-cw + M, -cw + M + E)
-					pctx.quadraticCurveTo(-cw + M, -cw + M, -cw + M + E, -cw + M)
-					pctx.closePath()
-					pctx.fill()
-				}
-
-				// Coins de jointure
-				if (!a1 && !a2) {
-					pctx.beginPath()
-					pctx.moveTo(-cw + M, cw - M - M)
-					pctx.lineTo(-cw + M, cw - M)
-					pctx.lineTo(-cw + M + E, cw - M)
-					pctx.quadraticCurveTo(-cw + M, cw - M, -cw + M, cw - M - E)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (!a2 && !a3) {
-					pctx.beginPath()
-					pctx.moveTo(cw - M - E, cw - M)
-					pctx.lineTo(cw - M, cw - M)
-					pctx.lineTo(cw - M, cw - M - E)
-					pctx.quadraticCurveTo(cw - M, cw - M, cw - M - E, cw - M)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (!a3 && !a4) {
-					pctx.beginPath()
-					pctx.moveTo(cw - M, -cw + M + E)
-					pctx.lineTo(cw - M, -cw + M)
-					pctx.lineTo(cw - M - E, -cw + M)
-					pctx.quadraticCurveTo(cw - M, -cw + M, cw - M, -cw + M + E)
-					pctx.closePath()
-					pctx.fill()
-				}
-				if (!a4 && !a1) {
-					pctx.beginPath()
-					pctx.moveTo(-cw + M + E, -cw + M)
-					pctx.lineTo(-cw + M, -cw + M)
-					pctx.lineTo(-cw + M, -cw + M + E)
-					pctx.quadraticCurveTo(-cw + M, -cw + M, -cw + M + E, -cw + M)
-					pctx.closePath()
-					pctx.fill()
-				}
+			// Coins de jointure
+			if (!a1 && !a2) {
+				pctx.beginPath()
+				pctx.moveTo(-cw + M, cw - M - M)
+				pctx.lineTo(-cw + M, cw - M)
+				pctx.lineTo(-cw + M + E, cw - M)
+				pctx.quadraticCurveTo(-cw + M, cw - M, -cw + M, cw - M - E)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (!a2 && !a3) {
+				pctx.beginPath()
+				pctx.moveTo(cw - M - E, cw - M)
+				pctx.lineTo(cw - M, cw - M)
+				pctx.lineTo(cw - M, cw - M - E)
+				pctx.quadraticCurveTo(cw - M, cw - M, cw - M - E, cw - M)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (!a3 && !a4) {
+				pctx.beginPath()
+				pctx.moveTo(cw - M, -cw + M + E)
+				pctx.lineTo(cw - M, -cw + M)
+				pctx.lineTo(cw - M - E, -cw + M)
+				pctx.quadraticCurveTo(cw - M, -cw + M, cw - M, -cw + M + E)
+				pctx.closePath()
+				pctx.fill()
+			}
+			if (!a4 && !a1) {
+				pctx.beginPath()
+				pctx.moveTo(-cw + M + E, -cw + M)
+				pctx.lineTo(-cw + M, -cw + M)
+				pctx.lineTo(-cw + M, -cw + M + E)
+				pctx.quadraticCurveTo(-cw + M, -cw + M, -cw + M + E, -cw + M)
+				pctx.closePath()
+				pctx.fill()
 			}
 			pctx.restore()
 		}
@@ -659,10 +667,39 @@ class Ground {
 		ctx.restore()
 	}
 
+	public drawCheckerboard(ctx: CanvasRenderingContext2D) {
+
+		if (!this.game.tactic) { return }
+
+		ctx.save()
+		ctx.fillStyle = this.game.map.checkerboardColor
+
+		for (const cell of this.field.cells) {
+
+			if (((cell.x + cell.y) % 2) || cell.obstacle) { continue }
+
+			ctx.save()
+			const xy = this.field.cellToXY(cell)
+			const real = this.xyToXYPixels(xy.x, xy.y)
+			ctx.translate(real.x * this.scale, real.y * this.scale)
+
+			ctx.beginPath()
+			ctx.moveTo(0, -this.tileSizeY / 2.)
+			ctx.lineTo(this.tileSizeX / 2., 0)
+			ctx.lineTo(0, this.tileSizeY / 2.)
+			ctx.lineTo(-this.tileSizeX / 2., 0)
+			ctx.closePath()
+			ctx.fill()
+
+			ctx.restore()
+		}
+		ctx.restore()
+	}
+
 	public drawGrid(ctx: CanvasRenderingContext2D) {
 
 		ctx.save()
-		ctx.strokeStyle = this.game.map.options.gridColor
+		ctx.strokeStyle = this.game.map.gridColor
 		ctx.globalAlpha = this.game.tactic ? 0.25 : 0.18
 		ctx.lineWidth = 1.3 * this.scale
 
@@ -692,12 +729,36 @@ class Ground {
 	}
 
 	public addObstacleElement(obstacle: Obstacle) {
-		obstacle.drawID = this.game.addDrawableElement(obstacle, obstacle.y)
+		obstacle.drawID = this.game.addDrawableElement(obstacle, obstacle.drawLine)
+	}
+
+	// Efface les traces en repeignant le fond. Le premier appel après resize() le redessine
+	// (~50 ms) et en garde une copie, que les suivants recollent (~1 ms) : glisser la barre de
+	// progression en arrière pendant la lecture en demande un par image.
+	public clearTraces() {
+		if (!this.hasTraces || !this.texture || !this.textureCtx) { return }
+		if (this.clean) {
+			this.textureCtx.save()
+			this.textureCtx.setTransform(1, 0, 0, 1, 0, 0)
+			this.textureCtx.globalCompositeOperation = 'copy'
+			this.textureCtx.drawImage(this.clean, 0, 0)
+			this.textureCtx.restore()
+			this.hasTraces = false
+		} else {
+			this.resize(this.width, this.height, this.game.shadows)
+			if (this.hasTraces || !this.texture) { return } // resize() n'a rien repeint
+			this.clean = document.createElement('canvas')
+			this.clean.width = this.texture.width
+			this.clean.height = this.texture.height
+			this.clean.getContext('2d')?.drawImage(this.texture, 0, 0)
+		}
 	}
 
 	public drawTexture(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
+			this.hasTraces = true
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.translate(x, y)
 			this.textureCtx.rotate(angle)
 			this.textureCtx.drawImage(image, -image.width / 2, -image.height / 2)
@@ -707,7 +768,9 @@ class Ground {
 
 	public drawTextureCrop(image: HTMLImageElement, x: number, y: number, angle: number, ox: number, oy: number, w: number, h: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
+			this.hasTraces = true
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.translate(x, y)
 			this.textureCtx.rotate(angle)
 			this.textureCtx.drawImage(image, ox, oy, w, h, -w / 2, -h / 2, w, h)
@@ -717,7 +780,9 @@ class Ground {
 
 	public drawTextureScale(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number, scaleX: number, scaleY: number, alpha: number = 1) {
 		if (GROUND_TEXTURE && this.textureCtx) {
+			this.hasTraces = true
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.globalAlpha = alpha
 			this.textureCtx.translate(x, y)
 			this.textureCtx.scale(scaleX, scaleY)
@@ -729,12 +794,23 @@ class Ground {
 
 	public drawTextureCropScale(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number, ox: number, oy: number, w: number, h: number, scaleX: number, scaleY: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
+			this.hasTraces = true
 			this.textureCtx.save()
+			this.applyNightFilter(this.textureCtx)
 			this.textureCtx.translate(x, y)
 			this.textureCtx.scale(scaleX, scaleY)
 			this.textureCtx.rotate(angle)
 			this.textureCtx.drawImage(image, ox, oy, w, h, -w / 2, -h / 2, w, h)
 			this.textureCtx.restore()
+		}
+	}
+
+	// Les impacts, le sang et les douilles sont peints sur le fond bien après
+	// sa teinte de nuit : ctx.filter les met au même niveau. Le filtre fait
+	// partie de l'état du contexte, l'appelant l'annule avec son restore().
+	private applyNightFilter(ctx: CanvasRenderingContext2D) {
+		if (this.game.night) {
+			ctx.filter = this.game.map.nightFilter
 		}
 	}
 

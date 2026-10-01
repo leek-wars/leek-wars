@@ -6,6 +6,7 @@
 	"dark_mode": "Nattilstand",
 	"decelerate": "Decelerer",
 	"display_cell_numbers": "Displaykassenumre",
+	"marks_foreground": "mark() i forgrunden",
 	"display_debug": "Vis fejlretningsoplysninger",
 	"display_life_bars": "Vis sundhedsbjælker",
 	"display_logs": "Vis fejlretninger",

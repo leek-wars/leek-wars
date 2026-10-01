@@ -39,6 +39,7 @@
 	"n_power": "{0} Leistung",
 	"n_poison": "ein Gift von {0}",
 	"open_chest": "{entity} öffnet die Truhe {chest} und erhält: {resources}",
+	"plant_awake": "{plant} erwacht durch {leek}",
 	"reduce_effects": "Die Effekte von {leek} werden um {value} reduziert",
 	"remove_poisons": "Die Gifte von {leek} werden neutralisiert",
 	"remove_shackles": "{leek}s Fesseln sind zerstört",

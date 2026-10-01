@@ -90,7 +90,7 @@
 
 <style lang="scss" scoped>
 	tr.mine td {
-		background: var(--background);
+		background: var(--background-mine);
 		font-weight: bold;
 	}
 	td {
@@ -123,18 +123,18 @@
 		height: 14px;
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 	}
 	.bar span {
 		height: 12px;
 		vertical-align: top;
 		&:first-child {
-			border-top-left-radius: 7px;
-			border-bottom-left-radius: 7px;
+			border-top-left-radius: var(--radius-medium);
+			border-bottom-left-radius: var(--radius-medium);
 		}
 		&:last-child {
-			border-top-right-radius: 7px;
-			border-bottom-right-radius: 7px;
+			border-top-right-radius: var(--radius-medium);
+			border-bottom-right-radius: var(--radius-medium);
 		}
 	}
 	.gain {
@@ -143,16 +143,16 @@
 	.alive {
 		margin-left: 27px;
 	}
+	// Le crâne sert de masque : il prend l'encre du texte, dans tous les thèmes.
 	.dead {
-		background-image: url("/image/cross.png");
+		background-color: var(--text-color);
+		mask: url("/image/cross.png") no-repeat;
+		-webkit-mask: url("/image/cross.png") no-repeat;
 		width: 15px;
 		height: 20px;
 		display: inline-block;
 		margin-right: 12px;
 		vertical-align: bottom;
-	}
-	body.dark .dead {
-		filter: invert(1);
 	}
 	.xp {
 		min-width: 180px;
@@ -169,30 +169,35 @@
 		background: var(--background-disabled);
 	}
 	.new_xp {
-		background-color: #5fad1b;
+		background-color: var(--primary-surface);
 	}
 	.bonus {
 		background-color: #0075df;
-		color: white;
+		color: var(--white);
 		font-weight: bold;
 		padding: 0 4px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 	.talent-bonus {
-		background-color: #888;
-		color: white;
+		background-color: var(--grey-7);
+		color: var(--white);
 		font-weight: bold;
 		padding: 0 4px;
 		margin-left: 10px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 	.resources {
 		padding: 0 5px;
 		text-align: left;
 		height: 29px;
+		// Une seule ligne dans le tableau : la colonne s'élargit, c'est la barre d'XP
+		// qui cède la place (et sur mobile le tableau défile déjà en .scroll-x).
+		:deep(.resources-list) {
+			flex-wrap: nowrap;
+		}
 	}
 	.xp-blocked {
 		font-size: 16px;
-		color: #666;
+		color: var(--grey-5);
 	}
 </style>

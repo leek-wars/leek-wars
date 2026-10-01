@@ -1,14 +1,36 @@
+import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import router from '@/router'
 import { SocketMessage } from '@/model/socket'
 import { store } from '@/model/store'
 import { Leek } from './leek'
 
-const ARENA_MODE_ICONS = ['mdi-sword-cross', 'mdi-flag', 'mdi-treasure-chest', 'mdi-shield-account']
-const ARENA_MODE_LABELS = ['arena_mode_br', 'arena_mode_war', 'arena_mode_chest_hunt', 'arena_mode_colossus']
+const ARENA_NO_PREFERENCE = -1
+// Les choix de mode préféré, dans l'ordre d'affichage : « Peu importe » suit les autres
+// joueurs, « Aléatoire » vote pour chaque mode à parts égales, puis les quatre modes.
+// `label` est une clé sans espace de noms : chaque appelant la préfixe (`main.`) ou la
+// résout dans ses propres fichiers.
+const ARENA_CHOICES = [
+	{ preference: ARENA_NO_PREFERENCE, icon: 'mdi-help-circle-outline', label: 'arena_no_preference' },
+	{ preference: -2, icon: 'mdi-dice-multiple', label: 'arena_random' },
+	{ preference: 0, icon: 'mdi-sword-cross', label: 'arena_mode_br' },
+	{ preference: 1, icon: 'mdi-flag', label: 'arena_mode_war' },
+	{ preference: 2, icon: 'mdi-treasure-chest', label: 'arena_mode_chest_hunt' },
+	{ preference: 3, icon: 'mdi-shield-account', label: 'arena_mode_colossus' },
+]
+const ARENA_PREFERENCES = ARENA_CHOICES.map(choice => choice.preference)
+
+// Une valeur inconnue se lit comme « Peu importe ».
+function arenaChoice(preference: number) {
+	return ARENA_CHOICES.find(choice => choice.preference === preference) ?? ARENA_CHOICES[0]
+}
 
 function arenaModeIcon(preference: number): string {
-	return ARENA_MODE_ICONS[preference] || 'mdi-help-circle-outline'
+	return arenaChoice(preference).icon
+}
+
+function arenaModeLabel(preference: number): string {
+	return arenaChoice(preference).label
 }
 
 interface ArenaRegistration {
@@ -24,12 +46,14 @@ const REGISTRATIONS_KEY = 'arena-registrations'
 class Arena {
 	static readonly MIN_PLAYERS = 10
 	static readonly MAX_PLAYERS = 20
+	/** Niveau à partir duquel un poireau peut entrer dans l'arène (potager, chat, accueil). */
+	static readonly MIN_LEVEL = 20
 
 	leeks: {[key: number]: Leek} = {}
 	progress: number = 0
 	enabled: boolean = false
 	countdown: number = -1
-	preference: number = -1
+	preference: number = ARENA_NO_PREFERENCE
 
 	private loadRegistrations(): {[farmer: number]: ArenaRegistration} {
 		try {
@@ -73,7 +97,7 @@ class Arena {
 			this.clearActiveSlot()
 		}
 	}
-	register(leek: number, preference: number = -1, wantsColossus: boolean = false) {
+	register(leek: number, preference: number = ARENA_NO_PREFERENCE, wantsColossus: boolean = false) {
 		LeekWars.socket.send([SocketMessage.ARENA_REGISTER, leek, preference, wantsColossus])
 		localStorage.setItem('arena-leek', '' + leek)
 		localStorage.setItem('arena-preference', '' + preference)
@@ -119,10 +143,16 @@ class Arena {
 			}
 		}
 	}
-	leave() {
+	// `reason` n'est renseigné que lorsque c'est le SERVEUR qui nous sort de la
+	// salle (un autre de nos comptes y est déjà). Sans message, le bouton
+	// d'inscription se contenterait de retomber tout seul, sans rien expliquer.
+	leave(reason?: string) {
 		LeekWars.socket.send([SocketMessage.ARENA_LEAVE])
 		this.clearStorage()
 		this.reset()
+		if (reason) {
+			LeekWars.toast(i18n.t('main.arena_error_' + reason) as string)
+		}
 	}
 	// Changement de compte : désinscrit le poireau du compte qu'on quitte côté
 	// serveur (un seul compte inscrit à la fois) mais conserve la mémoire pour
@@ -141,8 +171,8 @@ class Arena {
 		this.enabled = false
 		this.progress = 0
 		this.countdown = -1
-		this.preference = -1
-		store.commit('arena-status', {enabled: false, preference: -1})
+		this.preference = ARENA_NO_PREFERENCE
+		store.commit('arena-status', {enabled: false, preference: ARENA_NO_PREFERENCE})
 	}
 	start(data: [unknown, unknown]) {
 		if (data[1]) { // Garden arena (not automatic)
@@ -160,4 +190,4 @@ class Arena {
 	}
 }
 
-export { Arena, ARENA_MODE_LABELS, arenaModeIcon }
+export { Arena, ARENA_PREFERENCES, arenaModeIcon, arenaModeLabel }

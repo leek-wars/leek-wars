@@ -39,6 +39,7 @@
 	"n_power": "{0} moc",
 	"n_poison": "trucizna {0}",
 	"open_chest": "{entity} otwórz skrzynię {chest} i zdobądź: {resources}",
+	"plant_awake": "{plant} budzi się, gdy {leek} wchodzi",
 	"reduce_effects": "Efekty działania {leek} są zmniejszone o {value}",
 	"remove_poisons": "Trucizny {leek} są neutralizowane",
 	"remove_shackles": "Kajdany {leek} są zniszczone",

@@ -6,6 +6,7 @@
 	"dark_mode": "Modo nocturno",
 	"decelerate": "Decelerar",
 	"display_cell_numbers": "Mostrar números de cuadro",
+	"marks_foreground": "mark() en primer plano",
 	"display_debug": "Mostrar información de depuración",
 	"display_life_bars": "Mostrar barras de salud",
 	"display_logs": "Debugs",

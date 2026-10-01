@@ -6,6 +6,7 @@
 	"dark_mode": "야간 모드",
 	"decelerate": "감속",
 	"display_cell_numbers": "셀 번호 표시",
+	"marks_foreground": "mark() 맨 앞에 표시",
 	"display_debug": "디버그 정보 표시",
 	"display_life_bars": "체력 바 표시",
 	"display_logs": "디버그 표시",

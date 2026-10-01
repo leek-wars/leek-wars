@@ -24,7 +24,9 @@
 						<avatar :farmer="entity" />
 					</div>
 					<div v-if="type === 'leek'" class="image">
-						<leek-image :leek="entity" :scale="0.8" />
+						<!-- Le portrait à 0,8 mange 200 px de haut sur un téléphone, où
+						     l'écran entier tenait déjà dans l'en-tête de la page. -->
+						<leek-image :leek="entity" :scale="LeekWars.mobile ? 0.45 : 0.8" />
 					</div>
 					<div v-if="type === 'team'" class="image">
 						<emblem :team="entity" />
@@ -344,6 +346,32 @@ watch(viewMode, () => {
 		background: var(--background-header);
 		font-weight: bold;
 	}
+	// v3 : le sélecteur de période au style des actions du thème — bordé,
+	// police d'affichage, survol discret sur la surface de ligne, pixel push au
+	// clic, et l'actif en aplat vert comme la page courante de la pagination.
+	body:not(.v2) .period {
+		font-family: var(--font-display);
+		letter-spacing: var(--font-display-tracking);
+		font-weight: var(--font-display-weight);
+		font-size: 12px;
+		text-transform: uppercase;
+		padding: 9px 10px;
+		border: 1px solid var(--border-strong);
+		background: var(--background-input);
+		color: var(--text-color);
+	}
+	body:not(.v2) .period:hover {
+		background: var(--background-row);
+	}
+	body:not(.v2) .period:active {
+		transform: translate(1px, 1px);
+	}
+	body:not(.v2) .period.selected {
+		background: var(--primary-surface);
+		border-color: var(--primary);
+		color: var(--primary-surface-text);
+		font-weight: normal;
+	}
 	.header-row {
 		display: flex;
 		align-items: center;
@@ -357,6 +385,45 @@ watch(viewMode, () => {
 	}
 	.view-toggle {
 		flex: none;
+	}
+	/* Le portrait commençait au ras des boutons de période : le bloc du haut
+	   n'a pas de marge et l'image n'a que son rembourrage de 10 px, mangé par
+	   le hors-champ du dessin. */
+	.periods {
+		margin-bottom: 16px;
+	}
+	/* Le sélecteur de vue est un `v-btn-toggle` Vuetify laissé tel quel : deux
+	   boutons « elevated » à fond BLANC PUR posés sur le parchemin, ombre
+	   comprise. Il reprend le vocabulaire du v3 : un cadre, pas de fond, et
+	   l'actif en aplat vert pâle sur encre verte, comme l'entrée de menu
+	   courante et les pastilles de mode d'arène. */
+	body:not(.v2) .view-toggle {
+		height: 30px;
+		border: 1px solid var(--border-strong);
+		background: transparent;
+		:deep(.v-btn) {
+			background: transparent;
+			box-shadow: none;
+			border-radius: 0;
+			min-width: 36px;
+			color: var(--text-color-secondary);
+			/* Vuetify peint survol et état actif dans un calque posé par-dessus
+			   le fond ; sans ça il grise l'aplat vert. */
+			.v-btn__overlay {
+				display: none;
+			}
+			&:hover {
+				background: var(--background-row);
+				color: var(--text-color);
+			}
+			&.v-btn--active {
+				background: color-mix(in srgb, var(--primary) 12%, transparent);
+				color: var(--primary);
+			}
+		}
+		:deep(.v-btn + .v-btn) {
+			border-left: 1px solid var(--border-strong);
+		}
 	}
 	.opponent-search {
 		height: 32px;
@@ -434,7 +501,7 @@ watch(viewMode, () => {
 		align-items: center;
 		gap: 6px;
 		padding: 5px 13px;
-		border-radius: 15px;
+		border-radius: var(--radius-pill);
 		font-size: 13px;
 		line-height: 1;
 		white-space: nowrap;
@@ -463,7 +530,7 @@ watch(viewMode, () => {
 		flex: none;
 		width: 7px;
 		height: 7px;
-		border-radius: 50%;
+		border-radius: var(--radius-pill);
 		background: currentColor;
 		opacity: 0.35;
 	}
@@ -487,13 +554,100 @@ watch(viewMode, () => {
 		margin: 2px 4px;
 		background: var(--border);
 	}
-	body.dark .chip { --c: #7ec93f; }
-	.res-win { --c: #5fad1b; }
-	.res-draw { --c: #8a8a8a; }
-	.res-defeat { --c: #d3382f; }
-	.res-generating { --c: #3f86d6; }
-	body.dark .res-win { --c: #7ec93f; }
-	body.dark .res-draw { --c: #a6a6a6; }
-	body.dark .res-defeat { --c: #e07a72; }
-	body.dark .res-generating { --c: #6ba8e6; }
+	/* La couleur d'un chip vient des jetons du thème : les mêmes que portent les
+	   cartes et le tableau de l'historique, pour que le filtre « défaites » soit
+	   du rouge des défaites. Ils existent en clair comme en sombre. */
+	.res-win { --c: var(--result-win); }
+	.res-draw { --c: var(--result-draw); }
+	.res-defeat { --c: var(--result-defeat); }
+	.res-generating { --c: var(--info); }
+
+	/* ====== Mobile : la page tenait entièrement au-dessus de la liste ======
+	 *
+	  * Sur un écran de 412 × 915, 894 px d'en-tête : pas un seul combat visible
+	  * à l'arrivée. Périodes 76, portrait et bilan 229, barre de recherche 42,
+	  * filtres 380.
+	 *
+	 * Rien n'est masqué — tous les filtres restent atteignables — mais chaque
+	 * bloc reprend la place qu'il vaut sur un téléphone. */
+	#app.app {
+		/* Quatre périodes de 150 px de large : deux par ligne. Elles se
+		   partagent la ligne à parts égales, comme les catégories du potager. */
+		.periods {
+			display: flex;
+			gap: 4px;
+			padding: 0 8px;
+		}
+		.period {
+			width: auto;
+			flex: 1 1 0;
+			min-width: 0;
+			margin: 0;
+			padding: 8px 2px;
+			font-size: 11px;
+		}
+		.image {
+			padding: 0;
+		}
+		.stats table {
+			margin: 6px auto;
+		}
+		.stats td {
+			padding: 0 10px;
+		}
+		/* Le champ de recherche passait à 200 px entre le compteur et le
+		   sélecteur de vue : trois éléments serrés sur une ligne de 412. Il
+		   prend sa propre ligne, pleine largeur. */
+		.header-row {
+			flex-wrap: wrap;
+			padding: 0 8px;
+		}
+		.opponent-search {
+			order: 3;
+			flex: 1 0 100%;
+			margin: 8px 0 0;
+		}
+		/* L'intitulé de filtre réservait 130 px à droite d'une ligne de 412 : il
+		   ne restait pas de quoi poser trois pastilles, et chaque famille
+		   s'étalait sur trois ou quatre lignes. Il passe au-dessus de ses
+		   pastilles, et celles-ci se resserrent d'un cran. */
+		.history-options {
+			margin: 12px 8px;
+			gap: 10px;
+		}
+		.filter-row {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 4px;
+		}
+		.filter-label {
+			flex: none;
+			text-align: left;
+			padding-top: 0;
+			font-size: 11px;
+		}
+		.chips {
+			gap: 5px;
+		}
+		.chip {
+			padding: 4px 9px;
+			font-size: 12px;
+			gap: 5px;
+		}
+		.chip.all {
+			padding-left: 11px;
+			padding-right: 11px;
+		}
+	}
+
+	/* Peau v2 : les valeurs historiques, au pixel près. */
+	body.v2.dark .chip { --c: #7ec93f; }
+	body.v2 .res-win { --c: var(--primary); }
+	body.v2 .res-draw { --c: #8a8a8a; }
+	body.v2 .res-defeat { --c: #d3382f; }
+	body.v2 .res-generating { --c: #3f86d6; }
+	body.v2.dark .res-win { --c: #7ec93f; }
+	body.v2.dark .res-draw { --c: #a6a6a6; }
+	body.v2.dark .res-defeat { --c: #e07a72; }
+	body.v2.dark .res-generating { --c: #6ba8e6; }
 </style>

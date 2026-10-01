@@ -1,7 +1,34 @@
 import { Game } from '@/component/player/game/game'
 import { LeekWars } from '@/model/leekwars'
+import { chipImageDir } from '@/model/item'
 
 const SHADOW_QUALITY = 0.3
+
+// Tailles gardées par texture dans les caches de mise à l'échelle. Une texture ne
+// sert qu'à une ou deux tailles À LA FOIS (un obstacle en 1×1 et en 2×2, les mains
+// d'un combat — une seule taille sur un combat à trente poireaux), mais chaque
+// redimensionnement du lecteur en demande de nouvelles : fenêtre qu'on étire,
+// séparation du journal qu'on fait glisser. Sans borne, le cache gardait un canvas
+// par taille traversée jusqu'au rechargement de la page (26 → 192 canvas pour un
+// aller-retour de 500 px), et les textures de T sont partagées par tous les combats.
+const SCALED_CACHE_MAX = 8
+
+/** Lecture d'un cache borné : l'entrée lue repasse en queue, la dernière évincée. */
+function cacheGet<K, V>(cache: Map<K, V>, key: K): V | undefined {
+	const value = cache.get(key)
+	if (value !== undefined) {
+		cache.delete(key)
+		cache.set(key, value)
+	}
+	return value
+}
+
+function cachePut<K, V>(cache: Map<K, V>, key: K, value: V) {
+	cache.set(key, value)
+	if (cache.size > SCALED_CACHE_MAX) {
+		cache.delete(cache.keys().next().value as K)
+	}
+}
 
 class Texture {
 	public path: string
@@ -12,9 +39,20 @@ class Texture {
 	public shadow: HTMLCanvasElement | null = null
 	public buildShadow: boolean
 	public shadowQuality: number
-	private cache: {[key: number]: HTMLCanvasElement} = {}
+	private cache = new Map<number, HTMLCanvasElement>()
+	private darkCache = new Map<string, HTMLCanvasElement>()
 	public ctx!: CanvasRenderingContext2D
 	public loaded: boolean = false
+
+	// Le repli n'est posé qu'en cas d'échec, et repart dès qu'une Image le remplace
+	private get failed() { return this.texture === BROKEN_PLACEHOLDER }
+
+	// Une Image en cours de chargement a souvent déjà sa taille, mais drawImage n'y
+	// peint rien : sa mise à l'échelle serait un canvas vide, et en cache il resterait
+	// servi pour cette largeur — un redimensionnement du lecteur pendant le chargement,
+	// un lancement à la même taille, et les obstacles restaient invisibles tout le
+	// combat. D'ici là on rend le repli transparent, sans rien allouer ni garder.
+	private get painted() { return !(this.texture instanceof HTMLImageElement) || isPainted(this.texture) }
 
 	constructor(path: string, buildShadow: boolean = false, quality: number = 1) {
 		this.path = path + '?0'
@@ -24,7 +62,7 @@ class Texture {
 
 	public load(game: Game) {
 		// Already loaded
-		if (this.texture) {
+		if (this.texture && !this.failed) {
 			game.numData++
 			setTimeout(() => {
 				game.resourceLoaded(this.path)
@@ -32,12 +70,20 @@ class Texture {
 			return this
 		}
 
+		// Reprise après échec : les textures de T sont partagées par tous les combats
+		// de la session, garder le repli 1×1 laisserait le mob sans main jusqu'au
+		// rechargement de la page.
+		this.loaded = false
+
 		game.numData++
 		this.texture = new Image()
 		this.texture.crossOrigin = "anonymous"
 
+		// Le premier événement retire les trois écouteurs : leur closure capture le
+		// Game, qui resterait sinon accroché aux textures statiques de T.
+		const listeners = new AbortController()
 		const onload = () => {
-			this.texture.removeEventListener('error', onerror)
+			listeners.abort()
 			if (this.path.includes('.svg')) {
 				this.texture = this.getBitmap()
 			}
@@ -50,17 +96,41 @@ class Texture {
 		// Double flèche d'origine `() => () => {...}` : le corps n'était jamais
 		// exécuté, donc une texture en échec/abort (réseau instable) n'incrémentait
 		// pas loadedData et pouvait bloquer le compteur de chargement (#11573).
+		// 'error' et 'abort' partagent ce handler : se désabonner évite aussi de
+		// compter la ressource deux fois (loadedData est comparé à numData par
+		// égalité stricte, un dépassement bloquerait le chargement pour toujours).
 		const onerror = () => {
 			console.warn("Error loading : " + this.path)
+			listeners.abort()
+			const image = this.texture
+			// Une Image en échec reste dans l'état « broken » : drawImage lèverait
+			// InvalidStateError. Le canvas transparent, lui, se dessine.
+			this.texture = BROKEN_PLACEHOLDER
+			// Les ombres sont dessinées via `shadow!`, sans garde
+			if (this.buildShadow) {
+				this.shadow = BROKEN_PLACEHOLDER
+			}
+			this.loaded = true
 			game.resourceLoaded(this.path)
-			this.texture.removeEventListener('load', onload)
+			// Les appelants (leek.ts, mob.ts...) attendent un 'load' sur l'Image pour
+			// lire la taille de base : sans cet événement ils resteraient à 0×0, une
+			// taille que drawImage refuse. Émis une fois le repli en place, pour
+			// qu'ils y mesurent 1×1, et en dernier pour que `loaded` soit déjà vrai.
+			image.dispatchEvent(new Event('load'))
 		}
-		this.texture.addEventListener('load', onload)
-		this.texture.addEventListener('error', onerror)
-		this.texture.addEventListener('abort', onerror)
+		const options = { signal: listeners.signal }
+		this.texture.addEventListener('load', onload, options)
+		this.texture.addEventListener('error', onerror, options)
+		this.texture.addEventListener('abort', onerror, options)
 
 		this.texture.src = this.path // Start loading
 		return this
+	}
+
+	// Le cache de T ne rappelle jamais load() : sans ça une texture de corps en
+	// échec garderait le repli 1×1 jusqu'au rechargement de la page.
+	public retryIfFailed(game: Game) {
+		return this.failed ? this.load(game) : this
 	}
 
 	getBitmap() {
@@ -77,11 +147,17 @@ class Texture {
 	}
 
 	getScaled(width: number) {
-		if (width === this.texture.width) {
+		// Mettre à l'échelle le repli 1×1 remplirait le cache d'un canvas
+		// transparent par largeur demandée, donc par niveau de zoom.
+		if (this.failed || width === this.texture.width) {
 			return this.texture
 		}
-		if (width in this.cache) {
-			return this.cache[width]
+		const cached = cacheGet(this.cache, width)
+		if (cached) {
+			return cached
+		}
+		if (!this.painted) {
+			return BROKEN_PLACEHOLDER
 		}
 		try {
 			const canvas = document.createElement('canvas')
@@ -89,7 +165,42 @@ class Texture {
 			canvas.height = this.texture.height * (width / this.texture.width)
 			const ctx = canvas.getContext('2d')!
 			ctx.drawImage(this.texture, 0, 0, width, canvas.height)
-			this.cache[width] = canvas
+			cachePut(this.cache, width, canvas)
+			return canvas
+		} catch {
+			return this.texture
+		}
+	}
+
+	// Variante « nuit » d'une texture, teintée par un multiply. Les obstacles
+	// sont redessinés à chaque frame : comme getScaled, on les assombrit une
+	// fois pour toutes au (re)dimensionnement plutôt qu'au dessin.
+	getScaledDark(width: number, color: string) {
+		if (this.failed) {
+			return this.texture
+		}
+		const key = width + '|' + color
+		const cached = cacheGet(this.darkCache, key)
+		if (cached) {
+			return cached
+		}
+		if (!this.painted) {
+			return BROKEN_PLACEHOLDER
+		}
+		try {
+			const canvas = document.createElement('canvas')
+			canvas.width = Math.max(1, width)
+			canvas.height = Math.max(1, this.texture.height * (width / this.texture.width))
+			const ctx = canvas.getContext('2d')!
+			ctx.drawImage(this.texture, 0, 0, canvas.width, canvas.height)
+			// Le multiply teinte aussi le transparent autour du sprite : l'alpha
+			// d'origine est remis par-dessus pour redécouper la silhouette.
+			ctx.globalCompositeOperation = 'multiply'
+			ctx.fillStyle = color
+			ctx.fillRect(0, 0, canvas.width, canvas.height)
+			ctx.globalCompositeOperation = 'destination-in'
+			ctx.drawImage(this.texture, 0, 0, canvas.width, canvas.height)
+			cachePut(this.darkCache, key, canvas)
 			return canvas
 		} catch {
 			return this.texture
@@ -99,8 +210,10 @@ class Texture {
 	getScaledTexture(width: number) {
 		const result = new Texture('')
 		const canvas = document.createElement('canvas')
-		canvas.width = width
-		canvas.height = this.texture.height * (width / this.texture.width)
+		// Un canvas de dimension nulle est refusé comme source par drawImage
+		// (InvalidStateError) : le repli 1×1, réduit par Bulb.SCALE, y tomberait.
+		canvas.width = Math.max(1, width)
+		canvas.height = Math.max(1, this.texture.height * (width / this.texture.width))
 		const ctx = canvas.getContext('2d')!
 		ctx.drawImage(this.texture, 0, 0, width, canvas.height)
 		result.texture = canvas
@@ -203,6 +316,8 @@ class T {
 	public static odachi = new Texture(LeekWars.STATIC + 'image/weapon/odachi.png', true, SHADOW_QUALITY)
 	public static excalibur = new Texture(LeekWars.STATIC + 'image/weapon/excalibur.png', true, SHADOW_QUALITY)
 	public static scythe = new Texture(LeekWars.STATIC + 'image/weapon/scythe.png', true, SHADOW_QUALITY)
+	public static desert_saber = new Texture(LeekWars.STATIC + 'image/weapon/desert_saber.png', true, SHADOW_QUALITY)
+	public static sun_spear = new Texture(LeekWars.STATIC + 'image/weapon/sun_spear.png', true, SHADOW_QUALITY)
 	public static quantum_rifle = new Texture(LeekWars.STATIC + 'image/weapon/quantum_rifle.png', true, SHADOW_QUALITY)
 	public static orbital = new Texture(LeekWars.STATIC + 'image/weapon/orbital.png')
 	public static cart_quantum_rifle = new Texture(LeekWars.STATIC + 'image/weapon/cart_quantum_rifle.png')
@@ -386,12 +501,28 @@ class T {
 	public static chip_adrenaline = new Texture(LeekWars.STATIC + 'image/chip/glyph/adrenaline.png')
 	public static chip_motivation = new Texture(LeekWars.STATIC + 'image/chip/glyph/motivation.png')
 	// Chips boss (icones directes faute de glyph dédié)
-	public static chip_kemuridama = new Texture(LeekWars.STATIC + 'image/chip/kemuridama.png')
-	public static chip_shuriken = new Texture(LeekWars.STATIC + 'image/chip/shuriken.png')
-	public static shuriken_star = new Texture(LeekWars.STATIC + 'image/chip/shuriken_star.png')
-	public static chip_fire_ball = new Texture(LeekWars.STATIC + 'image/chip/fire_ball.png')
-	public static chip_trebuchet = new Texture(LeekWars.STATIC + 'image/chip/trebuchet.png')
-	public static chip_thunder = new Texture(LeekWars.STATIC + 'image/chip/thunder.png')
+	public static chip_hemorrhage = new Texture(LeekWars.STATIC + 'image/chip/glyph/hemorrhage.png')
+	public static chip_maturation = new Texture(LeekWars.STATIC + 'image/chip/glyph/maturation.png')
+	public static chip_superinfection = new Texture(LeekWars.STATIC + 'image/chip/glyph/superinfection.png')
+	// Puces des plantes 2.50 (Éveil) : Piment = piquant / capsaicin, Maïs = sugar / popcorn
+	public static chip_piquant = new Texture(LeekWars.STATIC + 'image/chip/glyph/piquant.png')
+	public static chip_capsaicin = new Texture(LeekWars.STATIC + 'image/chip/glyph/capsaicin.png')
+	public static chip_sugar = new Texture(LeekWars.STATIC + 'image/chip/glyph/sugar.png')
+	public static chip_popcorn = new Texture(LeekWars.STATIC + 'image/chip/glyph/popcorn.png')
+	// Sprites des animations de Pop-corn (grain éclaté) et de Sucre (morceau de sucre)
+	public static popcorn = new Texture(LeekWars.STATIC + 'image/fight/popcorn.png')
+	public static sugar_cube = new Texture(LeekWars.STATIC + 'image/fight/sugar_cube.png')
+	// Six tuiles de puces servent de sprite au combat (le projectile lui-même).
+	// Elles suivent donc la série du thème, comme les tuiles de l'interface ;
+	// `chipImageDir` est lu une fois, au chargement du module : changer de thème
+	// en cours de partie ne rhabille pas un combat déjà ouvert, un rechargement
+	// s'en charge.
+	public static chip_kemuridama = new Texture(LeekWars.STATIC + 'image/' + chipImageDir() + '/kemuridama.png')
+	public static chip_shuriken = new Texture(LeekWars.STATIC + 'image/' + chipImageDir() + '/shuriken.png')
+	public static shuriken_star = new Texture(LeekWars.STATIC + 'image/' + chipImageDir() + '/shuriken_star.png')
+	public static chip_fire_ball = new Texture(LeekWars.STATIC + 'image/' + chipImageDir() + '/fire_ball.png')
+	public static chip_trebuchet = new Texture(LeekWars.STATIC + 'image/' + chipImageDir() + '/trebuchet.png')
+	public static chip_thunder = new Texture(LeekWars.STATIC + 'image/' + chipImageDir() + '/thunder.png')
 	public static chip_rage = new Texture(LeekWars.STATIC + 'image/chip/glyph/rage.png')
 	public static chip_seven_league_boots = new Texture(LeekWars.STATIC + 'image/chip/glyph/seven_league_boots.png')
 	public static chip_leather_boots = new Texture(LeekWars.STATIC + 'image/chip/glyph/leather_boots.png')
@@ -417,6 +548,7 @@ class T {
 	public static chip_rampart = new Texture(LeekWars.STATIC + 'image/chip/glyph/rampart.png')
 	public static chip_carapace = new Texture(LeekWars.STATIC + 'image/chip/glyph/carapace.png')
 	public static chip_dome = new Texture(LeekWars.STATIC + 'image/chip/glyph/dome.png')
+	public static chip_divine_protection = new Texture(LeekWars.STATIC + 'image/chip/glyph/divine_protection.png')
 
 	// Heal
 	public static chip_bandage = new Texture(LeekWars.STATIC + 'image/chip/glyph/bandage.png')
@@ -462,7 +594,7 @@ class T {
 
 	static get(game: Game, path: string, buildShadow: boolean = false, quality: number = 1, domain: string = LeekWars.STATIC) {
 		if (path in this.cache) {
-			return this.cache[path]
+			return this.cache[path].retryIfFailed(game)
 		}
 		const texture = new Texture(domain + path, buildShadow, quality).load(game)
 		this.cache[path] = texture
@@ -470,6 +602,67 @@ class T {
 	}
 
 	private static cache: {[key: string]: Texture} = {}
+}
+
+// Canvas transparent 1×1 partagé, repli dessinable des textures dont le
+// chargement a échoué (une Image en échec reste en état « broken »).
+const BROKEN_PLACEHOLDER = document.createElement('canvas')
+BROKEN_PLACEHOLDER.width = 1
+BROKEN_PLACEHOLDER.height = 1
+
+const TRANSPARENT_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+
+const imageCache: {[src: string]: HTMLImageElement} = {}
+
+// Chargement d'une image hors d'une Texture (icônes d'effet et d'état), toujours
+// dessinable : réaffecter la source sort l'Image de l'état « broken », où
+// drawImage lèverait InvalidStateError. Une garde sur la taille au moment du
+// dessin ne conviendrait pas : un SVG sans width/height intrinsèques mesure 0
+// sur certains navigateurs tout en étant parfaitement dessinable.
+function loadDrawableImage(src: string): HTMLImageElement {
+	if (src in imageCache) {
+		return imageCache[src]
+	}
+	const image = new Image()
+	const onerror = () => {
+		console.warn("Error loading : " + image.src)
+		image.src = TRANSPARENT_PIXEL
+	}
+	image.addEventListener('error', onerror, { once: true })
+	image.addEventListener('abort', onerror, { once: true })
+	image.src = src || TRANSPARENT_PIXEL
+	imageCache[src] = image
+	return image
+}
+
+/**
+ * Une Image dont le chargement a échoué reste dans l'état « broken » jusqu'à ce que
+ * son handler d'erreur ait basculé sur le pixel transparent. La boucle de jeu tourne
+ * à 60 fps : elle peint dans cette fenêtre, et drawImage y lève InvalidStateError,
+ * ce qui tue la requestAnimationFrame et FIGE le combat.
+ * `complete && naturalWidth === 0` identifie cet état ; une image encore en cours de
+ * chargement n'est pas concernée, drawImage y est un no-op inoffensif.
+ */
+function isDrawable(image: CanvasImageSource | null | undefined): boolean {
+	if (!image) return false
+	if (image instanceof HTMLImageElement) return !(image.complete && image.naturalWidth === 0)
+	// Un canvas de dimension nulle (texture d'entité pas encore rendue) fait aussi
+	// lever drawImage, avec un autre message : « canvas element with a width or
+	// height of 0 ». Même conséquence, boucle de rendu tuée.
+	if (image instanceof HTMLCanvasElement) return image.width > 0 && image.height > 0
+	return true
+}
+
+/**
+ * Une image qui a fini de charger ET qui a des pixels à donner.
+ *
+ * ⚠️ Le pendant strict d'`isDrawable`, qui dit seulement que `drawImage` ne lèvera
+ * pas : une image encore en cours de chargement passe `isDrawable` tout en ne
+ * peignant rien. Sans conséquence quand on repeint à chaque image, mais fatal dès
+ * qu'on fige le résultat — le sprite pré-composé resterait vide pour toujours.
+ */
+function isPainted(image: HTMLImageElement): boolean {
+	return image.complete && image.naturalWidth > 0
 }
 
 function buildTextureShadow(texture: Texture, quality: number) {
@@ -497,4 +690,4 @@ function buildTextureShadow(texture: Texture, quality: number) {
 	}
 }
 
-export { T, Texture, SHADOW_QUALITY }
+export { T, Texture, SHADOW_QUALITY, SCALED_CACHE_MAX, loadDrawableImage, isDrawable, isPainted }

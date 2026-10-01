@@ -1,15 +1,21 @@
 <template>
 	<a :xlink:href="link" @click="click">
 		<rect :x="x" :y="y" :class="{'no-fight': !fight}" class="fight" :width="30" :height="30" />
-		<image v-if="fight" :x="x + 6" :y="y + 6" :width="18" :height="18" xlink:href="/image/icon/garden.png" />
+		<!-- Le glyphe du combat, dessiné en `path` et pas en `image` : on est dans un
+		     SVG, `<v-icon>` n'y a pas sa place. Les chemins MDI sont sur une grille de
+		     24, d'où le facteur 18/24 pour tenir dans la case. -->
+		<path v-if="fight" :d="swordPath" :transform="`translate(${x + 6}, ${y + 6}) scale(0.75)`" class="fight-icon" />
 	</a>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { mdiIcons } from '@/model/mdi-icons'
 
 defineOptions({ name: 'TournamentFight' })
+
+const swordPath = mdiIcons['mdi-sword']
 
 const props = defineProps<{
 	fight: Record<string, unknown>
@@ -29,7 +35,7 @@ function click(e: Event) {
 
 <style lang="scss" scoped>
 	.fight {
-		stroke: var(--background-disabled);
+		stroke: var(--bracket-line);
 		stroke-width: 2;
 	}
 	.no-fight {
@@ -37,6 +43,11 @@ function click(e: Event) {
 		stroke-dasharray: 5.5;
 	}
 	.fight:not(.no-fight) {
-		fill: #777;
+		fill: var(--grey-6);
+	}
+	// Encre claire sur la case grise de la case jouée, dans les deux thèmes.
+	.fight-icon {
+		fill: var(--white);
+		pointer-events: none;
 	}
 </style>

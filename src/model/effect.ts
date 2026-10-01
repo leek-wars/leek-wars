@@ -62,6 +62,7 @@ enum EffectType {
 	STEAL_LIFE = 61,
 	MULTIPLY_STATS = 62,
 	DAMAGE_TO_RESISTANCE = 63,
+	SUPERINFECTION = 64,
 }
 
 enum EffectModifier {
@@ -99,6 +100,11 @@ enum State {
 	INVICIBLE = 3,
 	PACIFIST = 4,
 	STATIC = 11,
+	// Enraciné (plantes 2.50) : ni déplacement ni poussée/attirance, mais
+	// l'Inversion/Rempotage fonctionne (≠ STATIC qui bloque aussi l'inversion).
+	// Ordinal 9, confirmé dans l'enum du générateur.
+	ROOTED = 9,
+	STERILE = 12,
 }
 
 class Effect {
@@ -123,4 +129,41 @@ class EntityEffect {
 	public modifiers!: number
 }
 
-export { Effect, EffectModifier, EffectTarget, EffectType, EffectTypeMarket, EntityEffect, State }
+/**
+ * Valeur d'un effet telle qu'elle s'affiche : les entraves et les vulnérabilités
+ * en négatif, les boucliers relatifs et le renvoi de dégâts en pourcentage. Vide
+ * pour un effet d'état, qui porte une icône à la place.
+ *
+ * Le lecteur de combat l'écrit à deux endroits qui se voient en même temps à
+ * l'écran — les pastilles au-dessus des poireaux et le panneau de détails.
+ */
+function effectValueText(effect: EntityEffect): string {
+	if (effect.type === EffectType.ADD_STATE) { return '' }
+	let text = '' + effect.value
+	if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
+		text = '-' + text
+	}
+	if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
+		text = text + '%'
+	}
+	return text
+}
+
+/** Facteur appliqué par un coup critique (miroir de Effect.CRITICAL_FACTOR côté moteur). */
+const CRITICAL_FACTOR = 1.3
+
+/**
+ * Distance de repoussée d'un EFFECT_REPEL : value1 cases, ×1,3 arrondi en coup critique.
+ * Miroir exact de la branche TYPE_REPEL d'Attack.applyOnCell côté moteur — le client
+ * rejoue le déplacement pendant le combat, les deux doivent donner le même nombre.
+ */
+function repelDistance(value1: number, critical: boolean): number {
+	return Math.round(value1 * (critical ? CRITICAL_FACTOR : 1))
+}
+
+/** Effet qui agit au début de chaque tour de sa cible (miroir des PeriodicEffect du moteur). */
+function isPeriodicEffect(type: number): boolean {
+	return type === EffectType.POISON || type === EffectType.AFTEREFFECT || type === EffectType.HEAL
+}
+
+export { CRITICAL_FACTOR, Effect, EffectModifier, EffectTarget, EffectType, EffectTypeMarket, effectValueText, EntityEffect, isPeriodicEffect, repelDistance, State }

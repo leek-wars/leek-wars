@@ -45,8 +45,11 @@ defineProps<{
 	.alive {
 		margin-left: 21px;
 	}
+	// Le crâne sert de masque : il prend l'encre du texte, dans tous les thèmes.
 	.dead {
-		background-image: url("/image/cross.png");
+		background-color: var(--text-color);
+		mask: url("/image/cross.png") no-repeat;
+		-webkit-mask: url("/image/cross.png") no-repeat;
 		width: 15px;
 		height: 20px;
 		display: inline-block;

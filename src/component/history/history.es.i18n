@@ -28,6 +28,8 @@
 	"chest_hunt": "Caza de cofres",
 	"n_chests": "{0} cofres",
 	"colossus": "Coloso",
+	"view_grid": "Vista de cuadrícula",
+	"view_table": "Vista de tabla",
 	"result": "Resultado",
 	"generating": "Generando"
 }

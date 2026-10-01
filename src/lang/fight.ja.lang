@@ -39,6 +39,7 @@
 	"n_power": "{0}パワー",
 	"n_poison": "{0}の毒",
 	"open_chest": "{entity} チェスト {chest} を開けて {resources} を入手",
+	"plant_awake": "{leek} が入り {plant} が目を覚ます",
 	"reduce_effects": "{leek} の効果が {value} 減少します",
 	"remove_poisons": "{leek} の毒は中和されました",
 	"remove_shackles": "{leek} の枷は破壊された",

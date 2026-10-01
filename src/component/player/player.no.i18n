@@ -6,6 +6,7 @@
 	"dark_mode": "Nattmodus",
 	"decelerate": "Bremse ned",
 	"display_cell_numbers": "Vis boksnummer",
+	"marks_foreground": "mark() i forgrunnen",
 	"display_debug": "Vis feilsøkingsinformasjon",
 	"display_life_bars": "Vis helsestolper",
 	"display_logs": "Vis feilsøking",

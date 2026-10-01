@@ -1,16 +1,19 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Boulder, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, FlyingSpinningProjectile, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { prepareParticleSprites, Blood, Boulder, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, FlyingSpinningProjectile, Garbage, SpinningGarbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Orbital, Particle, Plasma, PrismParticle, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Path } from './path'
 import { Position } from '@/component/player/game/position'
 import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
+import { STAMPS } from './particle-sprites'
 import { S } from './sound'
 
 class Particles {
 	public game: Game
 	public particles: Particle[] = []
 	public groundParticles: Particle[] = []
+	private preparedScale = 0
+	private prepareTimer: ReturnType<typeof setTimeout> | undefined
 
 	constructor(game: Game) {
 		this.game = game
@@ -104,6 +107,10 @@ class Particles {
 	}
 	public addCartridge(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {
 		this.add(new Cartridge(this.game, x, y, z, dx, dy, dz, texture))
+	}
+	// Débris balistique qui tourne sur lui-même (rotation en radians par frame)
+	public addSpinningGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1, angle: number = 0, life: number = Particle.GARBAGE_LIFE) {
+		this.add(new SpinningGarbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale, angle, life))
 	}
 	public addGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1, angle: number = 0, life: number = Particle.GARBAGE_LIFE) {
 		this.add(new Garbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale, angle, life))
@@ -228,10 +235,46 @@ class Particles {
 	public drawAir(ctx: CanvasRenderingContext2D) {
 		this.draw(ctx, this.particles)
 	}
+	/**
+	 * Prépare les feuilles de sprites des particules posées à plat pour l'échelle du terrain
+	 * (cf. particle-sprites.ts) : au lancement, puis après chaque changement d'échelle — un
+	 * redimensionnement en rafale n'en déclenche qu'une, une fois la fenêtre posée.
+	 */
+	public prepare(palettes: ((t: number) => string)[], now: boolean = false) {
+		if (!STAMPS) { return }
+		clearTimeout(this.prepareTimer)
+		const run = () => {
+			const k = this.game.ground.scale
+			if (k > 0 && k !== this.preparedScale) {
+				this.preparedScale = k
+				prepareParticleSprites(k, palettes)
+			}
+		}
+		if (now) { run() } else { this.prepareTimer = setTimeout(run, 200) }
+	}
+
 	public draw(ctx: CanvasRenderingContext2D, particles: Particle[]) {
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
+		// Particules posées à plat (cf. particle-sprites.ts) : copies 1:1 dans le repère du
+		// canvas, qui n'a de sens que sans rotation ni cisaillement. L'ordre de dessin est
+		// gardé, seule la matrice bascule entre les deux façons de dessiner.
+		const m = STAMPS ? ctx.getTransform() : null
+		const flat = m !== null && m.b === 0 && m.c === 0 && m.a === m.d && m.a > 0
+		let identity = false
 		for (const particle of particles) {
+			if (flat && particle.angle === 0 && particle.blit) {
+				if (!identity) {
+					ctx.setTransform(1, 0, 0, 1, 0, 0)
+					identity = true
+				}
+				particle.blit(ctx, m.a * particle.x + m.e, m.d * (particle.y - particle.z) + m.f, m.a)
+				continue
+			}
+			if (identity && m) {
+				ctx.setTransform(m)
+				identity = false
+			}
 			ctx.save()
 			ctx.translate(particle.x, particle.y - particle.z)
 			ctx.rotate(particle.angle)

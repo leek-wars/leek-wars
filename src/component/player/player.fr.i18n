@@ -5,6 +5,7 @@
 	"dark_mode": "Mode nuit",
 	"decelerate": "Décélérer",
 	"display_cell_numbers": "Afficher numéros cases",
+	"marks_foreground": "mark() en premier plan",
 	"display_debug": "Afficher infos debug",
 	"display_life_bars": "Afficher barres de vie",
 	"display_logs": "Debugs",

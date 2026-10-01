@@ -6,6 +6,7 @@
 	"dark_mode": "Modalità notturna",
 	"decelerate": "Decelerare",
 	"display_cell_numbers": "Visualizzare i numeri delle caselle",
+	"marks_foreground": "mark() in primo piano",
 	"display_debug": "Mostra informazioni di debug",
 	"display_life_bars": "Mostra le barre della salute",
 	"display_logs": "Mostra debug",

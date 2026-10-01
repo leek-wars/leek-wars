@@ -5,6 +5,7 @@
 	"dark_mode": "Dark mode",
 	"decelerate": "Slow down",
 	"display_cell_numbers": "Show cell numbers",
+	"marks_foreground": "mark() in foreground",
 	"display_debug": "Display debug info",
 	"display_life_bars": "Show health bars",
 	"display_logs": "Display debug output",

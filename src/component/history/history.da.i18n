@@ -28,6 +28,8 @@
 	"chest_hunt": "Kistejagt",
 	"n_chests": "{0} kister",
 	"colossus": "Koloss",
+	"view_grid": "Gittervisning",
+	"view_table": "Tabelvisning",
 	"result": "Resultat",
 	"generating": "Genererer"
 }

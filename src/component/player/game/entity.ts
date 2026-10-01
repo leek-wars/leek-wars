@@ -2,14 +2,15 @@ import { Bubble } from '@/component/player/game/bubble'
 import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
-import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
+import { isDrawable, isPainted, loadDrawableImage, SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
-import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
+import { EffectModifier, EffectType, effectValueText, EntityEffect, State } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { TEAM_COLORS } from '@/model/team'
+import { BakedMemo, BakedSprite, BakedSpriteCache, blitBaked, CAN_BAKE, memoMatches, ready } from './baked-sprite'
 import { Path } from './path'
 import { S } from './sound'
 import { WeaponAnimation } from './weapons'
@@ -21,6 +22,10 @@ enum EntityType {
 	TURRET = 2,
 	CHEST = 3,
 	MOB = 4,
+	// v2.50 — les plantes (Maïs, Piment, Prototaxite) sont un type d'entité à part côté moteur :
+	// enracinées, elles ne jouent pas leur tour. Le rendu reste celui d'un bulbe (cf Bulb.setPlant),
+	// et les combats d'avant le changement les envoient encore en BULB.
+	PLANT = 5,
 }
 enum EntityDirection {
 	NORTH = 0,
@@ -39,12 +44,455 @@ enum DamageType {
 	SLICE
 }
 
+/**
+ * Pastilles d'effet pré-composées.
+ *
+ * Une pastille (l'icône de la puce ou de l'arme, sa valeur, sa durée, son état)
+ * ne change qu'à l'ajout, l'empilement ou le retrait d'un effet — mais on la
+ * repeignait intégralement à chaque image. Sur un combat à 8 poireaux, les 71
+ * pastilles affichées coûtaient 59 % du temps de dessin du moteur : un PNG de
+ * 250 px redimensionné en 18, deux fonds et deux textes, chacun mesuré au
+ * préalable (151 `measureText` par image, à eux seuls).
+ *
+ * On les peint donc une fois chacune, à la résolution exacte où elles
+ * atterrissent à l'écran, et l'image ne fait plus qu'un blit par pastille :
+ * 3,20 → 0,70 ms par image à CPU ÷6, dessin du moteur 5,80 → 3,30 ms.
+ *
+ * Le blit part d'un `ImageBitmap` et pas du canevas de brouillon : un bitmap est
+ * immuable, donc envoyé au GPU une seule fois, là où un canevas reste une cible
+ * de dessin que le navigateur peut avoir à renvoyer. Sa création étant
+ * asynchrone, une pastille se dessine directement tant qu'il n'est pas arrivé.
+ */
+// Marge autour de la pastille (la valeur et la durée débordent un peu de l'icône),
+// comptée en PIXELS DU CANVAS : l'origine du contenu tombe ainsi pile sur la
+// grille de pixels, sinon le texte et l'icône sont déjà flous à la cuisson.
+const EFFECT_BADGE_MARGIN = 2
+const EFFECT_BADGE_FONT = "bold 9pt Roboto"
+// La clé porte l'échelle de dessin : deux lecteurs affichés côte à côte à des
+// zooms différents se partagent le cache au lieu de se chasser l'un l'autre.
+const EFFECT_BADGES: Map<string, { bitmap: ImageBitmap | null }> = new Map()
+// Un effet qui s'empile ou dont la durée s'écoule devient une nouvelle pastille :
+// on borne le cache.
+const EFFECT_BADGE_MAX = 400
+
+// Une police ne se décharge jamais : on la demande UNE fois, puis on n'interroge
+// plus le navigateur. ⚠️ `document.fonts.check` coûte cher — appelé pour chacune
+// des 71 pastilles d'une image, il annulait à lui seul tout le gain de la
+// pré-composition (5,00 ms par image au lieu de 3,30).
+const fontsReady = new Set<string>()
+const fontsAsked = new Set<string>()
+function fontAvailable(font: string): boolean {
+	if (!fontsReady.has(font) && !fontsAsked.has(font)) {
+		fontsAsked.add(font)
+		if (document.fonts.check(font)) {
+			fontsReady.add(font)
+		} else {
+			// Figer une pastille avec la police de repli la garderait ainsi tout le
+			// combat : on attend, le dessin direct prend le relais entre-temps.
+			const ready = () => { fontsReady.add(font) }
+			document.fonts.load(font).then(ready, ready)
+		}
+	}
+	return fontsReady.has(font)
+}
+
+function effectDurationText(effect: EntityEffect): string {
+	return '' + LeekWars.formatTurns(effect.turns)
+}
+
+/** Position, dans le repère courant, qui tombe pile sur un pixel du canvas. */
+function snapToPixel(value: number, scale: number, offset: number): number {
+	return (Math.round(scale * value + offset) - offset) / scale
+}
+
+/**
+ * Peint une pastille, origine en haut à gauche de l'icône. `alpha` multiplie les
+ * opacités internes : 1 pour la pré-composition, l'opacité de l'entité pour le
+ * dessin direct (le repli, tant qu'une image n'est pas chargée).
+ */
+function drawEffectBadge(ctx: CanvasRenderingContext2D, effect: EntityEffect, size: number, alpha: number) {
+
+	const state_size = 0.6
+	const text_size = 9
+
+	ctx.font = EFFECT_BADGE_FONT
+	ctx.textAlign = "left"
+	ctx.textBaseline = "middle"
+
+	// Icône absente côté serveur : l'Image reste « broken » le temps que son
+	// handler d'erreur bascule sur le pixel transparent, et drawImage lève dans
+	// cet intervalle — ce qui tuait la boucle de rendu et figeait le combat.
+	ctx.globalAlpha = alpha
+	if (isDrawable(effect.texture)) {
+		ctx.drawImage(effect.texture, 0, 0, size, size)
+	}
+	if (effect.modifiers & EffectModifier.IRREDUCTIBLE) {
+		ctx.strokeStyle = "#ffca00"
+		ctx.lineWidth = 3
+		ctx.strokeRect(1.5, 1.5, size - 3, size - 3)
+	}
+	// Valeur, ou icône d'état
+	if (effect.type === EffectType.ADD_STATE) {
+		const color = FightEntity.stateColors[effect.value]
+		if (color) {
+			ctx.globalAlpha = 0.85 * alpha
+			ctx.fillStyle = color
+			ctx.fillRect(0, (1 - state_size) * size - 2, size * state_size + 2, size * state_size + 2)
+		}
+		ctx.globalAlpha = alpha
+		const stateIcon = FightEntity.stateImage(effect.value)
+		if (isDrawable(stateIcon)) {
+			ctx.drawImage(stateIcon, 1, (1 - state_size) * size - 1, size * state_size, size * state_size)
+		}
+	} else {
+		const value = effectValueText(effect)
+		const w = ctx.measureText(value).width
+		ctx.globalAlpha = 0.5 * alpha
+		ctx.fillStyle = 'black'
+		ctx.fillRect(1, size - text_size - 5, w + 3, text_size + 4)
+		ctx.globalAlpha = alpha
+		ctx.fillStyle = 'white'
+		ctx.fillText(value, 2, size - 6)
+	}
+	// Durée
+	const duration = effectDurationText(effect)
+	const w2 = ctx.measureText(duration).width
+	ctx.globalAlpha = 0.5 * alpha
+	ctx.fillStyle = 'black'
+	ctx.fillRect(size - 11, 1.5, w2 + 3, 12)
+	ctx.globalAlpha = alpha
+	ctx.fillStyle = 'white'
+	ctx.fillText(duration, size - 9, 8)
+}
+
+/**
+ * Pastille pré-composée d'un effet, ou `null` s'il est trop tôt pour la figer :
+ * une icône encore en cours de chargement, ou la police pas encore disponible,
+ * resterait absente de la pastille pour tout le combat. L'appelant repasse alors
+ * par le dessin direct, et retentera à l'image suivante.
+ */
+function getEffectBadge(effect: EntityEffect, size: number, quality: number): ImageBitmap | null {
+
+	if (typeof createImageBitmap !== 'function') { return null }
+
+	const key = effect.item + '|' + effect.type + '|' + effect.value + '|' + effect.turns + '|' + effect.modifiers + '|' + quality
+	const cached = EFFECT_BADGES.get(key)
+	if (cached) { return cached.bitmap }
+
+	// Les images et la police doivent être là avant de figer la pastille : ce qui
+	// manque au moment de la peindre en resterait absent pour tout le combat
+	// (cf. `isPainted`, qui est plus strict qu'`isDrawable` pour cette raison).
+	if (!isPainted(effect.texture)) { return null }
+	if (effect.type === EffectType.ADD_STATE && !isPainted(FightEntity.stateImage(effect.value))) { return null }
+	if (!fontAvailable(EFFECT_BADGE_FONT)) { return null }
+
+	const canvas = document.createElement('canvas')
+	// `willReadFrequently` garde le brouillon côté processeur : sans lui,
+	// createImageBitmap doit relire un canevas posé sur le GPU (1 ms pièce).
+	const ctx = canvas.getContext('2d', { willReadFrequently: true })
+	if (!ctx) { return null }
+
+	// Mesurer d'abord, dimensionner ensuite (fixer `width` réinitialise le
+	// contexte) : la valeur et la durée peuvent dépasser à droite de l'icône —
+	// elles débordent sur la pastille suivante, qui est dessinée après et les
+	// recouvre, comme avant.
+	ctx.font = EFFECT_BADGE_FONT
+	const valueWidth = ctx.measureText(effectValueText(effect)).width
+	const durationWidth = ctx.measureText(effectDurationText(effect)).width
+	const width = Math.max(size, valueWidth + 5, size - 11 + durationWidth + 4)
+
+	canvas.width = Math.ceil(width * quality) + 2 * EFFECT_BADGE_MARGIN
+	canvas.height = Math.ceil(size * quality) + 2 * EFFECT_BADGE_MARGIN
+	ctx.setTransform(quality, 0, 0, quality, EFFECT_BADGE_MARGIN, EFFECT_BADGE_MARGIN)
+	drawEffectBadge(ctx, effect, size, 1)
+
+	// Les entrées les plus anciennes portent des durées déjà écoulées : on en
+	// évince une par création plutôt que de tout jeter d'un coup — sinon l'image
+	// qui franchit le plafond repaie la composition des 71 pastilles affichées,
+	// et ça se voit.
+	while (EFFECT_BADGES.size >= EFFECT_BADGE_MAX) {
+		const oldest = EFFECT_BADGES.keys().next()
+		if (oldest.done) { break }
+		const evicted = EFFECT_BADGES.get(oldest.value)
+		if (evicted && evicted.bitmap) { evicted.bitmap.close() }
+		EFFECT_BADGES.delete(oldest.value)
+	}
+	const badge: { bitmap: ImageBitmap | null } = { bitmap: null }
+	EFFECT_BADGES.set(key, badge)
+	createImageBitmap(canvas).then((bitmap) => {
+		// L'entrée a pu être évincée entre-temps : ce bitmap-là ne sert plus.
+		if (EFFECT_BADGES.get(key) === badge) { badge.bitmap = bitmap } else { bitmap.close() }
+	}, () => {
+		if (EFFECT_BADGES.get(key) === badge) { EFFECT_BADGES.delete(key) }
+	})
+	return null
+}
+
+const NAME_PLATE_FONT = "500 11pt Roboto"
+const NAME_PLATE_HEIGHT = 22
+const NAME_PLATE_BAR_HEIGHT = 9
+
+/** Fond et nom d'une plaque, dans le repère de la plaque (origine au milieu du bord haut). */
+function paintNamePlate(ctx: CanvasRenderingContext2D, text: string, width: number, active: boolean, alpha: number) {
+	ctx.globalAlpha = (active ? 0.8 : 0.6) * alpha
+	ctx.fillStyle = active ? 'white' : 'black'
+	ctx.fillRect(-width / 2, 0, width, NAME_PLATE_HEIGHT + NAME_PLATE_BAR_HEIGHT - 1)
+	ctx.globalAlpha = alpha
+	ctx.fillStyle = active ? 'black' : 'white'
+	ctx.font = NAME_PLATE_FONT
+	ctx.textBaseline = "middle"
+	ctx.textAlign = "center"
+	ctx.fillText(text, 0, 12)
+}
+
+/** Barre de vie sous le nom, même repère que paintNamePlate. */
+function paintLifeBar(ctx: CanvasRenderingContext2D, entity: FightEntity, width: number) {
+	if (entity.life > 0) {
+		const barWidth = entity.displayLife / entity.maxLife * width
+		ctx.fillStyle = entity.lifeColor
+		ctx.strokeStyle = entity.lifeColorLighter
+		ctx.fillRect(-width / 2 + 1, NAME_PLATE_HEIGHT, barWidth - 2, NAME_PLATE_BAR_HEIGHT - 2)
+		ctx.strokeRect(-width / 2 + 1, NAME_PLATE_HEIGHT, barWidth - 2, NAME_PLATE_BAR_HEIGHT - 2)
+	}
+}
+
+let namePlateTokens = 0
+
+/**
+ * Plaque de nom pré-composée : le fond, le nom, la barre de vie et les pastilles
+ * d'effets figés en UN bitmap, dans cet ordre — le bas de la barre et le haut des
+ * pastilles se partagent une rangée de pixels, l'ordre compte.
+ *
+ * Le texte n'y est presque pour rien (~5 µs par plaque, mesuré) : ce qui coûtait,
+ * c'est le NOMBRE d'appels — le fond, la mesure et l'écriture du nom, puis par
+ * pastille une clé, une recherche et un blit calé, une douzaine d'opérations par
+ * plaque et par image, que Chromium paie une à une (enregistrées puis envoyées au
+ * processus GPU). Combat à 30 poireaux, 20 plaques : 4,38 → 2,88 ms de dessin
+ * par image à CPU ÷4 sous Chromium, 3,80 → 3,35 ms sous Firefox.
+ *
+ * Le bitmap n'est composé qu'une fois les entrées stables deux images de suite :
+ * les PV (et la barre) défilent pendant une seconde après chaque coup, et un
+ * déplacement change la phase sous-pixel de la plaque à chaque image — la plaque
+ * est alors dessinée directement, comme avant. Il retient cette phase et se pose
+ * au pixel entier : la plaque ne bouge pas d'un pixel en se figeant, pastilles
+ * comprises. Les entrées sont comparées champ par champ, sans clé textuelle : sur
+ * les silhouettes d'arme, bâtir une clé et interroger une Map à chaque image
+ * coûtait plus que ce que le cache économisait.
+ */
+class NamePlate {
+	// Entrées de l'image précédente. Les PV affichés sont comparés EXACTS : la
+	// barre de vie suit la valeur non arrondie jusqu'au bout du défilement.
+	private displayLife = NaN
+	private life = NaN
+	private maxLife = NaN
+	private active = false
+	private showIDs = false
+	private showEffects = false
+	private quality = 0
+	private phaseX = 0
+	private phaseY = 0
+	// Ce qui dessine les pastilles, cinq nombres par effet (cf. la clé de getEffectBadge)
+	private effects: number[] = []
+	public bitmap: ImageBitmap | null = null
+	// Coin du bitmap, relatif au pixel entier du repère de la plaque
+	public x = 0
+	public y = 0
+	// Jeton de la composition en cours, 0 si aucune
+	private pending = 0
+
+	/** Vrai si rien n'a bougé depuis l'image précédente ; sinon retient les nouvelles entrées. */
+	public same(entity: FightEntity, active: boolean, m: DOMMatrix): boolean {
+		const game = entity.game
+		const phaseX = m.e - Math.floor(m.e), phaseY = m.f - Math.floor(m.f)
+		let same = entity.displayLife === this.displayLife && entity.life === this.life && entity.maxLife === this.maxLife
+			&& active === this.active && game.showIDs === this.showIDs
+			&& game.showEffects === this.showEffects && m.a === this.quality
+			&& phaseX === this.phaseX && phaseY === this.phaseY
+		if (same) {
+			const fx = this.effects
+			let i = 0
+			for (const id in entity.effects) {
+				const e = entity.effects[id]
+				if (fx[i] !== e.item || fx[i + 1] !== e.type || fx[i + 2] !== e.value || fx[i + 3] !== e.turns || fx[i + 4] !== e.modifiers) {
+					same = false
+					break
+				}
+				i += 5
+			}
+			if (i !== fx.length) { same = false }
+		}
+		if (!same) {
+			this.displayLife = entity.displayLife
+			this.life = entity.life
+			this.maxLife = entity.maxLife
+			this.active = active
+			this.showIDs = game.showIDs
+			this.showEffects = game.showEffects
+			this.quality = m.a
+			this.phaseX = phaseX
+			this.phaseY = phaseY
+			const effects: number[] = []
+			for (const id in entity.effects) {
+				const e = entity.effects[id]
+				effects.push(e.item, e.type, e.value, e.turns, e.modifiers)
+			}
+			this.effects = effects
+			if (this.bitmap) {
+				this.bitmap.close()
+				this.bitmap = null
+			}
+			this.pending = 0
+		}
+		return same
+	}
+
+	/**
+	 * Lance la composition si tout ce qu'il faut est là : la police, et le bitmap de
+	 * chaque pastille — ce qui manquerait au moment de figer la plaque en resterait
+	 * absent. Sinon on retentera à l'image suivante, le dessin direct faisant le relais.
+	 */
+	public compose(entity: FightEntity, text: string, width: number, effectSize: number, m: DOMMatrix) {
+		if (this.pending || this.bitmap || typeof createImageBitmap !== 'function') { return }
+		if (!fontAvailable(NAME_PLATE_FONT)) { return }
+		const q = this.quality
+		const E = Math.floor(m.e), F = Math.floor(m.f)
+		let minX = Math.floor(this.phaseX - q * width / 2) - 1
+		let maxX = Math.ceil(this.phaseX + q * width / 2) + 1
+		let minY = -1
+		let maxY = Math.ceil(this.phaseY + q * (NAME_PLATE_HEIGHT + NAME_PLATE_BAR_HEIGHT - 1)) + 1
+		const badges: { bitmap: ImageBitmap, x: number, y: number }[] = []
+		if (this.showEffects) {
+			let x = -LeekWars.objectSize(entity.effects) * effectSize / 2
+			for (const id in entity.effects) {
+				const bitmap = getEffectBadge(entity.effects[id], effectSize, q)
+				if (!bitmap) { return }
+				// Le calage du dessin direct (cf. drawName), relatif au pixel entier
+				const bx = Math.round(q * x - EFFECT_BADGE_MARGIN + m.e) - E
+				const by = Math.round(q * effectSize - EFFECT_BADGE_MARGIN + m.f) - F
+				badges.push({ bitmap, x: bx, y: by })
+				minX = Math.min(minX, bx)
+				maxX = Math.max(maxX, bx + bitmap.width)
+				minY = Math.min(minY, by)
+				maxY = Math.max(maxY, by + bitmap.height)
+				x += effectSize
+			}
+		}
+		const canvas = document.createElement('canvas')
+		canvas.width = maxX - minX
+		canvas.height = maxY - minY
+		// Cf. getEffectBadge : un brouillon côté processeur, que createImageBitmap
+		// n'a pas à relire depuis le GPU. Rien n'y est rééchantillonné (texte,
+		// rectangles, pastilles posées au pixel entier). Sous Firefox, bitmap et
+		// dessin direct sont identiques au niveau près ; sous Chromium, dont le
+		// canvas du jeu est rastérisé sur le GPU, seuls les bords anticrénelés
+		// diffèrent un peu (netteté −1 %) — un brouillon accéléré ne faisait pas mieux.
+		const ctx = canvas.getContext('2d', { willReadFrequently: true })
+		if (!ctx) { return }
+		ctx.setTransform(q, 0, 0, q, this.phaseX - minX, this.phaseY - minY)
+		paintNamePlate(ctx, text, width, this.active, 1)
+		paintLifeBar(ctx, entity, width)
+		ctx.setTransform(1, 0, 0, 1, 0, 0)
+		for (const badge of badges) {
+			ctx.drawImage(badge.bitmap, badge.x - minX, badge.y - minY)
+		}
+		this.x = minX
+		this.y = minY
+		const token = this.pending = ++namePlateTokens
+		createImageBitmap(canvas).then((bitmap) => {
+			// Les entrées ont pu bouger entre-temps : ce bitmap-là ne sert plus
+			if (this.pending === token) {
+				this.bitmap = bitmap
+				this.pending = 0
+			} else {
+				bitmap.close()
+			}
+		}, () => {
+			if (this.pending === token) { this.pending = 0 }
+		})
+	}
+}
+
+/**
+ * Losanges d'équipe pré-composés : le trait, et le remplissage de l'entité dont c'est
+ * le tour.
+ *
+ * Chaque entité trace un losange sur sa case à chaque image : un chemin de quatre
+ * segments, trait de 3,5 à bouts et jointures arrondis, rastérisé de zéro. Il ne
+ * dépend pourtant que de la couleur d'équipe, de la taille des cases et de l'échelle
+ * du terrain. On le cuit donc une fois à sa taille finale à l'écran et on le pose en
+ * copie 1:1 à coordonnées entières, avec sa transparence : un trait cuit opaque puis
+ * posé à α donne le même résultat que ce trait tracé à α.
+ */
+const TEAM_SQUARES = new BakedSpriteCache(120)
+const TEAM_SQUARE_WIDTH = 3.5
+
+/** Chemin du losange d'une case, centré sur l'origine. */
+function traceDiamond(ctx: CanvasRenderingContext2D, tileX: number, tileY: number) {
+	ctx.beginPath()
+	ctx.moveTo(0, -tileY / 2)
+	ctx.lineTo(tileX / 2, 0)
+	ctx.lineTo(0, tileY / 2)
+	ctx.lineTo(-tileX / 2, 0)
+	ctx.closePath()
+}
+
+/** Pose le trait (ou le remplissage) du losange, de la couleur donnée. */
+function paintDiamond(ctx: CanvasRenderingContext2D, color: string, tileX: number, tileY: number, fill: boolean) {
+	traceDiamond(ctx, tileX, tileY)
+	if (fill) {
+		ctx.fillStyle = color
+		ctx.fill()
+	} else {
+		ctx.strokeStyle = color
+		ctx.lineCap = 'round'
+		ctx.lineJoin = 'round'
+		ctx.lineWidth = TEAM_SQUARE_WIDTH
+		ctx.stroke()
+	}
+}
+
+/**
+ * Trait ou remplissage du losange pour la matrice courante (l'échelle du terrain).
+ * La taille des cases est une constante du terrain : la couleur suffit à distinguer
+ * les losanges d'une même partie, la taille n'entre que dans la clé.
+ */
+function teamSquare(entity: FightEntity, color: string, tileX: number, tileY: number, fill: boolean, m: DOMMatrix): BakedSprite | null {
+	const memo = fill ? entity.teamFill : entity.teamStroke
+	if (memoMatches(memo, color, m)) { return ready(memo) }
+	const hw = tileX / 2 + TEAM_SQUARE_WIDTH, hh = tileY / 2 + TEAM_SQUARE_WIDTH
+	const fresh = TEAM_SQUARES.lookup((fill ? 'f|' : 's|') + color + '|' + tileX + '|' + tileY, color, m, [[-hw, -hh, 2 * hw, 2 * hh]], (ctx) => {
+		paintDiamond(ctx, color, tileX, tileY, fill)
+	})
+	if (fill) { entity.teamFill = fresh } else { entity.teamStroke = fresh }
+	return ready(fresh)
+}
+
 abstract class FightEntity extends Entity {
 
 	static stateImages: Map<number, HTMLImageElement> = new Map()
+	// Couleur du fond de l'icône d'état, indexée par état. Vert = bénéfique, bleu =
+	// neutre, rouge = subi. Un état sans couleur ne peint pas de fond.
+	// 2 = Insoignable (rouge), 9 = Enraciné (bleu, inhérent aux plantes 2.50),
+	// 12 = Stérile (rouge).
 	static stateColors = [
-		'green', '', '', 'green', '', '', '', '', '', '', '', 'blue'
+		'green', '', 'red', 'green', '', '', '', '', '', 'blue', '', 'blue', 'red'
 	]
+
+	/**
+	 * Icône d'un état, toujours dessinable. Le chargement est paresseux et jamais
+	 * conditionné à addState : un effet d'état dont la valeur n'a pas été enregistrée
+	 * renvoyait `undefined`, et drawImage faisait alors tomber toute la boucle de jeu
+	 * — combat figé. Un état sans icône part en 404, dont le repli évite une Image
+	 * « broken » que drawImage refuserait aussi.
+	 */
+	static stateImage(state: number): HTMLImageElement {
+		let image = FightEntity.stateImages.get(state)
+		if (!image) {
+			image = loadDrawableImage(LeekWars.STATIC + "image/state/" + state + ".svg")
+			FightEntity.stateImages.set(state, image)
+		}
+		return image
+	}
 
 	// Infos générales
 	public game: Game
@@ -72,6 +520,10 @@ abstract class FightEntity extends Entity {
 	public power = 0
 	public maxLife = 1
 	public initialMaxLife = 1
+	// Vie de base de l'entité (stats de base côté serveur), invariante pendant le
+	// combat. Distincte de initialMaxLife, qui est amputée du bonus de critique des
+	// invocations pour le calcul de la taille d'affichage (growth).
+	public baseLife = 1
 	public maxTP = 0
 	public maxMP = 0
 	public absoluteShield = 0
@@ -111,6 +563,7 @@ abstract class FightEntity extends Entity {
 	public jumpHeight = 0
 	// Drawing
 	public drawID: number | null = null
+	private namePlate: NamePlate | null = null
 	public width: number = 0
 	public height: number = 0
 	public baseHeight: number = 0
@@ -132,16 +585,19 @@ abstract class FightEntity extends Entity {
 	public path: Cell[] = []
 	// Animation
 	public oscillation = 1
+	public teamStroke: BakedMemo | null = null
+	public teamFill: BakedMemo | null = null
 	public frame: number
 	public growth: number = 1.0
 	public lastDamageType: DamageType = DamageType.DEFAULT
+	/** Dernière attaque jouée = coup critique. Lu par les animations d'arme (repoussée de la lance). */
+	public lastCritical: boolean = false
 	public crashAnim: number = 0
 	public carbonizeAnim: number = 0
 	public deadAnim: number = 0
 	public blooming: boolean = false
 	// Effects
 	public effects: {[key: number]: EntityEffect} = {}
-	public launched_effects: {[key: number]: EntityEffect} = {}
 	public jumpForce: number = 0
 	public bodyTexFront!: Texture
 	public bodyTexBack!: Texture
@@ -150,6 +606,18 @@ abstract class FightEntity extends Entity {
 	public lifeColorLighter!: string
 	// States
 	public states: Set<number> = new Set()
+	// Statique : ni déplacement forcé, ni échange de position. Les tourelles le sont
+	// par construction (Turret.startFight pose l'état, irréductible), mais les combats
+	// enregistrés avant l'apparition de cet effet ne le contiennent pas : sans ce cas
+	// particulier, le grappin et le gant de boxe les déplaçaient visuellement.
+	get isStatic(): boolean {
+		return this.type === EntityType.TURRET || this.states.has(State.STATIC)
+	}
+	// Immunisé aux déplacements forcés (poussée/attirance) : Statique ou Enraciné.
+	// L'Inversion/Rempotage ne passe pas par ici (l'Enraciné reste échangeable).
+	get unmovable(): boolean {
+		return this.isStatic || this.states.has(State.ROOTED)
+	}
 	// Reachable cells
 	public reachableCells: Set<Cell> = new Set<Cell>()
 	public reachableCellsArea!: number[][]
@@ -704,11 +1172,9 @@ abstract class FightEntity extends Entity {
 		this.active = false
 
 		for (const id in this.effects) {
-			delete this.game.leeks[this.effects[id].caster].launched_effects[id]
 			this.game.removeEffect(parseInt(id, 10))
 		}
 		this.effects = {}
-		this.launched_effects = {}
 		this.game.actionDone()
 	}
 
@@ -1017,28 +1483,27 @@ abstract class FightEntity extends Entity {
 		// Team square
 		ctx.save()
 
-		ctx.globalAlpha = 1
-		ctx.beginPath()
-		ctx.moveTo(0, -this.game.ground.realTileSizeY / 2)
-		ctx.lineTo(this.game.ground.realTileSizeX / 2, 0)
-		ctx.lineTo(0, this.game.ground.realTileSizeY / 2)
-		ctx.lineTo(-this.game.ground.realTileSizeX / 2, 0)
-		ctx.closePath()
-
-		if (this.id === this.game.currentPlayer) {
-			ctx.fillStyle = TEAM_COLORS[this.team - 1]
-			ctx.globalAlpha = 0.5
-			ctx.fill()
+		// Losange pré-composé (cf. TEAM_SQUARES), posé 1:1 à coordonnées entières. Le
+		// remplissage n'est cuit que pour l'entité dont c'est le tour.
+		const color = TEAM_COLORS[this.team - 1]
+		const tileX = this.game.ground.realTileSizeX, tileY = this.game.ground.realTileSizeY
+		const current = this.id === this.game.currentPlayer
+		let m: DOMMatrix | null = null, stroke: BakedSprite | null = null, fill: BakedSprite | null = null
+		if (CAN_BAKE && ctx.filter === 'none') {
+			m = ctx.getTransform()
+			stroke = teamSquare(this, color, tileX, tileY, false, m)
+			fill = current ? teamSquare(this, color, tileX, tileY, true, m) : null
 		}
-
-		ctx.globalAlpha = 0.8 * (1 - this.deadAnim)
-		ctx.strokeStyle = TEAM_COLORS[this.team - 1]
-		ctx.lineCap = 'round'
-		ctx.lineJoin = 'round'
-		ctx.lineWidth = 3.5
-		ctx.stroke()
-
-		ctx.globalAlpha = 1
+		if (m && stroke && (fill || !current)) {
+			if (fill) {
+				ctx.globalAlpha = 0.5
+				blitBaked(ctx, fill, m)
+			}
+			ctx.globalAlpha = 0.8 * (1 - this.deadAnim)
+			blitBaked(ctx, stroke, m)
+		} else {
+			this.drawTeamSquare(ctx, color, tileX, tileY, current)
+		}
 		ctx.restore()
 
 		if (this.crashAnim) {
@@ -1048,6 +1513,19 @@ abstract class FightEntity extends Entity {
 
 		// Integrate z pos
 		ctx.translate(0, - this.z)
+	}
+
+	/**
+	 * Tracé direct du losange d'équipe : repli tant que sa version pré-composée
+	 * n'est pas prête (cf. TEAM_SQUARES), ou si un filtre est en cours.
+	 */
+	private drawTeamSquare(ctx: CanvasRenderingContext2D, color: string, tileX: number, tileY: number, current: boolean) {
+		if (current) {
+			ctx.globalAlpha = 0.5
+			paintDiamond(ctx, color, tileX, tileY, true)
+		}
+		ctx.globalAlpha = 0.8 * (1 - this.deadAnim)
+		paintDiamond(ctx, color, tileX, tileY, false)
 	}
 
 	public endDraw(ctx: CanvasRenderingContext2D) {
@@ -1080,7 +1558,7 @@ abstract class FightEntity extends Entity {
 		if (this.x !== this.dx || this.y !== this.dy) {
 			ctx.save()
 			ctx.globalAlpha = 0.5
-			ctx.fillStyle = this.game.map.options.reachableColor
+			ctx.fillStyle = this.game.map.reachableColor
 
 			for (const cell of this.path) {
 				const pos = this.game.ground.field.cellToXY(cell)
@@ -1115,7 +1593,6 @@ abstract class FightEntity extends Entity {
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 
 		const effect_size = 30
-		const state_size = 0.6
 		const reverse = Math.min(0.7, this.game.textRatio / this.game.ground.scale)
 		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? effect_size : 0
 		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - this.baseZ - 30 - z * reverse)
@@ -1123,87 +1600,62 @@ abstract class FightEntity extends Entity {
 
 		ctx.scale(reverse, reverse)
 
-		ctx.font = "500 11pt Roboto"
-
-		let text = this.translatedName + " (" + Math.round(this.displayLife) + ")"
-		if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
-		const width = Math.max(120, ctx.measureText(text).width + 14)
-		const height = 22
-		const barHeight = 9
-
+		// Le repère de la plaque n'est qu'un agrandissement et une translation, sans
+		// rotation : m.a est l'échelle réelle du contexte, (m.e, m.f) sa position.
+		const m = ctx.getTransform()
 		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
+		const plate = this.namePlate || (this.namePlate = new NamePlate())
+		// L'agonie fait varier l'opacité à chaque image : dessin direct
+		const stable = plate.same(this, active, m) && this.deadAnim === 0
 
-		// Fond
-		ctx.globalAlpha = (active ? 0.8 : 0.6) * (1 - this.deadAnim)
-		ctx.fillStyle = active ? 'white' : 'black'
-		ctx.fillRect(-width / 2, 0, width, height + barHeight - 1)
+		if (stable && plate.bitmap) {
+			ctx.save()
+			ctx.setTransform(1, 0, 0, 1, 0, 0)
+			ctx.globalAlpha = 1
+			ctx.drawImage(plate.bitmap, Math.floor(m.e) + plate.x, Math.floor(m.f) + plate.y)
+			ctx.restore()
+		} else {
+			let text = this.translatedName + " (" + Math.round(this.displayLife) + ")"
+			if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
+			ctx.font = NAME_PLATE_FONT
+			const width = Math.max(120, ctx.measureText(text).width + 14)
+			paintNamePlate(ctx, text, width, active, 1 - this.deadAnim)
+			paintLifeBar(ctx, this, width)
 
-		// Nom
-		ctx.globalAlpha = (1 - this.deadAnim)
-		ctx.fillStyle = active ? 'black' : 'white'
-		ctx.textBaseline = "middle"
-		ctx.textAlign = "center"
-		ctx.fillText(text, 0, 12)
-
-		// Barre de vie
-		if (this.life > 0) {
-			const life = this.displayLife / this.maxLife
-			const barWidth = life * width
-			ctx.fillStyle = this.lifeColor
-			ctx.strokeStyle = this.lifeColorLighter
-			ctx.fillRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
-			ctx.strokeRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
-		}
-
-		// Effects
-		const text_size = 9
-		if (this.game.showEffects) {
-			const count = LeekWars.objectSize(this.effects)
-			let x = -count * effect_size / 2
-			ctx.font = "bold 9pt Roboto"
-			ctx.textAlign = "left"
-			ctx.strokeStyle = "#ffca00"
-			ctx.lineWidth = 3
-			for (const e in this.effects) {
-				const effect = this.effects[e]
-				ctx.drawImage(effect.texture, x, effect_size, effect_size, effect_size)
-				if (effect.modifiers & EffectModifier.IRREDUCTIBLE) {
-					ctx.strokeRect(x + 1.5, effect_size + 1.5, effect_size - 3, effect_size - 3)
-				}
-				// Value
-				if (effect.type == EffectType.ADD_STATE) {
-					ctx.globalAlpha = 0.85 * (1 - this.deadAnim)
-					ctx.fillStyle = FightEntity.stateColors[effect.value]
-					ctx.fillRect(x, (2 - state_size) * effect_size - 2, effect_size * state_size + 2, effect_size * state_size + 2)
-					ctx.globalAlpha = (1 - this.deadAnim)
-					ctx.drawImage(FightEntity.stateImages.get(effect.value)!, x + 1, (2 - state_size) * effect_size - 1, effect_size * state_size, effect_size * state_size)
-				} else {
-					let effect_message = '' + effect.value
-					if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
-						effect_message = '-' + effect_message
+			// Effects
+			if (this.game.showEffects) {
+				const count = LeekWars.objectSize(this.effects)
+				let x = -count * effect_size / 2
+				// Les pastilles sont pré-composées (cf EFFECT_BADGES) à l'échelle RÉELLE
+				// du contexte — que l'on lit plutôt que de la recalculer — puis posées
+				// calées sur la grille de pixels : le même bitmap décalé d'un demi-pixel
+				// serait entièrement mélangé à ses voisins, et c'est CE décalage qui
+				// floutait les pastilles, pas la pré-composition.
+				const quality = m.a, scaleY = m.d, offsetX = m.e, offsetY = m.f
+				const margin = EFFECT_BADGE_MARGIN / quality
+				const alpha = 1 - this.deadAnim
+				ctx.globalAlpha = alpha
+				for (const e in this.effects) {
+					const effect = this.effects[e]
+					const bitmap = getEffectBadge(effect, effect_size, quality)
+					if (bitmap) {
+						// Poser le bitmap à SA taille : un canevas se compte en pixels
+						// entiers, et poser 19 px dans 18,1 rééchantillonnerait ce qui
+						// doit rester un blit au pixel près.
+						ctx.drawImage(bitmap,
+							snapToPixel(x - margin, quality, offsetX),
+							snapToPixel(effect_size - margin, scaleY, offsetY),
+							bitmap.width / quality, bitmap.height / quality)
+					} else {
+						ctx.save()
+						ctx.translate(x, effect_size)
+						drawEffectBadge(ctx, effect, effect_size, alpha)
+						ctx.restore()
 					}
-					if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
-						effect_message = effect_message + '%'
-					}
-					const w = ctx.measureText(effect_message).width
-					ctx.globalAlpha = 0.5 * (1 - this.deadAnim)
-					ctx.fillStyle = 'black'
-					ctx.fillRect(x + 1, 2 * effect_size - text_size - 5, w + 3, text_size + 4)
-					ctx.globalAlpha = (1 - this.deadAnim)
-					ctx.fillStyle = 'white'
-					ctx.fillText(effect_message, x + 2, 2 * effect_size - 6)
+					x += effect_size
 				}
-				// Duration
-				const effect_duration = effect.turns === -1 ? '∞' : '' + effect.turns
-				const w2 = ctx.measureText(effect_duration).width
-				ctx.globalAlpha = 0.5 * (1 - this.deadAnim)
-				ctx.fillStyle = 'black'
-				ctx.fillRect(x + effect_size - 11, effect_size + 1.5, w2 + 3, 12)
-				ctx.globalAlpha = (1 - this.deadAnim)
-				ctx.fillStyle = 'white'
-				ctx.fillText(effect_duration, x + effect_size - 9, effect_size + 8)
-				x += effect_size
 			}
+			if (stable) { plate.compose(this, text, width, effect_size, m) }
 		}
 
 		if (this.id === this.game.currentPlayer) {
@@ -1219,6 +1671,8 @@ abstract class FightEntity extends Entity {
 
 		ctx.font = "bold 11pt Roboto"
 		ctx.textAlign = "center"
+		// Posé ici : quand la plaque est un bitmap, plus personne ne l'a réglé avant
+		ctx.textBaseline = "middle"
 		const textTP = '' + this.tp
 		const textMP = '' + this.mp
 		const iconSize = 13
@@ -1254,7 +1708,7 @@ abstract class FightEntity extends Entity {
 			ctx.save()
 			ctx.scale(this.game.ground.scale, this.game.ground.scale)
 			ctx.translate(this.ox, this.oy)
-			this.bubble.draw(ctx, 0, this.height + 30, this.isTop)
+			this.bubble.draw(ctx, this.height + 30, this.isTop)
 			ctx.restore()
 		}
 	}
@@ -1322,10 +1776,7 @@ abstract class FightEntity extends Entity {
 
 	addState(state: number) {
 		this.states.add(state)
-		// Load image
-		const image = new Image()
-		image.src = LeekWars.STATIC + "image/state/" + state + ".svg"
-		FightEntity.stateImages.set(state, image)
+		FightEntity.stateImage(state)
 	}
 }
 

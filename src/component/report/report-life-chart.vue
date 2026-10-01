@@ -4,8 +4,9 @@
 			<v-tooltip v-if="fight && fight.type === FightType.TEAM">
 				<template #activator="{ props }">
 					<div v-bind="props" class="button flat" @click="toggleTurrets">
-						<img v-if="turrets" src="/image/icon/turret.png">
-						<img v-else src="/image/icon/turret_off.png">
+						<!-- Une seule tourelle, éteinte quand elles sont masquées : MDI n'a pas
+						     de variante « off », et l'opacité dit la même chose que l'ancien PNG gris. -->
+						<v-icon :class="{off: !turrets}">mdi-tower-fire</v-icon>
 					</div>
 				</template>
 				{{ $t('toggle_turrets') }}
@@ -21,8 +22,8 @@
 			<v-tooltip>
 				<template #activator="{ props }">
 					<div v-bind="props" class="button flat" @click="toggleSmooth">
-						<img v-if="smooth" src="/image/icon/graph_angular.png">
-						<img v-else src="/image/icon/graph_smooth.png">
+						<v-icon v-if="smooth">mdi-chart-line-variant</v-icon>
+						<v-icon v-else>mdi-chart-bell-curve-cumulative</v-icon>
 					</div>
 				</template>
 				{{ $t('toggle_smooth') }}
@@ -31,9 +32,14 @@
 		<div class="chart-panel">
 			<div class="damage-options">
 				<div class="spacer"></div>
-				<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" :ripple="false" />
+				<lw-switch v-model="chartDisplaySummons" :label="$t('display_summons')" />
 			</div>
-			<Line v-if="chartData" ref="lifeChart" :data="chartData" :options="chartOptions ?? undefined" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
+			<!-- La boîte donne sa taille au graphique (maintainAspectRatio: false) : le
+			     ratio 2,66 d'avant, mais avec un plancher de hauteur — sur un téléphone
+			     le ratio seul donnait 150 px pour douze tours et huit courbes. -->
+			<div class="chart-box">
+				<Line v-if="chartData" ref="lifeChart" :data="chartData" :options="chartOptions ?? undefined" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" />
+			</div>
 		</div>
 	</panel>
 </template>
@@ -41,7 +47,7 @@
 <script setup lang="ts">
 	import { Fight, FightType } from '@/model/fight'
 	import { TEAM_COLORS } from '@/model/team'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { mixins } from '@/model/i18n'
 	import { Line } from 'vue-chartjs'
 	import { ChartComponentRef } from 'vue-chartjs'
@@ -183,7 +189,7 @@
 					chartFocus(nearest)
 				}
 			},
-			aspectRatio: 2.66,
+			maintainAspectRatio: false,
 			elements: { point: { pointStyle: false } },
 			scales: {
 				x: {
@@ -262,8 +268,19 @@
 </script>
 
 <style lang="scss" scoped>
+	.button .v-icon.off {
+		opacity: 0.4;
+	}
 	.chart-panel {
 		position: relative;
+	}
+	/* Hauteur = largeur / 2,66 comme avant (aspect-ratio), mais jamais moins de
+	   260 px. Chart.js remplit la boîte. */
+	.chart-box {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 2.66;
+		min-height: 260px;
 	}
 	.damage-options {
 		display: flex;

@@ -1,9 +1,14 @@
 
+import { chipImageDir } from '@/model/item'
 import Player from '@/component/player/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
+import { getPreSummonMultipliers, unmultiplyStats } from '@/component/player/game/colossus'
+import { withEffectItemIds } from '@/component/player/game/effect-items'
+import { FrameMeter } from '@/component/player/game/frame-meter'
+import { playAudio } from '@/model/audio'
 import { Farmer } from '@/model/farmer'
-import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, effectRecipients, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Exasperation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
+import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, effectRecipients, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Exasperation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Hemorrhage, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Maturation, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Superinfection, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry, Piquant, Capsaicin, Sugar, Popcorn } from '@/component/player/game/chips'
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground, GroundTexture, OBSTACLES } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
@@ -11,18 +16,19 @@ import { Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, J
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
-import { T, Texture } from '@/component/player/game/texture'
-import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, PlutoniumBazooka, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
+import { loadDrawableImage, T, Texture } from '@/component/player/game/texture'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, DesertSaber, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, PlutoniumBazooka, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, SunSpear, Sword, UnbridledGazor, UnstableDestroyer, QuantumRifle } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { CHIPS } from '@/model/chips'
-import { EffectType, EntityEffect, State } from '@/model/effect'
-import { Fight, FightData, FightType } from '@/model/fight'
+import { EffectType, EntityEffect, isPeriodicEffect, repelDistance } from '@/model/effect'
+import { Fight, FightData, FightType, isOwnLogs, Report, VERSION_PERIODIC_ON_HIT } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
+import { WeaponTemplate } from '@/model/weapon'
 
 import { Chest } from './chest'
 import { Mob } from './mob'
@@ -116,7 +122,8 @@ enum Colors {
 }
 
 // Params
-const FPS = 60
+// Plafond d'images par seconde de la boucle (cf. minFrameTime plus bas).
+const MAX_FPS = 80
 const MAX_DT = 8
 const GROUND_TEXTURE = true
 const SHADOW_SCALE = 0.5
@@ -124,8 +131,13 @@ const SHADOW_ALPHA = 0.55
 
 let lastTime = new Date().getTime()
 let dt = 0
-const frameTime = 1000 / FPS
-const lastFPS = [] as number[]
+// Intervalle minimal entre deux images. La boucle suit le rafraîchissement de l'écran
+// (requestAnimationFrame) : sur un 60 Hz chaque vsync passe, sur un 120/144 Hz une sur
+// deux — sinon on dessinerait 144 images par seconde pour rien, au détriment des
+// machines lentes. Le seuil doit rester SOUS deux vsync du plus rapide des écrans
+// courants (2 × 1/144 = 13,89 ms), sinon on saute deux images sur trois et on tombe
+// à 48 images par seconde, pire qu'un 60 Hz.
+const minFrameTime = 1000 / MAX_FPS
 
 // var hidden, visibilityState, visibilityChange;
 
@@ -157,6 +169,7 @@ const ENTITY_CLASSES = [
 	Turret,
 	Chest,
 	Mob,
+	Bulb, // PLANT : type d'entité distinct côté moteur, même rendu qu'un bulbe (setPlant)
 ]
 
 export const WEAPONS = [
@@ -200,6 +213,34 @@ export const WEAPONS = [
 	Excalibur, // 38
 	Scythe, // 39
 	QuantumRifle, // 40
+	DesertSaber, // 41
+	SunSpear, // 42
+]
+
+// Icône affichée sous le nom de l'entité pour un effet d'arme, indexée par template.
+// À tenir à jour en même temps que WEAPONS : une arme oubliée ici s'affiche sans
+// icône dans la liste d'effets. Deux entrées ne sont pas l'image de l'arme mais celle
+// de l'effet qu'elle pose : flamme (Lance-flammes) et gaz_icon (Gazeur).
+export const WEAPON_EFFECT_IMAGES: (string | null)[] = [
+	"pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
+	"lightninger",
+	"plutonium_bazooka", // 26
+	"neutrino", // 27
+	null, // 28
+	"bazooka", // 29
+	null, // 30
+	null, // 31
+	"dark_katana", // 32
+	"enhanced_lightninger", // 33
+	"unstable_destroyer", // 34
+	"sword", // 35
+	"heavy_sword", // 36
+	"odachi", // 37
+	"excalibur", // 38
+	"scythe", // 39
+	"quantum_rifle", // 40
+	"desert_saber", // 41
+	"sun_spear", // 42
 ]
 
 export const CHIP_ANIMATIONS = [
@@ -292,8 +333,8 @@ export const CHIP_ANIMATIONS = [
 	Transmutation, // 87
 	Grapple, // 88
 	BoxingGlove, // 89
-	null, // 90
-	null, // 91
+	null, // 90 corn (Maïs, invocation 2.50 — passe par ActionType.SUMMON)
+	null, // 91 chilli_pepper (Piment, invocation 2.50 — passe par ActionType.SUMMON)
 	null, // 92 bulb
 	null, // 93 bulb
 	Serum, // 94
@@ -303,9 +344,9 @@ export const CHIP_ANIMATIONS = [
 	Bramble, // 98
 	Dome, // 99
 	Manumission, // 100
-	null,
-	null,
-	null,
+	Hemorrhage, // 101
+	null, // 102
+	null, // 103
 	Prism, // 104
 	Shuriken, // 105
 	Kemuridama, // 106
@@ -317,12 +358,22 @@ export const CHIP_ANIMATIONS = [
 	null, // 112
 	DivineProtection, // 113
 	Exasperation, // 114
+	Maturation, // 115 (2.50)
+	Superinfection, // 116 (2.50)
+	null, // 117 prototaxite (Prototaxite, invocation 2.50 — passe par ActionType.SUMMON)
+	// Puces des plantes 2.50 (Éveil) : réservées au Piment et au Maïs
+	Piquant, // 118 (2.50)
+	Capsaicin, // 119 (2.50)
+	Sugar, // 120 (2.50)
+	Popcorn, // 121 (2.50)
 ]
 
 class Game {
 	public canvas!: HTMLCanvasElement
 	public loadedData: number = 0
 	public numData: number = 0
+	/** Palettes des explosions des armes du combat, préparées avec les autres sprites (cf. Particles.prepare). */
+	private explosionPalettes: ((t: number) => string)[] = []
 	public initialized: boolean = false
 	public paused: boolean = false
 	public requestPause = false
@@ -384,6 +435,7 @@ class Game {
 	public tactic = false
 	public shadows = true
 	public showCells: boolean = false
+	public marksForeground: boolean = false
 	public showLifes: boolean = true
 	public showEffects: boolean = true
 	public showIDs: boolean = false
@@ -392,9 +444,15 @@ class Game {
 	public autoDark: boolean = true
 	public largeActions: boolean = false
 	public actionsWidth: number = 400
+	/** Actions posées sous le lecteur (éditeur) : la carte n'a pas à leur laisser de place. */
+	public actionsBelow: boolean = false
+	/** Disposition des petits écrans mobiles : le hud n'est plus posé sur la carte, qui n'a pas à lui laisser de place. */
+	public compact: boolean = false
 	public displayDebugs: boolean = true
 	public displayAllyDebugs: boolean = true
 	public displayAILines: boolean = true
+	/** Affichage du compteur d'images, réservé aux administrateurs. */
+	public showFPS: boolean = false
 	public plainBackground: boolean = false
 	public sound: boolean = false
 	public volume: number = 0.5;
@@ -403,13 +461,24 @@ class Game {
 	public obstacles!: {[key: number]: number[]}
 	public error: boolean = false
 	public fps: number = 0
-	public avgFPS: number = 0
 	public showCellTime: number = 0
 	public currentPlayer: number | null = null
+	// Plante en train de jouer son réveil : currentPlayer pointe sur elle, et ceci garde
+	// l'entité dont c'est le tour, à qui PLANT_ASLEEP rendra la main.
+	public awakeningPlayer: number | null = null
 	public selectedEntity: FightEntity | null = null
 	public hoverEntity: FightEntity | null = null
 	public jumping: boolean = false
 	public logging: boolean = true
+	/**
+	 * Le moteur n'est PAS réactif (player.vue le pose dans un shallowRef + markRaw) :
+	 * traverser un proxy Vue sur chaque `this.x` d'une boucle de rendu coûtait la moitié
+	 * du temps d'image sur une machine lente, et chaque écriture déclenchait un rendu Vue
+	 * du hud. C'est donc le moteur qui prévient l'interface quand elle doit se relire —
+	 * player.vue pose ces deux crochets et les débite (cf. refreshUI).
+	 */
+	public onFrame: (() => void) | null = null
+	public onJumpEnd: (() => void) | null = null
 	public jumpRequested: boolean = false
 	public jumpAction: number = 0
 	public ratio: number = 1
@@ -527,8 +596,15 @@ class Game {
 
 		// Add entities
 		const entities = this.data.leeks
+		const preSummonMultipliers = getPreSummonMultipliers(entities, this.data.actions, fight.date)
 
-		for (const e of entities) {
+		for (const raw of entities) {
+
+			// Le snapshot d'une invocation figé APRÈS son multiplicateur de Colosse
+			// contient déjà les stats multipliées : on les ramène à la base, l'action
+			// d'effet rejouée juste après se charge de les multiplier (cf.
+			// getPreSummonMultipliers).
+			const e = raw.id in preSummonMultipliers ? unmultiplyStats(raw, preSummonMultipliers[raw.id]) : raw
 
 			const type = typeof(e.type) === 'undefined' ? EntityType.LEEK : e.type
 
@@ -557,6 +633,7 @@ class Game {
 			entity.displayLife = e.life
 			entity.maxLife = entity.life
 			entity.initialMaxLife = entity.maxLife
+			entity.baseLife = entity.maxLife
 
 			// Strength
 			entity.strength = 0
@@ -716,15 +793,20 @@ class Game {
 		}
 
 		// Actions
-		this.actions = this.data.actions.map(a => new Action(a))
+		this.actions = withEffectItemIds(this.data.actions, fight.date).map(a => new Action(a))
 		this.currentAction = 0
 
-		// Check first action
-		// if (this.actions.length === 0 || this.actions[0].type !== ActionType.START_FIGHT) {
-		// 	console.warn("Error ! no action START_FIGHT")
-		// 	this.setError()
-		// 	return
-		// }
+		// Le générateur peut émettre des effets initiaux (états permanents des
+		// tourelles, cf. Turret.java) AVANT l'action START_FIGHT. Or le player
+		// suppose que actions[0] est le START_FIGHT et ne la passe jamais à
+		// doAction (lecture normale comme jump démarrent à l'index 1) : le
+		// premier effet du préambule était perdu (tourelle sans état STATIC →
+		// swap visuel par Inversion puis tourelle invisible). On remonte
+		// le START_FIGHT en tête pour que le préambule soit réellement exécuté.
+		const startFight = this.actions.findIndex(a => a.type === ActionType.START_FIGHT)
+		if (startFight > 0) {
+			this.actions.unshift(...this.actions.splice(startFight, 1))
+		}
 		this.log(this.actions[0])
 
 		// Get the relative position of the turns in the actions
@@ -802,6 +884,8 @@ class Game {
 		for (const weapon of weaponsTaken) {
 			const weaponAnimation = WEAPONS[weapon - 1]
 			if (!weaponAnimation) { continue }
+			const palette = (weaponAnimation as { explosionPalette?: (t: number) => string }).explosionPalette
+			if (palette) { this.explosionPalettes.push(palette) }
 			for (const texture of weaponAnimation.textures) {
 				textures.add(texture)
 			}
@@ -833,12 +917,12 @@ class Game {
 		}
 	}
 
-	public setLogs(logs: {[farmerId: string]: {[actionId: string]: LogEntry[]}}) {
+	public setLogs(logs: {[farmerId: string]: {[actionId: string]: LogEntry[]}}, turretAIOwners?: Report['turret_ai_owners']) {
 		// Merge logs
 		// return
 		for (const farmer in logs) {
 			const farmerLogs = logs[farmer]
-			const me = parseInt(farmer, 10) === store.state.farmer!.id
+			const me = isOwnLogs(farmer, store.state.farmer, turretAIOwners)
 			for (const action in farmerLogs) {
 				const actionI = parseInt(action, 10)
 				if (!(action in this.logs)) {
@@ -870,6 +954,9 @@ class Game {
 			this.ground.addObstacleElement(obstacle)
 		}
 		this.ground.resize(this.width, this.height, this.shadows)
+		if (!this.creator) {
+			this.particles.prepare(this.explosionPalettes, true)
+		}
 
 		for (const entity of this.leeks) {
 			if (entity.cell) {
@@ -926,6 +1013,9 @@ class Game {
 		this.width = width
 		this.height = height
 		this.ground.resize(width, height, this.shadows)
+		if (this.launched && !this.creator) {
+			this.particles.prepare(this.explosionPalettes)
+		}
 		this.textRatio = Math.sqrt(window.devicePixelRatio)
 	}
 	public setOrigin(originX: number, originY: number) {
@@ -933,11 +1023,93 @@ class Game {
 		this.mouseOriginY = originY + Math.round(this.ground.startY / this.ratio)
 	}
 
+	/** Compteur d'images (cf. FrameMeter), lu par le panneau d'administration. */
+	public meter = new FrameMeter()
+
 	public updateFrame() {
 		if (!this.paused) {
 			this.update()
-			setTimeout(() => this.updateFrame(), frameTime)
+			this.meter.frame(performance.now())
+			this.refreshUI()
+			this.scheduleFrame()
 		}
+	}
+
+	/**
+	 * Cadence de la boucle. Avant, un `setTimeout(16.7 ms)` posé APRÈS le travail de
+	 * l'image : le rythme dérivait (~50 images/s sur un écran 60 Hz) et rien n'était
+	 * aligné sur le rafraîchissement de l'écran. requestAnimationFrame cale les images
+	 * sur l'écran et laisse le navigateur en sauter quand la machine ne suit pas, au
+	 * lieu d'empiler des timers en retard.
+	 */
+	private lastFrameTime = 0
+	private scheduleFrame() {
+		if (this.uncapped) {
+			this.scheduleUncappedFrame()
+		} else {
+			// Onglet caché : le navigateur met les animation frames en attente, le combat
+			// se fige et repart exactement où il en était au retour sur l'onglet (computeDT
+			// plafonne dt, il n'y a pas de bond). C'est voulu : avant, les timers bridés à
+			// 1 Hz le faisaient avancer au ralenti, on ne revenait sur rien de regardable.
+			requestAnimationFrame((time) => this.onFrameDue(time))
+		}
+	}
+
+	/**
+	 * L'image est due. Le mode est relu ici et à chaque planification : couper le
+	 * débridage entre deux images rend simplement la main au vsync à la suivante,
+	 * sans que personne ait à traiter la transition.
+	 */
+	private onFrameDue(time: number) {
+		if (this.paused) { return }
+		// Écran à haute fréquence : on saute cette image. Sans objet en débridé, où
+		// il n'y a plus de vsync à respecter.
+		if (!this.uncapped && time - this.lastFrameTime < minFrameTime) {
+			this.scheduleFrame()
+			return
+		}
+		this.lastFrameTime = time
+		this.updateFrame()
+	}
+
+	/**
+	 * Mode débridé, réservé aux administrateurs : la boucle quitte
+	 * requestAnimationFrame pour mesurer ce que le moteur SAIT produire, et non ce
+	 * que l'écran accepte d'afficher. Sur un écran 60 Hz, rAF plafonne à 60 images
+	 * par seconde quoi qu'on fasse — ce n'est pas notre plafond de MAX_FPS qui
+	 * limite, c'est le vsync.
+	 *
+	 * Le relais passe par un MessageChannel et pas par setTimeout(0) : au-delà de
+	 * cinq minuteurs imbriqués, le navigateur impose 4 ms d'attente, ce qui
+	 * plafonnerait la mesure à 250 images par seconde.
+	 *
+	 * ⚠️ La plupart de ces images ne seront jamais affichées, et la boucle occupe
+	 * le fil principal en continu. C'est un instrument de mesure, pas un réglage.
+	 * Le combat, lui, garde sa vitesse : dt vient du temps réel écoulé.
+	 */
+	public uncapped = false
+	private uncappedChannel: MessageChannel | null = null
+	private scheduleUncappedFrame() {
+		if (!this.uncappedChannel) {
+			this.uncappedChannel = new MessageChannel()
+			this.uncappedChannel.port1.onmessage = () => {
+				// ⚠️ Un MessageChannel n'est pas mis en attente quand l'onglet passe en
+				// arrière-plan, contrairement à rAF : sans ce retour au vsync, le combat
+				// continuerait à tourner à plein régime dans un onglet que personne ne
+				// regarde.
+				if (document.hidden) {
+					requestAnimationFrame((time) => this.onFrameDue(time))
+					return
+				}
+				this.onFrameDue(performance.now())
+			}
+		}
+		this.uncappedChannel.port2.postMessage(null)
+	}
+
+	/** Prévient l'interface Vue qu'elle doit se relire (cf. onFrame). */
+	public refreshUI() {
+		if (this.onFrame) { this.onFrame() }
 	}
 
 	public setError() {
@@ -952,17 +1124,6 @@ class Game {
 			dt = MAX_DT
 		}
 		lastTime = timeNow
-		this.fps = Math.floor(1000 / delay)
-
-		lastFPS.push(this.fps)
-		if (lastFPS.length > 30) {
-			lastFPS.shift()
-		}
-		this.avgFPS = 0
-		for (const f of lastFPS) {
-			this.avgFPS += f
-		}
-		this.avgFPS = Math.round(this.avgFPS / 30)
 	}
 
 	public speedUp() {
@@ -1140,7 +1301,7 @@ class Game {
 			}
 			for (const sound of this.activeSounds) {
 				if (sound !== this.atmosphere) {
-					sound.sound.play()
+					playAudio(sound.sound)
 				}
 			}
 			this.paused = false
@@ -1159,13 +1320,14 @@ class Game {
 		case ActionType.LEEK_TURN: {
 			this.log(action)
 			this.currentPlayer = action.params[1]
-			const entity = this.leeks[action.params[1]]
 
-			for (const effect_id in entity.launched_effects) {
-				const effect = entity.launched_effects[effect_id]
-				if (effect.turns === 1) {
-					delete entity.launched_effects[effect_id]
-				} else if (effect.turns !== -1) {
+			// Un effet perd un tour au tour de son lanceur, un effet périodique au tour de sa
+			// cible. À son dernier tour, c'est le moteur qui le retire (REMOVE_EFFECT).
+			const periodicOnHit = (this.data.version ?? 0) >= VERSION_PERIODIC_ON_HIT
+			for (const id in this.effects) {
+				const effect = this.effects[id]
+				const countedBy = periodicOnHit && isPeriodicEffect(effect.type) ? effect.target : effect.caster
+				if (countedBy === this.currentPlayer && effect.turns > 1) {
 					effect.turns--
 				}
 			}
@@ -1196,6 +1358,7 @@ class Game {
 		}
 		case ActionType.END_TURN: {
 			this.currentPlayer = null
+			this.awakeningPlayer = null
 			// Reinitialisation of characteristics
 			this.leeks[action.params[1]].tp = action.params[2]
 			this.leeks[action.params[1]].mp = action.params[3]
@@ -1292,14 +1455,14 @@ class Game {
 					cell.setEntity(caster)
 				}
 				if (chip === 88) { // grapple
-					if (targets.length && !targets[0].states.has(State.STATIC)) {
+					if (targets.length && !targets[0].unmovable) {
 						const realCell = this.ground.field.computeAttractCell(caster.cell!, targets[0].cell!, cell)
 						realCell.setEntity(targets[0])
 					}
 				}
 				if (chip === 89) { // boxing glove
 					// console.log("glove", cell.id, "targets=" + targets.length)
-					if (targets.length && !targets[0].states.has(State.STATIC)) {
+					if (targets.length && !targets[0].unmovable) {
 						const realCell = this.ground.field.getLastAvailableCell(caster.cell!, cell, targets[0])
 						realCell.setEntity(targets[0])
 					}
@@ -1312,7 +1475,7 @@ class Game {
 					// ne le cible pas, d'où un décalage visuel (#11548). L'Inversion
 					// (masque 31) continue de swapper les ennemis.
 					const recipient = effectRecipients(chip_template.effects, caster, targets)[0]
-					if (recipient && !caster.states.has(State.STATIC) && !recipient.states.has(State.STATIC)) { // C'est possible de lancer dans le vide
+					if (recipient && !caster.isStatic && !recipient.isStatic) { // C'est possible de lancer dans le vide
 						const launcher_cell = caster.cell!
 						cell.setEntity(caster)
 						launcher_cell.setEntity(recipient)
@@ -1322,7 +1485,9 @@ class Game {
 				break
 			}
 
-			if (CHIP_ANIMATIONS[chip - 1] !== null && chip !== 40) {
+			// != null : couvre aussi undefined, pour une puce plus récente que le
+			// tableau (ex. Prototaxite 2.50, template 117 : invocation, pas d'animation dédiée).
+			if (CHIP_ANIMATIONS[chip - 1] != null && chip !== 40) {
 				const chipAnimation: ChipAnimation = new CHIP_ANIMATIONS[chip - 1]!(this)
 				// Donne au launch() de quoi filtrer les vraies cibles via le
 				// bitmask Effect.targets (issue #3127 — l'inférence par
@@ -1352,6 +1517,7 @@ class Game {
 			const leek = this.leeks[this.currentPlayer!] as Leek
 			const weapon_template = LeekWars.weapons[LeekWars.items[leek.weapon!.id].params]
 			leek.lastDamageType = leek.weapon!.damageType
+			leek.lastCritical = result === 2
 			action.entity = leek
 			action.item = weapon_template
 			this.log(action)
@@ -1361,6 +1527,11 @@ class Game {
 			}
 
 			if (this.jumping) {
+				// Le log n'a pas d'action de déplacement pour les effets de mouvement :
+				// on rejoue l'EFFECT_REPEL (lance du soleil), comme le grappin et le
+				// gant de boxe plus haut côté puces. La resynchro visuelle de fin de
+				// saut lit les cellules logiques mises à jour ici.
+				this.applyWeaponRepel(leek, cell, weapon_template, result === 2)
 				this.actionDone()
 				break
 			}
@@ -1521,6 +1692,42 @@ class Game {
 			}
 			break
 		}
+		case ActionType.PLANT_AWAKE: {
+			// Éveil : une entité vient d'entrer dans la zone de la plante, qui va jouer
+			// juste après. Un rebond et un coup de lueur sur son losange suffisent à
+			// dire laquelle répond — les USE_CHIP qui suivent racontent le reste.
+			const plant = this.leeks[action.params[1]]
+			this.log(action)
+			// Ce qui suit est joué par la plante, au milieu du tour d'une autre entité.
+			// SAY, USE_CHIP et compagnie ne portent pas l'entité qui agit : sans ce
+			// basculement, le passant prononcerait les say() de la plante et perdrait ses
+			// PT pour elle. PLANT_ASLEEP rend la main.
+			// Les PT de la plante en 4e paramètre datent du même correctif que
+			// PLANT_ASLEEP : leur absence signe un combat d'avant, qui n'a pas de borne de
+			// fin — on le rejoue alors comme avant, sinon la plante garderait la main
+			// jusqu'à la fin du tour.
+			if (plant && action.params[3] !== undefined) {
+				this.awakeningPlayer = this.currentPlayer
+				this.currentPlayer = action.params[1]
+				// Le moteur rend ses PT à la plante à chaque réveil.
+				plant.tp = action.params[3]
+			}
+			if (plant && !this.jumping) {
+				const bulb = plant as Bulb
+				bulb.awakeGlow = 1
+				bulb.bounceY = 1.18
+				bulb.bounceX = 0.88
+			}
+			this.actionDone(this.jumping ? 0 : 20)
+			break
+		}
+		case ActionType.PLANT_ASLEEP: {
+			// Fin du réveil : la main revient à l'entité dont c'est le tour.
+			this.currentPlayer = this.awakeningPlayer
+			this.awakeningPlayer = null
+			this.actionDone()
+			break
+		}
 		case ActionType.RESURRECTION: {
 			const target = action.params[2]
 			const cell = this.ground.field.cells[action.params[3]]
@@ -1618,6 +1825,11 @@ class Game {
 			this.actionDone()
 			break
 		}
+		case ActionType.UPDATE_EFFECT_TURNS : {
+			this.updateEffectTurns(action.params[1], action.params[2])
+			this.actionDone()
+			break
+		}
 		case ActionType.REDUCE_EFFECTS : {
 			this.log(action)
 			this.actionDone()
@@ -1667,7 +1879,12 @@ class Game {
 
 		const effect = this.effects[id]
 		if (effect) {
-			effect.value += value
+			// La valeur d'un effet d'état est un identifiant d'état, pas une quantité :
+			// l'additionner donnait un état inexistant (invincible + invincible = 6).
+			// Corrigé côté générateur, mais les combats déjà enregistrés le contiennent.
+			if (effect.type !== EffectType.ADD_STATE) {
+				effect.value += value
+			}
 			const leek = this.leeks[effect.target]
 			this.updateCharacteristics(leek, effect.type, value)
 
@@ -1688,7 +1905,6 @@ class Game {
 		const value = action.params[6]
 		const turns = action.params[7]
 
-		const caster = this.leeks[caster_id]
 		const leek = this.leeks[target]
 
 		if (stacked) {
@@ -1709,29 +1925,18 @@ class Game {
 			if (item === 0) {
 				image = LeekWars.STATIC + "image/fight/power.png"
 			} else if (item in CHIPS) {
-				image = LeekWars.STATIC + "image/chip/" + CHIPS[item].name + ".png"
+				image = LeekWars.STATIC + "image/" + chipImageDir() + "/" + CHIPS[item].name + ".png"
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
-					const template = LeekWars.items[item].params
-					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
-					"lightninger",
-					"plutonium_bazooka", // 26
-					"neutrino", // 27
-					null, // 28
-					"bazooka", // 29
-					null, // 30
-					null, // 31
-					"dark_katana", // 32
-					"enhanced_lightninger", // 33
-					"unstable_destroyer", // 34
-					"sword", // 35
-					"heavy_sword", // 36
-					"odachi", // 37
-					"excalibur", // 38
-					"scythe", // 39
-
-				][template - 1]
-					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
+					// params arrive en chaîne depuis l'API ("41") : sans Number(), les
+					// comparaisons strictes ci-dessous ne matchaient jamais.
+					const template = Number(LeekWars.items[item].params)
+					const img = WEAPON_EFFECT_IMAGES[template - 1]
+					// Le tableau s'arrête aux armes connues du client : le serveur peut
+					// être déployé avant lui et envoyer un template plus récent.
+					if (img) {
+						image = LeekWars.STATIC + "image/weapon/" + img + ".png"
+					}
 					// Gestion des états du poireau
 					if (template === 8) {
 						leek.burn()
@@ -1740,13 +1945,13 @@ class Game {
 					}
 				}
 			}
-			const texture = new Image()
-			texture.src = image
+			// Une icône absente du serveur laisserait l'Image dans l'état « broken »,
+			// où drawImage lève InvalidStateError et casse le rendu.
+			const texture = loadDrawableImage(image)
 
 			// Ajout de l'effet
 			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture, modifiers }
 			leek.effects[id] = this.effects[id]
-			caster.launched_effects[id] = this.effects[id]
 		}
 
 		this.log(action)
@@ -1844,7 +2049,10 @@ class Game {
 				if (leek.mp) leek.buffMP(leek.mp * factor, this.jumping)
 				// Mirror server EffectMultiplyStats.apply: additive on maxLife so erosion is preserved.
 				// First apply adds (factor-1)*lifeBase; replacement adds 1*lifeBase.
-				const lifeBase = leek.initialMaxLife
+				// lifeBase = vie de base du serveur, donc baseLife et non initialMaxLife :
+				// cette dernière est divisée par 1.2 sur une invocation critique (taille
+				// d'affichage), ce qui sous-évaluait le bonus des bulbes critiques du Colosse.
+				const lifeBase = leek.baseLife
 				const lifeDelta = leek.maxLife <= lifeBase ? lifeBase * factor : lifeBase
 				const ratio = leek.maxLife > 0 ? leek.life / leek.maxLife : 1
 				leek.winMaxLife(lifeDelta, this.jumping)
@@ -1960,6 +2168,14 @@ class Game {
 		delete this.effects[id]
 	}
 
+	// Un effet a perdu des tours en dehors du décompte normal (Surinfection) : sans ça,
+	// le décompte du client l'afficherait trop longtemps.
+	public updateEffectTurns(id: number, turns: number) {
+		const effect = this.effects[id]
+		if (!effect) { return }
+		effect.turns = turns
+	}
+
 	public updateEffect(id: number, new_value: number) {
 
 		const effect = this.effects[id]
@@ -2042,6 +2258,11 @@ class Game {
 			leek.power += delta
 			break
 		}
+		// La valeur d'un effet d'état est un identifiant d'état, pas une quantité : la
+		// réduire donnait un autre état (Libération à -40 % sur Stérile : 12 → 7, l'état
+		// magnétisé, sans icône). Corrigé côté générateur, mais les combats déjà
+		// enregistrés portent la valeur mise à l'échelle.
+		if (effect.type === EffectType.ADD_STATE) { return }
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
 
@@ -2308,7 +2529,7 @@ class Game {
 	public addObstacle(obstacle: Obstacle) {
 		// console.log("addObstacle", obstacle.y)
 		this.ground.obstacles.push(obstacle)
-		obstacle.drawID = this.addDrawableElement(obstacle, obstacle.y)
+		obstacle.drawID = this.addDrawableElement(obstacle, obstacle.drawLine)
 	}
 
 	public removeObstacle(obstacle: Obstacle) {
@@ -2318,7 +2539,7 @@ class Game {
 			if (cell) { cell.obstacle = null }
 		}
 		this.ground.obstacles.splice(this.ground.obstacles.indexOf(obstacle), 1)
-		this.removeDrawableElement(obstacle.drawID!, obstacle.y)
+		this.removeDrawableElement(obstacle.drawID!, obstacle.drawLine)
 	}
 
 	public addEntity(entity: FightEntity) {
@@ -2365,6 +2586,55 @@ class Game {
 				}
 		// 	}
 		// }
+	}
+
+	/**
+	 * Rejoue la branche TYPE_REPEL du serveur (Attack.java) pour une arme : le log de
+	 * combat ne contient pas d'action de déplacement pour les effets de mouvement,
+	 * c'est au client de recalculer (comme le grappin / gant de boxe côté puces).
+	 * Les entités de la zone, de la plus proche à la plus lointaine, sont repoussées
+	 * de value1 cases en s'éloignant du tireur (×1,3 arrondi en coup critique, comme
+	 * la puissance des autres effets). Poussées séquentielles, occupation
+	 * mise à jour entre chaque : une entité déjà arrêtée bloque la suivante, comme
+	 * sur le serveur. Seules les cellules logiques sont mises à jour ici, l'appelant
+	 * anime (ou pas) le déplacement visuel à partir des mouvements retournés.
+	 */
+	public applyWeaponRepel(caster: FightEntity, cell: Cell, template: WeaponTemplate, critical: boolean): {entity: FightEntity, cell: Cell}[] {
+		const repel = template.effects.find((e) => e.id === EffectType.REPEL)
+		if (!repel || !caster.cell) { return [] }
+		const distance = repelDistance(repel.value1, critical)
+
+		// Entités de la zone. Cas laser à part : comme AreaLaserLine côté serveur, la
+		// ligne va de min_range à max_range dans la direction visée (getAreaCells ne
+		// sait pas produire cette zone-là), stoppée par un obstacle si l'arme a la ligne
+		// de vue. La plus proche d'abord : l'ordre de poussée en dépend.
+		const entities = [] as FightEntity[]
+		if (template.area === Area.LASER_LINE) {
+			const dx = Math.sign(cell.x - caster.cell.x)
+			const dy = Math.sign(cell.y - caster.cell.y)
+			if ((dx === 0) === (dy === 0)) { return [] } // pas aligné : zone vide
+			let current: Cell | null = caster.cell
+			for (let i = 1; i <= template.max_range; ++i) {
+				current = this.ground.field.next_cell(current, dx, dy)
+				if (!current) { break }
+				if (i < template.min_range) { continue }
+				if (template.los && current.obstacle) { break }
+				if (current.entity) { entities.push(current.entity as FightEntity) }
+			}
+		} else {
+			entities.push(...this.ground.field.getTargets(cell, template.area, caster.cell, template.max_range, template.min_range) as FightEntity[])
+		}
+
+		const moves = [] as {entity: FightEntity, cell: Cell}[]
+		for (const entity of entities) {
+			if (entity === caster || entity.dead) { continue }
+			if (entity.unmovable) { continue } // slideEntity ignore les statiques et enracinés
+			const destination = this.ground.field.computeRepelCell(caster.cell, entity.cell!, distance)
+			if (destination === entity.cell) { continue }
+			destination.setEntity(entity) // cellule logique à jour, sans toucher au visuel
+			moves.push({ entity, cell: destination })
+		}
+		return moves
 	}
 
 	public createEffectAreaCells(cells: Cell[], lines: number[][], convert: {[key: number]: [number, number]}) {
@@ -2544,6 +2814,43 @@ class Game {
 		return this.createEffectAreaCells(cells, lines, convert)
 	}
 
+	// Zone en losange de rayon arbitraire (distance de Manhattan), même rendu que
+	// createEffectAreaOutline mais générique : sert aux zones d'effet persistantes
+	// des plantes 2.50 (portée de tir du Piment, zone de soin du Maïs).
+	public createPlantAreaOutline(cell: Cell, radius: number) {
+
+		const cells = [] as Cell[]
+		const lines = [] as number[][]
+		const convert = {} as {[key: number]: [number, number]}
+		const l = 2 * radius + 1
+		for (let i = 0; i < l; ++i) {
+			lines.push(Array.from({length: l}, () => 0))
+		}
+		const c = radius
+
+		const add_cell = (x: number, y: number) => {
+			const n = this.ground.field.next_cell(cell, x, y)
+			lines[c + x][c + y] = ~lines[c + x][c + y] + 16
+			if (n && !n.obstacle) {
+				if (x < c) { lines[c + x + 1][c + y] ^= 1 }
+				if (y < c) { lines[c + x][c + y + 1] ^= 2 }
+				if (x > -c) { lines[c + x - 1][c + y] ^= 4 }
+				if (y > -c) { lines[c + x][c + y - 1] ^= 8 }
+			}
+			if (n === null || n.obstacle) { return }
+			cells.push(n)
+			convert[n.id] = [c + x, c + y]
+		}
+
+		for (let x = -radius; x <= radius; ++x) {
+			const dy = radius - Math.abs(x)
+			for (let y = -dy; y <= dy; ++y) {
+				add_cell(x, y)
+			}
+		}
+		return this.createEffectAreaCells(cells, lines, convert)
+	}
+
 	public createReachableAreaOutline(mp: number, cell: Cell, reachableCells: Set<Cell>) {
 
 		const cells = [] as Cell[]
@@ -2666,26 +2973,46 @@ class Game {
 		this.ctx.restore()
 	}
 
-	public drawMarker(x: number, y: number, color: string) {
+	// Un tracé par couleur plutôt qu'un remplissage par case : les losanges ne se
+	// chevauchent pas, le rendu est le même pour bien moins d'appels.
+	public drawMarkers(alpha: number, operation: GlobalCompositeOperation = 'source-over') {
+
+		const paths: {[color: string]: Path2D} = {}
+		let empty = true
+		const dx = this.ground.tileSizeX / 2.1
+		const dy = this.ground.tileSizeY / 2.1
+		for (const m in this.markers) {
+			const marker = this.markers[m]
+			const xy = this.ground.xyToXYPixels(marker.x, marker.y)
+			const x = xy.x * this.ground.scale
+			const y = xy.y * this.ground.scale
+			const path = paths[marker.color] || (paths[marker.color] = new Path2D())
+			path.moveTo(x, y - dy)
+			path.lineTo(x + dx, y)
+			path.lineTo(x, y + dy)
+			path.lineTo(x - dx, y)
+			path.closePath()
+			empty = false
+		}
+		if (empty) { return }
 
 		this.ctx.save()
-
-		this.ctx.globalAlpha = 0.7
-		this.ctx.fillStyle = color
-
-		const xy = this.ground.xyToXYPixels(x, y)
-		this.ctx.translate(xy.x * this.ground.scale, xy.y * this.ground.scale)
-
-		this.ctx.beginPath()
-		this.ctx.moveTo(0, -this.ground.tileSizeY / 2.1)
-		this.ctx.lineTo(this.ground.tileSizeX / 2.1, 0)
-		this.ctx.lineTo(0, this.ground.tileSizeY / 2.1)
-		this.ctx.lineTo(-this.ground.tileSizeX / 2.1, 0)
-		this.ctx.closePath()
-
-		this.ctx.fill()
-
+		this.ctx.globalAlpha = alpha
+		this.ctx.globalCompositeOperation = operation
+		for (const color in paths) {
+			this.ctx.fillStyle = color
+			this.ctx.fill(paths[color])
+		}
 		this.ctx.restore()
+	}
+
+	public drawTextMarkers() {
+		// Les numéros des cases prennent la place des textes
+		if (this.showCells) { return }
+		for (const m in this.markersText) {
+			const marker = this.markersText[m]
+			this.drawTextMarker(marker.x, marker.y, marker.text, marker.color)
+		}
 	}
 
 	public drawTextMarker(x: number, y: number, text: string, color: string) {
@@ -2762,6 +3089,7 @@ class Game {
 		if (!this.launched) { return }
 		this.requestPause = this.paused
 		this.draw()
+		this.refreshUI()
 	}
 
 	public draw() {
@@ -2772,13 +3100,22 @@ class Game {
 		// Draw ground particles
 		this.particles.drawGround(this.ctx)
 
+		// Zones d'effet des plantes 2.50 : cellules teintées discrètes autour de
+		// chaque plante vivante (portée de tir du Piment, zone de soin du Maïs —
+		// le Prototaxite n'a pas de zone), sous les entités.
+		for (const entity of this.leeks) {
+			if (entity instanceof Bulb && entity.plant && entity.active && !entity.dead && entity.zoneRange > 0 && entity.cell) {
+				this.drawEffectArea(entity.plantArea(), entity.zoneColor, 2, 0.45 + entity.awakeGlow * 0.5, 0.12 + entity.awakeGlow * 0.25)
+			}
+		}
+
 		// Draw leeks paths
 		for (const entity of this.leeks) {
 			if (entity.active) {
 				entity.drawPath(this.ctx)
 			}
 			if (entity === this.hoverEntity || entity === this.mouseEntity || entity === this.selectedEntity) {
-				this.drawEffectArea(entity.reachableCellsArea, this.map.options.reachableColor, 2, 0.7, 0.1)
+				this.drawEffectArea(entity.reachableCellsArea, this.map.reachableColor, 2, 0.7, 0.1)
 			}
 		}
 
@@ -2790,10 +3127,11 @@ class Game {
 		}
 
 		// Draw markers
-		for (const m in this.markers) {
-			const marker = this.markers[m]
-			this.drawMarker(marker.x, marker.y, marker.color)
+		this.drawMarkers(0.7)
+		if (!this.marksForeground) {
+			this.drawTextMarkers()
 		}
+
 		// Show pointer cell
 		this.drawPointerCell()
 
@@ -2815,14 +3153,18 @@ class Game {
 			}
 		}
 
+		// mark() en premier plan : les marques se voient à travers les poireaux et obstacles
+		// qui les recouvrent — source-atop ne peint que sur ce qui est déjà dessiné, et une
+		// marque à découvert, repeinte de sa propre couleur, ne change pas — et les textes
+		// passent devant eux.
+		if (this.marksForeground) {
+			this.drawMarkers(0.5, 'source-atop')
+			this.drawTextMarkers()
+		}
+
 		// Draw cells numbers
 		if (this.showCells) {
 			this.ground.drawCellNumbers(this.ctx)
-		} else {
-			for (const m in this.markersText) {
-				const marker = this.markersText[m]
-				this.drawTextMarker(marker.x, marker.y, marker.text, marker.color)
-			}
 		}
 
 		// Show cell
@@ -2852,6 +3194,7 @@ class Game {
 		if (this.requestPause) {
 			this.paused = true
 			this.requestPause = false
+			this.meter.idle()
 		}
 		// Bubbles
 		for (const i in this.leeks) {
@@ -2919,6 +3262,11 @@ class Game {
 	}
 
 	public jump(jumpAction: number) {
+		// Le saut rejoue les actions sans leurs animations : en revenant en arrière, on efface
+		// les traces au sol (douilles, jus de poireau, impacts) d'actions pas encore rejouées.
+		if (jumpAction <= this.currentAction) {
+			this.ground.clearTraces()
+		}
 		// Return to initial state
 		this.ground.field.resetCells()
 		for (const i in this.states) {
@@ -2987,6 +3335,7 @@ class Game {
 		this.clearMarks()
 		this.turn = 1
 		this.currentPlayer = null
+		this.awakeningPlayer = null
 
 		this.showCellTime = 0
 		for (const chip of this.chips) {
@@ -3044,6 +3393,9 @@ class Game {
 
 		this.requestPause = this.paused
 		this.draw()
+
+		if (this.onJumpEnd) { this.onJumpEnd() }
+		this.refreshUI()
 	}
 
 	public previousAction() {
@@ -3149,6 +3501,12 @@ class Game {
 		return this.autoDark ? LeekWars.darkMode : this.dark
 	}
 
+	// Mode nuit : la carte est assombrie au rendu (fond, décors, obstacles).
+	// Le Nexus en est exclu, il a ses propres textures sombres (DarkNexus).
+	public get night(): boolean {
+		return this.mapType !== 0 && this.isDark()
+	}
+
 	public toggleDark() {
 		if (this.mapType == 0) {
 			if (this.isDark()) {
@@ -3158,8 +3516,13 @@ class Game {
 			}
 			this.map.create()
 			this.atmosphere = this.map.options.sound
-			this.redraw()
+		} else if (this.launched) {
+			// Fond et textures d'obstacles sont teintés au (re)dimensionnement.
+			// Avant le lancement il n'y a rien à teindre : le combat se dessinera
+			// de toute façon avec l'état du moment.
+			this.ground.resize(this.width, this.height, this.shadows)
 		}
+		this.redraw()
 	}
 }
 

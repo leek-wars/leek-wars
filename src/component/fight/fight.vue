@@ -1,11 +1,22 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<div v-if="fight">
+			<div v-if="fight" class="page-title">
+				<page-icon name="fight" fallback="mdi-sword" />
+				<div class="page-title-text">
 				<h1>{{ fight.title }}</h1>
 				<div class="info">{{ $filters.date(fight.date) }}</div>
+				</div>
 			</div>
 			<div class="tabs">
+				<!-- Retour au contexte d'ou vient le combat. Le rapport le proposait
+				     deja, mais la page du combat lui-meme etait un cul-de-sac : on ouvrait un
+				     combat depuis l'arbre d'un tournoi et il n'y avait plus aucun chemin de
+				     retour vers ce tournoi. -->
+				<router-link v-if="backLink" :to="backLink.to" class="tab">
+					<v-icon>{{ backLink.icon }}</v-icon>
+					<span>{{ backLink.label }}</span>
+				</router-link>
 				<div v-if="fight_id === 'local'" class="tab" @click="reload">
 					<v-icon>mdi-refresh</v-icon>
 					Recharger
@@ -15,9 +26,17 @@
 
 		<panel class="first">
 			<template #content>
-				<div class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
-					<player v-if="fight_id" ref="playerRef" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+				<div ref="playerContainer" class="fight" :style="{minWidth: playerWidth + 'px', minHeight: playerHeight + 'px'}">
+					<player v-if="fight_id" ref="playerRef" :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :horizontal="playerHorizontal" :compact="playerCompact" :start-turn="startTurn" :start-action="startAction" :mobile-panels="mobilePanels" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 				</div>
+				<!-- Ordre des poireaux et actions, sous le lecteur en compact. Le conteneur
+				     est ici et non dans le lecteur, dont la racine a une hauteur fixe : rien ne
+				     peut se poser dessous depuis l'intérieur. Il est vide, c'est le hud qui y
+				     téléporte ses deux blocs, pour que leur logique reste en un seul endroit.
+				     Présent sur tout mobile, même hors compact : créé au moment où l'on tourne
+				     l'écran, il obligerait le hud à reconstruire ses deux blocs au lieu de les
+				     déplacer. -->
+				<div v-if="LeekWars.mobile" ref="mobilePanelsRef" class="mobile-panels"></div>
 			</template>
 		</panel>
 
@@ -109,7 +128,7 @@
 			<div class="tabs">
 				<template v-if="$store.state.connected">
 					<div class="tab" @click="showReport = true">
-						<img src="/image/icon/flag.png">
+						<v-icon>mdi-flag</v-icon>
 						<span class="report-button">{{ $t('warning.report') }}</span>
 					</div>
 					<div v-if="$store.getters.admin" class="tab" @click="toggleLoading">
@@ -127,17 +146,17 @@
 	import { locale } from '@/locale'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Comment } from '@/model/comment'
-	import { Fight, FightType } from '@/model/fight'
+	import { Fight, FightContext, FightType } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
-	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
+	import { GROUND_PADDING_TOP } from '../player/game/ground'
 	import Comments from '@/component/comment/comments.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 	import { useRoute } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 	const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`))
@@ -147,12 +166,27 @@
 	const t = useNamespacedT('fight')
 	const route = useRoute()
 	const playerRef = useTemplateRef<{ loaded: boolean }>('playerRef')
+	const playerContainer = useTemplateRef<HTMLElement>('playerContainer')
+	// Cible du Teleport du hud : nulle au premier rendu, le hud attend qu'elle existe.
+	const mobilePanels = useTemplateRef<HTMLElement>('mobilePanelsRef')
 
 	const fight_id = ref<string | null>(null)
 	const fight = ref<Fight | null>(null)
 	const playerWidth = ref(0)
 	const playerHeight = ref(0)
 	const playerHorizontal = ref(false)
+	/**
+	 * Place qu'il faut au hud du bureau : les actions (395 px) à gauche, les détails
+	 * de l'entité (395 px) à droite, l'ordre de jeu entre les deux, et une hauteur de
+	 * terrain au-dessus. Sur mobile, en dessous, le lecteur passe en disposition
+	 * compacte : contrôles sur les côtés en paysage, ordre et actions sous le terrain
+	 * en portrait. Le user-agent seul ne suffit pas à trancher : un iPad qui demande
+	 * le site mobile recevait la disposition d'un téléphone couché, hud replié et
+	 * terrain coupé.
+	 */
+	const DESKTOP_HUD_MIN_WIDTH = 1000
+	const DESKTOP_HUD_MIN_HEIGHT = 600
+	const playerCompact = ref(false)
 	const showReport = ref(false)
 	const reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
 	type NotificationData = { id: number, type: number, date: number, parameters: string[], new: boolean }
@@ -164,6 +198,27 @@
 			playerRef.value.loaded = !playerRef.value.loaded
 		}
 	}
+
+	/**
+	 * Ou renvoyer le spectateur quand il a fini de regarder.
+	 *
+	 * Memes destinations et memes libelles que les boutons du rapport, pour que les deux
+	 * pages d'un meme combat repondent pareil. Le tournoi est ouvert a tous, y compris aux
+	 * visiteurs : c'est justement de la qu'on arrive sur un combat qu'on n'a pas joue. Le
+	 * potager et l'editeur demandent un compte, ils ne s'affichent donc que connecte.
+	 */
+	const backLink = computed(() => {
+		const f = fight.value
+		if (!f) return null
+		// tournament vaut -1 quand le combat n'appartient a aucun tournoi.
+		if (f.context === FightContext.TOURNAMENT && f.tournament && f.tournament > 0) {
+			return { to: '/tournament/' + f.tournament, icon: 'mdi-tournament', label: t('back_to_tournament') }
+		}
+		if (!store.state.connected) return null
+		if (f.context === FightContext.GARDEN) return { to: '/garden', icon: 'mdi-undo', label: t('back_to_garden') }
+		if (f.context === FightContext.TEST) return { to: '/editor', icon: 'mdi-undo', label: t('back_to_editor') }
+		return null
+	})
 
 	const isFlatLayout = computed(() => {
 		if (!fight.value) return false
@@ -197,6 +252,47 @@
 		fight_id.value = id as string
 	}, { immediate: true })
 
+	function horizontalInset(el: Element | null): number {
+		if (!el) return 0
+		const style = getComputedStyle(el)
+		return (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0)
+	}
+
+	function horizontalBorders(el: Element | null): number {
+		if (!el) return 0
+		const style = getComputedStyle(el)
+		return (parseFloat(style.borderLeftWidth) || 0) + (parseFloat(style.borderRightWidth) || 0)
+	}
+
+	/**
+	 * Ce que la page prend SOUS le lecteur : le trait du bas du panneau, et rien
+	 * d'autre. C'était `8` en dur, de l'air pour qu'on voie que la page continue
+	 * en dessous ; la rangée de commandes le dit déjà, et ce liseré de fond sous
+	 * un panneau qui remplit l'écran se lisait comme un défaut d'alignement.
+	 * Zéro ne convient pas non plus : le trait du panneau
+	 * passerait alors juste sous la ligne de flottaison.
+	 */
+	function verticalOutset(): number {
+		const panel = document.querySelector('.page .panel.first')
+		if (!panel) return 1
+		return parseFloat(getComputedStyle(panel).borderBottomWidth) || 0
+	}
+
+	/**
+	 * Ce que la page prend au-dessus du lecteur : l'en-tête fixe, la barre de titre
+	 * et le trait du panneau. C'était `128` en dur, une mesure de la v2 ; en v3
+	 * l'en-tête fait 80 px et la barre de titre 60 px, soit 161 px. Le lecteur
+	 * dépassait donc du bas de la fenêtre et sa rangée de commandes, ainsi que le
+	 * bas de la barre des poireaux, partaient hors de l'écran. La position du
+	 * lecteur ne dépend pas de sa propre hauteur : la
+	 * mesurer ici ne peut pas boucler.
+	 */
+	function verticalOffset(): number {
+		const container = playerContainer.value
+		if (!container) return 128
+		return container.getBoundingClientRect().top + window.scrollY
+	}
+
 	function reload() {
 		fight_id.value = null
 		nextTick(() => {
@@ -208,50 +304,77 @@
 		LeekWars.lightBar = window.innerWidth / window.innerHeight > 1
 
 		const reference = document.querySelector('.app-center') as HTMLElement
-		const offset = 40 + 24
-		const controls = 36
-		const padding_bottom = LeekWars.mobile ? 5 : 105
-		if (reference) {
-			if (LeekWars.mobile) {
-				if (window.innerWidth > window.innerHeight) {
-					// Landscape
-					const height = Math.min(window.innerHeight, Math.round(reference.offsetWidth / 1.5))
-					const padding_top = (height - padding_bottom) * GROUND_PADDING_TOP
-					playerWidth.value = Math.min(window.innerWidth, Math.round((height - padding_bottom - padding_top) * 2)) + 2 * controls
-					playerHeight.value = height
-					playerHorizontal.value = true
-				} else {
-					// Portrait
-					const ratio = 1.3
-					const width = Math.min(reference.offsetWidth, Math.round((window.innerHeight - 56) * ratio))
-					playerWidth.value = width
-					playerHeight.value = Math.round(width / ratio)
-					playerHorizontal.value = false
-				}
-			} else {
-				// Desktop
-				const maxWidth = reference.offsetWidth - offset
-				const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
-				const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
-				const theoricalHeight = Math.round(theoricalHeight1 + padding_bottom + padding_top + controls)
-				const height = Math.min(window.innerHeight - 128, theoricalHeight)
-				playerWidth.value = maxWidth
-				playerHeight.value = height
-				playerHorizontal.value = false
-			}
+		// Ce que la colonne retire au lecteur : le retrait de `.app-center` (20 px de
+		// chaque côté), celui de `.page-wrapper` (12 px de chaque côté en v2, zéro en
+		// v3) et le trait du panneau (v3). C'était `40 + 24` en dur : en v3, où le
+		// voile de 12 px n'existe plus, le lecteur restait 24 px plus étroit que la
+		// colonne et laissait une bande vide.
+		const offset = horizontalInset(reference) + horizontalInset(document.querySelector('.page-wrapper')) + horizontalBorders(reference.querySelector('.panel.first'))
+		playerCompact.value = LeekWars.mobile && (window.innerWidth < DESKTOP_HUD_MIN_WIDTH || window.innerHeight < DESKTOP_HUD_MIN_HEIGHT)
+		playerHorizontal.value = playerCompact.value && window.innerWidth > window.innerHeight
+		if (!reference) { return }
+		if (playerHorizontal.value) {
+			// Paysage compact : les contrôles passent sur les côtés
+			const controls = 36
+			const padding_bottom = 5
+			const height = Math.min(window.innerHeight, Math.round(reference.offsetWidth / 1.5))
+			const padding_top = (height - padding_bottom) * GROUND_PADDING_TOP
+			// Les contrôles des deux côtés comptent DANS la borne : ajoutés après
+			// elle, ils poussaient le lecteur 72 px au-delà du bord droit dès que la
+			// largeur, et non la hauteur, limitait le terrain (écran peu allongé,
+			// comme celui d'un pliable ouvert).
+			playerWidth.value = Math.min(reference.offsetWidth - offset, Math.round((height - padding_bottom - padding_top) * 2) + 2 * controls)
+			playerHeight.value = height
+		} else if (playerCompact.value) {
+			// Portrait compact
+			const ratio = 1.3
+			const width = Math.min(reference.offsetWidth - offset, Math.round((window.innerHeight - 56) * ratio))
+			playerWidth.value = width
+			playerHeight.value = Math.round(width / ratio)
+		} else {
+			// Desktop : le lecteur prend toute la hauteur libre, et le panneau
+			// s'arrête donc juste au-dessus du bas de la fenêtre.
+			//
+			// Il était borné par la hauteur qu'il faut au terrain pour tenir dans
+			// la largeur de la colonne (`theoricalHeight`). Dès que la colonne est
+			// étroite pour la fenêtre — chat ouvert, écran haut — c'est cette borne
+			// qui gagnait, et le panneau tombait court : 63 px de vide sous lui en
+			// 1920×1000, plus encore en 1678. Le
+			// terrain, lui, ne grandit pas pour autant : il reste limité par la
+			// largeur et `Ground.resize` le centre dans la place reçue, la hauteur
+			// en trop devient du décor de part et d'autre.
+			playerWidth.value = reference.offsetWidth - offset
+			playerHeight.value = window.innerHeight - verticalOffset() - verticalOutset()
 		}
 	}
+
+	// La hauteur du lecteur se déduit de sa position dans la page. Or celle-ci
+	// bouge APRÈS le premier calcul : `resize()` part du `setup`, quand le
+	// conteneur n'existe pas encore et que `verticalOffset()` en est réduit à sa
+	// valeur de repli, puis la barre de titre reçoit le nom du combat et le retour
+	// au potager. Chaque pixel gagné ou perdu au-dessus du lecteur est un pixel
+	// d'écart en bas du panneau, et rien ne le recalculait : ni le chargement du
+	// combat, ni un changement de hauteur de la barre. On remesure donc au montage, à
+	// l'arrivée du combat, et à chaque fois que la barre de titre change de taille.
+	let headerObserver: ResizeObserver | undefined
 
 	onMounted(() => {
 		emitter.on('resize', resize)
 		emitter.on('trophy', onTrophy)
 		emitter.on('fight_notification', onFightNotification)
+		nextTick(resize)
+		const header = document.querySelector('.page > .page-header')
+		if (header) {
+			headerObserver = new ResizeObserver(() => resize())
+			headerObserver.observe(header)
+		}
 	})
 
 	onUnmounted(() => {
 		emitter.off('resize', resize)
 		emitter.off('trophy', onTrophy)
 		emitter.off('fight_notification', onFightNotification)
+		headerObserver?.disconnect()
 
 		// Notifications de trophées restants
 		for (const message of trophyQueue) {
@@ -278,6 +401,8 @@
 			loadedFight.title = t('entity.' + loadedFight.boss_name) as string
 		}
 		LeekWars.setTitle(loadedFight.title, LeekWars.formatDate(loadedFight.date))
+		// Le titre qu'on vient de poser peut changer la hauteur de la barre.
+		nextTick(resize)
 	}
 
 	function onTrophy(trophy: unknown) {
@@ -317,6 +442,13 @@
 	.game:fullscreen {
 		max-height: 100%;
 	}
+	// Accueille l'ordre des poireaux et les actions téléportés par le hud en mobile.
+	// Aucun décor ici : les deux blocs portent le leur, et le conteneur reste donc invisible
+	// tant que le combat charge, au lieu d'afficher une bande vide.
+	.mobile-panels {
+		display: flex;
+		flex-direction: column;
+	}
 	.fight-info {
 		margin-right: 12px;
 	}
@@ -327,7 +459,7 @@
 		width: 80px;
 		font-size: 20px;
 		text-align: center;
-		color: #eee;
+		color: var(--grey-13);
 	}
 	.fight-info td:nth-child(1) {
 		text-align: right;
@@ -338,7 +470,7 @@
 	.fight-info .farmer {
 		display: inline-block;
 		text-align: center;
-		color: #eee;
+		color: var(--grey-13);
 		margin-bottom: 10px;
 		margin-left: 5px;
 		margin-right: 5px;
@@ -359,7 +491,10 @@
 		vertical-align: top;
 		margin-right: 2px;
 	}
-	.fight-info .farmer img {
+	// L'avatar est une enveloppe autour de l'image (cadre biseauté du thème v3) :
+	// dimensionner l'<img> ne contraint plus rien, c'est l'enveloppe qui porte la
+	// taille. L'emblème d'équipe, lui, est resté une image seule.
+	.fight-info .farmer .avatar, .fight-info .farmer .emblem {
 		width: 75px;
 		height: 75px;
 	}
@@ -368,10 +503,10 @@
 		display: inline-block;
 		padding-top: 10px;
 		vertical-align: top;
-		color: #eee;
+		color: var(--grey-13);
 	}
 	.views-counter {
-		color: white;
+		color: var(--white);
 		font-size: 20px;
 		padding: 6px 12px;
 	}
@@ -383,7 +518,7 @@
 			.name {
 				font-size: 11px;
 			}
-			img {
+			.avatar, .emblem {
 				width: 50px;
 				height: 50px;
 			}

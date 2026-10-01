@@ -40,6 +40,7 @@
 	"n_power": "{0} potere",
 	"n_poison": "un veleno di {0}",
 	"open_chest": "{entity} apri lo scrigno {chest} e ottieni: {resources}",
+	"plant_awake": "{plant} si sveglia al passaggio di {leek}",
 	"reduce_effects": "Gli effetti di {leek} sono ridotti di {value}",
 	"remove_poisons": "I veleni di {leek} vengono neutralizzati",
 	"remove_shackles": "Le catene di {leek} sono state distrutte",

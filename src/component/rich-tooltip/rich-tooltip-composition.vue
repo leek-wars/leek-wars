@@ -1,7 +1,7 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template #activator="{ props: activatorProps }">
-			<span v-bind="activatorProps">
+			<span v-bind="activatorProps" class="rich-tooltip-activator">
 				<slot :props="activatorProps"></slot>
 			</span>
 		</template>
@@ -19,10 +19,10 @@
 								<emblem :team="farmer.team" :title="farmer.team.name" />
 							</router-link> -->
 						</span>
-						<talent :id="composition.id" :talent="composition.talent" :max_talent="composition.max_talent" category="team" />
-						<ranking-badge v-if="composition && composition.ranking && composition.ranking <= 1000 && composition.in_garden" :id="composition.id" :ranking="composition.ranking" category="team" />
+						<talent :id="composition.team?.id ?? 0" :talent="composition.talent" :max_talent="composition.max_talent" category="team" />
+						<ranking-badge v-if="composition && composition.team && composition.ranking && composition.ranking <= 1000 && composition.in_garden" :id="composition.team.id" :ranking="composition.ranking" category="team" />
 						<span class="level">
-							• {{ composition.leeks.length }} <img src="/image/icon/black/leek.png">
+							• {{ composition.leeks.length }} <v-icon>mdi-leek</v-icon>
 							• {{ $t('main.level_n', [composition.total_level]) }}
 						</span>
 						<v-btn class="expand" variant="text" size="x-small" :icon="expand_leeks ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand_leeks = !expand_leeks" />
@@ -116,6 +116,10 @@ function open(_v: boolean) {
 			if (expand_leeks.value) {
 				menu.value?.updateLocation?.()
 			}
+		}, () => {
+			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
+			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			content_created.value = false
 		})
 	}
 }
@@ -191,7 +195,7 @@ function setParent(event: boolean) {
 	.talent-more {
 		font-size: 15px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--grey-7);
 		display: inline-block;
 		vertical-align: top;
 		margin-top: 10px;

@@ -1,8 +1,11 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="statistics" fallback="mdi-poll" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
 			</div>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<router-link to="/about">
@@ -43,6 +46,10 @@
 					<div class="chart"><Doughnut ref="charts" :data="chartAI" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_ai_version') }}</div>
 				</div>
+				<div v-if="category_id == 3" class="chart-wrap right">
+					<div class="chart"><Doughnut ref="charts" :data="chartAILanguage" :options="chartOptions" /></div>
+					<div class="title">{{ $t('chart_ai_language') }}</div>
+				</div>
 				<div v-if="category_id == 6" class="chart-wrap left">
 					<div class="chart"><Doughnut ref="charts" :data="chartLanguages" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_languages') }}</div>
@@ -55,9 +62,10 @@
 					<div class="chart"><Doughnut ref="charts" :data="chartChests" :options="chartOptions" /></div>
 					<div class="title">{{ $t('chart_chests') }}</div>
 				</div>
-				<template v-for="(statistic, name) in category">
-					<div v-if="statistic.visible" :key="name" :class="{private: statistic.private, show_today: statistic.show_today, color: selectedStatistic === name && !!selectedStatisticColor}" class="statistic card" :style="{background: selectedStatistic === name ? selectedStatisticColor : ''}" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="hoverStat(name)" @mouseleave="hoverLeave">
-						<div class="label"><v-icon v-if="statistic.icon">{{ 'mdi-' + statistic.icon }}</v-icon> {{ $t(name) }}</div>
+				<!-- La clé va sur le `template` qui porte la boucle (cf. items.vue). -->
+				<template v-for="(statistic, name) in category" :key="name">
+					<div v-if="statistic.visible" :class="{private: statistic.private, show_today: statistic.show_today, color: selectedStatistic === name && !!selectedStatisticColor}" class="statistic card" :style="{background: selectedStatistic === name ? selectedStatisticColor : ''}" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="hoverStat(name)" @mouseleave="hoverLeave">
+						<div class="label"><img v-if="aiLanguageLogo(name)" class="stat-lang-logo" :src="aiLanguageLogo(name)!"> <v-icon v-else-if="statistic.icon">{{ 'mdi-' + statistic.icon }}</v-icon> {{ $t(name) }}</div>
 						<div v-if="!statistic.today_state" class="value total">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
@@ -125,11 +133,11 @@
 	const actions = ref<{ icon: string, click: () => void }[]>([])
 	const charts = ref<{ chart?: unknown }[] | null>(null)
 
-	function makeChartData(category: number, values: string[]) {
+	function makeChartData(category: number, values: string[], minShare = 0.01) {
 		const stats = statistics_cloned.value[category]
 		if (!stats) { return { labels: [], datasets: [{ data: [] }] } }
 		const total = values.reduce((t, s) => t + stats[s].value, 0)
-		const filtered_values = values.filter(s => stats[s].value / total > 0.01)
+		const filtered_values = values.filter(s => stats[s].value / total > minShare)
 		filtered_values.sort((a, b) => stats[b].value - stats[a].value)
 		return {
 			labels: filtered_values.map(s => te(s + '_chart') ? t(s + '_chart') : t(s)),
@@ -146,10 +154,23 @@
 	const chartFightContext = computed(() => makeChartData(FIGHT_CATEGORY, ['fight_garden', 'fight_test', 'fight_tournament', 'fight_challenge']))
 	const chartDamage = computed(() => makeChartData(FIGHT_CATEGORY, ['damage_direct', 'damage_poison', 'damage_return', 'damage_life']))
 	const chartAI = computed(() => makeChartData(AI_CATEGORY, ['ais_v1', 'ais_v2', 'ais_v3', 'ais_v4']))
+	// minShare 0 : LeekScript domine (~99,9% des IA) et le filtre par défaut évincerait JS/TS/Python.
+	const chartAILanguage = computed(() => makeChartData(AI_CATEGORY, ['ais_leekscript', 'ais_javascript', 'ais_typescript', 'ais_python'], 0))
 	const chartLanguage = computed(() => makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en', 'lang_es', 'lang_it', 'lang_de']))
 	const chartLanguages = computed(() => makeChartData(CODE_CATEGORY, ['lw_code_java', 'lw_code_javascript', 'lw_code_php', 'lw_code_css', 'lw_code_vue', 'lw_code_json']))
 	const chartItems = computed(() => makeChartData(ITEM_CATEGORY, ['item_resource', 'item_weapon', 'item_chip', 'item_potion', 'item_hat', 'item_pomp']))
 	const chartChests = computed(() => makeChartData(CHEST_CATEGORY, ['chest_wood', 'chest_iron', 'chest_diamond']))
+
+	// Logo de langage pour les tuiles/légende des stats "IA par langage" (la statistique n'a pas d'icône).
+	const AI_LANGUAGE_LOGOS: { [key: string]: string } = {
+		ais_leekscript: '/image/language/leekscript.svg',
+		ais_javascript: '/image/language/javascript.svg',
+		ais_typescript: '/image/language/typescript.svg',
+		ais_python: '/image/language/python.svg',
+	}
+	function aiLanguageLogo(name: string): string | null {
+		return AI_LANGUAGE_LOGOS[name] ?? null
+	}
 
 	function toggleAction() {
 		playing.value = !playing.value
@@ -294,6 +315,22 @@
 	#app.app h2 {
 		font-size: 22px;
 	}
+	// v3 : le titre de section en police d'affichage, encadré du pointillé
+	// vert de la barre de page — les deux dégradés flous étaient un reste du
+	// v2. Sans capitales, comme tous les titres en
+	// police d'affichage (cf. `leekwars-shell-v3.scss`, titre de page).
+	body:not(.v2) h2 {
+		font-family: var(--font-display);
+		letter-spacing: var(--font-display-tracking);
+		font-size: 16px;
+		font-weight: var(--font-display-weight);
+		text-transform: none;
+	}
+	body:not(.v2) h2:before,
+	body:not(.v2) h2:after {
+		height: 3px;
+		background: repeating-linear-gradient(90deg, var(--primary) 0 4px, transparent 4px 8px);
+	}
 	.stats {
 		padding-top: 10px;
 		padding-bottom: 20px;
@@ -325,6 +362,11 @@
 				font-size: 16px;
 				transition: none;
 			}
+			.stat-lang-logo {
+				width: 16px;
+				height: 16px;
+				object-fit: contain;
+			}
 		}
 		.unit {
 			display: inline-block;
@@ -340,6 +382,11 @@
 			display: block;
 			color: var(--text-color-secondary);
 			text-align: right;
+			// Chiffres à chasse fixe : les compteurs s'animent, et en chasse
+			// proportionnelle chaque tick changeait la largeur de la carte —
+			// toute la grille tremblait. Inter porte des
+			// chiffres tabulaires, pas besoin de changer de police.
+			font-variant-numeric: tabular-nums;
 			&.today {
 				color: #00c0e5;
 			}
@@ -349,11 +396,11 @@
 		}
 		&.color {
 			.value, .value.total, .label, .type {
-				color: white;
+				color: var(--white);
 			}
 		}
 		&.show_today.color:hover .value {
-			color: white;
+			color: var(--white);
 		}
 	}
 	#app.app .statistic {
@@ -398,5 +445,57 @@
 	}
 	.delimiter {
 		margin: 35px;
+	}
+
+	/* ====== Mobile : trois compteurs par ligne ======
+	 *
+	 * Les cartes sont des `inline-block` à `min-width: 128px` : sur un téléphone
+	 * il n'en tenait que deux par ligne, et la page des statistiques faisait une
+	 * dizaine d'écrans de haut.
+	 *
+	 * La section passe en flex pour que le tiers de largeur soit calculable
+	 * (l'espace blanc entre deux `inline-block` compte comme un caractère et
+	 * fausse tout calcul en pourcentage). Les graphiques et les séparateurs, qui
+	 * flottaient dans la colonne, prennent une ligne entière : à cette largeur
+	 * un camembert de 180 px flanqué de cartes de 120 ne tient de toute façon
+	 * pas. */
+	#app.app .category {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: stretch;
+		gap: 6px;
+	}
+	#app.app .statistic {
+		margin: 0;
+		min-width: 0;
+		flex: 1 1 calc(33.333% - 4px);
+		max-width: calc(33.333% - 4px);
+		padding: 4px 6px;
+		.label {
+			font-size: 11.5px;
+			margin-bottom: 2px;
+			.v-icon,
+			.stat-lang-logo {
+				font-size: 13px;
+				width: 13px;
+				height: 13px;
+			}
+		}
+		.value {
+			font-size: 15px;
+		}
+		.type {
+			font-size: 11px;
+		}
+	}
+	#app.app .chart-wrap {
+		flex: 1 0 100%;
+		float: none;
+		margin-top: 6px;
+	}
+	#app.app .delimiter {
+		flex: 1 0 100%;
+		margin: 6px 0;
 	}
 </style>

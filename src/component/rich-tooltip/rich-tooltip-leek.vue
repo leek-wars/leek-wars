@@ -1,7 +1,7 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:modelValue="open($event)">
 		<template #activator="{ props: activatorProps }">
-			<slot :props="activatorProps"></slot>
+			<slot :props="{ ...activatorProps, class: 'rich-tooltip-activator' }"></slot>
 		</template>
 		<div :class="{expanded: expand_items}" class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!leek" :size="30" />
@@ -51,19 +51,21 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
-								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-bind="props">
+							<rich-tooltip-item v-for="weapon in weapons" :key="weapon.id" v-slot="{ props }" :item="weapon.item" :bottom="true" :leek="leek" @update:modelValue="setParent">
+								<img :src="'/image/' + weapon.item.name.replace('_', '/') + '.png'" class="weapon" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="chips">
-							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek" @update:modelValue="setParent">
-								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-bind="props">
+							<rich-tooltip-item v-for="chip in chips" :key="chip.id" v-slot="{ props }" :item="chip.item" :bottom="true" :leek="leek" @update:modelValue="setParent">
+								<img :src="chipImageUrl(chip.chip.name)" class="chip" v-bind="props">
 							</rich-tooltip-item>
 						</div>
 						<div class="components">
-							<template v-for="(component, ci) in leek.components" :key="ci"><rich-tooltip-item v-if="component" v-slot="{ props }" :item="LeekWars.items[component.template]" :bottom="true" @update:modelValue="setParent">
-								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-bind="props">
-							</rich-tooltip-item></template>
+							<!-- :instance obligatoire, sinon l'infobulle retombe sur les stats de BASE
+							     du template et le liseré de palier disparaît. -->
+							<rich-tooltip-item v-for="component in components" :key="component.id" v-slot="{ props }" :item="component.item" :instance="(component as any)" :bottom="true" @update:modelValue="setParent">
+								<img :src="'/image/component/' + component.item.name + '.png'" :class="alteredClass(component, LeekWars.componentCapacity(component.template), LeekWars.alterations?.weights)" class="component" v-bind="props">
+							</rich-tooltip-item>
 						</div>
 					</div>
 				</div>
@@ -73,12 +75,14 @@
 </template>
 
 <script setup lang="ts">
+import { chipImageUrl } from '@/model/item'
 import { ref, computed, watch, useTemplateRef, defineAsyncComponent } from 'vue'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import LeekImage from '@/component/leek-image.vue'
 import { CHIPS as CHIPS_TYPED } from '@/model/chips'
+import { alteredClass } from '@/model/alteration'
 
 const LwTitle = defineAsyncComponent(() => import('@/component/title/title.vue'))
 
@@ -107,6 +111,30 @@ const value = ref(false)
 const _open_delay = computed(() => props.openDelay ?? (props.instant ? 1 : 500))
 const _close_delay = computed(() => props.instant ? 1 : 1)
 
+/**
+ * Les trois listes d'équipement, chacune appariée à son template d'objet.
+ *
+ * Le template était lu deux fois par vignette directement dans le rendu
+ * (`LeekWars.items[x]` pour l'infobulle, puis pour le chemin de l'image), sans
+ * jamais vérifier qu'il existe. Un objet que le client ne connaît pas (jeu de
+ * données plus ancien que celui du poireau, par exemple) donnait une prop `item`
+ * à `undefined` puis une lecture de `.name` sur `undefined` au rendu de l'image.
+ *
+ * Les vignettes sans template sont donc écartées : sans nom d'objet il n'y a ni
+ * image ni fiche à montrer. Les puces demandent en plus leur entrée dans CHIPS,
+ * qui porte le nom du fichier d'image.
+ */
+const weapons = computed(() => (leek.value?.weapons ?? [])
+	.map(weapon => ({ ...weapon, item: LeekWars.items[weapon.template] }))
+	.filter(weapon => weapon.item))
+const chips = computed(() => (leek.value?.chips ?? [])
+	.map(chip => ({ ...chip, item: LeekWars.items[chip.template], chip: CHIPS[chip.template] }))
+	.filter(chip => chip.item && chip.chip))
+const components = computed(() => (leek.value?.components ?? [])
+	.filter(component => component)
+	.map(component => ({ ...component!, item: LeekWars.items[component!.template] }))
+	.filter(component => component.item))
+
 watch(() => props.id, () => {
 	leek.value = null
 	content_created.value = false
@@ -123,6 +151,10 @@ function open(v: boolean) {
 			if (expand_items.value) {
 				menu.value?.updateLocation?.()
 			}
+		}, () => {
+			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
+			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			content_created.value = false
 		})
 	}
 }
@@ -201,6 +233,10 @@ function setParent(event: boolean) {
 			font-size: 18px;
 		}
 		.avatar {
+			// L'avatar est une enveloppe autour de l'image : la taille se pose sur
+			// elle, dimensionner l'<img> seul ne contraint plus rien.
+			width: 17px;
+			height: 17px;
 			margin-left: 5px;
 			margin-top: 3px;
 		}
@@ -216,7 +252,7 @@ function setParent(event: boolean) {
 	.talent-more {
 		font-size: 15px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--grey-7);
 		display: inline-block;
 		vertical-align: top;
 		margin-top: 10px;

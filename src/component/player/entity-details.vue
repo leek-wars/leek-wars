@@ -1,9 +1,13 @@
 <template>
 	<div class="details-wrapper">
 		<div class="effects">
-			<v-tooltip v-for="effect in entity.effects" :key="effect.id" location="left">
+			<!-- v-memo : une infobulle Vuetify DANS une boucle porte des slots dynamiques,
+			     donc Vue la re-rend à chaque rendu du parent quoi qu'il arrive — et le
+			     panneau se redessine plusieurs fois par seconde, alors qu'une pastille ne
+			     change qu'à l'empilement ou au tour suivant. -->
+			<v-tooltip v-for="effect in entity.effects" :key="effect.id" v-memo="[effect, effect.value, effect.turns]" location="left">
 				<template #activator="{ props }">
-					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-bind="props">
+					<div :value="effectValueText(effect)" :turns="LeekWars.formatTurns(effect.turns)" class="effect" :class="{irreductible: effect.modifiers & EffectModifier.IRREDUCTIBLE}" v-bind="props">
 						<img class="image" :src="effect.texture.src">
 						<img v-if="effect.type === EffectType.ADD_STATE" class="state" :src="LeekWars.STATIC + 'image/state/' + effect.value + '.svg'" :style="{ background: FightEntity.stateColors[effect.value] }">
 					</div>
@@ -88,25 +92,36 @@
 			</v-tooltip>
 		</div>
 		<div :class="{dead: entity.dead, dark}" class="details">
-			<div class="entity-image">
-				<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
+			<!-- La branche ne dépend que de l'entité : inutile d'en refaire les vnodes
+			     (et les quatre `instanceof`) chaque fois que la vie change. -->
+			<div v-memo="[entity]" class="entity-image">
+				<img v-if="entity.summon" :src="'/' + summonImage(entity.bulbName)">
 				<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="0.15" />
 				<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.name + '.png'">
 				<img v-else-if="(entity instanceof Mob)" :src="'/image/mob/' + entity.name + '.png'">
 				<leek-image v-else :leek="entity" :scale="0.3" />
 			</div>
 			<div>
-				<div class="flex">
-					<span class="name">{{ entity.translatedName }}</span>&nbsp;
+				<!-- v-memo : le panneau se redessine jusqu'à vingt fois par seconde, cette
+				     rangée ne bouge qu'avec la vie. La clé porte la largeur de la barre au
+				     millième, pour qu'elle suive toujours une animation de dégâts.
+				     `translatedName` y est aussi : une invocation peut être renommée en cours
+				     de combat sans changer d'identité. -->
+				<div v-memo="[entity, entity.translatedName, entity.level, entity.farmer, Math.round(1000 * entity.displayLife / entity.maxLife)]" class="flex">
+					<span class="name ellipsis">{{ entity.translatedName }}</span>&nbsp;
 					<div class="spacer"></div>
 					<span class="level">{{ $t('main.level_n', [entity.level]) }}</span>
 					<div class="bar-wrapper">
 						<div :style="{width: (100 * entity.displayLife / entity.maxLife) + '%', background: entity.lifeColor}" class="details-bar"></div>
 					</div>
-					<div>{{ entity.farmer?.name }}</div>
-					<avatar :farmer="entity.farmer" class="farmer-avatar" />
+					<div class="farmer-name ellipsis">{{ entity.farmer?.name }}</div>
+					<!-- Mémoïsé malgré des props stables : la mesure est têtue, le retirer
+					     coûte ~6 ms de p99 sur un combat à 30 poireaux. -->
+					<avatar v-memo="[entity.farmer]" :farmer="entity.farmer" class="farmer-avatar" />
 				</div>
-				<div class="stats">
+				<!-- v-memo : `entity.life` en plus de `displayLife`, car la classe `zero`
+				     suit la vie réelle, qui tombe à 0 avant que l'animation la rattrape. -->
+				<div v-memo="[Math.round(entity.displayLife), entity.life, entity.maxLife, entity.tp, entity.mp, entity.absoluteShield, entity.relativeShield, entity.damageReturn, dark]" class="stats">
 					<div :class="{zero: entity.life === 0}" class="stat life">
 						<img src="/image/charac/small/life.png">
 						<div :class="{small: entity.maxLife > 9999}" class="color-life">{{ Math.round(entity.displayLife) + ' / ' + entity.maxLife }}</div>
@@ -132,7 +147,8 @@
 						<div class="damage-return">{{ entity.damageReturn }}%</div>
 					</div>
 				</div>
-				<div class="stats">
+				<!-- v-memo : les caractéristiques ne bougent qu'à un buff ou une entrave. -->
+				<div v-memo="[entity.strength, entity.wisdom, entity.agility, entity.resistance, entity.science, entity.magic, entity.frequency, dark]" class="stats">
 					<div :class="{zero: entity.strength === 0}" class="stat">
 						<img src="/image/charac/small/strength.png" :class="{dark}">
 						<div class="strength color-strength" :class="{dark}">{{ entity.strength }}</div>
@@ -168,7 +184,8 @@
 </template>
 
 <script setup lang="ts">
-	import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
+	import { EffectModifier, EffectType, effectValueText } from '@/model/effect'
+	import { summonImage } from '@/model/summon'
 	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
@@ -181,20 +198,14 @@
 	defineProps<{
 		entity: FightEntity
 		game: Game
+		/**
+		 * Compteur de rafraîchissement du lecteur : l'entité n'est plus un objet réactif,
+		 * c'est le changement de cette prop qui fait relire ses valeurs (cf. player.vue).
+		 */
+		tick: number
 		dark: boolean
 	}>()
 
-	function effectText(effect: EntityEffect) {
-		if (effect.type === EffectType.ADD_STATE) return ''
-		let r = '' + effect.value
-		if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
-			r = '-' + r
-		}
-		if (effect.type === EffectType.RAW_RELATIVE_SHIELD || effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
-			r += '%'
-		}
-		return r
-	}
 </script>
 
 <style lang="scss" scoped>
@@ -208,17 +219,20 @@
 	width: 100%;
 	height: 100px;
 	padding: 4px 5px;
-	background-color: #fff;
+	background-color: var(--white);
 	box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-	border-top-left-radius: 5px;
+	border-top-left-radius: var(--radius);
 	display: flex;
 	align-items: center;
 	&.dark {
-		background-color: #222;
-		color: #eee;
+		background-color: var(--grey-1);
+		color: var(--grey-13);
 	}
 	& > * {
 		flex: 1;
+		// Sans ça, un long pseudo d'éleveur élargit la colonne au-delà du panneau
+		// (largeur fixe) et pousse les stats hors du combat
+		min-width: 0;
 	}
 }
 .details.dead {
@@ -238,13 +252,14 @@
 }
 .flex {
 	align-items: center;
-	margin-right: -4px;
+	gap: 4px;
+}
+.name, .farmer-name {
+	min-width: 0;
 }
 .name {
 	font-weight: 500;
 	width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .level {
 	white-space: nowrap;
@@ -255,9 +270,9 @@
 .details .bar-wrapper {
 	flex-basis: 200px;
 	height: 8px;
-	border: 1px solid #999;
+	border: 1px solid var(--grey-8);
 	margin: 0 6px;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 }
 .details .details-bar {
 	height: 6px;
@@ -265,10 +280,10 @@
 .farmer-avatar {
 	width: 30px;
 	height: 30px;
+    flex: 30px 0 0;
 }
 .stats {
 	display: flex;
-	width: 100%;
 	margin: 8px 4px;
 	gap: 2px;
 }
@@ -291,7 +306,7 @@
 		}
 	}
 	&.black {
-		color: black;
+		color: var(--black);
 		&.dark {
 			filter: invert(100%);
 		}
@@ -349,11 +364,11 @@
 	bottom: 4px;
 	padding: 1px 2px;
 	content: attr(value);
-	color: white;
+	color: var(--white);
 	font-weight: bold;
 	background: rgba(0,0,0,0.5);
-	border-top-right-radius: 7px;
-	border-bottom-left-radius: 10px;
+	border-top-right-radius: var(--radius-medium);
+	border-bottom-left-radius: var(--radius-large);
 	font-size: 12px;
 }
 .effects .effect:before {
@@ -362,11 +377,11 @@
 	top: 0;
 	padding: 1px 2px;
 	content: attr(turns);
-	color: white;
+	color: var(--white);
 	font-weight: bold;
 	background: rgba(0,0,0,0.5);
-	border-bottom-left-radius: 7px;
-	border-top-right-radius: 10px;
+	border-bottom-left-radius: var(--radius-medium);
+	border-top-right-radius: var(--radius-large);
 	font-size: 12px;
 }
 </style>

@@ -6,6 +6,7 @@
 	"dark_mode": "Nattläge",
 	"decelerate": "Minska hastigheten",
 	"display_cell_numbers": "Visa boxnummer",
+	"marks_foreground": "mark() i förgrunden",
 	"display_debug": "Visa felsökningsinformation",
 	"display_life_bars": "Visa hälsostaplar",
 	"display_logs": "Visa felsökningar",
