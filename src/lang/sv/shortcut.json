@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: vik/vik upp det aktuella kodblocket",
 	"shortcut_14": "<b>Ctrl + J</b>: Komprimera alla kodblock",
 	"shortcut_15": "<b>Ctrl + I</b>: expandera alla kodblock",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: sök i alla filer",
 	"shortcut_2": "<b>Ctrl + Q</b>: starta ett test",
 	"shortcut_3": "<b>Ctrl + D</b>: duplicera den aktuella raden eller markeringen",
 	"shortcut_4": "<b>Ctrl + K</b>: radera den aktuella raden",

@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: chiude/estende il blocco di codice corrente",
 	"shortcut_14": "<b>Ctrl + J</b>: Comprimi tutti i blocchi di codice",
 	"shortcut_15": "<b>Ctrl + I</b>: espande tutti i blocchi di codice",
+	"shortcut_16": "<b>Ctrl + Maiusc + F</b>: ricerca in tutti i file",
 	"shortcut_2": "<b>Ctrl + Q</b>: avvia un test",
 	"shortcut_3": "<b>Ctrl + D</b>: duplica la riga o la selezione corrente",
 	"shortcut_4": "<b>Ctrl + K</b>: elimina la riga corrente",

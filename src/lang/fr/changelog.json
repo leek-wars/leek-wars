@@ -2,6 +2,7 @@
 	"forum_topic": "Sujet forum",
 	"need_ai_change": "Peut nécessiter des changements dans l'IA",
 	"popup_ok": "OK :)",
+	"search_results": "Aucun résultat | 1 résultat | {n} résultats",
 	"see_all_changes": "Retrouvez la liste complète des changements sur la page {changelog}.",
 	"title": "Historique des modifications",
 	"title_0": "🌟 Nouveautés",

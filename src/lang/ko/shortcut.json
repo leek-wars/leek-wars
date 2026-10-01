@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: 현재 코드 블록 접기/펼치기",
 	"shortcut_14": "<b>Ctrl + J</b>: 모든 코드 블록 접기",
 	"shortcut_15": "<b>Ctrl + I</b>: 모든 코드 블록 확장",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: 모든 파일에서 검색",
 	"shortcut_2": "<b>Ctrl + Q</b>: 테스트 시작",
 	"shortcut_3": "<b>Ctrl + D</b>: 현재 줄 또는 선택 항목 복제",
 	"shortcut_4": "<b>Ctrl + K</b>: 현재 줄 삭제",

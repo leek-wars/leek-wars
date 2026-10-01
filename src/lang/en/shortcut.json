@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: fold/unfold the current code block",
 	"shortcut_14": "<b>Ctrl + J</b>: fold all code blocks",
 	"shortcut_15": "<b>Ctrl + I</b>: unfold all code blocks",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: search in all files",
 	"shortcut_2": "<b>Ctrl + Q</b>: run a test",
 	"shortcut_3": "<b>Ctrl + D</b>: duplicate the line or the selected text",
 	"shortcut_4": "<b>Ctrl + K</b>: delete the current line",

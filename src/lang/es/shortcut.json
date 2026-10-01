@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: plegar/desplegar el bloque de código actual",
 	"shortcut_14": "<b>Ctrl + J</b>: contraer todos los bloques de código",
 	"shortcut_15": "<b>Ctrl + I</b>: expandir todos los bloques de código",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: busca en todos los archivos",
 	"shortcut_2": "<b>Ctrl + Q</b>: iniciar una prueba",
 	"shortcut_3": "<b>Ctrl + D</b>: duplica la línea o selección actual",
 	"shortcut_4": "<b>Ctrl + K</b>: elimina la línea actual",

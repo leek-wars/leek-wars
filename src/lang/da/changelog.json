@@ -2,6 +2,7 @@
 	"forum_topic": "Forum emne",
 	"need_ai_change": "Kan kræve ændringer i AI",
 	"popup_ok": "OKAY :)",
+	"search_results": "Ingen resultater | 1 resultat | {n} resultater",
 	"see_all_changes": "Find den fulde liste over ændringer på siden {changelog}.",
 	"title": "Skift historik",
 	"title_0": "🌟 Nye ankomster",

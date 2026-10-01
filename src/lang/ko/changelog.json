@@ -2,6 +2,7 @@
 	"forum_topic": "포럼 주제",
 	"need_ai_change": "AI의 변경이 필요할 수 있음",
 	"popup_ok": "좋아요 :)",
+	"search_results": "결과 없음 | 결과 1개 | 결과 {n}개",
 	"see_all_changes": "{changelog} 페이지에서 전체 변경 목록을 찾으십시오.",
 	"title": "변경 내역",
 	"title_0": "🌟 신입생",

@@ -6,12 +6,13 @@
 	"shortcut_13": "<b>Ctrl + U</b> : replier/déplier le bloc de code courant",
 	"shortcut_14": "<b>Ctrl + J</b> : replier tous les blocs de code",
 	"shortcut_15": "<b>Ctrl + I</b> : déplier tous les blocs de code",
+	"shortcut_16": "<b>Ctrl + Shift + F</b> : rechercher dans tous les fichiers",
 	"shortcut_2": "<b>Ctrl + Q</b> : lancer un test",
 	"shortcut_3": "<b>Ctrl + D</b> : dupliquer la ligne ou la sélection courante",
 	"shortcut_4": "<b>Ctrl + K</b> : supprimer la ligne courante",
 	"shortcut_5": "<b>Ctrl + E</b> ou <b>Ctrl + /</b> : commenter/décommenter la ligne courante",
 	"shortcut_6": "<b>Ctrl + P</b> : ouvrir un fichier",
 	"shortcut_7": "<b>Ctrl + F</b> : rechercher dans le fichier courant",
-	"shortcut_8": "<b>Alt + haut/bas</b> : deplacer la ligne courante vers le haut/bas",
+	"shortcut_8": "<b>Alt + haut/bas</b> : déplacer la ligne courante vers le haut/bas",
 	"shortcut_9": "<b>Alt + gauche/droite</b> : basculer entre les fichiers ouverts"
 }

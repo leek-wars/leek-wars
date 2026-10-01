@@ -6,6 +6,7 @@
 	"shortcut_13": "<b>Ctrl + U</b>: fold/fold den aktuelle kodeblok",
 	"shortcut_14": "<b>Ctrl + J</b>: Skjul alle kodeblokke",
 	"shortcut_15": "<b>Ctrl + I</b>: Udvid alle kodeblokke",
+	"shortcut_16": "<b>Ctrl + Shift + F</b>: søg i alle filer",
 	"shortcut_2": "<b>Ctrl + Q</b>: start en test",
 	"shortcut_3": "<b>Ctrl + D</b>: Dupliker den aktuelle linje eller markering",
 	"shortcut_4": "<b>Ctrl + K</b>: Slet den aktuelle linje",
