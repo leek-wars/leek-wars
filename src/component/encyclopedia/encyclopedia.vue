@@ -3,20 +3,21 @@
 		<div class="page-bar page-header">
 			<div class="flex">
 				<h1 :class="{small: breadcrumb_items.length >= 3}">
-					<v-icon class="book">mdi-book-open-page-variant</v-icon>
+					<page-icon name="encyclopedia" fallback="mdi-book-open-page-variant" class="book" />
 					<breadcrumb :items="breadcrumb_items" :raw="true" />
 					<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 				</h1>
-				<div v-if="$store.getters.admin && page && page.language === 'fr'" class="info">
-					<v-checkbox v-model="page.official" :hide-details="true" :dark="true" label="Officiel" @change="updateOfficial" />
-				</div>
 			</div>
 			<div v-if="page" class="tabs">
+				<div v-if="$store.getters.admin && page.language === 'fr'" class="info">
+					<lw-checkbox v-model="page.official" :dark="true" label="Officiel" @change="updateOfficial" />
+				</div>
+				<doc-language-selector v-if="!edition && !inAppBar" />
 				<v-menu v-if="contributor && edition" offset-y>
 					<template #activator="{ props }">
 						<div class="page-language info" v-bind="props">
 							<flag :code="LeekWars.languages[page.language].country" :clickable="false" />
-							<img width="10" src="/image/selector.png">
+							<v-icon class="caret">mdi-menu-down</v-icon>
 						</div>
 					</template>
 					<v-list :dense="true">
@@ -48,12 +49,12 @@
 					<v-icon>mdi-delete</v-icon>
 					{{ $t('main.delete') }}
 				</div>
-				<v-menu v-if="page && Object.values(page.translations).length" offset-y>
+				<v-menu v-if="page && Object.values(translations).length" offset-y>
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props"><v-icon>mdi-translate</v-icon></div>
 					</template>
 					<v-list :dense="true">
-						<router-link v-for="(translation, l) in page.translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
+						<router-link v-for="(translation, l) in translations" :key="l" :to="'/encyclopedia/' + l + '/' + translation">
 							<v-list-item class="language">
 								<template #prepend>
 									<flag :code="LeekWars.languages[l].country" :clickable="false" />
@@ -68,7 +69,22 @@
 		<panel v-if="page" class="first encyclopedia last">
 			<template #content>
 				<div class="table">
-					<div v-if="edition" ref="monacoContainer" class="monaco-container"></div>
+					<!-- La page rendue à côté sert d'aperçu : pas d'aperçu dans l'éditeur. -->
+					<markdown-editor
+						v-if="edition"
+						ref="pageEditor"
+						:model-value="page.content"
+						class="page-editor"
+						fill
+						default-mode="code"
+						storage-key="encyclopedia-editor"
+						preview-mode="encyclopedia"
+						upload-context="encyclopedia"
+						:live-preview="false"
+						:monaco-options="PAGE_EDITOR_MONACO"
+						@update:model-value="onContentEdited"
+						@scroll="editorScroll"
+					/>
 					<div v-if="LeekWars.encyclopedia[language] && Object.keys(LeekWars.encyclopedia[language]).length" ref="markdown" class="markdown" @scroll="markdownScroll">
 						<!-- {{ parents }} -->
 
@@ -84,9 +100,9 @@
 							<i18n-t keypath="not_found" tag="div" class="message">
 								<template #name>{{ code }}</template>
 							</i18n-t>
-							<div v-if="Object.keys(page.translations).length" class="available-translations">
+							<div v-if="Object.keys(translations).length" class="available-translations">
 								{{ $t('available_in') }}
-								<router-link v-for="(title, lang) in page.translations" :key="lang" :to="'/encyclopedia/' + lang + '/' + title.replace(/ /g, '_')">
+								<router-link v-for="(title, lang) in translations" :key="lang" :to="'/encyclopedia/' + lang + '/' + title.replace(/ /g, '_')">
 									<flag :code="LeekWars.languages[lang].country" :clickable="false" />
 									{{ LeekWars.languages[lang].name }}
 								</router-link>
@@ -217,10 +233,18 @@
 <script setup lang="ts">
 	import type * as Monaco from 'monaco-editor'
 	import '@/component/editor/monaco-csp'
+	import { colorDecoratorOptions } from '@/component/editor/monaco-color-decorators'
+	import { defineLeekWarsThemes } from '@/component/editor/monaco-themes'
+	import { loadMonaco as loadMarkdownMonaco, type MonacoLifecycle } from '@/component/editor/monaco-markdown'
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+	import MarkdownEditor from '@/component/markdown-editor/markdown-editor.vue'
+	import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
+	import { docLanguage } from '@/model/doc-language'
+	import { displaySignature, flatNameForObjectPath } from '@/model/doc-signature'
 	import { locale } from '@/locale'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { userImageErrorMessage } from '@/model/user-image-upload'
 	import { store } from '@/model/store'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -228,7 +252,7 @@
 	import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: 'Encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 
@@ -236,7 +260,7 @@
 	const t = useNamespacedT('encyclopedia')
 	const route = useRoute()
 	const router = useRouter()
-	const monacoContainer = useTemplateRef<HTMLElement>('monacoContainer')
+	const pageEditor = useTemplateRef<InstanceType<typeof MarkdownEditor>>('pageEditor')
 	const markdownRef = useTemplateRef<HTMLElement>('markdown')
 	const diffContainer = useTemplateRef<HTMLElement>('diffContainer')
 
@@ -278,12 +302,14 @@
 
 	const page = ref<EncyclopediaPage | null>(null)
 	const edition = ref(false)
-	const editor = ref<Monaco.editor.IStandaloneCodeEditor | null>(null)
+	// Pages longues, noms de fonctions qui reviennent : on garde les suggestions de
+	// mots de Monaco (retirées pour les messages du forum) et le repli des sections.
+	const PAGE_EDITOR_MONACO: Monaco.editor.IStandaloneEditorConstructionOptions = { folding: true }
 	let scrolling = false
 	// Date du dernier édit. Taper modifie la hauteur du contenu des deux côtés :
-	// Monaco émet un event de scroll dès que sa scrollHeight change (pas seulement
-	// le scrollTop), et le navigateur clampe le scrollTop de la preview lors de son
-	// re-render. Ces events ne sont pas des scrolls utilisateur ; les répercuter via
+	// l'éditeur déplace son texte pour garder le curseur visible, et le navigateur
+	// clampe le scrollTop de la preview lors de son re-render. Ces events ne sont
+	// pas des scrolls utilisateur ; les répercuter via
 	// la synchro fait sauter l'éditeur et dériver la preview à chaque touche. On
 	// désactive donc la synchro dans les deux sens juste après une frappe, le temps
 	// que le reflow se stabilise.
@@ -297,6 +323,17 @@
 	const history = ref<HistoryEntry[] | null>(null)
 	const selectedHistoryIndex = ref<number | null>(null)
 	const diffEditor = ref<Monaco.editor.IStandaloneDiffEditor | null>(null)
+	// Cycle de vie commun des éditeurs Monaco (voir monaco-dispose.ts). Chargé avec Monaco par
+	// loadMonaco(), donc présent dès qu'un éditeur existe ; en import dynamique, car une arête
+	// statique vers Monaco ferait précharger son chunk sur la route de l'encyclopédie.
+	let monacoLifecycle: MonacoLifecycle | null = null
+
+	function loadMonaco() {
+		return loadMarkdownMonaco().then(({ monaco, lifecycle }) => {
+			monacoLifecycle = lifecycle
+			return monaco
+		})
+	}
 	const referencedBy = ref<ReferencedBy | null>(null)
 	let destroyed = false
 	let loadedPending = false
@@ -306,6 +343,11 @@
 		return lang in LeekWars.languages ? lang : i18nLocale.value as string
 	})
 	const main_title = computed(() => LeekWars.languages[language.value].encyclopedia)
+	// Des traductions peuvent exister dans des langues que le site ne gère pas (des
+	// pages en hindi, sans drapeau ni nom dans `LeekWars.languages`) : on ne propose
+	// que les langues du site.
+	const translations = computed<Record<string, string>>(() => Object.fromEntries(
+		Object.entries(page.value?.translations ?? {}).filter(([lang]) => lang in LeekWars.languages)))
 	const code = computed(() => 'page' in route.params ? (route.params.page as string).replace(/_/g, ' ') : main_title.value)
 	const lanuage_and_code = computed(() => language.value + '/' + code.value)
 	const title = computed(() => page.value ? page.value.title : 'Encyclopedia')
@@ -324,7 +366,7 @@
 			return parts
 		}
 	})
-	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator : false)
+	const contributor = computed(() => store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator || store.state.farmer.referent : false)
 	const parents = computed(() => {
 		const list: { id: number, title: string, [key: string]: unknown }[] = []
 		const visited = new Set<number>()
@@ -337,9 +379,28 @@
 		}
 		return list.reverse()
 	})
+	/**
+	 * La barre d'application mobile (lw-bar) porte déjà le sélecteur de langage, mais elle
+	 * n'existe que connecté (`#app:not(.connected) .app-bar { display: none }`). Hors de ce
+	 * cas — desktop, ou mobile déconnecté — c'est la barre d'onglets de la page qui le porte,
+	 * sans quoi il n'y en aurait aucun.
+	 */
+	const inAppBar = computed(() => LeekWars.mobile && store.state.connected)
+
 	const function_args = computed(() => {
 		for (const fun of FUNCTIONS) {
 			if (fun.name === code.value) {
+				// En JS/TS/Python la fonction plate n'existe PAS : afficher sa signature à côté
+				// du titre induirait en erreur. On montre le membre objet, seul nom appelable.
+				// Le titre de la page reste le nom plat : c'est la clé de l'encyclopédie.
+				if (docLanguage.value !== 'leekscript') {
+					const signature = displaySignature(fun.name, fun.return_type, docLanguage.value)
+					if (!signature) return undefined
+					// La flèche sépare le titre de la page du membre objet : sans elle les deux se
+					// collent (`getLifeentity.life`), le `(` de la forme plate faisant office
+					// de séparateur implicite.
+					return ' → <span class="lstype">' + LeekWars.protect(signature) + '</span>'
+				}
 				let name = "("
 				let i = 0
 				for (const a in fun.arguments_names) {
@@ -380,11 +441,6 @@
 		window.removeEventListener('beforeunload', boundBeforeUnload)
 
 		destroyDiffEditor()
-		if (editor.value) {
-			editor.value.getModel()?.dispose()
-			editor.value.dispose()
-			editor.value = null
-		}
 		if (edition.value) {
 			editEnd()
 		}
@@ -471,6 +527,14 @@
 		referencedBy.value = null
 		destroyDiffEditor()
 
+		// Adresse écrite avec le nom OBJET (`Entity.life`) : les pages sont titrées du nom plat,
+		// on redirige vers la bonne, en réutilisant le bandeau « redirigé depuis » existant.
+		const flat = flatNameForObjectPath(code.value)
+		if (flat && flat !== code.value) {
+			router.replace('/encyclopedia/' + language.value + '/' + flat + '?from=' + encodeURIComponent(code.value))
+			return
+		}
+
 		LeekWars.get<EncyclopediaPage & { redirect?: string }>('encyclopedia/get/' + language.value + '/' + code.value).then(p => {
 			if (p.redirect) {
 				router.replace('/encyclopedia/' + language.value + '/' + p.redirect.replace(/ /g, '_') + '?from=' + encodeURIComponent(code.value))
@@ -482,7 +546,7 @@
 			page.value = p
 			if (edition.value) {
 				editStart()
-				setEditorContent()
+				modified.value = false
 			}
 			LeekWars.setTitle(title.value)
 			updatePageMeta(p)
@@ -528,7 +592,7 @@ ${ret}
 
 ` : '# ' + code.value + '\n\n'
 			}
-			setEditorContent()
+			modified.value = false
 		})
 	}, { immediate: true })
 
@@ -539,7 +603,7 @@ ${ret}
 			LeekWars.large = true
 			LeekWars.box = true
 			LeekWars.footer = false
-			prepareEditor()
+			modified.value = false
 			return
 		}
 		LeekWars.post('encyclopedia/start-edition', {page_id: page.value.id}).then(() => {
@@ -547,84 +611,39 @@ ${ret}
 			LeekWars.large = true
 			LeekWars.box = true
 			LeekWars.footer = false
-			prepareEditor()
+			modified.value = false
 		}).error((result) => {
 			LeekWars.toast("Verrouillé par " + result.locker)
 		})
 	}
 
-	function prepareEditor() {
-		if (editor.value) {
-			setEditorContent()
-			return
-		}
+	function onContentEdited(value: string) {
+		if (!page.value) { return }
+		page.value.content = value
+		modified.value = true
+		lastEditTime = Date.now()
+		// La page parent est déclarée par le premier blockquote (« > Titre ») du
+		// contenu. On la résout depuis le rendu markdown après mise à jour du DOM.
 		nextTick(() => {
-			import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
-				const container = monacoContainer.value
-				if (!container) { return }
-				editor.value = markRaw(monaco.editor.create(container, {
-					value: page.value ? page.value.content : "",
-					language: "markdown",
-					automaticLayout: true,
-					wordWrap: "on",
-					fontSize: 14,
-					lineHeight: 22,
-					theme: "vs",
-					tabSize: 4,
-					insertSpaces: false,
-					lineNumbers: "on",
-					folding: true,
-					minimap: { enabled: false },
-					scrollBeyondLastLine: false,
-					overviewRulerLanes: 0,
-					overviewRulerBorder: false,
-					renderLineHighlight: "line",
-					accessibilitySupport: 'off', // Workaround Firefox : sélection backward + remplacement (#2802)
-				}))
-
-				editor.value.onDidChangeModelContent(() => {
-					modified.value = true
-					lastEditTime = Date.now()
-					if (page.value) page.value.content = editor.value!.getValue()
-					// La page parent est déclarée par le premier blockquote (« > Titre ») du
-					// contenu. On la résout depuis le rendu markdown après mise à jour du DOM.
-					nextTick(() => {
-						const md = markdownRef.value
-						if (!md || !page.value) return
-						const blockquote = md.querySelector('blockquote')
-						if (blockquote) {
-							const key = blockquote.textContent!.trim().replace(/_/g, ' ').toLowerCase()
-							const pages = LeekWars.encyclopedia[language.value]
-							page.value.parent = (pages && pages[key]) ? pages[key].id : 1
-						}
-					})
-				})
-
-				editor.value.onDidScrollChange((e) => {
-					if (scrolling) { scrolling = false; return }
-					// Scroll provoqué par la frappe (croissance de scrollHeight), pas par
-					// l'utilisateur : ne pas le répercuter sur la preview (sinon elle dérive).
-					if (Date.now() - lastEditTime < REFLOW_STABILIZE_DELAY) { return }
-					const scrollTop = e.scrollTop
-					const scrollHeight = e.scrollHeight
-					const editorHeight = editor.value!.getLayoutInfo().height
-					if (scrollHeight <= editorHeight) { return }
-					const percent = scrollTop / (scrollHeight - editorHeight)
-
-					scrolling = true
-					const md = markdownRef.value
-					if (md) md.scrollTop = (md.scrollHeight - md.clientHeight) * percent
-				})
-
-				modified.value = false
-			})
+			const md = markdownRef.value
+			if (!md || !page.value) return
+			const blockquote = md.querySelector('blockquote')
+			if (blockquote) {
+				const key = blockquote.textContent!.trim().replace(/_/g, ' ').toLowerCase()
+				const pages = LeekWars.encyclopedia[language.value]
+				page.value.parent = (pages && pages[key]) ? pages[key].id : 1
+			}
 		})
 	}
 
-	function setEditorContent() {
-		if (!page.value || !editor.value) { return }
-		editor.value.setValue(page.value.content)
-		modified.value = false
+	function editorScroll(ratio: number) {
+		if (scrolling) { scrolling = false; return }
+		// Scroll provoqué par la frappe (croissance du texte), pas par l'utilisateur :
+		// ne pas le répercuter sur la preview (sinon elle dérive).
+		if (Date.now() - lastEditTime < REFLOW_STABILIZE_DELAY) { return }
+		scrolling = true
+		const md = markdownRef.value
+		if (md) md.scrollTop = (md.scrollHeight - md.clientHeight) * ratio
 	}
 
 	function editEnd() {
@@ -632,11 +651,6 @@ ${ret}
 		LeekWars.large = false
 		LeekWars.box = false
 		LeekWars.footer = true
-		if (editor.value) {
-			editor.value.getModel()?.dispose()
-			editor.value.dispose()
-			editor.value = null
-		}
 		if (page.value) page.value.locker = null
 		releasePage()
 	}
@@ -675,11 +689,7 @@ ${ret}
 		const percent = md.scrollTop / (md.scrollHeight - md.clientHeight)
 
 		scrolling = true
-		if (editor.value) {
-			const scrollHeight = editor.value.getScrollHeight()
-			const editorHeight = editor.value.getLayoutInfo().height
-			editor.value.setScrollTop(Math.ceil((scrollHeight - editorHeight) * percent))
-		}
+		pageEditor.value?.scrollTo(percent)
 	}
 
 	onBeforeRouteUpdate((to, from, next) => {
@@ -708,6 +718,8 @@ ${ret}
 		}).error(error => {
 			if (error.error === 'duplicate_reference') {
 				LeekWars.toast("Sauvegarde échouée : la référence est déjà utilisée par la page \"" + error.page + "\" (#" + error.page_id + ")")
+			} else if (error.error?.startsWith('user_image')) {
+				LeekWars.toast(userImageErrorMessage(error))
 			} else {
 				LeekWars.toast("Sauvegarde échouée : " + error.error)
 			}
@@ -778,9 +790,10 @@ ${ret}
 		const oldContent = index < history.value.length - 1 ? history.value[index + 1].content : ''
 		const expectedIndex = selectedHistoryIndex.value
 
-		import(/* webpackChunkName: "monaco" */ 'monaco-editor').then((monaco) => {
+		loadMonaco().then((monaco) => {
 			if (selectedHistoryIndex.value !== expectedIndex) return
-			diffEditor.value = markRaw(monaco.editor.createDiffEditor(container, {
+			defineLeekWarsThemes(monaco)
+			diffEditor.value = markRaw(monacoLifecycle!.createDiffEditor(container, {
 				automaticLayout: true,
 				readOnly: true,
 				renderSideBySide: false,
@@ -793,7 +806,8 @@ ${ret}
 				renderOverviewRuler: false,
 				wordWrap: 'on',
 				hideUnchangedRegions: { enabled: true },
-				theme: LeekWars.darkMode ? 'vs-dark' : 'vs',
+				theme: LeekWars.darkMode ? 'leek-wars-dark' : 'leek-wars',
+				...colorDecoratorOptions,
 			}))
 			diffEditor.value.setModel({
 				original: markRaw(monaco.editor.createModel(oldContent, 'markdown')),
@@ -803,13 +817,12 @@ ${ret}
 	}
 
 	function destroyDiffEditor() {
-		if (diffEditor.value) {
-			const model = diffEditor.value.getModel()
-			diffEditor.value.dispose()
-			model?.original.dispose()
-			model?.modified.dispose()
-			diffEditor.value = null
-		}
+		if (!diffEditor.value) return
+		const model = diffEditor.value.getModel()
+		monacoLifecycle!.disposeEditor(diffEditor.value)
+		model?.original.dispose()
+		model?.modified.dispose()
+		diffEditor.value = null
 	}
 
 
@@ -868,11 +881,11 @@ ${ret}
     z-index: 2;
 }
 h1 {
-	background: #222;
+	background: var(--grey-1);
 	font-size: 20px;
 	display: inline-flex;
 	&::after {
-		border-color: transparent transparent transparent #222;
+		border-color: transparent transparent transparent var(--grey-1);
 	}
 	gap: 10px;
 	.book {
@@ -880,6 +893,17 @@ h1 {
 		font-size: 22px;
 		margin: 6px 0;
 	}
+	/* L'asset coloré du v3 est centré par le flex du titre : les 6 px de marge du
+	   glyphe le descendaient de 4 px sous la ligne du fil d'Ariane. */
+	img.book {
+		margin: 0;
+	}
+}
+/* Les autres pages posent leur icône dans un bloc `page-title` sans rembourrage ;
+   ici elle vit dans le h1, dont les 15 px de gauche la décalaient d'autant
+   L'image n'existe qu'en v3 : le v2 garde son rembourrage. */
+h1:has(> img.page-icon) {
+	padding-left: 0;
 }
 .page-header .flex {
 	align-items: center;
@@ -908,13 +932,13 @@ h1 {
 		min-width: 0;
 	}
 }
-.monaco-container {
-	height: 100%;
+.page-editor {
 	min-height: 0;
-	overflow: hidden;
+	border-right: 1px solid var(--border);
 }
 
 .stats {
+	container: encyclopedia-stats / inline-size;
 	padding: 15px;
 	border-top: 1px solid var(--border);
 	color: var(--text-color-secondary);
@@ -922,7 +946,7 @@ h1 {
 	flex-direction: column;
 	gap: 10px;
 	a {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: bold;
 	}
 	.contributors {
@@ -953,7 +977,7 @@ h1 {
 		& > * {
 			flex: 1;
 			&:first-child {
-				border-right: 1px solid #ccc;
+				border-right: 1px solid var(--grey-11);
 			}
 			&:last-child {
 				padding-left: 20px;
@@ -970,7 +994,7 @@ h1 {
 		font-size: 20px;
 	}
 	.v-icon {
-		color: #ccc;
+		color: var(--grey-11);
 		font-size: 150px;
 	}
 	.available-translations {
@@ -981,7 +1005,7 @@ h1 {
 			align-items: center;
 			gap: 5px;
 			margin: 0 8px;
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: bold;
 			.flag {
 				max-width: 25px;
@@ -1024,7 +1048,7 @@ h1 {
 		}
 		&.active {
 			background: #5fad1b22;
-			border-left: 3px solid #5fad1b;
+			border-left: 3px solid var(--primary);
 			padding-left: 7px;
 		}
 		.history-info {
@@ -1066,6 +1090,42 @@ h1 {
 	min-width: 0;
 	border-left: 1px solid var(--border);
 }
+/* Bloc étroit (mobile, ou aperçu à côté de l'éditeur) : à côté de la liste de 300 px,
+   le diff n'affichait plus que ses numéros de ligne. On empile. */
+@container encyclopedia-stats (width < 700px) {
+	.stats .contributors {
+		flex-wrap: wrap;
+		row-gap: 8px;
+	}
+	.stats .expanded-stats {
+		flex-direction: column;
+		gap: 10px;
+		& > * {
+			flex: none;
+			&:first-child {
+				border-right: none;
+			}
+			&:last-child {
+				padding-left: 0;
+			}
+		}
+	}
+	.history-panel {
+		flex-direction: column;
+		height: auto;
+	}
+	.history-list {
+		width: auto;
+		min-width: 0;
+		max-height: 300px;
+	}
+	.diff-container {
+		flex: none;
+		height: min(450px, 70vh);
+		border-left: none;
+		border-top: 1px solid var(--border);
+	}
+}
 .references-count {
 	margin-left: 10px;
 }
@@ -1103,7 +1163,10 @@ h1 {
 	display: inline-flex;
 	gap: 6px;
 	align-items: center;
-	height: 100%;
+	// La hauteur d'un .tab de barre de page : `100%` d'un conteneur en hauteur
+	// auto ne vaut rien, le drapeau flottait au-dessus de la ligne des onglets.
+	height: 36px;
+	vertical-align: top;
 	.flag {
 		vertical-align: top;
 		height: 20px;

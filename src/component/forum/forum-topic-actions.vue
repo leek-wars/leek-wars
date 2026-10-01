@@ -5,18 +5,19 @@
 		<span class="action pin" @click="$emit('pin')"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? t('unpin') : t('pin') }}</span>
 	</template>
 	<template v-if="canEditStatus">
-		<v-select :model-value="topic.status" :items="statusItems" hide-details dense variant="outlined" class="status-select" @update:model-value="$emit('set-status', $event)">
+		<lw-select :model-value="topic.status" :items="statusItems" class="status-select" @update:model-value="$emit('set-status', $event)">
 			<template #selection="{ item }">
 				<v-icon :color="item.raw.color">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
 			</template>
+			<!-- La ligne redevient un élément ordinaire : l'icône et le libellé s'écrivent,
+			     là où v-list-item les tirait de son #prepend et de sa prop `title`. -->
 			<template #item="{ props: itemProps, item }">
-				<v-list-item v-bind="itemProps">
-					<template #prepend>
-						<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
-					</template>
-				</v-list-item>
+				<div v-bind="itemProps">
+					<v-icon :color="item.raw.color" class="status-icon">{{ item.raw.icon }}</v-icon>
+					<span>{{ item.title }}</span>
+				</div>
 			</template>
-		</v-select>
+		</lw-select>
 	</template>
 	<span v-else-if="topic.status !== ForumTopicStatus.OPEN && currentStatusInfo" class="status-text">
 		<v-icon :color="currentStatusInfo.color">{{ currentStatusInfo.icon }}</v-icon> {{ currentStatusInfo.title }}
@@ -25,18 +26,17 @@
 		<span v-if="topic.release" class="action" @click="$emit('open-release')">
 			<v-icon>mdi-tag</v-icon> {{ 'v' + String(topic.release).charAt(0) + '.' + String(topic.release).slice(1) }}
 		</span>
-		<v-select v-if="hasPriority" :model-value="topic.priority" :items="priorityItems" hide-details dense variant="outlined" class="priority-select" @update:model-value="$emit('set-priority', $event)">
+		<lw-select v-if="hasPriority" :model-value="topic.priority" :items="priorityItems" class="priority-select" @update:model-value="$emit('set-priority', $event)">
 			<template #selection="{ item }">
 				<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>&nbsp;{{ item.raw.title }}
 			</template>
 			<template #item="{ props: itemProps, item }">
-				<v-list-item v-bind="itemProps">
-					<template #prepend>
-						<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
-					</template>
-				</v-list-item>
+				<div v-bind="itemProps">
+					<v-icon :color="item.raw.color" size="small">{{ item.raw.icon }}</v-icon>
+					<span>{{ item.title }}</span>
+				</div>
 			</template>
-		</v-select>
+		</lw-select>
 	</template>
 	<span v-if="hasPriority && topic.priority && !(store.state.farmer && store.state.farmer.admin)" class="priority-label" :class="'priority-' + topic.priority">
 		<v-icon :color="topic.priority === 1 ? '#e53935' : topic.priority === 2 ? '#fb8c00' : '#757575'" size="small">mdi-flag</v-icon>
@@ -44,10 +44,10 @@
 	</span>
 	<span v-if="topic.acknowledged && !topic.private_issue && !(store.state.farmer && store.state.farmer.admin)" class="status-text"><v-icon color="#6f42c1">mdi-eye</v-icon> {{ t('status_acknowledged') }}</span>
 	<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars/issues/' + topic.issue" class="issue-badge" target="_blank" rel="noopener">
-		<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
+		<v-icon>mdi-github</v-icon><span>#{{ topic.issue }}</span>
 	</a>
 	<a v-if="topic.private_issue && store.state.farmer && store.state.farmer.admin" :href="'https://github.com/5pilow/leek-wars/issues/' + topic.private_issue" class="issue-badge private-issue" target="_blank" rel="noopener">
-		<img src="/image/github_white.png"><span>#{{ topic.private_issue }}</span>
+		<v-icon>mdi-github</v-icon><span>#{{ topic.private_issue }}</span>
 	</a>
 	<span v-if="store.state.farmer && store.state.farmer.admin && !topic.private_issue && topic.status === ForumTopicStatus.OPEN" class="action create-issue" @click="$emit('create-issue')"><v-icon :class="{ 'mdi-spin': creatingIssue }">{{ creatingIssue ? 'mdi-loading' : 'mdi-source-branch' }}</v-icon> {{ t('create_issue') }}</span>
 </template>
@@ -103,7 +103,7 @@ defineEmits<{
 	align-items: center;
 	gap: 4px;
 	padding: 6px;
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	.v-icon {
 		font-size: 17px;
 	}
@@ -121,26 +121,14 @@ defineEmits<{
 	gap: 5px;
 	font-size: 14px;
 }
-.status-select, .priority-select {
+// Idem : la classe arrive sur le champ de lw-select, pas l'attribut de portée.
+// Les règles qui suivaient visaient les rouages de v-select (.v-field,
+// .v-select__selection) et n'ont plus d'objet depuis la migration.
+:deep(.status-select), :deep(.priority-select) {
 	display: inline-flex;
 	vertical-align: middle;
 	flex-grow: 0;
-	:deep(.v-field) {
-		font-size: 13px;
-		min-height: 28px;
-		padding: 4px 8px;
-	}
-	:deep(.v-field__input) {
-		padding: 0;
-		min-height: unset;
-		align-items: center;
-	}
-	:deep(.v-icon) {
-		opacity: 1 !important;
-	}
-	:deep(.v-select__selection) {
-		color: var(--text-color);
-	}
+	font-size: 13px;
 }
 .priority-label {
 	font-size: 13px;
@@ -154,8 +142,8 @@ defineEmits<{
 }
 .issue-badge {
 	background: #0366d6;
-	color: white;
-	border-radius: 5px;
+	color: var(--white);
+	border-radius: var(--radius);
 	font-size: 13px;
 	font-weight: 500;
 	padding: 0 6px;

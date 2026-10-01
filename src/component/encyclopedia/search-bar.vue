@@ -87,7 +87,7 @@ watch(query, () => {
 			padding-left: 15px;
 			color: var(--text-color) !important;
 			:deep(b) {
-				color: #5fad1b;
+				color: var(--primary);
 				font-weight: bold;
 			}
 			&:hover {

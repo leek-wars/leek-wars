@@ -19,7 +19,20 @@ vi.mock('@/model/leekwars', () => ({
 	},
 }))
 vi.mock('@/model/i18n', () => ({ i18n: { t: (k: string) => `T(${k})` } }))
-vi.mock('@/model/item', () => ({ ItemType: { WEAPON: 1, CHIP: 2, POTION: 3, HAT: 4 } }))
+vi.mock('@/model/item', () => {
+	// Mêmes règles que item.ts : préfixe de catégorie retiré du nom de fichier et de la clé.
+	const ITEM_CATEGORY_NAME: Record<number, string> = { 1: 'weapon', 2: 'chip', 3: 'potion', 4: 'hat', 7: 'resource' }
+	const itemImageName = (item: { type: number, name: string }) => {
+		const prefix = ITEM_CATEGORY_NAME[item.type] + '_'
+		return item.name.startsWith(prefix) ? item.name.substring(prefix.length) : item.name
+	}
+	return {
+		ItemType: { WEAPON: 1, CHIP: 2, POTION: 3, HAT: 4 },
+		ITEM_CATEGORY_NAME,
+		itemImageName,
+		itemTranslationKey: (item: { type: number, name: string }) => ITEM_CATEGORY_NAME[item.type] + '.' + itemImageName(item),
+	}
+})
 
 import { NotificationBuilder } from '@/model/notification-builder'
 import { NotificationType } from '@/model/notification'
@@ -39,11 +52,13 @@ describe('NotificationBuilder.build - combats & poireaux', () => {
 		expect(n.title).toEqual(['Poiro', '5'])
 		expect(n.icon).toBe(true) // mdi-transfer-up
 	})
-	it('FIGHT_REPORT : lien, image, résultat', () => {
+	it('FIGHT_REPORT : lien, glyphe, résultat', () => {
 		h.leeks = { a: { id: 7, name: 'Poiro' } }
 		const n = NotificationBuilder.build({ type: NotificationType.FIGHT_REPORT, parameters: ['7', '42', 'Enemy', '1'] })
 		expect(n.link).toBe('/fight/42')
-		expect(n.image).toBe('notif/garden.png')
+		// Le glyphe du COMBAT, pas l'ancien PNG `notif/garden.png`.
+		expect(n.image).toBe('mdi-sword')
+		expect(n.icon).toBe(true)
 		expect(n.title).toEqual(['Poiro', 'Enemy'])
 		expect(n.result).toBe(1)
 	})
@@ -91,6 +106,46 @@ describe('NotificationBuilder.build - tournoi & item', () => {
 		const n = NotificationBuilder.build({ type: NotificationType.GIVE_ITEM, parameters: ['Giver', '100'] })
 		expect(n.link).toBe('/inventory/')
 		expect(n.title).toEqual(['Giver', 'T(weapon.pistol)'])
+	})
+})
+
+describe('NotificationBuilder.build - bug corrigé', () => {
+	it('BUG_REPORT_REWARD : lien vers le sujet, son titre, image du Scarabée en couleurs', () => {
+		const n = NotificationBuilder.build({ type: NotificationType.BUG_REPORT_REWARD, parameters: [5221, 3, 'Titre du bug'] })
+		expect(n.link).toBe('/forum/category-3/topic-5221')
+		expect(n.title).toEqual(['Titre du bug'])
+		expect(n.image).toBe('resource/scarab.png')
+		expect(n.clazz).toBe('notif-item')
+		expect(n.text).toBeNull()
+	})
+})
+
+describe('NotificationBuilder.build - suggestion réalisée', () => {
+	it('SUGGESTION_REWARD : lien vers le sujet, son titre, image de la Luciole en couleurs', () => {
+		const n = NotificationBuilder.build({ type: NotificationType.SUGGESTION_REWARD, parameters: [12000, 4, 'Titre de la suggestion'] })
+		expect(n.link).toBe('/forum/category-4/topic-12000')
+		expect(n.title).toEqual(['Titre de la suggestion'])
+		expect(n.image).toBe('resource/firefly.png')
+		expect(n.clazz).toBe('notif-item')
+		expect(n.text).toBeNull()
+	})
+})
+
+describe('NotificationBuilder.build - don d\'un organisateur', () => {
+	it('RESOURCE_GIFT : ressource traduite avec sa quantité, image en couleurs, mot de l\'organisateur', () => {
+		h.items = { 606: { name: 'moonstone', type: 7 } }
+		const n = NotificationBuilder.build({ type: NotificationType.RESOURCE_GIFT, parameters: ['Casanova', '606', '5', 'Soirée BR'] })
+		expect(n.link).toBe('/inventory')
+		expect(n.title).toEqual(['Casanova', 'T(resource.moonstone) × 5'])
+		expect(n.image).toBe('resource/moonstone.png')
+		expect(n.clazz).toBe('notif-item')
+		expect(n.text).toBe('Soirée BR')
+	})
+	it('RESOURCE_GIFT : une seule pierre, sans mot → ni quantité ni texte libre', () => {
+		h.items = { 606: { name: 'moonstone', type: 7 } }
+		const n = NotificationBuilder.build({ type: NotificationType.RESOURCE_GIFT, parameters: ['Casanova', 606, 1, ''] })
+		expect(n.title).toEqual(['Casanova', 'T(resource.moonstone)'])
+		expect(n.text).toBeNull()
 	})
 })
 

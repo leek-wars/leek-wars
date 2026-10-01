@@ -9,7 +9,7 @@
 				<div v-if="messages[0]" class="separator">
 					{{ $filters.date(messages[0].date) }}
 				</div>
-				<chat-message v-for="message in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" :large="large" :class="'m-' + message.id" @scroll="updateScroll" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
+				<chat-message v-for="message in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" :large="large" @scroll="updateScroll" @menu="openMenu($event, message)" @emoji="openEmojis" />
 			</div>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
@@ -20,7 +20,7 @@
 		</div>
 		<chat-input v-else :chat="id || 0" @message="sendMessage" />
 
-		<div v-show="!isScrollBottom" v-ripple class="card scroll-down" @click="scrollToBottom">
+		<div v-show="!isScrollBottom" v-ripple class="card scroll-down" @click="scrollToBottom()">
 			<v-icon>mdi-chevron-down</v-icon>
 		</div>
 
@@ -62,15 +62,16 @@
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in censorMessagesList" :key="message.id">
-							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :hide-details="true">
+							<lw-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]">
 								<template #label>
 									<span v-html="message.content"></span>
 								</template>
-							</v-checkbox>
+							</lw-checkbox>
 						</div>
 					</div>
 				</div>
-				<v-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
+				<lw-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" />
+				<lw-checkbox v-if="censorHasImages && $store.getters.moderator" v-model="banImages" :label="$t('main.ban_images')" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="censorDialog = false">{{ $t('main.cancel') }}</div>
@@ -85,15 +86,16 @@
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in deleteMessagesList" :key="message.id">
-							<v-checkbox v-model="deletedMessages[message.id]" :hide-details="true">
+							<lw-checkbox v-model="deletedMessages[message.id]">
 								<template #label>
 									<span v-html="message.content"></span>
 								</template>
-							</v-checkbox>
+							</lw-checkbox>
 						</div>
 					</div>
 				</div>
-				<v-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
+				<lw-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" />
+				<lw-checkbox v-if="deleteHasImages && $store.getters.moderator" v-model="banImages" :label="$t('main.ban_images')" />
 			</div>
 			<template #actions>
 				<div v-ripple @click="deleteDialog = false">{{ $t('main.cancel') }}</div>
@@ -134,7 +136,7 @@
 
 		<v-menu v-if="menuMessage && $store.state.farmer?.verified" v-model="menuEmoji" offset-y top :nudge-top="10" :activator="menuEmojiActivator" :open-on-click="false" persistent no-click-animation content-class="emojis-dialog">
 			<v-card class="emojis" tabindex="-1" @keydown.esc="menuEmoji = false">
-				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
+				<span v-for="(emoji, e) in emojis" :key="emoji" class="emoji" :class="{selected: emoji === menuMessage.my_reaction}" @click="toggleReaction(emoji)" v-html="emojisHtml[e]"></span>
 				<span v-if="menuMessage.my_reaction && !emojis.includes(menuMessage.my_reaction)" class="emoji selected" @click="toggleReaction(menuMessage.my_reaction)" v-html="formatEmojisText(menuMessage.my_reaction)"></span>
 				<emoji-picker :close-on-selected="true" @pick="toggleReaction"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
 			</v-card>
@@ -145,20 +147,22 @@
 <script lang="ts" setup>
 	import type { Chat as ChatModel, ChatMessage, ChatWindow } from '@/model/chat'
 	import { ChatType } from '@/model/chat'
+	import { containsUserImage, userImageHashes } from '@/model/user-image'
 	import { formatChatMessage } from '@/model/chat-format'
+	import { favoriteEmojis, trackEmojiUsage, unescapeEmoji } from '@/model/emoji-usage'
 	import { formatEmojisText } from '@/model/emojis'
 	import type { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { TeamMemberLevel } from '@/model/team'
-	import { computed, defineAsyncComponent, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useTemplateRef, watch } from 'vue'
+	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
@@ -174,16 +178,36 @@
 	const { t } = useI18n()
 	const router = useRouter()
 	const messages = useTemplateRef<HTMLElement>('messages')
-	const instance = getCurrentInstance()
 
-	const emojis = ['❤️', '👍', '👋', '😂', '👏', '😢', '😮', '😱']
+	// Barre de réaction rapide : les emojis favoris du joueur (les
+	// plus utilisés, réactions et messages confondus) d'abord, complétés par les
+	// emojis par défaut historiques jusqu'à 8. Sans historique d'usage, la barre
+	// est identique à l'ancienne.
+	const DEFAULT_REACTIONS = ['❤️', '👍', '👋', '😂', '👏', '😢', '😮', '😱']
+	const emojis = computed(() => {
+		// Forme brute (celle qui est postée en réaction), les favoris étant
+		// stockés en forme canonique (`&lt;3`).
+		const list = favoriteEmojis.value.slice(0, DEFAULT_REACTIONS.length).map(unescapeEmoji)
+		for (const emoji of DEFAULT_REACTIONS) {
+			if (list.length >= DEFAULT_REACTIONS.length) { break }
+			if (!list.includes(emoji)) { list.push(emoji) }
+		}
+		return list
+	})
+	// Précalculé : les smileys custom favoris (":)", "(lama)"…) se rendent en
+	// <img>, les emojis unicode passent par le même chemin que le reste du chat.
+	const emojisHtml = computed(() => emojis.value.map(e => formatEmojisText(e)))
 
 	const isScrollBottom = ref(true)
 	let userScroll = false
+	// Conversation dont cette vue tient le verrou d'historique (cf. Chat.history_locks) :
+	// posé dès qu'on quitte le bas de la liste, relâché en redescendant, en changeant de
+	// conversation ou en fermant la vue.
+	let historyLock: ChatModel | null = null
+	let lastRefresh = 0
 	const unread = ref(false)
 
 	const menuMessage = ref<ChatMessage | null>(null)
-	let scrollMessage = 0
 	const menuActivator = ref<Element | undefined>(undefined)
 	const menuEmojiActivator = ref<Element | undefined>(undefined)
 	const menu = ref(false)
@@ -196,6 +220,14 @@
 	const censorMessage = ref<ChatMessage | null>(null)
 	const censoredMessages = ref<{[key: number]: boolean}>({})
 	const censorMute = ref(false)
+	// Bannir l'image est un geste À PART du retrait du message : on censure ou on
+	// supprime pour beaucoup de raisons (insulte, spam, hors-sujet) dont la plupart
+	// n'ont rien à voir avec l'image jointe. La case n'apparaît que si un message
+	// coché en porte une, et elle n'est jamais pré-cochée.
+	//
+	// Partagée par les deux boîtes, comme `censorMute` : retirer un message et
+	// retirer son image sont la même décision quel que soit le geste employé.
+	const banImages = ref(false)
 
 	const deleteDialog = ref(false)
 	const deletedMessage = ref<ChatMessage | null>(null)
@@ -223,12 +255,19 @@
 	const isModerator = computed(() => store.getters.moderator || (chat.value && chat.value.type === ChatType.TEAM && store.state.farmer!.team!.member_level >= TeamMemberLevel.CAPTAIN))
 	const censorMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: ChatMessage) => m.censored === 0 && m.farmer.id === muteFarmer.value!.id) : [])
 	const deleteMessagesList = computed(() => chat.value && muteFarmer.value ? chat.value.messages.filter((m: ChatMessage) => m.farmer.id === muteFarmer.value!.id) : [])
+	// Sur les messages COCHÉS seulement : décocher le seul message illustré doit faire
+	// disparaître l'option, sinon le modérateur croit bannir une image qu'il épargne.
+	// Sur `raw_content`, le texte d'origine : `content` a déjà été transformé en HTML
+	// par formatMessage, l'URL n'y est plus sous sa forme brute.
+	const censorHasImages = computed(() => hasSelectedImages(censorMessagesList.value, censoredMessages.value))
+	const deleteHasImages = computed(() => hasSelectedImages(deleteMessagesList.value, deletedMessages.value))
 
 	const onResize = () => updateScroll()
 	emitter.on('chat', newMessage)
 	emitter.on('chat-history', chatHistory)
 	emitter.on('resize', onResize)
 	emitter.on('wsconnected', update)
+	emitter.on('visible', refresh)
 	if (store.state.wsconnected) {
 		update()
 	}
@@ -242,10 +281,12 @@
 	})
 
 	onBeforeUnmount(() => {
+		setHistoryLock(false)
 		emitter.off('chat', newMessage)
 		emitter.off('chat-history', chatHistory)
 		emitter.off('resize', onResize)
 		emitter.off('wsconnected', update)
+		emitter.off('visible', refresh)
 	})
 
 	function newMessage(e: number[]) {
@@ -257,15 +298,14 @@
 	}
 
 	function chatHistory(e: number) {
-		if (e === props.id && scrollMessage) {
-			nextTick(() => {
-				const element = (instance?.proxy?.$el as HTMLElement)?.querySelector('.m-' + scrollMessage) as HTMLElement
-				if (element && messages.value) {
-					messages.value.scrollTop = element.offsetTop
-				}
-				scrollMessage = 0
-			})
-		}
+		const m = messages.value
+		if (e !== props.id || !m) { return }
+		// Mesuré avant que le DOM ne suive le store (au prochain tick) : l'historique s'insère
+		// au-dessus, la distance au bas de la conversation ne bouge donc pas, dans chaque vue
+		// qui l'affiche (page, panneau). Pas d'ancrage sur l'ancien premier message : il peut
+		// avoir rejoint la bulle d'un message plus ancien.
+		const fromBottom = m.scrollHeight - m.scrollTop
+		nextTick(() => { m.scrollTop = m.scrollHeight - fromBottom })
 	}
 
 	function scroll() {
@@ -285,38 +325,74 @@
 		} else {
 			userScroll = true
 		}
-		if (sTop < 150 && chat.value && chat.value.messages.length && chat.value.messages[0]) {
-			scrollMessage = chat.value.messages[0].id
+		setHistoryLock(!atBottom)
+		if (sTop < 150 && chat.value && chat.value.messages.length) {
 			store.commit('load-chat-history', props.id)
+		}
+	}
+
+	// Verrou d'historique : tant que cette vue est remontée dans les vieux messages, le
+	// store n'en purge aucun (ils sont à l'écran, les jeter ferait sauter le défilement).
+	function setHistoryLock(locked: boolean) {
+		const target = locked ? chat.value : null
+		if (historyLock === target) { return }
+		const previous = historyLock
+		historyLock = target
+		if (target) { target.history_locks++ }
+		if (previous) {
+			previous.history_locks--
+			store.commit('trim-chat', previous.id)
 		}
 	}
 
 	function updateScroll(force: boolean = false) {
 		if (!userScroll || force) {
 			if (messages.value) {
-				scrollToBottom()
+				scrollToBottom(force)
 				unread.value = false
 			}
 		}
 	}
 
-	function scrollToBottom() {
-		if (messages.value) {
+	function scrollToBottom(force: boolean = true) {
+		if (!messages.value) { return }
+		messages.value.scrollTop = messages.value.scrollHeight + 1000
+		setTimeout(() => {
+			// Second passage une fois les images et les embeds mis en page. On revérifie que
+			// l'utilisateur n'est pas reparti dans l'historique entre-temps : sinon un coup de
+			// molette dans les 100 ms suivant un nouveau message le ramenait en bas.
+			if (!messages.value || (!force && userScroll)) { return }
 			messages.value.scrollTop = messages.value.scrollHeight + 1000
-			setTimeout(() => {
-				if (messages.value) {
-					messages.value.scrollTop = messages.value.scrollHeight + 1000
-				}
-			}, 100)
-		}
+		}, 100)
 	}
 
 	watch(() => props.id, update)
 
 	function update() {
+		// Changement de conversation (ou rechargement complet) : la vue repart du bas, le
+		// verrou posé sur la conversation précédente n'a plus lieu d'être.
+		setHistoryLock(false)
 		if (!props.id) { return }
+		lastRefresh = Date.now()
 		store.commit('register-chat', {id: props.id})
 		store.commit('load-chat', chat.value)
+		read()
+	}
+
+	// Retour sur l'onglet ou sur l'app mobile : on recharge les messages en HTTP tout de
+	// suite, sans attendre la socket. Pendant la mise en veille elle meurt en silence, et
+	// sa reconnexion (détection + poignée de main + auth) prend plusieurs secondes pendant
+	// lesquelles la conversation affichée restait figée sur son ancien contenu.
+	function refresh() {
+		if (!props.id) { return }
+		// Socket manifestement vivante (onglet simplement passé au second plan sur un
+		// ordinateur) : elle a livré les messages au fil de l'eau, rien à rattraper.
+		if (!LeekWars.socket.maybeStale()) { return }
+		if (!chat.value) { update(); return }
+		// Aller-retour éclair entre deux apps : rien de neuf à aller chercher.
+		if (Date.now() - lastRefresh < 2000) { return }
+		lastRefresh = Date.now()
+		store.commit('reload-chat', chat.value)
 		read()
 	}
 
@@ -334,7 +410,8 @@
 					const lastLeekId = (arenaLeekId && farmer.leeks[arenaLeekId]) ? arenaLeekId : gardenLeekId
 					const leek = (lastLeekId && farmer.leeks[lastLeekId]) ? farmer.leeks[lastLeekId] : Object.values(farmer.leeks)[0]
 					if (leek) {
-						LeekWars.arena.register(leek.id)
+						const preference = parseInt(localStorage.getItem('arena/preference') || '-1', 10)
+						LeekWars.arena.register(leek.id, preference)
 					}
 				}
 			}
@@ -378,14 +455,17 @@
 		censorMessage.value = message
 		muteFarmer.value = message.farmer
 		censoredMessages.value = {}
+		// Les deux options repartent décochées à chaque ouverture : une case restée
+		// cochée de la censure précédente bannirait une image sans que le modérateur
+		// l'ait demandé, ou remettrait quelqu'un en sourdine sans le vouloir.
+		censorMute.value = false
+		banImages.value = false
 		if (message.censored === 0) {
 			censoredMessages.value[message.id] = true
 		}
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				if (sub.censored === 0) {
-					censoredMessages.value[sub.id] = true
-				}
+		for (const sub of message.subMessages) {
+			if (sub.censored === 0) {
+				censoredMessages.value[sub.id] = true
 			}
 		}
 	}
@@ -396,11 +476,14 @@
 		deletedMessage.value = message
 		muteFarmer.value = message.farmer
 		deletedMessages.value = {}
+		// Mêmes remises à zéro qu'à l'ouverture de la censure, et pour la même raison :
+		// les deux cases sont partagées entre les boîtes, une case restée cochée du
+		// geste précédent agirait sans qu'on l'ait demandé.
+		censorMute.value = false
+		banImages.value = false
 		deletedMessages.value[message.id] = true
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				deletedMessages.value[sub.id] = true
-			}
+		for (const sub of message.subMessages) {
+			deletedMessages.value[sub.id] = true
 		}
 	}
 
@@ -432,6 +515,7 @@
 		if (censorMessage.value) {
 			const ids = Object.entries(censoredMessages.value).filter(e => e[1]).map(e => e[0]).join(',')
 			LeekWars.post('message/censor', { messages: ids, mute: censorMute.value })
+			banSelectedImages(censorMessagesList.value, censoredMessages.value)
 		}
 	}
 
@@ -440,7 +524,31 @@
 		if (deletedMessage.value) {
 			const ids = Object.entries(deletedMessages.value).filter(e => e[1]).map(e => e[0]).join(',')
 			LeekWars.delete('message/delete', { messages: ids, mute: censorMute.value })
+			banSelectedImages(deleteMessagesList.value, deletedMessages.value)
 		}
+	}
+
+	/**
+	 * Vrai si un des messages cochés porte une image affichable. Sur `raw_content`,
+	 * le texte d'origine : `content` a déjà été transformé en HTML par formatMessage.
+	 */
+	function hasSelectedImages(messages: ChatMessage[], selection: {[key: number]: boolean}) {
+		return messages.some((m: ChatMessage) => selection[m.id] && containsUserImage(m.raw_content ?? ''))
+	}
+
+	/**
+	 * Bannit les images des messages cochés, si le modérateur l'a demandé.
+	 *
+	 * Réservé aux modérateurs : la case ne s'affiche qu'à qui peut le faire.
+	 */
+	function banSelectedImages(messages: ChatMessage[], selection: {[key: number]: boolean}) {
+		if (!banImages.value) { return }
+		const hashes = new Set<string>()
+		for (const message of messages) {
+			if (!selection[message.id]) { continue }
+			for (const hash of userImageHashes(message.raw_content ?? '')) { hashes.add(hash) }
+		}
+		for (const hash of hashes) { LeekWars.post('user-image/ban', { hash }) }
 	}
 
 	function muteConfirm() {
@@ -505,14 +613,13 @@
 		} else {
 			LeekWars.post('message-reaction/add', { reaction: emoji, message_id: menuMessage.value.id })
 			menuMessage.value.my_reaction = emoji
+			trackEmojiUsage(emoji)
 		}
 	}
 
 	function formatMessage(message: ChatMessage) {
-		if (message.subMessages) {
-			for (const sub of message.subMessages) {
-				formatMessage(sub)
-			}
+		for (const sub of message.subMessages) {
+			formatMessage(sub)
 		}
 		if (message.formatted) return message
 
@@ -565,15 +672,17 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #aaa;
+		color: var(--grey-9);
 	}
 	.chat-new-messages {
 		position: absolute;
-		bottom: 39px;
+		// Posée sur le trait du haut de la saisie, haute de 40 px sous ce trait
+		// (interligne fixé dans chat-input.vue).
+		bottom: 40px;
 		right: 0;
 		left: 0;
-		background: #5fad1b;
-		color: var(--pure-white);
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		text-align: center;
 		line-height: 30px;
 		cursor: pointer;
@@ -582,7 +691,7 @@
 		height: 30px;
 		line-height: 30px;
 		background-color: #d3324d;
-		color: white;
+		color: var(--white);
 		text-align: center;
 		transition: height ease 0.5s;
 		position: absolute;
@@ -658,7 +767,7 @@
 			padding: 6px 8px;
 			margin-bottom: 12px;
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			background: var(--pure-white);
 			font-family: inherit;
 			font-size: 14px;
@@ -687,9 +796,16 @@
 			transform: scale(1.6) translateY(-6px);
 		}
 		.emoji.selected {
-			border: 1px solid #777;
-			background: #eee;
-			border-radius: 50%;
+			border: 1px solid var(--grey-6);
+			background: var(--grey-13);
+			// Rond en v2, angles francs en v3.
+			border-radius: var(--radius-pill);
+		}
+		// Smileys custom favoris (images) : la règle globale img.emoji les fixe à
+		// 16px, trop petit à côté des emojis unicode de 22px de la barre.
+		.emoji :deep(img.emoji) {
+			width: 24px;
+			height: 24px;
 		}
 		.more {
 			font-size: 23px;

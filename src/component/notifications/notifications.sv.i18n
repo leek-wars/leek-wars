@@ -1,3 +1,7 @@
 {
-	"title": "Aviseringar"
+	"title": "Aviseringar",
+	"push_blocked": "Aviseringar är blockerade. Tillåt dem i webbläsarens inställningar.",
+	"push_error": "Det gick inte att aktivera push-aviseringar.",
+	"push_notifications": "Pushmeddelanden",
+	"push_unsupported": "Din webbläsare stöder inte push-aviseringar."
 }

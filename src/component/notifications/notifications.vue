@@ -1,7 +1,23 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="notifications" fallback="mdi-bell" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
+			<v-tooltip :disabled="!pushHint" location="bottom">
+				<template #activator="{ props }">
+					<span class="push-notifs-button" v-bind="props" @click="updatePushNotifications">
+						<v-icon v-if="pushHint" class="push-warning">mdi-alert-circle-outline</v-icon>
+						<v-icon v-else>mdi-bell-ring-outline</v-icon>
+						<span>{{ $t('push_notifications') }}</span>
+						<lw-switch :model-value="pushNotifications" />
+					</span>
+				</template>
+				{{ pushHint }}
+			</v-tooltip>
 		</div>
 		<panel class="first last">
 			<template #content>
@@ -20,12 +36,17 @@ import { mixins , useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { NotificationBuilder } from '@/model/notification-builder'
 import { store } from '@/model/store'
+import { usePushNotifications } from '@/model/use-push-notifications'
 
 defineOptions({ name: 'Notifications', i18n: {}, mixins: [...mixins] })
 
 const t = useNamespacedT('notifications')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const notifications = ref<any[] | null>(null)
+
+const { pushNotifications, pushHint, reconcilePushToggle, updatePushNotifications } = usePushNotifications(t)
+// Pas de liste serveur ici : tout abonnement local du navigateur suffit à afficher le toggle ON.
+reconcilePushToggle()
 
 LeekWars.get('notification/get-latest/500').then(data => {
 	notifications.value = []
@@ -42,5 +63,20 @@ LeekWars.get('notification/get-latest/500').then(data => {
 <style lang="scss" scoped>
 	#app.app .content {
 		padding: 0;
+	}
+	.push-notifs-button {
+		display: flex;
+		cursor: pointer;
+		align-items: center;
+		gap: 8px;
+		margin-left: auto;
+		padding: 0 8px;
+		// Le bouton vit dans la barre d'en-tête : il en prend l'encre. --grey-13
+		// (« presque blanc ») supposait une barre sombre, ce que le v3 en clair
+		// n'est plus — 1,01 mesuré, l'icône disparaissait complètement.
+		color: var(--page-bar-color);
+		.push-warning {
+			color: #ffca28;
+		}
 	}
 </style>

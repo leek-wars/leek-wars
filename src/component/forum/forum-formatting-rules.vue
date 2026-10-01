@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="formating">
-		<h4>Formatage</h4>
+		<h4>{{ $t('title') }}</h4>
 		<span class="rule">{{ $t('source_code') }} ➤ </span> <span class="example"><b>```</b>{{ $t('source_code_ex') }}<b>```</b></span> <br>
 		<span class="rule">{{ $t('image') }} ➤ </span> <span class="example"><b>&lt;img src=&#39;</b>{{ $t('image_ex') }}<b>&#39;&gt;</b></span> <br>
 		<span class="rule">{{ $t('big_title') }} ➤ </span> <span class="example"><b>#</b> {{ $t('big_title_ex') }}</span> <br>
@@ -27,12 +27,12 @@
 		margin-bottom: 4px;
 	}
 	.formating .rule {
-		color: #888;
+		color: var(--grey-7);
 		font-weight: bold;
 		margin-right: 6px;
 	}
 	.formating b {
-		color: #5fad1b;
+		color: var(--primary);
 		font-size: 16px;
 	}
 	.example {

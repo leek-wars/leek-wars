@@ -1,16 +1,16 @@
 {
 	"cancel": "取消",
 	"me": "我",
-	"new_message": "新消息...",
-	"quit": "辞职",
-	"quit_confirm": "你想离开对话吗？您将无法再看到以前的消息。",
-	"quit_conversation": "离开对话",
+	"new_message": "新消息…",
+	"quit": "退出",
+	"quit_confirm": "要退出这个对话吗？退出后你将无法再查看之前的消息。",
+	"quit_conversation": "退出对话",
 	"send": "发送",
 	"title": "聊天",
 	"cat_team": "团队",
-	"cat_private": "私人信息",
+	"cat_private": "私信",
 	"team": "团队",
 	"enable_notifications": "启用通知",
 	"disable_notifications": "停用通知",
-	"admin_warn": "要提出建议或报告非严重错误，请在 {forum} 上创建一个主题。"
+	"admin_warn": "如需提出建议或报告不严重的 bug，请在{forum}发布主题。"
 }
