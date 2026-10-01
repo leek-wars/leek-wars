@@ -1,0 +1,379 @@
+<template>
+	<div class="trophies-widget">
+		<loader v-if="!loaded" />
+		<template v-else>
+			<div class="summary">
+				<div class="stat">
+					<div class="value">{{ $filters.number(count) }} <span class="total">/ {{ $filters.number(total) }}</span></div>
+					<div class="label">{{ t('trophies_unlocked') }}</div>
+				</div>
+				<div class="stat">
+					<div class="value">{{ $filters.number(points) }}</div>
+					<div class="label">{{ t('points') }}</div>
+				</div>
+			</div>
+			<!-- Récap par rareté : les six paliers du jeu (`difficulty`), avec leurs
+			     icônes et leurs clés existantes — la page des trophées compte déjà
+			     de cette façon. Les paliers vides sautent. -->
+			<div v-if="anyTrophies" class="rarities" :class="{ 'odd-tail': rarities.length >= 3 && rarities.length % 2 === 1 }" :style="{ '--rarity-columns': rarities.length, '--rarity-columns-narrow': Math.ceil(rarities.length / 2) }">
+				<v-tooltip v-for="r in rarities" :key="r.difficulty">
+					<template #activator="{ props }">
+						<span class="rarity-count" v-bind="props">
+							<img :src="'/image/icon/trophy/' + r.difficulty + '.svg'" alt="">
+							<span class="n">{{ $filters.number(r.count) }}</span>
+						</span>
+					</template>
+					{{ $t('main.difficulty_' + r.difficulty) }}
+				</v-tooltip>
+			</div>
+			<div ref="sectionsEl" class="sections">
+				<div v-for="s in visibleSections" :key="s.key" class="section-block">
+					<h4 class="section">{{ t(s.key) }}</h4>
+					<div class="trophy-row">
+						<rich-tooltip-trophy v-for="trophy in s.list" :key="trophy.code" v-slot="{ props }" :trophy="trophy" :bottom="true" :instant="true">
+							<router-link :to="'/trophy/' + trophy.code" v-bind="props">
+								<trophy-icon :code="trophy.code" class="trophy" />
+							</router-link>
+						</rich-tooltip-trophy>
+					</div>
+				</div>
+			</div>
+			<div v-if="!anyTrophies" class="none">{{ t('no_trophy') }}</div>
+		</template>
+	</div>
+</template>
+
+<script setup lang="ts">
+	import { computed, ref, watch } from 'vue'
+	import { useI18n } from 'vue-i18n'
+	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
+	import { useNamespacedT } from '@/model/i18n'
+	import { useFitCount } from '@/component/home/widgets/use-fit-count'
+	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
+
+	defineOptions({ name: 'HomeWidgetTrophies' })
+
+	// Taille des trois séries, la même que celle de la requête groupée (`home/get`).
+	const SERIE = 18
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	type Trophy = any
+	interface TrophiesData {
+		count: number, total: number, points: number,
+		rarities: { difficulty: number, count: number }[],
+		best: Trophy[], rarest: Trophy[], latest: Trophy[]
+	}
+
+	// Charge utile envoyée par la requête groupée de l'accueil (`home/get`).
+	// `undefined` : elle est en vol. `null` : elle n'a rien pour ce widget, qui
+	// reprend alors son propre appel. Cf. home.vue.
+	const props = defineProps<{ data?: TrophiesData | null }>()
+
+	const t = useNamespacedT('home')
+	const { locale } = useI18n()
+
+	const loaded = ref(false)
+	const count = ref(0)
+	const total = ref(0)
+	const points = ref(0)
+	const rarities = ref<{ difficulty: number, count: number }[]>([])
+	const best = ref<Trophy[]>([])
+	const rarest = ref<Trophy[]>([])
+	const latest = ref<Trophy[]>([])
+
+	const sections = computed(() => [
+		{ key: 'best_trophies', icon: 'mdi-trophy-outline', list: best.value },
+		{ key: 'rarest_trophies', icon: 'mdi-star-outline', list: rarest.value },
+		{ key: 'latest_trophies', icon: 'mdi-history', list: latest.value },
+	].filter(s => s.list.length))
+	const anyTrophies = computed(() => best.value.length > 0)
+
+	// Hauteur naturelle d'une section (intitulé + rangée) et écart entre deux,
+	// mesurés dans les deux thèmes : les sections s'étirent ensuite pour remplir
+	// le panel, donc leur hauteur rendue ne peut plus servir à décider combien il
+	// en tient — c'est celle-ci qui le décide (cf. useFitCount).
+	const SECTION_HEIGHT = LeekWars.legacyTheme ? 73 : 53
+	const SECTION_GAP = LeekWars.legacyTheme ? 8 : 14
+
+	// Autant de sections que la hauteur du panel le permet, jamais coupées.
+	const sectionsEl = ref<HTMLElement | null>(null)
+	const sectionCount = useFitCount(sectionsEl, '.section-block', 3, SECTION_GAP, SECTION_HEIGHT)
+	const visibleSections = computed(() => sections.value.slice(0, sectionCount.value))
+
+	function apply(data: TrophiesData) {
+		count.value = data.count
+		total.value = data.total
+		points.value = data.points
+		rarities.value = data.rarities
+		best.value = data.best
+		rarest.value = data.rarest
+		latest.value = data.latest
+		loaded.value = true
+	}
+
+	// Repli : le service complet, qui renvoie les ~450 trophées du jeu, et les
+	// trois séries taillées ici. Les trophées BONUS restent dehors, comme dans
+	// les points de l'éleveur.
+	function load() {
+		if (!store.state.farmer) { loaded.value = true; return }
+		LeekWars.get('trophy/get-farmer-trophies/' + store.state.farmer.id + '/' + locale.value).then(data => {
+			const all: Trophy[] = Object.values(data.trophies)
+			const list = all.filter(tr => tr.unlocked && !tr.bonus)
+			const counts = [0, 0, 0, 0, 0, 0]
+			let pts = 0
+			for (const trophy of list) {
+				pts += trophy.points
+				counts[trophy.difficulty]++
+			}
+			apply({
+				count: data.count,
+				total: data.total,
+				points: pts,
+				rarities: counts.map((n, difficulty) => ({ difficulty, count: n })).filter(r => r.count > 0),
+				best: [...list].sort((a, b) => b.points - a.points).slice(0, SERIE),
+				rarest: [...list].sort((a, b) => a.rarity - b.rarity).slice(0, SERIE),
+				latest: [...list].sort((a, b) => b.date - a.date).slice(0, SERIE),
+			})
+		}).error(() => { loaded.value = true })
+	}
+
+	watch(() => props.data, (data) => {
+		if (data === undefined) return
+		if (data === null) load()
+		else apply(data)
+	}, { immediate: true })
+</script>
+
+<style lang="scss" scoped>
+	// Taille de la série de trophées d'une section, partagée avec le script
+	// (`slice(0, 18)`) : c'est elle qui donne le nombre de colonnes de la rangée.
+	$serie: 18;
+
+	.trophies-widget {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		height: 100%;
+	}
+	// Plus d'air entre le résumé, le
+	// récap par rareté et les sections, et entre un intitulé et sa rangée.
+	body:not(.v2) .trophies-widget {
+		gap: 14px;
+	}
+	body:not(.v2) .sections {
+		gap: 14px;
+	}
+	body:not(.v2) .section-block {
+		// L'intitulé respire au-dessus de sa rangée : collé, il
+		// se lisait comme une étiquette du premier trophée plutôt que comme le
+		// titre de la série.
+		gap: 10px;
+	}
+	// Les sections occupent la hauteur restante ; on n'affiche que celles
+	// qui tiennent entièrement (useFitCount), overflow hidden en filet.
+	.sections {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	// Les sections retenues se partagent TOUTE la hauteur restante : plus de blanc en bas du panneau, l'intitulé et sa rangée restent
+	// ensemble au centre de la bande qui revient à la section.
+	.section-block {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		flex: 1 1 auto;
+		gap: 8px;
+	}
+	.summary {
+		display: flex;
+		gap: 12px;
+	}
+	.stat {
+		flex: 1;
+		text-align: center;
+		background: var(--background-secondary);
+		border-radius: var(--radius);
+		padding: 10px;
+	}
+	// `--background-secondary` EST la surface du panneau en v3 : les deux cases
+	// n'y auraient donc aucun fond visible. Même piège que sur le widget
+	// « Mes poireaux ». Elles prennent la surface de rangée, faite pour ça ; le
+	// v2, dont les deux valeurs diffèrent, garde la sienne.
+	body:not(.v2) .stat {
+		background: var(--background-row);
+	}
+
+	// Récap par rareté : une rangée de compteurs, l'icône du palier et son
+	// nombre. Le nom du palier est dans l'infobulle — l'écrire tiendrait six
+	// libellés sur une ligne de widget.
+	// Les paliers occupent TOUTE la ligne : une colonne par
+	// palier affiché, à parts égales. Elles sont calées sur le nombre réel de
+	// paliers et non sur les six du jeu — avec quatre paliers, six colonnes
+	// laisseraient un vide au bout de la ligne.
+	.rarities {
+		display: grid;
+		grid-template-columns: repeat(var(--rarity-columns), minmax(0, 1fr));
+		gap: 4px;
+	}
+	// Panneau étroit : six compteurs sur une ligne se toucheraient. On passe à
+	// deux lignes de trois plutôt que de les serrer — le même parti pris que la
+	// rangée de trophées, et les deux lignes restent pleines.
+	@container (max-width: 340px) {
+		.rarities {
+			grid-template-columns: repeat(var(--rarity-columns-narrow), minmax(0, 1fr));
+		}
+		// Nombre impair de paliers : la seconde ligne en a un de moins et finirait
+		// sur un trou. Le dernier compteur prend les deux colonnes qui restent.
+		.rarities.odd-tail .rarity-count:last-child {
+			grid-column: span 2;
+		}
+	}
+	.rarity-count {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		padding: 2px 6px;
+		img {
+			width: 16px;
+			height: 16px;
+		}
+		.n {
+			// Monospace comme les autres compteurs : la police d'affichage
+			// confond les chiffres à cette taille.
+			font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+			font-size: 13px;
+			color: var(--text-color);
+		}
+	}
+	body:not(.v2) .rarity-count {
+		background: var(--background-row);
+	}
+	.stat .value {
+		font-size: 24px;
+		font-weight: bold;
+		color: var(--primary);
+	}
+	.stat .value .total {
+		font-size: 15px;
+		color: var(--text-color-secondary);
+		font-weight: normal;
+	}
+	.stat .label {
+		font-size: 13px;
+		color: var(--text-color-secondary);
+	}
+	.section {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--text-color-secondary);
+		margin-top: 4px;
+	}
+	// Intitulé de section du v3 : la typo d'affichage en capitales et petit
+	// corps, comme les en-têtes du panneau social — et non un h4 de corps
+	// de texte, qui pesait autant que les trophées qu'il annonce. L'icône saute :
+	// elle doublait le titre sans rien apprendre.
+	body:not(.v2) .section {
+		font-family: var(--font-display);
+		letter-spacing: var(--font-display-tracking);
+		font-size: 11px;
+		font-weight: var(--font-display-weight);
+		text-transform: uppercase;
+		margin: 2px 0 0;
+	}
+	.trophy-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		// Une seule rangée : les icônes rétrécissent pour que la série tienne en
+		// largeur plutôt que d'en masquer. Overflow hidden en dernier filet.
+		//
+		// La coupure tombe sur la hauteur d'UNE icône et non sur le plafond de
+		// 40 px : quand la série ne tient pas en largeur elle passe à la ligne, et
+		// 40 px laissaient dépasser une bande de la rangée suivante — visible dans
+		// l'ancien design, qui garde cette mise en rangée là où le v3 pose une
+		// grille (plus bas).
+		--trophy-size: clamp(24px, calc((100cqw - 66px) / 12), 40px);
+		max-height: var(--trophy-size);
+		overflow: hidden;
+		// Les liens qui portent les icônes sont en ligne : sans ça, le demi-
+		// interligne de la police leur ajoute 4 px sous chaque icône, et la
+		// rangée coupée à la hauteur d'une icône rognait le bas des trophées.
+		line-height: 0;
+	}
+	.trophy-row .trophy {
+		width: var(--trophy-size);
+		height: var(--trophy-size);
+	}
+	// Des trophées petits et nombreux : plafond de 26 px, série de 18.
+	body:not(.v2) .trophy-row {
+		// Une colonne par trophée de la série : elles se partagent TOUTE la
+		// largeur, et la place en trop devient du blanc autour de chaque trophée
+		// plutôt qu'un vide au bout de la rangée. Avec moins de trophées que de
+		// colonnes, la rangée reste calée à gauche sans écarts géants — ce que
+		// `space-between` aurait donné.
+		display: grid;
+		grid-template-columns: repeat(#{$serie}, minmax(0, 1fr));
+		// `stretch`, pas `center` : centré, l'élément de grille se réduit à son
+		// contenu et l'icône n'a plus de largeur de référence (voir le lien,
+		// plus bas). C'est le lien qui centre l'icône dans la colonne.
+		justify-items: stretch;
+		align-items: center;
+		gap: 6px;
+		max-height: 26px;
+	}
+	// Le nombre de colonnes suit la largeur du panneau. Sans ça, dix-huit
+	// colonnes fixes dans un panneau étroit écrasent les trophées : mesuré à
+	// 9 px sur une colonne de 268. On en montre donc MOINS plutôt que des
+	// trophées minuscules — le parti pris déjà retenu pour les cartes de combat
+	// de l'accueil. Ce qui dépasse tombe à la ligne suivante et le `max-height`
+	// le coupe, toujours sur un trophée entier puisque les colonnes sont pleines.
+	@container (max-width: 560px) {
+		body:not(.v2) .trophy-row {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+		}
+	}
+	@container (max-width: 380px) {
+		body:not(.v2) .trophy-row {
+			grid-template-columns: repeat(8, minmax(0, 1fr));
+		}
+	}
+	// Le lien qui enveloppe l'icône remplit sa colonne. Inline, il prenait la
+	// largeur de son contenu, et le `100%` de l'icône devenait cyclique donc
+	// `auto` : les SVG dessinés sur 24 unités restaient à 24 px quand les
+	// autres montaient à 26, et se décalaient de 4 px dans leur colonne.
+	body:not(.v2) .trophy-row a {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+	}
+	body:not(.v2) .trophy-row .trophy {
+		// La colonne donne la largeur, le plafond garde des trophées lisibles
+		// sans les regrossir.
+		width: min(100%, 26px);
+		height: auto;
+		aspect-ratio: 1;
+	}
+	// Panel bas : résumé compact pour laisser la place aux sections.
+	@container (max-height: 260px) {
+		.stat {
+			padding: 5px;
+		}
+		.stat .value {
+			font-size: 18px;
+		}
+		.stat .value .total {
+			font-size: 13px;
+		}
+	}
+	.none {
+		color: var(--text-color-secondary);
+		font-style: italic;
+	}
+</style>
