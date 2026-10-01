@@ -1,5 +1,7 @@
 {
 	"missing_only": "未所持のみ表示",
 	"completed": "完了",
-	"test_celebration": "アニメーションをテスト（管理者）"
+	"test_celebration": "アニメーションをテスト（管理者）",
+	"hide_paid": "有料アイテムを隠す",
+	"hide_unobtainable": "入手不可能なアイテムを隠す"
 }

@@ -91,16 +91,16 @@ function clickCell(x: number, y: number) {
 	}
 	.cell {
 		aspect-ratio: 1;
-		background: #ddd;
+		background: var(--grey-12);
 		margin: 0.5px;
 		cursor: pointer;
 		flex: 1;
 	}
 	.cell.obstacle {
-		background: black;
+		background: var(--black);
 	}
 	.cell.los {
-		background: #5fad1b;
+		background: var(--primary-surface);
 	}
 	.cell.red {
 		background: red;

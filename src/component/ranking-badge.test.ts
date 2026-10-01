@@ -49,4 +49,14 @@ describe('ranking-badge.vue', () => {
 		await w.find('.badge').trigger('click')
 		expect(goToRanking).toHaveBeenCalledWith('farmer', 'talent', 42)
 	})
+
+	// Sur la page éleveur, le badge d'un poireau est dans le lien de sa carte : sans
+	// preventDefault, le navigateur suivait ce lien et rechargeait la page du poireau.
+	it('le clic ne suit pas le lien qui contient le badge', () => {
+		const { w, goToRanking } = mountBadge({ ranking: 5, id: 42, category: 'leek' })
+		const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+		w.find('.badge').element.dispatchEvent(click)
+		expect(click.defaultPrevented).toBe(true)
+		expect(goToRanking).toHaveBeenCalledWith('leek', 'talent', 42)
+	})
 })

@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('about') }}</h1>
+			<div class="page-title">
+				<page-icon name="about" fallback="mdi-information" />
+				<div class="page-title-text">
+					<h1>{{ $t('about') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<router-link to="/changelog">
 					<div class="tab">
@@ -11,7 +16,7 @@
 				</router-link>
 				<router-link to="/statistics">
 					<div class="tab">
-						<v-icon>mdi-chart-timeline-variant</v-icon>
+						<v-icon>mdi-poll</v-icon>
 						<span>{{ $t('main.stats') }}</span>
 					</div>
 				</router-link>
@@ -23,7 +28,7 @@
 				</router-link>
 				<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener">
 					<div class="tab action">
-						<img src="/image/github_white.png">
+						<v-icon>mdi-github</v-icon>
 						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>
 					</div>
 				</a>
@@ -217,7 +222,6 @@ const technologies = [
 		{ name: 'Sass', link: 'https://sass-lang.com/', image: 'sass.svg' },
 		{ name: 'JavaScript', link: 'http://www.w3schools.com/js/DEFAULT.asp', image: 'javascript.png' },
 		{ name: 'TypeScript', link: 'https://www.typescriptlang.org/', image: 'typescript.svg' },
-		{ name: 'CodeMirror', link: 'https://codemirror.net/', image: 'codemirror.svg' },
 		{ name: 'Vue', link: 'https://vuejs.org/', image: 'vue.png' },
 		{ name: 'Chart.js', link: 'https://www.chartjs.org/', image: 'chartjs.png' },
 		{ name: 'KaTeX', link: 'https://katex.org/', image: 'katex.png' },
@@ -251,10 +255,10 @@ const technologies = [
 
 const team = computed(() => [[
 	{ name: 'Pilow', id: 1, grade: 'admin', role: t('team_web_graphism') + '<br>' + t('team_leekscript_fights') },
-	{ name: 'SilentHunter', id: 11, grade: 'admin', role: t('team_admin_server') },
 	{ name: 'TheTintin', id: 38357, grade: 'moderator', role: t('main.grade_moderator') },
 	{ name: 'Ref', id: 43276, grade: 'moderator', role: t('main.grade_moderator') },
 ], [
+	{ name: 'SilentHunter', id: 11, grade: 'former admin', role: t('team_admin_server') },
 	{ name: 'Dawyde', id: 2, grade: 'former admin', role: t('former_dev') },
 	{ name: 'mistigis', id: 100, grade: 'former moderator', role: t('former_mod') },
 	{ name: 'McNalYoo', id: 273, grade: 'former moderator', role: t('former_mod') },
@@ -267,7 +271,7 @@ const githubStars = ref<number | null>(null)
 
 onBeforeMount(() => {
 	LeekWars.setTitle(t('title'))
-	LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
+	LeekWars.setActions([{icon: 'mdi-github', click: () => window.open('https://github.com/leek-wars/leek-wars', '_newtab')}])
 })
 
 onMounted(() => {
@@ -353,7 +357,7 @@ onMounted(() => {
 		}
 		.role {
 			font-style: italic;
-			color: #666;
+			color: var(--grey-5);
 			margin-top: 4px;
 			font-weight: 500;
 		}
@@ -375,13 +379,13 @@ onMounted(() => {
 		display: inline-block;
 	}
 	.links a {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.green {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	a.green:visited {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.social {
 		display: flex;
@@ -413,7 +417,7 @@ onMounted(() => {
 		min-width: 150px;
 		box-sizing: border-box;
 		padding: 6px 14px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		background: var(--background-secondary);
 		border: 1px solid var(--border);
 		color: var(--text-color);
@@ -444,25 +448,25 @@ onMounted(() => {
 	.social-btn.facebook {
 		background: #1877f2;
 		border-color: #1877f2;
-		color: #fff;
+		color: var(--white);
 		&:hover { background: #1465d8; }
 	}
 	.social-btn.x {
-		background: #000;
-		border-color: #000;
-		color: #fff;
-		&:hover { background: #222; }
+		background: var(--black);
+		border-color: var(--black);
+		color: var(--white);
+		&:hover { background: var(--grey-1); }
 	}
 	.social-btn.instagram {
 		background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 		border-color: #cc2366;
-		color: #fff;
+		color: var(--white);
 		&:hover { filter: brightness(1.08); }
 	}
 	.social-btn.linkedin {
 		background: #0a66c2;
 		border-color: #0a66c2;
-		color: #fff;
+		color: var(--white);
 		&:hover { background: #08529c; }
 	}
 </style>

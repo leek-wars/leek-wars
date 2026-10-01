@@ -18,6 +18,7 @@
 	"click_to_change_country": "Muuta napsauttamalla",
 	"connected": "Yhdistetty",
 	"contributor": "Osallistuja",
+	"referent": "Referentti",
 	"country_ok": "Takaisin",
 	"country_selection": "Maan valinta",
 	"create": "Luoda",
@@ -112,6 +113,13 @@
 	"trophy_x": "Palkinto {0}",
 	"sponsorship": "Sponsorointi",
 	"godsons_level": "Rekursiivinen viittausten kokonaistaso",
+	"team_invitations": "Miehistökutsut",
+	"accept": "Hyväksy",
+	"reject": "Hylkää",
+	"invitation_accepted": "Kutsu hyväksytty!",
+	"invitation_rejected": "Kutsu hylätty",
+	"invite_to_team": "Kutsu miehistöön",
+	"invitation_sent": "Kutsu lähetetty!",
 	"choose_as_godfather": "Valitse kummiksi",
 	"godfather_request_sent": "Pyyntö lähetetty",
 	"godfather_request_sent_toast": "Kummipyyntö lähetetty!",
@@ -124,5 +132,7 @@
 	"aposteriori_title": "Lunastettavat kummipalkkiot",
 	"aposteriori_desc": "Kummipalkkiojärjestelmä on uusi: lunasta palkkiot kummilapsistasi ja kummistasi.",
 	"aposteriori_claim": "Lunasta",
-	"aposteriori_claimed": "Palkkiot vastaanotettu!"
+	"aposteriori_claimed": "Palkkiot vastaanotettu!",
+	"linked_accounts": "{0} tiliä",
+	"linked_main": "ensisijainen"
 }

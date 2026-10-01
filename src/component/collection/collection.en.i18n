@@ -1,5 +1,7 @@
 {
 	"missing_only": "Show only missing",
 	"completed": "Completed",
-	"test_celebration": "Test animation (admin)"
+	"test_celebration": "Test animation (admin)",
+	"hide_paid": "Hide paid items",
+	"hide_unobtainable": "Hide unobtainable items"
 }

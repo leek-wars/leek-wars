@@ -64,6 +64,7 @@
 	"invite_friends": "Freunde einladen",
 	"leeks": "Lauch ({0})",
 	"level_n": "Stufe {0}",
+	"live_on_team": "Live bei {0}",
 	"log_change": "Ändern Sie die Sichtbarkeitsstufe von Ablaufverfolgungen",
 	"log_change_text": "Ändern Sie die Sichtbarkeit Ihrer Verbündeten (Mitglieder Ihres Teams) Ihrer Spuren im Kampf (Funktion debug(), debugE() etc.):",
 	"log_level_0": "Versteckt",

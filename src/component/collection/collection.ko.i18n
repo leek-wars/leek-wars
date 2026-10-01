@@ -1,5 +1,7 @@
 {
 	"missing_only": "미보유만 표시",
 	"completed": "완료",
-	"test_celebration": "애니메이션 테스트 (관리자)"
+	"test_celebration": "애니메이션 테스트 (관리자)",
+	"hide_paid": "유료 아이템 숨기기",
+	"hide_unobtainable": "획득 불가 아이템 숨기기"
 }

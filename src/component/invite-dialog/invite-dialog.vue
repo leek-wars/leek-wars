@@ -109,7 +109,7 @@ function nativeShare() {
 .invite-url {
 	background: var(--background-secondary);
 	border: 1px solid var(--border);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 10px 14px;
 	font-family: monospace;
 	font-size: 16px;
@@ -121,8 +121,8 @@ function nativeShare() {
 .invite-qr {
 	display: block;
 	margin: 16px auto 0;
-	background: white;
-	border-radius: 4px;
+	background: var(--white);
+	border-radius: var(--radius);
 	padding: 6px;
 }
 .share-buttons {
@@ -139,18 +139,18 @@ function nativeShare() {
 	justify-content: center;
 	gap: 6px;
 	padding: 10px;
-	border-radius: 4px;
-	color: white;
+	border-radius: var(--radius);
+	color: var(--primary-surface-text);
 	text-decoration: none;
 	cursor: pointer;
 	font-weight: 500;
 	.v-icon {
-		color: white;
+		color: var(--primary-surface-text);
 	}
-	&.x { background: #000; }
+	&.x { background: var(--black); }
 	&.whatsapp { background: #25d366; }
 	&.telegram { background: #29a9eb; }
-	&.native { background: var(--primary); }
+	&.native { background: var(--primary-surface); }
 	&.copy { background: #607d8b; }
 }
 </style>

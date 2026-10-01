@@ -18,6 +18,7 @@
 	"click_to_change_country": "クリックして変更",
 	"connected": "接続済み",
 	"contributor": "寄稿者",
+	"referent": "リファレント",
 	"country_ok": "戻る",
 	"country_selection": "国の選択",
 	"create": "作成",
@@ -131,5 +132,7 @@
 	"aposteriori_title": "受け取れる師弟の報酬",
 	"aposteriori_desc": "師弟の報酬システムは新しいです。弟子と師匠の報酬を受け取りましょう。",
 	"aposteriori_claim": "受け取る",
-	"aposteriori_claimed": "報酬を受け取りました！"
+	"aposteriori_claimed": "報酬を受け取りました！",
+	"linked_accounts": "{0} アカウント",
+	"linked_main": "メイン"
 }

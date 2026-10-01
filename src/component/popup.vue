@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :model-value="modelValue" :width="width" :persistent="persistent" :content-class="contentClass" scroll-strategy="none" @update:model-value="$emit('update:modelValue', $event)">
+	<v-dialog :model-value="modelValue" :width="width" :persistent="persistent" :content-class="dialogContentClass" scroll-strategy="none" @update:model-value="$emit('update:modelValue', $event)">
 		<template v-if="content_created">
 			<div class="title">
 				<slot name="icon">
@@ -19,7 +19,8 @@
 			<div :class="{full: full}" class="content">
 				<slot></slot>
 			</div>
-			<div v-if="hasActionsSlot" class="actions">
+			<!-- $slots se lit au rendu : un computed, lui, ne voit jamais un slot apparaître ni disparaître -->
+			<div v-if="$slots.actions" class="actions">
 				<slot name="actions"></slot>
 			</div>
 		</template>
@@ -27,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, useSlots, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { LeekWars } from '@/model/leekwars'
 
 defineOptions({ name: 'Popup' })
@@ -39,17 +40,24 @@ const props = defineProps<{
 	width?: number
 	full?: boolean
 	persistent?: boolean
+	contentClass?: string
 }>()
 
 const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 }>()
 
-const slots = useSlots()
 const content_created = ref(props.modelValue === true)
 
-const contentClass = computed(() => LeekWars.mobile ? 'popup mobile' : 'popup')
-const hasActionsSlot = computed(() => !!slots.actions)
+// La classe `popup` porte tout le chrome du dialogue (coquille v3 comprise) :
+// une classe passée par l'appelant s'ajoute à la nôtre au lieu de la remplacer,
+// sinon `content-class` redescend en attribut et écrase la liaison ci-dessous.
+const dialogContentClass = computed(() => {
+	const classes = ['popup']
+	if (LeekWars.mobile) { classes.push('mobile') }
+	if (props.contentClass) { classes.push(props.contentClass) }
+	return classes.join(' ')
+})
 
 watch(() => props.modelValue, (v) => {
 	if (v === true) content_created.value = true
@@ -90,8 +98,8 @@ function close() {
 	left: 0;
 }
 .title {
-	background: #2a2a2a;
-	color: #eee;
+	background: var(--panel-header-background);
+	color: var(--grey-13);
 	padding: 0 10px;
 	padding-top: 6px;
 	padding-bottom: 4px;
@@ -99,8 +107,8 @@ function close() {
 	font-size: 20px;
 	line-height: 28px;
 	text-align: left;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
+	border-top-left-radius: var(--radius-tiny);
+	border-top-right-radius: var(--radius-tiny);
 	display: flex;
 	.main {
 		flex: 1;
@@ -113,7 +121,7 @@ function close() {
 		margin-bottom: -4px;
 		margin-right: -10px;
 		&:deep(.option) {
-			background: black;
+			background: var(--black);
 			height: 40px;
 			width: 40px;
 			padding: 7px;
@@ -122,7 +130,7 @@ function close() {
 				vertical-align: baseline;
 			}
 			&:hover {
-				background: #888;
+				background: var(--grey-7);
 			}
 			img {
 				width: 26px;
@@ -145,8 +153,8 @@ body.dark .content {
 	background: rgba(15,15,15, 0.95);
 }
 .v-dialog.no-actions .content {
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: var(--radius-small);
+	border-bottom-right-radius: var(--radius-small);
 }
 .actions {
 	height: 40px;
@@ -156,8 +164,8 @@ body.dark .content {
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		background: #555;
-		color: #eee;
+		background: var(--grey-4);
+		color: var(--grey-13);
 		width: 100%;
 		height: 40px;
 		text-align: center;
@@ -167,10 +175,10 @@ body.dark .content {
 			margin-right: 4px;
 		}
 		&:not(:last-child) {
-			border-right: 1px solid #777;
+			border-right: 1px solid var(--grey-6);
 		}
 		&:hover {
-			background: #777;
+			background: var(--grey-6);
 		}
 		&.red {
 			background: #c00;
@@ -179,7 +187,7 @@ body.dark .content {
 			background: #e00;
 		}
 		&.green {
-			background: #5fad1b;
+			background: var(--primary-surface);
 		}
 		&.green:hover {
 			background: #73d120;
@@ -195,7 +203,7 @@ body.dark .content {
 .title:deep(.v-icon) {
 	margin-right: 5px;
 	margin-bottom: 2px;
-	color: #eee;
+	color: var(--grey-13);
 }
 .title:deep(img) {
 	width: 24px;

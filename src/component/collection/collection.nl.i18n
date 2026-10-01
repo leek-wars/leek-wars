@@ -1,5 +1,7 @@
 {
 	"missing_only": "Alleen ontbrekende tonen",
 	"completed": "Voltooid",
-	"test_celebration": "Animatie testen (admin)"
+	"test_celebration": "Animatie testen (admin)",
+	"hide_paid": "Betaalde voorwerpen verbergen",
+	"hide_unobtainable": "Onverkrijgbare voorwerpen verbergen"
 }

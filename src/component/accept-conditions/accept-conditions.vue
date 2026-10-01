@@ -1,7 +1,12 @@
 <template lang="html">
 	<div>
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="conditions" fallback="mdi-file-document" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<div>{{ $t('accept_1') }}</div>

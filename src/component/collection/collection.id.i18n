@@ -1,5 +1,7 @@
 {
 	"missing_only": "Tampilkan hanya yang hilang",
 	"completed": "Selesai",
-	"test_celebration": "Uji animasi (admin)"
+	"test_celebration": "Uji animasi (admin)",
+	"hide_paid": "Sembunyikan item berbayar",
+	"hide_unobtainable": "Sembunyikan item yang tidak bisa didapat"
 }

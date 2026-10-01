@@ -18,6 +18,7 @@
 	"click_to_change_country": "Clique para mudar",
 	"connected": "Conectado",
 	"contributor": "Contribuidor",
+	"referent": "Referente",
 	"country_ok": "Voltar",
 	"country_selection": "Seleção de país",
 	"create": "Criar",
@@ -131,5 +132,7 @@
 	"aposteriori_title": "Recompensas de apadrinhamento a resgatar",
 	"aposteriori_desc": "O sistema de recompensas de apadrinhamento é recente: resgate as dos seus afilhados e do seu padrinho.",
 	"aposteriori_claim": "Resgatar",
-	"aposteriori_claimed": "Recompensas recebidas!"
+	"aposteriori_claimed": "Recompensas recebidas!",
+	"linked_accounts": "{0} contas",
+	"linked_main": "principal"
 }

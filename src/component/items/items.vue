@@ -1,13 +1,18 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>
-				<breadcrumb :items="breadcrumb_items" :raw="true" />
-			</h1>
+			<div class="page-title">
+				<page-icon name="items" fallback="mdi-shape" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<router-link to="/market">
 					<div class="tab action" image="icon/market.png" link="/market">
-						<img src="/image/icon/market.png">
+						<v-icon>mdi-store</v-icon>
 						<span>{{ $t('main.market') }}</span>
 					</div>
 				</router-link>
@@ -18,9 +23,12 @@
 				<div class="levels">
 					<span v-for="(items, l) in levels" :key="l" class="level">
 						<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
-						<template v-for="item in items">
-							<div v-if="lockedByTrophy(item)" :key="item.id" class="locked">?</div>
-							<item v-else :key="item.id" :item="item" />
+						<!-- La clé va sur le `template` qui porte la boucle : posée sur les
+						     enfants, elle ne sert que d'identité de branche et la liste est
+						     diffée par position. -->
+						<template v-for="item in items" :key="item.id">
+							<div v-if="lockedByTrophy(item)" class="locked">?</div>
+							<item v-else :item="item" />
 						</template>
 					</span>
 				</div>
@@ -45,7 +53,8 @@ const { locale } = useI18n()
 	const t = useNamespacedT('items')
 
 const trophies = ref<Record<string, { unlocked: boolean, [key: string]: unknown }>>({})
-const ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411])
+// 444-447 : puces des plantes, hors marché comme 417/418.
+const ignoredItems = new Set([406, 407, 408, 409, 410, 425, 419, 418, 417, 416, 415, 414, 413, 412, 411, 444, 445, 446, 447])
 
 LeekWars.setTitle('Items')
 
@@ -117,11 +126,11 @@ onMounted(() => {
 	}
 	.locked {
 		height: 67px;
-		background: #ddd;
-		border-radius: 4px;
+		background: var(--grey-12);
+		border-radius: var(--radius);
 		line-height: 67px;
 		font-weight: bold;
 		font-size: 30px;
-		color: #888;
+		color: var(--grey-7);
 	}
 </style>

@@ -64,6 +64,7 @@
 	"invite_friends": "友達を招待",
 	"leeks": "ネギ（{0}）",
 	"level_n": "レベル {0}",
+	"live_on_team": "{0} のライブ",
 	"log_change": "トレースの可視性レベルを変更する",
 	"log_change_text": "戦闘中の味方 (チームのメンバー) の痕跡の可視性レベルを変更します (関数 debug()、debugE() など):",
 	"log_level_0": "隠れた",

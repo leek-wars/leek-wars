@@ -38,6 +38,7 @@
 	"error_weapon_already_equipped": "{0} a déjà équipé cette arme.",
 	"error_weapon_two_forgotten": "{0} a déjà une arme oubliée équipée.",
 	"error_chip_already_equipped": "{0} a déjà équipé cette puce.",
+	"error_component_already_equipped": "{0} a déjà équipé ce composant.",
 	"farmed_by": "Élevé par {farmer}",
 	"fights": "Combats",
 	"garden": "Agressions",

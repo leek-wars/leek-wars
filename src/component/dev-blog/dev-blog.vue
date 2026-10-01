@@ -1,10 +1,13 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div class="title-wrapper">
-				<h1>
-					<router-link to="/forum">{{ $t('main.dev-blog') }}</router-link>
-				</h1>
+			<div class="page-title">
+				<page-icon name="dev-blog" fallback="mdi-newspaper-variant" />
+				<div class="page-title-text">
+					<h1>
+						<router-link to="/dev-blog">{{ $t('main.dev-blog') }}</router-link>
+					</h1>
+				</div>
 			</div>
 		</div>
 
@@ -105,7 +108,7 @@ onBeforeMount(() => {
 			align-items: center;
 			// font-size: 16px;
 			padding: 0 6px;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.vote i {
 			font-size: 18px;

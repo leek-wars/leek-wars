@@ -6,7 +6,7 @@
 			<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
 			<div class="level">
 				<span class="flex">
-				{{ farmer.leek_count }} <img class="icon" src="/image/icon/black/leek.png"></span>
+				{{ farmer.leek_count }} <v-icon class="icon">mdi-leek</v-icon></span>
 				{{ $t('main.level_n', [farmer.total_level]) }}
 				<flag v-if="farmer.country" class="country" :code="farmer.country" />
 			</div>

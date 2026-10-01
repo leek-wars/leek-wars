@@ -75,6 +75,7 @@
 	"invite_friends": "Inviter des amis",
 	"leeks": "Poireaux ({0})",
 	"level_n": "Niveau {0}",
+	"live_on_team": "En direct sur {0}",
 	"log_change": "Changer le niveau de visibilité des traces",
 	"log_change_text": "Changez le niveau de visibilité pour vos alliés (membres de votre équipe) de vos traces en combat (fonction debug(), debugE() etc.) :",
 	"log_level_0": "Cachées",

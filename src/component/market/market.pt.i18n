@@ -1,4 +1,5 @@
 {
+	"already_bought": "Já comprado",
 	"already_have": "Você já possui esse item",
 	"are_you_sure_you_want_to_buy": "Tem certeza de que deseja comprar {item}?",
 	"are_you_sure_you_want_to_sell": "Tem certeza de que deseja vender {item}?",
@@ -39,6 +40,7 @@
 	"potion_selled": "Poção vendida!",
 	"price": "Preço",
 	"resell": "Revender",
+	"scheme_required": "Você não possui o esquema",
 	"sell": "Vender",
 	"summon_available_chips": "Chips equipados",
 	"summon_characteristics": "Características",

@@ -250,9 +250,6 @@ function validate() {
 function updateValue(value: boolean) {
 	if (!value) {
 		close()
-		if (LeekWars.didactitial_step === 1) {
-			LeekWars.didactitial_next()
-		}
 	}
 }
 
@@ -260,6 +257,9 @@ function close() {
 	validating.value = false
 	reset()
 	emit('update:modelValue', false)
+	if (LeekWars.didactitial_step === 1) {
+		LeekWars.didactitial_next()
+	}
 }
 
 const capital = computed(() => props.totalCapital - usedCapital.value)
@@ -272,14 +272,14 @@ const capital = computed(() => props.totalCapital - usedCapital.value)
 		display: inline-flex;
 	}
 	.capital {
-		color: white;
+		color: var(--primary-surface-text);
 		font-size: 18px;
-		background: #5fad1b;
+		background: var(--primary-surface);
 		display: inline-block;
 		padding: 5px 10px;
 	}
 	.capital.zero {
-		background: #888;
+		background: var(--grey-7);
 	}
 	.characteristics {
 		display: grid;
@@ -287,7 +287,7 @@ const capital = computed(() => props.totalCapital - usedCapital.value)
 		padding: 20px 0;
 	}
 	.sup {
-		color: #555;
+		color: var(--grey-4);
 	}
 	.content img {
 		width: 40px;

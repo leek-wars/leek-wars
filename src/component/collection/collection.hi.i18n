@@ -1,5 +1,7 @@
 {
 	"missing_only": "केवल अनुपलब्ध दिखाएं",
 	"completed": "पूर्ण",
-	"test_celebration": "एनिमेशन जांचें (admin)"
+	"test_celebration": "एनिमेशन जांचें (admin)",
+	"hide_paid": "सशुल्क वस्तुएं छिपाएं",
+	"hide_unobtainable": "अप्राप्य वस्तुएं छिपाएं"
 }

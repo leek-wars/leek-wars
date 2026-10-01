@@ -1,11 +1,11 @@
 {
 	"logos": "徽标和图标",
-	"screenshots": "截屏",
-	"videos": "影片",
+	"screenshots": "截图",
+	"videos": "视频",
 	"banners": "横幅",
-	"presentations": "简报",
-	"links": "有用的链接",
-	"original_topic": "原始演示主题（FR）",
-	"chronology": "年表",
-	"download": "下载新闻资料袋"
+	"presentations": "介绍资料",
+	"links": "实用链接",
+	"original_topic": "最初的介绍帖（法语）",
+	"chronology": "大事记",
+	"download": "下载媒体资料包"
 }

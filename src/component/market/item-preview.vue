@@ -11,11 +11,13 @@
 		<div v-if="item.rarity > 0" class="rarity-wrapper">
 			<span class="rarity" :class="'difficulty-' + item.rarity">{{ $t('main.difficulty_' + item.rarity) }}</span>
 		</div>
-		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ item.name.toUpperCase() }}</div>
+		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ constantName ?? item.name.toUpperCase() }}</div>
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
 			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" :width="WeaponsData[item.params]?.width" @click="playSound(item, category)">
 			<scheme-image v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" />
-			<img v-else :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
+			<img v-else :class="item.type === ItemType.COMPONENT && instance ? alteredClass(instance, LeekWars.componentCapacity(item.id), LeekWars.alterations?.weights) : ''" :src="itemImageUrl(item)" @click="playSound(item, category)">
+			<!-- Charge du composant altere, en badge coin bas droit. -->
+			<charge-badge v-if="item.type === ItemType.COMPONENT && instance" class="charge" :alterations="instance.stats" :capacity="LeekWars.componentCapacity(item.id)" />
 		</div>
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
@@ -25,9 +27,9 @@
 		<potion-preview v-else-if="item.type === ItemType.POTION" :potion="LeekWars.potions[item.id]" :inventory="!!inventory" :show-use="!!showUse" :item-template-id="item.id" @update:model-value="$emit('update:modelValue', $event)" />
 		<hat-preview v-else-if="item.type === ItemType.HAT" :hat="LeekWars.hats[item.params]" />
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
-		<resource-preview v-else-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
 		<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" @update:model-value="$emit('update:modelValue', $event)" />
+		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="(LeekWars.components[item.params] as any)" :alterations="instance?.stats" :optimal-dose="instance?.optimal_dose" :family="LeekWars.alterations?.component_families?.[item.params]" @update:model-value="$emit('update:modelValue', $event)" />
+		<alteration-preview v-else-if="item.type === ItemType.ALTERATION" :template="item.id" />
 		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" :show-craft="!!inventory" @update:model-value="$emit('update:modelValue', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
 
@@ -63,22 +65,31 @@
 				<v-btn v-if="quantity >= 10" size="small" class="get-all notif-trophy" @click.stop="retrieveN(10)">x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 			</div>
 		</div>
+
+		<!-- Le stock de l'éleveur ferme la fiche, sous les valeurs : c'est une ligne de la même
+		     famille, et la place des aperçus par type est au-dessus. -->
+		<resource-preview v-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
 	</div>
 </template>
 
 <script setup lang="ts">
 import ChipPreview from '@/component/market/chip-preview.vue'
 import ComponentPreview from '@/component/market/component-preview.vue'
+import ChargeBadge from '@/component/market/charge-badge.vue'
+import AlterationPreview from '@/component/market/alteration-preview.vue'
 import FightPackPreview from '@/component/market/fight-pack-preview.vue'
 import HatPreview from '@/component/market/hat-preview.vue'
 import PompPreview from '@/component/market/pomp-preview.vue'
 import PotionPreview from '@/component/market/potion-preview.vue'
 import ResourcePreview from '@/component/market/resource-preview.vue'
 import WeaponPreview from '@/component/market/weapon-preview.vue'
+import { playAudio } from '@/model/audio'
 import { CHIPS as CHIPSImport } from '@/model/chips'
-import { ITEM_CATEGORY_NAME, ItemTemplate, ItemType } from '@/model/item'
+import { ITEM_CATEGORY_NAME, ItemTemplate, ItemType, itemImageUrl } from '@/model/item'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
+import { alteredClass } from '@/model/alteration'
+import type { InventoryItem } from '@/model/farmer'
 import { store } from '@/model/store'
 import { WeaponsData as WeaponsDataImport } from '@/model/weapon'
 import { computed, onMounted } from 'vue'
@@ -94,6 +105,8 @@ defineOptions({ name: 'ItemPreview', components: {
 	'fight-pack-preview': FightPackPreview,
 	'resource-preview': ResourcePreview,
 	'component-preview': ComponentPreview,
+	'charge-badge': ChargeBadge,
+	'alteration-preview': AlterationPreview,
 	'scheme-preview': SchemePreview,
 	'scheme-image': SchemeImage
 }})
@@ -105,11 +118,21 @@ const props = withDefaults(defineProps<{
 	showUse?: boolean
 	leek?: Leek
 	craftCost?: number
+	/**
+	 * Identifiant a afficher pour l'arme ou la puce, quand ce n'est pas la constante plate
+	 * LeekScript : la page de documentation y passe la forme du langage lu (`Chip.adrenaline`).
+	 * Non renseigne ailleurs -> `CHIP_ADRENALINE`, comme avant.
+	 */
+	constantName?: string
+	/** Instance affichee, quand elle porte des donnees propres (alterations). */
+	instance?: InventoryItem | null
 }>(), {
 	showUse: false,
 	craftCost: 0,
 	quantity: 0,
 	leek: undefined,
+	constantName: undefined,
+	instance: null,
 })
 
 const emit = defineEmits<{
@@ -214,6 +237,8 @@ function weaponSound(id: number) {
 			38: ['sword'],
 			39: ['sword'],
 			40: ['quantum_rifle'],
+			41: ['sword'],
+			42: ['sword'],
 		} as {[key: number]: unknown[]})[id]
 	}
 
@@ -251,7 +276,7 @@ function playSound(item: ItemTemplate, type: string) {
 			const sound_ext = sound.includes('.') ? sound : sound + '.mp3'
 			const audio = new Audio('/sound/' + sound_ext)
 			audio.volume = 0.5
-			audio.play()
+			playAudio(audio)
 			if (sounds.length > 2) {
 				const delay = parseFloat(sounds[1] as string)
 				setTimeout(() => {
@@ -265,10 +290,17 @@ function playSound(item: ItemTemplate, type: string) {
 </script>
 
 <style lang="scss" scoped>
-.get-all.v-size--small {
+/* `.v-size--small` était la classe de taille de Vuetify 2 : depuis la migration
+   elle ne désigne plus rien, et la règle ne s'appliquait plus (flèche à sa
+   taille naturelle, boutons collés les uns aux autres). */
+.get-all {
 	font-size: 15px;
 	font-weight: 500;
-	padding: 7px;
+	/* Padding horizontal seulement : le bouton Vuetify 3 a une hauteur fixe
+	   (28 px en `small`) et centre son contenu dedans. Un padding vertical
+	   rétrécit la boîte de contenu sous la hauteur du texte, qui déborde alors
+	   par le bas — le libellé se retrouve collé en haut du bouton. */
+	padding: 0 7px;
 	margin: 6px 4px;
 	img {
 		margin-left: 4px;

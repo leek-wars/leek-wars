@@ -41,14 +41,14 @@ const page = computed(() => props.query ? '&page=' : '/page-')
 		vertical-align: middle;
 		font-size: 18px;
 		display: inline-block;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		&:hover {
 			background: var(--border);
 		}
 	}
 	a.current {
-		color: white;
-		background-color: #5fad1b;
+		color: var(--primary-surface-text);
+		background-color: var(--primary-surface);
 		font-weight: 500;
 	}
 </style>

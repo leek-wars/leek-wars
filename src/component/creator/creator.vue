@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="creator" fallback="mdi-pencil-ruler" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<template #content>
@@ -61,7 +66,7 @@
 								<div class="title">Puces</div>
 								<div class="container chips">
 									<rich-tooltip-item v-for="(chip, c) of game.selectedEntity.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :nodge="true" :leek="game.selectEntity">
-										<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= game.selectedEntity.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
+										<img :src="chipImageUrl(LeekWars.items[chip].name.replace('chip_', ''))" :class="{disabled: c >= game.selectedEntity.ram}" class="chip" v-bind="props" @click="removeLeekChip(chip)">
 									</rich-tooltip-item>
 									<div v-if="game.selectedEntity.chips.length < game.selectedEntity.ram" class="add" @click="chipsDialog = true">+</div>
 								</div>
@@ -123,7 +128,7 @@
 			<div v-if="game.selectedEntity" class="padding chips-dialog">
 				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.id]" :bottom="true" :nodge="true" :leek="game.selectedEntity">
 					<span :class="{disabled: game.selectedEntity.chips.indexOf(chip.id) !== -1}" v-bind="props">
-						<img :src="'/image/chip/' + chip.name + '.png'" class="chip" @click="addOrRemoveLeekChip(chip.id)">
+						<img :src="chipImageUrl(chip.name)" class="chip" @click="addOrRemoveLeekChip(chip.id)">
 					</span>
 				</rich-tooltip-item>
 			</div>
@@ -131,7 +136,7 @@
 
 		<popup v-if="game" v-model="weaponsDialog" :width="800">
 			<template #icon>
-				<img src="/image/icon/garden.png">
+				<v-icon>mdi-pistol</v-icon>
 			</template>
 			<template #title>
 				<span v-if="game.selectedEntity">{{ $t('select_weapons') }} [{{ game.selectedEntity.weapons.length }}/{{ 4 }}]</span>
@@ -154,6 +159,7 @@ const Player = defineAsyncComponent(() => import(/* webpackChunkName: "[request]
 export default { components: { Player } }
 </script>
 <script lang="ts" setup>
+import { chipImageUrl } from '@/model/item'
 import type { FightMap } from '@/model/fight'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -514,10 +520,10 @@ function addOrRemoveLeekWeapon(weapon: number) {
 	.id, .size {
 		position: absolute;
 		background: #fff7;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 1.5px 4.5px;
 		font-size: 12px;
-		color: #000;
+		color: var(--black);
 		font-weight: 500;
 	}
 	.id {
@@ -534,7 +540,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 		left: calc(50% - 15px);
 		width: 30px;
 		height: 30px;
-		background: white;
+		background: var(--white);
 		padding: 5px;
 		border-radius: 50%;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.25), 0px 1px 1px 0px rgba(0,0,0,0.18), 0px 1px 3px 0px rgba(0,0,0,0.16);
@@ -563,13 +569,13 @@ function addOrRemoveLeekWeapon(weapon: number) {
 				display: inline-block;
 				font-weight: bold;
 				padding: 2px 4px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				min-width: 120px;
 				margin-right: 10px;
 				&[contenteditable="true"] {
 					border: 1px solid var(--border);
 				&:hover {
-					border: 1px solid #777;
+					border: 1px solid var(--grey-6);
 				}
 				}
 			}
@@ -625,9 +631,9 @@ function addOrRemoveLeekWeapon(weapon: number) {
 	.v-icon {
 		font-size: 50px;
 		border-radius: 50%;
-		color: #ccc;
+		color: var(--grey-11);
 		&.active {
-			color: black;
+			color: var(--black);
 		}
 	}
 }
@@ -635,7 +641,7 @@ function addOrRemoveLeekWeapon(weapon: number) {
 	margin: 50px;
 	font-size: 40px;
 	align-self: center;
-	background: white;
+	background: var(--white);
 	border-radius: 50%;
 	padding: 10px;
 	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.25), 0px 1px 1px 0px rgba(0,0,0,0.18), 0px 1px 3px 0px rgba(0,0,0,0.16);

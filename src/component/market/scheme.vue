@@ -3,33 +3,37 @@
 		<div v-if="showResult" v-ripple class="group result" @click="possible && emitter.emit('craft', scheme)">
 			<rich-tooltip-item v-if="!sharedTooltip" v-slot="{ props }" :item="result" :bottom="true" :inventory="true" :craft-cost="ingredientCost" @update:model-value="$emit('update:modelValue', $event)">
 				<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}">
-					<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type" loading="lazy">
+					<img :src="itemImageUrl(result)" :type="result.type" loading="lazy">
 					<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 				</div>
 			</rich-tooltip-item>
 			<div v-else class="item" :quantity="1" :class="{['rarity-border-' + result.rarity]: true, 'missing': !possible}" @click.stop="possible && emitter.emit('craft', scheme)" @mouseenter="$emit('show-tooltip', { item: result, quantity: 1, craftCost: ingredientCost, event: $event })" @mouseleave="$emit('hide-tooltip')">
-				<img :src="'/image/' + ITEM_CATEGORY_NAME[result.type] + '/' + result.name.replace('hat_', '').replace('potion_', '') + '.png'" :type="result.type">
+				<img :src="itemImageUrl(result)" :type="result.type">
 				<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 			</div>
 		</div>
 		<div v-if="showResult" :key="'__'" class="symbol">{{ " = " }}</div>
 		<div class="items">
-			<template v-for="(ingredient, i) in items">
+			<!-- La clé va sur le `template` qui porte la boucle : posée sur les enfants,
+			     elle ne sert que d'identité de branche et la liste est diffée par
+			     position. Chaque tour émet deux nœuds (l'ingrédient et le « + »), le
+			     fragment claveté les garde ensemble. -->
+			<template v-for="(ingredient, i) in items" :key="i">
 				<template v-if="ingredient">
-					<rich-tooltip-item v-if="!sharedTooltip" :key="i" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('update:modelValue', $event)">
+					<rich-tooltip-item v-if="!sharedTooltip" v-slot="{ props }" :item="ingredient.item" :bottom="true" :inventory="true" :quantity="ingredient.quantity" @update:model-value="$emit('update:modelValue', $event)">
 						<div class="item" v-bind="props" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)">
-							<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type" loading="lazy">
+							<img :src="itemImageUrl(ingredient.item)" :type="ingredient.item.type" loading="lazy">
 							<div v-if="ingredient.quantity > 1" class="quantity">{{ $filters.number(ingredient.quantity) }}</div>
 							<v-icon v-if="ingredientScheme(ingredient)" class="craft-icon">mdi-hammer-wrench</v-icon>
 						</div>
 					</rich-tooltip-item>
-					<div v-else :key="'s' + i" class="item" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)" @mouseenter="$emit('show-tooltip', { item: ingredient.item, quantity: ingredient.quantity, event: $event })" @mouseleave="$emit('hide-tooltip')">
-						<img :src="'/image/' + ITEM_CATEGORY_NAME[ingredient.item.type] + '/' + ingredient.item.name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'" :type="ingredient.item.type" loading="lazy">
+					<div v-else class="item" :class="{['rarity-border-' + ingredient.item.rarity]: true, [item_present[i]]: true, craftable: !!ingredientScheme(ingredient)}" @click.stop="craftIngredient(ingredient)" @mouseenter="$emit('show-tooltip', { item: ingredient.item, quantity: ingredient.quantity, event: $event })" @mouseleave="$emit('hide-tooltip')">
+						<img :src="itemImageUrl(ingredient.item)" :type="ingredient.item.type" loading="lazy">
 						<div v-if="ingredient.quantity > 1" class="quantity">{{ $filters.number(ingredient.quantity) }}</div>
 						<v-icon v-if="ingredientScheme(ingredient)" class="craft-icon">mdi-hammer-wrench</v-icon>
 					</div>
 				</template>
-				<div v-if="ingredient && i < items.length - 1" :key="'_' + i" class="symbol">{{ " + " }}</div>
+				<div v-if="ingredient && i < items.length - 1" class="symbol">{{ " + " }}</div>
 			</template>
 		</div>
 		<div class="spacer"></div>
@@ -42,11 +46,11 @@
 
 <script setup lang="ts">
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-import { ITEM_CATEGORY_NAME, ItemTemplate } from '@/model/item'
+import { ItemTemplate, itemImageUrl } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { SchemeTemplate } from '@/model/scheme'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed } from 'vue'
 
 defineOptions({ name: 'Scheme', components: {
@@ -92,50 +96,17 @@ function craftIngredient(ingredient: Ingredient) {
 	if (scheme) emitter.emit('craft', scheme)
 }
 
+// Ingrédient possédé, en partie, ou pas du tout. Le compte vient du getter du store et
+// non d'une boucle locale sur les inventaires : cette boucle-là rendait la quantité de la
+// PREMIÈRE ligne trouvée, et une pièce altérée — instance unique rangée à côté de la pile
+// de ses jumelles neuves, sous le même template — faisait passer 470 pommes pour une
+// seule, recette en rouge et craft refusé alors que le serveur l'aurait accepté.
 const item_present = computed(() => items.value.map(item => {
-	if (item === null) return 'present'
-	if (store.state.farmer) {
-		if (item.item.id === 148) {
-			return store.state.farmer.habs >= item.quantity ? 'present' : 'partial'
-		} else {
-			for (const resource of store.state.farmer!.resources) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.components) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.potions) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.weapons) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.chips) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.hats) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-			for (const resource of store.state.farmer!.pomps) {
-				if (item.item && resource.template === item.item.id) {
-					return resource.quantity >= item.quantity ? 'present' : 'partial'
-				}
-			}
-		}
-	}
-	return 'missing'
+	if (item === null || !item.item) return 'present'
+	if (!store.state.farmer) return 'missing'
+	const owned = store.getters.item_quantity(item.item.id)
+	if (owned >= item.quantity) return 'present'
+	return owned > 0 ? 'partial' : 'missing'
 }))
 </script>
 
@@ -163,7 +134,7 @@ const item_present = computed(() => items.value.map(item => {
 		position: relative;
 		padding: 4px;
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		box-shadow: var(--elevation-1);
 		img {
 			width: 42px;
 			height: 42px;
@@ -175,8 +146,8 @@ const item_present = computed(() => items.value.map(item => {
 			bottom: 0;
 			right: 0;
 			background: #000b;
-			border-top-left-radius: 4px;
-			color: white;
+			border-top-left-radius: var(--radius);
+			color: var(--white);
 			padding: 1.5px 4.5px;
 			font-weight: 500;
 			font-size: 14px;
@@ -200,7 +171,7 @@ const item_present = computed(() => items.value.map(item => {
 				bottom: 2px;
 				left: 2px;
 				font-size: 11px;
-				color: #555;
+				color: var(--grey-4);
 				opacity: 0.6;
 			}
 		}
@@ -238,9 +209,9 @@ const item_present = computed(() => items.value.map(item => {
 	margin: -2px;
 	z-index: 2;
 	background: var(--pure-white);
-	border: 1px solid #aaa;
+	border: 1px solid var(--grey-9);
 	border-radius: 100%;
-	box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+	box-shadow: var(--elevation-1);
 	&.arrow {
 		margin: 14px;
 		margin-right: 18px;

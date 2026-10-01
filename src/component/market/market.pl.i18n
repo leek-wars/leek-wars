@@ -39,6 +39,7 @@
 	"potion_selled": "Eliksir sprzedany!",
 	"price": "Cena",
 	"resell": "Odsprzedać",
+	"scheme_required": "Nie posiadasz schematu",
 	"sell": "Sprzedać",
 	"summon_available_chips": "Wyposażone żetony",
 	"summon_characteristics": "Cechy",

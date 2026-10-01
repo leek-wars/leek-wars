@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="tutorial-menu">
-		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + $t(item.name, locale).replace(/ /g, '_')">
+		<router-link v-for="(item, i) of items" :key="i" class="item" :style="{'background-image': 'url(' + item.image + ')'}" :to="'/encyclopedia/' + locale + '/' + ($t(item.name, locale) + suffix).replace(/ /g, '_')">
 			<v-icon class="icon">mdi-{{ item.icon }}</v-icon>
 			<div class="bottom">
 				<div class="name">
@@ -18,16 +18,18 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/model/store'
 import { mixins } from '@/model/i18n'
-import { tutorial_items } from './tutorial-items'
+import { tutorial_items, tutorialTitleSuffix, type TutorialTrack } from './tutorial-items'
 
 defineOptions({ name: 'TutorialMenu', i18n: {}, mixins: [...mixins] })
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	locale: string
-}>()
+	track?: TutorialTrack
+}>(), { track: 'leekscript' })
 
 const { mergeLocaleMessage } = useI18n()
 const items = tutorial_items
+const suffix = tutorialTitleSuffix(props.track)
 
 import(/* webpackChunkName: "tutorial-[request]" */ `@/lang/${props.locale}/tutorial.json`).then(module => {
 	mergeLocaleMessage(props.locale, module.default)
@@ -52,8 +54,8 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 			display: flex;
 			align-items: flex-end;
 			text-decoration: none !important;
-			border-radius: 4px;
-			box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+			border-radius: var(--radius);
+			box-shadow: var(--elevation-1);
 			overflow: hidden;
 			.bottom {
 				padding-top: 20px;
@@ -61,10 +63,10 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 				padding-left: 12px;
 				background: linear-gradient(transparent, #000d);
 				flex: 1;
-				color: white;
+				color: var(--white);
 				text-align: left;
-				border-bottom-left-radius: 4px;
-				border-bottom-right-radius: 4px;
+				border-bottom-left-radius: var(--radius);
+				border-bottom-right-radius: var(--radius);
 				margin-bottom: -28px;
 				transition: margin-bottom 200ms ease;
 				.name {
@@ -72,9 +74,12 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 					align-items: center;
 					gap: 8px;
 					.v-icon {
-						color: white;
-						background: #5fad1b;
+						color: var(--primary-surface-text);
+						background: var(--primary-surface);
 						border-radius: 50%;
+						body:not(.v2) & {
+							border-radius: 0;
+						}
 						padding: 2px;
 						font-size: 11px;
 						width: 15px;
@@ -94,21 +99,27 @@ const progress = computed(() => store.state.farmer ? store.state.farmer.tutorial
 			.icon {
 				position: absolute;
 				font-size: 36px;
-				background: white;
+				background: var(--white);
 				border-radius: 50%;
 				box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 5px;
 				left: 9px;
 				top: 9px;
 				padding: 7px;
-				color: #222;
+				color: var(--grey-1);
 				width: 50px;
 				height: 50px;
+				// v3 : un carré bordé, à plat, et non la pastille ronde à ombre floue du v2.
+				body:not(.v2) & {
+					border-radius: 0;
+					box-shadow: none;
+					border: 1px solid var(--border-strong);
+				}
 			}
 			.items {
 				font-size: 14px;
 				margin: 0;
 				margin-top: 5px;
-				color: white;
+				color: var(--white);
 				padding-left: 18px;
 			}
 		}

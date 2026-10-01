@@ -1,9 +1,14 @@
 <template>
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>
-				<breadcrumb :items="breadcrumb_items" :raw="true" />
-			</h1>
+			<div class="page-title">
+				<page-icon name="trophies" fallback="mdi-trophy" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<v-menu bottom offset-y :max-width="600">
 					<template #activator="{ props }">
@@ -32,11 +37,11 @@
 				</v-menu>
 				<div class="tab" @click="group_by_categories = !group_by_categories">
 					<span>{{ $t('group_by_categories') }}</span>
-					<v-switch :model-value="group_by_categories" hide-details />
+					<lw-switch :model-value="group_by_categories" />
 				</div>
 				<div class="tab" @click="hide_unlocked = !hide_unlocked">
 					<span>{{ $t('hide_unlocked') }}</span>
-					<v-switch :model-value="hide_unlocked" hide-details />
+					<lw-switch :model-value="hide_unlocked" />
 				</div>
 			</div>
 		</div>
@@ -77,7 +82,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="closet">
+					<div ref="closet" class="closet">
 						<div>
 							<h4><v-icon>mdi-trophy-outline</v-icon> {{ $t('best_trophies') }}</h4>
 							<div class="trophies">
@@ -157,7 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { mixins, useNamespacedT } from '@/model/i18n'
@@ -166,7 +171,7 @@ import { store } from '@/model/store'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import Trophy from './trophy.vue'
 import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 defineOptions({ name: 'Trophies', i18n: {}, mixins: [...mixins] })
 
@@ -226,9 +231,44 @@ const sorted_trophies = computed(() => {
 	return result
 })
 
-const best_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.points - a.points).slice(0, 7))
-const rarest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => a.rarity - b.rarity).slice(0, 7))
-const latest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.date - a.date).slice(0, 7))
+// Nombre de trophées mis en avant par colonne : autant qu'il en tient, jusqu'à
+// 10. La mesure porte sur la COLONNE (`flex: 1`, donc un tiers de la vitrine
+// quoi qu'elle contienne) et non sur la rangée d'icônes, dont la largeur
+// dépendrait du compte qu'on cherche à calculer — le compte se mordrait la
+// queue et ne remonterait jamais quand la fenêtre s'élargit.
+const MAX_HIGHLIGHTED = 10
+const TROPHY_SIZE = 43
+const TROPHIES_PADDING = 20
+const closet = ref<HTMLElement | null>(null)
+const highlight_count = ref(7)
+let closet_observer: ResizeObserver | null = null
+
+function updateHighlightCount() {
+	const column = closet.value?.firstElementChild as HTMLElement | undefined
+	if (!column) return
+	const inner = column.clientWidth - TROPHIES_PADDING
+	if (inner <= 0) return
+	highlight_count.value = Math.min(MAX_HIGHLIGHTED, Math.max(3, Math.floor(inner / TROPHY_SIZE)))
+}
+
+// La vitrine n'existe qu'une fois les trophées chargés : on s'accroche au ref
+// plutôt qu'à onMounted, qui passerait avant elle.
+watch(closet, el => {
+	if (closet_observer) { closet_observer.disconnect(); closet_observer = null }
+	if (el) {
+		closet_observer = new ResizeObserver(() => updateHighlightCount())
+		closet_observer.observe(el)
+		nextTick(() => updateHighlightCount())
+	}
+}, { immediate: true })
+
+onBeforeUnmount(() => {
+	if (closet_observer) { closet_observer.disconnect(); closet_observer = null }
+})
+
+const best_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.points - a.points).slice(0, highlight_count.value))
+const rarest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => a.rarity - b.rarity).slice(0, highlight_count.value))
+const latest_trophies = computed(() => all_trophies.value.filter(tr => tr.unlocked && tr.category !== 0).sort((a, b) => b.date - a.date).slice(0, highlight_count.value))
 
 const breadcrumb_items = computed(() => [
 	{ name: farmer.value ? farmer.value.name : '...', link: '/farmer/' + id.value },
@@ -243,6 +283,14 @@ const sort_icon = computed(() => ({
 	date: 'mdi-calendar',
 } as {[key: string]: string})[sort_by.value])
 
+function initCategory(category: number) {
+	raw_trophies.value[category] = []
+	progressions.value[category] = 0
+	points.value[category] = 0
+	totals.value[category] = 0
+	totalPoints.value[category] = 0
+}
+
 function update() {
 	const requestedId = id.value
 	loaded.value = false
@@ -253,13 +301,7 @@ function update() {
 	title.value = null
 	all_trophies.value = []
 	if (!requestedId) return
-	(LeekWars.trophyCategories as unknown as TrophyCategory[]).forEach((c: TrophyCategory) => {
-		raw_trophies.value[c.id] = []
-		progressions.value[c.id] = 0
-		points.value[c.id] = 0
-		totals.value[c.id] = 0
-		totalPoints.value[c.id] = 0
-	})
+	(LeekWars.trophyCategories as unknown as TrophyCategory[]).forEach((c: TrophyCategory) => initCategory(c.id))
 	LeekWars.get('trophy/get-farmer-trophies/' + requestedId + '/' + locale.value).then(data => {
 		if (requestedId !== id.value) return
 		for (const tk in data.trophies) {
@@ -269,6 +311,9 @@ function update() {
 			const trophy = data.trophies[tk]
 			all_trophies.value = data.trophies
 			if (trophy.category === 0) continue
+			// Catégorie inconnue des game data (cache pas encore rafraîchi après l'ajout
+			// d'une catégorie) : sans ce garde-fou toute la page reste sur ses loaders.
+			if (!raw_trophies.value[trophy.category]) initCategory(trophy.category)
 			raw_trophies.value[trophy.category].push(trophy)
 			totals.value[trophy.category]++
 			totalPoints.value[trophy.category] += trophy.points
@@ -390,6 +435,15 @@ watch(sort_by, () => {
 		.closet {
 			display: flex;
 			justify-content: space-between;
+			gap: 8px;
+			// Colonnes de largeur egale : c'est sur elle que se mesure le
+			// nombre de trophees affiches, et elle ne doit donc pas dependre
+			// de ce qu'elles contiennent. `min-width: 0` pour qu'une rangee
+			// d'icones ne puisse pas imposer un plancher.
+			> div {
+				flex: 1;
+				min-width: 0;
+			}
 		}
 		.trophies {
 			display: flex;
@@ -427,7 +481,7 @@ watch(sort_by, () => {
 		height: 14px;
 		position: relative;
 		background: var(--pure-white);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		margin: 5px 0;
 		border: 1px solid var(--border);
 		.bar {
@@ -435,7 +489,7 @@ watch(sort_by, () => {
 			width: 0;
 			background: #30bb00;
 			position: absolute;
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 		}
 		.bar.blue {
 			background: #008fbb;
@@ -451,7 +505,7 @@ watch(sort_by, () => {
 		width: 100%;
 		.stats {
 			display: inline-block;
-			color: white;
+			color: var(--white);
 			font-size: 16px;
 			margin: 9px 10px;
 		}
@@ -460,7 +514,7 @@ watch(sort_by, () => {
 		height: 12px;
 		position: relative;
 		background: var(--pure-white);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		flex: 1;
 		margin-top: 12px;
 		border: 1px solid var(--border);
@@ -469,7 +523,7 @@ watch(sort_by, () => {
 			width: 0;
 			background: #30bb00;
 			position: absolute;
-			border-radius: 5px;
+			border-radius: var(--radius);
 		}
 	}
 	.bar {
@@ -477,9 +531,27 @@ watch(sort_by, () => {
 	}
 	.trophies {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
 		grid-gap: 8px;
 		padding: 8px;
+	}
+	// Le nom du trophée se coupe en points de suspension plutôt que de pousser le
+	// compteur de points hors de la carte. En
+	// `:deep` parce que le nom est rendu par trophy.vue : la portée de ce fichier
+	// ne couvre que la racine de la carte. Réservé à la grille — l'infobulle
+	// riche, plus large, garde ses noms entiers sur deux lignes.
+	.trophies .trophy {
+		:deep(.info), :deep(.header) {
+			min-width: 0;
+		}
+		:deep(.name) {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		:deep(.points) {
+			flex-shrink: 0;
+		}
 	}
 	#app.app .trophies {
 		grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
@@ -503,9 +575,9 @@ watch(sort_by, () => {
 			margin-bottom: 5px;
 		}
 		.points {
-			border: 1px solid #aaa;
+			border: 1px solid var(--grey-9);
 			padding: 1px 4px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			margin-left: 5px;
 			font-weight: 500;
 		}
@@ -521,18 +593,18 @@ watch(sort_by, () => {
 		.trophy-bar {
 			height: 10px;
 			position: relative;
-			background: white;
-			border-radius: 6px;
+			background: var(--white);
+			border-radius: var(--radius-medium);
 			margin-top: 6px;
-			border: 1px solid #ddd;
+			border: 1px solid var(--grey-12);
 			.bar {
 				height: 8px;
-				border-radius: 6px;
+				border-radius: var(--radius-medium);
 				position: absolute;
 				background: #30bb00;
 			}
 			&.full .bar {
-				background: #ddd;
+				background: var(--grey-12);
 			}
 		}
 		.unlock {
@@ -541,11 +613,11 @@ watch(sort_by, () => {
 			margin-top: 4px;
 		}
 		.date, .rarity {
-			color: #888;
+			color: var(--grey-7);
 			font-size: 13px;
 			font-style: italic;
 			.fight {
-				color: black;
+				color: var(--black);
 			}
 		}
 	}
@@ -557,11 +629,6 @@ watch(sort_by, () => {
 		.trophy-bar {
 			margin-left: 0;
 			width: 100%;
-		}
-	}
-	.trophy.locked {
-		.image {
-			opacity: 0.8;
 		}
 	}
 	.list-icon {

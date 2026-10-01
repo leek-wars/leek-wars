@@ -34,6 +34,7 @@
 	"error_weapon_already_equipped": "{0} już założył tę broń.",
 	"error_weapon_two_forgotten": "{0} ma już na wyposażeniu zapomnianą broń.",
 	"error_chip_already_equipped": "{0} już wyposażył ten chip.",
+	"error_component_already_equipped": "{0} już wyposażył ten komponent.",
 	"farmed_by": "Wychowany przez {farmer}",
 	"fights": "Walki",
 	"garden": "Ogród",

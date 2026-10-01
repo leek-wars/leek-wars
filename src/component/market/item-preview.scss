@@ -17,26 +17,41 @@
 	.name {
 		font-size: 17px;
 		white-space: nowrap;
+		// Un nom trop long (composants électroniques) débordait de la fiche et
+		// ajoutait une barre de défilement horizontale : il est coupé.
+		// `min-width: 0` est indispensable, sinon la largeur minimale
+		// automatique du flex empêche le titre de rétrécir.
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.rarity {
 		color: white;
 		font-size: 13px;
 		font-weight: 500;
 		padding: 4px 6px;
-		border-radius: 5px;
+		border-radius: var(--radius);
 	}
 	.level {
 		font-size: 15px;
 		white-space: nowrap;
+		flex-shrink: 0;
 	}
 	.image {
 		max-height: 140px;
 		background: var(--background);
 		padding: 15px;
-		& > * {
+		position: relative;
+		& > img, & > .scheme-image {
 			max-width: 100%;
 			max-height: 110px;
 			object-fit: scale-down;
+		}
+		// Jauge de charge d'un composant altere, en badge coin bas droit.
+		.charge {
+			position: absolute;
+			right: 8px;
+			bottom: 8px;
 		}
 	}
 	&.chip .image img {
@@ -82,7 +97,7 @@
 		display: inline-block;
 		vertical-align: middle;
 		margin-left: 8px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 	}
 	.ennemies {
 		background-color: red;
@@ -128,10 +143,17 @@
 		padding: 10px;
 		// Grille 2 colonnes (2x2 pour 4 poireaux) comme l'aperçu des chapeaux,
 		// sinon le flex retombait sur une seule ligne et débordait.
+		// Colonnes en `1fr` bornées à 0 et images qui rétrécissent : sinon un
+		// poireau à grande arme dépasse sa part de la carte (280 px) et l'aperçu
+		// se met à défiler à l'horizontale.
 		display: grid;
-		grid-template-columns: repeat(2, auto);
-		justify-content: center;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		justify-items: center;
 		align-items: end;
 		gap: 10px 14px;
+		svg {
+			max-width: 100%;
+			height: auto;
+		}
 	}
 }

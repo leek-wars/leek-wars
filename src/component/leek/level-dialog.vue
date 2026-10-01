@@ -64,7 +64,7 @@
 					<h4><v-icon>mdi-chip</v-icon> {{ $t('new_chips') }}</h4>
 					<div class="available-market">{{ $t('available_on_market') }}</div>
 					<div v-for="chip of levelData.chips" :key="chip" class="chip">
-						<img :src="'/image/chip/' + chip + '.png'"><br>
+						<img :src="chipImageUrl(chip)"><br>
 						<div class="name">{{ $t('chip.' + chip) }}</div>
 					</div>
 				</div>
@@ -93,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+import { chipImageUrl } from '@/model/item'
 import { mixins } from '@/model/i18n'
 import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
@@ -102,8 +103,11 @@ defineOptions({ name: 'LevelDialog', i18n: {}, mixins: [...mixins] })
 interface LevelData {
 	level: number
 	gains: { life: number, capital: number, [key: string]: number }
-	weapons: number[]
-	chips: number[]
+	// Des NOMS, pas des identifiants, sans leur préfixe de catégorie (`chip_`). Le type
+	// disait `number[]` et personne ne s'en apercevait tant que la vue ne faisait que
+	// concaténer.
+	weapons: string[]
+	chips: string[]
 	new_chip: boolean
 	new_weapon: boolean
 	[key: string]: unknown

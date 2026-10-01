@@ -41,6 +41,7 @@
 	"potions": "물약",
 	"price": "가격",
 	"resell": "재판매",
+	"scheme_required": "다이어그램을 보유하고 있지 않습니다",
 	"schemes": "다이어그램",
 	"sell": "판매",
 	"summon_available_chips": "장착된 칩",

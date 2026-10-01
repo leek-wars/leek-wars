@@ -22,8 +22,8 @@ defineProps<{
 
 <style lang="scss" scoped>
 	.kill {
-		border: 3px solid #000;
-		border-radius: 5px;
+		border: 3px solid var(--black);
+		border-radius: var(--radius);
 		padding: 2px 3px;
 		margin-left: -5px;
 		display: table;

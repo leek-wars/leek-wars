@@ -18,6 +18,7 @@
 	"click_to_change_country": "Haga clic para cambiar",
 	"connected": "Conectado",
 	"contributor": "Contribuyente",
+	"referent": "Referente",
 	"country_ok": "Retorno",
 	"country_selection": "Selección de país",
 	"create": "Crear",
@@ -131,5 +132,7 @@
 	"aposteriori_title": "Recompensas de padrinazgo por reclamar",
 	"aposteriori_desc": "El sistema de recompensas de padrinazgo es reciente: reclama las de tus ahijados y tu padrino.",
 	"aposteriori_claim": "Reclamar",
-	"aposteriori_claimed": "¡Recompensas recibidas!"
+	"aposteriori_claimed": "¡Recompensas recibidas!",
+	"linked_accounts": "{0} cuentas",
+	"linked_main": "principal"
 }

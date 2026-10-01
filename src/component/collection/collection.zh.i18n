@@ -1,5 +1,7 @@
 {
-	"missing_only": "仅显示缺失",
+	"missing_only": "仅显示未拥有",
 	"completed": "已完成",
-	"test_celebration": "测试动画（管理员）"
+	"test_celebration": "测试动画（管理员）",
+	"hide_paid": "隐藏付费物品",
+	"hide_unobtainable": "隐藏无法获得的物品"
 }

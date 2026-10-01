@@ -15,7 +15,7 @@
 			<br>
 			<div class="level">
 				<span class="flex">
-				{{ compo.leek_count }} <img class="icon" src="/image/icon/black/leek.png">
+				{{ compo.leek_count }} <v-icon class="icon">mdi-leek</v-icon>
 				</span>
 				{{ $t('main.level_n', [compo.total_level]) }}
 			</div>

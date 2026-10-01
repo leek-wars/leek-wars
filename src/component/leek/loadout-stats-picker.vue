@@ -5,6 +5,7 @@
 			<div>
 				<span :class="'stat color-' + c">{{ bonuses[c] }}</span>
 				<span v-if="modelValue[c]" class="sup">&nbsp;({{ modelValue[c] }})</span>
+				<span v-if="totals[c] != null && totals[c] !== bonuses[c]" :class="'total color-' + c">&nbsp;= {{ totals[c] }}</span>
 				<div class="add-wrapper">
 					<v-tooltip v-for="q in [1, 10, 100]" :key="q">
 						<template #activator="{ props }">
@@ -36,8 +37,10 @@ defineOptions({ name: 'LoadoutStatsPicker' })
 const props = withDefaults(defineProps<{
 	modelValue: LoadoutStats
 	max?: number
+	totals?: { [stat: string]: number }
 }>(), {
 	max: Infinity,
+	totals: () => ({}),
 })
 
 const emit = defineEmits<{
@@ -121,12 +124,20 @@ function clear(charac: string) {
 	padding: 10px 0;
 }
 .sup {
-	color: #555;
+	color: var(--grey-4);
+}
+.charac .stat,
+.charac .sup,
+.charac .total {
+	vertical-align: baseline;
+}
+.charac .total {
+	font-size: 14px;
 }
 img {
-	width: 40px;
-	height: 40px;
-	margin-right: 10px;
+	width: 30px;
+	height: 30px;
+	margin-right: 8px;
 }
 .add {
 	vertical-align: top;

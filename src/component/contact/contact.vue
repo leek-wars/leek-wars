@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>{{ t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="contact" fallback="mdi-card-account-mail" />
+				<div class="page-title-text">
+					<h1>{{ t('title') }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<div class="contact">
@@ -76,7 +81,7 @@ onBeforeMount(() => LeekWars.setTitle(t('title')))
 	padding: 26px 18px;
 	background: var(--background-secondary);
 	border: 1px solid var(--border);
-	border-radius: 8px;
+	border-radius: var(--radius-large);
 	color: var(--text-color);
 	text-decoration: none;
 	font-weight: 500;

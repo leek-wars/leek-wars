@@ -3,9 +3,9 @@
 		<h4>{{ $t('characteristic.characteristics') }}</h4>
 		<div class="characteristics">
 			<div class="summon-image">
-				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
+				<img :src="'/' + summonImage(summon.name)" width="width">
 			</div>
-			<div>
+			<div class="stats">
 				<characteristic-tooltip v-for="c of LeekWars.characteristics_table" :key="c" v-slot="{ props }" :characteristic="c" :value="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :total="c === 'frequency' || c === 'ram' || c === 'cores' ? 0 : summon.characteristics[c][1]" :leek="{ level: summon.level ?? 1 }" :test="true">
 					<div class="characteristic" v-bind="props">
 						<img :src="'/image/charac/' + c + '.png'" v-bind="props">
@@ -25,15 +25,17 @@
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
 			<rich-tooltip-item v-for="chip of summon.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" @update:model-value="$emit('update:modelValue', $event)">
-				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-bind="props">
+				<img :src="chipImageUrl(CHIPS[chip].name)" class="chip" v-bind="props">
 			</rich-tooltip-item>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { chipImageUrl } from '@/model/item'
 import { CHIPS as CHIPSImport } from '@/model/chips'
 import { LeekWars } from '@/model/leekwars'
+import { summonImage } from '@/model/summon'
 import { defineAsyncComponent } from 'vue'
 import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 
@@ -63,14 +65,38 @@ const CHIPS = CHIPSImport
 		background: var(--background-secondary);
 		display: block;
 	}
+	// Trois colonnes de même largeur : l'image, puis les deux colonnes de
+	// caractéristiques. Sans base fixe (`flex: 1 1 0`), sinon l'image garde ses
+	// 90 px et les stats prennent tout le reste.
 	.characteristics {
 		display: flex;
 		align-items: center;
 	}
-	.characteristic {
-		display: inline-block;
-		width: 50%;
-		padding: 2px 0;
+	.characteristics .stats {
+		flex: 2 1 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+	// L'ordre de characteristics_table est déjà entrelacé pour une lecture en
+	// deux colonnes ligne par ligne (vie | magie, force | fréquence...).
+	// Rangées resserrées : l'icône descend à 18 px, la hauteur de ligne est bornée
+	// et le rembourrage disparaît — la valeur reste alignée sur son icône.
+	// En flex : l'icône était `vertical-align: bottom` dans une boîte de ligne, et
+	// le jambage sous la ligne de base ajoutait une dizaine de pixels par rangée
+	// que ni le rembourrage ni la hauteur de ligne ne pouvaient reprendre.
+	// Sélecteur en trois classes : item-preview.scss (non scopé) pose 5 px de
+	// rembourrage sur chaque `.stats div`, ce qui faisait le plus gros du pas de
+	// 31 px, et peint les enfants de `.stats` en alternance --pure-white /
+	// --background-secondary. En v3 les deux jetons se confondent ; en v2 (#fff
+	// contre #eee) la grille sortait en damier blanc sur le fond gris.
+	.summon .characteristics .characteristic {
+		width: auto;
+		padding: 0;
+		background: none;
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		line-height: 1.1;
 	}
 	.summon h4 {
 		padding: 8px;
@@ -78,7 +104,7 @@ const CHIPS = CHIPSImport
 		font-size: 15px;
 	}
 	.summon-image {
-		flex: 1 0 90px;
+		flex: 1 1 0;
 		text-align: center;
 		max-height: 120px;
 	}
@@ -88,20 +114,34 @@ const CHIPS = CHIPSImport
 	.summon .characteristics {
 		text-align: left;
 	}
-	.summon .characteristic span {
-		display: inline-block;
-		margin-top: 2px;
-		vertical-align: top;
-		margin-left: 2px;
+	// L'écart à l'icône vient maintenant du `gap` de la rangée (7 px, comme le
+	// panneau de la page poireau), plus des marges à additionner.
+	.summon .characteristic > span {
 		font-weight: bold;
 	}
 	.summon .characteristic img {
-		width: 20px;
-		vertical-align: bottom;
+		width: 18px;
+		display: block;
+		flex: none;
 	}
+	// L'activateur de l'infobulle est un <span> inline : sur une image de 50 px il
+	// ne mesurait que la hauteur de ligne (19 px) et son bas tombait 7 px SOUS
+	// l'image. L'infobulle s'ancrait donc à ce bas fantôme, et le trou entre
+	// l'icône et la carte la refermait dès qu'on y passait la souris. En flex,
+	// le span épouse l'image.
+	.summon .chips {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 6px;
+		padding: 3px;
+	}
+	// display:block, et l'écart par `gap` plutôt que par une marge : l'image
+	// reste inline sinon, et le <span> activateur garde sous elle l'espace du
+	// jambage de la ligne. C'est à ce bas fantôme que l'infobulle s'ancrait.
 	.summon .chips .chip {
+		display: block;
 		width: 50px;
 		height: 50px;
-		margin: 3px;
 	}
 </style>
