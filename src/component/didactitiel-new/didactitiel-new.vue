@@ -30,7 +30,7 @@
 						<template #help><router-link to="/encyclopedia">{{ $t('main.help') }}</router-link></template>
 						<template #tutorial><router-link :to="'/encyclopedia/' + $i18n.locale + '/' + $t('main.tutorial').replace(/ /g, '_')">{{ $t('main.tutorial') }}</router-link></template>
 					</i18n-t>
-					<i18n-t class="text" keypath="main.dida_11" tag="div">
+					<i18n-t v-if="$store.state.farmer?.verified" class="text" keypath="main.dida_11" tag="div">
 						<template #chat><router-link to="/messages">{{ $t('main.chat') }}</router-link></template>
 						<template #forum><router-link to="/forum">{{ $t('main.forum') }}</router-link></template>
 					</i18n-t>
@@ -111,7 +111,7 @@ const closed = complete
 .bubble {
 	background: var(--pure-white);
 	padding: 20px 30px;
-	border-radius: 7px;
+	border-radius: var(--radius-medium);
 	position: relative;
 	margin-bottom: 100px;
 	width: 530px;
@@ -134,7 +134,7 @@ const closed = complete
 		transform: scale(1);
 	}
 	.text a {
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: 500;
 	}
 	img {

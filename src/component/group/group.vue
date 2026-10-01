@@ -1,8 +1,13 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1 v-if="group">{{ group.name }}</h1>
-			<h1 v-else>{{ $t('main.group') }}</h1>
+			<div class="page-title">
+				<page-icon name="group" fallback="mdi-account-group" />
+				<div class="page-title-text">
+					<h1 v-if="group">{{ group.name }}</h1>
+					<h1 v-else>{{ $t('main.group') }}</h1>
+				</div>
+			</div>
 
 			<!-- <div v-if="group && group.is_supervisor" class="tabs">
 				<div class="tab action" icon="question_answer" @click="settingsDialog = true">
@@ -25,6 +30,9 @@
 			</router-link>
 		</div>
 
+		<!-- Superviseur et chat côte à côte quand la largeur le permet : le
+		     conteneur replie en une colonne sous 800 px environ, comme partout. -->
+		<div class="container large">
 		<panel class="first">
 			<loader v-if="!group" />
 			<div v-else>
@@ -34,8 +42,7 @@
 					<!-- <div class="flex name" v-bind="props" v-ripple>
 						<avatar :farmer="item" />
 						<span>{{ item.name }}</span>
-						<img v-if="item.connected" class="status" src="/image/connected.png">
-						<img v-else class="status" src="/image/disconnected.png">
+						<lw-status :online="item.connected" class="status" />
 					</div> -->
 					<router-link :to="'/farmer/' + group.owner.id">
 						<div v-ripple class="card member" v-bind="props">
@@ -43,8 +50,7 @@
 							<div class="info">
 								<div class="name">
 									<b>{{ group.owner.name }}</b>
-									<img v-if="group.owner.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="group.owner.connected" class="status" />
 								</div>
 								<div class="level">{{ $t('main.level_n', [group.owner.total_level]) }}</div>
 							</div>
@@ -66,12 +72,12 @@
 						{{ $t('3_members_min') }}
 					</v-tooltip>
 					<router-link v-if="group.tournament" :to="'/tournament/' + group.tournament">
-						<v-btn color="primary"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('see_tournament') }}</v-btn>
+						<v-btn color="primary"><v-icon>mdi-tournament</v-icon>&nbsp;{{ $t('see_tournament') }}</v-btn>
 					</router-link>
 					<v-tooltip v-else :disabled="group.members.length >= 4">
 						<template #activator="{ props }">
 							<span v-bind="props">
-								<v-btn :disabled="group.members.length < 4" @click="startTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_tournament') }}</v-btn>
+								<v-btn :disabled="group.members.length < 4" @click="startTournament"><v-icon>mdi-tournament</v-icon>&nbsp;{{ $t('start_tournament') }}</v-btn>
 							</span>
 						</template>
 						{{ $t('4_members_min') }}
@@ -80,7 +86,7 @@
 					<v-tooltip v-if="!group.tournament" :disabled="group.members.length >= 4">
 						<template #activator="{ props }">
 							<span v-bind="props">
-								<v-btn :disabled="group.members.length < 4" @click="startTeamTournament"><v-icon>mdi-trophy</v-icon>&nbsp;{{ $t('start_team_tournament') }}</v-btn>
+								<v-btn :disabled="group.members.length < 4" @click="startTeamTournament"><v-icon>mdi-tournament</v-icon>&nbsp;{{ $t('start_team_tournament') }}</v-btn>
 							</span>
 						</template>
 						{{ $t('4_members_min') }}
@@ -89,7 +95,7 @@
 			</div>
 		</panel>
 
-		<panel v-if="group && group.setting_chat" :title="$t('main.chat')" toggle="group/chat" icon="mdi-chat-outline">
+		<panel v-if="group && group.setting_chat" :title="$t('main.chat')" toggle="group/chat" icon="mdi-chat">
 			<template #actions>
 				<div v-if="!LeekWars.mobile && group && $store.state.chat[group.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[group.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
@@ -99,6 +105,7 @@
 				<chat :id="group.chat" />
 			</template>
 		</panel>
+		</div>
 
 
 		<panel v-if="group" toggle="group/members" icon="mdi-account-group">
@@ -136,8 +143,7 @@
 									<div v-ripple class="flex name" v-bind="props">
 										<avatar :farmer="item" />
 										<span>{{ item.name }}</span>
-										<img v-if="item.connected" class="status" src="/image/connected.png">
-										<img v-else class="status" src="/image/disconnected.png">
+										<lw-status :online="item.connected" class="status" />
 									</div>
 								</rich-tooltip-farmer>
 							</router-link>
@@ -246,7 +252,7 @@
 
 					<rich-tooltip-item v-for="chip in group.chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true">
 						<div class="chip" v-bind="props">
-							<img :src="'/image/' + LeekWars.items[chip].name.replace('_', '/') + '.png'">
+							<img :src="itemImageUrl(LeekWars.items[chip])">
 							<v-tooltip v-if="LeekWars.items[chip].level > group.level">
 								<template #activator="{ props }">
 									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
@@ -271,7 +277,7 @@
 					<fights-history :fights="group.fights" />
 				</template>
 			</panel>
-			<panel v-if="group && group.tournaments && group.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+			<panel v-if="group && group.tournaments && group.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-tournament">
 				<template #content>
 					<tournaments-history :tournaments="group.tournaments" :show-time="true" />
 				</template>
@@ -280,17 +286,18 @@
 
 		<div v-if="group && group.is_supervisor" class="container last">
 			<panel :title="$t('settings')" icon="mdi-cog-outline">
-				<v-switch v-model="group.setting_chat" :label="$t('setting_chat')" hide-details @change="updateSettingChat" />
+				<lw-switch v-model="group.setting_chat" :label="$t('setting_chat')" @change="updateSettingChat" />
+				<lw-switch v-model="group.use_passwords" :label="$t('setting_use_passwords')" @change="updateUsePasswords" />
 			</panel>
 			<panel :title="$t('member_options')" icon="mdi-cog-outline">
-				<v-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
-				<v-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" />
-				<v-switch v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" />
-				<v-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" />
-				<v-switch v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" />
-				<v-switch v-model="group.setting_new_leek" hide-details :label="$t('new_leek')" @change="updateNewLeek" />
-				<v-switch v-model="group.setting_xp_blocked" hide-details :label="$t('main.xp_blocked')" @change="updateXpBlocked" />
-				<v-switch v-model="group.setting_equipment_blocked" hide-details :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" />
+				<lw-switch v-model="group.setting_public_chat" :label="$t('setting_public_chat')" @change="updateSettingPublicChat" />
+				<lw-switch v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" @change="updateSettingBuyFights" />
+				<lw-switch v-model="group.setting_bank" :label="$t('setting_bank')" @change="updateSettingBank" />
+				<lw-switch v-model="group.setting_tournaments" :label="$t('setting_tournaments')" @change="updateSettingTournaments" />
+				<lw-switch v-model="group.setting_br" :label="$t('setting_br')" @change="updateSettingBr" />
+				<lw-switch v-model="group.setting_new_leek" :label="$t('new_leek')" @change="updateNewLeek" />
+				<lw-switch v-model="group.setting_xp_blocked" :label="$t('main.xp_blocked')" @change="updateXpBlocked" />
+				<lw-switch v-model="group.setting_equipment_blocked" :label="$t('equipment_blocked')" @change="updateEquipmentBlocked" />
 			</panel>
 		</div>
 
@@ -372,21 +379,21 @@
 			-->
 			<!-- <br><br> -->
 			<h4>{{ $t('main_options') }}</h4>
-			<v-checkbox v-model="group.setting_chat" :label="$t('setting_chat')" hide-details />
+			<lw-checkbox v-model="group.setting_chat" :label="$t('setting_chat')" />
 			<br>
 
 			<h4>{{ $t('member_options') }}</h4>
-			<!-- <v-checkbox v-model="group.setting_trophies" :label="$t('setting_trophies')" hide-details /> -->
-			<v-checkbox v-model="group.setting_public_chat" :label="$t('setting_public_chat')" hide-details @change="updateSettingPublicChat" />
-			<v-checkbox v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" hide-details @change="updateSettingBuyFights" />
-			<v-checkbox v-model="group.setting_bank" :label="$t('setting_bank')" hide-details @change="updateSettingBank" />
-			<v-checkbox v-model="group.setting_tournaments" :label="$t('setting_tournaments')" hide-details @change="updateSettingTournaments" />
-			<v-checkbox v-model="group.setting_br" :label="$t('setting_br')" hide-details @change="updateSettingBr" />
+			<!-- <lw-checkbox v-model="group.setting_trophies" :label="$t('setting_trophies')" /> -->
+			<lw-checkbox v-model="group.setting_public_chat" :label="$t('setting_public_chat')" @change="updateSettingPublicChat" />
+			<lw-checkbox v-model="group.setting_buy_fights" :label="$t('setting_buy_fights')" @change="updateSettingBuyFights" />
+			<lw-checkbox v-model="group.setting_bank" :label="$t('setting_bank')" @change="updateSettingBank" />
+			<lw-checkbox v-model="group.setting_tournaments" :label="$t('setting_tournaments')" @change="updateSettingTournaments" />
+			<lw-checkbox v-model="group.setting_br" :label="$t('setting_br')" @change="updateSettingBr" />
 		</popup>
 
 		<popup v-if="group" v-model="weaponsDialog" :width="800">
 			<template #icon>
-				<img src="/image/icon/garden.png">
+				<v-icon>mdi-pistol</v-icon>
 			</template>
 			<template #title>
 				{{ $t('weapons_of', [group.name]) }}
@@ -427,7 +434,7 @@
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
 						<div :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-bind="props" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
-							<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" draggable="false">
+							<img :src="chipImageUrl(CHIPS[chip].name)" draggable="false">
 							<v-tooltip v-if="LeekWars.items[chip].level > group.level">
 								<template #activator="{ props }">
 									<v-icon v-bind="props" class="card alert">mdi-alert-circle</v-icon>
@@ -442,7 +449,7 @@
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
 					<rich-tooltip-item v-for="chip in farmer_chips" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" :nodge="true">
 						<div :class="{dragging: draggedChip && draggedChip === chip && draggedChipLocation === 'farmer', locked: CHIPS[chip].level > group.level || group.chips.find(c => c === chip) }" :draggable="CHIPS[chip].level <= group.level" class="chip" v-bind="props" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
-							<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" draggable="false">
+							<img :src="chipImageUrl(CHIPS[chip].name)" draggable="false">
 						</div>
 					</rich-tooltip-item>
 				</div>
@@ -506,7 +513,7 @@
 				<v-window-item :value="'tab-' + 1" class="content grid chips-popup farmer-chips">
 					<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true" :nodge="true">
 						<div class="chip" @click="giveItemConfirm(chip.id)">
-							<img :src="'/image/chip/' + chip.name + '.png'" v-bind="props">
+							<img :src="chipImageUrl(chip.name)" v-bind="props">
 						</div>
 					</rich-tooltip-item>
 				</v-window-item>
@@ -577,6 +584,7 @@
 </template>
 
 <script setup lang="ts">
+	import { itemImageUrl, chipImageUrl } from '@/model/item'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Member } from '@/model/farmer'
@@ -596,7 +604,7 @@
 	import { computed, defineAsyncComponent, reactive, ref, useTemplateRef } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const FightsHistory = defineAsyncComponent(() => import('@/component/history/fights-history.vue'))
 	const TournamentsHistory = defineAsyncComponent(() => import('@/component/history/tournaments-history.vue'))
@@ -773,6 +781,7 @@
 	}
 
 	function updateSettingChat() { settingPut('chat', group.value!.setting_chat) }
+	function updateUsePasswords() { settingPut('use-passwords', group.value!.use_passwords) }
 	function updateSettingBank() { settingPut('bank', group.value!.setting_bank) }
 	function updateSettingPublicChat() { settingPut('public-chat', group.value!.setting_public_chat) }
 	function updateSettingBuyFights() { settingPut('buy-fights', group.value!.setting_buy_fights) }
@@ -1111,7 +1120,7 @@
 	background: var(--background);
 	border: 1px solid var(--primary);
 	border-left: 4px solid var(--primary);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 12px 18px;
 	margin-bottom: 10px;
 	.demo-banner-text {
@@ -1202,9 +1211,6 @@ input[type="text"], input[type="email"] {
 		width: 34px;
 	}
 }
-.status {
-	width: 15px;
-}
 .characteristics {
 	max-width: 370px;
 	.characteristic {
@@ -1223,7 +1229,7 @@ input[type="text"], input[type="email"] {
 			display: inline-block;
 			font-weight: bold;
 			padding: 2px 4px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			min-width: 120px;
 			margin-right: 10px;
 			border: 1px solid #0000;
@@ -1252,7 +1258,7 @@ body.dark .characteristic.frequency img {
 			margin-bottom: 10px;
 			button {
 				font-size: 20px;
-				color: #555;
+				color: var(--grey-4);
 			}
 		}
 		.level {
@@ -1339,7 +1345,7 @@ body.dark .characteristic.frequency img {
 }
 .alert {
 	color: red;
-	background: white;
+	background: var(--white);
 	border-radius: 50%;
 	padding: 1px;
 	z-index: 1;

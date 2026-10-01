@@ -41,6 +41,12 @@ const url = computed(() => props.code ? '/image/flag/' + props.code + '.png?2' :
 			height: auto;
 			border-radius: calc(1px + 6%);
 			box-shadow: 0 1px 2px 0 #0003;
+			/* v3 : angles francs, et l'ombre floue laisse la place au trait —
+			   c'est le liseré ::before qui détache le drapeau du fond. */
+			body:not(.v2) & {
+				border-radius: 0;
+				box-shadow: none;
+			}
 		}
 		&:before {
 			content: "";
@@ -55,6 +61,15 @@ const url = computed(() => props.code ? '/image/flag/' + props.code + '.png?2' :
 			box-sizing: border-box;
 			border: 1px solid rgba(0,0,0,.1);
 			border-radius: calc(1px + 6%);
+		}
+		/* Le liseré d'origine est un noir à 10 % en `multiply` : juste sur une
+		   page claire, invisible sur le presque-noir du v3, où un drapeau sombre
+		   se fondait dans le fond. Il passe au trait du thème, en composition
+		   normale. */
+		body:not(.v2) &:before {
+			mix-blend-mode: normal;
+			border-color: var(--border-strong);
+			border-radius: 0;
 		}
 	}
 </style>

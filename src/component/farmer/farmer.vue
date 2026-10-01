@@ -4,14 +4,17 @@
 	<error v-else-if="farmer && farmer.deleted" :title="$t('deleted')" :message="$t('deleted_message')" />
 	<div v-else class="page">
 		<div class="page-header page-bar">
-			<div>
-				<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ props }" :bottom="true">
-					<h1 v-bind="props">{{ farmer.name }}</h1>
-				</rich-tooltip-farmer>
-				<h1 v-else>...</h1>
-				<div class="info state">
-					<span v-if="displayConnected"><img src="/image/connected.png">{{ $t('connected') }}</span>
-					<span v-else><img src="/image/disconnected.png">{{ $t('disconnected') }}</span>
+			<div class="page-title">
+				<page-icon name="farmer" fallback="mdi-account" />
+				<div class="page-title-text">
+					<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ props }" :bottom="true">
+						<h1 v-bind="props">{{ farmer.name }}</h1>
+					</rich-tooltip-farmer>
+					<h1 v-else>...</h1>
+					<div class="info state">
+						<span v-if="displayConnected"><lw-status :online="true" />{{ $t('connected') }}</span>
+						<span v-else><lw-status :online="false" />{{ $t('disconnected') }}</span>
+					</div>
 				</div>
 			</div>
 			<div v-if="farmer" class="tabs">
@@ -24,7 +27,7 @@
 					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && $store.getters.leek_count >= 2" content-class="fluid" @update:model-value="loadTournamentRange()">
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props">
-								<v-icon>mdi-trophy</v-icon>
+								<v-icon>mdi-tournament</v-icon>
 								<span v-if="farmer.tournament && !farmer.tournament.registered" class="register" @click="registerTournament">{{ $t('register_to_tournament') }}</span>
 								<span v-else class="unregister" @click="registerTournament">{{ $t('unregister') }}</span>
 							</div>
@@ -41,7 +44,7 @@
 					</v-tooltip>
 					<div v-if="$store.getters.leek_count >= 2" class="tab" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
-						<v-switch :model-value="farmer.in_garden" hide-details />
+						<lw-switch :model-value="farmer.in_garden" />
 					</div>
 					<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" @click="logout">
 						<v-icon>mdi-power</v-icon>
@@ -103,7 +106,9 @@
 						</div>
 						<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'">
 							<div class="info">
-								<img class="flag" src="/image/forum.png"><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
+								<!-- Glyphes mdi et non des PNG : un PNG sombre
+							     disparaissait sur le thème sombre, le glyphe suit l'encre. -->
+							<v-icon>mdi-forum</v-icon><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
 							</div>
 						</router-link>
 						<div class="info country">
@@ -114,12 +119,12 @@
 							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
 						<div v-if="safeWebsite" class="info website">
-							<img src="/image/website.png"><a :href="safeWebsite" target="_blank" rel="noopener"><span class="text label">{{ safeWebsite }}</span></a>
+							<v-icon>mdi-web</v-icon><a :href="safeWebsite" target="_blank" rel="noopener"><span class="text label">{{ safeWebsite }}</span></a>
 							<span v-if="myFarmer" class="edit" @click="websiteDialog = true"></span>
 						</div>
 						<div v-else-if="myFarmer" class="add add-website" @click="websiteDialog = true">{{ $t('add_website') }}</div>
 						<div v-if="farmer.github" class="info github">
-							<img src="/image/github.png"><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">github.com/{{ farmer.github }}</span></a>
+							<v-icon>mdi-github</v-icon><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">github.com/{{ farmer.github }}</span></a>
 							<span v-if="myFarmer" class="edit" @click="githubDialog = true"></span>
 						</div>
 						<div v-else-if="myFarmer" class="add add-github" @click="githubDialog = true">{{ $t('add_github') }}</div>
@@ -138,7 +143,35 @@
 					<div v-if="farmer" class="grades">
 						<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
 						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
-						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+						<div v-if="farmer.referent" class="grade referent">{{ $t('referent') }}</div>
+						<div v-else-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+						<!-- Orthogonal aux autres grades, donc pas de v-else-if.
+						     Le « + » doré au lieu du texte, et il mène à la page LW+. Pas de
+						     clé i18n, « LW+ » est un nom de marque. -->
+						<v-tooltip v-if="farmer.lwplus" location="bottom">
+							<template #activator="{ props }">
+								<router-link to="/lwplus" class="grade lwplus" v-bind="props">
+									<img src="/image/lwplus/plus_badge.webp" alt="LW+" width="128" height="128">
+								</router-link>
+							</template>
+							<span>Leek Wars +</span>
+						</v-tooltip>
+						<!-- Comptes déclarés du joueur. C'est la contrepartie visible
+						     de la déclaration — l'afficher est tout l'objet du dispositif. -->
+						<v-menu v-if="farmer.linked_accounts && farmer.linked_accounts.length > 1" location="bottom">
+							<template #activator="{ props }">
+								<div class="grade linked" v-bind="props">
+									<v-icon>mdi-account-multiple</v-icon>
+									<span>{{ $t('linked_accounts', [farmer.linked_accounts.length]) }}</span>
+								</div>
+							</template>
+							<div class="linked-accounts-menu">
+								<router-link v-for="account in farmer.linked_accounts" :key="account.id" :to="'/farmer/' + account.id" class="linked-account">
+									<span>{{ account.name }}</span>
+									<span v-if="account.main" class="main">{{ $t('linked_main') }}</span>
+								</router-link>
+							</div>
+						</v-menu>
 					</div>
 
 
@@ -183,7 +216,7 @@
 							<td class="grey">
 								<v-tooltip>
 									<template #activator="{ props }">
-										<v-icon v-bind="props">mdi-trophy-outline</v-icon>
+										<v-icon v-bind="props">mdi-tournament</v-icon>
 									</template>
 									{{ $t('tournaments') }}
 								</v-tooltip>
@@ -195,7 +228,7 @@
 						</tr>
 					</table>
 
-					<Line v-if="farmer && chartData && chartOptions && Object.values(farmer.leeks).length > 1" :data="chartData" :options="chartOptions" class="talent-history" />
+					<talent-chart v-if="farmer && Object.values(farmer.leeks).length > 1" :history="farmer.talent_history" :history-long="farmer.talent_history_long" :current="farmer.talent" />
 
 					<div v-if="farmer" class="godfather grey">
 						<div v-if="farmer.godfather">
@@ -285,13 +318,16 @@
 				</div></template>
 			</panel>
 		</div>
-		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies">
+		<!-- Le glyphe passe par la prop `icon` et non par le slot `#title` : le slot porte
+		     la portée de CE composant, donc la règle `i { margin-right: 7px }` de
+		     `panel.vue` (scopée) ne l'atteignait pas et la coupe restait collée au mot. -->
+		<panel v-if="farmer && farmer.trophies > 0" toggle="farmer/trophies" icon="mdi-trophy">
 			<template #title>
-				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ $filters.number(farmer.points) }})</span>
+				{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ $filters.number(farmer.points) }})</span>
 			</template>
 			<template #actions>
 				<router-link :to="'/trophies/' + id" class="button flat">
-					<img src="/image/icon/trophy.png">
+					<v-icon>mdi-trophy</v-icon>
 					<span>{{ $t('see_all_trophies') }}</span>
 				</router-link>
 				<div class="button flat" @click="trophiesModeButton">
@@ -331,9 +367,12 @@
 			</template>
 		</panel>
 
-		<panel :title="$t('leeks')">
+		<!-- Poireaux et parrainage côte à côte quand la largeur le permet : `.container`
+		     est un flex qui replie ses panneaux en dessous de leur base. -->
+		<div class="container grid large">
+		<panel :title="$t('leeks')" icon="mdi-leek">
 			<loader v-if="!farmer" />
-			<div v-else class="leeks">
+			<div v-else ref="leeksEl" class="leeks" :style="{'--columns': leekColumns}">
 				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
 					<router-link v-ripple :to="'/leek/' + leek.id" class="leek" v-bind="props">
 						<div>
@@ -429,10 +468,10 @@
 						</div>
 					</div>
 					<h4>{{ $t('main.rewards') }}</h4>
-					<div v-if="farmer" class="rewards">
+					<div v-if="farmer" ref="rewardsEl" class="rewards" :style="{'--columns': rewardColumns}">
 						<div v-for="(reward, r) of rewards" :key="r" class="reward card" :class="{'notif-trophy': Number(r) <= (farmer.godsons_level ?? 0)}">
 							<div class="level">{{ $filters.number(Number(r)) }}<v-icon v-if="Number(r) <= (farmer.godsons_level ?? 0)">mdi-check</v-icon></div>
-							<trophy-icon v-if="reward.trophy" :code="reward.trophy" />
+							<trophy-icon v-if="reward.trophy" :code="reward.trophy" :light="Number(r) <= (farmer.godsons_level ?? 0)" />
 							<rich-tooltip-item v-else-if="reward.resource" v-slot="{ props }" :item="LeekWars.items[reward.item!]" :bottom="true">
 								<img v-bind="props" :src="'/image/resource/' + reward.resource + '.png'">
 							</rich-tooltip-item>
@@ -453,6 +492,7 @@
 				</div>
 			</template>
 		</panel>
+		</div>
 
 		<div class="container grid large">
 			<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
@@ -464,13 +504,13 @@
 				</template>
 				<template #content>
 					<loader v-if="!farmer" />
-					<fights-history v-else :fights="farmer.fight_history" :progress="liveProgress" />
+					<fights-history v-else :fights="farmer.fight_history" :progress="liveProgress" full-rows />
 				</template>
 			</panel>
-			<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+			<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-tournament">
 				<template #content>
 					<loader v-if="!farmer" />
-					<tournaments-history v-else :tournaments="farmer.tournaments" />
+					<tournaments-history v-else :tournaments="farmer.tournaments" full-rows />
 				</template>
 			</panel>
 		</div>
@@ -494,7 +534,7 @@
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin" class="report-button tab" @click="showReport = true">
-					<img src="/image/icon/flag.png">
+					<v-icon>mdi-flag</v-icon>
 					<span>{{ $t('report') }}</span>
 				</div>
 				<template v-if="myFarmer && $store.state.farmer && $store.state.farmer.verified">
@@ -507,6 +547,10 @@
 					<div class="tab" @click="trophyDialog = true">
 						<v-icon>mdi-trophy-outline</v-icon>
 						Donner trophée
+					</div>
+					<div class="tab" @click="openGradeDialog()">
+						<v-icon>mdi-shield-account-outline</v-icon>
+						Changer le grade
 					</div>
 				</template>
 			</div>
@@ -553,7 +597,7 @@
 
 		<popup v-if="farmer" v-model="githubDialog" :width="500" :title="$t('add_github')">
 			<template #icon>
-				<img src="/image/github_white.png">
+				<v-icon>mdi-github</v-icon>
 			</template>
 			<div class="github-dialog">
 				<input v-model="newGitHub" type="text" class="input">
@@ -610,6 +654,22 @@
 			</template>
 		</popup>
 
+		<popup v-if="farmer" v-model="gradeDialog" :width="500" icon="mdi-shield-account-outline">
+			<template #title>Changer le grade de {{ farmer.name }}</template>
+
+			<div class="grade-options">
+				<label v-for="option in gradeOptions" :key="option.value" class="grade-option">
+					<input v-model="gradeChoice" type="radio" :value="option.value">
+					<span :class="option.color">{{ option.label }}</span>
+				</label>
+			</div>
+
+			<template #actions>
+				<div v-ripple @click="gradeDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="setGrade()">Valider</div>
+			</template>
+		</popup>
+
 		<v-tooltip v-if="trophyTooltip.show" v-model="trophyTooltip.show" :open-on-hover="false" location="bottom">
 			<template #activator="{ props }">
 				<div ref="trophyTooltipAnchor" v-bind="props" class="trophy-tooltip-anchor" :style="{ left: trophyTooltip.x + 'px', top: trophyTooltip.y + 'px' }"></div>
@@ -630,6 +690,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { useLiveHistory } from '@/model/use-live-history'
+	import { useBalancedColumns } from '@/model/use-balanced-columns'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Team, TeamMemberLevel } from '@/model/team'
@@ -643,9 +704,8 @@
 	import LwTitle from '@/component/title/title.vue'
 	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
 	import GodsonsManageDialog from '@/component/godsons-manage-dialog/godsons-manage-dialog.vue'
-	import { emitter } from '@/model/vue'
-	import { Line } from 'vue-chartjs'
-	import type { ChartData, ChartOptions } from 'chart.js'
+	import { emitter } from '@/model/emitter'
+	import TalentChart from '@/component/talent-chart.vue'
 	import { computed, defineAsyncComponent, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
@@ -655,7 +715,7 @@
 	const ReportDialog = defineAsyncComponent(() => import('@/component/moderation/report-dialog.vue'))
 
 	defineOptions({ name: 'Farmer', i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, Line, InviteDialog, GodsonsManageDialog,
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, TitlePicker, 'lw-title': LwTitle, 'rich-tooltip-item': RichTooltipItem, TalentChart, InviteDialog, GodsonsManageDialog,
 	} })
 
 	const { locale: i18nLocale } = useI18n()
@@ -665,6 +725,8 @@
 	const avatarRef = useTemplateRef<ComponentPublicInstance>('avatar')
 	const avatarInput = useTemplateRef<HTMLInputElement>('avatarInput')
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
+	const leeksEl = ref<HTMLElement | null>(null)
+	const rewardsEl = ref<HTMLElement | null>(null)
 
 	type Trophy = (typeof LeekWars.trophies)[number]
 	const farmer = ref<Farmer | null>(null)
@@ -716,9 +778,20 @@
 		5000: { potion: 'mafia', item: 282 },
 		10000: { hat: 'gold_fedora', item: 280 },
 	}
+	// Rangées équilibrées plutôt que remplies au maximum : dix récompenses dans
+	// neuf colonnes donnaient 9 + 1, quatre poireaux dans trois donnaient 3 + 1.
+	// Les minimums et les gouttières doivent suivre ceux de la feuille de style.
+	const leekColumns = useBalancedColumns(leeksEl, computed(() => farmer.value ? Object.keys(farmer.value.leeks).length : 0), 170, 8)
+	const rewardColumns = useBalancedColumns(rewardsEl, Object.keys(rewards).length, 90, 8)
+	const gradeDialog = ref(false)
+	// Distinction spéciale (champ special, 0/1/2). Le grade modo/admin se gère ailleurs.
+	const gradeOptions = [
+		{ value: 'none', label: "Aucune", color: '', special: 0 },
+		{ value: 'contributor', label: "Contributeur", color: 'contributor', special: 1 },
+		{ value: 'referent', label: "Référent", color: 'referent', special: 2 },
+	]
+	const gradeChoice = ref('none')
 	const invitationSent = ref(false)
-	const chartData = ref<ChartData<'line'> | null>(null)
-	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 
 	const id = computed<number | null>(() => route.params.id ? parseInt(route.params.id as string, 10) : (store.state.farmer ? store.state.farmer.id : null))
 	const myFarmer = computed(() => store.state.farmer && id.value === store.state.farmer.id)
@@ -802,6 +875,7 @@
 
 	watch(id, () => update(), { immediate: true })
 
+
 	// Mise à jour en direct du petit historique de combats. `update()` réutilise
 	// le store pour son propre profil (pas de refetch), donc on recharge ici
 	// directement le fight_history depuis le serveur.
@@ -859,11 +933,10 @@
 			])
 		} else {
 			LeekWars.setActions([
-				{image: 'icon/garden.png', click: () => router.push('/garden/challenge/farmer/' + f.id)},
+				{icon: 'mdi-flag-outline', click: () => router.push('/garden/challenge/farmer/' + f.id)},
 				{icon: 'mdi-email-outline', click: () => router.push('/chat/new/' + f.id + '/' + f.name + '/' + f.avatar_changed)}
 			])
 		}
-		chart()
 		getTrophies()
 		warnings()
 		newWebsite.value = f.website
@@ -903,34 +976,6 @@
 		} else {
 			trophiesMode.value = 'list'
 			localStorage.setItem('farmer/trophies-mode', 'list')
-		}
-	}
-
-	function chart() {
-		if (!farmer.value || !farmer.value.talent_history || farmer.value.talent_history.length === 0) return
-		const labels = []
-		const time = LeekWars.time
-		for (let i = 1; i <= 7; ++i) {
-			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
-		}
-		chartData.value = {
-			labels: labels.reverse(),
-			datasets: [
-				{
-					tension: 0.2,
-					data: farmer.value.talent_history,
-					borderColor: '#5fad1b',
-					pointBackgroundColor: '#5fad1b',
-					borderWidth: 2,
-					fill: { target: 'origin', above: '#5fad1b30' },
-				}
-			]
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} as any
-		chartOptions.value = {
-			aspectRatio: 2.5,
-			plugins: { legend: { display: false } },
-			elements: { point: { radius: 4, hoverRadius: 6 } },
 		}
 	}
 
@@ -1059,7 +1104,10 @@
 			return
 		}
 
-		LeekWars.fileToImage(file, avatarRef.value?.$el as Element)
+		// `$el` est l'enveloppe de l'avatar, pas l'image : c'est bien le <img>
+		// qu'il faut repeindre pour l'aperçu avant l'envoi.
+		const avatarImage = (avatarRef.value?.$el as HTMLElement | undefined)?.querySelector('img')
+		if (avatarImage) { LeekWars.fileToImage(file, avatarImage) }
 
 		const formdata = new FormData()
 		formdata.append('avatar', file)
@@ -1181,7 +1229,7 @@
 	function pickTitle(title: number[]) {
 		farmer.value!.title = title
 		titleDialog.value = false
-		LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+		LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0, gold: !!title[4]})
 		store.commit('set-title', title)
 	}
 
@@ -1220,6 +1268,33 @@
 				})
 				.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
 		}
+	}
+
+	function openGradeDialog() {
+		if (!farmer.value) return
+		// Détermine la distinction actuelle à partir des booléens exposés
+		if (farmer.value.referent) gradeChoice.value = 'referent'
+		else if (farmer.value.contributor) gradeChoice.value = 'contributor'
+		else gradeChoice.value = 'none'
+		gradeDialog.value = true
+	}
+
+	function setGrade() {
+		if (!farmer.value) return
+		const option = gradeOptions.find(o => o.value === gradeChoice.value)
+		if (!option) return
+		// On ne touche pas au grade modo/admin : on le conserve tel quel
+		const grade = farmer.value.admin ? 100 : (farmer.value.moderator ? 10 : 0)
+		LeekWars.post('farmer/set-grade', { farmer_id: farmer.value.id, grade, special: option.special })
+			.then(data => {
+				if (!farmer.value) return
+				farmer.value.referent = option.special === 2
+				farmer.value.contributor = option.special === 1
+				farmer.value.grade = data.color
+				gradeDialog.value = false
+				LeekWars.toast("Grade mis à jour !")
+			})
+			.error(error => LeekWars.toast(t('error_' + error.error, error.params)))
 	}
 
 	function toggleLike() {
@@ -1296,7 +1371,7 @@
 				max-height: 40px;
 			}
 			&:hover {
-				background: white;
+				background: var(--white);
 			}
 			h4 {
 				font-size: 14px;
@@ -1313,7 +1388,7 @@
 	}
 	.infos .add {
 		font-size: 13px;
-		color: #999;
+		color: var(--grey-8);
 		margin: 3px 0;
 		img {
 			width: 20px;
@@ -1327,7 +1402,7 @@
 	}
 	.infos .info {
 		padding: 1px;
-		color: #888;
+		color: var(--grey-7);
 		font-size: 14px;
 		word-break: break-all;
 		display: flex;
@@ -1335,10 +1410,13 @@
 		gap: 6px;
 	}
 	.infos .info a {
-		color: #888;
+		color: var(--grey-7);
 	}
 	.infos .info img, .infos .info .flag {
 		width: 20px;
+	}
+	.infos .info .v-icon {
+		font-size: 20px;
 	}
 	.infos .info .label {
 		line-height: 22px;
@@ -1380,7 +1458,7 @@
 	.team img {
 		width: 150px;
 		height: 150px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 	}
 	.talent-wrapper {
 		text-align: center;
@@ -1392,10 +1470,12 @@
 	.talent-more {
 		font-size: 18px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--grey-7);
 	}
-	.talent-history {
-		margin-top: 3px;
+	/* Même resserrement que sur la page du poireau : le gain du jour est une
+	   glose du talent, pas un second score. */
+	body:not(.v2) .talent-more {
+		font-size: 14px;
 	}
 	.stats {
 		vertical-align: top;
@@ -1423,7 +1503,7 @@
 			color: var(--text-color-secondary);
 		}
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		.v-icon {
 			color: var(--text-color-secondary);
@@ -1433,7 +1513,7 @@
 		margin-top: 10px;
 		padding: 0 15px;
 		font-size: 13px;
-		color: #999;
+		color: var(--grey-8);
 		text-align: left;
 	}
 	.grades {
@@ -1441,8 +1521,8 @@
 		text-align: left;
 	}
 	.grade {
-		border-radius: 5px;
-		color: white;
+		border-radius: var(--radius-medium);
+		color: var(--white);
 		display: inline-block;
 		padding: 3px 6px;
 		margin-top: 5px;
@@ -1458,6 +1538,74 @@
 	}
 	.grade.contributor {
 		background: #009c1d;
+	}
+	.grade.referent {
+		background: #2196f3;
+	}
+	// Le « + » doré en relief remplace la pastille de texte : plus de fond, l'image
+	// EST le badge, et elle mène à la page d'abonnement. Boîte en inline-flex
+	// de la même hauteur qu'une pastille de grade : une image en ligne s'aligne
+	// sur la BASE du texte voisin, pas sur son milieu, et le badge pendait.
+	.grade.lwplus {
+		background: none;
+		padding: 0;
+		height: 24px;
+		display: inline-flex;
+		align-items: center;
+		vertical-align: middle;
+		img {
+			// Le « + » seul, pas le logo entier : à côté d'une
+			// pastille de grade, il tient sa hauteur sans allonger la ligne.
+			width: 22px;
+			height: 22px;
+		}
+	}
+	// Les pastilles voisines se calent sur le même axe, sinon c'est le texte qui
+	// décroche du badge.
+	.grades .grade {
+		vertical-align: middle;
+	}
+	// Gris neutre volontaire — déclarer ses comptes n'est ni une
+	// distinction ni un avertissement, c'est une information.
+	.grade.linked {
+		background: #6b7a75;
+		cursor: pointer;
+		.v-icon {
+			font-size: 16px;
+			margin-right: 3px;
+		}
+	}
+	.linked-accounts-menu {
+		background: var(--background);
+		border: 1px solid var(--border);
+		padding: 4px 0;
+	}
+	.linked-account {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 12px;
+		color: var(--text-color);
+		&:hover {
+			background: var(--background-secondary);
+		}
+		.main {
+			color: var(--text-color-secondary);
+			font-size: 12px;
+		}
+	}
+	.grade-options {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 5px 0;
+	}
+	.grade-option {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		cursor: pointer;
+		font-size: 16px;
 	}
 	.avatar-wrapper {
 		position: relative;
@@ -1480,9 +1628,16 @@
 			pointer-events: none;
 		}
 	}
-	#app.app .leeks {
+	// Grille à rangées équilibrées (`--columns` vient de useBalancedColumns) : les
+	// poireaux flottaient en `inline-block`, donc 3 + 1 dès que le panneau se
+	// resserrait. Le mobile avait déjà sa grille, en `auto-fill` ; la règle vaut
+	// maintenant pour les deux, le calcul suit la largeur réelle du conteneur.
+	// `align-items: end` aligne les noms sous des poireaux de hauteurs inégales
+	// (chapeaux) — c'est ce que faisait déjà la grille du mobile.
+	.leeks {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+		grid-template-columns: repeat(var(--columns, 1), minmax(0, 1fr));
+		gap: 8px;
 		align-items: flex-end;
 	}
 	.leek {
@@ -1517,7 +1672,48 @@
 	}
 	.leek:hover {
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
+	}
+	// v3 : les mêmes états que les cartes du widget « Mes poireaux » de
+	// l'accueil, au lieu de l'aplat blanc et de l'ombre
+	// Material du v2 — `--pure-white` est le parchemin en clair et du noir en
+	// sombre, donc un survol qui ne se lit pas d'un thème à l'autre.
+	// Le liseré est posé transparent dès le repos : la carte ne bouge pas d'un
+	// pixel quand il s'allume.
+	body:not(.v2) {
+		.leek {
+			border: 1px solid transparent;
+			transition: background-color .12s ease, border-color .12s ease;
+		}
+		// Nom, titre, talent et niveau se touchaient sous le poireau. Les écarts sont
+		// portés par la colonne elle-même : une seule valeur à régler, et rien
+		// à additionner entre les marges de quatre blocs différents.
+		.leek > div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+		}
+		.leek .name {
+			line-height: 1.2;
+			max-width: 100%;
+		}
+		// Les marges du v2 feraient double emploi avec le `gap`.
+		.leek .talent-ranking {
+			margin: 0;
+			gap: 6px;
+		}
+		.leek img {
+			margin-bottom: 0;
+		}
+		.leek:hover {
+			background: var(--background-row);
+			border-color: var(--border-strong);
+			box-shadow: none;
+		}
+		.leek:active {
+			border-color: var(--primary);
+		}
 	}
 	.trophies-mode-button {
 		padding: 8px 10px;
@@ -1541,15 +1737,22 @@
 		aspect-ratio: 1;
 		vertical-align: bottom;
 	}
+	/* La date vit DANS l'infobulle : elle se pose sur --tooltip-color et pas sur
+	   le texte de la page. Un gris fixe (--grey-12, clair) se lisait sur
+	   l'infobulle sombre de la v2 mais disparaissait sur la claire de la v3. */
 	.trophy-date {
 		padding-top: 4px;
 		font-size: 13px;
 		font-style: italic;
-		color: #ddd;
+		color: inherit;
+		opacity: 0.7;
 	}
+	/* Même cas que la carte d'avertissement plus bas : la tuile de la vue grille
+	   peignait un `--white` fixe, crème dans les DEUX thèmes, sous le nom du
+	   trophée écrit à l'encre du thème. */
 	.trophies.grid .trophy {
-		background: white;
-		border: 1px solid #ddd;
+		background: var(--background-secondary);
+		border: 1px solid var(--border);
 	}
 	.trophies-bonus {
 		margin: 5px;
@@ -1563,13 +1766,17 @@
 		text-align: center;
 		padding-bottom: 20px;
 		.warning-title {
-			color: red;
+			color: var(--error);
 			margin-bottom: 15px;
 		}
+		/* La carte laisse `.card` poser sa surface : elle peignait un `--white`
+		   fixe, qui en v3 vaut le parchemin dans les DEUX thèmes. En sombre, le
+		   texte de la carte (encre claire du thème) tombait à 1,09 de contraste
+		   sur ce fond crème — illisible. Même chose pour les gris fixes de la
+		   date et de l'auteur, qui ne se lisent que sur une surface claire. */
 		.warning {
 			padding: 5px;
-			background: white;
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			width: 250px;
 			display: inline-block;
 			margin: 6px;
@@ -1579,11 +1786,11 @@
 			}
 			.date {
 				font-size: 12px;
-				color: #666;
+				color: var(--text-color-secondary);
 			}
 			.author {
 				font-size: 12px;
-				color: #666;
+				color: var(--text-color-secondary);
 			}
 		}
 	}
@@ -1666,7 +1873,7 @@
 	}
 	.sponsorship {
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		.godfather-manage .gf-row {
 			display: flex;
@@ -1708,7 +1915,7 @@
 			flex-wrap: wrap;
 			padding: 12px;
 			margin-bottom: 14px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			background: rgba(90, 194, 0, 0.12);
 			border: 1px solid var(--primary);
 			.ap-text {
@@ -1740,10 +1947,10 @@
 			.ap-claim {
 				cursor: pointer;
 				padding: 8px 18px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				font-weight: 500;
-				color: #fff;
-				background: var(--primary);
+				color: var(--primary-surface-text);
+				background: var(--primary-surface);
 				white-space: nowrap;
 				&:hover { filter: brightness(1.1); }
 			}
@@ -1780,12 +1987,12 @@
 			.req-action {
 				cursor: pointer;
 				padding: 6px 14px;
-				border-radius: 4px;
+				border-radius: var(--radius);
 				white-space: nowrap;
 				font-weight: 500;
 				&.accept {
-					color: #fff;
-					background: var(--primary);
+					color: var(--primary-surface-text);
+					background: var(--primary-surface);
 					&:hover { filter: brightness(1.1); }
 				}
 				&.refuse {
@@ -1798,7 +2005,9 @@
 			display: grid;
 			gap: 8px;
 			margin-top: 10px;
-			grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+			// Rangées équilibrées : `auto-fill` remplissait la première et laissait
+			// une ou deux récompenses seules sur la seconde.
+			grid-template-columns: repeat(var(--columns, 1), minmax(0, 1fr));
 			.reward {
 				flex: 1;
 				min-width: 0;
@@ -1806,7 +2015,7 @@
 				text-align: center;
 				font-weight: 500;
 				&.notif-trophy .v-icon {
-					color: black;
+					color: var(--black);
 				}
 				.level {
 					font-size: 18px;
@@ -1835,7 +2044,7 @@
 			background: var(--pure-white);
 			border: 1px solid var(--border);
 			position: relative;
-			border-radius: 5px;
+			border-radius: var(--radius-medium);
 			text-align: left;
 		}
 		.xp-bar {
@@ -1844,7 +2053,7 @@
 			display: inline-block;
 			vertical-align: top;
 			position: absolute;
-			border-radius: 5px;
+			border-radius: var(--radius-medium);
 			transition: all ease 0.3s;
 		}
 		.xp-bar.blue {

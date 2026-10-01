@@ -1,18 +1,31 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="garden" fallback="mdi-sword-cross" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<div v-if="garden" class="tabs">
-				<div class="tab action hidden disabled">
-					<img src="/image/icon/garden.png">
-					<span>{{ garden.fights }}</span>
-					<span v-if="$store.state.farmer?.team_fights">+ {{ $store.state.farmer.team_fights }}</span>
+				<v-tooltip>
+					<template #activator="{ props }">
+						<div v-bind="props" class="tab action counter hidden disabled">
+							<img class="restat-potion" src="/image/potion/restat.png">
+							<span>{{ restatPotionCount }}</span>
+						</div>
+					</template>
+					{{ $t('potion.restat') }}
+				</v-tooltip>
+				<div class="tab action counter hidden disabled">
+					<v-icon>mdi-sword-cross</v-icon>
+					<span>{{ garden.fights }}<template v-if="$store.state.farmer?.team_fights"> + {{ $store.state.farmer.team_fights }}</template></span>
 				</div>
 			</div>
 		</div>
 		<season-banner />
 		<div class="container last">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
+			<div class="column3 categories">
 				<panel class="garden-left first last">
 					<template #content>
 						<template v-if="category === 'challenge'">
@@ -95,8 +108,8 @@
 				</panel>
 			</div>
 
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<panel class="garden-right first last">
+			<div class="column9">
+				<panel class="garden-right first">
 					<loader v-if="!garden || !$store.state.farmer" />
 
 					<div v-else-if="category === 'challenge'">
@@ -135,6 +148,10 @@
 								</div>
 							</div>
 							<garden-no-fights v-else :canbuy="false" />
+						</div>
+						<div v-else-if="garden.my_compositions.length === 0" class="no-opponent">
+							<img src="/image/notgood.png">
+							<h4>{{ $t('no_composition') }}</h4>
 						</div>
 						<div v-else>
 							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_compo') }}</div>
@@ -179,10 +196,10 @@
 								<span class="title"><v-icon>mdi-arrow-left-right</v-icon> {{ $t('main.side') }}</span>
 								<span class="desc">{{ $t('main.side_desc') }}</span>
 							</div>
-							<v-radio-group v-model="side">
-								<v-radio value="left" :label="$t('main.side_left')"></v-radio>
-								<v-radio value="right" :label="$t('main.side_right')"></v-radio>
-							</v-radio-group>
+							<lw-radio-group v-model="side">
+								<lw-radio value="left" :label="$t('main.side_left')"></lw-radio>
+								<lw-radio value="right" :label="$t('main.side_right')"></lw-radio>
+							</lw-radio-group>
 						</div>
 					</div>
 					<div v-else>
@@ -214,9 +231,6 @@
 									<img src="/image/notgood.png">
 									<h4>{{ $t(leekErrors[selectedLeek.id]) }}</h4>
 								</div>
-								<div v-if="$store.getters.admin && leekOpponents[selectedLeek.id] && leekOpponents[selectedLeek.id].length" class="solo-batch">
-									<v-btn color="primary" :loading="batchLoading" @click="batchSoloAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
-								</div>
 							</div>
 							<garden-no-fights v-else-if="!garden.fights" :canbuy="true" @bought="reload" />
 						</div>
@@ -238,9 +252,6 @@
 								<div v-if="farmerOpponents && !farmerOpponents.length" class="no-opponent">
 									<img src="/image/notgood.png">
 									<h4>{{ $t('no_opponent_of_your_size') }}</h4>
-								</div>
-								<div v-if="$store.getters.admin && farmerOpponents && farmerOpponents.length" class="solo-batch">
-									<v-btn color="primary" :loading="batchLoading" @click="batchFarmerAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
 								</div>
 							</div>
 							<garden-no-fights v-else :canbuy="true" @bought="reload" />
@@ -285,19 +296,18 @@
 										<garden-leek :leek="leek" />
 									</router-link>
 								</div>
-								<br>
 								<div class="arena-preferences">
 									<h4>{{ $t('arena_preference') }}</h4>
-									<v-radio-group v-model="arenaPreference" inline hide-details>
-										<v-radio :label="$t('arena_no_preference')" :value="-1" />
-										<v-radio :label="$t('arena_mode_br')" :value="0" />
-										<v-radio :label="$t('arena_mode_war')" :value="1" />
-										<v-radio :label="$t('arena_mode_chest_hunt')" :value="2" />
-										<v-radio :label="$t('arena_mode_colossus')" :value="3" />
-									</v-radio-group>
+									<div class="modes">
+										<div v-for="mode of ARENA_PREFERENCES" :key="mode" v-ripple :class="{selected: arenaPreference === mode}" class="mode" @click="arenaPreference = mode">
+											<v-icon>{{ modeIcon(mode) }}</v-icon>
+											<span>{{ modeLabel(mode) }}</span>
+										</div>
+									</div>
 								</div>
-								<br>
-								<v-btn v-if="garden.fights" color="primary" :disabled="!arenaEnabled" @click="arenaRegister">{{ $t('main.select') }}</v-btn>
+								<div v-if="garden.fights" class="arena-register">
+									<v-btn color="primary" size="large" :disabled="!arenaEnabled" @click="arenaRegister"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('main.select') }}</v-btn>
+								</div>
 								<garden-no-fights v-else :canbuy="true" @bought="reload" />
 								<div v-if="garden.fights && liveArenaCount > 0" class="arena-live">
 									<div class="arena-live-count">
@@ -418,7 +428,6 @@
 										</div>
 										<div class="attack-buttons">
 											<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
-											<v-btn v-if="$store.getters.admin" color="primary" :loading="batchLoading" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="batchAttack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;x10</v-btn>
 										</div>
 									</div>
 								</div>
@@ -426,6 +435,11 @@
 						</div>
 					</div>
 				</panel>
+				<garden-batch v-if="batchLauncher || batchLoading || batchFights.length" :ids="batchFights" :launching="batchLoading" @close="closeBatch">
+					<template #launch>
+						<garden-fast-fight v-if="batchLauncher" :loading="batchLoading" :disabled="batchLauncher.disabled" :disabled-reason="batchLauncher.reason" @launch="batchLauncher.launch" />
+					</template>
+				</garden-batch>
 			</div>
 		</div>
 	</div>
@@ -433,16 +447,20 @@
 
 <script setup lang="ts">
 	import { locale } from '@/locale'
-	import { Arena, ARENA_MODE_LABELS, arenaModeIcon } from '@/model/arena'
+	import type { ApiError } from '@/model/api-error'
+	import { Arena, ARENA_PREFERENCES, arenaModeIcon, arenaModeLabel } from '@/model/arena'
 	import { Farmer } from '@/model/farmer'
 	import { mixins, useNamespacedT } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
+	import { countRestatPotions } from '@/model/leekwars'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Composition } from '@/model/team'
+	import GardenBatch from './garden-batch.vue'
 	import GardenCompo from './garden-compo.vue'
 	import GardenFarmer from './garden-farmer.vue'
+	import GardenFastFight from './garden-fast-fight.vue'
 	import GardenLeek from './garden-leek.vue'
 	import { BOSSES } from '@/model/boss'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -451,7 +469,7 @@
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 	import { useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	const GardenNoFights = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`))
 
@@ -468,6 +486,7 @@
 
 	interface GardenData {
 		fights: number
+		team_fights: number
 		farmer_enabled: boolean
 		team_enabled: boolean
 		battle_royale_enabled: boolean
@@ -510,6 +529,56 @@
 	const arenaPreference = ref(parseInt(localStorage.getItem('arena/preference') || '-1', 10))
 	const wantsColossus = ref(false)
 	const batchLoading = ref(false)
+	// Dernier lot Fast Garden : ses combats (grille + résumé sous le potager) et sa clé
+	// de configuration, qui dit si une relance s'y cumule ou en ouvre un nouveau.
+	const batchFights = ref<number[]>([])
+	const batchKey = ref('')
+	const BATCH_STORAGE = 'garden/batch'
+	// 100 = le quota journalier d'un abonné LW+ : une journée entière de relances tient
+	// dans un lot. Au-delà, `garden/get-batch` chargerait des rapports pour rien.
+	const BATCH_MAX = 100
+	// Un lot de la veille n'intéresse plus personne : on ne restaure que du frais.
+	const BATCH_TTL = 24 * 3600 * 1000
+
+	function storeBatch() {
+		if (!batchFights.value.length) {
+			localStorage.removeItem(BATCH_STORAGE)
+			return
+		}
+		localStorage.setItem(BATCH_STORAGE, JSON.stringify({
+			farmer: store.state.farmer?.id, date: Date.now(),
+			key: batchKey.value, fights: batchFights.value,
+		}))
+	}
+
+	function closeBatch() {
+		batchFights.value = []
+		batchKey.value = ''
+		storeBatch()
+	}
+
+	/**
+	 * Restaure le lot au retour sur la page. Lié à l'éleveur : le bandeau de comptes
+	 * permet de changer de compte sans recharger, et `garden/get-batch` ne rend que les
+	 * combats dont je suis le lanceur — un lot d'un autre compte n'afficherait rien.
+	 */
+	let batchRestored = false
+	function restoreBatch() {
+		if (batchRestored || !store.state.farmer) { return }
+		batchRestored = true
+		try {
+			const raw = JSON.parse(localStorage.getItem(BATCH_STORAGE) || 'null')
+			if (!raw || !Array.isArray(raw.fights) || !raw.fights.length) { return }
+			if (raw.farmer !== store.state.farmer.id || Date.now() - (raw.date || 0) > BATCH_TTL) {
+				localStorage.removeItem(BATCH_STORAGE)
+				return
+			}
+			batchFights.value = raw.fights.filter((id: unknown) => typeof id === 'number').slice(0, BATCH_MAX)
+			batchKey.value = typeof raw.key === 'string' ? raw.key : ''
+		} catch {
+			localStorage.removeItem(BATCH_STORAGE)
+		}
+	}
 
 	const farmerEnabled = computed(() => !!(garden.value && garden.value.farmer_enabled))
 	const teamEnabled = computed(() => !!(garden.value && garden.value.team_enabled))
@@ -517,48 +586,121 @@
 	const bossEnabled = computed(() => true)
 	const liveArenaCount = computed(() => store.state.arenaCount || 0)
 	const liveArenaCountdown = computed(() => store.state.arenaCountdown)
+	const restatPotionCount = computed(() => countRestatPotions(store.state.farmer?.potions || []))
 
-	function batchErrorToast(error: unknown) {
-		const key = typeof error === 'string' ? error : (error && typeof error === 'object' && 'error' in error ? String((error as { error: unknown }).error) : null) || 'unknown_error'
-		LeekWars.toast(t(key))
+	// La forme du corps d'erreur est déjà normalisée par LeekWars.request().
+	function batchErrorToast(error: ApiError) {
+		LeekWars.toast(t(error.error))
 	}
-	function batchSoloAttack() {
+	/**
+	 * Fast Garden : on ne navigue PLUS vers le premier combat du lot (l'ancien x10
+	 * admin le faisait). Le lot s'affiche sur place, dans son panneau sous le potager,
+	 * et se remplit au fur et à mesure des générations.
+	 *
+	 * Relancer CUMULE, mais seulement à l'identique : même poireau en solo, même compo
+	 * en équipe, même boss avec la même escouade. Un résumé qui mélangerait deux
+	 * poireaux ou deux compos ne voudrait rien dire — dans ce cas le lot repart de zéro.
+	 */
+	function batchLaunched(fights: number[], key: string, counter: 'update-fights' | 'update-team-fights' = 'update-fights') {
+		// Décrément local pour l'affichage immédiat ; le reload() qui suit remet les
+		// compteurs faisant foi (le lot peut s'être arrêté avant d'atteindre `count`).
+		store.commit(counter, -fights.length)
+
+		const previous = key === batchKey.value ? batchFights.value : []
+		batchKey.value = key
+		// Les nouveaux en tête : le serveur trie par id décroissant de toute façon, mais
+		// c'est aussi la queue qu'on rabote quand le lot dépasse le plafond.
+		batchFights.value = [...fights, ...previous.filter(id => !fights.includes(id))].slice(0, BATCH_MAX)
+		storeBatch()
+
+		reload()
+		nextTick(() => {
+			document.querySelector('.fast-garden')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+		})
+	}
+	function batchSoloAttack(count: number) {
 		if (!selectedLeek.value) return
+		const leek_id = selectedLeek.value.id
 		batchLoading.value = true
-		LeekWars.post('garden/start-solo-fight-batch', {leek_id: selectedLeek.value.id}).then(data => {
-			store.commit('update-fights', -data.fights.length)
-			router.push('/fight/' + data.fights[0])
+		LeekWars.post<{fights: number[]}>('garden/start-solo-fight-batch', {leek_id, count}).then(data => {
+			batchLaunched(data.fights, 'solo:' + leek_id)
 		}).error(batchErrorToast).finally(() => {
 			batchLoading.value = false
 		})
 	}
-	function batchFarmerAttack() {
+	function batchFarmerAttack(count: number) {
 		batchLoading.value = true
-		LeekWars.post('garden/start-farmer-fight-batch', {count: 10}).then(data => {
-			store.commit('update-fights', -data.fights.length)
-			router.push('/fight/' + data.fights[0])
+		LeekWars.post<{fights: number[]}>('garden/start-farmer-fight-batch', {count}).then(data => {
+			// Le potager éleveur n'a qu'une configuration : tous ses lots se cumulent.
+			batchLaunched(data.fights, 'farmer')
 		}).error(batchErrorToast).finally(() => {
 			batchLoading.value = false
 		})
 	}
-	function batchAttack() {
+	function batchTeamAttack(count: number) {
+		if (!selectedComposition.value) return
+		const composition_id = selectedComposition.value.id
+		batchLoading.value = true
+		LeekWars.post<{fights: number[]}>('garden/start-team-fight-batch', {composition_id, count}).then(data => {
+			batchLaunched(data.fights, 'team:' + composition_id, 'update-team-fights')
+		}).error(batchErrorToast).finally(() => {
+			batchLoading.value = false
+		})
+	}
+	function batchAttack(count: number) {
 		const currentSquad = LeekWars.bossSquads.squad
 		if (!currentSquad || !selectedBoss.value) return
 		const participants = currentSquad.engaged_leeks
 			.filter((l: Leek) => (l.farmer as unknown as number) === store.state.farmer!.id)
 			.map((l: Leek) => l.id)
 		if (participants.length === 0) return
+		// L'escouade est identifiée par les poireaux engagés (de TOUS les farmers), pas
+		// par son id : attaquer la quitte, relancer en reforme forcément une autre.
+		const boss_id = selectedBoss.value.id
+		const key = 'boss:' + boss_id + ':' + currentSquad.engaged_leeks.map((l: Leek) => l.id).sort((a, b) => a - b).join(',')
 		batchLoading.value = true
-		LeekWars.post('garden/start-boss-fight-batch', {boss_id: selectedBoss.value.id, participants}).then(data => {
-			store.commit('update-fights', -data.fights.length)
+		LeekWars.post<{fights: number[]}>('garden/start-boss-fight-batch', {boss_id, participants, count}).then(data => {
 			LeekWars.bossSquads.leaveSquad()
-			router.push('/fight/' + data.fights[0])
+			batchLaunched(data.fights, key)
 		}).error(batchErrorToast).finally(() => {
 			batchLoading.value = false
 		})
 	}
+	/**
+	 * Le lanceur qui correspond au potager affiché, pour le bouton de relance du panneau
+	 * du lot. Il rend exactement ce que rend le bouton du potager au même instant : si
+	 * rien n'est sélectionné (pas de poireau, plus de combats, pas d'escouade), il n'y a
+	 * rien à relancer et le bouton disparaît plutôt que de mentir.
+	 */
+	const batchLauncher = computed(() => {
+		if (category.value === 'solo') {
+			if (!selectedLeek.value || !garden.value?.fights) { return null }
+			const opponents = leekOpponents[selectedLeek.value.id]
+			return { launch: batchSoloAttack, disabled: !opponents || !opponents.length, reason: '' }
+		}
+		if (category.value === 'farmer') {
+			if (!garden.value?.fights) { return null }
+			return { launch: batchFarmerAttack, disabled: !farmerOpponents.value || !farmerOpponents.value.length, reason: '' }
+		}
+		if (category.value === 'team') {
+			if (!selectedComposition.value || selectedComposition.value.fights <= 0) { return null }
+			const opponents = teamOpponents[selectedComposition.value.id]
+			return { launch: batchTeamAttack, disabled: !opponents || !opponents.length, reason: '' }
+		}
+		if (category.value === 'boss') {
+			const currentSquad = LeekWars.bossSquads.squad
+			if (!currentSquad || !selectedBoss.value) { return null }
+			return {
+				launch: batchAttack,
+				disabled: currentSquad.engaged_leeks.length === 0 || currentSquad.master !== store.state.farmer!.id,
+				reason: t('fast_fight_boss_master_only') as string,
+			}
+		}
+		return null
+	})
+
 	function modeLabel(preference: number): string {
-		return t(ARENA_MODE_LABELS[preference] || 'arena_no_preference') as string
+		return t(arenaModeLabel(preference)) as string
 	}
 	const modeIcon = arenaModeIcon
 
@@ -574,15 +716,8 @@
 		advanced.value = localStorage.getItem("editor/test/advanced") === 'true'
 
 		request = LeekWars.get('garden/get')
-		request.then((r) => {
-			garden.value = (r as { garden: GardenData }).garden
-			for (const composition of garden.value.my_compositions) {
-				compositions_by_id[composition.id] = composition
-			}
-			update()
-		})
+		request.then(handleGardenData)
 
-		emitter.on('back', back)
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 		emitter.on('garden-queue', (data: unknown) => queue.value = data as number)
 
@@ -596,23 +731,27 @@
 		window.addEventListener('pageshow', onPageShow)
 	})
 
-	function back() {
-		if (category.value === 'challenge') {
-			router.back()
-		} else {
-			router.push('/garden')
+	/* Plus de retour vers une liste de catégories : sur mobile la page ne se
+	   dédoublait plus qu'ici (`splitBack`), et le bouton de la barre
+	   d'application redevient le menu, comme sur les pages sans split. */
+
+	function handleGardenData(r: unknown) {
+		garden.value = (r as { garden: GardenData }).garden
+		// Jamais de compteur négatif (ex: dernier combat dépensé en attendant dans la file d'arène)
+		garden.value.fights = Math.max(0, garden.value.fights)
+		garden.value.team_fights = Math.max(0, garden.value.team_fights)
+		for (const composition of garden.value.my_compositions) {
+			composition.fights = Math.max(0, composition.fights)
+			compositions_by_id[composition.id] = composition
 		}
-		localStorage.removeItem('garden/category')
+		// Resynchronise les compteurs du menu/header : les valeurs du store
+		// dérivent (décréments locaux, compos créées sans refetch du farmer)
+		store.commit('set-fights-counts', { fights: garden.value.fights, team_fights: garden.value.team_fights })
+		update()
 	}
 
 	function reload() {
-		LeekWars.get('garden/get').then((r) => {
-			garden.value = (r as { garden: GardenData }).garden
-			for (const composition of garden.value.my_compositions) {
-				compositions_by_id[composition.id] = composition
-			}
-			update()
-		})
+		LeekWars.get('garden/get').then(handleGardenData)
 	}
 
 	function onPageShow(event: PageTransitionEvent) {
@@ -625,7 +764,6 @@
 	}
 
 	onBeforeUnmount(() => {
-		emitter.off('back', back)
 		if (request) { request.abort() }
 		LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 		emitter.off('wsconnected', updateWS)
@@ -637,17 +775,19 @@
 
 	function update() {
 		if (!store.state.farmer) { return }
+		restoreBatch()
 		const params = route.params
 		category.value = params.category as string
 		if (!category.value) {
-			const savedCategory = localStorage.getItem('garden/category')
-			if (savedCategory || !LeekWars.mobile) {
-				let defaultCategory = savedCategory || 'solo'
-				if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
-				if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !store.state.farmer.br_enabled) { defaultCategory = 'solo' }
-				replaceNextTick('/garden/' + defaultCategory)
-				return
-			}
+			// Le mobile restait sur la liste des catégories tant qu'aucune n'avait été
+			// visitée (l'ancienne vue en deux écrans). Les catégories sont maintenant un
+			// menu en tête de page : il y a toujours une catégorie ouverte dessous, sur
+			// mobile comme ailleurs.
+			let defaultCategory = localStorage.getItem('garden/category') || 'solo'
+			if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
+			if ((defaultCategory === 'battle-royale' || defaultCategory === 'arena') && !store.state.farmer.br_enabled) { defaultCategory = 'solo' }
+			replaceNextTick('/garden/' + defaultCategory)
+			return
 		}
 		if ((category.value === 'solo' || category.value === 'arena') && (!params.item || !store.state.farmer?.leeks || !(parseInt(params.item as string, 10) in store.state.farmer.leeks))) {
 			const key = category.value === 'arena' ? 'arena-leek' : 'garden/leek'
@@ -681,7 +821,6 @@
 			}
 			const category_underscore = category.value.replace('-', '_')
 			LeekWars.setTitle(t('garden_' + category_underscore), t('n_fights', store.state.farmer.fights) + (store.state.farmer.team_fights ? ' + ' + t('n_fights', store.state.farmer.team_fights) : ''))
-			LeekWars.splitShowContent()
 
 			if (category.value === 'solo') {
 				loadLeek(store.state.farmer.leeks[item])
@@ -703,10 +842,6 @@
 					LeekWars.bossSquads.listen()
 				}
 			}
-		} else {
-			localStorage.removeItem("garden/category")
-			LeekWars.setTitle(t('title'))
-			LeekWars.splitShowList()
 		}
 	}
 
@@ -792,7 +927,7 @@
 		LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
 			router.push('/fight/' + data.fight)
 			store.commit('update-fights', -1)
-		}).error(error => LeekWars.toast(t('error_' + (error?.error || 'unknown_error'), error?.params || [])))
+		}).error(error => LeekWars.toast(t(error.error) as string))
 	}
 
 	function clickCompositionOpponent(composition: Composition) {
@@ -829,7 +964,8 @@
 				}
 			})
 		} else if (challengeType.value === 'team') {
-			if (!garden.value) return
+			// Sans équipe, ou sans poireau dans une de ses compositions : rien à présélectionner.
+			if (!garden.value?.my_compositions.length) return
 			if (!route.params.item) {
 				replaceNextTick('/garden/challenge/' + challengeType.value + '/' + challengeTarget.value + '/' + garden.value.my_compositions[0].id)
 				return
@@ -912,6 +1048,24 @@
 
 
 <style lang="scss" scoped>
+/* La page est longue — adversaires puis lot de combats — et les onglets de
+   catégorie partaient avec le scroll. Ils restent en haut.
+   `align-self` est indispensable : le conteneur étire ses colonnes sur toute sa
+   hauteur, et un élément sticky qui remplit son bloc conteneur n'a nulle part où
+   coller. En v3 la barre du haut est fixe (`--header-height`), d'où le décalage,
+   comme le panneau de prévisualisation du marché. */
+.column3 {
+	position: sticky;
+	align-self: flex-start;
+	top: 12px;
+	body:not(.v2) & {
+		top: calc(var(--header-height) + 12px);
+	}
+}
+	.tabs .tab img.restat-potion {
+		width: 32px;
+		margin: -4px 0;
+	}
 	// Quand le bandeau de saison est présent, les panneaux du dessus s'y collent :
 	// on carre leurs coins hauts pour une jointure nette avec le bandeau.
 	.season-banner + .container .panel.first {
@@ -932,7 +1086,7 @@
 			padding: 10px;
 			display: block;
 			border: 1px solid var(--border);
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			.player-count {
 				font-size: 20px;
 				color: var(--text-color-secondary);
@@ -941,17 +1095,137 @@
 		}
 		.tab.router-link-active {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			box-shadow: var(--elevation-1);
 		}
 		.tab:not(.enabled) {
 			opacity: 0.4;
-			background: #ccc;
+			background: var(--grey-11);
 			cursor: default;
+		}
+		/* ====== v3 ======
+		   L'actif prenait un aplat `--pure-white`, qui vaut le fond de page en
+		   sombre : l'onglet courant y devenait la case la plus SOMBRE de la
+		   colonne. Il passe au trait et à l'encre verts, comme les onglets de la
+		   barre de page.
+		   Le désactivé était peint en `--grey-11`, un gris de l'échelle claire
+		   que le bloc sombre ne redéfinit pas : case claire sous une encre
+		   claire, 1,34 mesuré sur le compteur et 1,38 sur l'intitulé. Il prend la
+		   surface que le thème réserve à ça, et l'opacité de 0,4 qui écrasait le
+		   tout n'a plus lieu d'être. */
+		body:not(.v2) & {
+			.tab {
+				transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+			}
+			.tab.enabled:hover {
+				background: var(--background-row);
+				border-color: var(--border-strong);
+			}
+			.tab.router-link-active {
+				background: var(--background-row);
+				border-color: var(--primary);
+				box-shadow: none;
+				h2 {
+					color: var(--primary);
+				}
+			}
+			.tab:not(.enabled) {
+				opacity: 1;
+				background: var(--background-disabled);
+				border-color: var(--border);
+				color: var(--text-color-secondary);
+				/* L'intitulé est un h2, qui porte sa propre couleur dans
+				   global.scss : sans cette ligne il resterait à pleine encre et
+				   l'onglet indisponible se lirait comme un onglet ouvert. */
+				h2 {
+					color: var(--text-color-secondary);
+				}
+				.player-count {
+					color: var(--text-color-secondary);
+				}
+			}
 		}
 		.tab h2 {
 			margin: 0;
 			margin-bottom: 5px;
 			font-size: 20px;
+		}
+	}
+	/* ====== Mobile : les catégories deviennent un menu en tête de page ======
+	 *
+	 * La page se dédoublait (`splitBack`) : un premier écran ne montrait que les
+	 * cinq grosses cases de catégorie, le potager lui-même n'arrivait qu'au clic,
+	 * et le bouton de la barre d'application servait de retour. Un écran entier
+	 * pour cinq liens, et un mode de navigation propre à cette page.
+	 *
+	 * Les catégories sont maintenant une barre d'onglets au-dessus du potager.
+	 * Mêmes liens, même composant : seule la mise en forme change ici, la colonne
+	 * de gauche du bureau n'y touche pas.
+	 */
+	#app.app {
+		.categories {
+			/* La colonne prend toute la largeur (sans quoi `flex: 3` la met côte à
+			   côte avec le potager) et perd son collage en haut d'écran : la barre
+			   défile avec la page, la barre d'application est déjà fixe. */
+			flex: 1 0 100%;
+			position: static;
+		}
+		.garden-left {
+			/* `:not(.tab)` : le potager de défi met un onglet unique à la place de
+			   la liste, directement sous le panneau — il n'a pas à devenir une
+			   barre. */
+			> div:not(.tab) {
+				padding: 6px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+			.tab {
+				margin: 0;
+				padding: 7px 6px;
+				/* Toutes les catégories à la même largeur : base 0, elles se
+				   partagent la ligne à parts égales quelle que soit la longueur
+				   de l'intitulé. `fit-content` en largeur minimale garde le
+				   garde-fou des langues à mots longs — un intitulé qui ne tient
+				   pas dans sa part pousse la barre à se replier sur deux lignes
+				   plutôt qu'à se faire couper. */
+				flex: 1 1 0;
+				min-width: fit-content;
+				text-align: center;
+			}
+			/* Le nombre de participants (4 contre 4, 10-20…) reste sous
+			   l'intitulé, en petit : c'est ce qui distingue les catégories les
+			   unes des autres. Tout est mis à
+			   l'échelle de la barre — la carte du bureau écrivait les compteurs
+			   en 20 px. */
+			.tab h2 {
+				font-size: 15px;
+				margin: 0 0 1px;
+			}
+			.tab .player-count {
+				font-size: 11px;
+				padding: 0;
+			}
+			.tab .player {
+				height: 11px;
+				margin-bottom: 3px;
+			}
+			.tab .sword {
+				height: 11px;
+				margin: 0 4px 3px;
+			}
+			/* La file d'attente n'est pas un onglet : elle passe sous la barre. */
+			.queue {
+				flex: 1 0 100%;
+				padding: 6px;
+				display: flex;
+				align-items: baseline;
+				justify-content: center;
+				gap: 8px;
+				.count {
+					padding: 0;
+					font-size: 15px;
+				}
+			}
 		}
 	}
 	.sword {
@@ -975,15 +1249,18 @@
 	.leek, .farmer, .composition-wrapper {
 		width: 100%;
 		display: inline-block;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		border: 1px solid var(--border);
 	}
 	.opponents {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
+		// 150 → 180 : le potager a gagné de la place, les cartes flottaient au
+		// milieu de marges vides. Vaut pour ses poireaux comme
+		// pour les adversaires, les deux passent par ce conteneur.
 		& > * {
-			max-width: 150px;
+			max-width: 180px;
 			width: 100%;
 		}
 	}
@@ -997,14 +1274,14 @@
 		}
 	}
 	#app.app .opponents > * {
-		max-width: 120px;
+		max-width: 140px;
 	}
 	.leek:not(.disabled), .composition, .composition-wrapper, .opponents .farmer, .squad:not(.disabled) {
 		cursor: pointer;
 	}
 	.leek:hover:not(.disabled), .my-farmer, .composition-wrapper:hover, .opponents .farmer:hover, .participant.active:hover, .squad:not(.disabled):hover {
 		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	.bosses {
 		display: flex;
@@ -1020,7 +1297,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 4px;
-		margin: 6px 0;
+		margin: 10px 0;
 		font-size: 13px;
 		color: var(--text-color-secondary);
 		.v-icon { font-size: 18px; }
@@ -1088,7 +1365,7 @@
 	}
 	a.my-leek.router-link-active, a.my-composition.router-link-active {
 		background-color: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	:deep(.talent) {
 		font-size: 22px;
@@ -1108,6 +1385,65 @@
 	}
 	.leek-count {
 		font-size: 22px;
+	}
+	/* ====== Préférence de mode d'arène ======
+	 *
+	 * C'étaient cinq cases à cocher alignées à gauche sous les poireaux, avec le
+	 * bouton d'inscription posé à droite sur la même ligne : rien ne disait que
+	 * les deux allaient ensemble, et les modes n'avaient pas d'image.
+	 *
+	 * Le choix devient une rangée de pastilles centrées, chacune avec le glyphe
+	 * du mode — les mêmes que la pastille de préférence affichée sur les
+	 * poireaux en attente (`.arena-pref`) — et l'inscription passe dessous, au
+	 * centre. Le sélectionné suit la doctrine du vert. */
+	.arena-preferences {
+		/* Pas de largeur maximale : à 620 px les cinq pastilles passaient sur
+		   deux lignes alors que la colonne en offre le double. Avec « Aléatoire », elles sont six :
+		   gouttières et marges resserrées pour qu'elles tiennent encore sur une
+		   ligne en français dès 770 px de colonne (789 px dans une fenêtre de
+		   1366 px), et elles se replient d'elles-mêmes en dessous. */
+		margin: 20px auto 0;
+		h4 {
+			text-align: center;
+			margin-bottom: 10px;
+			color: var(--text-color-secondary);
+		}
+		.modes {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 6px;
+		}
+		.mode {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			padding: 7px 8px;
+			white-space: nowrap;
+			border: 1px solid var(--border);
+			border-radius: var(--radius-tiny);
+			color: var(--text-color-secondary);
+			font-weight: 500;
+			cursor: pointer;
+			user-select: none;
+			transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+			.v-icon {
+				font-size: 18px;
+			}
+			&:hover {
+				background: var(--background-row);
+				border-color: var(--border-strong);
+				color: var(--text-color);
+			}
+			&.selected {
+				background: color-mix(in srgb, var(--primary) 12%, transparent);
+				border-color: var(--primary);
+				color: var(--primary);
+			}
+		}
+	}
+	.arena-register {
+		margin-top: 16px;
 	}
 	.arena-waiting,
 	.arena-live-count {
@@ -1151,8 +1487,8 @@
 		position: relative;
 		width: 8px;
 		height: 8px;
-		border-radius: 50%;
-		background: var(--primary);
+		border-radius: var(--radius-pill);
+		background: var(--primary-surface);
 	}
 	// Halo pulsé via un pseudo-élément animé en transform/opacity (compositables
 	// GPU, aucun repaint). L'ancienne version animait box-shadow, ce qui forçait
@@ -1161,8 +1497,10 @@
 		content: '';
 		position: absolute;
 		inset: 0;
-		border-radius: 50%;
-		background: rgba(95, 173, 27, 0.6);
+		border-radius: var(--radius-pill);
+		/* Le vert du v2 était écrit en dur ici alors que le point lui-même suit
+		   `--primary` : en v3 le halo ne parlait plus la couleur de sa source. */
+		background: color-mix(in srgb, var(--primary-surface) 60%, transparent);
 		animation: arena-pulse 2s infinite;
 		pointer-events: none;
 	}
@@ -1282,11 +1620,6 @@
 	justify-content: space-between;
 	margin-top: 20px;
 	align-items: center;
-}
-.solo-batch {
-	display: flex;
-	justify-content: center;
-	margin-top: 16px;
 }
 .attack-buttons {
 	display: flex;

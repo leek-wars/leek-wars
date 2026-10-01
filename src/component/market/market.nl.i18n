@@ -39,6 +39,7 @@
 	"potion_selled": "Toverdrank verkocht!",
 	"price": "Prijs",
 	"resell": "Doorverkopen",
+	"scheme_required": "Je bezit het diagram niet",
 	"sell": "Verkopen",
 	"summon_available_chips": "Uitgeruste chips",
 	"summon_characteristics": "Functies",

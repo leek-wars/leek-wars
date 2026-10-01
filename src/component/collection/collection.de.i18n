@@ -1,5 +1,7 @@
 {
 	"missing_only": "Nur fehlende anzeigen",
 	"completed": "Abgeschlossen",
-	"test_celebration": "Animation testen (Admin)"
+	"test_celebration": "Animation testen (Admin)",
+	"hide_paid": "Kostenpflichtige Gegenstände ausblenden",
+	"hide_unobtainable": "Nicht erhältliche Gegenstände ausblenden"
 }

@@ -1,5 +1,5 @@
 <template lang="html">
-	<rich-tooltip-item :bottom="true" :instant="true" :item="item" :inventory="true">
+	<rich-tooltip-item :bottom="true" :instant="true" :item="item" :instance="instance" :inventory="true">
 		<div class="item">
 			<img :src="url" :alt="label" :class="{weapon: is_weapon}">
 		</div>
@@ -8,8 +8,9 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, type ItemTemplate } from '@/model/item'
+import { ItemType, ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED, itemImageName, itemImageUrl, type ItemTemplate } from '@/model/item'
 import { i18n } from '@/model/i18n'
+import type { InventoryItem } from '@/model/farmer'
 
 const RichTooltipItem = defineAsyncComponent(() => import('@/component/rich-tooltip/rich-tooltip-item.vue'))
 
@@ -17,12 +18,19 @@ defineOptions({ name: 'Item' })
 
 const ITEM_CATEGORY_NAME: Record<number, string> = ITEM_CATEGORY_NAME_TYPED
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	item: ItemTemplate
-}>()
+	/**
+	 * Instance affichée, quand elle porte des données propres (altérations) : sans elle
+	 * l'infobulle montre les stats du template, et une pièce altérée s'y lit comme une neuve.
+	 */
+	instance?: InventoryItem | null
+}>(), {
+	instance: null,
+})
 
-const image = computed(() => props.item.type === ItemType.COMPONENT ? props.item.name : props.item.name.substring(props.item.name.indexOf('_') + 1))
-const url = computed(() => '/image/' + ITEM_CATEGORY_NAME[props.item.type] + '/' + image.value + '.png')
+const image = computed(() => itemImageName(props.item))
+const url = computed(() => itemImageUrl(props.item))
 const is_weapon = computed(() => props.item.type === ItemType.WEAPON)
 // alt accessible : nom traduit de l'objet, repli sur le nom brut si la clé
 // de traduction n'existe pas (dégradation gracieuse, jamais la clé brute).
@@ -35,8 +43,8 @@ const label = computed(() => {
 <style lang="scss" scoped>
 .item {
 	background: var(--pure-white);
-	border-radius: 4px;
-	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+	border-radius: var(--radius);
+	box-shadow: var(--elevation-1);
 	padding: 4px;
 	img {
 		width: 100%;

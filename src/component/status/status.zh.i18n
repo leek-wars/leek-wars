@@ -4,7 +4,7 @@
 	"just_now": "刚刚",
 	"seconds_ago": "{s}秒前",
 	"overall_checking": "检查中…",
-	"overall_ok": "所有系统正常运行",
+	"overall_ok": "所有服务运行正常",
 	"overall_partial": "部分故障",
 	"overall_down": "重大故障",
 	"status_ok": "正常",

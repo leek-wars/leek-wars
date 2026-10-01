@@ -1,5 +1,7 @@
 {
 	"missing_only": "Näytä vain puuttuvat",
 	"completed": "Valmis",
-	"test_celebration": "Testaa animaatio (admin)"
+	"test_celebration": "Testaa animaatio (admin)",
+	"hide_paid": "Piilota maksulliset esineet",
+	"hide_unobtainable": "Piilota esineet, joita ei voi saada"
 }

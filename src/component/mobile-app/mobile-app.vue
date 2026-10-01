@@ -1,7 +1,12 @@
 <template>
 	<div>
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="app" fallback="mdi-cellphone" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<router-link to="/about">
 					<div class="tab">
@@ -17,7 +22,7 @@
 				</router-link>
 				<router-link to="/statistics">
 					<div class="tab">
-						<v-icon>mdi-chart-timeline-variant</v-icon>
+						<v-icon>mdi-poll</v-icon>
 						<span>{{ $t('main.stats') }}</span>
 					</div>
 				</router-link>

@@ -13,7 +13,7 @@
 					<div class="loadout-name">{{ loadout.name }}</div>
 					<div class="loadout-preview">
 						<img v-for="tpl in loadout.weapons.slice(0, 4)" :key="'w' + tpl" :src="'/image/' + LeekWars.items[tpl].name.replace('_', '/') + '.png'" class="preview-weapon" :alt="LeekWars.items[tpl].name" :title="LeekWars.items[tpl].name">
-						<img v-for="tpl in loadout.chips.slice(0, 6)" :key="'c' + tpl" :src="'/image/chip/' + CHIPS[tpl].name + '.png'" class="preview-chip" :alt="CHIPS[tpl].name" :title="CHIPS[tpl].name">
+						<img v-for="tpl in loadout.chips.slice(0, 6)" :key="'c' + tpl" :src="chipImageUrl(CHIPS[tpl].name)" class="preview-chip" :alt="CHIPS[tpl].name" :title="CHIPS[tpl].name">
 					</div>
 				</div>
 				<div class="loadout-actions">
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { chipImageUrl } from '@/model/item'
 import { ChipTemplate } from '@/model/chip'
 import { CHIPS as CHIPSImport } from '@/model/chips'
 import { Leek } from '@/model/leek'
@@ -125,8 +126,15 @@ function remove(loadout: Loadout) {
 	align-items: center;
 	gap: 10px;
 	padding: 6px 10px;
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background: #f5f5f5;
+}
+/* v3 : surface de rangée et trait, plus un gris fixe sur le parchemin (même
+   correction que le dialogue des équipements). */
+body:not(.v2) .loadout-card {
+	background: var(--background-row);
+	border: 1px solid var(--border);
+	border-radius: 0;
 }
 .loadout-icon {
 	width: 32px;

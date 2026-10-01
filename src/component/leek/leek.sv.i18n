@@ -34,6 +34,7 @@
 	"error_weapon_already_equipped": "{0} har redan utrustat det här vapnet.",
 	"error_weapon_two_forgotten": "{0} har redan ett glömt vapen utrustat.",
 	"error_chip_already_equipped": "{0} har redan utrustat detta chip.",
+	"error_component_already_equipped": "{0} har redan utrustat denna komponent.",
 	"farmed_by": "Uppfostrad av {farmer}",
 	"fights": "Strider",
 	"garden": "Trädgård",

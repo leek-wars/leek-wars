@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('main.press-kit') }}</h1>
+			<div class="page-title">
+				<page-icon name="press-kit" fallback="mdi-package-variant-closed" />
+				<div class="page-title-text">
+					<h1>{{ $t('main.press-kit') }}</h1>
+				</div>
+			</div>
 			<div class="tabs">
 				<router-link to="/changelog">
 					<div class="tab">
@@ -11,13 +16,13 @@
 				</router-link>
 				<router-link to="/statistics">
 					<div class="tab">
-						<v-icon>mdi-chart-timeline-variant</v-icon>
+						<v-icon>mdi-poll</v-icon>
 						<span>{{ $t('main.stats') }}</span>
 					</div>
 				</router-link>
 				<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener">
 					<div class="tab action">
-						<img src="/image/github_white.png">
+						<v-icon>mdi-github</v-icon>
 						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>
 					</div>
 				</a>
@@ -255,7 +260,7 @@ function setLanguage(l: Language) {
 		img {
 			max-width: 100%;
 			max-height: 230px;
-			background: repeating-conic-gradient(#bbb 0% 25%, #777 0% 50%) 50% / 15px 15px;
+			background: repeating-conic-gradient(var(--grey-10) 0% 25%, var(--grey-6) 0% 50%) 50% / 15px 15px;
 			&.alpha {
 				padding: 15px;
 			}
@@ -264,7 +269,7 @@ function setLanguage(l: Language) {
 	.legend {
 		text-align: center;
 		font-weight: 500;
-		color: #555;
+		color: var(--grey-4);
 		font-size: 16px;
 		padding-top: 5px;
 	}
@@ -280,9 +285,9 @@ function setLanguage(l: Language) {
 	}
 	.format {
 		padding: 0 4px;
-		background: #fff;
+		background: var(--white);
 		margin-right: 4px;
-		border: 1px solid #aaa;
+		border: 1px solid var(--grey-9);
 	}
 	.language-button {
 		cursor: pointer;
@@ -297,8 +302,8 @@ function setLanguage(l: Language) {
 		gap: 8px;
 		align-items: center;
 		margin-bottom: 10px;
-		border: 1px solid #aaa;
-		border-radius: 4px;
+		border: 1px solid var(--grey-9);
+		border-radius: var(--radius);
 	}
 	.flag {
 		max-width: 30px;
@@ -312,14 +317,14 @@ function setLanguage(l: Language) {
 		padding-left: 8px;
 	}
 	object {
-		background: white;
-		color: black;
+		background: var(--white);
+		color: var(--black);
 	}
 	.item:only-of-type object {
 		width: 500px;
 		height: 240px;
 	}
 	.panel .green {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 </style>

@@ -34,6 +34,7 @@
 	"error_weapon_already_equipped": "{0} heeft dit wapen al uitgerust.",
 	"error_weapon_two_forgotten": "{0} heeft al een vergeten wapen.",
 	"error_chip_already_equipped": "{0} heeft deze chip al uitgerust.",
+	"error_component_already_equipped": "{0} heeft deze component al uitgerust.",
 	"farmed_by": "Opgevoed door {farmer}",
 	"fights": "Vecht",
 	"garden": "Moestuin",

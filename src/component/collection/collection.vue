@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('main.collection') }}</h1>
+			<div class="page-title">
+				<page-icon name="collection" fallback="mdi-trophy-variant-outline" />
+				<div class="page-title-text">
+					<h1>{{ $t('main.collection') }}</h1>
+				</div>
+			</div>
 			<page-tabs active="collection" />
 		</div>
 		<panel class="collection-panel">
@@ -17,6 +22,10 @@
 							</div>
 							<div class="summary-progress">
 								<div class="summary-bar" :class="{ complete: total_owned === total_count }" :style="{ width: percent(total_owned, total_count) + '%' }"></div>
+							</div>
+							<div v-if="paidTemplates.size || unobtainableTemplates.size" class="summary-filter">
+								<lw-checkbox v-if="paidTemplates.size" v-model="hidePaid" :label="t('hide_paid')" />
+								<lw-checkbox v-if="unobtainableTemplates.size" v-model="hideUnobtainable" :label="t('hide_unobtainable')" />
 							</div>
 						</div>
 						<div class="category-tabs">
@@ -70,8 +79,9 @@
 
 <script lang="ts" setup>
 	import { mixins, useNamespacedT } from '@/model/i18n'
-	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, ITEM_CATEGORY_NAME } from '@/model/item'
+	import { type ItemTemplate, ItemType, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, itemImageUrl } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
+	import router from '@/router'
 	import { store } from '@/model/store'
 	import { computed, onMounted, ref, watch } from 'vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
@@ -96,6 +106,25 @@
 	const filter = ref<ItemType>(CATEGORY_ORDER.includes(storedFilter) ? storedFilter : CATEGORY_ORDER[0])
 
 	watch(filter, () => localStorage.setItem('collection/filter', '' + filter.value))
+
+	// Objets qu'on n'obtient qu'en payant en argent réel (cristaux ou fidélité LW+),
+	// listés par le serveur d'après les flags des templates — jamais une liste en dur
+	// ici, qui se périmerait au premier objet ajouté.
+	const paidTemplates = ref<Set<number>>(new Set())
+	// Les masquer : une collection incompletable sans sortir la carte bleue démotive,
+	// et le joueur veut savoir où il en est de ce qui lui est vraiment atteignable
+	// Choix mémorisé comme celui de la catégorie.
+	const hidePaid = ref(localStorage.getItem('collection/hide_paid') === 'true')
+
+	watch(hidePaid, () => localStorage.setItem('collection/hide_paid', '' + hidePaid.value))
+
+	// Objets retirés du jeu, que plus rien ne donne (liste du serveur). Même logique
+	// que les payants, dans une case à part : ce ne sont pas les mêmes joueurs qui
+	// veulent cacher l'un ou l'autre.
+	const unobtainableTemplates = ref<Set<number>>(new Set())
+	const hideUnobtainable = ref(localStorage.getItem('collection/hide_unobtainable') === 'true')
+
+	watch(hideUnobtainable, () => localStorage.setItem('collection/hide_unobtainable', '' + hideUnobtainable.value))
 
 	// Templates déjà possédés un jour (serveur, table farmer_item_collection) :
 	// inclut les items équipés ET ceux vendus/consommés depuis. Absent du store local.
@@ -144,18 +173,35 @@
 		return map
 	})
 
+	// Ce que la page compte et affiche : tous les items, moins ceux que les cases masquent.
+	const visibleByType = computed(() => {
+		const hidden = new Set<number>()
+		if (hidePaid.value) for (const id of paidTemplates.value) hidden.add(id)
+		if (hideUnobtainable.value) for (const id of unobtainableTemplates.value) hidden.add(id)
+		if (!hidden.size) return allByType.value
+		const map = new Map<ItemType, ItemTemplate[]>()
+		for (const [type, items] of allByType.value) {
+			map.set(type, items.filter((item) => !hidden.has(item.id)))
+		}
+		return map
+	})
+
 	function percent(owned: number, total: number): number {
 		return total ? Math.floor(owned / total * 100) : 0
 	}
 
+	function statsFor(byType: Map<ItemType, ItemTemplate[]>) {
+		return CATEGORY_ORDER
+			.map((type) => {
+				const items = byType.get(type) ?? []
+				const ownedCount = items.reduce((sum, item) => sum + (owned.value.has(item.id) ? 1 : 0), 0)
+				return { type, total: items.length, owned: ownedCount }
+			})
+			.filter((c) => c.total > 0)
+	}
+
 	// Stats par catégorie pour les onglets (indépendant de l'onglet sélectionné).
-	const categoryStats = computed(() => CATEGORY_ORDER
-		.map((type) => {
-			const items = allByType.value.get(type) ?? []
-			const ownedCount = items.reduce((sum, item) => sum + (owned.value.has(item.id) ? 1 : 0), 0)
-			return { type, total: items.length, owned: ownedCount }
-		})
-		.filter((c) => c.total > 0))
+	const categoryStats = computed(() => statsFor(visibleByType.value))
 
 	// Joue l'animation dorée sur une catégorie (après un éventuel délai), puis la
 	// retire. Purement visuel, sans effet serveur.
@@ -174,10 +220,14 @@
 	// jamais été célébrée, on joue une fois l'animation dorée puis on l'enregistre
 	// côté serveur (ne rejoue plus, même sur un autre appareil). Décalé dans le
 	// temps si plusieurs catégories sont complétées d'un coup (arrivée initiale).
+	// Toujours sur la collection ENTIÈRE, jamais sur le comptage filtré : une
+	// catégorie complétée parce qu'on masque ses objets payants ou inobtenables n'est pas complétée,
+	// et la célébration ne se joue qu'une fois dans une vie — la déclencher là
+	// brûlerait pour de bon celle du jour où le joueur finit vraiment la catégorie.
 	function checkCelebrations() {
 		if (!celebrationsLoaded.value) return
 		let delay = 0
-		for (const c of categoryStats.value) {
+		for (const c of statsFor(allByType.value)) {
 			if (c.total === 0 || c.owned !== c.total) continue
 			if (celebratedCategories.value.has(c.type)) continue
 			celebratedCategories.value.add(c.type) // garde anti-rejeu immédiat
@@ -186,7 +236,7 @@
 			LeekWars.post('item/celebrate-category', { category: c.type })
 		}
 	}
-	watch([categoryStats, celebrationsLoaded], checkCelebrations)
+	watch([allByType, owned, celebrationsLoaded], checkCelebrations)
 
 	// Admin : rejouer l'animation sur une catégorie au hasard (test visuel, sans
 	// écriture serveur, réutilisable à volonté).
@@ -200,19 +250,17 @@
 	}
 
 	// Catégorie affichée (une seule à la fois, selon l'onglet sélectionné).
-	const currentCategory = computed(() => allByType.value.get(filter.value) ?? [])
+	const currentCategory = computed(() => visibleByType.value.get(filter.value) ?? [])
 
 	// Totaux dérivés des stats par catégorie (un seul comptage, pas de re-parcours).
 	const total_count = computed(() => categoryStats.value.reduce((sum, c) => sum + c.total, 0))
 	const total_owned = computed(() => categoryStats.value.reduce((sum, c) => sum + c.owned, 0))
 
+	// `itemImageUrl` retire le préfixe de catégorie ("fight-pack_fight_pack_50" ->
+	// "fight_pack_50"), garde les noms nus (ressources, composants) et envoie les
+	// puces vers le dossier du design courant (`chip` ou `chipv3`).
 	function imageUrl(item: ItemTemplate): string {
-		if (item.type === ItemType.RESOURCE) return '/image/resource/' + item.name + '.png'
-		if (item.type === ItemType.COMPONENT) return '/image/component/' + item.name + '.png'
-		// Retire le préfixe de catégorie (ex: "fight-pack_fight_pack_50" -> "fight_pack_50").
-		const category = ITEM_CATEGORY_NAME[item.type]
-		const image = item.name.replace(category + '_', '')
-		return '/image/' + category + '/' + image + '.png'
+		return itemImageUrl(item)
 	}
 
 	// Tooltip partagé (même mécanique que l'inventaire).
@@ -256,13 +304,24 @@
 		tooltipVisible.value = false
 	}
 
+	// Actions mobile : les onglets du header (page-tabs) sont masqués sur mobile,
+	// on expose donc les mêmes liens dans la barre d'app.
+	LeekWars.setActions([
+		{icon: 'mdi-bank', click: () => router.push('/bank?ref=collection_action')},
+		{icon: 'mdi-store', click: () => router.push('/market')},
+		{icon: 'mdi-treasure-chest', click: () => router.push('/inventory')},
+	])
+
 	onMounted(() => {
 		LeekWars.setTitle(t('main.collection') as string)
 		// Templates déjà possédés un jour (équipés et items vendus/consommés inclus) :
 		// source de vérité côté serveur (table farmer_item_collection).
-		LeekWars.get<{ templates: number[], celebrated: number[] }>('item/get-collection').then((res) => {
+		LeekWars.get<{ templates: number[], celebrated: number[], paid: number[], unobtainable?: number[] }>('item/get-collection').then((res) => {
 			serverOwned.value = new Set(res.templates)
 			celebratedCategories.value = new Set(res.celebrated ?? [])
+			// Champ absent : la case ne s'affiche pas.
+			paidTemplates.value = new Set(res.paid ?? [])
+			unobtainableTemplates.value = new Set(res.unobtainable ?? [])
 			celebrationsLoaded.value = true
 		}).error(() => { /* repli : inventaire local du store uniquement */ })
 	})
@@ -297,19 +356,25 @@
 			margin-left: auto;
 			font-size: 26px;
 			font-weight: 700;
-			color: #5fad1b;
+			color: var(--primary);
 		}
+	}
+	.summary-filter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 24px;
+		margin-top: 12px;
 	}
 	.summary-progress {
 		height: 18px;
 		background: var(--background-disabled);
-		border-radius: 9px;
+		border-radius: var(--radius-large);
 		overflow: hidden;
 		.summary-bar {
 			height: 100%;
-			background-color: #5fad1b;
+			background-color: var(--primary-surface);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 9px, transparent 9px, transparent 18px);
-			border-radius: 9px;
+			border-radius: var(--radius-large);
 			transition: width 0.4s;
 			&.complete {
 				background-color: #2196f3;
@@ -327,6 +392,13 @@
 		.summary-percent { font-size: 22px; }
 	}
 	.summary-progress { height: 14px; }
+	.summary-filter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 20px;
+		margin-top: 10px;
+		font-size: 14px;
+	}
 }
 .category-tabs {
 	display: grid;
@@ -344,7 +416,7 @@
 	overflow: hidden;
 	min-width: 0;
 	border: 1px solid var(--border);
-	border-radius: 8px;
+	border-radius: var(--radius-large);
 	padding: 18px 20px 20px;
 	cursor: pointer;
 	background: var(--background-secondary);
@@ -353,7 +425,7 @@
 		background: var(--background-header);
 	}
 	&.active {
-		border-color: #5fad1b;
+		border-color: var(--primary);
 		background: var(--pure-white);
 	}
 	.cat-tab-head {
@@ -390,13 +462,13 @@
 	.cat-progress {
 		height: 13px;
 		background: var(--background-disabled);
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 		overflow: hidden;
 		.cat-bar {
 			height: 100%;
-			background-color: #5fad1b;
+			background-color: var(--primary-surface);
 			background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 7px, transparent 7px, transparent 14px);
-			border-radius: 7px;
+			border-radius: var(--radius-medium);
 			transition: width 0.3s;
 			&.complete {
 				background-color: #2196f3;
@@ -436,15 +508,25 @@
 		position: relative;
 		overflow: hidden;
 		padding: 4px 14px;
-		border-radius: 15px;
+		border-radius: var(--radius-pill);
 		font-size: 18px;
 		font-weight: 800;
 		letter-spacing: 0.6px;
 		text-transform: uppercase;
-		color: #000;
+		color: var(--black);
 		background: linear-gradient(0deg, #ffb029, #ffdc3a);
 		border: 1px solid #ffb430;
 		box-shadow: 0 2px 9px rgba(150, 100, 0, 0.45);
+		// v3 : ni arrondi, ni dégradé, ni ombre floue, trois choses que le thème
+		// bannit. Angles francs, l'or vif à plat avec son encre, et l'ombre pixel des
+		// surfaces flottantes.
+		body:not(.v2) & {
+			border-radius: 0;
+			background: var(--gold-bright);
+			border: 1px solid var(--gold-text);
+			color: var(--gold-text);
+			box-shadow: var(--shadow-pixel-small);
+		}
 		animation: celebrate-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
 		&::after {
 			content: '';

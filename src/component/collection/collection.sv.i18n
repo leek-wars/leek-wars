@@ -1,5 +1,7 @@
 {
 	"missing_only": "Visa endast saknade",
 	"completed": "Klart",
-	"test_celebration": "Testa animation (admin)"
+	"test_celebration": "Testa animation (admin)",
+	"hide_paid": "Dölj betalda föremål",
+	"hide_unobtainable": "Dölj föremål som inte går att få"
 }

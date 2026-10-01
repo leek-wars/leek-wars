@@ -1,10 +1,10 @@
 {
-	"title": "管理徒弟",
-	"stats": "等级 {0} · 天赋 {1} · 徒弟等级 {2} · 加入 {3}",
+	"title": "管理被邀请人",
+	"stats": "{0} 级 · 天赋 {1} · 被邀请人等级 {2} · 注册于 {3}",
 	"disown": "移除",
-	"empty": "还没有徒弟。",
-	"disown_confirm_title": "移除这个徒弟？",
-	"disown_confirm_message": "你将移除 {name}，并失去 {level} 点徒弟递归等级。",
+	"empty": "暂无被邀请人。",
+	"disown_confirm_title": "要移除这位被邀请人吗？",
+	"disown_confirm_message": "你将移除 {name}，你的被邀请人等级（递归累计）将减少 {level}。",
 	"cancel": "取消",
-	"error_disown_failed": "无法移除这个徒弟。"
+	"error_disown_failed": "无法移除该被邀请人。"
 }

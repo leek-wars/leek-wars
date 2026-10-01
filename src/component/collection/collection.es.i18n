@@ -1,5 +1,7 @@
 {
 	"missing_only": "Mostrar solo los que faltan",
 	"completed": "Completado",
-	"test_celebration": "Probar animación (admin)"
+	"test_celebration": "Probar animación (admin)",
+	"hide_paid": "Ocultar los objetos de pago",
+	"hide_unobtainable": "Ocultar los objetos inobtenibles"
 }

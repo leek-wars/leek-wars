@@ -1,6 +1,6 @@
 {
 	"title": "邀请你的朋友",
-	"description": "分享你的推荐链接。当朋友通过它注册并验证账号后，你们俩都会获得 Habs {habs} 和水晶 {crystals}。",
+	"description": "分享你的邀请链接。朋友通过该链接注册并验证账号后，你们双方都将获得 Habs {habs} 和水晶 {crystals}。",
 	"share_message": "来 Leek Wars 和我一起玩吧，这是一款为你的韭葱编写 AI 的战斗游戏！",
 	"share": "分享",
 	"copy": "复制链接",

@@ -16,6 +16,16 @@ interface InventoryItem {
 	quantity: number
 	time?: number
 	type?: number
+	/** Alterations portees par CETTE instance, absentes de la plupart des items. */
+	stats?: { [carac: string]: number }
+	altered_power?: number
+	preferred_leek?: number
+	/**
+	 * Dosage optimal du composant (#12146), envoyé par le serveur UNIQUEMENT une fois
+	 * l'énigme résolue : une tentative réelle est tombée pile dessus. Absent tant que la
+	 * pièce garde son secret.
+	 */
+	optimal_dose?: number
 }
 
 interface FarmerTournament {
@@ -87,23 +97,37 @@ class Farmer {
 	public talent!: number
 	public max_talent!: number
 	public talent_history!: number[]
+	/** Fenêtre longue du graphique de talent (30 jours). `null` les jours sans
+	 *  mesure, et absente d'un serveur antérieur au sélecteur de période. */
+	public talent_history_long?: (number | null)[]
 	public team!: Team | null
 	public total_level!: number
 	public ai_tree?: FarmerTree
 	public language!: string
 	public title!: number[]
 	public show_ai_lines!: boolean
+	public home_layout!: string | null // disposition JSON des widgets du tableau de bord (null = défaut)
 	public pomps!: InventoryItem[]
 	public pass!: boolean
 	public errors!: number
 	public contributor!: boolean
+	public lwplus!: boolean // abonné LW+ (badge, public)
+	public lwplus_until!: number // fin de la période payée, en secondes (bloc privé : soi uniquement)
+	public lwplus_offered?: boolean // LW+ offert aux modérateurs, hors période payée (bloc privé)
+	public referent!: boolean
+	// Comptes déclarés du joueur (public), null si compte solo. Ne pas
+	// confondre avec store.state.accounts, qui liste les comptes connectés du
+	// sélecteur de comptes — tout autre chose.
+	public linked_accounts!: { id: number, name: string, avatar_changed: number, main: boolean }[] | null
 	public rewards!: Reward[]
 	public resources!: InventoryItem[]
 	public components!: InventoryItem[]
+	public alterations!: InventoryItem[]
 	public schemes!: InventoryItem[]
 	public fight_packs!: InventoryItem[]
 	public verified!: boolean
 	public tutorial_progress!: number
+	public ai_language!: string
 	public group!: Group
 	public public_chat_enabled!: boolean
 	public equipment_enabled!: boolean

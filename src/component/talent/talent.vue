@@ -1,10 +1,13 @@
 <template lang="html">
 	<div>
 		<div class="page-bar page-header">
-			<div>
-				<h1>Talents moyens</h1>
-				<div class="info">
-					<v-icon>mdi-information-outline</v-icon> Mise à jour toutes les heures
+			<div class="page-title">
+				<page-icon name="statistics" fallback="mdi-poll" />
+				<div class="page-title-text">
+					<h1>Talents moyens</h1>
+					<div class="info">
+						<v-icon>mdi-information-outline</v-icon> Mise à jour toutes les heures
+					</div>
 				</div>
 			</div>
 		</div>

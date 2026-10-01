@@ -1,16 +1,33 @@
 <template lang="html">
-	<!-- Racine STABLE unique (.page toujours montée) : un v-if/v-else à la racine crée un
-	     Fragment dont l'el peut devenir null pendant le patch/unmount -> "parentNode of null"
-	     (#4163, surtout sur un mob où `error` bascule). L'erreur 404 rend DANS .page. -->
+	<!-- Le drapeau 404 s'appelle `notFound` et SURTOUT PAS `error` : dans un <script setup>,
+	     une balise est résolue d'abord contre les liaisons du script, donc un `const error`
+	     masquerait le composant <error>. Le vnode aurait alors un booléen pour type, ne
+	     serait jamais monté, et la bascule suivante de cette branche crasherait la session en
+	     « nextSibling of null ». Garde-fou : component-tag-shadowing.test.ts. -->
 	<div class="page">
-		<error v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
+		<error v-if="notFound" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
 		<template v-else>
 		<div class="page-header page-bar">
-			<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ props }" :bottom="true">
-				<h1 v-bind="props">{{ leek.name }}</h1>
-			</rich-tooltip-leek>
-			<h1 v-else>...</h1>
-			<div class="tabs">
+			<div class="page-title">
+				<!-- La tête du poireau plutôt qu'un glyphe : c'est l'icône la plus
+				     parlante que cette page puisse porter. `scale` est obligatoire ;
+				     la coquille fixe ensuite le cadre du svg (44 px, hors-champ du
+				     chapeau compris, pour une tête de la taille des icônes des autres
+				     pages). Rien en v2 : cette coquille est gardée par
+				     `body:not(.v2)`, l'icône s'y posait donc sans mise en page
+				     au-dessus du titre (même raison que `page-icon.vue`, qui ne rend
+				     rien non plus dans l'ancien design). -->
+				<leek-image v-if="leek && !LeekWars.legacyTheme" class="page-icon" :leek="leek" :scale="0.2" head />
+				<div class="page-title-text">
+					<!-- Tooltip toujours monté, simplement désactivé tant que le poireau n'est pas
+					     chargé : il ne charge son contenu qu'à l'ouverture, et seulement si id > 0.
+					     Un seul nœud plutôt que deux branches reste plus simple ici. -->
+					<rich-tooltip-leek :id="leek ? leek.id : 0" v-slot="{ props }" :disabled="!leek" :bottom="true">
+						<h1 v-bind="props">{{ leek ? leek.name : '...' }}</h1>
+					</rich-tooltip-leek>
+				</div>
+			</div>
+			<div class="actions">
 				<template v-if="leek && my_leek">
 					<template v-if="leek.tournament && leek.tournament.current">
 						<router-link :to="'/tournament/' + leek.tournament.current">
@@ -20,7 +37,7 @@
 					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && leek.tournament" content-class="fluid" @update:model-value="loadTournamentRange">
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props" @click="registerTournament">
-								<v-icon>mdi-trophy</v-icon>
+								<v-icon>mdi-tournament</v-icon>
 								<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
 								<span v-else class="unregister">{{ $t('unregister') }}</span>
 							</div>
@@ -39,7 +56,7 @@
 						<template #activator="{ props }">
 							<div class="tab" v-bind="props" @click="updateGarden">
 								<span>{{ $t('garden') }}</span>
-								<v-switch :model-value="leek.in_garden" hide-details />
+								<lw-switch :model-value="leek.in_garden" />
 							</div>
 						</template>
 						{{ $t('authorize_agressions') }}
@@ -143,12 +160,17 @@
 				</v-tooltip>
 
 				<template v-if="leek && leek.level >= 100">
-					<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" ratio="ct-major-eleventh" class="talent-history" />
+					<div class="chart-wrap">
+						<talent-chart :history="leek.talent_history" :history-long="leek.talent_history_long" :current="leek.talent" fixed-height />
+					</div>
 				</template>
 			</panel>
 
 			<panel :title="$t('characteristic.characteristics')">
-				<template v-if="leek && my_leek && $store.state.farmer && $store.state.farmer.equipment_enabled" #actions>
+				<!-- Les icônes d'en-tête ne servent plus qu'au v2 : en v3 les trois
+				     commandes du panneau (équipement, potions, capital) sont réunies
+				     dans une barre en pied de panneau, avec leur libellé. -->
+				<template v-if="LeekWars.legacyTheme && leek && my_leek && $store.state.farmer && $store.state.farmer.equipment_enabled" #actions>
 					<div class="button flat" @click="showLoadout = true">
 						<v-icon>mdi-package-variant-closed</v-icon>
 					</div>
@@ -164,7 +186,8 @@
 								<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>
 							</div>
 						</characteristic-tooltip>
-						<div v-if="leek && my_leek" class="center mt-3">
+						<!-- Peau v2 : les deux boutons Material centrés, au pixel près. -->
+						<div v-if="LeekWars.legacyTheme && leek && my_leek" class="center mt-3">
 							<span class="dida-element">
 								<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer && $store.state.farmer.equipment_enabled" color="primary" :class="{bouncing: !showCapital && LeekWars.didactitial_step === 1}" @click="showCapital = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
@@ -181,6 +204,32 @@
 								{{ $t('potions') }}
 							</v-btn>
 						</div>
+						<!-- v3 : les trois commandes réunies en pied de panneau, libellées.
+						     Le capital porte son compte et passe à l'aplat de marque dès
+						     qu'il y a des points à placer — c'est la seule des trois qui
+						     appelle une action, les deux autres ouvrent un tiroir.
+						     L'étoile suit la convention des icônes du site : pleine quand il y a
+						     quelque chose, en contour pour l'état vide. -->
+						<div v-else-if="leek && my_leek" class="panel-actions">
+							<div v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" class="panel-action" @click="showLoadout = true">
+								<v-icon>mdi-package-variant-closed</v-icon>{{ $t('main.loadouts') }}
+							</div>
+							<div class="panel-action" @click="potionDialog = true">
+								<v-icon>mdi-flask</v-icon>{{ $t('potions') }}
+							</div>
+							<span class="dida-element">
+								<div v-if="$store.state.farmer && $store.state.farmer.equipment_enabled" class="panel-action" :class="{green: leek.capital > 0, bouncing: !showCapital && LeekWars.didactitial_step === 1}" @click="showCapital = true">
+									<v-icon>{{ leek.capital > 0 ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>{{ leek.capital > 0 ? $t('main.n_capital', [leek.capital]) : $t('main.capital') }}
+								</div>
+								<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
+									<i18n-t tag="div" class="bubble" keypath="main.dida_2">
+										<template #life><img height=18 src="/image/charac/life.png"></template>
+										<template #strength><img height=18 src="/image/charac/strength.png"></template>
+									</i18n-t>
+									<span class="arrow"></span>
+								</span>
+							</span>
+						</div>
 					</div>
 				</template>
 			</panel>
@@ -196,13 +245,13 @@
 					<div class="weapons-wrapper center">
 						<loader v-if="!leek" />
 						<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
-						<template v-else>
+						<div v-else class="weapons">
 							<div v-for="weapon in orderedWeapons" :key="weapon.id" class="weapon">
 								<rich-tooltip-item  v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :leek="leek">
 									<img v-bind="props" :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" :width="WeaponsData[LeekWars.items[weapon.template].params].width" @click="setWeapon(weapon.template)">
 								</rich-tooltip-item>
 							</div>
-						</template>
+						</div>
 					</div>
 				</template>
 			</panel>
@@ -221,7 +270,7 @@
 						<div v-else class="chips">
 							<rich-tooltip-item v-for="(chip, i) in orderedChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :leek="leek">
 								<div class="chip" :class="{disabled: i >= leek.total_ram}" v-bind="props">
-									<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'">
+									<img :src="chipImageUrl(CHIPS[chip.template].name)">
 								</div>
 							</rich-tooltip-item>
 						</div>
@@ -241,10 +290,14 @@
 						<template v-else>
 							<div class="components-grid">
 								<template v-for="(c, i) of 8" :key="i">
-									<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
-										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
+									<!-- L'item du composant peut manquer du catalogue : le client peut être
+									     plus récent que l'API (cf. loadGameData), ou un template avoir été
+									     retiré. Sans cette garde, la case passe `undefined` en prop `item`
+									     puis casse sur son `.name` — la case vide est le moindre mal. -->
+									<div v-if="leek.components[i] && LeekWars.items[leek.components[i].template]" class="component" :class="{disabled: i >= max_components}">
+										<rich-tooltip-item v-slot="{ props }" :key="c" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 											<div v-bind="props">
-												<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+												<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 											</div>
 										</rich-tooltip-item>
 									</div>
@@ -254,9 +307,9 @@
 									<router-link v-if="my_leek" :to="'/editor/' + (leek.ai.path || leek.ai.name)">
 										<ai :ai="leek.ai" :library="false" :small="false" />
 									</router-link>
-									<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.path" target="_blank">
+									<div v-else-if="$store.getters.admin" class="admin-ai" @click="openAdminAI">
 										<ai :ai="leek.ai" :library="false" :small="false" />
-									</a>
+									</div>
 									<ai v-else :ai="leek.ai" :library="false" :small="false" />
 								</template>
 								<span v-else class="empty">{{ $t('no_ai') }}</span>
@@ -288,12 +341,12 @@
 					</router-link>
 				</template>
 				<template #content>
-					<fights-history :fights="leek.fights" :progress="liveProgress" />
+					<fights-history :fights="leek.fights" :progress="liveProgress" full-rows />
 				</template>
 			</panel>
-			<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+			<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-tournament">
 				<template #content>
-					<tournaments-history :tournaments="leek.tournaments" />
+					<tournaments-history :tournaments="leek.tournaments" full-rows />
 				</template>
 			</panel>
 		</div>
@@ -320,7 +373,7 @@
 			<div class="tabs">
 				<template v-if="$store.state.connected && !my_leek">
 					<div class="tab" @click="showReport = true">
-						<img src="/image/icon/flag.png">
+						<v-icon>mdi-flag</v-icon>
 						<span class="report-button">{{ $t('report') }}</span>
 					</div>
 				</template>
@@ -333,7 +386,7 @@
 				<v-tooltip v-if="leek && my_leek && leek.level >= 20 && $store.state.farmer?.br_enabled">
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props" @click="registerAutoArena">
-							<v-icon>mdi-trophy</v-icon>
+							<v-icon>mdi-stadium</v-icon>
 							<span v-if="!leek.auto_br" class="register">{{ $t('register_to_arena') }}</span>
 							<span v-else class="unregister">{{ $t('unregister') }}</span>
 						</div>
@@ -354,7 +407,7 @@
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props" @click="updateXpBlocked">
 							<span>{{ $t('main.xp_blocked') }}</span>
-							<v-switch :model-value="leek.xp_blocked" hide-details />
+							<lw-switch :model-value="leek.xp_blocked" />
 						</div>
 					</template>
 					{{ $t('xp_blocked_desc') }}
@@ -364,7 +417,7 @@
 
 		<popup v-if="leek" v-model="weaponsDialog" :width="800">
 			<template #icon>
-				<img src="/image/icon/garden.png">
+				<v-icon>mdi-pistol</v-icon>
 			</template>
 			<template #title>
 				{{ $t('weapons_of', [leek.name]) }}
@@ -426,7 +479,7 @@
 
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
 			<template #icon>
-				<img src="/image/icon/potion.png">
+				<v-icon>mdi-flask</v-icon>
 			</template>
 			<template #title>
 				{{ $t("use_a_potion", [leek.name]) }}
@@ -453,7 +506,7 @@
 
 		<popup v-if="leek && my_leek" v-model="skinPotionDialog" :width="750">
 			<template #icon>
-				<img src="/image/icon/potion.png">
+				<v-icon>mdi-flask</v-icon>
 			</template>
 			<template #title>
 				{{ $t("select_skin") }}
@@ -541,7 +594,7 @@
 		</popup>
 
 		<popup v-model="skinWeaponDialog" :width="650">
-			<template #icon><img src="/image/icon/garden.png"></template>
+			<template #icon><v-icon>mdi-pistol</v-icon></template>
 			<template #title><span>{{ $t('select_a_weapon') }}</span></template>
 			<div v-if="leek" class="weapons-popup">
 				<div class="leek-weapons">
@@ -553,9 +606,12 @@
 						</template>
 						<b>{{ $t('no_weapon') }}</b>
 					</v-tooltip>
-					<rich-tooltip-item v-for="(weapon, i) in orderedWeapons" :key="i" v-slot="{ props }" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true" :leek="leek">
-						<div class="weapon" v-bind="props" @click="setWeapon(weapon.template)">
-							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'">
+					<!-- Toutes les armes possedees, et plus seulement celles equipees sur ce
+					     poireau : l'apparat est un cosmetique, une arme rangee au coffre
+					     ou portee par un autre poireau a autant le droit d'etre affichee. -->
+					<rich-tooltip-item v-for="template in skinWeapons" :key="template" v-slot="{ props }" :item="LeekWars.items[template]" :bottom="true" :nodge="true" :leek="leek">
+						<div class="weapon" :class="{selected: leek.weapon === template}" v-bind="props" @click="setWeapon(template)">
+							<img :src="itemImageUrl(LeekWars.items[template])">
 						</div>
 					</rich-tooltip-item>
 				</div>
@@ -583,7 +639,7 @@
 						<img v-else class="image" src="/image/hat/no_hat.png">
 						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.items[leek.hat.template].params].name) }}</div>
 					</div>
-					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="holdWeaponEnabled ? (skinWeaponDialog = true) : goToMarket('hold_weapon')">
+					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="holdWeaponEnabled ? openSkinWeaponDialog() : goToMarket('hold_weapon')">
 						<div class="title">
 							<v-tooltip v-if="holdWeaponEnabled">
 								<template #activator="{ props }">
@@ -627,7 +683,7 @@
 				<div class="container">
 					<div class="column6">
 						<div v-if="$store.state.farmer" class="pomp">
-							<v-switch :model-value="$store.state.farmer.show_ai_lines" hide-details :disabled="!showAiLinesEnabled" @change="changeShowAiLines">
+							<lw-switch :model-value="$store.state.farmer.show_ai_lines" :disabled="!showAiLinesEnabled" @change="changeShowAiLines">
 								<template #label>
 									<span>{{ $t('pomp.ai_lines') }}</span>
 									<v-tooltip :disabled="showAiLinesEnabled">
@@ -637,10 +693,10 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
 									</v-tooltip>
 								</template>
-							</v-switch>
+							</lw-switch>
 						</div>
 						<div v-if="leek" class="pomp">
-							<v-switch :model-value="leek.metal" hide-details :disabled="!metalEnabled" @change="changeMetal">
+							<lw-switch :model-value="leek.metal" :disabled="!metalEnabled" @change="changeMetal">
 								<template #label>
 									<span>{{ $t('pomp.metal') }}</span>
 									<v-tooltip :disabled="metalEnabled">
@@ -650,17 +706,17 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
 									</v-tooltip>
 								</template>
-							</v-switch>
+							</lw-switch>
 						</div>
 					</div>
 					<div v-if="leek" class="pomp column6">
-						<v-radio-group v-model="leek.face" hide-details @update:model-value="changeFace">
-							<v-radio :value="0">
+						<lw-radio-group v-model="leek.face" @update:model-value="changeFace">
+							<lw-radio :value="0">
 								<template #label>
           							{{ $t('neutral') }}
 								</template>
-							</v-radio>
-							<v-radio :value="1" :disabled="!happyEnabled">
+							</lw-radio>
+							<lw-radio :value="1" :disabled="!happyEnabled">
 								<template #label>
           							{{ $t('happy') }}
 									<v-tooltip :disabled="happyEnabled">
@@ -670,8 +726,8 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.happy') }}
 									</v-tooltip>
 								</template>
-							</v-radio>
-							<v-radio :value="2" :disabled="!angryEnabled">
+							</lw-radio>
+							<lw-radio :value="2" :disabled="!angryEnabled">
 								<template #label>
 									{{ $t('angry') }}
 									<v-tooltip :disabled="angryEnabled">
@@ -681,8 +737,8 @@
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.angry') }}
 									</v-tooltip>
 								</template>
-							</v-radio>
-						</v-radio-group>
+							</lw-radio>
+						</lw-radio-group>
 					</div>
 				</div>
 				<v-btn size="small" @click="downloadLeekImage">{{ $t('download_leek_image') }}</v-btn>
@@ -703,6 +759,19 @@
 
 		<level-dialog v-if="leek" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 
+		<popup v-if="leek && !my_leek && leek.ai" v-model="adminAIDialog" :width="1000">
+			<template #icon>
+				<v-icon>mdi-code-braces</v-icon>
+			</template>
+			<template #title>
+				{{ leek.ai.path }}
+			</template>
+			<div class="admin-ai-code">
+				<loader v-if="adminAICode === null" />
+				<lw-code v-else :code="adminAICode" :language="adminAILanguage" />
+			</div>
+		</popup>
+
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="1050">
 			<template #icon>
 				<v-icon>mdi-code-braces</v-icon>
@@ -721,9 +790,11 @@
 			<div class="ai-popup">
 				<div class="leek-ai-components components-grid">
 					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
-						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :bottom="true">
+						<!-- :instance obligatoire, sinon l'infobulle retombe sur les stats de BASE
+						     et une piece alteree s'affiche comme une neuve. -->
+						<rich-tooltip-item v-if="leek.components[i] && LeekWars.items[leek.components[i].template]" v-slot="{ props }" :key="i" ref="componentTooltips" :item="LeekWars.items[leek.components[i].template]" :instance="(leek.components[i] as any)" :bottom="true">
 							<div v-if="leek.components[i]" :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i]!.template && draggedComponentLocation === 'leek'}" draggable="true" v-bind="props" @dragstart="componentDragStart('leek', leek.components[i]!, $event)" @dragend="leek.components[0] && componentDragEnd(leek.components[0])" @click="leek.components[i] && removeComponent(leek.components[i]!)">
-								<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+								<img :class="alteredClass(leek.components[i] as any, LeekWars.componentCapacity(leek.components[i].template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
 							</div>
 						</rich-tooltip-item>
 						<div v-else><v-icon>mdi-sd</v-icon></div>
@@ -734,15 +805,15 @@
 				</div>
 				<div class="flex">
 					<explorer class="explorer" @select="selectAI($event)" />
-					<div>
+					<div class="components-column">
 						<div class="title">
 							<v-icon>mdi-sd</v-icon>
 							{{ $t('all_my_components') }} ({{ farmer_components.length }})
 						</div>
 						<div class="farmer-components" :class="{dashed: draggedComponent && draggedComponentLocation === 'leek'}" @dragover="dragOver" @drop="componentsDrop('farmer', $event)">
-							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" ref="componentTooltips" :item="LeekWars.items[component.template]" :bottom="true" :nodge="true">
+							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ props }" ref="componentTooltips" :item="LeekWars.items[component.template]" :instance="(component as any)" :bottom="true" :nodge="true">
 								<div :quantity="component.quantity" :class="{dragging: draggedComponent && draggedComponent.template === component.template && draggedComponentLocation === 'farmer', locked: LeekWars.items[component.template].level > leek.level || leek.components.find(c => c && c.template === component.template) }" :draggable="LeekWars.items[component.template].level <= leek.level" class="component" v-bind="props" @dragstart="componentDragStart('farmer', component, $event)" @dragend="componentDragEnd(component)" @click="addComponent(component)">
-									<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
+									<img :class="alteredClass(component as any, LeekWars.componentCapacity(component.template), LeekWars.alterations?.weights)" :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
 								</div>
 							</rich-tooltip-item>
 						</div>
@@ -770,7 +841,7 @@
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :nodge="true" :leek="leek">
 						<div :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-bind="props" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
-							<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" draggable="false">
+							<img :src="chipImageUrl(CHIPS[chip.template].name)" draggable="false">
 						</div>
 					</rich-tooltip-item>
 				</div>
@@ -780,7 +851,7 @@
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
 					<rich-tooltip-item v-for="chip in farmer_chips" :key="chip.id" v-slot="{ props }" :item="LeekWars.items[chip.template]" :bottom="true" :nodge="true">
 						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: CHIPS[chip.template].level > leek.level || leek.chips.find(c => c.template === chip.template) }" :draggable="CHIPS[chip.template].level <= leek.level" class="chip" v-bind="props" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
-							<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" draggable="false">
+							<img :src="chipImageUrl(CHIPS[chip.template].name)" draggable="false">
 						</div>
 					</rich-tooltip-item>
 				</div>
@@ -803,9 +874,11 @@
 	import { Chip } from '@/model/chip'
 	import { Hat } from '@/model/hat'
 	import { mixins , useNamespacedT } from '@/model/i18n'
-	import { ItemTemplate, ItemType } from '@/model/item'
+	import { itemImageUrl, chipImageUrl, ItemTemplate, ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
-	import { Component } from '@/model/component'
+	import { alteredClass, displayRatio } from '@/model/alteration'
+	import { Component, componentsBonus } from '@/model/component'
+	import type { InventoryItem } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Potion, PotionEffect } from '@/model/potion'
@@ -827,10 +900,9 @@
 	import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { useLiveHistory } from '@/model/use-live-history'
-	import { Line } from 'vue-chartjs'
-	import type { ChartData, ChartOptions } from 'chart.js'
+	import TalentChart from '@/component/talent-chart.vue'
 
 	const CapitalDialog = defineAsyncComponent(() => import('./capital-dialog.vue'))
 	const LoadoutDialog = defineAsyncComponent(() => import('./loadout-dialog.vue'))
@@ -841,7 +913,7 @@
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
 	defineOptions({ name: 'Leek', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, Line,
+		CharacteristicTooltip, RichTooltipItem, RichTooltipFarmer, RichTooltipLeek, TitlePicker, ai: AIElement, 'lw-title': LwTitle, LeekComponent, TalentChart,
 	} })
 
 	useI18n() // initialize local scope for <i18n-t>
@@ -855,7 +927,7 @@
 	const pickerRef = useTemplateRef<InstanceType<typeof TitlePicker>>('picker')
 
 	const leek = ref<Leek | null>(null)
-	const error = ref(false)
+	const notFound = ref(false)
 	const weaponsDialog = ref(false)
 	const draggedWeapon = ref<Weapon | null>(null)
 	const draggedWeaponLocation = ref<string | null>(null)
@@ -868,13 +940,13 @@
 	const renameError = ref<{error: string, error_params?: unknown[]} | null>(null)
 	const potionDialog = ref(false)
 	const hatDialog = ref(false)
-	const chartData = ref<ChartData<'line'> | null>(null)
-	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	const showReport = ref(false)
 	const reasons = [Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_AI_NAME]
 	const levelPopup = ref(false)
 	const levelPopupData = ref<unknown>(null)
 	const aiDialog = ref(false)
+	const adminAIDialog = ref(false)
+	const adminAICode = ref<string | null>(null)
 	const draggedAI = ref<AI | null>(null)
 	const chipsDialog = ref(false)
 	const draggedChip = ref<Chip | null>(null)
@@ -943,7 +1015,20 @@
 	})
 
 	const farmer_hats = computed(() => store.state.farmer ? store.state.farmer.hats : [])
-	const farmer_components = computed(() => store.state.farmer ? store.state.farmer.components : [])
+	/** Charge d'altération d'une pièce, exactement le ratio de la jauge. */
+	function componentCharge(component: InventoryItem) {
+		const weights = LeekWars.alterations?.weights
+		if (!component.stats || !weights) return 0
+		return displayRatio(component.stats, LeekWars.componentCapacity(component.template), weights)
+	}
+	// Niveau croissant (les pièces utilisables d'abord, les verrouillées à la fin), puis
+	// charge décroissante comme dans l'inventaire : l'ordre du serveur est arbitraire.
+	const farmer_components = computed(() => {
+		if (!store.state.farmer) return []
+		return [...store.state.farmer.components].sort((a, b) =>
+			((LeekWars.items[a.template]?.level ?? 0) - (LeekWars.items[b.template]?.level ?? 0))
+			|| (componentCharge(b) - componentCharge(a)))
+	})
 
 	// Suggestions d'achat : items achetables en cristaux non possédés, depuis le catalogue du marché
 	const marketItems = ref<ItemTemplate[]>([])
@@ -1097,7 +1182,7 @@
 		// affiché et on swappe atomiquement quand la réponse arrive.
 		tournamentRange.value = null
 		tournamentRangeLoading.value = false
-		error.value = false
+		notFound.value = false
 		const reqId = id.value
 		const method = my_leek.value ? 'leek/get-private/' + id.value : 'leek/get/' + id.value
 		request = LeekWars.get<Leek>(method)
@@ -1109,15 +1194,14 @@
 				if (my_leek.value) {
 					LeekWars.setActions([
 						{icon: 'mdi-auto-fix', click: () => customize()},
-						{image: 'icon/potion.png', click: () => potion()},
+						{icon: 'mdi-flask', click: () => potion()},
 					])
 				} else {
 					LeekWars.setActions([
-						{image: 'icon/garden.png', click: () => router.push('/garden/challenge/leek/' + id.value)}
+						{icon: 'mdi-flag-outline', click: () => router.push('/garden/challenge/leek/' + id.value)}
 					])
 				}
 				renameName.value = leek.value.name
-				chart()
 				if (leek.value.level_seen < leek.value.level) {
 					showLevelPopup()
 				}
@@ -1133,7 +1217,7 @@
 		}).error(() => {
 			if (reqId !== id.value) return
 			leek.value = null
-			error.value = true
+			notFound.value = true
 		})
 	}
 
@@ -1242,32 +1326,6 @@
 		}
 	}
 
-	function chart() {
-		if (!leek.value || leek.value.level < 100) return
-		const labels = []
-		const time = LeekWars.time
-		for (let i = 1; i <= 7; ++i) {
-			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
-		}
-		chartData.value = {
-			labels: labels.reverse(),
-			datasets: [{
-				tension: 0.2,
-				data: leek.value.talent_history,
-				borderColor: '#5fad1b',
-				pointBackgroundColor: '#5fad1b',
-				borderWidth: 2,
-				fill: { target: 'origin', above: '#5fad1b30' },
-			}]
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} as any
-		chartOptions.value = {
-			aspectRatio: 2.5,
-			plugins: { legend: { display: false } },
-			elements: { point: { radius: 4, hoverRadius: 6 } },
-		}
-	}
-
 	function selectHat(h: Hat | null) {
 		if (!leek.value) return
 		hatDialog.value = false
@@ -1307,6 +1365,23 @@
 		if (!leek.value) return
 		leek.value.ai = null
 		LeekWars.delete('leek/remove-ai', {leek_id: leek.value.id})
+	}
+
+	// Extension du path (.js/.ts/.py) sinon LeekScript, pour la coloration de l'aperçu admin
+	const adminAILanguage = computed(() => {
+		const m = /\.(js|ts|py)$/.exec(leek.value?.ai?.path || '')
+		return m ? m[1] : 'leekscript'
+	})
+
+	function openAdminAI() {
+		if (!leek.value || !leek.value.ai) return
+		adminAIDialog.value = true
+		adminAICode.value = null
+		LeekWars.post('ai/read-admin', {farmer_id: leek.value.farmer.id, path: leek.value.ai.path}).then((data) => {
+			adminAICode.value = data.code
+		}).error(() => {
+			adminAICode.value = ''
+		})
 	}
 
 	function selectAI(ai: AI) {
@@ -1499,11 +1574,21 @@
 			if (leek.value) {
 				const old = leek.value.components[index]
 				if (old) store.commit('add-component', old)
-				leek.value.components[index] = {id: data.id, template: c.template, quantity: 1} as Component
+				// Conserver les alterations de la piece equipee, sinon sa tooltip retombe
+				// sur les stats de base jusqu'au rechargement de la page.
+				leek.value.components[index] = {id: data.id, template: c.template, quantity: 1, stats: c.stats, altered_power: c.altered_power} as Component
 				store.commit('remove-inventory', { ...c, item_template: c.template, quantity: 1, type: ItemType.COMPONENT })
 				refreshTotalCharacteristics()
 			}
-		}).error(err => LeekWars.toast(err.error as string))
+		}).error(err => {
+			// Une stat d'exception par poireau : une piece alteree ne peut pas creer une
+			// carac deja creee par une autre piece du poireau.
+			if (err.error === 'duplicate_exception_stat') {
+				LeekWars.toast(t('main.error_duplicate_exception_stat', [t('characteristic.' + (err as { carac?: string }).carac)]))
+			} else {
+				LeekWars.toast(t('main.error_x', [err.error]))
+			}
+		})
 	}
 
 	function moveComponent(c: Component, index: number | undefined) {
@@ -1551,17 +1636,47 @@
 	function refreshTotalCharacteristics() {
 		if (!leek.value) return
 		const l = leek.value as Leek & Record<string, number>
+		// Item hors catalogue (cf. la garde du même cas dans le template) : on ne connaît
+		// pas ses stats, il ne compte simplement pas.
+		const bonus = componentsBonus(leek.value.components, max_components.value,
+			template => LeekWars.components[LeekWars.items[template]?.params]?.stats)
 		for (const charac of LeekWars.characteristics) {
-			l['total_' + charac] = l[charac]
+			l['total_' + charac] = l[charac] + (bonus[charac] || 0)
 		}
-		for (let c = 0; c < 8; ++c) {
-			const component = leek.value.components[c]
-			if (component && c < max_components.value) {
-				for (const charac of LeekWars.components[LeekWars.items[component.template].params].stats) {
-					l['total_' + charac[0]] += charac[1]
-				}
-			}
-		}
+	}
+
+	/**
+	 * Armes proposables par l'apparat « Tenir une arme ».
+	 *
+	 * Le serveur en est la source : une arme equipee sur un AUTRE poireau n'apparait dans
+	 * aucune donnee deja chargee ici (ni `leek.weapons`, ni `farmer.weapons` qui ne porte
+	 * que le coffre). Un seul appel, a la premiere ouverture de la fenetre.
+	 *
+	 * En attendant la reponse, on montre les armes du poireau : la fenetre n'est jamais
+	 * vide, et la liste ne fait que s'allonger quand le serveur repond.
+	 */
+	const ownedWeapons = ref<number[] | null>(null)
+	let ownedWeaponsRequested = false
+
+	const skinWeapons = computed(() => {
+		const templates = ownedWeapons.value ?? orderedWeapons.value.map(w => w.template)
+		return [...new Set(templates)]
+			.filter(template => LeekWars.items[template])
+			.sort((a, b) => LeekWars.items[a].level - LeekWars.items[b].level)
+	})
+
+	function openSkinWeaponDialog() {
+		skinWeaponDialog.value = true
+		if (ownedWeaponsRequested) return
+		ownedWeaponsRequested = true
+		// L'échec est SILENCIEUX et volontaire : la fenêtre retombe sur les armes du poireau.
+		// Sans ce gestionnaire, un rejet non capturé partirait en rapport d'erreur.
+		LeekWars.get('pomp/get-weapons').then(data => {
+			ownedWeapons.value = data.weapons as number[]
+		}).error(() => {
+			// Nouvel essai à la prochaine ouverture.
+			ownedWeaponsRequested = false
+		})
 	}
 
 	function setWeapon(w: number) {
@@ -1577,7 +1692,7 @@
 	function pickTitle(title: number[]) {
 		leek.value!.title = title
 		titleDialog.value = false
-		LeekWars.put('leek/set-title', {leek_id: leek.value!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+		LeekWars.put('leek/set-title', {leek_id: leek.value!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0, gold: !!title[4]})
 		store.commit('set-leek-title', {leek: leek.value!.id, title})
 	}
 
@@ -1680,13 +1795,25 @@
 				font-size: 17px;
 				vertical-align: top;
 				display: inline-block;
-				margin-top: 3px;
+				margin-top: 4px;
 				font-weight: bold;
 			}
 		}
 		.characteristic:nth-child(4n+3),
 		.characteristic:nth-child(4n+4) {
 			background: var(--background-secondary);
+		}
+	}
+	/* Les zébrures existaient déjà — elles étaient simplement INVISIBLES en v3 :
+	   elles peignent `--background-secondary`, qui EST la surface du panneau
+	   depuis que le thème v3 fait pointer `--panel-background` dessus. C'est le
+	   même piège que le widget « Mes poireaux » de l'accueil. Elles prennent la
+	   surface de rangée, qui est faite pour ça. Le v2, lui, a bien deux valeurs
+	   distinctes et garde les siennes. */
+	body:not(.v2) .characteristics {
+		.characteristic:nth-child(4n+3),
+		.characteristic:nth-child(4n+4) {
+			background: var(--background-row);
 		}
 	}
 	body.dark .characteristic.frequency img {
@@ -1709,7 +1836,7 @@
 		background: var(--pure-white);
 		border: 1px solid var(--border);
 		position: relative;
-		border-radius: 5px;
+		border-radius: var(--radius);
 	}
 	.xp-bar {
 		height: 10px;
@@ -1717,7 +1844,7 @@
 		display: inline-block;
 		vertical-align: top;
 		position: absolute;
-		border-radius: 5px;
+		border-radius: var(--radius);
 		transition: all ease 0.3s;
 	}
 	.xp-bar.blue {
@@ -1727,6 +1854,12 @@
 		font-size: 18px;
 		margin-left: 5px;
 		color: var(--text-color-secondary);
+	}
+	/* Le gain du jour est une glose, pas un score : il ne doit pas crier plus fort
+	   que le talent lui-même. Même corps que le chiffre qu'il commente, la couleur
+	   secondaire suffit à le mettre en retrait. */
+	body:not(.v2) .talent-more {
+		font-size: 14px;
 	}
 	.fights {
 		margin-top: 10px;
@@ -1739,7 +1872,7 @@
 			color: var(--text-color-secondary);
 		}
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid var(--border);
@@ -1751,30 +1884,10 @@
 		align-items: center;
 		justify-content: center;
 	}
-	.talent-history {
-		margin-top: 3px;
-		// margin-left: -10px;
-		// margin-right: -4px;
-		// margin-bottom: -16px;
-		position: relative;
-		:deep(.ct-line) {
-			stroke: rgba(95, 173, 27, 0.7);
-			stroke-width: 2px;
-		}
-		:deep(.ct-point) {
-			stroke: #5fad1b;
-		}
-		:deep(.ct-area) {
-			fill: rgba(95, 173, 27, 1);
-			fill-opacity: 0.2;
-		}
-		:deep(.ct-label.ct-horizontal) {
-			text-align: center;
-			display: block;
-		}
-		:deep(&:before) {
-			float: none;
-		}
+	// La hauteur du graphique appartient à cette page : le composant partagé se
+	// contente de remplir ce qu'on lui donne.
+	.chart-wrap {
+		height: 150px;
 	}
 	.chart-tooltip {
 		position: absolute;
@@ -1782,11 +1895,11 @@
 	.edit-button {
 		float: right;
 		cursor: pointer;
-		color: #aaa;
+		color: var(--grey-9);
 		margin: 10px 0;
 	}
 	.edit-button:hover {
-		color: black;
+		color: var(--black);
 	}
 	.dragging {
 		opacity: 0.2;
@@ -1820,6 +1933,12 @@
 	.weapons-popup .weapon[draggable] {
 		cursor: move;
 	}
+	// Arme actuellement portee par l'apparat : avec toutes les armes de l'eleveur, la
+	// liste est trop longue pour retrouver la selection en comparant les images.
+	.weapons-popup .weapon.selected {
+		border-color: var(--primary);
+		box-shadow: inset 0 0 0 1px var(--primary);
+	}
 	.weapons-popup .weapon img {
 		max-width: calc(100% - 20px);
 		max-height: 60px;
@@ -1837,13 +1956,52 @@
 			margin: 20px;
 		}
 	}
+	// Puces plafonnées à 52 px. La grille occupe toujours toute la largeur du
+	// panel (colonnes en `1fr`), mais la largeur excédentaire ne gonfle plus
+	// les puces : elle reste dans la case, autour de l'image, ce qui écarte les
+	// puces les unes des autres. Les cases gardent un ratio 1:1, donc l'écart
+	// gagné à l'horizontale l'est aussi à la verticale — l'espacement reste
+	// régulier dans les deux sens. À 24 puces (niveau 301) on tient en
+	// 3 rangées sans dépasser la hauteur des panels voisins.
 	.panel .chips {
 		text-align: center;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-		grid-gap: 3px;
-		margin: 8px;
+		grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+		gap: 10px;
+		margin: 10px;
 		flex: 1;
+	}
+	// Le carré de la case ne dépend pas de l'image : une puce non carrée ne
+	// déformerait pas la grille.
+	.panel .chips .chip {
+		aspect-ratio: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.panel .chips .chip img {
+		max-width: 52px;
+		max-height: 52px;
+		object-fit: contain;
+	}
+	// L'ancien design garde SA grille : des puces qui remplissent leur colonne,
+	// serrées par 3 px d'écart. Le plafond de 52 px et l'aération qui va avec
+	// sont un parti pris du v3 — appliqués aux anciennes tuiles, ils écartent
+	// les puces d'une page que les joueurs connaissent par cœur.
+	body.v2 {
+		.panel .chips {
+			grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+			gap: 3px;
+			margin: 8px;
+		}
+		.panel .chips .chip {
+			aspect-ratio: auto;
+			display: inline-block;
+		}
+		.panel .chips .chip img {
+			max-width: none;
+			max-height: none;
+		}
 	}
 	.chip {
 		display: inline-block;
@@ -1866,14 +2024,31 @@
 		height: 60px;
 		vertical-align: bottom;
 	}
+	// Colonnes à la largeur exacte d'une puce, et non `minmax(60px, 1fr)` : en
+	// `1fr` les colonnes s'élargissent pour remplir la ligne et chaque puce se
+	// centre dans la sienne, donc l'écart horizontal valait le `gap` PLUS le
+	// reste de la division — toujours plus que l'écart vertical, qui vaut le gap
+	// tout court. À largeur fixe, les deux
+	// valent 8 px ; `justify-content` partage le résidu en marges de part et
+	// d'autre de la grille au lieu de le glisser entre les puces.
 	.chips-dialog .leek-chips, .chips-dialog .farmer-chips {
 		min-height: 80px;
 		border: 3px solid transparent;
 		padding: 5px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-		gap: 6px;
-		justify-items: center;
+		grid-template-columns: repeat(auto-fill, 60px);
+		gap: 8px;
+		justify-content: center;
+	}
+	// Même histoire que la grille du panel : l'ancien design laisse ses cases
+	// s'étirer sur la largeur (`1fr`) au lieu de les figer à 60 px centrés.
+	body.v2 {
+		.chips-dialog .leek-chips, .chips-dialog .farmer-chips {
+			grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+			gap: 6px;
+			justify-items: center;
+			justify-content: normal;
+		}
 	}
 	.leek-ai-components {
 		flex: 1;
@@ -1886,6 +2061,13 @@
 			display: flex;
 			justify-content: center;
 		}
+	}
+	.admin-ai {
+		cursor: pointer;
+	}
+	.admin-ai-code {
+		max-height: calc(100vh - 220px);
+		overflow-y: auto;
 	}
 	.component {
 		display: inline-block;
@@ -1908,10 +2090,22 @@
 	.ai-popup {
 		display: flex;
 		flex-direction: column;
+		// Le popup lui-meme ne defile pas : il tient dans la hauteur laissee
+		// par la fenetre, et ce sont les deux listes qui defilent chacune de
+		// leur cote. Le defilement d'ensemble ne revient que si l'ecran est
+		// trop petit pour les hauteurs minimales des deux colonnes.
+		//
+		// Le compte vient de la chaine Vuetify, un `max-height: 100%` ne
+		// resolvant pas ici (la zone de contenu n'a pas de hauteur propre) :
+		// 24 px de marge de l'overlay, 48 px de son `max-height`, 40 px de
+		// barre de titre et 30 px de padding du contenu, plus 4 px de marge
+		// pour ne pas rallumer la barre de defilement pour un pixel.
+		max-height: calc(100vh - 146px);
 		.leek-ai-components {
 			width: 360px;
 			margin-bottom: 30px;
 			align-self: center;
+			flex: none;
 			.component {
 				border: 3px solid transparent;
 				cursor: pointer;
@@ -1924,9 +2118,18 @@
 		}
 		.flex {
 			gap: 20px;
+			// La rangee prend toute la hauteur restante : c'est elle qui donne
+			// leur hauteur aux deux zones de defilement.
+			flex: 1;
+			min-height: 0;
 			& > * {
 				flex: 1;
 			}
+		}
+		.components-column {
+			display: flex;
+			flex-direction: column;
+			min-height: 0;
 		}
 		.leek-ai, .farmer-ais {
 			min-height: 80px;
@@ -1955,6 +2158,15 @@
 			grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
 			gap: 6px;
 			justify-items: center;
+			// La grille defile pour elle-meme au lieu d'allonger le popup.
+			flex: 1;
+			align-content: start;
+			overflow-y: auto;
+			// Sans ca, `overflow-y` force `overflow-x` a auto et la barre
+			// verticale, en rognant la largeur, fait apparaitre une barre
+			// horizontale sous la grille.
+			overflow-x: hidden;
+			margin-bottom: 10px;
 			.component {
 				cursor: move;
 				width: 60px;
@@ -1993,21 +2205,52 @@
 			img {
 				width: 100%;
 			}
+			// Même plaque de quantité que les armes, puces et chapeaux (règle plus
+			// bas) : l'aplat de marque et son encre, au coin. Toujours affichée, même à 1 :
+			// une potion se consomme.
 			&::after {
 				position: absolute;
-				bottom: 0;
-				right: 0;
+				bottom: -5px;
+				right: -5px;
 				padding-top: 1px;
-				height: 19px;
+				height: 20px;
 				padding-left: 4px;
 				padding-right: 4px;
 				content: attr(quantity);
 				text-align: center;
-				color: #eee;
-				border-radius: 20px;
+				color: var(--primary-surface-text);
+				border-radius: var(--radius-pill);
 				font-weight: bold;
-				background-color: var(--text-color-secondary);
+				background-color: var(--primary-surface);
 			}
+		}
+	}
+	// Le popup d'IA fait 1050 px : bien avant le mobile, l'explorateur d'IA et la
+	// grille de composants deviennent deux colonnes trop etroites. On les empile.
+	@media (max-width: 800px) {
+		// Empile, on revient au defilement d'ensemble : deux zones de defilement
+		// l'une au-dessus de l'autre sur une colonne etroite sont impraticables.
+		.ai-popup {
+			max-height: none;
+		}
+		.ai-popup .flex {
+			flex-direction: column;
+			flex: none;
+		}
+		// En colonne, `flex: 1` se partagerait la HAUTEUR et ecraserait les deux blocs :
+		// on les laisse prendre leur hauteur naturelle.
+		.ai-popup .flex > * {
+			flex: none;
+		}
+		// Empile, l'explorateur repousserait les composants hors de l'ecran avant
+		// meme qu'on les voie.
+		.ai-popup .explorer {
+			min-height: 0;
+			height: 260px;
+		}
+		.ai-popup .farmer-components {
+			flex: none;
+			overflow-y: visible;
 		}
 	}
 	#app.app .farmer-potions .potions-grid {
@@ -2081,10 +2324,10 @@
 			gap: 3px;
 			padding: 2px 7px;
 			background: rgba(0, 0, 0, 0.6);
-			color: #fff;
+			color: var(--white);
 			font-size: 14px;
 			font-weight: bold;
-			border-radius: 8px 0 0 0;
+			border-radius: var(--radius-large) 0 0 0;
 			img {
 				height: 20px;
 				width: auto;
@@ -2134,14 +2377,35 @@
 		}
 	}
 	.weapons-wrapper {
-		padding: 6px 0;
+		padding: 10px;
 		height: 100%;
 		justify-content: center;
 		display: flex;
 		flex-direction: column;
+		container-type: inline-size;
 		.weapon img {
 			vertical-align: bottom;
 			max-width: 100%;
+		}
+	}
+	.weapons {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	// Panel assez large : les armes passent en grille 2 colonnes (2x2 à 4 armes)
+	// au lieu de la pile verticale qui laisse tout l'espace horizontal vide.
+	@container (min-width: 460px) {
+		.weapons {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			align-items: center;
+			justify-items: center;
+			row-gap: 10px;
+		}
+		// Nombre impair : la dernière arme est centrée sur toute la largeur.
+		.weapons .weapon:last-child:nth-child(odd) {
+			grid-column: span 2;
 		}
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat, .farmer-components .component {
@@ -2157,9 +2421,11 @@
 		height: 20px;
 		content: attr(quantity);
 		text-align: center;
-		color: #eee;
-		border-radius: 20px;
-		background-color: #0a0;
+		// Le vert du theme, pas un #0a0 en dur : il jurait avec le v3 et son
+		// encre creme dessus ne tenait pas 3 de contraste.
+		color: var(--primary-surface-text);
+		border-radius: var(--radius-pill);
+		background-color: var(--primary-surface);
 		font-weight: bold;
 		padding-left: 4px;
 		padding-right: 4px;
@@ -2211,9 +2477,9 @@
 						opacity: 0.5;
 					}
 					.name {
-						color: #555;
+						color: var(--grey-4);
 						.v-icon {
-							color: #999;
+							color: var(--grey-8);
 						}
 					}
 				}
@@ -2230,9 +2496,8 @@
 			cursor: pointer;
 			pointer-events: auto;
 		}
-		.v-radio.v-radio--is-disabled {
+		.lw-radio.disabled {
 			opacity: 0.7;
-			pointer-events: auto;
 		}
 	}
 	.rename-button {
@@ -2244,10 +2509,14 @@
 		}
 	}
 	.empty {
-		color: #999;
+		color: var(--grey-8);
 	}
+	// L'explorateur s'etire sur toute la hauteur de la rangee, qui vaut la
+	// hauteur disponible a l'ecran : il etait fige a 460 px avec du vide sous
+	// lui. Le minimum n'est la que pour les tres petits ecrans, ou il rend la
+	// main au defilement d'ensemble du popup.
 	.explorer {
-		height: 460px;
+		min-height: 260px;
 	}
 	.weapon-count, .chip-count, .register-count {
 		padding-left: 5px;

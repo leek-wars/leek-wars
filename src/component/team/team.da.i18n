@@ -64,6 +64,7 @@
 	"invite_friends": "Inviter venner",
 	"leeks": "Porrer ({0})",
 	"level_n": "Niveau {0}",
+	"live_on_team": "Live hos {0}",
 	"log_change": "Skift synlighedsniveauet for spor",
 	"log_change_text": "Skift niveauet af synlighed for dine allierede (medlemmer af dit team) af dine spor i kamp (funktion debug(), debugE() osv.):",
 	"log_level_0": "Skjult",

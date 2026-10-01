@@ -23,5 +23,7 @@
 	"error_already_have_candidacy": "Sinulla on jo vireillä oleva hakemus.",
 	"error_already_in_team": "Olet jo tiimissä.",
 	"error_team_full": "Tämä tiimi on täynnä.",
-	"error_too_many_candidacies": "Sinulla on jo 5 vireillä olevaa hakemusta."
+	"error_too_many_candidacies": "Sinulla on jo 5 vireillä olevaa hakemusta.",
+	"show_closed": "Näytä suljetut",
+	"closed": "Suljettu"
 }

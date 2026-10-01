@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="team" fallback="mdi-shield" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<div class="banner">
@@ -19,10 +24,10 @@
 		</panel>
 		<panel>
 			<div class="filters">
-				<v-text-field v-model="search" :label="$t('search')" prepend-inner-icon="mdi-magnify" density="compact" variant="outlined" hide-details clearable class="filter-search" />
-				<v-select v-model="activityFilter" :items="activityOptions" :label="$t('activity')" density="compact" variant="outlined" hide-details class="filter-select" />
-				<v-select v-model="sizeFilter" :items="sizeOptions" :label="$t('team_size')" density="compact" variant="outlined" hide-details class="filter-select" />
-				<v-switch v-model="showClosed" :label="$t('show_closed')" density="compact" hide-details color="primary" class="filter-switch" />
+				<lw-input v-model="search" :label="$t('search')" prepend-inner-icon="mdi-magnify" clearable class="filter-search" />
+				<lw-select v-model="activityFilter" :items="activityOptions" :label="$t('activity')" class="filter-select" />
+				<lw-select v-model="sizeFilter" :items="sizeOptions" :label="$t('team_size')" class="filter-select" />
+				<lw-switch v-model="showClosed" :label="$t('show_closed')" class="filter-switch" />
 			</div>
 
 			<loader v-if="!teams" />
@@ -248,7 +253,7 @@ loadTeams()
 		font-size: 22px;
 		font-weight: 500;
 		margin-bottom: 6px;
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	p {
 		color: var(--text-color-secondary);
@@ -275,11 +280,17 @@ loadTeams()
 		border: none !important;
 	}
 }
-.filter-select {
+// Le champ est rendu par lw-select : il porte la classe mais pas l'attribut de
+// portée de ce composant, d'où le :deep(). Sans lui, la largeur maximale de ces
+// deux filtres ne s'appliquait plus depuis leur migration.
+:deep(.filter-select) {
 	max-width: 200px;
 }
 #app.app {
-	.filter-search, .filter-select {
+	.filter-search {
+		max-width: 100%;
+	}
+	:deep(.filter-select) {
 		max-width: 100%;
 	}
 }
@@ -321,6 +332,10 @@ loadTeams()
 	border-radius: 50%;
 	background: var(--border);
 	border: 1.5px solid var(--pure-white);
+	// v3 : une LED carrée, comme lw-status.
+	body:not(.v2) & {
+		border-radius: 0;
+	}
 	&.online {
 		background: #95d85a;
 	}
@@ -356,7 +371,7 @@ loadTeams()
 	flex: none;
 }
 .closed-badge {
-	color: #999;
+	color: var(--grey-8);
 	font-size: 12px;
 	display: flex;
 	align-items: center;

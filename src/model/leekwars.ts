@@ -1,9 +1,14 @@
 import packageJson from '@/../package.json'
 import { env } from '@/env'
 import { locale } from '@/locale'
+import { normalizeApiError, type ApiError } from '@/model/api-error'
 import { Arena } from '@/model/arena'
+import { playAudio } from '@/model/audio'
 import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, COMPLEXITIES } from '@/model/data'
 import { linkify, toChatLink } from '@/model/linkify'
+import { rankingAnchor } from '@/model/ranking'
+import { RETRY_CONFIG, retryDelay } from '@/model/retry-delay'
+import { buildObjectApiModel } from '@/component/editor/leekwars-dts'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -18,17 +23,21 @@ import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
-import { PotionEffect, PotionTemplate } from './potion'
+import { design } from './design'
+import { isRestatPotion, Potion, PotionEffect, PotionTemplate } from './potion'
 import { ITEMS } from './items'
 import { SCHEMES } from './schemes'
 import { COMPONENTS } from './components'
+import type { AlterationData } from './alteration'
 import { WEAPONS } from './weapons'
 import { BossSquads } from './boss-squads'
 import { DATA_TYPES, loadGameData as loadGameDataRaw } from './gamedata'
 import { nextTick, reactive } from 'vue'
 
 const DEV = window.location.port === '8080'
-const LOCAL = window.location.port === '8500' || window.location.port === '5100'
+const LOCAL = window.location.port === '8500' || window.location.port === '5100' || window.location.hostname === 'leekwars.local' || window.location.hostname === 'leekwars-beta.local'
+// Client develop local branché sur le backend beta : identité visuelle violette
+const BETA_LOCAL = window.location.hostname === 'leekwars-beta.local'
 
 // Helper functions to avoid TypeScript "excessively deep" errors with vue-i18n
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,21 +83,6 @@ function ucfirst(str: string) {
 	return f + str.substr(1)
 }
 
-const RETRY_CONFIG = {
-	maxRetries: 3,
-	baseDelay: 1000,  // 1s, 2s, 4s
-	maxDelay: 10000,
-}
-function retryDelay(retry: number) {
-	return Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retry), RETRY_CONFIG.maxDelay)
-}
-
-interface ApiError {
-	error: string
-	params?: unknown[]
-	[key: string]: unknown
-}
-
 interface ExtendedPromise<T> extends Promise<T> {
 	abort: () => void
 	error: (callback: (error: ApiError) => void) => ExtendedPromise<T>
@@ -102,7 +96,7 @@ interface ExtendedPromise<T> extends Promise<T> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function request<T = any>(method: string, url: string, params?: string | FormData | null): ExtendedPromise<T> {
+function request<T = any>(method: string, url: string, params?: string | FormData | null, noRetry = false): ExtendedPromise<T> {
 	let currentXhr: XMLHttpRequest | null = null
 	let retryTimeout: ReturnType<typeof setTimeout> | null = null
 
@@ -112,7 +106,10 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 			const xhr = new XMLHttpRequest()
 			currentXhr = xhr
 			xhr.open(method, url)
-			xhr.responseType = 'json'
+			// 'text' et non 'json' : le parsing manuel ci-dessous est le seul moyen de distinguer
+			// un corps VIDE (succès sans contenu) d'un corps ILLISIBLE (réponse cassée) — avec
+			// responseType 'json' les deux donnent le même `response` null.
+			xhr.responseType = 'text'
 			if (store.state.connected) {
 				xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
 			}
@@ -121,33 +118,64 @@ function request<T = any>(method: string, url: string, params?: string | FormDat
 				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 			}
 			xhr.onload = () => {
-				if (xhr.status === 200) {
-					resolve(xhr.response)
-				} else if (xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
+				// Réessai avant toute lecture du corps : celui d'une 429 n'intéresse personne.
+				// `noRetry` pour les endpoints dont la 429 est un DÉLAI VOULU et non une
+				// saturation passagère : la rejouer ne peut que rater, et renvoyer un
+				// corps volumineux (upload d'image) trois fois pour rien.
+				if (!noRetry && xhr.status === 429 && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 						console.warn("[429] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
 					}
 					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
+					return
+				}
+				// Corps vide = succès sans contenu : certains services renvoient null
+				// (farmer/get-godfather-info sur un login inconnu, par exemple), et leurs appelants
+				// traitent ce null comme une réponse valide. Corps non vide mais illisible = réponse
+				// cassée (tronquée, page d'erreur d'un proxy) : c'est un échec. La résoudre faisait
+				// planter les `.then` qui déréférencent le résultat (`f.leeks` dans
+				// rich-tooltip-farmer, `data.code` après ai/read) en unhandledrejection non rattrapée.
+				const text = xhr.responseText
+				let body: unknown = null
+				let unreadable = false
+				if (text !== '') {
+					try { body = JSON.parse(text) } catch { unreadable = true }
+				}
+				if (xhr.status === 200 && !unreadable) {
+					resolve(body as T)
 				} else {
 					if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 						const message = "[" + xhr.status + "] " + method + " " + url
 						console.error(message)
 						// LeekWars.toast(message, 5000)
 					}
-					reject(xhr.response)
+					// L'URL voyage avec l'erreur : un corps illisible se normalise en 'unknown_error'
+					// (seul code traduit dans les 18 locales) et serait sinon indistinguable des
+					// autres dans les rapports masqués.
+					reject(normalizeApiError(unreadable ? { invalid_response: method + ' ' + url } : body))
 				}
 			}
 			xhr.onerror = () => {
-				// En dev (cross-origin), une 429 sur le preflight CORS se traduit par un onerror
-				if ((LOCAL || DEV) && retry < RETRY_CONFIG.maxRetries) {
+				// `onerror` n'est PAS une 429 (celle-ci arrive par `onload` avec son statut, réessai
+				// géré plus haut) : ici la couche réseau a lâché — 4G qui décroche, serveur
+				// injoignable, requête coupée par un bloqueur. Le message doit le dire, sans quoi le
+				// joueur se croit rate-limité alors qu'il navigue tranquillement.
+				//
+				// Pas de réessai automatique : `onerror` peut survenir APRÈS que le serveur a traité
+				// la requête (réponse perdue en route), et rejouer un POST le ferait deux fois —
+				// deux combats lancés, deux objets fabriqués. Seule exception, le GET en dev :
+				// cross-origin, une 429 sur le preflight CORS s'y traduit par un onerror indistinguable
+				// d'une panne réseau. Restreint au GET parce que DEV (port 8080) tape l'API de
+				// PRODUCTION : y rejouer un POST perdu fabriquerait vraiment l'objet deux fois.
+				if ((LOCAL || DEV) && method === 'GET' && retry < RETRY_CONFIG.maxRetries) {
 					const delay = retryDelay(retry)
 					console.warn("[CORS/429?] " + method + " " + url + " — retry " + (retry + 1) + "/" + RETRY_CONFIG.maxRetries + " in " + delay + "ms")
 					retryTimeout = setTimeout(() => attempt(retry + 1), delay)
 				} else {
-					console.error("[429] " + method + " " + url + " — all retries exhausted")
-					LeekWars.toast($t('main.too_many_requests'))
-					reject({ error: 'too_many_requests' })
+					console.error("[network] " + method + " " + url)
+					LeekWars.toast($t('main.network_error'))
+					reject({ error: 'network_error' })
 				}
 			}
 			xhr.send(params)
@@ -177,8 +205,8 @@ function serializeBody(form: Record<string, unknown> | FormData): string | FormD
 	return JSON.stringify(form)
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function post<T = any>(url: string, form: Record<string, unknown> | FormData = {}) {
-	return request<T>('POST', LeekWars.API + url, serializeBody(form))
+function post<T = any>(url: string, form: Record<string, unknown> | FormData = {}, noRetry = false) {
+	return request<T>('POST', LeekWars.API + url, serializeBody(form), noRetry)
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function put<T = any>(url: string, form: Record<string, unknown> | FormData = {}) {
@@ -200,7 +228,10 @@ const SKINS: { [key: number]: string } = {
 	24: "whiteandblack", 25: "ghost", 26: "salmon", 27: "radioactive", 28: "sand", 29: "teal", 30: "matcha", 31: "peach",
 	32: "fire", 33: "venimous", 34: "greyscale", 35: "frozen", 36: "dalton", 37: "charlie", 38: "mariniere", 39: "france",
 	40: "iron", 41: "diamond", 42: "mafia", 43: "bordeaux",
-	// 44: "ventura"
+	// 44 : récompense de fidélité LW+.
+	44: "terracotta",
+	45: "emerald",
+	46: "amethyst", 47: "sapphire", 48: "topaz", 49: "ruby", 50: "opal",
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
@@ -306,21 +337,21 @@ class Language {
 const LANGUAGES = Object.freeze({
 	fr: { code: 'fr', name: 'Français', country: 'fr', flag: '/image/flag/fr.png', chat: 1, encyclopedia: 'Encyclopédie', chats: [1, 32506, 32507], currency: 'EUR', beta: false, forum: true } as Language,
 	en: { code: 'en', name: 'English', country: 'gb', flag: '/image/flag/gb.png', chat: 2, encyclopedia: 'Encyclopedia', chats: [2, 32508, 32509], currency: 'USD', beta: false, forum: true } as Language,
-	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
-	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 2, encyclopedia: 'Enzyklopädie', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
+	es: { code: 'es', name: 'Español', country: 'es', flag: '/image/flag/es.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
+	de: { code: 'de', name: 'Deutsch', country: 'de', flag: '/image/flag/de.png', chat: 2, encyclopedia: 'Enzyklopädie', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
 	it: { code: 'it', name: 'Italiano', country: 'it', flag: '/image/flag/it.png', chat: 2, encyclopedia: 'Enciclopedia', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
-	pt: { code: 'pt', name: 'Português', country: 'pt', flag: '/image/flag/pt.png', chat: 2, encyclopedia: 'Enciclopédia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
-	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 2, encyclopedia: 'Encyklopædi', chats: null, currency: 'DKK', beta: true, forum: false } as Language,
-	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 2, encyclopedia: 'Tietosanakirja', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
-	nl: { code: 'nl', name: 'Nederlands', country: 'nl', flag: '/image/flag/nl.png', chat: 2, encyclopedia: 'Encyclopedie', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
-	no: { code: 'no', name: 'Norsk', country: 'no', flag: '/image/flag/no.png', chat: 2, encyclopedia: 'Encyclopedia', chats: null, currency: 'NOK', beta: true, forum: false } as Language,
-	pl: { code: 'pl', name: 'Polska', country: 'pl', flag: '/image/flag/pl.png', chat: 2, encyclopedia: 'Encyklopedia', chats: null, currency: 'EUR', beta: true, forum: false } as Language,
-	sv: { code: 'sv', name: 'Svenska', country: 'se', flag: '/image/flag/sv.png', chat: 2, encyclopedia: 'Encyklopedi', chats: null, currency: 'SEK', beta: true, forum: false } as Language,
-	ru: { code: 'ru', name: 'Русский', country: 'ru', flag: '/image/flag/ru.png', chat: 2, encyclopedia: 'Энциклопедия', chats: null, currency: 'USD', beta: true, forum: false } as Language,
-	zh: { code: 'zh', name: '中文', country: 'cn', flag: '/image/flag/cn.png', chat: 2, encyclopedia: '百科全书', chats: null, currency: 'CNY', beta: true, forum: false } as Language,
-	id: { code: 'id', name: 'Bahasa', country: 'id', flag: '/image/flag/id.png', chat: 2, encyclopedia: 'Ensiklopedia', chats: null, currency: 'USD', beta: true, forum: false } as Language,
-	ja: { code: 'ja', name: '日本', country: 'jp', flag: '/image/flag/jp.png', chat: 2, encyclopedia: '百科事典', chats: null, currency: 'JPY', beta: true, forum: false } as Language,
-	ko: { code: 'ko', name: '한국인', country: 'kr', flag: '/image/flag/kr.png', chat: 2, encyclopedia: '백과사전', chats: null, currency: 'USD', beta: true, forum: false } as Language,
+	pt: { code: 'pt', name: 'Português', country: 'pt', flag: '/image/flag/pt.png', chat: 2, encyclopedia: 'Enciclopédia', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
+	da: { code: 'da', name: 'Dansk', country: 'dk', flag: '/image/flag/da.png', chat: 2, encyclopedia: 'Encyklopædi', chats: null, currency: 'DKK', beta: false, forum: false } as Language,
+	fi: { code: 'fi', name: 'Suomi', country: 'fi', flag: '/image/flag/fi.png', chat: 2, encyclopedia: 'Tietosanakirja', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
+	nl: { code: 'nl', name: 'Nederlands', country: 'nl', flag: '/image/flag/nl.png', chat: 2, encyclopedia: 'Encyclopedie', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
+	no: { code: 'no', name: 'Norsk', country: 'no', flag: '/image/flag/no.png', chat: 2, encyclopedia: 'Encyclopedia', chats: null, currency: 'NOK', beta: false, forum: false } as Language,
+	pl: { code: 'pl', name: 'Polska', country: 'pl', flag: '/image/flag/pl.png', chat: 2, encyclopedia: 'Encyklopedia', chats: null, currency: 'EUR', beta: false, forum: false } as Language,
+	sv: { code: 'sv', name: 'Svenska', country: 'se', flag: '/image/flag/sv.png', chat: 2, encyclopedia: 'Encyklopedi', chats: null, currency: 'SEK', beta: false, forum: false } as Language,
+	ru: { code: 'ru', name: 'Русский', country: 'ru', flag: '/image/flag/ru.png', chat: 2, encyclopedia: 'Энциклопедия', chats: null, currency: 'USD', beta: false, forum: false } as Language,
+	zh: { code: 'zh', name: '中文', country: 'cn', flag: '/image/flag/cn.png', chat: 2, encyclopedia: '百科全书', chats: null, currency: 'CNY', beta: false, forum: false } as Language,
+	id: { code: 'id', name: 'Bahasa', country: 'id', flag: '/image/flag/id.png', chat: 2, encyclopedia: 'Ensiklopedia', chats: null, currency: 'USD', beta: false, forum: false } as Language,
+	ja: { code: 'ja', name: '日本', country: 'jp', flag: '/image/flag/jp.png', chat: 2, encyclopedia: '百科事典', chats: null, currency: 'JPY', beta: false, forum: false } as Language,
+	ko: { code: 'ko', name: '한국인', country: 'kr', flag: '/image/flag/kr.png', chat: 2, encyclopedia: '백과사전', chats: null, currency: 'USD', beta: false, forum: false } as Language,
 } as { [key: string]: Language })
 
 const CURRENCIES = Object.freeze({
@@ -359,6 +390,7 @@ const LeekWars = reactive({
 	smart_version: packageJson.version.replace(/\.0$/, ''),
 	DEV,
 	LOCAL,
+	BETA_LOCAL,
 	API: LOCAL ? window.location.origin + '/api/' : (DEV ? 'https://leekwars.com/api/' : 'https://' + window.location.host + '/api/'),
 	SERVER: LOCAL ? window.location.origin + '/' : (DEV ? 'https://leekwars.com/' : 'https://' + window.location.host + '/'),
 	AVATAR: LOCAL ? window.location.origin + '/' : (DEV ? 'https://leekwars.com/' : 'https://' + window.location.host + '/'),
@@ -368,7 +400,9 @@ const LeekWars = reactive({
 	get,
 	put,
 	delete: del,
-	cgu_version: 1,
+	// Version affichée en tête des CGU. À garder synchro avec la version des CGU
+	// côté serveur : le shell HTML n'injecte pas la valeur serveur ici.
+	cgu_version: 2, // v2 : règle multi-comptes
 	mobile: false,
 	// Firefox gère mal le loading="lazy" sur les pages à forte densité d'images
 	// (trophées, marché) : les images ne se chargent pas de façon fiable. On
@@ -378,7 +412,7 @@ const LeekWars = reactive({
 	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
-	actions: [] as { icon?: string, image?: string, click: (e?: MouseEvent) => void }[],
+	actions: [] as { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[],
 	lightBar: false,
 	dark: 0,
 	title: '',
@@ -390,6 +424,9 @@ const LeekWars = reactive({
 	notifsPopups: localStorage.getItem('options/notifs-popups') !== 'false',
 	notifsOpenReport: localStorage.getItem('options/notifs-open-report') === 'true',
 	rankingInactive: localStorage.getItem('options/ranking-inactive') === 'true',
+	// Classement dédupliqué par joueur par défaut : une ligne par personne,
+	// celle de son compte principal. L'interrupteur remet toutes les lignes.
+	rankingAllAccounts: localStorage.getItem('options/ranking-all-accounts') === 'true',
 	arena: new Arena(),
 	bossSquads: new BossSquads(),
 	squares: new Squares(),
@@ -399,6 +436,7 @@ const LeekWars = reactive({
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,
 	timeSeconds: (Date.now() / 1000) | 0,
+	// Clé du router-view : l'incrémenter recrée la page (changement de compte, cf. model/account-switch.ts).
 	routerViewKey: 0,
 	large: false,
 	flex: false,
@@ -406,16 +444,17 @@ const LeekWars = reactive({
 	footer: true,
 	box: false,
 	nativeEmojis: detectNativeEmojis(),
-	leekTheme: (() => {
-		const stored = localStorage.getItem('leek-theme') === 'true'
-		// Sync cookie miroir au boot pour que le serveur puisse injecter le bon preload
-		// dès la prochaine navigation (migration des users qui n'avaient que localStorage).
-		if (typeof document !== 'undefined' && !document.cookie.includes('leek_theme=')) {
-			document.cookie = 'leek_theme=' + (stored ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax'
-		}
-		return stored
-	})(),
+	// Grands poireaux des marges : verts, discrets (trait seul) ou masqués.
+	// Reprend l'ancienne case « en blanc » (`leek-theme`) comme « discrets ».
+	bigLeeks: (localStorage.getItem('big-leeks') ?? (localStorage.getItem('leek-theme') === 'true' ? 'discreet' : 'green')) as 'green' | 'discreet' | 'hidden',
 	xpTheme: localStorage.getItem('theme') === 'xp',
+	// Ancien design (v2). Le défaut est le nouveau design (v3), pose par
+	// global.scss ; l'ancien thème est charge a la demande. cf. src/theme/
+	// L'état vit dans `design.ts`, un module feuille : `item.ts` doit le lire
+	// pour choisir le dossier des images de puces, et ne peut pas importer
+	// celui-ci (cycle). Ici, un simple accesseur.
+	get legacyTheme() { return design.legacy },
+	set legacyTheme(value: boolean) { design.legacy = value },
 	xpCursorsInit() {
 		if (xpCursorListenerRegistered) return
 		xpCursorListenerRegistered = true
@@ -430,6 +469,43 @@ const LeekWars = reactive({
 				el.style.cursor = ''
 			}
 		})
+	},
+	/**
+	 * Applique un réglage de thème : `auto`, `light`, `dark` ou `xp`.
+	 *
+	 * Les quatre partagent la clé `theme` du localStorage, donc le thème
+	 * Windows XP et le couple clair/sombre s'excluent : choisir un thème normal
+	 * éteint le skin, et le skin n'a pas de mode sombre (ses jetons sont les
+	 * mêmes des deux côtés, cf. src/xp.scss).
+	 *
+	 * Point d'entrée commun à tout ce qui change de thème (page des réglages,
+	 * `aprilFoolsAccept` dans app.vue, icône du trophée « Rétro ») : allumer le
+	 * skin pose `body.xp` ET charge sa feuille, sans attendre un rechargement.
+	 */
+	applyThemeSetting(setting: string) {
+		LeekWars.themeSetting = setting
+		localStorage.setItem('theme', setting)
+		const xp = setting === 'xp'
+		localStorage.setItem('xp-theme', '' + xp)
+		LeekWars.xpTheme = xp
+		if (xp) {
+			// La feuille du skin n'est pas dans le bundle : personne ne paye
+			// pour un thème qu'il n'a pas allumé. `main.ts` fait le même import
+			// au démarrage quand la clé est déjà posée.
+			import('@/xp.scss')
+			LeekWars.xpCursorsInit()
+			LeekWars.darkMode = false
+			// Allumer le skin le 1er avril décroche le trophée du poisson
+			// d'avril, « Rétro » (384) — celui dont l'icône est le bouton.
+			if (LeekWars.aprilFools) {
+				LeekWars.post('trophy/unlock', {trophy_id: 384})
+			}
+		} else {
+			// Les curseurs XP sont posés en style inline, élément par élément,
+			// par le listener ci-dessus : ils ne partent pas avec la feuille.
+			document.querySelectorAll<HTMLElement>('[style*="pointer.png"]').forEach(el => { el.style.cursor = '' })
+			LeekWars.darkMode = setting !== 'auto' ? setting === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+		}
 	},
 	keepConnected: null as ReturnType<typeof setInterval> | null,
 	startIntervals: () => {
@@ -459,30 +535,30 @@ const LeekWars = reactive({
 	leekSizes: Object.freeze(LEEK_SIZES),
 	isPublicChat: (id: number) => id in LeekWars.publicChats,
 	publicChats: {
-		1: { id: 1, name: 'Général', language: 'fr', icon: 'mdi-chat-outline' },
+		1: { id: 1, name: 'Général', language: 'fr', icon: 'mdi-chat' },
 		32506: { id: 32506, name: 'Aide', language: 'fr', icon: 'mdi-help-circle-outline' },
 		32507: { id: 32507, name: 'Programmation', language: 'fr', icon: 'mdi-code-braces' },
-		2: { id: 2, name: 'General', language: 'en', icon: 'mdi-chat-outline' },
+		2: { id: 2, name: 'General', language: 'en', icon: 'mdi-chat' },
 		32508: { id: 32508, name: 'Help', language: 'en', icon: 'mdi-help-circle-outline' },
 		32509: { id: 32509, name: 'Programming', language: 'en', icon: 'mdi-code-braces' },
-		3: { id: 3, name: 'General', language: 'es', icon: 'mdi-chat-outline' },
+		3: { id: 3, name: 'General', language: 'es', icon: 'mdi-chat' },
 		// 33187: { id: 33187, name: 'Ayuda', language: 'es', icon: 'mdi-help-circle-outline' },
 		// 33188: { id: 33188, name: 'Programación', language: 'es', icon: 'mdi-code-braces' },
-		4: { id: 4, name: 'General', language: 'de', icon: 'mdi-chat-outline' },
-		5: { id: 5, name: 'Generale', language: 'it', icon: 'mdi-chat-outline' },
-		6: { id: 6, name: 'Geral', language: 'pt', icon: 'mdi-chat-outline' },
-		7: { id: 7, name: 'Generelt', language: 'da', icon: 'mdi-chat-outline' },
-		8: { id: 8, name: 'Yleistä', language: 'fi', icon: 'mdi-chat-outline' },
-		9: { id: 9, name: 'General', language: 'nl', icon: 'mdi-chat-outline' },
-		10: { id: 10, name: 'General', language: 'no', icon: 'mdi-chat-outline' },
-		11: { id: 11, name: 'General', language: 'pl', icon: 'mdi-chat-outline' },
-		12: { id: 12, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		13: { id: 13, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		14: { id: 14, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		15: { id: 15, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		16: { id: 16, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		17: { id: 17, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
-		18: { id: 18, name: 'General', language: 'sv', icon: 'mdi-chat-outline' },
+		4: { id: 4, name: 'General', language: 'de', icon: 'mdi-chat' },
+		5: { id: 5, name: 'Generale', language: 'it', icon: 'mdi-chat' },
+		6: { id: 6, name: 'Geral', language: 'pt', icon: 'mdi-chat' },
+		7: { id: 7, name: 'Generelt', language: 'da', icon: 'mdi-chat' },
+		8: { id: 8, name: 'Yleistä', language: 'fi', icon: 'mdi-chat' },
+		9: { id: 9, name: 'Algemeen', language: 'nl', icon: 'mdi-chat' },
+		10: { id: 10, name: 'Generelt', language: 'no', icon: 'mdi-chat' },
+		11: { id: 11, name: 'Ogólne', language: 'pl', icon: 'mdi-chat' },
+		12: { id: 12, name: 'Allmänt', language: 'sv', icon: 'mdi-chat' },
+		// La liste s'arrête à 12 : les identifiants 13 à 18 figuraient ici,
+		// recopiés du suédois, alors qu'aucun d'eux n'est un salon public — d'où
+		// six drapeaux suédois de plus dans le sélecteur du widget Chat, et
+		// autant de salons vides quand on les choisissait (signalé par Sycareus).
+		// Les noms, eux, sont maintenant ceux des salons : « General » partout
+		// annonçait un salon anglophone que ces quatre-là ne sont pas.
 	} as {[key: number]: { id: number, name: string, language: string, icon: string }},
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
@@ -671,7 +747,7 @@ const LeekWars = reactive({
 		LeekWars.header = true
 		LeekWars.lightBar = false
 	},
-	setActions(actions: { icon?: string, image?: string, click: (e?: MouseEvent) => void }[]) {
+	setActions(actions: { icon?: string, image?: string, text?: string, click: (e?: MouseEvent) => void }[]) {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
@@ -834,7 +910,7 @@ const LeekWars = reactive({
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatDayMonthShortUTC, formatLongDuration,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag, setMeta,
 	shadeColor,
-	createCodeArea, createCodeAreaSimple,
+	createCodeArea, createCodeAreaSimple, codeLanguageMode,
 	clover: false, cloverTop: 0, cloverLeft: 0, cloverDX: 0, cloverDY: 0, cloverDDX: 0, cloverDDY: 0, cloverFake: false, cloverTimeout: null as ReturnType<typeof setTimeout> | null, lucky,
 	setFavicon,
 	linkify, toChatLink,
@@ -888,7 +964,7 @@ const LeekWars = reactive({
 	trophyCategoriesIcons: Object.freeze([
 		'mdi-trophy-variant-outline',  // 1: general
 		'mdi-sword-cross',             // 2: fight
-		'mdi-trophy-outline',          // 3: tournament
+		'mdi-tournament',              // 3: tournament (pas de variante creuse chez MDI)
 		'mdi-emoticon-outline',        // 4: fun
 		'mdi-chat-outline',            // 5: social
 		'mdi-star-outline',            // 6: bonus
@@ -905,6 +981,13 @@ const LeekWars = reactive({
 	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
 	complexities: Object.freeze(COMPLEXITIES),
 	components: Object.freeze(COMPONENTS),
+	alterations: null as AlterationData | null,
+	// Capacité d'altération d'un composant depuis son item_template, telle que la donnent
+	// les données de jeu. 0 si non altérable.
+	componentCapacity: (templateId: number): number => {
+		const params = LeekWars.items[templateId]?.params
+		return (params !== undefined ? LeekWars.components[params]?.capacity : 0) ?? 0
+	},
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'cores', 'ram', 'mp', 'tp']),
 	// characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'ram', 'agility', 'cores', 'resistance', 'mp', 'science', 'tp']),
 	characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'cores', 'agility', 'ram', 'resistance', 'mp', 'science', 'tp']),
@@ -1003,7 +1086,8 @@ const LeekWars = reactive({
 		const helpPages: Record<string, Record<string, string>> = {
 			fr: { too_much_ops: "Comprendre les Erreurs d'exécution", summons: "Bulbes" },
 			en: { too_much_ops: "Understanding Runtime Errors",	summons: "Bulbs" },
-			es: { too_much_ops: "Comprender los errores de tiempo de ejecución", summons: "Bulbos" }
+			es: { too_much_ops: "Comprender los errores de tiempo de ejecución", summons: "Bulbos" },
+			zh: { too_much_ops: "了解运行时错误", summons: "球茎" }
 		}
 		if (locale in helpPages) {
 			return helpPages[locale][log[4] as string]
@@ -1126,7 +1210,9 @@ function setMeta(options: MetaOptions = {}) {
 }
 
 function setFavicon(reset: boolean = false) {
-	if (env.BETA) {
+	if (BETA_LOCAL) {
+		LeekWars.favicon('/image/favicon_beta_local.png')
+	} else if (env.BETA) {
 		LeekWars.favicon('/image/favicon_beta.png')
 	} else if (LeekWars.DEV) {
 		LeekWars.favicon('/image/favicon_dev.png')
@@ -1146,6 +1232,19 @@ function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
 		}
 	}
 	return result
+}
+
+/** Potions de restat d'un inventaire, dans l'ordre où le serveur les consomme (offertes avant achetées). */
+function restatPotionsOf(potions: Potion[]): Potion[] {
+	// `LeekWars.potions` et pas `POTIONS` : loadGameData() remplace la propriété de
+	// LeekWars, l'objet importé de data.ts reste vide, donc tout lookup y échoue.
+	return potions
+		.filter(p => p.quantity > 0 && isRestatPotion(LeekWars.potions[p.template]))
+		.sort((a, b) => b.template - a.template)
+}
+
+function countRestatPotions(potions: Potion[]): number {
+	return restatPotionsOf(potions).reduce((total, p) => total + p.quantity, 0)
 }
 
 function potionByName(potions: {[key: string]: PotionTemplate}) {
@@ -1299,18 +1398,18 @@ function formatTime(time: number) {
 	return date.getHours() + ":" + minuts
 }
 
-// Module codemirror-wrapper mis en cache : une fois chargé, le formatage est
-// synchrone (avant le paint), sinon le bloc brut est peint un instant puis
-// remplacé par la version formatée (flicker à chaque re-rendu, ex. édition encyclopédie).
-let codeMirrorWrapper: typeof import("@/codemirror-wrapper") | null = null
-function withCodeMirror(callback: (wrapper: typeof import("@/codemirror-wrapper")) => void) {
-	if (codeMirrorWrapper) {
-		callback(codeMirrorWrapper)
+// Moteur de coloration Monaco (tokenizer statique, léger) mis en cache : une fois
+// chargé, la coloration est synchrone (avant le paint), sinon le bloc brut est peint
+// un instant puis recoloré (flicker à chaque re-rendu, ex. édition encyclopédie).
+let highlighter: typeof import("@/component/editor/monaco-highlight") | null = null
+function withHighlighter(callback: (h: typeof import("@/component/editor/monaco-highlight")) => void) {
+	if (highlighter) {
+		callback(highlighter)
 		return
 	}
-	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
-		codeMirrorWrapper = wrapper
-		callback(wrapper)
+	import(/* webpackChunkName: "monaco-highlight" */ "@/component/editor/monaco-highlight").then(h => {
+		highlighter = h
+		callback(h)
 	})
 }
 // Marqueur posé de façon synchrone : si l'élément a déjà été formaté (un update
@@ -1321,25 +1420,75 @@ function markFormatted(element: HTMLElement): boolean {
 	element.dataset.lwFormatted = '1'
 	return true
 }
-function createCodeArea(code: string, element: HTMLElement) {
+// Langages de coloration des blocs de code (```lang ...) -> id de langage Monaco.
+// Non reconnu / absent => LeekScript (défaut historique).
+const CODE_LANGUAGE_IDS: {[key: string]: string} = {
+	leekscript: 'leekscript', ls: 'leekscript', lw: 'leekscript', lse: 'leekscript',
+	js: 'javascript', javascript: 'javascript',
+	ts: 'typescript', typescript: 'typescript',
+	py: 'python', python: 'python',
+	json: 'json',
+	// Langages « invités » : colorés dans les aperçus (forum, chat, encyclopédie) mais pas
+	// éditables sur le site. Grammaires enregistrées dans monaco-highlight.ts.
+	sql: 'sql', mysql: 'sql', psql: 'sql', postgres: 'sql', postgresql: 'sql',
+	sh: 'shell', bash: 'shell', zsh: 'shell', shell: 'shell', console: 'shell', terminal: 'shell',
+	html: 'html', htm: 'html',
+	css: 'css',
+	xml: 'xml', svg: 'xml',
+	java: 'java',
+	php: 'php',
+	yaml: 'yaml', yml: 'yaml',
+}
+// Retourne l'id de langage Monaco pour un jeton de langage, ou undefined si inconnu.
+function codeLanguageMode(language: string | undefined | null): string | undefined {
+	if (!language) { return undefined }
+	return CODE_LANGUAGE_IDS[language.toLowerCase().trim()]
+}
+// Injecte dans les tokenizers de l'aperçu les données que possède leekwars.ts (permet à
+// monaco-highlight de n'importer aucun module applicatif, cf. leekscript-monarch.js) :
+//  - LeekScript : noms de constantes/fonctions (game data) ; tant qu'elles ne sont pas chargées,
+//    on réessaie au rendu suivant.
+//  - Python : noms des classes de l'API (Field, Debug, Color…), colorées en `type` ; source
+//    statique (modèle d'API objet, même déclaration que le leekwars.d.ts).
+let leekscriptDataFed = false
+let pythonClassesFed = false
+function feedHighlighterData(h: typeof import("@/component/editor/monaco-highlight")) {
+	if (!pythonClassesFed) {
+		pythonClassesFed = true
+		const model = buildObjectApiModel()
+		h.setPythonClasses([...model.singletons, ...model.classes])
+	}
+	if (leekscriptDataFed) { return }
+	const constants = LeekWars.constants, functions = LeekWars.functions
+	if (!constants?.length && !functions?.length) { return }
+	leekscriptDataFed = true
+	h.setLeekScriptData({
+		constants: constants.map(c => c.name),
+		functions: functions.filter(f => !f.deprecated).map(f => f.name),
+		deprecatedFunctions: functions.filter(f => f.deprecated).map(f => f.name),
+	})
+}
+function createCodeArea(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
-		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
-
-		const num = code.split(/\n/).length
-		for (let j = 0; j < num; j++) {
-			const line_num = element.getElementsByTagName('span')[0]
-			line_num.innerHTML += '<span>' + (j + 1) + '</span>'
-		}
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		feedHighlighterData(h)
+		const tokens = h.highlightToHtml(code, lang)
+		const num = code.split('\n').length
+		let gutter = ''
+		for (let j = 0; j < num; j++) { gutter += '<span>' + (j + 1) + '</span>' }
+		element.innerHTML = '<span class="line-number">' + gutter + '</span><pre>' + tokens + '</pre>'
 		element.classList.add('formatted')
 	})
 }
-function createCodeAreaSimple(code: string, element: HTMLElement) {
+function createCodeAreaSimple(code: string, element: HTMLElement, language?: string) {
 	if (!markFormatted(element)) { return }
-	withCodeMirror(wrapper => {
-		wrapper.CodeMirror.runMode(code, "leekscript", element)
-		element.innerHTML = '<pre>' + element.innerHTML + '</pre>'
+	const lang = codeLanguageMode(language) || 'leekscript'
+	withHighlighter(h => {
+		feedHighlighterData(h)
+		// Un <span> et non un <pre> : un <pre>, même affiché en ligne, entoure le code de
+		// sauts de ligne quand on copie la phrase qui le contient
+		element.innerHTML = '<span class="pre">' + h.highlightToHtml(code, lang) + '</span>'
 		element.classList.add('single')
 	})
 }
@@ -1369,7 +1518,7 @@ function lucky(isFake: boolean = false) {
 	if (!LeekWars.sfw) {
 		const audio = new Audio('/sound/move.mp3')
 		audio.volume = 0.4
-		audio.play()
+		playAudio(audio)
 		if (document.hidden) {
 			const cancel = () => {
 				audio.pause()
@@ -1398,19 +1547,22 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	// console.log("goToRanking", type, order, id)
 	let url = ''
 	const active = LeekWars.rankingInactive ? '' : '-active'
+	// Le rang se compte dans le classement que la page va afficher : avec « Tous
+	// les comptes », les autres comptes des joueurs y prennent aussi une place.
+	const all = LeekWars.rankingAllAccounts ? 'all-' : ''
 	if (type === 'leek') {
-		url = 'ranking/get-leek-rank' + active + '/' + id + '/' + order
+		url = 'ranking/get-leek-rank' + active + '/' + id + '/' + all + order
 	} else if (type === 'farmer') {
-		url = 'ranking/get-farmer-rank' + active + '/' + id + '/' + order
+		url = 'ranking/get-farmer-rank' + active + '/' + id + '/' + all + order
 	} else if (type === 'team') {
 		url = 'ranking/get-team-rank' + active + '/' + id + '/' + order
 	} else if (type === 'composition') {
-		url = 'ranking/get-composition-rank/' + id + '/' + order
+		url = 'ranking/get-composition-rank' + active + '/' + id + '/' + order
 	}
 	LeekWars.get(url).then(data => {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
 		const active_url = data.active ? '' : '?inactive'
-		const newRoute = '/ranking/' + type + '/' + order + '/page-' + page + active_url + '#rank-' + data.rank
+		const newRoute = '/ranking/' + type + '/' + order + '/page-' + page + active_url + rankingAnchor(type, id)
 		if (router.currentRoute.value.fullPath !== newRoute) {
 			router.push(newRoute)
 		}
@@ -1430,9 +1582,21 @@ async function loadGameData() {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const data = rawData as { [key: string]: any }
 
+	// Le client peut être plus récent que l'API : un type de données introduit
+	// par une feature non déployée n'existe pas encore côté serveur. C'est le cas
+	// nominal du client develop branché sur l'API de production (port 8080), et
+	// c'est aussi ce qui se passe en prod entre le déploiement du client et celui
+	// de l'API. On ne bloque donc que sur les types sans lesquels l'interface ne
+	// peut rien rendre ; les autres sont simplement absents (leur valeur par
+	// défaut est conservée) et chaque affectation plus bas est déjà gardée.
+	const CORE_TYPES: string[] = ['items', 'weapons', 'chips', 'hats', 'potions', 'constants', 'functions']
 	const missing = DATA_TYPES.filter(t => !data[t])
+	const missingCore = missing.filter(t => CORE_TYPES.includes(t))
+	if (missingCore.length > 0) {
+		throw new Error('[GameData] Incomplete dataset, missing: ' + missingCore.join(', '))
+	}
 	if (missing.length > 0) {
-		throw new Error('[GameData] Incomplete dataset, missing: ' + missing.join(', '))
+		console.warn('[GameData] Types absents de l\'API (client plus récent que le serveur) : ' + missing.join(', '))
 	}
 
 	const t0 = performance.now()
@@ -1451,6 +1615,7 @@ async function loadGameData() {
 	}
 	if (data.schemes) LeekWars.schemes = Object.freeze(data.schemes)
 	if (data.components) LeekWars.components = Object.freeze(data.components)
+	if (data.alterations) LeekWars.alterations = Object.freeze(data.alterations) as AlterationData
 	if (data.hat_templates) LeekWars.hatTemplates = Object.freeze(data.hat_templates)
 	if (data.chip_templates) LeekWars.chipTemplates = Object.freeze(data.chip_templates)
 	if (data.summon_templates) LeekWars.summonTemplates = Object.freeze(data.summon_templates)
@@ -1469,4 +1634,4 @@ async function loadGameData() {
 
 if (DEV || LOCAL) { (window as unknown as Record<string, unknown>).LeekWars = LeekWars }
 
-export { LeekWars, Language, loadGameData }
+export { LeekWars, Language, loadGameData, restatPotionsOf, countRestatPotions }

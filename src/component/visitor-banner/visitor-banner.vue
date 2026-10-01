@@ -18,6 +18,9 @@
 					<div v-ripple class="hat" :class="{selected: hat === 0}" @click="hat = 0"><img src="/image/hat/no_hat.png"></div>
 					<div v-for="h in hatList" :key="h" v-ripple class="hat" :class="{selected: hat === h}" @click="hat = h"><img :src="'/image/hat/' + LeekWars.hats[h].name + '.png'"></div>
 				</div>
+				<div class="languages">
+					<div v-for="l in AI_LANGUAGES" :key="l.id" v-ripple class="language" :class="{selected: aiLanguage === l.id}" :title="l.label" @click="aiLanguage = l.id"><img :src="l.logo" :alt="l.label"></div>
+				</div>
 				<div v-if="error" class="error">{{ error }}</div>
 			</div>
 		</div>
@@ -38,7 +41,9 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getRedirectAfterLogin } from '@/router'
 import { mixins, useNamespacedT } from '@/model/i18n'
+import { apiErrorKey } from '@/model/api-error'
 import { LeekWars } from '@/model/leekwars'
+import { AI_LANGUAGES } from '@/component/editor/file-types'
 import { store } from '@/model/store'
 
 defineOptions({ name: 'VisitorBanner', i18n: {}, mixins: [...mixins] })
@@ -62,8 +67,9 @@ const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}')
 const leekName = ref<string>(draft.name || '')
 const skin = ref<number>(draft.skin || 1)
 const hat = ref<number>(draft.hat || 0)
-watch([leekName, skin, hat], () => {
-	localStorage.setItem(DRAFT_KEY, JSON.stringify({ name: leekName.value, skin: skin.value, hat: hat.value }))
+const aiLanguage = ref<string>(AI_LANGUAGES.some(l => l.id === draft.language) ? draft.language : 'leekscript')
+watch([leekName, skin, hat, aiLanguage], () => {
+	localStorage.setItem(DRAFT_KEY, JSON.stringify({ name: leekName.value, skin: skin.value, hat: hat.value, language: aiLanguage.value }))
 })
 const error = ref('')
 const loading = ref(false)
@@ -154,16 +160,16 @@ function submit() {
 	}
 	loading.value = true
 	error.value = ''
-	LeekWars.post('farmer/register-fast', { leek_name: name, hat: hat.value, skin: skin.value, source: 'visitor-banner' }).then(data => {
+	LeekWars.post('farmer/register-fast', { leek_name: name, hat: hat.value, skin: skin.value, source: 'visitor-banner', ai_language: aiLanguage.value }).then(data => {
 		store.commit('connect', data)
 		store.commit('connected', '$')
 		router.push(getRedirectAfterLogin())
-	}).error((errs: unknown) => {
+	}).error(err => {
 		loading.value = false
-		const first = (errs as [number, string, (string | number)[]][])[0]
-		error.value = first ? t('error_' + first[1], first[2] || []) : t('error_register')
+		// error.error/params portent la première erreur de champ renvoyée par register-fast.
+		const message = t(apiErrorKey(err), err.params ?? [])
 		// clé non traduite (code d'erreur inconnu) : retomber sur le message générique
-		if (error.value.startsWith('error_')) { error.value = t('error_register') }
+		error.value = message.startsWith('error_') ? t('error_register') : message
 	})
 }
 </script>
@@ -179,9 +185,9 @@ function submit() {
 		gap: 18px;
 		width: min(720px, calc(100vw - 24px));
 		padding: 16px 18px 16px 22px;
-		border-radius: 14px;
-		color: white;
-		background: linear-gradient(115deg, #2a7a05, #5fad1b, #8bc34a, #5fad1b, #2a7a05);
+		border-radius: var(--radius-pill);
+		color: var(--white);
+		background: linear-gradient(115deg, #2a7a05, var(--primary), #8bc34a, var(--primary), #2a7a05);
 		background-size: 300% 300%;
 		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
 		transform: translateX(-50%) translateY(calc(100% + 80px));
@@ -234,15 +240,15 @@ function submit() {
 		input {
 			width: 100%;
 			max-width: 310px;
-			background: white;
-			color: #222;
+			background: var(--white);
+			color: var(--grey-1);
 			border: none;
-			border-radius: 8px;
+			border-radius: var(--radius-large);
 			padding: 10px 14px;
 			font-size: 15px;
 			outline: none;
 			&::placeholder {
-				color: #999;
+				color: var(--grey-8);
 			}
 		}
 	}
@@ -259,7 +265,7 @@ function submit() {
 		align-items: center;
 		justify-content: center;
 		background: rgba(255, 255, 255, 0.22);
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		cursor: pointer;
 		transition: background 0.15s ease, transform 0.3s ease;
 		&:hover {
@@ -283,7 +289,7 @@ function submit() {
 			transform: scale(1.15);
 		}
 		&.selected {
-			border-color: white;
+			border-color: var(--white);
 			transform: scale(1.2);
 			box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 		}
@@ -301,7 +307,7 @@ function submit() {
 		justify-content: center;
 		background: rgba(255, 255, 255, 0.22);
 		border: 2px solid transparent;
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		cursor: pointer;
 		transition: background 0.15s ease;
 		img {
@@ -313,7 +319,35 @@ function submit() {
 			background: rgba(255, 255, 255, 0.4);
 		}
 		&.selected {
-			background: white;
+			background: var(--white);
+			border-color: rgba(0, 0, 0, 0.1);
+		}
+	}
+	.languages {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.language {
+		width: 38px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.22);
+		border: 2px solid transparent;
+		border-radius: var(--radius-large);
+		cursor: pointer;
+		transition: background 0.15s ease;
+		img {
+			width: 20px;
+			height: 20px;
+		}
+		&:hover {
+			background: rgba(255, 255, 255, 0.4);
+		}
+		&.selected {
+			background: var(--white);
 			border-color: rgba(0, 0, 0, 0.1);
 		}
 	}
@@ -321,18 +355,18 @@ function submit() {
 		font-size: 13px;
 		font-weight: bold;
 		background: rgba(140, 0, 0, 0.45);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		padding: 4px 10px;
 	}
 	.cta {
 		flex-shrink: 0;
 		align-self: center;
-		background: white;
-		color: #3e8a00;
+		background: var(--white);
+		color: var(--primary-strong);
 		font-weight: bold;
 		font-size: 16px;
 		padding: 12px 22px;
-		border-radius: 9px;
+		border-radius: var(--radius-large);
 		text-decoration: none;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 		transition: transform 0.15s ease;
@@ -364,10 +398,10 @@ function submit() {
 		align-items: center;
 		gap: 10px;
 		padding: 10px 16px 10px 12px;
-		border-radius: 16px;
+		border-radius: var(--radius-pill);
 		cursor: pointer;
-		color: white;
-		background: linear-gradient(135deg, #2a7a05, #5fad1b, #8bc34a);
+		color: var(--white);
+		background: linear-gradient(135deg, #2a7a05, var(--primary), #8bc34a);
 		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 		animation: visitor-bubble-pop 0.4s cubic-bezier(0.22, 1.6, 0.36, 1);
 		transition: transform 0.15s ease;

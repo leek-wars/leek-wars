@@ -56,12 +56,16 @@ const description = computed(() => {
 	.result .main {
 		flex: 1;
 		padding: 2px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		cursor: pointer;
 	}
 	.result img {
 		max-width: 44px;
 		max-height: 44px;
+	}
+	.result .avatar {
+		width: 44px;
+		height: 44px;
 	}
 	.result .name {
 		margin: 3px 0;
@@ -74,7 +78,7 @@ const description = computed(() => {
 		text-align: center;
 	}
 	.result .level {
-		color: #aaa;
+		color: var(--grey-9);
 		font-size: 13px;
 	}
 	button {

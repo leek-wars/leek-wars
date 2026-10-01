@@ -18,6 +18,7 @@
 	"click_to_change_country": "Kliknij, aby zmienić",
 	"connected": "Połączony",
 	"contributor": "Współpracownik",
+	"referent": "Referent",
 	"country_ok": "OK",
 	"country_selection": "Wybór kraju",
 	"create": "Utwórz",
@@ -131,5 +132,7 @@
 	"aposteriori_title": "Nagrody za patronat do odebrania",
 	"aposteriori_desc": "System nagród za patronat jest nowy: odbierz te za swoich podopiecznych i swojego patrona.",
 	"aposteriori_claim": "Odbierz",
-	"aposteriori_claimed": "Nagrody odebrane!"
+	"aposteriori_claimed": "Nagrody odebrane!",
+	"linked_accounts": "{0} konta",
+	"linked_main": "główne"
 }

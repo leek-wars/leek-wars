@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="legal" fallback="mdi-scale-balance" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<h2>{{ $t('host') }}</h2>
@@ -41,7 +46,7 @@ onBeforeMount(() => LeekWars.setTitle(t('title')))
 
 <style lang="scss" scoped>
 	a {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	h2 {
 		margin-bottom: 20px;

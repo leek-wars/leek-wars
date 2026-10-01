@@ -26,6 +26,7 @@
 	"equip_item": "클릭하거나 드래그 앤 드롭하여 아이템 장착 또는 장착 해제",
 	"error_already_have_4_leeks": "이미 4개의 부추가 있습니다!",
 	"error_chip_already_equipped": "{0}이(가) 이미 이 칩을 장착했습니다.",
+	"error_component_already_equipped": "{0}이(가) 이미 이 구성 요소를 장착했습니다.",
 	"error_forbidden_name": "이 부추 이름은 금지되어 있습니다.",
 	"error_max_chip": "{0}은(는) 추가 칩을 장착할 수 없습니다.",
 	"error_max_component": "{0}은 추가 구성 요소를 장착할 수 없습니다.",

@@ -64,6 +64,7 @@
 	"invite_friends": "Zaproś znajomych",
 	"leeks": "Pory ({0})",
 	"level_n": "Poziom {0}",
+	"live_on_team": "Na żywo w {0}",
 	"log_change": "Zmień poziom widoczności śladów",
 	"log_change_text": "Zmień poziom widoczności dla sojuszników (członków twojej drużyny) swoich śladów w walce (funkcja debug(), debugE() itp.):",
 	"log_level_0": "Ukryty",

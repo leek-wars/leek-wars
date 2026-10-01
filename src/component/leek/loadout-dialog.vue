@@ -19,7 +19,7 @@
 							</div>
 							<div class="loadout-name">
 								{{ loadout.name }}
-								<v-tooltip v-if="loadoutStatus[loadout.id]?.statsDiffer" location="bottom">
+								<v-tooltip v-if="loadoutStatus[loadout.id]?.requiresRestat" location="bottom">
 									<template #activator="{ props }">
 										<img v-bind="props" src="/image/potion/restat.png" width="18" height="18" class="loadout-restat-icon">
 									</template>
@@ -38,6 +38,7 @@
 									<span>{{ $t('main.loadout_already_applied') }}</span>
 								</div>
 								<v-btn v-else size="small" color="primary" :loading="applying === loadout.id" @click="apply(loadout)">{{ $t('main.loadout_apply') }}</v-btn>
+								<v-btn size="x-small" variant="text" icon :title="$t('main.loadout_export')" @click="openExport([loadout])"><v-icon size="18">mdi-export-variant</v-icon></v-btn>
 								<v-btn size="x-small" variant="text" icon @click="startEdit(loadout)"><v-icon size="18">mdi-pencil</v-icon></v-btn>
 								<v-btn size="x-small" variant="text" icon @click="remove(loadout)"><v-icon size="18">mdi-delete</v-icon></v-btn>
 							</div>
@@ -70,8 +71,8 @@
 							</div>
 							<div class="preview-col preview-col-components">
 								<template v-for="c in loadout.components" :key="'comp' + c.index">
-								<div v-if="LeekWars.items[c.template]" class="preview-slot">
-										<item :item="LeekWars.items[c.template]" />
+								<div v-if="LeekWars.items[c.template]" class="preview-slot" :class="componentClass(c)">
+										<item :item="LeekWars.items[c.template]" :instance="componentInstance(c)" />
 									</div>
 								</template>
 							</div>
@@ -81,6 +82,8 @@
 			</div>
 			<div class="list-footer">
 				<v-btn prepend-icon="mdi-plus" @click="startCreate">{{ $t('main.loadout_create') }}</v-btn>
+				<v-btn prepend-icon="mdi-import" @click="openImport">{{ $t('main.loadout_import') }}</v-btn>
+				<v-btn v-if="loadouts.length > 1" prepend-icon="mdi-export-variant" @click="openExport(loadouts)">{{ $t('main.loadout_export_all') }}</v-btn>
 			</div>
 		</template>
 
@@ -110,6 +113,7 @@
 							<h4>
 								{{ $t('characteristic.characteristics') }}
 								<span class="capital-used" :class="{warning: totalCapital() > softMaxCapital}">({{ totalCapital() }} / {{ softMaxCapital }})</span>
+								<span v-if="softMaxCapital - totalCapital() > 0" class="capital-remaining">{{ $t('main.n_capital', [softMaxCapital - totalCapital()]) }}</span>
 								<v-tooltip v-if="totalCapital() > softMaxCapital" location="bottom">
 									<template #activator="{ props }">
 										<v-icon v-bind="props" color="warning" size="18" class="capital-warning-icon">mdi-alert</v-icon>
@@ -119,7 +123,7 @@
 							</h4>
 							<v-btn :class="{'invisible-btn': Object.keys(editing.stats).length === 0}" size="x-small" variant="text" icon @click="editing.stats = {}"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
-						<loadout-stats-picker v-model="editing.stats" :max="maxCapital" />
+						<loadout-stats-picker v-model="editing.stats" :max="maxCapital" :totals="editingStatTotals" />
 					</div>
 
 					<!-- Armes -->
@@ -203,19 +207,21 @@
 							<v-btn :class="{'invisible-btn': editing.components.length === 0}" size="x-small" variant="text" icon @click="editing.components = []"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
 						</div>
 						<div class="components-grid">
-							<div v-for="i in MAX_COMPONENTS" :key="i" class="component-slot" @click="clearComponentSlot(i - 1)">
+							<div v-for="i in MAX_COMPONENTS" :key="i" class="component-slot" :class="componentClass(componentAtSlot(i - 1))" @click="clearComponentSlot(i - 1)">
 								<template v-if="componentAtSlot(i - 1)">
-									<item v-if="LeekWars.items[componentAtSlot(i - 1)!]" :item="LeekWars.items[componentAtSlot(i - 1)!]" />
+									<item v-if="LeekWars.items[componentAtSlot(i - 1)!.template]" :item="LeekWars.items[componentAtSlot(i - 1)!.template]" :instance="componentInstance(componentAtSlot(i - 1))" />
 									<v-icon class="remove-icon" size="12">mdi-close</v-icon>
 								</template>
 								<div v-else class="slot-empty">{{ i }}</div>
 							</div>
 						</div>
+						<!-- Une entrée par pièce de base possédée ET par variante altérée : le joueur
+						     choisit la pièce, l'ensemble mémorise ses stats. -->
 						<div class="available-items">
-							<div v-for="c in allComponents" :key="c.template" class="item-slot"
-								:class="{selected: isComponentSelected(c.template)}"
-								@click="addComponent(c.template)">
-								<item v-if="LeekWars.items[c.template]" :item="LeekWars.items[c.template]" />
+							<div v-for="c in allComponents" :key="componentKey(c)" class="item-slot"
+								:class="[{selected: isComponentSelected(c)}, componentClass(c)]"
+								@click="addComponent(c)">
+								<item v-if="LeekWars.items[c.template]" :item="LeekWars.items[c.template]" :instance="componentInstance(c)" />
 							</div>
 						</div>
 					</div>
@@ -245,6 +251,39 @@
 		</template>
 	</popup>
 
+	<popup v-model="exportDialogOpen" :width="640">
+		<template #icon><v-icon>mdi-export-variant</v-icon></template>
+		<template #title>{{ $t('main.loadout_export') }}</template>
+		<div class="exchange">
+			<div class="exchange-hint">{{ $t('main.loadout_export_hint') }}</div>
+			<textarea class="exchange-text" readonly :value="exportText" @focus="($event.target as HTMLTextAreaElement).select()"></textarea>
+		</div>
+		<template #actions>
+			<div v-ripple class="action compact" @click="exportDialogOpen = false">{{ $t('main.close') }}</div>
+			<div v-ripple class="action compact green" @click="copyExport">
+				<v-icon>{{ exportCopied ? 'mdi-check' : 'mdi-content-copy' }}</v-icon>
+				<span>{{ exportCopied ? $t('main.loadout_copied') : $t('main.loadout_copy') }}</span>
+			</div>
+		</template>
+	</popup>
+
+	<popup v-model="importDialogOpen" :width="640">
+		<template #icon><v-icon>mdi-import</v-icon></template>
+		<template #title>{{ $t('main.loadout_import') }}</template>
+		<div class="exchange">
+			<div class="exchange-hint">{{ $t('main.loadout_import_hint') }}</div>
+			<textarea v-model="importText" class="exchange-text" spellcheck="false" :placeholder="$t('main.loadout_import_placeholder')"></textarea>
+			<div v-if="importError" class="exchange-error">{{ importError }}</div>
+		</div>
+		<template #actions>
+			<div v-ripple class="action compact" @click="importDialogOpen = false">{{ $t('main.cancel') }}</div>
+			<div v-ripple class="action compact green" :class="{disabled: !importText.trim() || importing}" @click="doImport">
+				<v-icon>mdi-import</v-icon>
+				<span>{{ $t('main.loadout_import') }}</span>
+			</div>
+		</template>
+	</popup>
+
 	<popup v-model="confirmCloseDialogOpen" :width="480" persistent>
 		<template #icon><v-icon>mdi-content-save-alert-outline</v-icon></template>
 		<template #title>{{ $t('main.loadout_unsaved_changes_title') }}</template>
@@ -269,8 +308,8 @@
 			<img src="/image/potion/restat.png" width="64" height="64">
 			<div class="restat-message">
 				<p>{{ $t('main.loadout_restat_message') }}</p>
-				<p v-if="restatPotionCount !== null" class="restat-count">{{ $t('main.loadout_restat_you_have', [restatPotionCount]) }}</p>
-				<p v-else-if="restatPotionCount === 0" class="restat-none">{{ $t('main.loadout_no_restat_potion') }}</p>
+				<p v-if="restatPotionCount > 0" class="restat-count">{{ $t('main.loadout_restat_you_have', [restatPotionCount]) }}</p>
+				<p v-else class="restat-none">{{ $t('main.loadout_no_restat_potion') }}</p>
 			</div>
 		</div>
 		<template #actions>
@@ -289,9 +328,11 @@
 
 <script lang="ts">
 	import { defineComponent, PropType } from 'vue'
-	import { LeekWars } from '@/model/leekwars'
+	import { LeekWars, restatPotionsOf } from '@/model/leekwars'
 	import { Leek, MAX_COMPONENTS } from '@/model/leek'
-	import { Loadout, LoadoutComponent, LoadoutStats } from '@/model/loadout'
+	import { Loadout, LoadoutComponent, LoadoutStats, ComponentStats, ParsedLoadout, componentStatsKey, sameComponentChoice, loadoutComponentStat, parseLoadouts, serializeLoadouts, uniqueLoadoutName } from '@/model/loadout'
+	import { alteredClass } from '@/model/alteration'
+	import { isReportedByTransport, normalizeApiError } from '@/model/api-error'
 	import { capitalToStatBonus, statBonusToCapital, baseStatFor, totalCapitalForLevel } from '@/model/capital'
 	import { store } from '@/model/store'
 	import { formatEmojisText } from '@/model/emojis'
@@ -300,6 +341,7 @@
 	import LoadoutStatsPicker from '@/component/leek/loadout-stats-picker.vue'
 	import Sortable from 'sortablejs'
 	import { Farmer } from '@/model/farmer'
+	import type { InventoryItem } from '@/model/farmer'
 	import { Potion } from '@/model/potion'
 	import { Weapon } from '@/model/weapon'
 	import { Chip } from '@/model/chip'
@@ -319,11 +361,16 @@
 			const item = LeekWars.items[c.template]
 			const comp = item && LeekWars.components[item.params]
 			if (!comp) continue
-			for (const [stat, value] of comp.stats) {
-				if (stat === 'ram') ram += value
-			}
+			ram += loadoutComponentStat(comp.stats, c.stats, 'ram')
 		}
 		return ram
+	}
+
+	/** Un choix de composant dans l'éditeur : un template, et les stats de la pièce (null = base). */
+	interface ComponentChoice {
+		template: number
+		stats: ComponentStats | null
+		altered_power?: number
 	}
 
 	interface EditingLoadout {
@@ -341,6 +388,31 @@
 		template: number
 		type: string
 		reason: string
+	}
+
+	// Union des templates possédés (exemplaires équipés compris) enrichie avec les
+	// items de l'inventaire libre quand ils y sont. Fallback sur l'inventaire libre
+	// tant que `loadout/get-all` n'a pas répondu. Tri par niveau puis template :
+	// l'ordre renvoyé par l'API est arbitraire.
+	function ownedItemList(ownedTemplates: number[], inventory: { template: number }[]) {
+		const inventoryByTpl: { [k: number]: { template: number } } = {}
+		for (const it of inventory) inventoryByTpl[it.template] = it
+		const seen = new Set<number>()
+		const result: { template: number }[] = []
+		for (const tpl of ownedTemplates) {
+			if (seen.has(tpl)) continue
+			seen.add(tpl)
+			result.push(inventoryByTpl[tpl] ?? { id: 0, template: tpl, quantity: 1 })
+		}
+		if (result.length === 0) {
+			for (const it of inventory) {
+				if (seen.has(it.template)) continue
+				seen.add(it.template)
+				result.push(it)
+			}
+		}
+		result.sort((a, b) => ((LeekWars.items[a.template]?.level ?? 0) - (LeekWars.items[b.template]?.level ?? 0)) || (a.template - b.template))
+		return result
 	}
 
 
@@ -369,8 +441,18 @@
 				skippedDialogOpen: false,
 				skippedItems: [] as SkippedItem[],
 				ownedWeaponTemplates: [] as number[],
+				ownedChipTemplates: [] as number[],
+				ownedComponentTemplates: [] as number[],
+				ownedComponentInstances: [] as ComponentChoice[],
 				originalEditingSnapshot: '',
 				confirmCloseDialogOpen: false,
+				exportDialogOpen: false,
+				exportText: '',
+				exportCopied: false,
+				importDialogOpen: false,
+				importText: '',
+				importError: '',
+				importing: false,
 			}
 		},
 		computed: {
@@ -406,55 +488,52 @@
 				if (!this.leek || !this.editing) return 0
 				return ramFor(this.leek.level, this.editing.stats.ram || 0, this.editing.components)
 			},
+			editingStatTotals(): { [stat: string]: number } {
+				const out: { [stat: string]: number } = {}
+				if (!this.editing) return out
+				for (const stat of CHARACTERISTICS) out[stat] = this.statTotalFor(this.editing, stat)
+				return out
+			},
 			restatPotionCount(): number {
-				const farmer = store.state.farmer as Farmer | null
-				if (!farmer || !farmer.potions) return 0
-				const p = farmer.potions.find((p: Potion) => p.template === 49)
-				return p ? p.quantity : 0
+				return this.restatPotions.reduce((total: number, p: Potion) => total + p.quantity, 0)
 			},
-			allWeapons() {
-				// Source de vérité : la liste `owned_weapons` retournée par
-				// `loadout/get-all` (DISTINCT item.template côté serveur, équipées ou non).
-				// On enrichit avec `farmer.weapons` pour les méta-données dispo, mais
-				// l'union finale couvre tout ce que l'éleveur possède — y compris les
-				// oubliées actuellement équipées sur d'autres poireaux.
-				const farmer = store.state.farmer
-				const inventoryByTpl: { [k: number]: Weapon } = {}
-				if (farmer) {
-					for (const w of farmer.weapons) inventoryByTpl[w.template] = w
-				}
-				const seen = new Set<number>()
-				const result: Weapon[] = []
-				for (const tpl of this.ownedWeaponTemplates) {
-					if (seen.has(tpl)) continue
-					seen.add(tpl)
-					result.push(inventoryByTpl[tpl] ?? { id: 0, template: tpl, quantity: 1 })
-				}
-				// Fallback : si `owned_weapons` n'a pas encore été chargé (premier
-				// affichage avant la réponse), montrer au moins l'inventaire libre.
-				if (result.length === 0 && farmer) {
-					for (const w of farmer.weapons) {
-						if (seen.has(w.template)) continue
-						seen.add(w.template)
-						result.push(w)
-					}
-				}
-				return result
+			restatPotions(): Potion[] {
+				return restatPotionsOf((store.state.farmer as Farmer | null)?.potions ?? [])
 			},
-			allChips() { return store.state.farmer?.chips ?? [] },
-			allComponents() { return store.state.farmer?.components ?? [] },
+			// Source de vérité : les listes `owned_*` retournées par `loadout/get-all`
+			// (exemplaires équipés compris) : l'inventaire libre du farmer omet les items
+			// dont tous les exemplaires sont équipés sur des poireaux.
+			allWeapons() { return ownedItemList(this.ownedWeaponTemplates, store.state.farmer?.weapons ?? []) },
+			allChips() { return ownedItemList(this.ownedChipTemplates, store.state.farmer?.chips ?? []) },
+			allComponents(): ComponentChoice[] {
+				// Une pièce de base par template possédé, puis chaque variante altérée
+				// possédée (équipée ou non), triées par template puis par puissance ajoutée.
+				const choices: ComponentChoice[] = ownedItemList(this.ownedComponentTemplates, store.state.farmer?.components ?? [])
+					.map((c) => ({ template: c.template, stats: null }))
+				const byTemplate: { [tpl: number]: ComponentChoice[] } = {}
+				for (const inst of this.ownedComponentInstances) {
+					(byTemplate[inst.template] ??= []).push(inst)
+				}
+				const out: ComponentChoice[] = []
+				for (const base of choices) {
+					out.push(base)
+					const variants = (byTemplate[base.template] ?? []).slice().sort((a, b) => (a.altered_power ?? 0) - (b.altered_power ?? 0))
+					for (const v of variants) out.push(v)
+				}
+				return out
+			},
 			hasAnyForgotten(): boolean {
-				return this.allWeapons.some((w: Weapon) => this.isForgottenTemplate(w.template))
+				return this.allWeapons.some((w) => this.isForgottenTemplate(w.template))
 			},
-			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } {
-				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, fullyApplied: boolean } } = {}
+			loadoutStatus(): { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } {
+				const result: { [id: number]: { itemsDiffer: boolean, statsDiffer: boolean, requiresRestat: boolean, fullyApplied: boolean } } = {}
 				if (!this.leek) return result
 				const leek = this.leek
 				const leekWeapons = (leek.weapons || []).map((w: Weapon) => w.template).sort((a: number, b: number) => a - b)
 				const leekChips = (leek.chips || []).map((c: Chip) => c.template).sort((a: number, b: number) => a - b)
-				const leekComps: { [idx: number]: number } = {}
+				const leekComps: { [idx: number]: Component } = {}
 				const lComps: (Component | null)[] = leek.components || []
-				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i]!.template
+				for (let i = 0; i < lComps.length; i++) if (lComps[i]) leekComps[i] = lComps[i]!
 				const leekCompKeys = Object.keys(leekComps)
 				for (const loadout of this.loadouts) {
 					// Pour les armes : on sépare oubliée (sticky : OK si l'oubliée actuelle ∈ alternatives,
@@ -464,8 +543,8 @@
 					const ldWeapons = [...loadout.weapons].sort((a, b) => a - b)
 					const ldForgotten = [...(loadout.forgotten_weapons || [])]
 					const ldChips = [...loadout.chips].sort((a, b) => a - b)
-					const ldComps: { [idx: number]: number } = {}
-					for (const c of loadout.components) ldComps[c.index] = c.template
+					const ldComps: { [idx: number]: LoadoutComponent } = {}
+					for (const c of loadout.components) ldComps[c.index] = c
 					let itemsDiffer = false
 					if (leekFixedWeapons.length !== ldWeapons.length) itemsDiffer = true
 					else for (let i = 0; i < leekFixedWeapons.length; i++) if (leekFixedWeapons[i] !== ldWeapons[i]) { itemsDiffer = true; break }
@@ -483,10 +562,18 @@
 					if (!itemsDiffer) {
 						const ldCompKeys = Object.keys(ldComps)
 						if (leekCompKeys.length !== ldCompKeys.length) itemsDiffer = true
-						else for (const k of leekCompKeys) if (leekComps[+k] !== ldComps[+k]) { itemsDiffer = true; break }
+						else for (const k of leekCompKeys) {
+							const equipped = leekComps[+k], wanted = ldComps[+k]
+							if (!wanted || equipped.template !== wanted.template) { itemsDiffer = true; break }
+							// L'ensemble désigne une pièce altérée précise : la pièce en place doit
+							// porter les mêmes stats. Une pièce de base demandée accepte ce qui est
+							// équipé, pas forcément une pièce vierge.
+							if (componentStatsKey(wanted.stats) && componentStatsKey(wanted.stats) !== componentStatsKey(equipped.stats)) { itemsDiffer = true; break }
+						}
 					}
 					const statsDiffer = this.statsDifferFromLeek(loadout)
-					result[loadout.id] = { itemsDiffer, statsDiffer, fullyApplied: !itemsDiffer && !statsDiffer }
+					const requiresRestat = statsDiffer && this.statsRequireRestatFromLeek(loadout)
+					result[loadout.id] = { itemsDiffer, statsDiffer, requiresRestat, fullyApplied: !itemsDiffer && !statsDiffer }
 				}
 				return result
 			},
@@ -569,7 +656,8 @@
 					const w = LeekWars.weapons[item.params]
 					if (w?.name) return 'weapon.' + w.name
 				} else if (s.type === 'chip') {
-					const c = LeekWars.chips[item.params]
+					// LeekWars.chips est indexé par id d'item_template, pas par item.params (id de chip_template)
+					const c = LeekWars.chips[s.template]
 					if (c?.name) return 'chip.' + c.name
 				} else if (s.type === 'component') {
 					const c = LeekWars.components[item.params]
@@ -582,6 +670,9 @@
 				LeekWars.get('loadout/get-all').then((data) => {
 					store.commit('set-loadouts', data.loadouts)
 					this.ownedWeaponTemplates = Array.isArray(data.owned_weapons) ? data.owned_weapons : []
+					this.ownedChipTemplates = Array.isArray(data.owned_chips) ? data.owned_chips : []
+					this.ownedComponentTemplates = Array.isArray(data.owned_components) ? data.owned_components : []
+					this.ownedComponentInstances = Array.isArray(data.owned_component_instances) ? data.owned_component_instances : []
 					this.loading = false
 				}).error(() => { this.loading = false })
 			},
@@ -678,7 +769,7 @@
 				this.editing.forgottenWeapons = allWeapons.filter((tpl: number) => this.isForgottenTemplate(tpl))
 				this.editing.chips = this.leek.chips.map((c: Chip) => c.template)
 				this.editing.components = this.leek.components
-					.map((c: Component | null, i: number) => c ? { index: i, template: c.template } : null)
+					.map((c: Component | null, i: number): LoadoutComponent | null => c ? { index: i, template: c.template, stats: c.stats ?? null } : null)
 					.filter((c): c is LoadoutComponent => c !== null)
 				// Import des stats depuis l'allocation actuelle du leek
 				const stats: LoadoutStats = {}
@@ -690,27 +781,135 @@
 				}
 				this.editing.stats = stats
 			},
+			// --- Import / export d'un ensemble (#12079) ---------------------------
+			openExport(list: Loadout[]) {
+				this.exportText = serializeLoadouts(list, LeekWars.items)
+				this.exportCopied = false
+				this.exportDialogOpen = true
+			},
+			copyExport() {
+				if (!navigator.clipboard) { LeekWars.toast(this.$t('main.loadout_copy_failed')); return }
+				navigator.clipboard.writeText(this.exportText).then(() => {
+					this.exportCopied = true
+					window.setTimeout(() => { this.exportCopied = false }, 2000)
+				}).catch(() => LeekWars.toast(this.$t('main.loadout_copy_failed')))
+			},
+			openImport() {
+				this.importText = ''
+				this.importError = ''
+				this.importDialogOpen = true
+			},
+			doImport() {
+				if (this.importing) return
+				const text = this.importText.trim()
+				if (!text) return
+				const result = parseLoadouts(text, LeekWars.items)
+				if (!result) {
+					this.importError = this.$t('main.loadout_import_invalid') as string
+					return
+				}
+				this.importError = ''
+				if (result.ignored.length > 0) {
+					LeekWars.toast(this.$t('main.loadout_import_ignored_n', [result.ignored.length]))
+				}
+				if (result.loadouts.length === 1) {
+					// Un seul ensemble : on ouvre l'éditeur pré-rempli plutôt que d'enregistrer
+					// dans le dos du joueur — il voit ce qu'il récupère, avertissements compris
+					// (items au-dessus de son niveau, capital, RAM), et peut ajuster avant de valider.
+					this.importDialogOpen = false
+					this.editImported(result.loadouts[0])
+				} else {
+					this.importAll(result.loadouts)
+				}
+			},
+			editImported(parsed: ParsedLoadout) {
+				this.editing = {
+					id: null,
+					name: uniqueLoadoutName(parsed.name, this.loadouts.map(l => l.name), this.$t('main.loadout_imported_name') as string),
+					icon: parsed.icon,
+					weapons: parsed.weapons.filter(tpl => !this.isForgottenTemplate(tpl)),
+					forgottenWeapons: parsed.weapons.filter(tpl => this.isForgottenTemplate(tpl)),
+					chips: parsed.chips,
+					components: parsed.components,
+					stats: parsed.stats,
+				}
+				// Snapshot vide : rien n'est encore enregistré, fermer le dialogue doit prévenir.
+				this.originalEditingSnapshot = ''
+			},
+			async importAll(parsed: ParsedLoadout[]) {
+				this.importing = true
+				// Les noms sont uniques par éleveur côté serveur : on dédoublonne au fur et
+				// à mesure, en comptant ceux que la boucle vient elle-même de créer.
+				const names = this.loadouts.map(l => l.name)
+				let created = 0
+				for (const loadout of parsed) {
+					const name = uniqueLoadoutName(loadout.name, names, this.$t('main.loadout_imported_name') as string)
+					names.push(name)
+					try {
+						const data = await LeekWars.post('loadout/create', {
+							name,
+							icon: loadout.icon,
+							weapons: JSON.stringify(loadout.weapons),
+							chips: JSON.stringify(loadout.chips),
+							components: JSON.stringify(loadout.components),
+							stats: JSON.stringify(loadout.stats),
+						})
+						store.commit('add-loadout', data.set)
+						created++
+					} catch (e) {
+						// La limite d'ensembles par éleveur est ce que touche un import en lot.
+						// Une panne réseau a DÉJÀ son toast, posé par la couche requête : en
+						// remettre un le doublerait (isReportedByTransport).
+						const error = normalizeApiError(e)
+						if (error.error === 'loadout_max_reached') LeekWars.toast(this.$t('main.loadout_max_reached'))
+						else if (!isReportedByTransport(error)) LeekWars.toast(error.error)
+						break
+					}
+				}
+				this.importing = false
+				if (created > 0) {
+					this.importDialogOpen = false
+					LeekWars.toast(this.$t('main.loadout_imported_n', [created]))
+				}
+			},
 			totalCapital(): number {
 				if (!this.editing) return 0
 				return Object.values(this.editing.stats).reduce((a, b) => a + b, 0)
 			},
-			statBonusFor(loadout: Loadout, stat: string): number {
+			statBonusFor(loadout: { stats: LoadoutStats }, stat: string): number {
 				if (!loadout.stats) return 0
 				const cap = loadout.stats[stat] || 0
 				return cap > 0 ? capitalToStatBonus(stat, cap) : 0
 			},
-			statTotalFor(loadout: Loadout, stat: string): number {
+			statTotalFor(loadout: { stats: LoadoutStats, components: LoadoutComponent[] }, stat: string): number {
 				const level = this.leek?.level || 1
 				let total = baseStatFor(level, stat) + this.statBonusFor(loadout, stat)
 				for (const c of loadout.components || []) {
 					const item = LeekWars.items[c.template]
 					const comp = item && LeekWars.components[item.params]
 					if (!comp) continue
-					for (const [s, v] of comp.stats) {
-						if (s === stat) total += v
-					}
+					total += loadoutComponentStat(comp.stats, c.stats, stat)
 				}
 				return total
+			},
+			componentKey(c: { template: number, stats?: ComponentStats | null }): string {
+				return c.template + '|' + componentStatsKey(c.stats)
+			},
+			/** Liseré de palier d'une pièce altérée, comme dans l'inventaire ; rien pour une pièce de base. */
+			componentClass(c: { template: number, stats?: ComponentStats | null, altered_power?: number } | null): string {
+				if (!c || !c.stats) return ''
+				return alteredClass(c, LeekWars.componentCapacity(c.template), LeekWars.alterations?.weights)
+			},
+			/**
+			 * Instance à montrer dans l'infobulle d'une pièce choisie : l'ensemble ne mémorise
+			 * pas d'exemplaire, seulement son delta, mais ça suffit à l'aperçu pour afficher les
+			 * stats altérées, la charge et le palier — sans quoi deux variantes d'un même
+			 * template donnent la même fiche, celle de la pièce neuve.
+			 * Le delta remplace le `title` natif qui le disait en texte brut.
+			 */
+			componentInstance(c: { template: number, stats?: ComponentStats | null, altered_power?: number } | null): InventoryItem | null {
+				if (!c || !c.stats) return null
+				return { id: 0, template: c.template, quantity: 1, stats: c.stats, altered_power: c.altered_power }
 			},
 			isForgottenTemplate(tpl: number): boolean {
 				const item = LeekWars.items[tpl]
@@ -734,21 +933,26 @@
 				if (i === -1) this.editing.chips.push(tpl)
 				else this.editing.chips.splice(i, 1)
 			},
-			componentAtSlot(idx: number): number | null {
+			componentAtSlot(idx: number): LoadoutComponent | null {
 				if (!this.editing) return null
-				const c = this.editing.components.find(c => c.index === idx)
-				return c ? c.template : null
+				return this.editing.components.find(c => c.index === idx) ?? null
 			},
-			isComponentSelected(tpl: number) {
-				return this.editing?.components.some(c => c.template === tpl) ?? false
+			isComponentSelected(choice: ComponentChoice) {
+				return this.editing?.components.some(c => sameComponentChoice(c, choice)) ?? false
 			},
-			addComponent(tpl: number) {
+			addComponent(choice: ComponentChoice) {
 				if (!this.editing) return
-				const existing = this.editing.components.findIndex(c => c.template === tpl)
-				if (existing !== -1) { this.editing.components.splice(existing, 1); return }
+				// Un template ne s'équipe qu'une fois : choisir une autre variante du même
+				// template remplace la pièce en place, re-choisir la même la retire.
+				const existing = this.editing.components.findIndex(c => c.template === choice.template)
+				if (existing !== -1) {
+					if (sameComponentChoice(this.editing.components[existing], choice)) this.editing.components.splice(existing, 1)
+					else this.editing.components[existing].stats = choice.stats
+					return
+				}
 				for (let i = 0; i < MAX_COMPONENTS; i++) {
 					if (!this.editing.components.some(c => c.index === i)) {
-						this.editing.components.push({ index: i, template: tpl })
+						this.editing.components.push({ index: i, template: choice.template, stats: choice.stats })
 						return
 					}
 				}
@@ -792,8 +996,10 @@
 			},
 			apply(loadout: Loadout) {
 				if (!this.leek) return
-				// Détection locale d'un changement de stats → confirmation potion de restat
-				if (this.statsDifferFromLeek(loadout)) {
+				// Une potion de restat n'est nécessaire que pour *réduire* le capital
+				// investi sur une stat. Un changement additif (ex. juste après un
+				// restat, capital libre) s'investit directement, sans potion.
+				if (this.statsDifferFromLeek(loadout) && this.statsRequireRestatFromLeek(loadout)) {
 					this.pendingApply = loadout
 					this.restatDialogOpen = true
 					return
@@ -859,9 +1065,11 @@
 						store.commit('set-components', data.inventory.components)
 					}
 					if (data.stats_changed) {
-						// Mise à jour des stats du leek + décrément potion côté store
+						// Mise à jour des stats du leek côté store
 						this.applyStatsLocally(loadout)
-						this.decrementRestatPotion()
+						// Potion décrémentée seulement si le serveur en a réellement
+						// consommé une (changement réducteur, pas additif)
+						if (data.restat_used) this.decrementRestatPotion()
 					}
 					this.$emit('applied')
 					if (data.skipped && data.skipped.length > 0) {
@@ -890,6 +1098,19 @@
 				}
 				return false
 			},
+			// Même règle que le serveur : un restat
+			// (potion) n'est requis que pour *réduire* le capital d'une stat.
+			statsRequireRestatFromLeek(loadout: Loadout): boolean {
+				if (!this.leek) return false
+				const leek = this.leek
+				for (const stat of CHARACTERISTICS) {
+					const bonus = (leek[stat] as number) - baseStatFor(leek.level, stat)
+					const current = statBonusToCapital(stat, bonus)
+					const target = (loadout.stats && loadout.stats[stat]) || 0
+					if (target < current) return true
+				}
+				return false
+			},
 			applyStatsLocally(loadout: Loadout) {
 				if (!this.leek) return
 				const leek = this.leek
@@ -907,15 +1128,11 @@
 				store.commit('update-capital', { leek: this.leek.id, capital: newCapital })
 			},
 			decrementRestatPotion() {
-				const farmer = store.state.farmer as Farmer | null
-				if (!farmer || !farmer.potions) return
-				const p = farmer.potions.find((p: Potion) => p.template === 49)
-				if (p) {
-					p.quantity = Math.max(0, p.quantity - 1)
-					if (p.quantity === 0) {
-						const i = farmer.potions.indexOf(p)
-						if (i !== -1) farmer.potions.splice(i, 1)
-					}
+				const p = this.restatPotions[0]
+				if (!p) return
+				if (--p.quantity === 0) {
+					const potions = (store.state.farmer as Farmer).potions
+					potions.splice(potions.indexOf(p), 1)
 				}
 			},
 			remove(loadout: Loadout) {
@@ -933,15 +1150,26 @@
 .loadouts { display: flex; flex-direction: column; gap: 6px; }
 .loadout-card {
 	display: flex; flex-direction: column; gap: 6px;
-	padding: 8px 10px; border-radius: 6px; background: #f5f5f5;
+	padding: 8px 10px; border-radius: var(--radius-medium); background: #f5f5f5;
 }
-body.dark .loadout-card { background: #2a2a2a; }
+body.dark .loadout-card { background: var(--panel-header-background); }
+/* v3 : la carte prend la surface de rangée et un trait, comme toute rangée d'un
+   panneau v3, plutôt qu'un gris fixe (#f5f5f5) qui n'est pas un fond du thème. */
+body:not(.v2) .loadout-card,
+body:not(.v2) .skipped-item {
+	background: var(--background-row);
+	border: 1px solid var(--border);
+	border-radius: 0;
+}
+body:not(.v2) .sortable-chosen {
+	background: var(--background-header);
+}
 .loadout-header { display: flex; align-items: center; gap: 10px; }
-.drag-handle { cursor: grab; color: #999; flex-shrink: 0; }
+.drag-handle { cursor: grab; color: var(--grey-8); flex-shrink: 0; }
 .drag-handle:active { cursor: grabbing; }
 .sortable-ghost { opacity: 0.4; }
 .sortable-chosen { background: #eaeaea; }
-body.dark .sortable-chosen { background: #333; }
+body.dark .sortable-chosen { background: var(--grey-2); }
 .loadout-icon {
 	width: 28px; flex-shrink: 0;
 	display: flex; align-items: center; justify-content: center;
@@ -985,7 +1213,20 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 	display: inline-flex; align-items: center; gap: 4px;
 	padding: 0 8px; font-size: 13px; color: #2d8a2d; font-weight: 500;
 }
-.list-footer { margin-top: 12px; }
+.list-footer { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+// Échange d'ensembles (import / export)
+.exchange { display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+.exchange-hint { font-size: 13px; color: var(--text-color-secondary); }
+.exchange-text {
+	width: 100%; min-height: 220px; resize: vertical;
+	border: 1px solid var(--grey-11); border-radius: var(--radius-medium);
+	padding: 8px 10px; outline: none;
+	font-family: monospace; font-size: 12px; line-height: 1.4;
+	background: var(--background); color: var(--text-color);
+	&:focus { border-color: #1976d2; }
+}
+.exchange-error { color: #c0392b; font-size: 13px; }
 
 // Formulaire
 .loadout-form { display: flex; flex-direction: column; gap: 12px; }
@@ -1000,25 +1241,27 @@ body.dark .stat-badge.frequency img { filter: invert(1); }
 .emoji-display { font-size: 26px; line-height: 1; }
 :deep(.chat-input-emoji) {
 	width: 48px; height: 48px;
-	border: 2px solid #ddd; border-radius: 8px; padding: 6px;
+	border: 2px solid var(--grey-12); border-radius: var(--radius-large); padding: 6px;
 	display: flex; align-items: center; justify-content: center;
-	&:hover { border-color: #aaa; }
+	&:hover { border-color: var(--grey-9); }
 }
 .name-input {
-	flex: 1; border: 1px solid #ccc; border-radius: 6px;
+	flex: 1; border: 1px solid var(--grey-11); border-radius: var(--radius-medium);
 	padding: 8px 12px; font-size: 15px; outline: none;
 	&:focus { border-color: #1976d2; }
 }
 .import-row { margin-top: -6px; }
-.section h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: #888; }
+.section h4 { margin: 0; font-size: 13px; text-transform: uppercase; color: var(--grey-7); }
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; min-height: 24px; }
-.capital-used { font-weight: 400; color: #666; font-size: 12px; margin-left: 4px; }
+.capital-used { font-weight: 400; color: var(--grey-5); font-size: 12px; margin-left: 4px; }
 .capital-used.warning { color: #e67e22; font-weight: 600; }
+.capital-remaining { font-weight: 500; color: #2d8a2d; font-size: 12px; margin-left: 6px; }
+body.dark .capital-remaining { color: #6ac46a; }
 .capital-warning-icon { vertical-align: middle; margin-left: 4px; }
 .invisible-btn { visibility: hidden; pointer-events: none; }
 .skipped-list { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; max-height: 400px; overflow-y: auto; }
-.skipped-item { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 4px; background: #f5f5f5; }
-body.dark .skipped-item { background: #2a2a2a; }
+.skipped-item { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: var(--radius); background: #f5f5f5; }
+body.dark .skipped-item { background: var(--panel-header-background); }
 .skipped-item :deep(.item) { flex-shrink: 0; width: 48px !important; height: 48px !important; box-sizing: border-box !important; }
 .skipped-info { flex: 1; min-width: 0; }
 .skipped-name { font-weight: 600; font-size: 14px; }
@@ -1034,19 +1277,19 @@ body.dark .skipped-item { background: #2a2a2a; }
 .unsaved-message { padding: 12px; }
 .selected-items {
 	display: flex; flex-wrap: wrap; gap: 4px; min-height: 52px; margin-bottom: 6px;
-	.empty-hint { color: #bbb; font-size: 13px; align-self: center; }
+	.empty-hint { color: var(--grey-10); font-size: 13px; align-self: center; }
 }
 .available-items { display: flex; flex-wrap: wrap; gap: 4px; }
 .item-slot {
 	position: relative; cursor: pointer; flex-shrink: 0;
-	border: 2px solid transparent; border-radius: 6px;
+	border: 2px solid transparent; border-radius: var(--radius-medium);
 	width: 48px; height: 48px;
 	:deep(span) { display: block; }
 	:deep(.item) { width: 44px !important; height: 44px !important; box-sizing: border-box !important; }
-	&:hover { border-color: #aaa; }
+	&:hover { border-color: var(--grey-9); }
 	.remove-icon {
 		position: absolute; top: 1px; right: 1px; z-index: 1;
-		background: rgba(0,0,0,.5); border-radius: 50%; color: white;
+		background: rgba(0,0,0,.5); border-radius: 50%; color: var(--white);
 	}
 }
 .selected-items .item-slot { border-color: #1976d2; }
@@ -1064,22 +1307,22 @@ body.dark .skipped-item { background: #2a2a2a; }
 .available-items .item-slot.forgotten-available { box-shadow: inset 0 0 0 1px rgba(212, 167, 61, 0.5); }
 .preview-slot.preview-slot-forgotten {
 	box-shadow: inset 0 0 0 1px #d4a73d;
-	border-radius: 4px;
+	border-radius: var(--radius);
 }
 .components-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
 .component-slot {
-	width: 48px; height: 48px; border: 2px dashed #ccc; border-radius: 6px;
+	width: 48px; height: 48px; border: 2px dashed var(--grey-11); border-radius: var(--radius-medium);
 	display: flex; align-items: center; justify-content: center;
 	cursor: pointer; position: relative; flex-shrink: 0;
-	&:hover { border-color: #888; }
+	&:hover { border-color: var(--grey-7); }
 	:deep(span) { display: block; }
 	:deep(.item) { width: 44px !important; height: 44px !important; box-sizing: border-box !important; }
 	.remove-icon {
 		position: absolute; top: 1px; right: 1px; z-index: 1;
-		background: rgba(0,0,0,.5); border-radius: 50%; color: white;
+		background: rgba(0,0,0,.5); border-radius: 50%; color: var(--white);
 	}
 }
-.slot-empty { font-size: 12px; color: #ccc; }
+.slot-empty { font-size: 12px; color: var(--grey-11); }
 .form-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
 
 @media screen and (max-width: 599px) {

@@ -1,5 +1,5 @@
 <template>
-	<tr :class="{me: row.me}">
+	<tr :class="{me: row.me, inactive: !row.active}">
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
 			<router-link :to="'/team/' + row.team_id">
@@ -33,7 +33,11 @@ defineProps<{
 
 <style lang="scss" scoped>
 	tr.me td {
-		background: var(--background);
+		background: var(--background-mine);
 		font-weight: bold;
+	}
+	tr.inactive td, tr.inactive a {
+		color: var(--text-color-secondary);
+		font-style: italic;
 	}
 </style>

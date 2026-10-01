@@ -20,10 +20,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 import { mixins, useNamespacedT } from '@/model/i18n'
 import router from '@/router'
 import Popup from '@/component/popup.vue'
-import { tutorial_items } from '@/component/tutorial/tutorial-items'
+import { tutorial_items, tutorialTrackForLanguage } from '@/component/tutorial/tutorial-items'
 
 defineOptions({ name: 'TutorialNudgeDialog', i18n: {}, mixins: [...mixins] })
 
@@ -47,7 +48,9 @@ function later() {
 function start() {
 	LeekWars.track('tutorial-nudge-start')
 	show.value = false
-	router.push('/help/tutorial')
+	// On envoie le joueur vers le tutoriel du langage qu'il a choisi (LeekScript, JS/TS ou Python).
+	const track = tutorialTrackForLanguage(store.state.farmer ? store.state.farmer.ai_language : null)
+	router.push('/help/tutorial/' + track)
 }
 </script>
 
@@ -69,14 +72,14 @@ function start() {
 		width: 44px;
 		height: 44px;
 		border-radius: 50%;
-		background: #fff;
+		background: var(--white);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
 		.v-icon {
 			font-size: 24px;
-			color: #222;
+			color: var(--grey-1);
 		}
 		.num {
 			position: absolute;
@@ -85,9 +88,9 @@ function start() {
 			min-width: 16px;
 			height: 16px;
 			padding: 0 3px;
-			border-radius: 8px;
-			background: var(--primary);
-			color: #fff;
+			border-radius: var(--radius-large);
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
 			font-size: 11px;
 			font-weight: bold;
 			line-height: 16px;

@@ -35,6 +35,7 @@
 	"error_weapon_already_equipped": "{0} has already equipped this weapon.",
 	"error_weapon_two_forgotten": "{0} already has a forgotten weapon equipped.",
 	"error_chip_already_equipped": "{0} has already equipped this chip.",
+	"error_component_already_equipped": "{0} has already equipped this component.",
 	"farmed_by": "Bred by {farmer}",
 	"fights": "Fights",
 	"garden": "Garden",

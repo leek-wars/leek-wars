@@ -2,11 +2,25 @@
 	<tr :class="{me: row.me, inactive: !row.active}">
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
+			<v-tooltip v-if="row.connected">
+				<template #activator="{ props }">
+					<span class="online" v-bind="props"></span>
+				</template>
+				{{ $t('main.connected') }}
+			</v-tooltip>
 			<router-link :to="'/farmer/' + row.id">
 				<rich-tooltip-farmer :id="row.id" v-slot="{ props }" :bottom="true">
 					<span v-bind="props">{{ row.name }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
+			<!-- Classement dédupliqué : la ligne vaut pour tout le joueur,
+			     on dit combien de comptes elle représente. -->
+			<v-tooltip v-if="row.accounts && row.accounts > 1">
+				<template #activator="{ props }">
+					<span class="accounts" v-bind="props">+{{ row.accounts - 1 }}</span>
+				</template>
+				{{ $t('ranking.linked_accounts', [row.accounts]) }}
+			</v-tooltip>
 		</td>
 		<td>{{ $filters.number(row.talent) }}</td>
 		<td>{{ $filters.number(row.trophies) }}</td>
@@ -39,11 +53,30 @@ defineProps<{
 
 <style lang="scss" scoped>
 	tr.me td {
-		background: var(--background);
+		background: var(--background-mine);
 		font-weight: bold;
 	}
 	tr.inactive td, tr.inactive a {
 		color: var(--text-color-secondary);
 		font-style: italic;
+	}
+	/* Éleveur connecté : un carré plein devant le pseudo. Carré et non
+	   rond, comme tout le reste du design ; la couleur seule ne suffirait pas à
+	   le distinguer, d'où l'infobulle qui le nomme. */
+	.online {
+		display: inline-block;
+		width: 7px;
+		height: 7px;
+		margin-right: 6px;
+		vertical-align: middle;
+		background: var(--primary-surface);
+	}
+	.accounts {
+		margin-left: 6px;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: normal;
+		border: 1px solid var(--border);
+		color: var(--text-color-secondary);
 	}
 </style>

@@ -38,12 +38,18 @@
 	gap: 12px;
 	padding: 10px 16px;
 	// Coins bas carrés + collé aux panneaux du potager en dessous.
-	border-radius: 4px 4px 0 0;
+	border-radius: var(--radius) var(--radius) 0 0;
 	margin-bottom: 0;
-	color: white;
+	color: var(--white);
 	cursor: pointer;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	user-select: none;
+}
+/* v3 : pas d'ombre floue sous un bandeau collé au panneau — le trait suffit. */
+body:not(.v2) .season-banner {
+	box-shadow: none;
+	border: 1px solid var(--border-strong);
+	border-bottom: none;
 }
 .season-emoji {
 	font-size: 28px;
@@ -73,7 +79,7 @@
 	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
 }
 .season-info {
-	color: white;
+	color: var(--white);
 	opacity: 0.85;
 }
 @media (max-width: 640px) {

@@ -1,31 +1,46 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-bar page-header">
-			<h1>
-				<breadcrumb :items="breadcrumb_items" :raw="true" />
-			</h1>
+			<div class="page-title">
+				<page-icon name="group" fallback="mdi-account-group" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 
-			<div class="intro">
-				<h2>{{ $t('intro') }}</h2>
+			<!-- Le texte et le bouton de démo se partagent la largeur : le texte se
+			     termine par « Idéal si vous êtes : », qui annonce les trois tuiles
+			     juste en dessous — le bouton ne peut pas s'intercaler entre les deux. -->
+			<div class="intro-row">
+				<div class="intro">
+					<h2>{{ $t('intro') }}</h2>
 
-				<span v-html="$t('intro2')"></span>
-			</div>
+					<!-- Présentation du jeu, pour le visiteur qui ne connaît pas encore Leek Wars.
+					     Le pré-rendu SEO de la page reprend ce texte : les deux doivent rester
+					     identiques. -->
+					<p class="what-is">{{ $t('what_is') }}</p>
 
-			<div class="demo-cta">
-				<v-btn size="x-large" color="primary" :loading="creating" @click="tryDemo">
-					<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ myGroupId ? $t('access_my_demo') : $t('try_demo') }}
-				</v-btn>
-				<div class="demo-cta-sub">{{ $t('demo_cta_sub') }}</div>
+					<span v-html="$t('intro2')"></span>
+				</div>
+
+				<div class="demo-cta">
+					<v-btn size="x-large" color="primary" :loading="creating" @click="tryDemo">
+						<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ myGroupId ? $t('access_my_demo') : $t('try_demo') }}
+					</v-btn>
+					<div class="demo-cta-sub">{{ $t('demo_cta_sub') }}</div>
+				</div>
 			</div>
 
 			<v-dialog v-model="guestForm" :max-width="440">
 				<div class="guest-dialog">
 					<h2>{{ $t('demo_form_title') }}</h2>
 					<div class="guest-intro">{{ $t('demo_form_intro') }}</div>
-					<v-text-field v-model="guestName" :label="$t('demo_form_name')" variant="outlined" density="comfortable" :hide-details="true" @keyup.enter="submitGuest" />
-					<v-text-field v-model="guestEmail" :label="$t('demo_form_email')" type="email" variant="outlined" density="comfortable" :hide-details="true" @keyup.enter="submitGuest" />
+					<lw-input v-model="guestName" :label="$t('demo_form_name')" @keyup.enter="submitGuest" />
+					<lw-input v-model="guestEmail" :label="$t('demo_form_email')" type="email" @keyup.enter="submitGuest" />
 					<div v-if="guestError" class="guest-error">{{ guestError }}</div>
 					<v-btn size="large" color="primary" :loading="submitting" :block="true" @click="submitGuest">
 						<v-icon>mdi-rocket-launch-outline</v-icon>&nbsp;{{ $t('try_demo') }}
@@ -67,23 +82,21 @@
 				</div>
 			</div>
 
-			<div class="screenshots">
-				<a href="/image/groups/members.png" target="_blank">
-					<img src="/image/groups/members.png">
-					<div>{{ $t('create_members') }}</div>
-				</a>
-				<a href="/image/groups/equipment.png" target="_blank">
-					<img src="/image/groups/equipment.png">
-					<div>{{ $t('equipment') }}</div>
-				</a>
-				<a href="/image/feature/tournament.webp" target="_blank">
-					<img src="/image/feature/tournament.webp">
-					<div>{{ $t('tournaments') }}</div>
-				</a>
-			</div>
-
 			<h2>{{ $t('offers') }}</h2>
 			<div class="offers">
+				<div class="offer card free">
+					<div class="title">🎓 {{ $t('teachers') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_class_group') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_students_play') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_kit') }}</div>
+					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_no_personal_data') }}</div>
+					<div class="offer-note">{{ $t('teachers_note') }}</div>
+					<div class="spacer"></div>
+					<div class="price">{{ $t('free') }}</div>
+					<a :href="'mailto:contact@leekwars.com?subject=' + $t('teachers_subject')" target="_blank">
+						<v-btn color="primary">{{ $t('teachers_cta') }}</v-btn>
+					</a>
+				</div>
 				<div class="offer card">
 					<div class="title">🥈 {{ $t('platinum') }}</div>
 					<div class="item"><v-icon>mdi-check</v-icon> {{ $t('offer_manage') }}</div>
@@ -112,6 +125,24 @@
 				</div>
 			</div>
 			<!-- <div class="small">¹ Un jour de support offert, 49€ par jour supplémentaire</div> -->
+
+			<!-- Les captures viennent après les offres : le visiteur arrive pour
+			     créer un groupe, il voit d'abord ce que ça coûte, puis à quoi ça
+			     ressemble. -->
+			<div class="screenshots">
+				<a href="/image/groups/members.png" target="_blank">
+					<img src="/image/groups/members.png">
+					<div>{{ $t('create_members') }}</div>
+				</a>
+				<a href="/image/groups/equipment.png" target="_blank">
+					<img src="/image/groups/equipment.png">
+					<div>{{ $t('equipment') }}</div>
+				</a>
+				<a href="/image/feature/tournament.webp" target="_blank">
+					<img src="/image/feature/tournament.webp">
+					<div>{{ $t('tournaments') }}</div>
+				</a>
+			</div>
 
 			<h2>{{ $t('features') }}</h2>
 			<div class="features">
@@ -187,47 +218,42 @@
 				</div>
 			</div>
 
+			<!-- Les quatre témoignages sont des enfants directs de la grille : les
+			     trois derniers étaient empilés dans un div intermédiaire séparé par
+			     des <br>, ce qui n'occupait que deux colonnes et laissait le reste
+			     de la largeur vide. -->
 			<div class="testimonies">
-
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
-					<div class="card small">
+					<div class="card">
 						« {{ $t('testimony_esiea') }} »
 					</div>
 					<img src="/image/partner/esiea.png">
 				</div>
 
-				<div>
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
 						« {{ $t('testimony_xplor') }} »
 					</div>
 					<img src="/image/partner/xplor.svg">
 				</div>
-				<br>
 
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
 						« {{ $t('testimony_n_hitec') }} »
 					</div>
 					<img src="/image/partner/n-hitec.png">
 				</div>
-				<br>
 
 				<div class="testimony">
-					<!-- <avatar :farmer="{id: -1, avatar_changed: 0}" /> -->
 					<div class="card">
 						« {{ $t('testimony_norauto') }} »
 					</div>
 					<img src="/image/partner/norauto.png">
 				</div>
-				</div>
 			</div>
 
 			<h2>{{ $t('faq') }}</h2>
-			<div v-for="q in [1, 2, 3]" :key="q">
+			<div v-for="q in [1, 2, 3, 4, 5, 6]" :key="q">
 				<div class="question">{{ $t('question' + q) }}</div>
 				<div class="answer">{{ $t('answer' + q) }}</div>
 			</div>
@@ -323,6 +349,13 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+// Page de présentation, faite de texte courant : en pleine largeur du v3 (cf.
+// « Largeur » dans leekwars-shell-v3.scss) les lignes devenaient illisibles sur
+// un grand écran. Comme l'inscription, elle se borne et se centre.
+.page {
+	max-width: 1400px;
+	margin: 0 auto;
+}
 .panel {
 	padding: 15px;
 }
@@ -330,13 +363,36 @@ onBeforeMount(() => {
 	padding: 0;
 }
 
+// Le texte tenait dans la moitié gauche du panneau et laissait la droite vide,
+// pendant que le bouton de démo occupait seul une bande sous lui. Les deux se
+// partagent maintenant la largeur : le texte prend ce dont il a besoin (borné à
+// 70 ch, la longueur de ligne lisible), le bouton se centre dans la place qui
+// reste. En dessous de 900 px, il repasse sous le texte comme avant.
+.intro-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 20px;
+	.intro {
+		flex: 1 1 420px;
+	}
+	.demo-cta {
+		flex: 1 1 300px;
+		margin: 0;
+	}
+}
 .intro {
 	font-size: 16px;
 	line-height: 1.5;
+	.what-is {
+		margin: 12px 0 18px;
+		max-width: 70ch;
+		color: var(--text-color-secondary);
+	}
 }
 .guest-dialog {
 	background: var(--background);
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 25px;
 	display: flex;
 	flex-direction: column;
@@ -385,11 +441,15 @@ h2 {
 	font-weight: 500;
 	font-size: 25px;
 	margin-bottom: 10px;
-	// color: #5fad1b;
+	// color: var(--primary);
 }
+// `auto-fit` et non `auto-fill` : la grille tient 4 colonnes sur la largeur de
+// la page, mais il n'y a que 3 tuiles — `auto-fill` gardait la 4e colonne vide
+// et tassait les tuiles à gauche. `auto-fit` réduit les colonnes au nombre de
+// tuiles, qui se partagent alors toute la largeur.
 .targets {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	gap: 30px;
 	margin-top: 15px;
 	margin-bottom: 30px;
@@ -398,14 +458,27 @@ h2 {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
+		// Les 4 poireaux totalisent un peu plus que la largeur de la tuile (274 px
+		// de svg pour 270 px utiles) : en flux inline, le dernier passait à la
+		// ligne. La rangée passe en flex sans retour, et les svg se laissent
+		// comprimer des quelques pourcents qui manquent — ils gardent leur
+		// proportion (preserveAspectRatio), et la tuile reste bonne jusqu'à sa
+		// largeur minimale de 250 px.
 		.image {
 			margin-bottom: 10px;
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: flex-end;
+			justify-content: center;
+			> * {
+				min-width: 0;
+			}
 		}
 		.title {
 			font-size: 20px;
 			font-weight: 500;
 			margin-bottom: 5px;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 }
@@ -438,7 +511,7 @@ h2 {
 	.offer {
 		max-width: 300px;
 		padding: 20px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		display: flex;
 		flex-direction: column;
 		border: 1px solid var(--border);
@@ -454,7 +527,7 @@ h2 {
 			font-size: 15px;
 			margin: 5px 0;
 			.v-icon {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 		.price {
@@ -473,6 +546,17 @@ h2 {
 		.v-btn {
 			width: 100%;
 			margin-top: 30px;
+		}
+		// Placée AVANT le spacer : sous le bouton, elle décalait le bloc prix/bouton vers le
+		// haut et désalignait cette carte des deux autres.
+		.offer-note {
+			font-size: 13px;
+			opacity: 0.75;
+			margin-top: 10px;
+			line-height: 1.35;
+		}
+		&.free {
+			border-color: #5fad1b;
 		}
 	}
 }
@@ -504,7 +588,7 @@ h2 {
 		max-width: 100%;
 		max-height: 180px;
 		object-fit: contain;
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		box-shadow: var(--elevation-1);
 		margin-bottom: 6px;
 	}
 }
@@ -513,9 +597,17 @@ h2 {
 		flex-wrap: wrap;
 	}
 }
+// 300 px de colonne minimale : sur la largeur bornée de la page (1400 px, soit
+// 1338 px utiles dans le panneau), les quatre témoignages tiennent sur une seule
+// rangée et occupent toute la largeur — à 320 px il n'en rentrait que trois, et
+// le quatrième repartait seul sur une rangée aux deux tiers vide. La grille
+// retombe ensuite à 3, 2 et 1 colonne à mesure que la fenêtre rétrécit.
+// `align-items: start` évite que les trois courts s'étirent sur la hauteur du
+// long (celui de l'ESIEA) : chaque logo reste collé sous son propre encadré.
 .testimonies {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	align-items: start;
 	margin-top: 40px;
 	margin-bottom: 10px;
 	gap: 25px;

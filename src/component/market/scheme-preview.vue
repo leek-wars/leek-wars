@@ -16,7 +16,7 @@ export default {
 
 <script setup lang="ts">
 import type { SchemeTemplate } from '@/model/scheme'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 withDefaults(defineProps<{
 	scheme: SchemeTemplate

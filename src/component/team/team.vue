@@ -1,8 +1,8 @@
 <template>
-	<!-- Racine STABLE unique (.page toujours montée) : v-if/v-else à la racine = Fragment dont
-	     l'el peut devenir null pendant le patch -> "parentNode of null" (#4163, cf leek.vue). -->
+	<!-- `notFound` et surtout pas `error` : un `const error` de <script setup> masquerait le
+	     composant <error> ci-dessous et casserait la page (cf. leek.vue). -->
 	<div class="page">
-	<error v-if="error" :title="$t('not_found')">
+	<error v-if="notFound" :title="$t('not_found')">
 		<template #message><i18n-t keypath="not_found_id" tag="span"><template #id><b>{{ id }}</b></template></i18n-t></template>
 		<template #button>
 			<router-link to="/teams">
@@ -13,15 +13,20 @@
 	<template v-else>
 		<div class="page-header page-bar">
 
-			<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
-				<h1 v-bind="props">{{ team.name }}</h1>
-			</rich-tooltip-team>
-			<h1 v-else>...</h1>
+			<div class="page-title">
+				<page-icon name="team" fallback="mdi-shield" />
+				<div class="page-title-text">
+					<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ props }" :bottom="true">
+						<h1 v-bind="props">{{ team.name }}</h1>
+					</rich-tooltip-team>
+					<h1 v-else>...</h1>
+				</div>
+			</div>
 
 			<div v-if="team" class="tabs">
 				<router-link v-if="is_member" :to="'/forum/category-' + team.forum">
 					<div :link="'/forum/category-' + team.forum" class="tab action" icon="question_answer">
-						<img src="/image/icon/forum.png">
+						<v-icon>mdi-forum</v-icon>
 						<span>{{ $t('forum') }}</span>
 					</div>
 				</router-link>
@@ -29,7 +34,7 @@
 					<template #activator="{ props }">
 						<div class="tab" v-bind="props" @click="updateOpened">
 							<span>{{ $t('opened') }}</span>
-							<v-switch :model-value="team.opened ?? false" hide-details @click.stop />
+							<lw-switch :model-value="team.opened ?? false" @click.stop />
 						</div>
 					</template>
 					{{ $t('recrutment_mode') }}
@@ -152,14 +157,14 @@
 				<v-tooltip v-if="team && team.won_tournaments > 0">
 					<template #activator="{ props }">
 						<div v-bind="props" class="tournaments">
-							<v-icon class="grey">mdi-trophy-outline</v-icon>
+							<v-icon class="grey">mdi-tournament</v-icon>
 							<span class="big">{{ $filters.number(team.won_tournaments) }}</span>
 						</div>
 					</template>
 					{{ $t('tournaments') }}
 				</v-tooltip>
 
-				<Line v-if="chartData && chartOptions" :data="chartData" :options="chartOptions" class="talent-history" />
+				<talent-chart v-if="team" :history="team.talent_history" :history-long="team.talent_history_long" :current="team.talent" />
 
 				<div v-if="team && $store.state.farmer && !is_member && $store.state.farmer.team == null && !myInvitation" class="center">
 					<br>
@@ -178,8 +183,7 @@
 								<div class="owner-info">
 									<div class="owner-name" :class="teamOwner.color">
 										{{ teamOwner.name }}
-										<img v-if="teamOwner.connected" class="owner-status" src="/image/connected.png">
-										<img v-else class="owner-status" src="/image/disconnected.png">
+										<lw-status :online="teamOwner.connected" class="owner-status" />
 									</div>
 									<div class="owner-label">{{ $t('owner') }}</div>
 								</div>
@@ -216,16 +220,29 @@
 			</div>
 		</panel>
 
-		<panel v-if="team && is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
-			<template #actions>
-				<div v-if="!LeekWars.mobile && team && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
-					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
-				</div>
-			</template>
-			<template #content>
-				<chat v-if="team" :id="team.chat" />
-			</template>
-		</panel>
+		<!-- Le chat et la timeline de l'équipe côte à côte : ce qui se dit et ce qui
+			se fait. Hors équipe, seul « En direct » reste et prend toute la largeur.
+			Réservé aux connectés : `live/get-team-events` demande un jeton, un visiteur
+			n'aurait qu'un panneau vide. -->
+		<div v-if="team && $store.state.connected" class="container">
+			<panel v-if="is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat">
+				<template #actions>
+					<div v-if="!LeekWars.mobile && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
+						<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
+					</div>
+				</template>
+				<template #content>
+					<chat :id="team.chat" />
+				</template>
+			</panel>
+
+			<panel class="live-panel" :title="$t('live_on_team', [team.name])" toggle="team/live" icon="mdi-access-point">
+				<!-- Le même filtre que sur l'accueil, et le même état : deux panneaux
+					ouverts en même temps ne peuvent pas montrer deux filtres. -->
+				<template #actions><live-filter-menu /></template>
+				<live :team="team.id" />
+			</panel>
+		</div>
 
 		<panel v-if="team && is_member && team.candidacies && team.candidacies.length > 0">
 			<template #title>{{ $t('candidacies') }} ({{ team.candidacies.length }})</template>
@@ -262,14 +279,12 @@
 							<div v-for="col in columnsConfigList" :key="col.key"
 								class="column-config-item" :data-key="col.key">
 								<v-icon class="drag-handle">mdi-drag</v-icon>
-								<v-checkbox-btn v-model="col.visible" :disabled="col.key === 'name'" density="compact" color="primary" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
+								<lw-checkbox v-model="col.visible" :disabled="col.key === 'name'" :label="columnLabel(col)" class="column-checkbox" @change="saveColumnsConfig" />
 							</div>
 						</div>
 						<div class="sort-config">
 							<span class="sort-label">{{ $t('default_sort') }}</span>
-							<select v-model="columnsSortKey" class="sort-select" @change="saveColumnsConfig">
-								<option v-for="col in visibleConfigColumns" :key="col.key" :value="col.key">{{ columnLabel(col) }}</option>
-							</select>
+							<lw-select v-model="columnsSortKey" :items="visibleConfigColumns.map(col => ({ value: col.key, title: columnLabel(col) }))" class="sort-select" @update:model-value="saveColumnsConfig" />
 							<v-icon class="sort-order" @click="toggleSortOrder">{{ columnsSortOrder === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending' }}</v-icon>
 						</div>
 					</div>
@@ -296,8 +311,7 @@
 								<div v-bind="props">
 									<avatar :farmer="member" />
 									<div class="name">
-										<img v-if="member.connected" class="status" src="/image/connected.png">
-										<img v-else class="status" src="/image/disconnected.png">
+										<lw-status :online="member.connected" class="status" />
 										<v-tooltip v-if="member.grade == 'owner'">
 											<template #activator="{ props }">
 												<span v-bind="props">★</span>
@@ -326,10 +340,7 @@
 						</template>
 						<template v-if="owner && editMembers">
 							<i v-if="member.grade == 'owner'" class="grade">{{ $t('owner') }}</i>
-							<select v-else v-model="member.grade" class="level" @change="changeLevel(member)">
-								<option value="captain">{{ $t('captain') }}</option>
-								<option value="member">{{ $t('member') }}</option>
-							</select>
+							<lw-select v-else v-model="member.grade" :items="[{ value: 'captain', title: $t('captain') }, { value: 'member', title: $t('member') }]" class="level" @update:model-value="changeLevel(member)" />
 							<br>
 							<v-btn v-if="$store.state.farmer && member.id !== $store.state.farmer.id" class="ban" size="small" @click="banMemberStart(member)">
 								<v-icon>mdi-hand-pointing-right</v-icon>
@@ -352,8 +363,7 @@
 							<rich-tooltip-farmer :id="item.id" v-slot="{ props }">
 								<span v-bind="props" class="member-info">
 									<avatar :farmer="item" class="table-avatar" />
-									<img v-if="item.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="item.connected" class="status" />
 									<span :class="item.color">{{ item.name }}</span>
 								</span>
 							</rich-tooltip-farmer>
@@ -504,7 +514,7 @@
 			</div>
 		</panel>
 
-		<panel v-if="is_member" :title="$t('compositions')">
+		<panel v-if="is_member" :title="$t('compositions')" icon="mdi-shield-sword">
 			<template v-if="captain" #actions>
 				<div class="button flat" @click="createCompoDialog = true">{{ $t('create_composition') }}</div>
 			</template>
@@ -514,7 +524,7 @@
 		<div v-if="is_member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
 
 		<div v-if="is_member && team && team.compositions" class="compos">
-			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo">
+			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo" icon="mdi-shield-sword">
 				<template #title>
 					<rich-tooltip-composition :id="composition.id" v-slot="{ props }">
 						<div v-bind="props">{{ composition.name }}</div>
@@ -529,7 +539,7 @@
 					<v-tooltip v-if="$store.state.farmer && $store.state.farmer.tournaments_enabled && captain" content-class="fluid" @update:model-value="loadTournamentRange(composition)">
 						<template #activator="{ props }">
 							<div class="button flat" v-bind="props" @click="registerTournament(composition)">
-								<v-icon>mdi-trophy</v-icon>
+								<v-icon>mdi-tournament</v-icon>
 								<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
 								<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
 							</div>
@@ -548,12 +558,12 @@
 					</div>
 				</template>
 				<template #content>
-					<div :class="{dashed: draggedLeek != null && canDrop(composition)}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
+					<div :class="{dashed: draggedLeek != null && canDrop(composition)}" :data-composition="composition.id" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
 
 						<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
 						<rich-tooltip-leek v-for="leek in composition.leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-							<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
+							<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)" @touchstart="leeksTouchstart(composition, leek, $event)">
 								<leek-image :leek="leek" :scale="0.6" />
 								<br>
 								<div class="name">{{ leek.name }}</div>
@@ -575,11 +585,11 @@
 			<template #title>{{ $t('unsorted_leeks') }}</template>
 
 			<template #content>
-				<div :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
+				<div :class="{dashed: draggedLeek != null}" data-composition="-1" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 					<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
 					<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :id="leek.id" :key="leek.id" v-slot="{ props }">
-						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
+						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-bind="props" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)" @touchstart="leeksTouchstart(null, leek, $event)">
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
 							<div class="name">{{ leek.name }}</div>
@@ -623,13 +633,13 @@
 					</router-link>
 				</template>
 				<template #content>
-					<fights-history v-if="team" :fights="team.fights" :progress="liveProgress" />
+					<fights-history v-if="team" :fights="team.fights" :progress="liveProgress" full-rows />
 				</template>
 			</panel>
 
-			<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+			<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-tournament">
 				<template #content>
-					<tournaments-history v-if="team" :tournaments="team.tournaments" />
+					<tournaments-history v-if="team" :tournaments="team.tournaments" full-rows />
 				</template>
 			</panel>
 
@@ -644,7 +654,7 @@
 				<div v-if="owner" class="tab" @click="dissolveDialog = true">{{ $t('disolve_team') }}</div>
 				<div v-if="!is_member && $store.state.connected">
 					<div class="report-button tab" @click="showReport = true">
-						<img src="/image/icon/flag.png">
+						<v-icon>mdi-flag</v-icon>
 						<span>{{ $t('report') }}</span>
 					</div>
 				</div>
@@ -792,7 +802,7 @@
 					<h4>{{ $t('main.chips') }}</h4>
 					<div class="chips">
 						<rich-tooltip-item v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ props }" :item="LeekWars.items[chip]" :bottom="true" :instant="true">
-							<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-bind="props">
+							<img :src="chipImageUrl(CHIPS[chip].name)" class="chip" v-bind="props">
 						</rich-tooltip-item>
 					</div>
 				</div>
@@ -808,11 +818,11 @@
 		<popup v-if="team && is_member" v-model="logsDialog" :width="600" icon="mdi-playlist-check" :title="$t('log_change')">
 			<div>{{ $t('log_change_text') }}</div>
 			<br>
-			<v-radio-group v-model="logsLevel" hide-details @update:model-value="updateLogsLevel">
-				<v-radio :value="0" :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
-				<v-radio :value="1" :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
-				<v-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
-			</v-radio-group>
+			<lw-radio-group v-model="logsLevel" @update:model-value="updateLogsLevel">
+				<lw-radio :value="0" :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
+				<lw-radio :value="1" :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
+				<lw-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
+			</lw-radio-group>
 		</popup>
 
 		<invite-dialog v-model="inviteDialog" />
@@ -822,6 +832,7 @@
 </template>
 
 <script setup lang="ts">
+	import { chipImageUrl } from '@/model/item'
 	import { locale } from '@/locale'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { ChatType } from '@/model/chat'
@@ -832,6 +843,7 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Composition, Team, TeamMember, type TeamInvitation } from '@/model/team'
+	import { startTouchDrag } from '@/model/touch-drag'
 	import { useLiveHistory } from '@/model/use-live-history'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -844,20 +856,22 @@
 	import TurretImage from '@/component/turret-image.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import InviteDialog from '@/component/invite-dialog/invite-dialog.vue'
+	// Le panneau « En direct » de l'accueil, restreint aux membres de l'équipe
+	import Live from '@/component/live/live.vue'
+	import LiveFilterMenu from '@/component/live/live-filter-menu.vue'
 	import { CHIPS } from '@/model/chips'
 	import { computed, defineAsyncComponent, nextTick, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
-	import { emitter } from '@/model/vue'
-	import { Line } from 'vue-chartjs'
-	import type { ChartData, ChartOptions } from 'chart.js'
+	import { emitter } from '@/model/emitter'
+	import TalentChart from '@/component/talent-chart.vue'
 	import Sortable from 'sortablejs'
 
 	const Chat = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`))
 	const Explorer = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`))
 
 	defineOptions({ name: 'Team', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, Line, InviteDialog,
+		CharacteristicTooltip, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement, TalentChart, InviteDialog,
 	} })
 
 	interface ColumnDef {
@@ -905,7 +919,7 @@
 	const columnsConfigListEl = useTemplateRef<HTMLElement>('columnsConfigListEl')
 
 	const team = ref<Team | null>(null)
-	const error = ref(false)
+	const notFound = ref(false)
 	const captain = ref(false)
 	const owner = ref(false)
 	const showReport = ref(false)
@@ -947,8 +961,6 @@
 	const logsLevel = ref(0)
 	const rankingsLoading = ref(false)
 	const rankingsLoaded = ref(false)
-	const chartData = ref<ChartData<'line'> | null>(null)
-	const chartOptions = ref<ChartOptions<'line'> | null>(null)
 	let savingRecruitment = false
 
 	const id = computed(() => 'id' in route.params ? parseInt(route.params.id as string, 10) : (store.state.farmer && store.state.farmer.team !== null ? store.state.farmer.team.id : null))
@@ -1033,6 +1045,7 @@
 
 	watch(id, () => update(), { immediate: true })
 
+
 	// Mise à jour en direct du petit historique de combats.
 	const { progress: liveProgress } = useLiveHistory({
 		type: 'team',
@@ -1042,7 +1055,12 @@
 	})
 
 	function update() {
-		if (id.value === null) return
+		if (id.value === null) {
+			// `/team` sans équipe, où mène un changement de compte : comme le menu, on
+			// renvoie vers la liste des équipes plutôt que de charger indéfiniment.
+			if (store.state.farmer && !('id' in route.params)) { router.replace('/teams') }
+			return
+		}
 		let request = 'team/get/' + id.value
 		if (store.state.farmer) {
 			if (store.state.farmer.team !== null && store.state.farmer.team.id === id.value) {
@@ -1051,7 +1069,7 @@
 				request = 'team/get-connected/' + id.value
 			}
 		}
-		error.value = false
+		notFound.value = false
 		rankingsLoading.value = false
 		rankingsLoaded.value = false
 		LeekWars.get<Team>(request).then(tm => {
@@ -1080,14 +1098,13 @@
 			}
 
 			addRankingStyles()
-			chart()
 
 			LeekWars.setTitle(team.value.name)
 			LeekWars.setSubTitle(t('main.n_farmers', [tm.members.length]) + " • " + t('main.n_leeks', [tm.leek_count]))
 			if (is_member.value) {
 				logsLevel.value = my_member.value!.logs_level
 				LeekWars.setActions([
-					{icon: 'mdi-chat-outline', click: () => router.push('/forum/category-' + tm.forum)},
+					{icon: 'mdi-forum', click: () => router.push('/forum/category-' + tm.forum)},
 					{icon: 'mdi-account-group', click: () => router.push('/teams')}
 				])
 			} else {
@@ -1098,7 +1115,7 @@
 			}
 			emitter.emit('loaded')
 		}).error(() => {
-			error.value = true
+			notFound.value = true
 		})
 	}
 
@@ -1560,6 +1577,42 @@
 		return !composition.tournament.registered && composition.leeks.length < 6 && draggedLeekComposition.value !== composition
 	}
 
+	// Le glisser-déposer HTML5 ci-dessus n'existe pas au tactile : sur mobile on
+	// rejoue le geste au doigt (appui long pour attraper le poireau), avec les
+	// mêmes règles de dépôt.
+	function leeksTouchstart(composition: Composition | null, leek: Leek, e: TouchEvent) {
+		if (composition && composition.tournament.registered) return
+		startTouchDrag(e, {
+			drop: '.leeks[data-composition]',
+			accept: (zone) => {
+				const target = compositionOfZone(zone)
+				if (target === undefined) return false
+				return target === null ? composition !== null : canDrop(target)
+			},
+			start: () => {
+				draggedLeek.value = leek
+				draggedLeekComposition.value = composition
+				leek.dragging = true
+			},
+			end: (zone) => {
+				const target = zone ? compositionOfZone(zone) : undefined
+				if (target !== undefined && target !== composition) {
+					moveLeek(leek, composition, target)
+				}
+				leek.dragging = false
+				draggedLeek.value = null
+			}
+		})
+	}
+
+	// Zone de dépôt -> composition, null pour les poireaux non classés,
+	// undefined si ce n'est pas une zone de cette page.
+	function compositionOfZone(zone: HTMLElement): Composition | null | undefined {
+		if (!team.value) return undefined
+		const id = parseInt(zone.dataset.composition ?? '', 10)
+		return id === -1 ? null : team.value.compositionsById[id]
+	}
+
 	function selectAI(ai: {path: string}) {
 		LeekWars.put('team/set-turret-ai', {ai_path: ai.path}).then(() => {
 			team.value!.turret_ai = ai
@@ -1578,32 +1631,6 @@
 		composition.tournamentRangeLoading = true
 		const power = Math.round(composition.leeks.reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
 		LeekWars.get('tournament/range-compo/' + power).then(d => composition.tournamentRange = d)
-	}
-
-	function chart() {
-		if (!team.value || !team.value.talent_history || team.value.talent_history.length === 0) return
-		const labels = []
-		const time = LeekWars.time
-		for (let i = 1; i <= 7; ++i) {
-			labels.push(LeekWars.formatDayMonthShort(time - i * 24 * 3600))
-		}
-		chartData.value = {
-			labels: labels.reverse(),
-			datasets: [{
-				tension: 0.2,
-				data: team.value.talent_history,
-				borderColor: '#5fad1b',
-				pointBackgroundColor: '#5fad1b',
-				borderWidth: 2,
-				fill: { target: 'origin', above: '#5fad1b30' },
-			}]
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} as any
-		chartOptions.value = {
-			aspectRatio: 2.5,
-			plugins: { legend: { display: false } },
-			elements: { point: { radius: 4, hoverRadius: 6 } },
-		}
 	}
 
 	function toggleLike() {
@@ -1708,7 +1735,7 @@
 		[contenteditable]:empty:before {
 			content: attr(data-placeholder);
 			font-style: italic;
-			color: #999;
+			color: var(--grey-8);
 		}
 	}
 	.guillemet {
@@ -1723,7 +1750,7 @@
 	}
 	.team-status.empty {
 		font-style: italic;
-		color: #999;
+		color: var(--grey-8);
 	}
 	.bar {
 		width: 100%;
@@ -1732,7 +1759,7 @@
 		background: var(--pure-white);
 		border: 1px solid var(--border);
 		position: relative;
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 	}
 	.xp-bar {
 		height: 10px;
@@ -1740,7 +1767,7 @@
 		display: inline-block;
 		vertical-align: top;
 		position: absolute;
-		border-radius: 5px;
+		border-radius: var(--radius-medium);
 	}
 	.xp-bar.blue {
 		background: #008fbb;
@@ -1750,9 +1777,6 @@
 		align-items: center;
 		justify-content: center;
 		margin-top: 15px;
-	}
-	.talent-history {
-		margin-top: 3px;
 	}
 	.fights, .tournaments {
 		width: 100%;
@@ -1764,7 +1788,7 @@
 			color: var(--text-color-secondary);
 		}
 		.grey {
-			color: #999;
+			color: var(--grey-8);
 		}
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid var(--border);
@@ -1785,7 +1809,7 @@
 	}
 	.candidacies .empty {
 		padding: 10px;
-		color: #999;
+		color: var(--grey-8);
 		text-align: center;
 	}
 	.candidacies .farmer {
@@ -1822,11 +1846,11 @@
 			font-size: 14px;
 			margin-top: 3px;
 			padding-top: 2px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			&.me {
 				cursor: pointer;
 				&:hover {
-					background: #ddd;
+					background: var(--grey-12);
 				}
 			}
 			&.hidden {
@@ -1846,6 +1870,15 @@
 	}
 	.chat {
 		height: 300px;
+	}
+	// La timeline se cale sur la hauteur du chat qu'elle accompagne et défile
+	// à l'intérieur : sans ça, une équipe active pousserait la page sur des
+	// dizaines d'événements pendant que le chat, lui, reste à 300 px.
+	.live-panel:deep(> .content) {
+		max-height: 300px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		padding: 8px;
 	}
 	.farmer, .popup.change_owner_popup .farmer {
 		display: inline-block;
@@ -1872,6 +1905,15 @@
 	}
 	.members-table {
 		white-space: nowrap;
+		// La v-data-table pose sa « surface » Vuetify, qui ne descend d'aucun
+		// jeton du thème (palette doublée dans vuetify.ts, sans surface) : en v3
+		// sombre le tableau posait un rectangle étranger sur le panneau. Il
+		// devient transparent et laisse le panneau porter le fond, l'encre suit
+		// le thème.
+		&.v-table {
+			background: transparent;
+			color: var(--text-color);
+		}
 		.date-cell {
 			font-size: 12px;
 		}
@@ -1897,7 +1939,6 @@
 			margin-right: 4px;
 		}
 		.status {
-			width: 13px;
 			margin-right: 2px;
 		}
 		.flag {
@@ -1933,7 +1974,7 @@
 			display: flex;
 			align-items: center;
 			padding: 0 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			transition: background 0.15s;
 			&:hover {
 				background: rgba(128, 128, 128, 0.1);
@@ -1973,7 +2014,7 @@
 		.sort-select {
 			flex: 1;
 			padding: 4px 8px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			border: 1px solid var(--border-color);
 			background: var(--background);
 			color: var(--text-color);
@@ -1981,29 +2022,28 @@
 		.sort-order {
 			cursor: pointer;
 			&:hover {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 	}
 	.farmer .status {
-		width: 15px;
 		vertical-align: bottom;
 		margin-bottom: 2px;
 	}
 	.change_owner_popup .farmer {
 		padding: 4px;
 		padding-top: 10px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		cursor: pointer;
 	}
 	.change_owner_popup .farmer.selected {
-		background: #5fad1b;
+		background: var(--primary-surface);
 	}
 	.change_owner_popup .farmer.selected .name {
-		color: white;
+		color: var(--white);
 	}
 	.no-compos {
-		color: #aaa;
+		color: var(--grey-9);
 		font-size: 18px;
 		margin: 20px;
 		text-align: center;
@@ -2017,7 +2057,7 @@
 		padding-top: 1px;
 	}
 	.level-talent .level {
-		color: white;
+		color: var(--white);
 		line-height: 32px;
 		margin-left: 30px;
 		margin-right: 10px;
@@ -2039,6 +2079,10 @@
 		transform: scale(1);
 		cursor: pointer;
 		width: 96px;
+		// L'appui long attrape le poireau pour le déplacer : ni menu « Enregistrer
+		// l'image » sur mobile, ni sélection de texte, ne doivent s'y superposer.
+		-webkit-touch-callout: none;
+		user-select: none;
 		.name {
 			font-size: 16px;
 			text-align: center;
@@ -2085,7 +2129,7 @@
 		top: 50%; bottom: 50%;
 		margin-top: -9px;
 		font-weight: 300;
-		color: #aaa;
+		color: var(--grey-9);
 		font-size: 18px;
 	}
 	.compo-tournament {
@@ -2096,17 +2140,21 @@
 		margin-right: 8px;
 		margin-bottom: 3px;
 		font-size: 18px;
-		color: #444;
+		color: var(--grey-3);
 	}
 	.tournament-info {
 		font-size: 18px;
-		color: #444;
+		color: var(--grey-3);
 	}
 	.compo:not(.in-tournament) .leek {
 		cursor: move;
 	}
 	.compo .leeks.dashed {
-		border: 4px dashed #aaa;
+		border: 4px dashed var(--grey-9);
+	}
+	// Zone visée par le doigt pendant un glisser tactile (cf. touch-drag.ts)
+	.compo .leeks.drop-hover {
+		border: 4px dashed var(--primary);
 	}
 	.panel :deep(.turret-wrapper) {
 		display: flex;
@@ -2123,7 +2171,7 @@
 				align-items: center;
 				gap: 10px;
 				padding: 6px 12px;
-				border-radius: 8px;
+				border-radius: var(--radius-large);
 				transition: background 0.15s;
 				&:hover {
 					background: rgba(128, 128, 128, 0.1);
@@ -2145,7 +2193,6 @@
 				color: var(--text-color-secondary);
 			}
 			.owner-status {
-				width: 14px;
 				vertical-align: middle;
 				margin-right: 2px;
 			}
@@ -2175,7 +2222,7 @@
 				}
 			}
 			.no-ai {
-				color: #5fad1b;
+				color: var(--primary);
 				font-weight: bold;
 				text-decoration: underline;
 				cursor: pointer;
@@ -2322,6 +2369,64 @@
 	.compos {
 		margin-bottom: 12px;
 	}
+	/* Compositions sur deux colonnes dès que la place le permet.
+	   `auto-fit` plutôt qu'un point de rupture en pixels : ce qui compte est la
+	   largeur DISPONIBLE, qui dépend du menu replié ou non et du panneau social
+	   ouvert ou non, pas de celle de la fenêtre. 600 px est la largeur sous
+	   laquelle une composition ne tiendrait plus ses six poireaux à leur taille
+	   actuelle (600 / 6 = 100 px par poireau, gouttières comprises). */
+	body:not(.v2) .compos {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+		gap: 12px;
+		/* Chaque ligne prend la hauteur de son contenu : des lignes toutes égales
+		   (`1fr`) gardaient la hauteur d'une composition dépliée pour une ligne
+		   de compositions repliées, soit un grand trou vide. Au sein d'une ligne,
+		   l'étirement par défaut aligne toujours les bas des panneaux dépliés. */
+		grid-auto-rows: auto;
+	}
+	/* Un panneau replié n'a plus que son en-tête : l'étirer à côté d'une
+	   composition dépliée laisserait une grande boîte vide. Le composant panneau
+	   ne pose pas de classe quand il est replié, on détecte donc l'absence de
+	   son contenu. */
+	body:not(.v2) .compos > .panel:not(:has(> .leeks)) {
+		align-self: start;
+	}
+	body:not(.v2) .compos > .panel {
+		margin-bottom: 0;
+	}
+	/* Six colonnes fixes : c'est la taille maximale d'une composition, donc les
+	   poireaux occupent toujours le même sixième et s'alignent d'une
+	   composition à l'autre, quel que soit leur nombre. La grille `auto-fill`
+	   d'origine les collait à gauche, en colonnes de largeurs différentes.
+	   Ne vaut que dans les compositions : le panneau des poireaux non classés
+	   n'a pas de limite à six et garde son remplissage automatique. */
+	body:not(.v2) .compos .leeks {
+		grid-template-columns: repeat(6, 1fr);
+		/* Le panneau est désormais étiré à la hauteur de sa ligne : c'est la
+		   zone des poireaux qui prend le surplus — elle est aussi la cible du
+		   glisser-déposer, autant qu'elle couvre tout le panneau — et elle
+		   centre ses poireaux dedans plutôt que de laisser le vide en bas. */
+		flex: 1;
+		align-content: center;
+		/* Une image de poireau est plus large que sa cellule : l'arme et le
+		   chapeau débordent (jusqu'à ~150 px pour une cellule de ~105). Elles
+		   sont centrées, donc le premier et le dernier poireau sortaient du
+		   panneau. Cette marge leur donne la place de déborder à l'intérieur. */
+		padding: 5px 24px;
+	}
+	body:not(.v2) .compos .leek {
+		width: auto;
+		min-width: 0;
+		/* Centrage en flex et non par `text-align` : une image plus large que sa
+		   cellule est une boîte en ligne, que `text-align: center` ne recentre
+		   pas — elle part de la gauche et déborde uniquement à droite. Le
+		   centrage transversal d'un flex, lui, déborde des deux côtés à parts
+		   égales, ce que la marge du conteneur absorbe. */
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 	.team-language-popup {
 		text-align: center;
 		.language {
@@ -2331,14 +2436,14 @@
 			margin: 5px;
 			cursor: pointer;
 			border: 1px solid var(--border);
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			.flag {
 				height: 22px;
 				margin-bottom: 10px;
 			}
 			&.selected {
 				background: var(--pure-white);
-				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+				box-shadow: var(--elevation-1);
 			}
 		}
 	}

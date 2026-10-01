@@ -1,12 +1,18 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
-			<div class="tabs">
-				<router-link :to="getURL('leek', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'leek'}">{{ $t('leeks') }}</div></router-link>
+			<div class="page-title">
+				<page-icon name="ranking" fallback="mdi-podium" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
+			<div class="tabs compact">
+				<router-link :to="getURL('leek', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'leek'}"><v-icon>mdi-leek</v-icon><span>{{ $t('leeks') }}</span></div></router-link>
 				<router-link :to="getURL('level-' + rankingLevel, 'talent', country, LeekWars.rankingInactive)">
 					<div class="tab" :class="{active: category.startsWith('level')}">
-						{{ $t('main.level_n', [rankingLevel]) }}
+						<v-icon>mdi-stairs</v-icon>
+						<span>{{ $t('main.level_n', [rankingLevel]) }}</span>
 						<v-menu offset-y>
 							<template #activator="{ props }">
 								<v-icon v-bind="props" @click.prevent="">mdi-chevron-down</v-icon>
@@ -19,9 +25,9 @@
 						</v-menu>
 					</div>
 				</router-link>
-				<router-link :to="getURL('farmer', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'farmer'}">{{ $t('farmers') }}</div></router-link>
-				<router-link :to="getURL(teamMode, 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team' || category === 'composition'}">{{ $t('teams') }}</div></router-link>
-				<router-link :to="getURL('boss-' + bossId, bossMode, null, LeekWars.rankingInactive)"><div class="tab" :class="{active: category.startsWith('boss')}">{{ $t('boss') }}</div></router-link>
+				<router-link :to="getURL('farmer', 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'farmer'}"><v-icon>mdi-account</v-icon><span>{{ $t('farmers') }}</span></div></router-link>
+				<router-link :to="getURL(teamMode, 'talent', country, LeekWars.rankingInactive)"><div class="tab" :class="{active: category === 'team' || category === 'composition'}"><v-icon>mdi-shield</v-icon><span>{{ $t('teams') }}</span></div></router-link>
+				<router-link :to="getURL('boss-' + bossId, bossMode, null, LeekWars.rankingInactive)"><div class="tab" :class="{active: category.startsWith('boss')}"><v-icon>mdi-crown</v-icon><span>{{ $t('boss') }}</span></div></router-link>
 
 				<v-menu v-model="countryList" offset-y>
 					<template #activator="{ props }">
@@ -53,10 +59,9 @@
 						</router-link>
 					</v-list>
 				</v-menu>
-				<router-link to="/ranking/fun"><div class="tab" :class="{active: category === 'fun'}">{{ $t('fun') }}</div></router-link>
-				<router-link to="/statistics"><div class="tab">{{ $t('statistics') }}</div></router-link>
+				<router-link to="/ranking/fun"><div class="tab" :class="{active: category === 'fun'}"><v-icon>mdi-emoticon-happy</v-icon><span>{{ $t('fun') }}</span></div></router-link>
 				<div class="tab action" icon="search" @click="openSearch">
-					<img src="/image/search.png">
+					<v-icon class="search-icon">mdi-magnify</v-icon>
 				</div>
 			</div>
 		</div>
@@ -65,7 +70,7 @@
 				<div v-if="category === 'fun'" class="fun-rankings">
 				<loader v-if="!rankings" />
 				<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
-					<h4>{{ $t(funRanking.title + '_title') }}</h4>
+					<h4><v-icon>{{ FUN_ICONS[funRanking.title] ?? 'mdi-emoticon-happy' }}</v-icon>{{ $t(funRanking.title + '_title') }}</h4>
 					<table class="ranking">
 						<tr class="header">
 							<th>{{ $t('place') }}</th>
@@ -123,8 +128,11 @@
 						<v-btn v-else-if="category === 'farmer'" @click="LeekWars.goToRanking('farmer', order, $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="LeekWars.goToRanking('team', order, $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
-					<v-switch v-if="!category.startsWith('boss')" v-model="activeSwitch" :label="$t('hide_inactives')" hide-details class="inactives" @change="toggleInactives" />
-					<v-switch v-if="category === 'team' || category === 'composition'" v-model="compositionMode" :label="$t('compositions')" hide-details class="inactives" @change="toggleCompositionMode" />
+					<lw-switch v-if="!category.startsWith('boss')" v-model="activeSwitch" :label="$t('hide_inactives')" class="inactives" @change="toggleInactives" />
+					<!-- Déduplication par joueur : seules les catégories qui
+					     classent des personnes sont concernées. -->
+					<lw-switch v-if="displayCategory === 'leek' || displayCategory === 'farmer'" v-model="allAccountsSwitch" :label="$t('all_accounts')" class="inactives" @change="toggleAllAccounts" />
+					<lw-switch v-if="category === 'team' || category === 'composition'" v-model="compositionMode" :label="$t('compositions')" class="inactives" @change="toggleCompositionMode" />
 				</div>
 				<div class="scroll-x">
 					<table v-if="displayCategory === 'leek'" class="ranking large">
@@ -158,7 +166,7 @@
 							<th>{{ $t('main.country') }}</th>
 							<th class="column-team">{{ $t('main.team') }}</th>
 						</tr>
-						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
+						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: highlighted === row.id}" />
 					</table>
 					<table v-else-if="displayCategory == 'farmer'" class="ranking large">
 						<tr class="header">
@@ -191,7 +199,7 @@
 							<th>{{ $t('main.country') }}</th>
 							<th>{{ $t('main.team') }}</th>
 						</tr>
-						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
+						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: highlighted === row.id}" />
 					</table>
 					<table v-else-if="displayCategory === 'team'" class="ranking large">
 						<tr class="header">
@@ -238,8 +246,9 @@
 									<v-icon v-if="order === 'leeks'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
+							<th>{{ $t('main.activity') }}</th>
 						</tr>
-						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
+						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: highlighted === row.id}" />
 					</table>
 					<table v-else-if="displayCategory === 'composition'" class="ranking large">
 						<tr class="header">
@@ -270,7 +279,7 @@
 								</router-link>
 							</th>
 						</tr>
-						<ranking-composition-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
+						<ranking-composition-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: highlighted === row.id}" />
 					</table>
 					<table v-else-if="displayCategory.startsWith('boss')" class="ranking large boss-ranking">
 						<tr class="header">
@@ -307,7 +316,7 @@
 							</th>
 							<th>{{ $t('main.fight') }}</th>
 						</tr>
-						<tr v-for="row in (ranking as unknown as BossRow[])" :key="row.id" :class="{me: row.me, highlight: searchResult == row.rank}">
+						<tr v-for="row in (ranking as unknown as BossRow[])" :key="row.id" :class="{me: row.me, highlight: highlighted === row.id}">
 							<td>{{ row.rank }}</td>
 							<td :class="row.style">
 								<router-link :to="'/farmer/' + row.id">
@@ -319,7 +328,19 @@
 							<td><div class="country-wrapper"><flag v-if="row.country" :code="row.country" /></div></td>
 							<td>{{ row.turns }}</td>
 							<td>{{ row.leeks }}</td>
-							<td>{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</td>
+							<!-- La colonne montre les niveaux des poireaux du run, mais les classements sont
+							     triés sur le power (superlinéaire en niveau) : les deux ne sont pas monotones
+							     l'un par rapport à l'autre, d'où le power en survol pour expliquer l'ordre.
+							     Sans niveaux enregistrés (run antérieur), on retombe sur la valeur unique
+							     reconstituée depuis le power. -->
+							<td :title="$t('team_power') + ' : ' + LeekWars.formatNumber(row.power)">
+								<span v-if="row.levels && row.levels.length" class="levels">
+									<span v-for="group in levelGroups(row.levels)" :key="group.level" class="level">
+										{{ group.level }}<span v-if="group.count > 1" class="count"> ×{{ group.count }}</span>
+									</span>
+								</span>
+								<template v-else>{{ Math.round(row.leeks * Math.pow(row.power / row.leeks, 1 / LeekWars.POWER_FACTOR)) }}</template>
+							</td>
 							<td>{{ new Date(row.date * 1000).toLocaleDateString() }}</td>
 							<td class="fight-link-cell">
 								<router-link v-if="row.fight" :to="'/fight/' + row.fight" :title="$t('main.fight')" style="vertical-align: bottom;">
@@ -337,12 +358,23 @@
 			</template>
 		</panel>
 
+		<div class="page-footer page-bar">
+			<div class="tabs">
+				<router-link to="/statistics">
+					<div class="tab">
+						<v-icon>mdi-poll</v-icon>
+						<span>{{ $t('statistics') }}</span>
+					</div>
+				</router-link>
+			</div>
+		</div>
+
 		<popup v-model="searchDialog" :width="500" icon="mdi-magnify" :title="$t('search_in_ranking')">
 			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" :aria-label="$t('search_name')" class="query" type="text">
 			<div class="flex">
-				<v-checkbox v-model="searchLeeks" :label="$t('leeks')" hide-details />
-				<v-checkbox v-model="searchFarmers" :label="$t('farmers')" hide-details />
-				<v-checkbox v-model="searchTeams" :label="$t('teams')" hide-details />
+				<lw-checkbox v-model="searchLeeks" :label="$t('leeks')" />
+				<lw-checkbox v-model="searchFarmers" :label="$t('farmers')" />
+				<lw-checkbox v-model="searchTeams" :label="$t('teams')" />
 			</div>
 			<br>
 			<loader v-if="!searchResults && searchQuery.length" />
@@ -362,11 +394,11 @@
 	import { mixins , useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { BOSSES } from '@/model/boss'
-	import { Ranking, RankingRow } from '@/model/ranking'
+	import { Ranking, RankingRow, rankingAnchorId } from '@/model/ranking'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import Pagination from '@/component/pagination.vue'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 	import { useRoute, useRouter } from 'vue-router'
 
@@ -400,6 +432,46 @@
 		}
 	}
 	const rankings = ref<FunRanking[] | null>(null)
+	// Un glyphe par classement fun, indexé par le `title` que renvoie l'API. Le
+	// vocabulaire des icônes du site d'abord : combat,
+	// arène, tournoi, boss, trophée, puce, coffre et tourelle reprennent le glyphe
+	// qu'ils portent ailleurs sur le site. Les autres sont propres à ces classements.
+	// Pas de crâne pour les kills : il dit « défaite » dans l'historique et la tooltip
+	// de combat, d'où la pierre tombale. Les trois tournois partagent volontairement
+	// `mdi-tournament` — c'est le même objet, seul le titre les sépare.
+	// Les trois autres arènes reprennent le glyphe de leur mode dans la salle
+	// d'attente (`ARENA_CHOICES` de `model/arena.ts`) : c'est là que le joueur
+	// les a choisies, le classement doit porter le même dessin. Les deux classements
+	// du colosse le partagent comme les tournois partagent la coupe — une seule
+	// arène, vue des deux camps.
+	const FUN_ICONS: Record<string, string> = {
+		richest: 'mdi-cash-multiple',
+		trophies: 'mdi-trophy',
+		connection: 'mdi-calendar-check',
+		kills: 'mdi-grave-stone',
+		allies_killed: 'mdi-heart-broken',
+		shots: 'mdi-crosshairs',
+		distance: 'mdi-map-marker-distance',
+		chips: 'mdi-chip',
+		summons: 'mdi-flower',
+		fights: 'mdi-sword',
+		clovers: 'mdi-clover',
+		scarabs: 'mdi-bug-check',
+		fireflies: 'mdi-lightbulb-on',
+		br: 'mdi-stadium',
+		war: 'mdi-flag',
+		chest_hunt: 'mdi-treasure-chest',
+		colossus: 'mdi-shield-account',
+		as_colossus: 'mdi-shield-account',
+		solo_tournaments: 'mdi-tournament',
+		farmer_tournaments: 'mdi-tournament',
+		team_tournaments: 'mdi-tournament',
+		chests: 'mdi-treasure-chest',
+		crashes: 'mdi-bug',
+		boss_killed: 'mdi-crown',
+		turrets_killed: 'mdi-tower-fire',
+		damage: 'mdi-flash',
+	}
 	const page = ref(0)
 	const pages = ref(0)
 	const category = ref('')
@@ -412,6 +484,7 @@
 	const searchQuery = ref('')
 	const searchResults = ref<{ id: number, type: string, [key: string]: unknown }[] | null>(null)
 	const activeSwitch = ref(false)
+	const allAccountsSwitch = ref(LeekWars.rankingAllAccounts)
 	const compositionMode = ref(localStorage.getItem('ranking/team-mode') === 'composition')
 	const countryList = ref(false)
 	const displayCategory = ref('')
@@ -425,14 +498,24 @@
 		{ id: 'power', icon: 'mdi-arm-flex' },
 		{ id: 'first', icon: 'mdi-flag-checkered' },
 	]
-	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, date: number, fight: number }
+	interface BossRow { id: number, name: string, country: string | null, rank: number, me?: string, style?: string, turns: number, leeks: number, power: number, levels: number[], date: number, fight: number }
+	// Niveaux du run, du plus haut au plus bas, les identiques regroupés : 301, 301, 301, 150 => "301 ×3" "150"
+	const levelGroups = (levels: number[]) => {
+		const groups: {level: number, count: number}[] = []
+		for (const level of [...levels].sort((a, b) => b - a)) {
+			const last = groups[groups.length - 1]
+			if (last && last.level === level) { last.count++ } else { groups.push({ level, count: 1 }) }
+		}
+		return groups
+	}
 	// Dernier boss / mode visités, restaurés au clic sur l'onglet Boss (#3627)
 	const bossId = computed(() => category.value.startsWith('boss-') ? (parseInt(category.value.substring(5), 10) || 1) : (parseInt(localStorage.getItem('ranking/boss-id') || '1', 10) || 1))
 	const bossMode = computed(() => category.value.startsWith('boss-') && order.value ? order.value : (localStorage.getItem('ranking/boss-mode') || 'turns'))
 
 	const url = computed(() => getURLBase(category.value, order.value))
 	const urlQuery = computed(() => getURLQuery(country.value, LeekWars.rankingInactive))
-	const searchResult = computed(() => parseInt(route.hash.replace('#rank-', ''), 10))
+	// Ligne de l'entité que désigne l'ancre, cf. rankingAnchor.
+	const highlighted = computed(() => rankingAnchorId(route.hash, displayCategory.value))
 	const rankingLevel = computed(() => category.value && category.value.startsWith('level-') ? parseInt(category.value.substring(6)) : parseInt(localStorage.getItem('ranking/level') || '50'))
 	const country = computed<string | null>(() => {
 		if (!route.query.country) { return null }
@@ -465,9 +548,14 @@
 		}
 	}, { immediate: true })
 
+	// Catégorie envoyée à l'API : le préfixe `all-` désactive la déduplication par
+	// joueur. Il passe par la catégorie et non par un paramètre en plus,
+	// parce que les services GET exigent un nombre exact de segments d'URL.
+	const apiCategory = computed(() => (allAccountsSwitch.value ? 'all-' : '') + category.value)
+
 	const key = computed(() => {
 		if (category.value === 'fun') return 'fun'
-		return inactive.value + '/' + category.value + '/' + order.value + '/' + page.value + '/' + country.value
+		return inactive.value + '/' + apiCategory.value + '/' + order.value + '/' + page.value + '/' + country.value
 	})
 
 	watch(key, () => {
@@ -520,7 +608,7 @@
 		} else {
 			ranking.value = null
 			const service = inactive.value ? 'get' : 'get-active'
-			LeekWars.get('ranking/' + service + '/' + category.value + '/' + order.value + '/' + page.value + '/' + country.value).then(data => {
+			LeekWars.get('ranking/' + service + '/' + apiCategory.value + '/' + order.value + '/' + page.value + '/' + country.value).then(data => {
 				const r = data.ranking as Ranking
 				if (page.value === 1) {
 					if (r.length > 0) {
@@ -561,7 +649,7 @@
 				const subtitle = category.value.includes('level') ? t('main.level_n', [rankingLevel.value]) : t('main.n_' + category.value + 's', [data.total])
 				LeekWars.setTitle(t('title'), subtitle)
 				emitter.emit('loaded')
-				if (searchResult.value) {
+				if (highlighted.value !== null) {
 					nextTick(() => {
 						const row = document.querySelector('tr.highlight')
 						if (row) { row.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
@@ -597,6 +685,13 @@
 		LeekWars.rankingInactive = !activeSwitch.value
 		localStorage.setItem('options/ranking-inactive', '' + LeekWars.rankingInactive)
 		router.push(url.value + urlQuery.value)
+	}
+
+	function toggleAllAccounts() {
+		LeekWars.rankingAllAccounts = allAccountsSwitch.value
+		localStorage.setItem('options/ranking-all-accounts', '' + allAccountsSwitch.value)
+		// Pas de router.push : la clé de rechargement contient déjà apiCategory,
+		// et le préfixe `all-` n'a rien à faire dans l'URL visible.
 	}
 
 	function toggleCompositionMode() {
@@ -650,7 +745,7 @@
 		min-width: 130px;
 		height: 90px;
 		padding: 4px 14px;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		border: 2px solid var(--border);
 		cursor: pointer;
 		color: var(--text-color);
@@ -667,7 +762,7 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		a { text-decoration: none; display: flex; }
-		.mode-button.active { background: var(--primary); color: white; }
+		.mode-button.active { background: var(--primary-surface); color: var(--primary-surface-text); }
 		:deep(.mode-button) {
 			height: 42px;
 			margin: 0;
@@ -688,6 +783,21 @@
 		}
 		.column-country {
 			width: 60px;
+		}
+		.levels {
+			display: inline-flex;
+			// Jamais de retour à la ligne : une équipe tient sur une seule ligne, la table
+			// s'élargit (et défile horizontalement sur mobile) plutôt que de casser la liste.
+			flex-wrap: nowrap;
+			white-space: nowrap;
+			justify-content: center;
+			gap: 9px;
+		}
+		.level {
+			white-space: nowrap;
+			.count {
+				color: var(--text-color-secondary);
+			}
 		}
 	}
 	.fight-link-cell {
@@ -728,6 +838,13 @@
 	h4 {
 		text-align: left;
 		margin: 8px 5px;
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		.v-icon {
+			font-size: 20px;
+			color: var(--text-color-secondary);
+		}
 	}
 	.ranking {
 		background: var(--pure-white);
@@ -755,7 +872,7 @@
 			}
 		}
 		tr:first-child th:last-child {
-			border-top-right-radius: 3px;
+			border-top-right-radius: var(--radius-small);
 		}
 		th {
 			padding: 0 5px;
@@ -768,21 +885,21 @@
 			border-right: none;
 		}
 		:deep(.first a) {
-			color: #ffa900;
+			color: var(--rank-first);
 			font-weight: bold;
 		}
 		:deep(.second a) {
-			color: #9c9c9c;
+			color: var(--rank-second);
 			font-weight: bold;
 		}
 		:deep(.third a) {
-			color: #ae4e00;
+			color: var(--rank-third);
 			font-weight: bold;
 		}
 		tr.me {
 			font-weight: bold;
 			:deep(td) {
-				background: var(--background);
+				background: var(--background-mine);
 			}
 		}
 		tr.highlight {

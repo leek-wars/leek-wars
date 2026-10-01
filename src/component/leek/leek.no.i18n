@@ -26,6 +26,7 @@
 	"equip_item": "Klikk eller dra og slipp for å utstyre eller deaktivere et element",
 	"error_already_have_4_leeks": "Du har allerede 4 purre!",
 	"error_chip_already_equipped": "{0} har allerede utstyrt denne brikken.",
+	"error_component_already_equipped": "{0} har allerede utstyrt denne komponenten.",
 	"error_forbidden_name": "Dette navnet på purre er forbudt.",
 	"error_max_chip": "{0} kan ikke utstyre en ekstra brikke.",
 	"error_max_component": "{0} kan ikke utstyre en ekstra komponent.",

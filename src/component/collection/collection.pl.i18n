@@ -1,5 +1,7 @@
 {
 	"missing_only": "Pokaż tylko brakujące",
 	"completed": "Ukończono",
-	"test_celebration": "Testuj animację (admin)"
+	"test_celebration": "Testuj animację (admin)",
+	"hide_paid": "Ukryj przedmioty płatne",
+	"hide_unobtainable": "Ukryj przedmioty niemożliwe do zdobycia"
 }

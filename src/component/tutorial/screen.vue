@@ -23,14 +23,14 @@ const extended = ref(false)
 		margin-bottom: 20px;
 	}
 	.screen:hover .legend {
-		color: black;
+		color: var(--black);
 	}
 	.screen img {
 		cursor: zoom-in;
 		display: block;
 		width: 65%;
 		margin: 0 auto;
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 	}
 	.screen.extended img {
 		cursor: zoom-out;
@@ -40,7 +40,7 @@ const extended = ref(false)
 		text-align: center;
 		font-size: 18px;
 		font-weight: 300;
-		color: #555;
+		color: var(--grey-4);
 		font-style: italic;
 		padding: 5px;
 	}

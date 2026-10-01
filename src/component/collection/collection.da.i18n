@@ -1,5 +1,7 @@
 {
 	"missing_only": "Vis kun manglende",
 	"completed": "Fuldført",
-	"test_celebration": "Test animation (admin)"
+	"test_celebration": "Test animation (admin)",
+	"hide_paid": "Skjul betalte genstande",
+	"hide_unobtainable": "Skjul genstande, der ikke kan fås"
 }

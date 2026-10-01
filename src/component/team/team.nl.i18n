@@ -64,6 +64,7 @@
 	"invite_friends": "Vrienden uitnodigen",
 	"leeks": "Prei ({0})",
 	"level_n": "Niveau {0}",
+	"live_on_team": "Live bij {0}",
 	"log_change": "Wijzig het zichtbaarheidsniveau van sporen",
 	"log_change_text": "Wijzig het zichtbaarheidsniveau voor uw bondgenoten (leden van uw team) van uw sporen in gevechten (functie debug(), debugE() etc.):",
 	"log_level_0": "Verborgen",

@@ -9,6 +9,7 @@
 	"setting_buy_fights": "Enable purchase of fights",
 	"setting_bank": "Enable crystal bank",
 	"setting_chat": "Enable group chat",
+	"setting_use_passwords": "Password accounts (no member email)",
 	"main_options": "Main options",
 	"setting_tournaments": "Enable public tournaments",
 	"setting_br": "Enable Battle Royales",

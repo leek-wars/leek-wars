@@ -33,7 +33,9 @@
 					</template>
 				</i18n-t>
 			</template>
-			<span class="rarity"><span v-if="trophy.unlocked"> • </span>{{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
+			<!-- Nombre de détenteurs et rareté : absents d'un trophée tiré des game data (frise des
+			     récompenses LW+), qui afficherait sinon « NaN% ». -->
+			<span v-if="trophy.total != null && trophy.rarity != null" class="rarity"><span v-if="trophy.unlocked"> • </span>{{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
 		</div>
 	</router-link>
 </template>
@@ -69,7 +71,7 @@ defineProps<{
 		width: 100%;
 		.stats {
 			display: inline-block;
-			color: white;
+			color: var(--white);
 			font-size: 16px;
 			margin: 9px 10px;
 		}
@@ -109,7 +111,7 @@ defineProps<{
 		.points {
 			border: 1px solid var(--border);
 			padding: 1px 4px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			margin-left: 5px;
 			font-weight: 500;
 		}
@@ -141,12 +143,12 @@ defineProps<{
 			height: 10px;
 			position: relative;
 			background: var(--pure-white);
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			margin-top: 6px;
 			border: 1px solid var(--border);
 			.bar {
 				height: 8px;
-				border-radius: 6px;
+				border-radius: var(--radius-medium);
 				position: absolute;
 				background: #30bb00;
 			}
@@ -181,6 +183,37 @@ defineProps<{
 	.trophy.locked {
 		.image {
 			opacity: 0.8;
+		}
+	}
+	/* v3 : les états officiels des cartes cliquables (widget « Mes poireaux »,
+	   forum) — surface de rangée et liseré fort au survol, liseré vert sous le
+	   clic.
+	   Le trophée verrouillé n'a pas de `.card`, donc pas de liseré : il en reçoit
+	   un transparent, pour que la carte ne bouge pas d'un pixel au survol. */
+	body:not(.v2) .trophy {
+		border: 1px solid transparent;
+		transition: background .12s ease, border-color .12s ease;
+		/* Le trophée obtenu doit se lire d'un coup d'œil dans la grille. Le
+		   `.card` du shell v3 lui donnait `--background-secondary`, qui est AUSSI
+		   `--panel-background` : même fond que le panneau qui le porte, il ne
+		   restait qu'un filet à 8 % de blanc en sombre.
+		   Il prend donc la surface de rangée et le trait fort. */
+		&.card {
+			background: var(--background-row);
+			border-color: var(--border-strong);
+		}
+		&:hover {
+			background: var(--background-row);
+			border-color: var(--border-strong);
+		}
+		/* Une carte déjà pleine doit monter d'un cran de plus au survol, sinon
+		   « obtenu » et « survolé » deviennent le même état. Le mélange part de
+		   l'encre : il éclaircit en sombre et fonce en clair, comme la rangée. */
+		&.card:hover {
+			background: color-mix(in srgb, var(--text-color) 8%, var(--background-row));
+		}
+		&:active {
+			border-color: var(--primary);
 		}
 	}
 	.list-icon {

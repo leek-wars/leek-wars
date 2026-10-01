@@ -1,14 +1,21 @@
 <template lang="html">
 	<div ref="marketRoot" class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="market" fallback="mdi-store" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 			<page-tabs active="market">
 				<template #before>
 					<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="tab disabled search-box">
-						<img src="/image/search.png">
+						<v-icon class="search-icon">mdi-magnify</v-icon>
 						<input v-model="search" type="text" :placeholder="$t('main.search')" @keyup.stop>
 					</div>
-					<div v-if="!LeekWars.mobile" class="tab action" @click="toggleExpanded">
+					<!-- Élargir la page n'a de sens que dans l'ancien thème : le nouveau
+					     donne déjà toute la largeur au marché. -->
+					<div v-if="LeekWars.legacyTheme && !LeekWars.mobile" class="tab action" @click="toggleExpanded">
 						<v-icon>{{ expanded ? 'mdi-arrow-collapse' : 'mdi-arrow-expand' }}</v-icon>
 					</div>
 				</template>
@@ -16,18 +23,6 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<panel v-if="outOfFights && ownedFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross" class="use-packs-panel">
-					<template #content>
-						<div class="items fights">
-							<div v-for="pack in ownedFightPacks" :key="pack.template" class="item fight-pack owned-pack">
-								<img :src="'/image/fight-pack/fight_pack_' + pack.fights + '.png'">
-								<div>{{ $t('n_fights', [pack.fights]) }}</div>
-								<div class="owned-count">×{{ pack.count }}</div>
-								<v-btn size="small" color="primary" class="use-btn" @click="useFightPack(pack.template)">{{ $t('main.retrieve') }}</v-btn>
-							</div>
-						</div>
-					</template>
-				</panel>
 				<panel v-if="$store.state.farmer?.buy_fights_enabled && filteredFightPacks.length" :title="$t('fights')" icon="mdi-sword-cross">
 					<template #content>
 						<loader v-if="!fight_packs.length" />
@@ -43,7 +38,7 @@
 					<template #content>
 						<loader v-if="!weapons.length" />
 						<div v-else class="items weapons">
-							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level}">
+							<router-link v-for="weapon in filteredWeapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" class="item weapon" :class="{toohigh: weapon.level > max_level, 'craft-locked': craftLocked.has(weapon.id)}">
 								<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'" loading="lazy">
 								<div v-if="items[weapon.id].leek_count || items[weapon.id].farmer_count" class="counts">
 									<span v-if="items[weapon.id].leek_count" class="leek-count">{{ items[weapon.id].leek_count }}</span>
@@ -63,20 +58,20 @@
 					<template #content>
 						<loader v-if="!chips.length" />
 						<div v-else-if="chipMode === 'level' || search" class="items chips">
-							<router-link v-for="chip in filteredChips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
-								<img :src="'/image/chip/' + chip.name + '.png'" loading="lazy">
+							<router-link v-for="chip in filteredChips" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level, 'craft-locked': craftLocked.has(chip.id)}">
+								<img :src="chipImageUrl(chip.name)" loading="lazy">
 								<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
 									<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
 									<span v-if="items[chip.id].farmer_count" class="farmer-count">{{ items[chip.id].farmer_count }}</span>
 								</div>
 							</router-link>
 						</div>
-						<div v-else>
-							<div v-for="type in effectTypes" :key="type">
+						<div v-else class="chips-types">
+							<div v-for="type in effectTypes" :key="type" class="chip-type">
 								<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 								<div class="items chips">
-									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level}">
-										<img :src="'/image/chip/' + chip.name + '.png'" loading="lazy">
+									<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" class="item chip" :class="{toohigh: chip.level > max_level, 'craft-locked': craftLocked.has(chip.id)}">
+										<img :src="chipImageUrl(chip.name)" loading="lazy">
 										<div v-if="items[chip.id].leek_count || items[chip.id].farmer_count" class="counts">
 											<span v-if="items[chip.id].leek_count" class="leek-count">{{ items[chip.id].leek_count }}</span>
 											<span v-if="items[chip.id].farmer_count" class="farmer-count">{{ items[chip.id].farmer_count }}</span>
@@ -87,7 +82,7 @@
 						</div>
 					</template>
 				</panel>
-				<panel v-if="filteredPotions.length || !search" :title="$t('potions') + ' [' + filteredPotions.length + ']'" icon="mdi-bottle-tonic-plus-outline">
+				<panel v-if="filteredPotions.length || !search" :title="$t('potions') + ' [' + filteredPotions.length + ']'" icon="mdi-flask">
 					<template #content>
 						<loader v-if="!potions.length" />
 						<div v-else class="items potions">
@@ -159,8 +154,13 @@
 								</router-link>
 
 								<div class="buy-buttons">
-									<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
+									<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals && !selectedScheme" class="already-have">
 										{{ $t('cannot_buy') }}
+									</div>
+									<div v-if="selectedScheme" class="buy">
+										<h4 class="buy-label">{{ $t('main.craft') }}</h4>
+										<v-btn class="craft-button" :disabled="!selectedSchemeOwned" prepend-icon="mdi-hammer-wrench" @click="goCraft()">{{ $t('main.craft') }}</v-btn>
+										<div v-if="!selectedSchemeOwned" class="already-have">{{ $t('scheme_required') }}</div>
 									</div>
 									<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 										<h4 class="buy-label">{{ $t('buy') }}</h4>
@@ -213,7 +213,7 @@
 							<v-icon>mdi-chip</v-icon> {{ $t('chips') }}
 						</div>
 						<div v-ripple class="item" @click="scroll(3)">
-							<v-icon>mdi-bottle-tonic-plus-outline</v-icon> {{ $t('potions') }}
+							<v-icon>mdi-flask</v-icon> {{ $t('potions') }}
 						</div>
 						<div v-ripple class="item" @click="scroll(4)">
 							<v-icon>mdi-hat-fedora</v-icon> {{ $t('hats') }}
@@ -229,8 +229,14 @@
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<router-link to="/help/items" class="tab">
-					<v-icon>mdi-chart-timeline-variant</v-icon>
+					<v-icon>mdi-shape</v-icon>
 					<span class="report-button">{{ $t('item_progress') }}</span>
+				</router-link>
+				<!-- Leek Wars + : simple lien discret en pied de page, les lots
+				     n'ont rien à faire au milieu des items du marché. -->
+				<router-link to="/lwplus" class="tab">
+					<v-icon>mdi-star-four-points</v-icon>
+					<span class="report-button">Leek Wars +</span>
 				</router-link>
 			</div>
 		</div>
@@ -319,16 +325,19 @@
 	import { Farmer } from '@/model/farmer'
 	import { HatTemplate } from '@/model/hat'
 	import { mixins , useNamespacedT } from '@/model/i18n'
-	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
+	import { chipImageUrl, ItemTemplate, ItemType } from '@/model/item'
+	import { itemDisplayName } from '@/model/item-name'
 	import { LeekWars } from '@/model/leekwars'
 	import { PompTemplate } from '@/model/pomp'
 	import { PotionTemplate } from '@/model/potion'
+	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
+	import { foldText } from '@/model/text'
 	import ItemPreview from './item-preview.vue'
 	import SchemeImage from './scheme-image.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 	import PageTabs from '@/component/app/page-tabs.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { computed, onBeforeUnmount, onUnmounted, reactive, ref, useTemplateRef, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute, useRouter } from 'vue-router'
@@ -346,6 +355,9 @@ const t = useNamespacedT('market')
 	function trophyName(trophy: ItemTemplate['trophy']): string {
 		return typeof trophy === 'object' && trophy ? trophy.name : ''
 	}
+
+	// Objet affiché par défaut sur desktop, où le marché ne s'affiche jamais sans sélection.
+	const DEFAULT_ITEM = 'pistol'
 
 	const selectedItem = ref<ItemTemplate | null>(null)
 	const items = reactive<{[key: string]: ItemTemplate}>({})
@@ -379,35 +391,62 @@ const t = useNamespacedT('market')
 		return 0
 	})
 
+	// Schéma dont l'item est le résultat, pour les items craft-only du marché
+	// (market mais non achetables : Sabre du désert, Lance du soleil...)
+	function resultScheme(itemId: number): SchemeTemplate | null {
+		for (const s of Object.values(LeekWars.schemes) as SchemeTemplate[]) {
+			if (s.result === itemId) { return s }
+		}
+		return null
+	}
+
+	// Ids des schémas (scheme_template) possédés par l'éleveur
+	const farmerSchemes = computed(() => {
+		const set = new Set<number>()
+		if (store.state.farmer) {
+			for (const s of store.state.farmer.schemes) {
+				const template = LeekWars.items[s.template]
+				if (template) { set.add(parseInt('' + template.params, 10)) }
+			}
+		}
+		return set
+	})
+
+	const selectedScheme = computed(() => {
+		const item = selectedItem.value
+		if (!item || item.buyable || item.buyable_crystals) { return null }
+		return resultScheme(item.id)
+	})
+	const selectedSchemeOwned = computed(() => !!selectedScheme.value && farmerSchemes.value.has(selectedScheme.value.id))
+
+	// Items craft-only dont l'éleveur n'a pas le schéma : grisés dans les listes
+	const craftLocked = computed(() => {
+		const set = new Set<number>()
+		for (const s of Object.values(LeekWars.schemes) as SchemeTemplate[]) {
+			const item = LeekWars.items[s.result]
+			if (!item || item.buyable || item.buyable_crystals) { continue }
+			if (!farmerSchemes.value.has(s.id)) { set.add(s.result) }
+		}
+		return set
+	})
+
+	function goCraft() {
+		if (selectedScheme.value) {
+			// Le panneau Schémas doit être déplié pour que la forge soit montée à l'arrivée
+			localStorage.setItem('inventory/workshop', 'true')
+			router.push('/inventory?craft=' + selectedScheme.value.id)
+		}
+	}
+
 	function matchesSearch(item: ItemTemplate): boolean {
 		if (!search.value) { return true }
-		const query = search.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-		const name = translateName(item).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+		const query = foldText(search.value)
+		const name = foldText(translateName(item))
 		const rawName = item.name.replace(/^(weapon|chip|potion|hat|pomp)_/, '').toLowerCase()
 		return name.includes(query) || rawName.includes(query)
 	}
 
 	const filteredFightPacks = computed(() => fight_packs.value.filter(p => matchesSearch(p)))
-
-	// Packs de combat possédés (utilisables manuellement). Les templates réels 265..268 sont
-	// chargés dans `items` avec leur farmer_count ; on les surface quand le joueur n'a plus de combats.
-	const FIGHT_PACK_TEMPLATES = [{ template: 265, fights: 50 }, { template: 266, fights: 100 }, { template: 267, fights: 200 }, { template: 268, fights: 500 }]
-	const outOfFights = computed(() => (store.state.farmer?.fights ?? 0) <= 0)
-	const ownedFightPacks = computed(() => FIGHT_PACK_TEMPLATES
-		.map(p => ({ ...p, count: items[p.template]?.farmer_count ?? 0 }))
-		.filter(p => p.count > 0))
-
-	function useFightPack(template: number) {
-		LeekWars.post<{ fights: number }>('item/retrieve', { template, quantity: 1 }).then(data => {
-			if (data.fights) {
-				store.commit('update-fights', data.fights)
-				store.commit('update-bought-fights', data.fights)
-			}
-			if (items[template]) items[template].farmer_count = Math.max(0, (items[template].farmer_count ?? 0) - 1)
-			store.commit('remove-inventory', { type: ItemType.FIGHT_PACK, item_template: template, quantity: 1 })
-			updateSubtitle()
-		}).error(error => LeekWars.toast(t('error_' + error.error, error.params)))
-	}
 
 	const filteredWeapons = computed(() => weapons.value.filter(w => matchesSearch(items[w.id])))
 	const filteredChips = computed(() => chips.value.filter(c => matchesSearch(items[c.id])))
@@ -437,7 +476,9 @@ const t = useNamespacedT('market')
 		return names
 	})
 
-	if (expanded.value) {
+	// Le choix mémorisé ne se réapplique qu'en v2 : sans le bouton, un `expanded`
+	// resté à true dans le localStorage élargirait la page sans moyen d'y revenir.
+	if (LeekWars.legacyTheme && expanded.value) {
 		LeekWars.large = true
 	}
 	const actions = [
@@ -460,12 +501,15 @@ const t = useNamespacedT('market')
 				const chip = CHIPS[item.id]
 				chips.value.push(chip)
 				items_by_name[CHIPS[item.id].name] = item
-				for (const effect of chip.effects) {
-					if (chipsByType.value[effect.type] === undefined) {
-						chipsByType.value[effect.type] = []
+				// `chip.type` et pas `chip.effects[0].type` : le serveur peut forcer la
+				// catégorie d'une puce que son premier effet range au mauvais endroit
+				// (Maturation, un +vie max mais une amélioration).
+				const type = chip.type ?? chip.effects[0]?.type
+				if (type !== undefined) {
+					if (chipsByType.value[type] === undefined) {
+						chipsByType.value[type] = []
 					}
-					chipsByType.value[effect.type].push(chip)
-					break
+					chipsByType.value[type].push(chip)
 				}
 			} else if (item.type === ItemType.POTION) {
 				const potion = LeekWars.potions[item.id]
@@ -575,12 +619,26 @@ const t = useNamespacedT('market')
 	function update() {
 		const item = route.params.item as string
 		if (item) {
-			selectedItem.value = items_by_name[item]
-			LeekWars.setTitle(translateName(selectedItem.value))
+			// Objet absent du catalogue : chapeau non encore révélé, objet verrouillé par un
+			// trophée qu'on n'a pas, ou lien périmé — la banque, elle, lie vers /market/<nom> de
+			// ce qu'elle vend. translateName(undefined) planterait alors toute la page.
+			// hasOwnProperty et pas un simple accès : /market/toString remonterait sinon une
+			// méthode d'Object.prototype comme si c'était un objet du jeu.
+			const template = Object.prototype.hasOwnProperty.call(items_by_name, item) ? items_by_name[item] : undefined
+			if (!template) {
+				// Catalogue pas encore reçu (les armes sont sa plus grosse famille, jamais vide
+				// une fois chargé) : ne rien faire, sa réception rappelle update(). Sinon replier
+				// DIRECTEMENT sur la destination finale plutôt que de repasser par /market, qui
+				// demanderait une exception pour ne pas boucler.
+				if (weapons.value.length) { router.replace(LeekWars.mobile ? '/market' : '/market/' + DEFAULT_ITEM) }
+				return
+			}
+			selectedItem.value = template
+			LeekWars.setTitle(translateName(template))
 			LeekWars.splitShowContent()
 			emitter.emit('loaded')
 		} else if (!LeekWars.mobile) {
-			router.replace('/market/pistol')
+			router.replace('/market/' + DEFAULT_ITEM)
 		} else {
 			selectedItem.value = null
 			LeekWars.setTitle(t('title'))
@@ -601,16 +659,7 @@ const t = useNamespacedT('market')
 		if (item.type === ItemType.FIGHT_PACK) {
 			return t('n_fights', [item.id - 1000000])
 		}
-		if (item.type === ItemType.SCHEME) {
-			const scheme = LeekWars.schemes[item.params]
-			const result = scheme ? LeekWars.items[scheme.result] : null
-			if (!result) return ''
-			const category = ITEM_CATEGORY_NAME[result.type as ItemType]
-			const name = result.name.replace(category + '_', '')
-			return t('main.scheme_x', [t(category + '.' + name)])
-		}
-		const type = ITEM_CATEGORY_NAME[item.type as ItemType]
-		return t(type + '.' + item.name.replace(type + '_', ''))
+		return itemDisplayName(item, t)
 	}
 
 	function openBuyHabs(quantity: number) {
@@ -791,6 +840,14 @@ const t = useNamespacedT('market')
 		position: sticky;
 		top: 12px;
 		max-height: calc(100vh - 24px);
+		// La barre du haut du v3 est fixe : sans ce décalage, le panneau vient se
+		// coller sous elle et son contenu se fait rogner (le haut de l'image de
+		// l'arme passait dessous). La hauteur maximale déduit la même bande, sinon
+		// le panneau dépasse en bas d'autant.
+		body:not(.v2) & {
+			top: calc(var(--header-height) + 12px);
+			max-height: calc(100vh - var(--header-height) - 24px);
+		}
 		display: flex;
 		flex-direction: column;
 		& > * {
@@ -808,10 +865,10 @@ const t = useNamespacedT('market')
 		padding: 6px 0;
 	}
 	.preview .leek {
-		background: #5fad1b;
-		color: white;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		padding: 4px 8px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		margin: 3px 1px;
 		display: inline-block;
 	}
@@ -850,20 +907,53 @@ const t = useNamespacedT('market')
 		&.toohigh {
 			opacity: 0.4;
 		}
+		&.craft-locked {
+			opacity: 0.4;
+			img {
+				filter: grayscale(1);
+			}
+		}
 	}
 	.items .item.router-link-active {
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
+	}
+	// Etats officiels du v3 (doctrine « survol discret, actif en vert »), les
+	// memes que les cartes du widget « Mes poireaux » de l'accueil : surface de
+	// rangee et trait renforce au survol, liseré vert sur l'item choisi. Les
+	// etats du v2 ci-dessus ne valent rien ici — `--pure-white` EST la surface
+	// du panneau en v3, donc l'item choisi ne se distinguait pas, et
+	// l'elevation est une ombre floue, que le v3 bannit. Le liseré est deja la au
+	// repos, la vignette ne bouge pas d'un pixel.
+	body:not(.v2) {
+		.items .item {
+			transition: background-color .12s ease, border-color .12s ease;
+			&:hover {
+				background: var(--background-row);
+				border-color: var(--border-strong);
+			}
+			&:active {
+				border-color: var(--primary);
+			}
+		}
+		.items .item.router-link-active {
+			background: var(--background-row);
+			border-color: var(--primary);
+			box-shadow: none;
+		}
 	}
 	.buy-label {
 		display: inline-block;
 	}
 	.items .item .counts {
 		position: absolute;
-		bottom: -5px;
-		right: -5px;
+		// Dans le carre de l'item, pas a cheval dessus : a -5 px les compteurs
+		// debordaient sur la vignette voisine, et l'item selectionne se
+		// retrouvait avec les chiffres de ses deux voisins colles a son liseré.
+		bottom: 0;
+		right: 0;
 		display: flex;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		overflow: hidden;
 		span {
 			min-width: 18px;
@@ -871,14 +961,19 @@ const t = useNamespacedT('market')
 			padding: 2px 4px;
 			font-size: 12px;
 			text-align: center;
-			color: #eee;
+			color: var(--grey-13);
 			font-weight: bold;
 		}
 		.leek-count {
-			background-color: #5fad1b;
+			background-color: var(--primary-surface);
+			/* L'encre du bloc est `--grey-13`, une crème identique dans les deux
+			   thèmes : sur le vert néon du sombre elle tombait à 1,1 de contraste.
+			   `--primary-text` est justement l'encre calibrée pour un aplat de
+			   marque (sombre en thème sombre, crème en clair). */
+			color: var(--primary-surface-text);
 		}
 		.farmer-count {
-			background-color: #555;
+			background-color: var(--grey-4);
 		}
 	}
 	.items .item.too-expensive img {
@@ -892,20 +987,6 @@ const t = useNamespacedT('market')
 		div {
 			margin-top: 10px;
 		}
-	}
-	.item.fight-pack.owned-pack {
-		cursor: default;
-		.owned-count {
-			margin-top: 4px;
-			font-size: 13px;
-			color: var(--text-color-secondary);
-		}
-		.use-btn {
-			margin-top: 8px;
-		}
-	}
-	.use-packs-panel {
-		border: 1px solid var(--primary);
 	}
 	.fights img {
 		height: 75px;
@@ -924,6 +1005,25 @@ const t = useNamespacedT('market')
 			right: 0;
 			margin: auto;
 		}
+	}
+	.chips-types {
+		// Deux colonnes de catégories dès qu'il y a la place pour deux fois
+		// 450 px, une seule en dessous. Les catégories courtes (Renvois,
+		// Poisons) laissaient sinon une grande bande vide à leur droite.
+		columns: 450px 2;
+		column-gap: 8px;
+		// Le retrait du haut est porté par le conteneur, sinon la deuxième
+		// colonne démarre 8 px plus haut que la première.
+		padding-top: 8px;
+		// `.panel h4.first` est déclaré plus bas à specificité égale : il faut
+		// passer devant lui, pas seulement après.
+		.panel & h4.first {
+			margin-top: 0;
+		}
+	}
+	.chip-type {
+		// Une catégorie ne se coupe pas entre deux colonnes.
+		break-inside: avoid;
 	}
 	.chips .chip {
 		padding: 7px;
@@ -1027,16 +1127,35 @@ const t = useNamespacedT('market')
 		input { flex: 1; }
 	}
 	.menu {
+		// 140 px et pas 100 : à 100, « Chapeaux » et « Apparats » ne tenaient pas
+		// sur une ligne à côté de leur glyphe et se cassaient sous lui. Les cases
+		// sont plus larges, l'intitulé insécable.
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
 		grid-gap: 8px;
 		user-select: none;
 		flex: 0 0 auto;
 		.item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			white-space: nowrap;
 			background: var(--background);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
-			padding: 8px 5px;
+			body:not(.v2) & {
+				box-shadow: none;
+				border: 1px solid var(--border);
+				transition: background-color .12s ease, border-color .12s ease;
+				// Meme survol discret que les vignettes d'items : `--pure-white`
+				// ci-dessous EST la surface du panneau en v3, invisible.
+				&:hover {
+					background: var(--background-row);
+					border-color: var(--border-strong);
+				}
+			}
+			padding: 10px 8px;
 			cursor: pointer;
 			// color: var(--text-color);
 			&:hover {

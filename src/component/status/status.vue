@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="status" fallback="mdi-server" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first last">
 			<div v-if="!loaded" class="loading">
@@ -68,12 +73,16 @@ async function refresh() {
 		const data = await LeekWars.get('health/check')
 		applyResponse(data)
 	} catch (e: unknown) {
-		if (e && typeof e === 'object' && 'services' in e) {
-			applyResponse(e as { services?: { [k: string]: string }, healthy?: boolean })
-		} else {
-			services.value = { api: 'error' }
-			healthy.value = false
+		// L'endpoint renvoie 503 dès qu'UN service est down, mais avec le détail par
+		// service dans le corps : on l'affiche (les services up restent up, seuls les
+		// down passent en rouge) au lieu de tout marquer hors service.
+		const body = e && typeof e === 'object' ? e as { services?: { [k: string]: string }, healthy?: boolean } : null
+		if (body && body.services && Object.keys(body.services).length) {
+			applyResponse(body)
 		}
+		// Sinon : impossible de joindre le service de statut lui-même (réseau/timeout).
+		// On ne sait pas si les services sont down, donc on GARDE le dernier état connu
+		// plutôt que d'afficher faussement une panne majeure ; « vérifié il y a … » en témoigne.
 	}
 	lastChecked.value = new Date()
 	loaded.value = true
@@ -128,16 +137,16 @@ const lastCheckedLabel = computed(() => {
 	align-items: center;
 	gap: 20px;
 	padding: 20px 25px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	margin-bottom: 20px;
-	color: white;
-	&.ok { background: var(--primary); }
+	color: var(--primary-surface-text);
+	&.ok { background: var(--primary-surface); }
 	&.partial { background: #f0ad4e; }
 	&.down { background: #d9534f; }
 }
 .overall-icon {
 	font-size: 42px !important;
-	color: white !important;
+	color: var(--white) !important;
 }
 .overall-title {
 	font-size: 22px;
@@ -158,8 +167,11 @@ const lastCheckedLabel = computed(() => {
 	align-items: center;
 	gap: 12px;
 	padding: 14px 16px;
-	border-radius: 4px;
-	background: var(--grey-lighter, #f5f5f5);
+	border-radius: var(--radius);
+	// `--grey-lighter` n'existe pas : le repli #f5f5f5 peignait les cartes en
+	// blanc sous une encre claire en thème sombre.
+	background: var(--background-secondary);
+	border: 1px solid var(--border);
 	border-left: 4px solid transparent;
 	&.ok { border-left-color: var(--primary); }
 	&.error { border-left-color: #d9534f; }
@@ -185,8 +197,12 @@ const lastCheckedLabel = computed(() => {
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
-	background: #999;
-	.ok & { background: var(--primary); }
+	// v3 : une LED carrée, comme lw-status.
+	body:not(.v2) & {
+		border-radius: 0;
+	}
+	background: var(--grey-8);
+	.ok & { background: var(--primary-surface); }
 	.error & { background: #d9534f; }
 }
 </style>

@@ -18,6 +18,7 @@
 	"click_to_change_country": "Klicka för att ändra",
 	"connected": "Ansluten",
 	"contributor": "Bidragsgivare",
+	"referent": "Referent",
 	"country_ok": "OK",
 	"country_selection": "Val av land",
 	"create": "Skapa",
@@ -131,5 +132,7 @@
 	"aposteriori_title": "Fadderbelöningar att hämta",
 	"aposteriori_desc": "Belöningssystemet för fadderskap är nytt: hämta dem för dina fadderbarn och din fadder.",
 	"aposteriori_claim": "Hämta",
-	"aposteriori_claimed": "Belöningar mottagna!"
+	"aposteriori_claimed": "Belöningar mottagna!",
+	"linked_accounts": "{0} konton",
+	"linked_main": "huvudkonto"
 }
