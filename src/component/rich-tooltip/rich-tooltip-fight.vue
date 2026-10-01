@@ -1,7 +1,7 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :open-delay="_open_delay" :close-delay="_close_delay" :location="bottom ? 'bottom' : 'top'" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template #activator="{ props: activatorProps }">
-			<slot :props="activatorProps"></slot>
+			<slot :props="{ ...activatorProps, class: 'rich-tooltip-activator' }"></slot>
 		</template>
 		<div class="card" :class="{expanded: expand}" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!data" :size="30" />
@@ -10,7 +10,7 @@
 					<v-icon v-if="data.status == 0" class="type-icon timersand">mdi-timer-sand-empty</v-icon>
 					<v-icon v-else-if="data.context == FightContext.CHALLENGE" class="type-icon">mdi-flag-outline</v-icon>
 					<v-icon v-else-if="data.type == FightType.BOSS" class="type-icon">mdi-crown</v-icon>
-					<v-icon v-else-if="data.context == FightContext.TOURNAMENT" class="type-icon">mdi-trophy-outline</v-icon>
+					<v-icon v-else-if="data.context == FightContext.TOURNAMENT" class="type-icon">mdi-tournament</v-icon>
 					<v-icon v-else-if="isArena" class="type-icon">mdi-sword-cross</v-icon>
 					<img v-else src="/image/icon/black/garden.png" class="type-icon-img">
 					<div class="type-info">
@@ -262,6 +262,10 @@ function open(v: boolean) {
 	if (props.id > 0 && !data.value) {
 		LeekWars.get<TooltipFight>('fight/rich-tooltip/' + props.id).then(d => {
 			data.value = d
+		}, () => {
+			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
+			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			content_created.value = false
 		})
 	}
 }
@@ -443,12 +447,10 @@ const metaItems = computed(() => {
 		display: inline-flex;
 		align-items: center;
 		.v-icon { font-size: 22px; }
-		&.win .v-icon { color: #4caf50; }
-		&.defeat .v-icon { color: #e53935; }
-		&.draw .v-icon { color: var(--text-color-secondary); }
+		&.win .v-icon { color: var(--result-win); }
+		&.defeat .v-icon { color: var(--result-defeat); }
+		&.draw .v-icon { color: var(--result-draw); }
 	}
-	body.dark .result-badge.win .v-icon { color: #7ddc7d; }
-	body.dark .result-badge.defeat .v-icon { color: #ff7068; }
 
 	.sides {
 		display: flex;

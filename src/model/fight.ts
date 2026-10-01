@@ -86,6 +86,7 @@ class Report {
 	public duration!: number
 	public season?: string        // saison événementielle active (#4383), ex : 'summer'
 	public season_bonus?: number  // bonus XP/butin en % appliqué à ce combat (boss en saison)
+	public turret_ai_owners?: {[team: string]: number}  // propriétaire de l'IA de chaque tourelle, par id d'équipe
 }
 
 class Fight {
@@ -181,7 +182,21 @@ class FightLeek {
  */
 type RawAction = number[]
 
+/** Version des combats depuis laquelle les effets périodiques se décomptent au tour de leur cible. */
+const VERSION_PERIODIC_ON_HIT = 1
+
+/**
+ * Les logs d'un combat arrivent par bloc : sous l'id d'un éleveur, ou sous -<id de l'équipe>
+ * pour la tourelle d'une équipe. Ceux d'une tourelle sont les siens si c'est son IA qui la jouait.
+ */
+function isOwnLogs(key: string, farmer: Farmer | null, turretAIOwners?: Report['turret_ai_owners']): boolean {
+	const id = Number(key)
+	return !!farmer && (id === farmer.id || turretAIOwners?.[-id] === farmer.id)
+}
+
 class FightData {
+	// Version des règles du combat, absente des plus anciens (0)
+	public version?: number
 	public actions!: RawAction[]
 	public map!: FightMap
 	public leeks!: FightLeek[]
@@ -190,5 +205,5 @@ class FightData {
 	public ops!: {[key: number]: number}
 }
 
-export { Fight, FightType, FightContext, ArenaMode, Report, ReportLeek, ReportFarmer, ReportTeam, FightLeek, FightMap, FightData }
+export { Fight, FightType, FightContext, ArenaMode, Report, ReportLeek, ReportFarmer, ReportTeam, FightLeek, FightMap, FightData, VERSION_PERIODIC_ON_HIT, isOwnLogs }
 export type { RawAction }

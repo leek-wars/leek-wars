@@ -6,6 +6,7 @@
 	"dark_mode": "Modo noturno",
 	"decelerate": "Desacelerar",
 	"display_cell_numbers": "Exibir números das casas",
+	"marks_foreground": "mark() em primeiro plano",
 	"display_debug": "Mostrar informações de depuração",
 	"display_life_bars": "Mostrar barras de saúde",
 	"display_logs": "Mostrar depurações",

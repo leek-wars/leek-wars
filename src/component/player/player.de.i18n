@@ -6,6 +6,7 @@
 	"dark_mode": "Nacht-Modus",
 	"decelerate": "Verlangsamen",
 	"display_cell_numbers": "Boxnummern anzeigen",
+	"marks_foreground": "mark() im Vordergrund",
 	"display_debug": "Debug-Info anzeigen",
 	"display_life_bars": "Gesundheitsbalken anzeigen",
 	"display_logs": "Debugging anzeigen",

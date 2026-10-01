@@ -5,7 +5,7 @@ import { T, Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { Position } from './position'
-import { Effect, EffectTarget, State } from '@/model/effect'
+import { Effect, EffectTarget } from '@/model/effect'
 
 abstract class ChipAnimation {
 	public game: Game
@@ -153,19 +153,126 @@ function recipientMatches(effect: Effect, launcher: FightEntity, target: FightEn
 	return false
 }
 
+// Copies teintées de textures existantes (canvas créé une seule fois par couple
+// texture/couleur) : terre brune des plantes, entaille rouge d'Hémorragie…
+// Pas de nouveau PNG, pas d'allocation par frame.
+const tintCache = new Map<Texture, Map<string, Texture>>()
+function tintedTexture(source: Texture, color: string, alpha: number): Texture {
+	// Sprite pas encore chargée : repli sur l'originale, sans mettre en cache.
+	if (!source.texture.width) { return source }
+	let byColor = tintCache.get(source)
+	if (!byColor) { byColor = new Map(); tintCache.set(source, byColor) }
+	const key = color + '/' + alpha
+	let tinted = byColor.get(key)
+	if (!tinted) {
+		const canvas = document.createElement('canvas')
+		canvas.width = source.texture.width
+		canvas.height = source.texture.height
+		const ctx = canvas.getContext('2d')!
+		ctx.drawImage(source.texture, 0, 0)
+		ctx.globalCompositeOperation = 'source-atop'
+		ctx.globalAlpha = alpha
+		ctx.fillStyle = color
+		ctx.fillRect(0, 0, canvas.width, canvas.height)
+		tinted = new Texture('')
+		tinted.texture = canvas
+		byColor.set(key, tinted)
+	}
+	return tinted
+}
+
+// Halo rond en dégradé radial (bulle de poison, lueur), créé une seule fois
+// par couple couleur/taille.
+const glowTextures = new Map<string, Texture>()
+function glowTexture(color: string, size: number): Texture {
+	const key = color + '/' + size
+	let glow = glowTextures.get(key)
+	if (!glow) {
+		const canvas = document.createElement('canvas')
+		canvas.width = size
+		canvas.height = size
+		const ctx = canvas.getContext('2d')!
+		const r = size / 2
+		const gradient = ctx.createRadialGradient(r, r, 0, r, r, r)
+		gradient.addColorStop(0, color)
+		gradient.addColorStop(0.55, color + 'aa')
+		gradient.addColorStop(1, color + '00')
+		ctx.fillStyle = gradient
+		ctx.fillRect(0, 0, size, size)
+		glow = new Texture('')
+		glow.texture = canvas
+		glowTextures.set(key, glow)
+	}
+	return glow
+}
+
+// Petite pastille de couleur unie (goutte), créée une seule fois par couleur.
+const dropTextures = new Map<string, Texture>()
+function dropTexture(color: string): Texture {
+	let drop = dropTextures.get(color)
+	if (!drop) {
+		const canvas = document.createElement('canvas')
+		canvas.width = 6
+		canvas.height = 6
+		const ctx = canvas.getContext('2d')!
+		ctx.fillStyle = color
+		ctx.beginPath()
+		ctx.arc(3, 3, 3, 0, Math.PI * 2)
+		ctx.fill()
+		drop = new Texture('')
+		drop.texture = canvas
+		dropTextures.set(color, drop)
+	}
+	return drop
+}
+
+// Couleur de goutte assortie au sang de l'entité (sève pâle des poireaux,
+// variantes des mobs) pour que les gouttes se fondent avec les giclées du moteur.
+function bloodColor(target: FightEntity): string {
+	if (target.bloodTex === T.blood_orange) { return '#e8862a' }
+	if (target.bloodTex === T.blood_purple) { return '#9b4dbb' }
+	if (target.bloodTex === T.blood_white) { return '#e8e8e8' }
+	return '#c9e6bc'
+}
+
 class Summon extends ChipAnimation {
-	static textures = [T.summon_leaf]
-	static sounds = [S.bulb]
+	static textures = [T.summon_leaf, T.explosion_rock, T.explosion_rock2]
+	static sounds = [S.bulb, S.bury]
 
 	public summon!: FightEntity
 	public summoned: boolean = false
+	// Plantes : la terre se soulève AVANT que la plante ne sorte. Première motte à
+	// duration 54 (16 frames après le lancer), la principale à l'apparition (40).
+	static PLANT_HEAVE_TIME = 54
+	public heaved: boolean = false
 
 	constructor(game: Game) {
 		super(game, null, 70, DamageType.DEFAULT)
 	}
 
+	private isPlant(): boolean {
+		return (this.summon as { plant?: boolean } | undefined)?.plant === true
+	}
+
+	// Motte de terre : fragments de roche teintés brun projetés du sol, que des
+	// cailloux, pas de feuilles.
+	private throwClods(count: number, minDz: number, maxDz: number) {
+		const pos = this.position
+		for (let i = 0; i < count; ++i) {
+			const angle = Math.random() * Math.PI * 2
+			const dist = 0.3 + Math.random() * 1.6
+			const texture = tintedTexture(Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2, '#6b4a2b', 0.65)
+			this.game.particles.addGarbage(pos.x, pos.y, 4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, minDz + Math.random() * (maxDz - minDz), texture, 1, Math.random() * 0.2 - 0.1, 0.25 + Math.random() * 0.4, Math.random() * Math.PI, 60)
+		}
+	}
+
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+
+		// Une plante (Piment, Maïs, Prototaxite) sort de terre : rien que la
+		// motte à l'apparition, aucune feuille. Les feuilles
+		// du lancer sont réservées aux bulbes.
+		if (this.isPlant()) { return }
 
 		const s = 2.0
 		const life = 70
@@ -182,9 +289,22 @@ class Summon extends ChipAnimation {
 	public update(dt: number) {
 		super.update(dt)
 
+		const plant = this.isPlant()
+		// Une plante se plante : la terre se soulève d'abord (bruit de terre, pas
+		// le cri des bulbes), puis la plante jaillit dans la motte principale.
+		if (plant && !this.heaved && this.duration < Summon.PLANT_HEAVE_TIME) {
+			this.heaved = true
+			S.bury.play(this.game)
+			this.throwClods(7, 1.5, 2.5)
+		}
+
 		if (this.duration < 40 && !this.summoned) {
 
-			S.bulb.play(this.game)
+			if (plant) {
+				this.throwClods(10, 2, 3.5)
+			} else {
+				S.bulb.play(this.game)
+			}
 			this.summon.active = true
 			this.summon.blooming = true
 			this.summon.deadAnim = 1
@@ -516,10 +636,20 @@ class Dome extends ChipShieldAnimation {
 	static textures = [T.shield_aureol, T.chip_dome]
 	constructor(game: Game) { super(game, T.chip_dome, Area.CIRCLE3) }
 }
-export class DivineProtection extends ChipShieldAnimation {
+// Protection divine (113) : bouclier sur TOUS les alliés (zone ALLIES), où
+// qu'ils soient. La zone n'a pas de centre, donc pas de losange au sol (le
+// CIRCLE3 orange d'avant mentait) ; à la place, l'auréole de bouclier et le
+// glyphe de la puce au-dessus de chaque protégé.
+export class DivineProtection extends ChipAnimation {
 	static sounds = [S.shield]
-	static textures = [T.shield_aureol, T.chip_dome]
-	constructor(game: Game) { super(game, T.chip_dome, Area.CIRCLE3) }
+	static textures = [T.shield_aureol, T.chip_divine_protection]
+	constructor(game: Game) { super(game, S.shield, 60, DamageType.DEFAULT) }
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.createChipAureol(recipients, T.shield_aureol)
+		this.createChipImage(recipients, T.chip_divine_protection)
+	}
 }
 
 class Ice extends ChipAnimation {
@@ -585,7 +715,7 @@ class Inversion extends ChipAnimation {
 			this.game.particles.addRectangle(x1, y1, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
-		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.states.has(State.STATIC)) {
+		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.isStatic) {
 			const cell = this.launcher.cell!
 			this.launcher.setCell(this.target.cell!)
 			this.target.setCell(cell)
@@ -638,7 +768,7 @@ class Repotting extends ChipAnimation {
 			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
 		}
 		// !STATIC : le serveur (invertEntities) ne swappe pas une entité statique.
-		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.states.has(State.STATIC)) {
+		if (!this.inverted && this.duration < 40 && this.launcher && this.target && !this.target.isStatic) {
 			const cell = this.launcher.cell!
 			this.launcher.setCell(this.target.cell!)
 			this.target.setCell(cell)
@@ -1484,7 +1614,12 @@ class Grapple extends ChipAnimation {
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		// Fix targetCell and targetPos
 		if (targets.length) {
-			targetCell = this.game.ground.field.computeAttractCell(launcher.cell!, targets[0].cell!, targetCell)
+			// Une cible immobile reste sur sa case : le crochet s'y plante et y reste,
+			// au lieu de revenir à vide vers la case d'attirance (cf. getLastAvailableCell
+			// côté Gant de boxe).
+			targetCell = targets[0].unmovable
+				? targets[0].cell!
+				: this.game.ground.field.computeAttractCell(launcher.cell!, targets[0].cell!, targetCell)
 			const xy = this.game.ground.field.cellToXY(targetCell)
 			targetPos = this.game.ground.xyToXYPixels(xy.x, xy.y)
 		}
@@ -1528,14 +1663,14 @@ class Grapple extends ChipAnimation {
 		this.x = this.sx + x * this.ex
 		this.y = this.sy + x * this.ey
 		this.d = Math.sqrt(Math.pow(this.x - this.sx, 2) + Math.pow(this.y - this.sy, 2))
-		if (this.target && !this.target.states.has(State.STATIC) && r > 0.5) {
+		if (this.target && !this.target.unmovable && r > 0.5) {
 			this.target.ox = this.x
 			this.target.oy = this.y
 		}
 	}
 
 	public end() {
-		if (this.target && !this.target.states.has(State.STATIC)) {
+		if (this.target && !this.target.unmovable) {
 			this.target.setCell(this.cell)
 		}
 	}
@@ -1671,7 +1806,7 @@ class BoxingGlove extends ChipAnimation {
 		this.y = this.sy + x * this.ey
 		this.d = Math.sqrt(Math.pow(this.x - this.sx, 2) + Math.pow(this.y - this.sy, 2))
 
-		if (this.target && !this.target.states.has(State.STATIC)) {
+		if (this.target && !this.target.unmovable) {
 			const tr = Math.max(0, Math.min(1, r / (0.2 * (1 - this.move_start)) - this.move_start))
 			this.target.ox = this.tsx + tr * (this.position.x - this.tsx)
 			this.target.oy = this.tsy + tr * (this.position.y - this.tsy)
@@ -1731,6 +1866,430 @@ class Prism extends ChipAnimation {
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addPrism(targetPos.x, targetPos.y, 180, 80)
+	}
+}
+
+// Hémorragie (2.50) : applique l'état Insoignable (state 2). L'entaille :
+// un arc pourpre bref en travers de la cible, une grosse giclée à l'impact avec
+// des gouttes qui retombent (gravité), puis un suintement résiduel — la plaie
+// qui ne se referme pas.
+class Hemorrhage extends ChipAnimation {
+	static textures = [T.chip_hemorrhage, T.slash, T.leek_blood]
+	static sounds = [S.leek_slice]
+	static DURATION = 70
+	static SLASH_TIME = 8
+	public slashed = false
+	public ooze = 0
+	constructor(game: Game) { super(game, S.leek_slice, Hemorrhage.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.createChipImage(this.targets, T.chip_hemorrhage)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.targets) { return }
+		const elapsed = Hemorrhage.DURATION - this.duration
+		if (!this.slashed && elapsed >= Hemorrhage.SLASH_TIME) {
+			this.slashed = true
+			const slash = tintedTexture(T.slash, '#d01030', 0.9)
+			for (const target of this.targets) {
+				// L'entaille en diagonale à travers le corps. Vie 42 : l'enveloppe
+				// d'alpha des ImageParticle (fade-in 30, fade-out 20) plafonne
+				// l'opacité très bas sur les vies courtes.
+				const angle = (Math.random() > 0.5 ? 1 : -1) * (Math.PI / 10 + Math.random() * Math.PI / 12)
+				this.game.particles.addImage(target.ox, target.oy, target.height * 0.62, 0, 0, 0, angle, slash, 42, 1, 0, false, 0.9)
+				// La giclée principale
+				target.hurt(target.ox, target.oy, target.height * 0.5, Math.random() * 2 - 1, Math.random() - 0.5, 2)
+				// Gouttes projetées qui retombent en pluie
+				const drop = dropTexture(bloodColor(target))
+				for (let i = 0; i < 7; ++i) {
+					const a = Math.random() * Math.PI * 2
+					const d = 0.4 + Math.random() * 1.2
+					this.game.particles.addGarbage(target.ox, target.oy, target.height * 0.5, Math.cos(a) * d, Math.sin(a) * d * 0.5, 1 + Math.random() * 2, drop, 1, 0, 1 + Math.random() * 0.8, 0, 45)
+				}
+			}
+		}
+		// Suintement : la plaie continue de goutter jusqu'à la fin
+		if (this.slashed) {
+			this.ooze -= dt
+			if (this.ooze <= 0) {
+				this.ooze = 6
+				for (const target of this.targets) {
+					const drop = dropTexture(bloodColor(target))
+					const ox = Math.random() * 16 - 8
+					this.game.particles.addGarbage(target.ox + ox, target.oy, target.height * (0.3 + Math.random() * 0.3), Math.random() * 0.4 - 0.2, 0, 0.2, drop, 1, 0, 0.6 + Math.random() * 0.4, 0, 40)
+					// De temps en temps une vraie giclée qui tache le sol
+					if (Math.random() > 0.72) {
+						target.hurt(target.ox, target.oy, target.height * 0.45, Math.random() * 2 - 1, Math.random() - 0.5, 1)
+					}
+				}
+			}
+		}
+	}
+}
+
+// Maturation (2.50) : buff permanent d'une invocation alliée (+vie max,
+// +puissance). Une poussée de croissance : hélice de sève verte et dorée qui
+// monte en se resserrant autour de l'invocation, impulsion de squash & stretch
+// au sommet, couronne dorée et gerbe de feuilles.
+class Maturation extends ChipAnimation {
+	static textures = [T.summon_leaf, T.chip_maturation]
+	static sounds = [S.heal]
+	static DURATION = 65
+	static PULSE_TIME = 38
+	// Une émission tous les 2 pas et non à chaque frame. Émises frame par frame,
+	// les lueurs se recouvrent (leur diamètre valait la moitié de celui de
+	// l'hélice) et la spirale devient un nuage informe ; espacées, l'œil relie
+	// les points et lit l'hélice. Tous les 3 pas,
+	// les perles étaient trop éparses : 2 pas en donne dix-neuf au lieu de treize,
+	// encore distinctes avec des lueurs de 13 px.
+	static SPIRAL_STEP = 2
+	// L'enveloppe d'alpha des ImageParticle plafonne l'opacité à vie² / 2400
+	// (cf. ImageParticle.draw) : sous ~49 frames de vie, une particule n'est
+	// JAMAIS pleinement opaque. Les lueurs de l'hélice vivaient 32 frames, donc
+	// plafonnaient à 43 % : d'où la impression de brouillard. Elles vivent
+	// maintenant assez longtemps pour être franches, et la traînée entière reste
+	// à l'écran jusqu'à la poussée, ce qui dessine l'hélice au lieu de la suggérer.
+	static GLOW_LIFE = 50
+	public pulsed = false
+	public spiral = 0
+	public step = 0
+	constructor(game: Game) { super(game, S.heal, Maturation.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.createChipImage(this.targets, T.chip_maturation)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.targets) { return }
+		const elapsed = Maturation.DURATION - this.duration
+		// L'hélice montante : UN seul brin, dont les perles alternent sève verte
+		// et sève dorée, du sol jusqu'au-dessus de l'invocation.
+		if (elapsed <= Maturation.PULSE_TIME) {
+			this.spiral -= dt
+			if (this.spiral <= 0) {
+				this.spiral = Maturation.SPIRAL_STEP
+				const progress = Math.min(1, elapsed / Maturation.PULSE_TIME)
+				// Deux tours pleins, et un rayon qui se resserre en montant :
+				// l'hélice visse la pousse dans la plante au lieu de l'entourer.
+				const angle = progress * Math.PI * 4
+				const radius = 24 - progress * 12
+				// Un seul brin se suit à l'œil ; deux brins opposés (la version
+				// d'avant) se recouvrent, et on retombe sur le nuage qu'on cherche
+				// à éviter. La couleur alterne d'une perle à l'autre, ce qui garde
+				// le vert ET le doré.
+				const color = this.step % 2 === 0 ? '#7ee04a' : '#ffc93a'
+				const glow = glowTexture(color, 13)
+				for (const target of this.targets) {
+					// PLUS HAUTE QUE LARGE, sinon ce ne sont que des anneaux
+					// empilés : un bulbe chétif mesure 48 de haut pour une hélice
+					// qui faisait 76 de diamètre, et l'œil n'y lisait aucune
+					// montée. On monte donc bien au-dessus de la plante.
+					const z = progress * (target.height * 1.25 + 30)
+					const x = target.ox + Math.cos(angle) * radius
+					const y = target.oy + Math.sin(angle) * radius * 0.5
+					this.game.particles.addImage(x, y, z, 0, 0, 0.04, 0, glow, Maturation.GLOW_LIFE, 1, 0, false, 1)
+					// Des feuilles qui PARTENT DU PIED du bulbe (posées à mi-hauteur
+					// en face de la perle, elles
+					// flottaient sans origine). Elles naissent au ras du sol, au
+					// pourtour de la base, et montent le long de la plante en
+					// s'écartant un peu : la sève monte des racines.
+					if (this.step % 3 === 1) {
+						const leaf = tintedTexture(T.summon_leaf, '#8fd94b', 0.5)
+						// Petites (0,32) et en s'écartant franchement : à 0,45 et
+						// serrées sur l'axe, elles recouvraient un bulbe chétif et
+						// cachaient l'hélice.
+						const side = Math.random() * Math.PI * 2
+						const foot = 10 + Math.random() * 8
+						const lx = target.ox + Math.cos(side) * foot
+						const ly = target.oy + Math.sin(side) * foot * 0.5
+						this.game.particles.addImage(lx, ly, 2, Math.cos(side) * 0.22, Math.sin(side) * 0.11, 0.55 + Math.random() * 0.3, 0, leaf, 55, 1, (Math.random() - 0.5) * 0.08, false, 0.32, Math.cos(side) < 0 ? -1 : 1)
+					}
+				}
+				this.step++
+			}
+		}
+		// L'impulsion de croissance, la couronne dorée et la gerbe de feuilles
+		if (!this.pulsed && elapsed >= Maturation.PULSE_TIME) {
+			this.pulsed = true
+			const gold = glowTexture('#ffd75e', 16)
+			const leaf = tintedTexture(T.summon_leaf, '#a8e85a', 0.45)
+			for (const target of this.targets) {
+				const bulb = target as { bounceX?: number, bounceY?: number }
+				if (bulb.bounceY !== undefined) {
+					bulb.bounceY = 1.35
+					bulb.bounceX = 0.82
+				}
+				// Couronne qui s'ouvre à mi-hauteur : douze points nets valent
+				// mieux qu'un halo, ils dessinent l'anneau en s'écartant.
+				for (let i = 0; i < 12; ++i) {
+					const angle = (i / 12) * Math.PI * 2
+					this.game.particles.addImage(target.ox, target.oy, target.height * 0.55, Math.cos(angle) * 1.5, Math.sin(angle) * 0.75, 0.25, 0, gold, 50, 1, 0, false, 0.9)
+				}
+				// Gerbe de feuilles plutôt que les croix de soin d'avant :
+				// Maturation fait grandir, elle ne soigne pas. Elle jaillit du
+				// pied de la plante (z ≈ 0), pas de sa mi-hauteur, et monte vite.
+				for (let i = 0; i < 8; ++i) {
+					const angle = Math.random() * Math.PI * 2
+					const speed = 0.5 + Math.random() * 0.6
+					this.game.particles.addImage(target.ox + Math.cos(angle) * 4, target.oy + Math.sin(angle) * 2, 2, Math.cos(angle) * speed, Math.sin(angle) * speed * 0.5, 1.5 + Math.random() * 0.7, 0, leaf, 60, 1, (Math.random() - 0.5) * 0.1, false, 0.3 + Math.random() * 0.2, Math.cos(angle) < 0 ? -1 : 1)
+				}
+			}
+		}
+	}
+}
+
+// Surinfection (2.50) : convertit une partie des poisons actifs de la
+// cible en dégâts immédiats. La conversion se lit en deux temps : des bulles
+// violettes (les poisons qu'on active) convergent depuis le pourtour de la
+// cible, puis détonent en gerbe toxique avec le flash.
+class Superinfection extends ChipPoisonAnimation {
+	static textures = [T.poison_aureol, T.chip_superinfection, T.halo_green]
+	static sounds = [S.poison]
+	static BURST = 28
+	public burst = Superinfection.BURST
+	constructor(game: Game) { super(game, T.chip_superinfection) }
+	public launch(launchPos: Cell, position: Cell, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		const recipients = this.recipientsOf(launcher, targets)
+		this.targets = recipients
+		// Les poisons convergent : bulles violettes depuis le pourtour, réglées
+		// pour se résorber dans la cible au moment de la détonation.
+		const bubble = glowTexture('#c93ef0', 22)
+		for (const target of recipients) {
+			for (let i = 0; i < 11; ++i) {
+				const angle = Math.random() * Math.PI * 2
+				const dist = 45 + Math.random() * 35
+				const life = Superinfection.BURST + Math.random() * 6
+				const x = target.ox + Math.cos(angle) * dist
+				const y = target.oy + Math.sin(angle) * dist * 0.5
+				const z = 5 + Math.random() * 40
+				this.game.particles.addImage(x, y, z, -Math.cos(angle) * dist / life, -Math.sin(angle) * dist * 0.5 / life, 0.2, 0, bubble, life, 1, 0, false, 1.2 + Math.random() * 0.9)
+			}
+		}
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (this.burst > 0) {
+			this.burst -= dt
+			if (this.burst <= 0 && this.targets) {
+				const flash = glowTexture('#e577ff', 22)
+				for (const target of this.targets) {
+					// La détonation : flash + gerbe de halos toxiques + anneau violet
+					target.hurt(target.ox, target.oy, 25, 0, 0, 0)
+					// Les traînées verticales (halo_green teinté violet : en vert,
+					// elles évoquaient un soin) montent droit,
+					// chacune depuis son point du pourtour, sans dérive latérale —
+					// un trait vertical qui glisse de côté se lit comme un bug
+					// d'affichage.
+					const streak = tintedTexture(T.halo_green, '#c93ef0', 0.85)
+					for (let i = 0; i < 8; ++i) {
+						const x = target.ox + (Math.random() - 0.5) * 60
+						const y = target.oy + (Math.random() - 0.5) * 20
+						this.game.particles.addImage(x, y, Math.random() * 15, 0, 0, 1.6 + Math.random() * 0.8, 0, streak, 40)
+					}
+					for (let i = 0; i < 8; ++i) {
+						const angle = (i / 8) * Math.PI * 2
+						this.game.particles.addImage(target.ox, target.oy, 25, Math.cos(angle) * 2.2, Math.sin(angle) * 1.1, 0.4, 0, flash, 32, 1, 0, false, 1.2)
+					}
+				}
+			}
+		}
+	}
+}
+
+// Puces des plantes 2.50 (Éveil). Le Piment
+// et le Maïs se réveillent quand une entité entre dans leur zone et répondent
+// avec ces quatre puces, que seules les plantes portent.
+
+// Piquant (118) : la morsure du Piment. Dégâts purs, courts et secs : trois
+// éclats de piqûre rouge orangé jaillissent de la cible, comme sur l'icône,
+// et la cible flambe brièvement. Pas de glyphe : les attaques n'en ont pas.
+class Piquant extends ChipAnimation {
+	// T.fire : burnAnim() dessine des flammes, la texture doit être préchargée
+	// (sinon drawImage lève et fige tout le combat).
+	static textures = [T.fire]
+	static sounds = [S.fire]
+	constructor(game: Game) { super(game, S.fire, 40, DamageType.FIRE) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		const sting = glowTexture('#ff7a30', 18)
+		for (const target of this.targets) {
+			target.burnAnim(25)
+			// Trois éclats principaux bien séparés, plus quelques étincelles.
+			// Vie 40 : sous ~49 frames l'enveloppe d'alpha des ImageParticle
+			// plafonne l'opacité, on compense par la taille.
+			for (let i = 0; i < 12; ++i) {
+				const angle = (i / 12) * Math.PI * 2 + Math.random() * 0.3
+				const speed = i % 4 === 0 ? 2.6 : 1.3 + Math.random() * 0.9
+				const scale = i % 4 === 0 ? 1.6 : 0.9
+				this.game.particles.addImage(target.ox, target.oy, target.height * 0.6, Math.cos(angle) * speed, Math.sin(angle) * speed * 0.5, 0.6 + Math.random() * 0.6, 0, sting, 40, 1, 0, false, scale)
+			}
+		}
+	}
+}
+
+// Capsaïcine (119) : le Piment explose de capsaïcine sur toute sa zone
+// (même construction que Pop-corn). Lancée par le
+// Piment sur lui-même : une gerbe de particules rouges jaillit de son sommet
+// dans tous les sens et retombe sur la zone, puis chaque ennemi touché
+// s'embrase, et des braises montent de lui : la séquelle s'annonce. Pas de
+// glyphe, c'est une attaque.
+class Capsaicin extends ChipAnimation {
+	static textures = [T.fire]
+	static sounds = [S.fire]
+	static DURATION = 85
+	static SHOWER = 22
+	static BLAZE = 30
+	public burnt = false
+	constructor(game: Game) { super(game, S.fire, Capsaicin.DURATION, DamageType.FIRE) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.game.setEffectArea(targetCell, Area.CIRCLE3, '#ff3a1a', 70)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		const elapsed = Capsaicin.DURATION - this.duration
+		const pepper = this.launcher
+		// La gerbe : gouttes de capsaïcine rouges et quelques éclats plus clairs,
+		// balistiques, qui sautent haut et retombent jusqu'aux bords de la zone.
+		if (pepper && elapsed < Capsaicin.SHOWER) {
+			const drop = glowTexture('#ff3c1c', 14)
+			const spark = glowTexture('#ffb060', 10)
+			for (let i = 0; i < 4; ++i) {
+				const angle = Math.random() * Math.PI * 2
+				const dist = 0.8 + Math.random() * 2.4
+				const texture = i === 3 ? spark : drop
+				// 0,35 de la hauteur : la gerbe sort du bas du fruit, pas de la pointe des
+				// feuilles. Les gouttes montent ensuite d'elles-mêmes
+				// (vitesse verticale 3 à 6,5), donc un point d'émission bas se lit quand
+				// même de loin.
+				this.game.particles.addGarbage(pepper.ox, pepper.oy, pepper.height * 0.35, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, texture, 1, 0, 0.8 + Math.random() * 0.7, 0, 70)
+			}
+			// Et le Piment lui-même crache un peu de feu
+			if (Math.random() > 0.5) {
+				this.game.particles.addFire(pepper.ox + Math.random() * 10 - 5, pepper.oy + Math.random() * 6 - 3, pepper.height * 0.3, Math.random() * Math.PI * 2, false)
+			}
+		}
+		if (!this.targets) { return }
+		// L'embrasement de chaque ennemi quand la pluie l'atteint…
+		if (!this.burnt && elapsed >= Capsaicin.SHOWER) {
+			this.burnt = true
+			for (const target of this.targets) {
+				target.burnAnim(Capsaicin.DURATION - Capsaicin.SHOWER + 20)
+			}
+		}
+		if (elapsed < Capsaicin.SHOWER) { return }
+		const ember = glowTexture('#ff4a1a', 9)
+		for (const target of this.targets) {
+			if (elapsed < Capsaicin.SHOWER + Capsaicin.BLAZE) {
+				// …de vraies flammes sur la cible…
+				if (Math.random() > 0.3) {
+					this.game.particles.addFire(target.ox + Math.random() * 30 - 15, target.oy + Math.random() * 16 - 8, 10 + Math.random() * 30, Math.random() * Math.PI * 2, false)
+				}
+			} else if (Math.random() > 0.55) {
+				// …puis des braises qui montent en dérivant : ça continue de brûler.
+				const x = target.ox + (Math.random() - 0.5) * 40
+				const y = target.oy + (Math.random() - 0.5) * 14
+				this.game.particles.addImage(x, y, 5 + Math.random() * 20, (Math.random() - 0.5) * 0.3, 0, 0.9 + Math.random() * 0.6, 0, ember, 45, 1, 0, false, 0.6 + Math.random() * 0.6)
+			}
+		}
+	}
+}
+
+// Sucre (120) : une bouchée de maïs doux. Le Maïs éjecte un morceau de sucre
+// de son sommet, qui décrit une cloche jusqu'à l'allié et rebondit à ses
+// pieds ; à l'arrivée, auréole de soin, glyphe et
+// quelques cristaux qui scintillent.
+class Sugar extends ChipAnimation {
+	static textures = [T.cure_aureol, T.chip_sugar, T.sugar_cube]
+	static sounds = [S.heal]
+	// Vol du morceau de sucre, en frames. La gravité des Garbage vaut 0,3 par
+	// frame : dz est choisi pour que le morceau retombe exactement sur la cible.
+	static FLIGHT = 28
+	static DURATION = Sugar.FLIGHT + 40
+	public landed = false
+	constructor(game: Game) { super(game, S.heal, Sugar.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		if (!launcher) { this.land(); return }
+		const flight = Sugar.FLIGHT
+		const z0 = launcher.height * 0.95
+		for (const target of this.targets) {
+			const dx = (target.ox - launcher.ox) / flight
+			const dy = (target.oy - launcher.oy) / flight
+			const dz = (0.15 * flight * flight - z0) / flight
+			// Gros morceau qui tourne sur lui-même en vol
+			this.game.particles.addSpinningGarbage(launcher.ox, launcher.oy, z0, dx, dy, dz, T.sugar_cube, 1, 0.07 + Math.random() * 0.04, 2.0, Math.random() * Math.PI * 2, flight + 30)
+		}
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.landed && Sugar.DURATION - this.duration >= Sugar.FLIGHT) { this.land() }
+		if (!this.landed || !this.targets || this.duration < 12) { return }
+		const crystal = glowTexture('#f4ffe8', 12)
+		for (const target of this.targets) {
+			if (Math.random() > 0.5) {
+				const x = target.ox + (Math.random() - 0.5) * 50
+				const y = target.oy + (Math.random() - 0.5) * 16
+				this.game.particles.addImage(x, y, Math.random() * 12, 0, 0, 0.8 + Math.random() * 0.7, 0, crystal, 50, 1, 0, false, 0.8 + Math.random())
+			}
+		}
+	}
+	private land() {
+		this.landed = true
+		if (!this.targets) { return }
+		this.createChipAureol(this.targets, T.cure_aureol)
+		this.createChipImage(this.targets, T.chip_sugar)
+	}
+}
+
+// Pop-corn (121) : l'épi éclate et arrose tout le monde. Lancée par le Maïs
+// sur lui-même : une fontaine de grains éclatés (sprite popcorn) jaillit de
+// son sommet et retombe en pluie sur la zone, puis chaque allié touché reçoit
+// son soin.
+class Popcorn extends ChipAnimation {
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_popcorn, T.popcorn]
+	static sounds = [S.heal]
+	static DURATION = 75
+	static SHOWER = 22
+	public healed = false
+	constructor(game: Game) { super(game, S.heal, Popcorn.DURATION, DamageType.DEFAULT) }
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
+		super.launch(launchPos, position, targets, targetCell, launcher)
+		this.targets = this.recipientsOf(launcher, targets)
+		this.game.setEffectArea(targetCell, Area.CIRCLE3, '#ffd75e', 70)
+		// Le glyphe au-dessus du Maïs lui-même, pas au-dessus des soignés.
+		if (launcher) { this.createChipImage([launcher], T.chip_popcorn) }
+	}
+	public update(dt: number) {
+		super.update(dt)
+		const elapsed = Popcorn.DURATION - this.duration
+		const corn = this.launcher
+		// La fontaine de grains : balistiques, ils sautent haut et retombent
+		// jusqu'aux bords de la zone.
+		if (corn && elapsed < Popcorn.SHOWER) {
+			for (let i = 0; i < 3; ++i) {
+				const angle = Math.random() * Math.PI * 2
+				const dist = 0.8 + Math.random() * 2.2
+				// 0,4 de la hauteur : l'épi éclate au ras de la plante, pas au-dessus
+				// d'elle. Les grains montent ensuite tout seuls.
+				this.game.particles.addGarbage(corn.ox, corn.oy, corn.height * 0.4, Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5, 3 + Math.random() * 3.5, T.popcorn, Math.random() > 0.5 ? 1 : -1, 0, 0.4 + Math.random() * 0.3, 0, 70)
+			}
+		}
+		// Le soin sur chaque allié quand la pluie les atteint
+		if (!this.healed && elapsed >= Popcorn.SHOWER && this.targets) {
+			this.healed = true
+			this.createChipAureol(this.targets, T.cure_aureol)
+			for (const target of this.targets) {
+				for (let i = 0; i < 3; ++i) { this.createChipHealEntity(target) }
+			}
+		}
 	}
 }
 
@@ -1903,4 +2462,4 @@ class Thunder extends ChipAnimation {
 	}
 }
 
-export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
+export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, FireBall, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Hemorrhage, Ice, Iceberg, Inversion, Jump, Kemuridama, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Maturation, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Prism, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, Shuriken, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Superinfection, Teleportation, Therapy, Thorn, Thunder, Toxin, Tranquilizer, Transmutation, Trebuchet, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry, Piquant, Capsaicin, Sugar, Popcorn }

@@ -192,20 +192,20 @@
 		vertical-align: bottom;
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 	}
 	.bar span {
 		height: 12px;
 		display: inline-block;
 		vertical-align: top;
-		// border-radius: 7px;
+		// border-radius: var(--radius-medium);
 		&:first-child {
-			border-top-left-radius: 7px;
-			border-bottom-left-radius: 7px;
+			border-top-left-radius: var(--radius-medium);
+			border-bottom-left-radius: var(--radius-medium);
 		}
 		&:last-child {
-			border-top-right-radius: 7px;
-			border-bottom-right-radius: 7px;
+			border-top-right-radius: var(--radius-medium);
+			border-bottom-right-radius: var(--radius-medium);
 		}
 	}
 	.new_xp.team {
@@ -215,7 +215,9 @@
 		width: 110px;
 	}
 	.resources {
-		width: 200px;
+		// La place de la plus longue liste du combat (--report-resources, posé par
+		// report.vue) : 31px par ressource dans fight-resources.vue, plus la cellule.
+		width: max(200px, calc(var(--report-resources, 0) * 31px + 10px));
 	}
 	.alive {
 		margin-left: 27px;

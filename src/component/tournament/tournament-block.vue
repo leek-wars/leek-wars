@@ -1,7 +1,17 @@
 <template>
-	<rect :width="size" :height="size" :x="x" :y="y" :me="item ? item.me : false" :class="{'no-fight': !item}" class="entry" />
-	<leek-image v-if="item && item.data" :x="x + 1" :y="y + 1" :width="size - 2" :height="size - 2" :leek="{level: item.data[0], skin: item.data[1], hat: item.data[2], weapon: item.data[3], metal: item.data[5], face: item.data[6]}" :scale="1" :invert="invert" />
-	<image v-else-if="item" :win="item.win" :width="size - 2" :height="size - 2" :x="x + 1" :y="y + 1" :xlink:href="image" />
+	<defs>
+		<clipPath :id="boxClipId">
+			<polygon :points="innerShape" />
+		</clipPath>
+	</defs>
+	<polygon :points="shape" :me="item ? item.me : false" :champion="isChampion" :class="{'no-fight': !item}" class="entry" />
+	<!-- Le contenu est découpé par un groupe et non par lui-même : sur un <svg>
+	     imbriqué (leek-image), le clip s'appliquerait dans SON repère, et tout
+	     disparaîtrait. Un <g> n'a pas de repère à lui. -->
+	<g :clip-path="'url(#' + boxClipId + ')'">
+		<leek-image v-if="item && item.data" :x="x + 1" :y="y + 1" :width="size - 2" :height="size - 2" :leek="{level: item.data[0], skin: item.data[1], hat: item.data[2], weapon: item.data[3], metal: item.data[5], face: item.data[6]}" :scale="1" :invert="invert" />
+		<image v-else-if="item" :win="item.win" :width="size - 2" :height="size - 2" :x="x + 1" :y="y + 1" :xlink:href="image" />
+	</g>
 	<foreignObject v-if="item" :x="x" :y="y" :width="size" :height="size" style="overflow: visible">
 		<rich-tooltip-leek v-if="entityType === 'leek'" :id="entityId" v-slot="{ props }" :disabled="!isActive" :bottom="true">
 			<div v-bind="props" class="tooltip-target" @mouseenter="activate" @click="click" />
@@ -21,21 +31,22 @@
 			</clipPath>
 		</defs>
 		<image :x="avatarCx - avatarSize / 2" :y="y + size - avatarSize / 3 - avatarSize / 2" :width="avatarSize" :height="avatarSize" :xlink:href="farmerAvatar" :clip-path="'url(#' + clipId + ')'" />
-		<circle :cx="avatarCx" :cy="y + size - avatarSize / 3" :r="avatarSize / 2" fill="none" stroke="var(--background-disabled)" :stroke-width="1.5" />
+		<circle :cx="avatarCx" :cy="y + size - avatarSize / 3" :r="avatarSize / 2" fill="none" stroke="var(--bracket-line)" :stroke-width="1.5" />
 	</a>
-	<foreignObject v-if="displayName" :x="x" :y="nameAbove ? y - nameFontSize * 1.6 - 1 : y + size + 1" :width="size" :height="nameFontSize * 1.6" style="overflow: visible; pointer-events: none">
+	<foreignObject v-if="displayName" :x="x - NAME_OVERFLOW" :y="nameAbove ? y - NAME_HEIGHT - 1 : y + size + 1" :width="size + 2 * NAME_OVERFLOW" :height="NAME_HEIGHT" style="overflow: visible; pointer-events: none">
 		<div class="block-name-wrap" :class="{ above: nameAbove }"><span class="block-name" :style="nameStyle">{{ displayName }}</span></div>
 	</foreignObject>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
+import { CHAMPION, cutSquare, NAME_FONT_SIZE, NAME_HEIGHT, NAME_OVERFLOW, sameEntry } from '@/component/tournament/bracket'
 
 defineOptions({ name: 'TournamentBlock' })
 
@@ -56,7 +67,8 @@ interface TournamentItem {
 }
 
 const props = defineProps<{
-	item: TournamentItem
+	// Nullable : la case du vainqueur est vide tant que le tournoi n'est pas fini.
+	item: TournamentItem | null
 	x: number
 	y: number
 	size: number
@@ -76,6 +88,15 @@ const farmerAvatar = computed(() => {
 })
 const avatarCx = computed(() => props.invert ? props.x + props.size - avatarSize.value / 3 : props.x + avatarSize.value / 3)
 const clipId = computed(() => 'avatar-clip-' + props.x + '-' + props.y)
+const boxClipId = computed(() => 'box-clip-' + props.x + '-' + props.y)
+// Le vainqueur se reconnaît à tous les tours qu'il a traversés, sa case y prend
+// le bord doré du chemin.
+const champion = inject(CHAMPION, null)
+const isChampion = computed(() => sameEntry(champion?.value, props.item))
+const shape = computed(() => cutSquare(props.x, props.y, props.size))
+// Le contenu est découpé un poil à l'intérieur du trait, comme l'avatar dont le
+// fond dépasse de 1 px tout autour.
+const innerShape = computed(() => cutSquare(props.x + 1, props.y + 1, props.size - 2))
 const blockKey = computed(() => props.x + ',' + props.y)
 const isActive = computed(() => activeBlock.value === blockKey.value)
 const entityType = computed(() => {
@@ -92,18 +113,17 @@ const entityId = computed(() => {
 // tronqué par CSS (ellipsis) seulement s'il déborde réellement. Le serveur suffixe
 // le nom par " (niveau)", retiré ici pour l'affichage.
 const displayName = computed(() => (props.item?.name ?? '').replace(/ \(\d+\)$/, ''))
-// Taille de texte proportionnelle à la case, progression adoucie sur les grosses
-// cases (base fixe + pente réduite) : ≈ 9px pour size 50, ≈ 14px pour size 120.
-const nameFontSize = computed(() => 5.5 + props.size * 0.07)
-const nameStyle = computed(() => {
-	const fs = nameFontSize.value
-	return {
-		fontSize: fs + 'px',
-		lineHeight: (fs * 1.3) + 'px',
-		padding: (fs * 0.08) + 'px ' + (fs * 0.35) + 'px',
-		borderRadius: (fs * 0.35) + 'px',
-	}
-})
+// Taille fixe, partagée avec le graphe : c'est elle qui fixe le bas du repère.
+const nameFontSize = NAME_FONT_SIZE
+const nameStyle = {
+	fontSize: nameFontSize + 'px',
+	lineHeight: (nameFontSize * 1.3) + 'px',
+	// Latérale à 0,5 et non 0,22 : elle avait été resserrée
+	// quand l'étiquette était confinée à la largeur de la case, où elle mangeait
+	// 14 % de la place du nom. Depuis NAME_OVERFLOW elle ne la prend plus au texte.
+	// Pas d'angles arrondis : une pastille sur un bracket tout en angles droits.
+	padding: (nameFontSize * 0.08) + 'px ' + (nameFontSize * 0.5) + 'px',
+}
 
 function activate() {
 	activeBlock.value = blockKey.value
@@ -116,9 +136,12 @@ function clickFarmer(e: Event) {
 	if (props.item) router.push('/farmer/' + props.item.farmer_id)
 	e.preventDefault()
 }
-function mouseenter() {
+// Position à l'écran plutôt que dans le repère du SVG : celui-ci est mis à
+// l'échelle et étiré selon la place disponible, la page ne peut pas la refaire.
+function mouseenter(e: MouseEvent) {
 	if (props.item && props.item.name) {
-		emitter.emit('tooltip', { x: props.x + props.size / 2, y: props.y + props.size, content: props.item.name })
+		const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+		emitter.emit('tooltip', { x: rect.left + rect.width / 2, y: rect.bottom, content: props.item.name })
 	}
 }
 function mouseleave() {
@@ -129,12 +152,17 @@ function mouseleave() {
 <style lang="scss" scoped>
 	.entry {
 		fill: var(--pure-white);
-		stroke: var(--background-disabled);
+		stroke: var(--bracket-line);
 		stroke-width: 2;
 	}
 	.entry[me="true"] {
-		stroke: #5fad1b;
+		stroke: var(--primary);
 		fill: #78ff0355;
+	}
+	// Après la règle « moi » et à spécificité égale : si notre participant gagne
+	// le tournoi, sa case garde le fond vert et prend le bord doré.
+	.entry[champion="true"] {
+		stroke: var(--gold);
 	}
 	.no-fight {
 		fill: var(--background);
@@ -162,8 +190,14 @@ function mouseleave() {
 		max-width: 100%;
 		box-sizing: border-box;
 		font-weight: 500;
-		color: #fff;
-		background: rgba(0, 0, 0, 0.55);
+		// Encre et surface du thème : en clair, texte foncé sur le crème du
+		// panneau ; en sombre, l'inverse, sans
+		// rien de plus à écrire. Le voile noir fixe d'avant restait noir sur un
+		// thème clair, et la surface valant exactement celle du panneau,
+		// l'étiquette ne se lit plus comme une pastille posée dessus : juste le
+		// nom, qui masque au passage le trait qui lui passerait derrière.
+		color: var(--text-color);
+		background: var(--panel-background);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;

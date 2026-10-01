@@ -6,6 +6,7 @@
 	"dark_mode": "Ночной режим",
 	"decelerate": "Замедлить",
 	"display_cell_numbers": "Показать номера ящиков",
+	"marks_foreground": "mark() на переднем плане",
 	"display_debug": "Показать отладочную информацию",
 	"display_life_bars": "Показать полоски здоровья",
 	"display_logs": "Показать отладки",

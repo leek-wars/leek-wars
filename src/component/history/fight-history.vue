@@ -34,7 +34,7 @@
 					<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
 					<v-icon v-else-if="fight.context == FightContext.CHALLENGE">mdi-flag-outline</v-icon>
 					<v-icon v-else-if="fight.type == FightType.BOSS">mdi-crown</v-icon>
-					<v-icon v-else-if="fight.context == FightContext.TOURNAMENT">mdi-trophy-outline</v-icon>
+					<v-icon v-else-if="fight.context == FightContext.TOURNAMENT">mdi-tournament</v-icon>
 					<img v-else src="/image/icon/black/garden.png">
 				</router-link>
 			</rich-tooltip-fight>
@@ -107,11 +107,11 @@ const arenaLabel = computed<[string, string]>(() => {
 		margin: 5px;
 		// color: #333;
 		text-align: center;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 15px;
 		height: 42px;
 		white-space: nowrap;
-		background: white;
+		background: var(--white);
 		position: relative;
 		.center {
 			background: rgba(255, 255, 255, 0.3);
@@ -120,17 +120,23 @@ const arenaLabel = computed<[string, string]>(() => {
 			}
 			flex: 42px 0 0;
 			height: 42px;
+			/* L'icône est centrée par le flex, pas par une line-height et des
+			   marges calées à la main : un `<v-icon>` est une boîte inline-flex
+			   d'une hauteur de 1em, donc posée sur la ligne de base du bloc et
+			   remontée par sa marge basse — elle se retrouvait ~5 px au-dessus
+			   du centre de la rangée (visible sur le sablier des combats en
+			   cours). La vue tableau du même historique centre déjà ainsi. */
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			img {
 				width: 22px;
 				height: 22px;
-				margin: 10px 6px;
 				opacity: 0.8;
 			}
 			i {
-				color: #333;
-				line-height: 42px;
+				color: var(--grey-2);
 				font-size: 26px;
-				margin: 8px;
 				&.timersand {
 					animation: rotate 2s linear infinite;
 				}
@@ -183,26 +189,102 @@ const arenaLabel = computed<[string, string]>(() => {
 			}
 		}
 	}
-	.win {
-		background-color: #b6f182;
+	/* ====== Peau v2 : les aplats pastel historiques, au pixel près ====== */
+	body.v2 {
+		.win {
+			background-color: #b6f182;
+		}
+		.draw {
+			background: #dcdcdc;
+		}
+		.defeat {
+			background-color: #ffb3ae;
+		}
+		.generating {
+			background: var(--pure-white);
+		}
+		&.dark {
+			.win {
+				background-color: #3c651b;
+			}
+			.draw {
+				background: var(--grey-3);
+			}
+			.defeat {
+				background-color: #76342f;
+			}
+		}
 	}
-	body.dark .win {
-		background-color: #3c651b;
+
+	/* ====== v3 : rangée neutre, liseré de résultat ======
+	   Même langue que la vue tableau du même historique (fights-history-table) :
+	   la couleur du résultat tient dans un liseré de 4 px et une teinte légère
+	   de la rangée, pas dans un aplat plein. L'aplat venait du v2 ; posé sur les
+	   surfaces sombres du thème il donnait des pastilles délavées, et sa version
+	   sombre (#3c651b, #76342f) ne descend d'aucun jeton — les deux vues d'un
+	   même historique se coloraient donc différemment. Les jetons --result-*
+	   existent dans les deux thèmes et portent déjà le tableau. */
+	body:not(.v2) {
+		.fight {
+			--result: var(--text-color-faint);
+			background: var(--background-row);
+			border: 1px solid var(--border-strong);
+			box-shadow: inset 4px 0 0 var(--result);
+			/* Cartes plus hautes en v3 : 46 px au lieu de 42, le v2 garde sa
+			   hauteur au pixel. Les noms gagnent du rembourrage pour rester au
+			   centre optique, l'heure garde son coin bas. */
+			height: 46px;
+			/* `height: 100%` et pas une hauteur en pixels : la carte est en
+			   `border-box`, sa hauteur comprend donc ses deux bordures. Des enfants
+			   calés sur la hauteur de la carte dépassaient d'un pixel en bas. En
+			   pourcentage, ils suivent la carte quelle que soit sa hauteur. */
+			.center {
+				flex-basis: 46px;
+				height: 100%;
+			}
+			.fighters {
+				height: 100%;
+			}
+			/* 44 px de contenu (46 moins les bordures) = 30 d'interligne + 2 × 7. */
+			.fighter {
+				padding: 7px 0;
+			}
+		}
+		.win {
+			--result: var(--result-win);
+			background: color-mix(in srgb, var(--result-win) 14%, var(--background-row));
+		}
+		.draw {
+			--result: var(--result-draw);
+			background: color-mix(in srgb, var(--result-draw) 10%, var(--background-row));
+		}
+		.defeat {
+			--result: var(--result-defeat);
+			background: color-mix(in srgb, var(--result-defeat) 14%, var(--background-row));
+		}
+		/* En génération : liseré éteint, la barre de progression porte l'info. */
+		.generating {
+			--result: var(--text-color-faint);
+			background: var(--background-row);
+		}
+		/* Le bouton central se détache par le trait, pas par un voile blanc
+		   (invisible en clair, éclaircissant en sombre). */
+		.fight .center {
+			background: none;
+			border-left: 1px solid var(--border);
+			border-right: 1px solid var(--border);
+			&:hover {
+				background: color-mix(in srgb, var(--text-color) 10%, transparent);
+			}
+			i {
+				color: var(--text-color-secondary);
+			}
+		}
 	}
-	.draw {
-		background: #dcdcdc;
-	}
-	body.dark .draw {
-		background: #444;
-	}
-	.defeat {
-		background-color: #ffb3ae;
-	}
-	body.dark .defeat {
-		background-color: #76342f;
-	}
-	.generating {
-		background: var(--pure-white);
+	/* L'icône du potager est une encre noire : invisible sur la rangée sombre.
+	   Même remède que les onglets de la barre de page (leekwars-shell-v3). */
+	body.dark:not(.v2) .fight .center img {
+		filter: invert(1);
 	}
 	.progress-bar {
 		position: absolute;
@@ -211,13 +293,13 @@ const arenaLabel = computed<[string, string]>(() => {
 		right: 0;
 		height: 3px;
 		background: var(--background-disabled);
-		border-bottom-left-radius: 3px;
-		border-bottom-right-radius: 3px;
+		border-bottom-left-radius: var(--radius-small);
+		border-bottom-right-radius: var(--radius-small);
 		overflow: hidden;
 	}
 	.progress-bar-fill {
 		height: 100%;
-		background: var(--primary);
+		background: var(--primary-surface);
 		transition: width 0.4s ease;
 	}
 	@keyframes rotate {

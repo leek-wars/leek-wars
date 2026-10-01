@@ -1,12 +1,12 @@
 <template>
 	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" :max-height="maxHeight" :location="openBottom ? 'bottom' : 'top'" :origin="openBottom ? 'top' : 'bottom'" :offset="nodge ? [0, 20] : 0" :open-delay="_open_delay" :close-delay="_close_delay" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" :disabled="disabled" :content-class="'rich-item-tooltip-menu'" :content-props="{ style: 'max-height:' + maxHeight + 'px' }" @update:model-value="onToggle">
 		<template #activator="{ props: activatorProps }">
-			<span v-bind="activatorProps" @pointerenter="onHover" @mouseenter="onHover" @focus="onHover">
+			<span v-bind="activatorProps" class="rich-tooltip-activator" @pointerenter="onHover" @mouseenter="onHover" @focus="onHover">
 				<slot :props="activatorProps"></slot>
 			</span>
 		</template>
 		<div class="card" :style="{ maxHeight: maxHeight + 'px' }" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="(v: unknown) => setParent(v as boolean)" @retrieve="(v: unknown) => $emit('retrieve', v as unknown[])" />
+			<item-preview :item="item" :quantity="quantity" :instance="instance" :inventory="inventory" :leek="leek" :craft-cost="craftCost" @update:modelValue="(v: unknown) => setParent(v as boolean)" @retrieve="(v: unknown) => $emit('retrieve', v as unknown[])" />
 		</div>
 	</v-menu>
 </template>
@@ -14,10 +14,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import ItemPreview from '@/component/market/item-preview.vue'
+import type { InventoryItem } from '@/model/farmer'
 import { ItemTemplate } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import type { Leek } from '@/model/leek'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 
 defineOptions({ name: 'RichTooltipItem' })
 
@@ -25,23 +26,41 @@ const props = withDefaults(defineProps<{
 	item: ItemTemplate
 	quantity?: number
 	bottom?: boolean
+	/**
+	 * Fige le sens d'ouverture au lieu de le retourner quand la place manque.
+	 *
+	 * Sur une grille dense comme la palette d'alterations, un retour vers le
+	 * haut fait recouvrir par l'infobulle les cases que le joueur est en train de
+	 * comparer. Mieux vaut ouvrir vers le bas et laisser l'infobulle defiler.
+	 */
+	pin?: boolean
 	instant?: boolean
 	nodge?: boolean
 	inventory?: boolean
 	openDelay?: number
 	leek?: Leek
 	craftCost?: number
+	/** Instance affichee, quand elle porte des donnees propres (alterations). */
+	instance?: InventoryItem | null
 }>(), {
 	craftCost: 0,
 	quantity: undefined,
 	openDelay: undefined,
 	leek: undefined,
+	instance: null,
 })
 
 const emit = defineEmits<{
 	'update:modelValue': [value: boolean]
 	'retrieve': [items: unknown[]]
 }>()
+
+/**
+ * Hauteur habituelle d'une fiche d'objet, marge comprise : les altérations font 331
+ * à 375 px selon qu'elles portent une note. Sert à décider si la fiche tient d'un
+ * côté de la case survolée, pas à la dimensionner.
+ */
+const CARD_HEIGHT = 380
 
 const locked = ref(false)
 const mouse = ref(false)
@@ -68,9 +87,39 @@ function computeBounds() {
 	const padding = 16
 	const spaceBelow = vh - rect.bottom - padding
 	const spaceAbove = rect.top - padding
-	const preferBottom = props.bottom !== false
+	// Prop BOOLEENNE : absente, Vue la caste a `false` et non a `undefined`. Un
+	// `props.bottom !== false` valait donc toujours false, et tout appelant qui ne
+	// precisait rien preferait le HAUT — y compris les infobulles epinglees, dont le
+	// `pin` ne faisait que figer ce mauvais sens. Le sens par defaut
+	// reste le haut, comme dans tout le site ; qui veut le bas le demande.
+	const preferBottom = props.bottom
 	const prefSpace = preferBottom ? spaceBelow : spaceAbove
 	const altSpace = preferBottom ? spaceAbove : spaceBelow
+	if (props.pin) {
+		// Sens impose, mais pas au prix de la lisibilite : une fiche coupee ne sert a
+		// rien. On garde la direction demandee TANT QUE la fiche y tient entiere ; sinon
+		// on passe du cote ou elle tient.
+		//
+		// La hauteur maximale vaut EXACTEMENT la place du cote retenu, sans plancher :
+		// Vuetify mesure la carte une fois plafonnee par ce max-height, et un plancher
+		// de 200 px la faisait retourner toute seule des que la palette approchait du bas
+		// de l'ecran, en recouvrant la barre d'onglets et la forge.
+		if (prefSpace >= CARD_HEIGHT) {
+			openBottom.value = preferBottom
+			maxHeight.value = prefSpace
+		} else if (altSpace >= CARD_HEIGHT) {
+			openBottom.value = !preferBottom
+			maxHeight.value = altSpace
+		} else {
+			// Elle ne tient d'aucun cote (petite fenetre) : la borner a la place d'un
+			// cote la couperait pour rien. On lui donne toute la hauteur de l'ecran et
+			// on laisse Vuetify la recaler dedans — elle recouvre la case survolee, ce
+			// qui reste preferable a une fiche illisible.
+			openBottom.value = altSpace > prefSpace ? !preferBottom : preferBottom
+			maxHeight.value = Math.max(120, vh - 2 * padding)
+		}
+		return
+	}
 	if (prefSpace >= 300 || prefSpace >= altSpace) {
 		openBottom.value = preferBottom
 		maxHeight.value = Math.max(200, prefSpace)
@@ -126,7 +175,7 @@ onBeforeUnmount(() => {
 	padding: 4px;
 }
 .stats > div:nth-child(2n+1) {
-	background-color: white;
+	background-color: var(--white);
 }
 .stats > div:nth-child(2n) {
 	background-color: #f2f2f2;

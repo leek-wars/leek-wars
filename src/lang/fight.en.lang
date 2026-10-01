@@ -40,6 +40,7 @@
 	"n_power": "{0} power",
 	"n_poison": "a poison of {0}",
 	"open_chest": "{entity} opens {chest} and gets: {resources}",
+	"plant_awake": "{plant} wakes up as {leek} walks in",
 	"reduce_effects": "The effects on {leek} are reduced by {value}",
 	"remove_poisons": "The poisons of {leek} are neutralized",
 	"remove_shackles": "The shackles of {leek} are destroyed",

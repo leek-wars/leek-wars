@@ -26,7 +26,7 @@ vi.mock('@/router', () => ({ default: routerMock }))
 vi.mock('@/model/socket', () => ({ SocketMessage: { ARENA_REGISTER: 10, ARENA_LEAVE: 11 } }))
 vi.mock('@/model/leek', () => ({ Leek: class Leek {} }))
 
-import { Arena, arenaModeIcon } from '@/model/arena'
+import { Arena, ARENA_PREFERENCES, arenaModeIcon, arenaModeLabel } from '@/model/arena'
 
 const registrations = () => JSON.parse(localStorage.getItem('arena-registrations') || '{}')
 
@@ -48,6 +48,28 @@ describe('arenaModeIcon', () => {
 	it('renvoie un fallback pour un mode inconnu', () => {
 		expect(arenaModeIcon(99)).toBe('mdi-help-circle-outline')
 		expect(arenaModeIcon(-1)).toBe('mdi-help-circle-outline')
+	})
+	it('distingue « Aléatoire » de « Peu importe »', () => {
+		expect(arenaModeIcon(-2)).toBe('mdi-dice-multiple')
+	})
+})
+
+describe('arenaModeLabel', () => {
+	it('renvoie la clé du mode, de « Peu importe » et de « Aléatoire »', () => {
+		expect(arenaModeLabel(0)).toBe('arena_mode_br')
+		expect(arenaModeLabel(3)).toBe('arena_mode_colossus')
+		expect(arenaModeLabel(-1)).toBe('arena_no_preference')
+		expect(arenaModeLabel(-2)).toBe('arena_random')
+	})
+	it('retombe sur « Peu importe » pour une valeur inconnue', () => {
+		expect(arenaModeLabel(99)).toBe('arena_no_preference')
+		expect(arenaModeLabel(-7)).toBe('arena_no_preference')
+	})
+})
+
+describe('ARENA_PREFERENCES', () => {
+	it('propose « Peu importe », « Aléatoire », puis les quatre modes', () => {
+		expect(ARENA_PREFERENCES).toEqual([-1, -2, 0, 1, 2, 3])
 	})
 })
 

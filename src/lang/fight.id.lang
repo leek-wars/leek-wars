@@ -39,6 +39,7 @@
 	"n_power": "{0} kekuatan",
 	"n_poison": "racun {0}",
 	"open_chest": "{entity} buka peti {chest} dan dapatkan: {resources}",
+	"plant_awake": "{plant} terbangun saat {leek} masuk",
 	"reduce_effects": "Efek {leek} dikurangi dengan {value}",
 	"remove_poisons": "Racun {leek} dinetralkan",
 	"remove_shackles": "Belenggu {leek} hancur",

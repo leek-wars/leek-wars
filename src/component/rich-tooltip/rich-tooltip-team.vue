@@ -1,7 +1,7 @@
 <template>
 	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :max-width="600" :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'scale-transition'" :open-on-hover="!locked" offset-y @update:model-value="open($event)">
 		<template #activator="{ props: activatorProps }">
-			<span v-bind="activatorProps">
+			<span v-bind="activatorProps" class="rich-tooltip-activator">
 				<slot :props="activatorProps"></slot>
 			</span>
 		</template>
@@ -20,7 +20,7 @@
 						<ranking-badge v-if="team && team.ranking <= 1000" :id="team.id" :ranking="team.ranking" category="team" />
 						<span class="level">
 							• {{ $t('main.n_farmers', [team.farmers.length]) }}
-							• {{ team.leek_count }} <img src="/image/icon/black/leek.png">
+							• {{ team.leek_count }} <v-icon>mdi-leek</v-icon>
 							• {{ $t('main.level_n', [team.level]) }}</span>
 						<v-btn class="expand" variant="text" size="x-small" :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="expand = !expand" />
 					</div>
@@ -92,6 +92,10 @@ function open(_v: boolean) {
 			if (expand.value) {
 				menu.value?.updateLocation?.()
 			}
+		}, () => {
+			// Requête échouée : sans ça le tooltip reste bloqué sur son loader pour toute la
+			// session, `content_created` empêchant toute nouvelle tentative à la réouverture.
+			content_created.value = false
 		})
 	}
 }
@@ -168,7 +172,7 @@ function setParent(event: boolean) {
 	.talent-more {
 		font-size: 15px;
 		margin-left: 5px;
-		color: #888;
+		color: var(--grey-7);
 		display: inline-block;
 		vertical-align: top;
 		margin-top: 10px;
@@ -185,7 +189,7 @@ function setParent(event: boolean) {
 		margin-left: 5px;
 		vertical-align: top;
 		margin-top: 10px;
-		color: #555;
+		color: var(--grey-4);
 		img {
 			width: 16px;
 			opacity: 0.5;

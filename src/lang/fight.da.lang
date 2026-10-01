@@ -39,6 +39,7 @@
 	"n_power": "{0} strøm",
 	"n_poison": "en gift på {0}",
 	"open_chest": "{entity} åbn kisten {chest} og få: {resources}",
+	"plant_awake": "{plant} vågner ved {leek}",
 	"reduce_effects": "Virkningerne af {leek} reduceres med {value}",
 	"remove_poisons": "{leek}'s gifte neutraliseres",
 	"remove_shackles": "{leek}'s lænker er ødelagt",

@@ -6,6 +6,7 @@
 	"dark_mode": "Yötila",
 	"decelerate": "Hidastaa",
 	"display_cell_numbers": "Näytä laatikoiden numerot",
+	"marks_foreground": "mark() etualalla",
 	"display_debug": "Näytä virheenkorjaustiedot",
 	"display_life_bars": "Näytä terveyspalkit",
 	"display_logs": "Näytä virheenkorjaukset",

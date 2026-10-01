@@ -18,12 +18,24 @@ class MapOptions {
 	public gridColor!: string
 	public smoothPattern!: boolean
 	public dark!: boolean
+	public nightStrength!: number
 	public reachableColor!: string
 	public backgroundColor!: string
 	public patternColor!: string
 	public backgroundTileSize!: number
 	public patternTileSize!: number
 	public checkerboardColor!: string
+}
+
+// Mode sombre des cartes : le fond, les décors et les obstacles sont
+// teintés par un multiply de cette couleur. Chaque carte dose son
+// assombrissement avec `nightStrength` (0 = intacte, 1 = teinte pleine) : la
+// banquise et la plage, éblouissantes en thème sombre, prennent tout, les
+// cartes déjà sombres comme le cimetière beaucoup moins.
+const NIGHT_TINT = { r: 57, g: 69, b: 103 }
+
+function nightTint(strength: number) {
+	return [NIGHT_TINT.r, NIGHT_TINT.g, NIGHT_TINT.b].map(c => Math.round(255 + (c - 255) * strength))
 }
 
 class RandomGenerator {
@@ -44,10 +56,17 @@ abstract class Map {
 	public tacticLargeColors: string[]
 	public seed: number = 0
 	public random = new RandomGenerator()
+	public nightColor: string
+	public nightFilter: string
 
 	constructor(game: Game, options: MapOptions) {
 		this.game = game
 		this.options = options
+		const [r, g, b] = nightTint(options.nightStrength)
+		this.nightColor = `rgb(${r}, ${g}, ${b})`
+		// Les traces posées pendant le combat (impacts, sang, douilles) arrivent
+		// après la teinte du fond : ctx.filter les assombrit d'autant.
+		this.nightFilter = `brightness(${((0.3 * r + 0.59 * g + 0.11 * b) / 255).toFixed(2)})`
 		this.tacticSmallColors = [
 			options.tacticSmallColor,
 			LeekWars.shadeColor(options.tacticSmallColor, -35),
@@ -59,6 +78,13 @@ abstract class Map {
 			LeekWars.shadeColor(options.tacticLargeColor, -70),
 		]
 	}
+	// Rendu sombre effectif : la carte l'est nativement, ou le mode nuit
+	// l'assombrit. Pilote aussi le style du HUD.
+	public get isDark() { return this.options.dark || this.game.night }
+	public get gridColor() { return this.game.night ? '#fff' : this.options.gridColor }
+	public get reachableColor() { return this.game.night ? '#fff' : this.options.reachableColor }
+	public get checkerboardColor() { return this.game.night ? '#ffffff18' : this.options.checkerboardColor }
+
 	create() {
 		this.options.sound.load(this.game)
 		this.options.groundTexture.load(this.game)
@@ -108,6 +134,20 @@ abstract class Map {
 	drawDetails(_ctx: CanvasRenderingContext2D) {
 		// nothing by default
 	}
+	// Projection commune à tous les décors de carte, appelée depuis un contexte
+	// déjà translaté sur l'objet. `shadow` est encore nul tant que la texture
+	// n'a pas fini de charger : `Ground.resize` n'attend que `initialized` et
+	// peut donc redessiner le fond en plein chargement.
+	protected drawShadow(ctx: CanvasRenderingContext2D, texture: Texture, w: number, h: number = w) {
+		if (!texture.shadow) { return }
+		ctx.save()
+		ctx.scale(1, -SHADOW_SCALE)
+		ctx.rotate(-Math.PI / 4)
+		ctx.translate(0, -h)
+		ctx.globalAlpha = SHADOW_ALPHA
+		ctx.drawImage(texture.shadow, -w / 2, 0, w, h)
+		ctx.restore()
+	}
 	drawCellDetails(_ctx: CanvasRenderingContext2D, _cell: Cell) {
 		// nothing by default
 	}
@@ -128,6 +168,7 @@ class Beach extends Map {
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
+			nightStrength: 1,
 			reachableColor: '#333',
 			backgroundColor: '#f8efda',
 			patternColor: '#cbedec',
@@ -239,6 +280,7 @@ class Desert extends Map {
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
+			nightStrength: 0.9,
 			reachableColor: '#333',
 			backgroundColor: '#fbbe36',
 			patternColor: '#daccba',
@@ -365,6 +407,7 @@ class Factory extends Map {
 			gridColor: '#fff',
 			smoothPattern: true,
 			dark: true,
+			nightStrength: 0.6,
 			reachableColor: '#fff',
 			backgroundColor: '#555',
 			patternColor: '#aaa',
@@ -436,13 +479,7 @@ class Factory extends Map {
 			ctx.save()
 			ctx.translate(x, y)
 
-			ctx.save()
-			ctx.scale(1, -SHADOW_SCALE)
-			ctx.rotate(-Math.PI / 4)
-			ctx.translate(0, -s * r)
-			ctx.globalAlpha = SHADOW_ALPHA
-			ctx.drawImage(T.factory_bolt.shadow!, -s / 2, 0, s, s * r)
-			ctx.restore()
+			this.drawShadow(ctx, T.factory_bolt, s, s * r)
 
 			ctx.drawImage(T.factory_bolt.texture, -s / 2, -s * r, s, s * r)
 			ctx.restore()
@@ -509,6 +546,7 @@ class Forest extends Map {
 			gridColor: '#fff',
 			smoothPattern: false,
 			dark: true,
+			nightStrength: 0.55,
 			reachableColor: '#fff',
 			backgroundColor: '#3b221b',
 			patternColor: '#3b940f',
@@ -576,15 +614,7 @@ class Forest extends Map {
 			ctx.save()
 			ctx.translate(x, y)
 
-			if (tex.shadow) {
-				ctx.save()
-				ctx.scale(1, -SHADOW_SCALE)
-				ctx.rotate(-Math.PI / 4)
-				ctx.translate(0, -s)
-				ctx.globalAlpha = SHADOW_ALPHA
-				ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-				ctx.restore()
-			}
+			this.drawShadow(ctx, tex, s)
 
 			ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 			ctx.restore()
@@ -681,6 +711,7 @@ class Glacier extends Map {
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
+			nightStrength: 1,
 			reachableColor: '#333',
 			backgroundColor: '#eee',
 			patternColor: '#30f6f6',
@@ -763,6 +794,7 @@ class Nexus extends Map {
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
+			nightStrength: 1,
 			reachableColor: '#333',
 			backgroundColor: '#fff',
 			patternColor: '#fff',
@@ -790,6 +822,7 @@ class DarkNexus extends Map {
 			gridColor: '#fff',
 			smoothPattern: true,
 			dark: true,
+			nightStrength: 0,
 			reachableColor: '#fff',
 			backgroundColor: '#000',
 			patternColor: '#000',
@@ -817,6 +850,7 @@ class Temple extends Map {
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: true,
+			nightStrength: 0.65,
 			reachableColor: '#fff',
 			backgroundColor: '#9a8d6b',
 			patternColor: '#66822d',
@@ -881,15 +915,7 @@ class Temple extends Map {
 			ctx.save()
 			ctx.translate(x, y)
 
-			if (tex.shadow) {
-				ctx.save()
-				ctx.scale(1, -SHADOW_SCALE)
-				ctx.rotate(-Math.PI / 4)
-				ctx.translate(0, -s)
-				ctx.globalAlpha = SHADOW_ALPHA
-				ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-				ctx.restore()
-			}
+			this.drawShadow(ctx, tex, s)
 
 			ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 			ctx.restore()
@@ -940,6 +966,7 @@ class Japan extends Map {
 			gridColor: '#aaa',
 			smoothPattern: false,
 			dark: false,
+			nightStrength: 0.65,
 			reachableColor: '#fff',
 			backgroundColor: '#3b940f',
 			patternColor: '#999999',
@@ -997,15 +1024,7 @@ class Japan extends Map {
 				ctx.save()
 				ctx.translate(x, y)
 
-				if (tex.shadow) {
-					ctx.save()
-					ctx.scale(1, -SHADOW_SCALE)
-					ctx.rotate(-Math.PI / 4)
-					ctx.translate(0, -s)
-					ctx.globalAlpha = SHADOW_ALPHA
-					ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-					ctx.restore()
-				}
+				this.drawShadow(ctx, tex, s)
 
 				ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 				ctx.restore()
@@ -1111,6 +1130,7 @@ class Castle extends Map {
 			gridColor: '#aaa',
 			smoothPattern: false,
 			dark: false,
+			nightStrength: 0.6,
 			reachableColor: '#fff',
 			backgroundColor: '#666666',
 			patternColor: '#3b221b',
@@ -1169,15 +1189,7 @@ class Castle extends Map {
 				ctx.save()
 				ctx.translate(x, y)
 
-				if (tex.shadow) {
-					ctx.save()
-					ctx.scale(1, -SHADOW_SCALE)
-					ctx.rotate(-Math.PI / 4)
-					ctx.translate(0, -s)
-					ctx.globalAlpha = SHADOW_ALPHA
-					ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-					ctx.restore()
-				}
+				this.drawShadow(ctx, tex, s)
 
 				ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 				ctx.restore()
@@ -1283,6 +1295,7 @@ class Cemetery extends Map {
 			gridColor: '#aaa',
 			smoothPattern: false,
 			dark: true,
+			nightStrength: 0.25,
 			reachableColor: '#fff',
 			backgroundColor: '#170800',
 			patternColor: '#302c29',
@@ -1335,15 +1348,7 @@ class Cemetery extends Map {
 				ctx.save()
 				ctx.translate(x, y)
 
-				if (tex.shadow) {
-					ctx.save()
-					ctx.scale(1, -SHADOW_SCALE)
-					ctx.rotate(-Math.PI / 4)
-					ctx.translate(0, -s)
-					ctx.globalAlpha = SHADOW_ALPHA
-					ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
-					ctx.restore()
-				}
+				this.drawShadow(ctx, tex, s)
 
 				ctx.drawImage(tex.texture, -s / 2, -s, s, s)
 				ctx.restore()

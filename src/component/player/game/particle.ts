@@ -1,8 +1,9 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from '@/component/player/game/game'
 import { Position } from '@/component/player/game/position'
-import { T, Texture } from "@/component/player/game/texture"
+import { isDrawable, isPainted, T, Texture } from "@/component/player/game/texture"
 import { Cell } from '@/model/cell'
+import { blitCell, blitDisc, CELL, Discs, discs, prepareCells, prepareDiscs } from './particle-sprites'
 import { S } from './sound'
 
 const NUM_SHOTS_SPRITES = 4
@@ -70,6 +71,12 @@ abstract class Particle {
 		// nothing to do
 	}
 	public abstract draw(ctx: CanvasRenderingContext2D): void
+	/**
+	 * Dessin à plat, facultatif (cf. particle-sprites.ts) : la particule se pose en copies
+	 * 1:1 dans le repère du canvas, son origine en (x, y), à `k` pixels par unité du
+	 * terrain. Seulement quand elle n'est pas tournée, cf. Particles.draw.
+	 */
+	public blit?(ctx: CanvasRenderingContext2D, x: number, y: number, k: number): void
 }
 
 abstract class CollideParticle extends Particle {
@@ -225,7 +232,39 @@ class Lightning extends Particle {
 	}
 }
 
-class Fire extends Particle {
+/**
+ * Particule dessinée comme une case d'une planche (flammes, gaz), agrandie et estompée
+ * selon son âge. Posée à plat, elle passe par une case déjà agrandie (cf. particle-sprites.ts).
+ */
+abstract class CellParticle extends Particle {
+	protected abstract cellSheet(): HTMLImageElement | HTMLCanvasElement
+	protected abstract cellIndex(): number
+	protected abstract cellSize(): number
+	protected abstract cellAlpha(): number
+
+	public draw(ctx: CanvasRenderingContext2D) {
+		ctx.globalAlpha = this.cellAlpha()
+		const size = this.cellSize()
+		ctx.drawImage(this.cellSheet(), this.cellIndex() * CELL, 0, CELL, CELL, -size / 2, -size / 2, size, size)
+		ctx.globalAlpha = 1
+	}
+	public blit(ctx: CanvasRenderingContext2D, x: number, y: number, k: number) {
+		ctx.globalAlpha = this.cellAlpha()
+		blitCell(ctx, this.cellSheet(), this.cellIndex(), x, y, this.cellSize() * k)
+		ctx.globalAlpha = 1
+	}
+
+	/** Ajoute à `out` les cases [index, taille en pixels] que `probe` traverse au cours de sa vie, à `k` pixels par unité. */
+	public static cellsOverLife(probe: CellParticle, maxLife: number, k: number, out: Map<number, [number, number]>) {
+		for (let life = 0; life <= maxLife; life += 0.25) {
+			probe.life = life
+			const cell = probe.cellIndex(), size = Math.round(probe.cellSize() * k)
+			out.set(cell * 1024 + size, [cell, size])
+		}
+	}
+}
+
+class Fire extends CellParticle {
 	constructor(game: Game, x: number, y: number, z: number, angle: number, thrown: boolean) {
 		super(game, x, y, z, FIRE_LIFE)
 		angle += (Math.random() * (Math.PI / 10)) - Math.PI / 20
@@ -234,30 +273,24 @@ class Fire extends Particle {
 		this.dx = Math.cos(angle) * speed
 		this.dy = Math.sin(angle) * speed
 	}
-	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.globalAlpha = this.life / 70
-		const size = 60 - this.life / 2.2
-		const textureId = 10 - Math.round(this.life / 7)
-		ctx.drawImage(T.fire.texture, textureId * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
-		ctx.globalAlpha = 1
-	}
+	protected cellSheet() { return T.fire.texture }
+	protected cellIndex() { return 10 - Math.round(this.life / 7) }
+	protected cellSize() { return 60 - this.life / 2.2 }
+	protected cellAlpha() { return this.life / 70 }
 }
 
-class SimpleFire extends Particle {
+class SimpleFire extends CellParticle {
 	constructor(game: Game, x: number, y: number, z: number, angle: number) {
 		super(game, x, y, z, FIRE_LIFE)
 		this.dx = Math.cos(angle)
 		this.dy = Math.sin(angle)
 	}
-	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.globalAlpha = this.life / 100
-		const size = 70 - this.life / 2.5
-		const textureId = 10 - Math.round(this.life / 10)
-		ctx.drawImage(T.fire.texture, textureId * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
-		ctx.globalAlpha = 1
-	}
+	protected cellSheet() { return T.fire.texture }
+	protected cellIndex() { return 10 - Math.round(this.life / 10) }
+	protected cellSize() { return 70 - this.life / 2.5 }
+	protected cellAlpha() { return this.life / 100 }
 }
-class Gaz extends Particle {
+class Gaz extends CellParticle {
 	public texture: Texture
 	public textureID: number
 	constructor(game: Game, x: number, y: number, z: number, angle: number, thrown: boolean, texture: Texture) {
@@ -270,12 +303,10 @@ class Gaz extends Particle {
 		this.dy = Math.sin(angle) * speed
 		this.texture = texture
 	}
-	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.globalAlpha = this.life / 100
-		const size = 70 - this.life / 2.5
-		ctx.drawImage(this.texture.texture, this.textureID * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
-		ctx.globalAlpha = 1
-	}
+	protected cellSheet() { return this.texture.texture }
+	protected cellIndex() { return this.textureID }
+	protected cellSize() { return 70 - this.life / 2.5 }
+	protected cellAlpha() { return this.life / 100 }
 }
 
 class Meteorite extends Particle {
@@ -392,6 +423,120 @@ interface ExplosionSource {
 	points: ExplosionPoint[]
 }
 
+/** Dégradé de feu par défaut selon la vie restante d'un point : blanc → jaune → rouge → noir (composantes 0-1, non bornées). */
+function fireRGB(life: number): [number, number, number] {
+	const P = RealisticExplosion.POINT_LIFE, dir = P / 4
+	return [(life - P / 4) / dir, (life - 2 * P / 4) / dir, (life - 3 * P / 4) / dir]
+}
+
+function fireColor(life: number): string {
+	const [r, g, b] = fireRGB(life)
+	return 'rgb(' + r * 255 + ', ' + g * 255 + ', ' + b * 255 + ')'
+}
+
+/** Palette de la Bazooka au plutonium : jaune → orange (t : 1 = neuve → 0 = éteinte). */
+export const PLUTONIUM_FIRE = (t: number) => 'rgb(255, ' + Math.round(165 + 90 * t) + ', 0)'
+
+const PALETTES = new Map<((t: number) => string) | undefined, string[]>()
+
+/**
+ * Couleur des boules de feu par vie restante arrondie (0 … POINT_LIFE), pour partager les
+ * disques préparés. Composantes bornées : tous les noirs donnent la même chaîne.
+ */
+export function explosionColors(colorFn?: (t: number) => string): string[] {
+	let colors = PALETTES.get(colorFn)
+	if (!colors) {
+		const P = RealisticExplosion.POINT_LIFE
+		const byte = (v: number) => Math.round(Math.min(255, Math.max(0, v * 255)))
+		colors = []
+		for (let life = 0; life <= P; life++) {
+			colors.push(colorFn ? colorFn(life / P) : 'rgb(' + fireRGB(life).map(byte).join(', ') + ')')
+		}
+		PALETTES.set(colorFn, colors)
+	}
+	return colors
+}
+
+/**
+ * Explosion posée à plat : chaque boule de feu devient un disque cuit (cf.
+ * particle-sprites.ts) de la couleur de sa vie arrondie. Les points d'une même vague sont
+ * contigus et ont la même vie, donc la même couleur et le même alpha.
+ */
+function blitExplosion(ctx: CanvasRenderingContext2D, sources: ExplosionSource[], colors: string[], x: number, y: number, k: number) {
+	const P = RealisticExplosion.POINT_LIFE
+	for (const source of sources) {
+		let life = NaN
+		let table: Discs | null = null
+		for (const point of source.points) {
+			if (point.life !== life) {
+				life = point.life
+				// ⚠️ Au-dessus du tiers de sa vie, l'alpha dépasse 1 : le canvas l'IGNORE et le
+				// point garde celui d'une vague plus ancienne (rendu d'origine, cf. draw)
+				ctx.globalAlpha = Math.max(0, life / (P / 3))
+				table = ctx.globalAlpha > 0 ? discs(colors[Math.min(P, Math.max(0, Math.round(life)))]) : null
+			}
+			if (table) {
+				blitDisc(ctx, table, x + point.x * k, y + (point.y - point.z) * k, point.s * k)
+			}
+		}
+	}
+	ctx.globalAlpha = 1
+}
+
+/** Rayons passés à addRealisticExplosion : du trébuchet (1,5) à la roquette (3). */
+const EXPLOSION_RADIUS_MIN = 1.5
+const EXPLOSION_RADIUS_MAX = 3
+
+/**
+ * Feuilles de disques d'une palette à l'échelle `k` : pour chaque couleur, les rayons
+ * qu'un point de cette vie peut avoir — taille tirée entre 2r et 3,2r + 5 (add_point),
+ * puis +0,05 par unité de vie écoulée (update). Hors de ces bornes, cercle direct.
+ */
+function prepareExplosion(colors: string[], k: number) {
+	const P = RealisticExplosion.POINT_LIFE
+	const ranges = new Map<string, [number, number]>()
+	for (let life = 0; life <= P; life++) {
+		const grown = 0.05 * (P - life)
+		const lo = Math.floor(2 * k * (2 * EXPLOSION_RADIUS_MIN + grown - 0.05)) - 1
+		const hi = Math.ceil(2 * k * (3.2 * EXPLOSION_RADIUS_MAX + 5 + grown + 0.05)) + 1
+		const range = ranges.get(colors[life])
+		ranges.set(colors[life], range ? [Math.min(range[0], lo), Math.max(range[1], hi)] : [lo, hi])
+	}
+	for (const [color, [lo, hi]] of ranges) {
+		prepareDiscs(color, lo, hi)
+	}
+}
+
+/**
+ * Prépare, à `k` pixels par unité du terrain, les feuilles de sprites des particules
+ * posées à plat : disques des explosions (dégradé de feu et `palettes` des armes du
+ * combat), cases de flammes et de gaz dont la planche est chargée.
+ */
+function prepareParticleSprites(k: number, palettes: ((t: number) => string)[]) {
+	prepareExplosion(explosionColors(), k)
+	for (const palette of palettes) {
+		prepareExplosion(explosionColors(palette), k)
+	}
+	const ready = (image: HTMLImageElement | HTMLCanvasElement | undefined): image is HTMLImageElement | HTMLCanvasElement =>
+		!!image && (image instanceof HTMLImageElement ? isPainted(image) : isDrawable(image))
+	if (ready(T.fire.texture)) {
+		const cells = new Map<number, [number, number]>()
+		CellParticle.cellsOverLife(Object.create(Fire.prototype), FIRE_LIFE, k, cells)
+		CellParticle.cellsOverLife(Object.create(SimpleFire.prototype), FIRE_LIFE, k, cells)
+		prepareCells(T.fire.texture, cells.values())
+	}
+	for (const texture of [T.gaz, T.orange_gaz]) {
+		if (!ready(texture.texture)) { continue }
+		const cells = new Map<number, [number, number]>()
+		for (let id = 0; id < 5; id++) {
+			const probe = Object.create(Gaz.prototype) as Gaz
+			probe.textureID = id
+			CellParticle.cellsOverLife(probe, GAZ_LIFE, k, cells)
+		}
+		prepareCells(texture.texture, cells.values())
+	}
+}
+
 class RealisticExplosion extends Particle {
 	static LIFE = 65
 	static POINT_LIFE = 50
@@ -401,12 +546,14 @@ class RealisticExplosion extends Particle {
 	// Couleur en fonction de l'âge de la particule (t : 1 = neuve → 0 = éteinte).
 	// Si absent, dégradé de feu par défaut (jaune → orange → rouge → noir).
 	public colorFn: ((t: number) => string) | undefined
+	private colors: string[]
 
 	constructor(game: Game, x: number, y: number, radius: number, colorFn?: (t: number) => string) {
 		super(game, x, y, 0, RealisticExplosion.LIFE)
 
 		this.radius = radius
 		this.colorFn = colorFn
+		this.colors = explosionColors(colorFn)
 		const SOURCE_SPEED = radius / 2.5
 		const rad = radius * this.game.ground.realTileSizeY / 5
 		const RADIUS_RAND = radius * this.game.ground.realTileSizeY / 8
@@ -475,15 +622,7 @@ class RealisticExplosion extends Particle {
 		for (const source of this.sources) {
 			for (const point of source.points) {
 				ctx.globalAlpha = Math.max(0, point.life / (RealisticExplosion.POINT_LIFE / 3))
-				if (this.colorFn) {
-					ctx.fillStyle = this.colorFn(point.life / RealisticExplosion.POINT_LIFE)
-				} else {
-					const dir = (RealisticExplosion.POINT_LIFE / 4)
-					const blue = (point.life - 3 * RealisticExplosion.POINT_LIFE / 4) / dir
-					const green = (point.life - 2 * RealisticExplosion.POINT_LIFE / 4) / dir
-					const red = (point.life - RealisticExplosion.POINT_LIFE / 4) / dir
-					ctx.fillStyle = 'rgb(' + red * 255 + ', ' + green * 255 + ', ' + blue * 255 + ')'
-				}
+				ctx.fillStyle = this.colorFn ? this.colorFn(point.life / RealisticExplosion.POINT_LIFE) : fireColor(point.life)
 
 				ctx.beginPath()
 				ctx.arc(point.x, point.y - point.z, point.s, 0, 2 * Math.PI)
@@ -492,6 +631,10 @@ class RealisticExplosion extends Particle {
 			}
 		}
 		ctx.globalAlpha = 1
+	}
+
+	public blit(ctx: CanvasRenderingContext2D, x: number, y: number, k: number): void {
+		blitExplosion(ctx, this.sources, this.colors, x, y, k)
 	}
 }
 
@@ -571,11 +714,7 @@ class SmallExplosion extends Particle {
 		for (const source of this.sources) {
 			for (const point of source.points) {
 				ctx.globalAlpha = Math.max(0, point.life / (RealisticExplosion.POINT_LIFE / 3))
-				const dir = (RealisticExplosion.POINT_LIFE / 4)
-				const blue = (point.life - 3 * RealisticExplosion.POINT_LIFE / 4) / dir
-				const green = (point.life - 2 * RealisticExplosion.POINT_LIFE / 4) / dir
-				const red = (point.life - RealisticExplosion.POINT_LIFE / 4) / dir
-				ctx.fillStyle = 'rgb(' + red * 255 + ', ' + green * 255 + ', ' + blue * 255 + ')'
+				ctx.fillStyle = fireColor(point.life)
 
 				ctx.beginPath()
 				ctx.arc(point.x, point.y - point.z, point.s, 0, 2 * Math.PI)
@@ -584,6 +723,10 @@ class SmallExplosion extends Particle {
 			}
 		}
 		ctx.globalAlpha = 1
+	}
+
+	public blit(ctx: CanvasRenderingContext2D, x: number, y: number, k: number): void {
+		blitExplosion(ctx, this.sources, explosionColors(), x, y, k)
 	}
 }
 
@@ -663,6 +806,18 @@ class Garbage extends FallingParticle {
 		ctx.globalAlpha = this.life / 5
 		ctx.scale(this.orientation, 1)
 		// ctx.rotate(this.angle)
+		ctx.drawImage(this.texture, 0, 0, this.texture.width, this.texture.height, -this.texture.width * this.scale / 2, -this.texture.height * this.scale / 2, this.texture.width * this.scale, this.texture.height * this.scale)
+		ctx.globalAlpha = 1
+	}
+}
+
+// Débris balistique qui tourne sur lui-même (Garbage ignore l'angle au dessin :
+// rotation commentée exprès pour les cailloux). Sert au morceau de sucre du Maïs.
+class SpinningGarbage extends Garbage {
+	public draw(ctx: CanvasRenderingContext2D) {
+		ctx.globalAlpha = this.life / 5
+		ctx.rotate(this.angle)
+		ctx.scale(this.orientation, 1)
 		ctx.drawImage(this.texture, 0, 0, this.texture.width, this.texture.height, -this.texture.width * this.scale / 2, -this.texture.height * this.scale / 2, this.texture.width * this.scale, this.texture.height * this.scale)
 		ctx.globalAlpha = 1
 	}
@@ -1036,10 +1191,14 @@ class BuryParticle extends Particle {
 	}
 
 	public draw(ctx: CanvasRenderingContext2D): void {
+		// Texture d'entité pas encore rendue : canvas 0x0, sur lequel drawImage lève et
+		// tue la boucle de rendu (rare, mais même conséquence que l'icône cassée).
+		if (!isDrawable(this.texture.texture)) { return }
 		const w = this.texture.texture.width
 		const h = (this.life / BuryParticle.LIFE) * this.texture.texture.height
 		// const h = this.texture.texture.height
 		// console.log("draw", this.x, this.y, w, h)
+		if (h <= 0) { return }
 		ctx.drawImage(this.texture.texture, 0, 0, w, h, - w / 2 * this.scale, - h * this.scale, w * this.scale, h * this.scale)
 	}
 }
@@ -1119,4 +1278,4 @@ class PrismParticle extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, FlyingSpinningProjectile, Boulder, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }
+export { prepareParticleSprites, Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, FlyingSpinningProjectile, Boulder, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, SpinningGarbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, PrismParticle, RealisticExplosion, Rocket, SmallExplosion, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES, Orbital }

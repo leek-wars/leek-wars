@@ -9,9 +9,12 @@
 	</error>
 	<div v-else class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1><breadcrumb v-if="fight && fightTypeLabel" :items="breadcrumbItems" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
-				<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
+			<div class="page-title">
+				<page-icon name="fight" fallback="mdi-sword" />
+				<div class="page-title-text">
+					<h1><breadcrumb v-if="fight && fightTypeLabel" :items="breadcrumbItems" :raw="true" /><span v-else>{{ $t('title') }}</span></h1>
+					<div v-if="fight" class="info">{{ $filters.date(fight.date) }}</div>
+				</div>
 			</div>
 			<div class="tabs">
 				<div v-if="report && fight && $store.getters.admin" class="tab disabled">
@@ -67,7 +70,7 @@
 							</table>
 						</div>
 					</div>
-					<div v-else>
+					<div v-else :style="{ '--report-resources': maxResources }">
 						<div v-if="report.win === 1">
 							<report-block :icon="team1Icon" :title="team1Title" :fight="fight" :leeks="report.leeks1" :farmer="report.farmer1" :team="report.team1" :flags="report.flags1" />
 							<report-block :icon="team2Icon" :title="team2Title" :fight="fight" :leeks="report.leeks2" :farmer="report.farmer2" :team="report.team2" :flags="report.flags2" />
@@ -109,7 +112,7 @@
 						<span v-else-if="fight.context == FightContext.TOURNAMENT && fight.tournament != -1">
 							<router-link :to="'/tournament/' + fight.tournament">
 								<v-btn>
-									<v-icon>mdi-trophy</v-icon>
+									<v-icon>mdi-tournament</v-icon>
 									{{ $t('back_to_tournament') }}
 								</v-btn>
 							</router-link>
@@ -160,22 +163,26 @@
 			<loader v-if="!loaded" />
 			<template v-else>
 				<div class="damage-options">
-					<v-radio-group v-model="damageChartType" :inline="true" :hide-details="true">
-						<v-radio :value="0" :label="$t('inflicted_damage')" :ripple="false" />
-						<v-radio :value="1" :label="$t('received_damage')" :ripple="false" />
-						<v-radio :value="2" :label="$t('heal')" :ripple="false" />
-						<v-radio :value="3" label="Tank" :ripple="false" />
-					</v-radio-group>
+					<lw-radio-group v-model="damageChartType" :inline="true">
+						<lw-radio :value="0" :label="$t('inflicted_damage')" />
+						<lw-radio :value="1" :label="$t('received_damage')" />
+						<lw-radio :value="2" :label="$t('heal')" />
+						<lw-radio :value="3" label="Tank" />
+					</lw-radio-group>
 					<div class="spacer"></div>
-					<v-radio-group v-if="fight!.type !== FightType.BATTLE_ROYALE && fight!.type !== FightType.SOLO" v-model="damagesTeams" :inline="true" :hide-details="true">
-						<v-radio :value="0" label="Entités" :ripple="false" />
-						<v-radio :value="1" label="Équipes" :ripple="false" />
-					</v-radio-group>
-					<v-switch v-model="damagesDisplaySummons" :disabled="damagesTeams === 1" :label="$t('display_summons')" :hide-details="true" :ripple="false" />
+					<lw-radio-group v-if="fight!.type !== FightType.BATTLE_ROYALE && fight!.type !== FightType.SOLO" v-model="damagesTeams" :inline="true">
+						<lw-radio :value="0" label="Entités" />
+						<lw-radio :value="1" label="Équipes" />
+					</lw-radio-group>
+					<lw-switch v-model="damagesDisplaySummons" :disabled="damagesTeams === 1" :label="$t('display_summons')" />
 				</div>
 				<div class="damages">
 					<div class="damage-chart">
-						<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
+						<!-- Chart.js prend la largeur de son parent : sans cette boîte, en
+						     colonne (mobile) l'anneau faisait toute la largeur de l'écran. -->
+						<div class="donut">
+							<Doughnut :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" />
+						</div>
 						<div v-if="legends" class="legend">
 							<div v-for="(damage, d) in damageChartDamage.datasets[0].data" :key="d">
 								<span :style="{color: legends[d]}">{{ damageChartDamage.labels[d] }}</span> <div class="value">{{ $filters.number(damage) }}</div>
@@ -199,7 +206,7 @@
 		<panel :title="$t('movements')" toggle="report/movements" icon="mdi-map-outline">
 			<loader v-if="!loaded || !fight" />
 			<div v-else class="movements">
-				<lw-map v-if="map_obstacles" :teams="map_teams" :obstacles="map_obstacles" />
+				<lw-map v-if="map_obstacles" :teams="map_teams" :obstacles="map_obstacles" :map-id="map_id" />
 
 				<v-btn class="all" @click="walkedCells(999)">{{ $t('all') }}</v-btn>
 				<template v-if="fight.type !== FightType.BATTLE_ROYALE">
@@ -223,9 +230,10 @@
 					</div>
 				</div>
 				<div v-if="errors.length" class="title">{{ $t('n_errors', errors.length) }}</div>
-				<div class="errors" @mouseover="mouseover">
-					<div v-for="(e, i) in errors" :key="i" class="log error" :a="e.action" :i="e.index">
+				<div class="errors">
+					<div v-for="(e, i) in errors" :key="i" class="log error">
 						<pre>[{{ e.entity }}] {{ e.data }} <span v-if="e.resolvedAI" class="ai" @click="goToAI(e.resolvedAI, e.line)">[{{ e.resolvedAI.path }}:{{ e.line }}]</span></pre>
+						<a class="goto" @click.prevent="goToAction(e.action, e.index)">➡️</a>
 					</div>
 				</div>
 				<div v-if="warnings.length" class="title">
@@ -235,9 +243,10 @@
 					</template>
 					</i18n-t>
 				</div>
-				<div class="errors" @mouseover="mouseover">
-					<div v-for="(w, i) in warnings" :key="i" class="log warning" :a="w.action" :i="w.index">
+				<div class="errors">
+					<div v-for="(w, i) in warnings" :key="i" class="log warning">
 						<pre>[{{ w.entity }}] {{ w.data }} <span v-if="w.resolvedAI" class="ai" @click="goToAI(w.resolvedAI, w.line)">[{{ w.resolvedAI.path }}:{{ w.line }}]</span></pre>
+						<a class="goto" @click.prevent="goToAction(w.action, w.index)">➡️</a>
 					</div>
 				</div>
 			</div>
@@ -246,8 +255,8 @@
 		<panel class="last actions" title="Actions" toggle="report/actions" icon="mdi-format-list-bulleted">
 			<div v-if="hasPersonalLogs" class="actions-options">
 				<div class="spacer"></div>
-				<v-switch v-model="actionsDisplayLogs" :label="$t('display_logs')" :hide-details="true" :ripple="false" />
-				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" :ripple="false" />
+				<lw-switch v-model="actionsDisplayLogs" :label="$t('display_logs')" />
+				<lw-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" />
 			</div>
 			<loader v-if="!loaded || !fight" />
 			<actions v-else :has-err-warn="hasErrWarn" :fight="fight" :report="report" :actions="fightActions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
@@ -261,10 +270,11 @@
 	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
-	import { Fight, FightContext, FightType, Report, ReportLeek } from '@/model/fight'
+	import { Fight, FightContext, FightType, isOwnLogs, Report, ReportLeek } from '@/model/fight'
 	import { Farmer } from '@/model/farmer'
 	import { i18n, loadLocalizedMessages, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { fixedHeaderHeight } from '@/model/shell'
 	import { store } from '@/model/store'
 	import { TEAM_COLORS } from '@/model/team'
 	import { seasonDisplay } from '@/model/season'
@@ -276,7 +286,8 @@
 	import { CHIPS } from '@/model/chips'
 	import { fileSystem } from '@/model/filesystem'
 	import router from '@/router'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
+	import { isTyping } from '@/model/keyboard'
 	import { computed, defineAsyncComponent, getCurrentInstance, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useRoute } from 'vue-router'
@@ -370,9 +381,9 @@
 	const damagesBarsHeight = ref(0)
 	const damagesDisplaySummons = ref(false)
 	const map_obstacles = ref<{[key: number]: number[]} | null>(null)
+	const map_id = ref<number>(0)
 	const map_teams = ref<{[team: number]: Set<number>} | null>(null)
 	const legends = ref<string[] | null>(null)
-	let currentLink: Element | null = null
 
 	const id = computed(() => route.params.id)
 	const team1Title = computed(() => {
@@ -388,6 +399,13 @@
 		if (r.win === 0) return t('team2')
 		const count = r.win === 1 ? r.leeks2.length : r.leeks1.length
 		return t('loosers', count)
+	})
+	// Gagnants et perdants sont deux tableaux distincts : pour que leurs colonnes
+	// restent alignées, les deux réservent la place de la plus longue liste de
+	// ressources du combat (cf. report-block.vue).
+	const maxResources = computed(() => {
+		if (!report.value) { return 0 }
+		return Math.max(0, ...[...report.value.leeks1, ...report.value.leeks2].map(l => l.resources ? Object.keys(l.resources).length : 0))
 	})
 	const team1Icon = computed(() => {
 		if (!fight.value) { return '' }
@@ -455,6 +473,9 @@
 			}
 
 			let currentPlayer: ReportLeek | null = null
+			// Entité dont c'est le tour, mise de côté le temps du réveil d'une plante : les
+			// actions du réveil sont celles de la plante.
+			let awakenedFrom: ReportLeek | null = null
 			const effects: {[key: number]: { turns: number; value: number; type: number; target: number }} = {}
 			fightActions.value = fight.value.data.actions.map((a: number[]) => {
 				const action = new Action(a)
@@ -472,6 +493,16 @@
 					effects[a[2]] = { turns: a[7], value: a[6], type: a[5], target: a[4] }
 				} else if (a[0] === ActionType.STACK_EFFECT) {
 					action.item = effects[a[1]]
+				} else if (a[0] === ActionType.PLANT_AWAKE && a[3] !== undefined) {
+					// a[3] (les PT de la plante) date du même correctif que PLANT_ASLEEP :
+					// sans lui, le combat n'a pas de borne de fin de réveil.
+					awakenedFrom = currentPlayer
+					currentPlayer = leeks.value[a[1]]
+				} else if (a[0] === ActionType.PLANT_ASLEEP) {
+					if (awakenedFrom) {
+						currentPlayer = awakenedFrom
+						awakenedFrom = null
+					}
 				}
 				action.entity = currentPlayer
 				return action
@@ -530,7 +561,7 @@
 	loadLocalizedMessages('fight', (loc) => import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${loc}.lang`))
 
 	function keyup(e: KeyboardEvent) {
-		if (e.key === 'r') {
+		if (e.key === 'r' && !isTyping(e)) {
 			refight()
 			e.preventDefault()
 		}
@@ -547,8 +578,14 @@
 			for (const farmer in logs.value) {
 				const farmerLogs = logs.value[farmer]
 				if (i in farmerLogs) {
-					;(fightActions.value[+a] as Record<string, unknown>).me = parseInt(farmer, 10) === store.state.farmer!.id
-					fightActions.value[+a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9 && l[1] !== 10))
+					// « À soi » se note par log, comme dans game.ts setLogs : plusieurs blocs se
+					// partagent une action, l'action 0 surtout.
+					const own = isOwnLogs(farmer, store.state.farmer, report.value?.turret_ai_owners)
+					for (const log of farmerLogs[i]) {
+						if (log[1] === 4 || log[1] === 9 || log[1] === 10) { continue }
+						log[6] = own
+						fightActions.value[+a].logs.push(log)
+					}
 				}
 			}
 		}
@@ -558,7 +595,7 @@
 		errors.value = []
 		warnings.value = []
 		for (const farmer in logs.value) {
-			if (parseInt(farmer, 10) !== store.state.farmer!.id) { continue }
+			if (!isOwnLogs(farmer, store.state.farmer, report.value?.turret_ai_owners)) { continue }
 			const farmerLogs = logs.value[farmer]
 			for (const a in farmerLogs) {
 				const action = farmerLogs[a]
@@ -568,9 +605,9 @@
 					const type = log[1] as number
 					const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.error_' + log[3], log[4] as (string | number)[], { escapeParameter: false }) + "\n" + log[2] : log[2]
 					if (type === 2 || type === 7) {
-						warnings.value.push({entity: leeks.value[leek].name, data: message as string, action: a, index: i, ai: log[4] as number, line: log[5] as number, resolvedAI: fileSystem.ais[log[4] as number]})
+						warnings.value.push({entity: leeks.value[leek].translatedName as string, data: message as string, action: a, index: i, ai: log[4] as number, line: log[5] as number, resolvedAI: fileSystem.ais[log[4] as number]})
 					} else if (type === 3 || type === 8) {
-						errors.value.push({entity: leeks.value[leek].name, data: message as string, action: a, index: i, ai: log[4] as number, line: log[5] as number, resolvedAI: fileSystem.ais[log[4] as number]})
+						errors.value.push({entity: leeks.value[leek].translatedName as string, data: message as string, action: a, index: i, ai: log[4] as number, line: log[5] as number, resolvedAI: fileSystem.ais[log[4] as number]})
 					}
 					i++
 				}
@@ -768,6 +805,7 @@
 
 	function updateMap() {
 		map_obstacles.value = fight.value!.data.map.obstacles
+		map_id.value = fight.value!.data.map.id
 	}
 
 	function walkedCells(fid: number) {
@@ -789,42 +827,39 @@
 		const element = document.getElementById('turn-' + turn)
 		if (element) {
 			const sibling = element.parentElement!.nextElementSibling!
-			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
+			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48 - fixedHeaderHeight())
 		}
 	}
 
-	function mouseover(e: MouseEvent) {
-		let target = (e.target as Element)
-		if (target.tagName === 'PRE') target = target.parentElement as Element
-		else if (target.tagName === 'A') target = target.parentElement as Element
-		else if (target.tagName === 'SPAN') target = target.closest('.log') as Element || target
-		if (currentLink && currentLink !== target) {
-			const l = currentLink.querySelector('a')
-			if (l) {
-				currentLink.removeChild(l)
-			}
-		}
-		currentLink = target
-		const link = target.querySelector('a')
-		if (!link) {
-			const action = target.getAttribute('a')
-			const index = target.getAttribute('i')
-			const l = document.createElement('a')
-			l.innerText = '➡️'
-			l.onclick = (e) => {
-				const error = document.querySelector('.fight-actions [l="' + action + '"][i="' + index + '"') as HTMLElement
-				if (error) {
-					window.scrollTo(0, error.offsetTop - 100)
-				}
-				e.preventDefault()
-			}
-			target.appendChild(l)
+	// Le lien de saut est rendu dans chaque ligne et seulement masqué en CSS : le créer
+	// au survol (ancien comportement) relayoutait tout le bloc à chaque mouvement de souris,
+	// ce qui figeait le navigateur sur les rapports à plusieurs centaines d'erreurs.
+	function goToAction(action: string, index: number) {
+		const error = document.querySelector('.fight-actions [l="' + action + '"][i="' + index + '"]') as HTMLElement | null
+		if (error) {
+			window.scrollTo(0, error.offsetTop - 100 - fixedHeaderHeight())
 		}
 	}
 </script>
 
 
 <style lang="scss" scoped>
+	/* La barre du haut du v3 est FIXE (`#app:not(.app) header.header`, cf.
+	   leekwars-shell-v3.scss) : les deux éléments collants de la page — la ligne
+	   d'options des actions et les en-têtes de tour — se calaient à 0 et
+	   passaient DERRIÈRE elle. Ce jeton porte la bande à dégager. Il
+	   reste à 0 là où la barre ne masque rien : en v2, où elle est dans le flux,
+	   et sur mobile (`#app.app`), où c'est `lw-bar` qui coiffe la page.
+	   Un jeton plutôt qu'une règle imbriquée sous `body:not(.v2)` comme le
+	   marché et le potager : les en-têtes de tour se visent en `:deep()`, et un
+	   `:deep()` précédé d'un sélecteur reçoit l'attribut de portée sur le
+	   sélecteur de GAUCHE — ici `#app`, qui ne l'a pas. */
+	.page {
+		--report-sticky-top: 0px;
+	}
+	body:not(.v2) #app:not(.app) .page {
+		--report-sticky-top: var(--header-height);
+	}
 	.season-tag {
 		display: flex;
 		width: fit-content;
@@ -832,8 +867,8 @@
 		gap: 6px;
 		margin: 0 auto 12px;
 		padding: 5px 12px;
-		border-radius: 14px;
-		color: white;
+		border-radius: var(--radius-pill);
+		color: var(--white);
 		font-weight: bold;
 		font-size: 13px;
 		cursor: help;
@@ -874,7 +909,7 @@
 	}
 	.turn {
 		font-size: 18px;
-		color: #888;
+		color: var(--grey-7);
 		margin-left: -20px;
 	}
 	.log {
@@ -889,6 +924,16 @@
 		&:deep(a) {
 			cursor: pointer;
 		}
+		.goto {
+			flex-shrink: 0;
+			font-size: 11px;
+			line-height: 1;
+			cursor: pointer;
+			visibility: hidden;
+		}
+		&:hover > .goto {
+			visibility: visible;
+		}
 	}
 	.warning {
 		color: #ff5f00;
@@ -900,7 +945,7 @@
 		padding: 10px;
 		margin: 20px 100px;
 		background: #ffb6b6;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 	}
 	.warnings-error .ai {
 		color: var(--text-color-secondary);
@@ -984,7 +1029,17 @@
 	@media screen and (max-width: 800px) {
 		.damages {
 			flex-direction: column;
+			/* En colonne, la base de 270 px des enfants devenait une HAUTEUR. */
+			& > * {
+				flex: none;
+			}
 		}
+	}
+	/* L'anneau : 250 px au plus (la colonne de 270 px moins ses marges sur grand
+	   écran), centré ; la légende dessous garde toute la largeur. */
+	.donut {
+		max-width: 250px;
+		margin: 0 auto;
 	}
 	.damage-chart {
 		text-align: center;
@@ -1028,10 +1083,16 @@
 	}
 	.actions-options {
 		display: flex;
-		background: var(--background);
+		/* L'aplat sert à masquer le contenu qui défile dessous : c'est donc la
+		   surface du PANNEAU qu'il doit reprendre, pas celle de la page. Les deux
+		   se confondaient en v2 (`--panel-background: var(--background)`) ; le v3
+		   creuse l'échelle des surfaces, et la bande se détachait en plus clair
+		   sur le panneau. Le jeton rend la même couleur qu'avant
+		   en v2, clair comme sombre. */
+		background: var(--panel-background);
 		position: sticky;
 		height: 45px;
-		top: 0;
+		top: var(--report-sticky-top);
 		padding-top: 10px;
 		padding-bottom: 10px;
 		.spacer {
@@ -1048,26 +1109,30 @@
 		.v-btn {
 			margin-bottom: 6px;
 			&:not(.all):not(.t4) {
-				color: white;
+				color: var(--white);
 			}
 		}
 	}
 	:deep(.turn) {
 		position: sticky;
-		top: 0;
-		background: var(--background);
+		top: var(--report-sticky-top);
+		/* Même raison que `.actions-options` ci-dessus : la surface du panneau.
+		   Ici l'écart se voyait doublement, l'élément étant en `inline-block` —
+		   son rectangle s'arrêtait au ras de la pastille noire, en plein milieu
+		   d'une ligne de journal. */
+		background: var(--panel-background);
 		padding: 7px 0;
 		margin: 0;
 		display: inline-block;
 		.black {
 			font-size: 16px;
-			background: #333;
-			color: #eee;
+			background: var(--grey-2);
+			color: var(--grey-13);
 			font-weight: 500;
 			display: inline-flex;
 			padding: 3px 10px;
 			padding-right: 3px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			align-items: center;
 			.label {
 				padding-right: 5px;

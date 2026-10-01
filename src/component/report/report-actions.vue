@@ -2,9 +2,12 @@
 	<div class="fight-actions" @click="onActionClick" @auxclick="onActionClick">
 		<template v-for="(action, a) in actions" :key="a">
 			<component :is="(ActionComponents as Record<number, unknown>)[action.type]" :action="action" :a="a" :leeks="leeks" :report="report" :has-err-warn="hasErrWarn" @goToTurn="goToTurn" />
-			<template v-if="displayLogs && (displayAlliesLogs || action.me) && action.logs.length">
+			<template v-if="displayLogs && action.logs.length">
 				<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-				<action-log v-for="(log, l) in (action.logs as any[])" :key="a + 'l' + l" :log="(log as any)" :leeks="(leeks as any)" :action="(a as number)" :index="(l as number)" :lines="true" @goToAI="(...args: any[]) => goToAI(...(args as Parameters<typeof goToAI>))" />
+				<template v-for="(log, l) in (action.logs as any[])" :key="a + 'l' + l">
+					<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+					<action-log v-if="displayAlliesLogs || log[6]" :log="(log as any)" :leeks="(leeks as any)" :action="(a as number)" :index="(l as number)" :lines="true" @goToAI="(...args: any[]) => goToAI(...(args as Parameters<typeof goToAI>))" />
+				</template>
 			</template>
 		</template>
 		<action-end-fight />
@@ -14,6 +17,7 @@
 <script setup lang="ts">
 	import { ActionComponents as ActionComponentsTyped } from '@/model/action-components'
 	import { Fight, Report, ReportLeek } from '@/model/fight'
+	import { fixedHeaderHeight } from '@/model/shell'
 	import ActionEndFight from '../action/action-end-fight.vue'
 	import ActionLog from './report-log.vue'
 	import router from '@/router'
@@ -25,7 +29,6 @@
 
 	interface FightAction {
 		type: number
-		me?: boolean
 		logs: unknown[]
 		[key: string]: unknown
 	}
@@ -54,7 +57,8 @@
 	function onActionClick(e: MouseEvent) {
 		if (e.button !== 0 && e.button !== 1) return
 		const t = e.target as HTMLElement
-		if (t.closest('a, .ai, button, .pause')) return
+		// L'en-tête de tour a ses propres contrôles (label + chevrons) qui naviguent dans le rapport.
+		if (t.closest('a, .ai, button, .pause, .turn .black')) return
 		const target = findAction(e)
 		if (!target) return
 		const action = target.getAttribute('a')
@@ -70,7 +74,7 @@
 	function goToTurn(turn: number) {
 		const element = document.getElementById('turn-' + turn)!
 		const sibling = element.parentElement!.nextElementSibling!
-		window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 42)
+		window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 42 - fixedHeaderHeight())
 	}
 
 	function goToAI(file: string, line: number) {

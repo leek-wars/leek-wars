@@ -2,12 +2,12 @@
 	"comments": "评论",
 	"farmer": "{0} 饲养员锦标赛",
 	"few_seconds": "几秒钟",
-	"next_round_in": "下一轮在 {0}",
-	"not_found": "找不到比赛 ID {0} :(",
+	"next_round_in": "下一轮将在{0}后开始",
+	"not_found": "未找到锦标赛（ID：{0}）:(",
 	"send": "发送",
-	"solo": "{0} 个人赛",
+	"solo": "{0} 单人锦标赛",
 	"team": "{0} 团队锦标赛",
-	"next_round_supervisor": "下一轮将由主管发起",
+	"next_round_supervisor": "下一轮将由负责人发起",
 	"generate": "生成下一轮",
-	"generating": "生成中..."
+	"generating": "生成中…"
 }

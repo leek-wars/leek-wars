@@ -6,6 +6,7 @@
 	"dark_mode": "ナイトモード",
 	"decelerate": "減速する",
 	"display_cell_numbers": "ディスプレイボックス番号",
+	"marks_foreground": "mark() を前面に表示",
 	"display_debug": "デバッグ情報を表示",
 	"display_life_bars": "ヘルスバーを表示",
 	"display_logs": "デバッグを表示",

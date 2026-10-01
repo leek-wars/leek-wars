@@ -6,6 +6,7 @@
 	"dark_mode": "Tryb nocny",
 	"decelerate": "Zmniejszać prędkość",
 	"display_cell_numbers": "Wyświetl numery pudełek",
+	"marks_foreground": "mark() na pierwszym planie",
 	"display_debug": "Pokaż informacje o debugowaniu",
 	"display_life_bars": "Pokaż paski zdrowia",
 	"display_logs": "Pokaż debugowanie",

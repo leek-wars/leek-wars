@@ -13,6 +13,9 @@
 	"not_found_id": "Tunnuksella {0} purjoa ei löydy",
 	"fight_type": "Taistelutyyppejä",
 	"fight_context": "Taistelun kontekstit",
+	"loot": "Taistelusaalis",
+	"chests": "Arkut",
+	"rare_loot": "Harvinaiset resurssit",
 	"solo": "Yksin",
 	"farmer": "Kasvattaja",
 	"team": "Miehistö",
@@ -21,6 +24,12 @@
 	"garden": "Vihannespuutarha",
 	"tournament": "Turnaus",
 	"boss": "Pomo",
+	"war": "Sota",
+	"chest_hunt": "Aarrejahti",
+	"n_chests": "{0} arkkua",
+	"colossus": "Kolossi",
+	"view_grid": "Ruudukkonäkymä",
+	"view_table": "Taulukkonäkymä",
 	"result": "Tulos",
 	"generating": "Luodaan"
 }

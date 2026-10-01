@@ -107,6 +107,12 @@ enum StatisticsState {
 	BEGIN_TURN, USE_ITEM, ITEM_DAMAGE, ITEM_LIFE_STEAL, ITEM_DAMAGE_RETURN
 }
 
+// Une mort se logue [PLAYER_DEAD, entité, tueur]. Les tout premiers combats n'avaient pas
+// de tueur : on prenait l'entité dont c'était le tour. De 2015 à cette date, « personne »
+// s'écrivait -1 ; depuis, le tueur est simplement absent (une invocation qui meurt avec son
+// invocateur, par exemple) et ce n'est le kill de personne.
+const DEATH_WITHOUT_KILLER_SINCE = 1603022138 // 18/10/2020
+
 class FightStatistics {
 
 	public kills: number = 0
@@ -173,6 +179,8 @@ class FightStatistics {
 		let state = StatisticsState.BEGIN_TURN
 		let itemCaster: StatisticsEntity | null = null
 		let lastDamageAction: RawAction | null = null
+		// Entité dont c'est le tour, mise de côté le temps du réveil d'une plante.
+		let awakenedFrom: StatisticsEntity | null = null
 
 		for (const action of fight.data.actions) {
 			const type = action[0] as ActionType
@@ -360,8 +368,8 @@ class FightStatistics {
 						}
 					}
 
-					// Tank
-					if (state !== StatisticsState.BEGIN_TURN) { // On compte pas les poisons
+					// Tank, hors poisons. À 100 % de bouclier relatif ou plus, le coup d'origine n'est plus mesurable
+					if (state !== StatisticsState.BEGIN_TURN && entity.relativeShield < 100) {
 						const theoricalDamage = Math.round((damage + entity.absoluteShield) / (1 - entity.relativeShield / 100))
 						entity.tank += Math.max(0, theoricalDamage - damage)
 					}
@@ -453,11 +461,35 @@ class FightStatistics {
 					const entity = entities[action[1]]
 					entity.alive = false
 					entity.launched_effects = {}
-					const killer = action.length > 2 ? entities[action[2]] : currentEntity
+					// Un mort perd ses effets sans REMOVE_EFFECT (comme dans le lecteur) : un ressuscité n'en garde aucun
+					for (const id in entity.effects) {
+						this.removeEffect(parseInt(id))
+					}
+					const killer = action.length > 2 ? entities[action[2]] : fight.date < DEATH_WITHOUT_KILLER_SINCE ? currentEntity : null
 					if (killer) { killer.kills++ }
 					entity.life = 0
 					this.updateLifes()
 					this.addTime()
+					break
+				}
+				case ActionType.PLANT_AWAKE: {
+					// Un réveil tombe au milieu du tour d'une autre entité, et les actions
+					// de la plante ne portent pas qui les joue : sans ce basculement, ses
+					// dégâts et ses soins sont comptés au passant.
+					// action[3] (les PT de la plante) date du même correctif que PLANT_ASLEEP :
+					// sans lui, le combat n'a pas de borne de fin de réveil.
+					const plant = action[3] !== undefined ? entities[action[1]] : null
+					if (plant) {
+						awakenedFrom = currentEntity
+						currentEntity = plant
+					}
+					break
+				}
+				case ActionType.PLANT_ASLEEP: {
+					if (awakenedFrom) {
+						currentEntity = awakenedFrom
+						awakenedFrom = null
+					}
 					break
 				}
 				case ActionType.LAMA:
@@ -559,10 +591,16 @@ class FightStatistics {
 					break
 				}
 				case ActionType.RESURRECTION: {
-					entities[action[2]].resurrection++
-					entities[action[2]].life = action[4]
+					const entity = entities[action[2]]
+					entity.resurrection++
+					entity.life = action[4]
+					// La résurrection divise la vie max : sans la reprendre, le graphe en pourcentage affiche une entité full life à ~50%
+					if (action.length > 5) {
+						entity.max_life = action[5]
+					}
+					entity.alive = true
 					const cell = this.field.cells[action[3]]
-					entities[action[2]].move(cell)
+					entity.move(cell)
 					if (preciseLives) {
 						this.updateLifes()
 					}
@@ -582,6 +620,11 @@ class FightStatistics {
 				}
 				case ActionType.ADD_STACKED_EFFECT: {
 					this.addEffect(action, true)
+					this.addTime()
+					break
+				}
+				case ActionType.STACK_EFFECT: {
+					this.stackEffect(action[1], action[2])
 					this.addTime()
 					break
 				}
@@ -725,6 +768,55 @@ class FightStatistics {
 			caster.launched_effects[id] = this.effects[id]
 		}
 
+		if (type === EffectType.MULTIPLY_STATS) {
+			this.setMaxLife(leek, leek.max_life * value)
+		} else {
+			this.applyEffectValue(leek, type, value)
+		}
+	}
+
+	/** STACK_EFFECT porte le surplus d'un lancer identique, ajouté à l'effet déjà posé (comme dans le lecteur). */
+	private stackEffect(id: number, value: number) {
+		const effect = this.effects[id]
+		if (!effect) { return }
+		effect.value += value
+		this.applyEffectValue(this.entities[effect.target], effect.type, value)
+	}
+
+	private removeEffect(id: number) {
+		const effect = this.effects[id]
+		if (!effect) { return }
+
+		const leek = this.entities[effect.target]
+		if (effect.type === EffectType.MULTIPLY_STATS) {
+			this.setMaxLife(leek, leek.max_life / effect.value)
+		} else {
+			this.applyEffectValue(leek, effect.type, -effect.value)
+		}
+		delete leek.effects[id]
+		delete this.effects[id]
+	}
+
+	private updateEffect(id: number, new_value: number) {
+		const effect = this.effects[id]
+		if (!effect) { return }
+
+		this.applyEffectValue(this.entities[effect.target], effect.type, new_value - effect.value)
+		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
+	}
+
+	private setMaxLife(leek: StatisticsEntity, max_life: number) {
+		const ratio = leek.max_life > 0 ? leek.life / leek.max_life : 1
+		leek.max_life = Math.round(max_life)
+		leek.life = Math.round(leek.max_life * ratio)
+	}
+
+	/**
+	 * Répercute sur les caractéristiques une variation de la valeur d'un effet : +valeur à
+	 * l'ajout, +surplus à l'empilement, +(nouvelle - ancienne) à la mise à jour, -valeur au
+	 * retrait. Une seule table, pour que le retrait défasse exactement l'ajout.
+	 */
+	private applyEffectValue(leek: StatisticsEntity, type: EffectType, value: number) {
 		switch (type) {
 		case EffectType.ABSOLUTE_SHIELD:
 		case EffectType.STEAL_ABSOLUTE_SHIELD:
@@ -785,162 +877,7 @@ class FightStatistics {
 		case EffectType.DAMAGE_RETURN:
 			leek.damageReturn += value
 			break
-		case EffectType.POISON:
-			break
-		case EffectType.MULTIPLY_STATS: {
-			const ratio = leek.max_life > 0 ? leek.life / leek.max_life : 1
-			leek.max_life = Math.round(leek.max_life * value)
-			leek.life = Math.round(leek.max_life * ratio)
-			break
 		}
-		}
-	}
-
-	private removeEffect(id: number) {
-		const effect = this.effects[id]
-
-		if (!effect) { return }
-
-		const effectID = effect.type
-		const leek = this.entities[effect.target]
-		const value = effect.value
-
-		switch (effectID) {
-		case EffectType.SHACKLE_MP:
-			leek.mp += value
-			break
-		case EffectType.SHACKLE_TP:
-			leek.tp += value
-			break
-		case EffectType.SHACKLE_STRENGTH:
-			leek.strength += value
-			break
-		case EffectType.SHACKLE_MAGIC:
-			leek.magic += value
-			break
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
-		case EffectType.ABSOLUTE_SHIELD:
-		case EffectType.RAW_ABSOLUTE_SHIELD:
-			leek.absoluteShield -= value
-			break
-		case EffectType.RELATIVE_SHIELD:
-			leek.relativeShield -= value
-			break
-		case EffectType.VULNERABILITY:
-			leek.relativeShield += value
-			break
-		case EffectType.ABSOLUTE_VULNERABILITY:
-			leek.absoluteShield += value
-			break
-		case EffectType.BUFF_AGILITY:
-		case EffectType.RAW_BUFF_AGILITY:
-			leek.agility -= value
-			break
-		case EffectType.BUFF_STRENGTH:
-		case EffectType.RAW_BUFF_STRENGTH:
-			leek.strength -= value
-			break
-		case EffectType.BUFF_WISDOM:
-			leek.wisdom -= value
-			break
-		case EffectType.RAW_BUFF_MAGIC:
-			leek.magic -= value
-			break
-		case EffectType.RAW_BUFF_SCIENCE:
-			leek.science -= value
-			break
-		case EffectType.BUFF_RESISTANCE:
-			leek.resistance -= value
-			break
-		case EffectType.DAMAGE_RETURN:
-			leek.damageReturn -= value
-			break
-		case EffectType.BUFF_MP:
-		case EffectType.RAW_BUFF_MP:
-			leek.mp -= value
-			break
-		case EffectType.BUFF_TP:
-		case EffectType.RAW_BUFF_TP:
-			leek.tp -= value
-			break
-		case EffectType.MULTIPLY_STATS: {
-			const ratio = leek.max_life > 0 ? leek.life / leek.max_life : 1
-			leek.max_life = Math.round(leek.max_life / value)
-			leek.life = Math.round(leek.max_life * ratio)
-			break
-		}
-		}
-		delete leek.effects[id]
-		delete this.effects[id]
-	}
-
-	private updateEffect(id: number, new_value: number) {
-
-		const effect = this.effects[id]
-		if (!effect) { return }
-
-		const effectID = effect.type
-		const leek = this.entities[effect.target]
-		const delta = new_value - effect.value
-
-		switch (effectID) {
-		case EffectType.SHACKLE_MP:
-			leek.mp -= delta
-			break
-		case EffectType.SHACKLE_TP:
-			leek.tp -= delta
-			break
-		case EffectType.SHACKLE_STRENGTH:
-			leek.strength -= delta
-			break
-		case EffectType.SHACKLE_MAGIC:
-			leek.magic -= delta
-			break
-		case EffectType.ABSOLUTE_SHIELD:
-			leek.absoluteShield += delta
-			break
-		case EffectType.RELATIVE_SHIELD:
-			leek.relativeShield += delta
-			break
-		case EffectType.VULNERABILITY:
-			leek.relativeShield -= delta
-			break
-		case EffectType.ABSOLUTE_VULNERABILITY:
-			leek.absoluteShield -= delta
-			break
-		case EffectType.BUFF_AGILITY:
-		case EffectType.RAW_BUFF_AGILITY:
-			leek.agility += delta
-			break
-		case EffectType.BUFF_STRENGTH:
-		case EffectType.RAW_BUFF_STRENGTH:
-			leek.strength += delta
-			break
-		case EffectType.BUFF_WISDOM:
-			leek.wisdom += delta
-			break
-		case EffectType.RAW_BUFF_MAGIC:
-			leek.magic += delta
-			break
-		case EffectType.RAW_BUFF_SCIENCE:
-			leek.science += delta
-			break
-		case EffectType.BUFF_RESISTANCE:
-			leek.resistance += delta
-			break
-		case EffectType.DAMAGE_RETURN:
-			leek.damageReturn += delta
-			break
-		case EffectType.BUFF_MP:
-		case EffectType.RAW_BUFF_MP:
-			leek.mp += delta
-			break
-		case EffectType.BUFF_TP:
-		case EffectType.RAW_BUFF_TP:
-			leek.tp += delta
-			break
-		}
-		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
 }
 
