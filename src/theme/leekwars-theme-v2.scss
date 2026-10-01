@@ -1,0 +1,250 @@
+/* Thème v2 : l'ancien design de Leek Wars, en jetons.
+ *
+ * Ce n'est plus le thème par défaut : c'est une option, activable dans les
+ * réglages. Le défaut est leekwars-theme-v3.scss, charge par global.scss ;
+ * ce fichier n'est charge qu'a la demande et vient repeindre par-dessus.
+ *
+ * D'ou le selecteur `html body.v2` : il doit gagner sur `body.dark` du v3 sans
+ * dependre de l'ordre de chargement, et perdre face a `html body.v2.dark`.
+ *
+ * Toute variable ajoutée ici doit exister dans le v3, et inversement, sinon un
+ * des deux thèmes se retrouve avec un trou.
+ *
+ * Convention : une variable ne décrit jamais une couleur ("vert"), elle décrit
+ * un rôle ("fond d'en-tête de panneau"). Sinon le v3 hérite de noms qui mentent.
+ */
+
+html body.v2 {
+	/* Police d'affichage : titres, en-tetes, onglets, libelles de section */
+	--font-display: "Roboto", sans-serif;
+	/* Le v2 peint en Roboto : ni la case de grille d'une police pixel, ni sa
+	   graisse. Ces deux jetons doivent exister dans les deux thèmes, sinon les
+	   règles partagées par les deux (le `%caption` de garden-batch.vue, qui
+	   n'est pas gardé par `body:not(.v2)`) emportent les valeurs du v3. */
+	--font-display-tracking: 0.06em;
+	--font-display-weight: inherit;
+	/* Police de corps historique, inchangée : seul le v3 passe à Inter. */
+	--font-body: "Roboto", sans-serif;
+
+	/* Marque */
+	--primary: #5fad1b;
+	/* Encre posee SUR un aplat de marque. */
+	--primary-text: #fff;
+	/* Le vert quand il sert d'encre sur une surface claire. */
+	--primary-strong: #3e8a00;
+	/* Le vert quand il PEINT une surface, et l'encre posée dessus. Le v2 n'a
+	   qu'un seul vert dans les deux rôles : ces deux jetons valent donc la paire
+	   historique, et les appelants migrés y restent au pixel près. */
+	--primary-surface: var(--primary);
+	--primary-surface-text: var(--primary-text);
+
+	/* Encre et fonds */
+	/* Attention aux deux paires, elles ne font pas la même chose :
+	   --pure-white / --pure-black S'INVERSENT en mode sombre (c'est la paire
+	   historique, utilisee pour « la couleur du fond de page » et « la couleur
+	   du texte ») ; --white / --black sont des constantes, elles valent blanc
+	   et noir dans les deux themes. */
+	--pure-white: #fff;
+	--pure-black: #000;
+	--white: #fff;
+	--black: #000;
+	--background: #f2f2f2;
+	--background-secondary: #eee;
+	--background-disabled: #bbb;
+	--background-header: #e5e5e5;
+	/* Surface d'un champ : le v2 peignait les champs en --pure-white, le jeton
+	   garde exactement cette valeur (et son inversion en sombre). */
+	--background-input: var(--pure-white);
+	/* Fond hors de la page, visible autour du contenu */
+	--background-outer: #333;
+	/* Parité avec le v3 : le v2 garde l'image grise telle quelle, sans
+	   recoloration. Même gris que l'image. */
+	--big-leek-discreet: #B9B9B9;
+	/* Encre du pied de page, pose sur ce fond exterieur et non sur la page */
+	--footer-color: #666;
+	/* Surface de survol d'une ligne de liste, et troisieme encre (la plus pale) */
+	--background-row: #e8e8e8;
+	/* Surface de la ligne « moi » (classements, rapport de combat). Le v2 la
+	   peignait en --background sur un tableau en --pure-white : valeur gardee
+	   telle quelle, le jeton n'existe que parce que le v3 ne peut pas s'en
+	   servir (voir son commentaire). */
+	--background-mine: var(--background);
+	--text-color-faint: #999;
+	--border: #ddd;
+	/* Trait plus marque, pour delimiter une surface et non separer deux lignes */
+	--border-strong: #ccc;
+	--text-color: #111;
+	--text-color-secondary: #686868;
+	--type-color: #0000D0;
+	--link-color: #0645ad;
+	--selection-background: #61b01c;
+	--selection-color: #fff;
+
+	/* Rayons. Le v2 est arrondi, le v3 sera à angles francs : ces six
+	   variables sont le principal levier de bascule. */
+	--radius-tiny: 2px;
+	--radius-small: 3px;
+	--radius: 4px;
+	--radius-medium: 6px;
+	--radius-large: 8px;
+	--radius-pill: 20px;
+
+	/* Chrome : panneaux */
+	--panel-background: var(--background);
+	--panel-header-background: #2a2a2a;
+	--panel-header-color: #eee;
+	--panel-header-height: 36px;
+	--panel-shadow: 0px 10px 11px -11px rgba(0, 0, 0, 0.75);
+	/* L'ombre pixel n'existe que dans le v3 ; présente ici pour la parité des
+	   variables. Un composant du v2 ne doit jamais la consommer. */
+	--shadow-pixel: none;
+	--shadow-pixel-small: none;
+	--shadow-pixel-pressed: none;
+
+	/* Tooltips : les valeurs historiques de global.scss, au pixel près. La
+	   flèche garde son alpha de 0.9 d'origine. */
+	--tooltip-background: #333;
+	--tooltip-color: white;
+	--tooltip-arrow: rgba(51, 51, 51, 0.9);
+	/* Elevation Material niveau 2, copiee telle quelle dans 41 composants. */
+	--elevation-1: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+	/* Chrome : barre du haut. Elle est posee sur le fond exterieur, pas sur la
+	   page. Le logo est un SVG blanc charge en <img>, donc increcolorable en
+	   CSS : --header-logo-filter est la seule prise pour l'adapter a un fond
+	   clair. */
+	/* Hauteur de la barre du haut. Presente pour la parite des variables : en v2
+	   la barre reste dans le flux de la colonne centrale, personne ne la lit. */
+	--header-height: 80px;
+	--header-color: #eee;
+	/* Surface de la barre et opacite de son effet verre. Presentes pour la
+	   parite des variables : en v2 la barre n'a pas de surface a elle, elle est
+	   posee a nu sur le fond exterieur, et la coquille v3 qui lit ces deux
+	   jetons est enfermee dans `body:not(.v2)`. */
+	--header-background: transparent;
+	--header-glass: 100%;
+	--header-button-background: rgba(80, 80, 80, 0.6);
+	--header-button-background-hover: rgba(200, 200, 200, 0.4);
+	--header-logo-filter: none;
+
+	/* Chrome : barre de page et ses onglets */
+	--page-bar-color: #eee;
+	--page-bar-tab-background: rgba(0, 0, 0, 0.3);
+	--page-bar-tab-background-hover: rgba(0, 0, 0, 0.6);
+
+	/* Échelle de gris : inventaire, pas design.
+	 *
+	 * Le site utilise aujourd'hui douze gris différents, écrits en dur, pour
+	 * trois rôles seulement (encre secondaire, bordure, fond). On les sort ici
+	 * un par un, à valeur identique, pour ne rien changer au rendu actuel et
+	 * avoir enfin la liste complète en un seul endroit.
+	 *
+	 * C'est volontairement nommé par teinte et non par rôle : ces variables
+	 * sont un état de transition. Le thème v3 les fera converger vers ses
+	 * propres rôles (une encre secondaire, une bordure), et cette échelle
+	 * disparaîtra à ce moment-là. Pour du code neuf, utiliser les variables de
+	 * rôle (--text-color-secondary, --border) et pas cette échelle. */
+	--grey-1: #222;
+	--grey-2: #333;
+	--grey-3: #444;
+	--grey-4: #555;
+	--grey-5: #666;
+	--grey-6: #777;
+	--grey-7: #888;
+	--grey-8: #999;
+	--grey-9: #aaa;
+	--grey-10: #bbb;
+	--grey-11: #ccc;
+	--grey-12: #ddd;
+	--grey-13: #eee;
+
+	/* Couleurs sémantiques. Elles existaient en dur dans une trentaine de
+	   composants, sous quatre rouges et trois verts différents. */
+	/* Etat inactif (poireau ou eleveur qui ne joue plus) */
+	--inactive-color: #9c9c9c;
+
+	/* L'or en APLAT (l'or en ENCRE, c'est --rank-first juste en dessous).
+	   Présent ici pour la parité des variables : le v2 peint ses `notif-trophy`
+	   en dur dans global.scss, en dégradé, dont voici le sommet. */
+	--gold: #ffdc3a;
+	--gold-text: #000;
+	--gold-bright: #ffdc3a;
+
+	/* Podium du classement : or, argent, bronze */
+	--rank-first: #ffa900;
+	--rank-second: var(--text-color-secondary);
+	--rank-third: #ae4e00;
+
+	/* Couleurs de grade, appliquees aux pseudos */
+	--grade-moderator: #ffa900;
+	--grade-admin: #df1500;
+	--grade-contributor: #009c1d;
+	--grade-referent: #2196f3;
+
+	--success: #4caf50;
+	--warning: #ff9800;
+	--error: #c62828;
+	--info: #2196f3;
+
+	/* Résultat d'un combat. Deux rôles distincts, à ne pas confondre :
+	   l'accent (barre de ligne, icône, pastille) est saturé et se lit sur le
+	   fond ; le texte doit rester lisible, donc foncé en clair et clair en
+	   sombre. La paire retenue est celle de l'historique de combat, la plus
+	   récemment dessinée ; l'infobulle de combat et les widgets d'accueil
+	   utilisaient trois autres verts et deux autres rouges, ils s'alignent. */
+	--result-win: #6fbf3e;
+	--result-win-text: #2e7d32;
+	--result-win-background: rgba(111, 191, 62, 0.18);
+	--result-defeat: #d96058;
+	--result-defeat-text: #c62828;
+	--result-defeat-background: rgba(217, 96, 88, 0.18);
+	--result-draw: var(--text-color-secondary);
+	--result-draw-background: rgba(170, 170, 170, 0.18);
+
+	/* Couleurs des caractéristiques : les valeurs historiques de `global.scss`,
+	   sorties en jetons pour que le v3 puisse en donner d'autres. Le
+	   rendu du v2 est inchangé, y compris ses trois exceptions en sombre
+	   (force, science, magie), qui deviennent des surcharges du bloc `.dark`. */
+	--stat-life: red;
+	--stat-max-life: #00d5b5;
+	--stat-strength: #833100;
+	--stat-wisdom: #5ebe00;
+	--stat-agility: #0080f7;
+	--stat-resistance: #ff4a01;
+	--stat-ram: #ce00c7;
+	--stat-cores: #878787;
+	--stat-science: #0000a2;
+	--stat-magic: #b800b6;
+	--stat-tp: #ff7f01;
+	--stat-mp: #00a900;
+	--stat-poison: #fb27ff;
+
+	&.dark {
+		--pure-white: #000;
+		--pure-black: #fff;
+		--background: #1f1f1f;
+		--background-secondary: #171717;
+		--background-disabled: #555;
+		--background-header: #2f2f2f;
+		--background-row: #2a2a2a;
+		--text-color-faint: #777;
+		--border: #444;
+		--border-strong: #555;
+		--text-color: #f7f7f7;
+		--text-color-secondary: #999;
+		--type-color: #0099d0;
+		--link-color: #4bbaff;
+
+		--result-win: #7ddc7d;
+		--result-win-text: #c8e6c9;
+		--result-win-background: rgba(125, 220, 125, 0.15);
+		--result-defeat: #ff7068;
+		--result-defeat-text: #ffcdd2;
+		--result-defeat-background: rgba(255, 112, 104, 0.18);
+		--result-draw-background: rgba(180, 180, 180, 0.12);
+
+		--stat-strength: #c05415;
+		--stat-science: #2a63ff;
+		--stat-magic: #d810d5;
+	}
+}

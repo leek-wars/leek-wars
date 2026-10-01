@@ -1,7 +1,12 @@
 <template lang="html">
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ _title }}</h1>
+			<div class="page-title">
+				<page-icon name="error" fallback="mdi-alert" />
+				<div class="page-title-text">
+					<h1>{{ _title }}</h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first center">
 			<img src="/image/notgood.png">

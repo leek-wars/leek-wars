@@ -1,16 +1,16 @@
 <template lang="html">
-	<div class="console" :class="'theme-' + cssTheme">
+	<div class="console" :class="'theme-' + theme">
 		<div ref="scroll" v-autostopscroll class="scroll" >
 			<div class="lines">
 				<div v-for="(line, l) in lines" :key="l" class="line">
 					<template v-if="line.type === 'code'">
 						<!-- <span class="arrow">›</span> -->
 						<v-icon class="arrow">mdi-chevron-right</v-icon>
-						<span v-single-code><code>{{ line.code }}</code></span>
+						<lw-code :code="line.code ?? ''" single :theme="codeThemeClass" :language="language" />
 					</template>
 					<template v-else-if="line.type === 'result'">
 						<div class="line result">
-							<span v-single-code><code>{{ line.result }}</code></span>
+							<lw-code :code="String(line.result ?? '')" single :theme="codeThemeClass" :language="language" />
 							<span class="ops">{{ line.ops }} ops</span>
 						</div>
 					</template>
@@ -20,7 +20,8 @@
 					<template v-else-if="line.type === 'error'">
 						<div class="error">
 							<div v-if="line.location" class="zigzag">{{ line.zigzags }}</div>
-							<div>{{ $t('leekscript.error_' + line.error, line.params ?? [], { escapeParameter: false }) }}</div>
+							<div v-if="line.message">{{ line.message }}</div>
+							<div v-else>{{ $t('leekscript.error_' + line.error, line.params ?? [], { escapeParameter: false }) }}</div>
 						</div>
 						<span v-if="line.ops" class="ops">{{ line.ops }} ops</span>
 					</template>
@@ -44,11 +45,14 @@ import { FileSystem, fileSystem } from '@/model/filesystem'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
-import { emitter } from '@/model/vue'
+import { emitter } from '@/model/emitter'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import AIViewMonaco from '../editor/ai-view-monaco.vue'
+import { getLanguageVersions } from '../editor/file-types'
+import { AUTO_CODE_THEME, siteCodeTheme } from '../editor/code-theme'
+import LwCode from './code.vue'
 
-defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco } })
+defineOptions({ name: 'Console', components: { 'ai-view-monaco': AIViewMonaco, 'lw-code': LwCode } })
 
 interface EditorRef {
 	editor: {
@@ -66,9 +70,26 @@ interface ConsoleLine {
 	ops?: number
 	log?: unknown[]
 	error?: string
+	message?: string
 	params?: (string | number)[]
 	location?: number[]
 	zigzags?: string
+}
+
+// Extension de path par langage : pilote la coloration/autocomplétion Monaco (getLanguageForPath)
+// et le langage envoyé au serveur. LeekScript garde la convention historique `.leek`.
+const LANGUAGE_EXT: { [lang: string]: string } = {
+	leekscript: '.leek',
+	javascript: '.js',
+	typescript: '.ts',
+	python: '.py',
+}
+// Jeton de langage attendu par le serveur : js / ts / python, ou leekscript.
+const SERVER_LANGUAGE: { [lang: string]: string } = {
+	leekscript: 'leekscript',
+	javascript: 'js',
+	typescript: 'ts',
+	python: 'python',
 }
 
 const editorRef = useTemplateRef<EditorRef>('editor')
@@ -77,8 +98,29 @@ const scrollRef = useTemplateRef<HTMLElement>('scroll')
 const lines = ref<ConsoleLine[]>([])
 const history = ref<string[]>([])
 const historyPos = ref(0)
-const ai = ref<AI>(new AI({ id: 0, code: '', path: FileSystem.CONSOLE_MAGIC_KEY + Math.random() + '.leek' }))
-const theme = ref<string>(localStorage.getItem('editor/theme') || (LeekWars.darkMode ? 'monokai' : 'leek-wars'))
+const language = ref<string>(localStorage.getItem('console/language') || 'leekscript')
+// Un identifiant stable par session : chaque langage a son propre path (donc son modèle Monaco),
+// réutilisé au fil des bascules de langage plutôt que d'accumuler des modèles orphelins.
+const consoleId = Math.random()
+function consolePath(lang: string) {
+	return FileSystem.CONSOLE_MAGIC_KEY + consoleId + (LANGUAGE_EXT[lang] ?? '.leek')
+}
+const ai = ref<AI>(new AI({ id: 0, code: '', path: consolePath(language.value) }))
+// Version sélectionnée pour le langage polyglot courant (pragma). Une seule version par langage
+// aujourd'hui (le runtime l'impose) : purement indicatif, mais mémorisé par langage pour le jour où
+// plusieurs versions coexisteront. Vide pour LeekScript (qui a son propre sélecteur version/strict).
+function defaultVersion(lang: string) {
+	return getLanguageVersions(lang)[0]?.pragma ?? ''
+}
+const languageVersion = ref<string>(localStorage.getItem('console/version/' + language.value) || defaultVersion(language.value))
+// Thème de la console : un thème de coloration choisi, ou `auto` — elle suit
+// alors le clair/sombre du site, en direct.
+// Le choix a sa propre clé de stockage : `editor/theme` appartient à l'éditeur,
+// qui la donne telle quelle à Monaco et ne saurait pas quoi faire d'un `auto`.
+// Elle reste la valeur de départ, pour qu'une console déjà réglée ne change pas
+// d'aspect du jour au lendemain.
+const themeSetting = ref<string>(localStorage.getItem('console/theme') || localStorage.getItem('editor/theme') || AUTO_CODE_THEME)
+const theme = computed(() => themeSetting.value === AUTO_CODE_THEME ? siteCodeTheme() : themeSetting.value)
 const leekscript = reactive({
 	version: 4,
 	strict: false,
@@ -111,7 +153,7 @@ function clear() {
 	history.value = []
 	historyPos.value = 0
 	setEditorValue('')
-	LeekWars.socket.send([SocketMessage.CONSOLE_NEW, leekscript.version, leekscript.strict])
+	LeekWars.socket.send([SocketMessage.CONSOLE_NEW, leekscript.version, leekscript.strict, SERVER_LANGUAGE[language.value] ?? 'leekscript'])
 }
 
 function up() {
@@ -189,10 +231,12 @@ function focus() {
 	editorRef.value?.editor.focus()
 }
 
-const cssTheme = computed(() => ['monokai', 'vs-dark', 'hc-black'].includes(theme.value) ? 'monokai' : 'leekwars')
+// Les aperçus des lignes passées suivent le thème PROPRE de la console (pas celui du site,
+// qui peut être clair alors que la console est sombre, et inversement).
+const codeThemeClass = computed(() => 'code-theme-' + theme.value)
 
 function saveTheme() {
-	localStorage.setItem('editor/theme', theme.value)
+	localStorage.setItem('console/theme', themeSetting.value)
 }
 
 watch(() => leekscript.version, () => {
@@ -205,7 +249,21 @@ watch(() => leekscript.strict, () => {
 	clear()
 })
 
-defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
+// Bascule de langage : nouveau path (donc bascule de la coloration/autocomplétion Monaco via le
+// watcher de props.ai.path dans l'éditeur), puis on repart sur une session REPL neuve.
+watch(language, (lang) => {
+	localStorage.setItem('console/language', lang)
+	languageVersion.value = localStorage.getItem('console/version/' + lang) || defaultVersion(lang)
+	ai.value = new AI({ id: 0, code: '', path: consolePath(lang) })
+	fileSystem.consoleAI = ai.value
+	clear()
+})
+
+watch(languageVersion, (v) => {
+	if (v) localStorage.setItem('console/version/' + language.value, v)
+})
+
+defineExpose({ isEmpty, clear, focus, saveTheme, themeSetting, leekscript, language, languageVersion })
 </script>
 
 <style lang="scss" scoped>
@@ -219,26 +277,59 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
 		}
 		position: relative;
 
+		// Gris génériques : la console porte les surfaces de son thème de
+		// coloration, pas celles du site — elle peut être sombre sur une page
+		// claire, et l'inverse. Ce bloc-ci sert aux thèmes vs et hc-light.
 		--pure-white: #fff;
 		--background: #f2f2f2;
-		--background-secondary: #eee;
-		--background-disabled: #bbb;
+		--background-secondary: var(--grey-13);
+		--background-disabled: var(--grey-10);
 		--background-header: #e5e5e5;
-		--border: #ddd;
+		--border: var(--grey-12);
 		--text-color: #111;
-		--text-color-secondary: #777;
+		--text-color-secondary: var(--grey-6);
 		--type-color: #0000D0;
 	}
-	.theme-monokai {
+	.theme-leek-wars-dark, .theme-monokai, .theme-vs-dark, .theme-hc-black {
 		--pure-white: #000;
 		--background: #1f1f1f;
 		--background-secondary: #171717;
-		--background-disabled: #555;
+		--background-disabled: var(--grey-4);
 		--background-header: #2f2f2f;
-		--border: #444;
+		--border: var(--grey-3);
 		--text-color: #f7f7f7;
-		--text-color-secondary: #aaa;
+		--text-color-secondary: var(--grey-9);
 		--type-color: #0099d0;
+	}
+	// Le thème maison va plus loin que les gris génériques : la console prend
+	// les surfaces du site, pour être dans la continuité de la page au lieu de
+	// flotter dessus — même parti pris que la coquille de l'éditeur (cf.
+	// editor.vue). Son fond est celui d'un PANNEAU
+	// (`--background-secondary` du thème), pas celui de la page : la console est
+	// une surface posée, sous un bandeau de panneau.
+	// Restreint à `body:not(.v2)` : en thème v2 les gris ci-dessus SONT déjà les
+	// surfaces du site, il n'y a rien à reprendre.
+	body:not(.v2) .theme-leek-wars {
+		--pure-white: #FBF7E8;
+		--background: #FBF7E8;
+		--background-secondary: #E9E3CD;
+		--background-disabled: #D3CCB2;
+		--background-header: #F3EDD8;
+		--border: rgba(14, 20, 16, 0.14);
+		--text-color: #0E1410;
+		--text-color-secondary: #4A5847;
+		--type-color: #1A7AA0;
+	}
+	body:not(.v2) .theme-leek-wars-dark {
+		--pure-white: #0B0F0B;
+		--background: #0E1316;
+		--background-secondary: #0B0F0B;
+		--background-disabled: #2A2F2C;
+		--background-header: #11161A;
+		--border: rgba(255, 255, 255, 0.16);
+		--text-color: #E8F0E6;
+		--text-color-secondary: #A8B4A4;
+		--type-color: #5CE0FF;
 	}
 	.scroll {
 		// position: relative;
@@ -277,7 +368,7 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
 		.ops {
 			font-size: 13px;
 			font-weight: normal;
-			color: #888;
+			color: var(--grey-7);
 			margin-left: 10px;
 		}
 	}
@@ -293,7 +384,7 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
 		input {
 			border: none;
 			background: transparent;
-			// color: white;
+			// color: var(--white);
 			font-family: monospace;
 			margin: 0;
 			padding: 0;
@@ -346,5 +437,10 @@ defineExpose({ isEmpty, clear, focus, saveTheme, theme, leekscript })
 .console:deep(code) {
 	border: none;
 	padding: 0;
+	// Les thèmes sombres posent leur propre fond sur le <pre> (<span class="pre"> en ligne) :
+	// inutile ici, la console a déjà le fond assorti au thème.
+	pre, .pre {
+		background: transparent;
+	}
 }
 </style>

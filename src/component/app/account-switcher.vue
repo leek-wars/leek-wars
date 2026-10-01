@@ -48,14 +48,23 @@
 				</v-card>
 			</v-menu>
 		</v-list-item>
+		<!-- La console ne s'adresse qu'aux joueurs qui ont déclaré leurs
+		     comptes ; inutile de la montrer aux autres, elle serait vide. -->
+		<v-list-item v-if="hasDeclaredAccounts" link :ripple="true" to="/accounts">
+			<template #prepend>
+				<v-icon>mdi-view-dashboard-outline</v-icon>
+			</template>
+			<v-list-item-title>{{ $t('main.account_console') }}</v-list-item-title>
+		</v-list-item>
 	</v-list>
 </template>
 
 <script setup lang="ts">
+import { activateAccount } from '@/model/account-switch'
 import { LeekWars } from '@/model/leekwars'
-import { AccountInfo, store } from '@/model/store'
+import { type AccountInfo, store } from '@/model/store'
 import router from '@/router'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({ name: 'AccountSwitcher' })
@@ -76,6 +85,10 @@ const addMenuOpen = ref(false)
 const switchingId = ref<number | null>(null)
 const loadingId = ref<number | null>(null)
 const loadingAction = ref<string | null>(null)
+
+// linked_accounts : les comptes liés du joueur, à ne pas confondre avec
+// store.state.accounts, qui est la liste des comptes connectés de ce switcher.
+const hasDeclaredAccounts = computed(() => (store.state.farmer?.linked_accounts?.length ?? 0) > 1)
 
 function isActive(account: AccountInfo) {
 	return account.id === store.state.farmer?.id
@@ -102,11 +115,9 @@ function switchAccount(account: AccountInfo) {
 
 	switchingId.value = account.id
 	LeekWars.post<AuthData>('farmer/switch', { farmer_id: account.id }).then((data) => {
-		const token = LeekWars.DEV ? data.token : '$'
-		store.commit('connect', { ...data, token })
 		switchingId.value = null
 		emit('close')
-		router.push('/')
+		activateAccount(data)
 	}).error(() => {
 		switchingId.value = null
 		loginForm.value.login = account.name
@@ -119,8 +130,8 @@ function loginNewAccount() {
 	const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
 	interface AuthError { error?: string }
 	LeekWars.post<AuthData>(url, { ...loginForm.value, keep_connected: true }).then((data) => {
-		const token = LeekWars.DEV ? data.token : '$'
-		store.commit('connect', { ...data, token })
+		// Le compte connecté devient le compte actif.
+		activateAccount(data)
 		loginForm.value = { login: '', password: '' }
 		loginLoading.value = false
 		loginMenuId.value = null
@@ -148,9 +159,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 		loadingId.value = null
 		loadingAction.value = null
 		if (data.switched) {
-			const token = LeekWars.DEV ? data.token : '$'
-			store.commit('connect', { ...data, token })
-			router.push('/')
+			activateAccount(data)
 		} else if (data.accounts) {
 			store.commit('update-accounts', data.accounts)
 		} else {
@@ -164,7 +173,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 <style lang="scss" scoped>
 	.account-switcher-menu {
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.active {
 		background: rgba(95, 173, 27, 0.1);
@@ -200,7 +209,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 		opacity: 1 !important;
 	}
 	.status-active {
-		color: #5fad1b;
+		color: var(--primary);
 	}
 	.status-connected {
 		color: #4fc3f7;
@@ -210,7 +219,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 	}
 	.login-submenu {
 		padding: 12px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 		width: 220px;
 		form {
@@ -226,7 +235,7 @@ function accountAction(account: AccountInfo, action: string, endpoint: string) {
 		width: 100%;
 		padding: 6px 8px;
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 13px;
 	}
 	.login-error {

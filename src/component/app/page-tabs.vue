@@ -34,12 +34,12 @@
 			</router-link>
 		</template>
 		<div v-if="active === 'market'" class="tab action active">
-			<img src="/image/icon/black/market.png">
+			<v-icon>mdi-store</v-icon>
 			<span>{{ $t('main.market') }}</span>
 		</div>
 		<router-link v-else to="/market">
 			<div class="tab action">
-				<img src="/image/icon/market.png">
+				<v-icon>mdi-store</v-icon>
 				<span>{{ $t('main.market') }}</span>
 			</div>
 		</router-link>

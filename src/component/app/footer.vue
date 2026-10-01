@@ -125,10 +125,14 @@ function throwCookies() {
 		padding-bottom: 20px;
 		position: relative;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-		color: #666;
+		/* auto-FIT et non auto-fill : avec 4 colonnes de contenu dans 1545 px,
+		   auto-fill réservait 5 pistes de 296 px et laissait 360 px de vide à
+		   droite. auto-fit efface les pistes vides, les 4 colonnes se partagent
+		   toute la largeur. */
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		color: var(--footer-color);
 		a, h4, .item, .v-icon {
-			color: #666;
+			color: var(--footer-color);
 			transition: color 0.15s ease;
 			.v-icon {
 				font-size: 16px;
@@ -136,19 +140,19 @@ function throwCookies() {
 			}
 		}
 		#app.xp & {
-			color: #222;
+			color: var(--grey-1);
 		}
 		#app.xp & a, #app.xp & .item, #app.xp & .v-icon {
-			color: #222;
+			color: var(--grey-1);
 			&:hover {
 				color: #316ac5;
 			}
 		}
 		#app.xp & h4 {
-			color: #222;
+			color: var(--grey-1);
 		}
 		h4.version {
-			color: #999;
+			color: var(--grey-8);
 		}
 		a {
 			font-weight: 500;
@@ -184,15 +188,15 @@ function throwCookies() {
 			opacity: 1;
 		}
 		h4 {
-			color: #999;
+			color: var(--grey-8);
 		}
 		.item, .v-icon {
-			color: #ccc;
+			color: var(--grey-11);
 		}
 		a {
-			color: #ccc;
+			color: var(--grey-11);
 			&:hover {
-				color: #5fad1b;
+				color: var(--primary);
 			}
 		}
 	}
@@ -213,6 +217,14 @@ function throwCookies() {
 	.cookie-button {
 		cursor: pointer;
 		user-select: none;
+	}
+	/* Le conteneur des biscuits est vide (ses biscuits sont en position fixed),
+	   mais il comptait comme une case de la grille : une 5e colonne fantôme, qui
+	   volait un quart de la largeur aux quatre vraies. Hors flux. */
+	.cookies {
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 	.cookie {
 		position: fixed;
@@ -241,7 +253,58 @@ function throwCookies() {
 		cursor: pointer;
 		font-size: 20px;
 		&:hover {
-			color: #5fad1b !important;
+			color: var(--primary) !important;
+		}
+	}
+
+	/* ====== v3 : un bandeau, séparé du contenu par le trait ====== */
+	body:not(.v2) .footer {
+		border-top: 1px solid var(--border-strong);
+		margin-top: 20px;
+	}
+	/* Le gabarit central réserve 20 px de marge de chaque côté (0 en dessous de
+	   600 px et en mode application, cf. app.vue) : le pied de page les reprend
+	   pour aller d'un bord à l'autre, et cale ses colonnes sur la gauche des
+	   panneaux plutôt que sur un retrait de 45 px hérité d'une autre mise en
+	   page. Quand le menu est là, le bandeau part de son bord droit — il ne
+	   glisse pas sous une barre fixe. */
+	/* La gouttière est celle que `.app-center` publie (`--app-center-gutter`) :
+	   jamais en dur, sinon le bandeau dépasse dès qu'elle change et passe sous
+	   le menu et sous le panneau social. Les 8 px retirés du rembourrage
+	   sont ceux que `.column` ajoute déjà : le texte retombe ainsi exactement
+	   sur le bord des panneaux au-dessus.
+	   Quand les grands poireaux sont affichés, le texte s'écarte de 60 px de
+	   plus : ils débordent de la colonne derrière le pied
+	   de page et mordent de 45 à 50 px sur chaque bord à sa hauteur. */
+	@media screen and (min-width: 600px) {
+		body:not(.v2) #app:not(.app) .footer {
+			margin-left: calc(-1 * var(--app-center-gutter));
+			margin-right: calc(-1 * var(--app-center-gutter));
+			padding-left: calc(var(--app-center-gutter) - 8px);
+			padding-right: calc(var(--app-center-gutter) - 8px);
+		}
+		body:not(.v2) #app:not(.app):has(.big-leeks) .footer {
+			padding-left: calc(var(--app-center-gutter) + 52px);
+			padding-right: calc(var(--app-center-gutter) + 52px);
+		}
+	}
+	/* Le survol allume le pied de page. Il le faisait avec --grey-11 et
+	   --grey-8, deux gris de l'échelle claire que le thème sombre ne redéfinit
+	   pas : sur le fond extérieur clair, survoler le pied de page le faisait
+	   DISPARAÎTRE (1,23 mesuré pour les liens, 2,36 pour les intitulés). Les
+	   encres du thème montent dans les deux thèmes. */
+	body:not(.v2) .footer:hover {
+		h4 {
+			color: var(--text-color-secondary);
+		}
+		.item, .v-icon {
+			color: var(--text-color);
+		}
+		a {
+			color: var(--text-color);
+			&:hover {
+				color: var(--primary);
+			}
 		}
 	}
 </style>

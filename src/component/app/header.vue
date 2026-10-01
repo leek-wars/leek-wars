@@ -3,9 +3,20 @@
 		<div class="header-left">
 			<router-link to="/">
 				<div class="logo-wrapper">
-					<img class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : '/image/leekwars.svg'">
+					<!-- Icône devant le mot-symbole (v3) : c'est le poireau du favicon,
+					     déjà l'icône du jeu, pas un dessin nouveau. -->
+					<img v-if="!LeekWars.legacyTheme && !LeekWars.xpTheme" class="logo-icon" src="/image/favicon.png" alt="">
+					<img v-if="LeekWars.legacyTheme || LeekWars.xpTheme" class="logo" :src="LeekWars.xpTheme ? '/image/xp_logo.png' : '/image/leekwars.svg'">
+					<!-- Le logo historique est rempli d'un dégradé vertical (blanc → #b3b3b3),
+					     hérité d'une barre sombre. Le v3 en prend une version à plat, même
+					     géométrie au point près, un seul aplat.
+					     Le SVG sert de MASQUE et la boîte est peinte en `--text-color` :
+					     le mot-symbole est de la couleur du texte, pas d'un noir ou d'un
+					     blanc pur. -->
+					<span v-else class="logo logo-mask" role="img" aria-label="Leek Wars"></span>
 					<span v-if="seasonDecoration" class="season-decoration">{{ seasonDecoration }}</span>
-					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
+					<span v-if="LeekWars.BETA_LOCAL" class="beta-local-label">Bêta locale</span>
+					<span v-else-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
 					<!-- <v-tooltip>
@@ -44,7 +55,7 @@
 						</v-list-item>
 					</v-list>
 				</v-menu>
-				<div class="button-wrapper">
+				<div class="button-wrapper help-button">
 					<router-link to="/help">
 						<div class="header-button">
 							<v-icon>mdi-help-circle-outline</v-icon>
@@ -82,8 +93,19 @@
 						<v-icon>mdi-weather-night</v-icon>
 					</div>
 				</div> -->
+				<!-- Encart LW+ : le « + » 3D doré, qui ne tourne qu'au survol du
+				     bouton, et le temps restant de l'abonnement en abrégé (« 15 j »,
+				     « 3 mois », « 2 ans »). Mène à la page d'abonnement. Absent sans LW+. -->
+				<div v-if="$store.state.farmer.lwplus && lwplusRemaining" class="button-wrapper">
+					<router-link to="/lwplus" :class="{'header-active': $route.path.startsWith('/lwplus')}">
+						<div class="header-button lwplus-button" @pointerenter="spinPlus" @pointerleave="lwplusLogo?.rest()">
+							<lwplus-logo ref="lwplusLogo" variant="plus" alt="LW+" class="lwplus-icon" />
+							<span class="text">{{ lwplusRemaining }}</span>
+						</div>
+					</router-link>
+				</div>
 				<div v-if="env.BANK && $store.state.farmer.verified && $store.state.farmer.bank_enabled" class="button-wrapper">
-					<router-link to="/bank?ref=header">
+					<router-link to="/bank?ref=header" :class="{'header-active': $route.path.startsWith('/bank')}">
 						<div v-if="$store.state.farmer" class="header-button">
 							<span class="farmer-crystals text">{{ $filters.number(Math.round($store.state.farmer.animated_crystals)) }}</span>
 							<span class="crystal text"></span>
@@ -93,7 +115,10 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<router-link to="/market">
+					<!-- `header-active` à la main : /market et /market/:item sont deux
+					     records de route distincts, router-link-active ne suit donc pas
+					     les sous-pages (idem banque et potager). -->
+					<router-link to="/market" :class="{'header-active': $route.path.startsWith('/market')}">
 						<div v-if="$store.state.farmer" class="header-button">
 							<span class="farmer-habs text">{{ $filters.number(Math.round($store.state.farmer.animated_habs)) }}</span>
 							<span class="hab text"></span>
@@ -105,23 +130,21 @@
 				<div class="button-wrapper">
 					<v-tooltip v-if="$store.state.farmer?.bought_fights || $store.state.farmer?.team_fights" bottom>
 						<template #activator="{ props }">
-							<router-link to="/garden" v-bind="props">
+							<router-link to="/garden" v-bind="props" :class="{'header-active': $route.path.startsWith('/garden')}">
 								<div class="header-button fights-button">
-									<span class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
-									<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
-									<img src="/image/icon/garden.png">
+									<span class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}<template v-if="$store.state.farmer?.team_fights"> + {{ $filters.number($store.state.farmer.team_fights) }}</template></span>
+									<v-icon>mdi-sword-cross</v-icon>
 								</div>
 							</router-link>
 						</template>
-						{{ $t('main.free_fights') }} : {{ $filters.number($store.state.farmer.fights - $store.state.farmer.bought_fights) }}<br>
-						{{ $t('main.paid_fights') }} : {{ $filters.number($store.state.farmer.bought_fights) }}<template v-if="$store.state.farmer.team_fights"><br>
+						{{ $t('main.free_fights') }} : {{ $filters.number(Math.max(0, $store.state.farmer.fights - $store.state.farmer.bought_fights)) }}<br>
+						{{ $t('main.paid_fights') }} : {{ $filters.number(Math.min($store.state.farmer.fights, $store.state.farmer.bought_fights)) }}<template v-if="$store.state.farmer.team_fights"><br>
 						{{ $t('main.team') }} : {{ $filters.number($store.state.farmer.team_fights) }}</template>
 					</v-tooltip>
-					<router-link v-else to="/garden">
+					<router-link v-else to="/garden" :class="{'header-active': $route.path.startsWith('/garden')}">
 						<div class="header-button fights-button">
-							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}</span>
-							<span v-if="$store.state.farmer?.team_fights" class="farmer-fights text">+ {{ $filters.number($store.state.farmer.team_fights) }}</span>
-							<img src="/image/icon/garden.png">
+							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $filters.number($store.state.farmer.fights) }}<template v-if="$store.state.farmer.team_fights"> + {{ $filters.number($store.state.farmer.team_fights) }}</template></span>
+							<v-icon>mdi-sword-cross</v-icon>
 						</div>
 					</router-link>
 				</div>
@@ -159,10 +182,24 @@
 						</div>
 					</v-menu>
 				</div>
+				<!-- La console flottait en icône libre par-dessus la page, en haut à
+				     gauche : elle rejoint la barre, avec les autres outils. -->
+				<div class="button-wrapper">
+					<v-tooltip bottom>
+						<template #activator="{ props }">
+							<div class="console-button header-button" v-bind="props" @click="openConsole">
+								<v-icon>mdi-console</v-icon>
+							</div>
+						</template>
+						{{ $t('main.console') }}
+					</v-tooltip>
+				</div>
 				<div class="button-wrapper">
 					<router-link to="/settings">
 						<div class="settings-button header-button">
-							<v-icon>mdi-cog-outline</v-icon>
+							<!-- mdi-cog plein : le glyphe canonique des réglages, le contour
+							     est réservé aux états vides. -->
+							<v-icon>mdi-cog</v-icon>
 						</div>
 					</router-link>
 				</div>
@@ -188,12 +225,34 @@
 </template>
 
 <script lang="ts" setup>
+	import { emitter } from '@/model/emitter'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { seasonDisplay } from '@/model/season'
+	import { i18n } from '@/model/i18n'
 	import { computed, defineAsyncComponent, ref } from 'vue'
+	import LwplusLogo from '@/component/lwplus/lwplus-logo.vue'
 
 	defineOptions({ name: 'LwHeader' })
+
+	// Temps restant de LW+ en une unité, arrondi vers le haut : jours sous un mois,
+	// mois sous un an, années ensuite. Les libellés abrégés viennent de main.n_*.
+	const lwplusLogo = ref<InstanceType<typeof LwplusLogo> | null>(null)
+
+	// Le survol du BOUTON fait tourner le « + », pas seulement le survol de
+	// l'image, qui est petite. Le composant filtre lui-même le tactile.
+	function spinPlus(event: PointerEvent) {
+		lwplusLogo.value?.spin(event)
+	}
+	const lwplusRemaining = computed(() => {
+		const until = store.state.farmer?.lwplus_until ?? 0
+		const seconds = until - LeekWars.time
+		if (seconds <= 0) { return '' }
+		const days = Math.max(1, Math.ceil(seconds / 86400))
+		if (days < 30) { return i18n.tc('main.n_day', days) }
+		if (days < 365) { return i18n.tc('main.n_month', Math.max(1, Math.round(days / 30))) }
+		return i18n.tc('main.n_year', Math.max(1, Math.round(days / 365)))
+	})
 
 	// Décoration saisonnière greffée sur le logo (#4383), seulement en saison active.
 	const seasonDecoration = computed(() => {
@@ -206,6 +265,12 @@
 
 	const accountMenu = ref(false)
 
+	// La fenêtre de console est montée à la racine de l'application, hors de
+	// portée de la barre : c'est elle qui écoute.
+	function openConsole() {
+		emitter.emit('open-console')
+	}
+
 	function readNotifications() {
 		if (store.state.unreadNotifications) {
 			LeekWars.post('notification/read-all')
@@ -216,12 +281,61 @@
 
 <style lang="scss" scoped>
 	.logo {
+		filter: var(--header-logo-filter);
 		width: 100%;
 		max-width: 320px;
 		max-height: 45px;
 		margin: 0px;
 		margin-top: 15px;
 		margin-bottom: 10px;
+	}
+	// v3 : mot-symbole plus petit, précédé du poireau. Le wrapper passe en flex
+	// pour aligner l'icône, le logo et le badge d'environnement sur une même
+	// ligne ; les marges d'origine calaient le logo dans une barre alignée en bas,
+	// alors que celle du v3 centre son contenu.
+	body:not(.v2):not(.xp) {
+		.logo-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+		.logo {
+			width: auto;
+			height: 32px;
+			max-width: none;
+			max-height: none;
+			margin: 0;
+		}
+		// Le mot-symbole peint en couleur de texte : la boîte prend la largeur du
+		// SVG par son ratio (175.283 × 23.778) et le masque, calé à gauche et
+		// contenu, garde ses proportions si la boîte se resserre (mobile).
+		.logo-mask {
+			display: block;
+			aspect-ratio: 175.283 / 23.778;
+			background-color: var(--text-color);
+			mask: url('/image/leekwars_flat.svg') left center / contain no-repeat;
+			-webkit-mask: url('/image/leekwars_flat.svg') left center / contain no-repeat;
+		}
+		.logo-icon {
+			height: 32px;
+			width: auto;
+			flex-shrink: 0;
+		}
+		// Les badges d'environnement sont calés pour la barre du v2, alignée en
+		// bas (`line-height: 70px`) : dans un wrapper flex ils gonflent la ligne.
+		.logo-wrapper :is(.dev-label, .beta-label, .local-label, .beta-local-label) {
+			line-height: 1;
+			margin-left: 0;
+		}
+		// La décoration saisonnière était posée à 287 px du bord, c'est-à-dire au
+		// bout du logo d'avant. Elle s'accroche maintenant à son coin, quelle que
+		// soit sa largeur.
+		.logo-wrapper .season-decoration {
+			top: -6px;
+			left: auto;
+			right: -18px;
+			font-size: 26px;
+		}
 	}
 	.avatar {
 		height: 42px;
@@ -235,10 +349,10 @@
 		align-items: flex-end;
 		height: 80px;
 	}
-	.header .fights-button img {
-		height: 20px;
-		width: 20px;
-		margin: -4px 0;
+	// L'épée du compteur de combats : plus petite que les icônes de la barre
+	// (26 px), qui sont seules dans leur bouton — celle-ci accompagne un nombre.
+	.header .fights-button .v-icon {
+		font-size: 21px;
 		opacity: 0.8;
 	}
 	.header-left {
@@ -285,16 +399,16 @@
 		font-size: 17px;
 		height: 42px;
 		margin-left: 25px;
-		color: #eee;
+		color: var(--header-color);
 		position: relative;
-		background: rgba(80, 80, 80, 0.6);
+		background: var(--header-button-background);
 		vertical-align: bottom;
 		white-space: nowrap;
 		user-select: none;
 		align-items: center;
 		line-height: 42px;
 		i {
-			color: #eee;
+			color: var(--header-color);
 			font-size: 26px;
 		}
 		&.merge-left {
@@ -327,6 +441,20 @@
 		vertical-align: bottom;
 		margin-bottom: -13px;
 	}
+	// L'or en encre pour la marque, le temps restant dans la couleur du compteur.
+	.header .lwplus-button {
+		padding: 0 10px 0 6px;
+		gap: 4px;
+		// Le rendu a une marge de cadrage : 32 px d'image pour un signe d'environ 25 px.
+		.lwplus-icon {
+			width: 32px;
+			height: 32px;
+			margin: -3px;
+		}
+		.text {
+			padding-right: 0;
+		}
+	}
 	.signup-button {
 		padding-right: 20px;
 	}
@@ -339,7 +467,7 @@
 		height: 0;
 		border-style: solid;
 		border-width: 0 0 42px 20px;
-		border-color: transparent transparent rgba(80, 80, 80, 0.6) transparent;
+		border-color: transparent transparent var(--header-button-background) transparent;
 	}
 	.header-button:not(.mobile):after {
 		content: "";
@@ -351,19 +479,19 @@
 		height: 0;
 		border-style: solid;
 		border-width: 42px 20px 0 0;
-		border-color: rgba(80, 80, 80, 0.6) transparent transparent transparent;
+		border-color: var(--header-button-background) transparent transparent transparent;
 	}
 	.header .button-wrapper:last-child .header-button:after {
 		border: none;
 	}
 	.header .header-button:hover {
-		background: rgba(200, 200, 200, 0.4);
+		background: var(--header-button-background-hover);
 	}
 	.header .header-button:hover:before {
-		border-color: transparent transparent rgba(200, 200, 200, 0.4) transparent;
+		border-color: transparent transparent var(--header-button-background-hover) transparent;
 	}
 	.header .header-button:hover:after {
-		border-color: rgba(200, 200, 200, 0.4) transparent transparent transparent;
+		border-color: var(--header-button-background-hover) transparent transparent transparent;
 	}
 	.farmer-avatar {
 		height: 42px;
@@ -385,17 +513,17 @@
 		position: absolute;
 		top: -2px;
 		right: -6px;
-		background: #5fad1b;
+		background: var(--primary-surface);
 		padding: 4px 5px;
-		color: white;
-		border-radius: 5px;
+		color: var(--primary-surface-text);
+		border-radius: var(--radius);
 		height: 20px;
 		line-height: 12px;
 	}
 	.dialog {
 		background: var(--background);
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.dialog-items {
 		width: 400px;
@@ -466,11 +594,11 @@
 		margin-right: 8px;
 	}
 	.beta {
-		background: white;
-		color: #333;
+		background: var(--white);
+		color: var(--grey-2);
 		padding: 2px 4px;
-		border: 1px solid #aaa;
-		border-radius: 4px;
+		border: 1px solid var(--grey-9);
+		border-radius: var(--radius);
 		font-size: 12px;
 		margin-left: 8px;
 	}

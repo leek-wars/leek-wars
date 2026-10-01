@@ -13,6 +13,14 @@
 		</div>
 		<div v-if="!LeekWars.lightBar || LeekWars.menuExpanded" class="actions-wrapper">
 			<div class="static-actions">
+				<!-- L'arène en cours : le petit bandeau vertical qui flottait sur le bord
+				     droit (`mobile-br`) monte dans la barre.
+				     Le compteur n'est PAS en couleur d'accent : ce n'est pas une
+				     notification, c'est un état. -->
+				<div v-if="LeekWars.arena.enabled" v-ripple class="action header-button mobile arena-button" :title="$t('main.arena')" @click="$router.push('/garden/arena'); LeekWars.closeMenu()">
+					<v-icon>mdi-stadium</v-icon>
+					<span class="counter arena-counter">{{ LeekWars.arena.progress }}/{{ Arena.MAX_PLAYERS }}</span>
+				</div>
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" v-ripple class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.closeMenu()">
 					<v-icon>mdi-message-outline</v-icon>
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
@@ -38,9 +46,11 @@
 				</router-link>
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">
+				<doc-language-selector v-if="onDocumentation" />
 				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
-					<v-icon v-if="action.icon" class="action">{{ action.icon }}</v-icon>
-					<img v-else :src="'/image/' + action.image" class="action">
+					<img v-if="action.image" :src="'/image/' + action.image" class="action">
+					<v-icon v-else-if="action.icon" class="action">{{ action.icon }}</v-icon>
+					<span v-if="action.text" class="action action-text">{{ action.text }}</span>
 				</div>
 			</div>
 		</div>
@@ -51,13 +61,27 @@
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
-import { ref } from 'vue'
+import { emitter } from '@/model/emitter'
+import { Arena } from '@/model/arena'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import DocLanguageSelector from '@/component/documentation/doc-language-selector.vue'
 import type { Notification } from '@/model/notification'
 
 defineOptions({ name: 'LwBar' })
 
 const dark = ref(false)
+const route = useRoute()
+
+/**
+ * Le sélecteur de langage n'a de sens que là où on LIT de la documentation. Sur mobile la
+ * barre d'onglets de la page n'existe pas — c'est cette barre d'application qui la remplace —
+ * donc sans ça le sélecteur serait tout simplement absent sur téléphone.
+ */
+const onDocumentation = computed(() => {
+	const path = route.path
+	return path.startsWith('/help/documentation') || path.startsWith('/encyclopedia')
+})
 
 function mainButton() {
 	if (LeekWars.menuExpanded || !LeekWars.splitBack) {
@@ -83,6 +107,19 @@ function readNotification(notification: Notification) {
 </script>
 
 <style lang="scss" scoped>
+	// Le sélecteur n'est pas dans une `.page-bar .tabs`, il ne reçoit donc PAS la mise en forme
+	// d'onglet du site : sans hauteur ni centrage explicites il se calait en haut d'une barre
+	// de 56px. On l'aligne sur les autres actions, qui font toute la hauteur.
+	// `:deep` et non une classe passée au composant : sa racine est un `<v-menu>`, dont
+	// l'héritage d'attributs n'atteint pas l'élément activateur — la classe se perdait en route.
+	.actions :deep(.doc-language-selector) {
+		display: inline-flex;
+		align-items: center;
+		height: 56px;
+		padding: 0 12px;
+		vertical-align: top;
+	}
+
 	.app-bar {
 		position: fixed;
 		top: 0;
@@ -90,7 +127,7 @@ function readNotification(notification: Notification) {
 		height: 56px;
 		z-index: 6;
 		background: #4b9e06;
-		color: white;
+		color: var(--white);
 		line-height: 55px;
 		font-size: 18px;
 		overflow: hidden;
@@ -114,9 +151,9 @@ function readNotification(notification: Notification) {
 	.app-bar .menu-button .bar {
 		width: 20px;
 		height: 2px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		margin: 5px 0;
-		background: white;
+		background: var(--white);
 		transition: all ease 400ms;
 	}
 	.app-bar .menu-button.back .bar:first-child {
@@ -181,13 +218,21 @@ function readNotification(notification: Notification) {
 		width: 56px;
 		height: 56px;
 		padding: 15px;
-		color: white;
+		color: var(--white);
 	}
 	.action img {
 		width: 56px;
 		height: 56px;
 		opacity: 1;
 		padding: 16px;
+	}
+	.action-text {
+		height: 56px;
+		line-height: 56px;
+		padding: 0 12px;
+		color: var(--white);
+		font-size: 16px;
+		white-space: nowrap;
 	}
 	.app-bar.content .action.list:not(.content),
 	.app-bar.list .action.content:not(.list),
@@ -203,10 +248,74 @@ function readNotification(notification: Notification) {
 		right: 5px;
 		padding: 4px 3px;
 		background: #ff6f00;
-		color: #fff;
-		border-radius: 5px;
+		color: var(--white);
+		border-radius: var(--radius);
 		height: 20px;
 		line-height: 12px;
+	}
+	// « x/20 » de l'arène : un état, pas une alerte — surface sombre neutre sur
+	// l'aplat vert du v2, jamais l'orange des compteurs.
+	.arena-counter {
+		background: rgba(0, 0, 0, 0.35);
+		font-size: 11px;
+		font-weight: 500;
+		white-space: nowrap;
+	}
+
+	/* ====== v3 : la barre d'application est une barre de page ======
+	   Pas d'aplat vert du v2 écrit en dur, d'encre blanche ni d'ombre floue
+	   d'élévation : en thème clair, ce serait un bandeau vif au-dessus du
+	   parchemin, et l'encre `--white` n'est jamais redéfinie en sombre. Elle
+	   prend la surface d'en-tête et l'encre du thème, comme la barre de page sur
+	   grand écran, et se détache par le trait. */
+	body:not(.v2) {
+		.app-bar {
+			background: var(--background-header);
+			color: var(--text-color);
+			box-shadow: none;
+			border-bottom: 1.5px solid var(--border-strong);
+		}
+		/* Le shell habille `.menu-button` en poignée de repli — un petit carré bordé
+		   posé dans le vide, pour le menu et le panneau social sur grand écran. Ici
+		   ce n'est pas une poignée mais le premier bouton de la barre : sa surface
+		   de panneau y dessinait un carré plus clair, cousu à même le bandeau. */
+		.app-bar .menu-button {
+			background: transparent;
+			border: none;
+			color: inherit;
+		}
+		/* Les trois traits du bouton et les icônes suivaient `--white` : ils suivent
+		   maintenant l'encre de la barre, quel que soit le thème. */
+		.app-bar .menu-button .bar {
+			background: currentColor;
+		}
+		.action .v-icon,
+		.action-text {
+			color: inherit;
+		}
+		/* Même pastille que le compteur du header sur grand écran. Le orange en dur
+		   ne descendait d'aucun jeton et ne tenait que sur l'aplat vert. */
+		.counter {
+			background: var(--primary-surface);
+			color: var(--primary-surface-text);
+			border-radius: var(--radius-tiny);
+		}
+		/* Le compteur d'arène reste en surface de rangée bordée, à l'encre du
+		   thème : le vert plein est réservé aux notifications. */
+		.arena-counter {
+			background: var(--background-row);
+			color: var(--text-color);
+			border: 1px solid var(--border-strong);
+			line-height: 10px;
+		}
+		/* Les images d'action sont les PNG BLANCS du v2 (garden, market, potion,
+		   github_white — mesurés entre 245 et 255 de luminosité), taillés pour
+		   l'aplat vert : sur le parchemin ils disparaissent. On les retourne en
+		   clair seulement, l'inverse de ce que le shell fait pour les icônes
+		   noires en thème sombre. */
+		&:not(.dark) .action img {
+			filter: invert(1);
+		}
 	}
 	.dark {
 		position: fixed;

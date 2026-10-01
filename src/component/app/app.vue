@@ -8,8 +8,6 @@
 
 				<lw-menu v-if="$store.state.connected" />
 
-				<v-icon class="console-button" @click="leekscriptConsole">mdi-console</v-icon>
-
 				<console-window v-if="showConsole" v-model="consoleValue" @close="consoleValue = false" />
 
 				<lw-bar v-if="LeekWars.mobile" />
@@ -24,10 +22,18 @@
 					</div>
 				</div>
 
-				<div v-if="!LeekWars.mobile" ref="bigLeeksEl" class="big-leeks">
+				<!-- Les deux poireaux géants des marges, sur toutes les pages, verts,
+				     discrets (trait seul, que le v3 teinte selon le thème) ou masqués
+				     selon le réglage. Le v3 a un cadrage à part sur les pages de
+				     présentation (inscription et groupes). Les classes `showcase` et
+				     `discreet` sont posées en impératif (cf. applyLayout), surtout pas
+				     par un `$route` ou un `:class` dans ce template — app.vue ne doit
+				     pas se re-rendre à chaque navigation, et un `:class`
+				     effacerait les classes posées à la main. -->
+				<div v-if="!LeekWars.mobile && LeekWars.bigLeeks !== 'hidden'" ref="bigLeeksEl" class="big-leeks">
 					<div class="wrapper">
-						<img class="big-leek-1" width="252" height="372" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
-						<img class="big-leek-2" width="398" height="508" fetchpriority="high" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
+						<img class="big-leek-1" width="252" height="372" fetchpriority="low" :src="LeekWars.bigLeeks === 'discreet' ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
+						<img class="big-leek-2" width="398" height="508" fetchpriority="low" :src="LeekWars.bigLeeks === 'discreet' ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
 					</div>
 				</div>
 
@@ -35,7 +41,6 @@
 
 				<chats v-if="!LeekWars.mobile && $store.state.connected" />
 				<squares v-if="$store.state.connected" />
-				<mobile-br v-if="LeekWars.mobile && $store.state.connected" />
 
 				<div class="toasts"></div>
 
@@ -174,6 +179,17 @@
 				<div>{{ $t('main.logged_out_other_tab') }}</div>
 			</popup>
 
+				<popup v-model="accountChangedOtherTab" :width="500" :persistent="true">
+					<template #title>
+						<v-icon>mdi-account-switch</v-icon>
+						{{ $t('main.account_changed_other_tab_title') }}
+					</template>
+					<div>{{ $t('main.account_changed_other_tab') }}</div>
+					<template #actions>
+						<v-btn @click="reload">{{ $t('main.account_changed_other_tab_reload') }}</v-btn>
+					</template>
+				</popup>
+
 				<popup v-model="LeekWars.logoutDialog" :width="500">
 					<template #title>
 						<v-icon>mdi-logout</v-icon>
@@ -212,7 +228,7 @@
 					<span>{{ $t('main.new_version') }}</span>
 				</div>
 				<template #actions>
-					<v-btn variant="text" color="#5fad1b" @click="reloadNewVersion">{{ $t('main.new_version_reload') }}</v-btn>
+					<v-btn variant="text" color="#5fad1b" @click="reload">{{ $t('main.new_version_reload') }}</v-btn>
 					<v-btn variant="text" @click="LeekWars.newVersionPopup = false">{{ $t('main.new_version_later') }}</v-btn>
 				</template>
 			</v-snackbar>
@@ -229,7 +245,6 @@
 	const Chats = defineAsyncComponent(() => import('@/component/app/chats.vue'))
 	const Footer = defineAsyncComponent(() => import('@/component/app/footer.vue'))
 	const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`))
-	const MobileBR = defineAsyncComponent(() => import('@/component/app/mobile-br.vue'))
 	const Social = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`))
 	const Squares = defineAsyncComponent(() => import('@/component/app/squares.vue'))
 	const ConsoleWindow = defineAsyncComponent(() => import('./console-window.vue'))
@@ -246,10 +261,11 @@
 	const Documentation = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`))
 	const DidactitielNew = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel-new/didactitiel-new.${locale}.i18n`))
 	export default {
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, 'mobile-br': MobileBR, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow, RequestCounter, PageHost }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Chats, ChangelogDialog, Documentation, DidactitielNew, ConsoleWindow, RequestCounter, PageHost }
 	}
 </script>
 <script lang="ts" setup>
+	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -259,7 +275,8 @@
 	import { useI18n } from 'vue-i18n'
 	import { useRouter } from 'vue-router'
 	import { useTheme } from 'vuetify'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
+	import { newcomerLanding } from '@/router'
 
 	const { locale: i18nLocale } = useI18n()
 	const router = useRouter()
@@ -280,6 +297,7 @@
 	const checkEmailReminderDismissed = ref(false)
 	const showActivationWelcome = ref(false)
 	const loggedOutOtherTab = ref(false)
+	const accountChangedOtherTab = ref(false)
 
 	// Bandeau bas "Valide ton compte" (verify-banner) : visible une fois le
 	// didactitiel terminé (ou au moins un combat joué pour les comptes
@@ -463,12 +481,28 @@
 		return store.state.accounts.filter((a: AccountInfo) => a.connected || a.id === farmerId)
 	})
 
+	// Le thème Vuetify porte le même couple (clair/sombre) × (v3/v2) que le CSS.
+	const applyVuetifyTheme = () => {
+		theme.change((LeekWars.darkMode ? 'dark' : 'light') + (LeekWars.legacyTheme ? '-v2' : ''))
+	}
+
 	watch(() => LeekWars.darkMode, () => {
-		theme.change(LeekWars.darkMode ? 'dark' : 'light')
+		applyVuetifyTheme()
 		if (LeekWars.darkMode)
 			document.body.classList.add('dark')
 		else
 			document.body.classList.remove('dark')
+		// Cookie miroir du mode sombre. On écrit la valeur RÉSOLUE et non le
+		// réglage : en « auto », elle dépend de la préférence système. Ce watch couvre les trois
+		// sources (réglage, bascule, changement de thème de l'OS via le listener
+		// matchMedia de vue.ts), et son `immediate` migre les comptes existants
+		// dès le premier chargement.
+		document.cookie = 'dark=' + (LeekWars.darkMode ? '1' : '0') + '; path=/; max-age=31536000; SameSite=Lax'
+	}, { immediate: true })
+
+	watch(() => [LeekWars.themeSetting, LeekWars.legacyTheme, LeekWars.sfw], () => {
+		const appearance = LeekWars.themeSetting + '.' + (LeekWars.legacyTheme ? 'v2' : 'v3') + '.' + (LeekWars.sfw ? '1' : '0')
+		document.cookie = 'appearance=' + appearance + '; path=/; max-age=31536000; SameSite=Lax'
 	}, { immediate: true })
 
 	watch(() => LeekWars.xpTheme, () => {
@@ -476,6 +510,19 @@
 			document.body.classList.add('xp')
 		else
 			document.body.classList.remove('xp')
+	}, { immediate: true })
+
+	// Ancien design : le nouveau thème est le défaut, l'ancien est une option.
+	// Sa feuille n'est chargée qu'à la demande, comme celle du thème XP, donc
+	// personne ne paye pour un thème qu'il n'a pas activé.
+	watch(() => LeekWars.legacyTheme, () => {
+		if (LeekWars.legacyTheme) {
+			import('@/theme/leekwars-theme-v2.scss')
+			document.body.classList.add('v2')
+		} else {
+			document.body.classList.remove('v2')
+		}
+		applyVuetifyTheme()
 	}, { immediate: true })
 
 	// Flags de layout (large/flex/box/footer/lightBar) appliqués en IMPÉRATIF, hors du
@@ -498,22 +545,35 @@
 		if (b) {
 			b.classList.toggle('flex', LeekWars.flex || LeekWars.large)
 			b.classList.toggle('hidden', LeekWars.didactitial)
+			// Le v3 cadre les poireaux à part sur les deux pages de présentation :
+			// l'inscription et les groupes privés. La route est lue ici, dans
+			// l'impératif, pour la même raison que les flags de layout.
+			// '/' et '/godfather/:login' rendent tous les
+			// deux l'inscription quand on n'est pas connecté (cf. router.ts).
+			const path = router.currentRoute.value.path
+			const signup = !store.state.connected && (path === '/' || path.startsWith('/godfather'))
+			b.classList.toggle('showcase', signup || path === '/groups')
+			b.classList.toggle('discreet', LeekWars.bigLeeks === 'discreet')
 		}
 		document.body.classList.toggle('lightbar', LeekWars.lightBar)
 	}
 	// mobile est inclus : big-leeks est en v-if="!mobile", il faut ré-appliquer ses
 	// classes quand il (re)monte. flush:'post' garantit que le DOM est à jour.
-	watch(() => [LeekWars.large, LeekWars.flex, LeekWars.box, LeekWars.didactitial, LeekWars.lightBar, LeekWars.mobile], applyLayout, { flush: 'post' })
+	watch(() => [LeekWars.large, LeekWars.flex, LeekWars.box, LeekWars.didactitial, LeekWars.lightBar, LeekWars.mobile, LeekWars.bigLeeks, router.currentRoute.value.path, store.state.connected], applyLayout, { flush: 'post' })
 	onMounted(applyLayout)
 	onMounted(startVersionCheck)
 
-	function reloadNewVersion() {
+	function reload() {
 		window.location.reload()
 	}
 
 	emitter.on('connected', () => {
 		if (!store.state.farmer!.didactitiel_seen) {
 			LeekWars.show_didactitiel()
+			const landing = newcomerLanding()
+			if (landing && router.currentRoute.value.path === '/') {
+				router.replace(landing)
+			}
 			nextTick(() => {
 				store.commit('didactitiel-seen')
 			})
@@ -569,9 +629,28 @@
 		if (e.key === 'connected' && e.newValue === 'true' && !store.state.connected) {
 			window.location.reload()
 		}
+		if (e.key === 'active-account') { checkActiveAccount() }
 	}
 	window.addEventListener('storage', onStorage)
 	onBeforeUnmount(() => window.removeEventListener('storage', onStorage))
+
+	// Changement de compte dans un autre onglet : le cookie JWT est commun, cet
+	// onglet agit déjà au nom du nouveau compte (API, et WebSocket dès qu'il se
+	// reconnecte) tout en affichant l'ancien. On recharge pour resynchroniser.
+	function checkActiveAccount() {
+		const active = localStorage.getItem('active-account')
+		if (!active || !store.state.farmer || active === '' + store.state.farmer.id) { return }
+		// Une IA modifiée ne vit que dans le modèle Monaco et n'est plus enregistrable
+		// (le compte a déjà basculé) : on laisse le joueur copier son code et recharger.
+		if (fileSystem.unsavedAIs.length) {
+			accountChangedOtherTab.value = true
+			return
+		}
+		reload()
+	}
+	// L'événement `storage` n'atteint pas un onglet en bfcache ou suspendu, et n'est
+	// pas rejoué au réveil : sans cette relecture il ne rechargerait jamais.
+	emitter.on('visible', checkActiveAccount)
 
 	const queryParams = new URLSearchParams(window.location.search)
 	const toast = queryParams.get('toast')
@@ -596,10 +675,11 @@
 	}
 	function aprilFoolsAccept() {
 		aprilFoolsDialog.value = false
-		LeekWars.themeSetting = 'xp'
-		localStorage.setItem('theme', 'xp')
-		LeekWars.xpTheme = true
-		LeekWars.darkMode = false
+		// Cette fonction posait `body.xp` à la main sans charger la feuille du
+		// skin — celle-ci n'était importée que par le watcher de settings.vue —
+		// donc le thème n'arrivait qu'au rechargement suivant. Elle passe par le
+		// point d'entrée commun, comme l'icône du trophée « Rétro ».
+		LeekWars.applyThemeSetting('xp')
 	}
 	function confirmLogout() {
 		LeekWars.logoutDialog = false
@@ -611,10 +691,13 @@
 		LeekWars.dark = 0
 	}
 
-	function leekscriptConsole() {
+	// La console s'ouvre depuis le bouton de la barre du haut (`lw-header`), qui
+	// n'a pas la fenetre sous la main : elle est montee ici, a la racine, pour
+	// flotter au-dessus de toute la coquille.
+	emitter.on('open-console', () => {
 		showConsole.value = true
 		consoleValue.value = true
-	}
+	})
 
 	function clickClover() {
 		if (LeekWars.cloverFake) {
@@ -702,36 +785,16 @@
 		top: -48px;
 		z-index: 10000;
 		padding: 10px 16px;
-		background: var(--primary);
-		color: #fff;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		font-weight: 500;
-		border-radius: 0 0 4px 4px;
+		border-radius: 0 0 var(--radius) var(--radius);
 		transition: top 0.15s ease;
 		&:focus {
 			top: 0;
-			outline: 2px solid #fff;
+			outline: 2px solid var(--white);
 			outline-offset: -4px;
 		}
-	}
-	.console-button.v-icon {
-		position: fixed;
-		top: 44px;
-		left: 35px;
-		z-index: 1;
-		cursor: pointer;
-		display: none;
-		font-size: 30px;
-		opacity: 0.5;
-		color: white;
-		&:hover {
-			opacity: 1;
-		}
-	}
-	#app.connected .console-button {
-		display: block;
-	}
-	#app.app .console-button {
-		display: none;
 	}
 	#app.app {
 		overflow: hidden;
@@ -752,12 +815,22 @@
 		transition: transform ease 200ms;
 		margin: 0;
 		padding: 0;
+		--app-center-gutter: 0px;
 	}
 	#app.app.menu-expanded .app-center {
 		transform: translateX(250px);
 	}
+	/* Gouttière de la colonne : 15 px de chaque côté.
+	   Publiée en variable parce que d'autres en dépendent : le pied de page v3
+	   la reprend en marge négative pour aller d'un bord à l'autre (footer.vue),
+	   et les grands poireaux se calent sur la boîte de la colonne
+	   (leekwars-shell-v3.scss) : ne pas la recopier en dur. Posée sur #app pour que `.big-leeks`,
+	   voisin et non descendant de `.app-center`, en hérite aussi. */
+	#app {
+		--app-center-gutter: 15px;
+	}
 	.app-center {
-		padding: 0 20px;
+		padding: 0 var(--app-center-gutter);
 		display: flex;
 	}
 	#app.connected:not(.app) .app-center {
@@ -859,7 +932,7 @@
 		position: fixed;
 		top: 0; bottom: 0;
 		left: 0; right: 0;
-		background: black;
+		background: var(--black);
 		opacity: 0;
 		z-index: 5;
 		transition: opacity ease 200ms;
@@ -873,7 +946,10 @@
 	}
 	.clover {
 		position: fixed;
-		z-index: 1000;
+		// Au-dessus de la coquille v3, qui recouvre la zone où il apparaît :
+		// bandeau du haut (1001), colonne du menu et poignées (1002). Reste
+		// sous les overlays Vuetify (à partir de 2000).
+		z-index: 1003;
 		cursor: pointer;
 		width: 40px;
 		height: 40px;
@@ -921,6 +997,7 @@
 	@media screen and (max-width: 599px) {
 		.app-center {
 			padding: 0;
+			--app-center-gutter: 0px;
 		}
 		.big-leeks {
 			display: none;
@@ -940,7 +1017,7 @@
 		}
 		a {
 			font-weight: 500;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
 
@@ -963,7 +1040,7 @@
 		margin-top: 12px;
 		padding: 8px 10px;
 		background: var(--background-secondary);
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 	.logout-account {
 		display: flex;
