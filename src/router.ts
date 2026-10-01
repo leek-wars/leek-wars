@@ -5,6 +5,7 @@ const AcceptConditions = () => import(/* webpackChunkName: "[request]" */ `@/com
 const AdminEmails = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-emails.vue`)
 const AdminErrors = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-errors.vue`)
 const AdminHats = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-hats.vue`)
+const AdminWeapons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-weapons.vue`)
 const AdminSkins = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-skins.vue`)
 const AdminNewsletters = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-newsletters.vue`)
 const AdminServers = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-servers.vue`)
@@ -14,6 +15,7 @@ const AdminGroups = () => import(/* webpackChunkName: "admin" */ `@/component/ad
 const AdminSources = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-sources.vue`)
 const AdminAcquisition = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-acquisition.vue`)
 const AdminItems = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-items.vue`)
+const AdminAlterations = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-alterations.vue`)
 const AdminSchemes = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-schemes.vue`)
 const AdminSecurity = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-security.vue`)
 const AdminApiStats = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-api-stats.vue`)
@@ -24,12 +26,17 @@ const AdminDashboards = () => import(/* webpackChunkName: "admin" */ `@/componen
 const AdminMatchmaking = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-matchmaking.vue`)
 const AdminGameAnimations = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-game-animations.vue`)
 const AdminSeasons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-seasons.vue`)
+const AdminReserves = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-reserves.vue`)
+const AdminIcons = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-icons.vue`)
+const AdminComponents = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-components.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
 import Error from '@/component/app/error.vue'
 const BankBuy = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-buy.vue`)
 const BankValidate = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-validate.vue`)
 const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank.${locale}.i18n`)
+const BankHistory = () => import(/* webpackChunkName: "bank" */ `@/component/bank/bank-history.vue`)
+const LWPlus = () => import(/* webpackChunkName: "[request]" */ `@/component/lwplus/lwplus.${locale}.i18n`)
 const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/component/change-email/change-email.${locale}.i18n`)
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)
@@ -56,6 +63,7 @@ const Garden = () => import(/* webpackChunkName: "[request]" */ `@/component/gar
 const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.vue`)
 const HelpPolyglot = () => import(/* webpackChunkName: "[request]" */ `@/component/help/help-polyglot/help-polyglot.vue`)
 const InventoryPage = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory-page.${locale}.i18n`)
+const Reserve = () => import(/* webpackChunkName: "[request]" */ `@/component/reserve/reserve.${locale}.i18n`)
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
 const Items = () => import(/* webpackChunkName: "[request]" */ `@/component/items/items.${locale}.i18n`)
@@ -70,11 +78,14 @@ const Moderation = () => import(/* webpackChunkName: "[request]" */ `@/component
 const ModerationThugs = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation-thugs.${locale}.i18n`)
 const ModerationHistory = () => import('@/component/moderation/moderation-history.vue')
 const ModerationMuted = () => import('@/component/moderation/moderation-muted.vue')
+const ModerationImages = () => import('@/component/moderation/moderation-images.vue')
 const NewLeek = () => import(/* webpackChunkName: "[request]" */ `@/component/new-leek/new-leek.${locale}.i18n`)
 const Notifications = () => import(/* webpackChunkName: "[request]" */ `@/component/notifications/notifications.${locale}.i18n`)
 const PressKit = () => import(/* webpackChunkName: "[request]" */ `@/component/press-kit/press-kit.${locale}.i18n`)
 const Ranking = () => import(/* webpackChunkName: "[request]" */ `@/component/ranking/ranking.${locale}.i18n`)
+const RedesignStyleguide = () => import(/* webpackChunkName: "redesign" */ `@/component/redesign/redesign-styleguide.vue`)
 const Report = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report.${locale}.i18n`)
+const AccountsConsole = () => import(/* webpackChunkName: "[request]" */ `@/component/accounts/accounts-console.${locale}.i18n`)
 const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/settings/settings.${locale}.i18n`)
 const Signup = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`))
 const Statistics = () => import(/* webpackChunkName: "[request]" */ `@/component/statistics/statistics.${locale}.i18n`)
@@ -90,32 +101,43 @@ const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/t
 // const Workshop = () => import(/* webpackChunkName: "[request]" */ `@/component/workshop/workshop.${locale}.i18n`)
 
 import { LeekWars } from '@/model/leekwars'
-import { store } from '@/model/store'
+import { readNotificationsAt, store } from '@/model/store'
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized, NavigationGuardNext, RouteLocationRaw, RouteLocationResolved, RouteRecordRaw } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
-import AdminComponents from './component/admin/admin-components.vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
 import { vueMain } from './model/emitter'
+import { loadRouteTranslations } from './model/i18n'
+
+// Tableau de bord personnalisable. Affiché par défaut sur '/' quand on est
+// connecté. Le joueur peut revenir à l'ancien comportement (page du 1er poireau) via
+// l'option 'options/home-dashboard' = 'false' (réglages).
+const HomeDashboard = defineAsyncComponent(() => import(/* webpackChunkName: "[request]" */ `@/component/home/home.${locale}.i18n`))
+export const homeShowsFirstLeek = () => localStorage.getItem('options/home-dashboard') === 'false'
+
+// « Afficher la page Chat en premier » renvoie vers le chat à l'OUVERTURE de
+// l'application, une seule fois : le renvoi rejouait à chaque arrivée sur '/',
+// et « Accueil » ramenait donc toujours au chat — la page d'accueil devenait
+// inatteignable sans retourner décocher l'option (signalé par Smartiz).
+let chatFirstDone = false
+const chatFirstPending = () => !chatFirstDone && LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
 
 const Home = defineComponent({
 	components: { signup: Signup, leek: LeekAsync, messages: Messages },
-	computed: {
-		chatFirst() {
-			return LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
-		}
-	},
 	mounted() {
-		if (store.state.connected && this.chatFirst) {
+		if (store.state.connected && chatFirstPending()) {
+			chatFirstDone = true
 			const chatID = locale === 'fr' ? 1 : 2
 			this.$router.replace('/chat/' + chatID)
 		}
 	},
 	render() {
 		if (store.state.connected) {
-			const chatFirst = LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
-			return chatFirst ? null : h(LeekAsync)
+			// Le rendu précède le `mounted` qui déclenche le renvoi : ne rien
+			// afficher tant qu'on part au chat, l'accueil sinon.
+			if (chatFirstPending()) return null
+			return homeShowsFirstLeek() ? h(LeekAsync) : h(HomeDashboard)
 		}
 		return h(Signup)
 	}
@@ -152,6 +174,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/emails', component: AdminEmails, beforeEnter: connected },
 	{ path: '/admin/skins', component: AdminSkins, beforeEnter: connected },
 	{ path: '/admin/hats', component: AdminHats, beforeEnter: connected },
+	{ path: '/admin/weapons', component: AdminWeapons, beforeEnter: connected },
 	{ path: '/admin/newsletters', component: AdminNewsletters, beforeEnter: connected },
 	{ path: '/admin/errors', component: AdminErrors, beforeEnter: connected },
 	{ path: '/admin/servers', component: AdminServers, beforeEnter: connected },
@@ -160,6 +183,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/sources', component: AdminSources, beforeEnter: connected },
 	{ path: '/admin/acquisition', component: AdminAcquisition, beforeEnter: connected },
 	{ path: '/admin/items', component: AdminItems, beforeEnter: connected },
+	{ path: '/admin/alterations', component: AdminAlterations, beforeEnter: connected },
 	{ path: '/admin/schemes', component: AdminSchemes, beforeEnter: connected },
 	{ path: '/admin/security', component: AdminSecurity, beforeEnter: connected },
 	{ path: '/admin/api-stats', component: AdminApiStats, beforeEnter: connected },
@@ -176,6 +200,8 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/admin/matchmaking', component: AdminMatchmaking, beforeEnter: connected },
 	{ path: '/admin/game-animations', component: AdminGameAnimations, meta: LAYOUT_BOX_LARGE, beforeEnter: connected },
 	{ path: '/admin/seasons', component: AdminSeasons, beforeEnter: connected },
+	{ path: '/admin/reserves', component: AdminReserves, beforeEnter: connected },
+	{ path: '/admin/icons', component: AdminIcons, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
@@ -213,8 +239,8 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/garden/:category/:type/:target', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target/:item', component: Garden, beforeEnter: connected },
 	{ path: '/help', component: Encyclopedia },
-	{ path: '/help/api', component: Api, meta: LAYOUT_BOX },
-	{ path: '/help/api/:module/:function', component: Api, props: { popup: false }, meta: LAYOUT_BOX },
+	{ path: '/help/api', component: Api, meta: LAYOUT_BOX_LARGE },
+	{ path: '/help/api/:module/:function', component: Api, props: { popup: false }, meta: LAYOUT_BOX_LARGE },
 	{ path: '/help/documentation', component: Documentation, props: { popup: false }, meta: LAYOUT_BOX },
 	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false }, meta: LAYOUT_BOX },
 	{ path: '/help/items', component: Items },
@@ -222,7 +248,9 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/help/polyglot', component: HelpPolyglot },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
+	{ path: '/help/tutorial/:lang', component: Tutorial },
 	{ path: '/inventory', component: InventoryPage, meta: LAYOUT_BOX },
+	{ path: '/reserve', component: Reserve, beforeEnter: connected },
 	// Scroll naturel de la page + footer (pas de box : la grille est haute et
 	// déborderait sur le footer en hauteur fixe 100vh). resetLayout par défaut.
 	{ path: '/collection', component: Collection, beforeEnter: connected },
@@ -241,6 +269,7 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/history', component: ModerationHistory, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/muted', component: ModerationMuted, meta: {noscroll: true}, beforeEnter: connected },
+	{ path: '/moderation/images', component: ModerationImages, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/new-leek', component: NewLeek, beforeEnter: connected },
 	{ path: '/notifications', component: Notifications, beforeEnter: connected },
 	{ path: '/press-kit', component: PressKit },
@@ -250,7 +279,9 @@ const routes: RouteRecordRaw[] = [
 	{ path: '/ranking/:category/page-:page', component: Ranking },
 	{ path: '/ranking/:category/:order', component: Ranking },
 	{ path: '/ranking/:category/:order/page-:page', component: Ranking },
+	{ path: '/redesign', component: RedesignStyleguide },
 	{ path: '/report/:id', component: Report },
+	{ path: '/accounts', component: AccountsConsole, beforeEnter: connected },
 	{ path: '/settings', component: Settings, beforeEnter: connected },
 	{ path: '/signup/success/:farmer', component: SignupResult, props: { result: 'success' } },
 	{ path: '/signup/failed', component: SignupResult, props: { result: 'failed' } },
@@ -285,6 +316,7 @@ if (import.meta.env.VITE_SOCIAL !== 'false') {
 if (import.meta.env.VITE_BANK !== 'false') {
 	routes.push(
 		{ path: '/bank', component: Bank, beforeEnter: connected },
+		{ path: '/bank/history', component: BankHistory, beforeEnter: connected },
 		{ path: '/bank/buy/:pack', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/buy/:pack/:offer', component: BankBuy, beforeEnter: connected },
 		{ path: '/bank/validate/', component: BankValidate, beforeEnter: connected },
@@ -292,6 +324,9 @@ if (import.meta.env.VITE_BANK !== 'false') {
 		{ path: '/bank/validate/success/:crystals/:vendor', component: BankValidate, props: { success: true }, beforeEnter: connected },
 		{ path: '/bank/validate/failed/:reason', component: BankValidate, props: { success: false }, beforeEnter: connected },
 		{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: { success: false }, beforeEnter: connected },
+		// Abonnement LW+ : sous le même drapeau que la banque, un groupe qui
+		// coupe les paiements ne doit pas se voir proposer un abonnement non plus.
+		{ path: '/lwplus', component: LWPlus, beforeEnter: connected },
 	)
 }
 
@@ -409,6 +444,11 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 	next()
 })
 
+// Le dictionnaire de la page dans la langue COURANTE avant son montage : le composant importé
+// ne porte que celui de la langue du démarrage, et un titre posé dans le setup (ou au retour
+// d'un appel d'API) resterait sinon figé sur la clé brute après un changement de langue.
+router.beforeResolve(to => loadRouteTranslations(to).then(() => undefined))
+
 // Réinitialise les balises meta SEO/partage à chaque navigation : pose le canonical et
 // l'og:url de l'URL courante + remet les valeurs par défaut. Les pages publiques surchargent
 // ensuite via LeekWars.setMeta() dans leur onMounted (après le swap de <router-view>).
@@ -439,12 +479,20 @@ router.afterEach((to, from, failure) => {
 		}
 	}
 	LeekWars.setMeta()
+	if (!failure) readNotificationsAt(to.path)
 })
+
+/** Un nouvel éleveur démarre sur la page de son poireau, où commence le didacticiel. */
+export function newcomerLanding(): string | null {
+	if (LeekWars.didactitial_step !== 1 || !store.state.farmer) return null
+	const leek = LeekWars.first(store.state.farmer.leeks)
+	return leek ? '/leek/' + leek.id : null
+}
 
 export function getRedirectAfterLogin(): string {
 	const redirect = sessionStorage.getItem('redirect_after_login')
 	sessionStorage.removeItem('redirect_after_login')
-	return redirect || '/'
+	return newcomerLanding() || redirect || '/'
 }
 
 export default router
