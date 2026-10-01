@@ -30,6 +30,17 @@ const i18n = createI18n({
 	escapeParameter: true, // échappe les params interpolés dans v-html="$t(k,[userData])" (défense XSS) — #4007
 }) as unknown as I18nWithCompat
 
+// vue-i18n lève un SyntaxError (INVALID_ARGUMENT) dès que la clé n'est pas une string non vide, et
+// beaucoup de clés sont calculées à partir de données serveur. Dans un .catch() ce throw devient une
+// unhandledrejection non rattrapée qui casse la page, dans un render il casse le composant. Le reste
+// de la config traite déjà tout échec de lookup comme non fatal (missingWarn / fallbackWarn /
+// silentTranslationWarn) : on étend la même règle aux clés inexploitables. Emballé ici sur le
+// composer plutôt que sur chaque helper, donc avant le app.use(i18n) de vue.ts qui recopie ce
+// descripteur : t(), useNamespacedT(), i18n.t et le $t global en héritent d'un coup.
+const rawTranslate = (i18n.global.t as (...a: unknown[]) => unknown).bind(i18n.global)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(i18n.global as any).t = (key: unknown, ...args: unknown[]) => typeof key === 'string' && key ? rawTranslate(key, ...args) : ''
+
 // Compat wrappers: en mode composition, i18n.global.locale est un WritableComputedRef
 // et t/tc nécessitent un binding correct. On garde i18n.t() / i18n.tc() / i18n.locale
 // pour le code historique (pages chargées hors composant Vue, services, etc.)
@@ -95,7 +106,9 @@ const mixins = [{
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const opts = (this as any).$options
 		const locale = currentLocale()
-		if (!opts?.i18n?.messages?.[locale]) {
+		if (opts?.[MERGED_FLAG] === locale) {
+			// Déjà chargé par la garde du routeur (loadRouteTranslations) ou une instance précédente.
+		} else if (!opts?.i18n?.messages?.[locale]) {
 			loadInstanceTranslations(locale, this)
 		} else if (opts.name && opts[MERGED_FLAG] !== locale) {
 			// Messages déjà attachés à Component.i18n par le i18nPlugin Vite mais
@@ -136,28 +149,84 @@ function setI18nLanguage(lang: string) {
 	return lang
 }
 
+// Bascule de langue une fois TOUT prêt (dictionnaire général + ceux de la page affichée) : basculer
+// avant faisait rendre la page en clés brutes le temps que ses dictionnaires arrivent.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function loadLanguageAsync(vue: any, newLocale: string) {
-	// console.log("loadLanguageAsync", newLocale)
-	const currentRoute = vue.$router.currentRoute.value?.matched[0]
-	if (currentRoute) {
-		// console.log("loadLanguageAsync", currentRoute)
-		loadComponentLanguage(newLocale, currentRoute.components?.default, currentRoute.instances?.default)
+	const route = vue.$router.currentRoute.value
+	const home = route?.matched[0]
+	const pending: Promise<unknown>[] = [loadRouteTranslations(route, newLocale)]
+	if (home) {
+		pending.push(Promise.resolve(loadComponentLanguage(newLocale, home.components?.default, home.instances?.default)).catch(() => {}))
 	}
 	if (!loadedLanguages.includes(newLocale)) {
-		const modulePath = `/src/lang/locale/${newLocale}.ts`
-		const loader = localeModules[modulePath]
+		const loader = localeModules[`/src/lang/locale/${newLocale}.ts`]
 		if (!loader) {
-			console.error(`Locale module not found: ${modulePath}`)
-			return Promise.resolve(setI18nLanguage(newLocale))
+			console.error(`Locale module not found: /src/lang/locale/${newLocale}.ts`)
+		} else {
+			pending.push(loader().then((module) => {
+				i18n.global.mergeLocaleMessage(newLocale, module.translations)
+				loadedLanguages.push(newLocale)
+			}))
 		}
-		return loader().then((module) => {
-			i18n.global.mergeLocaleMessage(newLocale, module.translations)
-			loadedLanguages.push(newLocale)
-			return setI18nLanguage(newLocale)
-		})
 	}
-	return Promise.resolve(setI18nLanguage(newLocale))
+	return Promise.all(pending).then(() => setI18nLanguage(newLocale))
+}
+
+// Le dictionnaire d'un composant : le même que le composant, sauf pour les satellites qui
+// partagent celui d'un autre. `file` est aussi le NAMESPACE des clés fusionnées, les deux ne
+// peuvent pas diverger.
+function componentDictionary(rawName: string): { folder: string, file: string } {
+	const name = normalizeComponentName(rawName)
+	let folder = name
+	let file = name
+	if (name.startsWith("editor-")) { folder = "editor" }
+	if (name.startsWith("git-")) { folder = "editor" }
+	if (name.startsWith("signup-")) { folder = "signup" }
+	if (name.startsWith("encyclopedia-")) { folder = "encyclopedia" }
+	if (name.startsWith("level-dialog")) { folder = "leek" }
+	if (name.startsWith("forum-")) { folder = "forum" }
+	if (name.startsWith("inventory-")) { folder = "inventory" }
+	if (name === "fights-history-table") { folder = "history" }
+	// Les satellites du panneau « En direct » (son menu de filtre, posé par la page
+	// et non par le panneau) partagent SON dictionnaire : le nom est réécrit, pas
+	// seulement le dossier, sinon on chercherait un live/live-filter-menu.*.i18n qui
+	// n'existe pas — et le menu rendrait ses clés en brut partout où il est affiché
+	// sans que <live> soit monté (panneau d'équipe replié).
+	if (name.startsWith("live-")) { folder = "live"; file = "live" }
+	return { folder, file }
+}
+
+// Charge et fusionne le dictionnaire d'un composant pour une locale. Résout quand les clés sont
+// disponibles, ce qui permet de l'attendre AVANT de monter une page ou de basculer de langue.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function loadComponentTranslations(options: any, newLocale: string): Promise<void> {
+	if (!options?.name) { return Promise.resolve() }
+	if (options[MERGED_FLAG] === newLocale) { return Promise.resolve() }
+	const { folder, file } = componentDictionary(options.name)
+	const attached = options.i18n?.messages?.[newLocale]
+	if (attached) {
+		mergeNamespaced(newLocale, file, attached)
+		options[MERGED_FLAG] = newLocale
+		return Promise.resolve()
+	}
+	const loader = i18nModules[`/src/component/${folder}/${file}.${newLocale}.i18n`]
+	if (!loader) { return Promise.resolve() }
+	return loader().then((messages) => {
+		mergeNamespaced(newLocale, file, messages)
+		options[MERGED_FLAG] = newLocale
+	})
+}
+
+// Les pages sont importées par le routeur dans la langue du démarrage (`page.<locale>.i18n`) :
+// après un changement de langue, leur dictionnaire n'arrivait qu'en asynchrone depuis le
+// beforeCreate, et tout texte calculé une seule fois pendant ce temps (titre de la barre, etc.)
+// restait figé sur la clé brute. Attendu par la garde beforeResolve et par loadLanguageAsync.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function loadRouteTranslations(route: { matched: { components?: Record<string, any> | null }[] } | undefined, newLocale: string = currentLocale()): Promise<unknown> {
+	if (!route) { return Promise.resolve() }
+	const components = route.matched.flatMap(record => Object.values(record.components ?? {}))
+	return Promise.all(components.map(component => loadComponentTranslations(component, newLocale).catch(() => {})))
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -168,24 +237,7 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	if (!instance.$options.i18n) {
 		instance.$options.i18n = {}
 	}
-	const name = normalizeComponentName(instance.$options.name)
-	let folder = name
-	if (name.startsWith("editor-")) { folder = "editor" }
-	if (name.startsWith("git-")) { folder = "editor" }
-	if (name.startsWith("signup-")) { folder = "signup" }
-	if (name.startsWith("encyclopedia-")) { folder = "encyclopedia" }
-	if (name.startsWith("level-dialog")) { folder = "leek" }
-	if (name.startsWith("forum-")) { folder = "forum" }
-	if (name.startsWith("inventory-")) { folder = "inventory" }
-	if (name === "fights-history-table") { folder = "history" }
-
-	const modulePath = `/src/component/${folder}/${name}.${newLocale}.i18n`
-	const loader = i18nModules[modulePath]
-	if (!loader) return
-	return loader().then((messages) => {
-		mergeNamespaced(newLocale, name, messages)
-		instance.$options[MERGED_FLAG] = newLocale
-	})
+	return loadComponentTranslations(instance.$options, newLocale)
 }
 
 function loadComponentLanguage(newLocale: string, component: ComponentInstance<Component>, instance: Component | undefined) {
@@ -239,4 +291,4 @@ function loadLocalizedMessages(namespace: string, loader: (locale: string) => Pr
 	watch(currentLocale, load)
 }
 
-export { i18n, mixins, loadLanguageAsync, loadLocalizedMessages, t, locale, normalizeComponentName, useNamespacedT }
+export { i18n, mixins, loadLanguageAsync, loadLocalizedMessages, loadRouteTranslations, t, locale, normalizeComponentName, useNamespacedT }

@@ -1,4 +1,4 @@
-import { Chat, ChatMessage, ChatType } from '@/model/chat'
+import { Chat, type ChatExec, ChatMessage, ChatType } from '@/model/chat'
 import { Farmer } from '@/model/farmer'
 import { ItemType } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
@@ -7,6 +7,7 @@ import { Team } from '@/model/team'
 
 import Vuex, { Store } from 'vuex'
 import { clearAICache } from './ai-code-cache'
+import { setLocalStorageSafe } from './storage'
 import { fileSystem } from './filesystem'
 import { Hat } from './hat'
 import { Leek } from './leek'
@@ -31,6 +32,15 @@ function updateChatFarmer(chat: Chat, farmer: Farmer) {
 	}
 }
 
+// Numéro de la dernière requête de chargement lancée pour chaque conversation. Deux
+// rechargements peuvent se chevaucher (rafraîchissement immédiat au retour sur l'app +
+// rechargement à la reconnexion de la socket) : seule la réponse de la requête la plus
+// récente doit être appliquée, sinon une réponse en retard réécrase les messages frais.
+const chatLoadSequence: {[id: number]: number} = {}
+
+// Minuteur de l'animation en cours de chaque compteur de l'en-tête (cf. animateCounter).
+const counterTimers: Partial<Record<'habs' | 'crystals', ReturnType<typeof setTimeout>>> = {}
+
 export interface AccountInfo {
 	id: number
 	name: string
@@ -54,8 +64,6 @@ class LeekWarsState {
 	public last_ping: number = 0
 	public connected_farmers: number = 0
 	public loadingConversations: boolean = false
-	public habs_timer: ReturnType<typeof setTimeout> | undefined = undefined
-	public crystals_timer: ReturnType<typeof setTimeout> | undefined = undefined
 	public farmer_by_name: {[key: string]: Farmer} = {}
 	public arenaCount: number = 0
 	public arenaCountdown: number = -1
@@ -63,8 +71,52 @@ class LeekWarsState {
 	public arenaPreference: number = -1
 }
 
+// Quantité d'un template d'item possédée par l'éleveur (habs pour l'item 148), 0 s'il n'en a pas
+function itemQuantity(state: LeekWarsState, template: number): number {
+	if (!state.farmer) return 0
+	if (template === 148) return state.farmer.habs
+	const inventories: { template: number, quantity: number, stats?: { [carac: string]: number } }[][] = [
+		state.farmer.resources, state.farmer.components, state.farmer.potions,
+		state.farmer.chips, state.farmer.weapons, state.farmer.hats, state.farmer.pomps,
+		// Les alterations manquaient : une alteration posee dans la forge passait
+		// pour introuvable (quantite 0) et sa case se peignait en « missing »
+		// rouge grise alors que la tentative etait possible.
+		state.farmer.alterations ?? []
+	]
+	// Une piece ALTEREE est une instance unique (`stats`), rangee a cote de la pile
+	// de ses jumelles neuves et du meme template. Seule la pile neuve est consommee par
+	// une recette : 470 pommes plus une pomme alteree, la forge doit voir 470 pommes.
+	for (const inventory of inventories) {
+		for (const resource of inventory) {
+			if (resource.template === template && resource.stats == null) return resource.quantity
+		}
+	}
+	return 0
+}
+
 function updateTitle(state: LeekWarsState) {
 	LeekWars.setTitleCounter(state.unreadNotifications + state.unreadMessages)
+}
+
+// Fait défiler le compteur affiché (Habs ou cristaux) jusqu'à sa valeur, en 23 pas de 41 ms.
+// L'éleveur est fixé au départ : après un changement de compte, l'animation en cours ne se
+// reporte pas sur le compte suivant. Elle s'arrête au pas qui atteindrait la cible,
+// et au plus tard au 23e, même si la cible a bougé entre-temps.
+function animateCounter(farmer: Farmer, key: 'habs' | 'crystals') {
+	const animated = `animated_${key}` as const
+	clearTimeout(counterTimers[key])
+	const increment = (farmer[key] - farmer[animated]) / 23
+	let steps = 0
+	const update = () => {
+		const next = farmer[animated] + increment
+		if (++steps < 23 && (increment > 0 ? next < farmer[key] : next > farmer[key])) {
+			farmer[animated] = next
+			counterTimers[key] = setTimeout(update, 41)
+		} else {
+			farmer[animated] = farmer[key]
+		}
+	}
+	update()
 }
 
 const store: Store<LeekWarsState> = new Vuex.Store({
@@ -73,52 +125,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		moderator: (state: LeekWarsState) => state.farmer && state.farmer.moderator,
 		admin: (state: LeekWarsState) => state.farmer && state.farmer.admin,
 		leek_count: (state: LeekWarsState) => state.farmer ? Object.values(state.farmer.leeks).length : 0,
+		item_quantity: (state: LeekWarsState) => (template: number): number => itemQuantity(state, template),
 		scheme_possible: (state: LeekWarsState) => (scheme: SchemeTemplate) => {
-			return scheme.items.every(item => {
-				if (item === null) return true
-				if (state.farmer) {
-					if (item[0] === 148) {
-						return state.farmer.habs >= item[1]
-					} else {
-						for (const resource of state.farmer.resources) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.components) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.potions) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.chips) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.weapons) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.hats) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-						for (const resource of state.farmer.pomps) {
-							if (resource.template === item[0]) {
-								return resource.quantity >= item[1]
-							}
-						}
-					}
-				}
-				return false
-			})
+			return scheme.items.every(item => item === null || itemQuantity(state, item[0]) >= item[1])
 		}
 	},
 	mutations: {
@@ -157,11 +166,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			state.accounts = merged
 			localStorage.setItem('accounts', JSON.stringify(merged))
+			// Prévient les autres onglets du compte désormais actif (cf. onStorage dans app.vue).
+			setLocalStorageSafe('active-account', '' + state.farmer.id)
 			for (const id in state.farmer.leeks) {
 				state.farmer.leeks[id].country = state.farmer.country
 			}
 			state.farmer.animated_habs = state.farmer.habs
 			state.farmer.animated_crystals = state.farmer.crystals
+			// Jamais de compteur négatif (données serveur potentiellement erronées)
+			state.farmer.fights = Math.max(0, state.farmer.fights)
+			state.farmer.team_fights = Math.max(0, state.farmer.team_fights)
 			state.token = data.token
 			state.connected = true
 			state.connected_farmers = data.farmers
@@ -176,6 +190,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const notification of data.notifications.reverse()) {
 				store.commit('notification', notification)
 			}
+			// Première page chargée avant la connexion (ouverture depuis un push, lien direct)
+			readNotificationsAt(window.location.pathname)
 			for (const conversation of data.conversations) {
 				store.commit('new-conversation', conversation)
 			}
@@ -230,6 +246,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.removeItem('login-attempt')
 			localStorage.removeItem('token')
 			localStorage.removeItem('accounts')
+			localStorage.removeItem('active-account')
 			state.token = null
 			state.farmer = null
 			state.accounts = []
@@ -239,6 +256,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.conversationsList = []
 			state.unreadNotifications = 0
 			state.chat = {}
+			clearTimeout(counterTimers.habs)
+			clearTimeout(counterTimers.crystals)
 			fileSystem.clear()
 			LeekWars.clearIntervals()
 		},
@@ -292,7 +311,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			// console.log("load chat", chat, chat.id)
 			state.chat[chat.id].opened = true
 			state.chat[chat.id].loading = true
+			const sequence = chatLoadSequence[chat.id] = (chatLoadSequence[chat.id] || 0) + 1
 			LeekWars.get('message/get-messages/' + chat.id + '/' + 30 + '/0').then(data => {
+				// Réponse périmée : une requête plus récente est en cours, c'est elle qui
+				// remplira la conversation (et qui remettra loading à false). Conversation
+				// disparue : déconnexion ou changement de compte pendant la requête ('reset'
+				// vide state.chat), il n'y a plus rien à remplir.
+				if (chatLoadSequence[chat.id] !== sequence || !state.chat[chat.id]) return
 				store.commit('clear-chat', chat.id)
 				for (const farmer of data.mentions) {
 					state.farmer_by_name[farmer.name] = farmer
@@ -306,6 +331,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.chat[chat.id].loaded = true
 				state.chat[chat.id].loading = false
 			}).error(() => {
+				if (chatLoadSequence[chat.id] !== sequence || !state.chat[chat.id]) return
 				store.commit('clear-chat', chat.id)
 				state.chat[chat.id].loaded = true
 				state.chat[chat.id].loading = false
@@ -321,15 +347,21 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			chat.loading = true
 			LeekWars.get('message/get-messages/' + chatID + '/' + 30 + '/' + chat.messages.length).then(data => {
 				const chat = state.chat[chatID]
+				// Déconnexion pendant la requête : 'reset' a vidé state.chat.
+				if (!chat) return
 				if (data.messages.length === 0) {
 					chat.fully_loaded = true
 				}
 				for (const farmer of data.mentions) {
 					state.farmer_by_name[farmer.name] = farmer
 				}
-				for (const message of data.messages.reverse()) {
-					store.commit('chat-receive', { chat: chatID, type: data.type, message, new: false, unshift: true })
+				// Pas par chat-receive, fait pour le message qui vient d'arriver : il donnerait à
+				// l'aperçu de la conversation la date et l'auteur du plus ancien message chargé.
+				// Et d'un seul lot, pour que les bulles se recalculent une fois.
+				for (const message of data.messages) {
+					updateChatFarmer(chat, message.farmer)
 				}
+				chat.unshift(...data.messages)
 				emitter.emit('chat-history', chatID)
 				chat.loading = false
 			}).error(error => {
@@ -338,6 +370,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				emitter.emit('chat-history', chatID)
 				chat.loading = false
 			})
+		},
+
+		// Purge différée, commitée par la vue qui relâche son verrou d'historique (retour en
+		// bas de la conversation, fermeture du panneau) : la mémoire accumulée pendant la
+		// lecture des vieux messages est rattrapée une fois que plus personne ne les regarde.
+		'trim-chat'(state: LeekWarsState, chatID: number) {
+			const chat = state.chat[chatID]
+			if (chat && !chat.history_locks && chat.messages.length > Chat.MAX_MESSAGES) {
+				chat.trim(Chat.MAX_MESSAGES)
+			}
 		},
 
 		'clear-chat'(state: LeekWarsState, chatID: number) {
@@ -356,7 +398,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'chat-receive'(state: LeekWarsState, data: {chat: number, type: ChatType, message: ChatMessage, new: boolean, unshift: boolean }) {
+		'chat-receive'(state: LeekWarsState, data: {chat: number, type: ChatType, message: ChatMessage, new: boolean }) {
 
 			if (!state.farmer) return
 			// console.log("chat-receive message", data.chat, data.type, data.message)
@@ -387,13 +429,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			// la jeter : sinon le farmer mis en cache à l'ouverture de la conversation gardait
 			// son ancienne pp/pseudo après un changement côté envoyeur (#11625).
 			updateChatFarmer(chat, message.farmer)
-			if (data.unshift) {
-				chat.unshift(message)
-			} else {
-				chat.add(message)
-				emitter.emit('chat', [chatID])
-			}
-			if (data.new && chat.messages.length > Chat.MAX_MESSAGES) {
+			chat.add(message)
+			emitter.emit('chat', [chatID])
+			// Purge des vieux messages, sauf si une vue est en train de les lire (voir
+			// history_locks) : elle rappellera 'trim-chat' en redescendant en bas.
+			if (data.new && !chat.history_locks && chat.messages.length > Chat.MAX_MESSAGES) {
 				chat.trim(Chat.MAX_MESSAGES)
 			}
 
@@ -435,17 +475,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'update-crystals'(state: LeekWarsState, crystals: number) {
 			if (state.farmer) {
 				state.farmer.crystals += crystals
-				clearTimeout(state.crystals_timer)
-				const increment = (state.farmer!.crystals - state.farmer!.animated_crystals) / 23
-				const update = () => {
-					state.farmer!.animated_crystals = state.farmer!.animated_crystals + increment
-					if (Math.abs(state.farmer!.animated_crystals - state.farmer!.crystals) > 0.4) {
-						state.crystals_timer = setTimeout(update, 41)
-					} else {
-						state.farmer!.animated_crystals = state.farmer!.crystals
-					}
-				}
-				update()
+				animateCounter(state.farmer, 'crystals')
 			}
 		},
 
@@ -458,23 +488,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'update-habs'(state: LeekWarsState, habs: number) {
 			if (state.farmer) {
 				state.farmer.habs += habs
-				clearTimeout(state.habs_timer)
-				const increment = (state.farmer.habs - state.farmer.animated_habs) / 23
-				const update = () => {
-					state.farmer!.animated_habs = state.farmer!.animated_habs + increment
-					if (Math.abs(state.farmer!.animated_habs - state.farmer!.habs) > 0.4) {
-						state.habs_timer = setTimeout(update, 41)
-					} else {
-						state.farmer!.animated_habs = state.farmer!.habs
-					}
-				}
-				update()
+				animateCounter(state.farmer, 'habs')
 			}
 		},
 
 		'update-fights'(state: LeekWarsState, fights: number) {
 			if (state.farmer) {
-				state.farmer.fights += fights
+				state.farmer.fights = Math.max(0, state.farmer.fights + fights)
 				state.farmer.bought_fights = Math.min(state.farmer.bought_fights, state.farmer.fights)
 			}
 		},
@@ -484,7 +504,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'update-team-fights'(state: LeekWarsState, fights: number) {
-			if (state.farmer) { state.farmer.team_fights += fights }
+			if (state.farmer) { state.farmer.team_fights = Math.max(0, state.farmer.team_fights + fights) }
+		},
+
+		// Resynchronise les compteurs depuis le serveur (garden/get) : les
+		// décréments locaux ne voient pas les compos créées entre temps
+		'set-fights-counts'(state: LeekWarsState, counts: { fights: number, team_fights: number }) {
+			if (state.farmer) {
+				state.farmer.fights = Math.max(0, counts.fights)
+				state.farmer.team_fights = Math.max(0, counts.team_fights)
+			}
 		},
 
 		'set-talent'(state: LeekWarsState, talent: number) {
@@ -619,8 +648,49 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			const chat = state.chat[data.chat]
 			// console.log("delete chat", chat, data.messages)
 			if (chat) {
-				for (const message of data.messages) {
-					chat.deleteMessage(message)
+				chat.deleteMessages(data.messages)
+			}
+		},
+
+		// Message réécrit par son auteur (forum #12141). Arrive par la socket (CHAT_EDIT) et,
+		// pour l'auteur lui-même, aussi par la réponse HTTP : appliquer deux fois le même
+		// texte est sans effet, et on n'a pas à savoir lequel arrivera le premier.
+		'chat-edit'(state: LeekWarsState, data: {chat: number, message: number, content: string, date: number, mentions?: Farmer[]}) {
+			const chat = state.chat[data.chat]
+			if (!chat) { return }
+			// Un @pseudo AJOUTÉ à l'édition désigne quelqu'un que le client ne connaît
+			// peut-être pas encore : sans ça, la mention resterait du texte brut.
+			if (data.mentions) {
+				for (const farmer of data.mentions) {
+					state.farmer_by_name[farmer.name] = farmer
+				}
+			}
+			// `chat.messages` est la liste PLATE : un message groupé sous un autre y est
+			// aussi, et c'est le même objet que celui rendu dans `subMessages`.
+			const message = chat.messages.find(m => m.id === data.message)
+			if (!message) { return }
+			message.content = data.content
+			message.raw_content = data.content
+			message.edited = data.date
+			// Le formateur (chat.vue/formatMessage) travaille en place et se souvient
+			// d'être passé : sans ce drapeau remis à zéro, le message garderait l'ancien
+			// HTML pour toujours.
+			message.formatted = false
+			// L'aperçu de la conversation porte le TEXTE du dernier message, pas son id.
+			if (chat.messages[chat.messages.length - 1] === message) {
+				chat.last_message = data.content.replace(/<br>/g, '\n')
+			}
+		},
+
+		// Résultat d'un `/exec` : il arrive APRÈS le message, l'exécution étant asynchrone.
+		// Le message porte déjà un `exec` en attente ({pending: true}), qu'on remplace par le résultat.
+		'chat-exec-result'(state: LeekWarsState, data: {chat: number, message: number, exec: ChatExec}) {
+			const chat = state.chat[data.chat]
+			if (!chat) { return }
+			for (const message of chat.messages) {
+				if (message.id === data.message) {
+					message.exec = data.exec
+					break
 				}
 			}
 		},
@@ -628,29 +698,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'chat-react'(state: LeekWarsState, data: {chat: number, message: number, reaction: string, old: string, farmer: string}) {
 			const chat = state.chat[data.chat]
 			if (chat) {
-				for (const message of chat.messages) {
-					if (message.id === data.message) {
-						if (data.old) {
-							message.reactions[data.old].count--
-							const i = message.reactions[data.old].farmers.indexOf(data.farmer)
-							if (i !== -1) {
-								message.reactions[data.old].farmers.splice(i, 1)
-							}
-							if (message.reactions[data.old].count === 0) {
-								delete message.reactions[data.old]
-							}
-						}
-						if (data.reaction) {
-							if (data.reaction in message.reactions) {
-								message.reactions[data.reaction].count++
-								message.reactions[data.reaction].farmers.push(data.farmer)
-							} else {
-								message.reactions[data.reaction] = { count: 1, farmers: [ data.farmer ] }
-							}
-						}
-						break
-					}
-				}
+				chat.react(data.message, data.reaction, data.old, data.farmer)
 			}
 		},
 
@@ -760,6 +808,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				} else {
 					state.farmer.components.push(data)
 				}
+			} else if (data.type === ItemType.ALTERATION) {
+				// Les alterations se stackent par template, comme les ressources.
+				if (!state.farmer.alterations) { state.farmer.alterations = [] }
+				const existing = LeekWars.selectWhere(state.farmer.alterations, 'template', data.template)
+				if (existing) {
+					existing.quantity += quantity
+					existing.time = data.time
+				} else {
+					state.farmer.alterations.push({ id: data.id, template: data.template, quantity, time: data.time })
+				}
 			} else if (data.type === ItemType.SCHEME) {
 				const scheme = LeekWars.selectWhere(state.farmer.schemes, 'id', data.id)
 				if (scheme) {
@@ -798,7 +856,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'remove-inventory'(state: LeekWarsState, data: { type: ItemType, item_template: number, quantity?: number }) {
+		'remove-inventory'(state: LeekWarsState, data: { type: ItemType, item_template: number, quantity?: number, id?: number }) {
 			if (!state.farmer) { return }
 			// console.log("remove-inventory", data)
 			const quantity = data.quantity || 1
@@ -815,14 +873,32 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				list = state.farmer.components
 			} else if (data.type === ItemType.FIGHT_PACK) {
 				list = state.farmer.fight_packs
+			} else if (data.type === ItemType.ALTERATION) {
+				list = state.farmer.alterations
 			}
 			if (!list) { return }
-			const item = LeekWars.selectWhere(list, 'template', data.item_template)
-			if (item !== null) {
-				item.quantity -= quantity
-				if (item.quantity <= 0) {
-					LeekWars.removeOneWhere(list, 'template', data.item_template)
+			// Un composant altéré est une instance UNIQUE, qui cohabite avec la pile de ses
+			// jumelles neuves : quand l'appelant fournit un id, c'est cette ligne-là qu'il
+			// faut décrémenter, sinon on entame la pile et l'altération reste affichée.
+			if (data.id !== undefined) {
+				const index = list.findIndex(i => i.id === data.id)
+				if (index !== -1) {
+					list[index].quantity -= quantity
+					if (list[index].quantity <= 0) { list.splice(index, 1) }
+					return
 				}
+			}
+			// Sans id, c'est la pile NEUVE qu'on entame, jamais l'instance alteree posee
+			// juste a cote sous le meme template : c'est la pile neuve qui est consommee, et
+			// decrementer l'alteree la ferait disparaitre de l'inventaire.
+			const items = list as { id: number, template: number, quantity: number, stats?: { [carac: string]: number } }[]
+			const plain = items.findIndex(i => i.template === data.item_template && i.stats == null)
+			// Rien que d'altere sous ce template : on retombe sur la premiere ligne, le
+			// comportement d'avant, plutot que de ne rien retirer du tout.
+			const target = plain === -1 ? items.findIndex(i => i.template === data.item_template) : plain
+			if (target !== -1) {
+				items[target].quantity -= quantity
+				if (items[target].quantity <= 0) { items.splice(target, 1) }
 			}
 		},
 
@@ -900,15 +976,22 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (i !== -1) { state.farmer.loadouts.splice(i, 1) }
 		},
 
-		'add-component'(state: LeekWarsState, component: { id: number, template: number }) {
+		'add-component'(state: LeekWarsState, component: { id: number, template: number, stats?: { [carac: string]: number } | null, altered_power?: number }) {
 			if (!state.farmer) { return }
-			for (const w of state.farmer.components) {
-				if (w.template === component.template) {
-					w.quantity++
-					return
+			// Une pièce altérée est unique : elle ne se fond JAMAIS dans une pile, et une
+			// pile n'accueille que des pièces neuves. Sans cette garde, déséquiper un
+			// composant altéré l'agrégeait au stack de son template et ses altérations
+			// disparaissaient de l'affichage jusqu'au rechargement.
+			if (!component.stats) {
+				for (const w of state.farmer.components) {
+					if (w.template === component.template && !w.stats) {
+						w.quantity++
+						return
+					}
 				}
 			}
-			state.farmer.components.push({id: component.id, quantity: 1, template: component.template})
+			state.farmer.components.push({id: component.id, quantity: 1, template: component.template,
+				stats: component.stats ?? undefined, altered_power: component.altered_power})
 		},
 
 		// Réconciliation en masse du stock libre (non équipé) après un apply de loadout :
@@ -962,8 +1045,35 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'level-up'(state: LeekWarsState, data: { leek: number, level: number, capital: number }) {
 			if (state.farmer) {
-				state.farmer.leeks[data.leek].level = data.level
-				state.farmer.leeks[data.leek].capital = data.capital
+				// Poireau d'un autre compte : même raison que 'update-xp' plus bas.
+				const leek = state.farmer.leeks[data.leek]
+				if (!leek) { return }
+				leek.level = data.level
+				leek.capital = data.capital
+				// Niveau 301 : le serveur équipe la couronne (item 83),
+				// rend l'ancien chapeau au stock et offre la potion peau dorée (82).
+				// Répliqué ici, sinon inventaire et modale de chapeaux restent
+				// désynchronisés jusqu'au rechargement de la page.
+				if (data.level === 301) {
+					const CROWN_ITEM = 83
+					const crown_template = LeekWars.items[CROWN_ITEM]
+					const crown = crown_template ? LeekWars.hats[crown_template.params] : null
+					// Garde anti-rejeu (reconnexion WS) : ne rien faire si la couronne est déjà portée
+					if (crown && leek.hat?.hat_template !== crown.id) {
+						store.commit('change-hat', { leek: data.leek, hat: {
+							id: -CROWN_ITEM,
+							template: CROWN_ITEM,
+							hat_template: crown.id,
+							name: crown.name,
+							level: crown.level,
+							quantity: 1,
+						} })
+					}
+					const GOLD_SKIN_POTION = 82
+					if (!state.farmer.potions.find(p => p.template === GOLD_SKIN_POTION)) {
+						state.farmer.potions.push({ id: -GOLD_SKIN_POTION, template: GOLD_SKIN_POTION, quantity: 1, time: Date.now() / 1000 })
+					}
+				}
 			}
 		},
 
@@ -991,6 +1101,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'toggle-show-ai-lines'(state: LeekWarsState) {
 			if (state.farmer) {
 				state.farmer.show_ai_lines = !state.farmer.show_ai_lines
+			}
+		},
+
+		'set-home-layout'(state: LeekWarsState, layout: string) {
+			if (state.farmer) {
+				state.farmer.home_layout = layout
 			}
 		},
 
@@ -1044,16 +1160,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		// Comme 'level-up', ces mutations sont pilotées par le WebSocket, qui peut être
+		// authentifié sur un autre compte que celui affiché : le poireau du message
+		// n'appartient alors pas à l'éleveur courant (cf. store-leek-updates.test.ts).
 		'update-xp'(state: LeekWarsState, data: { leek: number, xp: number }) {
-			if (state.farmer) {
-				state.farmer.leeks[data.leek].xp += data.xp
-			}
+			const leek = state.farmer?.leeks[data.leek]
+			if (leek) { leek.xp += data.xp }
 		},
 
 		'update-leek-talent'(state: LeekWarsState, data: { leek: number, talent: number }) {
-			if (state.farmer) {
-				state.farmer.leeks[data.leek].talent += data.talent
-			}
+			const leek = state.farmer?.leeks[data.leek]
+			if (leek) { leek.talent += data.talent }
 		},
 
 		'update-farmer-talent'(state: LeekWarsState, talent: number) {
@@ -1120,6 +1237,28 @@ export { store }
 /** ID de l'éleveur connecté (0 si déconnecté). */
 export function farmerId(): number {
 	return store.state.farmer?.id ?? 0
+}
+
+// Page visée par une notification : sans ancre, requête ni barre finale, et un
+// rapport de combat vaut son combat (le lien dépend du réglage notifsOpenReport).
+function notificationTarget(path: string): string {
+	return path.replace(/[?#].*$/, '').replace(/\/+$/, '').replace(/^\/report\//, '/fight/')
+}
+
+/**
+ * Marque lues les notifications qui pointent vers la page affichée : arriver sur
+ * leur cible par un autre chemin (notification push, lien direct, historique)
+ * revient à les avoir lues, et une notification lue ne part plus par mail.
+ */
+export function readNotificationsAt(path: string) {
+	if (!store.state.connected || !store.state.unreadNotifications) return
+	const target = notificationTarget(path)
+	for (const notification of store.state.notifications) {
+		if (!notification.read && notification.link && notificationTarget(notification.link) === target) {
+			LeekWars.post('notification/read', { notification_id: notification.id })
+			store.commit('read-notification', notification.id)
+		}
+	}
 }
 
 // Purge les clés cache d'IA / d'état éditeur au format legacy non-namespacé
