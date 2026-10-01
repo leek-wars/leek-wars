@@ -66,15 +66,20 @@ function sendMessage(message: string, id: number) {
 		width: 300px;
 		background: var(--background);
 		margin-right: 15px;
-		border-top-left-radius: 7px;
-		border-top-right-radius: 7px;
+		// Jetons plutôt que des 7 px en dur : nuls en v3 (angles francs), 6 px en
+		// v2.
+		border-top-left-radius: var(--radius-medium);
+		border-top-right-radius: var(--radius-medium);
 		box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12);
 		pointer-events: all;
 		.header {
-			background: #2a2a2a;
-			color: white;
-			border-top-left-radius: 6px;
-			border-top-right-radius: 6px;
+			background: var(--panel-header-background);
+			// Pas de `--white` ici : `--panel-header-background` est une surface
+			// CLAIRE en v3, titre et croix y seraient presque invisibles. Le jeton
+			// d'encre d'en-tête vaut #eee en v2 : l'ancien design ne bouge pas.
+			color: var(--panel-header-color);
+			border-top-left-radius: var(--radius-medium);
+			border-top-right-radius: var(--radius-medium);
 			display: flex;
 			user-select: none;
 			cursor: pointer;
@@ -111,8 +116,8 @@ function sendMessage(message: string, id: number) {
 		animation: unread 2.5s infinite;
 	}
 	@keyframes unread {
-		0% { background:#5fad1b; }
-		50% { background:#2a2a2a; }
-		100% { background:#5fad1b; }
+		0% { background:var(--primary-surface); }
+		50% { background:var(--panel-header-background); }
+		100% { background:var(--primary-surface); }
 	}
 </style>

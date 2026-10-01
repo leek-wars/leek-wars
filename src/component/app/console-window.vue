@@ -3,11 +3,25 @@
 		<template #title>
 			<div @mousedown="consoleMouseDown">
 				{{ $t('main.console') }}
-				<v-menu v-if="consoleRef" offset-y :close-on-content-click="false">
+				<v-menu v-if="consoleRef" offset-y>
+					<template #activator="{ props }">
+						<v-chip v-bind="props" size="small"><img class="lang-logo" :src="currentLanguage.logo"> {{ currentLanguage.label }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+					</template>
+					<div class="lang-menu">
+						<div v-for="l in languages" :key="l.id" class="lang-item" :class="{ active: consoleRef.language === l.id }" @click="consoleRef.language = l.id"><img class="lang-logo" :src="l.logo"> {{ l.label }}</div>
+					</div>
+				</v-menu>
+				<v-menu v-if="consoleRef && consoleRef.language === 'leekscript'" offset-y :close-on-content-click="false">
 					<template #activator="{ props }">
 						<v-chip v-bind="props" size="small">LS {{ consoleRef.leekscript.version }} {{ consoleRef.leekscript.strict ? 'strict' : '' }} <v-icon>mdi-chevron-down</v-icon></v-chip>
 					</template>
 					<leekscript-versions v-model:version="consoleRef.leekscript.version" v-model:strict="consoleRef.leekscript.strict" />
+				</v-menu>
+				<v-menu v-else-if="consoleRef && currentVersionShort" offset-y :close-on-content-click="false">
+					<template #activator="{ props }">
+						<v-chip v-bind="props" size="small">{{ currentVersionShort }} <v-icon>mdi-chevron-down</v-icon></v-chip>
+					</template>
+					<polyglot-versions :language="consoleRef.language" v-model:version="consoleRef.languageVersion" />
 				</v-menu>
 				<v-chip v-if="consoleRef && !consoleRef.isEmpty()" size="small" @click="consoleRef.clear()"><v-icon>mdi-cancel</v-icon></v-chip>
 			</div>
@@ -18,7 +32,7 @@
 					<div class="option" v-bind="props"><v-icon>mdi-weather-night</v-icon></div>
 				</template>
 				<div class="theme-menu">
-					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && consoleRef.theme === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
+					<div v-for="t in themes" :key="t.value" class="theme-item" :class="{ active: consoleRef && consoleRef.themeSetting === t.value }" @click="setTheme(t.value)">{{ t.label }}</div>
 				</div>
 			</v-menu>
 			<!-- <div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div> -->
@@ -31,12 +45,17 @@
 
 <script setup lang="ts">
 import { LeekWars } from '@/model/leekwars'
-import { emitter } from '@/model/vue'
-import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { emitter } from '@/model/emitter'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Console from './console.vue'
 import LeekscriptVersions from './leekscript-versions.vue'
+import PolyglotVersions from './polyglot-versions.vue'
+import { AI_LANGUAGES, getLanguageVersions } from '../editor/file-types'
+import { AUTO_CODE_THEME } from '../editor/code-theme'
 
-defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions } })
+defineOptions({ name: 'ConsoleWindow', components: { 'console': Console, LeekscriptVersions, PolyglotVersions } })
+
+const languages = AI_LANGUAGES
 
 defineProps<{
 	modelValue: boolean
@@ -48,6 +67,15 @@ const emit = defineEmits<{
 }>()
 
 const consoleRef = useTemplateRef<InstanceType<typeof Console>>('console')
+const currentLanguage = computed(() => {
+	const lang = (consoleRef.value as unknown as { language?: string })?.language
+	return languages.find(l => l.id === lang) ?? languages[0]
+})
+const currentVersionShort = computed(() => {
+	const c = consoleRef.value as unknown as { language?: string, languageVersion?: string } | null
+	if (!c?.language) return ''
+	return getLanguageVersions(c.language).find(v => v.pragma === c.languageVersion)?.short ?? ''
+})
 const consoleX = ref(0)
 const consoleY = ref(0)
 const consoleDown = ref(false)
@@ -56,7 +84,10 @@ const consoleStarty = ref(0)
 const consoleDragx = ref(0)
 const consoleDragy = ref(0)
 const themes = [
+	// En tête : c'est le réglage par défaut, et le seul qui ne nomme pas un thème.
+	{ value: AUTO_CODE_THEME, label: 'Auto (thème du site)' },
 	{ value: 'leek-wars', label: 'Leek Wars' },
+	{ value: 'leek-wars-dark', label: 'Leek Wars Dark' },
 	{ value: 'monokai', label: 'Monokai' },
 	{ value: 'vs', label: 'VS Code clair' },
 	{ value: 'vs-dark', label: 'VS Code sombre' },
@@ -106,7 +137,7 @@ function consoleMouseUp(_e: MouseEvent) {
 function setTheme(theme: string) {
 	const console = consoleRef.value
 	if (console) {
-		console.theme = theme
+		console.themeSetting = theme
 		console.saveTheme()
 	}
 }
@@ -126,9 +157,18 @@ function consolePopup() {
 	box-shadow: 0 11px 15px -7px #0003, 0 24px 38px 3px #00000024, 0 9px 46px 8px #0000001f;
 }
 body.dark .theme-menu {
-	background: #2a2a2a;
+	background: var(--panel-header-background);
 	.theme-item {
-		color: #eee;
+		color: var(--grey-13);
+		&:hover {
+			background: #3a3a3a;
+		}
+	}
+}
+body.dark .lang-menu {
+	background: var(--panel-header-background);
+	.lang-item {
+		color: var(--grey-13);
 		&:hover {
 			background: #3a3a3a;
 		}
@@ -144,7 +184,7 @@ body.dark .theme-menu {
 }
 
 .theme-menu {
-	background: white;
+	background: var(--white);
 	padding: 4px 0;
 	.theme-item {
 		padding: 6px 16px;
@@ -152,13 +192,41 @@ body.dark .theme-menu {
 		font-size: 14px;
 		white-space: nowrap;
 		&:hover {
-			background: #eee;
+			background: var(--grey-13);
 		}
 		&.active {
 			font-weight: bold;
-			color: #5fad1b;
+			color: var(--primary);
 		}
 	}
+}
+
+.lang-menu {
+	background: var(--white);
+	padding: 4px 0;
+	.lang-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 16px;
+		cursor: pointer;
+		font-size: 14px;
+		white-space: nowrap;
+		&:hover {
+			background: var(--grey-13);
+		}
+		&.active {
+			font-weight: bold;
+			color: var(--primary);
+		}
+	}
+}
+
+.lang-logo {
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	object-fit: contain;
 }
 
 </style>

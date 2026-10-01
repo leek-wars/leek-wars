@@ -63,7 +63,7 @@
 
         <v-list-item v-ripple :lines="false" @click="strict = !strict">
             <template #prepend>
-                <v-checkbox v-model="strict" :hide-details="true" @click.stop />
+                <lw-checkbox v-model="strict" @click.stop />
             </template>
             <v-list-item-title>{{ $t('leekscript.strict_mode') }}</v-list-item-title>
             <v-list-item-subtitle>
@@ -101,15 +101,15 @@ const strict = defineModel<boolean>("strict", { required: true })
 		}
 	}
 	.green {
-		background: #5fad1b;
-		color: white;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
 		padding: 0 6px;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		margin-left: 4px;
 	}
 	.link {
 		padding: 5px;
-		color: #5fad1b;
+		color: var(--primary);
 		font-weight: 500;
 		display: block;
 		i {

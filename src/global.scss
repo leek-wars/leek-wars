@@ -1,3 +1,11 @@
+// Jetons du thème par défaut. Doit rester en premier : tout le reste du fichier
+// consomme ses variables. L'ancien thème (leekwars-theme-v2.scss) est une
+// option, chargée à la demande depuis app.vue.
+@use './theme/leekwars-theme-v3.scss';
+// Formes de la coquille propres au nouveau design (barre du haut, menu,
+// panneau social, pied de page). Encapsulé dans body:not(.v2).
+@use './theme/leekwars-shell-v3.scss';
+
 // Roboto variable font (self-hosted)
 @font-face {
 	font-family: 'Roboto';
@@ -17,10 +25,441 @@
 	src: url('/fonts/roboto-latin.woff2') format('woff2');
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+// Inter variable (SIL OFL), la police de corps du nouveau design (le
+// `--f-body` du mockup). Chargée seulement quand `--font-body` la demande,
+// donc jamais en v2 : les sous-ensembles ne pèsent rien tant qu'aucun glyphe
+// n'est peint avec. Couvre aussi le cyrillique, que notre Roboto n'avait pas.
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('/fonts/inter-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('/fonts/inter-cyrillic.woff2') format('woff2');
+	unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('/fonts/inter-cyrillic-ext.woff2') format('woff2');
+	unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+// Pixelify Sans (SIL OFL), la police d'affichage du nouveau design. Le mockup
+// demandait Press Start 2P, qui n'a que du latin : celle-ci couvre aussi le
+// cyrillique, ce qui compte pour un site en 17 langues. Auto-hébergée comme
+// Roboto, pour ne pas dépendre de Google. Le japonais, le coréen et le chinois
+// n'ont pas d'équivalent pixel : leurs glyphes retombent sur Roboto, caractère
+// par caractère, ce que fait le navigateur tout seul.
+@font-face {
+	font-family: 'Pixelify Sans';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	src: url('/fonts/pixelify-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Pixelify Sans';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	src: url('/fonts/pixelify-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+	font-family: 'Pixelify Sans';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	src: url('/fonts/pixelify-cyrillic.woff2') format('woff2');
+	unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+// Press Start 2P (SIL OFL), essayée à la place de Pixelify Sans, dont les
+// chiffres se lisaient mal. Elle couvre latin, latin étendu, cyrillique et
+// grec. Sa hauteur de capitale vaut tout le
+// cadratin (celle de Pixelify, 0,7) : `size-adjust: 70%` lui rend la même
+// hauteur visuelle à corps égal, si bien que tous les corps posés pour
+// Pixelify (le facteur 1,43) restent valables tels quels.
+// Le japonais, le coréen et le chinois retombent sur Roboto comme avant.
+@font-face {
+	font-family: 'Press Start 2P';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	size-adjust: 70%;
+	src: url('/fonts/press-start-2p-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Press Start 2P';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	size-adjust: 70%;
+	src: url('/fonts/press-start-2p-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+	font-family: 'Press Start 2P';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	size-adjust: 70%;
+	src: url('/fonts/press-start-2p-cyrillic.woff2') format('woff2');
+	unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+	font-family: 'Press Start 2P';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	size-adjust: 70%;
+	src: url('/fonts/press-start-2p-cyrillic-ext.woff2') format('woff2');
+	unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+	font-family: 'Press Start 2P';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	size-adjust: 70%;
+	src: url('/fonts/press-start-2p-greek.woff2') format('woff2');
+	unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+// Tiny5 (SIL OFL), essayée après Press Start 2P.
+// Même hauteur de capitale que Pixelify Sans (mesurées à 63 et 64 px pour
+// 100 px de corps), donc aucun `size-adjust` et aucun corps à retoucher.
+// Couvre latin, latin étendu, cyrillique et grec ; ses capitales accentuées
+// sont de vraies capitales, contrairement à Press Start 2P.
+@font-face {
+	font-family: 'Tiny5';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/tiny5-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Tiny5';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/tiny5-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+	font-family: 'Tiny5';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/tiny5-cyrillic.woff2') format('woff2');
+	unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+	font-family: 'Tiny5';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/tiny5-cyrillic-ext.woff2') format('woff2');
+	unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+	font-family: 'Tiny5';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/tiny5-greek.woff2') format('woff2');
+	unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+// Pixel Operator (CC0, Jayvee Enaguas), la police d'affichage.
+// Grille de 16 cases par cadratin, la plus fine des polices
+// essayées, et un GRAS dessiné par l'auteur (`PixelOperator-Bold`, trait de
+// 2 cases, avance +1) — pas besoin de le fabriquer comme pour Fusion Pixel.
+//
+// `size-adjust: 123.08%`, soit 16 × 2 / 26 : les corps multiples de 13 tombent
+// alors pile sur sa grille, donc le titre de page (26 px) et les actions de la
+// barre de page (13 px) sont PIXEL-PARFAITS — 0 % de pixels en demi-teinte.
+// Et ce facteur lui donne une hauteur de capitale de 0,692 cadratin, EXACTEMENT
+// celle de Fusion Pixel à 92,31 % : c'est ce qui rend le repli ci-dessous
+// invisible. Ne toucher à l'un de ces deux descripteurs qu'en corrigeant l'autre.
+//
+// ⚠️ Elle ne compte que 238 glyphes : ni cyrillique, ni grec, ni CJK, et il lui
+// manque le polonais (ą ć ę ł ń ś ź ż). Mesuré sur les fichiers de langue du
+// client : sur les 17 langues, 2 943 caractères lui échappent, dont 2 932 que
+// Fusion Pixel reprend. D'où la chaîne `--font-display` : Pixel Operator pour
+// le latin, Fusion Pixel pour le cyrillique, le grec et le reste, Roboto en
+// dernier. Les 11 caractères qu'aucune des deux n'a sont des emojis, déjà servis
+// par Noto Color Emoji.
+//
+// GRAS : la variante **HB** (« half bold »), livrée avec la famille. Le faux
+// gras du navigateur, essayé avant elle, bavait : il étale les contours hors grille.
+//
+// HB répond exactement à la question, mesuré à 26 px sur la même ligne :
+//   maigre 400          encre  +0 %    0 % de pixels lissés   largeur 322 px
+//   faux gras 700       encre +65 %   57 % de pixels lissés   largeur 322 px
+//   HB                  encre +64 %    0 % de pixels lissés   largeur 364 px
+//   Bold d'origine      encre +72 %    0 % de pixels lissés   largeur 362 px
+// Même épaisseur que le faux gras, mais dessinée sur la grille. Elle élargit les
+// textes de 13 % (la synthèse, elle, n'élargit pas l'avance) : vérifié sur les
+// sept pages, rien ne déborde.
+//
+// ESPACEMENT : les 21 règles portent aussi `letter-spacing: -0.0769em`, soit
+// exactement UNE CASE de grille — le blanc entre deux fûts passe de 2 cases à 1,
+// mesuré sur « nnnn ». Cela annule au passage les 13 % de largeur qu'ajoutait HB.
+//
+// La valeur vaut une case pour les DEUX polices, et ce n'est pas un hasard :
+// Pixel Operator a 16 cases par cadratin avec `size-adjust: 123.08%`, Fusion
+// Pixel en a 12 avec `92.31%`, et 1,2308/16 = 0,9231/12 = 0,0769. Les deux sont
+// calées sur les mêmes corps nets, donc sur la même case rendue. Si l'un des
+// deux `size-adjust` bouge, cette valeur bouge avec lui.
+//
+// Les faces déclarent `400 700` en pointant le fichier HB : les 21 règles en
+// `--font-display` demandent 700, et cette plage empêche Chromium d'ajouter sa
+// synthèse PAR-DESSUS le gras déjà dessiné. Côté repli, Fusion Pixel passe sur
+// ses fichiers `-bold-` pour la même raison, et sa densité d'encre est à 3 % de
+// celle de HB — le relais reste cohérent en graisse. Les fichiers maigres
+// restent sur le disque : y revenir tient au `src` des faces.
+@font-face {
+	font-family: 'Pixel Operator';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 123.08%;
+	src: url('/fonts/pixel-operator-hb-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Pixel Operator';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 123.08%;
+	src: url('/fonts/pixel-operator-hb-latin-ext.woff2') format('woff2');
+	/* La plage exacte des 38 glyphes du fichier, et non la plage « latin-ext »
+	   de Google : Pixel Operator n'a que 238 glyphes, la plage large faisait
+	   télécharger 1,6 Ko pour rien à toute langue dont les caractères étendus
+	   lui manquent — le polonais, par exemple, n'en a aucun. Les quatre
+	   codepoints que cette face partage avec la face latine (ı Œ œ †) en sont
+	   RETIRÉS : à égalité, c'est la face déclarée en dernier qui gagne, et « Cœur »
+	   suffisait à faire charger ce second fichier sur toute page française. */
+	unicode-range: U+0108-0109, U+010C-010F, U+011A-011D, U+0124-0125, U+0134-0135, U+0147-0148, U+0158-0159, U+015C-015D, U+0160-0161, U+0164-0165, U+016C-016F, U+0178, U+017D-017E, U+02C7, U+20B1, U+20B7;
+}
+// Fusion Pixel 12px (SIL OFL, TakWolf), essayée pour la lisibilité de la police pixel.
+//
+// Dessinée sur une grille de 12 cases par cadratin, contre 8 à Tiny5 : à
+// hauteur de capitale égale ses glyphes ont 50 % de détail en plus, ce qui se
+// voit surtout sur les chiffres (« 16 077 » se lisait « 16 877 ») et sur les
+// capitales accentuées. Elle couvre en plus le japonais, le coréen et le
+// chinois, qui retombent aujourd'hui sur Roboto — ces sous-ensembles-là ne sont
+// PAS déployés pour l'instant (689 Ko à eux seuls, à découper par blocs).
+//
+// `size-adjust: 92.31%`, et c'est le descripteur qui fait tout le travail.
+//
+// Une police pixel n'est NETTE qu'aux corps multiples de sa grille : ailleurs un
+// pixel dessiné vaut 1,6 pixel écran et le navigateur le lisse. 92,31 % vaut
+// 12/13 : les corps multiples de 13 passent par ce facteur sur des entiers —
+// le titre de page (26) à 24 px de rendu, les actions de barre de page (13) à
+// 12 — PIXEL-PARFAITS, mesurés à 0 % de pixels en demi-teinte contre 38 % et
+// 68 % avec Tiny5.
+//
+// Les deux autres réglages, essayés et écartés :
+// - 83,33 % rendrait exactement la hauteur de capitale de Tiny5 (0,625 contre
+//   0,75 ici), donc un gabarit au pixel près — mais 14,4 px n'est un corps de
+//   personne : rien n'est jamais net (61 % de demi-teintes sur le titre).
+// - 100 % avec les corps recalés sur 12 et 24 est net partout, au prix d'une
+//   capitale 20 % plus haute sur TOUTES les surfaces, gabarits à reprendre.
+//
+// À 92,31 % la capitale gagne 11 % sur celle de Tiny5. Vérifié sur les pages
+// principales (accueil, éleveur, classement, marché, trophées, potager, forum) :
+// aucun texte en police d'affichage ne déborde de son conteneur.
+//
+// GRAS. TakWolf ne publie pas de graisse grasse, et le faux gras
+// du navigateur étale les contours HORS grille — il rend le trait épais mais
+// reprend 56 % de pixels en demi-teinte, soit tout ce que le choix de la police
+// venait de gagner. Le gras servi ici est donc dessiné : chaque glyphe est uni à
+// sa copie décalée d'une case (100 unités sur 1200 d'em) et son avance suit, ce
+// qui donne un trait de 2 cases en restant exactement sur la grille — 0 % de
+// demi-teintes, comme le maigre.
+//
+// Les faces déclarent `400 700` en pointant le MÊME fichier : la police n'a
+// qu'une graisse dessinée, et cette plage empêche le navigateur de synthétiser
+// un faux gras par-dessus quand une règle demande 700. Rien à changer dans les
+// composants, tout ce qui est en `--font-display` est gras.
+// Les cinq sous-ensembles maigres (`fusion-pixel-*.woff2`, sans `-bold`) restent
+// sur le disque : revenir au maigre tient au `src` de ces cinq faces.
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-cyrillic.woff2') format('woff2');
+	unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-cyrillic-ext.woff2') format('woff2');
+	unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+	font-family: 'Fusion Pixel';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	size-adjust: 92.31%;
+	src: url('/fonts/fusion-pixel-bold-greek.woff2') format('woff2');
+	unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+// Noto Color Emoji (SIL OFL), la police de repli des emojis : elle n'est peinte
+// que par `.emoji-font`, donc seulement pour les joueurs sans emojis natifs
+// (Linux, vieux Android — cf. `detectNativeEmojis`).
+//
+// Version COLRv1 (vectorielle) 2.057, à jour d'Emoji 18 : celle d'avant datait
+// de 2019 (2.018, Emoji 12) et affichait un tofu pour tout emoji plus récent,
+// dont ceux déjà proposés par le panneau (🫡 🥹 🫠 🫨 🥸 🫣 🫢 🤌 🫶 🫂 🫅 🫎 🪄 🪨).
+// Découpée en 11 sous-ensembles par plage de caractères : un chat plein de
+// smileys ne télécharge que les 141 Ko du sous-ensemble 9, et les 709 Ko de
+// drapeaux ne partent que si un drapeau est affiché — 2,1 Mo au total contre
+// 9,4 Mo pour l'ancien fichier unique, qui partait en entier.
+//
+// Le `?v=` n'est pas décoratif : /fonts/ est servi avec un Cache-Control d'un an
+// sous un nom de fichier stable, et rien côté serveur ne peut invalider un cache
+// déjà posé (même piège que `IMAGE_VERSION` dans le service worker). Sans lui,
+// une montée de version resterait invisible un an chez qui a déjà chargé la
+// police — c'est-à-dire exactement le public qui en dépend.
+//
+// Pour la remonter : rejouer `curl` sur
+// https://fonts.googleapis.com/css2?family=Noto+Color+Emoji avec un
+// User-Agent Chrome récent (sinon Google renvoie la version bitmap en TTF),
+// enregistrer les woff2 dans public/fonts/, recopier les unicode-range et remonter
+// `$emoji-font-version`. Le nombre de sous-ensembles change d'une version à l'autre.
+$emoji-font-version: '2.057';
 @font-face {
 	font-family: 'Noto Color Emoji';
-	src: url("../public/font/NotoColorEmoji.ttf");
-	font-display: optional;
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-0.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+1f1e6-1f1ff;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-1.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+200d, U+2620, U+26a7, U+fe0f, U+1f308, U+1f38c, U+1f3c1, U+1f3f3-1f3f4, U+1f6a9, U+e0062-e0063, U+e0065, U+e0067, U+e006c, U+e006e, U+e0073-e0074, U+e0077, U+e007f;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-2.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+23, U+2a, U+30-39, U+a9, U+ae, U+200d, U+203c, U+2049, U+20e3, U+2122, U+2139, U+2194-2199, U+21a9-21aa, U+23cf, U+23e9-23ef, U+23f8-23fa, U+24c2, U+25aa-25ab, U+25b6, U+25c0, U+25fb-25fe, U+2611, U+2622-2623, U+2626, U+262a, U+262e-262f, U+2638, U+2640, U+2642, U+2648-2653, U+2660, U+2663, U+2665-2666, U+2668, U+267b, U+267e-267f, U+2695, U+269b-269c, U+26a0, U+26a7, U+26aa-26ab, U+26ce, U+26d4, U+2705, U+2714, U+2716, U+271d, U+2721, U+2733-2734, U+2747, U+274c, U+274e, U+2753-2755, U+2757, U+2764, U+2795-2797, U+27a1, U+27b0, U+27bf, U+2934-2935, U+2b05-2b07, U+2b1b-2b1c, U+2b55, U+3030, U+303d, U+3297, U+3299, U+fe0f, U+1f170-1f171, U+1f17e-1f17f, U+1f18e, U+1f191-1f19a, U+1f201-1f202, U+1f21a, U+1f22f, U+1f232-1f23a, U+1f250-1f251, U+1f310, U+1f3a6, U+1f3b5-1f3b6, U+1f3bc, U+1f3e7, U+1f441, U+1f499-1f49c, U+1f49f-1f4a0, U+1f4ac-1f4ad, U+1f4b1-1f4b2, U+1f4b9, U+1f4db, U+1f4f2-1f4f6, U+1f500-1f507, U+1f515, U+1f518-1f524, U+1f52f-1f53d, U+1f549, U+1f54e, U+1f5a4, U+1f5e8, U+1f5ef, U+1f6ab, U+1f6ad-1f6b1, U+1f6b3, U+1f6b7-1f6bc, U+1f6be, U+1f6c2-1f6c5, U+1f6d0-1f6d1, U+1f6d7, U+1f6dc, U+1f7e0-1f7eb, U+1f7f0, U+1f90d-1f90e, U+1f9d1-1f9d2, U+1f9e1, U+1fa75-1fa77, U+1faaf;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-3.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+200d, U+231a-231b, U+2328, U+23f0-23f3, U+2602, U+260e, U+2692, U+2694, U+2696-2697, U+2699, U+26b0-26b1, U+26cf, U+26d1, U+26d3, U+2702, U+2709, U+270f, U+2712, U+fe0f, U+1f302, U+1f321, U+1f392-1f393, U+1f3a9, U+1f3bd, U+1f3ee, U+1f3f7, U+1f3fa, U+1f451-1f462, U+1f484, U+1f489-1f48a, U+1f48c-1f48e, U+1f4a1, U+1f4a3, U+1f4a5, U+1f4b0, U+1f4b3-1f4b8, U+1f4bb-1f4da, U+1f4dc-1f4f1, U+1f4ff, U+1f508-1f514, U+1f516-1f517, U+1f526-1f529, U+1f52c-1f52e, U+1f550-1f567, U+1f56f-1f570, U+1f576, U+1f587, U+1f58a-1f58d, U+1f5a5, U+1f5a8, U+1f5b1-1f5b2, U+1f5c2-1f5c4, U+1f5d1-1f5d3, U+1f5dc-1f5de, U+1f5e1, U+1f5f3, U+1f6aa, U+1f6ac, U+1f6bd, U+1f6bf, U+1f6c1, U+1f6cb, U+1f6cd-1f6cf, U+1f6d2, U+1f6e0-1f6e1, U+1f6f0, U+1f97b-1f97f, U+1f9af, U+1f9ba, U+1f9e2-1f9e6, U+1f9ea-1f9ec, U+1f9ee-1f9f4, U+1f9f7-1f9ff, U+1fa71-1fa74, U+1fa79-1fa7b, U+1fa86, U+1fa8e-1fa8f, U+1fa91-1fa93, U+1fa96, U+1fa99-1faa0, U+1faa2-1faa7, U+1faaa-1faae;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-4.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+265f, U+26bd-26be, U+26f3, U+26f8, U+fe0f, U+1f004, U+1f0cf, U+1f380-1f384, U+1f386-1f38b, U+1f38d-1f391, U+1f396-1f397, U+1f399-1f39b, U+1f39e-1f39f, U+1f3a3-1f3a5, U+1f3a7-1f3a9, U+1f3ab-1f3b4, U+1f3b7-1f3bb, U+1f3bd-1f3c0, U+1f3c5-1f3c6, U+1f3c8-1f3c9, U+1f3cf-1f3d3, U+1f3f8-1f3f9, U+1f47e, U+1f4e2, U+1f4f7-1f4fd, U+1f52b, U+1f579, U+1f58c-1f58d, U+1f5bc, U+1f6f7, U+1f6f9, U+1f6fc, U+1f93f, U+1f941, U+1f945, U+1f947-1f94f, U+1f9e7-1f9e9, U+1f9f5-1f9f6, U+1fa70-1fa71, U+1fa80-1fa81, U+1fa83-1fa85, U+1fa87-1fa8a, U+1fa94-1fa95, U+1fa97-1fa98, U+1faa1, U+1faa9, U+1fadf;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-5.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+2693, U+26e9-26ea, U+26f1-26f2, U+26f4-26f5, U+26fa, U+26fd, U+2708, U+fe0f, U+1f301, U+1f303, U+1f306-1f307, U+1f309, U+1f310, U+1f3a0-1f3a2, U+1f3aa, U+1f3cd-1f3ce, U+1f3d5, U+1f3d7-1f3db, U+1f3df-1f3e6, U+1f3e8-1f3ed, U+1f3ef-1f3f0, U+1f488, U+1f492, U+1f4ba, U+1f54b-1f54d, U+1f5fa-1f5ff, U+1f680-1f6a2, U+1f6a4-1f6a8, U+1f6b2, U+1f6d1, U+1f6d5-1f6d6, U+1f6dd-1f6df, U+1f6e2-1f6e5, U+1f6e9, U+1f6eb-1f6ec, U+1f6f3-1f6f6, U+1f6f8, U+1f6fa-1f6fb, U+1f9bc-1f9bd, U+1f9ed, U+1f9f3, U+1fa7c;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-6.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+200d, U+2615, U+fe0f, U+1f32d-1f330, U+1f336, U+1f33d, U+1f344-1f37f, U+1f382, U+1f52a, U+1f7e9, U+1f7eb, U+1f942-1f944, U+1f950-1f96f, U+1f99e, U+1f9aa, U+1f9c0-1f9cb, U+1fad0-1fadc;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-7.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+200d, U+2600-2601, U+2603-2604, U+2614, U+2618, U+26a1, U+26c4-26c5, U+26c8, U+26f0, U+2728, U+2744, U+2b1b, U+2b50, U+fe0f, U+1f300, U+1f304-1f305, U+1f308, U+1f30a-1f30f, U+1f311-1f321, U+1f324-1f32c, U+1f331-1f335, U+1f337-1f33c, U+1f33e-1f344, U+1f3d4, U+1f3d6, U+1f3dc-1f3de, U+1f3f5, U+1f400-1f43f, U+1f490, U+1f4a7, U+1f4ae, U+1f525, U+1f54a, U+1f573, U+1f577-1f578, U+1f648-1f64a, U+1f6d8, U+1f940, U+1f980-1f9ae, U+1f9ba, U+1fa90, U+1faa8, U+1fab0-1fabf, U+1facd-1facf, U+1fae7;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-8.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+200d, U+2640, U+2642, U+2695-2696, U+26f7, U+26f9, U+2708, U+2764, U+27a1, U+fe0f, U+1f33e, U+1f373, U+1f37c, U+1f384-1f385, U+1f393, U+1f3a4, U+1f3a8, U+1f3c2-1f3c4, U+1f3c7, U+1f3ca-1f3cc, U+1f3eb, U+1f3ed, U+1f3fb-1f3ff, U+1f430, U+1f466-1f469, U+1f46b-1f478, U+1f47c, U+1f481-1f483, U+1f486-1f487, U+1f48b, U+1f48f, U+1f491, U+1f4bb-1f4bc, U+1f527, U+1f52c, U+1f574-1f575, U+1f57a, U+1f645-1f647, U+1f64b, U+1f64d-1f64e, U+1f680, U+1f692, U+1f6a3, U+1f6b4-1f6b6, U+1f6c0, U+1f6cc, U+1f91d, U+1f926, U+1f930-1f931, U+1f934-1f93a, U+1f93c-1f93e, U+1f977, U+1f9af-1f9b3, U+1f9b8-1f9b9, U+1f9bc-1f9bd, U+1f9cc-1f9cf, U+1f9d1-1f9df, U+1fa70, U+1fa82, U+1fac3-1fac5, U+1fac8, U+1faef;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-9.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+200d, U+2194-2195, U+2603, U+261d, U+2620, U+2639-263a, U+2665, U+26a1, U+26c4, U+270a-270d, U+2728, U+2763-2764, U+2b50, U+fe0f, U+1f31a-1f31f, U+1f32b, U+1f389-1f38a, U+1f3fb-1f3ff, U+1f440-1f450, U+1f463-1f465, U+1f479-1f47b, U+1f47d-1f480, U+1f485, U+1f48b-1f48c, U+1f493-1f49f, U+1f4a2, U+1f4a4-1f4a6, U+1f4a8-1f4ab, U+1f4af, U+1f525, U+1f573, U+1f590, U+1f595-1f596, U+1f5a4, U+1f5e3, U+1f600-1f644, U+1f648-1f64a, U+1f64c, U+1f64f, U+1f90c-1f925, U+1f927-1f92f, U+1f932-1f933, U+1f970-1f976, U+1f978-1f97a, U+1f9a0, U+1f9b4-1f9b7, U+1f9bb, U+1f9be-1f9bf, U+1f9d0, U+1f9e0-1f9e1, U+1fa75-1fa79, U+1fac0-1fac2, U+1fac6, U+1fae0-1fae6, U+1fae8-1faea, U+1faef-1fafa;
+}
+@font-face {
+	font-family: 'Noto Color Emoji';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/noto-color-emoji-10.woff2?v=#{$emoji-font-version}') format('woff2');
+	unicode-range: U+1f6d9, U+1fa8b-1fa8d, U+1facc, U+1fadd, U+1faeb;
 }
 @keyframes mdi-spin {
 	from { transform: rotate(0deg); }
@@ -47,15 +486,15 @@
 	color: inherit;
 }
 .v-overlay[role="tooltip"] .v-overlay__content, .v-tooltip__content {
-	background: #333 !important;
+	background: var(--tooltip-background) !important;
 	font-size: 14px !important;
 	pointer-events: none;
 	max-width: 250px !important;
 	transition: none !important;
 	position: absolute;
-	color: white;
+	color: var(--tooltip-color);
 	padding: 5px 16px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	line-height: 20px;
 	.v-icon {
 		font-size: 20px;
@@ -70,14 +509,14 @@
 		height: 0;
 		border-left: 4px solid transparent;
 		border-right: 4px solid transparent;
-		border-bottom: 4px solid rgba(51,51,51, 0.9);
+		border-bottom: 4px solid var(--tooltip-arrow);
 		content: " ";
 	}
 	&.top::before {
 		top: auto;
 		bottom: -7px;
 		border-bottom: none;
-		border-top: 7px solid rgba(51,51,51, 0.9);
+		border-top: 7px solid var(--tooltip-arrow);
 	}
 	&.left::before {
 		left: auto;
@@ -86,7 +525,7 @@
 		top: 50%;
 		border-bottom: none;
 		border-top: 4px solid transparent;
-		border-left: 7px solid rgba(51,51,51, 0.9);
+		border-left: 7px solid var(--tooltip-arrow);
 		border-bottom: 4px solid transparent;
 	}
 	&.fluid {
@@ -97,7 +536,7 @@
 	top: auto;
 	bottom: -7px;
 	border-bottom: none;
-	border-top: 7px solid rgba(51,51,51, 0.9);
+	border-top: 7px solid var(--tooltip-arrow);
 }
 .v-overlay[role="tooltip"] .v-overlay__content[style*="anchor-origin: left"]::before {
 	left: auto;
@@ -106,7 +545,7 @@
 	top: 50%;
 	border-bottom: none;
 	border-top: 4px solid transparent;
-	border-left: 7px solid rgba(51,51,51, 0.9);
+	border-left: 7px solid var(--tooltip-arrow);
 	border-bottom: 4px solid transparent;
 }
 
@@ -121,8 +560,8 @@
 	opacity: 1;
 }
 .accent--text, .primary--text {
-	color: #5fad1b !important;
-	caret-color: #5fad1b !important;
+	color: var(--primary) !important;
+	caret-color: var(--primary) !important;
 }
 .v-input.v-input--selection-controls {
 	margin-top: 0;
@@ -178,8 +617,8 @@
 	}
 }
 .primary {
-    background-color: #5fad1b !important;
-    border-color: #5fad1b !important;
+    background-color: var(--primary-surface) !important;
+    border-color: var(--primary) !important;
 }
 button {
 	border-style: none;
@@ -188,7 +627,7 @@ button {
 .v-btn {
 	text-transform: none;
 	margin: 0 3px;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	font-weight: normal;
 	letter-spacing: normal;
 }
@@ -207,7 +646,12 @@ button {
     background-color: #ca0000 !important;
     border-color: #ca0000 !important;
 }
-body.dark .v-btn:not([class*="bg-"]) {
+// Le noir des boutons du thème sombre est un parti pris du v2 : le v3 donne
+// leur surface aux boutons dans sa coquille (`--background-header` pour les
+// boutons pleins, transparent pour les boutons texte), et ce sélecteur, plus
+// spécifique, la recouvrait — noir sur tous les boutons neutres, y compris
+// ceux qui portent un aplat de couleur venu d'ailleurs que d'une classe `bg-`.
+body.v2.dark .v-btn:not([class*="bg-"]) {
 	background-color: #000;
 }
 
@@ -219,45 +663,35 @@ html {
 *, *:before, *:after {
 	box-sizing: inherit;
 }
-// Marqueur visuel de la beta : fond extérieur légèrement rosé (classe ajoutée dans vue.ts si env.BETA)
+// Marqueurs visuels d'environnement : ils teintent le fond extérieur pour qu'on
+// sache d'un coup d'œil qu'on n'est pas en production.
+// Chacun a sa version claire et sa version sombre : avec une seule couleur en
+// dur, le fond extérieur restait sombre en thème clair, au point de rendre le
+// thème clair intestable en local.
+// Ils peignent `background` et ne redéfinissent pas --background-outer, pour
+// rester au-dessus des deux thèmes quelle que soit leur cascade.
 body.beta {
-	background: #492e46;
+	background: #f0e2ee; // beta (classe posée dans vue.ts si env.BETA)
+	&.dark { background: #492e46; }
+}
+body.local {
+	background: #dde6f4; // dev local, leekwars.local (classe posée dans main.ts)
+	&.dark { background: #24344d; }
+}
+body.beta-local {
+	background: #e5ddf5; // beta locale, leekwars-beta.local (classe posée dans main.ts)
+	&.dark { background: #322350; }
 }
 body {
 	margin: 0;
-	font-family: "Roboto", sans-serif;
+	font-family: var(--font-body);
 	font-size: 15px;
-	background: #333;
+	background: var(--background-outer);
 	color: var(--text-color);
-	--primary: #5fad1b;
-	--pure-white: #fff;
-	--pure-black: #000;
-	--background: #f2f2f2;
-	--background-secondary: #eee;
-	--background-disabled: #bbb;
-	--background-header: #e5e5e5;
-	--border: #ddd;
-	--text-color: #111;
-	--text-color-secondary: #686868;
-	--type-color: #0000D0;
-	--link-color: #0645ad;
-	&.dark {
-		--pure-white: #000;
-		--pure-black: #fff;
-		--background: #1f1f1f;
-		--background-secondary: #171717;
-		--background-disabled: #555;
-		--background-header: #2f2f2f;
-		--border: #444;
-		--text-color: #f7f7f7;
-		--text-color-secondary: #999;
-		--type-color: #0099d0;
-		--link-color: #4bbaff;
-	}
 }
 ::selection {
-	background: #61b01c;
-	color: white;
+	background: var(--selection-background);
+	color: var(--selection-color);
 }
 table {
 	border-collapse: collapse;
@@ -279,14 +713,14 @@ h1 {
 	display: inline-block;
 	height: 36px;
 	padding: 0 15px;
-	color: white;
+	color: var(--primary-surface-text);
 	position: relative;
-	background: #5fad1b;
+	background: var(--primary-surface);
 	text-shadow: 0px 2px 3px rgba(0,0,0,0.2), 0px 1px 3px rgba(0,0,0,0.1), 0px 3px 6px rgba(0,0,0,0.1);
-	border-top-left-radius: 3px;
+	border-top-left-radius: var(--radius-small);
 }
 h1 a, h1 a:visited {
-	color: white;
+	color: var(--primary-surface-text);
 }
 h1::after {
 	content: "";
@@ -297,7 +731,7 @@ h1::after {
 	height: 0;
 	border-style: solid;
 	border-width: 36px 0 0 19px;
-	border-color: transparent transparent transparent #5fad1b;
+	border-color: transparent transparent transparent var(--primary-surface);
 }
 h2 {
 	font-size: 25px;
@@ -306,9 +740,9 @@ h3 {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	margin-left: -15px;
-	background: #5fad1b;
+	background: var(--primary-surface);
 	display: inline-block;
-	color: white;
+	color: var(--primary-surface-text);
 	padding: 5px 10px;
 	font-size: 18px;
 	position: relative;
@@ -332,7 +766,7 @@ h3::after {
 	height: 0;
 	border-style: solid;
 	border-width: 32px 0 0 12px;
-	border-color: transparent transparent transparent #5fad1b;
+	border-color: transparent transparent transparent var(--primary-surface);
 }
 h4 {
 	font-size: 18px;
@@ -350,7 +784,7 @@ a:focus {
     outline: 0;
 }
 textarea {
-	font-family: "Roboto";
+	font-family: var(--font-body);
 	font-size: 15px;
 }
 ul, ol {
@@ -360,10 +794,17 @@ ul, ol {
 .center {
 	text-align: center;
 }
-.page-header.page-bar .tabs {
+/* `.actions` est le conteneur des ACTIONS d'une barre de page, distinct de
+   `.tabs` qui porte les onglets de navigation. Les deux partagent la mise en
+   forme de base — c'est le thème v3 qui les sépare visuellement, en donnant aux
+   actions un rectangle bordé et aux onglets leur trait vert. Sans cette ligne,
+   une barre migrée vers `.actions` se retrouvait sans aucun style en v2. */
+.page-header.page-bar .tabs,
+.page-header.page-bar .actions {
 	margin-left: 20px;
 }
-.page-bar .tabs .tab {
+.page-bar .tabs .tab,
+.page-bar .actions .tab {
 	display: inline-flex;
 	align-items: center;
 	padding: 0 7px;
@@ -371,20 +812,27 @@ ul, ol {
 	height: 36px;
 	vertical-align: top;
 	margin-right: 20px;
-	color: #eee;
+	color: var(--page-bar-color);
 	position: relative;
-	background: rgba(0, 0, 0, 0.3);
+	background: var(--page-bar-tab-background);
 	margin-left: 2px;
 	user-select: none;
 	gap: 6px;
 }
-.page-bar .tabs .tab:not(.disabled) {
+.page-bar .tabs .tab:not(.disabled),
+.page-bar .actions .tab:not(.disabled) {
 	cursor: pointer;
 }
-.page-bar .tabs .tab:not(.disabled):hover {
-	background-color: rgba(0, 0, 0, 0.6);
+.page-bar .tabs .tab:not(.disabled):hover,
+.page-bar .actions .tab:not(.disabled):hover {
+	background-color: var(--page-bar-tab-background-hover);
 }
-.page-bar .tabs .tab::before {
+/* Les biseaux du v2 : ce sont eux qui font l'onglet penché de l'ancien design.
+   Les actions y ont droit comme les onglets — une barre migrée de `.tabs` vers
+   `.actions` (page du poireau, LW+) perdait sinon la silhouette de ses boutons.
+   Le v3 les neutralise, il n'a pas d'onglet penché. */
+.page-bar .tabs .tab::before,
+.page-bar .actions .tab::before {
 	content: "";
 	position: absolute;
 	left: -20px;
@@ -393,12 +841,14 @@ ul, ol {
 	height: 0;
 	border-style: solid;
 	border-width: 0 20px 36px 0;
-	border-color: transparent rgba(0, 0, 0, 0.3) transparent transparent;
+	border-color: transparent var(--page-bar-tab-background) transparent transparent;
 }
-.page-bar .tabs .tab:not(.disabled):hover::before {
-	border-color: transparent rgba(0, 0, 0, 0.6) transparent transparent ;
+.page-bar .tabs .tab:not(.disabled):hover::before,
+.page-bar .actions .tab:not(.disabled):hover::before {
+	border-color: transparent var(--page-bar-tab-background-hover) transparent transparent;
 }
-.page-bar .tabs .tab::after {
+.page-bar .tabs .tab::after,
+.page-bar .actions .tab::after {
 	content: "";
 	position: absolute;
 	right: -20px;
@@ -407,9 +857,10 @@ ul, ol {
 	height: 0;
 	border-style: solid;
 	border-width: 36px 0 0 20px;
-	border-color: transparent transparent transparent rgba(0, 0, 0, 0.3);
+	border-color: transparent transparent transparent var(--page-bar-tab-background);
 }
-.page-bar .tabs .tab:not(.disabled):hover::after {
+.page-bar .tabs .tab:not(.disabled):hover::after,
+.page-bar .actions .tab:not(.disabled):hover::after {
 	border-color: transparent  transparent transparent rgba(0, 0, 0, 0.6);
 }
 .page-bar .tabs .tab.selected {
@@ -522,7 +973,7 @@ ul, ol {
 	max-height: 100%;
 }
 input {
-	font-family: "Roboto";
+	font-family: var(--font-body);
 }
 input, textarea {
 	border: solid 1px var(--border);
@@ -530,7 +981,9 @@ input, textarea {
 	min-height: 26px;
 	padding: 0 4px;
 	outline: 0;
-	background: var(--pure-white);
+	// Surface de champ : --background-input vaut --pure-white en v2, donc
+	// l'ancien thème rend exactement comme avant.
+	background: var(--background-input);
 	color: var(--text-color);
 }
 select {
@@ -541,7 +994,7 @@ select {
 select {
 	-webkit-appearance: menulist-button;
 	border: solid 1px var(--border);
-	background-color: var(--pure-white);
+	background-color: var(--background-input);
 	color: var(--text-color);
 }
 input:active, input:focus {
@@ -571,6 +1024,12 @@ img.emoji {
 body.dark img.emoji[src$="frequency.png"] {
 	filter: invert(1);
 }
+// Meme eclair noir dans les icones de caracteristique (atelier, forge, palette,
+// infobulles de composant) : invisible sur fond sombre sans inversion.
+body.dark img[src$="/charac/frequency.png"],
+body.dark img[src$="/charac/small/frequency.png"] {
+	filter: invert(1);
+}
 .emoji.large {
 	width: 30px;
 	height: 30px;
@@ -578,11 +1037,19 @@ body.dark img.emoji[src$="frequency.png"] {
 }
 .emoji-font {
 	font-family: "Noto Color Emoji";
+	// Normalisation de taille du mode « aucun emoji natif » : là, TOUS les emojis du
+	// document passent par la police livrée, et on les cadre à 16px.
 	font-size: 16px;
 }
-.dev-label, .beta-label, .local-label {
+// Emoji habillé seul au milieu d'emojis natifs (cf. `needsEmojiFont`) : seule la
+// famille doit changer. Sans ça, un emoji trop récent sortait à 16px au milieu de
+// voisins à la taille du contexte.
+.emoji-font.in-context {
+	font-size: inherit;
+}
+.dev-label, .beta-label, .local-label, .beta-local-label {
 	color: white;
-	border-radius: 4px;
+	border-radius: var(--radius);
 	padding: 4px 6px;
 	vertical-align: top;
 	line-height: 70px;
@@ -598,16 +1065,23 @@ body.dark img.emoji[src$="frequency.png"] {
 .local-label {
 	background: blue;
 }
+.beta-local-label {
+	background: #7634d8;
+}
 .moderator, a.moderator {
-	color: #ffa900;
+	color: var(--grade-moderator);
 	font-weight: bold;
 }
 .admin, a.admin {
-	color: #df1500;
+	color: var(--grade-admin);
 	font-weight: bold;
 }
 .contributor, a.contributor {
-	color: #009c1d;
+	color: var(--grade-contributor);
+	font-weight: bold;
+}
+.referent, a.referent {
+	color: var(--grade-referent);
 	font-weight: bold;
 }
 .bot, a.bot {
@@ -616,7 +1090,7 @@ body.dark img.emoji[src$="frequency.png"] {
 }
 .card {
 	background: var(--pure-white);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 .flex {
@@ -670,49 +1144,48 @@ body.dark img.emoji[src$="frequency.png"] {
 	z-index: 1;
 	background-image: linear-gradient(-45deg,rgba(255,255,255,.2) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.2) 75%,transparent 75%,transparent);
 	background-size: 50px 50px;
-	border-top-left-radius: 20px;
-	border-bottom-left-radius: 20px;
+	border-top-left-radius: var(--radius-pill);
+	border-bottom-left-radius: var(--radius-pill);
 	overflow: hidden;
-	border-radius: 6px;
+	border-radius: var(--radius-medium);
 	background-repeat: initial;
 }
 .rounded4 {
-	border-radius: 4px;
+	border-radius: var(--radius);
 }
-.color-life { color: red; }
-.color-max-life { color: #00d5b5; }
-.color-strength { color: #833100; }
-.dark .color-strength {	color: #c05415; }
-.color-wisdom {	color: #5ebe00; }
-.color-agility { color: #0080f7; }
+/* Couleurs des caractéristiques : les valeurs vivent dans les thèmes
+   (`--stat-*`), qui les inversent chacun à sa manière — le v2 garde les siennes
+   au pixel près, le v3 en donne une paire mesurée par thème. Les trois
+   surcharges `.dark` qui vivaient ici sont parties avec elles. */
+.color-life { color: var(--stat-life); }
+.color-max-life { color: var(--stat-max-life); }
+.color-strength { color: var(--stat-strength); }
+.color-wisdom {	color: var(--stat-wisdom); }
+.color-agility { color: var(--stat-agility); }
 .color-resistance {
-	color: #ff4a01;
+	color: var(--stat-resistance);
 }
 .color-ram {
-	color: #ce00c7;
+	color: var(--stat-ram);
 }
 .color-cores {
-	color: #878787;
+	color: var(--stat-cores);
 }
 .color-frequency {
 	color: var(--text-color);
 }
-.color-science { color: #0000a2; }
-.dark .color-science { color: #2a63ff; }
+.color-science { color: var(--stat-science); }
 .color-magic {
-	color: #b800b6;
-}
-.dark .color-magic {
-	color: #d810d5;
+	color: var(--stat-magic);
 }
 .color-tp {
-	color: #ff7f01;
+	color: var(--stat-tp);
 }
 .color-mp {
-	color: #00a900;
+	color: var(--stat-mp);
 }
 .color-poison {
-	color: #fb27ff;
+	color: var(--stat-poison);
 }
 .scroll-x {
 	overflow-x: auto;
@@ -734,9 +1207,10 @@ code {
 		vertical-align: bottom;
 		border: 1px solid var(--border);
 		padding: 1px 4px;
-		border-radius: 3px;
-		pre {
+		border-radius: var(--radius-small);
+		.pre {
 			white-space: pre-wrap;
+			word-break: break-all;
 		}
 	}
 	&:not(.single) > pre {
@@ -794,7 +1268,10 @@ code {
 	position: fixed;
 	left: 0;
 	right: 0;
-	z-index: 1000;
+	// Au-dessus des overlays Vuetify (v-dialog : 2400, +10 par overlay empilé),
+	// sinon un toast déclenché depuis un dialogue (équiper un composant, par
+	// exemple) s'affiche sous lui et le joueur ne voit jamais l'erreur.
+	z-index: 10000;
 	bottom: 100px;
 	text-align: center;
 	pointer-events: none;
@@ -811,10 +1288,10 @@ code {
 }
 .toast {
 	padding: 4px 8px;
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	font-weight: 300;
 	font-size: 18px;
-	font-family: "Roboto", sans-serif;
+	font-family: var(--font-body);
 	background: rgba(0,0,0, 0.7);
 	color: white;
 	display: inline-block;
@@ -844,7 +1321,7 @@ body {
 	background: #00aae2;
 	color: white;
 	padding: 0px 4px;
-	border-radius: 5px;
+	border-radius: var(--radius);
 	font-size: 15px;
 	display: inline-block;
 	margin-left: 4px;
@@ -866,7 +1343,7 @@ body {
 
 .notif-trophy {
 	background: linear-gradient(0deg, #ffb029, #ffdc3a);
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	border: 1px solid #ffb430;
 	color: black !important;
 	a, .message, .date {
@@ -878,7 +1355,7 @@ body {
 }
 .notif-bigwin {
 	background: linear-gradient(0deg, #0d2ad3, #329cff);
-	border-radius: 2px;
+	border-radius: var(--radius-tiny);
 	border: 1px solid #329cff;
 	&, .date, .message, .title {
 		color: white;
@@ -900,6 +1377,18 @@ body {
 .rarity-border-4 { border-top: 1px solid #f8ac00 !important }
 .rarity-border-5 { border-top: 1px solid red !important }
 
+// Silhouette coloree des composants alteres, par palier de remplissage du
+// puits. Globale car reutilisee dans l'inventaire, la page poireau et le dialogue de
+// selection. Le vert est assombri parce qu'il passe mal sur les composants deja verts
+// (RAM 3, kiwi, pomme).
+// Palier 0 : charge NEGATIVE, la casse a creuse la piece sous ses stats de base.
+.altered-0 { filter: drop-shadow(2px 2px 0 #7d5a5a) drop-shadow(0 0 2px rgba(125, 90, 90, .5)); }
+.altered-1 { filter: drop-shadow(2px 2px 0 #008800) drop-shadow(0 0 2px rgba(0, 136, 0, .5)); }
+.altered-2 { filter: drop-shadow(2px 2px 0 #0090ff) drop-shadow(0 0 2px rgba(0, 144, 255, .5)); }
+.altered-3 { filter: drop-shadow(2px 2px 0 #c21aff) drop-shadow(0 0 2px rgba(194, 26, 255, .5)); }
+.altered-4 { filter: drop-shadow(2px 2px 0 #f8ac00) drop-shadow(0 0 2px rgba(248, 172, 0, .5)); }
+.altered-5 { filter: drop-shadow(2px 2px 0 red) drop-shadow(0 0 2px rgba(255, 0, 0, .5)); }
+
 .spacer {
 	flex: 1;
 }
@@ -914,7 +1403,7 @@ body {
 .skin-8 { background: #9d00f8 }
 
 a.green-link {
-	color: #5fad1b;
+	color: var(--primary);
 	font-weight: 500;
 	&:hover {
 		text-decoration: underline;
@@ -986,10 +1475,10 @@ a.green-link {
 		}
 	}
 	.help {
-		font-family: Roboto;
+		font-family: var(--font-body);
 		font-size: 13px;
 		a {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: 500;
 		}
 	}
@@ -1042,7 +1531,7 @@ a.green-link {
 	max-width: 370px;
 	.bubble {
 		max-width: 370px;
-		border-radius: 7px;
+		border-radius: var(--radius-medium);
 		background: var(--pure-white);
 		padding: 18px;
 		box-shadow: rgba(0, 0, 0, 0.7) 0px 10px 30px;
@@ -1124,15 +1613,17 @@ a.green-link {
 	// --v-selection-control-size: 24px;
 }
 
-.v-checkbox .v-selection-control {
-	--v-selection-control-size: 28px;
-	min-height: auto !important;
-	gap: 6px;
+// Appui long au doigt, côté iOS : c'est le pendant CSS de
+// model/touch-context-menu.ts, qui porte l'explication et le même découpage.
+// Safari est le seul à respecter `-webkit-touch-callout` ; Chrome Android
+// l'ignore, d'où le handler JS. Les deux visent exactement les mêmes éléments :
+// toutes les images de l'interface, dont l'appui long sert à ouvrir une
+// infobulle et pas à ouvrir un menu « Enregistrer l'image ».
+img, canvas, svg image {
+	-webkit-touch-callout: none;
 }
-.v-switch .v-selection-control {
-	min-height: auto !important;
-	gap: 6px;
-	.v-selection-control__wrapper {
-		height: 30px;
-	}
+// Sauf les images de CONTENU, qu'on doit pouvoir enregistrer : celles des pages
+// markdown (forum, encyclopédie, tutoriel) et celles postées par les joueurs.
+.md img, .md canvas, img[src^="/user-image/"] {
+	-webkit-touch-callout: default;
 }

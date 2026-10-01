@@ -1,0 +1,454 @@
+/* Thème v3 : Leek Wars 3.0, le nouveau design.
+ *
+ * Même jeu de variables que leekwars-theme-v2.scss, autres valeurs. C'est tout
+ * ce que la bascule demande : les composants ne connaissent que les rôles, pas
+ * les couleurs. Toute variable ajoutée ici doit exister dans le v2, et
+ * inversement, sinon un des deux thèmes se retrouve avec un trou.
+ *
+ * Les valeurs viennent de la maquette du redesign. Le
+ * mockup est sombre par défaut ; ici le bloc `body` porte le thème clair
+ * (parchemin) et `body.dark` le thème sombre (néon sur presque noir), pour
+ * garder la cascade du site.
+ *
+ * Deux partis pris du mockup qui se lisent directement dans les valeurs :
+ * les angles sont francs (rayons à 0) et il n'y a pas d'ombre floue, la
+ * profondeur vient des bordures.
+ */
+
+body {
+	/* Police d'affichage. La chaine compte, chaque cran a une raison :
+
+	   1. Pixel Operator pour le latin. Grille de 16 cases par cadratin, la plus
+	      fine des douze polices pixel comparees, avec un gras dessine par son
+	      auteur. Mais 238 glyphes seulement : pas de cyrillique, pas de grec,
+	      pas de CJK, et pas le polonais.
+	   2. Fusion Pixel 12px prend tout ce qui manque — le russe, le grec, le
+	      polonais. Les `size-adjust` des deux polices sont calcules pour leur
+	      donner la MEME hauteur de capitale (0,692 cadratin) et les MEMES corps
+	      nets (multiples de 13), donc le relais ne se voit pas : cf. global.scss.
+	   3. Roboto ferme la chaine pour le japonais, le coreen et le chinois —
+	      Fusion Pixel les couvre, mais ces sous-ensembles ne sont pas deployes.
+
+	   Tiny5, Pixelify Sans et Press Start 2P restent declarees dans global.scss
+	   (rien n'est telecharge tant qu'aucune regle ne les demande) : revenir en
+	   arriere tient a ce jeton. */
+	--font-display: "Pixel Operator", "Fusion Pixel", "Roboto", sans-serif;
+
+	/* Crénage et graisse de la police d'affichage. Ils décrivent la POLICE, pas
+	   la mise en page : -0,0769 em vaut exactement une case de grille pour Pixel
+	   Operator (16 cases, `size-adjust: 123.08%`) comme pour Fusion Pixel (12
+	   cases, `92.31%`), puisque 1,2308/16 = 0,9231/12. Les 21 règles qui peignent
+	   en `--font-display` les prennent d'ici ; si un `size-adjust` bouge dans
+	   global.scss, c'est cette ligne-ci qui bouge, et elle seule. */
+	--font-display-tracking: -0.0769em;
+	--font-display-weight: 700;
+
+	/* Police de corps : l'Inter du mockup (--f-body). Roboto reste en repli
+	   pour les glyphes hors sous-ensembles, puis la chaîne système. */
+	--font-body: "Inter", "Roboto", system-ui, sans-serif;
+
+	/* Marque.
+	 *
+	 * #146128 et non le #1F8A3B du mockup : mesure faite, le vert sert 113 fois
+	 * comme couleur de TEXTE dans les composants, contre 58 fois comme fond. En
+	 * encre sur le parchemin, #1F8A3B plafonne a 3.9 de contraste, sous le seuil
+	 * de 4.5 ; corriger les 113 cas un par un ne tenait pas. En fond, le vert
+	 * fonce ne perd rien : l'encre claire dessus passe de 4.1 a 7.4.
+	 *
+	 * Contrepartie assumee : le vert du theme clair est moins vif que celui du
+	 * mockup. Le theme sombre
+	 * garde le neon, qui lui fonctionne dans les deux roles. */
+	--primary: #146128;
+	/* Encre posee SUR un aplat de marque. Indispensable ici : le vert du v3 en
+	   mode sombre est un neon clair, du texte blanc dessus est illisible. */
+	--primary-text: #FBF7E8;
+	/* Le vert quand il sert d'encre sur une surface claire : le neon du mode
+	   sombre est illisible dans ce role, d'ou un jeton distinct. */
+	--primary-strong: #146128;
+
+	/* Le vert quand il PEINT une surface.
+	 *
+	 * `--primary` est calibre pour l'ENCRE : sur le parchemin il faut descendre
+	 * a #146128 pour tenir 4.5, et ce vert-la, etale en aplat, est presque noir
+	 * — c'est lui qui rendait le theme clair terne, la marque n'apparaissant
+	 * plus nulle part a l'ecran. En aplat la contrainte s'inverse : c'est
+	 * l'encre POSEE dessus qui doit tenir.
+	 *
+	 * Elle est BLANCHE. Un vert vif (#2E9E4B) sous une encre presque noire tient
+	 * 5,42 sur le papier,
+	 * mais a l'usage le contraste se lit mal, les deux valeurs etant moyennes.
+	 * Du blanc demande un vert plus fonce — #2E9E4B ne monte qu'a 3,44 sous du
+	 * blanc, #1F8A3B a 4,41, encore sous le seuil. #1D8437 tient 4,76 tout en
+	 * restant un vert franc, loin du #146128 (7,58 mais quasi noir) qui avait
+	 * justement pousse a creer ce jeton.
+	 *
+	 * En SOMBRE rien ne change : l'aplat y est le neon, qui ne peut porter que
+	 * de l'encre sombre. Les deux themes ne se ressemblent pas sur ce point,
+	 * c'est la luminosite de l'aplat qui commande. */
+	--primary-surface: #1D8437;
+	--primary-surface-text: #FFFFFF;
+
+	/* Encre et fonds */
+	--pure-white: #FBF7E8;
+	--pure-black: #0E1410;
+	--white: #FBF7E8;
+	--black: #0E1410;
+	/* Echelle de surfaces.
+	 *
+	 * Elle etait plate : fond de page, panneau et en-tete tenaient dans
+	 * 1.04 / 1.05 / 1.08 de contraste, et trois roles (--pure-white,
+	 * --background-header, --background-row) partageaient la MEME valeur. Le v2,
+	 * lui, separait son fond gris de ses panneaux blancs de 1.32. Comme le v3 a
+	 * par ailleurs supprime les ombres et les arrondis, il ne restait plus qu'un
+	 * trait a 28 % pour decouper l'ecran entier : d'ou la nappe cremeuse
+	 * uniforme.
+	 *
+	 * Les cinq surfaces sont donc etalees, du plus fonce au plus clair :
+	 * exterieur, page, en-tete, panneau, champ — le panneau devient la surface
+	 * la plus claire de la page, c'est lui qui doit avancer. C'est un contraste
+	 * SURFACE/SURFACE, aucun seuil de texte n'est en jeu ; les encres, elles, y
+	 * gagnent (14.5 sur la page, 17.4 sur le panneau).
+	 *
+	 * REMONTE apres la coquille : l'etalement valait
+	 * pour le fond de la COLONNE CENTRALE, mais une fois la barre du haut, le
+	 * menu et le panneau social reunis en une seule surface, ces deux fonds ne
+	 * bordaient plus des panneaux isoles — ils encadraient toute la coquille, et
+	 * la bande beige autour d'elle prenait le dessus. Le sombre, lui, tient son
+	 * fond exterieur a 1.07 de la coquille.
+	 *
+	 * Les deux fonds remontent donc d'un tiers de leur ecart au panneau
+	 * (exterieur 1.34 → 1.22, page 1.20 → 1.13). C'est un rapprochement, pas un
+	 * retour a la nappe : l'echelle garde son ordre et ses proportions, elle est
+	 * seulement moins creuse. Les trois autres surfaces (en-tete, rangee, champ)
+	 * ne bougent pas — elles vivent SUR le panneau, ou l'etalement
+	 * n'a jamais pose probleme. */
+	--background: #EFE9D6;
+	--background-secondary: #FBF7E8;
+	--background-disabled: #D3CCB2;
+	--background-header: #F3EDD8;
+	--background-outer: #E7E1CB;
+	/* Trait des grands poireaux « discrets » (réglage), posé sur le fond de
+	   page : un gris-vert de l'échelle, plus sombre que le fond sans s'imposer
+	   (2,4 contre le fond ; l'image grise d'origine faisait 1,5). */
+	--big-leek-discreet: #8A9686;
+	--footer-color: #4A5847;
+	/* `bg-row` et `ink-3` du mockup : surface de survol et encre la plus pale.
+	   La rangee doit se distinguer du panneau qui la porte : en theme clair
+	   c'est donc un cran plus SOMBRE que lui, et non plus clair. */
+	--background-row: #EFE8D0;
+	/* Surface de la ligne « moi » (classements, rapport de combat).
+	 *
+	 * Le v2 la peignait en `--background` sur un tableau peint en
+	 * `--pure-white` : en v3 SOMBRE ces deux jetons valent le meme #0B0F0B, la
+	 * ligne etait donc peinte avec la couleur d'en dessous et ne restait
+	 * reperable qu'a sa graisse. En clair l'ecart tombait a 1.09, guere mieux.
+	 * Le remplacer par une surface neutre plus marquee ne suffirait pas : sur
+	 * douze lignes toutes identiques, il faut une TEINTE, pas un cran de gris —
+	 * et le survol d'une rangee occupe deja ce registre (`--background-row`).
+	 *
+	 * C'est donc le vert du theme a 12 %, exactement ce que le widget Classement
+	 * de l'accueil fait : « moi » se lit en vert partout sur le
+	 * site. Le mélange part de l'aplat de marque, qui s'inverse seul (vert fonce
+	 * en clair, neon en sombre) et le fond transparent le laisse se poser aussi
+	 * bien sur un tableau que sur un panneau. */
+	--background-mine: color-mix(in srgb, var(--primary-surface) 12%, transparent);
+	--text-color-faint: #6E7B69;
+	/* `bg-input` du mockup : la surface d'un champ, d'une case ou d'un compteur,
+	   toujours un cran plus claire que la page en clair, plus sombre en sombre. */
+	--background-input: #FFFCF0;
+	--border: rgba(14, 20, 16, 0.14);
+	/* `line-strong` du mockup : c'est ce trait qui delimite les panneaux, le
+	   design ne comptant sur aucune ombre pour les detacher du fond. */
+	--border-strong: rgba(14, 20, 16, 0.32);
+	--text-color: #0E1410;
+	--text-color-secondary: #4A5847;
+	--type-color: #1A7AA0;
+	--link-color: #1A7AA0;
+	--selection-background: #1F8A3B;
+	--selection-color: #FBF7E8;
+
+	/* Angles francs partout, zéro exception : même
+	   les 2 px que le mockup s'autorisait sur les plus petits éléments sautent.
+	   Le v2 garde ses 2 px. */
+	--radius-tiny: 0;
+	--radius-small: 0;
+	--radius: 0;
+	--radius-medium: 0;
+	--radius-large: 0;
+	--radius-pill: 0;
+
+	/* La seule ombre admise : franche, sans flou,
+	   façon pixel — celle du mockup. Réservée aux surfaces flottantes
+	   (dialogues, menus déroulants), les panneaux posés gardent le trait seul. */
+	--shadow-pixel: 4px 4px 0 #0E1410;
+	/* La variante courte, pour les boutons d'accent : le mockup les pose à 3 px
+	   au repos et passe à 4 px au survol (`--shadow-pixel`) en décalant le
+	   bouton d'un pixel, ce qui le fait « se lever ». */
+	--shadow-pixel-small: 3px 3px 0 #0E1410;
+	--shadow-pixel-pressed: 2px 2px 0 #0E1410;
+
+	/* Tooltips : même surface qu'un en-tête de panneau, le trait et l'ombre
+	   pixel les détachent (posés dans la coquille). La flèche n'existe plus en
+	   v3 (angles francs) : la variable est là pour la parité avec le v2. */
+	--tooltip-background: #FBF7E8;
+	--tooltip-color: #0E1410;
+	--tooltip-arrow: transparent;
+
+	/* Chrome : panneaux. Pas d'ombre portée, la profondeur vient du trait. */
+	--panel-background: var(--background-secondary);
+	--panel-header-background: #F3EDD8;
+	--panel-header-color: #0E1410;
+	--panel-header-height: 36px;
+	--panel-shadow: none;
+	--elevation-1: none;
+
+	/* Hauteur de la barre du haut. Le panneau social la connaissait deja en dur
+	   (`top: 80px`) ; depuis que la barre est un bandeau pleine largeur, le menu
+	   et la colonne centrale doivent s'en decaler aussi. */
+	--header-height: 80px;
+	/* Chrome : barre du haut. Le fond exterieur devient clair en theme clair,
+	   donc le logo blanc doit s'inverser et les pastilles s'assombrir. */
+	--header-color: #0E1410;
+	/* Surface de la barre, et son taux d'opacite sous l'effet verre.
+	 *
+	 * La barre, le menu et le panneau social forment UNE coquille : les trois
+	 * doivent porter la meme surface, ce que le theme sombre faisait deja par
+	 * accident et pas le clair. Mesure : barre rendue #EAE3C8 contre un menu
+	 * #FBF7E8, soit 1.20 de contraste — la barre tombait exactement sur la
+	 * couleur du fond exterieur et cessait de se lire comme une surface. En
+	 * sombre les memes deux points valent 1.02, d'ou l'impression d'ensemble.
+	 *
+	 * Deux causes, un jeton chacune. La teinte d'abord : la barre prenait
+	 * `--background-header`, la surface des EN-TETES de panneau, un cran plus
+	 * sombre que le panneau — elle prend maintenant la surface de coquille.
+	 * L'opacite ensuite : a 55 %, 45 % du fond exterieur remonte au travers, ce
+	 * qui coute 1.20 en clair (les surfaces claires sont etalees) contre 1.02 en
+	 * sombre (elles sont serrees). Le verre ne peut donc pas porter le meme taux
+	 * des deux cotes ; en clair il monte a 88 %, ou la barre reste a 1.02 de sa
+	 * surface quoi qu'il defile dessous. Le flou et la desaturation restent : ce
+	 * qui se perd, c'est la teinte du contenu qui passait au travers, pas
+	 * l'effet.
+	 *
+	 * Resoudre par la seule teinte etait impossible : a 55 %, la couleur qu'il
+	 * faudrait poser pour retomber sur #FBF7E8 depasse le blanc. */
+	--header-background: var(--panel-background);
+	--header-glass: 88%;
+	--header-button-background: rgba(14, 20, 16, 0.08);
+	--header-button-background-hover: rgba(14, 20, 16, 0.16);
+
+	/* Chrome : barre de page et ses onglets */
+	--page-bar-color: #0E1410;
+	--page-bar-tab-background: rgba(14, 20, 16, 0.06);
+	--page-bar-tab-background-hover: rgba(14, 20, 16, 0.12);
+
+	/* Échelle de gris, du plus foncé au plus clair, identique dans les deux
+	   thèmes comme dans le v2.
+	   L'inverser en mode sombre, pour qu'un composant qui prend --grey-4
+	   comme encre secondaire reste lisible partout, serait une mauvaise idée : la
+	   moitié des composants s'en sert dans l'autre sens, comme encre CLAIRE
+	   posée sur le chrome sombre (--grey-13 pour « du texte presque blanc »).
+	   L'inversion rendait ces textes invisibles. Tant que l'échelle porte deux
+	   sens contradictoires, elle ne peut pas s'inverser : c'est la conversion
+	   vers de vrais rôles qui reglera ça, pas un jeu de valeurs. */
+	--grey-1: #0E1410;
+	--grey-2: #1E2A20;
+	--grey-3: #2C3A2E;
+	--grey-4: #4A5847;
+	--grey-5: #5A6857;
+	--grey-6: #6A7867;
+	--grey-7: #7A8676;
+	--grey-8: #8A9686;
+	--grey-9: #9AA696;
+	--grey-10: #AAB6A6;
+	--grey-11: #C6CFBC;
+	--grey-12: #DCD6C0;
+	--grey-13: #F2ECD6;
+
+	/* Etat inactif : le gris du v2 (#9c9c9c) tombe a 2.6 sur le parchemin */
+	--inactive-color: #56634F;
+
+	/* L'or en APLAT — une surface peinte en or, pas de l'or comme encre : pour
+	   l'encre c'est --rank-first juste en dessous, foncé jusqu'à être lisible
+	   sur le parchemin. C'est le jeton `gold` du mockup : jaune vif en sombre,
+	   sa version foncée en clair, où le jaune vif s'éteindrait sur le
+	   parchemin. L'encre posée dessus reste sombre dans les deux thèmes
+	   (contraste mesuré 5,9 en clair, 12,9 en sombre), comme les flèches
+	   noires des boutons « Récupérer ». */
+	--gold: #B88A0E;
+	--gold-text: #0E1410;
+	/* L'or VIF, le même dans les deux thèmes : celui des notifications de
+	   trophée. Contrairement à `--gold`, il n'est pas calibré comme
+	   surface sur le parchemin mais comme un objet brillant posé dessus ; son
+	   encre reste `--gold-text` (contraste 12,9). */
+	--gold-bright: #FFD23A;
+
+	/* Podium du classement. Le v2 utilise un or #ffa900 qui tombe a 1,8 de
+	   contraste sur le parchemin. Les teintes sombres reprennent celles du
+	   mockup (gold, argent #C0C8D0, bronze #C77A0E), les claires sont leurs
+	   equivalents fonces. */
+	--rank-first: #8A6200;
+	--rank-second: #56634F;
+	--rank-third: #8A3D00;
+
+	/* Couleurs de grade, appliquees aux pseudos. Les teintes du v2 (#ffa900,
+	   #df1500) tombent a 1,8 de contraste sur le parchemin : illisibles. Elles
+	   sont foncees en theme clair et gardees vives en sombre. */
+	--grade-moderator: #A66A00;
+	--grade-admin: #C2382A;
+	--grade-contributor: #0F7A2A;
+	--grade-referent: #1A7AA0;
+
+	/* Couleurs des caractéristiques.
+	 *
+	 * Elles étaient écrites en dur dans `global.scss`, avec trois exceptions
+	 * `.dark` pour les trois plus criardes : le reste traversait tel quel les
+	 * deux thèmes. Mesuré, ça ne tenait ni d'un côté ni de l'autre — 1,46 pour
+	 * la vie max sur le parchemin, 1,85 pour la sagesse, 1,97 pour les PT ;
+	 * 3,01 pour la RAM et 2,93 pour la science sur le fond sombre.
+	 *
+	 * Chaque teinte garde sa TEINTE d'origine (même H, même S) : seule la
+	 * clarté bouge, jusqu'au premier palier qui tient 4,5 sur la pire surface
+	 * du thème — le fond de page en clair, la surface de rangée en sombre. Une
+	 * couleur de stat est une couleur d'identité, elle doit rester
+	 * reconnaissable d'un thème à l'autre ; ce sont les valeurs, pas les
+	 * teintes, qui s'inversent.
+	 *
+	 * La science fait exception : son #0000a2 tenait déjà 10,7 en clair, mais
+	 * un bleu presque noir ne se lit plus comme un bleu. Remontée à 6,4. */
+	--stat-life: #CE0000;
+	--stat-max-life: #007362;
+	--stat-strength: #833100;
+	--stat-wisdom: #397300;
+	--stat-agility: #0064C2;
+	--stat-resistance: #BA3500;
+	--stat-ram: #B600B0;
+	--stat-cores: #656565;
+	--stat-science: #1140C4;
+	--stat-magic: #B500B3;
+	--stat-tp: #A04F00;
+	--stat-mp: #007600;
+	--stat-poison: #B400B7;
+
+	/* Couleurs sémantiques */
+	--success: #1F8A3B;
+	--warning: #C77A0E;
+	--error: #C2382A;
+	--info: #1A7AA0;
+
+	/* Résultat d'un combat */
+	--result-win: #1F8A3B;
+	--result-win-text: #146128;
+	--result-win-background: rgba(31, 138, 59, 0.15);
+	--result-defeat: #C2382A;
+	--result-defeat-text: #8E2419;
+	--result-defeat-background: rgba(194, 56, 42, 0.15);
+	--result-draw: var(--text-color-secondary);
+	--result-draw-background: rgba(122, 134, 118, 0.15);
+
+	&.dark {
+		--primary: #7CFF6B;
+		--primary-text: #0B0F0B;
+		/* En sombre, « le vert lisible comme encre » est le neon lui-meme : le
+		   vert fonce du theme clair donnerait du vert sur noir. */
+		--primary-strong: #7CFF6B;
+		/* En sombre l'aplat de marque est deja le neon, avec son encre sombre :
+		   les deux jetons de surface valent donc les jetons historiques. */
+		--primary-surface: #7CFF6B;
+		--primary-surface-text: #0B0F0B;
+
+		/* L'echelle sombre reste serree. Etaler les surfaces sombres comme les
+		   claires — page 0A0D0C, panneau 151C1A, rangee 232D29 — ferait passer de
+		   1.03 a 1.13/1.22 de contraste. Le chiffre serait meilleur, le rendu non :
+		   le presque-noir du v3 est un parti pris, l'eclaircir le banalise. Le
+		   creusement de l'echelle ne vaut donc QUE pour le theme clair, ou la nappe
+		   cremeuse posait vraiment probleme. */
+		--pure-white: #0B0F0B;
+		--pure-black: #E8F0E6;
+		--background: #0B0F0B;
+		--background-secondary: #0E1316;
+		--background-disabled: #2A2F2C;
+		--background-header: #11161A;
+		--background-outer: #07090A;
+		/* Un vert sauge, clair sur le presque-noir sans en faire un néon
+		   (2,9 contre le fond). */
+		--big-leek-discreet: #44604B;
+		--footer-color: #A8B4A4;
+		--background-row: #131A1E;
+		--text-color-faint: #6B7A66;
+		--background-input: #0A0E10;
+		--border: rgba(255, 255, 255, 0.08);
+		--border-strong: rgba(255, 255, 255, 0.16);
+		--text-color: #E8F0E6;
+		--text-color-secondary: #A8B4A4;
+		--type-color: #5CE0FF;
+		--link-color: #5CE0FF;
+		--selection-background: #7CFF6B;
+		--selection-color: #0B0F0B;
+
+		--shadow-pixel: 4px 4px 0 #000;
+		--shadow-pixel-small: 3px 3px 0 #000;
+		--shadow-pixel-pressed: 2px 2px 0 #000;
+
+		--tooltip-background: #11161A;
+		--tooltip-color: #E8F0E6;
+
+		--panel-background: var(--background-secondary);
+		--panel-header-background: #11161A;
+		--panel-header-color: #E8F0E6;
+
+		--header-color: #E8F0E6;
+		/* Le sombre garde ses valeurs : c'est lui le modele. Sa barre rendue
+		   (#0B1012) est deja a 1.02 du menu, le verre a 55 % ne lui coute rien
+		   puisque le fond qui remonte au travers est a 1.07 de la coquille. */
+		--header-background: #11161A;
+		--header-glass: 55%;
+		--header-button-background: rgba(255, 255, 255, 0.08);
+		--header-button-background-hover: rgba(255, 255, 255, 0.16);
+
+		--page-bar-color: #E8F0E6;
+		--page-bar-tab-background: rgba(255, 255, 255, 0.06);
+		--page-bar-tab-background-hover: rgba(255, 255, 255, 0.12);
+
+		--inactive-color: #8A9686;
+
+		--gold: #FFD23A;
+		--gold-text: #0B0F0B;
+		--gold-bright: #FFD23A;
+
+		--rank-first: #FFD23A;
+		--rank-second: #C0C8D0;
+		--rank-third: #C77A0E;
+
+		--grade-moderator: #FFB23A;
+		--grade-admin: #FF5040;
+		--grade-contributor: #7CFF6B;
+		--grade-referent: #5CE0FF;
+
+		--stat-life: #FF5555;
+		--stat-max-life: #00D5B5;
+		--stat-strength: #E76E26;
+		--stat-wisdom: #5EBE00;
+		--stat-agility: #1E93FF;
+		--stat-resistance: #FF5814;
+		--stat-ram: #FF0EF7;
+		--stat-cores: #919191;
+		--stat-science: #618CFF;
+		--stat-magic: #F13EEE;
+		--stat-tp: #FF7F01;
+		--stat-mp: #00A900;
+		--stat-poison: #FB27FF;
+
+		--success: #7CFF6B;
+		--warning: #FFB23A;
+		--error: #FF5040;
+		--info: #5CE0FF;
+
+		--result-win: #7CFF6B;
+		--result-win-text: #A8E89C;
+		--result-win-background: rgba(124, 255, 107, 0.15);
+		--result-defeat: #FF5040;
+		--result-defeat-text: #FFB0A8;
+		--result-defeat-background: rgba(255, 80, 64, 0.15);
+		--result-draw-background: rgba(168, 180, 164, 0.12);
+	}
+}

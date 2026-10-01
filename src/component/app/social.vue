@@ -47,7 +47,13 @@
 					</template>
 				</panel>
 
-				<chat-panel v-if="env.SOCIAL && socialEverOpened" toggle="social/chat" chat="social" :height="300" />
+				<!-- Pas de hauteur : le chat est le dernier bloc de la colonne et prend
+				     la place restante (cf. `leekwars-shell-v3.scss`). L'ancien design,
+				     lui, ne voit rien de ces règles — la coquille v3 est encapsulée
+				     dans `body:not(.v2)` — et son chat grandissait avec ses messages
+				     jusqu'à passer sous le bas de l'écran : il garde les 300 px qu'il
+				     a toujours eus. -->
+				<chat-panel v-if="env.SOCIAL && socialEverOpened" toggle="social/chat" chat="social" :height="LeekWars.legacyTheme ? 300 : undefined" />
 			</div>
 		</div>
 	</div>
@@ -58,8 +64,8 @@ import Conversation from '@/component/messages/conversation.vue'
 import { LeekWars } from '@/model/leekwars'
 import type { Notification } from '@/model/notification'
 import { store } from '@/model/store'
-import { emitter } from '@/model/vue'
-import { defineAsyncComponent, nextTick, ref } from 'vue'
+import { emitter } from '@/model/emitter'
+import { defineAsyncComponent, nextTick, ref, watch } from 'vue'
 
 const ChatPanel = defineAsyncComponent(() => import(/* webpackChunkName: "chat" */ `@/component/chat/chat-panel.vue`))
 
@@ -77,6 +83,14 @@ if (widthStored) {
 	panelWidth.value = parseInt(widthStored, 10)
 }
 
+// La largeur du panneau est exposée en variable CSS pour que la mise en page
+// puisse réserver la place correspondante à droite. Sans ça, la marge du
+// contenu reste figée à 400 px (cf. app.vue) alors que le panneau peut aller
+// jusqu'à 800, et le panneau agrandi passe par-dessus la page.
+watch(panelWidth, (width) => {
+	document.documentElement.style.setProperty('--social-width', width + 'px')
+}, { immediate: true })
+
 function toggleSocial() {
 	LeekWars.socialCollapsed = !LeekWars.socialCollapsed
 	if (!LeekWars.socialCollapsed) {
@@ -92,8 +106,14 @@ function resizerMousedown(e: MouseEvent) {
 	const startWidth = panelWidth.value
 	const startX = e.clientX
 	const mousemove = (ev: MouseEvent) => {
-		panelWidth.value = Math.max(400, Math.min(800, startWidth + startX - ev.clientX))
-		localStorage.setItem('main/social-width', '' + panelWidth.value)
+		const width = Math.max(400, Math.min(800, startWidth + startX - ev.clientX))
+		if (width === panelWidth.value) { return }
+		panelWidth.value = width
+		localStorage.setItem('main/social-width', '' + width)
+		// Comme le toggle : les pages qui mesurent leur place (lecteur de combat,
+		// inventaire…) doivent suivre le glissement, pas seulement le repli. Le
+		// nextTick laisse le watch ci-dessus poser --social-width avant la mesure.
+		nextTick(() => emitter.emit('resize'))
 	}
 	const mouseup = (_ev: MouseEvent) => {
 		document.documentElement!.removeEventListener('mousemove', mousemove)
@@ -148,7 +168,7 @@ function readAllNotifications() {
 		.v-icon {
 			width: 30px;
 			height: 30px;
-			color: white;
+			color: var(--white);
 			font-size: 30px;
 		}
 	}
@@ -171,9 +191,9 @@ function readAllNotifications() {
 		cursor: col-resize;
 	}
 	.header .label {
-		background: #5fad1b;
-		color: white;
-		border-radius: 5px;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
+		border-radius: var(--radius);
 		margin-left: 8px;
 		margin-right: -6px;
 		margin-bottom: 2px;
@@ -201,6 +221,13 @@ function readAllNotifications() {
 		display: flex;
 		flex-direction: column;
 		gap: 2px;
+		// Les rangées gardent leur hauteur : dans une colonne flex bornée en
+		// hauteur, les enfants se COMPRESSENT (flex-shrink) avant que le
+		// défilement n'existe — trente notifications de trophée s'écrasaient en
+		// bandes de 8 px au lieu de faire défiler la liste.
+		> * {
+			flex-shrink: 0;
+		}
 	}
 
 	.blabla-panel > .content > div {
