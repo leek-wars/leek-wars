@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Stats API', link: '/admin/api-stats'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Stats API', link: '/admin/api-stats'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 
 		<panel class="first">
@@ -25,8 +30,8 @@
 							<input v-model="dateTo" type="datetime-local" class="date-input" />
 							<v-btn size="small" color="primary" @click="loadAll">Appliquer</v-btn>
 						</template>
-						<v-checkbox v-model="compare" density="compact" hide-details label="Comparer" @update:modelValue="loadAggregates" />
-						<v-checkbox v-model="autoRefresh" density="compact" hide-details label="Auto-refresh" @update:modelValue="onAutoRefreshChange" />
+						<lw-checkbox v-model="compare" label="Comparer" @update:modelValue="loadAggregates" />
+						<lw-checkbox v-model="autoRefresh" label="Auto-refresh" @update:modelValue="onAutoRefreshChange" />
 						<select v-if="autoRefresh" v-model.number="refreshInterval" class="interval-select" @change="onAutoRefreshChange">
 							<option :value="10">10s</option>
 							<option :value="30">30s</option>
@@ -635,7 +640,7 @@
 	.date-input, .interval-select {
 		padding: 4px 6px;
 		border: 1px solid var(--border);
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		background: var(--pure-white);
 		color: var(--text-color);
 		font-size: 13px;
@@ -654,7 +659,7 @@
 	.chart-wrap {
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 8px;
 		margin-bottom: 10px;
 		height: 400px;
@@ -667,7 +672,7 @@
 	.agg-card {
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 8px;
 		&.wide { grid-column: span 2; }
 		@media (max-width: 800px) { &.wide { grid-column: auto; } }
@@ -696,7 +701,7 @@
 			color: var(--text-color-secondary);
 			text-decoration: none;
 			padding: 2px 4px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			display: inline-flex;
 			align-items: center;
 			gap: 2px;
@@ -721,14 +726,14 @@
 		background: var(--background-header);
 		color: var(--text-color-secondary);
 		font-size: 10px;
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 	}
 	.farmer-link {
 		display: inline-block;
 		padding: 1px 6px;
 		background: var(--background-header);
 		color: var(--link-color);
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		text-decoration: none;
 		font-weight: bold;
 		font-size: 11px;
@@ -789,7 +794,7 @@
 	.filter-input {
 		padding: 4px 8px;
 		border: 1px solid var(--border);
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		background: var(--pure-white);
 		color: var(--text-color);
 		font-size: 13px;
@@ -820,7 +825,7 @@
 		font-family: monospace;
 		font-weight: bold;
 		padding: 1px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 12px;
 		min-width: 30px;
 		text-align: center;
@@ -855,7 +860,7 @@
 	.lat-mid { color: var(--text-color-secondary); }
 	.lat-warn { color: #e65100; font-weight: bold; }
 	.lat-bad { color: #b71c1c; font-weight: bold; }
-	.duration.lat-bad { background: #ffcdd2; padding: 1px 6px; border-radius: 3px; }
+	.duration.lat-bad { background: #ffcdd2; padding: 1px 6px; border-radius: var(--radius-small); }
 	.gap {
 		font-family: monospace;
 		font-size: 11px;
@@ -867,7 +872,7 @@
 		background: var(--background-header);
 		color: var(--link-color);
 		padding: 1px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 11px;
 		font-weight: bold;
 		text-decoration: none;

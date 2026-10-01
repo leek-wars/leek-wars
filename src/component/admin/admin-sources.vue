@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Sources', link: '/admin/sources'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Sources', link: '/admin/sources'}]" :raw="true" /></h1>
+				</div>
+			</div>
 
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="refresh">
@@ -24,8 +29,7 @@
 							<b class="date">{{ d }} ({{ day.length }})</b>
 							<div v-for="farmer of day" :key="farmer.id" class="card farmer" :class="{deleted: farmer.deleted, connected: farmer.connected && !farmer.deleted}">
 								<div class="date">
-									<img v-if="farmer.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<lw-status :online="farmer.connected" class="status" />
 									{{ $filters.time(farmer.register_time) }}
 								</div>
 								<rich-tooltip-farmer :id="farmer.id" v-slot="{ props }" :bottom="true">
@@ -83,6 +87,10 @@
 								<div class="ai-count" :title="farmer.ai_count + ' IA'">
 									<v-icon>mdi-file-document-outline</v-icon>
 									{{ farmer.ai_count }}
+								</div>
+
+								<div class="ai-lang">
+									<img v-if="aiLang(farmer.ai_language)" :src="aiLang(farmer.ai_language)!.logo" :title="aiLang(farmer.ai_language)!.label">
 								</div>
 
 								<div class="ip" :title="farmer.country ? farmer.country.toUpperCase() + ' — ' + farmer.register_ip : farmer.register_ip">
@@ -207,6 +215,7 @@
 
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
+	import { AI_LANGUAGES } from '@/component/editor/file-types'
 	import { store } from '@/model/store'
 	import { onBeforeUnmount, onMounted, ref } from 'vue'
 	import { useRouter } from 'vue-router'
@@ -268,6 +277,7 @@
 		email_bounced_at?: number | null
 		connected?: boolean
 		language?: string
+		ai_language?: string | null
 		country?: string | null
 		referer?: string
 		last_time: number
@@ -425,6 +435,10 @@
 		return 'Validé via ' + VIA[v]
 	}
 
+	function aiLang(id?: string | null) {
+		return AI_LANGUAGES.find(l => l.id === id) || null
+	}
+
 	function tutoTitle(farmer: SourceFarmer): string {
 		const didactitiel = farmer.didactitiel_seen ? 'Didactitiel terminé' : 'Didactitiel non terminé'
 		const tuto = 'Tutoriel ' + farmer.tutorial_progress + '/10'
@@ -493,7 +507,7 @@
 	.retention-card {
 		background: var(--panel-bg, #f7f7f7);
 		border: 1px solid rgba(0,0,0,0.05);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		padding: 10px 15px;
 		text-align: center;
 		.retention-label {
@@ -534,7 +548,7 @@
 		.code {
 			font-weight: 500;
 			font-size: 13px;
-			color: #555;
+			color: var(--grey-4);
 		}
 		.count {
 			margin-left: auto;
@@ -562,9 +576,9 @@
 		.name {
 			word-break: break-all;
 			font-weight: 500;
-			color: #555;
+			color: var(--grey-4);
 			&:hover {
-				color: #000;
+				color: var(--black);
 			}
 		}
 		.count {
@@ -614,6 +628,7 @@
 		/* play   */ minmax(90px, 1fr)
 		/* team   */ 28px
 		/* ai     */ 34px
+		/* lang   */ 24px
 		/* ip     */ minmax(120px, 1.1fr)
 		/* stats  */ minmax(100px, 1fr)
 		/* score  */ 64px
@@ -665,7 +680,6 @@
 		flex-shrink: 0;
 	}
 	.status {
-		width: 14px;
 		flex-shrink: 0;
 	}
 	.date {
@@ -682,6 +696,11 @@
 			max-width: 20px;
 		}
 	}
+	.ai-lang img {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+	}
 	.register-type {
 		.v-icon.pending {
 			opacity: 0.4;
@@ -689,7 +708,7 @@
 	}
 	.email-cell {
 		font-size: 12px;
-		color: #888;
+		color: var(--grey-7);
 		overflow: hidden;
 		gap: 4px;
 		.addr {
@@ -716,7 +735,7 @@
 			}
 			.clicked { color: #4caf50; }
 			.opened { color: #2196f3; }
-			.unopened { color: #bbb; }
+			.unopened { color: var(--grey-10); }
 			.bounced { color: #b71c1c; }
 		}
 	}
@@ -725,7 +744,7 @@
 			color: #4caf50;
 		}
 		.pending {
-			color: #bbb;
+			color: var(--grey-10);
 		}
 		.progress {
 			font-weight: 600;
@@ -758,12 +777,12 @@
 			height: 100%;
 			display: flex;
 			align-items: flex-end;
-			border-radius: 2px;
+			border-radius: var(--radius-tiny);
 			background: var(--background-disabled, #e0e0e0);
 			overflow: hidden;
 			.fill {
 				width: 100%;
-				border-radius: 2px;
+				border-radius: var(--radius-tiny);
 			}
 			&.a .fill {
 				background: #4caf50;
@@ -781,10 +800,10 @@
 	}
 	.team-cell {
 		.team {
-			color: #555;
+			color: var(--grey-4);
 			text-decoration: none;
 			&:hover {
-				color: #000;
+				color: var(--black);
 			}
 			.v-icon {
 				font-size: 18px;
@@ -792,9 +811,9 @@
 		}
 	}
 	.source {
-		color: #555;
+		color: var(--grey-4);
 		&:hover {
-			color: #000;
+			color: var(--black);
 		}
 	}
 	&.deleted {
@@ -829,7 +848,7 @@ body.dark .farmer.connected {
 	}
 }
 #app.app .farmer {
-	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px minmax(110px, 1fr) minmax(90px, 1fr) 64px minmax(70px, 1.1fr);
+	grid-template-columns: 60px minmax(100px, 1.3fr) 40px minmax(110px, 1.3fr) 60px minmax(70px, 1fr) minmax(80px, 1fr) 26px 30px 22px minmax(110px, 1fr) minmax(90px, 1fr) 64px minmax(70px, 1.1fr);
 	column-gap: 4px;
 	font-size: 12px;
 }

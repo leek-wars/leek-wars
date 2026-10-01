@@ -1,26 +1,13 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1>{{ $t('title') }}</h1>
+			<div class="page-title">
+				<page-icon name="moderation" fallback="mdi-gavel" />
+				<div class="page-title-text">
+					<h1>{{ $t('title') }}</h1>
+				</div>
 			</div>
-			<div class="tabs">
-				<router-link to="/moderation/thugs">
-					<div class="tab action content" icon="mdi-emoticon-devil-outline">
-						<v-icon>mdi-emoticon-devil-outline</v-icon> Voyous
-					</div>
-				</router-link>
-				<router-link to="/moderation/muted">
-					<div class="tab action content" icon="mdi-volume-off">
-						<v-icon>mdi-volume-off</v-icon> Mutés
-					</div>
-				</router-link>
-				<router-link to="/moderation/history">
-					<div class="tab action content" icon="mdi-history">
-						<v-icon>mdi-history</v-icon> Historique
-					</div>
-				</router-link>
-			</div>
+			<moderation-tabs active="reports" />
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column7 split-list">
@@ -83,19 +70,20 @@
 						<div class="title">Motif</div>
 						<div class="reason">Motif d'origine : <b>{{ $t('warning.reason_' + selectedFault.reason_text) }}</b></div>
 						<div v-if="selectedFault.fight" class="details">Combat : <router-link :to="'/fight/' + selectedFault.fight">{{ selectedFault.fight }}</router-link></div>
-						<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" hide-details :eager="true" dense outlined>
+						<lw-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif">
 							<template #selection>
 								{{ $t('warning.reason_' + finalReason) }}
 							</template>
-							<template #item="{ item, props }">
-								<v-list-item v-bind="props" class="select-item">
-									<template #title>
-										<div class="name">{{ $t('warning.reason_' + item.value) }}</div>
-										<div v-if="$te('warning.reason_' + item.value + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + item.value + '_action') }}</div>
-									</template>
-								</v-list-item>
+							<!-- Deux lignes dans la ligne : le motif et son action. Le
+							     v-list-item les empilait dans son #title, ici c'est la ligne
+							     elle-même qui s'empile (voir .select-item). -->
+							<template #item="{ item, props: itemProps }">
+								<div v-bind="itemProps" class="select-item">
+									<div class="name">{{ $t('warning.reason_' + item.value) }}</div>
+									<div v-if="$te('warning.reason_' + item.value + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + item.value + '_action') }}</div>
+								</div>
 							</template>
-						</v-select>
+						</lw-select>
 						<div class="details">
 							<div v-if="finalReason === Warning.INCORRECT_LEEK_NAME">
 								Poireau :
@@ -174,6 +162,7 @@
 
 <script lang="ts" setup>
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+	import ModerationTabs from '@/component/moderation/moderation-tabs.vue'
 	import type { Farmer } from '@/model/farmer'
 	import { i18n, mixins, useNamespacedT } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -186,7 +175,7 @@
 	import { useRoute, useRouter } from 'vue-router'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 
 	defineOptions({ name: "Moderation", i18n: {}, mixins: [...mixins] })
 
@@ -304,7 +293,7 @@
 		padding: 20px;
 		i {
 			font-size: 100px;
-			color: #ccc;
+			color: var(--grey-11);
 		}
 	}
 	.faults {
@@ -315,12 +304,12 @@
 		padding: 8px;
 		padding-bottom: 4px;
 		border: 1px solid var(--border);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		margin-bottom: 10px;
 	}
 	.fault.router-link-active {
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		box-shadow: var(--elevation-1);
 	}
 	#app.app .faults .fault {
 		margin: 0;
@@ -330,8 +319,11 @@
 		border: 2px solid var(--border);
 		opacity: 1;
 	}
-	.faults .fault img {
+	// L'avatar est une enveloppe autour de l'image (biseau v3) : c'est elle qui
+	// porte la taille et le flottement, l'image à l'intérieur la remplit.
+	.faults .fault .avatar {
 		width: 80px;
+		height: 80px;
 		float: left;
 		margin-right: 10px;
 		margin-bottom: 4px;
@@ -351,7 +343,7 @@
 		}
 	}
 	.faults .fault .reporter {
-		color: #666;
+		color: var(--grey-5);
 		font-size: 14px;
 	}
 	.title {
@@ -367,38 +359,36 @@
 		margin-bottom: 10px;
 		padding: 10px;
 	}
-	.select {
+	// Le champ est rendu par lw-select : classe présente, attribut de portée
+	// absent. Les règles qui suivaient rhabillaient les rouages de v-select
+	// (input, legend, label.v-label) et n'ont plus d'objet.
+	:deep(.select) {
 		margin: 10px 0;
-		:deep(input) {
-			border: none;
-		}
-		:deep(legend) {
-			margin-left: 17px;
-		}
-		:deep(label.v-label) {
-			z-index: 2;
-			left: -6px;
-		}
 	}
 	.select-item {
 		max-width: 500px;
+		// La ligne d'origine était un v-list-item qui empilait ses deux textes ;
+		// une ligne de lw-select est un flex horizontal, il faut le redresser.
+		flex-direction: column;
+		align-items: flex-start;
 	}
 	.desc {
 		font-weight: normal;
-		color: #555;
+		// --grey-4 est un gris de l'échelle claire, jamais redéfini en sombre.
+		color: var(--text-color-secondary);
 		white-space: normal;
 	}
 	.details {
 		margin-top: 5px;
 		a {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: bold;
 		}
 	}
 	.says {
 		max-height: 150px;
 		overflow-y: auto;
-		border: 1px solid #ddd;
+		border: 1px solid var(--grey-12);
 		padding: 4px;
 		margin: 4px 0;
 	}
@@ -487,7 +477,7 @@
 	.forum-message {
 		border: 1px solid var(--border);
 		margin: 5px 0;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		background: var(--background);
 		max-height: 250px;
 		overflow-y: auto;

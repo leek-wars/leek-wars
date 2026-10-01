@@ -1,16 +1,15 @@
 <template>
 	<div>
 		<div class="page-header page-bar">
-			<div>
-				<h1>
-					<breadcrumb :items="breadcrumb_items" :raw="true" />
-				</h1>
-			</div>
-			<div class="tabs">
-				<div class="tab action content" icon="mdi-emoticon-devil-outline">
-					<v-icon>mdi-emoticon-devil-outline</v-icon> Voyous
+			<div class="page-title">
+				<page-icon name="moderation" fallback="mdi-gavel" />
+				<div class="page-title-text">
+					<h1>
+						<breadcrumb :items="breadcrumb_items" :raw="true" />
+					</h1>
 				</div>
 			</div>
+			<moderation-tabs active="thugs" />
 		</div>
 
 		<panel title="Top Voyous">
@@ -37,6 +36,7 @@
 	import { Fault } from '@/model/moderation'
 	import { computed, ref } from 'vue'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import ModerationTabs from './moderation-tabs.vue'
 
 	defineOptions({ name: "ModerationThugs", i18n: {}, mixins: [...mixins] })
 
@@ -81,7 +81,7 @@
 		padding: 20px;
 		i {
 			font-size: 100px;
-			color: #ccc;
+			color: var(--grey-11);
 		}
 	}
 	.faults {
@@ -91,20 +91,20 @@
 		display: block;
 		padding: 8px;
 		padding-bottom: 4px;
-		border: 1px solid #ddd;
-		border-radius: 2px;
+		border: 1px solid var(--grey-12);
+		border-radius: var(--radius-tiny);
 		margin-bottom: 10px;
 	}
 	.fault.router-link-active {
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		background: var(--white);
+		box-shadow: var(--elevation-1);
 	}
 	#app.app .faults .fault {
 		margin: 0;
 		margin-bottom: 10px;
 	}
 	.faults .fault.selected {
-		border: 2px solid #ddd;
+		border: 2px solid var(--grey-12);
 		opacity: 1;
 	}
 	.faults .fault img {
@@ -128,7 +128,7 @@
 		}
 	}
 	.faults .fault .reporter {
-		color: #666;
+		color: var(--grey-5);
 		font-size: 14px;
 	}
 	.title {
@@ -137,7 +137,7 @@
 		text-transform: uppercase;
 		margin-top: -2px;
 		font-size: 14px;
-		color: #555;
+		color: var(--grey-4);
 		margin-bottom: 8px;
 	}
 	.warning {
@@ -162,20 +162,20 @@
 	}
 	.desc {
 		font-weight: normal;
-		color: #555;
+		color: var(--grey-4);
 		white-space: normal;
 	}
 	.details {
 		margin-top: 5px;
 		a {
-			color: #5fad1b;
+			color: var(--primary);
 			font-weight: bold;
 		}
 	}
 	.says {
 		max-height: 150px;
 		overflow-y: auto;
-		border: 1px solid #ddd;
+		border: 1px solid var(--grey-12);
 		padding: 4px;
 		margin: 4px 0;
 	}
@@ -212,7 +212,7 @@
 		margin-top: 6px;
 		text-align: justify;
 		.text {
-			color: #555;
+			color: var(--grey-4);
 		}
 	}
 	.warning-message {
@@ -238,8 +238,11 @@
 		margin-top: -3px;
 		float: right;
 	}
-	.thugs .thug img {
+	// L'avatar est une enveloppe autour de l'image (biseau v3) : c'est elle qui
+	// porte la taille, l'image à l'intérieur la remplit.
+	.thugs .thug .avatar {
 		margin-right: 5px;
+		flex: 0 0 25px;
 		width: 25px;
 		height: 25px;
 	}

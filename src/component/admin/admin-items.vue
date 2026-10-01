@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Items', link: '/admin/items'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Items', link: '/admin/items'}]" :raw="true" /></h1>
+				</div>
+			</div>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="load">
 					<v-icon>mdi-refresh</v-icon>
@@ -36,7 +41,7 @@
 						<v-btn v-if="search || category !== ItemType.ALL" size="small" variant="text" @click="resetFilters">
 							<v-icon>mdi-filter-remove-outline</v-icon> Réinitialiser
 						</v-btn>
-						<v-switch v-model="showUnowned" density="compact" hide-details inset color="primary" label="Possédés par personne" class="unowned-switch" />
+						<lw-switch v-model="showUnowned" label="Possédés par personne" class="unowned-switch" />
 						<div class="view-toggle">
 							<v-btn size="small" variant="text" icon="mdi-format-list-bulleted" :class="{active: viewMode === 'list'}" @click="viewMode = 'list'" />
 							<v-btn size="small" variant="text" icon="mdi-view-grid" :class="{active: viewMode === 'grid'}" @click="viewMode = 'grid'" />
@@ -57,7 +62,7 @@
 						:items="filteredRows"
 						:items-per-page="25"
 						:items-per-page-options="itemsPerPageOptions"
-						:sort-by="[{ key: 'total', order: 'desc' }]"
+						:sort-by="[{ key: 'total', order: 'asc' }]"
 						:row-props="rowProps"
 						density="compact"
 						class="items-table">
@@ -126,7 +131,7 @@
 <script lang="ts" setup>
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { ItemType, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ITEM_TYPE_NAME } from '@/model/item'
+	import { ItemType, ItemTemplate, ITEM_CATEGORY_NAME, ITEM_TYPE_ICONS, ITEM_TYPE_NAME, itemImageUrl } from '@/model/item'
 	import type { SchemeTemplate } from '@/model/scheme'
 	import { computed, onMounted, reactive, ref } from 'vue'
 	import { useRouter } from 'vue-router'
@@ -279,11 +284,7 @@
 	// autres (weapon_/chip_/potion_…) sont préfixés → on retire le préfixe.
 	function itemImage(item: ItemTemplate): string {
 		const target = item.type === ItemType.SCHEME ? (schemeResult(item) || item) : item
-		const cat = ITEM_CATEGORY_NAME[target.type]
-		const img = (target.type === ItemType.RESOURCE || target.type === ItemType.COMPONENT)
-			? target.name
-			: target.name.substring(target.name.indexOf('_') + 1)
-		return '/image/' + cat + '/' + img + '.png'
+		return itemImageUrl(target)
 	}
 
 	// Construit une ligne à partir d'un template + ses compteurs de distribution
@@ -387,7 +388,7 @@
 	margin-left: 8px;
 	padding: 5px 10px;
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	font-size: 13px;
 	background: var(--pure-white);
 	color: var(--text-color);
@@ -428,7 +429,7 @@
 		align-items: center;
 		justify-content: center;
 		background: var(--pure-white);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.18);
 		padding: 3px;
 		img {
@@ -455,12 +456,12 @@
 .ibar {
 	height: 5px;
 	background: var(--background-disabled, #e0e0e0);
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	overflow: hidden;
 	.fill {
 		height: 100%;
 		background: #2196f3;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 }
 .price {
@@ -472,10 +473,10 @@
 .rarity-badge {
 	display: inline-block;
 	padding: 1px 8px;
-	border-radius: 10px;
+	border-radius: var(--radius-large);
 	font-size: 11px;
 	font-weight: 600;
-	color: white;
+	color: var(--white);
 	white-space: nowrap;
 }
 .empty { text-align: center; color: var(--text-color-secondary); padding: 20px; }
@@ -506,7 +507,7 @@
 		padding: 10px 8px;
 		background: var(--background-secondary);
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: var(--radius-medium);
 		.card-thumb {
 			width: 96px;
 			height: 96px;
@@ -514,7 +515,7 @@
 			align-items: center;
 			justify-content: center;
 			background: var(--pure-white);
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 			padding: 6px;
 			cursor: pointer;

@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Schémas (' + (schemes ? schemes.length : '...') + ')', link: '/admin/schemes'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Schémas (' + (schemes ? schemes.length : '...') + ')', link: '/admin/schemes'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<div v-if="schemes" class="schemes">
@@ -9,7 +14,7 @@
 					<div v-ripple class="group result">
 						<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" @update:model-value="$emit('update:modelValue', $event)">
 							<div class="item" v-bind="props" :quantity="1" :class="{['rarity-border-' + LeekWars.items[scheme.result].rarity]: true}">
-								<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'" :type="LeekWars.items[scheme.result].type">
+								<img :src="itemImageUrl(LeekWars.items[scheme.result])" :type="LeekWars.items[scheme.result].type">
 								<div v-if="scheme.quantity > 1" class="quantity">{{ $filters.number(scheme.quantity) }}</div>
 							</div>
 						</rich-tooltip-item>
@@ -21,7 +26,7 @@
 							<div v-if="ingredient">
 								<rich-tooltip-item v-if="LeekWars.items[ingredient[0]]" :key="i" :item="LeekWars.items[ingredient[0]]" :bottom="true" :inventory="true" :quantity="ingredient[1]" @update:model-value="$emit('update:modelValue', $event)">
 									<div class="item" v-bind="props" :class="{['rarity-border-' + LeekWars.items[ingredient[0]].rarity]: true}">
-										<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[ingredient[0]].type] + '/' + LeekWars.items[ingredient[0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '') + '.png'" :type="LeekWars.items[ingredient[0]].type">
+										<img :src="itemImageUrl(LeekWars.items[ingredient[0]])" :type="LeekWars.items[ingredient[0]].type">
 										<div v-if="ingredient[1] > 1" class="quantity">{{ $filters.number(ingredient[1]) }}</div>
 									</div>
 								</rich-tooltip-item>
@@ -44,7 +49,7 @@
 						<div v-for="(_, i) in 9" :key="i" class="cell" :class="{['cell' + i]: true}">
 							<rich-tooltip-item v-if="scheme.items[i] && LeekWars.items[scheme.items[i][0]]" :key="i" :item="LeekWars.items[scheme.items[i][0]]" :bottom="true" :inventory="true" :quantity="scheme.items[i][1]">
 								<div class="item" :type="LeekWars.items[scheme.items[i][0]].type">
-									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.items[i][0]].type] + '/' + LeekWars.items[scheme.items[i][0]].name.replace('hat_', '').replace('potion_', '').replace('chip_', '').replace('weapon_', '') + '.png'">
+									<img :src="itemImageUrl(LeekWars.items[scheme.items[i][0]])">
 								</div>
 							</rich-tooltip-item>
 							<input v-if="scheme.items[i]" v-model="scheme.items[i]![0]" class="item-id">
@@ -53,7 +58,7 @@
 						<div class="cell" :class="{cell8: true}">
 							<rich-tooltip-item :item="LeekWars.items[scheme.result]" :bottom="true" :inventory="true" :quantity="scheme.quantity">
 								<div class="item" :type="LeekWars.items[scheme.result].type">
-									<img :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[scheme.result].type] + '/' + LeekWars.items[scheme.result].name.replace('hat_', '').replace('potion_', '') + '.png'">
+									<img :src="itemImageUrl(LeekWars.items[scheme.result])">
 									<input v-model="scheme.result" class="item-id">
 									<input v-model="scheme.quantity" class="quantity">
 								</div>
@@ -72,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ITEM_CATEGORY_NAME as ITEM_CATEGORY_NAME_TYPED } from '@/model/item'
+	import { itemImageUrl } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { SchemeTemplate } from '@/model/scheme'
 	import { store } from '@/model/store'
@@ -84,8 +89,6 @@
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 
 	defineOptions({})
-
-	const ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME_TYPED
 
 	const router = useRouter()
 	const schemes = ref<SchemeTemplate[] | null>(null)
@@ -146,7 +149,7 @@
 		padding: 4px;
 		height: 50px;
 		background: var(--pure-white);
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		box-shadow: var(--elevation-1);
 		img {
 			width: 42px;
 			height: 42px;
@@ -158,8 +161,8 @@
 			bottom: 0;
 			right: 0;
 			background: #000b;
-			border-top-left-radius: 4px;
-			color: white;
+			border-top-left-radius: var(--radius);
+			color: var(--white);
 			padding: 1.5px 4.5px;
 			font-weight: 500;
 			font-size: 14px;
@@ -201,9 +204,9 @@
 	margin: -2px;
 	z-index: 2;
 	background: var(--pure-white);
-	border: 1px solid #aaa;
+	border: 1px solid var(--grey-9);
 	border-radius: 100%;
-	box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+	box-shadow: var(--elevation-1);
 	&.arrow {
 		margin: 14px;
 		margin-right: 18px;
@@ -223,9 +226,9 @@
 	padding: 4px 10px;
 	font-size: 13px;
 	background: var(--color-primary);
-	color: white;
+	color: var(--white);
 	border: none;
-	border-radius: 3px;
+	border-radius: var(--radius-small);
 	cursor: pointer;
 	&:hover {
 		opacity: 0.9;
@@ -247,13 +250,13 @@
 		width: 28.5714285714%;
 		height: 28.5714285714%;
 		border: 1px solid var(--background-disabled);
-		border-radius: 2px;
+		border-radius: var(--radius-tiny);
 		background: var(--background-secondary);
 		position: absolute;
 		padding: 0;
 		&.active {
 			background: var(--pure-white);
-			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			box-shadow: var(--elevation-1);
 		}
 	}
 	.cell0 {
@@ -298,7 +301,7 @@
 		top: 28.5714285714%;
 		left: 28.5714285714%;
 		z-index: 2;
-		border-radius: 20px;
+		border-radius: var(--radius-pill);
 		border: 2px solid var(--background-disabled);
 		&:hover {
 			background: var(--background-secondary);
@@ -314,7 +317,7 @@
 			background: var(--pure-white);
 			border-radius: 50%;
 			pointer-events: none;
-			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			box-shadow: var(--elevation-1);
 		}
 	}
 	.cell.building {

@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Debug matchmaking', link: '/admin/matchmaking'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Debug matchmaking', link: '/admin/matchmaking'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first last">
 			<div class="content">
@@ -193,7 +198,7 @@
 			max-width: 260px;
 			padding: 6px 10px;
 			border: 1px solid var(--border);
-			border-radius: 4px;
+			border-radius: var(--radius);
 			background: var(--pure-white);
 			color: var(--text-color);
 		}
@@ -202,7 +207,7 @@
 		padding: 10px;
 		background: var(--error-background, #fbe9e7);
 		color: #c0392b;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		margin-bottom: 15px;
 	}
 	section {

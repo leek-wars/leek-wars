@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Gestionnaire d\'erreur', link: '/admin/errors'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Gestionnaire d\'erreur', link: '/admin/errors'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first last">
 			<div class="errors content">
@@ -10,12 +15,13 @@
 				</div>
 				<loader v-if="!errors" />
 				<div v-else>
-					<div class="delete">
-						<v-switch v-model="showHidden" color="primary" density="compact" hide-details label="Erreurs masquées" @update:model-value="onShowHiddenChange" />
-						<div class="spacer"></div>
-						Supprimer par mot-clé
-						<input v-model="deleteQuery" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-						<v-btn size="small" @click="deleteErrors">Supprimer</v-btn>
+					<div class="toolbar">
+						<lw-switch v-model="showHidden" label="Erreurs masquées" @update:model-value="onShowHiddenChange" />
+						<div class="delete-query">
+							<label for="delete-query">Supprimer par mot-clé</label>
+							<input id="delete-query" v-model="deleteQuery" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+							<v-btn size="small" color="error" :disabled="!deleteQuery.trim()" @click="deleteErrors">Supprimer</v-btn>
+						</div>
 					</div>
 
 					<h2 v-if="errors.length === 0">Aucune erreur !</h2>
@@ -90,7 +96,7 @@
 <script setup lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { emitter } from '@/model/vue'
+	import { emitter } from '@/model/emitter'
 	import { getCurrentInstance, nextTick, onBeforeUnmount, ref } from 'vue'
 	import { useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
@@ -299,9 +305,9 @@
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			border: 1px solid #aaa;
+			border: 1px solid var(--grey-9);
 			padding: 2px 6px;
-			border-radius: 4px;
+			border-radius: var(--radius);
 			.avatar {
 				width: 26px;
 				height: 26px;
@@ -311,17 +317,17 @@
 			font-size: 11px;
 			font-weight: bold;
 			padding: 2px 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			background: #e57373;
-			color: white;
+			color: var(--white);
 		}
 		.hidden-tag {
 			font-size: 11px;
 			font-weight: bold;
 			padding: 2px 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			background: #9e9e9e;
-			color: white;
+			color: var(--white);
 			text-transform: uppercase;
 		}
 		.ip {
@@ -331,7 +337,7 @@
 		.user-agent {
 			font-family: monospace;
 			font-size: 11px;
-			color: #666;
+			color: var(--grey-5);
 			max-width: 200px;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -341,24 +347,24 @@
 			font-size: 11px;
 			font-weight: bold;
 			padding: 2px 6px;
-			border-radius: 3px;
+			border-radius: var(--radius-small);
 			text-transform: uppercase;
-			&.daemon { background: #9c27b0; color: white; }
-			&.worker { background: #ff9800; color: white; }
-			&.api { background: #2196f3; color: white; }
-			&.cron { background: #607d8b; color: white; }
-			&.client { background: #4caf50; color: white; }
+			&.daemon { background: #9c27b0; color: var(--white); }
+			&.worker { background: #ff9800; color: var(--white); }
+			&.api { background: #2196f3; color: var(--white); }
+			&.cron { background: #607d8b; color: var(--white); }
+			&.client { background: #4caf50; color: var(--white); }
 		}
 		.build {
 			font-family: monospace;
 			font-size: 11px;
-			color: #666;
+			color: var(--grey-5);
 			display: inline-flex;
 			align-items: center;
 			gap: 3px;
 			padding: 2px 6px;
-			border-radius: 3px;
-			background: #eee;
+			border-radius: var(--radius-small);
+			background: var(--grey-13);
 			.build-age {
 				opacity: 0.7;
 			}
@@ -412,19 +418,19 @@
 	}
 	.codes {
 		font-size: 12px;
-		background: white;
+		background: var(--white);
 	}
 	.codes th {
-		border: 2px solid #ddd;
+		border: 2px solid var(--grey-12);
 		padding: 5px;
-		background: white;
+		background: var(--white);
 		font-weight: normal;
 		color: var(--text-color-secondary);
 		font-size: 18px;
 	}
 	.codes td {
 		width: 50%;
-		border: 2px solid #ddd;
+		border: 2px solid var(--grey-12);
 		padding: 0;
 		font-size: 12px;
 		vertical-align: top;
@@ -435,13 +441,53 @@
 	#app.app .error code {
 		font-size: 10px;
 	}
-	.delete {
+	// Barre d'outils : le switch garde sa taille, le bloc de suppression prend le reste et passe
+	// seul à la ligne sous 320px de place restante (sinon en mobile tout était écrasé à 1 caractère
+	// de large, labels rendus à la verticale et superposés).
+	.toolbar {
 		display: flex;
-		gap: 10px;
-		width: 100%;
-		justify-content: flex-end;
+		flex-wrap: wrap;
 		align-items: center;
+		gap: 10px 16px;
 		margin-bottom: 10px;
+		.lw-switch {
+			flex: none;
+		}
+	}
+	.delete-query {
+		flex: 1 1 320px;
+		min-width: 0;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		label {
+			white-space: nowrap;
+			color: var(--text-color-secondary);
+		}
+		input {
+			flex: 1 1 140px;
+			min-width: 0;
+			max-width: 420px;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 6px 10px;
+			background: var(--background);
+			color: var(--text-color);
+			&:focus {
+				border-color: var(--primary);
+				outline: none;
+			}
+		}
+		// En mobile le libellé prend sa propre ligne, sinon le bouton se retrouve seul sur une
+		// troisième ligne avec un champ de saisie minuscule.
+		@media (max-width: 599px) {
+			justify-content: flex-start;
+			label {
+				flex: 1 0 100%;
+			}
+		}
 	}
 	.flag {
 		height: 16px;
@@ -450,9 +496,9 @@
 		text-align: center;
 		padding: 8px;
 		margin-bottom: 10px;
-		background: #5fad1b;
-		color: white;
-		border-radius: 5px;
+		background: var(--primary-surface);
+		color: var(--primary-surface-text);
+		border-radius: var(--radius);
 		cursor: pointer;
 	}
 	.new-errors:hover {
@@ -469,7 +515,7 @@
 		align-items: center;
 		gap: 10px;
 		padding: 10px 15px;
-		border-bottom: 1px solid #ddd;
+		border-bottom: 1px solid var(--grey-12);
 		h2 {
 			margin: 0;
 			font-size: 18px;

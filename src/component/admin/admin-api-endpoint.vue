@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="crumb" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="crumb" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 
 		<panel class="first">
@@ -257,7 +262,7 @@
 		gap: 4px;
 		padding: 4px 10px;
 		background: var(--background-header);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		&:hover { background: var(--background-secondary); }
 	}
 	.summary-bar {
@@ -269,7 +274,7 @@
 	.chart-wrap {
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		margin: 10px;
 		padding: 8px;
 		height: 400px;
@@ -283,7 +288,7 @@
 	.agg-card {
 		background: var(--pure-white);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: var(--radius);
 		padding: 8px;
 		h4 { margin: 0 0 6px; font-size: 14px; color: var(--text-color-secondary); }
 		table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -297,7 +302,7 @@
 		padding: 1px 6px;
 		background: var(--background-header);
 		color: var(--link-color);
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		text-decoration: none;
 		font-weight: bold;
 		font-size: 11px;
@@ -309,7 +314,7 @@
 		font-family: monospace;
 		font-weight: bold;
 		padding: 1px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 12px;
 		min-width: 30px;
 		text-align: center;

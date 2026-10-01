@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Funnels', link: '/admin/funnels'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Funnels', link: '/admin/funnels'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<v-tabs v-model="selectedFunnel" @update:model-value="load">
@@ -526,8 +531,8 @@
 		flex-wrap: wrap;
 		input[type="date"] {
 			padding: 8px 12px;
-			border: 1px solid #ccc;
-			border-radius: 4px;
+			border: 1px solid var(--grey-11);
+			border-radius: var(--radius);
 			font-size: 14px;
 		}
 		.v-select {
@@ -550,17 +555,17 @@
 		}
 	}
 	.flow-container {
-		border: 1px solid #eee;
-		border-radius: 8px;
+		border: 1px solid var(--grey-13);
+		border-radius: var(--radius-large);
 		overflow: hidden;
 	}
 	body.dark .flow-container {
-		border-color: #444;
+		border-color: var(--grey-3);
 	}
 	.flow-node {
-		background: white;
+		background: var(--white);
 		border: 2px solid #4caf50;
-		border-radius: 8px;
+		border-radius: var(--radius-large);
 		padding: 8px 12px;
 		width: 220px;
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -572,7 +577,7 @@
 			left: 0;
 			height: 100%;
 			opacity: 0.4;
-			border-radius: 6px 0 0 6px;
+			border-radius: var(--radius-medium) 0 0 var(--radius-medium);
 		}
 		&.root {
 			border-color: #1976d2;
@@ -597,12 +602,12 @@
 		}
 		.node-stats {
 			font-size: 13px;
-			color: #666;
+			color: var(--grey-5);
 			white-space: nowrap;
 		}
 		.node-duration {
 			font-size: 13px;
-			color: #666;
+			color: var(--grey-5);
 			display: flex;
 			align-items: center;
 			gap: 2px;
@@ -610,18 +615,18 @@
 		}
 	}
 	body.dark .flow-node {
-		background: #2a2a2a;
-		color: #eee;
+		background: var(--panel-header-background);
+		color: var(--grey-13);
 		&.root {
 			background: #1a3a5c;
 		}
-		.node-stats { color: #aaa; }
-		.node-ring circle:first-child { stroke: #444; }
+		.node-stats { color: var(--grey-9); }
+		.node-ring circle:first-child { stroke: var(--grey-3); }
 	}
 	.empty {
 		padding: 40px;
 		text-align: center;
-		color: #888;
+		color: var(--grey-7);
 	}
 
 	// Line chart
@@ -655,11 +660,11 @@
 		align-items: center;
 		padding: 4px 8px;
 		background: #f5f5f5;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 13px;
 	}
 	body.dark .meta-row {
-		background: #2a2a2a;
+		background: var(--panel-header-background);
 	}
 	.meta-keys {
 		display: flex;
@@ -669,7 +674,7 @@
 	.meta-tag {
 		background: #e0e0e0;
 		padding: 2px 6px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		font-size: 12px;
 		font-family: monospace;
 	}

@@ -1,7 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Dashboards', link: '/admin/dashboards'}]" :raw="true" /></h1>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Dashboards', link: '/admin/dashboards'}]" :raw="true" /></h1>
+				</div>
+			</div>
 		</div>
 		<panel class="first last">
 			<loader v-if="!dashboards" />
@@ -22,7 +27,7 @@
 							<v-data-table
 								:headers="getHeaders(d.id)"
 								:items="data[d.id].rows"
-								:items-per-page="50"
+								:items-per-page="itemsPerPage(d.id)"
 								density="compact"
 								class="elevation-1">
 								<template v-for="col in data[d.id].columns" :key="col.key" #[cellSlot(col.key)]="{ item }">
@@ -80,6 +85,15 @@
 									<template v-else-if="col.type === 'eur'">
 										{{ $filters.number(item[col.key]) }} €
 									</template>
+									<!-- liste de poireaux, chacun avec sa rich-tooltip. La couleur et
+									     l'estompe viennent du serveur : le client ne fait que peindre. -->
+									<template v-else-if="col.type === 'leek_list'">
+										<div class="leek-list">
+											<rich-tooltip-leek v-for="leek in (item[col.key] as LeekChip[])" :id="leek.id" :key="leek.id" v-slot="{ props }" :bottom="true">
+												<router-link :to="'/leek/' + leek.id" v-bind="props" class="leek-chip" :class="{ dim: leek.dim }" :style="leek.color ? { backgroundColor: leek.color, color: 'white' } : {}">{{ leek.name }}</router-link>
+											</rich-tooltip-leek>
+										</div>
+									</template>
 									<!-- texte brut (défaut) -->
 									<template v-else>
 										{{ item[col.key] }}
@@ -101,6 +115,7 @@
 	import { useRoute, useRouter } from 'vue-router'
 	import Breadcrumb from '@/component/forum/breadcrumb.vue'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
 	const STORAGE_KEY = 'admin_dashboard_last'
 
@@ -113,6 +128,13 @@
 		scheme?: string
 		max?: number
 		tooltip_key?: string
+	}
+	/** Entrée d'une colonne `leek_list` : le serveur décide du libellé et des couleurs. */
+	interface LeekChip {
+		id: number
+		name: string
+		color?: string | null
+		dim?: boolean
 	}
 	interface Dashboard {
 		id: string
@@ -177,13 +199,25 @@
 		const d = data[id]
 		if (!d) return []
 		return d.columns.map((col: DashboardColumn) => {
-			const header: { title: string, key: string, sortable: boolean, sort?: (a: unknown, b: unknown, itemA: Record<string, number>, itemB: Record<string, number>) => number } = { title: col.title, key: col.key, sortable: true }
+			// Une liste de poireaux ne se trie pas : la colonne porte un tableau, pas une valeur.
+			const header: { title: string, key: string, sortable: boolean, sort?: (a: unknown, b: unknown, itemA: Record<string, number>, itemB: Record<string, number>) => number } = { title: col.title, key: col.key, sortable: col.type !== 'leek_list' }
 			if (col.sort_key) {
 				const sortKey = col.sort_key
 				header.sort = (a, b, itemA, itemB) => itemA[sortKey] - itemB[sortKey]
 			}
 			return header
 		})
+	}
+
+	/**
+	 * Une colonne `leek_list` monte une rich-tooltip par poireau, soit un overlay Vuetify chacune :
+	 * 50 lignes de 30 poireaux en instancient 1500 et figent l'onglet à l'ouverture. On pagine donc
+	 * plus court dès qu'une telle colonne est présente.
+	 */
+	function itemsPerPage(id: string): number {
+		const d = data[id]
+		if (d && d.columns.some((col: DashboardColumn) => col.type === 'leek_list')) return 10
+		return 50
 	}
 
 	function cellSlot(key: string) {
@@ -219,6 +253,27 @@
 </script>
 
 <style lang="scss" scoped>
+	.leek-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2px;
+		padding: 3px 0;
+		max-width: 620px;
+	}
+	.leek-chip {
+		display: inline-block;
+		padding: 0 4px;
+		border-radius: 3px;
+		font-size: 12px;
+		line-height: 17px;
+		white-space: nowrap;
+		background: var(--background-secondary);
+		color: var(--text-color);
+		text-decoration: none;
+		&.dim {
+			opacity: 0.55;
+		}
+	}
 	.dashboard-summary {
 		padding: 12px 16px;
 		font-size: 15px;
@@ -257,7 +312,7 @@
 		top: 2px;
 		bottom: 2px;
 		background: rgba(95, 173, 27, 0.15);
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 	}
 	.score-cell {
 		position: relative;
@@ -276,7 +331,7 @@
 		left: 0;
 		top: 2px;
 		bottom: 2px;
-		border-radius: 3px;
+		border-radius: var(--radius-small);
 		&.red { background: rgba(229, 57, 53, 0.28); }
 		&.green { background: rgba(67, 160, 71, 0.28); }
 	}

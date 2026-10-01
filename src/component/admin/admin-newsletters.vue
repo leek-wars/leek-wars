@@ -1,9 +1,12 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<div>
-				<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Newsletters', link: '/admin/newsletters'}]" :raw="true" /></h1>
-				<div class="info">{{ count }} inscrits</div>
+			<div class="page-title">
+				<page-icon name="admin" fallback="mdi-security" />
+				<div class="page-title-text">
+					<h1><breadcrumb :items="[{name: 'Administration', link: '/admin'}, {name: 'Newsletters', link: '/admin/newsletters'}]" :raw="true" /></h1>
+					<div class="info">{{ count }} inscrits</div>
+				</div>
 			</div>
 		</div>
 		<panel class="first">
@@ -21,7 +24,7 @@
 							<div class="actions">
 								<template v-if="n.sent === 0">
 									<v-btn v-if="$store.state.farmer" variant="tonal" @click="test(n, $store.state.farmer.id)"><v-icon>mdi-cog-outline</v-icon> Test compte normal</v-btn>
-									<v-text-field v-model="n.testTarget" type="number" label="Farmer ID" density="compact" hide-details style="max-width: 130px" />
+									<lw-input v-model="n.testTarget" type="number" label="Farmer ID" style="max-width: 130px" />
 									<v-btn variant="tonal" @click="test(n, n.testTarget ?? 0)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 								</template>
 								<span v-else class="sent"><v-icon>mdi-check-circle-outline</v-icon> Envoyé le {{ $filters.date(n.sent) }}</span>
@@ -69,7 +72,7 @@
 							</div>
 						</div>
 						<h2 class="subject">{{ n.lang ? n[n.lang].subject : '(pas de sujet)' }}</h2>
-						<v-card v-if="n.lang" class="preview" variant="outlined"><div v-html="html(n[n.lang].preview)"></div></v-card>
+						<v-card v-if="n.lang" class="preview" variant="outlined"><div class="mail-body" v-html="html(n[n.lang].preview)"></div></v-card>
 					</div>
 				</div>
 			</template>
@@ -199,7 +202,7 @@
 			gap: 10px;
 			flex-wrap: wrap;
 			.sent {
-				color: #5fad1b;
+				color: var(--primary);
 				font-size: 14px;
 				display: inline-flex;
 				align-items: center;
@@ -219,7 +222,7 @@
 			margin-top: 12px;
 			padding: 8px 12px;
 			background: var(--background-secondary);
-			border-radius: 6px;
+			border-radius: var(--radius-medium);
 			font-size: 13px;
 			.stat {
 				display: inline-flex;
@@ -252,7 +255,54 @@
 			line-height: 1.3;
 		}
 		.preview {
+			// Le fond de l'apercu est porte par .mail-body (div simple), pas par le
+			// v-card : Vuetify impose son fond de surface au v-card et l'emporte sur
+			// nos overrides. On neutralise donc le padding ici.
+			padding: 0;
+		}
+		// Apercu admin uniquement. Mode clair : mail sur blanc (comme les
+		// destinataires le verront). Mode sombre : on rend l'apercu en sombre pour
+		// ne pas eblouir. Le mail REELLEMENT envoye reste blanc/texte noir
+		// (template + buildMailHTML inchanges).
+		.mail-body {
 			padding: 15px;
+			background-color: var(--white);
+			color: var(--black);
+			// Le contenu du mail est injecte en v-html : les styles GLOBAUX du site
+			// s'y appliquent et cassent le rendu (h3 = banniere verte avec ::before
+			// et ::after, h4 = taille/couleur imposees...). On les neutralise ; le
+			// mail porte ses propres styles inline, qui priment ensuite.
+			:deep(h1), :deep(h2), :deep(h3), :deep(h4) {
+				background: none;
+				display: block;
+				height: auto;
+				padding: 0;
+				position: static;
+				text-shadow: none;
+				border-radius: 0;
+				line-height: normal;
+				color: inherit;
+			}
+			:deep(h1::before), :deep(h1::after),
+			:deep(h3::before), :deep(h3::after) {
+				content: none;
+				display: none;
+			}
+			body.dark & {
+				background-color: var(--background-secondary);
+				color: var(--text-color);
+				// L'apercu admin passe par buildMailHTML avec raw=false, qui enveloppe
+				// le contenu dans un div a fond clair #f7f7f7 en style inline. Sans ca
+				// il repeint du clair par-dessus notre fond sombre (le mail reellement
+				// envoye utilise raw=true et n'a pas ce wrapper).
+				:deep(div[style*="#f7f7f7"]) { background: var(--background-secondary) !important; }
+				// Titres/paragraphes du mail en couleurs sombres inline (#000/#444) :
+				// on les eclaircit. Le vert de marque (en-tete, bouton, liens, h3) et
+				// les blancs restent tels quels.
+				:deep(h2), :deep(h4) { color: var(--text-color) !important; }
+				:deep(p) { color: var(--text-color-secondary) !important; }
+				:deep(div[style*="border-top"]) { border-top-color: var(--border) !important; }
+			}
 		}
 	}
 </style>

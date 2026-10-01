@@ -14,9 +14,9 @@
 					</div>
 				</div>
 				<h4>{{ message }}</h4>
-				<v-radio-group v-model="selectedReason" :mandatory="false" class="radio">
-					<v-radio v-for="reason in reasons" :key="reason" :label="$t('warning.reason_' + reason)" :value="reason" />
-				</v-radio-group>
+				<lw-radio-group v-model="selectedReason" class="radio">
+					<lw-radio v-for="reason in reasons" :key="reason" :label="$t('warning.reason_' + reason)" :value="reason" />
+				</lw-radio-group>
 				<h4>{{ $t('warning.report_informations') }}</h4>
 				<textarea v-model="additionalMessage" class="report-message"></textarea>
 			</div>
@@ -159,10 +159,10 @@
 		width: 100%;
 		padding: 5px;
 		cursor: pointer;
-		border: 1px solid #ddd;
-		border-radius: 2px;
+		border: 1px solid var(--grey-12);
+		border-radius: var(--radius-tiny);
 		&:hover {
-			background: white;
+			background: var(--white);
 		}
 		.farmer {
 			display: inline-flex;
