@@ -154,6 +154,7 @@
 	import HomeWidgetTalent from '@/component/home/widgets/home-widget-talent.vue'
 	import HomeWidgetTrophies from '@/component/home/widgets/home-widget-trophies.vue'
 	import HomeWidgetChat from '@/component/home/widgets/home-widget-chat.vue'
+	import HomeWidgetNotes from '@/component/home/widgets/home-widget-notes.vue'
 	import HomeWidgetCollection from '@/component/home/widgets/home-widget-collection.vue'
 	import HomeWidgetRanking from '@/component/home/widgets/home-widget-ranking.vue'
 	import HomeWidgetRareTrophies from '@/component/home/widgets/home-widget-rare-trophies.vue'
@@ -201,6 +202,7 @@
 		multi?: boolean        // peut être ajouté plusieurs fois
 		configurable?: boolean // a un menu de configuration (params)
 		noScroll?: boolean     // contenu clippé sans défilement interne : la molette va à la page
+		initialParams?: () => Record<string, unknown> // réglages posés à l'ajout du widget
 	}
 
 	// Tailles en cellules de la grille sous-divisée : 24 = pleine largeur,
@@ -216,6 +218,12 @@
 		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 8, defaultH: 6, minW: 6, minH: 4, link: '/trophies', noScroll: true },
 		// noScroll : le panel ne défile jamais, la zone de messages du chat gère son propre défilement.
 		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 8, defaultH: 10, minW: 6, minH: 6, multi: true, configurable: true, noScroll: true },
+		// Bloc-notes : du markdown, écrit au clic. Le texte reste dans le navigateur
+		// (cf. le widget), sous une clé tirée à l'ajout : un id de widget est
+		// réattribué, et une nouvelle note reprendrait le texte d'une note supprimée.
+		// noScroll : comme le chat, c'est la note qui défile, pas le panneau.
+		// Minimums : sous 6 colonnes, l'invite d'une note vide est rognée.
+		notes: { icon: 'mdi-note-text-outline', component: markRaw(HomeWidgetNotes), defaultW: 8, defaultH: 8, minW: 6, minH: 4, multi: true, noScroll: true, initialParams: () => ({ note: newNoteId() }) },
 		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 8, defaultH: 8, minW: 5, minH: 4, link: '/collection', noScroll: true },
 		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 8, defaultH: 8, minW: 5, minH: 4, noScroll: true },
 		classement: { icon: 'mdi-format-list-numbered', component: markRaw(HomeWidgetClassement), defaultW: 8, defaultH: 10, minW: 5, minH: 4, link: '/ranking', multi: true, configurable: true, noScroll: true },
@@ -410,7 +418,18 @@
 		if (widgetMeta[widget.type].configurable) props.params = widget.params
 		if (AGGREGATED.has(widget.type)) props.data = widgetData.value[widget.id]
 		if (widget.type === 'live') props.hidden = liveHiddenOf(widget)
+		if (widget.type === 'notes') props.noteId = noteIdOf(widget)
 		return props
+	}
+
+	// Une note sans clé (disposition écrite à la main, ou venue d'un client plus
+	// ancien) se rabat sur l'id du widget, unique dans la disposition.
+	function noteIdOf(widget: WidgetInstance): string {
+		const note = widget.params.note
+		return typeof note === 'string' && note ? note : widget.id
+	}
+	function newNoteId(): string {
+		return Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
 	}
 
 	// Le filtre d'un panneau « En direct » voyage dans la disposition, et suit
@@ -832,7 +851,8 @@
 		if (!def.multi && widgets.value.some(w => w.type === type)) return
 		const id = genId(type)
 		const pos = firstFreePosition(def.defaultW, def.defaultH)
-		const widget: WidgetInstance = { id, type, x: pos.x, y: pos.y, w: def.defaultW, h: def.defaultH, params: {} }
+		const params = def.initialParams?.() ?? {}
+		const widget: WidgetInstance = { id, type, x: pos.x, y: pos.y, w: def.defaultW, h: def.defaultH, params }
 		widgets.value.push(widget)
 		refreshAvailable()
 		// Le nouveau venu tout seul : les autres ont déjà leur contenu.
