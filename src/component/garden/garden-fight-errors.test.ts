@@ -29,6 +29,7 @@ const FAST_GARDEN_KEYS = [
 	'fast_batch_title', 'fast_batch_progress', 'fast_batch_done', 'fast_batch_launching', 'fast_batch_results',
 	'fast_batch_levelups', 'fast_batch_trophies', 'fast_batch_rareloot', 'fast_batch_chests',
 	'fast_batch_avg_duration', 'fast_batch_avg_generation',
+	'fast_boss_allies_title', 'fast_boss_allies_warning', 'fast_boss_allies_launch',
 ]
 
 const DIR = 'src/component/garden'
