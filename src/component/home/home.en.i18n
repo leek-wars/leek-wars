@@ -74,5 +74,10 @@
 	"team_rank": "Ranking",
 	"team_members": "Members",
 	"no_team": "You are not in a team.",
-	"find_team": "Find a team"
+	"find_team": "Find a team",
+	"widget_history": "Fight history",
+	"widget_history_of": "History of {name}",
+	"choose_history": "Choose history",
+	"history_filters": "Filter fights",
+	"no_matching_fight": "No recent fight matches the filters."
 }

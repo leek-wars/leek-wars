@@ -74,5 +74,10 @@
 	"team_rank": "Classement",
 	"team_members": "Membres",
 	"no_team": "Vous n'êtes dans aucune équipe.",
-	"find_team": "Trouver une équipe"
+	"find_team": "Trouver une équipe",
+	"widget_history": "Historique de combat",
+	"widget_history_of": "Historique de {name}",
+	"choose_history": "Choisir l'historique",
+	"history_filters": "Filtrer les combats",
+	"no_matching_fight": "Aucun combat récent ne correspond aux filtres."
 }

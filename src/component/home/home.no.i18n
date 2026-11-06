@@ -74,5 +74,10 @@
 	"team_rank": "Rangering",
 	"team_members": "Medlemmer",
 	"no_team": "Du er ikke med i et lag.",
-	"find_team": "Finn et lag"
+	"find_team": "Finn et lag",
+	"widget_history": "Kamphistorie",
+	"widget_history_of": "Historien til {name}",
+	"choose_history": "Velg historikk",
+	"history_filters": "Filtrer kamper",
+	"no_matching_fight": "Ingen nylige kamper samsvarer med filtrene."
 }

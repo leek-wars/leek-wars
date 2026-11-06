@@ -74,5 +74,10 @@
 	"team_rank": "Ranking",
 	"team_members": "Członkowie",
 	"no_team": "Nie należysz do żadnego zespołu.",
-	"find_team": "Znajdź zespół"
+	"find_team": "Znajdź zespół",
+	"widget_history": "Historia walk",
+	"widget_history_of": "Historia {name}",
+	"choose_history": "Wybierz historię",
+	"history_filters": "Filtruj walki",
+	"no_matching_fight": "Żadna ostatnia walka nie pasuje do filtrów."
 }

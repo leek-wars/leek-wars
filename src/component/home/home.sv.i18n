@@ -74,5 +74,10 @@
 	"team_rank": "Ranking",
 	"team_members": "Medlemmar",
 	"no_team": "Du är inte med i något lag.",
-	"find_team": "Hitta ett lag"
+	"find_team": "Hitta ett lag",
+	"widget_history": "Stridshistorik",
+	"widget_history_of": "Historik för {name}",
+	"choose_history": "Välj historik",
+	"history_filters": "Filtrera strider",
+	"no_matching_fight": "Ingen nylig strid matchar filtren."
 }

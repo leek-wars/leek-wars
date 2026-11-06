@@ -74,5 +74,10 @@
 	"team_rank": "Ranking",
 	"team_members": "Medlemmer",
 	"no_team": "Du er ikke med på et hold.",
-	"find_team": "Find et hold"
+	"find_team": "Find et hold",
+	"widget_history": "Kamphistorie",
+	"widget_history_of": "Historien om {name}",
+	"choose_history": "Vælg historik",
+	"history_filters": "Filtrér kampe",
+	"no_matching_fight": "Ingen nylige kampe matcher filtrene."
 }

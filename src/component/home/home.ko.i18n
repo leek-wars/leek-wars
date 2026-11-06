@@ -74,5 +74,10 @@
 	"team_rank": "순위",
 	"team_members": "멤버",
 	"no_team": "팀에 속해 있지 않습니다.",
-	"find_team": "팀 찾기"
+	"find_team": "팀 찾기",
+	"widget_history": "전투 기록",
+	"widget_history_of": "{name}의 기록",
+	"choose_history": "기록 선택",
+	"history_filters": "전투 필터",
+	"no_matching_fight": "필터와 일치하는 최근 전투가 없습니다."
 }
