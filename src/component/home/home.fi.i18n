@@ -74,5 +74,10 @@
 	"team_rank": "Sijoitus",
 	"team_members": "Jäsenet",
 	"no_team": "Et kuulu mihinkään tiimiin.",
-	"find_team": "Etsi tiimi"
+	"find_team": "Etsi tiimi",
+	"widget_history": "Taisteluhistoria",
+	"widget_history_of": "Historia: {name}",
+	"choose_history": "Valitse historia",
+	"history_filters": "Suodata taistelut",
+	"no_matching_fight": "Mikään viimeaikainen taistelu ei vastaa suodattimia."
 }

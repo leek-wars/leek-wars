@@ -74,5 +74,10 @@
 	"team_rank": "Peringkat",
 	"team_members": "Anggota",
 	"no_team": "Anda tidak tergabung dalam tim.",
-	"find_team": "Cari tim"
+	"find_team": "Cari tim",
+	"widget_history": "Sejarah Pertempuran",
+	"widget_history_of": "Sejarah {name}",
+	"choose_history": "Pilih sejarah",
+	"history_filters": "Saring pertempuran",
+	"no_matching_fight": "Tidak ada pertempuran terbaru yang cocok dengan filter."
 }

@@ -86,6 +86,15 @@
 												{{ l.name }}
 											</div>
 										</template>
+										<template v-else-if="widget.type === 'history'">
+											<div class="config-title">{{ t('choose_history') }}</div>
+											<div v-ripple class="config-option" :class="{ selected: !historyLeekOf(widget) }" @click="setParam(widget, 'leek', undefined)">
+												<v-icon>mdi-account</v-icon> {{ store.state.farmer?.name }}
+											</div>
+											<div v-for="l in myLeeks" :key="l.id" v-ripple class="config-option" :class="{ selected: historyLeekOf(widget) === l.id }" @click="setParam(widget, 'leek', l.id)">
+												<v-icon>mdi-sprout</v-icon> {{ l.name }}
+											</div>
+										</template>
 									</div>
 								</v-menu>
 								<div class="button flat" @click="removeWidget(widget.id)">
@@ -96,6 +105,18 @@
 								du widget, qui ne s'ouvre qu'en mode édition — on filtre en regardant,
 								pas en déplaçant ses widgets. -->
 							<live-filter-menu v-if="!editMode && widget.type === 'live'" :hidden="liveHiddenOf(widget)" @update:hidden="setLiveHidden(widget, $event)" />
+							<!-- Même principe pour l'historique : les filtres de la page
+								d'historique, réglés en regardant la liste se retrier. -->
+							<v-menu v-if="!editMode && widget.type === 'history'" :close-on-content-click="false" location="bottom end">
+								<template #activator="{ props }">
+									<div class="button flat" :title="t('history_filters')" v-bind="props">
+										<v-icon>{{ historyFiltered(widget) ? 'mdi-filter' : 'mdi-filter-outline' }}</v-icon>
+									</div>
+								</template>
+								<div class="widget-config card history-filters-config">
+									<history-filters :model-value="historyFiltersOf(widget)" stacked @update:model-value="setHistoryFilters(widget, $event)" />
+								</div>
+							</v-menu>
 							<router-link v-if="!editMode && widgetLink(widget)" :to="widgetLink(widget)!" class="button flat">
 								<v-icon>mdi-arrow-right</v-icon>
 							</router-link>
@@ -165,6 +186,11 @@
 	import HomeWidgetLeekStats from '@/component/home/widgets/home-widget-leek-stats.vue'
 	import HomeWidgetArena from '@/component/home/widgets/home-widget-arena.vue'
 	import HomeWidgetTeam from '@/component/home/widgets/home-widget-team.vue'
+	import HomeWidgetHistory from '@/component/home/widgets/home-widget-history.vue'
+	import HistoryFilters from '@/component/history/history-filters.vue'
+	import {
+		type FightFilters, isDefaultFilters, sanitizeFilters,
+	} from '@/component/history/history-filters'
 	// Partagé avec la page d'équipe, d'où sa place hors du dossier des widgets
 	import Live from '@/component/live/live.vue'
 	import LiveFilterMenu from '@/component/live/live-filter-menu.vue'
@@ -213,6 +239,13 @@
 	const widgetMeta: Record<string, WidgetDefinition> = {
 		leeks: { icon: 'mdi-sprout', component: markRaw(HomeWidgetLeeks), defaultW: 12, defaultH: 8, minW: 6, minH: 6, link: '/farmer', noScroll: true },
 		talent: { icon: 'mdi-sword-cross', component: markRaw(HomeWidgetTalent), defaultW: 12, defaultH: 8, minW: 5, minH: 4, link: '/farmer', noScroll: true },
+		// Historique de combat : celui de l'éleveur ou d'un de ses poireaux, avec
+		// les filtres de la page d'historique. Plusieurs panneaux, un par source ou
+		// par filtre (« mes défaites en tournoi », « les combats d'Ail »). Les
+		// cartes de la page d'historique, autant que le panneau en laisse tenir.
+		// Minimums : sous 7 colonnes la carte (250 px) est rognée à droite, sous 4
+		// rangées elle l'est en bas.
+		history: { icon: 'mdi-history', component: markRaw(HomeWidgetHistory), defaultW: 8, defaultH: 8, minW: 7, minH: 4, multi: true, configurable: true, noScroll: true },
 		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 8, defaultH: 6, minW: 6, minH: 4, link: '/trophies', noScroll: true },
 		// noScroll : le panel ne défile jamais, la zone de messages du chat gère son propre défilement.
 		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 8, defaultH: 10, minW: 6, minH: 6, multi: true, configurable: true, noScroll: true },
@@ -479,6 +512,14 @@
 			const leek = myLeeks.value.find(l => l.id === leekOf(widget))
 			return leek ? t('widget_leek_stats_of', { leek: leek.name }) : base
 		}
+		// L'historique nomme sa source, éleveur ou poireau.
+		if (widget.type === 'history') {
+			const leekId = historyLeekOf(widget)
+			const name = leekId
+				? myLeeks.value.find(l => l.id === leekId)?.name
+				: store.state.farmer?.name
+			return name ? t('widget_history_of', { name }) : base
+		}
 		if (widget.type !== 'chat') return base
 		const farmer = store.state.farmer
 		const chosen = widget.params.chat as number | undefined
@@ -504,6 +545,12 @@
 	// le lien écrit une fois pour toutes dans `widgetMeta`.
 	function widgetLink(widget: WidgetInstance): string | undefined {
 		if (widget.type === 'classement') return '/ranking/' + categoryOf(widget)
+		// La page d'historique complète de la source, avec ses périodes.
+		if (widget.type === 'history') {
+			const leekId = historyLeekOf(widget)
+			if (leekId) return '/leek/' + leekId + '/history'
+			return store.state.farmer ? '/farmer/' + store.state.farmer.id + '/history' : undefined
+		}
 		return widgetMeta[widget.type].link
 	}
 	function chatOf(widget: WidgetInstance): number | undefined {
@@ -519,6 +566,27 @@
 		const chosen = widget.params.leek as number | undefined
 		if (chosen && myLeeks.value.some(l => l.id === chosen)) return chosen
 		return myLeeks.value[0]?.id
+	}
+	// Le poireau du widget d'historique, validé de même ; sans poireau valide,
+	// c'est l'historique de l'éleveur (même règle que home-widget-history.vue).
+	function historyLeekOf(widget: WidgetInstance): number | undefined {
+		const chosen = widget.params.leek as number | undefined
+		return chosen && myLeeks.value.some(l => l.id === chosen) ? chosen : undefined
+	}
+	function historyFiltersOf(widget: WidgetInstance): FightFilters {
+		return sanitizeFilters(widget.params.filters)
+	}
+	function historyFiltered(widget: WidgetInstance): boolean {
+		return !isDefaultFilters(historyFiltersOf(widget))
+	}
+	// Comme le filtre « En direct » : réglé en regardant, sauvegarde débouncée.
+	// Des filtres revenus aux valeurs par défaut ne sont plus écrits du tout.
+	function setHistoryFilters(widget: WidgetInstance, filters: FightFilters) {
+		const params = { ...widget.params }
+		if (isDefaultFilters(filters)) delete params.filters
+		else params.filters = filters
+		widget.params = params
+		persist()
 	}
 
 	// Mode large activé sur cette page uniquement (restauré en quittant).
@@ -1133,6 +1201,14 @@
 		min-width: 180px;
 		max-height: 300px;
 		overflow-y: auto;
+	}
+	// Les quatre rangées de pastilles de la page d'historique : plus larges et
+	// plus hautes qu'une liste d'options, elles ne doivent pas défiler.
+	.widget-config.history-filters-config {
+		width: 340px;
+		max-width: calc(100vw - 24px);
+		max-height: 80vh;
+		padding: 10px 12px;
 	}
 	.config-title {
 		font-weight: bold;

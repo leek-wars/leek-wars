@@ -69,53 +69,7 @@
 					</v-btn-toggle>
 				</div>
 
-				<div class="history-options">
-					<div class="filter-row">
-						<span class="filter-label">{{ $t('fight_context') }}</span>
-						<div class="chips">
-							<div class="chip all" :class="{ on: allContexts, indet: indetContexts }" @click="allContexts = !allContexts">{{ $t('main.all') }}</div>
-							<span class="sep"></span>
-							<div class="chip" :class="{ on: displayContexts.challenge }" @click="displayContexts.challenge = !displayContexts.challenge"><span class="dot"></span>{{ $t('challenge') }}</div>
-							<div class="chip" :class="{ on: displayContexts.garden }" @click="displayContexts.garden = !displayContexts.garden"><span class="dot"></span>{{ $t('garden') }}</div>
-							<div class="chip" :class="{ on: displayContexts.tournament }" @click="displayContexts.tournament = !displayContexts.tournament"><span class="dot"></span>{{ $t('tournament') }}</div>
-						</div>
-					</div>
-					<div v-if="type !== 'team'" class="filter-row">
-						<span class="filter-label">{{ $t('fight_type') }}</span>
-						<div class="chips">
-							<div class="chip all" :class="{ on: allTypes, indet: indetTypes }" @click="allTypes = !allTypes">{{ $t('main.all') }}</div>
-							<span class="sep"></span>
-							<div class="chip" :class="{ on: displayTypes.solo }" @click="displayTypes.solo = !displayTypes.solo"><span class="dot"></span>{{ $t('solo') }}</div>
-							<div class="chip" :class="{ on: displayTypes.farmer }" @click="displayTypes.farmer = !displayTypes.farmer"><span class="dot"></span>{{ $t('farmer') }}</div>
-							<div class="chip" :class="{ on: displayTypes.team }" @click="displayTypes.team = !displayTypes.team"><span class="dot"></span>{{ $t('team') }}</div>
-							<div class="chip" :class="{ on: displayTypes.battleRoyale }" @click="displayTypes.battleRoyale = !displayTypes.battleRoyale"><span class="dot"></span>{{ $t('battle_royale') }}</div>
-							<div class="chip" :class="{ on: displayTypes.war }" @click="displayTypes.war = !displayTypes.war"><span class="dot"></span>{{ $t('war') }}</div>
-							<div class="chip" :class="{ on: displayTypes.chestHunt }" @click="displayTypes.chestHunt = !displayTypes.chestHunt"><span class="dot"></span>{{ $t('chest_hunt') }}</div>
-							<div class="chip" :class="{ on: displayTypes.colossus }" @click="displayTypes.colossus = !displayTypes.colossus"><span class="dot"></span>{{ $t('colossus') }}</div>
-							<div class="chip" :class="{ on: displayTypes.boss }" @click="displayTypes.boss = !displayTypes.boss"><span class="dot"></span>{{ $t('boss') }}</div>
-						</div>
-					</div>
-					<div class="filter-row">
-						<span class="filter-label">{{ $t('loot') }}</span>
-						<div class="chips">
-							<div class="chip all" :class="{ on: allLoot, indet: indetLoot }" @click="allLoot = !allLoot">{{ $t('main.all') }}</div>
-							<span class="sep"></span>
-							<div class="chip" :class="{ on: displayLoot.chests }" @click="displayLoot.chests = !displayLoot.chests"><span class="dot"></span>{{ $t('chests') }}</div>
-							<div class="chip" :class="{ on: displayLoot.rareloot }" @click="displayLoot.rareloot = !displayLoot.rareloot"><span class="dot"></span>{{ $t('rare_loot') }}</div>
-						</div>
-					</div>
-					<div class="filter-row">
-						<span class="filter-label">{{ $t('result') }}</span>
-						<div class="chips">
-							<div class="chip all" :class="{ on: allResults, indet: indetResults }" @click="allResults = !allResults">{{ $t('main.all') }}</div>
-							<span class="sep"></span>
-							<div class="chip res-win" :class="{ on: displayResults.win }" @click="displayResults.win = !displayResults.win"><span class="dot"></span>{{ $t('victories') }}</div>
-							<div class="chip res-draw" :class="{ on: displayResults.draw }" @click="displayResults.draw = !displayResults.draw"><span class="dot"></span>{{ $t('draws') }}</div>
-							<div class="chip res-defeat" :class="{ on: displayResults.defeat }" @click="displayResults.defeat = !displayResults.defeat"><span class="dot"></span>{{ $t('defeats') }}</div>
-							<div class="chip res-generating" :class="{ on: displayResults.generating }" @click="displayResults.generating = !displayResults.generating"><span class="dot"></span>{{ $t('generating') }}</div>
-						</div>
-					</div>
-				</div>
+				<history-filters v-model="filters" :show-types="type !== 'team'" class="history-options" />
 
 				<fights-history-table v-if="viewMode === 'table'" :fights="filteredFights" :progress="progress" />
 				<fights-history v-else :fights="filteredFights" :progress="progress" />
@@ -125,10 +79,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, type Ref } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Farmer } from '@/model/farmer'
-import { type Fight, FightContext, FightType } from '@/model/fight'
+import type { Fight } from '@/model/fight'
 import { mixins , useNamespacedT } from '@/model/i18n'
 import type { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
@@ -136,6 +90,10 @@ import { useLiveHistory } from '@/model/use-live-history'
 import Breadcrumb from '../forum/breadcrumb.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
 import FightsHistoryTable from '@/component/history/fights-history-table.vue'
+import HistoryFilters from '@/component/history/history-filters.vue'
+import {
+	type FightFilters, type HistoryFilterGroup, fightMatchesFilters, sanitizeGroup,
+} from '@/component/history/history-filters'
 
 defineOptions({ name: 'History', i18n: {}, mixins: [...mixins] })
 
@@ -150,40 +108,27 @@ const fights = ref<Fight[]>([])
 const entity = ref<Farmer | Leek | null>(null)
 const period = ref<string>('today')
 const start_date = ref(0)
-const displayContexts = ref<Record<string, boolean>>({ challenge: true, garden: true, tournament: true })
-const displayTypes = ref<Record<string, boolean>>({ solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
-const displayLoot = ref<Record<string, boolean>>({ chests: false, rareloot: false })
-const displayResults = ref<Record<string, boolean>>({ win: true, draw: true, defeat: true, generating: true })
 const opponentSearch = ref('')
 const viewMode = ref<'grid' | 'table'>((localStorage.getItem('options/history-view') as 'grid' | 'table') || 'grid')
 
-// Case à cocher "Tous" par ligne de filtres : cochée quand toutes les options de la
-// ligne le sont, indéterminée si partiellement cochée. Cliquer (re)coche toute la ligne.
-function allModel(obj: Ref<Record<string, boolean>>, keys: string[]) {
-	return computed<boolean>({
-		get: () => keys.every(k => obj.value[k]),
-		set: (v: boolean) => keys.forEach(k => { obj.value[k] = v }),
-	})
+// Un groupe de filtres par clé de localStorage : les réglages enregistrés avant
+// le regroupement restent lus tels quels.
+const FILTER_STORAGE: Record<HistoryFilterGroup, string> = {
+	contexts: 'options/history-contexts',
+	types: 'options/history-types',
+	loot: 'options/history-loot',
+	results: 'options/history-results',
 }
-function someModel(obj: Ref<Record<string, boolean>>, keys: string[]) {
-	return computed(() => keys.some(k => obj.value[k]) && !keys.every(k => obj.value[k]))
+function storedGroup(group: HistoryFilterGroup): Record<string, boolean> {
+	const stored = localStorage.getItem(FILTER_STORAGE[group])
+	return sanitizeGroup(group, JSON.parse(stored || '{}'))
 }
-const allContexts = allModel(displayContexts, ['challenge', 'garden', 'tournament'])
-const indetContexts = someModel(displayContexts, ['challenge', 'garden', 'tournament'])
-const allTypes = allModel(displayTypes, ['solo', 'farmer', 'team', 'battleRoyale', 'war', 'chestHunt', 'colossus', 'boss'])
-const indetTypes = someModel(displayTypes, ['solo', 'farmer', 'team', 'battleRoyale', 'war', 'chestHunt', 'colossus', 'boss'])
-// Ligne Butin : sémantique inversée par rapport aux autres lignes. Ses chips sont des
-// RESTRICTIONS (cocher « Coffres » = ne montrer que les combats à coffres) et c'est
-// aucun chip coché qui affiche tout. « Tout » est donc coché quand aucune restriction
-// n'est active, et cliquer dessus les efface (avant, il cochait les deux restrictions,
-// masquant notamment les combats en génération alors qu'il affichait « Tout »).
-const allLoot = computed<boolean>({
-	get: () => !displayLoot.value.chests && !displayLoot.value.rareloot,
-	set: () => { displayLoot.value.chests = false; displayLoot.value.rareloot = false },
+const filters = ref<FightFilters>({
+	contexts: storedGroup('contexts'),
+	types: storedGroup('types'),
+	loot: storedGroup('loot'),
+	results: storedGroup('results'),
 })
-const indetLoot = computed(() => displayLoot.value.chests || displayLoot.value.rareloot)
-const allResults = allModel(displayResults, ['win', 'draw', 'defeat', 'generating'])
-const indetResults = someModel(displayResults, ['win', 'draw', 'defeat', 'generating'])
 
 // Texte recherchable d'un combat : noms de tous les participants (poireaux, équipes,
 // éleveurs, boss), pour filtrer par adversaire (#4314).
@@ -205,44 +150,12 @@ const breadcrumb_items = computed(() => [
 	{ name: t('title_html', [entity.value ? entity.value.name : '...']), link: '/' + props.type + '/' + (entity.value ? entity.value.id : '') + '/history' }
 ])
 
-const filteredFights = computed(() => fights.value.filter((fight) => {
-	const contextFilter = fight.date >= start_date.value && (
-		(displayContexts.value.challenge && fight.context === FightContext.CHALLENGE) ||
-		(displayContexts.value.garden && fight.context === FightContext.GARDEN) ||
-		(displayContexts.value.tournament && fight.context === FightContext.TOURNAMENT) ||
-		(displayContexts.value.garden && displayTypes.value.battleRoyale && fight.context === FightContext.BATTLE_ROYALE)
-	)
-
-	const typeFilter = (
-		(displayTypes.value.solo && fight.type === FightType.SOLO) ||
-		(displayTypes.value.farmer && fight.type === FightType.FARMER) ||
-		(displayTypes.value.team && fight.type === FightType.TEAM) ||
-		(displayTypes.value.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
-		(displayTypes.value.war && fight.type === FightType.WAR) ||
-		(displayTypes.value.chestHunt && fight.type === FightType.CHEST_HUNT) ||
-		(displayTypes.value.colossus && fight.type === FightType.COLOSSUS) ||
-		(displayTypes.value.boss && fight.type === FightType.BOSS) ||
-		props.type === 'team'
-	)
-
-	// Un combat en génération a un butin encore inconnu (chests/rareloot à 0) : il ne
-	// doit pas être exclu par le filtre butin, sinon il est invisible même avec le
-	// chip « En cours de génération » activé.
-	const lootFilter = !displayLoot.value.chests && !displayLoot.value.rareloot
-		|| fight.status === 0
-		|| (displayLoot.value.chests && fight.chests > 0)
-		|| (displayLoot.value.rareloot && fight.rareloot > 0)
-
-	const resultFilter = (displayResults.value.win && fight.result === 'win')
-		|| (displayResults.value.draw && fight.result === 'draw')
-		|| (displayResults.value.defeat && fight.result === 'defeat')
-		|| (displayResults.value.generating && fight.status == 0)
-
+const filteredFights = computed(() => {
 	const query = opponentSearch.value.trim().toLowerCase()
-	const opponentFilter = !query || fightSearchText(fight).includes(query)
-
-	return contextFilter && typeFilter && lootFilter && resultFilter && opponentFilter
-}))
+	return fights.value.filter(fight => fight.date >= start_date.value
+		&& fightMatchesFilters(fight, filters.value, props.type === 'team')
+		&& (!query || fightSearchText(fight).includes(query)))
+})
 
 const victories = computed(() => filteredFights.value.filter(f => f.result === 'win').length)
 const defeats = computed(() => filteredFights.value.filter(f => f.result === 'defeat').length)
@@ -264,18 +177,8 @@ function select_period(p: string) {
 	localStorage.setItem('options/history-period', p)
 }
 
-// Fusionne les filtres sauvegardés avec les défauts : une clé ajoutée après la
-// sauvegarde de l'utilisateur serait sinon undefined, donc silencieusement décochée
-// (ex. "generating" masquait les combats en génération pour tout localStorage antérieur).
-function storedFilters(key: string, defaults: Record<string, boolean>): Record<string, boolean> {
-	return { ...defaults, ...JSON.parse(localStorage.getItem(key) || '{}') }
-}
 const id = route.params.id
 const initialPeriod = localStorage.getItem('options/history-period') || '1week'
-displayContexts.value = storedFilters('options/history-contexts', { challenge: true, garden: true, tournament: true })
-displayTypes.value = storedFilters('options/history-types', { solo: true, farmer: true, team: true, battleRoyale: true, war: true, chestHunt: true, colossus: true, boss: true })
-displayLoot.value = storedFilters('options/history-loot', { chests: false, rareloot: false })
-displayResults.value = storedFilters('options/history-results', { win: true, draw: true, defeat: true, generating: true })
 select_period(initialPeriod)
 
 function loadHistory() {
@@ -300,18 +203,11 @@ loadHistory()
 
 onUnmounted(() => { destroyed = true })
 
-watch(displayContexts, () => {
-	localStorage.setItem('options/history-contexts', JSON.stringify(displayContexts.value))
-}, { deep: true })
-watch(displayTypes, () => {
-	localStorage.setItem('options/history-types', JSON.stringify(displayTypes.value))
-}, { deep: true })
-watch(displayLoot, () => {
-	localStorage.setItem('options/history-loot', JSON.stringify(displayLoot.value))
-}, { deep: true })
-watch(displayResults, () => {
-	localStorage.setItem('options/history-results', JSON.stringify(displayResults.value))
-}, { deep: true })
+for (const group of Object.keys(FILTER_STORAGE) as HistoryFilterGroup[]) {
+	watch(() => filters.value[group], value => {
+		localStorage.setItem(FILTER_STORAGE[group], JSON.stringify(value))
+	})
+}
 watch(viewMode, () => {
 	localStorage.setItem('options/history-view', viewMode.value)
 })
@@ -467,100 +363,11 @@ watch(viewMode, () => {
 	.grey {
 		color: var(--text-color-secondary);
 	}
+	/* Les pastilles et leur mise en page vivent dans history-filters.vue : seule
+	   la place du bloc dans la page se règle ici. */
 	.history-options {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
 		margin: 14px 10px;
 	}
-	.filter-row {
-		display: flex;
-		align-items: flex-start;
-		gap: 12px;
-	}
-	.filter-label {
-		flex: 0 0 130px;
-		text-align: right;
-		padding-top: 7px;
-		font-size: 12px;
-		font-weight: 500;
-		line-height: 1.3;
-		text-transform: uppercase;
-		letter-spacing: 0.4px;
-		color: var(--text-color-secondary);
-	}
-	.chips {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 7px;
-	}
-	.chip {
-		--c: var(--primary);
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 5px 13px;
-		border-radius: var(--radius-pill);
-		font-size: 13px;
-		line-height: 1;
-		white-space: nowrap;
-		cursor: pointer;
-		user-select: none;
-		color: var(--text-color-secondary);
-		background: var(--background-secondary);
-		border: 1px solid var(--border);
-		transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
-	}
-	.chip:hover {
-		color: var(--text-color);
-		background: var(--background-header);
-	}
-	.chip.on {
-		color: var(--c);
-		background: color-mix(in srgb, var(--c) 15%, transparent);
-		border-color: color-mix(in srgb, var(--c) 50%, transparent);
-		font-weight: 600;
-	}
-	.chip.on:hover {
-		color: var(--c);
-		background: color-mix(in srgb, var(--c) 24%, transparent);
-	}
-	.chip .dot {
-		flex: none;
-		width: 7px;
-		height: 7px;
-		border-radius: var(--radius-pill);
-		background: currentColor;
-		opacity: 0.35;
-	}
-	.chip.on .dot {
-		opacity: 1;
-	}
-	.chip.all {
-		font-weight: 700;
-		padding-left: 15px;
-		padding-right: 15px;
-	}
-	.chip.all.indet {
-		color: var(--c);
-		background: transparent;
-		border-style: dashed;
-		border-color: color-mix(in srgb, var(--c) 50%, transparent);
-	}
-	.sep {
-		align-self: stretch;
-		width: 1px;
-		margin: 2px 4px;
-		background: var(--border);
-	}
-	/* La couleur d'un chip vient des jetons du thème : les mêmes que portent les
-	   cartes et le tableau de l'historique, pour que le filtre « défaites » soit
-	   du rouge des défaites. Ils existent en clair comme en sombre. */
-	.res-win { --c: var(--result-win); }
-	.res-draw { --c: var(--result-draw); }
-	.res-defeat { --c: var(--result-defeat); }
-	.res-generating { --c: var(--info); }
 
 	/* ====== Mobile : la page tenait entièrement au-dessus de la liste ======
 	 *
@@ -607,47 +414,10 @@ watch(viewMode, () => {
 			flex: 1 0 100%;
 			margin: 8px 0 0;
 		}
-		/* L'intitulé de filtre réservait 130 px à droite d'une ligne de 412 : il
-		   ne restait pas de quoi poser trois pastilles, et chaque famille
-		   s'étalait sur trois ou quatre lignes. Il passe au-dessus de ses
-		   pastilles, et celles-ci se resserrent d'un cran. */
+		/* Les filtres passent leurs intitulés au-dessus des pastilles d'eux-mêmes
+		   (history-filters.vue) ; le bloc se rapproche seulement des bords. */
 		.history-options {
 			margin: 12px 8px;
-			gap: 10px;
-		}
-		.filter-row {
-			flex-direction: column;
-			align-items: stretch;
-			gap: 4px;
-		}
-		.filter-label {
-			flex: none;
-			text-align: left;
-			padding-top: 0;
-			font-size: 11px;
-		}
-		.chips {
-			gap: 5px;
-		}
-		.chip {
-			padding: 4px 9px;
-			font-size: 12px;
-			gap: 5px;
-		}
-		.chip.all {
-			padding-left: 11px;
-			padding-right: 11px;
 		}
 	}
-
-	/* Peau v2 : les valeurs historiques, au pixel près. */
-	body.v2.dark .chip { --c: #7ec93f; }
-	body.v2 .res-win { --c: var(--primary); }
-	body.v2 .res-draw { --c: #8a8a8a; }
-	body.v2 .res-defeat { --c: #d3382f; }
-	body.v2 .res-generating { --c: #3f86d6; }
-	body.v2.dark .res-win { --c: #7ec93f; }
-	body.v2.dark .res-draw { --c: #a6a6a6; }
-	body.v2.dark .res-defeat { --c: #e07a72; }
-	body.v2.dark .res-generating { --c: #6ba8e6; }
 </style>

@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { type MaybeRefOrGetter, onMounted, onUnmounted, ref, toValue, watch } from 'vue'
 import { emitter } from '@/model/emitter'
 import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
@@ -30,20 +30,22 @@ function fightRef(fightId: number, on: boolean) {
  * - Recharge (débouncé) via `reload` à chaque changement, avec un poll de
  *   secours tant qu'il reste des combats en génération.
  *
- * @param options.type   'farmer' | 'leek' | 'team'
+ * @param options.type   'farmer' | 'leek' | 'team', ou un getter / une ref quand le
+ *                       type peut changer (widget de l'accueil : éleveur ou poireau)
  * @param options.id     getter de l'id de l'entité (peut être indéfini tant que chargé)
  * @param options.fights getter de la liste de combats affichée
  * @param options.reload recharge la liste (refetch)
  * @returns `progress` : map fightId -> pourcentage, à passer à <fights-history>
  */
 export function useLiveHistory(options: {
-	type: string
+	type: MaybeRefOrGetter<string>
 	id: () => number | undefined
 	fights: () => Fight[] | undefined
 	reload: () => void
 }) {
 	const progress = ref<Record<number, number>>({})
 	const registered = new Set<number>()
+	let currentType = ''
 	let currentId: number | undefined
 	let reloadTimer: ReturnType<typeof setTimeout> | null = null
 	let lastReload = 0
@@ -52,11 +54,12 @@ export function useLiveHistory(options: {
 	let destroyed = false
 
 	// (Ré)abonne quand l'entité regardée change (chargement async, navigation A->B).
-	function subscribeTo(id: number | undefined) {
-		if (id === currentId) return
-		if (currentId !== undefined) historyRef(options.type, currentId, false)
+	function subscribeTo([type, id]: [string, number | undefined]) {
+		if (type === currentType && id === currentId) return
+		if (currentId !== undefined) historyRef(currentType, currentId, false)
+		currentType = type
 		currentId = id
-		if (currentId !== undefined) historyRef(options.type, currentId, true)
+		if (currentId !== undefined) historyRef(currentType, currentId, true)
 	}
 
 	// Abonne FIGHT_PROGRESS pour les combats en génération, désabonne les autres,
@@ -123,7 +126,7 @@ export function useLiveHistory(options: {
 	// recharge la liste : des combats ont pu apparaître/finir pendant la coupure.
 	// Pas de reload sur la connexion initiale (loadHistory est déjà en vol).
 	function onWsConnected() {
-		const code = HISTORY_TYPE[options.type]
+		const code = HISTORY_TYPE[currentType]
 		if (code !== undefined && currentId !== undefined) {
 			socketResubscribe([SocketMessage.HISTORY_REGISTER, code, currentId])
 		}
@@ -134,7 +137,8 @@ export function useLiveHistory(options: {
 		wasConnected = true
 	}
 
-	watch(options.id, subscribeTo, { immediate: true })
+	const entity = (): [string, number | undefined] => [toValue(options.type), options.id()]
+	watch(entity, subscribeTo, { immediate: true })
 	watch(options.fights, syncProgress, { immediate: true })
 
 	onMounted(() => {
@@ -147,7 +151,7 @@ export function useLiveHistory(options: {
 		emitter.off('fight-progress', onFightProgress)
 		emitter.off('history-update', onHistoryUpdate)
 		emitter.off('wsconnected', onWsConnected)
-		if (currentId !== undefined) historyRef(options.type, currentId, false)
+		if (currentId !== undefined) historyRef(currentType, currentId, false)
 		if (reloadTimer) clearTimeout(reloadTimer)
 		if (pollTimer) clearInterval(pollTimer)
 		for (const fid of registered) fightRef(fid, false)

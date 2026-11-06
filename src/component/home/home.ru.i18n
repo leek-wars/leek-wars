@@ -74,5 +74,10 @@
 	"team_rank": "Рейтинг",
 	"team_members": "Участники",
 	"no_team": "Вы не состоите в команде.",
-	"find_team": "Найти команду"
+	"find_team": "Найти команду",
+	"widget_history": "История боёв",
+	"widget_history_of": "История {name}",
+	"choose_history": "Выбрать историю",
+	"history_filters": "Фильтровать бои",
+	"no_matching_fight": "Нет недавних боёв, подходящих под фильтры."
 }

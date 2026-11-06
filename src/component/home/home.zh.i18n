@@ -74,5 +74,10 @@
 	"team_rank": "排名",
 	"team_members": "成员",
 	"no_team": "你还没有加入任何团队。",
-	"find_team": "寻找团队"
+	"find_team": "寻找团队",
+	"widget_history": "战斗历史",
+	"widget_history_of": "{name} 的战斗历史",
+	"choose_history": "选择历史",
+	"history_filters": "筛选战斗",
+	"no_matching_fight": "没有符合筛选条件的最近战斗。"
 }

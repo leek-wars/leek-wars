@@ -74,5 +74,10 @@
 	"team_rank": "ランキング",
 	"team_members": "メンバー",
 	"no_team": "チームに所属していません。",
-	"find_team": "チームを探す"
+	"find_team": "チームを探す",
+	"widget_history": "戦歴",
+	"widget_history_of": "{name}の戦歴",
+	"choose_history": "戦歴を選択",
+	"history_filters": "戦闘を絞り込む",
+	"no_matching_fight": "フィルターに一致する最近の戦闘はありません。"
 }

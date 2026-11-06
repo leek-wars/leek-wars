@@ -74,5 +74,10 @@
 	"team_rank": "Rangschikking",
 	"team_members": "Leden",
 	"no_team": "Je zit niet in een team.",
-	"find_team": "Een team zoeken"
+	"find_team": "Een team zoeken",
+	"widget_history": "Gevechtsgeschiedenis",
+	"widget_history_of": "Geschiedenis van {name}",
+	"choose_history": "Geschiedenis kiezen",
+	"history_filters": "Gevechten filteren",
+	"no_matching_fight": "Geen recent gevecht komt overeen met de filters."
 }
