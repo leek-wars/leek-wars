@@ -194,6 +194,9 @@ function componentDictionary(rawName: string): { folder: string, file: string } 
 	// n'existe pas — et le menu rendrait ses clés en brut partout où il est affiché
 	// sans que <live> soit monté (panneau d'équipe replié).
 	if (name.startsWith("live-")) { folder = "live"; file = "live" }
+	// Même cas pour les filtres d'historique : la page d'historique les pose, mais
+	// aussi le widget de l'accueil, où la page n'est pas montée.
+	if (name === "history-filters") { folder = "history"; file = "history" }
 	return { folder, file }
 }
 
