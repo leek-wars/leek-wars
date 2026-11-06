@@ -160,6 +160,7 @@
 	import HomeWidgetForum from '@/component/home/widgets/home-widget-forum.vue'
 	import HomeWidgetTournaments from '@/component/home/widgets/home-widget-tournaments.vue'
 	import HomeWidgetMyTournaments from '@/component/home/widgets/home-widget-my-tournaments.vue'
+	import HomeWidgetRegistrations, { registrationsContentHeight } from '@/component/home/widgets/home-widget-registrations.vue'
 	import HomeWidgetEncyclopedia from '@/component/home/widgets/home-widget-encyclopedia.vue'
 	import HomeWidgetClassement from '@/component/home/widgets/home-widget-classement.vue'
 	import HomeWidgetLeekStats from '@/component/home/widgets/home-widget-leek-stats.vue'
@@ -183,6 +184,14 @@
 	// l'échelle dans laquelle elles ont été écrites et sont converties au chargement.
 	const COLUMNS = 24
 	const CELL_HEIGHT = 39
+	// Ce que le panneau prend autour du contenu d'un widget : sa barre de titre,
+	// son rembourrage et la marge de gridstack — mesuré : hauteur de l'item moins
+	// celle du contenu. Sert aux widgets dont la hauteur minimale se calcule
+	// d'après leur contenu.
+	const PANEL_CHROME = 80
+	function cellsFor(contentHeight: number): number {
+		return Math.ceil((contentHeight + PANEL_CHROME) / CELL_HEIGHT)
+	}
 	// Échelle des dispositions enregistrées avant la sous-division.
 	const LEGACY_COLUMNS = 12
 	const LEGACY_CELL_HEIGHT = 78
@@ -234,6 +243,14 @@
 		// les retrouver un par un. Des lignes : le
 		// panneau en montre autant que sa hauteur en laisse tenir.
 		my_tournaments: { icon: 'mdi-tournament', component: markRaw(HomeWidgetMyTournaments), defaultW: 8, defaultH: 8, minW: 5, minH: 4, noScroll: true },
+		// Inscriptions : le tournoi de l'éleveur, et pour chaque poireau son tournoi
+		// et son arène automatique, en interrupteurs. Un oubli coûte un tournoi
+		// entier ; ici tout se voit d'un coup d'œil, sans défiler.
+		// Minimums : sous 6 colonnes les noms ne se lisent plus, même sans les
+		// intitulés de colonne (masqués quand le panneau est étroit). La hauteur
+		// minimale loge toutes les lignes : elle dépend du nombre de poireaux, d'où
+		// l'accesseur, relu à chaque usage (grille, relecture de la disposition).
+		registrations: { icon: 'mdi-calendar-check', component: markRaw(HomeWidgetRegistrations), defaultW: 8, defaultH: 8, minW: 6, get minH() { return cellsFor(registrationsContentHeight(store.state.farmer)) }, noScroll: true },
 		// Encyclopédie : les dernières pages modifiées, comme la section du même nom
 		// de l'encyclopédie. Le lien mène au sommaire.
 		encyclopedia: { icon: 'mdi-book-open-page-variant', component: markRaw(HomeWidgetEncyclopedia), defaultW: 8, defaultH: 8, minW: 5, minH: 4, link: '/encyclopedia', noScroll: true },
