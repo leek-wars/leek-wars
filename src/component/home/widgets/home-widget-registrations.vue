@@ -7,7 +7,7 @@
 					<!-- « Tout inscrire » loge dans la case vide de l'en-tête : une ligne
 						de plus sous le tableau agrandirait la taille minimale du widget. -->
 					<th class="all">
-						<v-btn v-if="missing" size="x-small" color="primary" prepend-icon="mdi-check-all" @click="registerAll">{{ t('register_all') }}</v-btn>
+						<v-btn v-if="missing" size="x-small" color="primary" prepend-icon="mdi-check-all" :loading="registering" @click="registerAll">{{ t('register_all') }}</v-btn>
 					</th>
 					<th>
 						<v-tooltip location="bottom">
@@ -43,7 +43,7 @@
 					</td>
 					<td>
 						<div v-if="row.tournament" class="cell">
-							<lw-switch :model-value="row.tournament.registered" @update:model-value="toggleTournament(row)" />
+							<lw-switch :model-value="!!row.tournament.registered" @update:model-value="toggleTournament(row)" />
 							<router-link v-if="row.tournament.current" :to="'/tournament/' + row.tournament.current" :title="t('see_tournament')" class="current">
 								<v-icon>mdi-arrow-right</v-icon>
 							</router-link>
@@ -68,14 +68,14 @@
 	const FARMER_TOURNAMENT_MIN_LEEKS = 2
 	const ARENA_MIN_LEVEL = 20
 
-	// Hauteurs mesurées, en pixels, du tableau en lignes compactes (sans
-	// miniatures) : celle de l'en-tête, qui porte « Tout inscrire », et celle
-	// d'une ligne.
+	// Hauteurs, en pixels, de l'en-tête du tableau (qui porte « Tout inscrire »)
+	// et d'une ligne compacte. Le style les impose (`v-bind`), et l'accueil en
+	// tire la taille minimale du panneau.
 	const HEADER_HEIGHT = 30
 	const ROW_HEIGHT = 27
 	// Ligne avec miniature, et largeur à partir de laquelle on les montre.
-	const LARGE_ROW_HEIGHT = 40
-	const LARGE_MIN_WIDTH = 340
+	const THUMB_ROW_HEIGHT = 40
+	const THUMBS_MIN_WIDTH = 340
 
 	function farmerRow(farmer: Farmer): boolean {
 		const enoughLeeks = Object.keys(farmer.leeks).length >= FARMER_TOURNAMENT_MIN_LEEKS
@@ -108,7 +108,7 @@
 
 	const t = useNamespacedT('home')
 
-	interface Registration { registered: boolean, current?: number | null }
+	interface Registration { registered?: boolean, current?: number | null }
 	/** Les seuls champs lus dans la fiche d'un poireau (leek/get-private). */
 	interface LeekRegistrations { level: number, tournament: Registration | null, auto_br: boolean }
 	interface Row {
@@ -134,12 +134,13 @@
 		const farmer = store.state.farmer
 		if (!farmer) { rows.value = []; return }
 		const list: Row[] = []
+		// L'objet du store lui-même, pas une copie : la page éleveur le lit aussi,
+		// une bascule faite ici s'y voit.
 		const own = farmer.tournament
 		if (farmerRow(farmer) && own) {
 			list.push({
 				key: 'farmer', farmer: true, id: farmer.id, name: farmer.name, link: '/farmer',
-				tournament: { registered: !!own.registered, current: own.current },
-				arena: null, loading: false,
+				tournament: own, arena: null, loading: false,
 			})
 		}
 		for (const leek of Object.values(farmer.leeks)) {
@@ -180,8 +181,8 @@
 	// faire défiler.
 	const rootEl = ref<HTMLElement | null>(null)
 	const size = ref({ width: 0, height: 0 })
-	const thumbs = computed(() => size.value.width >= LARGE_MIN_WIDTH
-		&& size.value.height >= HEADER_HEIGHT + rows.value.length * LARGE_ROW_HEIGHT)
+	const thumbs = computed(() => size.value.width >= THUMBS_MIN_WIDTH
+		&& size.value.height >= HEADER_HEIGHT + rows.value.length * THUMB_ROW_HEIGHT)
 	const observer = new ResizeObserver(entries => {
 		const box = entries[0].contentRect
 		size.value = { width: box.width, height: box.height }
@@ -192,32 +193,37 @@
 	})
 	onBeforeUnmount(() => observer.disconnect())
 
+	// Pour le style : les hauteurs qui servent au calcul de la taille minimale.
+	const headerHeight = HEADER_HEIGHT + 'px'
+	const rowHeight = ROW_HEIGHT + 'px'
+	const thumbRowHeight = THUMB_ROW_HEIGHT + 'px'
+
 	// Inscriptions à la volée, comme sur les pages éleveur et poireau : on bascule
 	// tout de suite et on revient en arrière si le serveur refuse.
-	function send(url: string, body: Record<string, unknown>, rollback: () => void) {
-		LeekWars.post(url, body).error((error: ApiError) => {
+	function send(url: string, body: Record<string, unknown>, rollback: () => void): Promise<unknown> {
+		return LeekWars.post(url, body).error((error: ApiError) => {
 			rollback()
 			if (!isReportedByTransport(error)) LeekWars.toast(t('registration_failed'))
 		})
 	}
 
-	function toggleTournament(row: Row) {
+	function toggleTournament(row: Row): Promise<unknown> {
 		const tournament = row.tournament
-		if (!tournament) return
+		if (!tournament) return Promise.resolve()
 		const next = !tournament.registered
 		tournament.registered = next
 		const rollback = () => { tournament.registered = !next }
 		const verb = next ? 'register' : 'unregister'
-		if (row.farmer) send('farmer/' + verb + '-tournament', {}, rollback)
-		else send('leek/' + verb + '-tournament', { leek_id: row.id }, rollback)
+		if (row.farmer) return send('farmer/' + verb + '-tournament', {}, rollback)
+		return send('leek/' + verb + '-tournament', { leek_id: row.id }, rollback)
 	}
 
-	function toggleArena(row: Row) {
-		if (row.arena === null) return
+	function toggleArena(row: Row): Promise<unknown> {
+		if (row.arena === null) return Promise.resolve()
 		const next = !row.arena
 		row.arena = next
 		const verb = next ? 'register' : 'unregister'
-		send('leek/' + verb + '-auto-br', { leek_id: row.id }, () => { row.arena = !next })
+		return send('leek/' + verb + '-auto-br', { leek_id: row.id }, () => { row.arena = !next })
 	}
 
 	// Ce qu'il reste à inscrire : le bouton n'apparaît que s'il a quelque chose à
@@ -225,11 +231,17 @@
 	const missing = computed(() => rows.value.some(row =>
 		(row.tournament && !row.tournament.registered) || row.arena === false))
 
-	function registerAll() {
+	// Une inscription après l'autre, comme le chargement des fiches : jusqu'à
+	// deux par poireau d'un coup déclencheraient la limitation de débit.
+	const registering = ref(false)
+	async function registerAll() {
+		if (registering.value) return
+		registering.value = true
 		for (const row of rows.value) {
-			if (row.tournament && !row.tournament.registered) toggleTournament(row)
-			if (row.arena === false) toggleArena(row)
+			if (row.tournament && !row.tournament.registered) await toggleTournament(row)
+			if (row.arena === false) await toggleArena(row)
 		}
+		registering.value = false
 	}
 </script>
 
@@ -252,7 +264,7 @@
 		border-collapse: collapse;
 	}
 	th {
-		height: 30px;
+		height: v-bind(headerHeight);
 		box-sizing: border-box;
 		font-size: 12px;
 		font-weight: 500;
@@ -273,14 +285,14 @@
 		}
 	}
 	td {
-		height: 27px;
+		height: v-bind(rowHeight);
 		box-sizing: border-box;
 		padding: 0 6px;
 		border-top: 1px solid var(--border);
 		vertical-align: middle;
 	}
 	.thumbs td {
-		height: 40px;
+		height: v-bind(thumbRowHeight);
 	}
 	.name {
 		width: 100%;
