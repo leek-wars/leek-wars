@@ -2,11 +2,11 @@
 	<div class="notes-widget">
 		<template v-if="editing">
 			<textarea ref="editorEl" v-model="text" class="editor" :maxlength="MAX_LENGTH" :placeholder="t('notes_placeholder')"
-				@input="scheduleSave" @blur="stopEditing" @keydown.esc.prevent="stopEditing"
-				@keydown.ctrl.enter.prevent="stopEditing" @keydown.meta.enter.prevent="stopEditing"></textarea>
+				@input="scheduleSave" @blur="stopEditing()" @keydown.esc.prevent="stopEditing(true)"
+				@keydown.ctrl.enter.prevent="stopEditing(true)" @keydown.meta.enter.prevent="stopEditing(true)"></textarea>
 			<div class="hint">{{ t('notes_local') }}</div>
 		</template>
-		<div v-else class="view" @click="startEditing">
+		<div v-else ref="viewEl" class="view" tabindex="0" @click="startEditing" @keydown.enter.self.prevent="startEditing">
 			<markdown v-if="text.trim()" :content="text" mode="forum" />
 			<template v-else>
 				<div class="placeholder">{{ t('notes_placeholder') }}</div>
@@ -49,6 +49,7 @@
 	const text = ref('')
 	const editing = ref(false)
 	const editorEl = ref<HTMLTextAreaElement | null>(null)
+	const viewEl = ref<HTMLElement | null>(null)
 	let saveTimer: ReturnType<typeof setTimeout> | null = null
 
 	// Navigation privée ou stockage plein : la note reste éditable, elle ne
@@ -85,9 +86,10 @@
 		text.value = read(key)
 	}, { immediate: true })
 
-	// Un clic sur la note l'ouvre en écriture, sauf sur un lien (on le suit) ou
-	// à la fin d'une sélection de texte (on voulait copier).
-	function startEditing(event: MouseEvent) {
+	// Un clic sur la note (ou Entrée, la note ayant le focus) l'ouvre en
+	// écriture, sauf sur un lien (on le suit) ou à la fin d'une sélection de
+	// texte (on voulait copier).
+	function startEditing(event: Event) {
 		if ((event.target as HTMLElement).closest('a, button')) return
 		if (window.getSelection()?.toString()) return
 		editing.value = true
@@ -99,11 +101,14 @@
 		})
 	}
 
-	function stopEditing() {
+	// `refocus` : sortie au clavier (Échap, Ctrl+Entrée), le focus revient sur
+	// la note au lieu de se perdre avec la zone de texte.
+	function stopEditing(refocus = false) {
 		if (saveTimer) clearTimeout(saveTimer)
 		saveTimer = null
 		write(storageKey.value, text.value)
 		editing.value = false
+		if (refocus) nextTick(() => viewEl.value?.focus())
 	}
 
 	// La même note ouverte dans un autre onglet : on reprend son texte, sauf

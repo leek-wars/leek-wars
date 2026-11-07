@@ -218,11 +218,10 @@
 		trophies: { icon: 'mdi-trophy', component: markRaw(HomeWidgetTrophies), defaultW: 8, defaultH: 6, minW: 6, minH: 4, link: '/trophies', noScroll: true },
 		// noScroll : le panel ne défile jamais, la zone de messages du chat gère son propre défilement.
 		chat: { icon: 'mdi-forum', component: markRaw(HomeWidgetChat), defaultW: 8, defaultH: 10, minW: 6, minH: 6, multi: true, configurable: true, noScroll: true },
-		// Bloc-notes : du markdown, écrit au clic. Le texte reste dans le navigateur
-		// (cf. le widget), sous une clé tirée à l'ajout : un id de widget est
-		// réattribué, et une nouvelle note reprendrait le texte d'une note supprimée.
-		// noScroll : comme le chat, c'est la note qui défile, pas le panneau.
-		// Minimums : sous 6 colonnes, l'invite d'une note vide est rognée.
+		// Bloc-notes : du markdown écrit au clic, gardé dans le navigateur sous une
+		// clé tirée à l'ajout (cf. le widget). noScroll : comme le chat, c'est la
+		// note qui défile. Minimums : sous 6 colonnes, l'invite d'une note vide est
+		// rognée.
 		notes: { icon: 'mdi-note-text-outline', component: markRaw(HomeWidgetNotes), defaultW: 8, defaultH: 8, minW: 6, minH: 4, multi: true, noScroll: true, initialParams: () => ({ note: newNoteId() }) },
 		collection: { icon: 'mdi-view-grid-outline', component: markRaw(HomeWidgetCollection), defaultW: 8, defaultH: 8, minW: 5, minH: 4, link: '/collection', noScroll: true },
 		ranking: { icon: 'mdi-podium', component: markRaw(HomeWidgetRanking), defaultW: 8, defaultH: 8, minW: 5, minH: 4, noScroll: true },
