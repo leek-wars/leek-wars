@@ -440,6 +440,25 @@
 						<garden-fast-fight v-if="batchLauncher" :loading="batchLoading" :disabled="batchLauncher.disabled" :disabled-reason="batchLauncher.reason" @launch="batchLauncher.launch" />
 					</template>
 				</garden-batch>
+				<popup v-model="bossBatchDialog" :width="560">
+					<template #icon><v-icon>mdi-alert</v-icon></template>
+					<template #title>{{ t('fast_boss_allies_title') }}</template>
+					<p>{{ t('fast_boss_allies_warning') }}</p>
+					<div class="participants">
+						<div v-for="leek of bossBatchAllies" :key="leek.id" class="participant">
+							<leek-image :leek="leek" :scale="0.42" />
+							<div class="name">
+								<avatar :farmer="LeekWars.bossSquads.squad?.farmers.find(f => f.id === (leek.farmer as unknown as number))" />
+								<span>{{ leek.name }}</span>
+							</div>
+							<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
+						</div>
+					</div>
+					<template #actions>
+						<div v-ripple class="action dismiss" @click="bossBatchDialog = false">{{ $t('main.cancel') }}</div>
+						<div v-ripple class="action green" @click="confirmBossBatch">{{ t('fast_boss_allies_launch') }}</div>
+					</template>
+				</popup>
 			</div>
 		</div>
 	</div>
@@ -647,13 +666,33 @@
 			batchLoading.value = false
 		})
 	}
-	function batchAttack(count: number) {
+	// A batch only spends the launcher's fights, so allied leeks are left out of it.
+	const bossBatchPending = ref<number | null>(null)
+	const bossBatchAllies = computed<Leek[]>(() => {
+		const currentSquad = LeekWars.bossSquads.squad
+		if (!currentSquad) return []
+		return currentSquad.engaged_leeks.filter((l: Leek) => (l.farmer as unknown as number) !== store.state.farmer!.id)
+	})
+	const bossBatchDialog = computed({
+		get: () => bossBatchPending.value !== null,
+		set: (open: boolean) => { if (!open) bossBatchPending.value = null },
+	})
+	function confirmBossBatch() {
+		const count = bossBatchPending.value
+		bossBatchPending.value = null
+		if (count) batchAttack(count, true)
+	}
+	function batchAttack(count: number, confirmed = false) {
 		const currentSquad = LeekWars.bossSquads.squad
 		if (!currentSquad || !selectedBoss.value) return
 		const participants = currentSquad.engaged_leeks
 			.filter((l: Leek) => (l.farmer as unknown as number) === store.state.farmer!.id)
 			.map((l: Leek) => l.id)
 		if (participants.length === 0) return
+		if (!confirmed && bossBatchAllies.value.length) {
+			bossBatchPending.value = count
+			return
+		}
 		// L'escouade est identifiée par les poireaux engagés (de TOUS les farmers), pas
 		// par son id : attaquer la quitte, relancer en reforme forcément une autre.
 		const boss_id = selectedBoss.value.id
